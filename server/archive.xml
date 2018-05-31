@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="builder" default="builder" basedir=".">
+  <target name ="builder" description="Creates the jar ">
+	<jar basedir="bin" jarfile="RSCEmulation.jar">
+		<zipgroupfileset dir="${user.dir}/lib" includes="*.jar"/>
+		<manifest>
+			<attribute name="Main-Class" value="org.rscemulation.server.Server"/>
+		</manifest>
+	</jar>
+  </target>
+</project>

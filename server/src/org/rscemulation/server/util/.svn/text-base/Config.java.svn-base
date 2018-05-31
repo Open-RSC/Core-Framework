@@ -1,0 +1,62 @@
+package org.rscemulation.server.util;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+public class Config {
+
+	public static void initConfig(String file) throws IOException {
+		START_TIME = System.currentTimeMillis();
+
+		Properties props = new Properties();
+		props.loadFromXML(new FileInputStream(file));
+		SERVER_VERSION = Integer.parseInt(props.getProperty("version"));
+		SERVER_NAME = props.getProperty("name");
+		SERVER_IP = props.getProperty("ip");
+		SERVER_PORT = Integer.parseInt(props.getProperty("port"));
+		SERVER_LOCATION = props.getProperty("location");
+		MAX_PLAYERS = Integer.parseInt(props.getProperty("maxplayers"));
+		
+		DB_HOST = props.getProperty("dbhost");
+		DB_NAME = props.getProperty("dbname");
+		DB_LOGIN = props.getProperty("dblogin");
+		DB_PASS = props.getProperty("dbpass");
+		
+		CONFIG_DB_HOST = props.getProperty("configdbhost");
+		CONFIG_DB_NAME = props.getProperty("configdbname");
+		CONFIG_DB_LOGIN = props.getProperty("configdblogin");
+		CONFIG_DB_PASS = props.getProperty("configdbpass");
+		
+		LOG_DB_HOST = props.getProperty("logdbhost");
+		LOG_DB_NAME = props.getProperty("logdbname");
+		LOG_DB_LOGIN = props.getProperty("logdblogin");
+		LOG_DB_PASS = props.getProperty("logdbpass");
+		
+		NOSUBNOWILD = Integer.parseInt(props.getProperty("nosubnowild"));
+		SUBNOWILD = Integer.parseInt(props.getProperty("subnowild"));
+		NOSUBWILD = Integer.parseInt(props.getProperty("nosubwild"));
+		SUBWILD = Integer.parseInt(props.getProperty("subwild"));
+		
+		//TEMP
+		TEMP_COMBAT_MULTIPLIER = Float.parseFloat(props.getProperty("temp_combat_multiplier"));
+		//TEMP
+		
+		F2P_WILDERNESS = props.getProperty("f2pwilderness").equals("true") ? true : false;
+		LOGGING = props.getProperty("logging_enabled").equals("true") ? true : false;
+		WEB_IP = props.getProperty("webip");
+		WEB_PORT = Integer.parseInt(props.getProperty("webport"));
+		//CVS_IP = props.getProperty("cvsip");
+		//CVS_PORT = Integer.parseInt(props.getProperty("cvsport"));
+		props.clear();
+	}
+
+	public static float TEMP_COMBAT_MULTIPLIER;
+	
+	public static String WEB_IP, SERVER_IP, SERVER_NAME, RSCD_HOME, CONF_DIR, SERVER_LOCATION, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_HOST, CONFIG_DB_NAME, CONFIG_DB_LOGIN, CONFIG_DB_PASS, LOG_DB_HOST, LOG_DB_NAME, LOG_DB_LOGIN, LOG_DB_PASS;
+	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, NOSUBNOWILD, SUBNOWILD, NOSUBWILD, SUBWILD;
+	public static long START_TIME;
+	public static boolean F2P_WILDERNESS, LOGGING;
+	public static String CVS_IP;
+	public static int CVS_PORT;
+}

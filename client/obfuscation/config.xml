@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<config>
+    <jars>
+        <jar out="rscunity.jar" in="rscunity-pre.jar"/>
+    </jars>
+    <keep-names>
+        <class template="class org.rscemulation.client.mudclient"/>
+        <class template="class org.rscemulation.client.loader.WebClientLoader"/>
+    </keep-names>
+	<property name="string-encryption" value="enable"/>
+	<property name="string-encryption-type" value="strong"/>
+	<property name="control-flow-obfuscation" value="enable"/>
+	<property name="extensive-flow-obfuscation" value="maximum"/>
+	<property name="force-default-package" value="enable"/>
+	<property name="default-package" value="org.rscemulation.client"/>
+	<property name="classes-naming" value="iii"/>
+	<property name="methods-naming" value="keywords"/>
+	<property name="fields-naming" value="keywords"/>
+	<property name="line-numbers" value="obfuscate"/>
+	<property name="finalize" value="enable"/>
+	<property name="version-marker" value="DS_BETA"/>
+	<property name="synthetize-methods" value="all"/>
+	<property name="synthetize-fields" value="all"/>
+    <property name="log-file" value="log.xml"/>
+</config>
