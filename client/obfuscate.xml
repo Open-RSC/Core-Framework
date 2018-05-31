@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="builder" default="builder" basedir=".">
+	<target name ="builder" description="Builds and obfuscates the loader">
+		<jar basedir="bin" jarfile="./obfuscation/rscunity-pre.jar"/>
+		<taskdef name="allatori" classname="com.allatori.ant.ObfuscatorTask" classpath="obfuscation/allatori.jar"/>
+		<allatori config="./obfuscation/config.xml"/>
+		<jar jarfile="rscunity.jar">
+			<zipgroupfileset dir="./obfuscation" includes="rscunity.jar"/>
+			 <manifest>
+				<attribute name="Main-Class" value="org.rscemulation.client.mudclient"/>
+			</manifest>
+		</jar>
+		 <input
+		    message="Please enter keystore password:"
+		    addproperty="keypass" />
+			
+		 <signjar jar="rscunity.jar" storetype="pkcs12"
+		   keystore="./obfuscation/ca.p12" alias="1" 
+		   storepass="${keypass}"/>
+		
+		<verifyjar jar="rscunity.jar"
+		alias="1" storepass="${keypass}"/>
+	</target>
+</project>

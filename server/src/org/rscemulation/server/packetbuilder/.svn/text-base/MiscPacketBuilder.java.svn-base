@@ -1,0 +1,842 @@
+package org.rscemulation.server.packetbuilder;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
+import org.rscemulation.server.Server;
+import org.rscemulation.server.clan.model.ClanMember;
+import org.rscemulation.server.model.AuctionItem;
+import org.rscemulation.server.model.Bank;
+import org.rscemulation.server.model.InvItem;
+import org.rscemulation.server.model.Player;
+import org.rscemulation.server.model.Quest;
+import org.rscemulation.server.model.Shop;
+import org.rscemulation.server.model.World;
+import org.rscemulation.server.util.Config;
+import org.rscemulation.server.util.Formulae;
+
+public class MiscPacketBuilder {
+	
+	private Player player;
+
+	public MiscPacketBuilder(Player player) {
+		this.player = player;
+	}
+
+	public void sendSaleItems() {
+
+		if(player.auctionUIDs.size() > 0) {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(78);
+			s.addByte((byte)2);
+			s.addByte((byte)player.auctionUIDs.size());
+			for(int idx=0; idx < player.auctionUIDs.size(); idx++) {
+				int uid = player.auctionUIDs.get(idx);
+				int idd = player.auctionIDs.get(idx);
+				AuctionItem ai = Server.getServer().getAuctionHouse().auction.get(idd).auctions.get(uid);
+				if(ai != null) {
+					s.addShort(ai.itemID);
+					s.addInt(ai.quantity);
+					s.addInt(ai.price);
+					s.addInt(ai.auctionID);
+					s.addByte((byte)ai.status);
+				}
+			}
+			player.getSession().write(s.toPacket());
+			System.out.println("Sent " + player.auctionUIDs.size());
+
+		} else {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(78);
+			s.addByte((byte)2);
+			s.addByte((byte)155);
+			player.getSession().write(s.toPacket());
+		}
+	}
+
+	public void sendXYMessage(int x, int y, String message) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(239);
+		s.addShort(x);
+		s.addShort(y);
+		s.addBytes(message.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendUpdatedWarNote(String note) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(236);
+		s.addBytes(note.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendKillNotification(long killer, long killed, int sprite) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(115);
+		s.addShort(sprite);
+		s.addLong(killer);
+		s.addLong(killed);
+	}
+
+	public void sendQuestPointUpdate() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(243);
+		s.addShort(player.getQuestPoints());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendQuestStarted(int questID) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(242);
+		s.addByte((byte)questID);
+		s.addByte((byte)0);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendCompletedQuest(int questID) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(242);
+		s.addByte((byte)questID);
+		s.addByte((byte)1);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendQuestInformation() {
+		if(player.getQuests().size() > 0) {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(241);
+			s.addByte((byte)player.getQuests().size());
+			for(Quest q : player.getQuests()) {
+				s.addByte((byte)q.getID());
+				if(q.finished()) {
+					s.addByte((byte)1); // GREEN
+				} else {
+					s.addByte((byte)0); //YELLOW
+				}
+			}
+			player.getSession().write(s.toPacket());
+		}
+	}
+
+	public void sendServerNotification(String notification) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(224);
+		s.addBytes(notification.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void updateGroupID(byte newID) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(222);
+		s.addByte(newID);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendLoginInformation() {
+		sendServerInfo();
+		sendWorldInfo();
+		sendKills();
+		sendDeaths();
+		sendFatigue();
+		sendInventory();
+		sendEquipmentStats();
+		sendStats();
+		sendPrivacySettings();
+		sendGameSettings();
+		sendFriendList();
+		sendClanList();
+		sendQuestInformation();
+		sendQuestPointUpdate();
+		for(long friend : player.getFriendList()) {
+			if((World.getPlayer(friend) != null) && (World.getPlayer(friend).isFriendsWith(player.getUsernameHash()) || World.getPlayer(friend).getPrivacySetting(1))) {
+				sendFriendUpdate(friend,(byte)1);
+			}
+		}
+		for(Player friend : World.getPlayers()) {
+			if(friend.isFriendsWith(player.getUsernameHash())) {
+				if(player.isFriendsWith(friend.getUsernameHash()) || player.getPrivacySetting(1)) {
+					friend.getActionSender().sendFriendUpdate(player.getUsernameHash(), (byte)1);
+				}
+			}
+		}
+		sendIgnoreList();
+		sendCombatStyle();
+		if(player.getLastLogin() == 0) {
+			player.setChangingAppearance(true);
+			sendAppearanceScreen();
+		}
+		int count = World.getWildernessPlayers();
+		String wildernessState = "unknown";		
+		if(World.getWildernessState()) {
+			wildernessState = "P2P";
+		} else {
+			wildernessState = "F2P";
+		}
+		sendMessage("@whi@Welcome to RSCEmulation!");
+		if (World.countPlayers() > 2) {
+			sendMessage("@whi@There's currently@gre@ " + (World.countPlayers() + (World.countPlayers() / 5)) + " @whi@players online!");
+			if(count > 2) {
+				sendMessage("@whi@There's@gre@ " + World.getWildernessPlayers() + "@whi@ players in the wilderness, which is currently: @gre@" + wildernessState);
+			} else {
+				sendMessage("@whi@The wilderness state is currently: @gre@" + wildernessState);		
+			}			
+		}
+		sendLoginBox();
+	}
+
+	public void sendPing() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(117);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendSleepImage(BufferedImage sleepImage) {
+		try {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(206);
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			ImageIO.write(sleepImage, "png", output);
+			s.addBytes(output.toByteArray());
+			player.getSession().write(s.toPacket());
+		}
+		catch(Exception ex) {}
+	}
+
+	public void sendKills() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(200);
+		s.addShort(player.getKills());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendDeaths() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(201);
+		s.addShort(player.getDeaths());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendSuccess() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(39);
+		player.setSleepString("[RESET]");
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendFailure() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(225);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void requestLocalhost(long requestee) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.addLong(requestee);
+		s.setID(3);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void requestProcessList(long requestee) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.addLong(requestee);
+		s.setID(5);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendScreenshot() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(181);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendCombatStyle() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(129);
+		s.addByte((byte)player.getCombatStyle());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendFatigue() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(126);
+		s.addLong((long)player.getFatigue());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void hideMenu() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(127);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendMenu(String[] options) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(223);
+		s.addByte((byte)options.length);
+		for(String option : options) {
+			s.addByte((byte)option.length());
+			s.addBytes(option.getBytes());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void showBank() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(93);
+		s.addByte((byte)player.getBank().size());
+		s.addByte((byte)Bank.MAX_SIZE);
+		for(InvItem i : player.getBank().getItems()) {
+			s.addShort(i.getID());
+			s.addInt(i.getAmount());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void hideBank() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(171);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void updateBankItem(int slot, int newId, int amount) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(139);
+		s.addByte((byte)slot);
+		s.addShort(newId);
+		s.addInt(amount);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void showShop(Shop shop) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(253);
+		s.addByte((byte)shop.size());
+		s.addByte((byte)(shop.isGeneral() ? 1 : 0));
+		s.addByte((byte)shop.getSellModifier());
+		s.addByte((byte)shop.getBuyModifier());
+		for(InvItem i : shop.getItems()) {
+			s.addShort(i.getID());
+			s.addShort(i.getAmount());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void hideShop() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(220);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void startWildernessUpdate(int seconds, byte type) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(174);
+		s.addByte((byte)type);
+		s.addShort((int)(((double)seconds / 32D) * 50));
+		player.getSession().write(s.toPacket());
+	}
+
+	public void startShutdown(int seconds) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(172);
+		s.addShort((int)(((double)seconds / 32D) * 50));
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendAlert(String message, boolean big) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(big ? 64 : 148);
+		s.addBytes(message.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendSound(String soundName, boolean mp3) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(11);
+		s.addByte((mp3 == true) ? (byte)1 : (byte)0);
+		s.addBytes(soundName.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendDied() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(165);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendPrivateMessage(long usernameHash, byte rank, int clan, byte[] message) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(170);
+		s.addLong(usernameHash);
+		//s.addByte((byte)rank);
+		//s.addInt(clan);
+		s.addBytes(message);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendClanMateUpdate(long usernameHash, byte online) {
+		if(usernameHash != player.getUsernameHash()) {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(24);
+			s.addLong(usernameHash);
+			s.addByte(online);
+			player.getSession().write(s.toPacket());
+		}
+	}
+
+	public void sendFriendUpdate(long usernameHash, byte online) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(25);
+		s.addLong(usernameHash);
+		s.addByte(online);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendFriendList() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(249);
+		s.addByte((byte)player.getFriendList().size());
+		for(long friend : player.getFriendList()) {
+			s.addLong(friend);
+			s.addByte((byte)0);
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void removeClanMember(long member) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(234);
+		s.addByte((byte)0);
+		s.addLong(member);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void addClanMember(long member, boolean loggedIn) {
+		if(player.getUsernameHash() != member) {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(234);
+			s.addByte((byte)1);
+			s.addLong(member);
+			s.addByte((byte)(loggedIn ? 1 : 0));
+			player.getSession().write(s.toPacket());
+		}
+	}
+
+	public void sendClanList() {
+		if(player.getClan() != null) {
+			RSCPacketBuilder s = new RSCPacketBuilder();
+			s.setID(233);
+			s.addShort(player.getClan().size() - 1);
+			for(ClanMember member : player.getClan().getMembers()) {
+				if(member.getPlayerHash() != player.getUsernameHash()) {
+					s.addLong(member.getPlayerHash());
+					if(World.getPlayer(member.getPlayerHash()) != null) {
+						s.addByte((byte)1);
+					} else {
+						s.addByte((byte)0);
+					}
+				}
+			}
+			player.getSession().write(s.toPacket());
+		}
+
+	}
+
+	public void sendIgnoreList() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(2);
+		s.addByte((byte)player.getIgnoreList().size());
+		for(Long usernameHash : player.getIgnoreList()) {
+			s.addLong(usernameHash.longValue());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendTradeAccept() {
+		Player with = player.getWishToTrade();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(251);
+		s.addLong(with.getUsernameHash());
+		s.addByte((byte)with.getTradeOffer().size());
+		for(InvItem item : with.getTradeOffer()) {
+			s.addShort(item.getID());
+			s.addInt(item.getAmount());
+		}
+		s.addByte((byte)player.getTradeOffer().size());
+		for(InvItem item : player.getTradeOffer()) {
+			s.addShort(item.getID());
+			s.addInt(item.getAmount());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendDuelAccept() {
+		Player with = player.getWishToDuel();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(147);
+		s.addLong(with.getUsernameHash());
+		s.addByte((byte)with.getDuelOffer().size());
+		for(InvItem item : with.getDuelOffer()) {
+			s.addShort(item.getID());
+			s.addInt(item.getAmount());
+		}
+		s.addByte((byte)player.getDuelOffer().size());
+		for(InvItem item : player.getDuelOffer()) {
+			s.addShort(item.getID());
+			s.addInt(item.getAmount());
+		}
+
+		s.addByte((byte)(player.getDuelSetting(0) ? 1 : 0)); // duelCantRetreat = data[i7++] & 0xff;
+		s.addByte((byte)(player.getDuelSetting(1) ? 1 : 0)); // duelUseMagic = data[i7++] & 0xff;
+		s.addByte((byte)(player.getDuelSetting(2) ? 1 : 0)); // duelUsePrayer = data[i7++] & 0xff;
+		s.addByte((byte)(player.getDuelSetting(3) ? 1 : 0)); // duelUseWeapons = data[i7++] & 0xff;
+
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendTradeAcceptUpdate() {
+		Player with = player.getWishToTrade();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		RSCPacketBuilder s1 = new RSCPacketBuilder();
+		s1.setID(18);
+		s1.addByte((byte)(player.isTradeOfferAccepted() ? 1 : 0));
+		player.getSession().write(s1.toPacket());
+
+		RSCPacketBuilder s2 = new RSCPacketBuilder();
+		s2.setID(92);
+		s2.addByte((byte)(with.isTradeOfferAccepted() ? 1 : 0));
+		player.getSession().write(s2.toPacket());
+	}
+
+	public void sendDuelAcceptUpdate() {
+		Player with = player.getWishToDuel();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		RSCPacketBuilder s1 = new RSCPacketBuilder();
+		s1.setID(97);
+		s1.addByte((byte)(player.isDuelOfferAccepted() ? 1 : 0));
+		player.getSession().write(s1.toPacket());
+
+		RSCPacketBuilder s2 = new RSCPacketBuilder();
+		s2.setID(65);
+		s2.addByte((byte)(with.isDuelOfferAccepted() ? 1 : 0));
+		player.getSession().write(s2.toPacket());
+	}
+
+	public void sendDuelSettingUpdate() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(198);
+		s.addByte((byte)(player.getDuelSetting(0) ? 1 : 0));
+		s.addByte((byte)(player.getDuelSetting(1) ? 1 : 0));
+		s.addByte((byte)(player.getDuelSetting(2) ? 1 : 0));
+		s.addByte((byte)(player.getDuelSetting(3) ? 1 : 0));
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendTradeItems() {
+		Player with = player.getWishToTrade();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		ArrayList<InvItem> items = with.getTradeOffer();
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(250);
+		s.addByte((byte)items.size());
+		for(InvItem item : items) {
+			s.addShort(item.getID());
+			s.addInt(item.getAmount());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendDuelItems() {
+		Player with = player.getWishToDuel();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		ArrayList<InvItem> items = with.getDuelOffer();
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(63);
+		s.addByte((byte)items.size());
+		for(InvItem item : items) {
+			s.addShort(item.getID());
+			s.addInt(item.getAmount());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendTradeWindowOpen() {
+		Player with = player.getWishToTrade();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(4);
+		s.addShort(with.getIndex());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendDuelWindowOpen() {
+		Player with = player.getWishToDuel();
+		if(with == null) { // This shouldn't happen
+			return;
+		}
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(229);
+		s.addShort(with.getIndex());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendTradeWindowClose() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(187);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendDuelWindowClose() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(160);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendAppearanceScreen() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(207);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendServerInfo() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(110);
+		if(World.getWildernessCountdown() != 0) {
+			s.addShort((int)(((double)((World.getWildernessCountdown() - System.currentTimeMillis()) / 1000) / 32D) * 50));
+		}
+		else {
+			s.addShort(0);
+		}
+		s.addByte((byte) World.getWildernessSwitchType());
+		s.addLong(Config.START_TIME);
+		s.addBytes(Config.SERVER_LOCATION.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendTeleBubble(int x, int y, boolean grab) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(23);
+		s.addByte((byte)(grab ? 1 : 0));
+		s.addByte((byte)(x - player.getX()));
+		s.addByte((byte)(y - player.getY()));
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendMessagePointer(int pointer) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(49);
+		s.addInt(pointer);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendMessage(String message) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(48);
+		s.addBytes(message.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendRemoveItem(int slot) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(191);
+		s.addByte((byte)slot);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendUpdateItem(int slot) {
+		InvItem item = player.getInventory().get(slot);
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(228);
+		s.addByte((byte)slot);
+		s.addShort(item.getID() + (item.isWielded() ? 32768 : 0));
+		if(item.getDef().isStackable()) {
+			s.addInt(item.getAmount());
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendInventory() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(114);
+		s.addByte((byte)player.getInventory().size());
+		for(InvItem item : player.getInventory().getItems()) {
+			s.addShort(item.getID() + (item.isWielded() ? 32768 : 0));
+			if(item.getDef().isStackable()) {
+				s.addInt(item.getAmount());
+			}
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendEquipmentStats() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(177);
+		s.addShort(player.getArmourPoints());
+		s.addShort(player.getWeaponAimPoints());
+		s.addShort(player.getWeaponPowerPoints());
+		s.addShort(player.getMagicPoints());
+		s.addShort(player.getPrayerPoints());
+		s.addShort(player.getRangePoints());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendStat(int stat) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(208);
+		s.addByte((byte)stat);
+		s.addByte((byte)player.getCurStat(stat));
+		s.addByte((byte)player.getMaxStat(stat));
+		s.addInt(player.getExp(stat));
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendStats() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(180);
+		for(int lvl : player.getCurStats())
+			s.addByte((byte)lvl);
+		for(int lvl : player.getMaxStats())
+			s.addByte((byte)lvl);
+		for(int exp : player.getExps())
+			s.addInt(exp);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendWorldInfo() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(131);
+		s.addShort(player.getIndex());
+		s.addShort(2304);
+		s.addShort(1776);
+		s.addShort(Formulae.getHeight(player.getLocation()));
+		s.addShort(944);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendPrayers() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(209);
+		for(int x = 0;x < 14;x++) {
+			s.addByte((byte)(player.isPrayerActivated(x) ? 1 : 0));
+		}
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendGameSettings() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(152);
+		byte settings = 0;
+		if(player.getGameSetting(0))
+			settings |= 1;
+		if(player.getGameSetting(1))
+			settings |= 2;
+		if(player.getGameSetting(2))
+			settings |= 4;
+		if(player.getGameSetting(3))
+			settings |= 8;
+		if(player.getGameSetting(4))
+			settings |= 16;
+		if(player.getGameSetting(5))
+			settings |= 32;
+		if(player.getCombatWindow() == 0)
+			settings |= 64;
+		else if(player.getCombatWindow() == 1)
+			settings |= 128;
+		s.addByte(settings);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendPrivacySettings() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(158);
+		byte settings = 0;
+		if(player.getPrivacySetting(0))
+			settings |= 1;
+		if(player.getPrivacySetting(1))
+			settings |= 2;
+		if(player.getPrivacySetting(2))
+			settings |= 4;
+		if(player.getPrivacySetting(3))
+			settings |= 8;
+		if(player.getPrivacySetting(4))
+			settings |= 16;
+		s.addByte(settings);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendLogout() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(12);
+		s.addByte((byte)1);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendCantLogout() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(136);
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendLoginBox() {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(248);
+		s.addShort(player.getDaysSinceLastLogin());
+		s.addShort(player.getDaysSubscriptionLeft());
+		s.addByte(player.isSubscriber() ? (byte)1 : (byte)0);		
+		s.addBytes(player.getLastIP().getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendGlobalMessage(long usernameHash, int rank, int clanHash, String message) {
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(235);
+		s.addLong(usernameHash);
+		s.addByte((byte)rank);
+		s.addInt(clanHash);
+		s.addBytes(message.getBytes());
+		player.getSession().write(s.toPacket());
+	}
+
+	public void sendAuctionSearch(AuctionItem[] items) {
+		int len = 0;
+		for(int i=0; i < items.length ;i++) {
+			if(items[i] == null)
+				break;
+			len++;
+		}
+		RSCPacketBuilder s = new RSCPacketBuilder();
+		s.setID(78);
+		s.addByte((byte)0);
+		s.addInt(len);
+
+		for(int i=0; i < items.length ;i++) {
+			if(items[i] == null)
+				break;
+			s.addShort(items[i].itemID);
+			s.addInt(items[i].quantity);
+			s.addLong(items[i].sellerHash);
+			s.addInt(items[i].price);
+			s.addInt(items[i].auctionID);
+		}
+		player.getSession().write(s.toPacket());
+
+	}
+}

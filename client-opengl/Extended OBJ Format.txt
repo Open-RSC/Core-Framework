@@ -1,0 +1,66 @@
+Extended OBJ Format (Initial rough draft)
+
+Section I: Header
+This section contains information unique to this model and uses the following keywords:
+1) winding, a string value that should be either 'CW' or 'CCW' (clockwise / counterclockwise) that determines which order that the face vertices are declared in.  This affects which direction the face normals are generated from.
+
+Section II: Tables
+This format defines 3 separate tables that contain data describing various vertex elements.
+
+In these tables, three keywords may be used to describe vertex attributes
+1) v - vertex position, a series of three 32-bit floating point values (x, y, z)
+
+2) c - color intensity, a series of three or four 32-bit floating point values
+       (r, g, b, a), the alpha component may be excluded and defaults to 1.0
+
+3) t - texture position, a series of two 32-bit floating point values (u, v)
+
+There are three tables that may be created
+
+1) Vertex Position Table - contains the (x, y, z) positions of vertices used in the model
+
+2) Color Intensity Table - contains the (r, g, b, a*) intensities of the colors used in the model
+
+3) Texture Coordinate Table - contains the (u, v) positions of the textures used in this model
+
+
+Section III: Index Specification
+
+After the tables declaration, a series of faces are created by referring to indices from each table that data should be pulled from.
+
+The following keywords may be used in the index specification
+
+1) f - face definition, a series of 16-bit integral indices separated by '/'
+       face pulling from vertex position table only: f 1 2 3
+	   face pulling from vertex position and color intensity: f 1/0 2/0 3/0
+       face pulling from vertex position and texture position: f 1//0 2//0 3//0
+	   face pulling from vertex position, color intensity, and texture position: f 1/0/0 2/0/0 3/0/0
+	   
+2) _usetexture - a 16-bit integral value specifying the ID of the texture that should be applied to the faces following it
+                _usetexture 1    # use texture ID 1 on each subsequent face
+				f 1//1 2//2 3//3 # draw triangle using texture ID 1
+				_usetexture 0    # disable texturing
+
+				
+Section III: Example
+
+# Extended OBJ Example
+
+# Begin Header Section
+winding CCW # interpret vertex order as counter-clockwise
+
+# Begin Table Section
+v 0 0 0
+v 1 0 0
+v 0 1 0
+c 1 1 1 1 # white, 100% opacity
+t 0 0
+t 1 0
+t 0 1
+
+# Begin Index Section
+ # use whatever texture is ID 1
+_usetexture 1
+# (vertex 1, color 1, texcoord 1), (vertex 2, color 1, texcoord 2), (vertex 3, color 1, texcoord 3)
+# so in other words, a white triangle mapped to a triangle on texture '1'
+f 1/1/1 2/1/2 3/1/3 
