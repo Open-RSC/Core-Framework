@@ -1,4 +1,4 @@
-# rscemulation
+# RSCEmulation
 Upload of rscemulation's full source code and database configuration
 
 
