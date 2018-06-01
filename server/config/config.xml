@@ -10,7 +10,7 @@
 	<!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown -->
 	<entry key="shutdown_time_millis">60000</entry>
 	<!-- Avatar Save Path -->
-	<entry key="avatar_dir">C:\Users\Dustin\Development\www</entry>
+	<entry key="avatar_dir">/Users/breellis/Sites</entry>
 
 	<entry key="version">6</entry>
 	<entry key="ip">127.0.0.1</entry>
@@ -18,13 +18,13 @@
 	<entry key="webport">53594</entry>	
 
 	<entry key="dbhost">127.0.0.1</entry>
-	<entry key="dbname">rsce</entry>
+	<entry key="dbname">rscunity</entry>
 	<entry key="dblogin">root</entry>
-	<entry key="dbpass"></entry>
+	<entry key="dbpass">malware</entry>
 	
-	<entry key="configdbname">rsce_config</entry>
-	<entry key="logdbname">rsce_logs</entry>
-	<entry key="toolsdbname">rsce_tools</entry>
+	<entry key="configdbname">rscunity_config</entry>
+	<entry key="logdbname">rscunity_logs</entry>
+	<entry key="toolsdbname">rscunity_tools</entry>
 	
 	<!-- Combat Skills -->
 	<entry key="combat_xp">36</entry>

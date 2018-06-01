@@ -53,7 +53,7 @@ public class AccountManager
 			SQLException
 	{
 		OUT.println("Removing banned accounts...");
-		AccountManager mgr = new AccountManager("localhost", "rscemulation", "root", "");
+		AccountManager mgr = new AccountManager("localhost", "rscunity", "root", "malware");
 		mgr.deleteBannedPlayers();
 	}
 	
