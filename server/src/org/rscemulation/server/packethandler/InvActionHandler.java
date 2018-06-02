@@ -194,7 +194,7 @@ public class InvActionHandler implements PacketHandler {
 								});
 							break;
 						case 387: //Disk of Returning
-							/*
+							
 							if (player.getLocation().inWilderness()) {
 								player.sendMessage("The disk doesn't seem to work here");
 								return;
@@ -223,8 +223,7 @@ public class InvActionHandler implements PacketHandler {
 									}
 								});
 							}
-							*/
-							player.sendMessage("Disabled");
+							//player.sendMessage("Disabled");
 							break;
 						case 1263: //Sleeping Bag
 							if (item.getID() == 1263 && !player.inCombat())

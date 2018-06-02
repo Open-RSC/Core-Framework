@@ -46,12 +46,11 @@ public class NpcCommand implements PacketHandler {
 							}
 						}
 						
-						private void handlePickPocket() 
+						/*private void handlePickPocket() 
 						{								
 							final PickPocketDef pickpocket = EntityHandler.getPickpocketDefinition(affectedNpc.getID());
-						}
+						}*/
 
-						/*
 						private void handlePickPocket() {
 							final PickPocketDef pickpocket = EntityHandler.getPickpocketDefinition(affectedNpc.getID());
 							if (pickpocket != null) {
@@ -87,7 +86,7 @@ public class NpcCommand implements PacketHandler {
 								}
 							} else
 								owner.setBusy(false);
-						}	*/						
+						}
 					});
 				}
 			}
