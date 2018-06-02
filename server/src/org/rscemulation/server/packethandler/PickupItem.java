@@ -60,7 +60,8 @@ public class PickupItem implements PacketHandler {
 						if (item != null) {
 							if (!(owner.isRemoved() || owner.isBusy() || owner.isRanging() || !owner.nextTo(item) || owner.getStatus() != Action.TAKING_GITEM)) {
 								owner.resetAllExceptDMing();
-								if (player.getInventory().full() && !item.getDef().isStackable() || item.getDef().isNotable())
+								//if (player.getInventory().full() && !item.getDef().isStackable() || item.getDef().isNotable())
+                                                                if (player.getInventory().full())
 								{
 									owner.sendMessage("You do not have enough room in your inventory");
 									return;

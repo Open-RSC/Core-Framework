@@ -579,7 +579,7 @@ CREATE TABLE `rscd_bank` (
 
 LOCK TABLES `rscd_bank` WRITE;
 /*!40000 ALTER TABLE `rscd_bank` DISABLE KEYS */;
-INSERT INTO `rscd_bank` VALUES (1,10,9999,0);
+INSERT INTO `rscd_bank` VALUES (1,1288,1,33),(1,1119,1,32),(1,581,1,31),(1,580,1,30),(1,579,1,29),(1,578,1,28),(1,577,1,27),(1,576,1,26),(1,828,1,25),(1,832,1,24),(1,831,1,23),(1,981,1,22),(1,766,1,21),(1,656,1,20),(1,647,9999,19),(1,573,1,18),(1,525,1,17),(1,387,1,16),(1,1041,99,15),(1,1035,1,14),(1,1034,1,13),(1,1033,1,12),(1,1032,1,11),(1,1093,1,10),(1,1095,1,9),(1,1096,1,8),(1,422,1,7),(1,795,1,6),(1,1289,1,5),(1,575,2,4),(1,609,1,3),(1,16,1,2),(1,81,1,1),(1,10,100939654,0),(1,1263,1,34),(1,1278,1,35),(1,1216,1,36),(1,702,1,37),(1,703,1,38);
 /*!40000 ALTER TABLE `rscd_bank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -623,7 +623,7 @@ CREATE TABLE `rscd_curstats` (
 
 LOCK TABLES `rscd_curstats` WRITE;
 /*!40000 ALTER TABLE `rscd_curstats` DISABLE KEYS */;
-INSERT INTO `rscd_curstats` VALUES ('51697882930',1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `rscd_curstats` VALUES ('51697882930',114,114,115,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,1);
 /*!40000 ALTER TABLE `rscd_curstats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -708,7 +708,7 @@ CREATE TABLE `rscd_experience` (
 
 LOCK TABLES `rscd_experience` WRITE;
 /*!40000 ALTER TABLE `rscd_experience` DISABLE KEYS */;
-INSERT INTO `rscd_experience` VALUES ('51697882930',0,0,0,1154,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `rscd_experience` VALUES ('51697882930',13044835,13044835,13044835,13044835,13038319,13034557,13034431,13034431,13034431,13034431,13034431,13034431,13034431,13034431,13034431,13034797,13034431,13034431,13034431,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `rscd_experience` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -787,7 +787,7 @@ CREATE TABLE `rscd_invitems` (
 
 LOCK TABLES `rscd_invitems` WRITE;
 /*!40000 ALTER TABLE `rscd_invitems` DISABLE KEYS */;
-INSERT INTO `rscd_invitems` VALUES ('51697882930',81,1,0,1),('51697882930',10,99929999,0,0);
+INSERT INTO `rscd_invitems` VALUES ('51697882930',401,1,1,5),('51697882930',402,1,1,4),('51697882930',594,1,1,3),('51697882930',1213,1,1,2),('51697882930',971,1,1,1),('51697882930',597,1,1,0);
 /*!40000 ALTER TABLE `rscd_invitems` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -918,7 +918,7 @@ CREATE TABLE `rscd_players` (
 
 LOCK TABLES `rscd_players` WRITE;
 /*!40000 ALTER TABLE `rscd_players` DISABLE KEYS */;
-INSERT INTO `rscd_players` VALUES ('51697882930','testing',1,1,3,NULL,28,NULL,549,594,0,0,0,0,0,0,1,1,0,1,1,0,2,3,14,7,1,1,2,1,0,NULL,NULL,NULL,'0',0,'0.0.0.0',1527887109,0,0,'127.0.0.1',0,NULL,1,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x');
+INSERT INTO `rscd_players` VALUES ('51697882930','testing',1,1,123,NULL,1881,NULL,216,450,40,0,0,0,0,0,1,1,0,1,1,0,2,3,14,7,1,1,2,1,0,NULL,NULL,NULL,'0',0,'0.0.0.0',1527969466,0,0,'127.0.0.1',0,NULL,1,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x');
 /*!40000 ALTER TABLE `rscd_players` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1037,7 +1037,8 @@ CREATE TABLE `teleport_locations` (
   `y` int(5) NOT NULL,
   `description` varchar(255) NOT NULL,
   `command` varchar(255) NOT NULL,
-  `added_by` varchar(255) NOT NULL
+  `added_by` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1047,6 +1048,7 @@ CREATE TABLE `teleport_locations` (
 
 LOCK TABLES `teleport_locations` WRITE;
 /*!40000 ALTER TABLE `teleport_locations` DISABLE KEYS */;
+INSERT INTO `teleport_locations` VALUES (1,226,447,'Edgeville','edgeville','Marwolf'),(2,110,508,'Varrock','varrock','Marwolf'),(3,122,648,'Lumbridge','lumbridge','Marwolf'),(4,214,632,'Draynor','draynor','Marwolf'),(5,291,636,'Falador','falador','Marwolf'),(6,438,500,'Catherby','catherby','Marwolf'),(7,549,594,'Ardougne','ardy','Marwolf'),(8,793,24,'Jail','jail','Marwolf'),(9,70,1640,'Modroom','modroom','Marwolf'),(10,1,3456,'Blackhole','blackhole','Marwolf'),(11,360,696,'Karamja','karamja','Marwolf'),(12,72,696,'Al Kharid','al','Marwolf'),(13,516,460,'Seers Village','seers','Marwolf'),(14,587,761,'Yanille','yanille','Marwolf');
 /*!40000 ALTER TABLE `teleport_locations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1233,4 +1235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-01 22:31:35
+-- Dump completed on 2018-06-02 16:19:50

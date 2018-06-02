@@ -78,7 +78,7 @@ public class CommandHandler implements PacketHandler
 			player.sendMessage(player.getLocation()+" ");
 		}
 		
-		if (cmd.equals("online") && player.isMod() && player.unlockMod()) 
+		if (cmd.equals("online") && player.isMod()) 
 		{
 			StringBuilder sb = new StringBuilder();
 			synchronized (World.getPlayers()) 
@@ -106,7 +106,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Set invisible
 		 */
-		if (cmd.equals("invisible") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("invisible") && (player.isMod() || player.isDev())) 
 		{
 			player.invisible = !player.invisible;
 			player.sendMessage(Config.PREFIX + "You are now " + (player.invisible ? "invisible" : "visible"));
@@ -120,64 +120,9 @@ public class CommandHandler implements PacketHandler
 			player.removeFromCtf(player);
 			player.sendAlert("You have been removed from CTF");
 		}
-		/*
-		 * Staff unlock codes
-		 */
-		if ((cmd.equals("unlock")) && (player.isMod() || player.isDev()) || player.isEvent()) 
-		{
-			if (args.length > 0) 
-			{
-				if (player.isAdmin()) 
-				{
-					if (!player.unlockAdmin())
-					if (args[0].equalsIgnoreCase("wolf")) 
-					{
-						player.setAdmin();
-						player.sendMessage(Config.PREFIX + "You have unlocked Administrator access");
-					}
-				} 
-				else 
-				if (player.isMod()) 
-				{
-					if (!player.unlockMod())
-					if (args[0].equalsIgnoreCase("wolf")) 
-					{
-						player.setMod();
-						player.invisible = true;
-						//player.sendMessage(Config.PREFIX + "You are now " + (player.invisible ? "invisible" : "visible"));
-						//if (player.invisible)
-						for (Player x : player.getViewArea().getPlayersInView())
-						x.removeWatchedPlayer(player);
-						player.sendMessage(Config.PREFIX + "You have unlocked Moderator access");
-					}
-				} 
-				else 
-				if (player.isDev()) 
-				{
-					if (!player.unlockDev())
-					if (args[0].equalsIgnoreCase("wolf")) 
-					{
-						player.setDev();
-						player.sendMessage(Config.PREFIX + "You have unlocked Developer access");
-					}		
-				}
-				else
-				if (player.isEvent())
-				{
-					if (!player.unlockEvent())
-					{
-						if (args[0].equalsIgnoreCase("wolf")) 
-						{
-							player.setEvent();
-							player.sendMessage(Config.PREFIX + "You have unlocked Event Moderator access");
-						}		
-					}
-				}
-			}
-		} 
 		if (cmd.equals("say") || cmd.equals("s")) 
 		{
-			if ((player.isMod() && !player.unlockMod()) || ((player.isDev() && !player.unlockDev())) || ((player.isAdmin() && !player.unlockAdmin())) || ((player.isEvent() && !player.unlockEvent())))
+			if ((player.isMod()) || ((player.isDev())) || ((player.isAdmin())) || ((player.isEvent())))
 				return;
 			
 			if (player.getPrivacySetting(4)) 
@@ -232,7 +177,7 @@ public class CommandHandler implements PacketHandler
 			/*
 			 * Alert player
 			 */
-			if (cmd.equals("alert") && player.isMod() && player.unlockMod()) 
+			if (cmd.equals("alert") && player.isMod()) 
 			{
 				String message = "";
 				if (args.length > 0) 
@@ -251,7 +196,7 @@ public class CommandHandler implements PacketHandler
 			player.sendMessage(Config.PREFIX + "Syntax: ALERT [name] [message]");	
 		} 
 		else
-		if (cmd.equals("1vs1") && player.isAdmin() && player.unlockAdmin())
+		if (cmd.equals("1vs1") && player.isAdmin())
 		{
 			if(args.length != 1)
 			{
@@ -273,7 +218,7 @@ public class CommandHandler implements PacketHandler
 			}
 		}
 		else
-			if (cmd.equals("iplimit") && player.isAdmin() && player.unlockAdmin())
+			if (cmd.equals("iplimit") && player.isAdmin())
 			{
 				if(args.length != 1)
 				{
@@ -297,7 +242,7 @@ public class CommandHandler implements PacketHandler
 		else
 		if (cmd.equals("skull")) 
 		{
-			if (args.length > 0 && player.isAdmin() && player.unlockAdmin() || player.isMod() && player.unlockMod()) 
+			if (args.length > 0 && player.isAdmin() || player.isMod()) 
 			{
 				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 				
@@ -319,7 +264,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Heal player
 		 */
-		if (cmd.equals("heal") && player.isAdmin() && player.unlockAdmin()) 
+		if (cmd.equals("heal") && player.isAdmin()) 
 		{
 			if (args.length > 0) 
 			{
@@ -375,7 +320,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Mute world
 		 */
-		if (cmd.equals("muted") && player.isAdmin() && player.unlockAdmin()) 
+		if (cmd.equals("muted") && player.isAdmin()) 
 		{
 			World.muted = !World.muted;
 			synchronized (World.getPlayers()) 
@@ -392,7 +337,7 @@ public class CommandHandler implements PacketHandler
 			 */
 			if (cmd.equals("fatigue")) 
 			{
-				if (args.length > 0 && player.isMod() && player.unlockMod()) 
+				if (args.length > 0 && player.isMod()) 
 				{
 					Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 					if (p != null) 
@@ -425,7 +370,7 @@ public class CommandHandler implements PacketHandler
 					player.sendFatigue();
 				}
 			}
-		if (cmd.equals("ip") && player.isAdmin() && player.unlockAdmin()) 
+		if (cmd.equals("ip") && player.isAdmin()) 
 		{
 			if (args.length != 1) 
 			{
@@ -445,7 +390,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else 
-		if (cmd.equals("info") && player.isMod() && player.unlockMod()) 
+		if (cmd.equals("info") && player.isMod()) 
 		{
 			if (args.length != 1) 
 			{
@@ -466,7 +411,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Kick player
 		 */
-		if (cmd.equals("kick") && player.isMod() && player.unlockMod()) 
+		if (cmd.equals("kick") && player.isMod()) 
 		{
 			if (args.length != 1) 
 			{
@@ -492,7 +437,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Ban player
 		 */
-		if (cmd.equals("ban") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("ban") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
 			{
@@ -517,7 +462,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Unban player
 		 */
-		if (cmd.equals("unban") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("unban") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
 			{
@@ -530,7 +475,7 @@ public class CommandHandler implements PacketHandler
 			player.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");				
 		}
 		else 
-		if (cmd.equals("mute") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("mute") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
 			{
@@ -553,7 +498,7 @@ public class CommandHandler implements PacketHandler
 		 * Unmute player
 		 * ::unmute <playername>
 		 */
-		if (cmd.equals("unmute") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("unmute") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
 			{
@@ -576,7 +521,7 @@ public class CommandHandler implements PacketHandler
 		 * Spawn NPC
 		 * ::npc <id> 
 		 */
-		if (cmd.equals("npc") && (player.isAdmin() && player.unlockAdmin() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("npc") && (player.isAdmin() || player.isDev())) 
 		{
 			if (args.length == 0) 
 			{
@@ -647,7 +592,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Teleport single-click
 		 */
-		if (cmd.equals("teleport") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+		if (cmd.equals("teleport") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			player.resetLevers();
 			if (args.length == 0) 
@@ -710,7 +655,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("put") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+		if (cmd.equals("put") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			if (args.length != 1) 
 			{
@@ -739,7 +684,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("return") && player.isMod() && player.unlockMod()) 
+		if (cmd.equals("return") && player.isMod()) 
 		{
 			if (args.length != 1) 
 			{
@@ -768,7 +713,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("jail") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+		if (cmd.equals("jail") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			
@@ -784,7 +729,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("release") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+		if (cmd.equals("release") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			p.teleport(225, 447, false);
@@ -792,7 +737,7 @@ public class CommandHandler implements PacketHandler
 			player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
 		} 
 		else 
-		if (cmd.equals("goto") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev())) 
+		if (cmd.equals("goto") && (player.isMod() || player.isDev())) 
 		{
 			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			
@@ -807,7 +752,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("restart") && (player.isAdmin() && player.unlockAdmin() || player.isDev() && player.unlockDev()))
+		if (cmd.equals("restart") && (player.isAdmin() || player.isDev()))
 		{
 			String message = "";
 			if (args.length > 0) {
@@ -818,7 +763,7 @@ public class CommandHandler implements PacketHandler
 			World.getWorld().getEventPump().submit(new ShutdownEvent(true, message));
 		}
 		else 
-		if (cmd.equals("update") && player.isAdmin() && player.unlockAdmin())
+		if (cmd.equals("update") && player.isAdmin())
 		{
 			String message = "";
 			if (args.length > 0) 
@@ -831,7 +776,7 @@ public class CommandHandler implements PacketHandler
 			}
 			World.getWorld().getEventPump().submit(new ShutdownEvent(false, message));
 		} 
-		if (cmd.equals("item") && player.isAdmin() && player.unlockAdmin())
+		if (cmd.equals("item") && player.isAdmin())
 		{
 			if (args.length < 1 || args.length > 2)
 			{
@@ -858,7 +803,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		} 
-		if (cmd.equals("object") && (player.isAdmin() && player.unlockAdmin() || player.isDev() && player.unlockDev()))
+		if (cmd.equals("object") && (player.isAdmin() || player.isDev()))
 		{
 			switch (args.length) {
 				case 0: // Remove Object (from both in-game and database)
@@ -923,7 +868,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("door") && (player.isAdmin() && player.unlockAdmin() || player.isDev() && player.unlockDev()))
+		if (cmd.equals("door") && (player.isAdmin() || player.isDev()))
 		{
 			int id = -1, direction = 0;
 			boolean sql;
@@ -994,7 +939,7 @@ public class CommandHandler implements PacketHandler
 			player.sendInventory();
 		} else if (cmd.equals("wipebank") && player.isMod())
 			player.getBank().getItems().clear();			
-		else if (cmd.equals("kill") && player.isAdmin() && player.unlockAdmin()) {
+		else if (cmd.equals("kill") && player.isAdmin()) {
 			if (args.length != 1)
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: KILL [user]");
 			else {
@@ -1012,7 +957,7 @@ public class CommandHandler implements PacketHandler
 						p.killedBy(player, false);						
 				}
 			}
-		} else if (cmd.equals("damage") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("damage") && player.isAdmin()) {
 			if (args.length != 2)
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: DAMAGE [user] [amount]");
 			else {
@@ -1031,7 +976,7 @@ public class CommandHandler implements PacketHandler
 						p.killedBy(player, false);	
 				}
 			}
-		} else if (cmd.equals("stats") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("stats") && player.isAdmin()) {
 			int level = 99;
 			if (args.length > 0) {
 				try {
@@ -1054,7 +999,7 @@ public class CommandHandler implements PacketHandler
 			player.setCombatLevel(Formulae.getCombatlevel(player.getMaxStats()));
 			player.sendStats();
 			player.sendMessage(Config.PREFIX + "Set all stats to level " + level + ".");
-		} else if (cmd.equals("summonall") && player.isAdmin() && player.unlockAdmin()){
+		} else if (cmd.equals("summonall") && player.isAdmin()){
 			if (args.length == 0) {
 				synchronized (World.getPlayers()) {
 					for (Player p : World.getPlayers()) {
@@ -1093,7 +1038,7 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}	
-		} else if(cmd.equals("returnall") && player.isAdmin() && player.unlockAdmin()) {
+		} else if(cmd.equals("returnall") && player.isAdmin()) {
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
 					if (p != null) {
@@ -1104,7 +1049,7 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equals("massitem") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("massitem") && player.isAdmin()) {
 			if (args.length != 2) {
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: MASSITEM [id] [amount]");
 				return;
@@ -1184,7 +1129,7 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equals("npcevent") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("npcevent") && player.isAdmin()) {
 			if (args.length < 1) {
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent <npc_id> <npc_amount> <item_id> [<item_amount>]");
 				return;
@@ -1291,7 +1236,7 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equals("massnpc") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("massnpc") && player.isAdmin()) {
 			if (args.length != 1) {
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: NPC [id]");
 				return;
@@ -1383,7 +1328,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		}  
-		else if (cmd.equals("playertalk") && player.isAdmin() && player.unlockAdmin()) {
+		else if (cmd.equals("playertalk") && player.isAdmin()) {
 			if (args.length < 2) {
 				player.sendMessage(Config.PREFIX + "Invalid syntax. Try ::PLAYERTALK <player> <msg>");
 				return;
@@ -1398,7 +1343,7 @@ public class CommandHandler implements PacketHandler
 				return;
 			}
 			pl.addMessageToChatQueue(msg);
-		} else if (cmd.equals("npctalk") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("npctalk") && player.isAdmin()) {
 			String newStr = "";
 			for (int i = 1; i < args.length; i++)
 				newStr = newStr += args[i] + " ";
@@ -1410,7 +1355,7 @@ public class CommandHandler implements PacketHandler
 					p.informOfNpcMessage(new ChatMessage(n, newStr, p));		
 			} else
 				player.sendMessage(Config.PREFIX + "Invalid NPC");
-		} if (cmd.equals("stat") && player.isAdmin() && player.unlockAdmin()) {
+		} if (cmd.equals("stat") && player.isAdmin()) {
 			if (args.length < 2 || args.length > 3)
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: STAT [stat] [level] [user]");
 			else {
@@ -1447,7 +1392,7 @@ public class CommandHandler implements PacketHandler
 				} else
 					player.sendMessage(Config.PREFIX + "Invalid stat");
 			}
-		} else if (cmd.equals("smitenpc") && (player.isAdmin() && player.unlockAdmin() || player.isDev() && player.unlockDev())) {
+		} else if (cmd.equals("smitenpc") && (player.isAdmin() || player.isDev())) {
 			if (args.length == 2) {
 				try {
 					int id = Integer.parseInt(args[0]);
@@ -1529,7 +1474,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} else if (cmd.equals("event")) {
 			if (args.length > 1) {
-				if (player.isMod() && player.unlockMod() || player.isEvent() && player.unlockEvent()) {
+				if (player.isMod() || player.isEvent()) {
 					if (!World.eventRunning) {
 						try {
 							int low = Integer.parseInt(args[0]);
@@ -1571,7 +1516,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		} else 
-			if (cmd.equals("endevent") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+			if (cmd.equals("endevent") && (player.isMod() || player.isDev() || player.isEvent())) 
 			{
 			if (World.eventRunning) {
 				World.setEvent(-1, -1);
@@ -1581,13 +1526,13 @@ public class CommandHandler implements PacketHandler
 				}
 			} else 
 				player.sendMessage(Config.PREFIX + "No event is currently running");
-			} else if (cmd.equals("islandsafe") && (player.isEvent() && player.unlockEvent() || player.isMod() && player.unlockMod())) {
+			} else if (cmd.equals("islandsafe") && (player.isEvent() || player.isMod())) {
 				World.islandSafe = !World.islandSafe;
 				player.sendMessage(Config.PREFIX + "Safe mode " + (World.islandSafe ? "enabled" : "disabled"));
-			} else if (cmd.equals("islandcombat") && (player.isEvent() && player.unlockEvent() || player.isMod() && player.unlockMod())) {
+			} else if (cmd.equals("islandcombat") && (player.isEvent() || player.isMod())) {
 				World.islandCombat = !World.islandCombat;
 				player.sendMessage(Config.PREFIX + "Combat " + (World.islandCombat ? "disabled" : "enabled"));
-			} else if(cmd.equals("ipban") && player.isAdmin() && player.unlockAdmin()) {
+			} else if(cmd.equals("ipban") && player.isAdmin()) {
 			if (args.length != 1) {
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: IPBAN [ip]");
 				return;
@@ -1608,7 +1553,7 @@ public class CommandHandler implements PacketHandler
 				).start();
 				
 				player.sendMessage(Config.PREFIX + args[0] + " was successfully IP banned");
-		} else if (cmd.equals("unipban") && player.isAdmin() && player.unlockAdmin()) {
+		} else if (cmd.equals("unipban") && player.isAdmin()) {
 			if (args.length != 1) {
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: UNIPBAN [ip]");
 				return;
@@ -1658,7 +1603,7 @@ public class CommandHandler implements PacketHandler
 		} else if (cmd.equals("lotterypot")) {
 	        World.getLotteryPot(player);     
 		} 
-		else if(cmd.equals("godspells") && player.isAdmin() && player.unlockAdmin())
+		else if(cmd.equals("godspells") && player.isAdmin())
 		{
 			if(args.length != 1)
 			{
@@ -1679,7 +1624,7 @@ public class CommandHandler implements PacketHandler
 				return;
 			}
 		}
-		else if(cmd.equals("weakens") && player.isAdmin() && player.unlockAdmin())
+		else if(cmd.equals("weakens") && player.isAdmin())
 		{
 			if(args.length != 1)
 			{
@@ -1701,7 +1646,7 @@ public class CommandHandler implements PacketHandler
 			}
 		}
 		else
-			if (cmd.equals("startlottery") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+			if (cmd.equals("startlottery") && (player.isMod() || player.isDev() || player.isEvent())) 
 			{
 	        if (!World.lotteryRunning())
 	                if (args.length != 1)
@@ -1713,7 +1658,7 @@ public class CommandHandler implements PacketHandler
 	                          
 					} 
 					else 
-					if (cmd.equals("stoplottery") && (player.isMod() && player.unlockMod() || player.isDev() && player.unlockDev() || player.isEvent() && player.unlockEvent())) 
+					if (cmd.equals("stoplottery") && (player.isMod() || player.isDev() || player.isEvent())) 
 					{
 					if (World.lotteryRunning())
 						World.stopLottery();
