@@ -130,7 +130,7 @@ public class CommandHandler implements PacketHandler
 				if (player.isAdmin()) 
 				{
 					if (!player.unlockAdmin())
-					if (args[0].equalsIgnoreCase("1362012")) 
+					if (args[0].equalsIgnoreCase("wolf")) 
 					{
 						player.setAdmin();
 						player.sendMessage(Config.PREFIX + "You have unlocked Administrator access");
@@ -140,7 +140,7 @@ public class CommandHandler implements PacketHandler
 				if (player.isMod()) 
 				{
 					if (!player.unlockMod())
-					if (args[0].equalsIgnoreCase("weareone")) 
+					if (args[0].equalsIgnoreCase("wolf")) 
 					{
 						player.setMod();
 						player.invisible = true;
@@ -155,7 +155,7 @@ public class CommandHandler implements PacketHandler
 				if (player.isDev()) 
 				{
 					if (!player.unlockDev())
-					if (args[0].equalsIgnoreCase("7121992")) 
+					if (args[0].equalsIgnoreCase("wolf")) 
 					{
 						player.setDev();
 						player.sendMessage(Config.PREFIX + "You have unlocked Developer access");
@@ -166,7 +166,7 @@ public class CommandHandler implements PacketHandler
 				{
 					if (!player.unlockEvent())
 					{
-						if (args[0].equalsIgnoreCase("3v3ntrsc3")) 
+						if (args[0].equalsIgnoreCase("wolf")) 
 						{
 							player.setEvent();
 							player.sendMessage(Config.PREFIX + "You have unlocked Event Moderator access");
