@@ -579,6 +579,7 @@ CREATE TABLE `rscd_bank` (
 
 LOCK TABLES `rscd_bank` WRITE;
 /*!40000 ALTER TABLE `rscd_bank` DISABLE KEYS */;
+INSERT INTO `rscd_bank` VALUES (1,10,9999,0);
 /*!40000 ALTER TABLE `rscd_bank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -786,6 +787,7 @@ CREATE TABLE `rscd_invitems` (
 
 LOCK TABLES `rscd_invitems` WRITE;
 /*!40000 ALTER TABLE `rscd_invitems` DISABLE KEYS */;
+INSERT INTO `rscd_invitems` VALUES ('51697882930',81,1,0,1),('51697882930',10,99929999,0,0);
 /*!40000 ALTER TABLE `rscd_invitems` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -916,7 +918,7 @@ CREATE TABLE `rscd_players` (
 
 LOCK TABLES `rscd_players` WRITE;
 /*!40000 ALTER TABLE `rscd_players` DISABLE KEYS */;
-INSERT INTO `rscd_players` VALUES ('51697882930','testing',1,1,3,NULL,28,NULL,218,450,0,0,0,0,0,0,1,1,0,0,1,0,2,0,14,11,4,8,5,0,0,NULL,NULL,NULL,'0',0,'0.0.0.0',1527813424,0,0,'127.0.0.1',0,NULL,1,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x');
+INSERT INTO `rscd_players` VALUES ('51697882930','testing',1,1,3,NULL,28,NULL,549,594,0,0,0,0,0,0,1,1,0,1,1,0,2,3,14,7,1,1,2,1,0,NULL,NULL,NULL,'0',0,'0.0.0.0',1527887109,0,0,'127.0.0.1',0,NULL,1,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x');
 /*!40000 ALTER TABLE `rscd_players` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1231,4 +1233,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-31 20:52:20
+-- Dump completed on 2018-06-01 22:31:35

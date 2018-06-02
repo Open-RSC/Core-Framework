@@ -1,5 +1,5 @@
 .DS_Store
-
+.svn*
 /server/nbproject/private/
 /server/build/
 /server/dist/
