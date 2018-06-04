@@ -51,7 +51,7 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 	@Override
 	public void componentShown(ComponentEvent arg0) {}
 
-	public void downloadCache() {
+	public static void downloadCache() {
 		AppletUtils.DISPLAY_MESSAGE = "Checking dictionarys";
 		if (AppletUtils.doDirChecks())
 			try {
@@ -59,7 +59,7 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 				for (final File file : AppletUtils.CACHE.listFiles())
 					file.delete();
 				AppletUtils.DISPLAY_MESSAGE = "Downloading cache ";
-				new VirtualBrowser().getRaw(new URL("http://rscunity.com/play/rscunity.zip"), new ProgressCallback() {
+				new VirtualBrowser().getRaw(new URL("http://localhost/play/rscunity.zip"), new ProgressCallback() {
 					@Override
 					public void onComplete(byte[] bytes) {
 						try {
