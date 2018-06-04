@@ -1,15 +1,22 @@
-.DS_Store
-.svn*
-/server/nbproject/private/
-/server/build/
-/server/dist/
-/client/nbproject/private/
-/client/build/
-/client/dist/
-/client-opengl/nbproject/private/
-/client-opengl/build/
-/client-installer/nbproject/private/
-/client-installer/build/
-/client-installer/dist/
-*.jnlp
-*.html
+#ant specific
+*/dist/
+*/build/
+
+#netbeans specific
+core
+*/nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+
+#java specific
+*.class
+
+#general swap/backup files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
+*.svn
