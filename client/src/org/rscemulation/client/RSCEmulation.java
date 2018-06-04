@@ -410,7 +410,7 @@ public abstract class RSCEmulation<Delegate_T extends ImplementationDelegate>
 	@Override
 	public void run()
 	{
-		loadingPhase = LoadingPhase.LOADING;
+                loadingPhase = LoadingPhase.LOADING;
 		drawLoadingScreen();
 		loadGame();
 		

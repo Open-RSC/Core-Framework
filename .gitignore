@@ -11,3 +11,5 @@
 /client-installer/nbproject/private/
 /client-installer/build/
 /client-installer/dist/
+*.jnlp
+*.html

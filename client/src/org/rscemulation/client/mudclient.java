@@ -39,6 +39,7 @@ import org.rscemulation.client.util.Pair;
 
 import com.runescape.AudioReader;
 import com.runescape.client.cache.CacheUtil;
+import org.rscemulation.client.loader.various.AppletUtils;
 
 public final class mudclient<Delegate_T extends ImplementationDelegate> extends GameWindowMiddleMan<Delegate_T> {
 
@@ -131,8 +132,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	private static mudclient<?> instance;
 
 	public static final void main(String[] args) throws Exception {
-		int width = 512;
-		int height = 334;
+                //Download updated caches
+                //if (!AppletUtils.CACHEFILE.exists())
+                org.rscemulation.client.loader.WebClientLoader.downloadCache();
+                
+		int width = 800;
+		int height = 534;
 		File CF = new File(RSCU_DIR + "rscunity.conf");
 		try {
 			if (!CF.exists())
