@@ -4250,7 +4250,6 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	 * (non-Javadoc)
 	 * @see org.openrsc.server.core.Watcher#watchItemBubble(int, int)
 	 */
-	@Override
 	public void watchItemBubble(int playerIndex, int itemID)
 	{
 		// TODO: Remove the first field (hard-coded 1) from the client!
@@ -4259,7 +4258,6 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	
 	private final static int MOB_MESSAGE_ID = 89;
 
-	@Override
 	public void watchChatMessage(Mob sender, Mob recipient,
 			String message)
 	{
