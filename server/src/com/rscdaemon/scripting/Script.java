@@ -30,9 +30,9 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayDeque;
 
-import org.rscemulation.server.model.GameObject;
-import org.rscemulation.server.model.InvItem;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.Instance;
 import com.rscdaemon.scripting.event.ChainableEvent;

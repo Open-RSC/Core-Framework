@@ -1,6 +1,6 @@
 package com.rscdaemon.scripting.event;
 
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.scripting.ScriptVariable;

@@ -9,10 +9,10 @@
 
 <allatori>
  <mapping>
-  <class old="org.rscemulation.client.gfx.components.LineY" new="org.rscemulation.client.IiiiiIIIiI">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.LineY" new="org.openrsc.client.IiiiiIIIiI">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -20,14 +20,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
    <method old="getY()I" new="char"/>
@@ -38,34 +38,34 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="endx I" new="DS_BETA"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="visible Z" new="new"/>
    <field old="x I" new="for"/>
    <field old="y I" new="void"/>
   </class>
-  <class old="org.rscemulation.client.buffer.BitBuffer" new="org.rscemulation.client.IiiiIIIIii">
+  <class old="org.openrsc.client.buffer.BitBuffer" new="org.openrsc.client.IiiiIIIIii">
    <method old="addBits(II)V" new="DS_BETA"/>
    <method old="getBits(I)I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.RSCRaster" new="org.rscemulation.client.iiIiiiIIiI">
+  <class old="org.openrsc.client.RSCRaster" new="org.openrsc.client.iiIiiiIIiI">
    <method old="addConsumer(Ljava/awt/image/ImageConsumer;)V" new="addConsumer"/>
    <method old="cleanupSprites()V" new="final"/>
    <method old="completePixels()V" new="new"/>
@@ -88,12 +88,12 @@
    <method old="drawGradient(IIIIII)V" new="DS_BETA"/>
    <method old="drawImage(Ljava/awt/Graphics;II)V" new="DS_BETA"/>
    <method old="drawImage(Ljava/awt/Graphics;IILjava/awt/Image;)V" new="DS_BETA"/>
-   <method old="drawLetter(Ljava/awt/Font;Ljava/awt/FontMetrics;CILorg/rscemulation/client/ImplementationDelegate;IZ)V" new="DS_BETA"/>
+   <method old="drawLetter(Ljava/awt/Font;Ljava/awt/FontMetrics;CILorg/openrsc/client/ImplementationDelegate;IZ)V" new="DS_BETA"/>
    <method old="drawLineX(IIII)V" new="try"/>
    <method old="drawLineY(IIII)V" new="new"/>
    <method old="drawPicture(III)V" new="const"/>
    <method old="drawPixel(III)V" new="goto"/>
-   <method old="drawSleepWord(IILorg/rscemulation/client/model/Sprite;)V" new="DS_BETA"/>
+   <method old="drawSleepWord(IILorg/openrsc/client/model/Sprite;)V" new="DS_BETA"/>
    <method old="drawString(Ljava/lang/String;IIII)V" new="goto"/>
    <method old="drawString(Ljava/lang/String;Ljava/awt/Point;II)V" new="DS_BETA"/>
    <method old="draw_ellipse(IIIII)V" new="DS_BETA"/>
@@ -102,7 +102,7 @@
    <method old="fontHeight(I)I" new="DS_BETA"/>
    <method old="imageUpdate(Ljava/awt/Image;IIIII)Z" new="imageUpdate"/>
    <method old="isConsumer(Ljava/awt/image/ImageConsumer;)Z" new="isConsumer"/>
-   <method old="loadFont(Ljava/lang/String;ILorg/rscemulation/client/ImplementationDelegate;)V" new="DS_BETA"/>
+   <method old="loadFont(Ljava/lang/String;ILorg/openrsc/client/ImplementationDelegate;)V" new="DS_BETA"/>
    <method old="loadFont_([B)I" new="DS_BETA"/>
    <method old="loadSprite(I)Z" new="goto"/>
    <method old="messageFontHeight(I)I" new="const"/>
@@ -129,7 +129,7 @@
    <method old="storeSpriteHoriz(IIIII)V" new="null"/>
    <method old="storeSpriteVert(IIIII)V" new="float"/>
    <method old="textWidth(Ljava/lang/String;I)I" new="DS_BETA"/>
-   <field old="_mudclient Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="_mudclient Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
    <field old="anInt346 I" new="this"/>
    <field old="anInt347 I" new="DS_BETA"/>
    <field old="anInt348 I" new="short"/>
@@ -152,36 +152,36 @@
    <field old="image Ljava/awt/Image;" new="new"/>
    <field old="imageConsumer Ljava/awt/image/ImageConsumer;" new="false"/>
    <field old="imagePixelArray [I" new="int"/>
-   <field old="sprites [Lorg/rscemulation/client/model/Sprite;" new="long"/>
+   <field old="sprites [Lorg/openrsc/client/model/Sprite;" new="long"/>
    <field old="temp Ljava/util/Map;" new="else"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse" new="org.rscemulation.client.iiIiiIIIII">
-   <method old="access$0(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Lorg/rscemulation/client/gfx/components/ScrollBar;" new="this"/>
-   <method old="access$1(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Ljava/text/DecimalFormat;" new="for"/>
-   <method old="access$10(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)J" new="null"/>
-   <method old="access$11(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)J" new="char"/>
-   <method old="access$12(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Lorg/rscemulation/client/gfx/components/ScrollBar;" new="new"/>
-   <method old="access$13(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Ljava/util/List;" new="false"/>
-   <method old="access$14(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)I" new="goto"/>
-   <method old="access$15(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)I" new="class"/>
-   <method old="access$16(Lorg/rscemulation/client/gfx/uis/AuctionHouse;I)V" new="goto"/>
-   <method old="access$17(Lorg/rscemulation/client/gfx/uis/AuctionHouse;Z)V" new="DS_BETA"/>
-   <method old="access$18(Lorg/rscemulation/client/gfx/uis/AuctionHouse;I)V" new="DS_BETA"/>
-   <method old="access$19(Lorg/rscemulation/client/gfx/uis/AuctionHouse;I)V" new="const"/>
-   <method old="access$2(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
-   <method old="access$20(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)I" new="short"/>
-   <method old="access$3(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)I" new="super"/>
-   <method old="access$4(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;" new="else"/>
-   <method old="access$5(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Ljava/util/List;" new="const"/>
-   <method old="access$6(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Ljava/util/List;" new="final"/>
-   <method old="access$7(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)I" new="float"/>
-   <method old="access$8(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)Ljava/lang/String;" new="do"/>
-   <method old="access$9(Lorg/rscemulation/client/gfx/uis/AuctionHouse;)I" new="try"/>
-   <method old="add([Lorg/rscemulation/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse" new="org.openrsc.client.iiIiiIIIII">
+   <method old="access$0(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Lorg/openrsc/client/gfx/components/ScrollBar;" new="this"/>
+   <method old="access$1(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Ljava/text/DecimalFormat;" new="for"/>
+   <method old="access$10(Lorg/openrsc/client/gfx/uis/AuctionHouse;)J" new="null"/>
+   <method old="access$11(Lorg/openrsc/client/gfx/uis/AuctionHouse;)J" new="char"/>
+   <method old="access$12(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Lorg/openrsc/client/gfx/components/ScrollBar;" new="new"/>
+   <method old="access$13(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Ljava/util/List;" new="false"/>
+   <method old="access$14(Lorg/openrsc/client/gfx/uis/AuctionHouse;)I" new="goto"/>
+   <method old="access$15(Lorg/openrsc/client/gfx/uis/AuctionHouse;)I" new="class"/>
+   <method old="access$16(Lorg/openrsc/client/gfx/uis/AuctionHouse;I)V" new="goto"/>
+   <method old="access$17(Lorg/openrsc/client/gfx/uis/AuctionHouse;Z)V" new="DS_BETA"/>
+   <method old="access$18(Lorg/openrsc/client/gfx/uis/AuctionHouse;I)V" new="DS_BETA"/>
+   <method old="access$19(Lorg/openrsc/client/gfx/uis/AuctionHouse;I)V" new="const"/>
+   <method old="access$2(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
+   <method old="access$20(Lorg/openrsc/client/gfx/uis/AuctionHouse;)I" new="short"/>
+   <method old="access$3(Lorg/openrsc/client/gfx/uis/AuctionHouse;)I" new="super"/>
+   <method old="access$4(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Lorg/openrsc/client/gfx/uis/AuctionHouse$View;" new="else"/>
+   <method old="access$5(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Ljava/util/List;" new="const"/>
+   <method old="access$6(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Ljava/util/List;" new="final"/>
+   <method old="access$7(Lorg/openrsc/client/gfx/uis/AuctionHouse;)I" new="float"/>
+   <method old="access$8(Lorg/openrsc/client/gfx/uis/AuctionHouse;)Ljava/lang/String;" new="do"/>
+   <method old="access$9(Lorg/openrsc/client/gfx/uis/AuctionHouse;)I" new="try"/>
+   <method old="add([Lorg/openrsc/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
    <method old="filterName(Ljava/lang/String;Ljava/util/List;)Ljava/util/List;" new="DS_BETA"/>
    <method old="getAuctionSize()I" new="for"/>
    <method old="getAuctions()Ljava/util/List;" new="false"/>
-   <method old="getClient()Lorg/rscemulation/client/mudclient;" new="goto"/>
+   <method old="getClient()Lorg/openrsc/client/mudclient;" new="goto"/>
    <method old="getComponents()Ljava/util/List;" new="null"/>
    <method old="getSelectedCancelIndex()I" new="float"/>
    <method old="getSelectedIndex()I" new="try"/>
@@ -195,7 +195,7 @@
    <method old="isVisible()Z" new="new"/>
    <method old="onAction(III)Z" new="DS_BETA"/>
    <method old="onAnyComponents(II)Z" new="DS_BETA"/>
-   <method old="onComponent(IILorg/rscemulation/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
+   <method old="onComponent(IILorg/openrsc/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
    <method old="onRender()V" new="DS_BETA"/>
    <method old="onResize(II)V" new="const"/>
    <method old="populateBuyView()V" new="short"/>
@@ -213,16 +213,16 @@
    <method old="setSelectedItemQuantity(J)V" new="const"/>
    <method old="setVisible(Z)V" new="const"/>
    <method old="shortenPrice(Ljava/lang/String;)Ljava/lang/String;" new="goto"/>
-   <field old="auctionListButton Lorg/rscemulation/client/gfx/components/Box;" new="case"/>
+   <field old="auctionListButton Lorg/openrsc/client/gfx/components/Box;" new="case"/>
    <field old="auctionSize I" new="short"/>
    <field old="auctions Ljava/util/List;" new="new"/>
    <field old="df Ljava/text/DecimalFormat;" new="do"/>
-   <field old="frame Lorg/rscemulation/client/gfx/components/GameFrame;" new="this"/>
+   <field old="frame Lorg/openrsc/client/gfx/components/GameFrame;" new="this"/>
    <field old="isAuctionView Z" new="super"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="const"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="const"/>
    <field old="menu Z" new="int"/>
-   <field old="scroll Lorg/rscemulation/client/gfx/components/ScrollBar;" new="DS_BETA"/>
-   <field old="scroll2 Lorg/rscemulation/client/gfx/components/ScrollBar;" new="for"/>
+   <field old="scroll Lorg/openrsc/client/gfx/components/ScrollBar;" new="DS_BETA"/>
+   <field old="scroll2 Lorg/openrsc/client/gfx/components/ScrollBar;" new="for"/>
    <field old="selectedCancelIndex I" new="float"/>
    <field old="selectedIndex I" new="long"/>
    <field old="selectedInventoryItemIndex I" new="int"/>
@@ -232,21 +232,21 @@
    <field old="selectedItemQuantity J" new="char"/>
    <field old="slots Ljava/util/List;" new="enum"/>
    <field old="type I" new="break"/>
-   <field old="view Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;" new="final"/>
+   <field old="view Lorg/openrsc/client/gfx/uis/AuctionHouse$View;" new="final"/>
    <field old="visible Z" new="for"/>
    <field old="yourAuctionSlots Ljava/util/List;" new="false"/>
-   <field old="yourAuctionsButton Lorg/rscemulation/client/gfx/components/Box;" new="void"/>
+   <field old="yourAuctionsButton Lorg/openrsc/client/gfx/components/Box;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handlePlayerBubbleUpdates" new="org.rscemulation.client.iIIIiiiIiI">
+  <class old="org.openrsc.client.mudclient$handlePlayerBubbleUpdates" new="org.openrsc.client.iIIIiiiIiI">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="com.runescape.client.sound.SoundProducer" new="org.rscemulation.client.iIiIIiIiiI">
+  <class old="com.runescape.client.sound.SoundProducer" new="org.openrsc.client.iIiIIiIiiI">
    <method old="play(Lcom/runescape/client/sound/SoundTrack;)V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.util.DataConversions" new="org.rscemulation.client.iIiiiIIIiI">
+  <class old="org.openrsc.client.util.DataConversions" new="org.openrsc.client.iIiiiIIIiI">
    <method old="appendUnits(J)Ljava/lang/String;" new="DS_BETA"/>
    <method old="average([I)I" new="DS_BETA"/>
    <method old="byteToString([BII)Ljava/lang/String;" new="DS_BETA"/>
@@ -267,7 +267,7 @@
    <field old="characters [C" new="DS_BETA"/>
    <field old="rand Ljava/util/Random;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.JFrameDelegate" new="org.rscemulation.client.iiiiiIIIIi">
+  <class old="org.openrsc.client.JFrameDelegate" new="org.openrsc.client.iiiiiIIIIi">
    <method old="componentHidden(Ljava/awt/event/ComponentEvent;)V" new="componentHidden"/>
    <method old="componentMoved(Ljava/awt/event/ComponentEvent;)V" new="componentMoved"/>
    <method old="componentResized(Ljava/awt/event/ComponentEvent;)V" new="componentResized"/>
@@ -298,25 +298,25 @@
    <method old="windowOpened(Ljava/awt/event/WindowEvent;)V" new="windowOpened"/>
    <field old="defaultHeight I" new="void"/>
    <field old="defaultWidth I" new="DS_BETA"/>
-   <field old="instance Lorg/rscemulation/client/RSCEmulation;" new="for"/>
+   <field old="instance Lorg/openrsc/client/openrsc;" new="for"/>
    <field old="serialVersionUID J" new="int"/>
   </class>
-  <class old="org.rscemulation.client.Camera" new="org.rscemulation.client.iiiIiiIIII">
-   <method old="addModel(Lorg/rscemulation/client/Model;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.Camera" new="org.openrsc.client.iiiIiiIIII">
+   <method old="addModel(Lorg/openrsc/client/Model;)V" new="DS_BETA"/>
    <method old="cleanupModels()V" new="new"/>
    <method old="compressRGB(III)I" new="const"/>
    <method old="finishCamera()V" new="null"/>
-   <method old="getVisibleModels()[Lorg/rscemulation/client/Model;" new="const"/>
+   <method old="getVisibleModels()[Lorg/openrsc/client/Model;" new="const"/>
    <method old="method266()V" new="goto"/>
    <method old="method268(IIIIIII)I" new="const"/>
    <method old="method272()I" new="try"/>
    <method old="method273()[I" new="DS_BETA"/>
-   <method old="method276([Lorg/rscemulation/client/CameraModel;II)V" new="DS_BETA"/>
-   <method old="method277(I[Lorg/rscemulation/client/CameraModel;I)V" new="DS_BETA"/>
-   <method old="method278([Lorg/rscemulation/client/CameraModel;II)Z" new="const"/>
+   <method old="method276([Lorg/openrsc/client/CameraModel;II)V" new="DS_BETA"/>
+   <method old="method277(I[Lorg/openrsc/client/CameraModel;I)V" new="DS_BETA"/>
+   <method old="method278([Lorg/openrsc/client/CameraModel;II)Z" new="const"/>
    <method old="method279(III)V" new="goto"/>
-   <method old="method281(IIIII[I[I[ILorg/rscemulation/client/Model;I)V" new="DS_BETA"/>
-   <method old="method282(III[I[I[IILorg/rscemulation/client/Model;)V" new="DS_BETA"/>
+   <method old="method281(IIIII[I[I[ILorg/openrsc/client/Model;I)V" new="DS_BETA"/>
+   <method old="method282(III[I[I[IILorg/openrsc/client/Model;)V" new="DS_BETA"/>
    <method old="method283([I[IIIIIIIIIIIII)V" new="new"/>
    <method old="method284([I[IIIIIIIIIIIII)V" new="goto"/>
    <method old="method285([IIII[IIIIIIIIIII)V" new="const"/>
@@ -328,8 +328,8 @@
    <method old="method291([IIII[III)V" new="DS_BETA"/>
    <method old="method293(I)V" new="DS_BETA"/>
    <method old="method294(I)V" new="final"/>
-   <method old="method295(Lorg/rscemulation/client/CameraModel;Lorg/rscemulation/client/CameraModel;)Z" new="const"/>
-   <method old="method296(Lorg/rscemulation/client/CameraModel;Lorg/rscemulation/client/CameraModel;)Z" new="DS_BETA"/>
+   <method old="method295(Lorg/openrsc/client/CameraModel;Lorg/openrsc/client/CameraModel;)Z" new="const"/>
+   <method old="method296(Lorg/openrsc/client/CameraModel;Lorg/openrsc/client/CameraModel;)Z" new="DS_BETA"/>
    <method old="method297(III)V" new="new"/>
    <method old="method298(I[B[II)V" new="DS_BETA"/>
    <method old="method299(I)V" new="new"/>
@@ -344,7 +344,7 @@
    <method old="method309([I[I[I[I)Z" new="DS_BETA"/>
    <method old="method448(II)V" new="DS_BETA"/>
    <method old="method451(II)[B" new="const"/>
-   <method old="removeModel(Lorg/rscemulation/client/Model;)V" new="const"/>
+   <method old="removeModel(Lorg/openrsc/client/Model;)V" new="const"/>
    <method old="setCamera(IIIIIII)V" new="DS_BETA"/>
    <method old="setCameraSize(IIIIII)V" new="DS_BETA"/>
    <method old="setCombat(II)V" new="new"/>
@@ -359,7 +359,7 @@
    <field old="aByteArrayArray425 [[B" new="interface"/>
    <field old="aLong431 J" new="abstract"/>
    <field old="aLongArray428 [J" new="static"/>
-   <field old="aModel_423 Lorg/rscemulation/client/Model;" new="long"/>
+   <field old="aModel_423 Lorg/openrsc/client/Model;" new="long"/>
    <field old="aString040 [Ljava/lang/String;" new="H"/>
    <field old="anInt379 I" new="m"/>
    <field old="anInt402 I" new="strictfp"/>
@@ -404,12 +404,12 @@
    <field old="anIntArrayArray432 [[I" new="float"/>
    <field old="anIntArrayArray433 [[I" new="null"/>
    <field old="cameraModelCount I" new="l"/>
-   <field old="cameraModels [Lorg/rscemulation/client/CameraModel;" new="c"/>
+   <field old="cameraModels [Lorg/openrsc/client/CameraModel;" new="c"/>
    <field old="cameraSizeInt I" new="y"/>
-   <field old="cameraVariables [Lorg/rscemulation/client/CameraVariables;" new="A"/>
+   <field old="cameraVariables [Lorg/openrsc/client/CameraVariables;" new="A"/>
    <field old="currentVisibleModelCount I" new="super"/>
    <field old="f1Toggle Z" new="break"/>
-   <field old="gameImage Lorg/rscemulation/client/Raster;" new="boolean"/>
+   <field old="gameImage Lorg/openrsc/client/Raster;" new="boolean"/>
    <field old="halfHeight I" new="private"/>
    <field old="halfHeight2 I" new="i"/>
    <field old="halfWidth I" new="package"/>
@@ -417,7 +417,7 @@
    <field old="lastCameraModelCount I" new="return"/>
    <field old="maxModelCount I" new="byte"/>
    <field old="maxVisibleModelCount I" new="D"/>
-   <field old="modelArray [Lorg/rscemulation/client/Model;" new="catch"/>
+   <field old="modelArray [Lorg/openrsc/client/Model;" new="catch"/>
    <field old="modelCount I" new="f"/>
    <field old="modelIntArray [I" new="g"/>
    <field old="modelLeftY I" new="B"/>
@@ -425,19 +425,19 @@
    <field old="mouseX I" new="DS_BETA"/>
    <field old="mouseY I" new="native"/>
    <field old="visibleModelIntArray [I" new="true"/>
-   <field old="visibleModelsArray [Lorg/rscemulation/client/Model;" new="implements"/>
+   <field old="visibleModelsArray [Lorg/openrsc/client/Model;" new="implements"/>
    <field old="width I" new="public"/>
    <field old="zoom1 I" new="char"/>
    <field old="zoom2 I" new="short"/>
    <field old="zoom3 I" new="goto"/>
    <field old="zoom4 I" new="e"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.EntityHandler$1" new="org.rscemulation.client.iIIIiiIIiI">
+  <class old="org.openrsc.client.entityhandling.EntityHandler$1" new="org.openrsc.client.iIIIiiIIiI">
    <method old="compare(Ljava/lang/Object;Ljava/lang/Object;)I" new="compare"/>
-   <method old="compare(Lorg/rscemulation/client/util/Pair;Lorg/rscemulation/client/util/Pair;)I" new="DS_BETA"/>
+   <method old="compare(Lorg/openrsc/client/util/Pair;Lorg/openrsc/client/util/Pair;)I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.model.Tile" new="org.rscemulation.client.iiiIIIIiIi">
-   <method old="unpack(Ljava/nio/ByteBuffer;)Lorg/rscemulation/client/model/Tile;" new="DS_BETA"/>
+  <class old="org.openrsc.client.model.Tile" new="org.openrsc.client.iiiIIIIiIi">
+   <method old="unpack(Ljava/nio/ByteBuffer;)Lorg/openrsc/client/model/Tile;" new="DS_BETA"/>
    <field old="diagonalWalls I" new="int"/>
    <field old="groundElevation B" new="void"/>
    <field old="groundOverlay B" new="null"/>
@@ -446,10 +446,10 @@
    <field old="roofTexture B" new="new"/>
    <field old="verticalWall B" new="float"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.DrawSprite" new="org.rscemulation.client.IiiiiiiIiI">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.DrawSprite" new="org.openrsc.client.IiiiiiiIiI">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -457,15 +457,15 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
    <method old="getOverlay()I" new="enum"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getScaleX()I" new="case"/>
    <method old="getScaleY()I" new="byte"/>
    <method old="getSpriteIndex()I" new="true"/>
@@ -479,35 +479,35 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
    <method old="setOverlay(I)V" new="for"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setScaleX(I)V" new="DS_BETA"/>
    <method old="setScaleY(I)V" new="short"/>
    <method old="setSpriteIndex(I)V" new="const"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="overlay I" new="for"/>
    <field old="scaleX I" new="DS_BETA"/>
    <field old="scaleY I" new="void"/>
    <field old="spriteIndex I" new="int"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="com.runescape.client.cache.DataFileDecrypter" new="org.rscemulation.client.IIIIiiIIiI">
+  <class old="com.runescape.client.cache.DataFileDecrypter" new="org.openrsc.client.IIIIiiIIiI">
    <method old="AllatoriDecryptString2(Ljava/lang/String;)Ljava/lang/String;" new="DS_BETA"/>
    <method old="method130(Lcom/runescape/client/cache/DataFileVariables;)V" new="goto"/>
    <method old="method131(Lcom/runescape/client/cache/DataFileVariables;)V" new="DS_BETA"/>
@@ -518,15 +518,15 @@
    <method old="method136([I[I[I[BIII)V" new="DS_BETA"/>
    <method old="unpackData([BI[BII)I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.various.GameUIs" new="org.rscemulation.client.IiiIiIIiiI">
+  <class old="org.openrsc.client.gfx.uis.various.GameUIs" new="org.openrsc.client.IiiIiIIiiI">
    <method old="reload()V" new="DS_BETA"/>
    <field old="overlays Ljava/util/List;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient" new="org.rscemulation.client.mudclient">
-   <method old="access$0(Lorg/rscemulation/client/mudclient;)Lorg/rscemulation/client/StreamClass;" new="DS_BETA"/>
+  <class old="org.openrsc.client.mudclient" new="org.openrsc.client.mudclient">
+   <method old="access$0(Lorg/openrsc/client/mudclient;)Lorg/openrsc/client/StreamClass;" new="DS_BETA"/>
    <method old="addDMMessage(Ljava/lang/String;)V" new="do"/>
    <method old="addDuelItems(IJIZ)V" new="DS_BETA"/>
-   <method old="addNPC(IIIII)Lorg/rscemulation/client/Mob;" new="const"/>
+   <method old="addNPC(IIIII)Lorg/openrsc/client/Mob;" new="const"/>
    <method old="addNewServerNotification(Ljava/lang/String;)V" new="float"/>
    <method old="addToFriendsList(Ljava/lang/String;)V" new="const"/>
    <method old="addToIgnoreList(Ljava/lang/String;)V" new="null"/>
@@ -604,18 +604,18 @@
    <method old="garbageCollect()V" new="c"/>
    <method old="getEmptyFile()Ljava/io/File;" new="throw"/>
    <method old="getGameHeight()I" new="m"/>
-   <method old="getGameMenu()Lorg/rscemulation/client/Menu;" new="n"/>
+   <method old="getGameMenu()Lorg/openrsc/client/Menu;" new="n"/>
    <method old="getGameWidth()I" new="case"/>
    <method old="getGraphics()Ljava/awt/Graphics;" new="short"/>
    <method old="getHostname(Ljava/lang/String;)V" new="super"/>
    <method old="getImage()Ljava/awt/image/BufferedImage;" new="f"/>
    <method old="getInputBoxType()I" new="class"/>
-   <method old="getInstance()Lorg/rscemulation/client/mudclient;" new="protected"/>
-   <method old="getLastNpc(I)Lorg/rscemulation/client/Mob;" new="short"/>
-   <method old="getLastPlayer(I)Lorg/rscemulation/client/Mob;" new="float"/>
+   <method old="getInstance()Lorg/openrsc/client/mudclient;" new="protected"/>
+   <method old="getLastNpc(I)Lorg/openrsc/client/Mob;" new="short"/>
+   <method old="getLastPlayer(I)Lorg/openrsc/client/Mob;" new="float"/>
    <method old="getNameRankColour(I)Ljava/lang/String;" new="else"/>
    <method old="getNameRankSprite(I)Ljava/lang/String;" new="class"/>
-   <method old="getPlayer(I)Lorg/rscemulation/client/Mob;" new="char"/>
+   <method old="getPlayer(I)Lorg/openrsc/client/Mob;" new="char"/>
    <method old="handleAbuseClick(I)V" new="for"/>
    <method old="handleCommand(Ljava/lang/String;)Z" new="short"/>
    <method old="handleIncomingPacket(II[B)V" new="DS_BETA"/>
@@ -652,8 +652,8 @@
    <method old="makeAuxMenus()V" new="int"/>
    <method old="makeCharacterDesignMenu()V" new="e"/>
    <method old="makeLoginMenus()V" new="y"/>
-   <method old="makeModel(IIIII)Lorg/rscemulation/client/Model;" new="DS_BETA"/>
-   <method old="makePlayer(IIII)Lorg/rscemulation/client/Mob;" new="try"/>
+   <method old="makeModel(IIIII)Lorg/openrsc/client/Model;" new="DS_BETA"/>
+   <method old="makePlayer(IIII)Lorg/openrsc/client/Mob;" new="try"/>
    <method old="menuClick(I)V" new="false"/>
    <method old="method112(IIIIZ)I" new="const"/>
    <method old="method119()V" new="finally"/>
@@ -697,10 +697,10 @@
    <method old="sendPingPacketReadPacketData()V" new="this"/>
    <method old="sendPrivateMessage(JLjava/lang/String;)V" new="DS_BETA"/>
    <method old="sendPrivateMessage(J[BI)V" new="DS_BETA"/>
-   <method old="sendWalkCommand(Lorg/rscemulation/client/util/Pair;IIIIZZ)Z" new="const"/>
-   <method old="sendWalkCommandIgnoreCoordsEqual(Lorg/rscemulation/client/util/Pair;IIIIZZ)Z" new="DS_BETA"/>
+   <method old="sendWalkCommand(Lorg/openrsc/client/util/Pair;IIIIZZ)Z" new="const"/>
+   <method old="sendWalkCommandIgnoreCoordsEqual(Lorg/openrsc/client/util/Pair;IIIIZZ)Z" new="DS_BETA"/>
    <method old="setAbuseBox(I)V" new="null"/>
-   <method old="setInstance(Lorg/rscemulation/client/mudclient;)V" new="const"/>
+   <method old="setInstance(Lorg/openrsc/client/mudclient;)V" new="const"/>
    <method old="setPixelsAndAroundColour(III)V" new="new"/>
    <method old="setProp(Ljava/lang/String;Ljava/lang/String;)Z" new="const"/>
    <method old="setReported(Ljava/lang/String;)V" new="DS_BETA"/>
@@ -736,7 +736,7 @@
    <field old="EVE B" new="eC"/>
    <field old="FIGHT_MENU Z" new="Wb"/>
    <field old="FPS I" new="Ib"/>
-   <field old="KY69_mudclient_HNPU_A99X_0 Lorg/rscemulation/client/mudclient$KY69_mudclient_HNPU_A99X_0;" new="WA"/>
+   <field old="KY69_mudclient_HNPU_A99X_0 Lorg/openrsc/client/mudclient$KY69_mudclient_HNPU_A99X_0;" new="WA"/>
    <field old="LCYV_mudclient_SHKE_7 I" new="rd"/>
    <field old="MOD B" new="Vd"/>
    <field old="MOVIE_FPS I" new="Ce"/>
@@ -831,7 +831,7 @@
    <field old="characterDesignHairColourButton2 I" new="Je"/>
    <field old="characterDesignHeadButton1 I" new="nC"/>
    <field old="characterDesignHeadButton2 I" new="static"/>
-   <field old="characterDesignMenu Lorg/rscemulation/client/Menu;" new="hC"/>
+   <field old="characterDesignMenu Lorg/openrsc/client/Menu;" new="hC"/>
    <field old="characterDesignSkinColourButton1 I" new="return"/>
    <field old="characterDesignSkinColourButton2 I" new="U"/>
    <field old="characterDesignTopColourButton1 I" new="Zd"/>
@@ -857,11 +857,11 @@
    <field old="currentPass Ljava/lang/String;" new="CA"/>
    <field old="currentUser Ljava/lang/String;" new="Qc"/>
    <field old="deaths I" new="rA"/>
-   <field old="delegate Lorg/rscemulation/client/ImplementationDelegate;" new="short"/>
+   <field old="delegate Lorg/openrsc/client/ImplementationDelegate;" new="short"/>
    <field old="df2 Ljava/text/DecimalFormat;" new="wc"/>
    <field old="doorCount I" new="H"/>
    <field old="doorDirection [I" new="lF"/>
-   <field old="doorModel [Lorg/rscemulation/client/Model;" new="jc"/>
+   <field old="doorModel [Lorg/openrsc/client/Model;" new="jc"/>
    <field old="doorType [I" new="Ld"/>
    <field old="doorX [I" new="rC"/>
    <field old="doorY [I" new="T"/>
@@ -893,7 +893,7 @@
    <field old="duelUsePrayer I" new="pA"/>
    <field old="duelUseWeapons I" new="ve"/>
    <field old="duelWeAccept Z" new="IA"/>
-   <field old="engineHandle Lorg/rscemulation/client/TerrainManager;" new="Qb"/>
+   <field old="engineHandle Lorg/openrsc/client/TerrainManager;" new="Qb"/>
    <field old="enteredMessage Ljava/lang/String;" new="void"/>
    <field old="enteredText Ljava/lang/String;" new="class"/>
    <field old="equipmentStatus [I" new="qb"/>
@@ -911,15 +911,15 @@
    <field old="friendsCount I" new="super"/>
    <field old="friendsListLongs [J" new="continue"/>
    <field old="friendsListOnlineStatus [I" new="short"/>
-   <field old="friendsMenu Lorg/rscemulation/client/Menu;" new="bB"/>
+   <field old="friendsMenu Lorg/openrsc/client/Menu;" new="bB"/>
    <field old="friendsMenuHandle I" new="for"/>
    <field old="gH I" new="catch"/>
    <field old="gW I" new="byte"/>
-   <field old="gameCamera Lorg/rscemulation/client/Camera;" new="sC"/>
-   <field old="gameDataModels [Lorg/rscemulation/client/Model;" new="Hd"/>
-   <field old="gameGraphics Lorg/rscemulation/client/RSCRaster;" new="aC"/>
+   <field old="gameCamera Lorg/openrsc/client/Camera;" new="sC"/>
+   <field old="gameDataModels [Lorg/openrsc/client/Model;" new="Hd"/>
+   <field old="gameGraphics Lorg/openrsc/client/RSCRaster;" new="aC"/>
    <field old="gameHeight I" new="uB"/>
-   <field old="gameMenu Lorg/rscemulation/client/Menu;" new="ad"/>
+   <field old="gameMenu Lorg/openrsc/client/Menu;" new="ad"/>
    <field old="gameWidth I" new="vC"/>
    <field old="global Z" new="SB"/>
    <field old="groundItemCount I" new="fC"/>
@@ -928,22 +928,22 @@
    <field old="groundItemX [I" new="hB"/>
    <field old="groundItemY [I" new="synchronized"/>
    <field old="handlePacketErrorCount I" new="k"/>
-   <field old="handlePlayerAppearanceUpdates Lorg/rscemulation/client/mudclient$handlePlayerAppearanceUpdates;" new="ec"/>
+   <field old="handlePlayerAppearanceUpdates Lorg/openrsc/client/mudclient$handlePlayerAppearanceUpdates;" new="ec"/>
    <field old="hasReceivedWelcomeBoxDetails Z" new="TF"/>
    <field old="hasWorldInfo Z" new="sb"/>
-   <field old="hgopu Lorg/rscemulation/client/mudclient$handleGameObjectPositionUpdates;" new="V"/>
+   <field old="hgopu Lorg/openrsc/client/mudclient$handleGameObjectPositionUpdates;" new="V"/>
    <field old="hideCeilings Z" new="Md"/>
-   <field old="hipu Lorg/rscemulation/client/mudclient$handleItemPositionUpdates;" new="Fb"/>
+   <field old="hipu Lorg/openrsc/client/mudclient$handleItemPositionUpdates;" new="Fb"/>
    <field old="hjk I" new="GC"/>
-   <field old="hnpu Lorg/rscemulation/client/mudclient$handleNpcPositionUpdates;" new="qd"/>
-   <field old="hnu Lorg/rscemulation/client/mudclient$handleNpcUpdates;" new="kb"/>
-   <field old="hpbu Lorg/rscemulation/client/mudclient$handlePlayerBubbleUpdates;" new="UB"/>
-   <field old="hpcmu Lorg/rscemulation/client/mudclient$handlePlayerChatMessageUpdates;" new="yb"/>
-   <field old="hphu Lorg/rscemulation/client/mudclient$handlePlayerHitsUpdates;" new="b"/>
-   <field old="hppu Lorg/rscemulation/client/mudclient$handlePlayerPositionUpdates;" new="yB"/>
-   <field old="hpuu Lorg/rscemulation/client/mudclient$HandlePlayerUsernameUpdates;" new="MC"/>
-   <field old="hpwiu Lorg/rscemulation/client/mudclient$HandlePlayerWornItemsUpdate;" new="NC"/>
-   <field old="hwop Lorg/rscemulation/client/mudclient$handleWallObjectPositionUpdates;" new="EB"/>
+   <field old="hnpu Lorg/openrsc/client/mudclient$handleNpcPositionUpdates;" new="qd"/>
+   <field old="hnu Lorg/openrsc/client/mudclient$handleNpcUpdates;" new="kb"/>
+   <field old="hpbu Lorg/openrsc/client/mudclient$handlePlayerBubbleUpdates;" new="UB"/>
+   <field old="hpcmu Lorg/openrsc/client/mudclient$handlePlayerChatMessageUpdates;" new="yb"/>
+   <field old="hphu Lorg/openrsc/client/mudclient$handlePlayerHitsUpdates;" new="b"/>
+   <field old="hppu Lorg/openrsc/client/mudclient$handlePlayerPositionUpdates;" new="yB"/>
+   <field old="hpuu Lorg/openrsc/client/mudclient$HandlePlayerUsernameUpdates;" new="MC"/>
+   <field old="hpwiu Lorg/openrsc/client/mudclient$HandlePlayerWornItemsUpdate;" new="NC"/>
+   <field old="hwop Lorg/openrsc/client/mudclient$handleWallObjectPositionUpdates;" new="EB"/>
    <field old="idleCount I" new="uC"/>
    <field old="ignoreListCount I" new="null"/>
    <field old="ignoreListLongs [J" new="goto"/>
@@ -953,7 +953,7 @@
    <field old="inputID I" new="qc"/>
    <field old="inputMessage Ljava/lang/String;" new="this"/>
    <field old="inputText Ljava/lang/String;" new="if"/>
-   <field old="instance Lorg/rscemulation/client/mudclient;" new="uc"/>
+   <field old="instance Lorg/openrsc/client/mudclient;" new="uc"/>
    <field old="internalContainerGraphics Ljava/awt/Graphics;" new="p"/>
    <field old="inventoryCount I" new="iA"/>
    <field old="inventoryItems [I" new="switch"/>
@@ -969,11 +969,11 @@
    <field old="lastLoggedInDays I" new="Fc"/>
    <field old="lastLoggedInHostname Ljava/lang/String;" new="yc"/>
    <field old="lastMouseDownButton I" new="false"/>
-   <field old="lastNpcArray [Lorg/rscemulation/client/Mob;" new="cC"/>
+   <field old="lastNpcArray [Lorg/openrsc/client/Mob;" new="cC"/>
    <field old="lastNpcCount I" new="kc"/>
    <field old="lastPing J" new="false"/>
    <field old="lastPinging J" new="enum"/>
-   <field old="lastPlayerArray [Lorg/rscemulation/client/Mob;" new="oc"/>
+   <field old="lastPlayerArray [Lorg/openrsc/client/Mob;" new="oc"/>
    <field old="lastPlayerCount I" new="iC"/>
    <field old="lastPrivateMessageSender Ljava/lang/Long;" new="void"/>
    <field old="lastTradeDuelUpdate J" new="Dc"/>
@@ -1007,13 +1007,13 @@
    <field old="menuID [I" new="XB"/>
    <field old="menuIndexes [I" new="Yc"/>
    <field old="menuLength I" new="try"/>
-   <field old="menuLogin Lorg/rscemulation/client/Menu;" new="gc"/>
+   <field old="menuLogin Lorg/openrsc/client/Menu;" new="gc"/>
    <field old="menuLongVariable [J" new="X"/>
    <field old="menuMagicPrayersSelected I" new="kf"/>
-   <field old="menuNewUser Lorg/rscemulation/client/Menu;" new="MB"/>
+   <field old="menuNewUser Lorg/openrsc/client/Menu;" new="MB"/>
    <field old="menuText1 [Ljava/lang/String;" new="Id"/>
    <field old="menuText2 [Ljava/lang/String;" new="transient"/>
-   <field old="menuWelcome Lorg/rscemulation/client/Menu;" new="bC"/>
+   <field old="menuWelcome Lorg/openrsc/client/Menu;" new="bC"/>
    <field old="menuWidth I" new="W"/>
    <field old="menuX I" new="hb"/>
    <field old="menuY I" new="lA"/>
@@ -1021,7 +1021,7 @@
    <field old="messagesArray [Ljava/lang/String;" new="Ab"/>
    <field old="messagesTab I" new="xb"/>
    <field old="messagesTimeout [I" new="kA"/>
-   <field old="mobArray [Lorg/rscemulation/client/Mob;" new="Nb"/>
+   <field old="mobArray [Lorg/openrsc/client/Mob;" new="Nb"/>
    <field old="mobArrayIndexes [I" new="Mb"/>
    <field old="mobMessageCount I" new="aA"/>
    <field old="mobMessages [Ljava/lang/String;" new="kd"/>
@@ -1053,19 +1053,19 @@
    <field old="notifications [Ljava/lang/String;" new="DB"/>
    <field old="notificationsTimeout [I" new="Bb"/>
    <field old="npcAnimationArray [[I" new="lb"/>
-   <field old="npcArray [Lorg/rscemulation/client/Mob;" new="md"/>
+   <field old="npcArray [Lorg/openrsc/client/Mob;" new="md"/>
    <field old="npcCombatModelArray1 [I" new="tC"/>
    <field old="npcCombatModelArray2 [I" new="pC"/>
    <field old="npcCount I" new="YA"/>
-   <field old="npcRecordArray [Lorg/rscemulation/client/Mob;" new="dB"/>
+   <field old="npcRecordArray [Lorg/openrsc/client/Mob;" new="dB"/>
    <field old="objectCount I" new="VB"/>
    <field old="objectID [I" new="r"/>
-   <field old="objectModelArray [Lorg/rscemulation/client/Model;" new="j"/>
+   <field old="objectModelArray [Lorg/openrsc/client/Model;" new="j"/>
    <field old="objectType [I" new="JD"/>
    <field old="objectX [I" new="bc"/>
    <field old="objectY [I" new="Ec"/>
    <field old="onTutorialIsland Z" new="extends"/>
-   <field old="ourPlayer Lorg/rscemulation/client/Mob;" new="cd"/>
+   <field old="ourPlayer Lorg/openrsc/client/Mob;" new="cd"/>
    <field old="ownerID I" new="vF"/>
    <field old="packetData [B" new="true"/>
    <field old="password Ljava/lang/String;" new="break"/>
@@ -1073,7 +1073,7 @@
    <field old="pinging Z" new="NA"/>
    <field old="pingpacket [B" new="try"/>
    <field old="playerAliveTimeout I" new="lE"/>
-   <field old="playerArray [Lorg/rscemulation/client/Mob;" new="nb"/>
+   <field old="playerArray [Lorg/openrsc/client/Mob;" new="nb"/>
    <field old="playerCount I" new="q"/>
    <field old="playerStatBase [I" new="public"/>
    <field old="playerStatCurrent [I" new="sB"/>
@@ -1084,7 +1084,7 @@
    <field old="privateHandle I" new="KB"/>
    <field old="privateMessageTarget J" new="Vc"/>
    <field old="questHandle I" new="rB"/>
-   <field old="questMenu Lorg/rscemulation/client/Menu;" new="gA"/>
+   <field old="questMenu Lorg/openrsc/client/Menu;" new="gA"/>
    <field old="questMenuHandle I" new="G"/>
    <field old="questPoints I" new="fc"/>
    <field old="questionMenuAnswer [Ljava/lang/String;" new="a"/>
@@ -1118,7 +1118,7 @@
    <field old="serverIndex I" new="RA"/>
    <field old="serverMessage Ljava/lang/String;" new="dc"/>
    <field old="serverMessageBoxTop Z" new="fB"/>
-   <field old="serverMessageMenu Lorg/rscemulation/client/Menu;" new="Yb"/>
+   <field old="serverMessageMenu Lorg/openrsc/client/Menu;" new="Yb"/>
    <field old="serverMessageMenuHandle I" new="GB"/>
    <field old="serverStartTime J" new="eB"/>
    <field old="setValue Z" new="super"/>
@@ -1149,15 +1149,15 @@
    <field old="showWelcomeBox Z" new="native"/>
    <field old="skillArray [Ljava/lang/String;" new="kC"/>
    <field old="skillArrayLong [Ljava/lang/String;" new="rb"/>
-   <field old="sleepSprite Lorg/rscemulation/client/model/Sprite;" new="hA"/>
+   <field old="sleepSprite Lorg/openrsc/client/model/Sprite;" new="hA"/>
    <field old="sleeping Z" new="zb"/>
    <field old="sleepy Ljava/awt/image/BufferedImage;" new="LC"/>
    <field old="socketTimeout I" new="this"/>
    <field old="sounds [B" new="ZB"/>
-   <field old="spellMenu Lorg/rscemulation/client/Menu;" new="mA"/>
+   <field old="spellMenu Lorg/openrsc/client/Menu;" new="mA"/>
    <field old="spellMenuHandle I" new="TA"/>
    <field old="startTime J" new="ld"/>
-   <field old="streamClass Lorg/rscemulation/client/StreamClass;" new="DS_BETA"/>
+   <field old="streamClass Lorg/openrsc/client/StreamClass;" new="DS_BETA"/>
    <field old="subscriptionLeftDays I" new="m"/>
    <field old="sync_on_me Ljava/lang/Object;" new="Hc"/>
    <field old="systemUpdate I" new="Pd"/>
@@ -1200,12 +1200,12 @@
    <field old="windowWidth I" new="Xb"/>
    <field old="zoomCamera Z" new="mc"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.CheckBox" new="org.rscemulation.client.IIiIIIiiII">
-   <method old="access$0(Lorg/rscemulation/client/gfx/components/CheckBox;)Z" new="DS_BETA"/>
-   <method old="access$1(Lorg/rscemulation/client/gfx/components/CheckBox;Z)V" new="DS_BETA"/>
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.CheckBox" new="org.openrsc.client.IIiIIIiiII">
+   <method old="access$0(Lorg/openrsc/client/gfx/components/CheckBox;)Z" new="DS_BETA"/>
+   <method old="access$1(Lorg/openrsc/client/gfx/components/CheckBox;Z)V" new="DS_BETA"/>
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -1213,14 +1213,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
    <method old="getY()I" new="char"/>
@@ -1232,43 +1232,43 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setSelected(Z)V" new="goto"/>
    <method old="setText(Ljava/lang/String;)V" new="DS_BETA"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="selected Z" new="void"/>
    <field old="text Ljava/lang/String;" new="DS_BETA"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="com.runescape.SoundPlayer$1" new="org.rscemulation.client.iIIiIIiiiI">
+  <class old="com.runescape.SoundPlayer$1" new="org.openrsc.client.iIIiIIiiiI">
    <method old="run()V" new="run"/>
    <field old="this$0 Lcom/runescape/SoundPlayer;" new="void"/>
    <field old="val$track Lcom/runescape/client/sound/SoundTrack;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handleItemPositionUpdates" new="org.rscemulation.client.iIiIiiIIII">
+  <class old="org.openrsc.client.mudclient$handleItemPositionUpdates" new="org.openrsc.client.iIiIiiIIII">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(II[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
    <field old="length I" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="for"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="for"/>
   </class>
-  <class old="org.rscemulation.client.Mob" new="org.rscemulation.client.iIiiIIiiii">
+  <class old="org.openrsc.client.Mob" new="org.openrsc.client.iIiiIIiiii">
    <field old="admin I" new="goto"/>
    <field old="anInt162 I" new="abstract"/>
    <field old="anInt163 I" new="case"/>
@@ -1306,7 +1306,7 @@
    <field old="waypointsY [I" new="throw"/>
    <field old="wornItemsID I" new="do"/>
   </class>
-  <class old="com.runescape.client.cache.DataFileVariables" new="org.rscemulation.client.IiIIIIiIIi">
+  <class old="com.runescape.client.cache.DataFileVariables" new="org.openrsc.client.IiIIIIiIIi">
    <field old="aBoolean477 Z" new="case"/>
    <field old="aBooleanArray491 [Z" new="switch"/>
    <field old="aBooleanArray492 [Z" new="catch"/>
@@ -1356,11 +1356,11 @@
    <field old="anIntArrayArray500 [[I" new="interface"/>
    <field old="anIntArrayArray501 [[I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.action.ScrollListener" new="org.rscemulation.client.iIiiiIIIII">
+  <class old="org.openrsc.client.gfx.action.ScrollListener" new="org.openrsc.client.iIiiiIIIII">
    <method old="onScrollUpdate(I)V" new="const"/>
    <method old="scrolling(I)V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.ItemDef" new="org.rscemulation.client.iiiIiiIiII">
+  <class old="org.openrsc.client.entityhandling.defs.ItemDef" new="org.openrsc.client.iiiIiiIiII">
    <method old="getBasePrice()I" new="final"/>
    <method old="getBaseTokenPrice()I" new="new"/>
    <method old="getCommand()Ljava/lang/String;" new="try"/>
@@ -1389,12 +1389,12 @@
    <field old="stackable Z" new="null"/>
    <field old="wieldable Z" new="this"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$NotificationEvent" new="org.rscemulation.client.IiiIIiiIiI">
+  <class old="org.openrsc.client.mudclient$NotificationEvent" new="org.openrsc.client.IiiIIiiIiI">
    <field old="msg Ljava/lang/String;" new="for"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
    <field old="timeout I" new="void"/>
   </class>
-  <class old="org.rscemulation.client.GameWindowMiddleMan" new="org.rscemulation.client.iIiiiIiiii">
+  <class old="org.openrsc.client.GameWindowMiddleMan" new="org.openrsc.client.iIiiiIiiii">
    <method old="addToFriendsList(Ljava/lang/String;)V" new="const"/>
    <method old="addToIgnoreList(Ljava/lang/String;)V" new="null"/>
    <method old="buyFromAuctionHouse(IIJJ)V" new="DS_BETA"/>
@@ -1465,7 +1465,7 @@
    <field old="blockServerAnnouncements Z" new="do"/>
    <field old="blockTradeRequests Z" new="if"/>
    <field old="controlDown Z" new="const"/>
-   <field old="delegate Lorg/rscemulation/client/ImplementationDelegate;" new="short"/>
+   <field old="delegate Lorg/openrsc/client/ImplementationDelegate;" new="short"/>
    <field old="downArrowKeyDown Z" new="catch"/>
    <field old="enteredMessage Ljava/lang/String;" new="void"/>
    <field old="enteredText Ljava/lang/String;" new="class"/>
@@ -1497,16 +1497,16 @@
    <field old="reconnectTries I" new="private"/>
    <field old="rightArrowKeyDown Z" new="char"/>
    <field old="socketTimeout I" new="this"/>
-   <field old="streamClass Lorg/rscemulation/client/StreamClass;" new="DS_BETA"/>
+   <field old="streamClass Lorg/openrsc/client/StreamClass;" new="DS_BETA"/>
    <field old="upArrowKeyDown Z" new="break"/>
    <field old="username Ljava/lang/String;" new="char"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$1" new="org.rscemulation.client.iiIIiIIiII">
+  <class old="org.openrsc.client.mudclient$1" new="org.openrsc.client.iiIIiIIiII">
    <method old="run()V" new="run"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
    <field old="val$ip Ljava/lang/String;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.StreamClass" new="org.rscemulation.client.iIIiiIIIiI">
+  <class old="org.openrsc.client.StreamClass" new="org.openrsc.client.iIIiiIIIiI">
    <method old="add2ByteInt(I)V" new="DS_BETA"/>
    <method old="add4ByteInt(I)V" new="goto"/>
    <method old="addByte(I)V" new="const"/>
@@ -1563,16 +1563,16 @@
    <field old="packetStart I" new="class"/>
    <field old="streamSocket Ljava/net/Socket;" new="long"/>
   </class>
-  <class old="org.rscemulation.client.Model" new="org.rscemulation.client.IIIiiiiIII">
+  <class old="org.openrsc.client.Model" new="org.openrsc.client.IIIiiiiIII">
    <method old="method174(II)V" new="DS_BETA"/>
    <method old="method175()V" new="for"/>
    <method old="method176()V" new="new"/>
    <method old="method177(II)V" new="const"/>
-   <method old="method178([Lorg/rscemulation/client/Model;IZ)V" new="DS_BETA"/>
+   <method old="method178([Lorg/openrsc/client/Model;IZ)V" new="DS_BETA"/>
    <method old="method180(III)I" new="float"/>
    <method old="method181(I[III)I" new="DS_BETA"/>
-   <method old="method182(IIIIIIIZ)[Lorg/rscemulation/client/Model;" new="DS_BETA"/>
-   <method old="method183(Lorg/rscemulation/client/Model;[III)V" new="DS_BETA"/>
+   <method old="method182(IIIIIIIZ)[Lorg/openrsc/client/Model;" new="DS_BETA"/>
+   <method old="method183(Lorg/openrsc/client/Model;[III)V" new="DS_BETA"/>
    <method old="method184(ZIIIII)V" new="DS_BETA"/>
    <method old="method185(IIIII)V" new="DS_BETA"/>
    <method old="method186(III)V" new="final"/>
@@ -1592,9 +1592,9 @@
    <method old="method200()V" new="short"/>
    <method old="method201(IIIIIIII)V" new="DS_BETA"/>
    <method old="method202()V" new="goto"/>
-   <method old="method203()Lorg/rscemulation/client/Model;" new="final"/>
-   <method old="method204(ZZZZ)Lorg/rscemulation/client/Model;" new="DS_BETA"/>
-   <method old="method205(Lorg/rscemulation/client/Model;)V" new="DS_BETA"/>
+   <method old="method203()Lorg/openrsc/client/Model;" new="final"/>
+   <method old="method204(ZZZZ)Lorg/openrsc/client/Model;" new="DS_BETA"/>
+   <method old="method205(Lorg/openrsc/client/Model;)V" new="DS_BETA"/>
    <method old="method206([B)I" new="DS_BETA"/>
    <method old="vertex3I(III)I" new="null"/>
    <field old="aBoolean247 Z" new="d"/>
@@ -1681,10 +1681,10 @@
    <field old="anIntArrayArray279 [[I" new="import"/>
    <field old="isGiantCrystal Z" new="O"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.Button" new="org.rscemulation.client.IiIIIIiIII">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.Button" new="org.openrsc.client.IiIIIIiIII">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -1692,14 +1692,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getTextColor()I" new="enum"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
@@ -1711,35 +1711,35 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setText(Ljava/lang/String;)V" new="DS_BETA"/>
    <method old="setTextColor(I)V" new="DS_BETA"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="selected Z" new="void"/>
    <field old="text Ljava/lang/String;" new="for"/>
    <field old="textColor I" new="DS_BETA"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="org.rscemulation.client.gfx.action.KeyListener" new="org.rscemulation.client.IiIiIIIiiI">
+  <class old="org.openrsc.client.gfx.action.KeyListener" new="org.openrsc.client.IiIiIIIiiI">
    <method old="onKey(CI)Z" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.loader.various.AppletUtils" new="org.rscemulation.client.IiiIIiIIIi">
+  <class old="org.openrsc.client.loader.various.AppletUtils" new="org.openrsc.client.IiiIIiIIIi">
    <method old="copyInputStream(Ljava/io/InputStream;Ljava/io/OutputStream;)V" new="DS_BETA"/>
    <method old="doDirChecks()Z" new="DS_BETA"/>
    <method old="drawPercentage(Ljava/awt/Graphics;ILjava/lang/String;)V" new="DS_BETA"/>
@@ -1755,7 +1755,7 @@
    <field old="update_image Ljava/awt/Image;" new="float"/>
    <field old="width I" new="int"/>
   </class>
-  <class old="org.rscemulation.client.RSCEmulation" new="org.rscemulation.client.IiiIIiIIiI">
+  <class old="org.openrsc.client.openrsc" new="org.openrsc.client.IiiIIiIIiI">
    <method old="destroy()V" new="DS_BETA"/>
    <method old="drawLoadingScreen()V" new="const"/>
    <method old="drawString(Ljava/awt/Graphics;Ljava/lang/String;Ljava/awt/Font;II)V" new="DS_BETA"/>
@@ -1797,7 +1797,7 @@
    <field old="charSet Ljava/lang/String;" new="for"/>
    <field old="controlDown Z" new="const"/>
    <field old="currentTimeArray [J" new="int"/>
-   <field old="delegate Lorg/rscemulation/client/ImplementationDelegate;" new="short"/>
+   <field old="delegate Lorg/openrsc/client/ImplementationDelegate;" new="short"/>
    <field old="downArrowKeyDown Z" new="catch"/>
    <field old="enteredMessage Ljava/lang/String;" new="void"/>
    <field old="enteredText Ljava/lang/String;" new="class"/>
@@ -1809,7 +1809,7 @@
    <field old="lastMouseDownButton I" new="false"/>
    <field old="leftArrowKeyDown Z" new="long"/>
    <field old="loadingImage Ljava/awt/Image;" new="float"/>
-   <field old="loadingPhase Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="super"/>
+   <field old="loadingPhase Lorg/openrsc/client/openrsc$LoadingPhase;" new="super"/>
    <field old="mouseDownButton I" new="true"/>
    <field old="mouseX I" new="case"/>
    <field old="mouseY I" new="DS_BETA"/>
@@ -1817,40 +1817,40 @@
    <field old="shiftDown Z" new="do"/>
    <field old="upArrowKeyDown Z" new="break"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.EntityDef" new="org.rscemulation.client.IiIIIIIIii">
+  <class old="org.openrsc.client.entityhandling.defs.EntityDef" new="org.openrsc.client.IiIIIIIIii">
    <method old="getDescription()Ljava/lang/String;" new="DS_BETA"/>
    <method old="getName()Ljava/lang/String;" new="const"/>
    <field old="description Ljava/lang/String;" new="for"/>
    <field old="id I" new="DS_BETA"/>
    <field old="name Ljava/lang/String;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$1" new="org.rscemulation.client.IiiIIIiiIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$1" new="org.openrsc.client.IiiIIIiiIi">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="void"/>
    <field old="val$auctions Ljava/util/List;" new="for"/>
    <field old="val$i1 I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$KY69_mudclient_HNPU_A99X_0" new="org.rscemulation.client.iiiiiiiIIi">
+  <class old="org.openrsc.client.mudclient$KY69_mudclient_HNPU_A99X_0" new="org.openrsc.client.iiiiiiiIIi">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.EntityHandler" new="org.rscemulation.client.iIIiiiiIiI">
+  <class old="org.openrsc.client.entityhandling.EntityHandler" new="org.openrsc.client.iIIiiiiIiI">
    <method old="animationCount()I" new="super"/>
    <method old="doorCount()I" new="enum"/>
    <method old="elevationCount()I" new="null"/>
-   <method old="getAnimationDef(I)Lorg/rscemulation/client/entityhandling/defs/extras/AnimationDef;" new="DS_BETA"/>
-   <method old="getDoorDef(I)Lorg/rscemulation/client/entityhandling/defs/DoorDef;" new="new"/>
-   <method old="getElevationDef(I)Lorg/rscemulation/client/entityhandling/defs/ElevationDef;" new="for"/>
-   <method old="getItemDef(I)Lorg/rscemulation/client/entityhandling/defs/ItemDef;" new="final"/>
+   <method old="getAnimationDef(I)Lorg/openrsc/client/entityhandling/defs/extras/AnimationDef;" new="DS_BETA"/>
+   <method old="getDoorDef(I)Lorg/openrsc/client/entityhandling/defs/DoorDef;" new="new"/>
+   <method old="getElevationDef(I)Lorg/openrsc/client/entityhandling/defs/ElevationDef;" new="for"/>
+   <method old="getItemDef(I)Lorg/openrsc/client/entityhandling/defs/ItemDef;" new="final"/>
    <method old="getModelCount()I" new="DS_BETA"/>
    <method old="getModelName(I)Ljava/lang/String;" new="null"/>
-   <method old="getNpcDef(I)Lorg/rscemulation/client/entityhandling/defs/NPCDef;" new="goto"/>
-   <method old="getObjectDef(I)Lorg/rscemulation/client/entityhandling/defs/GameObjectDef;" new="short"/>
-   <method old="getPrayerDef(I)Lorg/rscemulation/client/entityhandling/defs/PrayerDef;" new="const"/>
-   <method old="getSpellDef(I)Lorg/rscemulation/client/entityhandling/defs/SpellDef;" new="float"/>
-   <method old="getTileDef(I)Lorg/rscemulation/client/entityhandling/defs/TileDef;" new="try"/>
+   <method old="getNpcDef(I)Lorg/openrsc/client/entityhandling/defs/NPCDef;" new="goto"/>
+   <method old="getObjectDef(I)Lorg/openrsc/client/entityhandling/defs/GameObjectDef;" new="short"/>
+   <method old="getPrayerDef(I)Lorg/openrsc/client/entityhandling/defs/PrayerDef;" new="const"/>
+   <method old="getSpellDef(I)Lorg/openrsc/client/entityhandling/defs/SpellDef;" new="float"/>
+   <method old="getTileDef(I)Lorg/openrsc/client/entityhandling/defs/TileDef;" new="try"/>
    <method old="invPictureCount()I" new="this"/>
    <method old="itemCount()I" new="const"/>
    <method old="load()V" new="catch"/>
@@ -1876,26 +1876,26 @@
    <field old="doors Ljava/util/ArrayList;" new="DS_BETA"/>
    <field old="elevation Ljava/util/ArrayList;" new="enum"/>
    <field old="invPictureCount I" new="false"/>
-   <field old="items [Lorg/rscemulation/client/entityhandling/defs/ItemDef;" new="new"/>
+   <field old="items [Lorg/openrsc/client/entityhandling/defs/ItemDef;" new="new"/>
    <field old="loaded Z" new="void"/>
    <field old="models Ljava/util/ArrayList;" new="do"/>
-   <field old="npcs [Lorg/rscemulation/client/entityhandling/defs/NPCDef;" new="short"/>
-   <field old="objects [Lorg/rscemulation/client/entityhandling/defs/GameObjectDef;" new="null"/>
+   <field old="npcs [Lorg/openrsc/client/entityhandling/defs/NPCDef;" new="short"/>
+   <field old="objects [Lorg/openrsc/client/entityhandling/defs/GameObjectDef;" new="null"/>
    <field old="prayers Ljava/util/ArrayList;" new="int"/>
    <field old="spells Ljava/util/ArrayList;" new="true"/>
    <field old="textures Ljava/util/ArrayList;" new="for"/>
    <field old="tiles Ljava/util/ArrayList;" new="else"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$2" new="org.rscemulation.client.iiIIIiiIiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$2" new="org.openrsc.client.iiIIIiiIiI">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="void"/>
    <field old="val$i1 I" new="DS_BETA"/>
    <field old="val$yourAuctions Ljava/util/List;" new="for"/>
   </class>
-  <class old="org.rscemulation.client.TerrainManager" new="org.rscemulation.client.IiiiIIIIiI">
+  <class old="org.openrsc.client.TerrainManager" new="org.openrsc.client.IiiiIIIIiI">
    <method old="bilinearInterpolate(II)I" new="final"/>
    <method old="garbageCollect()V" new="DS_BETA"/>
-   <method old="generatePath(Lorg/rscemulation/client/util/Pair;IIII[I[IZ)I" new="DS_BETA"/>
+   <method old="generatePath(Lorg/openrsc/client/util/Pair;IIII[I[IZ)I" new="DS_BETA"/>
    <method old="getDiagonalWalls(II)I" new="goto"/>
    <method old="getGroundTexture(II)I" new="try"/>
    <method old="getGroundTexturesOverlay(II)I" new="short"/>
@@ -1912,10 +1912,10 @@
    <method old="method407(IIII)V" new="null"/>
    <method old="method413(IIIII)V" new="DS_BETA"/>
    <method old="method419(III)V" new="try"/>
-   <method old="method421(Lorg/rscemulation/client/Model;IIIII)V" new="DS_BETA"/>
+   <method old="method421(Lorg/openrsc/client/Model;IIIII)V" new="DS_BETA"/>
    <method old="method424(II)Z" new="DS_BETA"/>
    <method old="method427(II)I" new="super"/>
-   <method old="method428([Lorg/rscemulation/client/Model;)V" new="DS_BETA"/>
+   <method old="method428([Lorg/openrsc/client/Model;)V" new="DS_BETA"/>
    <method old="orWalkable(III)V" new="goto"/>
    <method old="plotPoint(IIIZ)V" new="DS_BETA"/>
    <method old="registerDoor(IIII)V" new="DS_BETA"/>
@@ -1927,23 +1927,23 @@
    <method old="unregisterDoor(IIII)V" new="const"/>
    <method old="unregisterObject(IIII)V" new="goto"/>
    <method old="unset(III)V" new="null"/>
-   <field old="aModel Lorg/rscemulation/client/Model;" new="void"/>
-   <field old="aModelArray596 [Lorg/rscemulation/client/Model;" new="else"/>
-   <field old="aModelArrayArray580 [[Lorg/rscemulation/client/Model;" new="false"/>
-   <field old="aModelArrayArray598 [[Lorg/rscemulation/client/Model;" new="break"/>
+   <field old="aModel Lorg/openrsc/client/Model;" new="void"/>
+   <field old="aModelArray596 [Lorg/openrsc/client/Model;" new="else"/>
+   <field old="aModelArrayArray580 [[Lorg/openrsc/client/Model;" new="false"/>
+   <field old="aModelArrayArray598 [[Lorg/openrsc/client/Model;" new="break"/>
    <field old="anIntArrayArray581 [[I" new="new"/>
-   <field old="camera Lorg/rscemulation/client/Camera;" new="this"/>
-   <field old="gameImage Lorg/rscemulation/client/Raster;" new="short"/>
+   <field old="camera Lorg/openrsc/client/Camera;" new="this"/>
+   <field old="gameImage Lorg/openrsc/client/Raster;" new="short"/>
    <field old="groundTextureArray [I" new="do"/>
    <field old="objectDirs [[I" new="null"/>
    <field old="playerIsAlive Z" new="DS_BETA"/>
    <field old="requiresClean Z" new="int"/>
-   <field old="sectors [Lorg/rscemulation/client/model/Sector;" new="enum"/>
+   <field old="sectors [Lorg/openrsc/client/model/Sector;" new="enum"/>
    <field old="selectedX [I" new="true"/>
    <field old="selectedY [I" new="float"/>
    <field old="walkableValue [[I" new="for"/>
   </class>
-  <class old="org.rscemulation.client.Config" new="org.rscemulation.client.IIiiiIIIiI">
+  <class old="org.openrsc.client.Config" new="org.openrsc.client.IIiiiIIIiI">
    <field old="ADDR Ljava/net/InetSocketAddress;" new="int"/>
    <field old="CLIENT_VERSION I" new="void"/>
    <field old="IP Ljava/lang/String;" new="new"/>
@@ -1951,11 +1951,11 @@
    <field old="TOO_MANY_CHARS_IN_WILDERNESS_TEXT_A Ljava/lang/String;" new="null"/>
    <field old="TOO_MANY_CHARS_IN_WILDERNESS_TEXT_B Ljava/lang/String;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$3" new="org.rscemulation.client.iiIIIIIiIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$3" new="org.openrsc.client.iiIIIIIiIi">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.loader.util.Pair" new="org.rscemulation.client.IIiIiiiiii">
+  <class old="org.openrsc.loader.util.Pair" new="org.openrsc.client.IIiIiiiiii">
    <method old="equals(Ljava/lang/Object;)Z" new="equals"/>
    <method old="getFirst()Ljava/lang/Object;" new="const"/>
    <method old="getSecond()Ljava/lang/Object;" new="DS_BETA"/>
@@ -1963,7 +1963,7 @@
    <field old="t Ljava/lang/Object;" new="void"/>
    <field old="u Ljava/lang/Object;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.extras.AnimationDef" new="org.rscemulation.client.IIiiIiIIII">
+  <class old="org.openrsc.client.entityhandling.defs.extras.AnimationDef" new="org.openrsc.client.IIiiIiIIII">
    <method old="getCharColour()I" new="goto"/>
    <method old="getGenderModel()I" new="const"/>
    <method old="getName()Ljava/lang/String;" new="try"/>
@@ -1977,37 +1977,37 @@
    <field old="name Ljava/lang/String;" new="null"/>
    <field old="number I" new="new"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$4" new="org.rscemulation.client.IiIiIiiiII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$4" new="org.openrsc.client.IiIiIiiiII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$5" new="org.rscemulation.client.iiIiiIiIII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$5" new="org.openrsc.client.iiIiiIiIII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$6" new="org.rscemulation.client.iiIiIIiIiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$6" new="org.openrsc.client.iiIiIIiIiI">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$7" new="org.rscemulation.client.IiIiIiiiiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$7" new="org.openrsc.client.IiIiIiiiiI">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$8" new="org.rscemulation.client.iIIIIiIIiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$8" new="org.openrsc.client.iIIIIiIIiI">
    <method old="onKey(CI)Z" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$9" new="org.rscemulation.client.iiIiIIiiIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$9" new="org.openrsc.client.iiIiIIiiIi">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.GameFrame" new="org.rscemulation.client.iiiIIiiIII">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.GameFrame" new="org.openrsc.client.iiiIIiiIII">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -2015,14 +2015,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
    <method old="getY()I" new="char"/>
@@ -2034,39 +2034,39 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setTextCentered(Z)V" new="goto"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="centered Z" new="void"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="title Ljava/lang/String;" new="DS_BETA"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.exports.ObjectExporter" new="org.rscemulation.client.IiIiiIiiii">
+  <class old="org.openrsc.client.entityhandling.exports.ObjectExporter" new="org.openrsc.client.IiIiiIiiii">
    <method old="AllatoriDecryptString2(Ljava/lang/String;)Ljava/lang/String;" new="DS_BETA"/>
    <method old="main([Ljava/lang/String;)V" new="main"/>
   </class>
-  <class old="org.rscemulation.client.ImplementationDelegate" new="org.rscemulation.client.IiIiIiIiIi">
+  <class old="org.openrsc.client.ImplementationDelegate" new="org.openrsc.client.IiIiIiIiIi">
    <method old="getContainerImpl()Ljava/awt/Container;" new="const"/>
    <method old="onLogin()V" new="DS_BETA"/>
    <method old="onLogout()V" new="goto"/>
   </class>
-  <class old="org.rscemulation.client.DataEncryption" new="org.rscemulation.client.iiIIIIIiii">
+  <class old="org.openrsc.client.DataEncryption" new="org.openrsc.client.iiIIIIIiii">
    <method old="add2ByteInt(I)V" new="const"/>
    <method old="add4ByteInt(I)V" new="DS_BETA"/>
    <method old="addByte(I)V" new="goto"/>
@@ -2081,7 +2081,7 @@
    <field old="offset I" new="void"/>
    <field old="packet [B" new="for"/>
   </class>
-  <class old="org.rscemulation.client.buffer.IntBuffer" new="org.rscemulation.client.iiIIIiIIiI">
+  <class old="org.openrsc.client.buffer.IntBuffer" new="org.openrsc.client.iiIIIiIIiI">
    <method old="addByte(I)V" new="const"/>
    <method old="addInt(I)V" new="new"/>
    <method old="addLong(J)V" new="DS_BETA"/>
@@ -2091,7 +2091,7 @@
    <method old="getLong()J" new="new"/>
    <method old="getShort()I" new="const"/>
   </class>
-  <class old="org.rscemulation.client.util.Pair" new="org.rscemulation.client.iiiiiiIiII">
+  <class old="org.openrsc.client.util.Pair" new="org.openrsc.client.iiiiiiIiII">
    <method old="equals(Ljava/lang/Object;)Z" new="equals"/>
    <method old="getFirst()Ljava/lang/Object;" new="DS_BETA"/>
    <method old="getSecond()Ljava/lang/Object;" new="const"/>
@@ -2099,9 +2099,9 @@
    <field old="t Ljava/lang/Object;" new="void"/>
    <field old="u Ljava/lang/Object;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.CameraModel" new="org.rscemulation.client.iIiIIIiiIi">
+  <class old="org.openrsc.client.CameraModel" new="org.openrsc.client.iIiIIIiiIi">
    <field old="aBoolean367 Z" new="const"/>
-   <field old="aModel_359 Lorg/rscemulation/client/Model;" new="void"/>
+   <field old="aModel_359 Lorg/openrsc/client/Model;" new="void"/>
    <field old="anInt353 I" new="int"/>
    <field old="anInt354 I" new="enum"/>
    <field old="anInt355 I" new="else"/>
@@ -2118,14 +2118,14 @@
    <field old="anInt368 I" new="this"/>
    <field old="anInt369 I" new="null"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handleNpcPositionUpdates" new="org.rscemulation.client.iIiiiiIiii">
+  <class old="org.openrsc.client.mudclient$handleNpcPositionUpdates" new="org.openrsc.client.iIiiiiIiii">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(II[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
    <field old="length I" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="for"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="for"/>
   </class>
-  <class old="org.rscemulation.loader.AppletLoader" new="org.rscemulation.client.IiiIiiiIIi">
+  <class old="org.openrsc.loader.AppletLoader" new="org.openrsc.client.IiiIiiiIIi">
    <method old="createDir()V" new="short"/>
    <method old="createImage(II)Ljava/awt/Image;" new="createImage"/>
    <method old="destroy()V" new="destroy"/>
@@ -2164,7 +2164,7 @@
    <field old="fileDownloaded Z" new="short"/>
    <field old="height I" new="true"/>
    <field old="img Z" new="do"/>
-   <field old="instance Lorg/rscemulation/client/RSCEmulation;" new="int"/>
+   <field old="instance Lorg/openrsc/client/openrsc;" new="int"/>
    <field old="loaderImage Ljava/awt/Image;" new="enum"/>
    <field old="md5CheckSum Ljava/lang/String;" new="new"/>
    <field old="mediaTracker Ljava/awt/MediaTracker;" new="else"/>
@@ -2172,10 +2172,10 @@
    <field old="started Z" new="this"/>
    <field old="width I" new="long"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.Line" new="org.rscemulation.client.iIIiiiIIiI">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.Line" new="org.openrsc.client.iIIiiiIIiI">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -2183,14 +2183,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
    <method old="getY()I" new="char"/>
@@ -2201,30 +2201,30 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="endx I" new="for"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="visible Z" new="new"/>
    <field old="x I" new="DS_BETA"/>
    <field old="y I" new="void"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.TileDef" new="org.rscemulation.client.IiIIIIIiII">
+  <class old="org.openrsc.client.entityhandling.defs.TileDef" new="org.openrsc.client.IiIIIIIiII">
    <method old="getColour()I" new="goto"/>
    <method old="getObjectType()I" new="const"/>
    <method old="getUnknown()I" new="DS_BETA"/>
@@ -2232,7 +2232,7 @@
    <field old="objectType I" new="for"/>
    <field old="tileValue I" new="void"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.GameObjectDef" new="org.rscemulation.client.IiIiiiiIiI">
+  <class old="org.openrsc.client.entityhandling.defs.GameObjectDef" new="org.openrsc.client.IiIiiiiIiI">
    <method old="blocksRanged()Z" new="float"/>
    <method old="getCommand1()Ljava/lang/String;" new="final"/>
    <method old="getCommand2()Ljava/lang/String;" new="for"/>
@@ -2256,7 +2256,7 @@
    <field old="type I" new="null"/>
    <field old="width I" new="float"/>
   </class>
-  <class old="com.runescape.client.util.Buffer" new="org.rscemulation.client.iIiIiiiiii">
+  <class old="com.runescape.client.util.Buffer" new="org.openrsc.client.iIiIiiiiii">
    <method old="finishBitAccess()V" new="float"/>
    <method old="get()B" new="false"/>
    <method old="getBits(I)I" new="short"/>
@@ -2307,110 +2307,110 @@
    <field old="offset I" new="int"/>
    <field old="payload [B" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handlePlayerChatMessageUpdates" new="org.rscemulation.client.iIIiiIiiII">
+  <class old="org.openrsc.client.mudclient$handlePlayerChatMessageUpdates" new="org.openrsc.client.iIIiiIiiII">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$10" new="org.rscemulation.client.iiIiiiIIIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$10" new="org.openrsc.client.iiIiiiIIIi">
    <method old="onKey(CI)Z" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="void"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="void"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handleGameObjectPositionUpdates" new="org.rscemulation.client.IIIiIiIIII">
+  <class old="org.openrsc.client.mudclient$handleGameObjectPositionUpdates" new="org.openrsc.client.IIIiIiIIII">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(II[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
    <field old="length I" new="for"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$11" new="org.rscemulation.client.IiiiiiIIIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$11" new="org.openrsc.client.IiiiiiIIIi">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handlePlayerAppearanceUpdates" new="org.rscemulation.client.iIIIIiIiiI">
+  <class old="org.openrsc.client.mudclient$handlePlayerAppearanceUpdates" new="org.openrsc.client.iIIIIiIiiI">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
    <field old="init Z" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="for"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="for"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$12" new="org.rscemulation.client.IIiIiiiiII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$12" new="org.openrsc.client.IIiIiiiiII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$13" new="org.rscemulation.client.iiIiIiiiII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$13" new="org.openrsc.client.iiIiIiiiII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.CameraVariables" new="org.rscemulation.client.IIIiiIIIii">
+  <class old="org.openrsc.client.CameraVariables" new="org.openrsc.client.IIIiiIIIii">
    <field old="anInt372 I" new="void"/>
    <field old="anInt373 I" new="DS_BETA"/>
    <field old="leftX I" new="for"/>
    <field old="rightX I" new="int"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$14" new="org.rscemulation.client.IIiiIiiiii">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$14" new="org.openrsc.client.IIiiIiiiii">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handleWallObjectPositionUpdates" new="org.rscemulation.client.iiIiIiiiiI">
+  <class old="org.openrsc.client.mudclient$handleWallObjectPositionUpdates" new="org.openrsc.client.iiIiIiiiiI">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(II[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
    <field old="length I" new="for"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$15" new="org.rscemulation.client.IIiiIiiiII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$15" new="org.openrsc.client.IIiiIiiiII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$16" new="org.rscemulation.client.IiIIIIIiiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$16" new="org.openrsc.client.IiIIIIIiiI">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$17" new="org.rscemulation.client.IiiIIiIIII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$17" new="org.openrsc.client.IiiIIiIIII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.GraphicalOverlay" new="org.rscemulation.client.IIIIiIiIII">
-   <method old="add([Lorg/rscemulation/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
-   <method old="doAction(IIILorg/rscemulation/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
-   <method old="getClient()Lorg/rscemulation/client/mudclient;" new="goto"/>
+  <class old="org.openrsc.client.gfx.GraphicalOverlay" new="org.openrsc.client.IIIIiIiIII">
+   <method old="add([Lorg/openrsc/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
+   <method old="doAction(IIILorg/openrsc/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
+   <method old="getClient()Lorg/openrsc/client/mudclient;" new="goto"/>
    <method old="getComponents()Ljava/util/List;" new="null"/>
    <method old="isMenu()Z" new="const"/>
    <method old="isVisible()Z" new="new"/>
    <method old="onAction(III)Z" new="DS_BETA"/>
    <method old="onAnyComponents(II)Z" new="DS_BETA"/>
-   <method old="onComponent(IILorg/rscemulation/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
+   <method old="onComponent(IILorg/openrsc/client/gfx/GraphicalComponent;)Z" new="DS_BETA"/>
    <method old="onRender()V" new="DS_BETA"/>
    <method old="onResize(II)V" new="const"/>
    <method old="setMenu(Z)V" new="DS_BETA"/>
    <method old="setVisible(Z)V" new="const"/>
    <field old="components Ljava/util/List;" new="void"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
    <field old="menu Z" new="int"/>
    <field old="visible Z" new="for"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$18" new="org.rscemulation.client.iiIiIIiiiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$18" new="org.openrsc.client.iiIiIIiiiI">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="com.runescape.client.sound.SoundConfiguration" new="org.rscemulation.client.IiIIiIiIiI">
+  <class old="com.runescape.client.sound.SoundConfiguration" new="org.openrsc.client.IiIIiIiIiI">
    <method old="AllatoriDecryptString2(Ljava/lang/String;)Ljava/lang/String;" new="DS_BETA"/>
    <field old="MIDI_CHUNK_ID I" new="void"/>
    <field old="WAVE_CHUNK_ID I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$19" new="org.rscemulation.client.iIiiIIIiii">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$19" new="org.openrsc.client.iIiiIIIiii">
    <method old="onKey(CI)Z" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="com.runescape.client.sound.SoundTrackFormatException" new="org.rscemulation.client.IiiiiIIIii">
+  <class old="com.runescape.client.sound.SoundTrackFormatException" new="org.openrsc.client.IiiiiIIIii">
    <field old="serialVersionUID J" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.NPCDef" new="org.rscemulation.client.IiiiiiIiIi">
+  <class old="org.openrsc.client.entityhandling.defs.NPCDef" new="org.openrsc.client.IiiiiiIiIi">
    <method old="getAtt()I" new="float"/>
    <method old="getBottomColour()I" new="do"/>
    <method old="getCamera1()I" new="super"/>
@@ -2450,46 +2450,46 @@
    <field old="topColour I" new="this"/>
    <field old="walkModel I" new="else"/>
   </class>
-  <class old="org.rscemulation.client.model.Sector" new="org.rscemulation.client.IIIIiIiIiI">
-   <method old="getTile(I)Lorg/rscemulation/client/model/Tile;" new="DS_BETA"/>
-   <method old="getTile(II)Lorg/rscemulation/client/model/Tile;" new="DS_BETA"/>
-   <method old="setTile(IILorg/rscemulation/client/model/Tile;)V" new="DS_BETA"/>
-   <method old="setTile(ILorg/rscemulation/client/model/Tile;)V" new="DS_BETA"/>
-   <method old="unpack(Ljava/nio/ByteBuffer;)Lorg/rscemulation/client/model/Sector;" new="DS_BETA"/>
+  <class old="org.openrsc.client.model.Sector" new="org.openrsc.client.IIIIiIiIiI">
+   <method old="getTile(I)Lorg/openrsc/client/model/Tile;" new="DS_BETA"/>
+   <method old="getTile(II)Lorg/openrsc/client/model/Tile;" new="DS_BETA"/>
+   <method old="setTile(IILorg/openrsc/client/model/Tile;)V" new="DS_BETA"/>
+   <method old="setTile(ILorg/openrsc/client/model/Tile;)V" new="DS_BETA"/>
+   <method old="unpack(Ljava/nio/ByteBuffer;)Lorg/openrsc/client/model/Sector;" new="DS_BETA"/>
    <field old="HEIGHT S" new="for"/>
    <field old="WIDTH S" new="DS_BETA"/>
-   <field old="tiles [Lorg/rscemulation/client/model/Tile;" new="void"/>
+   <field old="tiles [Lorg/openrsc/client/model/Tile;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.action.Hovering" new="org.rscemulation.client.iIiIiiIiii">
+  <class old="org.openrsc.client.gfx.action.Hovering" new="org.openrsc.client.iIiIiiIiii">
    <method old="hovering()V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.ScrollBar" new="org.rscemulation.client.iIiIiiIiII">
-   <method old="access$0(Lorg/rscemulation/client/gfx/components/ScrollBar;)I" new="goto"/>
-   <method old="access$1(Lorg/rscemulation/client/gfx/components/ScrollBar;)Lorg/rscemulation/client/gfx/action/ScrollListener;" new="const"/>
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollListener(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="const"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.ScrollBar" new="org.openrsc.client.iIiIiiIiII">
+   <method old="access$0(Lorg/openrsc/client/gfx/components/ScrollBar;)I" new="goto"/>
+   <method old="access$1(Lorg/openrsc/client/gfx/components/ScrollBar;)Lorg/openrsc/client/gfx/action/ScrollListener;" new="const"/>
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollListener(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="const"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="drawSlider(IIIIII)V" new="DS_BETA"/>
-   <method old="extracted()Lorg/rscemulation/client/gfx/action/Action;" new="true"/>
+   <method old="extracted()Lorg/openrsc/client/gfx/action/Action;" new="true"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
    <method old="getBoarder()I" new="null"/>
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
    <method old="getIndex()I" new="int"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getMenuListTextCount()I" new="enum"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
-   <method old="getScrollListener()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="case"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getScrollListener()Lorg/openrsc/client/gfx/action/ScrollListener;" new="case"/>
    <method old="getSize()I" new="byte"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
@@ -2503,34 +2503,34 @@
    <method old="onScrollUpdate(I)V" new="const"/>
    <method old="render()V" new="for"/>
    <method old="scrolling(I)V" new="DS_BETA"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
    <method old="setFirstIndex(I)V" new="float"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setMenuListTextCount(I)V" new="for"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setSize(I)V" new="short"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="firstIndex I" new="int"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="menuListTextCount I" new="for"/>
-   <field old="scroll Lorg/rscemulation/client/gfx/action/ScrollListener;" new="void"/>
+   <field old="scroll Lorg/openrsc/client/gfx/action/ScrollListener;" new="void"/>
    <field old="size I" new="DS_BETA"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="org.rscemulation.client.buffer.impl.RSBuffer" new="org.rscemulation.client.IiiIiiIIiI">
+  <class old="org.openrsc.client.buffer.impl.RSBuffer" new="org.openrsc.client.IiiIiiIIiI">
    <method old="addBits(II)V" new="DS_BETA"/>
    <method old="addByte(I)V" new="const"/>
    <method old="addInt(I)V" new="new"/>
@@ -2544,36 +2544,36 @@
    <field old="buffer [B" new="void"/>
    <field old="position I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handlePlayerHitsUpdates" new="org.rscemulation.client.IIiIIiIIII">
+  <class old="org.openrsc.client.mudclient$handlePlayerHitsUpdates" new="org.openrsc.client.IIiIIiIIII">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handlePlayerPositionUpdates" new="org.rscemulation.client.iIIiiiIIII">
+  <class old="org.openrsc.client.mudclient$handlePlayerPositionUpdates" new="org.openrsc.client.iIIiiiIIII">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(II[B)V" new="DS_BETA"/>
    <field old="data [B" new="for"/>
    <field old="length I" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.loader.WebClientLoader$1" new="org.rscemulation.client.IiIIiiiiIi">
+  <class old="org.openrsc.client.loader.WebClientLoader$1" new="org.openrsc.client.IiIIiiiiIi">
    <method old="onComplete([B)V" new="DS_BETA"/>
    <method old="update(II)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/loader/WebClientLoader;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/loader/WebClientLoader;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.loader.various.ProgressCallback" new="org.rscemulation.client.IIIiIiiiii">
+  <class old="org.openrsc.client.loader.various.ProgressCallback" new="org.openrsc.client.IIIiIiiiii">
    <method old="onComplete([B)V" new="DS_BETA"/>
    <method old="update(II)V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.ElevationDef" new="org.rscemulation.client.iiIiIiIIIi">
+  <class old="org.openrsc.client.entityhandling.defs.ElevationDef" new="org.openrsc.client.iiIiIiIIIi">
    <method old="getUnknown1()I" new="DS_BETA"/>
    <method old="getUnknown2()I" new="const"/>
    <field old="unknown1 I" new="void"/>
    <field old="unknown2 I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.model.Sprite" new="org.rscemulation.client.IiIIIIIiIi">
-   <method old="fromImage(Ljava/awt/image/BufferedImage;)Lorg/rscemulation/client/model/Sprite;" new="DS_BETA"/>
+  <class old="org.openrsc.client.model.Sprite" new="org.openrsc.client.IiIIIIIiIi">
+   <method old="fromImage(Ljava/awt/image/BufferedImage;)Lorg/openrsc/client/model/Sprite;" new="DS_BETA"/>
    <method old="getHeight()I" new="try"/>
    <method old="getID()I" new="new"/>
    <method old="getPackageName()Ljava/lang/String;" new="goto"/>
@@ -2591,7 +2591,7 @@
    <method old="setShift(II)V" new="DS_BETA"/>
    <method old="setSomething(II)V" new="goto"/>
    <method old="toString()Ljava/lang/String;" new="toString"/>
-   <method old="unpack(Ljava/nio/ByteBuffer;)Lorg/rscemulation/client/model/Sprite;" new="DS_BETA"/>
+   <method old="unpack(Ljava/nio/ByteBuffer;)Lorg/openrsc/client/model/Sprite;" new="DS_BETA"/>
    <field old="TRANSPARENT I" new="null"/>
    <field old="height I" new="short"/>
    <field old="id I" new="do"/>
@@ -2604,24 +2604,24 @@
    <field old="xShift I" new="enum"/>
    <field old="yShift I" new="true"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$View$1" new="org.rscemulation.client.IiIiiiIiII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$View$1" new="org.openrsc.client.IiIiiiIiII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$1 Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;" new="void"/>
+   <field old="this$1 Lorg/openrsc/client/gfx/uis/AuctionHouse$View;" new="void"/>
    <field old="val$newIndex I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$20" new="org.rscemulation.client.iIIiIIiIIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$20" new="org.openrsc.client.iIIiIIiIIi">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$21" new="org.rscemulation.client.iIiiiIIIIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$21" new="org.openrsc.client.iIiiiIIIIi">
    <method old="onKey(CI)Z" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.gfx.GraphicalComponent" new="org.rscemulation.client.IiiiiiIIiI">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.GraphicalComponent" new="org.openrsc.client.IiiiiiIIiI">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -2629,14 +2629,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
    <method old="getY()I" new="char"/>
@@ -2649,50 +2649,50 @@
    <method old="onScrollUpdate(I)V" new="const"/>
    <method old="render()V" new="for"/>
    <method old="scrolling(I)V" new="DS_BETA"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="boarder I" new="short"/>
    <field old="boarder_moving I" new="for"/>
    <field old="bounds Ljava/awt/Rectangle;" new="DS_BETA"/>
    <field old="components Ljava/util/List;" new="long"/>
-   <field old="dragListener Lorg/rscemulation/client/gfx/action/DragListener;" new="false"/>
+   <field old="dragListener Lorg/openrsc/client/gfx/action/DragListener;" new="false"/>
    <field old="dragging Z" new="this"/>
    <field old="fill I" new="null"/>
    <field old="fill_hovering I" new="final"/>
-   <field old="frameScroll Lorg/rscemulation/client/gfx/action/ScrollListener;" new="float"/>
+   <field old="frameScroll Lorg/openrsc/client/gfx/action/ScrollListener;" new="float"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="keyListener Lorg/rscemulation/client/gfx/action/KeyListener;" new="const"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="keyListener Lorg/openrsc/client/gfx/action/KeyListener;" new="const"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="offsetX I" new="do"/>
    <field old="offsetY I" new="void"/>
    <field old="opaque I" new="case"/>
-   <field old="parent Lorg/rscemulation/client/gfx/GraphicalComponent;" new="break"/>
+   <field old="parent Lorg/openrsc/client/gfx/GraphicalComponent;" new="break"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$22" new="org.rscemulation.client.iIiIIiiIii">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$22" new="org.openrsc.client.iIiIIiiIii">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$23" new="org.rscemulation.client.IIiiIIIIiI">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$23" new="org.openrsc.client.IIiiIIIIiI">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.PrayerDef" new="org.rscemulation.client.IIIiIIiIiI">
+  <class old="org.openrsc.client.entityhandling.defs.PrayerDef" new="org.openrsc.client.IIIiIIiIiI">
    <method old="getDescription()Ljava/lang/String;" new="DS_BETA"/>
    <method old="getDrainRate()I" new="new"/>
    <method old="getName()Ljava/lang/String;" new="const"/>
@@ -2703,7 +2703,7 @@
    <field old="name Ljava/lang/String;" new="void"/>
    <field old="reqLevel I" new="void"/>
   </class>
-  <class old="com.runescape.AudioReader" new="org.rscemulation.client.iIiiIIIiiI">
+  <class old="com.runescape.AudioReader" new="org.openrsc.client.iIiiIIIiiI">
    <method old="loadData([BII)V" new="DS_BETA"/>
    <method old="read()I" new="read"/>
    <method old="read([BII)I" new="read"/>
@@ -2712,7 +2712,7 @@
    <field old="length I" new="DS_BETA"/>
    <field old="offset I" new="for"/>
   </class>
-  <class old="org.rscemulation.loader.util.DataConversions" new="org.rscemulation.client.IIiiIIIiIi">
+  <class old="org.openrsc.loader.util.DataConversions" new="org.openrsc.client.IIiiIIIiIi">
    <method old="appendUnits(I)Ljava/lang/String;" new="DS_BETA"/>
    <method old="average([I)I" new="DS_BETA"/>
    <method old="byteToString([BII)Ljava/lang/String;" new="DS_BETA"/>
@@ -2733,26 +2733,26 @@
    <field old="characters [C" new="void"/>
    <field old="rand Ljava/util/Random;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$24" new="org.rscemulation.client.IiIIIIiiIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$24" new="org.openrsc.client.IiIIIIiiIi">
    <method old="onScrollUpdate(I)V" new="const"/>
    <method old="scrolling(I)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.ScrollBar$1" new="org.rscemulation.client.iiiiIIiIII">
+  <class old="org.openrsc.client.gfx.components.ScrollBar$1" new="org.openrsc.client.iiiiIIiIII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/components/ScrollBar;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/components/ScrollBar;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$25" new="org.rscemulation.client.IIIIIIiIIi">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$25" new="org.openrsc.client.IIIIIIiIIi">
    <method old="onScrollUpdate(I)V" new="const"/>
    <method old="scrolling(I)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$26" new="org.rscemulation.client.IiiiIiIiII">
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$26" new="org.openrsc.client.IiiiIiIiII">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="void"/>
-   <field old="val$mc Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="void"/>
+   <field old="val$mc Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.Menu" new="org.rscemulation.client.iIiiiIiIii">
+  <class old="org.openrsc.client.Menu" new="org.openrsc.client.iIiiiIiIii">
    <method old="addString(ILjava/lang/String;Z)V" new="DS_BETA"/>
    <method old="clanMenuSlider(IIIIIIZ)I" new="goto"/>
    <method old="clearList(I)V" new="DS_BETA"/>
@@ -2832,7 +2832,7 @@
    <field old="greeModifier I" new="int"/>
    <field old="handleMaxTextLength [I" new="interface"/>
    <field old="lastMouseButton I" new="long"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="break"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="break"/>
    <field old="menuListText [[Ljava/lang/String;" new="try"/>
    <field old="menuListTextCount [I" new="for"/>
    <field old="menuObjectCanAcceptActions [Z" new="transient"/>
@@ -2852,30 +2852,30 @@
    <field old="mouseClicksConsecutive I" new="continue"/>
    <field old="mouseX I" new="case"/>
    <field old="mouseY I" new="enum"/>
-   <field old="raster Lorg/rscemulation/client/Raster;" new="catch"/>
+   <field old="raster Lorg/openrsc/client/Raster;" new="catch"/>
    <field old="redModifier I" new="else"/>
    <field old="redStringColour Z" new="double"/>
    <field old="topIndex [I" new="byte"/>
   </class>
-  <class old="org.rscemulation.client.gfx.action.DragListener" new="org.rscemulation.client.iIIIIiiIii">
+  <class old="org.openrsc.client.gfx.action.DragListener" new="org.openrsc.client.iIIIIiiIii">
    <method old="onDragging(II)Z" new="DS_BETA"/>
    <method old="stopDragging()V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$handleNpcUpdates" new="org.rscemulation.client.IIIIiiIIIi">
+  <class old="org.openrsc.client.mudclient$handleNpcUpdates" new="org.openrsc.client.IIIIiiIIIi">
    <method old="run()V" new="DS_BETA"/>
    <method old="update([B)V" new="DS_BETA"/>
    <field old="data [B" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="void"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.RSCEmulation$LoadingPhase" new="org.rscemulation.client.iIiIIiIIii">
-   <method old="valueOf(Ljava/lang/String;)Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="valueOf"/>
-   <method old="values()[Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="values"/>
-   <field old="ENUM$VALUES [Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="DS_BETA"/>
-   <field old="LOADED Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="for"/>
-   <field old="LOADING Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="int"/>
-   <field old="NOT_LOADED Lorg/rscemulation/client/RSCEmulation$LoadingPhase;" new="void"/>
+  <class old="org.openrsc.client.openrsc$LoadingPhase" new="org.openrsc.client.iIiIIiIIii">
+   <method old="valueOf(Ljava/lang/String;)Lorg/openrsc/client/openrsc$LoadingPhase;" new="valueOf"/>
+   <method old="values()[Lorg/openrsc/client/openrsc$LoadingPhase;" new="values"/>
+   <field old="ENUM$VALUES [Lorg/openrsc/client/openrsc$LoadingPhase;" new="DS_BETA"/>
+   <field old="LOADED Lorg/openrsc/client/openrsc$LoadingPhase;" new="for"/>
+   <field old="LOADING Lorg/openrsc/client/openrsc$LoadingPhase;" new="int"/>
+   <field old="NOT_LOADED Lorg/openrsc/client/openrsc$LoadingPhase;" new="void"/>
   </class>
-  <class old="com.runescape.client.cache.CacheUtil" new="org.rscemulation.client.IIiIiIiiii">
+  <class old="com.runescape.client.cache.CacheUtil" new="org.openrsc.client.IIiIiIiiii">
    <method old="AllatoriDecryptString2(Ljava/lang/String;)Ljava/lang/String;" new="const"/>
    <method old="fileContents(Ljava/lang/String;[B)[B" new="goto"/>
    <method old="fileLength(Ljava/lang/String;[B)I" new="const"/>
@@ -2883,17 +2883,17 @@
    <method old="getShort([BI)I" new="DS_BETA"/>
    <method old="loadArchive(Ljava/lang/String;)[B" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.CheckBox$1" new="org.rscemulation.client.iiIiiiiiii">
+  <class old="org.openrsc.client.gfx.components.CheckBox$1" new="org.openrsc.client.iiIiiiiiii">
    <method old="action(III)V" new="DS_BETA"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/components/CheckBox;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/components/CheckBox;" new="DS_BETA"/>
   </class>
-  <class old="com.runescape.SoundPlayer" new="org.rscemulation.client.iIIiIIiIii">
+  <class old="com.runescape.SoundPlayer" new="org.openrsc.client.iIIiIIiIii">
    <method old="play(Ljava/lang/String;)V" new="DS_BETA"/>
    <field old="archive [B" new="DS_BETA"/>
    <field old="ex Ljava/util/concurrent/ExecutorService;" new="for"/>
    <field old="lock Ljava/util/concurrent/locks/ReentrantLock;" new="void"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.DoorDef" new="org.rscemulation.client.IiiIIIIiII">
+  <class old="org.openrsc.client.entityhandling.defs.DoorDef" new="org.openrsc.client.IiiIIIIiII">
    <method old="getCommand1()Ljava/lang/String;" new="null"/>
    <method old="getCommand2()Ljava/lang/String;" new="for"/>
    <method old="getDescription()Ljava/lang/String;" new="DS_BETA"/>
@@ -2914,9 +2914,9 @@
    <field old="name Ljava/lang/String;" new="void"/>
    <field old="unknown I" new="enum"/>
   </class>
-  <class old="org.rscemulation.client.Auction" new="org.rscemulation.client.iiIIIIiiii">
+  <class old="org.openrsc.client.Auction" new="org.openrsc.client.iiIIIIiiii">
    <method old="compareTo(Ljava/lang/Object;)I" new="compareTo"/>
-   <method old="compareTo(Lorg/rscemulation/client/Auction;)I" new="DS_BETA"/>
+   <method old="compareTo(Lorg/openrsc/client/Auction;)I" new="DS_BETA"/>
    <method old="decIndex()V" new="const"/>
    <method old="equals(Ljava/lang/Object;)Z" new="equals"/>
    <method old="getAmount()J" new="null"/>
@@ -2936,7 +2936,7 @@
    <field old="owner Z" new="for"/>
    <field old="price J" new="null"/>
   </class>
-  <class old="org.rscemulation.client.loader.WebClientLoader" new="org.rscemulation.client.loader.WebClientLoader">
+  <class old="org.openrsc.client.loader.WebClientLoader" new="org.openrsc.client.loader.WebClientLoader">
    <method old="componentHidden(Ljava/awt/event/ComponentEvent;)V" new="componentHidden"/>
    <method old="componentMoved(Ljava/awt/event/ComponentEvent;)V" new="componentMoved"/>
    <method old="componentResized(Ljava/awt/event/ComponentEvent;)V" new="componentResized"/>
@@ -2963,69 +2963,69 @@
    <field old="applet_thread Ljava/lang/Thread;" new="null"/>
    <field old="defaultHeight I" new="DS_BETA"/>
    <field old="defaultWidth I" new="void"/>
-   <field old="instance Lorg/rscemulation/client/mudclient;" new="int"/>
+   <field old="instance Lorg/openrsc/client/mudclient;" new="int"/>
    <field old="serialVersionUID J" new="for"/>
   </class>
-  <class old="org.rscemulation.client.gfx.uis.AuctionHouse$View" new="org.rscemulation.client.iIiIIIIiII">
-   <method old="access$1(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;)Lorg/rscemulation/client/gfx/components/TextBox;" new="DS_BETA"/>
-   <method old="access$10(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;Lorg/rscemulation/client/gfx/components/TextBox;)V" new="null"/>
-   <method old="access$11(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;)Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="null"/>
-   <method old="access$2(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;)Lorg/rscemulation/client/gfx/components/TextBox;" new="try"/>
-   <method old="access$3(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;)Lorg/rscemulation/client/gfx/components/TextBox;" new="const"/>
-   <method old="access$4(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;Lorg/rscemulation/client/gfx/components/TextBox;)V" new="goto"/>
-   <method old="access$5(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;)Lorg/rscemulation/client/gfx/components/TextBox;" new="goto"/>
-   <method old="access$6(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;Lorg/rscemulation/client/gfx/components/TextBox;)V" new="DS_BETA"/>
-   <method old="access$7(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;)Lorg/rscemulation/client/gfx/components/TextBox;" new="new"/>
-   <method old="access$8(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;Lorg/rscemulation/client/gfx/components/TextBox;)V" new="new"/>
-   <method old="access$9(Lorg/rscemulation/client/gfx/uis/AuctionHouse$View;Lorg/rscemulation/client/gfx/components/TextBox;)V" new="const"/>
+  <class old="org.openrsc.client.gfx.uis.AuctionHouse$View" new="org.openrsc.client.iIiIIIIiII">
+   <method old="access$1(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;)Lorg/openrsc/client/gfx/components/TextBox;" new="DS_BETA"/>
+   <method old="access$10(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;Lorg/openrsc/client/gfx/components/TextBox;)V" new="null"/>
+   <method old="access$11(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;)Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="null"/>
+   <method old="access$2(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;)Lorg/openrsc/client/gfx/components/TextBox;" new="try"/>
+   <method old="access$3(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;)Lorg/openrsc/client/gfx/components/TextBox;" new="const"/>
+   <method old="access$4(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;Lorg/openrsc/client/gfx/components/TextBox;)V" new="goto"/>
+   <method old="access$5(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;)Lorg/openrsc/client/gfx/components/TextBox;" new="goto"/>
+   <method old="access$6(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;Lorg/openrsc/client/gfx/components/TextBox;)V" new="DS_BETA"/>
+   <method old="access$7(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;)Lorg/openrsc/client/gfx/components/TextBox;" new="new"/>
+   <method old="access$8(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;Lorg/openrsc/client/gfx/components/TextBox;)V" new="new"/>
+   <method old="access$9(Lorg/openrsc/client/gfx/uis/AuctionHouse$View;Lorg/openrsc/client/gfx/components/TextBox;)V" new="const"/>
    <method old="update(Z)V" new="DS_BETA"/>
-   <field old="amountBox Lorg/rscemulation/client/gfx/components/TextBox;" new="const"/>
-   <field old="auctionList Lorg/rscemulation/client/gfx/components/Box;" new="enum"/>
-   <field old="auctionSizeDisplay Lorg/rscemulation/client/gfx/components/DrawString;" new="short"/>
-   <field old="cancelAuctionButton Lorg/rscemulation/client/gfx/components/Box;" new="transient"/>
-   <field old="coins Lorg/rscemulation/client/gfx/components/DrawString;" new="continue"/>
-   <field old="coinsAmount Lorg/rscemulation/client/gfx/components/TextBox;" new="import"/>
-   <field old="coinsSprite Lorg/rscemulation/client/gfx/components/DrawSprite;" new="do"/>
-   <field old="createAuctionBox Lorg/rscemulation/client/gfx/components/Box;" new="case"/>
-   <field old="createAuctionButton Lorg/rscemulation/client/gfx/components/Box;" new="char"/>
-   <field old="inventoryItemAmounts [Lorg/rscemulation/client/gfx/components/DrawString;" new="void"/>
-   <field old="inventoryItemBoxes [Lorg/rscemulation/client/gfx/components/Box;" new="null"/>
-   <field old="inventoryItemSprites [Lorg/rscemulation/client/gfx/components/DrawSprite;" new="else"/>
-   <field old="noteSprites [Lorg/rscemulation/client/gfx/components/DrawSprite;" new="byte"/>
-   <field old="priceAll Lorg/rscemulation/client/gfx/components/DrawString;" new="new"/>
-   <field old="priceEach Lorg/rscemulation/client/gfx/components/DrawString;" new="abstract"/>
-   <field old="quantity Lorg/rscemulation/client/gfx/components/DrawString;" new="try"/>
-   <field old="saleAmount Lorg/rscemulation/client/gfx/components/DrawString;" new="class"/>
-   <field old="saleAmountInput Lorg/rscemulation/client/gfx/components/TextBox;" new="goto"/>
-   <field old="salePrice Lorg/rscemulation/client/gfx/components/DrawString;" new="false"/>
-   <field old="salePriceInput Lorg/rscemulation/client/gfx/components/TextBox;" new="if"/>
-   <field old="searchBox Lorg/rscemulation/client/gfx/components/TextBox;" new="super"/>
-   <field old="searchWord Lorg/rscemulation/client/gfx/components/DrawString;" new="this"/>
-   <field old="selectedInventoryItemAmount Lorg/rscemulation/client/gfx/components/DrawString;" new="float"/>
-   <field old="selectedInventoryItemSprite Lorg/rscemulation/client/gfx/components/DrawSprite;" new="instanceof"/>
-   <field old="selectedInventoryItemSpriteBox Lorg/rscemulation/client/gfx/components/Box;" new="return"/>
-   <field old="selectedItemBox Lorg/rscemulation/client/gfx/components/Box;" new="long"/>
-   <field old="selectedItemNameString Lorg/rscemulation/client/gfx/components/DrawString;" new="catch"/>
-   <field old="selectedItemSprite Lorg/rscemulation/client/gfx/components/DrawSprite;" new="extends"/>
-   <field old="sortBy Lorg/rscemulation/client/gfx/components/Box;" new="for"/>
-   <field old="this$0 Lorg/rscemulation/client/gfx/uis/AuctionHouse;" new="break"/>
-   <field old="totalPrice Lorg/rscemulation/client/gfx/components/DrawString;" new="switch"/>
-   <field old="typeAllButton Lorg/rscemulation/client/gfx/components/Box;" new="throws"/>
-   <field old="typeArrowsButton Lorg/rscemulation/client/gfx/components/Box;" new="true"/>
-   <field old="typeBox Lorg/rscemulation/client/gfx/components/Box;" new="throw"/>
-   <field old="typeConsumableButton Lorg/rscemulation/client/gfx/components/Box;" new="private"/>
-   <field old="typeNotesButton Lorg/rscemulation/client/gfx/components/Box;" new="static"/>
-   <field old="typeRunesButton Lorg/rscemulation/client/gfx/components/Box;" new="final"/>
-   <field old="typeWieldableButton Lorg/rscemulation/client/gfx/components/Box;" new="int"/>
-   <field old="yourAuctionsBox Lorg/rscemulation/client/gfx/components/Box;" new="DS_BETA"/>
+   <field old="amountBox Lorg/openrsc/client/gfx/components/TextBox;" new="const"/>
+   <field old="auctionList Lorg/openrsc/client/gfx/components/Box;" new="enum"/>
+   <field old="auctionSizeDisplay Lorg/openrsc/client/gfx/components/DrawString;" new="short"/>
+   <field old="cancelAuctionButton Lorg/openrsc/client/gfx/components/Box;" new="transient"/>
+   <field old="coins Lorg/openrsc/client/gfx/components/DrawString;" new="continue"/>
+   <field old="coinsAmount Lorg/openrsc/client/gfx/components/TextBox;" new="import"/>
+   <field old="coinsSprite Lorg/openrsc/client/gfx/components/DrawSprite;" new="do"/>
+   <field old="createAuctionBox Lorg/openrsc/client/gfx/components/Box;" new="case"/>
+   <field old="createAuctionButton Lorg/openrsc/client/gfx/components/Box;" new="char"/>
+   <field old="inventoryItemAmounts [Lorg/openrsc/client/gfx/components/DrawString;" new="void"/>
+   <field old="inventoryItemBoxes [Lorg/openrsc/client/gfx/components/Box;" new="null"/>
+   <field old="inventoryItemSprites [Lorg/openrsc/client/gfx/components/DrawSprite;" new="else"/>
+   <field old="noteSprites [Lorg/openrsc/client/gfx/components/DrawSprite;" new="byte"/>
+   <field old="priceAll Lorg/openrsc/client/gfx/components/DrawString;" new="new"/>
+   <field old="priceEach Lorg/openrsc/client/gfx/components/DrawString;" new="abstract"/>
+   <field old="quantity Lorg/openrsc/client/gfx/components/DrawString;" new="try"/>
+   <field old="saleAmount Lorg/openrsc/client/gfx/components/DrawString;" new="class"/>
+   <field old="saleAmountInput Lorg/openrsc/client/gfx/components/TextBox;" new="goto"/>
+   <field old="salePrice Lorg/openrsc/client/gfx/components/DrawString;" new="false"/>
+   <field old="salePriceInput Lorg/openrsc/client/gfx/components/TextBox;" new="if"/>
+   <field old="searchBox Lorg/openrsc/client/gfx/components/TextBox;" new="super"/>
+   <field old="searchWord Lorg/openrsc/client/gfx/components/DrawString;" new="this"/>
+   <field old="selectedInventoryItemAmount Lorg/openrsc/client/gfx/components/DrawString;" new="float"/>
+   <field old="selectedInventoryItemSprite Lorg/openrsc/client/gfx/components/DrawSprite;" new="instanceof"/>
+   <field old="selectedInventoryItemSpriteBox Lorg/openrsc/client/gfx/components/Box;" new="return"/>
+   <field old="selectedItemBox Lorg/openrsc/client/gfx/components/Box;" new="long"/>
+   <field old="selectedItemNameString Lorg/openrsc/client/gfx/components/DrawString;" new="catch"/>
+   <field old="selectedItemSprite Lorg/openrsc/client/gfx/components/DrawSprite;" new="extends"/>
+   <field old="sortBy Lorg/openrsc/client/gfx/components/Box;" new="for"/>
+   <field old="this$0 Lorg/openrsc/client/gfx/uis/AuctionHouse;" new="break"/>
+   <field old="totalPrice Lorg/openrsc/client/gfx/components/DrawString;" new="switch"/>
+   <field old="typeAllButton Lorg/openrsc/client/gfx/components/Box;" new="throws"/>
+   <field old="typeArrowsButton Lorg/openrsc/client/gfx/components/Box;" new="true"/>
+   <field old="typeBox Lorg/openrsc/client/gfx/components/Box;" new="throw"/>
+   <field old="typeConsumableButton Lorg/openrsc/client/gfx/components/Box;" new="private"/>
+   <field old="typeNotesButton Lorg/openrsc/client/gfx/components/Box;" new="static"/>
+   <field old="typeRunesButton Lorg/openrsc/client/gfx/components/Box;" new="final"/>
+   <field old="typeWieldableButton Lorg/openrsc/client/gfx/components/Box;" new="int"/>
+   <field old="yourAuctionsBox Lorg/openrsc/client/gfx/components/Box;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.loader.util.unzip" new="org.rscemulation.client.iiIiiiiIII">
+  <class old="org.openrsc.loader.util.unzip" new="org.openrsc.client.iiIiiiiIII">
    <method old="copyInputStream(Ljava/io/InputStream;Ljava/io/OutputStream;)V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.DrawString" new="org.rscemulation.client.IiIIIiiIii">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.DrawString" new="org.openrsc.client.IiIIIiiIii">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -3033,14 +3033,14 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
    <method old="getY()I" new="char"/>
@@ -3051,45 +3051,45 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setColor(I)V" new="const"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setSize(I)V" new="DS_BETA"/>
    <method old="setText(Ljava/lang/String;)V" new="DS_BETA"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="centered Z" new="void"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="size I" new="for"/>
    <field old="text Ljava/lang/String;" new="DS_BETA"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$HandlePlayerWornItemsUpdate" new="org.rscemulation.client.IIiIiiiIii">
+  <class old="org.openrsc.client.mudclient$HandlePlayerWornItemsUpdate" new="org.openrsc.client.IIiIiiiIii">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.extras.TextureDef" new="org.rscemulation.client.iIiIiIIiiI">
+  <class old="org.openrsc.client.entityhandling.defs.extras.TextureDef" new="org.openrsc.client.iIiIiIIiiI">
    <method old="getAnimationName()Ljava/lang/String;" new="DS_BETA"/>
    <method old="getDataName()Ljava/lang/String;" new="const"/>
    <field old="animationName Ljava/lang/String;" new="void"/>
    <field old="dataName Ljava/lang/String;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.entityhandling.defs.SpellDef" new="org.rscemulation.client.iiIiiIiiiI">
+  <class old="org.openrsc.client.entityhandling.defs.SpellDef" new="org.openrsc.client.iiIiiIiiiI">
    <method old="getDescription()Ljava/lang/String;" new="DS_BETA"/>
    <method old="getName()Ljava/lang/String;" new="const"/>
    <method old="getReqLevel()I" new="try"/>
@@ -3104,7 +3104,7 @@
    <field old="runeCount I" new="for"/>
    <field old="type I" new="int"/>
   </class>
-  <class old="com.runescape.client.sound.SoundTrack" new="org.rscemulation.client.IIIIiiIiii">
+  <class old="com.runescape.client.sound.SoundTrack" new="org.openrsc.client.IIIIiiIiii">
    <method old="fromBuffer(Ljava/lang/String;Lcom/runescape/client/util/Buffer;)Lcom/runescape/client/sound/SoundTrack;" new="DS_BETA"/>
    <field old="bitsPerSample I" new="for"/>
    <field old="blockAlign I" new="enum"/>
@@ -3118,37 +3118,37 @@
    <field old="rawData [B" new="float"/>
    <field old="sampleRate I" new="do"/>
   </class>
-  <class old="org.rscemulation.client.DataFileDecrypter" new="org.rscemulation.client.IiIiiiIiiI">
+  <class old="org.openrsc.client.DataFileDecrypter" new="org.openrsc.client.IiIiiiIiiI">
    <method old="load(Ljava/io/InputStream;)[B" new="DS_BETA"/>
    <method old="loadCachedData(Ljava/lang/String;[B)[B" new="DS_BETA"/>
-   <method old="method130(Lorg/rscemulation/client/DataFileVariables;)V" new="goto"/>
-   <method old="method131(Lorg/rscemulation/client/DataFileVariables;)V" new="DS_BETA"/>
-   <method old="method132(Lorg/rscemulation/client/DataFileVariables;)B" new="const"/>
-   <method old="method133(Lorg/rscemulation/client/DataFileVariables;)B" new="new"/>
-   <method old="method134(ILorg/rscemulation/client/DataFileVariables;)I" new="DS_BETA"/>
-   <method old="method135(Lorg/rscemulation/client/DataFileVariables;)V" new="null"/>
+   <method old="method130(Lorg/openrsc/client/DataFileVariables;)V" new="goto"/>
+   <method old="method131(Lorg/openrsc/client/DataFileVariables;)V" new="DS_BETA"/>
+   <method old="method132(Lorg/openrsc/client/DataFileVariables;)B" new="const"/>
+   <method old="method133(Lorg/openrsc/client/DataFileVariables;)B" new="new"/>
+   <method old="method134(ILorg/openrsc/client/DataFileVariables;)I" new="DS_BETA"/>
+   <method old="method135(Lorg/openrsc/client/DataFileVariables;)V" new="null"/>
    <method old="method136([I[I[I[BIII)V" new="DS_BETA"/>
    <method old="unpackData([BI[BII)I" new="DS_BETA"/>
    <field old="kdb Ljava/net/URL;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.loader.various.VirtualBrowser" new="org.rscemulation.client.IiiIiiiiiI">
+  <class old="org.openrsc.client.loader.various.VirtualBrowser" new="org.openrsc.client.IiiIiiiiiI">
    <method old="createConnection(Ljava/net/URL;Ljava/lang/String;)Ljava/net/HttpURLConnection;" new="const"/>
-   <method old="download(Ljava/net/HttpURLConnection;Lorg/rscemulation/client/loader/various/ProgressCallback;)[B" new="DS_BETA"/>
+   <method old="download(Ljava/net/HttpURLConnection;Lorg/openrsc/client/loader/various/ProgressCallback;)[B" new="DS_BETA"/>
    <method old="get(Ljava/net/URL;)Ljava/lang/String;" new="DS_BETA"/>
-   <method old="getRaw(Ljava/net/URL;Lorg/rscemulation/client/loader/various/ProgressCallback;)[B" new="DS_BETA"/>
+   <method old="getRaw(Ljava/net/URL;Lorg/openrsc/client/loader/various/ProgressCallback;)[B" new="DS_BETA"/>
    <method old="post(Ljava/net/URL;Ljava/lang/String;Z)Ljava/lang/String;" new="DS_BETA"/>
    <method old="postRaw(Ljava/net/URL;Ljava/lang/String;)[B" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.gfx.action.Action" new="org.rscemulation.client.IIiiiIiiIi">
+  <class old="org.openrsc.client.gfx.action.Action" new="org.openrsc.client.IIiiiIiiIi">
    <method old="action(III)V" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.mudclient$HandlePlayerUsernameUpdates" new="org.rscemulation.client.iiiIiIIIii">
+  <class old="org.openrsc.client.mudclient$HandlePlayerUsernameUpdates" new="org.openrsc.client.iiiIiIIIii">
    <method old="run()V" new="DS_BETA"/>
    <method old="update(I[B)V" new="DS_BETA"/>
    <field old="data [B" new="void"/>
-   <field old="this$0 Lorg/rscemulation/client/mudclient;" new="DS_BETA"/>
+   <field old="this$0 Lorg/openrsc/client/mudclient;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.DataFileVariables" new="org.rscemulation.client.IiIiiIIIIi">
+  <class old="org.openrsc.client.DataFileVariables" new="org.openrsc.client.IiIiiIIIIi">
    <field old="UID [B" new="const"/>
    <field old="aBoolean477 Z" new="interface"/>
    <field old="aBooleanArray491 [Z" new="final"/>
@@ -3199,10 +3199,10 @@
    <field old="anIntArrayArray500 [[I" new="short"/>
    <field old="anIntArrayArray501 [[I" new="long"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.TextBox" new="org.rscemulation.client.iiIIiIiiii">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.TextBox" new="org.openrsc.client.iiIIiIiiii">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="append(Ljava/lang/String;)V" new="goto"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
@@ -3211,15 +3211,15 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
    <method old="getFontSize()I" new="byte"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getText()Ljava/lang/String;" new="true"/>
    <method old="getTextColor()I" new="enum"/>
    <method old="getWidth()I" new="this"/>
@@ -3233,36 +3233,36 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
    <method old="setFontSize(I)V" new="DS_BETA"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setSelected(Z)V" new="goto"/>
    <method old="setText(Ljava/lang/String;)V" new="DS_BETA"/>
    <method old="setTextColor(I)V" new="const"/>
    <method old="setTextUnchangable(Ljava/lang/String;)V" new="const"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="fontSize I" new="for"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="selected Z" new="DS_BETA"/>
    <field old="text Ljava/lang/String;" new="void"/>
    <field old="textColor I" new="int"/>
    <field old="visible Z" new="new"/>
   </class>
-  <class old="org.rscemulation.client.DataOperations" new="org.rscemulation.client.IiIIiiIiII">
+  <class old="org.openrsc.client.DataOperations" new="org.openrsc.client.IiIIiiIiII">
    <method old="addCharacters(Ljava/lang/String;I)Ljava/lang/String;" new="DS_BETA"/>
    <method old="getImage([BII)Ljava/awt/Image;" new="DS_BETA"/>
    <method old="getIntFromByteArray([BII)I" new="const"/>
@@ -3282,7 +3282,7 @@
    <method old="stringLength12ToLong(Ljava/lang/String;)J" new="const"/>
    <field old="baseLengthArray [I" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.PacketConstruction" new="org.rscemulation.client.iIIiiIiIII">
+  <class old="org.openrsc.client.PacketConstruction" new="org.openrsc.client.iIIiiIiIII">
    <method old="add2ByteInt(I)V" new="DS_BETA"/>
    <method old="add4ByteInt(I)V" new="goto"/>
    <method old="addByte(I)V" new="const"/>
@@ -3332,11 +3332,11 @@
    <field old="packetStart I" new="class"/>
    <field old="skip8Offset I" new="const"/>
   </class>
-  <class old="org.rscemulation.client.Resources" new="org.rscemulation.client.iIiIIIiIiI">
+  <class old="org.openrsc.client.Resources" new="org.openrsc.client.iIiIIIiIiI">
    <method old="AllatoriDecryptString2(Ljava/lang/String;)Ljava/lang/String;" new="const"/>
    <method old="load(Ljava/lang/String;)Ljava/io/InputStream;" new="DS_BETA"/>
   </class>
-  <class old="org.rscemulation.client.Raster" new="org.rscemulation.client.iiiiIiiIiI">
+  <class old="org.openrsc.client.Raster" new="org.openrsc.client.iiiiIiiIiI">
    <method old="addConsumer(Ljava/awt/image/ImageConsumer;)V" new="addConsumer"/>
    <method old="cleanupSprites()V" new="final"/>
    <method old="completePixels()V" new="new"/>
@@ -3359,12 +3359,12 @@
    <method old="drawGradient(IIIIII)V" new="DS_BETA"/>
    <method old="drawImage(Ljava/awt/Graphics;II)V" new="DS_BETA"/>
    <method old="drawImage(Ljava/awt/Graphics;IILjava/awt/Image;)V" new="DS_BETA"/>
-   <method old="drawLetter(Ljava/awt/Font;Ljava/awt/FontMetrics;CILorg/rscemulation/client/ImplementationDelegate;IZ)V" new="DS_BETA"/>
+   <method old="drawLetter(Ljava/awt/Font;Ljava/awt/FontMetrics;CILorg/openrsc/client/ImplementationDelegate;IZ)V" new="DS_BETA"/>
    <method old="drawLineX(IIII)V" new="try"/>
    <method old="drawLineY(IIII)V" new="new"/>
    <method old="drawPicture(III)V" new="const"/>
    <method old="drawPixel(III)V" new="goto"/>
-   <method old="drawSleepWord(IILorg/rscemulation/client/model/Sprite;)V" new="DS_BETA"/>
+   <method old="drawSleepWord(IILorg/openrsc/client/model/Sprite;)V" new="DS_BETA"/>
    <method old="drawString(Ljava/lang/String;IIII)V" new="goto"/>
    <method old="drawString(Ljava/lang/String;Ljava/awt/Point;II)V" new="DS_BETA"/>
    <method old="draw_ellipse(IIIII)V" new="DS_BETA"/>
@@ -3373,7 +3373,7 @@
    <method old="fontHeight(I)I" new="DS_BETA"/>
    <method old="imageUpdate(Ljava/awt/Image;IIIII)Z" new="imageUpdate"/>
    <method old="isConsumer(Ljava/awt/image/ImageConsumer;)Z" new="isConsumer"/>
-   <method old="loadFont(Ljava/lang/String;ILorg/rscemulation/client/ImplementationDelegate;)V" new="DS_BETA"/>
+   <method old="loadFont(Ljava/lang/String;ILorg/openrsc/client/ImplementationDelegate;)V" new="DS_BETA"/>
    <method old="loadFont_([B)I" new="DS_BETA"/>
    <method old="loadSprite(I)Z" new="goto"/>
    <method old="messageFontHeight(I)I" new="const"/>
@@ -3439,15 +3439,15 @@
    <field old="imagePixelArray [I" new="int"/>
    <field old="imageX I" new="class"/>
    <field old="imageY I" new="char"/>
-   <field old="sprites [Lorg/rscemulation/client/model/Sprite;" new="long"/>
+   <field old="sprites [Lorg/openrsc/client/model/Sprite;" new="long"/>
    <field old="subClipHeight I" new="return"/>
    <field old="subClipWidth I" new="for"/>
    <field old="temp Ljava/util/Map;" new="else"/>
   </class>
-  <class old="org.rscemulation.client.gfx.components.Box" new="org.rscemulation.client.IIIIIIIiii">
-   <method old="add(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
-   <method old="addKeyListener(Lorg/rscemulation/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
-   <method old="addScrollable(Lorg/rscemulation/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
+  <class old="org.openrsc.client.gfx.components.Box" new="org.openrsc.client.IIIIIIIiii">
+   <method old="add(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="DS_BETA"/>
+   <method old="addKeyListener(Lorg/openrsc/client/gfx/action/KeyListener;)V" new="DS_BETA"/>
+   <method old="addScrollable(Lorg/openrsc/client/gfx/components/ScrollBar;)V" new="DS_BETA"/>
    <method old="convertToJag(III)I" new="DS_BETA"/>
    <method old="dragStop()Z" new="const"/>
    <method old="getAllChildComponents()Ljava/util/List;" new="false"/>
@@ -3455,15 +3455,15 @@
    <method old="getBoarderMoving()I" new="break"/>
    <method old="getBoundarys()Ljava/awt/Rectangle;" new="final"/>
    <method old="getComponents()Ljava/util/List;" new="new"/>
-   <method old="getDragListener()Lorg/rscemulation/client/gfx/action/DragListener;" new="void"/>
+   <method old="getDragListener()Lorg/openrsc/client/gfx/action/DragListener;" new="void"/>
    <method old="getFill()I" new="else"/>
    <method old="getFillHovering()I" new="if"/>
    <method old="getFontSize()I" new="case"/>
-   <method old="getFrameScroll()Lorg/rscemulation/client/gfx/action/ScrollListener;" new="catch"/>
+   <method old="getFrameScroll()Lorg/openrsc/client/gfx/action/ScrollListener;" new="catch"/>
    <method old="getHeight()I" new="do"/>
-   <method old="getKeyListener()Lorg/rscemulation/client/gfx/action/KeyListener;" new="class"/>
+   <method old="getKeyListener()Lorg/openrsc/client/gfx/action/KeyListener;" new="class"/>
    <method old="getOpaque()I" new="goto"/>
-   <method old="getParent()Lorg/rscemulation/client/gfx/GraphicalComponent;" new="try"/>
+   <method old="getParent()Lorg/openrsc/client/gfx/GraphicalComponent;" new="try"/>
    <method old="getTextColor()I" new="enum"/>
    <method old="getWidth()I" new="this"/>
    <method old="getX()I" new="DS_BETA"/>
@@ -3476,30 +3476,30 @@
    <method old="onRender()V" new="short"/>
    <method old="onResize(II)V" new="const"/>
    <method old="render()V" new="for"/>
-   <method old="setAction(Lorg/rscemulation/client/gfx/action/Action;)V" new="DS_BETA"/>
+   <method old="setAction(Lorg/openrsc/client/gfx/action/Action;)V" new="DS_BETA"/>
    <method old="setBoarder(I)V" new="null"/>
    <method old="setBoarderMoving(I)V" new="final"/>
    <method old="setBoundarys(Ljava/awt/Rectangle;)V" new="DS_BETA"/>
    <method old="setCentered(Z)V" new="goto"/>
    <method old="setComponents(Ljava/util/List;)V" new="DS_BETA"/>
-   <method old="setDragListener(Lorg/rscemulation/client/gfx/action/DragListener;)V" new="DS_BETA"/>
+   <method old="setDragListener(Lorg/openrsc/client/gfx/action/DragListener;)V" new="DS_BETA"/>
    <method old="setDragging(Z)V" new="const"/>
    <method old="setFill(I)V" new="try"/>
    <method old="setFillHovering(I)V" new="goto"/>
    <method old="setFontSize(I)V" new="const"/>
-   <method old="setFrameScroll(Lorg/rscemulation/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
-   <method old="setHovering(Lorg/rscemulation/client/gfx/action/Hovering;)V" new="DS_BETA"/>
+   <method old="setFrameScroll(Lorg/openrsc/client/gfx/action/ScrollListener;)V" new="DS_BETA"/>
+   <method old="setHovering(Lorg/openrsc/client/gfx/action/Hovering;)V" new="DS_BETA"/>
    <method old="setOpaque(I)V" new="new"/>
-   <method old="setParent(Lorg/rscemulation/client/gfx/GraphicalComponent;)V" new="const"/>
+   <method old="setParent(Lorg/openrsc/client/gfx/GraphicalComponent;)V" new="const"/>
    <method old="setText(Ljava/lang/String;I)V" new="DS_BETA"/>
    <method old="setTextColor(I)V" new="DS_BETA"/>
    <method old="setVisible(Z)V" new="DS_BETA"/>
-   <field old="action Lorg/rscemulation/client/gfx/action/Action;" new="enum"/>
+   <field old="action Lorg/openrsc/client/gfx/action/Action;" new="enum"/>
    <field old="centered Z" new="void"/>
    <field old="fontSize I" new="null"/>
    <field old="hovering Z" new="true"/>
-   <field old="hoveringCallback Lorg/rscemulation/client/gfx/action/Hovering;" new="int"/>
-   <field old="mc Lorg/rscemulation/client/mudclient;" new="else"/>
+   <field old="hoveringCallback Lorg/openrsc/client/gfx/action/Hovering;" new="int"/>
+   <field old="mc Lorg/openrsc/client/mudclient;" new="else"/>
    <field old="selected Z" new="DS_BETA"/>
    <field old="text Ljava/lang/String;" new="for"/>
    <field old="textColor I" new="int"/>
@@ -3568,7 +3568,7 @@
    <source old="Sprite.java" new="s"/>
    <source old="Tile.java" new="g"/>
    <source old="GameWindowMiddleMan.java" new="v"/>
-   <source old="RSCEmulation.java" new="o"/>
+   <source old="openrsc.java" new="o"/>
    <source old="mudclient.java" new="b"/>
    <source old="AppletLoader.java" new="j"/>
    <source old="DataConversions.java" new="k"/>

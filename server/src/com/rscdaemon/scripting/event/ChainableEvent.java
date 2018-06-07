@@ -28,8 +28,8 @@ package com.rscdaemon.scripting.event;
 
 import java.util.ArrayDeque;
 
-import org.rscemulation.server.model.Player;
-import org.rscemulation.server.model.World;
+import org.openrsc.server.model.Player;
+import org.openrsc.server.model.World;
 
 import com.rscdaemon.Event;
 import com.rscdaemon.scripting.Script;

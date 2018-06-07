@@ -1,7 +1,7 @@
 package com.rscdaemon.scripting.quest;
 
-import org.rscemulation.server.model.InvItem;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Player;
 
 public class DefaultItem
 	implements

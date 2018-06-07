@@ -27,11 +27,11 @@
 
 package com.rscdaemon.scripting;
 
-import org.rscemulation.server.entityhandling.defs.SpellDef;
-import org.rscemulation.server.model.GameObject;
-import org.rscemulation.server.model.Item;
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.entityhandling.defs.SpellDef;
+import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.Item;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.quest.Quest;
 

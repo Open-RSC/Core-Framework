@@ -1,9 +1,9 @@
 <project default="run" basedir=".">		
 	<property name="lib" location="lib" />
-	<property name="jar" location="RSCEmulation.jar" />
+	<property name="jar" location="openrsc.jar" />
 	
 	<target name="run">
-		<java classname="org.rscemulation.server.Server" fork="true">
+		<java classname="org.openrsc.server.Server" fork="true">
 			<arg value="config/config.xml" />
 			<jvmarg value="-verbose:gc" />
 			<jvmarg value="-Xmn512m" />

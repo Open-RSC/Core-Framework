@@ -28,7 +28,7 @@ package com.rscdaemon.scripting.quest;
 
 import java.io.Serializable;
 
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 /**
  * The <code>QuestReward</code> interface is the base for all types of rewards 

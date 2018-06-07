@@ -26,7 +26,7 @@
  */
 package com.rscdaemon.scripting.listener;
 
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 /**
  * A type of {@link EventListener} that is invoked when an item is dropped 

@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 /**
  * The <code>Quest</code> interface defines the basis for all transactions 

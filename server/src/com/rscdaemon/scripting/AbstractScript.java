@@ -32,11 +32,11 @@ import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.rscemulation.server.model.InvItem;
-import org.rscemulation.server.model.Mob;
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
-import org.rscemulation.server.model.World;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Mob;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
+import org.openrsc.server.model.World;
 
 import com.rscdaemon.scripting.event.AddToInventoryEvent;
 import com.rscdaemon.scripting.event.BindEvent;

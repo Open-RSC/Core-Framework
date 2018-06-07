@@ -1,12 +1,12 @@
 package com.runescape.entity.attribute;
 
-import org.rscemulation.server.Config;
-import org.rscemulation.server.model.InvItem;
-import org.rscemulation.server.model.Item;
-import org.rscemulation.server.model.Mob;
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
-import org.rscemulation.server.model.World;
+import org.openrsc.server.Config;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Item;
+import org.openrsc.server.model.Mob;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
+import org.openrsc.server.model.World;
 
 import com.runescape.entity.Attribute;
 

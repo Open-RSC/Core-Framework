@@ -3,8 +3,8 @@ package com.rscdaemon.scripts;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.rscemulation.server.model.InvItem;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.AbstractScript;
 import com.rscdaemon.scripting.Skill;

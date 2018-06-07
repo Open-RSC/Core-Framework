@@ -10,31 +10,31 @@
 	<!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown -->
 	<entry key="shutdown_time_millis">60000</entry>
 	<!-- Avatar Save Path -->
-	<entry key="avatar_dir">c:/www/</entry>
+	<entry key="avatar_dir">~/Sites</entry>
 
-	<entry key="version">6</entry>
+	<entry key="version">7</entry>
 	<entry key="ip">127.0.0.1</entry>
 	<entry key="port">53595</entry>
 	<entry key="webport">53594</entry>	
 
 	<entry key="dbhost">127.0.0.1</entry>
-	<entry key="dbname">rscunity</entry>
+	<entry key="dbname">openrsc</entry>
 	<entry key="dblogin">root</entry>
 	<entry key="dbpass">malware</entry>
 	
-	<entry key="configdbname">rscunity_config</entry>
-	<entry key="logdbname">rscunity_logs</entry>
-	<entry key="toolsdbname">rscunity_tools</entry>
+	<entry key="configdbname">openrsc_config</entry>
+	<entry key="logdbname">openrsc_logs</entry>
+	<entry key="toolsdbname">openrsc_tools</entry>
 	
 	<!-- Combat Skills -->
 	<entry key="combat_xp">36</entry>
 	<entry key="combat_xp_sub">36</entry>
 	<!-- Skilling -->
 	<entry key="skill_xp">6</entry>
-	<entry key="skill_xp_sub">7</entry>
+	<entry key="skill_xp_sub">6</entry>
 	<!-- Miscellaneous -->
 	<entry key="wild_xp_bonus">1</entry>
-	<entry key="skulled_xp_bonus">2</entry>
+	<entry key="skulled_xp_bonus">1</entry>
 	
-	<entry key="f2pwilderness">false</entry>
+	<entry key="f2pwilderness">true</entry>
 </properties>

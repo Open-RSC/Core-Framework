@@ -26,8 +26,8 @@
  */
 package com.rscdaemon.scripting.listener;
 
-import org.rscemulation.server.model.GameObject;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.Script;
 
