@@ -1,0 +1,7 @@
+Options -indexes
+
+# RewriteEngine on
+# RewriteRule ^item/?$ db.php?category=items
+# RewriteRule ^([^/]*)/([^/]*)/([^/]*)/([^/]*)/?$ db.php?category=items&index=$2&id=$3&item=$4 [L]
+
+# RewriteRule ^db/npc/?$ db.php?category=npcs
