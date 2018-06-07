@@ -26,9 +26,9 @@
  */
 package com.rscdaemon.scripting.listener;
 
-import org.rscemulation.server.entityhandling.defs.SpellDef;
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.entityhandling.defs.SpellDef;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
 
 /**
  * A type of {@link EventListener} that is invoked when a {@link Player} 

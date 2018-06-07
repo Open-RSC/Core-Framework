@@ -29,7 +29,7 @@ package com.rscdaemon.scripting.quest;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.Skill;
 

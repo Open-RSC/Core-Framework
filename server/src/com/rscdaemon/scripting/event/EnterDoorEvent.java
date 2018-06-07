@@ -1,8 +1,8 @@
 package com.rscdaemon.scripting.event;
 
-import org.rscemulation.server.model.GameObject;
-import org.rscemulation.server.model.Player;
-import org.rscemulation.server.model.World;
+import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.Player;
+import org.openrsc.server.model.World;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.scripting.ScriptError;

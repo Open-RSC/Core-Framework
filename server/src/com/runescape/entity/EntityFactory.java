@@ -1,7 +1,7 @@
 package com.runescape.entity;
 
 import org.apache.mina.common.IoSession;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 public final class EntityFactory {
 	

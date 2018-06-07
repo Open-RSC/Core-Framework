@@ -26,8 +26,8 @@
  */
 package com.rscdaemon.scripting.event;
 
-import org.rscemulation.server.model.MenuHandler;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.MenuHandler;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.MenuOption;
 import com.rscdaemon.scripting.Script;
@@ -135,7 +135,7 @@ public class MenuEvent
 					{
 						// Should never happen...but if it does...
 						e.printStackTrace();
-						owner.sendMessage("A critical error has occurred within the RSCE 3.x.x scripting system!");
+						owner.sendMessage("A critical error has occurred within the Open RSC 3.x.x scripting system!");
 						onMenuCancelled();
 					}
 				}

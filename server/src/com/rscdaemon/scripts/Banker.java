@@ -1,7 +1,7 @@
 package com.rscdaemon.scripts;
 
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.AbstractScript;
 import com.rscdaemon.scripting.MenuOption;

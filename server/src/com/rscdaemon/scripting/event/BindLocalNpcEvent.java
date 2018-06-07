@@ -28,10 +28,10 @@ package com.rscdaemon.scripting.event;
 
 import java.awt.Rectangle;
 
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
-import org.rscemulation.server.model.World;
-import org.rscemulation.server.util.DataConversions;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
+import org.openrsc.server.model.World;
+import org.openrsc.server.util.DataConversions;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.scripting.ScriptVariable;

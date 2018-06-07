@@ -26,9 +26,9 @@
  */
 package com.rscdaemon.scripting.event;
 
-import org.rscemulation.server.model.Mob;
-import org.rscemulation.server.model.Npc;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Mob;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Player;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.scripting.ScriptVariable;

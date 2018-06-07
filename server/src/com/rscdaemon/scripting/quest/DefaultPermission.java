@@ -31,7 +31,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.Player;
 
 /**
  * The default implementation of the {@link Permission} interface.

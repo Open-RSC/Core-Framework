@@ -2,18 +2,18 @@
 
 <config>
     <jars>
-        <jar out="rscunity.jar" in="rscunity-pre.jar"/>
+        <jar out="openrsc.jar" in="openrsc-pre.jar"/>
     </jars>
     <keep-names>
-        <class template="class org.rscemulation.client.mudclient"/>
-        <class template="class org.rscemulation.client.loader.WebClientLoader"/>
+        <class template="class org.openrsc.client.mudclient"/>
+        <class template="class org.openrsc.client.loader.WebClientLoader"/>
     </keep-names>
 	<property name="string-encryption" value="enable"/>
 	<property name="string-encryption-type" value="strong"/>
 	<property name="control-flow-obfuscation" value="enable"/>
 	<property name="extensive-flow-obfuscation" value="maximum"/>
 	<property name="force-default-package" value="enable"/>
-	<property name="default-package" value="org.rscemulation.client"/>
+	<property name="default-package" value="org.openrsc.client"/>
 	<property name="classes-naming" value="iii"/>
 	<property name="methods-naming" value="keywords"/>
 	<property name="fields-naming" value="keywords"/>

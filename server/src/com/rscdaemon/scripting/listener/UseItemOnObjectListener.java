@@ -26,9 +26,9 @@
  */
 package com.rscdaemon.scripting.listener;
 
-import org.rscemulation.server.model.GameObject;
-import org.rscemulation.server.model.InvItem;
-import org.rscemulation.server.model.Player;
+import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Player;
 
 /**
  * A type of {@link EventListener} that is invoked when a {@link Player} 
