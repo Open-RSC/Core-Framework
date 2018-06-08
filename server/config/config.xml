@@ -10,7 +10,7 @@
 	<!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown -->
 	<entry key="shutdown_time_millis">60000</entry>
 	<!-- Avatar Save Path -->
-	<entry key="avatar_dir">/var/www/html</entry>
+	<entry key="avatar_dir">/var/www/html/</entry>
 
 	<entry key="version">7</entry>
 	<entry key="ip">0.0.0.0</entry>
