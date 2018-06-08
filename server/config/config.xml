@@ -13,7 +13,7 @@
 	<entry key="avatar_dir">/var/www/html</entry>
 
 	<entry key="version">7</entry>
-	<entry key="ip">127.0.0.1</entry>
+	<entry key="ip">0.0.0.0</entry>
 	<entry key="port">53595</entry>
 	<entry key="webport">53594</entry>	
 
