@@ -51,7 +51,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public void loadConf() {
 		InputStream fis = null;
 		try {
-			fis = new FileInputStream(RSCU_DIR + "openrsc.conf");
+			fis = new FileInputStream(OPENRSC_DIR + "openrsc.conf");
 			Properties props = new Properties();
 			props.load(fis);
 
@@ -113,10 +113,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public boolean setProp(String key, String value) {
 		try {
 			Properties props = new Properties();
-			props.load(new FileInputStream(RSCU_DIR + "openrsc.conf"));
+			props.load(new FileInputStream(OPENRSC_DIR + "openrsc.conf"));
 			props.setProperty(key, value);
 
-			OutputStream propOut = new FileOutputStream(new File(RSCU_DIR + "openrsc.conf"));
+			OutputStream propOut = new FileOutputStream(new File(OPENRSC_DIR + "openrsc.conf"));
 			props.store(propOut, "openrsc Configuration");
 			props.clear();
 		} catch (Exception ex) {
@@ -126,7 +126,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		return true;
 	}
 
-	private final static String RSCU_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
+	private final static String OPENRSC_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
 			+ "openrsc" + System.getProperty("file.separator");
 
 	private static mudclient<?> instance;
@@ -138,7 +138,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
                 
 		int width = 800;
 		int height = 534;
-		File CF = new File(RSCU_DIR + "openrsc.conf");
+		File CF = new File(OPENRSC_DIR + "openrsc.conf");
 		try {
 			if (!CF.exists())
 				CF.createNewFile();
@@ -240,7 +240,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 					}
 				} else
-					displayMessage("@gre@RSCU:@whi@ This command is only available in a bank window", 3, 0);
+					displayMessage("@gre@Open RSC:@whi@ This command is only available in a bank window", 3, 0);
 				return true;
 			} catch (Exception e) {
 			}
@@ -254,7 +254,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		} else if (cmd.equalsIgnoreCase("loadconf") || cmd.equalsIgnoreCase("resetconfig")
 				|| cmd.equalsIgnoreCase("resetconf")) {
 			loadConf();
-			displayMessage("@gre@RSCU:@whi@ Configuration file has been refreshed", 3, 0);
+			displayMessage("@gre@Open RSC:@whi@ Configuration file has been refreshed", 3, 0);
 		}
 		return false;
 	}
@@ -5210,7 +5210,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 			case 33: // Page Up
 				if (ourPlayer.admin == 4) // Regular Player
-					displayMessage("@gre@RSCU:@whi@ Chat History is a subscriber only feature. Type ::SUBSCRIBE", 3, 0);
+					displayMessage("@gre@Open RSC:@whi@ Chat History is a subscriber only feature. Type ::SUBSCRIBE", 3, 0);
 				else {
 					currentChat--;
 					if (currentChat < 0) {
@@ -5223,7 +5223,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 			case 34: // Page Down
 				if (ourPlayer.admin == 4) // Regular Player
-					displayMessage("@gre@RSCU:@whi@ Chat History is a subscriber only feature. Type ::SUBSCRIBE", 3, 0);
+					displayMessage("@gre@Open RSC:@whi@ Chat History is a subscriber only feature. Type ::SUBSCRIBE", 3, 0);
 				else {
 					currentChat++;
 					if (currentChat >= messages.size()) {
@@ -5964,7 +5964,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
 					&& mouseButtonClick == 1) {
 				super.blockGlobalMessages = !super.blockGlobalMessages;
-				displayMessage("@gre@RSCU:@whi@ Global Chat currently: "
+				displayMessage("@gre@Open RSC:@whi@ Global Chat currently: "
 						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, 0);
 				super.streamClass.createPacket(16);
 				super.streamClass.addByte((super.blockGlobalMessages ? 4 : 9));
@@ -6445,7 +6445,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void loadSounds() {
-		sounds = CacheUtil.loadArchive(RSCU_DIR + "data" + System.getProperty("file.separator") + "sounds");
+		sounds = CacheUtil.loadArchive(OPENRSC_DIR + "data" + System.getProperty("file.separator") + "sounds");
 		audioReader = new AudioReader();
 	}
 
