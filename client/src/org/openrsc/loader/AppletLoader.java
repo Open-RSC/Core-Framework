@@ -80,7 +80,7 @@ public class AppletLoader
 		if(getParameter("siteCache") != null) {
 			cache = getParameter("siteCache");
 		} else {
-			cache = "localhost/play";
+			cache = "openrsc.com/play";
 		}
 		/// Set ip and port if directed to...
 		if(getParameter("ip") != null && getParameter("port") != null)
