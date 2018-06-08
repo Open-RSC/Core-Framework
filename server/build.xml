@@ -1,0 +1,70 @@
+<project default="compile" basedir=".">
+
+    <property name="src" location="src" />
+    <property name="build" location="build" />
+    <property name="lib" location="lib" />
+    <property name="jar" location="Open_RSC_Server.jar" />
+    <property name="javac.source" value="1.8"/>
+    <property name="javac.target" value="1.8"/>
+
+    <target name="compile">
+        <delete file="${jar}" />
+        <delete dir="${build}" />
+        <mkdir dir="${build}"/>
+        <javac srcdir="${src}" destdir="${build}" debug="on" target="1.8" source="1.8" includeantruntime="false">
+          <classpath>
+            <pathelement location="${lib}/mina.jar" />
+            <pathelement location="${lib}/xpp3.jar" />
+            <pathelement location="${lib}/slf4j.jar"/>
+            <pathelement location="${lib}/xstream.jar"/>
+            <pathelement location="${lib}/mysql-connector.jar" />
+            <pathelement location="${lib}/hex-string.jar" />
+            <pathelement location="${lib}/bsh-2.0b4.jar" />
+            <pathelement location="${lib}/apache-commons.jar" />
+            <pathelement location="${lib}/commons-lang-2.6.jar" />
+            <pathelement location="${lib}/commons-logging-1.1.1.jar" />
+            <pathelement location="${lib}/junit.jar" />
+            <pathelement location="${lib}/jmf.jar" />
+            <pathelement location="${lib}/js.jar" />
+            <pathelement location="${lib}/netty-3.2.5.Final.jar" />
+            <pathelement location="${lib}/pircbot.jar" />
+            <pathelement location="${lib}/xstream.jar" />
+            <pathelement path="${java.class.path}/"/>
+          </classpath>
+        </javac>
+        <jar basedir="${build}" destfile="${jar}" />
+    </target>
+
+    <target name="runserver">
+        <java classname="org.openrsc.server.Server" fork="true">
+          <arg value="config/config.xml" />
+          <jvmarg value="-verbose:gc" />
+          <jvmarg value="-Xmn512m" />
+          <jvmarg value="-Xms1024m" />
+          <jvmarg value="-Xmx1024m" />
+          <jvmarg value="-XX:+UseConcMarkSweepGC" />
+          <jvmarg value="-XX:+UseParNewGC" />
+          <jvmarg value="-XX:SurvivorRatio=2" />
+          <jvmarg value="-XX:NewRatio=8" />
+            <classpath>
+              <pathelement location="${lib}/mina.jar" />
+              <pathelement location="${lib}/xpp3.jar" />
+              <pathelement location="${lib}/slf4j.jar"/>
+              <pathelement location="${lib}/xstream.jar"/>
+              <pathelement location="${lib}/mysql-connector.jar" />
+              <pathelement location="${lib}/hex-string.jar" />
+              <pathelement location="${lib}/bsh-2.0b4.jar" />
+              <pathelement location="${lib}/apache-commons.jar" />
+              <pathelement location="${lib}/commons-lang-2.6.jar" />
+              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
+              <pathelement location="${lib}/junit.jar" />
+              <pathelement location="${lib}/jmf.jar" />
+              <pathelement location="${lib}/js.jar" />
+              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
+              <pathelement location="${lib}/pircbot.jar" />
+              <pathelement location="${lib}/xstream.jar" />
+              <pathelement path="${jar}/" />
+            </classpath>
+        </java>
+    </target>
+</project>
