@@ -4398,7 +4398,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			System.out.println("Please post a topic in the \"Support\" forum section.\n");
 			System.exit(-1);
 		}
-		loadSounds();
+		//loadSounds(); //Disabling as Java 9+ does not include the sun/audio/AudioPlayer
 		if (lastLoadedNull)
 			return;
 		updateLoadingProgress(100, "Starting game...");
