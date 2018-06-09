@@ -53,6 +53,7 @@ public class AccountManager
 			SQLException
 	{
 		OUT.println("Removing banned accounts...");
+                //needs to use config for credentials
 		AccountManager mgr = new AccountManager("localhost", "openrsc", "root", "malware");
 		mgr.deleteBannedPlayers();
 	}
