@@ -36,11 +36,11 @@ Fally 313 541 and 316 540
 			 * Disable glider to F2P
 			 * Users.
 			 */
-			if (!player.isSub())
+			/*if (!player.isSub())
 			{
 				player.sendMessage(Config.PREFIX + "Glider is only available to subscribers.");
 				return;
-			}
+			}*/
       		player.informOfNpcMessage(new ChatMessage(npc, "Where would you like to fly?", player));
       		player.setBusy(true);
       		World.getDelayedEventHandler().add(new ShortEvent(player) 

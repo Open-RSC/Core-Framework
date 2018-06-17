@@ -18,6 +18,8 @@ import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -1793,7 +1795,17 @@ public class Raster implements ImageProducer, ImageObserver {
                 if (j1 > i1) {
                     if (l1 <= k1)
                         l1 = i2;
-                    drawCenteredString(s.substring(k1, l1), i, j, k, l);
+                    
+                    StringBuilder colour        = new StringBuilder();
+                    StringBuilder regexBuilder  = new StringBuilder(s.substring(0, k1));
+                    String regexCheck           = regexBuilder.reverse().toString();
+                    Pattern regex               = Pattern.compile("(@.{3}@)");
+                    Matcher match               = regex.matcher(regexCheck);
+
+                    if(match.find())
+                        colour  = colour.append(match.group(0)).reverse();
+                    
+                    drawCenteredString(colour + s.substring(k1, l1 + 1), i, j, k, l);
                     j1 = 0;
                     k1 = i2 = l1 + 1;
                     j += messageFontHeight(k);
@@ -1801,7 +1813,16 @@ public class Raster implements ImageProducer, ImageObserver {
             }
 
             if (j1 > 0) {
-                drawCenteredString(s.substring(k1), i, j, k, l);
+                StringBuilder colour        = new StringBuilder();
+                StringBuilder regexBuilder  = new StringBuilder(s.substring(0, k1));
+                String regexCheck           = regexBuilder.reverse().toString();
+                Pattern regex               = Pattern.compile("(@.{3}@)");
+                Matcher match               = regex.matcher(regexCheck);
+
+                if(match.find())
+                    colour  = colour.append(match.group(0)).reverse();
+                
+                drawCenteredString(colour + s.substring(k1), i, j, k, l);
                 return;
             }
         }

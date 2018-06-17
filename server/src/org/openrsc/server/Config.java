@@ -19,7 +19,7 @@ public class Config {
 	
 	public static void initConfig(File file) throws IOException {
 		SERVER_NAME    = "Open RSC";
-		PREFIX         = "@gre@Open RSC:@whi@ "; // Prefix that is sent before every custom (non-RSC) message (such as commands).
+		PREFIX         = "@gre@OpenRSC:@whi@ "; // Prefix that is sent before every custom (non-RSC) message (such as commands).
 		START_TIME     = System.currentTimeMillis();
 		LOGGING        = true; // Should in-game events be logged to the logs database?
 		MAX_PLAYERS    = 1000;
@@ -73,5 +73,5 @@ public class Config {
 	public static long START_TIME;
 	public static boolean LOGGING, IRC, IRC_DEBUG, IRC_NOTIFY, PK_MODE;
 	
-	public static boolean ALLOW_WEAKENS = false, ALLOW_GODSPELLS = false;
+	public static boolean ALLOW_WEAKENS = true, ALLOW_GODSPELLS = true;
 }

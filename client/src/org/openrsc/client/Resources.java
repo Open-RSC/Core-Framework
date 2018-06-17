@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.JOptionPane;
+import org.openrsc.client.loader.various.AppletUtils;
 
 public class Resources
 {
@@ -13,7 +14,7 @@ public class Resources
 		try
 		{
 			{
-				return new FileInputStream(System.getProperty("user.home") + System.getProperty("file.separator") + "openrsc" + System.getProperty("file.separator") + path.substring(1));
+				return new FileInputStream(AppletUtils.CACHE + System.getProperty("file.separator") + path.substring(1));
 			}
 		}
 		catch(IOException ioe)

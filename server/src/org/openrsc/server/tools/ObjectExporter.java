@@ -15,18 +15,13 @@ import org.openrsc.server.model.World;
 public final class ObjectExporter {
 
 	public static void main(String[] args) throws Exception {
-		if (args.length < 1) 
-		{
-			System.out
-					.println("No configuration file provided - usage: Server <configfile>");
-			return;
-		}
 		try 
 		{
-			File file = new File(args[0]);
-			if (!file.exists()) {
-				System.err.println("Could not find configuration file: "
-						+ args[0]);
+            String configFile   = args.length < 1 ? "config/config.xml" : args[0];
+            File file           = new File(configFile);
+			if(!file.exists())
+			{
+				System.err.println("Could not find configuration file: " + configFile);
 				return;
 			}
 			Config.initConfig(file);

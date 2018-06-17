@@ -401,6 +401,8 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	 * List of players in CTF red team
 	 */
 	public static ArrayList<Player> ctfRed = new ArrayList<Player>();
+    
+    private boolean isInvulnerable = false;
 	
 	/**
 	 * List of players who have attacked you last
@@ -1937,12 +1939,28 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				isSub = false;
 				if (!isMod())
 					updateGroupID(4);
-				sendAlert("Your subscription period has expired. To re-subscribe, please visit the forums.");
+				sendAlert("Your subscription period has expired.");
 			}
 			return false;
 		}
 	}
+    
+	public void setInvulnerable(boolean invulnerable)
+    {
+		isInvulnerable = invulnerable;
+	}
+    
+    public boolean toggleInvulnerable()
+    {
+        setInvulnerable(!isInvulnerable);
+        return isInvulnerable;
+    }
 	
+    public boolean isInvulnerable()
+    {
+        return isInvulnerable;
+    }
+    
 	public boolean isMod() {
 		return groupID == 2 || isAdmin();
 	}
@@ -3197,10 +3215,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			}
 			else
 			{
-				if(this.isSub())
+				/*if(this.isSub())
 					setLocation(Point.location(220, 445), true);
-				else
-					setLocation(Point.location(122, 647), true);
+				else*/
+					setLocation(Point.location(122, 648), true);
 			}
 		}	
 		setDeathTime(System.currentTimeMillis());

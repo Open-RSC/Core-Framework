@@ -185,7 +185,7 @@ public class Duke_of_Lumbridge implements NpcHandler
 				{
 					public void action()
 					{
-						final String[] options107 = {"I seek a shield that will protect me from dragon breath", "Have you any quests for me?", "Where can I find money?", "Can I interest you in some goods to avoid that dragon?"};
+						final String[] options107 = {"I seek a shield that will protect me from dragon breath", "Have you any quests for me?", "Where can I find money?"/*, "Can I interest you in some goods to avoid that dragon?"*/};
 						owner.setBusy(false);
 						owner.sendMenu(options107);
 						owner.setMenuHandler(new MenuHandler(options107) 
@@ -208,9 +208,9 @@ public class Duke_of_Lumbridge implements NpcHandler
 									case 2:
 										findMoney(npc, owner);
 									break;
-									case 3:
+									/*case 3:
 										bypassQuest(npc, owner);
-									break;
+									break;*/
 								}
 							}
 						});
@@ -272,7 +272,7 @@ public class Duke_of_Lumbridge implements NpcHandler
 				{
 					public void action()
 					{
-						final String[] options107 = {"Have you any quests for me?", "Where can I find money?", "Can I interest you in some goods to avoid that dragon?"};
+						final String[] options107 = {"Have you any quests for me?", "Where can I find money?"/*, "Can I interest you in some goods to avoid that dragon?"*/};
 						owner.setBusy(false);
 						owner.sendMenu(options107);
 						owner.setMenuHandler(new MenuHandler(options107) 
@@ -292,9 +292,9 @@ public class Duke_of_Lumbridge implements NpcHandler
 									case 1:
 										findMoney(npc, owner);
 									break;
-									case 2:
+									/*case 2:
 										bypassQuest(npc, owner);
-									break;
+									break;*/
 								}
 							}
 						});

@@ -135,7 +135,7 @@ public class MenuEvent
 					{
 						// Should never happen...but if it does...
 						e.printStackTrace();
-						owner.sendMessage("A critical error has occurred within the Open RSC 3.x.x scripting system!");
+						owner.sendMessage("A critical error has occurred within the OpenRSC 3.x.x scripting system!");
 						onMenuCancelled();
 					}
 				}

@@ -580,7 +580,7 @@ public class InvActionHandler implements PacketHandler {
 										player.setSubscriptionExpires(2592000 + player.getSubscriptionExpires());
 									else
 										player.setSubscriptionExpires(DataConversions.getTimeStamp() + 2592000);
-									player.sendAlert("Thank you for subscribing to Open RSC!  Without subscribers we simply wouldn't be able to keep Open RSC up and running.  You have " + player.getDaysSubscriptionLeft() + " days remaining.");
+									player.sendAlert("Thank you for subscribing to " + Config.SERVER_NAME + "!  Without subscribers we simply wouldn't be able to keep " + Config.SERVER_NAME + " up and running.  You have " + player.getDaysSubscriptionLeft() + " days remaining.");
 									ServerBootstrap.getDatabaseService().submit(new SubscriptionTransaction(player.getUsernameHash(), player.getAccount(), DataConversions.getTimeStamp(), player.getIP()));
 									player.updateGroupID(5);
 								}

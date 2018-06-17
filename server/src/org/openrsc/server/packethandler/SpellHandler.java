@@ -111,9 +111,9 @@ public class SpellHandler implements PacketHandler {
 							}
 						}
 						
-                        if (affectedPlayer.isMod() || affectedPlayer.isDev() || affectedPlayer.isEvent())
+                        if ( affectedPlayer.isInvulnerable() /*affectedPlayer.isMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
                         {
-                        	player.sendMessage(Config.PREFIX + "You cannot attack Open RSC staff.");
+                        	player.sendMessage(Config.PREFIX + affectedPlayer.getUsername() + " is currently invulnerable!");
                         	player.resetFollowing();
                         	player.resetPath();
                         	return;
