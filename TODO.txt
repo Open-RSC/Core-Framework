@@ -33,10 +33,6 @@ When exactly is Charge spell acquired in the mage arena miniquest?
 
 - ensure thrander messages are right
 
-- Lots of missing dialog for non-quest NPCs
-- Shopkeeper introductions may not be accurate
-check.. https://github.com/Marwolf/Wolf-Kingdom-Reborn/blob/master/Server/plugins/com/wk/server/plugins/npcs/varrock/VarrockSwords.java
-
 
 - Thesallia regives scythe/bunny ears ... dialog option
 Thessalia dialog:
