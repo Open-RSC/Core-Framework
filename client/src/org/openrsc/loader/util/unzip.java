@@ -3,6 +3,7 @@ package org.openrsc.loader.util;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
+import org.openrsc.client.loader.various.AppletUtils;
 
 public class unzip {
 	
@@ -25,18 +26,15 @@ public class unzip {
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
 								if (entry.isDirectory()) {
-					(new File(System.getProperty("user.home")
-							+ System.getProperty("file.separator")
-							+ "openrsc"
+					(new File(
+                            AppletUtils.CACHE
 							+ System.getProperty("file.separator")
 							+ entry.getName())).mkdirs();
 					continue;
 				}
 				copyInputStream(zipFile.getInputStream(entry),
-						new BufferedOutputStream(new FileOutputStream(System
-								.getProperty("user.home")
-								+ System.getProperty("file.separator")
-								+ "openrsc"
+						new BufferedOutputStream(new FileOutputStream(
+                                AppletUtils.CACHE
 								+ System.getProperty("file.separator")
 								+ entry.getName())));
 			}

@@ -2205,9 +2205,331 @@ public class WallObjectAction implements PacketHandler {
 									else {
 										owner.sendMessage("The door is locked shut");
 									}
+                                    break;
 								} 
-								break;
-								case 57:
+                                
+                                Quest tutorialIsland = owner.getQuest(100);
+                                if (tutorialIsland != null)
+                                {
+                                    // Guide, first door.
+                                    if (object.getX() == 222 && object.getY() == 743)
+                                    {
+                                        if (tutorialIsland.getStage() >= 1)
+                                        {
+                                            if (owner.getX() == 222)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(221, 743);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(222, 743);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the guide before proceeding through this door.");
+                                        }	
+                                    }
+                                    else
+                                    // Controls Guide, second door.
+                                    if (object.getX() == 224 && object.getY() == 737)
+                                    {
+                                        if (tutorialIsland.getStage() >= 2)
+                                        {
+                                            if (owner.getY() == 737)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(224, 736);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(224, 737);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the controls guide before proceeding through this door.");
+                                        }
+                                    }
+                                    else
+                                    // Combat Instructor, third door.
+                                    if (object.getX() == 220 || object.getY() == 727)
+                                    {
+                                        if (tutorialIsland.getStage() >= 5)
+                                        {
+                                            if (owner.getX() == 220)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(219, 727);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(220, 727);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the combat instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Cooking Instructor, fourth door.
+                                    if (object.getX() == 212 && object.getY() == 729)
+                                    {
+                                        if (tutorialIsland.getStage() >= 8)
+                                        {
+                                            if (owner.getX() == 212)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(211, 729);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(212, 729);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the cooking instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Financial Advisor, fifth door.
+                                    if (object.getX() == 206 && object.getY() == 730)
+                                    {
+                                        if (tutorialIsland.getStage() >= 9)
+                                        {
+                                            if (owner.getX() == 206)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(205, 730);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(206, 730);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the financial advisor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Fishing Instructor, sixth door.
+                                    if (object.getX() == 201 && object.getY() == 734)
+                                    {
+                                        if (tutorialIsland.getStage() >= 11)
+                                        {
+                                            if (owner.getX() == 201)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(201, 734);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(201, 733);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the fishing instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Mining Instructor, seventh door.
+                                    if (object.getX() == 198 && object.getY() == 746)
+                                    {
+                                        if (tutorialIsland.getStage() >= 15)
+                                        {
+                                            if (owner.getY() == 745)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(198, 746);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(198, 745);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the mining instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Bank Assistant, eight door.
+                                    if (object.getX() == 204 && object.getY() == 752)
+                                    {
+                                        if (tutorialIsland.getStage() >= 16)
+                                        {
+                                            if (owner.getX() == 203)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(204, 752);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(203, 752);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the bank assistant before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Quest Advisor, ninth door.
+                                    if (object.getX() == 209 && object.getY() == 754)
+                                    {
+                                        if (tutorialIsland.getStage() >= 17)
+                                        {
+                                            if (owner.getY() == 753)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(209, 754);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(209, 753);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the quest advisor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Wilderness Guide, tenth door.
+                                    if (object.getX() == 217 && object.getY() == 760)
+                                    {
+                                        if (tutorialIsland.getStage() >= 18)
+                                        {
+                                            if (owner.getX() == 216)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(217, 760);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(216, 760);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the wilderness guide before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Magic Instructor, tenth door.
+                                    if (object.getX() == 222 && object.getY() == 760)
+                                    {
+                                        if (tutorialIsland.getStage() >= 21)
+                                        {
+                                            if (owner.getX() == 221)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(222, 760);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(221, 760);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the magic instructor before proceeding through this door.");	
+                                        }
+                                    }
+
+                                    else
+                                    // Fatigue Expert, elevent door.
+                                    if (object.getX() == 226 && object.getY() == 760)
+                                    {
+                                        if (tutorialIsland.getStage() >= 23)
+                                        {
+                                            if (owner.getX() == 225)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(226, 760);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(225, 760);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the fatigue instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Community Instructor, tenth door.
+                                    if (object.getX() == 230 && object.getY() == 759)
+                                    {
+                                        if (tutorialIsland.getStage() >= 24)
+                                        {
+                                            if (owner.getY() == 758)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(230, 759);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(230, 758);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the community instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    owner.sendMessage(Config.PREFIX + "You must talk to the guide before proceeding through this door.");
+                                }
+                                break;
+							case 57:
 								if(owner.getX() == 259 & owner.getInventory().countId(200) > 0 && owner.getInventory().countId(375) > 0 && owner.getInventory().countId(268) > 0 && owner.getInventory().countId(340) > 0) {
 									doDoor();
 									owner.teleport(258, 3334, false);
@@ -2255,327 +2577,6 @@ public class WallObjectAction implements PacketHandler {
 											}
 										}
 										return;
-									}
-									
-									Quest tutorialIsland = owner.getQuest(100);
-									if (tutorialIsland != null)
-									{
-										// Guide, first door.
-										if (object.getX() == 222 && object.getY() == 743)
-										{
-											if (tutorialIsland.getStage() >= 1)
-											{
-												if (owner.getX() == 222)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(221, 743);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(222, 743);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the guide before proceeding through this door.");
-											}	
-										}
-										else
-										// Controls Guide, second door.
-										if (object.getX() == 224 && object.getY() == 737)
-										{
-											if (tutorialIsland.getStage() >= 2)
-											{
-												if (owner.getY() == 737)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(224, 736);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(224, 737);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the controls guide before proceeding through this door.");
-											}
-										}
-										else
-										// Combat Instructor, third door.
-										if (object.getX() == 220 || object.getY() == 727)
-										{
-											if (tutorialIsland.getStage() >= 5)
-											{
-												if (owner.getX() == 220)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(219, 727);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(220, 727);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the combat instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Cooking Instructor, fourth door.
-										if (object.getX() == 212 && object.getY() == 729)
-										{
-											if (tutorialIsland.getStage() >= 8)
-											{
-												if (owner.getX() == 212)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(211, 729);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(212, 729);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the cooking instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Financial Advisor, fifth door.
-										if (object.getX() == 206 && object.getY() == 730)
-										{
-											if (tutorialIsland.getStage() >= 9)
-											{
-												if (owner.getX() == 206)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(205, 730);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(206, 730);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the financial advisor before proceeding through this door.");	
-											}
-										}
-										else
-										// Fishing Instructor, sixth door.
-										if (object.getX() == 201 && object.getY() == 734)
-										{
-											if (tutorialIsland.getStage() >= 11)
-											{
-												if (owner.getX() == 201)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(201, 734);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(201, 733);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the fishing instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Mining Instructor, seventh door.
-										if (object.getX() == 198 && object.getY() == 746)
-										{
-											if (tutorialIsland.getStage() >= 15)
-											{
-												if (owner.getY() == 745)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(198, 746);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(198, 745);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the mining instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Bank Assistant, eight door.
-										if (object.getX() == 204 && object.getY() == 752)
-										{
-											if (tutorialIsland.getStage() >= 16)
-											{
-												if (owner.getX() == 203)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(204, 752);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(203, 752);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the bank assistant before proceeding through this door.");	
-											}
-										}
-										else
-										// Quest Advisor, ninth door.
-										if (object.getX() == 209 && object.getY() == 754)
-										{
-											if (tutorialIsland.getStage() >= 17)
-											{
-												if (owner.getY() == 753)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(209, 754);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(209, 753);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the quest advisor before proceeding through this door.");	
-											}
-										}
-										else
-										// Wilderness Guide, tenth door.
-										if (object.getX() == 217 && object.getY() == 760)
-										{
-											if (tutorialIsland.getStage() >= 18)
-											{
-												if (owner.getX() == 216)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(217, 760);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(216, 760);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the wilderness guide before proceeding through this door.");	
-											}
-										}
-										else
-										// Magic Instructor, tenth door.
-										if (object.getX() == 222 && object.getY() == 760)
-										{
-											if (tutorialIsland.getStage() >= 21)
-											{
-												if (owner.getX() == 221)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(222, 760);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(221, 760);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the magic instructor before proceeding through this door.");	
-											}
-										}
-
-										else
-										// Fatigue Expert, elevent door.
-										if (object.getX() == 226 && object.getY() == 760)
-										{
-											if (tutorialIsland.getStage() >= 23)
-											{
-												if (owner.getX() == 225)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(226, 760);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(225, 760);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the fatigue instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Community Instructor, tenth door.
-										if (object.getX() == 230 && object.getY() == 759)
-										{
-											if (tutorialIsland.getStage() >= 24)
-											{
-												if (owner.getY() == 758)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(230, 759);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(230, 758);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the community instructor before proceeding through this door.");	
-											}
-										}
-									}
-									else
-									{
-										owner.sendMessage(Config.PREFIX + "You must talk to the guide before proceeding through this door.");
 									}
 								break;
 								

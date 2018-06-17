@@ -9,12 +9,13 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.net.Packet;
 
 import org.apache.mina.common.IoSession;
+import org.openrsc.server.Config;
 public class ReportAbuseHandler implements PacketHandler {
 	public void handlePacket(Packet p, IoSession session) throws Exception {
 		Player player = (Player)session.getAttachment();
 		try {
 			if (player != null) {
-				if (player.isSub()) {
+				//if (player.isSub()) {
 					if (System.currentTimeMillis() - player.getLastReport() > 60000) {
 						Player reported = World.getPlayer(p.readLong());
 						int rule = p.readInt();
@@ -26,8 +27,8 @@ public class ReportAbuseHandler implements PacketHandler {
 							player.sendMessage("Invalid player name.");
 					} else
 						player.sendMessage("You already sent an abuse report under 60 secs ago! Do not abuse this system!");
-				} else
-					player.sendMessage("@gre@RSCU @whi@Only subscribers can use the Report Abuse feature");
+				//} else
+				//	player.sendMessage(Config.PREFIX + " Only subscribers can use the Report Abuse feature");
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();

@@ -12,12 +12,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.JFrame;
 
 import org.openrsc.client.mudclient;
 import org.openrsc.client.loader.various.AppletUtils;
@@ -55,11 +55,8 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 		AppletUtils.DISPLAY_MESSAGE = "Checking dictionarys";
 		if (AppletUtils.doDirChecks())
 			try {
-				AppletUtils.DISPLAY_MESSAGE = "Deleting old cache";
-				for (final File file : AppletUtils.CACHE.listFiles())
-					file.delete();
 				AppletUtils.DISPLAY_MESSAGE = "Downloading cache ";
-				new VirtualBrowser().getRaw(new URL("http://openrsc.com/play/openrsc.zip"), new ProgressCallback() {
+				new VirtualBrowser().getRaw(new URL("http://localhost/play/openrsc.zip"), new ProgressCallback() {
 					@Override
 					public void onComplete(byte[] bytes) {
 						try {
@@ -71,7 +68,6 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 							AppletUtils.DISPLAY_MESSAGE = "Failed to save cache";
 						}
 						AppletUtils.DISPLAY_MESSAGE = "Cache downloaded...";
-						AppletUtils.extractFolder(AppletUtils.CACHEFILE.getPath(), AppletUtils.CACHE.toString());
 					}
 
 					@Override
@@ -79,6 +75,11 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 						AppletUtils.percentage = pos * 100 / length;
 					}
 				});
+                
+				AppletUtils.DISPLAY_MESSAGE = "Deleting old cache";
+				for (final File file : AppletUtils.CACHE.listFiles())
+					file.delete();
+                AppletUtils.extractFolder(AppletUtils.CACHEFILE.getPath(), AppletUtils.CACHE.toString());
 			} catch (final MalformedURLException e) {
 				AppletUtils.percentage = 0;
 				AppletUtils.DISPLAY_MESSAGE = "Failed to grab cache";

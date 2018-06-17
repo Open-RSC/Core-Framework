@@ -953,22 +953,22 @@ public final class World
 
 	public static void buyTicket(Player player) {
 	        if (player.getBank().countId(10) < lotteryPrice && player.getInventory().countId(10) < lotteryPrice) {
-	                player.sendMessage("@gre@RSCU@whi@ It seems that you don't have enough to buy a lottery ticket...");
-	                player.sendMessage("@gre@RSCU:@whi@ Please ensure that you have @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@ in your inventory or bank and try again");
+	                player.sendMessage(Config.PREFIX + "It seems that you don't have enough to buy a lottery ticket...");
+	                player.sendMessage(Config.PREFIX + "Please ensure that you have @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@ in your inventory or bank and try again");
 	        } else if (player.getLocation().inWilderness())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery whilst in the wilderness");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst in the wilderness");
 	        else if (player.isDueling())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery whilst you are dueling");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are dueling");
 	        else if (player.isTrading())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery whilst you are trading");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are trading");
 	        else if (player.isBusy())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery whilst you're set as busy");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're set as busy");
 	        else if (player.accessingBank())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery whilst you're banking");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're banking");
 	        else if (player.isMod())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery on a staff character");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery on a staff character");
 	        else if (player.accessingShop())
-	                player.sendMessage("@gre@RSCU:@whi@ You cannot enter the lottery whilst you're in a shop");
+	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're in a shop");
 	        else {
 	                if (player.getInventory().countId(10) >= lotteryPrice) {
 	                        if (player.getInventory().remove(new InvItem(10, lotteryPrice)) == -1)
@@ -986,7 +986,7 @@ public final class World
 	                        lotteryNotify++;
 	                else {
 	                        for (Player informee : World.getPlayers())
-	                                informee.sendNotification("@gre@Lottery:@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@! Type @gre@::LOTTERY@whi@ to enter.");                                       
+	                                informee.sendNotification(Config.PREFIX + " The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@! Type @gre@::LOTTERY@whi@ to enter.");                                       
 	                        lotteryNotify = 0;
 	                }                               
 	        }               

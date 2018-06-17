@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.openrsc.client.entityhandling.EntityHandler;
+import org.openrsc.client.loader.various.AppletUtils;
 import org.openrsc.client.model.Sector;
 import org.openrsc.client.util.DataConversions;
 import org.openrsc.client.util.Pair;
@@ -1305,7 +1306,7 @@ public class TerrainManager
     public void loadSection(int sectionX, int sectionY, int height, int sector) {
     	ZipFile landscapeFile = null;
         try {
-        	landscapeFile = new ZipFile(new File(System.getProperty("user.home") + System.getProperty("file.separator") + "openrsc" + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "landscape"));
+        	landscapeFile = new ZipFile(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "landscape"));
         } catch (Exception e) {
         	// Optional to alert the user.
             e.printStackTrace();

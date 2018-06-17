@@ -63,7 +63,7 @@ public class JFrameDelegate
 	 */
 	public JFrameDelegate(int width, int height)
 	{
-		super("Open RSC");
+		super("RuneScape");
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setResizable(false);
 		super.setBackground(Color.BLACK); // hack;
@@ -322,7 +322,7 @@ public class JFrameDelegate
 
 	@Override
 	public void onLogin() {
-		if(this.instance.isSubscriber())
+		/*if(this.instance.isSubscriber())
 		{
 			super.setResizable(true);
 			super.setSize(super.getSize().width, super.getSize().height + 15);
@@ -331,7 +331,9 @@ public class JFrameDelegate
 		{
 			// hack maybe?
 			super.setSize(super.getSize().width, super.getSize().height + 15);
-		}
+		}*/
+        super.setResizable(true);
+        super.setSize(super.getSize().width, super.getSize().height + 15);
 		componentResized(null);
 	}
 

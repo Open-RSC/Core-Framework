@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import org.openrsc.client.Config;
 import org.openrsc.client.ImplementationDelegate;
+import org.openrsc.client.loader.various.AppletUtils;
 import org.openrsc.client.openrsc;
 import org.openrsc.client.mudclient;
 import org.openrsc.loader.util.unzip;
@@ -38,10 +39,6 @@ public class AppletLoader
 	private static final long serialVersionUID = 1L;
 	
 	private final static String FILE_SEPARATOR = System.getProperty("file.separator");
-
-	private final static String cacheDir = System.getProperty("user.home") + FILE_SEPARATOR + "openrsc";
-	
-	private final static File JAR = new File(cacheDir + FILE_SEPARATOR + "openrsc.zip");
 
 	private MediaTracker mediaTracker;
 
@@ -64,7 +61,7 @@ public class AppletLoader
 	}
 
 	protected void createDir() {
-		File file = new File(cacheDir);
+		File file = new File(AppletUtils.CACHE.getPath());
 		if (file.exists())
 			return;
 		else {
@@ -107,12 +104,12 @@ public class AppletLoader
 									"https://" + cache + "/updated.png"));
 			mediaTracker = new MediaTracker(this);
 			mediaTracker.addImage(loaderImage, 0, 100, 100);
-			if (JAR.exists()) {
-				md5CheckSum = getMD5Checksum(JAR);
+			if (AppletUtils.CACHEFILE.exists()) {
+				md5CheckSum = getMD5Checksum(AppletUtils.CACHEFILE);
 				if (!getServerResponse().equals(md5CheckSum))
 					downloadAndExtract();
 			}
-			if (!JAR.exists()) {
+			if (!AppletUtils.CACHEFILE.exists()) {
 				downloadAndExtract();
 			}
 			if(canStart) {
@@ -131,7 +128,7 @@ public class AppletLoader
 	}
 
 	private void unpack() {
-		new unzip(JAR.toString());
+		new unzip(AppletUtils.CACHEFILE.toString());
 		fileDownloaded = false;
 	}
 
@@ -214,7 +211,7 @@ public class AppletLoader
 	private boolean fileDownloaded = false;
 
 	private void download() {
-		File file = new File(cacheDir + File.separator + "openrsc.zip");
+		File file = new File(AppletUtils.CACHEFILE.getPath());
 		if (file.exists()) {
 			file.delete();
 		}
