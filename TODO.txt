@@ -88,6 +88,7 @@ This object can't be sold in shops
 - Implement non tradeable can't sell to shop, can't offer/show in trade/stake
 - Should be able to drop non-tradeables, but other players can not see it (DropHandler.java)
 items.txt has non-tradeable item list
+- Dropping items is only visible for the player who dropped it for ??? seconds
 New field in def_item table
 Load into items.dat through ItemExporter
 Load on world load new field
