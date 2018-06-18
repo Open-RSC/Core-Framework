@@ -121,6 +121,8 @@ When can you cast charge?
 it is not permitted to set up a cannon...
 ...this close to the dwarf black guard
 
+- Remove all references to RSCU/RSCUnity/RSC Unity
+
 -------------------
 - Command Changes -
 -------------------
