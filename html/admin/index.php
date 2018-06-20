@@ -85,7 +85,7 @@ if(isset($search_query) && isset($search_type))
 				$idlist = array_map('intval', $idlist);
 				$idlist = implode(',', array_values($idlist));
 
-				$db->query('DELETE FROM ' . GAME_BASE . 'invitems WHERE slot IN ('.$idlist.') AND playerID='.$p_data['id']) or error('Unable to delete the selected items from players inventory', __FILE__, __LINE__, $db->error());
+				$db->query('DELETE FROM ' . GAME_BASE . 'invitems WHERE slot IN ('.$idlist.') AND user='.$p_data['id']) or error('Unable to delete the selected items from players inventory', __FILE__, __LINE__, $db->error());
 				redirect('admin/index.php?player_input='.$p_data['pusername'].'&amp;search_type=0#itemTables');
 			}
 			
@@ -105,13 +105,13 @@ if(isset($search_query) && isset($search_type))
 				$idlist = array_map('intval', $idlist);
 				$idlist = implode(',', array_values($idlist));
 
-				$db->query('DELETE FROM ' . GAME_BASE . 'bank WHERE slot IN ('.$idlist.') AND playerID='.$p_data['id']) or error('Unable to delete the selected items from players bank', __FILE__, __LINE__, $db->error());
+				$db->query('DELETE FROM ' . GAME_BASE . 'bank WHERE slot IN ('.$idlist.') AND user='.$p_data['id']) or error('Unable to delete the selected items from players bank', __FILE__, __LINE__, $db->error());
 				redirect('admin/index.php?player_input='.$p_data['pusername'].'&amp;search_type=0#itemTables');
 			}
 			
 			$detectExpiration = time() > $p_data['sub_expires'] ? true : false;
 			$additional_chars = $db->query("SELECT username,combat,online FROM " . GAME_BASE . "players WHERE owner = '" . $p_data['owner'] . "' ORDER BY creation_date");						
-			$total_played = $db->query("SELECT SUM(value) FROM " . GAME_BASE . "player_cache WHERE playerID = '" . $p_data['id'] . "' AND `key` = 'total_played'");
+			$total_played = $db->query("SELECT SUM(value) FROM " . GAME_BASE . "player_cache WHERE user = '" . $p_data['id'] . "' AND `key` = 'total_played'");
 			$sum_playtime = $db->result($total_played);
 			?>
 			<div class="columns col-sm-4">
@@ -221,7 +221,7 @@ if(isset($search_query) && isset($search_type))
 			e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,
 			e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving,(e.exp_attack+e.exp_defense+e.exp_strength+
 			e.exp_hits+e.exp_ranged+e.exp_prayer+e.exp_magic+e.exp_cooking+e.exp_woodcut+e.exp_fletching+e.exp_fishing+
-			e.exp_firemaking+e.exp_crafting+e.exp_smithing+e.exp_mining+e.exp_herblaw+e.exp_agility+e.exp_thieving) AS total_xp FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.playerID = p.id WHERE p.id = '" . $p_data['id'] . "'");
+			e.exp_firemaking+e.exp_crafting+e.exp_smithing+e.exp_mining+e.exp_herblaw+e.exp_agility+e.exp_thieving) AS total_xp FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.user = p.id WHERE p.id = '" . $p_data['id'] . "'");
 			$s_data = $db->fetch_assoc($p_skill);
 			?>
 			<div class="columns col-sm-4">
@@ -255,7 +255,7 @@ if(isset($search_query) && isset($search_type))
 					<a class="skills-block__base-link" href="update_stats.php?char_search=<?php echo $s_data['username'] ?>">Edit Stats <i class="fa fa-caret-right" aria-hidden="true"></i></a>
 				</div>
 				<?php 
-				$p_name_change = $db->query("SELECT old_name, new_name, date FROM " . GAME_BASE . "name_changes WHERE playerID = '" . $p_data['id'] . "' ORDER BY date DESC LIMIT 0, 10");
+				$p_name_change = $db->query("SELECT old_name, new_name, date FROM " . GAME_BASE . "name_changes WHERE user = '" . $p_data['id'] . "' ORDER BY date DESC LIMIT 0, 10");
 				?>
 				<div class="rest-block">
 					<h2 class="rest-block__title">Character name changes</h2>
@@ -290,7 +290,7 @@ if(isset($search_query) && isset($search_type))
 			<?php 
 			$p_quests = $db->query("SELECT 
 				SUM(CASE WHEN stage > 0 THEN 1 ELSE 0 END) AS in_progress,
-				SUM(CASE WHEN stage = -1 OR stage = -2 THEN 1 ELSE 0 END) AS completed FROM " . GAME_BASE . "quests WHERE playerID = '" . $p_data['id'] . "' " .(!MEMBERS_CONTENT ? "AND id < 17" : ""));
+				SUM(CASE WHEN stage = -1 OR stage = -2 THEN 1 ELSE 0 END) AS completed FROM " . GAME_BASE . "quests WHERE user = '" . $p_data['id'] . "' " .(!MEMBERS_CONTENT ? "AND id < 17" : ""));
 			$q_data = $db->fetch_assoc($p_quests);
 			$completed_quests = number_format($q_data['completed']);
 			$in_progress_quests = number_format($q_data['in_progress']);
@@ -320,8 +320,8 @@ if(isset($search_query) && isset($search_type))
 					<a class="skills-block__base-link" href="quests.php?character=<?php echo $p_data['id']?>">All Quests <i class="fa fa-caret-right" aria-hidden="true"></i></a>
 				</div>
 				<?php 
-				$ip_load = 'SELECT DISTINCT ip, time FROM ' . GAME_BASE . 'logins WHERE playerID = '.$p_data['id'].' ORDER BY time DESC';
-				$ip_result_pages = 'SELECT COUNT(*) FROM ' . GAME_BASE . 'logins WHERE playerID = '.$p_data['id'].'';
+				$ip_load = 'SELECT DISTINCT ip, time FROM ' . GAME_BASE . 'logins WHERE user = '.$p_data['id'].' ORDER BY time DESC';
+				$ip_result_pages = 'SELECT COUNT(*) FROM ' . GAME_BASE . 'logins WHERE user = '.$p_data['id'].'';
 	
 				$total_pages = $db->result($db->query($ip_result_pages));
 				
@@ -365,7 +365,7 @@ if(isset($search_query) && isset($search_type))
 			</div>
 			
 			<?php 
-			$fetch_inventory = $db->query("SELECT id, amount, slot, wielded FROM " . GAME_BASE . "invitems WHERE playerID = '" . $p_data['id'] . "' ORDER BY slot ASC");
+			$fetch_inventory = $db->query("SELECT id, amount, slot, wielded FROM " . GAME_BASE . "invitems WHERE user = '" . $p_data['id'] . "' ORDER BY slot ASC");
 			?>
 			<div class="items-block_table" id="itemTables">
 				<div class="columns col-sm-4">
@@ -415,10 +415,10 @@ if(isset($search_query) && isset($search_type))
 					</div>
 				</div>
 				<?php 
-				$fetch_bank_total = ceil($db->num_rows($db->query("SELECT slot FROM " . GAME_BASE . "bank WHERE playerID = '" . $p_data['id'] . "'")) / 50);
+				$fetch_bank_total = ceil($db->num_rows($db->query("SELECT slot FROM " . GAME_BASE . "bank WHERE user = '" . $p_data['id'] . "'")) / 50);
 				$start_page = (isset($_GET['page']) && $_GET['page'] > 0 && $_GET['page'] <= $fetch_bank_total) ? ($_GET['page'] - 1) * 50 : 0;
 				
-				$fetch_bank = $db->query("SELECT id, amount, slot FROM " . GAME_BASE . "bank WHERE playerID = '" . $p_data['id'] . "' ORDER BY slot ASC LIMIT " . $start_page . " , 50");
+				$fetch_bank = $db->query("SELECT id, amount, slot FROM " . GAME_BASE . "bank WHERE user = '" . $p_data['id'] . "' ORDER BY slot ASC LIMIT " . $start_page . " , 50");
 				?>
 				<div class="columns col-sm-8">
 					<div class="rest-block">
@@ -564,7 +564,7 @@ if(isset($search_query) && isset($search_type))
 				$find_play = $db->query("SELECT username FROM " . GAME_BASE . "players WHERE creation_ip = '" . $db->escape($search_query) . "'");
 				$player_login_ip = $db->query("SELECT username FROM " . GAME_BASE . "players WHERE login_ip = '" . $db->escape($search_query) . "'");
 				$find_accs = $db->query("SELECT username FROM users WHERE registration_ip = '" . $db->escape($search_query) . "';");
-				$rscl_login = $db->query("SELECT DISTINCT(" . GAME_BASE . "logins.playerID)," . GAME_BASE . "players.username FROM " . GAME_BASE . "logins JOIN " . GAME_BASE . "players ON " . GAME_BASE . "logins.playerID = " . GAME_BASE . "players.id WHERE ip = '" . $db->escape($search_query) . "';");
+				//$rscd_login = $db->query("SELECT DISTINCT(" . GAME_BASE . "logins.user)," . GAME_BASE . "players.username FROM " . GAME_BASE . "logins JOIN " . GAME_BASE . "players ON " . GAME_BASE . "logins.user = " . GAME_BASE . "players.id WHERE ip = '" . $db->escape($search_query) . "';");
 				
 				echo "
 				<div class='col-sm-9'>
@@ -624,16 +624,16 @@ if(isset($search_query) && isset($search_type))
 				{
 					echo "No matches found.";
 				}
-				echo"				
+				/*echo"				
 					</td>
 					</tr>
 					<tr>
 						<td width='20%'>Game - Distinct Login IP</td>
 					<td>
 				";
-				if($db->num_rows($rscl_login) > 0)
+				if($db->num_rows($rscd_login) > 0)
 				{
-					while($r = $db->fetch_assoc($rscl_login))
+					while($r = $db->fetch_assoc($rscd_login))
 					{
 						echo "<a href='index.php?player_input=" . urlencode($r['username']) . "&amp;search_type=0'>" . $r['username'] . "</a>, ";
 					}
@@ -648,7 +648,7 @@ if(isset($search_query) && isset($search_type))
 					</tbody>
 					</table>
 					</div>
-				";
+				";*/
 			} 
 			else 
 			{

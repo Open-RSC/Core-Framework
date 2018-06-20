@@ -2,7 +2,7 @@
 
 $db_type = 'mysqli';
 $db_host = '127.0.0.1';
-$db_name = 'wolf_kingdom';
+$db_name = 'openrsc';
 $db_username = 'root';
 $db_password = 'malware';
 $db_prefix = '';

@@ -79,7 +79,7 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 					`" . GAME_BASE . "players`.`highscoreopt`,
 					(" . GAME_BASE . "experience.exp_attack+" . GAME_BASE . "experience.exp_defense+" . GAME_BASE . "experience.exp_strength+" . GAME_BASE . "experience.exp_hits+" . GAME_BASE . "experience.exp_ranged+" . GAME_BASE . "experience.exp_prayer+" . GAME_BASE . "experience.exp_magic+" . GAME_BASE . "experience.exp_cooking+" . GAME_BASE . "experience.exp_woodcut+" . GAME_BASE . "experience.exp_fletching+" . GAME_BASE . "experience.exp_fishing+" . GAME_BASE . "experience.exp_firemaking+" . GAME_BASE . "experience.exp_crafting+" . GAME_BASE . "experience.exp_smithing+" . GAME_BASE . "experience.exp_mining+" . GAME_BASE . "experience.exp_herblaw+" . GAME_BASE . "experience.exp_agility+" . GAME_BASE . "experience.exp_thieving) AS total_xp
 				FROM 
-					`" . GAME_BASE . "players` LEFT JOIN `" . GAME_BASE . "experience` ON `" . GAME_BASE . "experience`.`playerID` = `" . GAME_BASE . "players`.`id`
+					`" . GAME_BASE . "players` LEFT JOIN `" . GAME_BASE . "experience` ON `" . GAME_BASE . "experience`.`user` = `" . GAME_BASE . "players`.`id`
 				WHERE 
 					`" . GAME_BASE . "players`.`username` = '" . $db->escape($getPlayer) . "' 
 				LIMIT 0, 1
@@ -107,7 +107,7 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 					<div class="adv_userlabel content-r-side">
 						<div class="adv_userlabel-block">
 							<?php 
-							$total_played = $db->query("SELECT SUM(value) FROM " . GAME_BASE . "player_cache WHERE playerID = '" . $db->escape($pull_char["id"]) . "' AND `key` = 'total_played'");
+							$total_played = $db->query("SELECT SUM(value) FROM " . GAME_BASE . "player_cache WHERE user = '" . $db->escape($pull_char["id"]) . "' AND `key` = 'total_played'");
 							$sum_playtime = $db->result($total_played);
 							$detectExpiration = time() > $pull_char['sub_expires'] ? true : false;
 							if($luna_user['id'] == $pull_char['owner']) //check so we own the char and then pull dropdown list.
@@ -251,9 +251,9 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 					} ?>
 				</div>
 				<?php 
-				$fetch_completed_quests = $db->query("SELECT id, stage FROM " . GAME_BASE . "quests WHERE playerID = '" . $db->escape($pull_char["id"]) . "' AND stage IN(-1, -2) ORDER BY id");
-				$fetch_started_quests = $db->query("SELECT id, stage FROM " . GAME_BASE . "quests WHERE playerID = '" . $db->escape($pull_char["id"]) . "' AND stage > 0 ORDER BY id");
-				$fetch_quest_query = $db->query("SELECT id, stage FROM " . GAME_BASE . "quests WHERE playerID = '" . $db->escape($pull_char["id"]) . "'  ORDER BY id");
+				$fetch_completed_quests = $db->query("SELECT id, stage FROM " . GAME_BASE . "quests WHERE user = '" . $db->escape($pull_char["id"]) . "' AND stage IN(-1, -2) ORDER BY id");
+				$fetch_started_quests = $db->query("SELECT id, stage FROM " . GAME_BASE . "quests WHERE user = '" . $db->escape($pull_char["id"]) . "' AND stage > 0 ORDER BY id");
+				$fetch_quest_query = $db->query("SELECT id, stage FROM " . GAME_BASE . "quests WHERE user = '" . $db->escape($pull_char["id"]) . "'  ORDER BY id");
 				?>
 				<div class="adv_blockset content_advblock">
 					<div class="adv_headerblock">
@@ -321,7 +321,7 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 					</div>
 				</div>
 				<?php 
-				$friend_query = $db->query("SELECT f.playerID, f.friend, f.friendName, p.id, p.online, p.sub_expires, p.platinum_expires FROM " . GAME_BASE . "friends AS f INNER JOIN " . GAME_BASE . "players AS p ON f.friendName = p.username WHERE f.playerID = '" . $db->escape($pull_char["id"]) . "' ORDER BY f.friendName ASC LIMIT 0, 200");
+				$friend_query = $db->query("SELECT f.user, f.friend, f.friendName, p.id, p.online, p.sub_expires, p.platinum_expires FROM " . GAME_BASE . "friends AS f INNER JOIN " . GAME_BASE . "players AS p ON f.friendName = p.username WHERE f.user = '" . $db->escape($pull_char["id"]) . "' ORDER BY f.friendName ASC LIMIT 0, 200");
 				?>
 				<div class="adv_blockset content_advblock">
 					<div class="adv_headerblock">

@@ -153,7 +153,7 @@ elseif(isset($_POST['final_checkout']) && $page == 'checkout')
 					$errors[] = "Please logout your character from game. Your character has to be logged out during the whole process for a safe purchase.";
 				}
 				
-				$bank = $db->query("SELECT id FROM ".GAME_BASE ."bank WHERE playerID = ".$db->escape($selected_char)) or error('Unable to check for bank space', __FILE__, __LINE__, $db->error());;
+				$bank = $db->query("SELECT id FROM ".GAME_BASE ."bank WHERE user = ".$db->escape($selected_char)) or error('Unable to check for bank space', __FILE__, __LINE__, $db->error());;
 				$bank_space = $db->num_rows($bank);
 				if($bank_space + $item_index > 192) 
 				{
@@ -171,12 +171,12 @@ elseif(isset($_POST['final_checkout']) && $page == 'checkout')
 						}
 						else 
 						{
-							$bank_item_lookup = $db->query("SELECT id FROM ".GAME_BASE ."bank WHERE playerID = ".$db->escape($selected_char)." AND id = ".$cart[$i]->item_id) or error('Unable to check if item already exist', __FILE__, __LINE__, $db->error());;
+							$bank_item_lookup = $db->query("SELECT id FROM ".GAME_BASE ."bank WHERE user = ".$db->escape($selected_char)." AND id = ".$cart[$i]->item_id) or error('Unable to check if item already exist', __FILE__, __LINE__, $db->error());;
 							$has_item = $db->num_rows($bank_item_lookup);
 							if($has_item > 0) {
-								$db->query("UPDATE ".GAME_BASE ."bank SET amount = amount  + ". $cart[$i]->quantity ." WHERE playerID = ".$db->escape($selected_char)." AND id = ".$cart[$i]->item_id) or error('Unable to update bank with the new items', __FILE__, __LINE__, $db->error());;
+								$db->query("UPDATE ".GAME_BASE ."bank SET amount = amount  + ". $cart[$i]->quantity ." WHERE user = ".$db->escape($selected_char)." AND id = ".$cart[$i]->item_id) or error('Unable to update bank with the new items', __FILE__, __LINE__, $db->error());;
 							} else {
-								$db->query("INSERT INTO ".GAME_BASE ."bank (playerID, id, amount, slot) VALUES (".$selected_char.", '".$cart[$i]->item_id."', '". $cart[$i]->quantity."', '".$bank_space++."')") or error('Unable to insert new items to bank', __FILE__, __LINE__, $db->error());;
+								$db->query("INSERT INTO ".GAME_BASE ."bank (user, id, amount, slot) VALUES (".$selected_char.", '".$cart[$i]->item_id."', '". $cart[$i]->quantity."', '".$bank_space++."')") or error('Unable to insert new items to bank', __FILE__, __LINE__, $db->error());;
 							}
 							$success[] = "\t\t\t\t\t". $cart[$i]->quantity ."x ". $cart[$i]->name ."".($cart[$i]->quantity > 1 ? "s" : "")." has been deposited in ".ucwords($curr_char_info['username'])."'s bank.";	
 						}

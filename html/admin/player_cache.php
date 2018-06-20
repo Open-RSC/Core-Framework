@@ -18,11 +18,11 @@ if ($luna_user['g_id'] != LUNA_ADMIN) {
 $player_search = isset($_GET['search_player']) && strlen($_GET['search_player']) <= 12 && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_GET['search_player']) ? strtolower($_GET['search_player']) : null;
 $key_search = isset($_GET['search_key_cache']) && strlen($_GET['search_key_cache']) <= 12 && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_GET['search_key_cache']) ? strtolower($_GET['search_key_cache']) : null;
 if(isset($player_search)) {
-	$cache_query = "SELECT p.username, c.type, c.key, c.value FROM ".GAME_BASE."player_cache AS c LEFT JOIN ".GAME_BASE."players AS p ON c.playerID = p.id WHERE p.username = '".$db->escape($player_search)."'";
+	$cache_query = "SELECT p.username, c.type, c.key, c.value FROM ".GAME_BASE."player_cache AS c LEFT JOIN ".GAME_BASE."players AS p ON c.user = p.id WHERE p.username = '".$db->escape($player_search)."'";
 } else if(isset($key_search)) {
-	$cache_query = "SELECT p.username, c.type, c.key, c.value FROM ".GAME_BASE."player_cache AS c LEFT JOIN ".GAME_BASE."players AS p ON c.playerID = p.id WHERE c.key LIKE '".$db->escape($key_search)."%'";
+	$cache_query = "SELECT p.username, c.type, c.key, c.value FROM ".GAME_BASE."player_cache AS c LEFT JOIN ".GAME_BASE."players AS p ON c.user = p.id WHERE c.key LIKE '".$db->escape($key_search)."%'";
 } else {
-	$cache_query = "SELECT p.username, c.type, c.key, c.value FROM ".GAME_BASE."player_cache AS c LEFT JOIN ".GAME_BASE."players AS p ON c.playerID = p.id";
+	$cache_query = "SELECT p.username, c.type, c.key, c.value FROM ".GAME_BASE."player_cache AS c LEFT JOIN ".GAME_BASE."players AS p ON c.user = p.id";
 }
 $total_results = $db->num_rows($db->query($cache_query));	
 $total_pages = ceil($total_results / 25);

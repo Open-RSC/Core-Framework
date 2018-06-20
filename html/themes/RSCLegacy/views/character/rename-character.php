@@ -59,7 +59,7 @@ if (!defined('FORUM'))
 					$checkclan = $db->query("SELECT id FROM " . GAME_BASE . "clan_players WHERE username = '" . $db->escape($getActiveChar['username']) . "'");
 					if(!$db->num_rows($checkclan))
 					{
-					//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE playerID = '" . $db->escape($curr_char) . "' AND id IN (2092, 2094)");
+					//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($curr_char) . "' AND id IN (2092, 2094)");
 						//if($db->num_rows($payment) > 0)
 						//{
 								?>

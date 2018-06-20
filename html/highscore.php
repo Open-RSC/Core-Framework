@@ -42,10 +42,10 @@ function getRank($user, $skill, $pid = null, $ironman) {
 	global $db;
 	if($skill != 'Overall') {
 		$sk = "exp_".strtolower($skill);
-		$stmt = $db->query("SELECT e.playerID, p.iron_man FROM " . GAME_BASE . "experience AS e LEFT JOIN " . GAME_BASE . "players AS p ON e.playerID = p.id WHERE p.iron_man = '".$ironman."' AND e.".$sk." > 0 ORDER BY e.".$sk." DESC");
+		$stmt = $db->query("SELECT e.user, p.iron_man FROM " . GAME_BASE . "experience AS e LEFT JOIN " . GAME_BASE . "players AS p ON e.user = p.id WHERE p.iron_man = '".$ironman."' AND e.".$sk." > 0 ORDER BY e.".$sk." DESC");
 		$count = 1;
 		while ($entry = $db->fetch_assoc($stmt)) {
-			if ($entry['playerID'] == $pid) {
+			if ($entry['user'] == $pid) {
 				return $count;
 			} 
 			$count++;
@@ -97,7 +97,7 @@ function getRank($user, $skill, $pid = null, $ironman) {
 								$COUNT = "SELECT COUNT(*) FROM " . GAME_BASE . "players WHERE kills > 0 AND highscoreopt = 0 AND banned = '0'";
 							break;
 							default:
-								$ALL_USERS = "SELECT e.".$skill_xp.",p.username,p.iron_man,p.hc_ironman_death, p.combat,p.skill_total FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.playerID = p.id WHERE p.skill_total > 27 AND p.highscoreopt = 0 ". ($selected_highscore == 'ironman' ? ' AND p.iron_man = 1' : '') . ($selected_highscore == 'ultimate_ironman' ? ' AND p.iron_man = 2' : '') . ($selected_highscore == 'hardcore_ironman' ? ' AND p.iron_man = 3 OR p.hc_ironman_death = 1' : '') ." AND p.banned = '0' AND group_id IN (0, 6) ORDER BY e.".$skill_xp." DESC";
+								$ALL_USERS = "SELECT e.".$skill_xp.",p.username,p.iron_man,p.hc_ironman_death, p.combat,p.skill_total FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.user = p.id WHERE p.skill_total > 27 AND p.highscoreopt = 0 ". ($selected_highscore == 'ironman' ? ' AND p.iron_man = 1' : '') . ($selected_highscore == 'ultimate_ironman' ? ' AND p.iron_man = 2' : '') . ($selected_highscore == 'hardcore_ironman' ? ' AND p.iron_man = 3 OR p.hc_ironman_death = 1' : '') ." AND p.banned = '0' AND group_id IN (0, 6) ORDER BY e.".$skill_xp." DESC";
 								$COUNT = "SELECT COUNT(*) FROM " . GAME_BASE . "players WHERE skill_total > 27 AND highscoreopt = '0' ". ($selected_highscore == 'ironman' ? ' AND iron_man = 1' : '') . ($selected_highscore == 'ultimate_ironman' ? ' AND iron_man = 2' : '') . ($selected_highscore == 'hardcore_ironman' ? ' AND iron_man = 3 OR hc_ironman_death = 1' : '') ." AND banned = '0' AND group_id IN (0, 6)";
 							break;
 						}	
@@ -115,7 +115,7 @@ function getRank($user, $skill, $pid = null, $ironman) {
 						require load_page('highscore/main.php');
 					} else {
 						if (isset($curr_player)) {
-							$FETCH_SINGLE_PLAYER = $db->query("SELECT e.exp_attack,e.exp_defense,e.exp_strength,e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving, p.total_experience,p.username, p.combat,p.skill_total,p.id,p.creation_date,p.login_date,p.kills,p.deaths,p.highscoreopt,p.iron_man FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.playerID = p.id WHERE p.username = '".$db->escape($curr_player)."'") or die('Failed to fetch user profile');
+							$FETCH_SINGLE_PLAYER = $db->query("SELECT e.exp_attack,e.exp_defense,e.exp_strength,e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving, p.total_experience,p.username, p.combat,p.skill_total,p.id,p.creation_date,p.login_date,p.kills,p.deaths,p.highscoreopt,p.iron_man FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.user = p.id WHERE p.username = '".$db->escape($curr_player)."'") or die('Failed to fetch user profile');
 							if ($db->num_rows($FETCH_SINGLE_PLAYER) > 0) {
 								require load_page('highscore/player.php');
 							} else {
@@ -133,8 +133,8 @@ function getRank($user, $skill, $pid = null, $ironman) {
 					} else if(!isset($curr_player1) && isset($curr_player2)) {
 						redirect('highscore.php?c='.$selected_highscore.'&m=ranking&user='.$curr_player2.'');
 					} else if(isset($curr_player1) && isset($curr_player2)) {
-						$FETCH_PLAYER1 = $db->query("SELECT e.exp_attack,e.exp_defense,e.exp_strength,e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving,p.total_experience,p.username,p.skill_total,p.id,p.kills,p.deaths,p.highscoreopt,p.iron_man FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.playerID = p.id WHERE p.username = '".$db->escape($curr_player1)."'") or die('Failed to fetch user1 profile');
-						$FETCH_PLAYER2 = $db->query("SELECT e.exp_attack,e.exp_defense,e.exp_strength,e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving,p.total_experience,p.username,p.skill_total,p.id,p.kills,p.deaths,p.highscoreopt,p.iron_man FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.playerID = p.id WHERE p.username = '".$db->escape($curr_player2)."'") or die('Failed to fetch user2 profile');
+						$FETCH_PLAYER1 = $db->query("SELECT e.exp_attack,e.exp_defense,e.exp_strength,e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving,p.total_experience,p.username,p.skill_total,p.id,p.kills,p.deaths,p.highscoreopt,p.iron_man FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.user = p.id WHERE p.username = '".$db->escape($curr_player1)."'") or die('Failed to fetch user1 profile');
+						$FETCH_PLAYER2 = $db->query("SELECT e.exp_attack,e.exp_defense,e.exp_strength,e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving,p.total_experience,p.username,p.skill_total,p.id,p.kills,p.deaths,p.highscoreopt,p.iron_man FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.user = p.id WHERE p.username = '".$db->escape($curr_player2)."'") or die('Failed to fetch user2 profile');
 						if ($db->num_rows($FETCH_PLAYER1) == 0) {
 							?>
 						<div class="HSError">

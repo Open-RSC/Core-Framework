@@ -20,8 +20,8 @@ if ($luna_user['g_id'] != LUNA_ADMIN) {
 function formTotals($id, $mode = null) 
 {
 	global $db;
-	$query1 = $db->query("SELECT " . GAME_BASE . "invitems.id, SUM(" . GAME_BASE . "invitems.amount) AS i_am FROM " . GAME_BASE . "invitems INNER JOIN " . GAME_BASE . "players ON " . GAME_BASE . "invitems.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "invitems.id = '" . $db->escape($id) ."' AND " . GAME_BASE . "players.banned = '0'");
-	$query2 = $db->query("SELECT " . GAME_BASE . "bank.id, SUM(" . GAME_BASE . "bank.amount) AS b_am FROM " . GAME_BASE . "bank INNER JOIN " . GAME_BASE . "players ON " . GAME_BASE . "bank.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "bank.id = '" . $db->escape($id) . "' AND " . GAME_BASE . "players.banned = '0'");
+	$query1 = $db->query("SELECT " . GAME_BASE . "invitems.id, SUM(" . GAME_BASE . "invitems.amount) AS i_am FROM " . GAME_BASE . "invitems INNER JOIN " . GAME_BASE . "players ON " . GAME_BASE . "invitems.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "invitems.id = '" . $db->escape($id) ."' AND " . GAME_BASE . "players.banned = '0'");
+	$query2 = $db->query("SELECT " . GAME_BASE . "bank.id, SUM(" . GAME_BASE . "bank.amount) AS b_am FROM " . GAME_BASE . "bank INNER JOIN " . GAME_BASE . "players ON " . GAME_BASE . "bank.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "bank.id = '" . $db->escape($id) . "' AND " . GAME_BASE . "players.banned = '0'");
 	$invtotal = 0;
 	$banktotal = 0;
 	while($t = $db->fetch_assoc($query1))
@@ -104,11 +104,11 @@ $lookup_id = isset($_GET['lookup']) && is_numeric($_GET['lookup']) && $_GET['loo
 <?php
 if(isset($lookup_id)) 
 {
-	$find_inv = $db->query("SELECT SUM(" . GAME_BASE . "invitems.amount) AS i_amt FROM " . GAME_BASE . "invitems LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "invitems.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "invitems.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned = '0'");
-	$find_bank = $db->query("SELECT SUM(" . GAME_BASE . "bank.amount) AS b_amt FROM " . GAME_BASE . "bank LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "bank.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "bank.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned = '0'");
+	$find_inv = $db->query("SELECT SUM(" . GAME_BASE . "invitems.amount) AS i_amt FROM " . GAME_BASE . "invitems LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "invitems.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "invitems.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned = '0'");
+	$find_bank = $db->query("SELECT SUM(" . GAME_BASE . "bank.amount) AS b_amt FROM " . GAME_BASE . "bank LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "bank.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "bank.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned = '0'");
 	
-	$inventory_query = $db->query("SELECT SUM(" . GAME_BASE . "invitems.amount) AS amount, " . GAME_BASE . "players.username, " . GAME_BASE . "players.creation_ip FROM " . GAME_BASE . "invitems LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "invitems.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "invitems.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned >= 0 GROUP BY " . GAME_BASE . "invitems.playerID ORDER BY " . GAME_BASE . "invitems.amount DESC");
-	$bank_query = $db->query("SELECT SUM(" . GAME_BASE . "bank.amount) AS amount, " . GAME_BASE . "players.username, " . GAME_BASE . "players.creation_ip FROM " . GAME_BASE . "bank LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "bank.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "bank.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned >= 0 GROUP BY " . GAME_BASE . "bank.playerID ORDER BY " . GAME_BASE . "bank.amount  DESC");
+	$inventory_query = $db->query("SELECT SUM(" . GAME_BASE . "invitems.amount) AS amount, " . GAME_BASE . "players.username, " . GAME_BASE . "players.creation_ip FROM " . GAME_BASE . "invitems LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "invitems.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "invitems.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned >= 0 GROUP BY " . GAME_BASE . "invitems.user ORDER BY " . GAME_BASE . "invitems.amount DESC");
+	$bank_query = $db->query("SELECT SUM(" . GAME_BASE . "bank.amount) AS amount, " . GAME_BASE . "players.username, " . GAME_BASE . "players.creation_ip FROM " . GAME_BASE . "bank LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "bank.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "bank.id = '" . $db->escape($lookup_id) . "' AND " . GAME_BASE . "players.banned >= 0 GROUP BY " . GAME_BASE . "bank.user ORDER BY " . GAME_BASE . "bank.amount  DESC");
 	
 	$grab_name = $db->fetch_assoc($db->query("SELECT name, id FROM " . GAME_BASE . "itemdef WHERE id = '" . $db->escape($lookup_id) . "'"));
 	$grab_i_lookup = $db->fetch_assoc($find_inv);

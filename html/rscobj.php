@@ -6,7 +6,7 @@ define('LUNA_ROOT', dirname(__FILE__) . '/');
 	$host = "127.0.0.1";
 	$username = "root";
 	$password = "malware";
-	$dbname = "wolf_kingdom";
+	$dbname = "openrsc_config";
 
 	// Skapar länk med databasen.
 	// variablen $db kommer innehålla connection till databasen.
@@ -25,12 +25,12 @@ if(isset($_POST['id'])) {
 	$dir = mysqli_real_escape_string($obj_db, $_POST['dir']);
 	$type = mysqli_real_escape_string($obj_db, $_POST['type']);
 	
-	$exists = mysqli_query($obj_db, "SELECT 1 FROM `rscl_objects` WHERE `x`='".$x."' AND `y`='".$y."' AND `direction`='".$dir."' AND `type`='".$type."'");
+	$exists = mysqli_query($obj_db, "SELECT 1 FROM `spawn_objects` WHERE `x`='".$x."' AND `y`='".$y."' AND `direction`='".$dir."' AND `type`='".$type."'");
 	
 	if(mysqli_num_rows($exists) > 0) {
 		echo "Exists:('".$x."','".$y."','".$id."','".$dir."','".$type."')";
 	} else {
-		mysqli_query($obj_db, "INSERT INTO `rscl_objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('".$x."','".$y."','".$id."','".$dir."','".$type."')");
+		mysqli_query($obj_db, "INSERT INTO `spawn_objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('".$x."','".$y."','".$id."','".$dir."','".$type."')");
 		echo "Success:('".$x."','".$y."','".$id."','".$dir."','".$type."')";
 	}
 } else {

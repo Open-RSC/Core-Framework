@@ -34,7 +34,7 @@ $find_chars = $db->query("
 	");
 $fetch_char_info = $db->query("SELECT p.id,p.username,p.combat,p.quest_points,p.skill_total,p.highscoreopt,e.exp_attack,e.exp_defense,e.exp_strength,
 e.exp_hits,e.exp_ranged,e.exp_prayer,e.exp_magic,e.exp_cooking,e.exp_woodcut,e.exp_fletching,e.exp_fishing,
-e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.playerID = p.id WHERE p.owner = '" . $id . "' AND p.forum_active = '1' LIMIT 1");
+e.exp_firemaking,e.exp_crafting,e.exp_smithing,e.exp_mining,e.exp_herblaw,e.exp_agility,e.exp_thieving FROM " . GAME_BASE . "players AS p LEFT JOIN " . GAME_BASE . "experience AS e ON e.user = p.id WHERE p.owner = '" . $id . "' AND p.forum_active = '1' LIMIT 1");
 
 $apply_char = $db->fetch_assoc($fetch_char_info);
 
@@ -72,10 +72,10 @@ if($setting == 'achievements')
 	$achievement_data = $db->query("SELECT 1 FROM " . GAME_BASE . "achievements");
 	$total_achievements = $db->num_rows($achievement_data);
 	
-	$achievement_status = $db->query("SELECT 1 FROM " . GAME_BASE . "achievement_progress WHERE playerID = '".$curr_char."'");
+	$achievement_status = $db->query("SELECT 1 FROM " . GAME_BASE . "achievement_progress WHERE user = '".$curr_char."'");
 	$total_completed = $db->num_rows($achievement_status);
 	
-	$achievement_result = $db->query("SELECT a.dbid, a.name, a.description, a.extra, ap.completed, ap.unlocked FROM " . GAME_BASE . "achievements AS a LEFT JOIN " . GAME_BASE . "achievement_progress AS ap ON ap.id = a.dbid AND ap.playerID = '".$curr_char."' ORDER BY ap.unlocked DESC");
+	$achievement_result = $db->query("SELECT a.dbid, a.name, a.description, a.extra, ap.completed, ap.unlocked FROM " . GAME_BASE . "achievements AS a LEFT JOIN " . GAME_BASE . "achievement_progress AS ap ON ap.id = a.dbid AND ap.user = '".$curr_char."' ORDER BY ap.unlocked DESC");
 	
 	// Function to calculate achievement progress percentages
 	function get_achievement_percentage($completed, $total, $boolean = false) 
@@ -167,7 +167,7 @@ else if($setting != 'achievements') {
 							$new_salt = random_pass(16); // 8 default?
 							$new_password_hash = game_hmac($new_salt.$first_pass, $HMAC_PRIVATE_KEY);
 							
-							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
+							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
 							new_notification($id, 'char_manager.php?id='.$id.'', __('You have changed in-game password on character: '. luna_htmlspecialchars($arrayit['username']) . '.', 'luna'), 'fa-lock');
 							redirect('char_manager.php?id='.$id.'&setting=change_password&saved=true');
 						//}
@@ -191,7 +191,7 @@ else if($setting != 'achievements') {
 				"SELECT " . GAME_BASE . "players.id, " . GAME_BASE . "players.owner," . GAME_BASE . "players.online, " . GAME_BASE . "experience.exp_attack, 
 				" . GAME_BASE . "experience.exp_defense, " . GAME_BASE . "experience.exp_strength, " . GAME_BASE . "experience.exp_hits, 
 				" . GAME_BASE . "experience.exp_prayer, " . GAME_BASE . "experience.exp_ranged, " . GAME_BASE . "experience.exp_magic 
-				FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "players.id = " . GAME_BASE . "experience.playerID  WHERE " . GAME_BASE . "players.id = '" . $db->escape($curr_char) . "' AND " . GAME_BASE . "players.owner = '" . $id . "'"
+				FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "players.id = " . GAME_BASE . "experience.user  WHERE " . GAME_BASE . "players.id = '" . $db->escape($curr_char) . "' AND " . GAME_BASE . "players.owner = '" . $id . "'"
 				);
 
 				if($db->num_rows($stat_char) > 0) 
@@ -199,7 +199,7 @@ else if($setting != 'achievements') {
 					$grab_char = $db->fetch_assoc($stat_char);
 					if($grab_char['online'] == 0) 
 					{
-						//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE playerID = '" . $db->escape($grab_char['id']) . "' AND id IN (2092, 2094)");
+						//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($grab_char['id']) . "' AND id IN (2092, 2094)");
 						//if($db->num_rows($payment) > 0)
 						//{
 							if(isset($_POST['reset_stat'])) 
@@ -235,18 +235,18 @@ else if($setting != 'achievements') {
 														$auto_calc_hits = ceil(($grab_char['exp_attack'] + $grab_char['exp_defense']) / 3) + 1154;
 													}
 													$convert_calc_hits = experience_to_level($auto_calc_hits);
-													$db->query("UPDATE " . GAME_BASE . "experience SET exp_hits = '" . $db->escape($auto_calc_hits)  . "', exp_" . $db->escape($rehash_inputs[1]) . " = '0' WHERE playerID = '" . $db->escape($grab_char['id']) . "'");
-													$db->query("UPDATE " . GAME_BASE . "curstats SET cur_hits = '" . $db->escape($convert_calc_hits) . "', cur_" . $db->escape($rehash_inputs[1]) . " = '1' WHERE playerID = '" . $db->escape($grab_char['id']) . "'");
+													$db->query("UPDATE " . GAME_BASE . "experience SET exp_hits = '" . $db->escape($auto_calc_hits)  . "', exp_" . $db->escape($rehash_inputs[1]) . " = '0' WHERE user = '" . $db->escape($grab_char['id']) . "'");
+													$db->query("UPDATE " . GAME_BASE . "curstats SET cur_hits = '" . $db->escape($convert_calc_hits) . "', cur_" . $db->escape($rehash_inputs[1]) . " = '1' WHERE user = '" . $db->escape($grab_char['id']) . "'");
 													// Delete the sub card from inventory
-													//$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE playerID = '" . $db->escape($grab_char['id']) . "' AND id IN (2092, 2094) LIMIT 1");
+													//$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($grab_char['id']) . "' AND id IN (2092, 2094) LIMIT 1");
 													redirect('char_manager.php?id='.$id.'&setting=reduction&saved=true');
 												}
 											break;
 											default:
-												 $db->query("UPDATE " . GAME_BASE . "experience SET exp_" . $db->escape($rehash_inputs[1]) . " = '0' WHERE playerID = '" . $db->escape($grab_char['id']) . "'");
-												 $db->query("UPDATE " . GAME_BASE . "curstats SET cur_" . $db->escape($rehash_inputs[1]) . " = '1' WHERE playerID = '" . $db->escape($grab_char['id']) . "'");	
+												 $db->query("UPDATE " . GAME_BASE . "experience SET exp_" . $db->escape($rehash_inputs[1]) . " = '0' WHERE user = '" . $db->escape($grab_char['id']) . "'");
+												 $db->query("UPDATE " . GAME_BASE . "curstats SET cur_" . $db->escape($rehash_inputs[1]) . " = '1' WHERE user = '" . $db->escape($grab_char['id']) . "'");	
 												 // Delete the sub card from inventory
-												 //$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE playerID = '" . $grab_char['id'] . "' AND id IN (2092, 2094) LIMIT 1");
+												 //$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" . $grab_char['id'] . "' AND id IN (2092, 2094) LIMIT 1");
 												 redirect('char_manager.php?id='.$id.'&setting=reduction&saved=true');
 											break;
 										}
@@ -313,7 +313,7 @@ else if($setting != 'achievements') {
 							{
 								if($check['online'] == 0) 
 								{
-									//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE playerID = '" . $db->escape($check['id']) . "' AND id IN (2092, 2094)");
+									//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($check['id']) . "' AND id IN (2092, 2094)");
 									//if($db->num_rows($payment) > 0)
 									//{
 										$db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
@@ -321,10 +321,10 @@ else if($setting != 'achievements') {
 										$db->query("UPDATE " . GAME_BASE . "auctions SET seller_username = '" . $db->escape($new_name) . "' WHERE seller_username='" . $current_name . "'") or die('ew13');
 										$db->query("UPDATE " . GAME_BASE . "friends SET friendName = '" . $db->escape($new_name) . "' WHERE friendName='" . $current_name . "'") or die('ew13');
 										// Delete the sub card from inventory
-										$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE playerID = '" . $db->escape($check['id']) . "' AND id IN (2092, 2094) LIMIT 1");
+										$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($check['id']) . "' AND id IN (2092, 2094) LIMIT 1");
 
 										// Insert into name change table			
-										$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (playerID, owner, old_name, new_name, date) VALUES('.intval($check['id']).', '.intval($check['owner']).', \''.$db->escape($current_name).'\',  \''.$db->escape($new_name).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
+										$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (user, owner, old_name, new_name, date) VALUES('.intval($check['id']).', '.intval($check['owner']).', \''.$db->escape($current_name).'\',  \''.$db->escape($new_name).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
 										new_notification($id, 'char_manager.php?id='.$id.'', __('Character: '. luna_htmlspecialchars($current_name) . ' has been renamed to: '. luna_htmlspecialchars($new_name) . '!', 'luna'), 'fa-pencil');
 										redirect('char_manager.php?id='.$id.'&setting=character_renaming&saved=true');
 									/*} 
@@ -504,7 +504,7 @@ function encode_username($username) {
 							$salt = random_pass(16); // 8 default?
 							$password_hash = game_hmac($salt.$password_1, $HMAC_PRIVATE_KEY);
                                                         $usernameHash = usernameToHash($username);
-							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,salt,creation_date,creation_ip) VALUES ('" . $usernameHash . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
+							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $usernameHash . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
 							$new_uid = $db->insert_id();
 							$db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
 							$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
@@ -540,17 +540,17 @@ function encode_username($username) {
 					
 					// DELETE CHARACTER
 					$db->query("DELETE FROM " . GAME_BASE . "players WHERE id = '" . $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "curstats WHERE playerID = '" . $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "experience WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "friends WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "ignores WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE playerID = '" .  $db->escape($character_to_delete). "'");
-					$db->query("DELETE FROM " . GAME_BASE . "logins WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "bank WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "player_cache WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "quests WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "curstats WHERE user = '" . $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "experience WHERE user = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "friends WHERE user = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "ignores WHERE user = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" .  $db->escape($character_to_delete). "'");
+					$db->query("DELETE FROM " . GAME_BASE . "logins WHERE user = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "bank WHERE user = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "player_cache WHERE user = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "quests WHERE user = '" .  $db->escape($character_to_delete) . "'");
 					$db->query("DELETE FROM " . GAME_BASE . "auctions WHERE seller = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "expired_auctions WHERE playerID = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "expired_auctions WHERE user = '" .  $db->escape($character_to_delete) . "'");
 					$db->query("DELETE FROM " . GAME_BASE . "clan WHERE leader = '" .  $db->escape($cur_del_char['username']) . "'");
 					$db->query("DELETE FROM " . GAME_BASE . "clan_players WHERE username = '" .  $db->escape($cur_del_char['username']) . "'");
 					

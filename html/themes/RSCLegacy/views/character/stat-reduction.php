@@ -57,9 +57,9 @@ if (!defined('FORUM'))
 			$grab_char = $db->query("SELECT " . GAME_BASE . "players.owner," . GAME_BASE . "players.online, " . GAME_BASE . "experience.exp_attack, 
 				" . GAME_BASE . "experience.exp_defense, " . GAME_BASE . "experience.exp_strength, " . GAME_BASE . "experience.exp_hits, 
 				" . GAME_BASE . "experience.exp_prayer, " . GAME_BASE . "experience.exp_ranged, " . GAME_BASE . "experience.exp_magic 
-				FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "players.id = " . GAME_BASE . "experience.playerID  WHERE " . GAME_BASE . "players.id = '" . $db->escape($curr_char) . "' AND " . GAME_BASE . "players.owner = '" . $id . "'");
+				FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "players.id = " . GAME_BASE . "experience.user  WHERE " . GAME_BASE . "players.id = '" . $db->escape($curr_char) . "' AND " . GAME_BASE . "players.owner = '" . $id . "'");
 
-			//$inv_info = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE playerID = '" . $db->escape($curr_char) . "' AND id IN (2092, 2094)");
+			//$inv_info = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($curr_char) . "' AND id IN (2092, 2094)");
 			if($db->num_rows($grab_char) > 0) 
 			{
 				$fetch = $db->fetch_assoc($grab_char);	

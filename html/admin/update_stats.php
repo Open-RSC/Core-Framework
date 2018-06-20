@@ -18,7 +18,7 @@ if ($luna_user['g_id'] != LUNA_ADMIN) {
 }
 
 if(isset($_GET['char_search']) && strlen($_GET['char_search']) >= 1 && strlen($_GET['char_search']) <= 12) {
-		$find_user = $db->query("SELECT " . GAME_BASE . "experience.* FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "players.id = " . GAME_BASE . "experience.playerID WHERE username = '" . $db->escape($_GET['char_search']) . "'");
+		$find_user = $db->query("SELECT " . GAME_BASE . "experience.* FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "players.id = " . GAME_BASE . "experience.user WHERE username = '" . $db->escape($_GET['char_search']) . "'");
 		if($db->num_rows($find_user) > 0) {
 			$fetch_skills = $db->fetch_assoc($find_user);
 			if(isset($_POST['updatestats'])) {
@@ -39,8 +39,8 @@ if(isset($_GET['char_search']) && strlen($_GET['char_search']) >= 1 && strlen($_
 				$auto_calc_hits = ceil(($fix_exp_skill['attack'] + $fix_exp_skill['defense'] + $fix_exp_skill['strength']) / 3) + 1154;
 				$convert_calc_hits = experience_to_level($auto_calc_hits);
 				//$db->query("UPDATE " . GAME_BASE . "players SET exp_hits = '" . $auto_calc_hits . "', " . substr($build_exp_ql, 0, -1) . ", cur_hits = '" . $convert_calc_hits . "', " . substr($build_cur_ql, 0, -1) . " WHERE id = '" . $db->escape($fetch_skills['id']) . "'") or error('Unable to update player stats', __FILE__, __LINE__, $db->error());
-				$db->query("UPDATE " . GAME_BASE . "experience SET exp_hits = '" . $auto_calc_hits . "', " . substr($build_exp_ql, 0, -1) . " WHERE playerID = '" . $fetch_skills['playerID'] . "'");
-				$db->query("UPDATE " . GAME_BASE . "curstats SET cur_hits = '" . $convert_calc_hits . "', " . substr($build_cur_ql, 0, -1) . " WHERE playerID = '" . $fetch_skills['playerID'] . "'");
+				$db->query("UPDATE " . GAME_BASE . "experience SET exp_hits = '" . $auto_calc_hits . "', " . substr($build_exp_ql, 0, -1) . " WHERE user = '" . $fetch_skills['user'] . "'");
+				$db->query("UPDATE " . GAME_BASE . "curstats SET cur_hits = '" . $convert_calc_hits . "', " . substr($build_cur_ql, 0, -1) . " WHERE user = '" . $fetch_skills['user'] . "'");
 								
 				new_notification($luna_user['id'], '#', __('You have updated '. luna_htmlspecialchars($_GET['char_search']) . ' stats via admin panel.', 'luna'), 'fa-bar-chart');
 				redirect('admin/update_stats.php?char_search=' . luna_htmlspecialchars($_GET['char_search']) . '&amp;saved=true');

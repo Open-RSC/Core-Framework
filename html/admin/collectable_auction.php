@@ -27,9 +27,9 @@ $item_name_query_addition = ($item_name_search != null ? "match (". GAME_BASE ."
 $fetch_auctions = "SELECT ". GAME_BASE ."itemdef.name AS 'auctionItemName', ". GAME_BASE ."players.username AS 'ggname', ". GAME_BASE ."players.id, ". GAME_BASE ."expired_auctions.item_id, 
 ". GAME_BASE ."expired_auctions.item_amount, ". GAME_BASE ."expired_auctions.explanation, ". GAME_BASE ."expired_auctions.time, ". GAME_BASE ."expired_auctions.claim_time, ". GAME_BASE ."expired_auctions.claimed 
 FROM ". GAME_BASE ."expired_auctions INNER JOIN ". GAME_BASE ."itemdef ON ". GAME_BASE ."itemdef.id = ". GAME_BASE ."expired_auctions.item_id 
-JOIN ". GAME_BASE ."players ON ". GAME_BASE ."players.id = ". GAME_BASE ."expired_auctions.playerID WHERE ".$seller_query_addition." AND ".$item_name_query_addition." ORDER BY ". GAME_BASE ."expired_auctions.time DESC";
+JOIN ". GAME_BASE ."players ON ". GAME_BASE ."players.id = ". GAME_BASE ."expired_auctions.user WHERE ".$seller_query_addition." AND ".$item_name_query_addition." ORDER BY ". GAME_BASE ."expired_auctions.time DESC";
 
-$fetch_auctions_p = "SELECT COUNT(*) FROM ". GAME_BASE ."expired_auctions INNER JOIN ". GAME_BASE ."itemdef ON ". GAME_BASE ."itemdef.id = ". GAME_BASE ."expired_auctions.item_id INNER JOIN ". GAME_BASE ."players ON ". GAME_BASE ."players.id = ". GAME_BASE ."expired_auctions.playerID WHERE ".$seller_query_addition." AND ".$item_name_query_addition."";
+$fetch_auctions_p = "SELECT COUNT(*) FROM ". GAME_BASE ."expired_auctions INNER JOIN ". GAME_BASE ."itemdef ON ". GAME_BASE ."itemdef.id = ". GAME_BASE ."expired_auctions.item_id INNER JOIN ". GAME_BASE ."players ON ". GAME_BASE ."players.id = ". GAME_BASE ."expired_auctions.user WHERE ".$seller_query_addition." AND ".$item_name_query_addition."";
 
 $total_results = $db->result($db->query($fetch_auctions_p));			
 $total_pages = ceil($total_results / $results_per_page);

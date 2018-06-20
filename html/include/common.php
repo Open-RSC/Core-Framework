@@ -41,7 +41,7 @@ if (!defined('FORUM')) {
 }
 // SQL BASE PREFIX
 
-define('GAME_BASE', 'rscl_');
+define('GAME_BASE', 'rscd_');
 
 define('MEMBERS_CONTENT', true);
 

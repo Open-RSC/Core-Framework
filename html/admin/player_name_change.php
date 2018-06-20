@@ -18,11 +18,11 @@ if ($luna_user['g_id'] != LUNA_ADMIN) {
 $player_search = isset($_GET['search_player']) && strlen($_GET['search_player']) <= 12 && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_GET['search_player']) ? strtolower($_GET['search_player']) : null;
 $forum_search = isset($_GET['search_forum']) && strlen($_GET['search_forum']) <= 12 && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_GET['search_forum']) ? strtolower($_GET['search_forum']) : null;
 if(isset($player_search)) {
-	$name_query = "SELECT p.username, u.username AS 'fuser', n.old_name, n.new_name, n.date FROM ".GAME_BASE."name_changes AS n LEFT JOIN ".GAME_BASE."players AS p ON n.playerID = p.id LEFT JOIN users AS u ON n.owner = u.id WHERE p.username = '".$db->escape($player_search)."' ORDER BY n.date DESC";
+	$name_query = "SELECT p.username, u.username AS 'fuser', n.old_name, n.new_name, n.date FROM ".GAME_BASE."name_changes AS n LEFT JOIN ".GAME_BASE."players AS p ON n.user = p.id LEFT JOIN users AS u ON n.owner = u.id WHERE p.username = '".$db->escape($player_search)."' ORDER BY n.date DESC";
 } else if(isset($forum_search)) {
-	$name_query = "SELECT p.username, u.username AS 'fuser', n.old_name, n.new_name, n.date FROM ".GAME_BASE."name_changes AS n LEFT JOIN ".GAME_BASE."players AS p ON n.playerID = p.id LEFT JOIN users AS u ON n.owner = u.id WHERE u.username = '".$db->escape($forum_search)."' ORDER BY n.date DESC";
+	$name_query = "SELECT p.username, u.username AS 'fuser', n.old_name, n.new_name, n.date FROM ".GAME_BASE."name_changes AS n LEFT JOIN ".GAME_BASE."players AS p ON n.user = p.id LEFT JOIN users AS u ON n.owner = u.id WHERE u.username = '".$db->escape($forum_search)."' ORDER BY n.date DESC";
 } else {
-	$name_query = "SELECT p.username, u.username AS 'fuser', n.old_name, n.new_name, n.date FROM ".GAME_BASE."name_changes AS n LEFT JOIN ".GAME_BASE."players AS p ON n.playerID = p.id LEFT JOIN users AS u ON n.owner = u.id ORDER BY n.date DESC";
+	$name_query = "SELECT p.username, u.username AS 'fuser', n.old_name, n.new_name, n.date FROM ".GAME_BASE."name_changes AS n LEFT JOIN ".GAME_BASE."players AS p ON n.user = p.id LEFT JOIN users AS u ON n.owner = u.id ORDER BY n.date DESC";
 }
 $total_results = $db->num_rows($db->query($name_query));	
 $total_pages = ceil($total_results / 25);

@@ -20,7 +20,7 @@ require 'header.php';
 
 $character = isset($_GET['character'])  && strlen($_GET['character']) <= 12 ? trim($_GET['character']) : null;
 
-$get_quests = $db->query("SELECT " . GAME_BASE . "quests.stage," . GAME_BASE . "quests.id, " . GAME_BASE . "players.username, " . GAME_BASE . "players.id FROM " . GAME_BASE . "quests LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "quests.playerID = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "quests.playerID = '" . $db->escape($character) . "'");
+$get_quests = $db->query("SELECT " . GAME_BASE . "quests.stage," . GAME_BASE . "quests.id, " . GAME_BASE . "players.username, " . GAME_BASE . "players.id FROM " . GAME_BASE . "quests LEFT JOIN " . GAME_BASE . "players ON " . GAME_BASE . "quests.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "quests.user = '" . $db->escape($character) . "'");
 $result_quest = $db->fetch_assoc($get_quests);
 
 if(isset($character) && $db->num_rows($get_quests) > 0) {
