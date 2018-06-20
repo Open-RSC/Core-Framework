@@ -125,7 +125,7 @@ public final class Server
 			try
 			{
 				System.out.println("Running Auto Restart...");
-				Runtime.getRuntime().exec("ant runserver");
+				Runtime.getRuntime().exec("run.sh");
 			}
 			catch (Exception e)
 			{
