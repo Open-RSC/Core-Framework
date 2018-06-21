@@ -368,10 +368,6 @@ else if($setting != 'achievements') {
 							{
 								if($check['online'] == 0) 
 								{
-										//$db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
-										//$db->query("UPDATE " . GAME_BASE . "auctions SET seller_username = '" . $db->escape($new_name) . "' WHERE seller_username='" . $current_name . "'") or die('Error');
-										//$db->query("UPDATE " . GAME_BASE . "friends SET friendName = '" . $db->escape($new_name) . "' WHERE friendName='" . $current_name . "'") or die('Error');
-
                                                                                 $db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
                                                                                 $db->query("UPDATE " . GAME_BASE . "players SET user = '" . $db->escape($usernameHash) . "' WHERE id='" . $check['id'] . "'");
                                                                                 $db->query("UPDATE " . GAME_BASE . "experience SET user = '" . $db->escape($usernameHash) . "' WHERE id='" . $check['id'] . "'");
@@ -381,7 +377,6 @@ else if($setting != 'achievements') {
                                                                                 $db->query("UPDATE " . GAME_BASE . "auctions SET player = '" . $db->escape($new_name) . "' WHERE player='" . $check['id'] . "'");
                                                                                 $db->query("UPDATE " . GAME_BASE . "friends SET user = '" . $db->escape($usernameHash) . "' WHERE user='" . $check['user'] . "'");
                                                                                 $db->query("UPDATE " . GAME_BASE . "ignores SET user = '" . $db->escape($usernameHash) . "' WHERE user='" . $check['user'] . "'");
-
                                                                                 
 										// Insert into name change table			
 										$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (user, owner, old_name, new_name, date) VALUES('.intval($check['id']).', '.intval($check['owner']).', \''.$db->escape($current_name).'\',  \''.$db->escape($new_name).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
@@ -560,7 +555,7 @@ function encode_username($username) {
 							$salt = random_pass(16); // 8 default?
 							$password_hash = game_hmac($salt.$password_1, $HMAC_PRIVATE_KEY);
                                                         $usernameHash = usernameToHash($username);
-							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $usernameHash . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
+							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
 							$new_uid = $db->insert_id();
 							$db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
 							$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
@@ -581,46 +576,90 @@ function encode_username($username) {
 				$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch deletion', __FILE__, __LINE__, $db->error());
 				$cur_user = $db->fetch_assoc($result);
 				
+                                function usernameToHash($s) {
+                                        $s = strtolower($s);
+                                        $s1 = '';
+                                        for ($i = 0;$i < strlen($s);$i++) {
+                                                $c = $s{$i};
+                                                if ($c >= 'a' && $c <= 'z') {
+                                                    $s1 = $s1 . $c;
+                                                } else if ($c >= '0' && $c <= '9') {
+                                                    $s1 = $s1 . $c;
+                                                } else {
+                                                    $s1 = $s1 . ' ';
+                                                }
+                                        }
+
+                                        $s1 = trim($s1);
+                                        if (strlen($s1) > 12) {
+                                            $s1 = substr($s1, 0, 12); //trims the username down to 12 characters if more are sent
+                                        }
+
+                                        $l = 0;
+                                        for ($j = 0;$j < strlen($s1);$j++) {
+                                                $c1 = $s1{$j};
+                                                $l *= 37;
+                                                if ($c1 >= 'a' && $c1 <= 'z') {
+                                                    $l += (1 + ord($c1)) - 97;
+                                                } else if ($c1 >= '0' && $c1 <= '9') {
+                                                    $l += (27 + ord($c1)) - 48;
+                                                }
+                                        }
+                                        return $l;
+                                }
+                                function hashToUsername($l) {
+                                        if ($l < 0) {
+                                                return 'invalid_name';
+                                        }
+                                        $s = '';
+                                        while ($l != 0) {
+                                                $i = floor(floatval($l % 37));
+                                                $l = floor(floatval($l / 37));
+                                                if ($i == 0) {
+                                                    $s = ' ' . $s;
+                                                } 
+                                                else if ($i < 27) {
+                                                        if ($l % 37 == 0) {
+                                                            $s = chr(($i + 65) - 1) . $s;
+                                                        }
+                                                        else {
+                                                                $s = chr(($i + 97) - 1) . $s;
+                                                        }
+                                                }
+                                                else {
+                                                        $s = chr(($i + 48) - 27) . $s;
+                                                }
+                                        }
+                                        return $s;
+                                }
+                                
 				if ($key == '' || $key != $cur_user['activate_key'])
 					message(__('The specified activation key was incorrect or has expired. Please re-request a new deletion. If that fails, contact the forum administrator at', 'luna').' <a href="mailto:'.luna_htmlspecialchars($luna_config['o_admin_email']).'">'.luna_htmlspecialchars($luna_config['o_admin_email']).'</a>.');
-				//No donations!
-                                //if($cur_user['jewels'] < 100) 
-				//	message(__('You need to have 100 jewels in order for this service. You can donate for jewels at: <a href="wolfkingdom.net/donate.php">wolfkingdom.net/donate.php</a>', 'luna').'');
-				//else {
-					$character_to_delete = $cur_user['activate_string'];
-					$character_to_delete_query = $db->query('SELECT username FROM ' . GAME_BASE . 'players WHERE id='.$character_to_delete) or error('Unable to fetch deletion extra', __FILE__, __LINE__, $db->error());
-					if (!$db->num_rows($character_to_delete_query)) 
+
+                                        $character_to_delete = $cur_user['activate_string'];
+					$character_to_delete_query = $db->query('SELECT id,user,username FROM ' . GAME_BASE . 'players WHERE id='.$character_to_delete) or error('Unable to fetch deletion extra', __FILE__, __LINE__, $db->error());
+                                        if (!$db->num_rows($character_to_delete_query)) 
 						message(__('User could not be found on your account', 'luna').'.');
-				
-					$cur_del_char = $db->fetch_assoc($character_to_delete_query);
 					
+                                        $cur_del_char = $db->fetch_assoc($character_to_delete_query);
+                                        
 					// DELETE CHARACTER
 					$db->query("DELETE FROM " . GAME_BASE . "players WHERE id = '" . $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "curstats WHERE user = '" . $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "experience WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "friends WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "ignores WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" .  $db->escape($character_to_delete). "'");
-					$db->query("DELETE FROM " . GAME_BASE . "logins WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "bank WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "player_cache WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "quests WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "auctions WHERE seller = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "expired_auctions WHERE user = '" .  $db->escape($character_to_delete) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "clan WHERE leader = '" .  $db->escape($cur_del_char['username']) . "'");
-					$db->query("DELETE FROM " . GAME_BASE . "clan_players WHERE username = '" .  $db->escape($cur_del_char['username']) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "curstats WHERE id = '" . $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "experience WHERE id = '" .  $db->escape($character_to_delete) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "friends WHERE user = '" .  $db->escape($cur_del_char['user']) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "ignores WHERE user = '" .  $db->escape($cur_del_char['user']) . "'");
+					$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" .  $db->escape($cur_del_char['user']). "'");
+					$db->query("DELETE FROM " . GAME_BASE . "quests WHERE id = '" .  $db->escape($character_to_delete) . "'");
 					
 					// UPDATE THE ACTIVATION KEYS TO NULL.
-                                        // No donations!
-					//$db->query('UPDATE '.$db->prefix.'users SET jewels=jewels - 100, activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update user defaults', __FILE__, __LINE__, $db->error());
                                         $db->query('UPDATE '.$db->prefix.'users SET activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update user defaults', __FILE__, __LINE__, $db->error());
 					message(__('Your character has been successfully deleted.', 'luna'), true);
-				//}
 			} else {
 				if (isset($_POST['delete_verify'])) {
 					require LUNA_ROOT.'include/email.php';
-					$result = $db->query('SELECT id, username, last_email_sent, jewels FROM '.$db->prefix.'users WHERE email=\''.$db->escape($luna_user['email']).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-					$char_delete_result = $db->query('SELECT id, username, banned FROM ' . GAME_BASE . 'players WHERE id='.$db->escape($curr_char).' AND owner='.$db->escape($luna_user['id']).'') or error('Unable to find player character info', __FILE__, __LINE__, $db->error());
+					$result = $db->query('SELECT id, username, last_email_sent FROM '.$db->prefix.'users WHERE email=\''.$db->escape($luna_user['email']).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+					$char_delete_result = $db->query('SELECT id, user, username, banned FROM ' . GAME_BASE . 'players WHERE id='.$db->escape($curr_char).' AND owner='.$db->escape($luna_user['id']).'') or error('Unable to find player character info', __FILE__, __LINE__, $db->error());
 					if (!$db->num_rows($char_delete_result)) 
 						message(__('User could not be found on your account', 'luna').'.');
 				
@@ -656,16 +695,6 @@ To confirm the deletion of your character, please click the activation url below
 					
 						// Loop through users we found
 						while ($cur_hit = $db->fetch_assoc($result)) {
-							//This is silly.
-                                                        /*if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0) {
-								message(sprintf(__('This account has already requested a character delete in the past hour. Please wait %s minutes before requesting again.', 'luna'), intval((3600 - (time() - $cur_hit['last_email_sent'])) / 60)), true);
-							}*/
-                                                        
-							//No donations!
-							//if($cur_hit['jewels'] < 100) {
-							//	message(__('This service cost 100 jewels, you can donate for more jewels at: <a href="http://wolfkingdom.net/donate.php">wolfkingdom.net/donate.php</a>', 'luna'));
-							//}
-							
 							$activation_key = random_pass(8);
 
 							$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.$db->escape($char_delete['id']).'\', activate_key=\''.$db->escape($activation_key).'\', last_email_sent = '.time().' WHERE id='.$cur_hit['id'])
@@ -677,9 +706,7 @@ To confirm the deletion of your character, please click the activation url below
 							$cur_mail_message = str_replace('<char_delete>', $char_delete['username'], $cur_mail_message);
 
 							luna_mail($luna_user['email'], $mail_subject, $cur_mail_message);
-                                                        //message(__('neat'), true);
 						}
-						//message(__('An email has been sent to the forum account email address with instructions on how to delete the selected character. If it does not arrive you can contact the forum administrator at', 'luna').' <a href="mailto:'.luna_htmlspecialchars($luna_config['o_admin_email']).'">'.luna_htmlspecialchars($luna_config['o_admin_email']).'</a>.', true);
 					}
 				}
 			}
