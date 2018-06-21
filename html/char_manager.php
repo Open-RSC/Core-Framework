@@ -5,6 +5,7 @@
  */
 define('LUNA_ROOT', dirname(__FILE__).'/');
 require LUNA_ROOT.'include/common.php';
+require LUNA_ROOT.'include/dataconversions.php';
 
 $page_title = array(luna_htmlspecialchars($luna_config['o_board_title']), __('Character Management', 'luna'));
 define('LUNA_ACTIVE_PAGE', 'character');
@@ -271,64 +272,6 @@ else if($setting != 'achievements') {
 			{
 				confirm_referrer('char_manager.php');
 				
-                                //Data conversion
-                                function usernameToHash($s) {
-                                        $s = strtolower($s);
-                                        $s1 = '';
-                                        for ($i = 0;$i < strlen($s);$i++) {
-                                                $c = $s{$i};
-                                                if ($c >= 'a' && $c <= 'z') {
-                                                    $s1 = $s1 . $c;
-                                                } else if ($c >= '0' && $c <= '9') {
-                                                    $s1 = $s1 . $c;
-                                                } else {
-                                                    $s1 = $s1 . ' ';
-                                                }
-                                        }
-
-                                        $s1 = trim($s1);
-                                        if (strlen($s1) > 12) {
-                                            $s1 = substr($s1, 0, 12); //trims the username down to 12 characters if more are sent
-                                        }
-
-                                        $l = 0;
-                                        for ($j = 0;$j < strlen($s1);$j++) {
-                                                $c1 = $s1{$j};
-                                                $l *= 37;
-                                                if ($c1 >= 'a' && $c1 <= 'z') {
-                                                    $l += (1 + ord($c1)) - 97;
-                                                } else if ($c1 >= '0' && $c1 <= '9') {
-                                                    $l += (27 + ord($c1)) - 48;
-                                                }
-                                        }
-                                        return $l;
-                                }
-                                function hashToUsername($l) {
-                                        if ($l < 0) {
-                                                return 'invalid_name';
-                                        }
-                                        $s = '';
-                                        while ($l != 0) {
-                                                $i = floor(floatval($l % 37));
-                                                $l = floor(floatval($l / 37));
-                                                if ($i == 0) {
-                                                    $s = ' ' . $s;
-                                                } 
-                                                else if ($i < 27) {
-                                                        if ($l % 37 == 0) {
-                                                            $s = chr(($i + 65) - 1) . $s;
-                                                        }
-                                                        else {
-                                                                $s = chr(($i + 97) - 1) . $s;
-                                                        }
-                                                }
-                                                else {
-                                                        $s = chr(($i + 48) - 27) . $s;
-                                                }
-                                        }
-                                        return $s;
-                                }
-                                
 				$current_name = isset($_POST['character_name']) && strlen($_POST['character_name']) <= 12 && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_POST['character_name']) ? trim($_POST['character_name']) : null;
 				$new_name = isset($_POST['new_name']) && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_POST['new_name']) ? trim($_POST['new_name']) : null;
                                 $usernameHash = usernameToHash($new_name);
@@ -449,108 +392,6 @@ else if($setting != 'achievements') {
 						}
 						else
 						{
-//Data conversion
-function usernameToHash($s) {
-        $s = strtolower($s);
-        $s1 = '';
-        for ($i = 0;$i < strlen($s);$i++) {
-                $c = $s{$i};
-                if ($c >= 'a' && $c <= 'z') {
-                    $s1 = $s1 . $c;
-                } else if ($c >= '0' && $c <= '9') {
-                    $s1 = $s1 . $c;
-                } else {
-                    $s1 = $s1 . ' ';
-                }
-        }
-
-        $s1 = trim($s1);
-        if (strlen($s1) > 12) {
-            $s1 = substr($s1, 0, 12); //trims the username down to 12 characters if more are sent
-        }
-
-        $l = 0;
-        for ($j = 0;$j < strlen($s1);$j++) {
-                $c1 = $s1{$j};
-                $l *= 37;
-                if ($c1 >= 'a' && $c1 <= 'z') {
-                    $l += (1 + ord($c1)) - 97;
-                } else if ($c1 >= '0' && $c1 <= '9') {
-                    $l += (27 + ord($c1)) - 48;
-                }
-        }
-        return $l;
-}
-function hashToUsername($l) {
-        if ($l < 0) {
-                return 'invalid_name';
-        }
-        $s = '';
-        while ($l != 0) {
-                $i = floor(floatval($l % 37));
-                $l = floor(floatval($l / 37));
-                if ($i == 0) {
-                    $s = ' ' . $s;
-                } 
-                else if ($i < 27) {
-                        if ($l % 37 == 0) {
-                            $s = chr(($i + 65) - 1) . $s;
-                        }
-                        else {
-                                $s = chr(($i + 97) - 1) . $s;
-                        }
-                }
-                else {
-                        $s = chr(($i + 48) - 27) . $s;
-                }
-        }
-        return $s;
-}
-
-function experienceToLevel($exp) {
-        global $experienceArray;
-        for($level = 0;$level < 119;$level++) {
-                if($exp >= $experienceArray[$level]) {
-                        continue;
-                }
-                return ($level + 1);
-        }
-        return 120; // This means were over the highest level there is
-}
-
-function encode_username($username) {
-        $username = strtolower($username);
-        $clean = '';
-        for($i = 0;$i < strlen($username);$i++) {
-                $c = ord($username{$i});
-                if($c >= 97 && $c <= 122) {
-                        $clean .= chr($c);
-                }
-                else if($c >= 48 && $c <= 57) {
-                        $clean .= chr($c);
-                }
-                else {
-                        $clean .= ' ';
-                }
-        }
-        $clean = trim($clean);
-        if(strlen($clean) > 12) {
-                $clean = substr($clean, 0, 12);
-        }
-        $hash = '0';
-        for($i = 0;$i < strlen($clean);$i++) {
-                $c = ord($clean{$i});
-                $hash = bcmul($hash, 37);
-                if($c >= 97 && $c <= 122) {
-                        $hash = bcadd($hash, (1 + $c) - 97);
-                }
-                else if($c >= 48 && $c <= 57) {
-                        $hash = bcadd($hash, (27 + $c) - 48);
-                }
-        }
-        $rewriteValue = explode(".", $hash);
-        return $rewriteValue[0];
-}
 							// SALT + SHA512 + Secrety key here.
 							$salt = random_pass(16); // 8 default?
 							$password_hash = game_hmac($salt.$password_1, $HMAC_PRIVATE_KEY);
@@ -576,63 +417,6 @@ function encode_username($username) {
 				$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch deletion', __FILE__, __LINE__, $db->error());
 				$cur_user = $db->fetch_assoc($result);
 				
-                                function usernameToHash($s) {
-                                        $s = strtolower($s);
-                                        $s1 = '';
-                                        for ($i = 0;$i < strlen($s);$i++) {
-                                                $c = $s{$i};
-                                                if ($c >= 'a' && $c <= 'z') {
-                                                    $s1 = $s1 . $c;
-                                                } else if ($c >= '0' && $c <= '9') {
-                                                    $s1 = $s1 . $c;
-                                                } else {
-                                                    $s1 = $s1 . ' ';
-                                                }
-                                        }
-
-                                        $s1 = trim($s1);
-                                        if (strlen($s1) > 12) {
-                                            $s1 = substr($s1, 0, 12); //trims the username down to 12 characters if more are sent
-                                        }
-
-                                        $l = 0;
-                                        for ($j = 0;$j < strlen($s1);$j++) {
-                                                $c1 = $s1{$j};
-                                                $l *= 37;
-                                                if ($c1 >= 'a' && $c1 <= 'z') {
-                                                    $l += (1 + ord($c1)) - 97;
-                                                } else if ($c1 >= '0' && $c1 <= '9') {
-                                                    $l += (27 + ord($c1)) - 48;
-                                                }
-                                        }
-                                        return $l;
-                                }
-                                function hashToUsername($l) {
-                                        if ($l < 0) {
-                                                return 'invalid_name';
-                                        }
-                                        $s = '';
-                                        while ($l != 0) {
-                                                $i = floor(floatval($l % 37));
-                                                $l = floor(floatval($l / 37));
-                                                if ($i == 0) {
-                                                    $s = ' ' . $s;
-                                                } 
-                                                else if ($i < 27) {
-                                                        if ($l % 37 == 0) {
-                                                            $s = chr(($i + 65) - 1) . $s;
-                                                        }
-                                                        else {
-                                                                $s = chr(($i + 97) - 1) . $s;
-                                                        }
-                                                }
-                                                else {
-                                                        $s = chr(($i + 48) - 27) . $s;
-                                                }
-                                        }
-                                        return $s;
-                                }
-                                
 				if ($key == '' || $key != $cur_user['activate_key'])
 					message(__('The specified activation key was incorrect or has expired. Please re-request a new deletion. If that fails, contact the forum administrator at', 'luna').' <a href="mailto:'.luna_htmlspecialchars($luna_config['o_admin_email']).'">'.luna_htmlspecialchars($luna_config['o_admin_email']).'</a>.');
 
