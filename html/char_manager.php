@@ -133,13 +133,13 @@ else if($setting != 'achievements') {
 				if($curr_char != $apply_char['id'] && $luna_user['g_id'] != LUNA_ADMIN) 
 					redirect('char_manager.php?id='.$id);
 				
-				$find = $db->query("SELECT username,pass,salt FROM " . GAME_BASE . "players WHERE " . GAME_BASE . "players.id = '" . $db->escape($curr_char) . "' AND owner = '" . $id . "'");
+				$find = $db->query("SELECT username,pass,password_salt FROM " . GAME_BASE . "players WHERE " . GAME_BASE . "players.id = '" . $db->escape($curr_char) . "' AND owner = '" . $id . "'");
 				$arrayit = $db->fetch_assoc($find);
 				if($db->num_rows($find) > 0)
 				{
 					$first_pass = isset($_POST['c_pass_1']) ? $_POST['c_pass_1'] : null;
 					$second_pass = isset($_POST['c_pass_2']) ? $_POST['c_pass_2'] : null;
-					$current_pass = isset($_POST['current_pass']) && strlen($_POST['current_pass']) <= 16 ? $_POST['current_pass'] : null;
+					//$current_pass = isset($_POST['current_pass']) && strlen($_POST['current_pass']) <= 16 ? $_POST['current_pass'] : null;
 					$errors = array();
 					if(empty($first_pass) || empty($second_pass))
 					{
@@ -168,7 +168,7 @@ else if($setting != 'achievements') {
 							$new_salt = random_pass(16); // 8 default?
 							$new_password_hash = game_hmac($new_salt.$first_pass, $HMAC_PRIVATE_KEY);
 							
-							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
+							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
 							redirect('char_manager.php?id='.$id.'&setting=change_password&saved=true');
 						//}
 					}
