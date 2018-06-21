@@ -153,7 +153,7 @@ $forum_time_formats = array($luna_config['o_time_format'], 'H:i:s', 'H:i', 'g:i:
 $forum_date_formats = array($luna_config['o_date_format'], 'Y-m-d', 'Y-d-m', 'd-m-Y', 'm-d-Y', 'M j Y', 'jS M Y');
 
 //HMAC PRIVATE KEY
-$HMAC_PRIVATE_KEY = '1992LeGaCY%#!%0202198$try@HACKUS';
+$HMAC_PRIVATE_KEY = 'openrsc';
 
 // Check/update/set cookie and fetch user info
 $luna_user = array();

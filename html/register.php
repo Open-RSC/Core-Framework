@@ -144,12 +144,10 @@ if ($luna_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['f
 			$char_salt = random_pass(16); // 8 default?
 			$char_password_hash = game_hmac($char_salt.$char_password1, $HMAC_PRIVATE_KEY);
 
-			$db->query("INSERT INTO " . GAME_BASE . "players (username,owner,pass,salt,creation_date,creation_ip) VALUES ('" . $db->escape($char_username) . "', '" . $new_uid . "', '" . $char_password_hash . "', '" . $char_salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
+			$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
 			$new_user = $db->insert_id();
-			$db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $new_user . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
-			$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $new_user . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
-				
-			new_notification($new_uid, 'char_manager.php?id='.$id.'', __('Adventurer! You have created a RSCLegacy character: '. luna_htmlspecialchars($char_username) . '!', 'luna'), 'fa-user-plus');
+                        $db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
+			$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
 			
 			if ($luna_config['o_regs_verify'] == '0') {
 				// Regenerate the users info cache

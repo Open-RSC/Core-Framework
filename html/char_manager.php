@@ -168,8 +168,7 @@ else if($setting != 'achievements') {
 							$new_salt = random_pass(16); // 8 default?
 							$new_password_hash = game_hmac($new_salt.$first_pass, $HMAC_PRIVATE_KEY);
 							
-							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
-							new_notification($id, 'char_manager.php?id='.$id.'', __('You have changed in-game password on character: '. luna_htmlspecialchars($arrayit['username']) . '.', 'luna'), 'fa-lock');
+							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
 							redirect('char_manager.php?id='.$id.'&setting=change_password&saved=true');
 						//}
 					}
@@ -323,7 +322,6 @@ else if($setting != 'achievements') {
                                                                                 
 										// Insert into name change table			
 										$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (user, owner, old_name, new_name, date) VALUES('.intval($check['id']).', '.intval($check['owner']).', \''.$db->escape($current_name).'\',  \''.$db->escape($new_name).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
-										new_notification($id, 'char_manager.php?id='.$id.'', __('Character: '. luna_htmlspecialchars($current_name) . ' has been renamed to: '. luna_htmlspecialchars($new_name) . '!', 'luna'), 'fa-pencil');
 										redirect('char_manager.php?id='.$id.'&setting=character_renaming&saved=true');                                                                                
 								} 
 								else 
@@ -400,7 +398,6 @@ else if($setting != 'achievements') {
 							$new_uid = $db->insert_id();
 							$db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
 							$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
-							new_notification($id, 'char_manager.php?id='.$id.'', __('Adventurer! You have created a RSCLegacy character: '. luna_htmlspecialchars($username) . '!', 'luna'), 'fa-user-plus');
 							redirect('char_manager.php?id='.$id.'&view=create&saved=true');
 						}
 					}

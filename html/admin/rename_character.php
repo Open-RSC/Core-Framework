@@ -47,7 +47,7 @@ if(isset($_GET['char_search']) && strlen($_GET['char_search']) >= 1 && strlen($_
 												
 						// Insert into name change table			
 						$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (user, owner, old_name, new_name, date) VALUES('.intval($fetch_user['id']).', '.intval($fetch_user['owner']).', \''.$db->escape($fetch_user['username']).'\',  \''.$db->escape($char_rename_to).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
-											
+
 						new_notification($luna_user['id'], '#', __('You have renamed '. luna_htmlspecialchars($_GET['char_search']) . ' to '. $char_rename_to . ' via admin panel.', 'luna'), 'fa-bar-chart');
 						redirect('admin/rename_character.php?char_search=' . $char_rename_to . '&amp;saved=true');
 					}
