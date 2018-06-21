@@ -54,8 +54,6 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 					`" . GAME_BASE . "players`.`id`,
 					`" . GAME_BASE . "players`.`male`,
 					`" . GAME_BASE . "players`.`online`,
-					`" . GAME_BASE . "players`.`sub_expires`,
-					`" . GAME_BASE . "players`.`platinum_expires`,
 					`" . GAME_BASE . "players`.`quest_points`,
 					`" . GAME_BASE . "players`.`skill_total`,
 					`" . GAME_BASE . "experience`.`exp_attack`,
@@ -109,7 +107,6 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 							<?php 
 							$total_played = $db->query("SELECT SUM(value) FROM " . GAME_BASE . "player_cache WHERE user = '" . $db->escape($pull_char["id"]) . "' AND `key` = 'total_played'");
 							$sum_playtime = $db->result($total_played);
-							$detectExpiration = time() > $pull_char['sub_expires'] ? true : false;
 							if($luna_user['id'] == $pull_char['owner']) //check so we own the char and then pull dropdown list.
 							{
 								$find_user_characters = @$db->query("SELECT username, id FROM " . GAME_BASE . "players WHERE owner = '" . $db->escape($pull_char["owner"]) . "' limit 0, 10");
@@ -321,7 +318,7 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 					</div>
 				</div>
 				<?php 
-				$friend_query = $db->query("SELECT f.user, f.friend, f.friendName, p.id, p.online, p.sub_expires, p.platinum_expires FROM " . GAME_BASE . "friends AS f INNER JOIN " . GAME_BASE . "players AS p ON f.friendName = p.username WHERE f.user = '" . $db->escape($pull_char["id"]) . "' ORDER BY f.friendName ASC LIMIT 0, 200");
+				$friend_query = $db->query("SELECT f.user, f.friend, f.friendName, p.id, p.online FROM " . GAME_BASE . "friends AS f INNER JOIN " . GAME_BASE . "players AS p ON f.friendName = p.username WHERE f.user = '" . $db->escape($pull_char["id"]) . "' ORDER BY f.friendName ASC LIMIT 0, 200");
 				?>
 				<div class="adv_blockset content_advblock">
 					<div class="adv_headerblock">
@@ -344,17 +341,12 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 						<?php
 							while($friend = $db->fetch_assoc($friend_query)) 
 							{
-								$detectExpiration = time() > $friend['sub_expires'] ? true : false;
 								echo 
 								'
 								<tr class="adv_tablebody">
 								<td class="cColumn" width="10%"><div class="friendthumbnail"><img src="'.get_player_card($friend['id']).'" width="65" height="115"></div></td>
 								<td class="friend_username"><a href="adventure.php?player='.urlencode($friend['friendName']).'">'.ucwords($friend['friendName']).'</a></td>
 								<td class="cColumn" width="10%">';
-								if(time() > $friend['platinum_expires']) 
-									echo (($detectExpiration == false) ? "Subscriber" : "Member");
-								else
-									echo "Premium"; 
 								echo '</td>
 								<td class="cColumn" width="10%"><i class="online_status'.($friend['online'] == 1 ? ' -true' : '').'" data-toggle="tooltip" data-placement="top" title="'.($friend['online'] == 1 ? 'Playing' : 'Offline').'"></i></td>
 								</tr>

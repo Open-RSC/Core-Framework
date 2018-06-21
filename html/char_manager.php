@@ -313,9 +313,6 @@ else if($setting != 'achievements') {
 							{
 								if($check['online'] == 0) 
 								{
-									//$payment = $db->query("SELECT id FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($check['id']) . "' AND id IN (2092, 2094)");
-									//if($db->num_rows($payment) > 0)
-									//{
 										$db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
 										//$db->query("UPDATE users SET jewels=jewels - ".$RENAME_PRICE." WHERE id ='" . $id . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());										
 										$db->query("UPDATE " . GAME_BASE . "auctions SET seller_username = '" . $db->escape($new_name) . "' WHERE seller_username='" . $current_name . "'") or die('ew13');
@@ -327,10 +324,7 @@ else if($setting != 'achievements') {
 										$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (user, owner, old_name, new_name, date) VALUES('.intval($check['id']).', '.intval($check['owner']).', \''.$db->escape($current_name).'\',  \''.$db->escape($new_name).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
 										new_notification($id, 'char_manager.php?id='.$id.'', __('Character: '. luna_htmlspecialchars($current_name) . ' has been renamed to: '. luna_htmlspecialchars($new_name) . '!', 'luna'), 'fa-pencil');
 										redirect('char_manager.php?id='.$id.'&setting=character_renaming&saved=true');
-									/*} 
-									else {
-										$errors[] = "You need to have a gold or premium token in your inventory for the purchase.";
-									}*/
+                                                                                echo 'Successfully renamed!';
 								} 
 								else 
 								{

@@ -59,11 +59,9 @@ if(isset($search_query) && isset($search_type))
 		" . GAME_BASE . "players.login_ip, 
 		" . GAME_BASE . "players.x,
 		" . GAME_BASE . "players.y, 
-		" . GAME_BASE . "players.sub_expires, 
 		" . GAME_BASE . "players.owner, 
 		users.username AS 'fusername', 
 		users.email,
-		users.jewels, 
 		users.registration_ip, 
 		users.registered FROM " . GAME_BASE . "players JOIN users ON " . GAME_BASE . "players.owner = users.id WHERE " . GAME_BASE . "players.username = '" . $db->escape($search_query) . "' LIMIT 0 , 1");
 		if($db->num_rows($pull_player) == 1) 
@@ -109,7 +107,6 @@ if(isset($search_query) && isset($search_type))
 				redirect('admin/index.php?player_input='.$p_data['pusername'].'&amp;search_type=0#itemTables');
 			}
 			
-			$detectExpiration = time() > $p_data['sub_expires'] ? true : false;
 			$additional_chars = $db->query("SELECT username,combat,online FROM " . GAME_BASE . "players WHERE owner = '" . $p_data['owner'] . "' ORDER BY creation_date");						
 			$total_played = $db->query("SELECT SUM(value) FROM " . GAME_BASE . "player_cache WHERE user = '" . $p_data['id'] . "' AND `key` = 'total_played'");
 			$sum_playtime = $db->result($total_played);
@@ -132,7 +129,6 @@ if(isset($search_query) && isset($search_type))
 						<div class="profile-block__time">--</div>
 					</div>
 					<div class="profile-block-imp">
-						<div class="profile-block__time ng-binding ng-scope"><?php echo (($detectExpiration == false) ? "<label class='label-primary'>Subscription Expires: <span>".format_time($p_data['sub_expires']) ."</span></label>" : "<label class='label-danger'>Not a subcriber</label>") ?></div>
 					</div>
 				</div>
 				<div class="rest-block">

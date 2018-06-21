@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: openrsc
+-- Host: 127.0.0.1    Database: openrsc
 -- ------------------------------------------------------
--- Server version	5.7.21
+-- Server version	5.5.5-10.3.7-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +29,7 @@ CREATE TABLE `bans` (
   `email` varchar(80) DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
   `expire` int(10) unsigned DEFAULT NULL,
-  `ban_creator` int(10) unsigned NOT NULL DEFAULT '0',
+  `ban_creator` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `bans_username_idx` (`username`(25))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(80) NOT NULL DEFAULT 'New Category',
-  `disp_position` int(10) NOT NULL DEFAULT '0',
+  `disp_position` int(10) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -103,18 +103,18 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `commenter` varchar(200) NOT NULL DEFAULT '',
-  `commenter_id` int(10) unsigned NOT NULL DEFAULT '1',
+  `commenter_id` int(10) unsigned NOT NULL DEFAULT 1,
   `commenter_ip` varchar(39) DEFAULT NULL,
   `commenter_email` varchar(80) DEFAULT NULL,
-  `message` mediumtext,
-  `admin_note` mediumtext,
-  `hide_smilies` tinyint(1) NOT NULL DEFAULT '0',
-  `commented` int(10) unsigned NOT NULL DEFAULT '0',
+  `message` mediumtext DEFAULT NULL,
+  `admin_note` mediumtext DEFAULT NULL,
+  `hide_smilies` tinyint(1) NOT NULL DEFAULT 0,
+  `commented` int(10) unsigned NOT NULL DEFAULT 0,
   `edited` int(10) unsigned DEFAULT NULL,
   `edited_by` varchar(200) DEFAULT NULL,
-  `thread_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `marked` tinyint(1) NOT NULL DEFAULT '0',
-  `soft` tinyint(1) NOT NULL DEFAULT '0',
+  `thread_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `marked` tinyint(1) NOT NULL DEFAULT 0,
+  `soft` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `comments_thread_id_idx` (`thread_id`),
   KEY `comments_multi_idx` (`commenter_id`,`thread_id`),
@@ -141,7 +141,7 @@ DROP TABLE IF EXISTS `config`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `config` (
   `conf_name` varchar(255) NOT NULL DEFAULT '',
-  `conf_value` text,
+  `conf_value` text DEFAULT NULL,
   PRIMARY KEY (`conf_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -152,7 +152,7 @@ CREATE TABLE `config` (
 
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
-INSERT INTO `config` VALUES ('o_cur_version','2.0.7'),('o_core_version','2.0.5771'),('o_code_name','Emerald'),('o_database_revision','91.26'),('o_searchindex_revision','2.0'),('o_parser_revision','11.4.2'),('o_board_title','Open RSC'),('o_board_slogan','A RuneScape Classic Private Server'),('o_board_description',''),('o_board_tags','runescape classic,rsc'),('o_timezone','America/New_York'),('o_time_format','H:i'),('o_date_format','j M Y'),('o_timeout_visit','1800'),('o_timeout_online','300'),('o_show_user_info','1'),('o_show_comment_count','1'),('o_signatures','1'),('o_smilies_sig','1'),('o_make_links','1'),('o_default_lang','English'),('o_default_style','RSCLegacy'),('o_default_user_group','4'),('o_disp_threads','30'),('o_disp_comments','20'),('o_indent_num_spaces','4'),('o_quote_depth','3'),('o_allow_center','1'),('o_allow_size','1'),('o_allow_spoiler','1'),('o_users_online','1'),('o_censoring','1'),('o_ranks','1'),('o_has_commented','1'),('o_thread_views','1'),('o_gzip','1'),('o_report_method','0'),('o_regs_report','0'),('o_default_email_setting','1'),('o_mailing_list','cleako@gmail.com'),('o_avatars','1'),('o_avatars_dir','img/avatars'),('o_avatars_width','250'),('o_avatars_height','250'),('o_avatars_size','250000'),('o_search_all_forums','1'),('o_base_url','http://localhost/html'),('o_admin_email','cleako@gmail.com'),('o_webmaster_email','cleako@gmail.com'),('o_forum_subscriptions','1'),('o_thread_subscriptions','1'),('recaptcha_secret_key','6Lc2tAgUAAAAAD1UAHTe5p-a5K4OxoYnDtOB0jw9'),('o_allow_advanced_editor','0'),('o_allow_dialog_editor','0'),('o_first_run_backstage','1'),('o_smtp_host','smtp.gmail.com'),('o_smtp_user','cleako@gmail.com'),('o_smtp_pass',NULL),('o_smtp_ssl','1'),('o_regs_allow','1'),('o_regs_verify','0'),('o_enable_advanced_search','1'),('o_announcement','0'),('o_announcement_message','Enter your announcement here.'),('o_announcement_title','<b>Announcement</b>'),('o_announcement_type','default'),('o_rules','0'),('o_rules_message','Rules'),('o_maintenance','0'),('o_maintenance_message',''),('o_feed_type','2'),('o_feed_ttl','5'),('o_cookie_bar','0'),('o_cookie_bar_url','http://getluna.org/docs/cookies.php'),('o_moderated_by','1'),('o_admin_note','Needed to insert this into the database to correct a SQL issue with boards being displayed:\r\n\r\nSET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,&#039;ONLY_FULL_GROUP_BY&#039;,&#039;&#039;));'),('o_enable_inbox','1'),('o_message_per_page','10'),('o_max_receivers','5'),('o_inbox_notification','0'),('o_emoji','1'),('o_emoji_size','16'),('o_back_to_top','1'),('o_show_copyright','0'),('o_copyright_type','0'),('o_custom_copyright',NULL),('o_header_search','1'),('o_board_statistics','1'),('o_notification_flyout','1'),('recaptcha_site_key','6Lc2tAgUAAAAAKiW5FtVpH4u9Ueqw42IFuL1n2Dg'),('o_message_img_tag','1'),('o_message_all_caps','1'),('o_subject_all_caps','1'),('o_sig_all_caps','0'),('o_sig_img_tag','1'),('o_sig_length','400'),('o_sig_lines','4'),('o_allow_banned_email','1'),('o_allow_dupe_email','1'),('o_force_guest_email','1');
+INSERT INTO `config` VALUES ('o_cur_version','2.0.7'),('o_core_version','2.0.5771'),('o_code_name','Emerald'),('o_database_revision','91.26'),('o_searchindex_revision','2.0'),('o_parser_revision','11.4.2'),('o_board_title','Open RSC'),('o_board_slogan','A RuneScape Classic Private Server'),('o_board_description',''),('o_board_tags','runescape classic,rsc'),('o_timezone','America/New_York'),('o_time_format','H:i'),('o_date_format','j M Y'),('o_timeout_visit','1800'),('o_timeout_online','300'),('o_show_user_info','1'),('o_show_comment_count','1'),('o_signatures','1'),('o_smilies_sig','1'),('o_make_links','1'),('o_default_lang','English'),('o_default_style','RSCLegacy'),('o_default_user_group','4'),('o_disp_threads','30'),('o_disp_comments','20'),('o_indent_num_spaces','4'),('o_quote_depth','3'),('o_allow_center','1'),('o_allow_size','1'),('o_allow_spoiler','1'),('o_users_online','1'),('o_censoring','1'),('o_ranks','1'),('o_has_commented','1'),('o_thread_views','1'),('o_gzip','1'),('o_report_method','0'),('o_regs_report','0'),('o_default_email_setting','1'),('o_mailing_list','cleako@gmail.com'),('o_avatars','1'),('o_avatars_dir','img/avatars'),('o_avatars_width','250'),('o_avatars_height','250'),('o_avatars_size','250000'),('o_search_all_forums','1'),('o_base_url','http://localhost'),('o_admin_email','cleako@gmail.com'),('o_webmaster_email','cleako@gmail.com'),('o_forum_subscriptions','1'),('o_thread_subscriptions','1'),('recaptcha_secret_key','6Lc2tAgUAAAAAD1UAHTe5p-a5K4OxoYnDtOB0jw9'),('o_allow_advanced_editor','0'),('o_allow_dialog_editor','0'),('o_first_run_backstage','1'),('o_smtp_host','smtp.gmail.com'),('o_smtp_user','cleako@gmail.com'),('o_smtp_pass',NULL),('o_smtp_ssl','1'),('o_regs_allow','1'),('o_regs_verify','0'),('o_enable_advanced_search','1'),('o_announcement','0'),('o_announcement_message','Enter your announcement here.'),('o_announcement_title','<b>Announcement</b>'),('o_announcement_type','default'),('o_rules','0'),('o_rules_message','Rules'),('o_maintenance','0'),('o_maintenance_message',''),('o_feed_type','2'),('o_feed_ttl','5'),('o_cookie_bar','0'),('o_cookie_bar_url','http://getluna.org/docs/cookies.php'),('o_moderated_by','1'),('o_admin_note','Needed to insert this into the database to correct a SQL issue with boards being displayed:\r\n\r\nSET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,&#039;ONLY_FULL_GROUP_BY&#039;,&#039;&#039;));'),('o_enable_inbox','1'),('o_message_per_page','10'),('o_max_receivers','5'),('o_inbox_notification','0'),('o_emoji','1'),('o_emoji_size','16'),('o_back_to_top','1'),('o_show_copyright','0'),('o_copyright_type','0'),('o_custom_copyright',NULL),('o_header_search','1'),('o_board_statistics','1'),('o_notification_flyout','1'),('recaptcha_site_key','6Lc2tAgUAAAAAKiW5FtVpH4u9Ueqw42IFuL1n2Dg'),('o_message_img_tag','1'),('o_message_all_caps','1'),('o_subject_all_caps','1'),('o_sig_all_caps','0'),('o_sig_img_tag','1'),('o_sig_length','400'),('o_sig_lines','4'),('o_allow_banned_email','1'),('o_allow_dupe_email','1'),('o_force_guest_email','1');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,11 +164,11 @@ DROP TABLE IF EXISTS `forum_perms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_perms` (
-  `group_id` int(10) NOT NULL DEFAULT '0',
-  `forum_id` int(10) NOT NULL DEFAULT '0',
-  `read_forum` tinyint(1) NOT NULL DEFAULT '1',
-  `comment` tinyint(1) NOT NULL DEFAULT '1',
-  `create_threads` tinyint(1) NOT NULL DEFAULT '1',
+  `group_id` int(10) NOT NULL DEFAULT 0,
+  `forum_id` int(10) NOT NULL DEFAULT 0,
+  `read_forum` tinyint(1) NOT NULL DEFAULT 1,
+  `comment` tinyint(1) NOT NULL DEFAULT 1,
+  `create_threads` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`group_id`,`forum_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -191,8 +191,8 @@ DROP TABLE IF EXISTS `forum_subscriptions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_subscriptions` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `forum_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`,`forum_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -217,19 +217,19 @@ DROP TABLE IF EXISTS `forums`;
 CREATE TABLE `forums` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `forum_name` varchar(80) NOT NULL DEFAULT 'New forum',
-  `forum_desc` text,
-  `moderators` text,
-  `num_threads` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `num_comments` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `forum_desc` text DEFAULT NULL,
+  `moderators` text DEFAULT NULL,
+  `num_threads` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `num_comments` mediumint(8) unsigned NOT NULL DEFAULT 0,
   `last_comment` int(10) unsigned DEFAULT NULL,
   `last_comment_id` int(10) unsigned DEFAULT NULL,
   `last_commenter_id` int(10) DEFAULT NULL,
-  `sort_by` tinyint(1) NOT NULL DEFAULT '0',
-  `disp_position` int(10) NOT NULL DEFAULT '0',
-  `cat_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sort_by` tinyint(1) NOT NULL DEFAULT 0,
+  `disp_position` int(10) NOT NULL DEFAULT 0,
+  `cat_id` int(10) unsigned NOT NULL DEFAULT 0,
   `color` varchar(25) NOT NULL DEFAULT '#2788cb',
-  `parent_id` int(11) DEFAULT '0',
-  `solved` tinyint(1) NOT NULL DEFAULT '1',
+  `parent_id` int(11) DEFAULT 0,
+  `solved` tinyint(1) NOT NULL DEFAULT 1,
   `icon` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
@@ -256,31 +256,31 @@ CREATE TABLE `groups` (
   `g_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `g_title` varchar(50) NOT NULL DEFAULT '',
   `g_user_title` varchar(50) DEFAULT NULL,
-  `g_moderator` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_edit_users` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_rename_users` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_change_passwords` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_ban_users` tinyint(1) NOT NULL DEFAULT '0',
-  `g_read_board` tinyint(1) NOT NULL DEFAULT '1',
-  `g_view_users` tinyint(1) NOT NULL DEFAULT '1',
-  `g_comment` tinyint(1) NOT NULL DEFAULT '1',
-  `g_create_threads` tinyint(1) NOT NULL DEFAULT '1',
-  `g_edit_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `g_delete_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `g_delete_threads` tinyint(1) NOT NULL DEFAULT '1',
-  `g_set_title` tinyint(1) NOT NULL DEFAULT '1',
-  `g_search` tinyint(1) NOT NULL DEFAULT '1',
-  `g_search_users` tinyint(1) NOT NULL DEFAULT '1',
-  `g_send_email` tinyint(1) NOT NULL DEFAULT '1',
-  `g_comment_flood` smallint(6) NOT NULL DEFAULT '30',
-  `g_search_flood` smallint(6) NOT NULL DEFAULT '30',
-  `g_email_flood` smallint(6) NOT NULL DEFAULT '60',
-  `g_inbox` tinyint(1) NOT NULL DEFAULT '1',
-  `g_inbox_limit` int(11) NOT NULL DEFAULT '20',
-  `g_report_flood` smallint(6) NOT NULL DEFAULT '60',
-  `g_soft_delete_view` tinyint(1) NOT NULL DEFAULT '1',
-  `g_soft_delete_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `g_soft_delete_threads` tinyint(1) NOT NULL DEFAULT '1',
+  `g_moderator` tinyint(1) NOT NULL DEFAULT 0,
+  `g_mod_edit_users` tinyint(1) NOT NULL DEFAULT 0,
+  `g_mod_rename_users` tinyint(1) NOT NULL DEFAULT 0,
+  `g_mod_change_passwords` tinyint(1) NOT NULL DEFAULT 0,
+  `g_mod_ban_users` tinyint(1) NOT NULL DEFAULT 0,
+  `g_read_board` tinyint(1) NOT NULL DEFAULT 1,
+  `g_view_users` tinyint(1) NOT NULL DEFAULT 1,
+  `g_comment` tinyint(1) NOT NULL DEFAULT 1,
+  `g_create_threads` tinyint(1) NOT NULL DEFAULT 1,
+  `g_edit_comments` tinyint(1) NOT NULL DEFAULT 1,
+  `g_delete_comments` tinyint(1) NOT NULL DEFAULT 1,
+  `g_delete_threads` tinyint(1) NOT NULL DEFAULT 1,
+  `g_set_title` tinyint(1) NOT NULL DEFAULT 1,
+  `g_search` tinyint(1) NOT NULL DEFAULT 1,
+  `g_search_users` tinyint(1) NOT NULL DEFAULT 1,
+  `g_send_email` tinyint(1) NOT NULL DEFAULT 1,
+  `g_comment_flood` smallint(6) NOT NULL DEFAULT 30,
+  `g_search_flood` smallint(6) NOT NULL DEFAULT 30,
+  `g_email_flood` smallint(6) NOT NULL DEFAULT 60,
+  `g_inbox` tinyint(1) NOT NULL DEFAULT 1,
+  `g_inbox_limit` int(11) NOT NULL DEFAULT 20,
+  `g_report_flood` smallint(6) NOT NULL DEFAULT 60,
+  `g_soft_delete_view` tinyint(1) NOT NULL DEFAULT 1,
+  `g_soft_delete_comments` tinyint(1) NOT NULL DEFAULT 1,
+  `g_soft_delete_threads` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`g_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -314,9 +314,9 @@ CREATE TABLE `guides` (
   `length` varchar(6) NOT NULL,
   `quest_points` int(2) unsigned NOT NULL,
   `guide_type` varchar(6) NOT NULL,
-  `reqs` mediumtext,
-  `items_needed` mediumtext,
-  `rewards` mediumtext,
+  `reqs` mediumtext DEFAULT NULL,
+  `items_needed` mediumtext DEFAULT NULL,
+  `rewards` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -341,7 +341,7 @@ DROP TABLE IF EXISTS `hof_categories`;
 CREATE TABLE `hof_categories` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hof_name` varchar(80) NOT NULL DEFAULT 'New Hof Category',
-  `hof_position` int(10) NOT NULL DEFAULT '0',
+  `hof_position` int(10) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -394,9 +394,9 @@ CREATE TABLE `menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `url` varchar(200) NOT NULL DEFAULT '',
   `name` varchar(200) NOT NULL DEFAULT '',
-  `disp_position` int(10) NOT NULL DEFAULT '0',
-  `visible` int(10) NOT NULL DEFAULT '1',
-  `sys_entry` int(10) DEFAULT '0',
+  `disp_position` int(10) NOT NULL DEFAULT 0,
+  `visible` int(10) NOT NULL DEFAULT 1,
+  `sys_entry` int(10) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -420,23 +420,23 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `messages` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `shared_id` int(10) NOT NULL DEFAULT '0',
-  `last_shared_id` int(10) NOT NULL DEFAULT '0',
-  `last_comment` int(10) DEFAULT '0',
-  `last_comment_id` int(10) DEFAULT '0',
+  `shared_id` int(10) NOT NULL DEFAULT 0,
+  `last_shared_id` int(10) NOT NULL DEFAULT 0,
+  `last_comment` int(10) DEFAULT 0,
+  `last_comment_id` int(10) DEFAULT 0,
   `last_commenter` varchar(255) NOT NULL DEFAULT '0',
-  `owner` int(11) NOT NULL DEFAULT '0',
+  `owner` int(11) NOT NULL DEFAULT 0,
   `subject` varchar(255) NOT NULL,
   `message` mediumtext NOT NULL,
-  `hide_smilies` tinyint(1) NOT NULL DEFAULT '0',
-  `show_message` tinyint(1) NOT NULL DEFAULT '0',
+  `hide_smilies` tinyint(1) NOT NULL DEFAULT 0,
+  `show_message` tinyint(1) NOT NULL DEFAULT 0,
   `sender` varchar(200) NOT NULL,
   `receiver` varchar(200) DEFAULT NULL,
-  `sender_id` int(10) NOT NULL DEFAULT '0',
+  `sender_id` int(10) NOT NULL DEFAULT 0,
   `receiver_id` varchar(255) DEFAULT '0',
   `sender_ip` varchar(39) DEFAULT NULL,
   `commented` int(10) NOT NULL,
-  `showed` tinyint(1) NOT NULL DEFAULT '0',
+  `showed` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -459,12 +459,12 @@ DROP TABLE IF EXISTS `notifications`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `notifications` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) NOT NULL DEFAULT '0',
+  `user_id` int(10) NOT NULL DEFAULT 0,
   `message` varchar(255) NOT NULL DEFAULT '0',
   `icon` varchar(255) NOT NULL DEFAULT '0',
   `link` varchar(255) NOT NULL DEFAULT '0',
-  `time` int(11) NOT NULL DEFAULT '0',
-  `viewed` tinyint(1) NOT NULL DEFAULT '0',
+  `time` int(11) NOT NULL DEFAULT 0,
+  `viewed` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -475,7 +475,7 @@ CREATE TABLE `notifications` (
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (2,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1527788945,1),(3,2,'Adventurer! You have created a RSCLegacy character: testing!','fa-user-plus','char_manager.php?id=2',1529508602,1),(4,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529508625,0),(5,2,'Adventurer! You have created a RSCLegacy character: nipper!','fa-user-plus','char_manager.php?id=2',1529509682,0);
+INSERT INTO `notifications` VALUES (2,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1527788945,1),(3,2,'Adventurer! You have created a RSCLegacy character: testing!','fa-user-plus','char_manager.php?id=2',1529508602,1),(4,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529508625,1),(5,2,'Adventurer! You have created a RSCLegacy character: nipper!','fa-user-plus','char_manager.php?id=2',1529509682,1);
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -487,10 +487,10 @@ DROP TABLE IF EXISTS `online`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `online` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '1',
+  `user_id` int(10) unsigned NOT NULL DEFAULT 1,
   `ident` varchar(200) NOT NULL DEFAULT '',
-  `logged` int(10) unsigned NOT NULL DEFAULT '0',
-  `idle` tinyint(1) NOT NULL DEFAULT '0',
+  `logged` int(10) unsigned NOT NULL DEFAULT 0,
+  `idle` tinyint(1) NOT NULL DEFAULT 0,
   `last_comment` int(10) unsigned DEFAULT NULL,
   `last_search` int(10) unsigned DEFAULT NULL,
   UNIQUE KEY `online_user_id_ident_idx` (`user_id`,`ident`(25)),
@@ -505,7 +505,7 @@ CREATE TABLE `online` (
 
 LOCK TABLES `online` WRITE;
 /*!40000 ALTER TABLE `online` DISABLE KEYS */;
-INSERT INTO `online` VALUES (2,'Marwolf',1529524395,0,NULL,NULL);
+INSERT INTO `online` VALUES (2,'Marwolf',1529547644,0,NULL,NULL);
 /*!40000 ALTER TABLE `online` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -518,10 +518,10 @@ DROP TABLE IF EXISTS `poll_results`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `poll_results` (
   `primary_id` int(10) NOT NULL AUTO_INCREMENT,
-  `poll_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `poll_id` int(10) unsigned NOT NULL DEFAULT 0,
   `user` int(5) unsigned NOT NULL,
   `user_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
-  `option_selected` int(10) unsigned NOT NULL DEFAULT '0',
+  `option_selected` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`primary_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -546,9 +546,9 @@ DROP TABLE IF EXISTS `polls`;
 CREATE TABLE `polls` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `started_by` int(5) unsigned NOT NULL,
-  `started_when` int(10) unsigned NOT NULL DEFAULT '0',
+  `started_when` int(10) unsigned NOT NULL DEFAULT 0,
   `question` varchar(140) NOT NULL,
-  `poll_closed` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `poll_closed` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `option_1` varchar(140) NOT NULL,
   `option_2` varchar(140) NOT NULL,
   `option_3` varchar(140) NOT NULL,
@@ -577,7 +577,7 @@ DROP TABLE IF EXISTS `ranks`;
 CREATE TABLE `ranks` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rank` varchar(50) NOT NULL DEFAULT '',
-  `min_comments` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `min_comments` mediumint(8) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -609,7 +609,7 @@ CREATE TABLE `recovery_questions` (
   `answer3` varchar(70) NOT NULL,
   `time` int(10) NOT NULL,
   `ip` varchar(15) NOT NULL,
-  `set` tinyint(1) NOT NULL DEFAULT '0',
+  `set` tinyint(1) NOT NULL DEFAULT 0,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   KEY `account` (`account`)
@@ -634,12 +634,12 @@ DROP TABLE IF EXISTS `reports`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reports` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `comment_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `thread_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `forum_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `reported_by` int(10) unsigned NOT NULL DEFAULT '0',
-  `created` int(10) unsigned NOT NULL DEFAULT '0',
-  `message` text,
+  `comment_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `thread_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `reported_by` int(10) unsigned NOT NULL DEFAULT 0,
+  `created` int(10) unsigned NOT NULL DEFAULT 0,
+  `message` text DEFAULT NULL,
   `zapped` int(10) unsigned DEFAULT NULL,
   `zapped_by` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -696,7 +696,7 @@ DROP TABLE IF EXISTS `rscd_bank`;
 CREATE TABLE `rscd_bank` (
   `owner` int(6) NOT NULL,
   `id` smallint(4) NOT NULL,
-  `amount` int(10) NOT NULL DEFAULT '1',
+  `amount` int(10) NOT NULL DEFAULT 1,
   `slot` smallint(3) NOT NULL,
   KEY `owner` (`owner`),
   KEY `id` (`id`)
@@ -722,25 +722,25 @@ DROP TABLE IF EXISTS `rscd_curstats`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rscd_curstats` (
   `user` varchar(40) NOT NULL,
-  `cur_attack` smallint(3) NOT NULL DEFAULT '1',
-  `cur_defense` smallint(3) NOT NULL DEFAULT '1',
-  `cur_strength` smallint(3) NOT NULL DEFAULT '1',
-  `cur_hits` tinyint(3) NOT NULL DEFAULT '10',
-  `cur_ranged` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_prayer` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_magic` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_cooking` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_woodcut` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_fletching` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_fishing` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_firemaking` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_crafting` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_smithing` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_mining` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_herblaw` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_agility` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_thieving` tinyint(3) NOT NULL DEFAULT '1',
-  `cur_runecrafting` tinyint(3) NOT NULL DEFAULT '1',
+  `cur_attack` smallint(3) NOT NULL DEFAULT 1,
+  `cur_defense` smallint(3) NOT NULL DEFAULT 1,
+  `cur_strength` smallint(3) NOT NULL DEFAULT 1,
+  `cur_hits` tinyint(3) NOT NULL DEFAULT 10,
+  `cur_ranged` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_prayer` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_magic` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_cooking` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_woodcut` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_fletching` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_fishing` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_firemaking` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_crafting` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_smithing` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_mining` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_herblaw` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_agility` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_thieving` tinyint(3) NOT NULL DEFAULT 1,
+  `cur_runecrafting` tinyint(3) NOT NULL DEFAULT 1,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`)
@@ -766,25 +766,25 @@ DROP TABLE IF EXISTS `rscd_experience`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rscd_experience` (
   `user` varchar(40) NOT NULL,
-  `exp_attack` int(9) NOT NULL DEFAULT '0',
-  `exp_defense` int(9) NOT NULL DEFAULT '0',
-  `exp_strength` int(9) NOT NULL DEFAULT '0',
-  `exp_hits` int(9) NOT NULL DEFAULT '1154',
-  `exp_ranged` int(9) NOT NULL DEFAULT '0',
-  `exp_prayer` int(9) NOT NULL DEFAULT '0',
-  `exp_magic` int(9) NOT NULL DEFAULT '0',
-  `exp_cooking` int(9) NOT NULL DEFAULT '0',
-  `exp_woodcut` int(9) NOT NULL DEFAULT '0',
-  `exp_fletching` int(9) NOT NULL DEFAULT '0',
-  `exp_fishing` int(9) NOT NULL DEFAULT '0',
-  `exp_firemaking` int(9) NOT NULL DEFAULT '0',
-  `exp_crafting` int(9) NOT NULL DEFAULT '0',
-  `exp_smithing` int(9) NOT NULL DEFAULT '0',
-  `exp_mining` int(9) NOT NULL DEFAULT '0',
-  `exp_herblaw` int(9) NOT NULL DEFAULT '0',
-  `exp_agility` int(9) NOT NULL DEFAULT '0',
-  `exp_thieving` int(9) NOT NULL DEFAULT '0',
-  `exp_runecrafting` int(9) NOT NULL DEFAULT '0',
+  `exp_attack` int(9) NOT NULL DEFAULT 0,
+  `exp_defense` int(9) NOT NULL DEFAULT 0,
+  `exp_strength` int(9) NOT NULL DEFAULT 0,
+  `exp_hits` int(9) NOT NULL DEFAULT 1154,
+  `exp_ranged` int(9) NOT NULL DEFAULT 0,
+  `exp_prayer` int(9) NOT NULL DEFAULT 0,
+  `exp_magic` int(9) NOT NULL DEFAULT 0,
+  `exp_cooking` int(9) NOT NULL DEFAULT 0,
+  `exp_woodcut` int(9) NOT NULL DEFAULT 0,
+  `exp_fletching` int(9) NOT NULL DEFAULT 0,
+  `exp_fishing` int(9) NOT NULL DEFAULT 0,
+  `exp_firemaking` int(9) NOT NULL DEFAULT 0,
+  `exp_crafting` int(9) NOT NULL DEFAULT 0,
+  `exp_smithing` int(9) NOT NULL DEFAULT 0,
+  `exp_mining` int(9) NOT NULL DEFAULT 0,
+  `exp_herblaw` int(9) NOT NULL DEFAULT 0,
+  `exp_agility` int(9) NOT NULL DEFAULT 0,
+  `exp_thieving` int(9) NOT NULL DEFAULT 0,
+  `exp_runecrafting` int(9) NOT NULL DEFAULT 0,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `attack_rank` int(10) DEFAULT NULL,
   `defense_rank` int(10) DEFAULT NULL,
@@ -904,8 +904,8 @@ DROP TABLE IF EXISTS `rscd_invitems`;
 CREATE TABLE `rscd_invitems` (
   `user` varchar(40) NOT NULL,
   `id` smallint(4) NOT NULL,
-  `amount` int(10) NOT NULL DEFAULT '1',
-  `wielded` tinyint(1) NOT NULL DEFAULT '0',
+  `amount` int(10) NOT NULL DEFAULT 1,
+  `wielded` tinyint(1) NOT NULL DEFAULT 0,
   `slot` tinyint(2) NOT NULL,
   KEY `user` (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -932,99 +932,102 @@ CREATE TABLE `rscd_players` (
   `id` int(10) unsigned NOT NULL,
   `user` varchar(45) NOT NULL,
   `username` varchar(12) NOT NULL,
-  `group_id` int(10) DEFAULT '0',
+  `group_id` int(10) DEFAULT 0,
   `owner` int(5) NOT NULL,
-  `combat` tinyint(3) NOT NULL DEFAULT '3',
+  `combat` tinyint(3) NOT NULL DEFAULT 3,
   `combat_rank` int(10) DEFAULT NULL,
-  `skill_total` smallint(4) NOT NULL DEFAULT '27',
+  `skill_total` smallint(4) NOT NULL DEFAULT 27,
   `skill_total_rank` int(10) DEFAULT NULL,
   `x` smallint(4) NOT NULL,
-  `y` smallint(4) NOT NULL DEFAULT '447',
-  `fatigue` tinyint(3) NOT NULL DEFAULT '0',
-  `combatstyle` tinyint(1) NOT NULL DEFAULT '0',
-  `block_chat` tinyint(1) NOT NULL DEFAULT '0',
-  `block_private` tinyint(1) NOT NULL DEFAULT '0',
-  `block_trade` tinyint(1) NOT NULL DEFAULT '0',
-  `block_duel` tinyint(1) NOT NULL DEFAULT '0',
-  `block_global` tinyint(1) NOT NULL DEFAULT '1',
-  `cameraauto` tinyint(1) NOT NULL DEFAULT '1',
-  `onemouse` tinyint(1) NOT NULL DEFAULT '0',
-  `soundoff` tinyint(1) NOT NULL DEFAULT '0',
-  `showroof` tinyint(1) NOT NULL DEFAULT '0',
-  `autoscreenshot` tinyint(1) NOT NULL DEFAULT '0',
-  `combatwindow` tinyint(1) NOT NULL DEFAULT '1',
-  `haircolour` tinyint(1) NOT NULL DEFAULT '2',
-  `topcolour` tinyint(2) NOT NULL DEFAULT '8',
-  `trousercolour` tinyint(2) NOT NULL DEFAULT '14',
-  `skincolour` tinyint(1) NOT NULL DEFAULT '0',
-  `headsprite` tinyint(1) NOT NULL DEFAULT '1',
-  `bodysprite` tinyint(1) NOT NULL DEFAULT '2',
-  `male` tinyint(1) NOT NULL DEFAULT '1',
-  `skulled` int(10) NOT NULL DEFAULT '0',
+  `y` smallint(4) NOT NULL DEFAULT 447,
+  `fatigue` tinyint(3) NOT NULL DEFAULT 0,
+  `combatstyle` tinyint(1) NOT NULL DEFAULT 0,
+  `block_chat` tinyint(1) NOT NULL DEFAULT 0,
+  `block_private` tinyint(1) NOT NULL DEFAULT 0,
+  `block_trade` tinyint(1) NOT NULL DEFAULT 0,
+  `block_duel` tinyint(1) NOT NULL DEFAULT 0,
+  `block_global` tinyint(1) NOT NULL DEFAULT 1,
+  `cameraauto` tinyint(1) NOT NULL DEFAULT 1,
+  `onemouse` tinyint(1) NOT NULL DEFAULT 0,
+  `soundoff` tinyint(1) NOT NULL DEFAULT 0,
+  `showroof` tinyint(1) NOT NULL DEFAULT 0,
+  `autoscreenshot` tinyint(1) NOT NULL DEFAULT 0,
+  `combatwindow` tinyint(1) NOT NULL DEFAULT 1,
+  `haircolour` tinyint(1) NOT NULL DEFAULT 2,
+  `topcolour` tinyint(2) NOT NULL DEFAULT 8,
+  `trousercolour` tinyint(2) NOT NULL DEFAULT 14,
+  `skincolour` tinyint(1) NOT NULL DEFAULT 0,
+  `headsprite` tinyint(1) NOT NULL DEFAULT 1,
+  `bodysprite` tinyint(1) NOT NULL DEFAULT 2,
+  `male` tinyint(1) NOT NULL DEFAULT 1,
+  `skulled` int(10) NOT NULL DEFAULT 0,
   `pass` char(128) NOT NULL,
   `password_salt` char(30) DEFAULT NULL,
-  `creation_date` int(10) NOT NULL DEFAULT '0',
+  `creation_date` int(10) NOT NULL DEFAULT 0,
   `creation_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
-  `login_date` int(10) NOT NULL DEFAULT '0',
-  `logout_date` bigint(10) NOT NULL DEFAULT '0',
-  `death_time` bigint(10) NOT NULL DEFAULT '0',
+  `login_date` int(10) NOT NULL DEFAULT 0,
+  `logout_date` bigint(10) NOT NULL DEFAULT 0,
+  `death_time` bigint(10) NOT NULL DEFAULT 0,
   `login_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
-  `deaths` smallint(5) NOT NULL DEFAULT '0',
+  `deaths` smallint(5) NOT NULL DEFAULT 0,
   `deaths_rank` int(10) DEFAULT NULL,
-  `kills` smallint(5) NOT NULL DEFAULT '0',
+  `kills` smallint(5) NOT NULL DEFAULT 0,
   `kills_rank` int(10) DEFAULT NULL,
-  `highscores` tinyint(1) NOT NULL DEFAULT '0',
-  `killnotify` tinyint(1) NOT NULL DEFAULT '0',
-  `store_employee` tinyint(1) NOT NULL DEFAULT '0',
-  `draynor_hopper` tinyint(1) NOT NULL DEFAULT '0',
-  `guild_hopper` tinyint(1) NOT NULL DEFAULT '0',
-  `banana_job` tinyint(1) NOT NULL DEFAULT '0',
-  `bananas_in_crate` tinyint(1) NOT NULL DEFAULT '0',
-  `rum_in_karamja_crate` tinyint(1) NOT NULL DEFAULT '0',
-  `rum_in_sarim_crate` tinyint(1) NOT NULL DEFAULT '0',
-  `has_traiborn_key` tinyint(1) NOT NULL DEFAULT '0',
-  `collecting_bones` tinyint(1) NOT NULL DEFAULT '0',
-  `bones` tinyint(2) NOT NULL DEFAULT '0',
-  `balls_of_wool` tinyint(2) NOT NULL DEFAULT '0',
-  `killed_skeleton` tinyint(1) NOT NULL DEFAULT '0',
-  `recieved_key_payment` tinyint(1) NOT NULL DEFAULT '0',
-  `delete_date` int(10) NOT NULL DEFAULT '0',
-  `lever_A_down` tinyint(1) NOT NULL DEFAULT '0',
-  `lever_B_down` tinyint(1) NOT NULL DEFAULT '0',
-  `lever_C_down` tinyint(1) NOT NULL DEFAULT '0',
-  `lever_D_down` tinyint(1) NOT NULL DEFAULT '0',
-  `lever_E_down` tinyint(1) NOT NULL DEFAULT '0',
-  `lever_F_down` tinyint(1) NOT NULL DEFAULT '0',
-  `leela_has_key` tinyint(1) NOT NULL DEFAULT '0',
-  `tutstage` int(1) NOT NULL DEFAULT '0',
-  `on_crandor` tinyint(1) NOT NULL DEFAULT '0',
-  `lady_patches` int(1) NOT NULL DEFAULT '0',
-  `has_map_piece` int(1) NOT NULL DEFAULT '0',
-  `cannon_x` int(4) NOT NULL DEFAULT '-1',
-  `cannon_y` int(4) NOT NULL DEFAULT '-1',
-  `cannon_stage` int(1) NOT NULL DEFAULT '-1',
-  `railing1` tinyint(1) NOT NULL DEFAULT '0',
-  `railing2` tinyint(1) NOT NULL DEFAULT '0',
-  `railing3` tinyint(1) NOT NULL DEFAULT '0',
-  `railing4` tinyint(1) NOT NULL DEFAULT '0',
-  `railing5` tinyint(1) NOT NULL DEFAULT '0',
-  `railing6` tinyint(1) NOT NULL DEFAULT '0',
-  `barrel` tinyint(1) NOT NULL DEFAULT '0',
-  `axle` tinyint(1) NOT NULL DEFAULT '0',
-  `shaft` tinyint(1) NOT NULL DEFAULT '0',
-  `pipe` tinyint(1) NOT NULL DEFAULT '0',
-  `poison` tinyint(2) NOT NULL DEFAULT '0',
+  `highscores` tinyint(1) NOT NULL DEFAULT 0,
+  `killnotify` tinyint(1) NOT NULL DEFAULT 0,
+  `store_employee` tinyint(1) NOT NULL DEFAULT 0,
+  `draynor_hopper` tinyint(1) NOT NULL DEFAULT 0,
+  `guild_hopper` tinyint(1) NOT NULL DEFAULT 0,
+  `banana_job` tinyint(1) NOT NULL DEFAULT 0,
+  `bananas_in_crate` tinyint(1) NOT NULL DEFAULT 0,
+  `rum_in_karamja_crate` tinyint(1) NOT NULL DEFAULT 0,
+  `rum_in_sarim_crate` tinyint(1) NOT NULL DEFAULT 0,
+  `has_traiborn_key` tinyint(1) NOT NULL DEFAULT 0,
+  `collecting_bones` tinyint(1) NOT NULL DEFAULT 0,
+  `bones` tinyint(2) NOT NULL DEFAULT 0,
+  `balls_of_wool` tinyint(2) NOT NULL DEFAULT 0,
+  `killed_skeleton` tinyint(1) NOT NULL DEFAULT 0,
+  `recieved_key_payment` tinyint(1) NOT NULL DEFAULT 0,
+  `delete_date` int(10) NOT NULL DEFAULT 0,
+  `lever_A_down` tinyint(1) NOT NULL DEFAULT 0,
+  `lever_B_down` tinyint(1) NOT NULL DEFAULT 0,
+  `lever_C_down` tinyint(1) NOT NULL DEFAULT 0,
+  `lever_D_down` tinyint(1) NOT NULL DEFAULT 0,
+  `lever_E_down` tinyint(1) NOT NULL DEFAULT 0,
+  `lever_F_down` tinyint(1) NOT NULL DEFAULT 0,
+  `leela_has_key` tinyint(1) NOT NULL DEFAULT 0,
+  `tutstage` int(1) NOT NULL DEFAULT 0,
+  `on_crandor` tinyint(1) NOT NULL DEFAULT 0,
+  `lady_patches` int(1) NOT NULL DEFAULT 0,
+  `has_map_piece` int(1) NOT NULL DEFAULT 0,
+  `cannon_x` int(4) NOT NULL DEFAULT -1,
+  `cannon_y` int(4) NOT NULL DEFAULT -1,
+  `cannon_stage` int(1) NOT NULL DEFAULT -1,
+  `railing1` tinyint(1) NOT NULL DEFAULT 0,
+  `railing2` tinyint(1) NOT NULL DEFAULT 0,
+  `railing3` tinyint(1) NOT NULL DEFAULT 0,
+  `railing4` tinyint(1) NOT NULL DEFAULT 0,
+  `railing5` tinyint(1) NOT NULL DEFAULT 0,
+  `railing6` tinyint(1) NOT NULL DEFAULT 0,
+  `barrel` tinyint(1) NOT NULL DEFAULT 0,
+  `axle` tinyint(1) NOT NULL DEFAULT 0,
+  `shaft` tinyint(1) NOT NULL DEFAULT 0,
+  `pipe` tinyint(1) NOT NULL DEFAULT 0,
+  `poison` tinyint(2) NOT NULL DEFAULT 0,
   `avatar_items` varchar(255) DEFAULT NULL,
-  `avatar` blob,
-  `quests` longblob,
-  `iron_man` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `iron_man_restriction` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `hc_ironman_death` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `online` tinyint(1) NOT NULL DEFAULT '0',
-  `banned` varchar(255) NOT NULL DEFAULT '0',
-  `highscoreopt` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `forum_active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `avatar` blob DEFAULT NULL,
+  `quests` longblob DEFAULT NULL,
+  `iron_man` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `iron_man_restriction` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `hc_ironman_death` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `online` tinyint(1) NOT NULL DEFAULT 0,
+  `banned` int(1) NOT NULL DEFAULT 0,
+  `highscoreopt` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `forum_active` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `total_experience` int(10) DEFAULT NULL,
+  `password` varchar(45) NOT NULL,
+  `muted` int(1) DEFAULT 0,
+  `quest_points` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`),
   UNIQUE KEY `id_UNIQUE` (`id`),
@@ -1053,7 +1056,7 @@ CREATE TABLE `rscd_players` (
 
 LOCK TABLES `rscd_players` WRITE;
 /*!40000 ALTER TABLE `rscd_players` DISABLE KEYS */;
-INSERT INTO `rscd_players` VALUES (1338,'51697882930','testing',0,2,3,0,27,0,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'7b41d6191387f2ad7846669662929cfdd1b2f65a5838ef616ffb846d0c069070556155849e8952066c6ea241c38188ac8fd3db7f4bbdd52a30954f13d4baff67','EQGw0LcFd656Xzo7',1529508602,'127.0.0.1',0,0,0,'0.0.0.0',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,'0',NULL,NULL,0,1,0,0,'0',0,0,NULL),(1339,'33458708176','marwolf',0,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'309d2fefdb34753ebe9f41874338a64e6ed747ece67db1b68edaf4ff70ec0174cb896639c3149d512a97a8466e9a8a194dcfce550f2323c3ba8a9f2d104ae5cb','TBa8QCmwntxdAD7w',1529508625,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,1,0,0,'0',0,1,NULL),(1340,'988515402','nipper',4,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'10e3ac259e990c1d9aa4ca46903c63990cbd758d6c50e418cd0df983e84415017e9a11170194b212a056242a338276940f6241b8bb1494acf05b858aee6f9c1e','p0mHvSuJ6uq8OZbA',1529509682,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,1,0,0,'0',0,0,NULL);
+INSERT INTO `rscd_players` VALUES (1338,'51697882930','testing',0,2,3,0,28,0,217,448,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'7b41d6191387f2ad7846669662929cfdd1b2f65a5838ef616ffb846d0c069070556155849e8952066c6ea241c38188ac8fd3db7f4bbdd52a30954f13d4baff67','EQGw0LcFd656Xzo7',1529508602,'127.0.0.1',1529544183,0,0,'127.0.0.1',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,'0',NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x',0,1,0,0,0,0,0,NULL,'',0,NULL),(1339,'33458708176','marwolf',0,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'309d2fefdb34753ebe9f41874338a64e6ed747ece67db1b68edaf4ff70ec0174cb896639c3149d512a97a8466e9a8a194dcfce550f2323c3ba8a9f2d104ae5cb','TBa8QCmwntxdAD7w',1529508625,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,1,0,0,0,0,1,NULL,'',0,NULL),(1340,'988515402','arf',4,2,3,NULL,28,NULL,222,446,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'10e3ac259e990c1d9aa4ca46903c63990cbd758d6c50e418cd0df983e84415017e9a11170194b212a056242a338276940f6241b8bb1494acf05b858aee6f9c1e','p0mHvSuJ6uq8OZbA',1529509682,'127.0.0.1',1529544021,0,0,'127.0.0.1',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x',0,1,0,0,0,0,0,NULL,'',0,NULL);
 /*!40000 ALTER TABLE `rscd_players` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1069,8 +1072,8 @@ CREATE TABLE `rscd_quests` (
   `user` varchar(30) NOT NULL,
   `quest_id` tinyint(3) NOT NULL,
   `quest_stage` tinyint(3) NOT NULL,
-  `finished` tinyint(1) NOT NULL DEFAULT '0',
-  `quest_points` tinyint(1) NOT NULL DEFAULT '0',
+  `finished` tinyint(1) NOT NULL DEFAULT 0,
+  `quest_points` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `rscd_quests_user` (`user`)
 ) ENGINE=MyISAM AUTO_INCREMENT=341 DEFAULT CHARSET=latin1;
@@ -1093,9 +1096,9 @@ DROP TABLE IF EXISTS `search_cache`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `search_cache` (
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
+  `id` int(10) unsigned NOT NULL DEFAULT 0,
   `ident` varchar(200) NOT NULL DEFAULT '',
-  `search_data` mediumtext,
+  `search_data` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `search_cache_ident_idx` (`ident`(8))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -1119,9 +1122,9 @@ DROP TABLE IF EXISTS `search_matches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `search_matches` (
-  `comment_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `word_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `subject_match` tinyint(1) NOT NULL DEFAULT '0',
+  `comment_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `word_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `subject_match` tinyint(1) NOT NULL DEFAULT 0,
   KEY `search_matches_word_id_idx` (`word_id`),
   KEY `search_matches_comment_id_idx` (`comment_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -1174,7 +1177,7 @@ CREATE TABLE `shop` (
   `item_id` mediumint(5) unsigned NOT NULL,
   `product_name` varchar(60) NOT NULL,
   `product_desc` text NOT NULL,
-  `product_category` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `product_category` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `redirect_url` varchar(60) NOT NULL,
   `product_image` varchar(60) NOT NULL,
   `product_price` mediumint(5) unsigned NOT NULL,
@@ -1205,7 +1208,7 @@ CREATE TABLE `shop_logs` (
   `product_id` mediumint(5) unsigned NOT NULL,
   `price` int(10) unsigned NOT NULL,
   `quantity` tinyint(2) unsigned NOT NULL,
-  `creation` int(10) unsigned NOT NULL DEFAULT '0',
+  `creation` int(10) unsigned NOT NULL DEFAULT 0,
   `forum_name` varchar(12) NOT NULL,
   `game_name` varchar(12) NOT NULL,
   PRIMARY KEY (`id`)
@@ -1257,8 +1260,8 @@ DROP TABLE IF EXISTS `thread_subscriptions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `thread_subscriptions` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `thread_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `thread_id` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`,`thread_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1284,20 +1287,20 @@ CREATE TABLE `threads` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `commenter` varchar(200) NOT NULL DEFAULT '',
   `subject` varchar(255) NOT NULL DEFAULT '',
-  `commented` int(10) unsigned NOT NULL DEFAULT '0',
-  `first_comment_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `last_comment` int(10) unsigned NOT NULL DEFAULT '0',
-  `last_comment_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `commented` int(10) unsigned NOT NULL DEFAULT 0,
+  `first_comment_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `last_comment` int(10) unsigned NOT NULL DEFAULT 0,
+  `last_comment_id` int(10) unsigned NOT NULL DEFAULT 0,
   `last_commenter` varchar(200) DEFAULT NULL,
-  `num_views` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `num_replies` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `num_views` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `num_replies` mediumint(8) unsigned NOT NULL DEFAULT 0,
   `last_commenter_id` int(10) DEFAULT NULL,
-  `closed` tinyint(1) NOT NULL DEFAULT '0',
-  `pinned` tinyint(1) NOT NULL DEFAULT '0',
-  `important` tinyint(1) NOT NULL DEFAULT '0',
+  `closed` tinyint(1) NOT NULL DEFAULT 0,
+  `pinned` tinyint(1) NOT NULL DEFAULT 0,
+  `important` tinyint(1) NOT NULL DEFAULT 0,
   `moved_to` int(10) unsigned DEFAULT NULL,
-  `forum_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `soft` tinyint(1) NOT NULL DEFAULT '0',
+  `forum_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `soft` tinyint(1) NOT NULL DEFAULT 0,
   `solved` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `threads_forum_id_idx` (`forum_id`),
@@ -1328,7 +1331,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `group_id` int(10) unsigned NOT NULL DEFAULT '3',
+  `group_id` int(10) unsigned NOT NULL DEFAULT 3,
   `username` varchar(200) NOT NULL DEFAULT '',
   `password` varchar(512) NOT NULL DEFAULT '',
   `salt` varchar(8) NOT NULL DEFAULT '',
@@ -1341,43 +1344,44 @@ CREATE TABLE `users` (
   `twitter` varchar(50) DEFAULT NULL,
   `google` varchar(50) DEFAULT NULL,
   `location` varchar(30) DEFAULT NULL,
-  `signature` text,
+  `signature` text DEFAULT NULL,
   `disp_threads` tinyint(3) unsigned DEFAULT NULL,
   `disp_comments` tinyint(3) unsigned DEFAULT NULL,
-  `email_setting` tinyint(1) NOT NULL DEFAULT '1',
-  `notify_with_comment` tinyint(1) NOT NULL DEFAULT '0',
-  `advanced_editor` tinyint(1) NOT NULL DEFAULT '1',
-  `dialog_editor` tinyint(1) NOT NULL DEFAULT '1',
-  `auto_notify` tinyint(1) NOT NULL DEFAULT '0',
-  `show_smilies` tinyint(1) NOT NULL DEFAULT '1',
-  `show_img` tinyint(1) NOT NULL DEFAULT '1',
-  `show_img_sig` tinyint(1) NOT NULL DEFAULT '1',
-  `show_avatars` tinyint(1) NOT NULL DEFAULT '1',
-  `show_sig` tinyint(1) NOT NULL DEFAULT '1',
+  `email_setting` tinyint(1) NOT NULL DEFAULT 1,
+  `notify_with_comment` tinyint(1) NOT NULL DEFAULT 0,
+  `advanced_editor` tinyint(1) NOT NULL DEFAULT 1,
+  `dialog_editor` tinyint(1) NOT NULL DEFAULT 1,
+  `auto_notify` tinyint(1) NOT NULL DEFAULT 0,
+  `show_smilies` tinyint(1) NOT NULL DEFAULT 1,
+  `show_img` tinyint(1) NOT NULL DEFAULT 1,
+  `show_img_sig` tinyint(1) NOT NULL DEFAULT 1,
+  `show_avatars` tinyint(1) NOT NULL DEFAULT 1,
+  `show_sig` tinyint(1) NOT NULL DEFAULT 1,
   `php_timezone` varchar(100) NOT NULL DEFAULT 'UTC',
-  `time_format` tinyint(1) NOT NULL DEFAULT '0',
-  `date_format` tinyint(1) NOT NULL DEFAULT '0',
+  `time_format` tinyint(1) NOT NULL DEFAULT 0,
+  `date_format` tinyint(1) NOT NULL DEFAULT 0,
   `language` varchar(25) NOT NULL DEFAULT 'English',
-  `num_comments` int(10) unsigned NOT NULL DEFAULT '0',
+  `num_comments` int(10) unsigned NOT NULL DEFAULT 0,
   `last_comment` int(10) unsigned DEFAULT NULL,
   `last_search` int(10) unsigned DEFAULT NULL,
   `last_email_sent` int(10) unsigned DEFAULT NULL,
   `last_report_sent` int(10) unsigned DEFAULT NULL,
-  `registered` int(10) unsigned NOT NULL DEFAULT '0',
+  `registered` int(10) unsigned NOT NULL DEFAULT 0,
   `registration_ip` varchar(39) NOT NULL DEFAULT '0.0.0.0',
-  `last_visit` int(10) unsigned NOT NULL DEFAULT '0',
+  `last_visit` int(10) unsigned NOT NULL DEFAULT 0,
   `admin_note` varchar(30) DEFAULT NULL,
   `activate_string` varchar(128) DEFAULT NULL,
   `activate_key` varchar(8) DEFAULT NULL,
-  `use_inbox` tinyint(1) NOT NULL DEFAULT '1',
-  `notify_inbox` tinyint(1) NOT NULL DEFAULT '1',
-  `notify_inbox_full` tinyint(1) NOT NULL DEFAULT '0',
-  `num_inbox` int(10) unsigned NOT NULL DEFAULT '0',
-  `jewels` int(10) unsigned NOT NULL DEFAULT '0',
-  `teleport_stone` int(10) unsigned NOT NULL DEFAULT '0',
-  `character_slots` tinyint(3) unsigned NOT NULL DEFAULT '6',
-  `gold_time` int(10) unsigned NOT NULL DEFAULT '0',
-  `premium_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `use_inbox` tinyint(1) NOT NULL DEFAULT 1,
+  `notify_inbox` tinyint(1) NOT NULL DEFAULT 1,
+  `notify_inbox_full` tinyint(1) NOT NULL DEFAULT 0,
+  `num_inbox` int(10) unsigned NOT NULL DEFAULT 0,
+  `jewels` int(10) unsigned NOT NULL DEFAULT 0,
+  `teleport_stone` int(10) unsigned NOT NULL DEFAULT 0,
+  `character_slots` tinyint(3) unsigned NOT NULL DEFAULT 6,
+  `gold_time` int(10) unsigned NOT NULL DEFAULT 0,
+  `premium_time` int(10) unsigned NOT NULL DEFAULT 0,
+  `sub_expires` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_username_idx` (`username`(25)),
   KEY `users_registered_idx` (`registered`)
@@ -1390,7 +1394,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,3,'Guest','Guest','','Guest',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,1,0,0,0,0,1,1,1,1,1,'UTC',0,0,'English',0,NULL,NULL,NULL,NULL,0,'0.0.0.0',0,NULL,NULL,NULL,1,1,0,0,0,0,6,0,0),(2,1,'Marwolf','ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a','UqqYG1aE','cleako@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,1,1,1,0,1,'America/New_York',4,5,'English',29,1527784708,0,1529509052,1469742274,0,'::1',1529510069,NULL,'1338','fp6C5J7u',1,1,0,200,20,50000,50,1487505329,1510583603);
+INSERT INTO `users` VALUES (1,3,'Guest','Guest','','Guest',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,1,0,0,0,0,1,1,1,1,1,'UTC',0,0,'English',0,NULL,NULL,NULL,NULL,0,'0.0.0.0',0,NULL,NULL,NULL,1,1,0,0,0,0,6,0,0,NULL),(2,1,'Marwolf','ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a','UqqYG1aE','cleako@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,1,1,1,0,1,'America/New_York',4,5,'English',29,1527784708,0,1529509052,1469742274,0,'::1',1529545226,NULL,'1338','fp6C5J7u',1,1,0,200,20,50000,50,1487505329,1510583603,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1403,4 +1407,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-20 20:40:10
+-- Dump completed on 2018-06-20 22:21:41
