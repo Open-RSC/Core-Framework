@@ -20,3 +20,5 @@
 *.lock
 *.svn
 server/Open_RSC_Server.jar
+html/cache/*
+!html/cache/.htaccess

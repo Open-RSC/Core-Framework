@@ -179,7 +179,7 @@ else if($setting != 'achievements') {
 				}
 			}	
 		break;
-		case "reduction":
+		/*case "reduction":
 			if($view_page == 'select' && isset($curr_char) && isset($_POST['stat_reset']))
 			{
 				confirm_referrer('char_manager.php');	
@@ -253,11 +253,7 @@ else if($setting != 'achievements') {
 									}
 								}
 							}
-						/*} 
-						else 
-						{
-							$errors[] = "You need to have a Gold or Premium token in your inventory.";
-						}*/
+						
 					}
 					else 
 					{
@@ -269,14 +265,73 @@ else if($setting != 'achievements') {
 					$errors[] = "This character does not belong to you.";
 				}
 			}
-		break;
+		break;*/
 		case "character_renaming":
 			if($view_page == 'select' && isset($_POST['character_rename']))
 			{
 				confirm_referrer('char_manager.php');
 				
+                                //Data conversion
+                                function usernameToHash($s) {
+                                        $s = strtolower($s);
+                                        $s1 = '';
+                                        for ($i = 0;$i < strlen($s);$i++) {
+                                                $c = $s{$i};
+                                                if ($c >= 'a' && $c <= 'z') {
+                                                    $s1 = $s1 . $c;
+                                                } else if ($c >= '0' && $c <= '9') {
+                                                    $s1 = $s1 . $c;
+                                                } else {
+                                                    $s1 = $s1 . ' ';
+                                                }
+                                        }
+
+                                        $s1 = trim($s1);
+                                        if (strlen($s1) > 12) {
+                                            $s1 = substr($s1, 0, 12); //trims the username down to 12 characters if more are sent
+                                        }
+
+                                        $l = 0;
+                                        for ($j = 0;$j < strlen($s1);$j++) {
+                                                $c1 = $s1{$j};
+                                                $l *= 37;
+                                                if ($c1 >= 'a' && $c1 <= 'z') {
+                                                    $l += (1 + ord($c1)) - 97;
+                                                } else if ($c1 >= '0' && $c1 <= '9') {
+                                                    $l += (27 + ord($c1)) - 48;
+                                                }
+                                        }
+                                        return $l;
+                                }
+                                function hashToUsername($l) {
+                                        if ($l < 0) {
+                                                return 'invalid_name';
+                                        }
+                                        $s = '';
+                                        while ($l != 0) {
+                                                $i = floor(floatval($l % 37));
+                                                $l = floor(floatval($l / 37));
+                                                if ($i == 0) {
+                                                    $s = ' ' . $s;
+                                                } 
+                                                else if ($i < 27) {
+                                                        if ($l % 37 == 0) {
+                                                            $s = chr(($i + 65) - 1) . $s;
+                                                        }
+                                                        else {
+                                                                $s = chr(($i + 97) - 1) . $s;
+                                                        }
+                                                }
+                                                else {
+                                                        $s = chr(($i + 48) - 27) . $s;
+                                                }
+                                        }
+                                        return $s;
+                                }
+                                
 				$current_name = isset($_POST['character_name']) && strlen($_POST['character_name']) <= 12 && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_POST['character_name']) ? trim($_POST['character_name']) : null;
 				$new_name = isset($_POST['new_name']) && preg_match("/^[a-zA-Z0-9\s]+?$/i", $_POST['new_name']) ? trim($_POST['new_name']) : null;
+                                $usernameHash = usernameToHash($new_name);
 				$errors = array();
 				if(empty($new_name))
 				{
@@ -313,18 +368,25 @@ else if($setting != 'achievements') {
 							{
 								if($check['online'] == 0) 
 								{
-										$db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
-										//$db->query("UPDATE users SET jewels=jewels - ".$RENAME_PRICE." WHERE id ='" . $id . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());										
-										$db->query("UPDATE " . GAME_BASE . "auctions SET seller_username = '" . $db->escape($new_name) . "' WHERE seller_username='" . $current_name . "'") or die('ew13');
-										$db->query("UPDATE " . GAME_BASE . "friends SET friendName = '" . $db->escape($new_name) . "' WHERE friendName='" . $current_name . "'") or die('ew13');
-										// Delete the sub card from inventory
-										$db->query("DELETE FROM " . GAME_BASE . "invitems WHERE user = '" . $db->escape($check['id']) . "' AND id IN (2092, 2094) LIMIT 1");
+										//$db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
+										//$db->query("UPDATE " . GAME_BASE . "auctions SET seller_username = '" . $db->escape($new_name) . "' WHERE seller_username='" . $current_name . "'") or die('Error');
+										//$db->query("UPDATE " . GAME_BASE . "friends SET friendName = '" . $db->escape($new_name) . "' WHERE friendName='" . $current_name . "'") or die('Error');
 
+                                                                                $db->query("UPDATE " . GAME_BASE . "players SET username='" . $db->escape($new_name) . "' WHERE id ='" . $check['id'] . "'") or error('Failed to rename player username', __FILE__, __LINE__, $db->error());
+                                                                                $db->query("UPDATE " . GAME_BASE . "players SET user = '" . $db->escape($usernameHash) . "' WHERE id='" . $check['id'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "experience SET user = '" . $db->escape($usernameHash) . "' WHERE id='" . $check['id'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "curstats SET user = '" . $db->escape($usernameHash) . "' WHERE id='" . $check['id'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "invitems SET user = '" . $db->escape($usernameHash) . "' WHERE user='" . $check['user'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "quests SET user = '" . $db->escape($usernameHash) . "' WHERE id='" . $check['id'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "auctions SET player = '" . $db->escape($new_name) . "' WHERE player='" . $check['id'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "friends SET user = '" . $db->escape($usernameHash) . "' WHERE user='" . $check['user'] . "'");
+                                                                                $db->query("UPDATE " . GAME_BASE . "ignores SET user = '" . $db->escape($usernameHash) . "' WHERE user='" . $check['user'] . "'");
+
+                                                                                
 										// Insert into name change table			
 										$db->query('INSERT INTO ' . GAME_BASE . 'name_changes (user, owner, old_name, new_name, date) VALUES('.intval($check['id']).', '.intval($check['owner']).', \''.$db->escape($current_name).'\',  \''.$db->escape($new_name).'\', '.time().')') or error('Unable to save character name change!', __FILE__, __LINE__, $db->error());
 										new_notification($id, 'char_manager.php?id='.$id.'', __('Character: '. luna_htmlspecialchars($current_name) . ' has been renamed to: '. luna_htmlspecialchars($new_name) . '!', 'luna'), 'fa-pencil');
-										redirect('char_manager.php?id='.$id.'&setting=character_renaming&saved=true');
-                                                                                echo 'Successfully renamed!';
+										redirect('char_manager.php?id='.$id.'&setting=character_renaming&saved=true');                                                                                
 								} 
 								else 
 								{
@@ -392,7 +454,7 @@ else if($setting != 'achievements') {
 						}
 						else
 						{
-                                                    //Data conversion
+//Data conversion
 function usernameToHash($s) {
         $s = strtolower($s);
         $s1 = '';
@@ -648,9 +710,9 @@ require load_page('header.php');
 					case "achievements":
 						require load_page('character/achievement.php'); 
 					break;
-					case "reduction":
+					/*case "reduction":
 						require load_page('character/stat-reduction.php');
-					break;
+					break;*/
 					default:
 						require load_page('character/select-character.php'); 
 					break;
