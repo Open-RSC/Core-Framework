@@ -475,7 +475,7 @@ CREATE TABLE `notifications` (
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (2,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1527788945,1),(3,2,'Adventurer! You have created a RSCLegacy character: testing!','fa-user-plus','char_manager.php?id=2',1529508602,0),(4,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529508625,0),(5,2,'Adventurer! You have created a RSCLegacy character: nipper!','fa-user-plus','char_manager.php?id=2',1529509682,0);
+INSERT INTO `notifications` VALUES (2,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1527788945,1),(3,2,'Adventurer! You have created a RSCLegacy character: testing!','fa-user-plus','char_manager.php?id=2',1529508602,1),(4,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529508625,0),(5,2,'Adventurer! You have created a RSCLegacy character: nipper!','fa-user-plus','char_manager.php?id=2',1529509682,0);
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -505,7 +505,7 @@ CREATE TABLE `online` (
 
 LOCK TABLES `online` WRITE;
 /*!40000 ALTER TABLE `online` DISABLE KEYS */;
-INSERT INTO `online` VALUES (2,'Marwolf',1529510069,0,NULL,NULL);
+INSERT INTO `online` VALUES (2,'Marwolf',1529524395,0,NULL,NULL);
 /*!40000 ALTER TABLE `online` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -929,15 +929,16 @@ DROP TABLE IF EXISTS `rscd_players`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rscd_players` (
-  `user` varchar(40) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
+  `user` varchar(45) NOT NULL,
   `username` varchar(12) NOT NULL,
-  `group_id` tinyint(1) NOT NULL DEFAULT '4',
+  `group_id` int(10) DEFAULT '0',
   `owner` int(5) NOT NULL,
   `combat` tinyint(3) NOT NULL DEFAULT '3',
   `combat_rank` int(10) DEFAULT NULL,
   `skill_total` smallint(4) NOT NULL DEFAULT '27',
   `skill_total_rank` int(10) DEFAULT NULL,
-  `x` smallint(4) NOT NULL DEFAULT '225',
+  `x` smallint(4) NOT NULL,
   `y` smallint(4) NOT NULL DEFAULT '447',
   `fatigue` tinyint(3) NOT NULL DEFAULT '0',
   `combatstyle` tinyint(1) NOT NULL DEFAULT '0',
@@ -970,8 +971,6 @@ CREATE TABLE `rscd_players` (
   `login_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
   `deaths` smallint(5) NOT NULL DEFAULT '0',
   `deaths_rank` int(10) DEFAULT NULL,
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `online` tinyint(1) NOT NULL DEFAULT '0',
   `kills` smallint(5) NOT NULL DEFAULT '0',
   `kills_rank` int(10) DEFAULT NULL,
   `highscores` tinyint(1) NOT NULL DEFAULT '0',
@@ -1018,11 +1017,17 @@ CREATE TABLE `rscd_players` (
   `avatar_items` varchar(255) DEFAULT NULL,
   `avatar` blob,
   `quests` longblob,
-  `highscoreopt` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `iron_man` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `iron_man_restriction` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `hc_ironman_death` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `online` tinyint(1) NOT NULL DEFAULT '0',
   `banned` varchar(255) NOT NULL DEFAULT '0',
+  `highscoreopt` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `forum_active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `total_experience` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `password_salt` (`password_salt`),
   KEY `pass` (`pass`),
   KEY `group_id` (`group_id`),
@@ -1048,7 +1053,7 @@ CREATE TABLE `rscd_players` (
 
 LOCK TABLES `rscd_players` WRITE;
 /*!40000 ALTER TABLE `rscd_players` DISABLE KEYS */;
-INSERT INTO `rscd_players` VALUES ('51697882930','testing',0,2,3,0,27,0,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'7b41d6191387f2ad7846669662929cfdd1b2f65a5838ef616ffb846d0c069070556155849e8952066c6ea241c38188ac8fd3db7f4bbdd52a30954f13d4baff67','EQGw0LcFd656Xzo7',1529508602,'127.0.0.1',0,0,0,'0.0.0.0',0,0,1338,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,'0',NULL,NULL,0,'0',0),('33458708176','marwolf',0,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'309d2fefdb34753ebe9f41874338a64e6ed747ece67db1b68edaf4ff70ec0174cb896639c3149d512a97a8466e9a8a194dcfce550f2323c3ba8a9f2d104ae5cb','TBa8QCmwntxdAD7w',1529508625,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,1339,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,'0',0),('988515402','nipper',4,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'10e3ac259e990c1d9aa4ca46903c63990cbd758d6c50e418cd0df983e84415017e9a11170194b212a056242a338276940f6241b8bb1494acf05b858aee6f9c1e','p0mHvSuJ6uq8OZbA',1529509682,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,1340,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,'0',1);
+INSERT INTO `rscd_players` VALUES (1338,'51697882930','testing',0,2,3,0,27,0,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'7b41d6191387f2ad7846669662929cfdd1b2f65a5838ef616ffb846d0c069070556155849e8952066c6ea241c38188ac8fd3db7f4bbdd52a30954f13d4baff67','EQGw0LcFd656Xzo7',1529508602,'127.0.0.1',0,0,0,'0.0.0.0',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,'0',NULL,NULL,0,1,0,0,'0',0,0,NULL),(1339,'33458708176','marwolf',0,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'309d2fefdb34753ebe9f41874338a64e6ed747ece67db1b68edaf4ff70ec0174cb896639c3149d512a97a8466e9a8a194dcfce550f2323c3ba8a9f2d104ae5cb','TBa8QCmwntxdAD7w',1529508625,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,1,0,0,'0',0,1,NULL),(1340,'988515402','nipper',4,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'10e3ac259e990c1d9aa4ca46903c63990cbd758d6c50e418cd0df983e84415017e9a11170194b212a056242a338276940f6241b8bb1494acf05b858aee6f9c1e','p0mHvSuJ6uq8OZbA',1529509682,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,1,0,0,'0',0,0,NULL);
 /*!40000 ALTER TABLE `rscd_players` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1310,7 +1315,7 @@ CREATE TABLE `threads` (
 
 LOCK TABLES `threads` WRITE;
 /*!40000 ALTER TABLE `threads` DISABLE KEYS */;
-INSERT INTO `threads` VALUES (19,'Marwolf','Thanks to the RSCLegacy source release',1527784187,2,1527784187,2,'Marwolf',4,0,2,0,0,0,NULL,16,0,NULL),(20,'Marwolf','Introduce yourself',1527784708,3,1527784708,3,'Marwolf',1,0,2,0,0,0,NULL,17,0,NULL);
+INSERT INTO `threads` VALUES (19,'Marwolf','Thanks to the RSCLegacy source release',1527784187,2,1527784187,2,'Marwolf',5,0,2,0,0,0,NULL,16,0,NULL),(20,'Marwolf','Introduce yourself',1527784708,3,1527784708,3,'Marwolf',1,0,2,0,0,0,NULL,17,0,NULL);
 /*!40000 ALTER TABLE `threads` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1385,7 +1390,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,3,'Guest','Guest','','Guest',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,1,0,0,0,0,1,1,1,1,1,'UTC',0,0,'English',0,NULL,NULL,NULL,NULL,0,'0.0.0.0',0,NULL,NULL,NULL,1,1,0,0,0,0,6,0,0),(2,1,'Marwolf','ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a','UqqYG1aE','cleako@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,1,1,1,0,1,'America/New_York',4,5,'English',29,1527784708,0,1529509052,1469742274,0,'::1',1527789080,NULL,'1338','fp6C5J7u',1,1,0,200,20,50000,50,1487505329,1510583603);
+INSERT INTO `users` VALUES (1,3,'Guest','Guest','','Guest',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,1,0,0,0,0,1,1,1,1,1,'UTC',0,0,'English',0,NULL,NULL,NULL,NULL,0,'0.0.0.0',0,NULL,NULL,NULL,1,1,0,0,0,0,6,0,0),(2,1,'Marwolf','ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a','UqqYG1aE','cleako@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,1,1,1,0,1,'America/New_York',4,5,'English',29,1527784708,0,1529509052,1469742274,0,'::1',1529510069,NULL,'1338','fp6C5J7u',1,1,0,200,20,50000,50,1487505329,1510583603);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1398,4 +1403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-20 11:55:01
+-- Dump completed on 2018-06-20 20:40:10
