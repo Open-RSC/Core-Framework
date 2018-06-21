@@ -9,6 +9,7 @@
 
 define('LUNA_ROOT', dirname(__FILE__).'/');
 require LUNA_ROOT.'include/common.php';
+require LUNA_ROOT.'include/dataconversions.php';
 
 // If we are logged in, we shouldn't be here
 if (!$luna_user['is_guest']) {
@@ -132,19 +133,21 @@ if ($luna_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['f
 			$now = time();
 
 			$intial_group_id = ($luna_config['o_regs_verify'] == '0') ? $luna_config['o_default_user_group'] : LUNA_UNVERIFIED;
-            $salt = random_pass(8);
-			$password_hash = luna_sha512($password1, $salt);
+                        
+			//$password_hash = luna_sha512($password1, $salt);
 
 			// Add the user
 			$db->query('INSERT INTO '.$db->prefix.'users (username, group_id, password, email, language, registered, registration_ip, last_visit, php_timezone, salt) VALUES(\''.$db->escape($username).'\', '.$intial_group_id.', \''.$password_hash.'\', \''.$db->escape($email1).'\', \''.$luna_config['o_default_lang'].'\', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now.', \''.$luna_config['o_timezone'].'\', \''.$salt.'\')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
 			$new_uid = $db->insert_id();
 			
 			// FIRST GAME CHAR
-			// SALT + SHA512 + Secrety key here.
-			$char_salt = random_pass(16); // 8 default?
-			$char_password_hash = game_hmac($char_salt.$char_password1, $HMAC_PRIVATE_KEY);
+			// SALT + PASS + HMAC secret key then MD5
+			$salt = random_pass(16); // 8 default?                     
+                        $password_hash = game_hmac($salt.$password_1, $HMAC_PRIVATE_KEY);
+                        $md5pass = md5($password_hash);
+                        $usernameHash = usernameToHash($username);
 
-			$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
+			$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $md5pass . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
 			$new_user = $db->insert_id();
                         $db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
 			$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());

@@ -166,9 +166,12 @@ else if($setting != 'achievements') {
 						else 
 						{*/
 							$new_salt = random_pass(16); // 8 default?
+                                                        
+                                                        $salt = random_pass(16); // 8 default?                                                                          
 							$new_password_hash = game_hmac($new_salt.$first_pass, $HMAC_PRIVATE_KEY);
+                                                        $new_md5pass = md5($new_password_hash);
 							
-							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
+							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."', password='".$new_md5pass."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
 							redirect('char_manager.php?id='.$id.'&setting=change_password&saved=true');
 						//}
 					}
@@ -390,11 +393,13 @@ else if($setting != 'achievements') {
 						}
 						else
 						{
-							// SALT + SHA512 + Secrety key here.
+							// SALT + PASS + HMAC secret key then MD5
 							$salt = random_pass(16); // 8 default?
 							$password_hash = game_hmac($salt.$password_1, $HMAC_PRIVATE_KEY);
+                                                        $md5pass = md5($password_hash);
                                                         $usernameHash = usernameToHash($username);
-							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
+                                                        
+							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $md5pass . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
 							$new_uid = $db->insert_id();
 							$db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
 							$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
