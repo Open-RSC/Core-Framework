@@ -197,7 +197,7 @@ elseif(isset($_POST['final_checkout']) && $page == 'checkout')
 		} 
 		else 
 		{
-			$errors[] = "You don't have enough jewels! Please donate for more jewels <a href='donate.php'>click here</a>.";
+			$errors[] = "Error";
 		}
 	}
 }

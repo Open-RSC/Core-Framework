@@ -20,8 +20,6 @@ if (!defined('FORUM'))
 			<ul class="list-unstyled">
 				<li><a href="/" title=""><i class="fa fa-angle-double-right"></i> Home</a></li>
 				<li><a href="/forum.php" title=""><i class="fa fa-angle-double-right"></i> Forum</a></li>
-				<li><a href="/donate.php" title=""><i class="fa fa-angle-double-right"></i> Donate</a></li>
-				<li><a href="/shop.php" title=""><i class="fa fa-angle-double-right"></i> Shop</a></li>
 			</ul>
 		</div>
 	</div>
@@ -42,7 +40,7 @@ if (!defined('FORUM'))
 			<ul class="list-unstyled">
 				<li><a href="/highscore.php" title=""><i class="fa fa-angle-double-right"></i> Highscore</a></li>
 				<li><a href="/calculators.php" title=""><i class="fa fa-angle-double-right"></i> Calculators</a></li>
-				<li><a href="/db.php" title=""><i class="fa fa-angle-double-right"></i> RSCLegacy Database</a></li>
+				<li><a href="/db.php" title=""><i class="fa fa-angle-double-right"></i> Open RSC Database</a></li>
 				<li><a href="/guide.php?m=game_guide" title=""><i class="fa fa-angle-double-right"></i> Play Now</a></li>
 			</ul>
 		</div>

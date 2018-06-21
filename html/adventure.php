@@ -153,12 +153,6 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 							<p>Status: <?php echo ($pull_char['online'] == 1 ? '<font style="color:green;">Playing</font>' : '<font style="color:red;">Offline</font>') ?> </p>
 							<p>Clan: <?php echo '--'; ?></p>
 							<p>Player Title: 
-							<?php 
-							if(time() > $pull_char['platinum_expires']) 
-								echo (($detectExpiration == false) ? "Subscriber" : "Member");
-							else
-								echo "Premium Subscriber"; 
-							?>
 							</p>
 							</div>
 						</div>

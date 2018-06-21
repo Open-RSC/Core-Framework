@@ -96,8 +96,6 @@ if (!$luna_user['is_guest']) {
     }
 }
 
-//No donations!
-//$jewels_menu_item = '<li><a href="donate.php"><span class="jewels-icon"></span><span class="jewel-text">'.number_format($luna_user['jewels']).'</span></a></li>';
 $charmanager_menu_item = '<li><a href="char_manager.php"><span class="fa fa-users"></span> Character Profile</a></li>';
 
 // Generate navigation items

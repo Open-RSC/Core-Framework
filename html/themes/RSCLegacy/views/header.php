@@ -151,14 +151,6 @@ s		<link rel="stylesheet" type="text/css" href="themes/RSCLegacy/css/style.css?<
 						</ul>
 						</li>
 						<li id="nav-forum"><a href="forum.php">Forums</a></li>				
-						<li id="nav-donate" class="hidden-sm">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Donate <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-						<li><a href="donate.php">Jewels</a></li>
-						<li class="divider"></li>
-						<li><a href="shop.php">Shop</a></li>
-						</ul>
-						</li>
 						<li id="nav-play" class="hidden-sm"><a href="adventure.php">Adventurer Log</a></li>
 					</ul>
 				</div>
