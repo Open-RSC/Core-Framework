@@ -36,11 +36,11 @@ s		<link rel="stylesheet" type="text/css" href="themes/RSCLegacy/css/style.css?<
 						<span class="icon-bar<?php echo (($num_new_pm != 0 || $num_notifications != 0)? ' flash' : '') ?>"></span>
 		</button>
 	  </div>
-		<a href="http://wolfkingdom.net" class="navbar-brand navbar-left">
+		<a href="/" class="navbar-brand navbar-left">
 		<div class="brand__section">
 			<div class="logoHeader">
 				<div class="logo-container">
-					RSC<img src="img/icons/rsclegacy.png" class="legacyLogo" ALT="Runescape Classic Legacy" width="32" height="32"/><span class="color2">LEGACY</span>
+					Open<img src="img/icons/rsclegacy.png" class="legacyLogo" ALT="Open RSC" width="32" height="32"/><span class="color2">RSC</span>
 				</div>
 			</div>
 		</div>

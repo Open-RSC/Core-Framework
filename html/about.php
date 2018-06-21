@@ -125,7 +125,8 @@ $find_staff = $db->query('SELECT u.group_id, u.id, u.username, u.title, u.num_co
 							<div id="question6" class="panel-collapse collapse" style="height: 0px;">
 								<div class="panel-body">
 									<h5><span class="label label-rscl">Answer</span></h5>
-									<p>Yes, we suppport all Android devices, to download the .apk please visit this link: <a href="http://wolfkingdom.net/android/wolfkingdom.apk">RSCLegacy.apk</a>.</p>
+									<!--<p>Yes, we support all Android devices, to download the .apk please visit this link: <a href="/android/wolfkingdom.apk">WolfKingdom.apk</a>.</p>-->
+                                                                        <p>Not right now.</p>
 								</div>
 							</div>
 						</div>

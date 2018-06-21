@@ -29,7 +29,7 @@ if (!defined('FORUM'))
 				$newsString = strip_tags($newsMessage);
 				if (strlen($newsString) > 375) {
 					$stringCut = substr($newsString, 0, 375);
-					$newsString = substr($stringCut, 0, strrpos($stringCut, ' ')).'... [url=http://wolfkingdom.net/thread.php?id='.$cur_news['id'].']Read More[/url]'; 
+					$newsString = substr($stringCut, 0, strrpos($stringCut, ' ')).'... [url=/thread.php?id='.$cur_news['id'].']Read More[/url]'; 
 				}
 				?>
 				<div class="frontpage-body">

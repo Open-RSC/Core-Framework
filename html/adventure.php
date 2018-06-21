@@ -18,8 +18,8 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 			?>
 			<div class="adv_plank">
 			<span class="adv_breadcrumb">
-			<a href="http://wolfkingdom.net">Home</a> / 
-			<a href="http://wolfkingdom.net/adventure.php">Adventurer Log</a>
+			<a href="/">Home</a> / 
+			<a href="/adventure.php">Adventurer Log</a>
 			<?php
 			if(isset($getPlayer)) 
 				echo '/ <a href="adventure.php?player='.urlencode($getPlayer).'" class="active">'.ucwords($getPlayer).'</a>';

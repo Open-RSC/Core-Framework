@@ -2309,7 +2309,7 @@ function load_meta() {
 	if (defined('LUNA_CANONICAL_TAG_FORUM'))
 		echo '<link rel="canonical" href="/viewforum.php?id='.$id.'" />'."\n";
 	if(defined('LUNA_CANONICAL_INDEX')) 
-		echo '<link rel="canonical" href="http://wolfkingdom.net" />'."\n";
+		echo '<link rel="canonical" href="/" />'."\n";
 		
 
 	echo '<meta name="google-site-verification" content="udFPnKcIsb8cXhawP9UvPjRXNMfpzF_SH1jbbld0XAw" />';

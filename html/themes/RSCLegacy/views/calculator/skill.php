@@ -9,7 +9,7 @@ if (!defined('FORUM'))
 		<?php
 		for($i = 0; $i < count($s_skills); $i ++)
 		{
-			echo "<a class='" . ($curr_skill == $s_skills[$i] ? " active" : "") . " list-group-item' href='calculators.php?skill=" . $s_skills[$i] . "'><img src='http://wolfkingdom.net/img/skills/" . $s_skills[$i] . ".gif' alt='*' style='vertical-align:bottom;' />&nbsp;" . ucfirst($s_skills[$i]) . "</a>";
+			echo "<a class='" . ($curr_skill == $s_skills[$i] ? " active" : "") . " list-group-item' href='calculators.php?skill=" . $s_skills[$i] . "'><img src='/img/skills/" . $s_skills[$i] . ".gif' alt='*' style='vertical-align:bottom;' />&nbsp;" . ucfirst($s_skills[$i]) . "</a>";
 		}
 		?>
 	</div>
@@ -27,9 +27,6 @@ if (!defined('FORUM'))
 			</td>
 			<td colspan="2" >
 				<select class="form-control input-sm" id="calculator-rate" >
-					<option value="2">RSCLegacy</option>
-					<option value="3.0">RSCLegacy Subscriber</option>
-					<option value="3.5">RSCLegacy Premium</option>
 					<option value="1">RuneScape Classic</option>
 				</select>
 			</td>

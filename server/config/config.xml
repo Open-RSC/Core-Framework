@@ -26,6 +26,8 @@
 	<entry key="logdbname">openrsc_logs</entry>
 	<entry key="toolsdbname">openrsc_tools</entry>
 	
+	<entry key="hmac_pass">openrsc</entry>
+	
 	<!-- Combat Skills -->
 	<entry key="combat_xp">36</entry>
 	<entry key="combat_xp_sub">36</entry>

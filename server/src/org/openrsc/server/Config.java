@@ -45,6 +45,8 @@ public class Config {
 		DB_NAME  = props.getProperty("dbname");
 		DB_LOGIN = props.getProperty("dblogin");
 		DB_PASS  = props.getProperty("dbpass");
+                
+                HMAC_PASS  = props.getProperty("hmac_pass");
 		
 		CONFIG_DB_NAME = props.getProperty("configdbname");
 		LOG_DB_NAME    = props.getProperty("logdbname");
@@ -67,7 +69,7 @@ public class Config {
 		props.clear();
 	}
 
-	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME, IRC_SERVER, IRC_CHANNEL, IRC_USERNAME, IRC_PASSWORD, IRC_GREET_1, IRC_GREET_2, IRC_GREET_3;
+	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, HMAC_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME, IRC_SERVER, IRC_CHANNEL, IRC_USERNAME, IRC_PASSWORD, IRC_GREET_1, IRC_GREET_2, IRC_GREET_3;
 	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS;
 	public static float combat_xp, combat_xp_sub, skill_xp, skill_xp_sub, wild_xp_bonus, skulled_xp_bonus;
 	public static long START_TIME;

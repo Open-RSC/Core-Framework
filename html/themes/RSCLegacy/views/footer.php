@@ -18,10 +18,10 @@ if (!defined('FORUM'))
 		<div class="footer-info-single">
 			<h2 class="title">Community</h2>
 			<ul class="list-unstyled">
-				<li><a href="http://wolfkingdom.net" title=""><i class="fa fa-angle-double-right"></i> Home</a></li>
-				<li><a href="http://wolfkingdom.net/forum.php" title=""><i class="fa fa-angle-double-right"></i> Forum</a></li>
-				<li><a href="http://wolfkingdom.net/donate.php" title=""><i class="fa fa-angle-double-right"></i> Donate</a></li>
-				<li><a href="http://wolfkingdom.net/shop.php" title=""><i class="fa fa-angle-double-right"></i> Shop</a></li>
+				<li><a href="/" title=""><i class="fa fa-angle-double-right"></i> Home</a></li>
+				<li><a href="/forum.php" title=""><i class="fa fa-angle-double-right"></i> Forum</a></li>
+				<li><a href="/donate.php" title=""><i class="fa fa-angle-double-right"></i> Donate</a></li>
+				<li><a href="/shop.php" title=""><i class="fa fa-angle-double-right"></i> Shop</a></li>
 			</ul>
 		</div>
 	</div>
@@ -29,10 +29,10 @@ if (!defined('FORUM'))
 		<div class="footer-info-single">
 			<h2 class="title">Support</h2>
 			<ul class="list-unstyled">
-				<li><a href="http://wolfkingdom.net/guide.php" title=""><i class="fa fa-angle-double-right"></i> Guides</a></li>
-				<li><a href="http://wolfkingdom.net/help.php" title=""><i class="fa fa-angle-double-right"></i> Forum Help</a></li>
-				<li><a href="http://wolfkingdom.net/about.php" title=""><i class="fa fa-angle-double-right"></i> Staff, FAQ & About Us</a></li>
-				<li><a href="http://wolfkingdom.net/terms.php" title=""><i class="fa fa-angle-double-right"></i> ToS / Rules</a></li>
+				<li><a href="/guide.php" title=""><i class="fa fa-angle-double-right"></i> Guides</a></li>
+				<li><a href="/help.php" title=""><i class="fa fa-angle-double-right"></i> Forum Help</a></li>
+				<li><a href="/about.php" title=""><i class="fa fa-angle-double-right"></i> Staff, FAQ & About Us</a></li>
+				<li><a href="/terms.php" title=""><i class="fa fa-angle-double-right"></i> ToS / Rules</a></li>
 			</ul>
 		</div>
 	</div>
@@ -40,10 +40,10 @@ if (!defined('FORUM'))
 		<div class="footer-info-single">
 			<h2 class="title">Game</h2>
 			<ul class="list-unstyled">
-				<li><a href="http://wolfkingdom.net/highscore.php" title=""><i class="fa fa-angle-double-right"></i> Highscore</a></li>
-				<li><a href="http://wolfkingdom.net/calculators.php" title=""><i class="fa fa-angle-double-right"></i> Calculators</a></li>
-				<li><a href="http://wolfkingdom.net/db.php" title=""><i class="fa fa-angle-double-right"></i> RSCLegacy Database</a></li>
-				<li><a href="http://wolfkingdom.net/guide.php?m=game_guide" title=""><i class="fa fa-angle-double-right"></i> Play Now</a></li>
+				<li><a href="/highscore.php" title=""><i class="fa fa-angle-double-right"></i> Highscore</a></li>
+				<li><a href="/calculators.php" title=""><i class="fa fa-angle-double-right"></i> Calculators</a></li>
+				<li><a href="/db.php" title=""><i class="fa fa-angle-double-right"></i> RSCLegacy Database</a></li>
+				<li><a href="/guide.php?m=game_guide" title=""><i class="fa fa-angle-double-right"></i> Play Now</a></li>
 			</ul>
 		</div>
 	</div>
@@ -60,19 +60,12 @@ if (!defined('FORUM'))
 					</ul>
 				</div>
 			</div>
-			<p><a href="http://wolfkingdom.net">Wolf Kingdom</a> is in no-way affiliated with <a href="http://www.jagex.com">Jagex Games Studio</a> or their games. Any references are made for identification purposes only.
+			<p><a href="/">Open RSC</a> is in no-way affiliated with <a href="http://www.jagex.com">Jagex Games Studio</a> or their games. Any references are made for identification purposes only.
 				<strong>RuneScape</strong>, <strong>RuneScape Classic</strong> and <strong>Old RuneScape</strong> are registered trademarks of <a href="http://www.jagex.com">Jagex Games Studio</a>.</p>
 			
 		</div>
 	</div>
 </div>
-<section class="copyright">
-	<div class="container">
-		<div class="col-sm-6">
-		<p>Copyright &copy; RSCLegacy™ 2017 - <a href="terms.php">Terms of Service</a> &#149; <a href="about.php">Contact Us</a></p>
-		</div>
-	</div>
-</section>
 </div>
 <?php if (($luna_config['o_cookie_bar'] == 1) && ($luna_user['is_guest']) && (!isset($_COOKIE['LunaCookieBar']))) { ?>
 	<div class="navbar navbar-inverse navbar-fixed-bottom cookie-bar">

@@ -27,7 +27,7 @@ if (!defined('FORUM'))
 			echo "
 				<tr>
 					<td style='width: 30%;'>
-						<img src='http://wolfkingdom.net/img/skills/" . $skill_id . ".gif' alt='*' style='vertical-align:top;'/>&nbsp;" . ucfirst($skill_id) . "
+						<img src='/img/skills/" . $skill_id . ".gif' alt='*' style='vertical-align:top;'/>&nbsp;" . ucfirst($skill_id) . "
 					</td>
 					";
 				echo '
