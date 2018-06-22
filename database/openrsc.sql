@@ -152,7 +152,7 @@ CREATE TABLE `config` (
 
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
-INSERT INTO `config` VALUES ('o_cur_version','2.0.7'),('o_core_version','2.0.5771'),('o_code_name','Emerald'),('o_database_revision','91.26'),('o_searchindex_revision','2.0'),('o_parser_revision','11.4.2'),('o_board_title','Open RSC'),('o_board_slogan','A RuneScape Classic Private Server'),('o_board_description',''),('o_board_tags','runescape classic,rsc'),('o_timezone','America/New_York'),('o_time_format','H:i'),('o_date_format','j M Y'),('o_timeout_visit','1800'),('o_timeout_online','300'),('o_show_user_info','1'),('o_show_comment_count','1'),('o_signatures','1'),('o_smilies_sig','1'),('o_make_links','1'),('o_default_lang','English'),('o_default_style','RSCLegacy'),('o_default_user_group','4'),('o_disp_threads','30'),('o_disp_comments','20'),('o_indent_num_spaces','4'),('o_quote_depth','3'),('o_allow_center','1'),('o_allow_size','1'),('o_allow_spoiler','1'),('o_users_online','1'),('o_censoring','1'),('o_ranks','1'),('o_has_commented','1'),('o_thread_views','1'),('o_gzip','1'),('o_report_method','0'),('o_regs_report','0'),('o_default_email_setting','1'),('o_mailing_list','cleako@gmail.com'),('o_avatars','1'),('o_avatars_dir','img/avatars'),('o_avatars_width','250'),('o_avatars_height','250'),('o_avatars_size','250000'),('o_search_all_forums','1'),('o_base_url','http://localhost'),('o_admin_email','cleako@gmail.com'),('o_webmaster_email','cleako@gmail.com'),('o_forum_subscriptions','1'),('o_thread_subscriptions','1'),('recaptcha_secret_key','6Lc2tAgUAAAAAD1UAHTe5p-a5K4OxoYnDtOB0jw9'),('o_allow_advanced_editor','0'),('o_allow_dialog_editor','0'),('o_first_run_backstage','1'),('o_smtp_host','smtp.gmail.com'),('o_smtp_user','cleako@gmail.com'),('o_smtp_pass',NULL),('o_smtp_ssl','1'),('o_regs_allow','1'),('o_regs_verify','0'),('o_enable_advanced_search','1'),('o_announcement','0'),('o_announcement_message','Enter your announcement here.'),('o_announcement_title','<b>Announcement</b>'),('o_announcement_type','default'),('o_rules','0'),('o_rules_message','Rules'),('o_maintenance','0'),('o_maintenance_message',''),('o_feed_type','2'),('o_feed_ttl','5'),('o_cookie_bar','0'),('o_cookie_bar_url','http://getluna.org/docs/cookies.php'),('o_moderated_by','1'),('o_admin_note','Needed to insert this into the database to correct a SQL issue with boards being displayed:\r\n\r\nSET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,&#039;ONLY_FULL_GROUP_BY&#039;,&#039;&#039;));'),('o_enable_inbox','1'),('o_message_per_page','10'),('o_max_receivers','5'),('o_inbox_notification','0'),('o_emoji','1'),('o_emoji_size','16'),('o_back_to_top','1'),('o_show_copyright','0'),('o_copyright_type','0'),('o_custom_copyright',NULL),('o_header_search','1'),('o_board_statistics','1'),('o_notification_flyout','1'),('recaptcha_site_key','6Lc2tAgUAAAAAKiW5FtVpH4u9Ueqw42IFuL1n2Dg'),('o_message_img_tag','1'),('o_message_all_caps','1'),('o_subject_all_caps','1'),('o_sig_all_caps','0'),('o_sig_img_tag','1'),('o_sig_length','400'),('o_sig_lines','4'),('o_allow_banned_email','1'),('o_allow_dupe_email','1'),('o_force_guest_email','1');
+INSERT INTO `config` VALUES ('o_cur_version','2.0.7'),('o_core_version','2.0.5771'),('o_code_name','Emerald'),('o_database_revision','91.26'),('o_searchindex_revision','2.0'),('o_parser_revision','11.4.2'),('o_board_title','Open RSC'),('o_board_slogan','A RuneScape Classic Private Server'),('o_board_description',''),('o_board_tags','runescape classic,rsc'),('o_timezone','America/New_York'),('o_time_format','H:i'),('o_date_format','j M Y'),('o_timeout_visit','1800'),('o_timeout_online','300'),('o_show_user_info','1'),('o_show_comment_count','1'),('o_signatures','1'),('o_smilies_sig','1'),('o_make_links','1'),('o_default_lang','English'),('o_default_style','RSCLegacy'),('o_default_user_group','4'),('o_disp_threads','30'),('o_disp_comments','20'),('o_indent_num_spaces','4'),('o_quote_depth','3'),('o_allow_center','1'),('o_allow_size','1'),('o_allow_spoiler','1'),('o_users_online','1'),('o_censoring','1'),('o_ranks','1'),('o_has_commented','1'),('o_thread_views','1'),('o_gzip','1'),('o_report_method','0'),('o_regs_report','0'),('o_default_email_setting','1'),('o_mailing_list','cleako@gmail.com'),('o_avatars','1'),('o_avatars_dir','img/avatars'),('o_avatars_width','250'),('o_avatars_height','250'),('o_avatars_size','250000'),('o_search_all_forums','1'),('o_base_url','http://localhost'),('o_admin_email','cleako@gmail.com'),('o_webmaster_email','cleako@gmail.com'),('o_forum_subscriptions','1'),('o_thread_subscriptions','1'),('recaptcha_secret_key','6Lc2tAgUAAAAAD1UAHTe5p-a5K4OxoYnDtOB0jw9'),('o_allow_advanced_editor','0'),('o_allow_dialog_editor','0'),('o_first_run_backstage','1'),('o_smtp_host','smtp.gmail.com:465'),('o_smtp_user','cleako@gmail.com'),('o_smtp_pass','yaunbaotfzwubmze'),('o_smtp_ssl','1'),('o_regs_allow','1'),('o_regs_verify','0'),('o_enable_advanced_search','1'),('o_announcement','0'),('o_announcement_message','Enter your announcement here.'),('o_announcement_title','<b>Announcement</b>'),('o_announcement_type','default'),('o_rules','0'),('o_rules_message','Rules'),('o_maintenance','0'),('o_maintenance_message',''),('o_feed_type','2'),('o_feed_ttl','5'),('o_cookie_bar','0'),('o_cookie_bar_url','http://getluna.org/docs/cookies.php'),('o_moderated_by','1'),('o_admin_note','Needed to insert this into the database to correct a SQL issue with boards being displayed:\r\n\r\nSET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,&#039;ONLY_FULL_GROUP_BY&#039;,&#039;&#039;));'),('o_enable_inbox','1'),('o_message_per_page','10'),('o_max_receivers','5'),('o_inbox_notification','0'),('o_emoji','1'),('o_emoji_size','16'),('o_back_to_top','1'),('o_show_copyright','0'),('o_copyright_type','0'),('o_custom_copyright',NULL),('o_header_search','1'),('o_board_statistics','1'),('o_notification_flyout','1'),('recaptcha_site_key','6Lc2tAgUAAAAAKiW5FtVpH4u9Ueqw42IFuL1n2Dg'),('o_message_img_tag','1'),('o_message_all_caps','1'),('o_subject_all_caps','1'),('o_sig_all_caps','0'),('o_sig_img_tag','1'),('o_sig_length','400'),('o_sig_lines','4'),('o_allow_banned_email','1'),('o_allow_dupe_email','1'),('o_force_guest_email','1');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -466,7 +466,7 @@ CREATE TABLE `notifications` (
   `time` int(11) NOT NULL DEFAULT 0,
   `viewed` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -475,7 +475,7 @@ CREATE TABLE `notifications` (
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (2,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1527788945,1),(3,2,'Adventurer! You have created a RSCLegacy character: testing!','fa-user-plus','char_manager.php?id=2',1529508602,1),(4,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529508625,1),(5,2,'Adventurer! You have created a RSCLegacy character: nipper!','fa-user-plus','char_manager.php?id=2',1529509682,1);
+INSERT INTO `notifications` VALUES (2,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1527788945,1),(3,2,'Adventurer! You have created a RSCLegacy character: testing!','fa-user-plus','char_manager.php?id=2',1529508602,1),(4,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529508625,1),(5,2,'Adventurer! You have created a RSCLegacy character: nipper!','fa-user-plus','char_manager.php?id=2',1529509682,1),(6,2,'Adventurer! You have created a RSCLegacy character: butt!','fa-user-plus','char_manager.php?id=2',1529587922,0),(7,2,'You have renamed putt to butt via admin panel.','fa-bar-chart','#',1529589814,0),(8,2,'You have renamed butt to butty via admin panel.','fa-bar-chart','#',1529589965,0),(9,2,'You have renamed butty to bitt via admin panel.','fa-bar-chart','#',1529590008,0),(10,2,'You have renamed bitt to testing via admin panel.','fa-bar-chart','#',1529590017,0),(11,2,'You have renamed testing to test via admin panel.','fa-bar-chart','#',1529590042,0),(12,2,'You have renamed test to teste via admin panel.','fa-bar-chart','#',1529590130,0),(13,2,'You have renamed teste to test via admin panel.','fa-bar-chart','#',1529590194,0),(14,2,'You have renamed test to testa via admin panel.','fa-bar-chart','#',1529590293,0),(15,2,'You have renamed testa to test via admin panel.','fa-bar-chart','#',1529590312,0),(16,2,'You have renamed test to test4 via admin panel.','fa-bar-chart','#',1529590399,0),(17,2,'You have renamed test4 to test via admin panel.','fa-bar-chart','#',1529590541,0),(18,2,'You have renamed test to test1 via admin panel.','fa-bar-chart','#',1529590610,0),(19,2,'You have renamed test1 to test via admin panel.','fa-bar-chart','#',1529590901,0),(20,2,'You have renamed test to test1 via admin panel.','fa-bar-chart','#',1529591091,0),(21,2,'You have renamed test3 to test2 via admin panel.','fa-bar-chart','#',1529591328,0),(22,2,'Character: test2 has been renamed to: test3!','fa-pencil','char_manager.php?id=2',1529612315,0),(23,2,'Character: licke has been renamed to: lick!','fa-pencil','char_manager.php?id=2',1529612476,0),(24,2,'Character: arffff has been renamed to: arf!','fa-pencil','char_manager.php?id=2',1529612496,0),(25,2,'Adventurer! You have created a RSCLegacy character: foot!','fa-user-plus','char_manager.php?id=2',1529613697,0),(26,2,'Adventurer! You have created a RSCLegacy character: blue!','fa-user-plus','char_manager.php?id=2',1529614091,0),(27,2,'Adventurer! You have created a RSCLegacy character: blue!','fa-user-plus','char_manager.php?id=2',1529614214,0),(28,2,'Adventurer! You have created a RSCLegacy character: nibbles!','fa-user-plus','char_manager.php?id=2',1529614313,0),(29,2,'Adventurer! You have created a RSCLegacy character: derp!','fa-user-plus','char_manager.php?id=2',1529614419,0),(30,2,'Adventurer! You have created a RSCLegacy character: arf!','fa-user-plus','char_manager.php?id=2',1529614502,0),(31,2,'Adventurer! You have created a RSCLegacy character: cat!','fa-user-plus','char_manager.php?id=2',1529614703,0),(32,2,'Adventurer! You have created a RSCLegacy character: dog!','fa-user-plus','char_manager.php?id=2',1529614761,0),(33,2,'Adventurer! You have created a RSCLegacy character: wolf!','fa-user-plus','char_manager.php?id=2',1529614821,0),(34,2,'Adventurer! You have created a RSCLegacy character: alf!','fa-user-plus','char_manager.php?id=2',1529614933,0),(35,2,'Adventurer! You have created a RSCLegacy character: fart!','fa-user-plus','char_manager.php?id=2',1529615054,0),(36,2,'Adventurer! You have created a RSCLegacy character: meow!','fa-user-plus','char_manager.php?id=2',1529615198,0),(37,2,'Adventurer! You have created a RSCLegacy character: pickle!','fa-user-plus','char_manager.php?id=2',1529615368,0),(38,2,'Adventurer! You have created a RSCLegacy character: charles!','fa-user-plus','char_manager.php?id=2',1529615486,0),(39,2,'Adventurer! You have created a RSCLegacy character: boof!','fa-user-plus','char_manager.php?id=2',1529615775,0),(40,2,'Adventurer! You have created a RSCLegacy character: crate!','fa-user-plus','char_manager.php?id=2',1529615984,0),(41,2,'Adventurer! You have created a RSCLegacy character: dog!','fa-user-plus','char_manager.php?id=2',1529616084,0),(42,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529617440,0),(43,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529617500,0),(44,2,'Adventurer! You have created a RSCLegacy character: test!','fa-user-plus','char_manager.php?id=2',1529617504,0),(45,2,'Adventurer! You have created a RSCLegacy character: test2!','fa-user-plus','char_manager.php?id=2',1529617511,0),(46,2,'Character: test has been renamed to: test2!','fa-pencil','char_manager.php?id=2',1529617597,0),(47,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529618128,0),(48,2,'Adventurer! You have created a RSCLegacy character: wolf!','fa-user-plus','char_manager.php?id=2',1529618249,0),(49,2,'Adventurer! You have created a RSCLegacy character: wolf!','fa-user-plus','char_manager.php?id=2',1529618325,0),(50,2,'Adventurer! You have created a RSCLegacy character: marwolf!','fa-user-plus','char_manager.php?id=2',1529618403,0),(51,2,'Character: marwolf has been renamed to: wolf!','fa-pencil','char_manager.php?id=2',1529618722,0),(52,2,'Adventurer! You have created a RSCLegacy character: arf!','fa-user-plus','char_manager.php?id=2',1529618748,0),(53,2,'Adventurer! You have created a RSCLegacy character: wolf!','fa-user-plus','char_manager.php?id=2',1529618782,0),(54,2,'You have renamed wolf to wolfy via admin panel.','fa-bar-chart','#',1529618982,0);
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -505,7 +505,7 @@ CREATE TABLE `online` (
 
 LOCK TABLES `online` WRITE;
 /*!40000 ALTER TABLE `online` DISABLE KEYS */;
-INSERT INTO `online` VALUES (2,'Marwolf',1529547644,0,NULL,NULL);
+INSERT INTO `online` VALUES (2,'Marwolf',1529635541,0,NULL,NULL);
 /*!40000 ALTER TABLE `online` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -709,7 +709,6 @@ CREATE TABLE `rscd_bank` (
 
 LOCK TABLES `rscd_bank` WRITE;
 /*!40000 ALTER TABLE `rscd_bank` DISABLE KEYS */;
-INSERT INTO `rscd_bank` VALUES (1,703,1,38),(1,702,1,37),(1,1216,1,36),(1,1278,1,35),(1,1263,1,34),(1,1288,1,33),(1,1119,1,32),(1,581,1,31),(1,580,1,30),(1,579,1,29),(1,578,1,28),(1,577,1,27),(1,576,1,26),(1,828,1,25),(1,832,1,24),(1,831,1,23),(1,981,1,22),(1,766,1,21),(1,656,1,20),(1,647,9999,19),(1,573,1,18),(1,525,1,17),(1,387,1,16),(1,1041,99,15),(1,1035,1,14),(1,1034,1,13),(1,1033,1,12),(1,1032,1,11),(1,1093,1,10),(1,1095,1,9),(1,1096,1,8),(1,422,1,7),(1,795,1,6),(1,1289,1,5),(1,575,2,4),(1,609,1,3),(1,16,1,2),(1,81,1,1),(1,10,100939654,0);
 /*!40000 ALTER TABLE `rscd_bank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -744,7 +743,7 @@ CREATE TABLE `rscd_curstats` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`)
-) ENGINE=MyISAM AUTO_INCREMENT=1341 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -753,7 +752,6 @@ CREATE TABLE `rscd_curstats` (
 
 LOCK TABLES `rscd_curstats` WRITE;
 /*!40000 ALTER TABLE `rscd_curstats` DISABLE KEYS */;
-INSERT INTO `rscd_curstats` VALUES ('51697882930',1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1338),('33458708176',1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1339),('988515402',1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1340);
 /*!40000 ALTER TABLE `rscd_curstats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -829,7 +827,7 @@ CREATE TABLE `rscd_experience` (
   KEY `exp_runecrafting` (`exp_runecrafting`),
   KEY `exp_total` (`total_xp`),
   KEY `user` (`user`)
-) ENGINE=MyISAM AUTO_INCREMENT=1341 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -838,7 +836,6 @@ CREATE TABLE `rscd_experience` (
 
 LOCK TABLES `rscd_experience` WRITE;
 /*!40000 ALTER TABLE `rscd_experience` DISABLE KEYS */;
-INSERT INTO `rscd_experience` VALUES ('51697882930',0,0,0,1154,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1338,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('33458708176',0,0,0,1154,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1339,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('988515402',0,0,0,1154,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1340,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `rscd_experience` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -853,10 +850,11 @@ CREATE TABLE `rscd_friends` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `user` varchar(40) NOT NULL,
   `friend` varchar(40) NOT NULL,
+  `friendName` varchar(12) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user` (`user`),
   KEY `friend` (`friend`)
-) ENGINE=MyISAM AUTO_INCREMENT=2359406 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -882,7 +880,7 @@ CREATE TABLE `rscd_ignores` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`),
   KEY `ignore` (`ignore`)
-) ENGINE=MyISAM AUTO_INCREMENT=6943 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -917,8 +915,34 @@ CREATE TABLE `rscd_invitems` (
 
 LOCK TABLES `rscd_invitems` WRITE;
 /*!40000 ALTER TABLE `rscd_invitems` DISABLE KEYS */;
-INSERT INTO `rscd_invitems` VALUES ('51697882930',401,1,1,5),('51697882930',402,1,1,4),('51697882930',594,1,1,3),('51697882930',1213,1,1,2),('51697882930',971,1,1,1),('51697882930',597,1,1,0);
 /*!40000 ALTER TABLE `rscd_invitems` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rscd_name_changes`
+--
+
+DROP TABLE IF EXISTS `rscd_name_changes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rscd_name_changes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user` int(10) unsigned NOT NULL,
+  `owner` int(10) unsigned NOT NULL,
+  `old_name` varchar(12) NOT NULL,
+  `new_name` varchar(12) NOT NULL,
+  `date` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rscd_name_changes`
+--
+
+LOCK TABLES `rscd_name_changes` WRITE;
+/*!40000 ALTER TABLE `rscd_name_changes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rscd_name_changes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -929,7 +953,7 @@ DROP TABLE IF EXISTS `rscd_players`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rscd_players` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` varchar(45) NOT NULL,
   `username` varchar(12) NOT NULL,
   `group_id` int(10) DEFAULT 0,
@@ -938,8 +962,8 @@ CREATE TABLE `rscd_players` (
   `combat_rank` int(10) DEFAULT NULL,
   `skill_total` smallint(4) NOT NULL DEFAULT 27,
   `skill_total_rank` int(10) DEFAULT NULL,
-  `x` smallint(4) NOT NULL,
-  `y` smallint(4) NOT NULL DEFAULT 447,
+  `x` smallint(4) NOT NULL DEFAULT 216,
+  `y` smallint(4) NOT NULL DEFAULT 451,
   `fatigue` tinyint(3) NOT NULL DEFAULT 0,
   `combatstyle` tinyint(1) NOT NULL DEFAULT 0,
   `block_chat` tinyint(1) NOT NULL DEFAULT 0,
@@ -1025,7 +1049,6 @@ CREATE TABLE `rscd_players` (
   `highscoreopt` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `forum_active` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `total_experience` int(10) DEFAULT NULL,
-  `password` varchar(45) NOT NULL,
   `muted` int(1) DEFAULT 0,
   `quest_points` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1047,7 +1070,7 @@ CREATE TABLE `rscd_players` (
   KEY `delete_date` (`delete_date`),
   KEY `creation_date` (`creation_date`),
   KEY `avatar_items` (`avatar_items`)
-) ENGINE=MyISAM AUTO_INCREMENT=1341 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 9216 kB';
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 9216 kB';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1056,7 +1079,6 @@ CREATE TABLE `rscd_players` (
 
 LOCK TABLES `rscd_players` WRITE;
 /*!40000 ALTER TABLE `rscd_players` DISABLE KEYS */;
-INSERT INTO `rscd_players` VALUES (1338,'51697882930','testing',0,2,3,0,28,0,217,448,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'7b41d6191387f2ad7846669662929cfdd1b2f65a5838ef616ffb846d0c069070556155849e8952066c6ea241c38188ac8fd3db7f4bbdd52a30954f13d4baff67','EQGw0LcFd656Xzo7',1529508602,'127.0.0.1',1529544183,0,0,'127.0.0.1',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,'0',NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x',0,1,0,0,0,0,0,NULL,'',0,NULL),(1339,'33458708176','marwolf',0,2,3,NULL,27,NULL,225,447,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'309d2fefdb34753ebe9f41874338a64e6ed747ece67db1b68edaf4ff70ec0174cb896639c3149d512a97a8466e9a8a194dcfce550f2323c3ba8a9f2d104ae5cb','TBa8QCmwntxdAD7w',1529508625,'127.0.0.1',0,0,0,'0.0.0.0',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,0,1,0,0,0,0,1,NULL,'',0,NULL),(1340,'988515402','arf',4,2,3,NULL,28,NULL,222,446,0,0,0,0,0,0,1,1,0,0,0,0,1,2,8,14,0,1,2,1,0,'10e3ac259e990c1d9aa4ca46903c63990cbd758d6c50e418cd0df983e84415017e9a11170194b212a056242a338276940f6241b8bb1494acf05b858aee6f9c1e','p0mHvSuJ6uq8OZbA',1529509682,'127.0.0.1',1529544021,0,0,'127.0.0.1',0,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,'¬\í\0sr\0java.util.TreeMapÁö>-%j\æ\0L\0\ncomparatort\0Ljava/util/Comparator;xppw\0\0\0\0x',0,1,0,0,0,0,0,NULL,'',0,NULL);
 /*!40000 ALTER TABLE `rscd_players` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1076,7 +1098,7 @@ CREATE TABLE `rscd_quests` (
   `quest_points` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `rscd_quests_user` (`user`)
-) ENGINE=MyISAM AUTO_INCREMENT=341 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1394,7 +1416,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,3,'Guest','Guest','','Guest',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,1,0,0,0,0,1,1,1,1,1,'UTC',0,0,'English',0,NULL,NULL,NULL,NULL,0,'0.0.0.0',0,NULL,NULL,NULL,1,1,0,0,0,0,6,0,0,NULL),(2,1,'Marwolf','ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a','UqqYG1aE','cleako@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,1,1,1,0,1,'America/New_York',4,5,'English',29,1527784708,0,1529509052,1469742274,0,'::1',1529545226,NULL,'1338','fp6C5J7u',1,1,0,200,20,50000,50,1487505329,1510583603,NULL);
+INSERT INTO `users` VALUES (1,3,'Guest','Guest','','Guest',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,1,0,0,0,0,1,1,1,1,1,'UTC',0,0,'English',0,NULL,NULL,NULL,NULL,0,'0.0.0.0',0,NULL,NULL,NULL,1,1,0,0,0,0,6,0,0,NULL),(2,1,'Marwolf','ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a','UqqYG1aE','cleako@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,1,1,1,0,1,'America/New_York',4,5,'English',29,1527784708,0,1529621000,1469742274,0,'::1',1529629387,NULL,NULL,NULL,1,1,0,200,20,50000,50,1487505329,1510583603,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1407,4 +1429,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-20 22:21:41
+-- Dump completed on 2018-06-21 22:45:59

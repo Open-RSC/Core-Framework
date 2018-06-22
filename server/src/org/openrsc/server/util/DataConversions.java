@@ -13,6 +13,8 @@ import org.openrsc.server.model.Point;
 import org.openrsc.server.net.RSCPacket;
 
 import com.bombaydigital.vault.HexString;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public final class DataConversions {
 	private static MessageDigest md5, sha1, sha512;
@@ -375,16 +377,32 @@ public final class DataConversions {
 		return HexString.bufferToHex(sha512.digest()).toLowerCase();
     }	    
 	
-	public static String IPToString(long ip) {
-		String result = "0.0.0.0";
-		for(int x = 0; x < 4; x++) {
-			int octet = (int)(ip / Math.pow(256, 3 - x));
-			ip -= octet * Math.pow(256, 3 - x);
-			if (x == 0)
-				result = String.valueOf(octet);
-			else
-				result += ("." + octet);
+    public static String IPToString(long ip) {
+            String result = "0.0.0.0";
+            for(int x = 0; x < 4; x++) {
+                    int octet = (int)(ip / Math.pow(256, 3 - x));
+                    ip -= octet * Math.pow(256, 3 - x);
+                    if (x == 0)
+                            result = String.valueOf(octet);
+                    else
+                            result += ("." + octet);
+            }
+            return result;
+    }
+    
+    public static String hmac(String hashType, String value, String key) {
+		try {
+			byte[] keyBytes = key.getBytes();
+			SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "Hmac" + hashType);
+			
+			Mac mac = Mac.getInstance("Hmac" + hashType);
+			mac.init(signingKey);
+			
+			byte[] rawHmac = mac.doFinal(value.getBytes());
+			return new BigInteger(1, rawHmac).toString(16);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return result;
+		return "";
 	}
 }

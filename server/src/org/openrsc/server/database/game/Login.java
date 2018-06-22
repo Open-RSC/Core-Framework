@@ -401,15 +401,21 @@ public final class Login
 
 		Statement statement = connection.createStatement();
 
-		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`password`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + DataConversions.usernameToHash(username) + "'"))
+		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`pass`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + DataConversions.usernameToHash(username) + "'"))
 		{
 			if(rs.next() && rs.getInt("delete_date") == 0)
 			{
 				
 				int banned = rs.getInt("banned");
+                                
+                                System.out.println("password typed: " + password + "\r\n" + 
+                                        "password: " + rs.getString("pass") + "\r\n" + 
+                                        "attempting: " + DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)
+                                        );
 				
 				//if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
-                                if(DataConversions.md5(rs.getString("password")).equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
+                                //if(DataConversions.md5(rs.getString("password")).equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
+                                if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{

@@ -90,7 +90,7 @@ if($setting == 'achievements')
 			return $percentage;
 	}
 }
-//FUNCTIONALITY
+
 else if($setting != 'achievements') {
 	switch($setting) {
 		case "active":
@@ -139,16 +139,11 @@ else if($setting != 'achievements') {
 				{
 					$first_pass = isset($_POST['c_pass_1']) ? $_POST['c_pass_1'] : null;
 					$second_pass = isset($_POST['c_pass_2']) ? $_POST['c_pass_2'] : null;
-					//$current_pass = isset($_POST['current_pass']) && strlen($_POST['current_pass']) <= 16 ? $_POST['current_pass'] : null;
 					$errors = array();
 					if(empty($first_pass) || empty($second_pass))
 					{
 						$errors[] = "Please fill in all the fields.";
 					}
-					/*if(empty($current_pass))
-					{
-						$errors[] = "You did not enter your current password.";
-					}*/
 					if($first_pass != $second_pass)
 					{
 						$errors[] = "Your passwords did not match.";
@@ -159,21 +154,13 @@ else if($setting != 'achievements') {
 					}
 					if(count($errors) == 0)
 					{
-						/*if($arrayit['pass'] != game_hmac($arrayit['salt'].$current_pass, $HMAC_PRIVATE_KEY))
-						{
-							$errors[] = "The current password you have entered is invalid.";
-						} 
-						else 
-						{*/
-							$new_salt = random_pass(16); // 8 default?
-                                                        
-                                                        $salt = random_pass(16); // 8 default?                                                                          
-							$new_password_hash = game_hmac($new_salt.$first_pass, $HMAC_PRIVATE_KEY);
-                                                        $new_md5pass = md5($new_password_hash);
-							
-							$db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."', password='".$new_md5pass."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
-							redirect('char_manager.php?id='.$id.'&setting=change_password&saved=true');
-						//}
+                                                $new_salt = random_pass(16); // 8 default?
+
+                                                $salt = random_pass(16); // 8 default?                                                                          
+                                                $new_password_hash = game_hmac($new_salt.$first_pass, $HMAC_PRIVATE_KEY);
+
+                                                $db->query("UPDATE " . GAME_BASE . "players SET pass= '" . $new_password_hash . "', password_salt='".$new_salt."' WHERE id = '" . $db->escape($curr_char) . "'") or die('Failed to update game character password');
+                                                redirect('char_manager.php?id='.$id.'&setting=change_password&saved=true');
 					}
 				} 
 				else
@@ -393,13 +380,11 @@ else if($setting != 'achievements') {
 						}
 						else
 						{
-							// SALT + PASS + HMAC secret key then MD5
 							$salt = random_pass(16); // 8 default?
 							$password_hash = game_hmac($salt.$password_1, $HMAC_PRIVATE_KEY);
-                                                        $md5pass = md5($password_hash);
                                                         $usernameHash = usernameToHash($username);
                                                         
-							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $md5pass . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
+							$db->query("INSERT INTO " . GAME_BASE . "players (user,username,owner,pass,password_salt,creation_date,creation_ip) VALUES ('" . $db->escape($usernameHash) . "', '" . $db->escape($username) . "', '" . $id . "', '" . $password_hash . "', '" . $salt . "', '".(time())."', '". $_SERVER['REMOTE_ADDR'] ."');") or error('Unable to insert game character', __FILE__, __LINE__, $db->error());
 							$new_uid = $db->insert_id();
 							$db->query("INSERT INTO " . GAME_BASE . "curstats (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert current stats on game character', __FILE__, __LINE__, $db->error());
 							$db->query("INSERT INTO " . GAME_BASE . "experience (user) VALUES ('" . $usernameHash . "');") or error('Unable to insert experience on game character', __FILE__, __LINE__, $db->error());
