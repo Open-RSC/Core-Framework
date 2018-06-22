@@ -1,5 +1,4 @@
 # Open RSC
 
-Username: testing
-
-Password: (disabled, use anything)
+Forum username: "Marwolf"
+Forum password: "malware"
