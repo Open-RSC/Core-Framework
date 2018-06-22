@@ -50,7 +50,7 @@ if (!defined('FORUM'))
 				<li>
 					<div class="inner">
 					<h4>
-						<strong>Discord:</strong><span><a class="discord" href="https://discord.gg">Chat Now!</a></span>
+						<strong>Discord:</strong><span><a class="discord" href="https://discord.gg/YB6mfUu">Chat Now!</a></span>
 					</h4>
 					</div>
 				</li>		
