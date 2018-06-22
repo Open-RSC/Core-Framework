@@ -403,32 +403,31 @@ public final class Login
 
 		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`password`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + DataConversions.usernameToHash(username) + "'"))
 		{
-                    load(statement);
 			if(rs.next() && rs.getInt("delete_date") == 0)
 			{
 				
 				int banned = rs.getInt("banned");
 				
 				//if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
-                                if(rs.getString("password").equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
+                                if(DataConversions.md5(rs.getString("password")).equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{
 						sendLoginResponse(LoginResponse.CHARACTER_BANNED);
 					}
-					else
+					/*else
 					{
-						//boolean isSubscriber = ((rs.getInt("sub_expires") - DataConversions.getTimeStamp()) > 0 ? true : false);
+						boolean isSubscriber = ((rs.getInt("sub_expires") - DataConversions.getTimeStamp()) > 0 ? true : false);
 						// If the player is subbed or if the player is staff or if the client dimensions are smaller than MAX_NON_SUB_WIDTH, load.
-						/*if(isSubscriber || rs.getInt("group_id") != 4 || clientWidth < MAX_NON_SUB_WIDTH)
+						if(isSubscriber || rs.getInt("group_id") != 4 || clientWidth < MAX_NON_SUB_WIDTH)
 						{*/
 							load(statement);
 						/*}
 						else
 						{// referenced a single time in the project, so here it is.
 							sendLoginResponse(LoginResponse.CLIENT_DIMENSIONS_TOO_LARGE);
-						}*/
-					}
+						}
+					}*/
 				}
 				else
 				{
