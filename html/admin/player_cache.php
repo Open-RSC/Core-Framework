@@ -1,9 +1,5 @@
 <?php
 
-/*
- * Copyright (C) 2016 RSCL
- * Author: Imposter.
- */
 define('LUNA_ROOT', '../');
 define('LUNA_SECTION', 'admin');
 define('LUNA_PAGE', 'player_cache');

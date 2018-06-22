@@ -79,7 +79,7 @@ if (!defined('FORUM'))
 	<div class="panel-body">
 		<div class="col-sm-12">
 			<div class="area_inner">
-			<p class="">Guides with detailed explanations of the various features available in RSCLegacy.</p>
+			<p class="">Guides with detailed explanations of the various features available in Open RSC.</p>
 			<div class="panel-group" role="tablist" id="GameGuide" aria-multiselectable="true"> 
 				<?php 
 				if($db->num_rows($find_gamefeature_guides) > 0 ) {

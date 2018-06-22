@@ -16,7 +16,7 @@ $result = $db->query("SELECT c.id AS cid, c.hof_name, e.accomplishment, e.userna
 			<h2 class="content-header_adv-title">Hall Of Fame</h2>
 			</div>
 			<div class="embended-info">
-				<p><center>Listed below are the first players to accomplish some of the more impressive feats on RSCLegacy, as well as the accomplishments we are tracking that are yet to be achieved.</center></p>
+				<p><center>Listed below are the first players to accomplish some of the more impressive feats on Open RSC, as well as the accomplishments we are tracking that are yet to be achieved.</center></p>
 			</div>
 			<p class="guide-version">Last tracking: 2016-11-18</p>
 			<div class="table_add">

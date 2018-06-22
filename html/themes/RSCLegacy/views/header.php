@@ -133,7 +133,7 @@ s		<link rel="stylesheet" type="text/css" href="themes/RSCLegacy/css/style.css?<
 						<li class="divider"></li>
 						<li><a href="hof.php">Hall Of Fame</a></li>
 						<li class="divider"></li>
-						<li><a href="db.php">RSCLegacy Database</a></li>
+						<li><a href="db.php">Open RSC Database</a></li>
 						<li class="divider"></li>
 						<li><a href="calculators.php">Calculators</a></li>
 						</ul>

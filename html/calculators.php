@@ -27,15 +27,15 @@ $curr_skill = isset($_GET['skill']) && in_array($_GET['skill'], $s_skills) || is
 	<div class="content character">
 		<div class="panel panel-default">
 			<div class="content-header content-header--highlight">
-				<h2 class="content-header-title">RSCLegacy Calculators</h2>
+				<h2 class="content-header-title">Open RSC Calculators</h2>
 			</div>
 			<div class="embended-info" id="calcInfo">
 				<p>
-					<i class="fa fa-info-circle" aria-hidden="true"></i> Game calculators provide players with useful tools to help plan how they play RSCLegacy.
+					<i class="fa fa-info-circle" aria-hidden="true"></i> Game calculators provide players with useful tools to help plan how they play Open RSC.
 				<ul>
 					<li>The Combat calculator can calculate stats for your character.</li>
 					<li>Our Skill calculators can determine the amount of actions you need to perform in order achieve a goal level or experience.</li>
-					<li>Our Max Hit calculator will determine if you are primarly a Ranger or a Fighter and numerate your combat level for your desired stats.</li>
+					<li>Our Max Hit calculator will determine if you are primarily a Ranger or a Fighter and numerate your combat level for your desired stats.</li>
 				</ul>
 				</p>
 			</div>

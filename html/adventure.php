@@ -43,7 +43,7 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 			</div>
 			<?php if (!$luna_user['is_guest'] || isset($getPlayer)) { ?>
 			<div class="embended-info">
-				<p class="big_info"><i class="fa fa-info-circle" aria-hidden="true"></i> Welcome to the RSCLegacy Adventurer's Log. All of your Adventurer's log data is available for <b>FREE</b>. </p>
+				<p class="big_info"><i class="fa fa-info-circle" aria-hidden="true"></i> Welcome to the Open RSC Adventurer's Log. All of your Adventurer's log data is available for <b>FREE</b>. </p>
 			</div>
 			<div class="panel-body">
 			<?php 
@@ -364,7 +364,7 @@ $getPlayer = isset($_GET["player"]) && trim($_GET["player"]) ? trim($_GET["playe
 			</div>
 			<?php } else { ?>
 			<div class="embended-info">
-				<p class="big_info"><i class="fa fa-info-circle" aria-hidden="true"></i> Welcome to the RSCLegacy Adventurer's Log. All of your Adventurer's log data is available for <b>FREE</b>. Start by logging in or searching for a player below.</p>
+				<p class="big_info"><i class="fa fa-info-circle" aria-hidden="true"></i> Welcome to the Open RSC Adventurer's Log. All of your Adventurer's log data is available for <b>FREE</b>. Start by logging in or searching for a player below.</p>
 			</div>
 			<div class="panel-body">
 				<div class="col-sm-6 content-l-side">

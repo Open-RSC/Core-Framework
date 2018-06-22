@@ -6,10 +6,10 @@ if (!defined('FORUM'))
 ?>
 <div class="panel panel-default">
 	<div class="content-header content-header--highlight">
-		<h2 class="content-header-title">RSCLegacy Database</h2>
+		<h2 class="content-header-title">Open RSC Database</h2>
 	</div>
 	<div class="embended-info">
-		<p><i class="fa fa-info-circle" aria-hidden="true"></i> Use the RSCLegacy database to find information on items and npcs.</p>
+		<p><i class="fa fa-info-circle" aria-hidden="true"></i> Use the Open RSC database to find information on items and npcs.</p>
 	</div>
 	<p class="guide-version"><span class="pull-left">Database type: F2P (Free To Play) & P2P (Members)</span>Updated: 2017-03-08</p>
 	<div class="embended-add">
@@ -37,7 +37,7 @@ if (!defined('FORUM'))
 				<div class="guide-view_image">
 					<img src="img/icons/red_dragon.gif" alt="" width="177" height="107">
 				</div>
-				<p>Event NPCs, Shop NPCs and Enemie monsters? Find out and learn about the RuneScape Classic NPCs.</p>
+				<p>Event NPCs, Shop NPCs and enemy monsters? Find out and learn about the RuneScape Classic NPCs.</p>
 			</a>
 			</div>
 		</div>

@@ -70,14 +70,11 @@ require load_page('header.php');
 				<div class="content-right">
 				<div class="mother-icons" id="download_rsc">
 					<div class="panel panel-default">
-						<div class="panel-heading"><h4 class="panel-title">Play RSCLegacy Now</h4></div>
+						<div class="panel-heading"><h4 class="panel-title">Play Open RSC Now</h4></div>
 						<div class="base_body">
-							<p>RuneScape Classic is the original version of RuneScape. Play for Free on your Android Device or Computer by downloading the APK or Launcher.</p>
+							<p>RuneScape Classic is the original version of RuneScape.</p>
 							<a href="RSCLauncher.jar">
 								<img src="img/icons/download_box.png" width="223" height="80" alt="Game Download">
-							</a>
-							<a href="android/wolfkingdom.apk">
-								<img src="img/icons/android_box.png" width="223" height="80" alt="Game Download">
 							</a>
 						</div>
 					</div>

@@ -47,17 +47,6 @@ if (!defined('FORUM'))
 	</div>
 	<div class="col-md-3 col-sm-6">
 		<div class="footer-info-single">
-			<h2 class="title">Social Networks</h2>
-			<div class="about">
-				<div class="social-media">
-					<ul class="list-inline">
-						<li><a href="http://www.facebook.com/rsclegacy" title=""><i class="fa fa-facebook"></i></a></li>
-						<li><a href="http://www.twitter.com/rsclegacy" title=""><i class="fa fa-twitter"></i></a></li>
-						<li><a href="http://www.youtube.com/rsclegacy" title=""><i class="fa fa-youtube"></i></a></li>
-						<li><a href="https://www.reddit.com/r/rsclegacy" title=""><i class="fa fa-reddit"></i></a></li>
-					</ul>
-				</div>
-			</div>
 			<p><a href="/">Open RSC</a> is in no-way affiliated with <a href="http://www.jagex.com">Jagex Games Studio</a> or their games. Any references are made for identification purposes only.
 				<strong>RuneScape</strong>, <strong>RuneScape Classic</strong> and <strong>Old RuneScape</strong> are registered trademarks of <a href="http://www.jagex.com">Jagex Games Studio</a>.</p>
 			

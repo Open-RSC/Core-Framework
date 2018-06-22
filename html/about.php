@@ -2,7 +2,7 @@
 define('LUNA_ROOT', './');
 require LUNA_ROOT.'include/common.php';
 
-$page_title = array(luna_htmlspecialchars($luna_config['o_board_title']), "RSCLegacy Database");
+$page_title = array(luna_htmlspecialchars($luna_config['o_board_title']), "Open RSC Database");
 define('LUNA_ALLOW_INDEX', 1);
 require load_page('header.php');
 

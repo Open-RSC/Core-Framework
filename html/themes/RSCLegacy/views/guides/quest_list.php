@@ -11,13 +11,13 @@ if (!defined('FORUM'))
 	<div class="embended-info">
 		<p>
 		<i class="fa fa-info-circle" aria-hidden="true"></i> 
-		Welcome to the RSCLegacy Quest Guides page. These guides will help you develop your RuneScape character and provide information about the game. This information was submitted and gathered by some of your fellow players to help you out. 
+		Welcome to the Open RSC Quest Guides page. These guides will help you develop your RuneScape character and provide information about the game. This information was submitted and gathered by some of your fellow players to help you out. 
 		If anything is incorrect or missing, or if you have any new information to submit to this database, please submit it to us in the <a href="#">forums</a>..
 		</p>
 	</div>
 	<p class="guide-version"><span class="pull-left">Quest type: F2P (Free To Play)  & P2P (Members)</span>Quests last updated: 2017-03-08</p>
 	<div class="embended-add">
-		<p><span><strong><i class="fa fa-book" aria-hidden="true"></i> RSCL Quest List</span></strong></p>
+		<p><span><strong><i class="fa fa-book" aria-hidden="true"></i> Open RSC Quest List</span></strong></p>
 	</div>
 	<div class="panel-body">
 	<div class="col-sm-12">

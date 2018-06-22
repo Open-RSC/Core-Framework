@@ -229,9 +229,6 @@ require 'header.php';
                     </div>
                 </div>
             </div>
-			 <div>
-                <p class="text-right">Copyright &copy; 2015-2016 RSCLegacy</p>
-            </div>
 		</div>
 	</div>
 </div>
