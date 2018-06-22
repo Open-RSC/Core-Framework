@@ -73,7 +73,7 @@ require load_page('header.php');
 						<div class="panel-heading"><h4 class="panel-title">Play Open RSC Now</h4></div>
 						<div class="base_body">
 							<p>RuneScape Classic is the original version of RuneScape.</p>
-							<a href="RSCLauncher.jar">
+							<a href="Open_RSC_Client.jar">
 								<img src="img/icons/download_box.png" width="223" height="80" alt="Game Download">
 							</a>
 						</div>

@@ -31,10 +31,10 @@ require load_page('header.php');
 					<div class="game_clients">
 						<div class="btn-group">
 							<div class="col-sm-6">
-								<a href="RSCLauncher.jar">
+								<a href="Open_RSC_Client.jar">
 									<img src="img/icons/download_box.png" width="223" height="80" alt="Game Download">
 								</a>
-								<p class="download_info">Download the executable RSCLauncher - <em>PC</em>.</p>
+								<p class="download_info">Download the Open RSC game client.</p>
 							</div>
 						</div>
 					</div>

@@ -94,7 +94,6 @@ public final class Login
 
 				// Set all players offline on server start-up.
 				statement.executeUpdate("UPDATE `rscd_players` SET `online` = '0' WHERE `online` != '0'");
-				System.out.println("Reset Online Statuses");
 				return Transaction.TRANSACTION_SUCCESS;
 			}}.call();	
 		}
@@ -408,32 +407,13 @@ public final class Login
 				
 				int banned = rs.getInt("banned");
                                 
-                                System.out.println("password typed: " + password + "\r\n" + 
-                                        "password: " + rs.getString("pass") + "\r\n" + 
-                                        "attempting: " + DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)
-                                        );
-				
-				//if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
-                                //if(DataConversions.md5(rs.getString("password")).equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
-                                if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
+				if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{
 						sendLoginResponse(LoginResponse.CHARACTER_BANNED);
 					}
-					/*else
-					{
-						boolean isSubscriber = ((rs.getInt("sub_expires") - DataConversions.getTimeStamp()) > 0 ? true : false);
-						// If the player is subbed or if the player is staff or if the client dimensions are smaller than MAX_NON_SUB_WIDTH, load.
-						if(isSubscriber || rs.getInt("group_id") != 4 || clientWidth < MAX_NON_SUB_WIDTH)
-						{*/
-							load(statement);
-						/*}
-						else
-						{// referenced a single time in the project, so here it is.
-							sendLoginResponse(LoginResponse.CLIENT_DIMENSIONS_TOO_LARGE);
-						}
-					}*/
+                                        load(statement);
 				}
 				else
 				{

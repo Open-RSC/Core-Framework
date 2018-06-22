@@ -28,7 +28,7 @@ if (!defined('FORUM'))
 			<table cellspacing="0" class="table table-bordered">
 				<tbody><tr>
 					<th>PC (Windows/Linux/Mac)</th>
-					<td><a href="RSCLauncher.jar" class="bt_silverwhite"><i class="fa fa-windows" aria-hidden="true"></i> <i class="fa fa-apple" aria-hidden="true"></i> <i class="fa fa-linux" aria-hidden="true"></i> PC - Windows / Mac / Linux</a></td>
+					<td><a href="Open_RSC_Client.jar" class="bt_silverwhite"><i class="fa fa-windows" aria-hidden="true"></i> <i class="fa fa-apple" aria-hidden="true"></i> <i class="fa fa-linux" aria-hidden="true"></i> PC - Windows / Mac / Linux</a></td>
 				</tr>
 				<tr>
 					<th>Android Devices</th>
