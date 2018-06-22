@@ -1,15 +1,12 @@
 Export to database folder my current database changes
-Update README.md
-Website doesn't work
 World definitions that decide if the world is F2P or P2P. Need to implement disabling of P2P element if F2P world. Later on, create additional world types that have different rules like deathmatch anywhere (before wildy)
 Fix sound for client. jre9 doesn't include the audio player. Might be we need to package the library with the client.
+Update landscape from latest client. Reimplement RSCE jail.
 
 --------------------------
 
 Dialog requests:
 Casting a god spell before completion of the mage arena outside of the mage arena.
-Message for eating a pumpkin
-Message for drinking half wine
 Message for using disk of returning
 
 Quest/Replay Requests:
@@ -24,6 +21,8 @@ When exactly is Charge spell acquired in the mage arena miniquest?
 -------------------
 -  Game Changes   -
 -------------------
+
+- remove event as a staff type ... re-evaluate existing events
 
 - wilderness is always P2P ... configure to not cycle
 
@@ -99,7 +98,11 @@ AuctionHouse
 
 
 Drinking half wine:
-???
+same as normal wine ... needs to be implemented
+
+Eating a pumpkin:
+
+Eating an easter egg:
 
 
 - Christmas Cracker pull messages ... also has cracker above the puller's head ... prize is party hat and silver ore ... other side gets a random item
@@ -148,6 +151,7 @@ CommandHandler.java
 
 - Password does not replace : character (Client: DataOperations.java Function: addCharacters)
 
+- Completely remove runecrafting. Remove item definitions, and runecrafting altar object definitions, and code associated thereof.
 
 
 -------------------
