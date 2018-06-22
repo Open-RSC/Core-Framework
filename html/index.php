@@ -46,17 +46,17 @@ threads.num_replies,
 threads.id FROM threads JOIN comments ON comments.commented = threads.commented JOIN users ON users.username = threads.commenter ORDER BY threads.commented DESC LIMIT 0 , " . $BOARD_TOTAL);
 */
 // How many top levlers do we want to display?
-$MAX_STANDING_PLAYERS = 3;
+//$MAX_STANDING_PLAYERS = 3;
 // Fetch top levlers
-$top_highscore = $db->query("SELECT (" . GAME_BASE . "experience.exp_attack+" . GAME_BASE . "experience.exp_defense+" . GAME_BASE . "experience.exp_strength+" . GAME_BASE . "experience.exp_hits+" . GAME_BASE . "experience.exp_ranged+" . GAME_BASE . "experience.exp_prayer+" . GAME_BASE . "experience.exp_magic+" . GAME_BASE . "experience.exp_cooking+" . GAME_BASE . "experience.exp_woodcut+" . GAME_BASE . "experience.exp_fletching+" . GAME_BASE . "experience.exp_fishing+" . GAME_BASE . "experience.exp_firemaking+" . GAME_BASE . "experience.exp_crafting+" . GAME_BASE . "experience.exp_smithing+" . GAME_BASE . "experience.exp_mining+" . GAME_BASE . "experience.exp_herblaw+" . GAME_BASE . "experience.exp_agility+" . GAME_BASE . "experience.exp_thieving) AS 'totals', " . GAME_BASE . "players.username, " . GAME_BASE . "players.id, " . GAME_BASE . "players.combat, " . GAME_BASE . "players.skill_total FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "experience.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "players.skill_total > 0 AND " . GAME_BASE . "players.highscoreopt = 0 AND " . GAME_BASE . "players.group_id = 0 OR " . GAME_BASE . "players.group_id > 2 AND " . GAME_BASE . "players.banned = 0 ORDER BY " . GAME_BASE . "players.skill_total DESC, totals DESC LIMIT 0, " . $MAX_STANDING_PLAYERS . "") or error('Unable to fetch top lvlers', __FILE__, __LINE__, $db->error());
+//$top_highscore = $db->query("SELECT (" . GAME_BASE . "experience.exp_attack+" . GAME_BASE . "experience.exp_defense+" . GAME_BASE . "experience.exp_strength+" . GAME_BASE . "experience.exp_hits+" . GAME_BASE . "experience.exp_ranged+" . GAME_BASE . "experience.exp_prayer+" . GAME_BASE . "experience.exp_magic+" . GAME_BASE . "experience.exp_cooking+" . GAME_BASE . "experience.exp_woodcut+" . GAME_BASE . "experience.exp_fletching+" . GAME_BASE . "experience.exp_fishing+" . GAME_BASE . "experience.exp_firemaking+" . GAME_BASE . "experience.exp_crafting+" . GAME_BASE . "experience.exp_smithing+" . GAME_BASE . "experience.exp_mining+" . GAME_BASE . "experience.exp_herblaw+" . GAME_BASE . "experience.exp_agility+" . GAME_BASE . "experience.exp_thieving) AS 'totals', " . GAME_BASE . "players.username, " . GAME_BASE . "players.id, " . GAME_BASE . "players.combat, " . GAME_BASE . "players.skill_total FROM " . GAME_BASE . "players JOIN " . GAME_BASE . "experience ON " . GAME_BASE . "experience.user = " . GAME_BASE . "players.id WHERE " . GAME_BASE . "players.skill_total > 0 AND " . GAME_BASE . "players.highscoreopt = 0 AND " . GAME_BASE . "players.group_id = 0 OR " . GAME_BASE . "players.group_id > 2 AND " . GAME_BASE . "players.banned = 0 ORDER BY " . GAME_BASE . "players.skill_total DESC, totals DESC LIMIT 0, " . $MAX_STANDING_PLAYERS . "") or error('Unable to fetch top lvlers', __FILE__, __LINE__, $db->error());
 
-$top_kd = $db->query("SELECT username,id,deaths,kills FROM " . GAME_BASE . "players WHERE kills > 0 AND highscoreopt = 0 AND group_id = 0 OR group_id > 2 AND banned = 0 ORDER BY kills DESC LIMIT 0, " . $MAX_STANDING_PLAYERS . "") or error('Unable to fetch top pkers', __FILE__, __LINE__, $db->error());
+//$top_kd = $db->query("SELECT username,id,deaths,kills FROM " . GAME_BASE . "players WHERE kills > 0 AND highscoreopt = 0 AND group_id = 0 OR group_id > 2 AND banned = 0 ORDER BY kills DESC LIMIT 0, " . $MAX_STANDING_PLAYERS . "") or error('Unable to fetch top pkers', __FILE__, __LINE__, $db->error());
 
-$top_poster = $db->query("SELECT username,id,num_comments FROM users WHERE num_comments > 0 ORDER BY num_comments DESC LIMIT 0, " . $MAX_STANDING_PLAYERS . "") or error('Unable to fetch top posters', __FILE__, __LINE__, $db->error());
+//$top_poster = $db->query("SELECT username,id,num_comments FROM users WHERE num_comments > 0 ORDER BY num_comments DESC LIMIT 0, " . $MAX_STANDING_PLAYERS . "") or error('Unable to fetch top posters', __FILE__, __LINE__, $db->error());
 
-$activity = $db->query("SELECT message, time, username FROM " . GAME_BASE . "live_feeds ORDER BY id DESC LIMIT 0, 20");
+//$activity = $db->query("SELECT message, time, username FROM " . GAME_BASE . "live_feeds ORDER BY id DESC LIMIT 0, 20");
 
-$threads = $db->query('SELECT users.group_id, threads.commented, threads.commenter, threads.first_comment_id, threads.subject FROM '.$db->prefix.'threads JOIN '.$db->prefix.'users ON users.username = threads.commenter WHERE moved_to IS NULL AND forum_id != 16 AND forum_id != 17 AND forum_id != 18 ORDER BY commented DESC LIMIT 0 , 20') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
+//$threads = $db->query('SELECT users.group_id, threads.commented, threads.commenter, threads.first_comment_id, threads.subject FROM '.$db->prefix.'threads JOIN '.$db->prefix.'users ON users.username = threads.commenter WHERE moved_to IS NULL AND forum_id != 16 AND forum_id != 17 AND forum_id != 18 ORDER BY commented DESC LIMIT 0 , 20') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
 
 require load_page('header.php');
 ?>
@@ -81,8 +81,6 @@ require load_page('header.php');
 				</div>
 				<?php
 				require load_page('frontpage-statistics.php');
-				require load_page('frontpage-standings.php');
-				//require load_page('frontpage-social.php');
 				?>
 				</div>
 			</div>

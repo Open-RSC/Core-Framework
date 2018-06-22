@@ -17,56 +17,17 @@ if (!defined('FORUM'))
 				<li>
 					<div class="inner">
 					<h4>
-						<strong>Server:</strong><span><?php echo checkStatus("127.0.0.1", "43594"); ?></span>
+						<strong>Server:</strong><span><?php echo checkStatus("127.0.0.1", "53595"); ?></span>
 					</h4>
 					</div>
 				</li>
 				<li>
 					<div class="inner">
 					<h4>
-						<strong>Server Type:</strong><span><?php echo (!MEMBERS_CONTENT ? "F2P (Free)" : "P2P (Free/Members)"); ?></span>
+						<strong>Total Players:</strong><span><?php echo totalGameCharacters(); ?></span>
 					</h4>
 					</div>
-				</li>
-				<li>
-					<div class="inner">
-					<h4>
-						<strong>Total Characters:</strong><span><?php echo totalGameCharacters(); ?></span>
-					</h4>
-					</div>
-				</li>
-				<li>
-					<div class="inner">
-					<h4>
-						<strong>Experience Rates:</strong>
-						<ul class="xp_list">
-							<li>Combat:</li>
-							<li><label class="label label-default">Normal: 8.0x</label></li> 
-							<li><label class="label label-warning">Gold: 10.0x</span></li>
-							<li><label class="label label-info">Premium: 12.0x</span></li>
-							<li><label class="label label-danger">Wildy: +0.5x</span></li>
-							<li><label class="label label-danger">Skulled: +1.0x</span></li>
-							<li><label class="label label-elixir">Elixir: +1.0x</span></li>
-						</ul>
-						<ul class="xp_list">
-							<li>Skilling:</li>
-							<li><label class="label label-default">Normal: 2.0x</label></li> 
-							<li><label class="label label-warning">Gold: 3.0x</span></li>
-							<li><label class="label label-info">Premium: 3.5x</span></li>
-							<li><label class="label label-danger">Wildy: +0.5x</span></li>
-							<li><label class="label label-danger">Skulled: +1.0x</span></li>
-							<li><label class="label label-elixir">Elixir: +1.0x</span></li>
-						</ul>
-					</h4>
-					</div>
-				</li>	
-				<li>
-					<div class="inner">
-					<h4>
-					<li>To see your total XP rate, type ::info in-game.</li>
-					</h4>
-					</div>
-				</li>	
+                                </li>
 			</ul>
 		</div>
 		<span class="space"></span>
@@ -89,7 +50,7 @@ if (!defined('FORUM'))
 				<li>
 					<div class="inner">
 					<h4>
-						<strong>Discord:</strong><span><a class="discord" href="https://discord.gg/ecaU7f8">Chat Now!</a></span>
+						<strong>Discord:</strong><span><a class="discord" href="https://discord.gg">Chat Now!</a></span>
 					</h4>
 					</div>
 				</li>		
