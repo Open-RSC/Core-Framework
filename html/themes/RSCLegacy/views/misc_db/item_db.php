@@ -6,7 +6,7 @@ if (!defined('FORUM'))
 ?>
 <ol class="breadcrumb">
 	<li><a href="index.php">Home</a></li>
-	<li><a href="db.php">RSCLegacy Database</a></li>
+	<li><a href="db.php">Open RSC Database</a></li>
 	<li class="active"><a href="db.php?category=items">Item Database</a></li>
 </ol>
 <div class="sidebar col-sm-3 content-l-side">
@@ -26,11 +26,11 @@ if (!defined('FORUM'))
 <div class="col-sm-9 char-r-side">
 	<div class="panel panel-default">
 	<div class="content-header content-header--highlight">
-		<h2 class="content-header-title">Index <?php echo ucwords($selected_index) ?> - RSCLegacy Item Database</h2>
+		<h2 class="content-header-title">Index <?php echo ucwords($selected_index) ?> - Open RSC Item Database</h2>
 	</div>
 	<div class="embended-info">
 		<p>
-		Here you can find information on all the items in RSCLegacy. Click one of the letters to show all items that start with that letter. You can also use the quick search box to find an item easily by searching for it's name.
+		Here you can find information on all the items in Open RSC. Click one of the letters to show all items that start with that letter. You can also use the quick search box to find an item easily by searching for it's name.
 		</p>
 	</div>
 	<span class="embended-space"></span>
@@ -120,15 +120,7 @@ if (!defined('FORUM'))
 					<b>Members Item</b>
 				</td>
 				<td style="width:80%" class="itemdb-info">
-					<?php echo ($result['isMembersOnly'] == 1 ? 'Yes' : 'No') ?>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:20%;" class="itemdetails-header-alternate">
-					<b>Tradeable</b>
-				</td>
-				<td style="width:80%" class="itemdb-info">
-					<?php echo ($result['isUntradable'] == 1 ? 'No' : 'Yes') ?>
+					<?php echo ($result['p2p'] == 1 ? 'Yes' : 'No') ?>
 				</td>
 			</tr>
 			<tr>
@@ -136,7 +128,7 @@ if (!defined('FORUM'))
 					<b>Equipable</b>
 				</td>
 				<td style="width:80%" class="itemdb-info">
-					<?php echo ($result['isWearable'] == 1 ? 'Yes' : 'No') ?>
+					<?php echo ($result['wieldable'] == 1 ? 'Yes' : 'No') ?>
 				</td>
 			</tr>
 			<tr>
@@ -144,7 +136,7 @@ if (!defined('FORUM'))
 					<b>Stackable</b>
 				</td>
 				<td style="width:80%" class="itemdb-info">
-					<?php echo ($result['isStackable'] == 1 ? 'Yes' : 'No') ?>
+					<?php echo ($result['stackable'] == 1 ? 'Yes' : 'No') ?>
 				</td>
 			</tr>
 			<tr>
@@ -152,7 +144,7 @@ if (!defined('FORUM'))
 					<b>High Alch</b>
 				</td>
 				<td style="width:80%" class="itemdb-info">
-					<?php echo number_format(($result['basePrice'] / 100 * 40 * 1.5))  ?>gp
+					<?php echo number_format(($result['base_price'] / 100 * 40 * 1.5))  ?>gp
 				</td>
 			</tr>
 			<tr>
@@ -160,7 +152,7 @@ if (!defined('FORUM'))
 					<b>Low Alch</b>
 				</td>
 				<td style="width:80%" class="itemdb-info">
-					<?php echo number_format(($result['basePrice'] / 100 * 40))  ?>gp
+					<?php echo number_format(($result['base_price'] / 100 * 40))  ?>gp
 				</td>
 			</tr>
 			<tr>
@@ -168,7 +160,7 @@ if (!defined('FORUM'))
 					<b>Shop Price</b>
 				</td>
 				<td style="width:80%" class="itemdb-info">
-					<?php echo number_format($result['basePrice'])  ?>gp - (From base store)
+					<?php echo number_format($result['base_price'])  ?>gp - (From base store)
 				</td>
 			</tr>
 			<tr>

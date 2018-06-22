@@ -1,3 +1,34 @@
+/*
+ * Copyright (C) openrsc 2009-13 All Rights Reserved
+ * 
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * 
+ * Written by openrsc Team <dev@openrsc.net>, January, 2013
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 package org.openrsc.server.database.game;
 
 import java.io.IOException;
@@ -11,7 +42,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.mina.common.IoSession;
-import org.openrsc.server.Config;
 import org.openrsc.server.LoginResponse;
 import org.openrsc.server.Server;
 import org.openrsc.server.database.DefaultTransaction;
@@ -27,6 +57,7 @@ import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
 
 import com.rscdaemon.scripting.quest.Quest;
+import org.openrsc.server.Config;
 
 /**
  * A Transaction for handling player login requests.
@@ -373,21 +404,13 @@ public final class Login
 		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`password`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + DataConversions.usernameToHash(username) + "'"))
 		{
                     load(statement);
-                        if(rs.getString("password").equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
-                        //if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
-                        {
-                                load(statement);
-                        }
-                        else
-                        {
-                                sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
-                        }
 			/*if(rs.next() && rs.getInt("delete_date") == 0)
 			{
 				
 				int banned = rs.getInt("banned");
 				
-				if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
+				//if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
+                                if(rs.getString("password").equalsIgnoreCase(DataConversions.md5(Config.HMAC_PASS + rs.getString("password_salt") + DataConversions.sha512(password))))
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{
