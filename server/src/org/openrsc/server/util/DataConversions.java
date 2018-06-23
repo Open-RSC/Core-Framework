@@ -15,10 +15,11 @@ import org.openrsc.server.net.RSCPacket;
 import com.bombaydigital.vault.HexString;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.SecureRandom;
 
 public final class DataConversions {
 	private static MessageDigest md5, sha1, sha512;
-	private static Random random = new Random();
+	private static SecureRandom random = new SecureRandom();
 	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$', '%', '"', '[', ']', '{', '}', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final BigInteger key = new BigInteger("730546719878348732291497161314617369560443701473303681965331739205703475535302276087891130348991033265134162275669215460061940182844329219743687403068279");
 	private static final BigInteger modulus = new BigInteger("1549611057746979844352781944553705273443228154042066840514290174539588436243191882510185738846985723357723362764835928526260868977814405651690121789896823");
@@ -355,54 +356,59 @@ public final class DataConversions {
 		
 		return s;
 	}
+        
+        public static String generateSalt() {
+                int len = 30;
+                StringBuilder sb = new StringBuilder( len );
+                for( int i = 0; i < len; i++ ) 
+                        sb.append( characters[random.nextInt(characters.length)] );
+                return sb.toString();
+        }
 
 	public static String md5(String s) {
 		md5.reset();
 		md5.update(s.getBytes());
-		
 		return HexString.bufferToHex(md5.digest()).toLowerCase();
 	}
 	
-    public static String sha1(String s) {
-		sha1.reset();
-		sha1.update(s.getBytes());
-		
-		return HexString.bufferToHex(sha1.digest()).toLowerCase();
-    }
-    
-    public static String sha512(String s) {
-		sha512.reset();
-		sha512.update(s.getBytes());
-		
-		return HexString.bufferToHex(sha512.digest()).toLowerCase();
-    }	    
-	
-    public static String IPToString(long ip) {
-            String result = "0.0.0.0";
-            for(int x = 0; x < 4; x++) {
-                    int octet = (int)(ip / Math.pow(256, 3 - x));
-                    ip -= octet * Math.pow(256, 3 - x);
-                    if (x == 0)
-                            result = String.valueOf(octet);
-                    else
-                            result += ("." + octet);
-            }
-            return result;
-    }
-    
-    public static String hmac(String hashType, String value, String key) {
-		try {
-			byte[] keyBytes = key.getBytes();
-			SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "Hmac" + hashType);
-			
-			Mac mac = Mac.getInstance("Hmac" + hashType);
-			mac.init(signingKey);
-			
-			byte[] rawHmac = mac.doFinal(value.getBytes());
-			return new BigInteger(1, rawHmac).toString(16);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "";
+        public static String sha1(String s) {
+                    sha1.reset();
+                    sha1.update(s.getBytes());
+                    return HexString.bufferToHex(sha1.digest()).toLowerCase();
+        }
+
+        public static String sha512(String s) {
+                    sha512.reset();
+                    sha512.update(s.getBytes());
+                    return HexString.bufferToHex(sha512.digest()).toLowerCase();
+        }	    
+
+        public static String IPToString(long ip) {
+                String result = "0.0.0.0";
+                for(int x = 0; x < 4; x++) {
+                        int octet = (int)(ip / Math.pow(256, 3 - x));
+                        ip -= octet * Math.pow(256, 3 - x);
+                        if (x == 0)
+                                result = String.valueOf(octet);
+                        else
+                                result += ("." + octet);
+                }
+                return result;
+        }
+
+        public static String hmac(String hashType, String value, String key) {
+                    try {
+                            byte[] keyBytes = key.getBytes();
+                            SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "Hmac" + hashType);
+
+                            Mac mac = Mac.getInstance("Hmac" + hashType);
+                            mac.init(signingKey);
+
+                            byte[] rawHmac = mac.doFinal(value.getBytes());
+                            return new BigInteger(1, rawHmac).toString(16);
+                    } catch (Exception e) {
+                            e.printStackTrace();
+                    }
+                    return "";
 	}
 }
