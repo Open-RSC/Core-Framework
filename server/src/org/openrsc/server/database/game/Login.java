@@ -4,7 +4,7 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * 
- * Written by openrsc Team <dev@openrsc.net>, January, 2013
+ * Written by openrsc Team <dev@openrsc.com>, January, 2013
  *
  *
  *

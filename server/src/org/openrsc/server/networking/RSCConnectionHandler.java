@@ -97,12 +97,12 @@ implements IoHandler
 		
 /*		try
 		{
-			String reply = "220 mail.openrsc.net ESMTP Postfix (Debian/GNU)";
+			String reply = "220 mail.openrsc.com ESMTP Postfix (Debian/GNU)";
 			//proxycheck -vv -ddsthost:dstport -c chat::"waitstr" list-of-IPs
 			// unfortunately, we have to test this on the linux box...safe? It looks like it should be. ok, I'll send you a command to run
 			// we need the string returned by it.
 			
-			if(Runtime.getRuntime().exec("/scripts/proxycheck -dmail.openrsc.net:25 -c chat::\" + reply + \" -s " + ip.getHostName()).waitFor() != 0)
+			if(Runtime.getRuntime().exec("/scripts/proxycheck -dmail.openrsc.com:25 -c chat::\" + reply + \" -s " + ip.getHostName()).waitFor() != 0)
 			{
 				session.write(PROXY_DENIED);
 				session.close();

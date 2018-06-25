@@ -10012,7 +10012,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		i = windowHeight / 2 + 63;
 		menuNewUser.drawText(windowWidth / 2, i + 8, "To create an account please go back to the", 4, true);
 		i += 20;
-		menuNewUser.drawText(windowWidth / 2, i + 8, "openrsc.net front page, and choose 'register'", 4, true);
+		menuNewUser.drawText(windowWidth / 2, i + 8, "openrsc.com front page, and choose 'register'", 4, true);
 		i += 30;
 		menuNewUser.drawBox(windowWidth / 2, i + 17, 150, 34);
 		menuNewUser.drawText(windowWidth / 2, i + 17, "Ok", 5, false);
