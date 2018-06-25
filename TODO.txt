@@ -1,9 +1,3 @@
-World definitions that decide if the world is F2P or P2P. Need to implement disabling of P2P element if F2P world. Later on, create additional world types that have different rules like deathmatch anywhere (before wildy)
-Fix sound for client. jre9 doesn't include the audio player. Might be we need to package the library with the client.
-Update landscape from latest client. Reimplement RSCE jail.
-
---------------------------
-
 Dialog requests:
 Casting a god spell before completion of the mage arena outside of the mage arena.
 Message for using disk of returning
@@ -34,6 +28,14 @@ When exactly is Charge spell acquired in the mage arena miniquest?
 - Bank note item ids should be 10k + original item id. Period.
 
 - Remove all references to RSCU/RSCUnity/RSC Unity
+
+- Merge in Marwolf's code
+
+- World definitions that decide if the world is F2P or P2P. Need to implement disabling of P2P element if F2P world. Later on, create additional world types that have different rules like deathmatch anywhere (before wildy)
+
+- Fix sound for client. jre9 doesn't include the audio player. Might be we need to package the library with the client.
+
+- Update landscape from latest client.
 
 
 
