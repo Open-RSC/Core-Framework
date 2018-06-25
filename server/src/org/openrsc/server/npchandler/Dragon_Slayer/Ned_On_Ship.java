@@ -4,6 +4,7 @@
 
 package org.openrsc.server.npchandler.Dragon_Slayer;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedGenericMessage;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
@@ -18,7 +19,7 @@ public class Ned_On_Ship implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(17);
+		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 		if(q != null) {
 			if(q.finished()) {
 				howDidYou(npc, owner);

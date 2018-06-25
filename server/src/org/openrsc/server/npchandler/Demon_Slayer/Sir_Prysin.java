@@ -3,6 +3,7 @@
 
 package org.openrsc.server.npchandler.Demon_Slayer;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
@@ -21,7 +22,7 @@ public class Sir_Prysin implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest demonSlayer = owner.getQuest(3);
+		Quest demonSlayer = owner.getQuest(Config.Quests.DEMON_SLAYER);
 		
 		if(demonSlayer != null) 
 		{
@@ -437,7 +438,7 @@ public class Sir_Prysin implements NpcHandler {
 	
 	private final void problem(final Npc npc, final Player owner)
 	{
-		owner.incQuestCompletionStage(3);
+		owner.incQuestCompletionStage(Config.Quests.DEMON_SLAYER);
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Um", "Well it's not so easy", "I kept one of the keys", "I gave the other two", "To other people for safe keeping", "One I gave to Rovin", "who is captain of the palace guard", "I gave the other to the wizard Traiborn"})
 		{
 			public void finished() 
@@ -584,7 +585,7 @@ public class Sir_Prysin implements NpcHandler {
 												owner.sendMessage("Prysin hands you an impressive looking sword");
 												owner.getInventory().add(new InvItem(52, 1));
 												owner.sendInventory();
-												owner.incQuestCompletionStage(3);
+												owner.incQuestCompletionStage(Config.Quests.DEMON_SLAYER);
 												owner.setBusy(false);
 												npc.unblock();
 											}

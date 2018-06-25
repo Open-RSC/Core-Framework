@@ -1,6 +1,7 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.InvItem;
@@ -17,7 +18,7 @@ public class Fishing_Instructor implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -68,7 +69,7 @@ public class Fishing_Instructor implements NpcHandler {
 						owner.sendMessage("The fishing instructor gives you a somewhat old looking net");
 						owner.getInventory().add(new InvItem(376, 1));
 						owner.sendInventory();
-						owner.incQuestCompletionStage(100);
+						owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Go catch some shrimp", "left click on that sparkling piece of water", "While you have the net in your inventory you might catch some fish"}) {
 							public void finished() {
 							owner.setBusy(false);
@@ -84,7 +85,7 @@ public class Fishing_Instructor implements NpcHandler {
 	private void fishChatB(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Well done you can now continue with the tutorial", "First you can cook the shrimps on my fire here if you like"}, true) {
 			public void finished() {
-				owner.incQuestCompletionStage(100);
+				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

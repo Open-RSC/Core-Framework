@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Black_Arm_Mini_Quest;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -151,8 +152,8 @@ public class Tramp implements NpcHandler {
 										warning(npc, owner);
 										break;
 									case 1:
-										Quest blackarm = owner.getQuest(51);
-										Quest phoenix = owner.getQuest(52);
+                                        Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+                                        Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
 										if(blackarm != null) {
 											if(blackarm.finished()) {
 												letMeJoin(npc, owner, true, false);
@@ -240,7 +241,7 @@ public class Tramp implements NpcHandler {
 			World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, reply) {
 				public void finished() {
 					if(!owner.isBlackarm()) {
-						owner.addQuest(51, 0);
+						owner.addQuest(Config.Quests.JOIN_BLACKARM_GANG, 0);
 					}
 					owner.setBusy(false);
 					npc.unblock();

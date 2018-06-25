@@ -106,7 +106,7 @@ public class WieldHandler implements PacketHandler {
 								wieldItem(player, item);
 								break;
                             case 401: // rune platebody
-                                Quest q = player.getQuest(17);
+                                Quest q = player.getQuest(Config.Quests.DRAGON_SLAYER);
                                 if(q == null || !q.finished())
                                 {
                                     player.sendMessage("you have not earned the right to wear this yet");

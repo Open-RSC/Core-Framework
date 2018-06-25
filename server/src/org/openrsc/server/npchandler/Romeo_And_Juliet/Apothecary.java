@@ -1,5 +1,6 @@
 package org.openrsc.server.npchandler.Romeo_And_Juliet;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedGenericMessage;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
@@ -17,7 +18,7 @@ public class Apothecary implements NpcHandler {
 	public void handleNpc(final Npc npc, Player owner) throws Exception {
 		owner.setBusy(true);
 		npc.blockedBy(owner);
-		Quest q = owner.getQuest(11);
+		Quest q = owner.getQuest(Config.Quests.ROMEO_AND_JULIET);
 		if(q != null) {
 			switch(q.getStage()) {
 				case 3:
@@ -25,7 +26,7 @@ public class Apothecary implements NpcHandler {
 						public void finished() {
 							World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Cadava potion. It's pretty nasty and hard to make.   ", "Wing of Rat, Tail of Frog, Ear of Snake and Horn of Dog", "I have all that, but i need some cadavaberries", "You will have to find them while i get the rest ready", "Bring them here when you have them. Be careful though, they are nasty."}) {
 								public void finished() {
-									owner.incQuestCompletionStage(11);
+									owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
 									owner.setBusy(false);
 									npc.unblock();
 								}

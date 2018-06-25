@@ -4,6 +4,7 @@
 
 //NPC ID: 253  
 package org.openrsc.server.npchandler.Heroes_Quest;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
@@ -31,11 +32,11 @@ public class Achetties implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(20);
-		Quest shieldOfArrav = owner.getQuest(13);
-		Quest dragonSlayer = owner.getQuest(17);
-		Quest lostCity = owner.getQuest(19);
-		Quest merlinsCrystal = owner.getQuest(22);
+		Quest q = owner.getQuest(Config.Quests.HEROS_QUEST);
+		Quest shieldOfArrav = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+		Quest dragonSlayer = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+		Quest lostCity = owner.getQuest(Config.Quests.LOST_CITY);
+		Quest merlinsCrystal = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
 
 		if (q == null)
 		{
@@ -112,8 +113,8 @@ public class Achetties implements NpcHandler
 														 *  quest stage to our
 														 *  character, whos accepted.
 														 */
-														owner.addQuest(20, 1);
-														owner.incQuestCompletionStage(20);
+														owner.addQuest(Config.Quests.HEROS_QUEST, 1);
+														owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
 														
 														final String[] menu_options = { "Any hints on getting the armband?", "Any hints on getting the feather", "Any hints on getting the eel", "I'll start looking for all those things then" };
 														owner.setBusy(false);
@@ -194,7 +195,7 @@ public class Achetties implements NpcHandler
 		{
 			public void finished()
 			{
-				if(owner.getInventory().countId(557) > 0 && owner.getInventory().countId(586) > 0 && owner.getInventory().countId(590) > 0 && owner.getQuest(20).getStage() >= 5) 
+				if(owner.getInventory().countId(557) > 0 && owner.getInventory().countId(586) > 0 && owner.getInventory().countId(590) > 0 && owner.getQuest(Config.Quests.HEROS_QUEST).getStage() >= 5) 
 				{
 					World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"I have all the things needed"}) 
 					{
@@ -215,7 +216,7 @@ public class Achetties implements NpcHandler
 										{
 											owner.sendMessage("@gre@You have completed the Heroes guild quest!");
 											owner.sendMessage("@gre@You have been awarded 1 quest point!");
-											owner.finishQuest(20);
+											owner.finishQuest(Config.Quests.HEROS_QUEST);
 											owner.incQuestExp(0, 3075 * 5); //attack exp
 											owner.sendStat(0);
 											owner.incQuestExp(1, 3075 * 5); //defence exp

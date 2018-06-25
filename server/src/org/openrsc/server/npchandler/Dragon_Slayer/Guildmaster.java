@@ -4,6 +4,7 @@
 
 package org.openrsc.server.npchandler.Dragon_Slayer;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.ChatMessage;
 import org.openrsc.server.model.MenuHandler;
@@ -16,7 +17,7 @@ public class Guildmaster implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(17);
+		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 		
 		
 		if(q != null) {
@@ -60,7 +61,7 @@ public class Guildmaster implements NpcHandler {
 		final String[] messages6 = {"I have a friend called Oziach who lives by the cliffs", "He has a supply of rune plate mail", "He may sell you one if you're lucky", "He can be a little strange sometimes though"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages6) {
 			public void finished() {
-				owner.addQuest(17, 2);
+				owner.addQuest(Config.Quests.DRAGON_SLAYER, 2);
 				owner.setBusy(false);
 				npc.unblock();
 			}

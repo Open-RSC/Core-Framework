@@ -5,6 +5,7 @@
 //scripted by Mr. Zain
 
 package org.openrsc.server.npchandler.Monks_Friend;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,7 +23,7 @@ public class Brother_Cedric implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(27);
+		Quest q = owner.getQuest(Config.Quests.MONKS_FRIEND);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -92,7 +93,7 @@ public class Brother_Cedric implements NpcHandler {
 							public void finished() {
 								World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Oh dear, oh dear", "I knew I had to do something", "Pleashhh, find me some water", "Once I'm sober I'll help you..", "..take the wine back."}) {
 									public void finished() {
-										owner.incQuestCompletionStage(27);
+										owner.incQuestCompletionStage(Config.Quests.MONKS_FRIEND);
 										owner.setBusy(false);
 										npc.unblock();
 									}	
@@ -133,7 +134,7 @@ public class Brother_Cedric implements NpcHandler {
 											owner.sendMessage("Brother Cedric drinks the water");
 											World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"aah, that's better"}) {
 												public void finished() {
-													owner.incQuestCompletionStage(27);
+													owner.incQuestCompletionStage(Config.Quests.MONKS_FRIEND);
 													owner.sendMessage("You throw the excess water over brother Cedric");
 													World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Now I just need to fix this cart..", "..and we can go party", "Could you help?"}) {
 														public void finished() {
@@ -198,7 +199,7 @@ public class Brother_Cedric implements NpcHandler {
 						public void finished() {
 							owner.getInventory().remove(14, 1);
 							owner.sendInventory();
-							owner.incQuestCompletionStage(27);
+							owner.incQuestCompletionStage(Config.Quests.MONKS_FRIEND);
 							World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Well done, now I'll fix this cart", "You head back to Brother Omad", "Tell him I'm on my way", "I won't be long"}) {
 								public void finished() {
 									owner.setBusy(false);

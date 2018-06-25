@@ -3,6 +3,7 @@
 */
 //npc ID 450
 package org.openrsc.server.npchandler.Plague_City;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -21,7 +22,7 @@ public class Alrena implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		if(q != null) 
 		{
 			if(q.finished())
@@ -214,7 +215,7 @@ public class Alrena implements NpcHandler {
 															owner.sendMessage("Alrenda gives you the mask");
 															owner.getInventory().add(766, 1);
 															owner.sendInventory();
-															owner.incQuestCompletionStage(35);
+															owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 															World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"While you two are digging I'll make a spare mask", "I'll hide it in the cupboard incase the mourners come in"})
 															{
 																public void finished() 

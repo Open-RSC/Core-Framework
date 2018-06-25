@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.The_Cooks_Assistant;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
@@ -21,7 +22,7 @@ public class Cook implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(2);
+		Quest q = owner.getQuest(Config.Quests.COOKS_ASSISTANT);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				final String[] messages7 = {"Hello friend, how is the adventuring going?"};
@@ -101,7 +102,7 @@ public class Cook implements NpcHandler {
 															owner.sendInventory();
 															World.getDelayedEventHandler().add(new SingleEvent(owner,1000) {
 																public void action() {
-																	owner.finishQuest(2);
+																	owner.finishQuest(Config.Quests.COOKS_ASSISTANT);
 																	owner.sendMessage("Well done. You have completed the cook's assistant quest");
 																	owner.sendMessage("@gre@You just advanced 1 quest point!");
 																	owner.incQuestExp(7, 180);
@@ -300,7 +301,7 @@ public class Cook implements NpcHandler {
 										final String[] messages5 = {"Oh thank you, thank you", "I need milk, eggs, and flour", "I'd be very grateful if you can get them to me"};
 										World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages5) {
 											public void finished() {
-												owner.addQuest(2, 1);
+												owner.addQuest(Config.Quests.COOKS_ASSISTANT, 1);
 												owner.setBusy(false);
 												npc.unblock();
 											}

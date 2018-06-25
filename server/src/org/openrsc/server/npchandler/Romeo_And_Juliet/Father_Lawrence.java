@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Romeo_And_Juliet;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.ChatMessage;
@@ -18,7 +19,7 @@ public class Father_Lawrence implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(11);
+		final Quest q = owner.getQuest(Config.Quests.ROMEO_AND_JULIET);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				questFinished(npc, owner);
@@ -108,7 +109,7 @@ public class Father_Lawrence implements NpcHandler {
 							public void finished() {
 								World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"I know just the thing.  A potion to make her appear dead", "Then Romeo can collect her from the crypt", "Go to the Apothecary, tell him I sent you", "You need some Cadava Potion"}) {
 									public void finished() {
-										owner.incQuestCompletionStage(11);
+										owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
 										owner.setBusy(false);
 										npc.unblock();
 									}

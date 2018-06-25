@@ -5,6 +5,7 @@ script put together by Mr.Zain
 */
 package org.openrsc.server.npchandler.Lost_City;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -24,7 +25,7 @@ public class Lost_City_Warrior implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(19);
+		Quest q = owner.getQuest(Config.Quests.LOST_CITY);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -214,7 +215,7 @@ public class Lost_City_Warrior implements NpcHandler {
 											owner.sendMessage("The warrior starts sobbing.");
 											owner.setBusy(false);
 											npc.unblock();
-											owner.incQuestCompletionStage(19);
+											owner.incQuestCompletionStage(Config.Quests.LOST_CITY);
 											}
 										});
 									}
@@ -241,9 +242,9 @@ public class Lost_City_Warrior implements NpcHandler {
 											owner.sendMessage("The warrior starts sobbing.");
 											owner.setBusy(false);
 											npc.unblock();
-											owner.addQuest(19, 2);
-											owner.incQuestCompletionStage(19);
-											owner.incQuestCompletionStage(19); 
+											owner.addQuest(Config.Quests.LOST_CITY, 2);
+											owner.incQuestCompletionStage(Config.Quests.LOST_CITY);
+											owner.incQuestCompletionStage(Config.Quests.LOST_CITY); 
 											}
 										});
 									}

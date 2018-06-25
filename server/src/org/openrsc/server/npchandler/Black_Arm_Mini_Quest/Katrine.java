@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Black_Arm_Mini_Quest;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -28,9 +29,9 @@ public class Katrine implements NpcHandler
 		owner.setBusy(true);
 		
 		
-		Quest phoenix = owner.getQuest(52);
-		Quest blackarm = owner.getQuest(51);
-		Quest heroesQuest = owner.getQuest(20);
+		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+		Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
+		Quest heroesQuest = owner.getQuest(Config.Quests.HEROS_QUEST);
 		
 		if (heroesQuest == null) 
 		{
@@ -295,7 +296,7 @@ public class Katrine implements NpcHandler
 								owner.getInventory().remove(585, 1);
 								owner.getInventory().add(586, 1);
 								owner.sendInventory();	
-								owner.incQuestCompletionStage(20);
+								owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -312,7 +313,7 @@ public class Katrine implements NpcHandler
 		{
 			public void finished() 
 			{
-				owner.incQuestCompletionStage(20);
+				owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -445,7 +446,7 @@ public class Katrine implements NpcHandler
 								owner.getInventory().remove(new InvItem(59,1));
 								owner.getInventory().remove(new InvItem(59,1));
 								owner.sendInventory();
-								owner.finishQuest(51);
+								owner.finishQuest(Config.Quests.JOIN_BLACKARM_GANG);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -718,7 +719,7 @@ public class Katrine implements NpcHandler
 	private void noProblem(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Great!", "You'll find the Phoenix gang's weapon stash just next to a temple", "due east of here."}) {
 			public void finished() {
-				owner.incQuestCompletionStage(51);
+				owner.incQuestCompletionStage(Config.Quests.JOIN_BLACKARM_GANG);
 				owner.setBusy(false);
 				npc.unblock();
 			}

@@ -3,6 +3,7 @@
 */
 //npc ID 486
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
@@ -19,8 +20,8 @@ public class Jerico implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
-		Quest plagueCity = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		
 		if(q != null) 
 		{
@@ -95,7 +96,7 @@ public class Jerico implements NpcHandler
 										{
 											public void finished()
 											{
-												owner.incQuestCompletionStage(38);
+												owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
 												owner.setBusy(false);
 												npc.unblock();
 											}

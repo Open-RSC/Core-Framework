@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
@@ -18,7 +19,7 @@ public class Guide implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -87,8 +88,8 @@ public class Guide implements NpcHandler {
 	private void tellMe(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"I suggest you go through the door now", "There are several guides and advisors on the island", "Speak to them", "They will teach you about the various aspects of the game"}) {
 			public void finished() {
-				owner.addQuest(100, 0);
-				owner.incQuestCompletionStage(100);
+				owner.addQuest(Config.Quests.TUTORIAL_ISLAND, 0);
+				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

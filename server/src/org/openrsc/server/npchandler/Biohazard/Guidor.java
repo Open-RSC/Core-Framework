@@ -3,6 +3,7 @@
 */
 //npc ID 508
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,8 +23,8 @@ public class Guidor implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
-		Quest plagueCity = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		
 		if(q != null) 
 		{
@@ -33,7 +34,7 @@ public class Guidor implements NpcHandler
 			}
 			else 
 			{
-				if(owner.getQuest(38) != null && owner.getQuest(38).getStage() >= 7)
+				if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 7)
 				{
 					switch(q.getStage())
 					{
@@ -179,7 +180,7 @@ public class Guidor implements NpcHandler
 																													public void action()
 																													{
 																														owner.sendMessage("You give him the vials, the sample and the touch paper");
-																														owner.incQuestCompletionStage(38);
+																														owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
 																														owner.getInventory().remove(809, 1);
 																														owner.getInventory().remove(810, 1);
 																														owner.getInventory().remove(811, 1);
@@ -364,7 +365,7 @@ public class Guidor implements NpcHandler
 						{
 							public void finished()
 							{
-								owner.incQuestCompletionStage(38);
+								owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
 								owner.setBusy(false);
 								npc.unblock();
 							}

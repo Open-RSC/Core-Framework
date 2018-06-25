@@ -2232,6 +2232,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void drawQuestMenu() {
 		questMenu.resetListTextCount(questMenuHandle);
 		int ctr = 0;
+        questMenu.drawMenuListText(questMenuHandle, ctr, "@whi@Quest-list (green=completed)");
+        ctr++;
 		for (String s : quests) {
 			questMenu.drawMenuListText(questMenuHandle, ctr, s);
 			ctr++;
@@ -11476,7 +11478,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int anInt986;
 	public BufferedImage sleepy;
 	public Sprite sleepSprite;
-	public String[] quests = { "@whi@Quest-list (green=completed)", "@red@Black knight's fortress",
+	public String[] quests = { "@red@Black knight's fortress",
 			"@red@Cook's assistant", "@red@Demon slayer", "@red@Doric's quest", "@red@The restless ghost",
 			"@red@Goblin diplomacy", "@red@Ernest the chicken", "@red@Imp catcher", "@red@Pirate's treasure",
 			"@red@Prince Ali rescue", "@red@Romeo & Juliet", "@red@Sheep shearer", "@red@Shield of Arrav",

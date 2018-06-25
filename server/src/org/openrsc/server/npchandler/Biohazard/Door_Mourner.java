@@ -3,6 +3,7 @@
 */
 //npc ID 451
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,7 +23,7 @@ public class Door_Mourner implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
 		
 		if(q != null) 
 		{
@@ -34,7 +35,7 @@ public class Door_Mourner implements NpcHandler
 			}
 			else 
 			{
-				if(owner.getQuest(38) != null && owner.getQuest(38).getStage() >= 3 && owner.getQuest(38).getStage() <= 5)
+				if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 3 && owner.getQuest(Config.Quests.BIOHAZARD).getStage() <= 5)
 				{
 					switch(q.getStage())
 					{

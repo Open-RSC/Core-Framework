@@ -6,6 +6,7 @@
 
 package org.openrsc.server.npchandler.Dragon_Slayer;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -20,7 +21,7 @@ public class Oracle implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(17);
+		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 		if(q != null) {
 			if(q.finished()) {
 				knowledge(npc, owner);

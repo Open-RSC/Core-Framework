@@ -5,6 +5,7 @@
 //scripted by Mr. Zain
 
 package org.openrsc.server.npchandler.Tree_Gnome_Village;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
@@ -19,7 +20,7 @@ public class Tracker_3 implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(32);
+		Quest q = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
