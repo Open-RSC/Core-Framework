@@ -4,6 +4,7 @@
 script put together by Mr.Zain
 */
 package org.openrsc.server.npchandler;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.ShortEvent;
 import org.openrsc.server.event.SingleEvent;
@@ -28,7 +29,7 @@ public class Gerrant implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(20);
+		Quest q = owner.getQuest(Config.Quests.HEROS_QUEST);
 		
 		if(q != null) 
 		{

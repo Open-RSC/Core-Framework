@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Prince_Ali_Rescue;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.InvItem;
@@ -16,7 +17,7 @@ public class PrinceAli implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(10);
+		Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
 		if(q != null) {
 			if(q.getStage() < 4) {
 				error(npc, owner);
@@ -103,7 +104,7 @@ public class PrinceAli implements NpcHandler {
 										World.getDelayedEventHandler().add(new DelayedQuestChat(owner, girlyPrince, messages4) {
 											public void finished() {
 												girlyPrince.remove();
-												owner.incQuestCompletionStage(10);
+												owner.incQuestCompletionStage(Config.Quests.PRINCE_ALI_RESCUE);
 												owner.sendMessage("The prince has escaped, well done!");
 												owner.sendMessage("You are now a friend of Al kharid");
 												owner.sendMessage("And may pass through the Al Kharid toll gate for free");

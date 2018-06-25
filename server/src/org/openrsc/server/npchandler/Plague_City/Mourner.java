@@ -3,6 +3,7 @@
 */
 //npc ID 444
 package org.openrsc.server.npchandler.Plague_City;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -23,7 +24,7 @@ public class Mourner implements NpcHandler
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		if(q != null) 
 		{
 			if(q.finished()) 

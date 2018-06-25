@@ -9,6 +9,7 @@ import org.openrsc.server.event.ShortEvent;
 import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.*;
 
 public class InvUseOnNpc implements PacketHandler {
@@ -241,7 +242,7 @@ public class InvUseOnNpc implements PacketHandler {
 							
 						case 123:	//Lady Keli - tie her up.  Kinky.
 							if (item.getID() == 237) {
-								Quest q = owner.getQuest(10);
+								Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
 								if(q != null) {
 									switch(q.getStage()) {
 										case 0:
@@ -252,7 +253,7 @@ public class InvUseOnNpc implements PacketHandler {
 										case 3:
 												owner.sendMessage("You overpower Keli, tie her up, and put her in a cupboard");
 												affectedNpc.remove();
-												owner.incQuestCompletionStage(10);
+												owner.incQuestCompletionStage(Config.Quests.PRINCE_ALI_RESCUE);
 												break;
 										case 4:
 												owner.sendMessage("You overpower Keli, tie her up, and put her in a cupboard");

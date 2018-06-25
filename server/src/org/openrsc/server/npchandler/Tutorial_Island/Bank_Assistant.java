@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
@@ -13,7 +14,7 @@ public class Bank_Assistant implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -50,7 +51,7 @@ public class Bank_Assistant implements NpcHandler {
 							public void finished() {
 								owner.setAccessingBank(true);
 								owner.showBank();
-								owner.incQuestCompletionStage(100);
+								owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 								owner.setBusy(false);
 								npc.unblock();
 							}	

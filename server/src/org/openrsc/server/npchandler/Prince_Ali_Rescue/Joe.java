@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Prince_Ali_Rescue;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
@@ -17,7 +18,7 @@ public class Joe implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(10);
+		Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -443,7 +444,7 @@ public class Joe implements NpcHandler {
 																World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages17) {
 																	public void finished() {
 																		owner.sendMessage("The guard is drunk, and no longer a problem");
-																		owner.incQuestCompletionStage(10);
+																		owner.incQuestCompletionStage(Config.Quests.PRINCE_ALI_RESCUE);
 																		owner.setBusy(false);
 																		npc.unblock();
 																	}

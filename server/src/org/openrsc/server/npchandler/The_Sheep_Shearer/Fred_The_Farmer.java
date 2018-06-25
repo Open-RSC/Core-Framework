@@ -4,6 +4,7 @@
 package org.openrsc.server.npchandler.The_Sheep_Shearer;
 
 // Converting this monster
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
@@ -23,7 +24,7 @@ public class Fred_The_Farmer implements NpcHandler {
 		final String[] messages75 = {"Ok I'll see you when you have some wool"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages75) {
 			public void finished() {
-				owner.addQuest(12, 1);
+				owner.addQuest(Config.Quests.SHEEP_SHEARER, 1);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -209,7 +210,7 @@ public class Fred_The_Farmer implements NpcHandler {
 								owner.sendInventory();
 								owner.incQuestExp(12, 580);
 								owner.sendStat(12);
-								owner.finishQuest(12);
+								owner.finishQuest(Config.Quests.SHEEP_SHEARER);
 								owner.sendMessage("@gre@You have gained 1 quest point!");
 								Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Sheep Shearer</span> quest!"));
 							}
@@ -291,7 +292,7 @@ public class Fred_The_Farmer implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(12);
+		Quest q = owner.getQuest(Config.Quests.SHEEP_SHEARER);
 		if(q != null) {
 			if(q.finished()) {
 					questFinished(npc, owner);

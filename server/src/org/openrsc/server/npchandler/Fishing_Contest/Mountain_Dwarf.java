@@ -5,6 +5,7 @@
 //scripted by Mr. Zain
 
 package org.openrsc.server.npchandler.Fishing_Contest;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
@@ -25,7 +26,7 @@ public class Mountain_Dwarf implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(26);
+		Quest q = owner.getQuest(Config.Quests.FISHING_CONTEST);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -249,8 +250,8 @@ public class Mountain_Dwarf implements NpcHandler {
 			owner.sendMessage("The dwarf gives you a competition pass");
 			owner.getInventory().add(719, 1);
 			owner.sendInventory();
-			owner.addQuest(26, 1);
-			owner.incQuestCompletionStage(26);
+			owner.addQuest(Config.Quests.FISHING_CONTEST, 1);
+			owner.incQuestCompletionStage(Config.Quests.FISHING_CONTEST);
 			owner.setBusy(false);
 			npc.unblock();
 			}
@@ -328,7 +329,7 @@ public class Mountain_Dwarf implements NpcHandler {
 											owner.sendMessage("You give the trophy to the dwarf");
 											World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Okay we will let you in now"}) {
 												public void finished() {
-													owner.finishQuest(26);
+													owner.finishQuest(Config.Quests.FISHING_CONTEST);
 													owner.incQuestExp(10, 3225);
 													owner.sendStat(10);
 													owner.sendMessage("@gre@You have completed the Fishing Contest quest!");

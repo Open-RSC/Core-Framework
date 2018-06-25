@@ -1,6 +1,7 @@
 package org.openrsc.server.event;
 
 import java.util.ArrayList;
+import org.openrsc.server.Config;
 
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
@@ -98,7 +99,7 @@ public class VampireFightEvent extends DelayedEvent implements IFightEvent {
 				attacker.resetCombat(CombatState.WON);
 				opponent.resetCombat(CombatState.LOST);
 			} else {
-				Quest q = owner.getQuest(15);
+				Quest q = owner.getQuest(Config.Quests.VAMPIRE_SLAYER);
 				if(!owner.getInventory().wielding(217) || owner.getInventory().countId(168) == 0 || q == null) {
 					owner.sendMessage("The vampire seems to regenerate");
 					opponent.setHits(opponent.getHits() + 20);
@@ -115,7 +116,7 @@ public class VampireFightEvent extends DelayedEvent implements IFightEvent {
 						owner.incQuestExp(0, 4000);
 						owner.sendStat(0);
 						owner.sendMessage("@gre@You have gained 3 quest points!");
-						owner.finishQuest(15);
+						owner.finishQuest(Config.Quests.VAMPIRE_SLAYER);
 						Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Vampire Slayer</span> quest!"));
 					}
 				}

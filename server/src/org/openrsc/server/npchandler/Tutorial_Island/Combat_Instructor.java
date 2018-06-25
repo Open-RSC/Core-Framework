@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.ChatMessage;
@@ -17,7 +18,7 @@ public class Combat_Instructor implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -72,7 +73,7 @@ public class Combat_Instructor implements NpcHandler {
 				owner.sendMessage("The instructor gives you a sword and shield");
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"look after these well", "These items will now have appeared in your inventory", "You can access them by selecting the bag icon in the menu bar", "which can be found in the top right hand corner of the screen", "To weild your weapon and shield left click on them within your inventory", "their box will go red to show you are wearing them"}) {
 					public void finished() {
-						owner.incQuestCompletionStage(100);
+						owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 						owner.sendMessage("When you have done this speak to the combat instructor again");
 						owner.setBusy(false);
 						npc.unblock();
@@ -98,7 +99,7 @@ public class Combat_Instructor implements NpcHandler {
 	private void combatChatC(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Well done you're a born fighter", "As you kill things", "your combat experience will go up", "this experience will slowly cause you to get tougher", "eventually you will be able to take on stronger enemies", "Such as those found in dungeons", "Now continue to the building to the northeast"}, true) {
 			public void finished() {
-				owner.incQuestCompletionStage(100);
+				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

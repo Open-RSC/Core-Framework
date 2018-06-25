@@ -3,6 +3,7 @@
 */
 //npc ID 454
 package org.openrsc.server.npchandler.Plague_City;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,7 +23,7 @@ public class Bravek implements NpcHandler
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		if(q != null) 
 		{
 			if(q.finished()) 
@@ -189,7 +190,7 @@ public class Bravek implements NpcHandler
 			public void finished()
 			{
 				owner.sendMessage("Bravek hands you a tatty piece of paper");
-				owner.incQuestCompletionStage(35);
+				owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 				owner.getInventory().add(781, 1);
 				owner.sendInventory();
 				owner.setBusy(false);
@@ -216,7 +217,7 @@ public class Bravek implements NpcHandler
 								public void action()
 								{
 									owner.sendMessage("Bravek gulps down the foul looking liquid");
-									owner.incQuestCompletionStage(35);
+									owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 									owner.getInventory().remove(771, 1);
 									owner.sendInventory();
 									World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"grruurgh", "Ooh that's much better", "Thanks that's the clearest my head has felt in a month", "Ah now what was it you wanted me to do for you?"})
@@ -528,7 +529,7 @@ public class Bravek implements NpcHandler
 				{
 					public void finished()
 					{
-						owner.incQuestCompletionStage(35);
+						owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 						owner.sendMessage("Bravek hands you a warrant");
 						owner.getInventory().add(775, 1);
 						owner.sendInventory();

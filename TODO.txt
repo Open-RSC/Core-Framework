@@ -1,4 +1,3 @@
-Export to database folder my current database changes
 World definitions that decide if the world is F2P or P2P. Need to implement disabling of P2P element if F2P world. Later on, create additional world types that have different rules like deathmatch anywhere (before wildy)
 Fix sound for client. jre9 doesn't include the audio player. Might be we need to package the library with the client.
 Update landscape from latest client. Reimplement RSCE jail.
@@ -9,17 +8,11 @@ Dialog requests:
 Casting a god spell before completion of the mage arena outside of the mage arena.
 Message for using disk of returning
 
-Quest/Replay Requests:
-mage arena
-gnome ball
-fishing trawler
-Gertrude's Cat, Murder Mystery, Digsite, Grand Tree, Watchtower, Shilo Village, Underground Pass, Observatory Quest, Sea Slug, Waterfall Quest, Temple of Ikov, Tribal Totem, Family Crest, The Hazel Cult, The Holy Grail, Scorpion Catcher, Dwarf Canon, Tourist Trap, Fight Arena, Witch's House
-
 Misc:
 When exactly is Charge spell acquired in the mage arena miniquest?
 
 -------------------
--  Game Changes   -
+-  Core Changes   -
 -------------------
 
 - remove event as a staff type ... re-evaluate existing events
@@ -30,7 +23,69 @@ When exactly is Charge spell acquired in the mage arena miniquest?
 
 - remove teleport pools
 
-- ensure thrander messages are right
+- change captcha to a generator ... like WolfKingdomReborn
+
+- Duke of Lumbridge should only have dialog option for anti dragon shield if the player does not have one in inventory.
+
+- Change stat numbers in function calls to an enum for better readability.
+
+- Quests still give exp at 100 fatigue. Player.increaseQuestXp ... Plague City quest completion seems to get it the closest to right.
+
+- Bank note item ids should be 10k + original item id. Period.
+
+- Remove all references to RSCU/RSCUnity/RSC Unity
+
+
+
+---------------------
+- Messaging Changes -
+---------------------
+
+- dlong can not wear
+you have not earned the right to wear this yet
+you need to complete the Lost city of zenaris quest
+[attack level]
+
+- daxe can not wear
+you have not earned the right to wear this yet
+you need to complete the Hero's guild entry quest
+[attack level]
+
+- dsq can not wear:
+you have not earned the right to wear this yet
+you need to complete the legend's guild quest
+[defense level]
+
+
+
+---------------------
+-  Trading Changes  -
+---------------------
+
+
+- Messages on staking/trading non-tradeables
+This object cannot be traded with other players
+This object cannot be added to a duel offer
+
+- Selling Non-tradeables to a shop
+This object can't be sold in shops
+
+- Implement non tradeable can't sell to shop, can't offer/show in trade/stake
+- Should be able to drop non-tradeables, but other players can not see it (DropHandler.java)
+items.txt has non-tradeable item list
+- Dropping items is only visible for the player who dropped it for ??? seconds
+New field in def_item table
+Load into items.dat through ItemExporter
+Load on world load new field
+DropHandler.java
+TradeHandler.java
+DuelHandler.java
+AuctionHouse
+
+
+---------------------
+-   Rares Changes   -
+---------------------
 
 
 - Thesallia regives scythe/bunny ears ... dialog option
@@ -50,21 +105,6 @@ Player: I have lost my scythe can I get another please?
 Thessalia: Ohh you poor dear, I have another here
 [White] Thessalia gives you a new scythe
 
-- dlong can not wear
-you have not earned the right to wear this yet
-you need to complete the Lost city of zenaris quest
-[attack level]
-
-- daxe can not wear
-you have not earned the right to wear this yet
-you need to complete the Hero's guild entry quest
-[attack level]
-
-- dsq can not wear:
-you have not earned the right to wear this yet
-you need to complete the legend's guild quest
-[defense level]
-
 - Picking up a second pair of bunny ears:
 You don't need another set of bunny ears
 You only have one head
@@ -73,37 +113,18 @@ You only have one head
 You don't need another scythe
 You already have one
 
-- Messages on staking/trading non-tradeables
-This object cannot be traded with other players
-This object cannot be added to a duel offer
-
-- Telekenetic grabbable items
+- Telekenetic grabbable items (seems to be just bunny ears and scythe)
 I can't use telekeneic grab on this object
 Seems to only be bunny ears and scythe
-
-- Selling Non-tradeables to a shop
-This object can't be sold in shops
-
-- Implement non tradeable can't sell to shop, can't offer/show in trade/stake
-- Should be able to drop non-tradeables, but other players can not see it (DropHandler.java)
-items.txt has non-tradeable item list
-- Dropping items is only visible for the player who dropped it for ??? seconds
-New field in def_item table
-Load into items.dat through ItemExporter
-Load on world load new field
-DropHandler.java
-TradeHandler.java
-DuelHandler.java
-AuctionHouse
-
 
 Drinking half wine:
 same as normal wine ... needs to be implemented
 
 Eating a pumpkin:
+You eat the pumpkin
 
 Eating an easter egg:
-
+You eat the easter egg
 
 - Christmas Cracker pull messages ... also has cracker above the puller's head ... prize is party hat and silver ore ... other side gets a random item
 You pull a christmas cracker
@@ -111,7 +132,18 @@ You get the prize from the cracker
 You pull a christmas cracker
 The person you pull the cracker with gets the prize
 
+
+
+---------------------
+-   Quest Changes   -
+---------------------
+
+
 - unimplemented quests: Gertrude's Cat, Murder Mystery, Digsite, Grand Tree, Watchtower, Shilo Village, Underground Pass, Observatory Quest, Sea Slug, Waterfall Quest, Temple of Ikov, Tribal Totem, Family Crest, The Hazel Cult, The Holy Grail, Scorpion Catcher, Dwarf Canon, Tourist Trap, Fight Arena, Witch's House
+
+- Most existing quests do not reward the requisite exp.
+
+- Gerrant does nothing in the Heros Quest. Is this correct? If not implement needed behaviour
 
 - miniquests / minigames
 implement mage arena ... messages for this ... mage arena portal exact goto location
@@ -124,8 +156,6 @@ When can you cast charge?
 it is not permitted to set up a cannon...
 ...this close to the dwarf black guard
 
-- Remove all references to RSCU/RSCUnity/RSC Unity
-
 -------------------
 - Command Changes -
 -------------------
@@ -136,23 +166,25 @@ CommandHandler.java
 -- Show commands syntax when not enough arguments supplied instead of silent fail.
 -- Show character edit/design menu ... change appearance
 -- Examine commands and see if they work for how I want. Modify as needed.
--- Can not use stuck in tutorial island.
+-- Only staff can use stuck.
 -- Skip Tutorial command teleports to Lumbridge. Examine the free items.
 -- Refreshwoodcut needs to be fixed
 -- teleport to player command
 -- command to go invulnerable ... accepts user .. if no user then current player ... mod+ only
--- refresh other defs ... relaod whole world?
+-- refresh other defs ... reload whole world?
+-- pmod+ can temporarily silent mute a player. Log this action!!!
 
 -------------------
 - Low Pri Changes -
 -------------------
 
-- Invulnerable players should render differently. Remove from list of targets. Render names differently in list of targets.
+- Invulnerable players should render differently. Remove from list of targets OR render names differently in list of targets.
 
 - Password does not replace : character (Client: DataOperations.java Function: addCharacters)
 
 - Completely remove runecrafting. Remove item definitions, and runecrafting altar object definitions, and code associated thereof.
 
+- Player.isBlackarm and Player.isPhoenix are both not used. Along with the field in the DB. Remove them OR change quest checking to check the player instead. Would also need to save blackarm/phoenix state.
 
 -------------------
 -      Subs       -

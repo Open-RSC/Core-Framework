@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
@@ -18,7 +19,7 @@ public class Boatman implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -78,7 +79,7 @@ public class Boatman implements NpcHandler {
 	private void readyGo(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Let's go then"}) {
 			public void finished() {
-				owner.finishQuest(100);
+				owner.finishQuest(Config.Quests.TUTORIAL_ISLAND);
 				owner.sendMessage("You have successfully completed the tutorial.");
 				owner.teleport(120, 648, false);
 				owner.setBusy(false);

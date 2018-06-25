@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
@@ -18,7 +19,7 @@ public class Wilderness_Guide implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -139,7 +140,7 @@ public class Wilderness_Guide implements NpcHandler {
 	private void whereWild(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Once you get into the main playing area head north", "then you will eventually reach the wilderness", "The deeper you venture into the wilderness", "The greater the level range of players who can attack you", "So if you go in really deep", "players much stronger than you can attack you", "Now proceed through the next door"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(100);
+				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -153,7 +154,7 @@ public class Wilderness_Guide implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Once you get into the main playing area head north", "then you will eventually reach the wilderness", "The deeper you venture into the wilderness", "the greater the level range of players who can attack you", "So if you go in really deep", "players much stronger than you can attack you", "Now proceed through the next door"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(100);
+								owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 								owner.setBusy(false);
 								npc.unblock();
 							}

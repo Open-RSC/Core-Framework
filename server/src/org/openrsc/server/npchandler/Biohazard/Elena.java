@@ -3,6 +3,7 @@
 */
 //npc ID 483
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -23,8 +24,8 @@ public class Elena implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
-		Quest plagueCity = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		
 		if(q == null)
 		{
@@ -187,8 +188,8 @@ public class Elena implements NpcHandler
 						{
 							public void finished()
 							{
-								owner.addQuest(38, 3);
-								owner.incQuestCompletionStage(38);
+								owner.addQuest(Config.Quests.BIOHAZARD, 3);
+								owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
 								owner.setBusy(false);
 								npc.unblock();	
 							}
@@ -277,7 +278,7 @@ public class Elena implements NpcHandler
 																		{
 																			public void finished()
 																			{
-																				owner.incQuestCompletionStage(38); //quest stage 6
+																				owner.incQuestCompletionStage(Config.Quests.BIOHAZARD); //quest stage 6
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}
@@ -418,7 +419,7 @@ public class Elena implements NpcHandler
 																		{
 																			public void finished()
 																			{
-																				owner.incQuestCompletionStage(38); //quest stage 10
+																				owner.incQuestCompletionStage(Config.Quests.BIOHAZARD); //quest stage 10
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}

@@ -3,6 +3,7 @@
 */
 //npc ID 487
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -23,8 +24,8 @@ public class Kilron implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
-		Quest plagueCity = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		
 		if(q != null) 
 		{
@@ -36,7 +37,7 @@ public class Kilron implements NpcHandler
 			}
 			else 
 			{
-				if(owner.getQuest(38) != null && owner.getQuest(38).getStage() >= 3 && owner.getQuest(38).getStage() <= 6)
+				if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 3 && owner.getQuest(Config.Quests.BIOHAZARD).getStage() <= 6)
 				{
 					switch(q.getStage())
 					{

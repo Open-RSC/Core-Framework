@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Pirates_Treasure;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
@@ -80,7 +81,7 @@ public class Redbeard_Frank implements NpcHandler {
 													owner.sendMessage("Frank hands you a key");
 													owner.getInventory().add(new InvItem(382, 1));
 													owner.sendInventory();
-													owner.incQuestCompletionStage(9);
+													owner.incQuestCompletionStage(Config.Quests.PIRATES_TREASURE);
 													final String[] messages2 = {"This is Hector's key", "I believe it opens his chest", "In his old room in the blue moon inn in Varrock", "With any luck his treasure will be in there"};
 													World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages2) {
 														public void finished() {
@@ -173,7 +174,7 @@ public class Redbeard_Frank implements NpcHandler {
 												final String[] messages3 = {"Well for example if you can get me a bottle of rum", "Not just any rum mind", "I'd like some rum brewed on Karamja island", "There's no rum like KAramja rum"};
 												World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages3) {
 													public void finished() {
-														owner.addQuest(9, 2);
+														owner.addQuest(Config.Quests.PIRATES_TREASURE, 2);
 														owner.setBusy(false);
 														npc.unblock();
 													}
@@ -211,7 +212,7 @@ public class Redbeard_Frank implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(9);
+		final Quest q = owner.getQuest(Config.Quests.PIRATES_TREASURE);
 		final String[] messages0 = {"Arrrh Matey"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages0, true) {
 			public void finished() {

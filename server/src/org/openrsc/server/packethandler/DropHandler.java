@@ -140,7 +140,7 @@ public class DropHandler implements PacketHandler {
 					
 							if(owner.getX() == 448 && owner.getY() == 435)
 							{
-								Quest q22 = owner.getQuest(22);
+								Quest q22 = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
 								if (q22 != null) {
 									if (q22.getStage() == 4) {
 									if(item.getID() == 604 && owner.getInventory().countId(602) > 0)

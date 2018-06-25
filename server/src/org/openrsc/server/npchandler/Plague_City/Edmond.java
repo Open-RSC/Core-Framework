@@ -3,6 +3,7 @@
 */
 //npc ID 437
 package org.openrsc.server.npchandler.Plague_City;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
@@ -25,7 +26,7 @@ public class Edmond implements NpcHandler
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		if(q != null) 
 		{
 			if(q.finished()) 
@@ -288,7 +289,7 @@ public class Edmond implements NpcHandler
 										public void action()
 										{
 											owner.sendMessage("You hear a clunk as you both fly backwards");
-											owner.incQuestCompletionStage(35);
+											owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 											World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"that's done the job", "remember always wear the gasmask", "otherwise you'll die over there for certain", "and please bring my elena back safe and sound"}) 
 											{
 												public void finished() 
@@ -343,7 +344,7 @@ public class Edmond implements NpcHandler
 		{
 			public void finished() 
 			{
-				owner.finishQuest(35);
+				owner.finishQuest(Config.Quests.PLAGUE_CITY);
 				owner.sendMessage("@gre@Well done you have completed the Plague City quest!");
 				owner.sendMessage("@gre@You have been awarded 1 quest points!");
 				owner.incQuestExp(14, 175 + 75 * owner.getMaxStat(14));
@@ -502,8 +503,8 @@ public class Edmond implements NpcHandler
 								{
 									public void finished()
 									{
-										owner.addQuest(35, 1);	
-										owner.incQuestCompletionStage(35);
+										owner.addQuest(Config.Quests.PLAGUE_CITY, 1);	
+										owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 										owner.setBusy(false);
 										npc.unblock();
 									}	

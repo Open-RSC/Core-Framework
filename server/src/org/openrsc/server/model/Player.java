@@ -676,7 +676,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			ladyPatches++;
 		if (ladyPatches > 2 && holeID == 226) {
 			sendMessage("The hole has been completely patched");
-			Quest q = getQuest(17);
+			Quest q = getQuest(Config.Quests.DRAGON_SLAYER);
 			if (q != null) {
 				if (q.getStage() == 3)
 					this.teleport(258, 3494, false);
@@ -685,7 +685,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			}
 		} else if(ladyPatches > 2 && holeID == 232) {
 			sendMessage("The hole has been completely patched");
-			Quest q = getQuest(17);
+			Quest q = getQuest(Config.Quests.DRAGON_SLAYER);
 			if (q != null) {
 				if (q.getStage() == 3)
 					this.teleport(258, 3494, false);

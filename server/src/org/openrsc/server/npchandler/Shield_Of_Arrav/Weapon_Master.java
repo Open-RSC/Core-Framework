@@ -1,5 +1,6 @@
 package org.openrsc.server.npchandler.Shield_Of_Arrav;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -12,7 +13,7 @@ import org.openrsc.server.npchandler.NpcHandler;
 public class Weapon_Master implements NpcHandler {
 	@Override
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
-		Quest phoenix = owner.getQuest(52);
+		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
 		if(phoenix != null) {
 			if(phoenix.finished()) {
 				final String[] messages0 = {"Hello"};

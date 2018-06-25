@@ -7,6 +7,7 @@ import org.openrsc.server.util.Formulae;
 import org.openrsc.server.states.CombatState;
 
 import java.util.ArrayList;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.ChatMessage;
 import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Mob;
@@ -114,8 +115,8 @@ public class DelrithFightEvent extends DelayedEvent implements IFightEvent{
 													owner.sendMessage("Delrith is sucked back into the dark dimension from which he came");
 													owner.sendMessage("You have completed the demonslayer quest");
 													owner.sendMessage("@gre@You have gained 3 quest points!");
-													owner.finishQuest(3);
-													owner.incQuestCompletionStage(3);
+													owner.finishQuest(Config.Quests.DEMON_SLAYER);
+													owner.incQuestCompletionStage(Config.Quests.DEMON_SLAYER);
 													Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Demon Slayer</span> quest!"));
 												}
 											});
