@@ -166,11 +166,11 @@ implements PacketHandler
 					player.sendMessage("The shop is currently full!");
 					return;
 				}
-				if (def.getName().equalsIgnoreCase("Swordfish") || def.getName().equalsIgnoreCase("Lobster") || def.getName().equalsIgnoreCase("Strength Potion") || def.getName().equalsIgnoreCase("Raw Lobster") || def.getName().equalsIgnoreCase("Raw Swordfish"))
+				/*if (def.getName().equalsIgnoreCase("Swordfish") || def.getName().equalsIgnoreCase("Lobster") || def.getName().equalsIgnoreCase("Strength Potion") || def.getName().equalsIgnoreCase("Raw Lobster") || def.getName().equalsIgnoreCase("Raw Swordfish"))
 				{
 					player.sendMessage("The shop is not interested in buying this item.");
 					return;
-				}
+				}*/
 
 				if (def.isStackable()) {
 					InvItem playerItem = new InvItem(id, amount);

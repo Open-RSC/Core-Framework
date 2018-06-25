@@ -94,10 +94,10 @@ public class InvActionHandler implements PacketHandler {
 							player.setStatus(Action.READING_BOOK);
 							World.getDelayedEventHandler().add(new DelayedGenericMessage(player, new String[] {"The shield of Arrav", "By a.R.Wright", "Arrav is probably the best known hero of the 4th age.", "One surviving artifact from the 4th age is a fabulous shield.", "This shield is believed to have once belonged to Arrav", "And is now indeed known as the shield of Arrav", "For 15 years it was the prize piece in the royal museum of Varrock.", "However in the year 143 of the 5th age", "A gang of thieves called the phoenix gang broke into the museum", "And stole the shield", "King Roald the VII put a 1200 gold reward on the return of the shield", "The thieves who stole the shield", "Have now become the most powerful crime gang in Varrock", "The reward for the return of the shield still stands."}, 2500) {
 								public void finished() {
-									Quest q = owner.getQuest(13);
+									Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
 									if (q != null)
 										if (q.getStage() == 0)
-											owner.incQuestCompletionStage(13);
+											owner.incQuestCompletionStage(Config.Quests.SHIELD_OF_ARRAV);
 									owner.setBusy(false);
 									owner.setStatus(Action.IDLE);
 								}
@@ -580,7 +580,7 @@ public class InvActionHandler implements PacketHandler {
 										player.setSubscriptionExpires(2592000 + player.getSubscriptionExpires());
 									else
 										player.setSubscriptionExpires(DataConversions.getTimeStamp() + 2592000);
-									player.sendAlert("Thank you for subscribing to Open RSC!  Without subscribers we simply wouldn't be able to keep Open RSC up and running.  You have " + player.getDaysSubscriptionLeft() + " days remaining.");
+									player.sendAlert("Thank you for subscribing to " + Config.SERVER_NAME + "!  Without subscribers we simply wouldn't be able to keep " + Config.SERVER_NAME + " up and running.  You have " + player.getDaysSubscriptionLeft() + " days remaining.");
 									ServerBootstrap.getDatabaseService().submit(new SubscriptionTransaction(player.getUsernameHash(), player.getAccount(), DataConversions.getTimeStamp(), player.getIP()));
 									player.updateGroupID(5);
 								}
@@ -603,7 +603,7 @@ public class InvActionHandler implements PacketHandler {
 		switch (item.getID())
 		{
 			case 799:
-				Quest Biohazard_Quest = player.getQuest(38);
+				Quest Biohazard_Quest = player.getQuest(Config.Quests.BIOHAZARD);
 				if (Biohazard_Quest.getStage() == 2)
 				{
 					if (player.getSeedsUsed() > 0 && player.getLocation().inBounds(620, 583, 622, 589))
@@ -613,7 +613,7 @@ public class InvActionHandler implements PacketHandler {
 						{
 							public void finished() 
 							{
-								owner.incQuestCompletionStage(38);
+								owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
 								owner.setBusy(false);
 							}
 						});

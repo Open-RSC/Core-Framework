@@ -3,6 +3,7 @@
 */
 //npc ID 504
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,12 +23,12 @@ public class Chemist implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
-		Quest plagueCity = owner.getQuest(35);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
 		
 		if(q != null) 
 		{	
-			if(owner.getQuest(38) != null && owner.getQuest(38).getStage() >= 6 && owner.getQuest(38).getStage() <= 7)
+			if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 6 && owner.getQuest(Config.Quests.BIOHAZARD).getStage() <= 7)
 			{
 				switch(q.getStage())
 				{
@@ -201,7 +202,7 @@ public class Chemist implements NpcHandler
 														owner.getInventory().add(813, 1);
 														owner.sendInventory();
 														owner.sendMessage("He gives you the touch paper");
-														owner.incQuestCompletionStage(38); //quest stage 7
+														owner.incQuestCompletionStage(Config.Quests.BIOHAZARD); //quest stage 7
 														owner.setBusy(false);
 														npc.unblock();
 													}

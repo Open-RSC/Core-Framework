@@ -5,6 +5,7 @@
 //Starting quest
 
 package org.openrsc.server.npchandler.The_Knights_Sword;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
@@ -22,7 +23,7 @@ public class Squire implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(14);
+		Quest q = owner.getQuest(Config.Quests.THE_KNIGHTS_SWORD);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -103,7 +104,7 @@ public class Squire implements NpcHandler {
 						owner.sendMessage("You give the sword to the squire");
 						owner.getInventory().remove(new InvItem(265, 1));
 						owner.sendInventory();
-						owner.finishQuest(14);
+						owner.finishQuest(Config.Quests.THE_KNIGHTS_SWORD);
 						owner.sendMessage("Well done you have completed the knight's sword quest");
 						owner.incQuestExp(13, 4850);
 						owner.sendStat(13);
@@ -253,7 +254,7 @@ public class Squire implements NpcHandler {
 	private void Ok(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Thank you very much", "As I say, the best place to start should be with reldo"}) {
 			public void finished() {
-				owner.addQuest(14, 1);
+				owner.addQuest(Config.Quests.THE_KNIGHTS_SWORD, 1);
 				owner.setBusy(false);
 				npc.unblock();
 			}

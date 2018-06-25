@@ -51,7 +51,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public void loadConf() {
 		InputStream fis = null;
 		try {
-			fis = new FileInputStream(OPENRSC_DIR + "openrsc.conf");
+			fis = new FileInputStream(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf");
 			Properties props = new Properties();
 			props.load(fis);
 
@@ -110,14 +110,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		return this.inputBoxType;
 	}
 
-	public boolean setProp(String key, String value) {
+	public static boolean setProp(String key, String value) {
 		try {
 			Properties props = new Properties();
-			props.load(new FileInputStream(OPENRSC_DIR + "openrsc.conf"));
+			props.load(new FileInputStream(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
 			props.setProperty(key, value);
 
-			OutputStream propOut = new FileOutputStream(new File(OPENRSC_DIR + "openrsc.conf"));
-			props.store(propOut, "openrsc Configuration");
+			OutputStream propOut = new FileOutputStream(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
+			props.store(propOut, "RuneScape Configuration");
 			props.clear();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -126,9 +126,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		return true;
 	}
 
-	private final static String OPENRSC_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
-			+ "openrsc" + System.getProperty("file.separator");
-
 	private static mudclient<?> instance;
 
 	public static final void main(String[] args) throws Exception {
@@ -136,12 +133,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
                 //if (!AppletUtils.CACHEFILE.exists())
                 org.openrsc.client.loader.WebClientLoader.downloadCache();
                 
-		int width = 800;
-		int height = 534;
-		File CF = new File(OPENRSC_DIR + "openrsc.conf");
+		int width = Config.DEFAULT_WINDOW_WIDTH;
+		int height = Config.DEFAULT_WINDOW_HEIGHT;
+		File CF = new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf");
 		try {
 			if (!CF.exists())
+            {
 				CF.createNewFile();
+                setProp("ROOFS", "ON");
+            }
 		} catch (Exception ex) {
 		}
 		try {
@@ -603,7 +603,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.storeSpriteVert(SPRITE_MEDIA_START + 10, (windowWidth / 2) - 256, (windowHeight / 2) - 167, 512,
 				200);
 	}
-
+    
 	public boolean mouseWithinCenteredCoords(int x, int y, int width, int height) {
 		int halfWidth = width / 2, halfHeight = height / 2;
 		return mouseX > (x - halfWidth) && mouseX < (x + halfWidth) && mouseY > (y - halfHeight)
@@ -2160,14 +2160,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		// Runecrafting
 		// if (playerStatBase[18] > 1) {
-		color = 0xffffff;
+		/*color = 0xffffff;
 		if (super.mouseX >= x + 90 && super.mouseY >= y - 10 && super.mouseY < y + 2 && super.mouseX < x + 196) {
 			color = 0xff0000;
 			k1 = 18;
 		}
 		drawString(skillArray[18] + ":@yel@" + playerStatCurrent[18] + "/" + playerStatBase[18], (x + c / 2) - 5, y, 1,
 				color);
-		y += 13;
+		y += 13;*/
 		// }
 		// Runecrafting
 
@@ -2181,7 +2181,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		y += 34;
 		// Runecrafting
 
-		y -= 12;
+		//y -= 12;
 		drawString("Equipment Status", x + 5, y, 3, 0xffff00);
 		y += 12;
 		for (int j2 = 0; j2 < 3; j2++) {
@@ -2232,6 +2232,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void drawQuestMenu() {
 		questMenu.resetListTextCount(questMenuHandle);
 		int ctr = 0;
+        questMenu.drawMenuListText(questMenuHandle, ctr, "@whi@Quest-list (green=completed)");
+        ctr++;
 		for (String s : quests) {
 			questMenu.drawMenuListText(questMenuHandle, ctr, s);
 			ctr++;
@@ -3358,7 +3360,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				gameCamera.removeModel(engineHandle.aModelArrayArray580[2][i]);
 				gameCamera.removeModel(engineHandle.aModelArrayArray598[2][i]);
 			}
-			zoomCamera = false;
+			
+            if(!zoomCamera)
+            {
+                amountToZoom -= 200;
+                zoomCamera = true;
+            }
 			if (lastWildYSubtract == 0
 					&& (engineHandle.walkableValue[ourPlayer.currentX / 128][ourPlayer.currentY / 128] & 0x80) == 0) {
 				if (showRoofs)
@@ -3372,7 +3379,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						gameCamera.addModel(engineHandle.aModelArrayArray598[2][i]);
 					}
 				}
-				zoomCamera = false;
+                if(zoomCamera)
+                {
+                    zoomCamera = false;
+                    amountToZoom += 200;
+                }
 			}
 		}
 
@@ -3528,11 +3539,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int l5 = lastAutoCameraRotatePlayerX + screenRotationX;
 			int i8 = lastAutoCameraRotatePlayerY + screenRotationY;
 
-			/*
-			 * if(engineHandle.getRoofTexture((l5 >> 7), (i8>>7)) != 0) {
-			 * if(cameraHeight > 550) { cameraHeight -= 5; } } else {
-			 * if(cameraHeight < 750) { cameraHeight += 5; } }
-			 */
 			if (fog /* || wildyLevel() > 0 */) {
 				if (!super.f1) {
 					gameCamera.zoom1 = ((gameWidth * 2) + (cameraHeight * 2)) - 124; // 2400
@@ -3630,11 +3636,28 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (ourPlayer.admin > 0 && ourPlayer.admin < 4) {
 				i9 += 13;
 				drawString(
-						"@gre@Coordinates: X:@whi@ " + (sectionX + areaX) + "@gre@, " + "Y: @whi@" + (sectionY + areaY),
+						"@gre@Coordinates: @blu@X@gre@:@whi@ " + (sectionX + areaX) + "@gre@, " + "@blu@Y@gre@: @whi@" + (sectionY + areaY),
 						6, i9, 1, 0xffff00);
 			}
 			i9 += 13;
 			drawString("@gre@FPS: @whi@" + FPS, 6, i9, 1, 0xffff00);
+            
+			/*i9 += 13;
+			gameGraphics.drawString("@gre@Camera Rotation: @whi@" + cameraRotation, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Camera FoV: @whi@" + cameraSizeInt, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Camera Zoom: @whi@" + cameraHeight, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Amount to Zoom: @whi@" + amountToZoom, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Camera Distance1: @whi@" + gameCamera.zoom1, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Camera Distance2: @whi@" + gameCamera.zoom2, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Camera Distance3: @whi@" + gameCamera.zoom3, 6, i9, 1, 0xffff00);
+			i9 += 13;
+			gameGraphics.drawString("@gre@Camera Distance4: @whi@" + gameCamera.zoom4, 6, i9, 1, 0xffff00);*/
 			/*
 			 * i9 += 13; double igping = (PING_RECIEVED - PING_SENT) / 1e6;
 			 * if(igping > 0) drawString("@gre@PING: @whi@" + df2.format(igping)
@@ -4395,7 +4418,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		loadModels();
 		if (lastLoadedNull) {
 			System.out.println("models in DATA_DIR doesn't exist... Open RSC will now close.");
-			System.out.println("Please post a topic in the \"Support\" forum section.\n");
+			//System.out.println("Please post a topic in the \"Support\" forum section.\n");
 			System.exit(-1);
 		}
 		//loadSounds(); //Disabling as Java 9+ does not include the sun/audio/AudioPlayer
@@ -5191,47 +5214,45 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 			case 38: // Up Arrow
 				if (loggedIn == 1)
-					if (cameraHeight > 750) {
-						if (cameraHeight - 25 < 750)
-							cameraHeight = 750;
+                {
+                    final int minHeight = 500 - (zoomCamera ? 200 : 0);
+					if (cameraHeight > minHeight) {
+						if (cameraHeight - 25 < minHeight)
+							cameraHeight = minHeight;
 						else
 							cameraHeight -= 25;
 					}
+                }
 				break;
 			case 40: // Down Arrow
 				if (loggedIn == 1)
-					if (cameraHeight < 1250) {
-						if (cameraHeight + 25 > 1250)
-							cameraHeight = 1250;
+                {
+                    final int maxHeight = 1250 - (zoomCamera ? 200 : 0);
+					if (cameraHeight < maxHeight) {
+						if (cameraHeight + 25 > maxHeight)
+							cameraHeight = maxHeight;
 						else
 							cameraHeight += 25;
 					}
+                }
 				break;
 
 			case 33: // Page Up
-				if (ourPlayer.admin == 4) // Regular Player
-					displayMessage("@gre@Open RSC:@whi@ Chat History is a subscriber only feature. Type ::SUBSCRIBE", 3, 0);
-				else {
-					currentChat--;
-					if (currentChat < 0) {
-						currentChat = 0;
-						return;
-					}
-					gameMenu.updateText(chatHandle, messages.get(currentChat));
-				}
+                currentChat--;
+                if (currentChat < 0) {
+                    currentChat = 0;
+                    return;
+                }
+                gameMenu.updateText(chatHandle, messages.get(currentChat));
 				break;
 
 			case 34: // Page Down
-				if (ourPlayer.admin == 4) // Regular Player
-					displayMessage("@gre@Open RSC:@whi@ Chat History is a subscriber only feature. Type ::SUBSCRIBE", 3, 0);
-				else {
-					currentChat++;
-					if (currentChat >= messages.size()) {
-						currentChat = messages.size();
-						gameMenu.updateText(chatHandle, "");
-					} else
-						gameMenu.updateText(chatHandle, messages.get(currentChat));
-				}
+                currentChat++;
+                if (currentChat >= messages.size()) {
+                    currentChat = messages.size();
+                    gameMenu.updateText(chatHandle, "");
+                } else
+                    gameMenu.updateText(chatHandle, messages.get(currentChat));
 				break;
 
 			case 113: // F2
@@ -6405,11 +6426,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			cameraRotation = cameraRotation + 2 & 0xff;
 		else if (super.rightArrowKeyDown)
 			cameraRotation = cameraRotation - 2 & 0xff;
-		if (zoomCamera && cameraHeight > 550) {
-			cameraHeight -= 4;
-		} else if (!zoomCamera && cameraHeight < 750) {
-			cameraHeight += 4;
-		}
+        
+        /*if (zoomCamera && cameraHeight > 550)
+            cameraHeight -= 4;
+        else if (!zoomCamera && cameraHeight < 750)
+            cameraHeight += 4;*/
+        if(amountToZoom > 0)
+        {
+            cameraHeight += 4;
+            amountToZoom -= 4;
+        }
+        if(amountToZoom < 0)
+        {
+            cameraHeight -= 4;
+            amountToZoom += 4;
+        }
+        
 		if (actionPictureType > 0)
 			actionPictureType--;
 		else if (actionPictureType < 0)
@@ -6445,7 +6477,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void loadSounds() {
-		sounds = CacheUtil.loadArchive(OPENRSC_DIR + "data" + System.getProperty("file.separator") + "sounds");
+		sounds = CacheUtil.loadArchive(AppletUtils.CACHE + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "sounds");
 		audioReader = new AudioReader();
 	}
 
@@ -6778,7 +6810,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			messagesArray[k] = messagesArray[k - 1];
 			messagesTimeout[k] = messagesTimeout[k - 1];
 		}
-
+        
 		messagesArray[0] = message;
 		messagesTimeout[0] = 300;
 		if (gameMenu.topIndex[chatHistoryHandle] == gameMenu.menuListTextCount[chatHistoryHandle] - 4)
@@ -10908,10 +10940,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	private File getEmptyFile() throws IOException {
 		String charName = DataOperations.longToString(DataOperations.stringLength12ToLong(currentUser));
-		File file = new File(System.getProperty("user.home") + File.separator + "openrsc" + File.separator + "Screenshots");
+		File file = new File(AppletUtils.CACHE + File.separator + "Screenshots");
 		if (!file.exists() || !file.isDirectory())
 			file.mkdir();
-		file = new File(System.getProperty("user.home") + File.separator + "openrsc" + File.separator + "Screenshots" + File.separator + charName);
+		file = new File(AppletUtils.CACHE + File.separator + "Screenshots" + File.separator + charName);
 		if (!file.exists() || !file.isDirectory())
 			file.mkdir();
 		String folder = file.getPath() + File.separator;
@@ -11080,6 +11112,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		tradeOtherItemsCount = new long[14];
 		menuIndexes = new int[250];
 		zoomCamera = false;
+        amountToZoom = 0;
 		playerStatExperience = new int[19];
 		cameraAutoAngleDebug = false;
 		npcRecordArray = new Mob[40000];
@@ -11373,6 +11406,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public long tradeOtherItemsCount[];
 	public int menuIndexes[];
 	public boolean zoomCamera;
+    public int amountToZoom;
 	public int playerStatExperience[];
 	public boolean cameraAutoAngleDebug;
 	public Mob npcRecordArray[];
@@ -11444,7 +11478,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int anInt986;
 	public BufferedImage sleepy;
 	public Sprite sleepSprite;
-	public String[] quests = { "@whi@Quest-list (green=completed)", "@red@Black knight's fortress",
+	public String[] quests = { "@red@Black knight's fortress",
 			"@red@Cook's assistant", "@red@Demon slayer", "@red@Doric's quest", "@red@The restless ghost",
 			"@red@Goblin diplomacy", "@red@Ernest the chicken", "@red@Imp catcher", "@red@Pirate's treasure",
 			"@red@Prince Ali rescue", "@red@Romeo & Juliet", "@red@Sheep shearer", "@red@Shield of Arrav",

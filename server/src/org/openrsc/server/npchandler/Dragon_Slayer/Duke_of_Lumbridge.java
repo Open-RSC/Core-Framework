@@ -2,6 +2,7 @@
 //recoded by Mr. Zain
 
 package org.openrsc.server.npchandler.Dragon_Slayer;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -19,7 +20,7 @@ public class Duke_of_Lumbridge implements NpcHandler
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(17);
+		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 		if(q != null) 
 		{
 			if(q.finished()) 
@@ -69,16 +70,16 @@ public class Duke_of_Lumbridge implements NpcHandler
 									{
 										if (owner.getInventory().countId(1304) > 0)
 										{
-											if (owner.getQuest(17) != null)
+											if (owner.getQuest(Config.Quests.DRAGON_SLAYER) != null)
 											{
-												owner.getQuest(17).setStage(3);
-												owner.finishQuest(17);
+												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
 											}
 											else
 											{
-												owner.addQuest(17, 2);
-												owner.getQuest(17).setStage(3);
-												owner.finishQuest(17);
+												owner.addQuest(Config.Quests.DRAGON_SLAYER, 2);
+												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
 											}
 											World.getDelayedEventHandler().add(new SingleEvent(owner, 2000)
 											{
@@ -117,16 +118,16 @@ public class Duke_of_Lumbridge implements NpcHandler
 									{
 										if (owner.getInventory().countId(10) >= 500000)
 										{
-											if (owner.getQuest(17) != null)
+											if (owner.getQuest(Config.Quests.DRAGON_SLAYER) != null)
 											{
-												owner.getQuest(17).setStage(3);
-												owner.finishQuest(17);
+												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
 											}
 											else
 											{
-												owner.addQuest(17, 2);
-												owner.getQuest(17).setStage(3);
-												owner.finishQuest(17);
+												owner.addQuest(Config.Quests.DRAGON_SLAYER, 2);
+												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
 											}
 											World.getDelayedEventHandler().add(new SingleEvent(owner, 2000)
 											{
@@ -185,7 +186,7 @@ public class Duke_of_Lumbridge implements NpcHandler
 				{
 					public void action()
 					{
-						final String[] options107 = {"I seek a shield that will protect me from dragon breath", "Have you any quests for me?", "Where can I find money?", "Can I interest you in some goods to avoid that dragon?"};
+						final String[] options107 = {"I seek a shield that will protect me from dragon breath", "Have you any quests for me?", "Where can I find money?"/*, "Can I interest you in some goods to avoid that dragon?"*/};
 						owner.setBusy(false);
 						owner.sendMenu(options107);
 						owner.setMenuHandler(new MenuHandler(options107) 
@@ -208,9 +209,9 @@ public class Duke_of_Lumbridge implements NpcHandler
 									case 2:
 										findMoney(npc, owner);
 									break;
-									case 3:
+									/*case 3:
 										bypassQuest(npc, owner);
-									break;
+									break;*/
 								}
 							}
 						});
@@ -272,7 +273,7 @@ public class Duke_of_Lumbridge implements NpcHandler
 				{
 					public void action()
 					{
-						final String[] options107 = {"Have you any quests for me?", "Where can I find money?", "Can I interest you in some goods to avoid that dragon?"};
+						final String[] options107 = {"Have you any quests for me?", "Where can I find money?"/*, "Can I interest you in some goods to avoid that dragon?"*/};
 						owner.setBusy(false);
 						owner.sendMenu(options107);
 						owner.setMenuHandler(new MenuHandler(options107) 
@@ -292,9 +293,9 @@ public class Duke_of_Lumbridge implements NpcHandler
 									case 1:
 										findMoney(npc, owner);
 									break;
-									case 2:
+									/*case 2:
 										bypassQuest(npc, owner);
-									break;
+									break;*/
 								}
 							}
 						});

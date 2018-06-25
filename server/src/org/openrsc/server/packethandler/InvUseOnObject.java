@@ -100,7 +100,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 447:  //Soil for Plague City
 		      				if(item.getID() == 50) {
 			      				owner.setBusy(true);
-			      				Quest plagueCity1 = owner.getQuest(35);
+			      				Quest plagueCity1 = owner.getQuest(Config.Quests.PLAGUE_CITY);
 			      				if(plagueCity1 != null) {
 			      					if(plagueCity1.getStage() == 2) {
 					      				owner.sendMessage("you pour the water onto the soil");
@@ -115,7 +115,7 @@ public class InvUseOnObject implements PacketHandler {
 					      							World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 					      								public void action() {
 					      									owner.sendMessage("the soil is soft enough to dig into");
-					      									owner.incQuestCompletionStage(35);
+					      									owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 					      									owner.setBusy(false);
 					      								}
 					      							});
@@ -135,9 +135,9 @@ public class InvUseOnObject implements PacketHandler {
 			      				}
 		      				} else if(item.getID() == 211) {
 			      				owner.setBusy(true);
-			      				Quest plagueCity1 = owner.getQuest(35);
+			      				Quest plagueCity1 = owner.getQuest(Config.Quests.PLAGUE_CITY);
 			      				if(plagueCity1 != null) {
-			      					if(owner.getQuest(35).getStage() >= 3) {
+			      					if(owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 3) {
 			      						World.getDelayedEventHandler().add(new DelayedGenericMessage(owner, new String[] {"you dig deep into the soft soil", "Suddenly it crumbles away", "you fall through", "and land in the sewer", "Edmond follows you down the hole"}, 2500) {
 			      							public void finished() {
 			      								if (plagueCity1.getStage() >= 4)
@@ -149,7 +149,7 @@ public class InvUseOnObject implements PacketHandler {
 			      								{
 			      									owner.teleport(621, 3415);
 				      								owner.setBusy(false);
-			      									owner.incQuestCompletionStage(35);
+			      									owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 			      								}
 			      							}
 			      						});
@@ -169,14 +169,14 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 502:
 		      				if (item.getID() == 801)
 		      				{
-		      					Quest Biohazard_Quest = owner.getQuest(38);
+		      					Quest Biohazard_Quest = owner.getQuest(Config.Quests.BIOHAZARD);
 		      					if (Biohazard_Quest.getStage() == 3)
 		      					{
 									World.getDelayedEventHandler().add(new DelayedGenericMessage(player, new String[] { "You place the rotten apples in the pot", "They quickly dissolve in to the stew", "That wasn't very nice" }, 2000)
 									{
 										public void finished() 
 										{
-				      						owner.incQuestCompletionStage(38);
+				      						owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
 				      						owner.getInventory().remove(801, 1);
 				      						owner.sendInventory();
 				      						owner.setBusy(false);
@@ -194,7 +194,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 494:		      				
 		      				if (item.getID() == 800)
 		      				{
-		      					Quest Biohazard_Quest = owner.getQuest(38);
+		      					Quest Biohazard_Quest = owner.getQuest(Config.Quests.BIOHAZARD);
 		      					if (Biohazard_Quest.getStage() == 2 && player.getSeedsUsed() < 1)
 		      					{
 		      						owner.setBusy(true);
@@ -229,12 +229,12 @@ public class InvUseOnObject implements PacketHandler {
 		      			break;
 		      				
 		      			case 449: // Plague City, use rope on the sewer.
-		      				if (item.getID() == 237 && owner.getQuest(35) != null && owner.getQuest(35).getStage() == 4)
+		      				if (item.getID() == 237 && owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() == 4)
 		      				{
 		      					owner.sendMessage("You tie one end of the rope to the sewer pipe's grill and hold the other end in your hand.");
 		      					owner.getInventory().remove(237, 1);
 		      					owner.sendInventory();
-		      					owner.incQuestCompletionStage(35);
+		      					owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 		      				}
 		      				else
 		      				{
@@ -251,11 +251,11 @@ public class InvUseOnObject implements PacketHandler {
 		      				{
 			      				if(item.getID() == 218)
 		      					{
-			      					Quest Fishing_Contest = owner.getQuest(26);
+			      					Quest Fishing_Contest = owner.getQuest(Config.Quests.FISHING_CONTEST);
 			      					switch(Fishing_Contest.getStage()) 
 			      					{
 			      						case 1:
-			      							owner.incQuestCompletionStage(26);
+			      							owner.incQuestCompletionStage(Config.Quests.FISHING_CONTEST);
 			      							owner.sendMessage("You place the garlic inside the pipe");
 			      							owner.getInventory().remove(218, 1);
 			      							owner.sendInventory();
@@ -301,7 +301,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			break;
 		      			
 		      			case 504:
-		      				Quest Biohazard_Quest = owner.getQuest(38);
+		      				Quest Biohazard_Quest = owner.getQuest(Config.Quests.BIOHAZARD);
 		      				if (item.getID() == 803 && Biohazard_Quest.getStage() >= 4)
 		      				{
 		      					World.registerEntity(new GameObject(object.getLocation(), 504, object.getDirection(), object.getType()));
@@ -375,7 +375,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				owner.sendMessage("You dig through the compost heap.");
 		      				World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 		      					public void action() {
-		      						Quest q = owner.getQuest(7);
+		      						Quest q = owner.getQuest(Config.Quests.ERNEST_THE_CHICKEN);
 		      						if(q != null) 
 		      						{
 		      							if(q.getStage() > 0 && !q.finished() && !owner.getInventory().contains(212)) 
@@ -401,7 +401,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				
 						case 77: //Drainpipe containing Silverlight Key 3
 							if (item.getID() == 50) {
-								if (owner.getQuestCompletionStage(3) == 2) {
+								if (owner.getQuestCompletionStage(Config.Quests.DEMON_SLAYER) == 2) {
 									if (!owner.getInventory().contains(new InvItem(51, 1))) {
 										owner.setBusy(true);
 										owner.getInventory().remove(new InvItem(50, 1));
@@ -429,7 +429,7 @@ public class InvUseOnObject implements PacketHandler {
 							break;
 						case 40: //Lumbridge Coffin [QUEST]
 							if (item.getID() == 412) {
-								Quest q = owner.getQuest(5);
+								Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
 								if (q != null) {
 									if (q.getStage() == 2 && !q.finished()) {
 										World.getDelayedEventHandler().add(new SingleEvent(owner, 1000) {
@@ -453,7 +453,7 @@ public class InvUseOnObject implements PacketHandler {
 																		owner.sendMessage("Thank you");
 																		World.getDelayedEventHandler().add(new SingleEvent(owner, 1000) {
 																			public void action() {
-																				owner.finishQuest(5);
+																				owner.finishQuest(Config.Quests.THE_RESTLESS_GHOST);
 																				owner.sendMessage("You have completed the restless ghost quest");
 																				owner.incQuestExp(5, 562);
 																				owner.sendStat(5);
@@ -778,7 +778,7 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendMessage("Nothing interesting happens");
 								break;
 						case 154: // Cabbage down the hole in Black Knight's Fortress [QUEST]
-							if (item.getID() == 18 && owner.getQuestCompletionStage(1) == 2) {
+							if (item.getID() == 18 && owner.getQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS) == 2) {
 								owner.getInventory().remove(new InvItem(18, 1));
 								owner.sendInventory();
 								owner.sendMessage("You drop a cabbage down the hold.");
@@ -795,7 +795,7 @@ public class InvUseOnObject implements PacketHandler {
 															public void action() {
 																for (Player informee : owner.getViewArea().getPlayersInView())
 																	informee.informOfChatMessage(new ChatMessage(owner, "Right I think that's successfully sabotaged the secret weapon.", owner));
-																owner.incQuestCompletionStage(1);																
+																owner.incQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS);																
 															}
 														});
 													}
@@ -1126,7 +1126,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				}
 		      				break;
 						case 177: // Doric's Anvil
-							if (owner.getQuestCompletionStage(4) != 1) {
+							if (owner.getQuestCompletionStage(Config.Quests.DORICS_QUEST) != 1) {
 								Npc doric = World.getNpc(144, 323, 327, 487, 492);
 								if (doric != null && !doric.isBusy()) {
 									if (doric.getX() != owner.getX() || doric.getY() != owner.getY()) {
@@ -1693,7 +1693,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			
 						case 187:
 							if(item.getID() == 382) {
-								Quest q = owner.getQuest(9);
+								Quest q = owner.getQuest(Config.Quests.PIRATES_TREASURE);
 								if (q != null) {
 									if (q.getStage() == 1) {
 										owner.setBusy(true);
@@ -1712,7 +1712,7 @@ public class InvUseOnObject implements PacketHandler {
 																	public void action() {
 																		owner.setBusy(false);
 																		owner.sendMessage("It says dig just behind the south bench in the park");
-																		owner.incQuestCompletionStage(9);
+																		owner.incQuestCompletionStage(Config.Quests.PIRATES_TREASURE);
 																	}
 																});
 															}
@@ -1730,7 +1730,7 @@ public class InvUseOnObject implements PacketHandler {
 							break;
 						case 188: //Flower for the Pirate's Treasure [QUEST]
 							if (item.getID() == 211) {
-								Quest q = owner.getQuest(9);
+								Quest q = owner.getQuest(Config.Quests.PIRATES_TREASURE);
 								if (q != null) {
 									if (q.getStage() == 2 && !q.finished()) {
 										final Npc wyson = World.getNpc(116, 285, 296, 545, 551);
@@ -1750,7 +1750,7 @@ public class InvUseOnObject implements PacketHandler {
 																public void action() {
 																	owner.sendMessage("Well done you have completed the Pirate's Treasure quest");
 																	owner.sendMessage("@gre@You have gained 2 quest points!");
-																	owner.finishQuest(9);
+																	owner.finishQuest(Config.Quests.PIRATES_TREASURE);
 																	owner.getInventory().add(new InvItem(10, 450));
 																	owner.getInventory().add(new InvItem(286, 1));
 																	owner.getInventory().add(new InvItem(163, 1));
@@ -1950,7 +1950,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			
 		      			case 287:
 		      				if (item.getID() == 606) { // Excalibur
-								Quest merlinsQuest = owner.getQuest(22);
+								Quest merlinsQuest = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
 								if (merlinsQuest != null) {
 									if (merlinsQuest.getStage() == 7 && !merlinsQuest.finished()) {
 										owner.sendMessage("You shatter the crystal with Excalibur");
@@ -2350,7 +2350,7 @@ public class InvUseOnObject implements PacketHandler {
 					case 45: //Prince Ali Rescue Door
 						if(item.getID() == 242) {
 							if(owner.getX() == 198) {
-								Quest q = owner.getQuest(10);
+								Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
 								if(q != null) {
 									switch(q.getStage()) {
 										case 0:

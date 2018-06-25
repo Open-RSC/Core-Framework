@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.The_Restless_Ghost;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.ChatMessage;
@@ -16,7 +17,7 @@ public class Priest implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(5);
+		final Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				notActive(npc, owner, true);
@@ -262,7 +263,7 @@ public class Priest implements NpcHandler {
 																	public void finished() {
 																		owner.setBusy(false);
 																		npc.unblock();
-																		owner.addQuest(5, 1);
+																		owner.addQuest(Config.Quests.THE_RESTLESS_GHOST, 1);
 																	}
 																});
 															}

@@ -187,7 +187,7 @@ public class CommandHandler implements PacketHandler
 					{
 						for (int i = 1; i < args.length; i++)
 						message += args[i] + " ";
-						p.sendAlert((player.isAdmin() ? "#adm#@yel@" : "#mod#") + player.getUsername() + ":@whi@ " + message);
+						p.sendAlert((player.getStaffName()) + ":@whi@ " + message);
 						player.sendMessage(Config.PREFIX + "Alert sent");
 						Logger.log(new GenericLog(player.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
 					}
@@ -1574,7 +1574,7 @@ public class CommandHandler implements PacketHandler
 					).start();	
 				player.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
 		} else if (cmd.equals("time") || cmd.equals("date")) {
-			player.sendMessage(Config.PREFIX + "Open RSC's time/date is:@gre@ " + new java.util.Date().toString());
+			player.sendMessage(Config.PREFIX + Config.SERVER_NAME + "'s time/date is:@gre@ " + new java.util.Date().toString());
 		} else if (cmd.equals("skiptutorial")) {
 			if (player.getLocation().onTutorialIsland())
 			{
@@ -1599,7 +1599,7 @@ public class CommandHandler implements PacketHandler
 	        if (World.lotteryRunning())
 	                World.buyTicket(player);
 	        else
-	                player.sendMessage("@gre@RSCU@whi@ There's no lottery running right now");
+	                player.sendMessage(Config.PREFIX + " There's no lottery running right now");
 		} else if (cmd.equals("lotterypot")) {
 	        World.getLotteryPot(player);     
 		} 
@@ -1650,7 +1650,7 @@ public class CommandHandler implements PacketHandler
 			{
 	        if (!World.lotteryRunning())
 	                if (args.length != 1)
-	                        player.sendMessage("@gre@RSCU@whi@ Invalid args. Syntax: STARTLOTTERY [price]");
+	                        player.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
 	                else
 	                        try {
 	                                World.startLottery(Integer.parseInt(args[0]));
@@ -1663,7 +1663,7 @@ public class CommandHandler implements PacketHandler
 					if (World.lotteryRunning())
 						World.stopLottery();
 					else
-						player.sendMessage("@gre@RSCU:@whi@ There's no lottery running right now");
+						player.sendMessage(Config.PREFIX + " There's no lottery running right now");
 					}
 				}
 		public static final ArrayList<String> statArray = new ArrayList<String>(){{

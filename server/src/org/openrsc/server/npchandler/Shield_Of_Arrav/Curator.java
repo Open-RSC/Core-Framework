@@ -3,6 +3,7 @@
 */
 
 package org.openrsc.server.npchandler.Shield_Of_Arrav;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -18,7 +19,7 @@ public class Curator implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(13);
+		Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
 		if(q != null) {
 			if(q.finished()) {
 				noQuest(npc, owner);
@@ -52,7 +53,7 @@ public class Curator implements NpcHandler {
 											public void finished() {
 												World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Oh ok"}) {
 													public void finished() {
-														owner.incQuestCompletionStage(13);
+														owner.incQuestCompletionStage(Config.Quests.SHIELD_OF_ARRAV);
 														owner.sendMessage("You hand over the shield parts");
 														owner.getInventory().remove(new InvItem(53, 1));
 														owner.getInventory().remove(new InvItem(54, 1));

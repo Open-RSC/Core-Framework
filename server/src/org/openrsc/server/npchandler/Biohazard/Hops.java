@@ -3,6 +3,7 @@
 */
 //npc ID 506
 package org.openrsc.server.npchandler.Biohazard;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.MenuHandler;
@@ -23,11 +24,11 @@ public class Hops implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(38);
+		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
 		
 		if(q != null) 
 		{	
-			if(owner.getQuest(38) != null && owner.getQuest(38).getStage() == 7)
+			if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() == 7)
 			{
 				questStage7(npc, owner);
 			}

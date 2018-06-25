@@ -13,13 +13,20 @@ import org.openrsc.server.model.Point;
 import org.openrsc.server.net.RSCPacket;
 
 import com.bombaydigital.vault.HexString;
+<<<<<<< HEAD
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+=======
+>>>>>>> pr/15
 import java.security.SecureRandom;
 
 public final class DataConversions {
 	private static MessageDigest md5, sha1, sha512;
+<<<<<<< HEAD
 	private static SecureRandom random = new SecureRandom();
+=======
+    private static SecureRandom random = new SecureRandom();
+>>>>>>> pr/15
 	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$', '%', '"', '[', ']', '{', '}', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final BigInteger key = new BigInteger("730546719878348732291497161314617369560443701473303681965331739205703475535302276087891130348991033265134162275669215460061940182844329219743687403068279");
 	private static final BigInteger modulus = new BigInteger("1549611057746979844352781944553705273443228154042066840514290174539588436243191882510185738846985723357723362764835928526260868977814405651690121789896823");
@@ -226,8 +233,8 @@ public final class DataConversions {
 			boolean flag = true;
 			for(int l1 = 0; l1 < k; l1++) {
 				char c = buffer[l1];
-				if (l1 > 4 && c == '@')
-					buffer[l1] = ' ';
+				/*if (l1 > 4 && c == '@')
+					buffer[l1] = ' ';*/
 				if (c == '%')
 					buffer[l1] = ' ';
 				if (flag && c >= 'a' && c <= 'z') {
@@ -302,7 +309,7 @@ public final class DataConversions {
 		
 		return 0;	
 	}
-
+    
 	public static long usernameToHash(String s) {
 		try {
 			s = s.toLowerCase();
@@ -356,6 +363,7 @@ public final class DataConversions {
 		
 		return s;
 	}
+<<<<<<< HEAD
         
         public static String generateSalt() {
                 int len = 30;
@@ -364,6 +372,17 @@ public final class DataConversions {
                         sb.append( characters[random.nextInt(characters.length)] );
                 return sb.toString();
         }
+=======
+    
+    public static String generateSalt()
+    {
+        int len             = 30;
+        StringBuilder sb    = new StringBuilder( len );
+        for( int i = 0; i < len; i++ ) 
+            sb.append( characters[random.nextInt(characters.length)] );
+        return sb.toString();
+    }
+>>>>>>> pr/15
 
 	public static String md5(String s) {
 		md5.reset();

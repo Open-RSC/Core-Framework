@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.InvItem;
@@ -16,7 +17,7 @@ public class Cooking_Instructor implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -76,7 +77,7 @@ public class Cooking_Instructor implements NpcHandler {
 				owner.sendInventory();
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Ok cook it on the range", "To use an item you are holding", "Open your inventory and click on the item you wish to use", "Then click on whatever you wish to use it on", "In this case use it on the range"}) {
 					public void finished() {
-						owner.incQuestCompletionStage(100);
+						owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 						owner.setBusy(false);
 						npc.unblock();
 					}
@@ -123,7 +124,7 @@ public class Cooking_Instructor implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Very well done", "Now you can tell whether you need to eat or not", "look at your stats menu", "Click on the bar graph icon in the menu bar", "Your stats are low right now", "As you use the various skills, these stats will increase", "If you look at your hits you will see 2 numbers", "The number on the right is your hits when you are at full health", "The number on the left is your current hits", "If the number on the left is lower eat some food to be healed"}) {
 					public void finished() {
-						owner.incQuestCompletionStage(100);
+						owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 						owner.setBusy(false);
 						npc.unblock();
 					}
@@ -136,7 +137,7 @@ public class Cooking_Instructor implements NpcHandler {
 	private void cookChatC(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"There are many other sorts of food you can cook", "As your cooking level increases you will be able to cook even more", "Some of these dishes are more complicated to prepare", "If you want to know more about cookery", "You could consult the online manual", "Now proceed through the next door"}, true) {
 			public void finished() {
-				owner.incQuestCompletionStage(100);
+				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

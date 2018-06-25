@@ -353,7 +353,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getQuest(38) == null)
+									if(owner.getQuest(Config.Quests.BIOHAZARD) == null)
 									{
 										owner.sendMessage("The door is locked");
 									}
@@ -361,7 +361,7 @@ public class WallObjectAction implements PacketHandler {
 									{
 										owner.setBusy(true);
 										Npc mourner = World.getNpc(451, 634, 634, 573, 573); //change coords to npc location
-										if(owner.getQuest(38) != null && owner.getQuest(38).getStage() >= 4)
+										if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 4)
 										{
 											mourner.blockedBy(owner);
 											if(player.getInventory().wielding(802)) //wield check doctor's robe
@@ -455,7 +455,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getQuest(20) == null || owner.getQuest(20) != null && owner.getQuest(20).finished() || owner.getQuest(52) != null &&  owner.getQuest(52).finished())
+									if(owner.getQuest(Config.Quests.HEROS_QUEST) == null || owner.getQuest(Config.Quests.HEROS_QUEST) != null && owner.getQuest(Config.Quests.HEROS_QUEST).finished() || owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG) != null &&  owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished())
 									{
 										owner.sendMessage("The door is locked");
 										return;
@@ -464,7 +464,7 @@ public class WallObjectAction implements PacketHandler {
 									{
 										owner.setBusy(true);
 										Npc grubor = World.getNpc(255, 436, 440, 691, 697); //change coords to npc location
-										if(owner.getQuest(20) != null && owner.getQuest(20).getStage() == 2)
+										if(owner.getQuest(Config.Quests.HEROS_QUEST) != null && owner.getQuest(20).getStage() == 2)
 										{
 											grubor.blockedBy(owner);
 											if(grubor != null) 
@@ -499,7 +499,7 @@ public class WallObjectAction implements PacketHandler {
 																			{
 																				public void action()
 																				{
-																					owner.incQuestCompletionStage(20);
+																					owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
 																					owner.sendMessage("You hear the door being unbarred");
 																					owner.setBusy(false);
 																					grubor.unblock();
@@ -526,7 +526,7 @@ public class WallObjectAction implements PacketHandler {
 												}
 											});
 										}
-										else if(owner.getQuest(51) != null && owner.getQuest(51).finished() && owner.getQuest(20) != null && owner.getQuest(20).getStage() >= 3)
+										else if(owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG) != null && owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG).finished() && owner.getQuest(Config.Quests.HEROS_QUEST) != null && owner.getQuest(Config.Quests.HEROS_QUEST).getStage() >= 3)
 										{
 											doDoor();
 											owner.teleport(439, 693, false);
@@ -548,7 +548,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getQuest(20).getStage() >= 3 && owner.getQuest(52) != null && owner.getQuest(52).finished())
+									if(owner.getQuest(Config.Quests.HEROS_QUEST).getStage() >= 3 && owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG) != null && owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished())
 									{
 										doDoor();
 										owner.teleport(448, 681, false);
@@ -572,7 +572,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getQuest(20) == null || owner.getQuest(20) != null &&  owner.getQuest(20).finished() || owner.getQuest(52) != null &&  owner.getQuest(52).finished())
+									if(owner.getQuest(Config.Quests.HEROS_QUEST) == null || owner.getQuest(Config.Quests.HEROS_QUEST) != null &&  owner.getQuest(Config.Quests.HEROS_QUEST).finished() || owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG) != null &&  owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished())
 									{
 										owner.sendMessage("The door is locked");
 										return;
@@ -581,7 +581,7 @@ public class WallObjectAction implements PacketHandler {
 									{
 										owner.setBusy(true);
 										Npc garv = World.getNpc(257, 459, 466, 681, 685);
-										if(owner.getQuest(20) != null && owner.getQuest(20).getStage() == 4)
+										if(owner.getQuest(Config.Quests.HEROS_QUEST) != null && owner.getQuest(Config.Quests.HEROS_QUEST).getStage() == 4)
 										{
 											garv.blockedBy(owner);
 											if(garv != null) 
@@ -707,8 +707,8 @@ public class WallObjectAction implements PacketHandler {
 							//Elena's house door
 							//action: Open
 							case 152:
-								Quest LC = owner.getQuest(38);
-								Quest plagueCity = owner.getQuest(35);
+								Quest LC = owner.getQuest(Config.Quests.BIOHAZARD);
+								Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
 								
 								if (owner.getX() == 607) 
 								{
@@ -915,7 +915,7 @@ public class WallObjectAction implements PacketHandler {
 								}
 								break;
 							case 194: //Dwarf Cannon Door [QUID46]
-								Quest dwarfCannon = owner.getQuest(46);
+								Quest dwarfCannon = owner.getQuest(Config.Quests.DWARF_CANNON);
 								if(dwarfCannon != null) {
 									if(dwarfCannon.getStage() == 4) {
 										doDoor();
@@ -929,7 +929,7 @@ public class WallObjectAction implements PacketHandler {
 								}
 								break;
 							case 197: //Dwarf Cannon Door to the engineer [QUID46]
-								Quest dwarfCannon2 = owner.getQuest(46);
+								Quest dwarfCannon2 = owner.getQuest(Config.Quests.DWARF_CANNON);
 								if(dwarfCannon2 != null) {
 									if(dwarfCannon2.finished() || dwarfCannon2.getStage() > 4) {
 										doDoor();
@@ -944,7 +944,7 @@ public class WallObjectAction implements PacketHandler {
 								break;
 								
 							case 66: //Lost City Door
-								Quest lostCity = owner.getQuest(19);
+								Quest lostCity = owner.getQuest(Config.Quests.LOST_CITY);
 								if(lostCity != null) {
 									if(lostCity.finished()) {
 										if(owner.isWearing(509) && owner.getX() > 125) {
@@ -967,7 +967,7 @@ public class WallObjectAction implements PacketHandler {
 												World.getDelayedEventHandler().add(new DelayedGenericMessage(owner, new String[] {"The world starts to shimmer", "You find yourself in different surroundings"}, 2500) {
 													public void finished() {
 														owner.teleport(127, 3518);
-														owner.finishQuest(19);
+														owner.finishQuest(Config.Quests.LOST_CITY);
 														owner.sendMessage("@gre@You have completed The Lost City quest!");
 														owner.sendMessage("@gre@You have gained 2 quest points!");
 														owner.setBusy(false);
@@ -1000,7 +1000,7 @@ public class WallObjectAction implements PacketHandler {
 								 * Location: Port Sarim.
 								 */
 								case 69:
-									Quest mc = owner.getQuest(22);
+									Quest mc = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
 									if (mc != null) {
 										if (mc.getStage() == 6)
 										{
@@ -1038,8 +1038,8 @@ public class WallObjectAction implements PacketHandler {
 								break;
 							
 							case 19:
-								Quest blackarm2 = owner.getQuest(51);
-								Quest phoenix = owner.getQuest(52);
+								Quest blackarm2 = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
+								Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
 								if(blackarm2 != null) {
 									if(phoenix != null) {
 										if(phoenix.finished()) {
@@ -1085,7 +1085,7 @@ public class WallObjectAction implements PacketHandler {
 								}
 								break;
 							case 39:
-								Quest blackarm = owner.getQuest(51);
+								Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
 								if(blackarm != null) {
 									if(blackarm.finished()) {
 										owner.setBusy(true);
@@ -1240,7 +1240,7 @@ public class WallObjectAction implements PacketHandler {
 															{
 																public void finished()
 																{
-																	if(owner.getInventory().countId(775) > 0 && owner.getQuest(35) != null && owner.getQuest(35).getStage() >= 12 ) 
+																	if(owner.getInventory().countId(775) > 0 && owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 12 ) 
 																	{
 																		World.getDelayedEventHandler().add(new DelayedQuestChat(owner, mourner, new String[] {"I have a warrant from Bravek to enter here"})
 																		{
@@ -1266,7 +1266,7 @@ public class WallObjectAction implements PacketHandler {
 																		{
 																			public void action()
 																			{
-																				if(owner.getQuest(35) != null && owner.getQuest(35).getStage() == 7)
+																				if(owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() == 7)
 																				{
 																					final String[] options107 = {"But I think a kidnap victim is in here", "I fear not a mere plague", "Thanks for the warning"};
 																					owner.setBusy(false);
@@ -1295,7 +1295,7 @@ public class WallObjectAction implements PacketHandler {
 																													{
 																														public void finished()
 																														{
-																															owner.incQuestCompletionStage(35);
+																															owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 																															owner.setBusy(false);
 																															mourner.unblock();	
 																														}
@@ -1318,7 +1318,7 @@ public class WallObjectAction implements PacketHandler {
 																													{
 																														public void finished()
 																														{
-																															owner.incQuestCompletionStage(35);
+																															owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 																															owner.setBusy(false);
 																															mourner.unblock();	
 																														}
@@ -1388,7 +1388,7 @@ public class WallObjectAction implements PacketHandler {
 															{
 																public void finished()
 																{
-																	if(owner.getInventory().countId(775) > 0 && owner.getQuest(35) != null && owner.getQuest(35).getStage() >= 12 ) 
+																	if(owner.getInventory().countId(775) > 0 && owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 12 ) 
 																	{
 																		World.getDelayedEventHandler().add(new DelayedQuestChat(owner, mourner, new String[] {"I have a warrant from Bravek to enter here"})
 																		{
@@ -1414,7 +1414,7 @@ public class WallObjectAction implements PacketHandler {
 																		{
 																			public void action()
 																			{
-																				if(owner.getQuest(35) != null && owner.getQuest(35).getStage() == 7)
+																				if(owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() == 7)
 																				{
 																					final String[] options107 = {"But I think a kidnap victim is in here", "I fear not a mere plague", "Thanks for the warning"};
 																					owner.setBusy(false);
@@ -1443,7 +1443,7 @@ public class WallObjectAction implements PacketHandler {
 																													{
 																														public void finished()
 																														{
-																															owner.incQuestCompletionStage(35);
+																															owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 																															owner.setBusy(false);
 																															mourner.unblock();	
 																														}
@@ -1466,7 +1466,7 @@ public class WallObjectAction implements PacketHandler {
 																													{
 																														public void finished()
 																														{
-																															owner.incQuestCompletionStage(35);
+																															owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 																															owner.setBusy(false);
 																															mourner.unblock();	
 																														}
@@ -1512,7 +1512,7 @@ public class WallObjectAction implements PacketHandler {
 						        } 
 								else 
 								{
-									if(owner.getQuest(35) != null && owner.getQuest(35).getStage() >= 7)
+									if(owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 7)
 									{
 										owner.sendMessage("You go through the door");
 										doDoor();
@@ -1544,7 +1544,7 @@ public class WallObjectAction implements PacketHandler {
 																{
 																	owner.getInventory().remove(768, 1);
 																	owner.sendInventory();
-																	owner.incQuestCompletionStage(35);
+																	owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
 																	owner.sendMessage("You go through the door");
 																	doDoor();
 																	owner.teleport(645, 568, false);
@@ -1575,7 +1575,7 @@ public class WallObjectAction implements PacketHandler {
 						        } 
 								else 
 								{
-									if(owner.getQuest(35) != null && owner.getQuest(35).getStage() >= 9)
+									if(owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 9)
 									{
 										doDoor();
 										owner.teleport(647, 585, false);
@@ -1588,7 +1588,7 @@ public class WallObjectAction implements PacketHandler {
 							break;
 							
 							case 59: //Dragon Slayer Door
-								Quest dragonslayer = owner.getQuest(17);
+								Quest dragonslayer = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 								if(dragonslayer != null) {
 									if(dragonslayer.getStage() == 3 && !dragonslayer.finished()) {
 										doDoor();
@@ -1838,7 +1838,7 @@ public class WallObjectAction implements PacketHandler {
 							} 
 							else 
 							{
-								if (owner.getQuest(20).finished() && owner.getQuestPoints() >= 56) 
+								if (owner.getQuest(Config.Quests.HEROS_QUEST).finished() && owner.getQuestPoints() >= 56) 
 								{
 									doDoor();
 									owner.teleport(372, 440, false);
@@ -1899,7 +1899,7 @@ public class WallObjectAction implements PacketHandler {
 									owner.teleport(owner.getX(), 3518);
 									return;
 								}
-								Quest q = owner.getQuest(17);
+								Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 								if(q != null) {
 									if(q.finished()) {
 										doDoor();
@@ -1944,7 +1944,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getQuest(20).getStage() >= 4 && owner.getQuest(52).finished())
+									if(owner.getQuest(Config.Quests.HEROS_QUEST).getStage() >= 4 && owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished())
 									{
 										doDoor();
 										owner.teleport(456, 679, false);
@@ -1985,7 +1985,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getInventory().countId(583) > 0 && owner.getQuest(20).getStage() == 4)
+									if(owner.getInventory().countId(583) > 0 && owner.getQuest(Config.Quests.HEROS_QUEST).getStage() == 4)
 									{
 										doDoor();
 										owner.teleport(471, 674, false);
@@ -2009,7 +2009,7 @@ public class WallObjectAction implements PacketHandler {
 						        }
 								else
 								{
-									if(owner.getQuest(20).getStage() >= 4 && owner.getQuest(52).finished() && owner.getInventory().countId(582) > 0)
+									if(owner.getQuest(Config.Quests.HEROS_QUEST).getStage() >= 4 && owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished() && owner.getInventory().countId(582) > 0)
 									{
 										doDoor();
 										owner.teleport(459, 673, false);
@@ -2205,9 +2205,331 @@ public class WallObjectAction implements PacketHandler {
 									else {
 										owner.sendMessage("The door is locked shut");
 									}
+                                    break;
 								} 
-								break;
-								case 57:
+                                
+                                Quest tutorialIsland = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+                                if (tutorialIsland != null)
+                                {
+                                    // Guide, first door.
+                                    if (object.getX() == 222 && object.getY() == 743)
+                                    {
+                                        if (tutorialIsland.getStage() >= 1)
+                                        {
+                                            if (owner.getX() == 222)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(221, 743);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(222, 743);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the guide before proceeding through this door.");
+                                        }	
+                                    }
+                                    else
+                                    // Controls Guide, second door.
+                                    if (object.getX() == 224 && object.getY() == 737)
+                                    {
+                                        if (tutorialIsland.getStage() >= 2)
+                                        {
+                                            if (owner.getY() == 737)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(224, 736);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(224, 737);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the controls guide before proceeding through this door.");
+                                        }
+                                    }
+                                    else
+                                    // Combat Instructor, third door.
+                                    if (object.getX() == 220 || object.getY() == 727)
+                                    {
+                                        if (tutorialIsland.getStage() >= 5)
+                                        {
+                                            if (owner.getX() == 220)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(219, 727);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(220, 727);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the combat instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Cooking Instructor, fourth door.
+                                    if (object.getX() == 212 && object.getY() == 729)
+                                    {
+                                        if (tutorialIsland.getStage() >= 8)
+                                        {
+                                            if (owner.getX() == 212)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(211, 729);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(212, 729);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the cooking instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Financial Advisor, fifth door.
+                                    if (object.getX() == 206 && object.getY() == 730)
+                                    {
+                                        if (tutorialIsland.getStage() >= 9)
+                                        {
+                                            if (owner.getX() == 206)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(205, 730);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(206, 730);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the financial advisor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Fishing Instructor, sixth door.
+                                    if (object.getX() == 201 && object.getY() == 734)
+                                    {
+                                        if (tutorialIsland.getStage() >= 11)
+                                        {
+                                            if (owner.getX() == 201)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(201, 734);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(201, 733);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the fishing instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Mining Instructor, seventh door.
+                                    if (object.getX() == 198 && object.getY() == 746)
+                                    {
+                                        if (tutorialIsland.getStage() >= 15)
+                                        {
+                                            if (owner.getY() == 745)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(198, 746);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(198, 745);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the mining instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Bank Assistant, eight door.
+                                    if (object.getX() == 204 && object.getY() == 752)
+                                    {
+                                        if (tutorialIsland.getStage() >= 16)
+                                        {
+                                            if (owner.getX() == 203)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(204, 752);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(203, 752);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the bank assistant before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Quest Advisor, ninth door.
+                                    if (object.getX() == 209 && object.getY() == 754)
+                                    {
+                                        if (tutorialIsland.getStage() >= 17)
+                                        {
+                                            if (owner.getY() == 753)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(209, 754);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(209, 753);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the quest advisor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Wilderness Guide, tenth door.
+                                    if (object.getX() == 217 && object.getY() == 760)
+                                    {
+                                        if (tutorialIsland.getStage() >= 18)
+                                        {
+                                            if (owner.getX() == 216)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(217, 760);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(216, 760);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the wilderness guide before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Magic Instructor, tenth door.
+                                    if (object.getX() == 222 && object.getY() == 760)
+                                    {
+                                        if (tutorialIsland.getStage() >= 21)
+                                        {
+                                            if (owner.getX() == 221)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(222, 760);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(221, 760);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the magic instructor before proceeding through this door.");	
+                                        }
+                                    }
+
+                                    else
+                                    // Fatigue Expert, elevent door.
+                                    if (object.getX() == 226 && object.getY() == 760)
+                                    {
+                                        if (tutorialIsland.getStage() >= 23)
+                                        {
+                                            if (owner.getX() == 225)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(226, 760);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(225, 760);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the fatigue instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                    else
+                                    // Community Instructor, tenth door.
+                                    if (object.getX() == 230 && object.getY() == 759)
+                                    {
+                                        if (tutorialIsland.getStage() >= 24)
+                                        {
+                                            if (owner.getY() == 758)
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(230, 759);
+                                            }
+                                            else
+                                            {
+                                                doDoor();
+                                                owner.sendMessage("You go through the door.");
+                                                owner.teleport(230, 758);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            owner.sendMessage(Config.PREFIX + "You must speak to the community instructor before proceeding through this door.");	
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    owner.sendMessage(Config.PREFIX + "You must talk to the guide before proceeding through this door.");
+                                }
+                                break;
+							case 57:
 								if(owner.getX() == 259 & owner.getInventory().countId(200) > 0 && owner.getInventory().countId(375) > 0 && owner.getInventory().countId(268) > 0 && owner.getInventory().countId(340) > 0) {
 									doDoor();
 									owner.teleport(258, 3334, false);
@@ -2238,7 +2560,7 @@ public class WallObjectAction implements PacketHandler {
 								case 75:
 									
 									// Shield of Arrav door.
-									Quest Shield_Of_Arrav = owner.getQuest(13);
+									Quest Shield_Of_Arrav = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
 									if (object.getX() == 148 && object.getY() == 533)
 									{
 										if (Shield_Of_Arrav != null && !Shield_Of_Arrav.finished() && Shield_Of_Arrav.getStage() < 3)
@@ -2255,327 +2577,6 @@ public class WallObjectAction implements PacketHandler {
 											}
 										}
 										return;
-									}
-									
-									Quest tutorialIsland = owner.getQuest(100);
-									if (tutorialIsland != null)
-									{
-										// Guide, first door.
-										if (object.getX() == 222 && object.getY() == 743)
-										{
-											if (tutorialIsland.getStage() >= 1)
-											{
-												if (owner.getX() == 222)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(221, 743);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(222, 743);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the guide before proceeding through this door.");
-											}	
-										}
-										else
-										// Controls Guide, second door.
-										if (object.getX() == 224 && object.getY() == 737)
-										{
-											if (tutorialIsland.getStage() >= 2)
-											{
-												if (owner.getY() == 737)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(224, 736);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(224, 737);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the controls guide before proceeding through this door.");
-											}
-										}
-										else
-										// Combat Instructor, third door.
-										if (object.getX() == 220 || object.getY() == 727)
-										{
-											if (tutorialIsland.getStage() >= 5)
-											{
-												if (owner.getX() == 220)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(219, 727);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(220, 727);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the combat instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Cooking Instructor, fourth door.
-										if (object.getX() == 212 && object.getY() == 729)
-										{
-											if (tutorialIsland.getStage() >= 8)
-											{
-												if (owner.getX() == 212)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(211, 729);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(212, 729);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the cooking instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Financial Advisor, fifth door.
-										if (object.getX() == 206 && object.getY() == 730)
-										{
-											if (tutorialIsland.getStage() >= 9)
-											{
-												if (owner.getX() == 206)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(205, 730);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(206, 730);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the financial advisor before proceeding through this door.");	
-											}
-										}
-										else
-										// Fishing Instructor, sixth door.
-										if (object.getX() == 201 && object.getY() == 734)
-										{
-											if (tutorialIsland.getStage() >= 11)
-											{
-												if (owner.getX() == 201)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(201, 734);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(201, 733);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the fishing instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Mining Instructor, seventh door.
-										if (object.getX() == 198 && object.getY() == 746)
-										{
-											if (tutorialIsland.getStage() >= 15)
-											{
-												if (owner.getY() == 745)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(198, 746);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(198, 745);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the mining instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Bank Assistant, eight door.
-										if (object.getX() == 204 && object.getY() == 752)
-										{
-											if (tutorialIsland.getStage() >= 16)
-											{
-												if (owner.getX() == 203)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(204, 752);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(203, 752);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the bank assistant before proceeding through this door.");	
-											}
-										}
-										else
-										// Quest Advisor, ninth door.
-										if (object.getX() == 209 && object.getY() == 754)
-										{
-											if (tutorialIsland.getStage() >= 17)
-											{
-												if (owner.getY() == 753)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(209, 754);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(209, 753);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the quest advisor before proceeding through this door.");	
-											}
-										}
-										else
-										// Wilderness Guide, tenth door.
-										if (object.getX() == 217 && object.getY() == 760)
-										{
-											if (tutorialIsland.getStage() >= 18)
-											{
-												if (owner.getX() == 216)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(217, 760);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(216, 760);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the wilderness guide before proceeding through this door.");	
-											}
-										}
-										else
-										// Magic Instructor, tenth door.
-										if (object.getX() == 222 && object.getY() == 760)
-										{
-											if (tutorialIsland.getStage() >= 21)
-											{
-												if (owner.getX() == 221)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(222, 760);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(221, 760);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the magic instructor before proceeding through this door.");	
-											}
-										}
-
-										else
-										// Fatigue Expert, elevent door.
-										if (object.getX() == 226 && object.getY() == 760)
-										{
-											if (tutorialIsland.getStage() >= 23)
-											{
-												if (owner.getX() == 225)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(226, 760);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(225, 760);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the fatigue instructor before proceeding through this door.");	
-											}
-										}
-										else
-										// Community Instructor, tenth door.
-										if (object.getX() == 230 && object.getY() == 759)
-										{
-											if (tutorialIsland.getStage() >= 24)
-											{
-												if (owner.getY() == 758)
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(230, 759);
-												}
-												else
-												{
-													doDoor();
-													owner.sendMessage("You go through the door.");
-													owner.teleport(230, 758);
-												}
-											}
-											else
-											{
-												owner.sendMessage(Config.PREFIX + "You must speak to the community instructor before proceeding through this door.");	
-											}
-										}
-									}
-									else
-									{
-										owner.sendMessage(Config.PREFIX + "You must talk to the guide before proceeding through this door.");
 									}
 								break;
 								
@@ -2648,7 +2649,7 @@ public class WallObjectAction implements PacketHandler {
 								
 							case 151 : // Search wall for Rogues purse
 								owner.sendMessage("Small amounts of herb fungus are growing at the base of this cavern wall");
-								Quest junglePotion = owner.getQuest(39);
+								Quest junglePotion = owner.getQuest(Config.Quests.JUNGLE_POTION);
 								if(junglePotion != null) {
 									if(junglePotion.getStage() == 4 && !junglePotion.finished() && owner.getInventory().countId(824) == 0) {
 										World.registerEntity(new Item(823, 411, 3576, 1, owner));

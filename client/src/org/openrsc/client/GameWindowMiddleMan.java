@@ -40,6 +40,7 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 			user = DataOperations.addCharacters(user, 20);
 			password = pass;
 			pass = DataOperations.addCharacters(pass, 20);
+
 			if (user.trim().length() == 0) {
 				loginScreenPrint("You must enter both a username", "and a password - Please try again");
 				return;

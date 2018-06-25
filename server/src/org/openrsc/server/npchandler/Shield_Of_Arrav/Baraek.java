@@ -6,6 +6,7 @@
 // Without fur in inventory
 
 package org.openrsc.server.npchandler.Shield_Of_Arrav;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,7 +23,7 @@ public class Baraek implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(13);
+		Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
 		if(q != null) {
 			if(q.finished()) {
 				questNotStarted(npc, owner);
@@ -205,7 +206,7 @@ public class Baraek implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"Thanks!"}) {
 					public void finished() {
-						owner.incQuestCompletionStage(13);
+						owner.incQuestCompletionStage(Config.Quests.SHIELD_OF_ARRAV);
 						owner.setBusy(false);
 						npc.unblock();
 					}

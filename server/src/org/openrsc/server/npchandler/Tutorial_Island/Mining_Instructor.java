@@ -1,5 +1,6 @@
 
 package org.openrsc.server.npchandler.Tutorial_Island;
+import org.openrsc.server.Config;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.InvItem;
@@ -16,7 +17,7 @@ public class Mining_Instructor implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(100);
+		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -70,7 +71,7 @@ public class Mining_Instructor implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Hello I'm a veteran miner!", "I'm here to show you how to mine", "If you want to quickly find out what is in a rock you can prospect it", "right click on this rock here", "and select prospect"}) {
 					public void finished() {
-						owner.incQuestCompletionStage(100);
+						owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 						owner.setBusy(false);
 						npc.unblock();
 					}
@@ -90,7 +91,7 @@ public class Mining_Instructor implements NpcHandler {
 						owner.sendInventory();
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Now hit those rocks"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(100);
+								owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -104,7 +105,7 @@ public class Mining_Instructor implements NpcHandler {
 	private void mineChatC(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Very good", "If at a later date you can find a rock with copper ore", "You can take the copper ore and tin ore to a furnace", "use them on the furnace to make bronze bars", "which you can then either sell", "or use on anvils with a hammer", "To make weapons", "As your mining and smithing levels grow", "you will be able to mine various exciting new metals", "now go through the next door to speak to the bankers"}, true) {
 			public void finished() {
-				owner.incQuestCompletionStage(100);
+				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

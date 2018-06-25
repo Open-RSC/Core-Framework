@@ -111,9 +111,9 @@ public class SpellHandler implements PacketHandler {
 							}
 						}
 						
-                        if (affectedPlayer.isMod() || affectedPlayer.isDev() || affectedPlayer.isEvent())
+                        if ( affectedPlayer.isInvulnerable() /*affectedPlayer.isMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
                         {
-                        	player.sendMessage(Config.PREFIX + "You cannot attack Open RSC staff.");
+                        	player.sendMessage(Config.PREFIX + affectedPlayer.getUsername() + " is currently invulnerable!");
                         	player.resetFollowing();
                         	player.resetPath();
                         	return;
@@ -1043,14 +1043,14 @@ public class SpellHandler implements PacketHandler {
 	private void finalizeSpell(Player player, SpellDef spell, boolean message, String string) {
 		if (player.getLocation().onTutorialIsland())
 		{
-			Quest tutorialIsland = player.getQuest(100);
+			Quest tutorialIsland = player.getQuest(Config.Quests.TUTORIAL_ISLAND);
 			if (tutorialIsland != null)
 			{
 				if (tutorialIsland.getStage() == 19)
 				{
 					player.sendMessage("You have successfully cast a spell on the chicken.");
 					player.sendMessage("Speak to the magic instructor for further instructions.");
-					player.incQuestCompletionStage(100);
+					player.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 				}
 			}
 		}

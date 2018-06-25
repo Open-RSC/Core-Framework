@@ -4,6 +4,7 @@
 //NPC ID: 256
 
 package org.openrsc.server.npchandler.Heroes_Quest;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -26,9 +27,9 @@ public class Trobert implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(20);
-		Quest blackarm = owner.getQuest(51);
-		Quest phoenix = owner.getQuest(52);
+		Quest q = owner.getQuest(Config.Quests.HEROS_QUEST);
+		Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
+		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
 		
 		if (q == null)
 		{
@@ -133,7 +134,7 @@ public class Trobert implements NpcHandler
 																		{
 																			public void finished()
 																			{
-																				owner.incQuestCompletionStage(20);
+																				owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
 																				owner.sendMessage("Trobert gives you Hartigen's ID paper");
 																				owner.getInventory().add(573, 1);
 																				owner.sendInventory();

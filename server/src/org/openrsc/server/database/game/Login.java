@@ -57,7 +57,13 @@ import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
 
 import com.rscdaemon.scripting.quest.Quest;
+<<<<<<< HEAD
 import org.openrsc.server.Config;
+=======
+import java.net.InetSocketAddress;
+import java.time.Instant;
+import org.apache.commons.lang.StringEscapeUtils;
+>>>>>>> pr/15
 
 /**
  * A Transaction for handling player login requests.
@@ -399,30 +405,122 @@ public final class Login
 		}
 
 		Statement statement = connection.createStatement();
+        long usernameHash   = DataConversions.usernameToHash(username);
 
+<<<<<<< HEAD
 		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`pass`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + DataConversions.usernameToHash(username) + "'"))
+=======
+		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`password`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + usernameHash + "'"))
+>>>>>>> pr/15
 		{
 			if(rs.next() && rs.getInt("delete_date") == 0)
 			{
 				
 				int banned = rs.getInt("banned");
+<<<<<<< HEAD
                                 
 				if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
+=======
+				
+                /*System.out.println("Input Password: " + password);
+                System.out.println("MD5 Password: " + DataConversions.md5(password));
+                System.out.println("Salt: " + rs.getString("password_salt"));
+                System.out.println("Password + Salt: " + rs.getString("password_salt") + DataConversions.md5(password));
+                System.out.println("Guessed Password: " + DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password)));
+                System.out.println("Stored Password: " + rs.getString("password"));*/
+                
+				if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
+>>>>>>> pr/15
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{
 						sendLoginResponse(LoginResponse.CHARACTER_BANNED);
 					}
+<<<<<<< HEAD
                                         load(statement);
+=======
+                    else
+                    {
+                        load(statement);
+                    }
+					/*else
+					{
+						boolean isSubscriber = ((rs.getInt("sub_expires") - DataConversions.getTimeStamp()) > 0 ? true : false);
+						// If the player is subbed or if the player is staff or if the client dimensions are smaller than MAX_NON_SUB_WIDTH, load.
+						if(isSubscriber || rs.getInt("group_id") != 4 || clientWidth < MAX_NON_SUB_WIDTH)
+						{
+							load(statement);
+						}
+						else
+						{// referenced a single time in the project, so here it is.
+							sendLoginResponse(LoginResponse.CLIENT_DIMENSIONS_TOO_LARGE);
+						}
+					}*/
+>>>>>>> pr/15
 				}
 				else
-				{
+				{ // Password is wrong
 					sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
 				}
 			}
 			else
+<<<<<<< HEAD
 			{
 				sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
+=======
+			{ //User does not exist ... create it
+				//sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
+                
+                String salt         = DataConversions.generateSalt();
+                String pass         = DataConversions.sha512(salt + DataConversions.md5(password));
+                String creation_ip  = ((InetSocketAddress)session.getRemoteAddress()).getAddress().getHostAddress();
+                int owner           = -1;
+                
+                // Insert forum user ... not used.
+                // TODO: Check for failure.
+                Statement user      = connection.createStatement();
+                user.executeUpdate("INSERT INTO `users` (username) VALUES ('" + StringEscapeUtils.escapeSql(username) + "');", Statement.RETURN_GENERATED_KEYS);
+                ResultSet userRs    = user.getGeneratedKeys();
+                if (userRs.next())
+                    owner           = userRs.getInt(1);
+                else
+                    sendLoginResponse(LoginResponse.MYSQL_ERROR);
+                userRs.close();
+                user.close();
+
+                // Insert a character
+                Statement players   = connection.createStatement();
+                int playersResult   = players.executeUpdate(
+                    "INSERT INTO `rscd_players` (owner,user,username,password,password_salt,creation_date,creation_ip)"
+                     + " VALUES ("
+                        + owner + ","
+                        + "'" + usernameHash + "',"// user
+                        + "'" + StringEscapeUtils.escapeSql(username) + "',"// username
+                        + "'" + pass + "'," // password
+                        + "'" + StringEscapeUtils.escapeSql(salt) + "'," // salt
+                        + Instant.now().getEpochSecond() + "," // creation_date
+                        + "'" + creation_ip + "'" // creation_ip
+                    + ");"
+                );
+                players.close();
+                
+                if(playersResult != 1)
+                    sendLoginResponse(LoginResponse.MYSQL_ERROR);
+                
+                // Insert character stats
+                // TODO: Check for failure
+                Statement curstats  = connection.createStatement();
+                curstats.executeUpdate("INSERT INTO `rscd_curstats` (user) VALUES ('" + usernameHash + "');");
+                curstats.close();
+                
+                // Insert character stats
+                // TODO: Check for failure
+                Statement experience    = connection.createStatement();
+                experience.executeUpdate("INSERT INTO `rscd_experience` (user) VALUES ('" + usernameHash + "');");
+                experience.close();
+                
+                load(statement);
+>>>>>>> pr/15
 			}
 		}
 		catch(SQLException e)

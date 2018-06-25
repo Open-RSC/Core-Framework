@@ -1,0 +1,208 @@
+Dialog requests:
+Casting a god spell before completion of the mage arena outside of the mage arena.
+Message for using disk of returning
+
+Misc:
+When exactly is Charge spell acquired in the mage arena miniquest?
+
+-------------------
+-  Core Changes   -
+-------------------
+
+- remove event as a staff type ... re-evaluate existing events
+
+- wilderness is always P2P ... configure to not cycle
+
+- wilderness command box has incorrectly rendered % ... % isn't rendering as a newline at all
+
+- remove teleport pools
+
+- change captcha to a generator ... like WolfKingdomReborn
+
+- Duke of Lumbridge should only have dialog option for anti dragon shield if the player does not have one in inventory.
+
+- Change stat numbers in function calls to an enum for better readability.
+
+- Quests still give exp at 100 fatigue. Player.increaseQuestXp ... Plague City quest completion seems to get it the closest to right.
+
+- Bank note item ids should be 10k + original item id. Period.
+
+- Remove all references to RSCU/RSCUnity/RSC Unity
+
+- Merge in Marwolf's code
+
+- World definitions that decide if the world is F2P or P2P. Need to implement disabling of P2P element if F2P world. Later on, create additional world types that have different rules like deathmatch anywhere (before wildy)
+
+- Fix sound for client. jre9 doesn't include the audio player. Might be we need to package the library with the client.
+
+- Update landscape from latest client.
+
+
+
+---------------------
+- Messaging Changes -
+---------------------
+
+- dlong can not wear
+you have not earned the right to wear this yet
+you need to complete the Lost city of zenaris quest
+[attack level]
+
+- daxe can not wear
+you have not earned the right to wear this yet
+you need to complete the Hero's guild entry quest
+[attack level]
+
+- dsq can not wear:
+you have not earned the right to wear this yet
+you need to complete the legend's guild quest
+[defense level]
+
+
+
+---------------------
+-  Trading Changes  -
+---------------------
+
+
+- Messages on staking/trading non-tradeables
+This object cannot be traded with other players
+This object cannot be added to a duel offer
+
+- Selling Non-tradeables to a shop
+This object can't be sold in shops
+
+- Implement non tradeable can't sell to shop, can't offer/show in trade/stake
+- Should be able to drop non-tradeables, but other players can not see it (DropHandler.java)
+items.txt has non-tradeable item list
+- Dropping items is only visible for the player who dropped it for ??? seconds
+New field in def_item table
+Load into items.dat through ItemExporter
+Load on world load new field
+DropHandler.java
+TradeHandler.java
+DuelHandler.java
+AuctionHouse
+
+
+---------------------
+-   Rares Changes   -
+---------------------
+
+
+- Thesallia regives scythe/bunny ears ... dialog option
+Thessalia dialog:
+I have lost my bunny ears can I get some more please?
+I have lost my scythe can I get another please?
+What have you got?
+No, thank you
+
+- Regaining bunny ears dialog:
+Player: I have lost my bunny ears can I get some more please?
+Thessalia: Ohh you poor dear, I have some more here
+[White] Thessalia gives you some new bunny ears
+
+- Regaining scythe dialog:
+Player: I have lost my scythe can I get another please?
+Thessalia: Ohh you poor dear, I have another here
+[White] Thessalia gives you a new scythe
+
+- Picking up a second pair of bunny ears:
+You don't need another set of bunny ears
+You only have one head
+
+- Picking up a second scythe:
+You don't need another scythe
+You already have one
+
+- Telekenetic grabbable items (seems to be just bunny ears and scythe)
+I can't use telekeneic grab on this object
+Seems to only be bunny ears and scythe
+
+Drinking half wine:
+same as normal wine ... needs to be implemented
+
+Eating a pumpkin:
+You eat the pumpkin
+
+Eating an easter egg:
+You eat the easter egg
+
+- Christmas Cracker pull messages ... also has cracker above the puller's head ... prize is party hat and silver ore ... other side gets a random item
+You pull a christmas cracker
+You get the prize from the cracker
+You pull a christmas cracker
+The person you pull the cracker with gets the prize
+
+
+
+---------------------
+-   Quest Changes   -
+---------------------
+
+
+- unimplemented quests: Gertrude's Cat, Murder Mystery, Digsite, Grand Tree, Watchtower, Shilo Village, Underground Pass, Observatory Quest, Sea Slug, Waterfall Quest, Temple of Ikov, Tribal Totem, Family Crest, The Hazel Cult, The Holy Grail, Scorpion Catcher, Dwarf Canon, Tourist Trap, Fight Arena, Witch's House
+
+- Most existing quests do not reward the requisite exp.
+
+- Gerrant does nothing in the Heros Quest. Is this correct? If not implement needed behaviour
+
+- miniquests / minigames
+implement mage arena ... messages for this ... mage arena portal exact goto location
+implement mage arena portal ... ObjectAction.handleWalkThrough
+add gnome ball and fishing trawler
+Can not cast god spells without cape/staff ... messages for this?
+When can you cast charge?
+
+- special message setting up dwarf canon near engineer ... 78x95 tiles
+it is not permitted to set up a cannon...
+...this close to the dwarf black guard
+
+-------------------
+- Command Changes -
+-------------------
+
+CommandHandler.java
+- Customize Commands:
+-- Add command to list commands... customize mudclient.java drawCommandsWindow()
+-- Show commands syntax when not enough arguments supplied instead of silent fail.
+-- Show character edit/design menu ... change appearance
+-- Examine commands and see if they work for how I want. Modify as needed.
+-- Only staff can use stuck.
+-- Skip Tutorial command teleports to Lumbridge. Examine the free items.
+-- Refreshwoodcut needs to be fixed
+-- teleport to player command
+-- command to go invulnerable ... accepts user .. if no user then current player ... mod+ only
+-- refresh other defs ... reload whole world?
+-- pmod+ can temporarily silent mute a player. Log this action!!!
+
+-------------------
+- Low Pri Changes -
+-------------------
+
+- Invulnerable players should render differently. Remove from list of targets OR render names differently in list of targets.
+
+- Password does not replace : character (Client: DataOperations.java Function: addCharacters)
+
+- Completely remove runecrafting. Remove item definitions, and runecrafting altar object definitions, and code associated thereof.
+
+- Player.isBlackarm and Player.isPhoenix are both not used. Along with the field in the DB. Remove them OR change quest checking to check the player instead. Would also need to save blackarm/phoenix state.
+
+-------------------
+-      Subs       -
+-------------------
+
+- Higher EXP Rate (config.xml, Player.increaseXP)
+- Subscribers sleep faster (Player.sleep, Player.temporaryFatigueThrottle)
+- Subscribers fatigue slower (Player.increaseXP)
+- Subscribers can use pool portals more often. (Player.canWarp)
+- Subscribers can have more auction house slots. (AuctionHouseHandler.java)
+- Double Drops from mods (Npc.killedBy)
+- Subscribers craft 2x runes  (ObjectAction.java, craftRunes)
+- Subscribers have 2x mining (ObjectAction.java, handleMining)
+- Subscribers have 2x woodcutting (ObjectAction.java, handleWoodcutting)
+- Subscribers have 2x fishing (ObjectAction.java, handleFishing)
+- [Removed] Subscribers can resend messages from history.
+- [Removed] Subscribers can resize window. (JFrameDelegate.onLogin)
+- [Removed] Subscribers can report. (ReportAbuseHandler.handlePacket)
+- [Removed] Subscribers can use the Gnome Glider

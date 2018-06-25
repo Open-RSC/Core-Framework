@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Dragon_Slayer;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -18,7 +19,7 @@ public class Klarense implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(17);
+		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
 		if(q != null) {
 			if(q.finished()) {
 				afterShipSold(npc, owner);
@@ -180,7 +181,7 @@ public class Klarense implements NpcHandler {
 			owner.sendInventory();
 			World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Ok she's all yours"}) {
 				public void finished() {
-					owner.incQuestCompletionStage(17); // 0x2
+					owner.incQuestCompletionStage(Config.Quests.DRAGON_SLAYER); // 0x2
 					owner.setBusy(false);
 					npc.unblock();
 				}

@@ -1,5 +1,6 @@
 package org.openrsc.server.packethandler;
 import org.apache.mina.common.IoSession;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.DelayedGenericMessage;
 import org.openrsc.server.event.DelayedQuestChat;
@@ -73,7 +74,7 @@ public class PickupItem implements PacketHandler {
 										final Npc weaponsmaster = World.getNpc(37, 102, 1476, 107, 1480);
 										if(weaponsmaster != null && owner.getLocation().inBounds(102, 1476, 107, 1480)) {
 											owner.setBusy(true);
-											Quest phoenix = owner.getQuest(52);
+											Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
 											if(phoenix != null) {
 												if(!phoenix.finished()) {
 													World.getDelayedEventHandler().add(new DelayedQuestChat(weaponsmaster, owner, new String[] {"Hey thief!"}, true) {
@@ -154,7 +155,7 @@ public class PickupItem implements PacketHandler {
 									break;
 									
 									case 412: // Skull [QUEST]
-										if (owner.getQuestCompletionStage(5) == 2 || owner.getQuestCompletionStage(5) == 3 && !owner.getInventory().contains(412)) {
+										if (owner.getQuestCompletionStage(Config.Quests.THE_RESTLESS_GHOST) == 2 || owner.getQuestCompletionStage(Config.Quests.THE_RESTLESS_GHOST) == 3 && !owner.getInventory().contains(412)) {
 											if (!owner.hasKilledSkeleton()) {
 												Npc skeleton = new Npc(40, owner.getX(), owner.getY(), owner.getX() - 3, owner.getX() + 3, owner.getY() - 3, owner.getY() + 3);
 												owner.sendMessage("Out of nowhere a skeleton appears!");

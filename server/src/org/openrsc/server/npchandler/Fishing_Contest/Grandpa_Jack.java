@@ -5,6 +5,7 @@
 //scripted by Mr. Zain
 
 package org.openrsc.server.npchandler.Fishing_Contest;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.ChatMessage;
@@ -22,7 +23,7 @@ public class Grandpa_Jack implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(26);
+		Quest q = owner.getQuest(Config.Quests.FISHING_CONTEST);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);

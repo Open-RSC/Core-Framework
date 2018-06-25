@@ -15,18 +15,13 @@ import org.openrsc.server.model.World;
 public final class ItemExporter {
 
 	public static void main(String[] args) throws Exception {
-		if (args.length < 1) 
-		{
-			System.out
-					.println("No configuration file provided - usage: Server <configfile>");
-			return;
-		}
 		try 
 		{
-			File file = new File(args[0]);
-			if (!file.exists()) {
-				System.err.println("Could not find configuration file: "
-						+ args[0]);
+            String configFile   = args.length < 1 ? "config/config.xml" : args[0];
+            File file           = new File(configFile);
+			if(!file.exists())
+			{
+				System.err.println("Could not find configuration file: " + configFile);
 				return;
 			}
 			Config.initConfig(file);
@@ -57,6 +52,21 @@ public final class ItemExporter {
 			out.writeBoolean(def.isStackable());
 			out.writeBoolean(def.isWieldable());
 			out.writeBoolean(def.questItem());
+            
+            /*System.out.println("Name Length: " + def.getName().length());
+            System.out.println("Name: " + def.getName());
+            System.out.println("Description Length: " + def.getDescription().length());
+            System.out.println("Description: " + def.getDescription());
+            System.out.println("Command Length: " + def.getCommand().length());
+            System.out.println("Base Price: " + def.getCommand());
+            System.out.println("Command: " + def.getBasePrice());
+            System.out.println("Base Token Price: " + def.getBaseTokenPrice());
+            System.out.println("Sprite: " + def.getSprite());
+            System.out.println("Picture Mask: " + def.getPictureMask());
+            System.out.println("Is Stackable: " + def.isStackable());
+            System.out.println("Is Wieldable: " + def.isWieldable());
+            System.out.println("Is Quest Item: " + def.questItem());
+            System.out.println("---------------------------");*/
 		}
 		Files.write(Paths.get("items.dat"), baos.toByteArray());
 	}

@@ -3,6 +3,7 @@
 
 package org.openrsc.server.npchandler.Demon_Slayer;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
@@ -21,7 +22,7 @@ public class Captain_Rovin implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest demonSlayer = owner.getQuest(3);
+		Quest demonSlayer = owner.getQuest(Config.Quests.DEMON_SLAYER);
 		
 		if(demonSlayer != null) 
 		{

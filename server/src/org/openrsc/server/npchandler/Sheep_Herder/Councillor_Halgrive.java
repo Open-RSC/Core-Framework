@@ -3,6 +3,7 @@
 * INSERT INTO `cconfig`.`conf_npc` (`npc_id`, `class_name`, `id`) VALUES ('436', 'org.openrsc.server.npchandler.Sheep_Herder.Councillor_Halgrive', NULL);
 */
 package org.openrsc.server.npchandler.Sheep_Herder;
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
@@ -17,7 +18,7 @@ public class Councillor_Halgrive implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(34);
+		Quest q = owner.getQuest(Config.Quests.SHEEP_HERDER);
 		if (q != null) {
 			switch (q.getStage()) {
 			case 0:
@@ -105,7 +106,7 @@ public class Councillor_Halgrive implements NpcHandler {
 								owner.sendMessage("The councillor gives you some sheep poison");
 								owner.getInventory().add(new InvItem(759, 1));
 								owner.sendInventory();
-								owner.addQuest(34,4);
+								owner.addQuest(Config.Quests.SHEEP_HERDER, 4);
 								owner.setBusy(false);
 								npc.unblock();
 								

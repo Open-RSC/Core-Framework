@@ -3,6 +3,7 @@
 */
 package org.openrsc.server.npchandler.Dorics_Quest;
 
+import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
@@ -21,7 +22,7 @@ public class Doric implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(4);
+		Quest q = owner.getQuest(Config.Quests.DORICS_QUEST);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -72,7 +73,7 @@ public class Doric implements NpcHandler {
 																				final String[] messages21 = {"Certainly, I will get them for you. Goodbye"};
 																				World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, messages21) {
 																					public void finished() {
-																						owner.addQuest(4, 1);
+																						owner.addQuest(Config.Quests.DORICS_QUEST, 1);
 																						owner.setBusy(false);
 																						npc.unblock();
 																					}
@@ -187,8 +188,8 @@ public class Doric implements NpcHandler {
 																			owner.sendMessage("@gre@You have gained 1 quest point!");		
 																			owner.incQuestExp(14, 1200);
 																			owner.sendStat(14);
-																			owner.finishQuest(4);
-																			owner.incQuestCompletionStage(4);
+																			owner.finishQuest(Config.Quests.DORICS_QUEST);
+																			owner.incQuestCompletionStage(Config.Quests.DORICS_QUEST);
 																			owner.setBusy(false);
 																			npc.unblock();
 																			Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed <span class=\"recent_quest\">Doric's</span> quest!"));

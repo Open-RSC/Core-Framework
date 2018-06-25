@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.runescape.entity.attribute.DropItemAttr;
+import org.openrsc.server.Config;
 
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.entityhandling.defs.NPCDef;
@@ -262,14 +263,14 @@ public class Npc extends Mob {
 				case 19: // Tutorial Island Rat
 				if (player.getLocation().onTutorialIsland())
 				{
-					Quest tutorialIsland = player.getQuest(100);
+					Quest tutorialIsland = player.getQuest(Config.Quests.TUTORIAL_ISLAND);
 					if (tutorialIsland != null)
 					{
 						if (tutorialIsland.getStage() == 3)
 						{
 							player.sendMessage("You have successfully killed the rat.");
 							player.sendMessage("Speak to the combat instructor for furhter instructions");
-							player.incQuestCompletionStage(100);
+							player.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
 						}
 					}
 				}
@@ -277,15 +278,15 @@ public class Npc extends Mob {
 				
 				// make sure the player is on the right stage...
 				case 216:
-					if(player.getQuest(19) != null && player.getQuest(19).getStage() == 3)
+					if(player.getQuest(Config.Quests.LOST_CITY) != null && player.getQuest(Config.Quests.LOST_CITY).getStage() == 3)
 					{
-						player.incQuestCompletionStage(19);
+						player.incQuestCompletionStage(Config.Quests.LOST_CITY);
 						player.sendMessage("You can now cut your branch.");
 					}
 				break;
 				
 				case 25:
-					Quest phoenix = winner.getQuest(52);
+					Quest phoenix = winner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
 					if(winner.getInventory().countId(49) == 0) {
 						if(phoenix != null) {
 							if(!phoenix.finished()) {
@@ -332,7 +333,7 @@ public class Npc extends Mob {
 				break;
 				
 				case 192:
-					Quest dragonslayer = winner.getQuest(17);
+					Quest dragonslayer = winner.getQuest(Config.Quests.DRAGON_SLAYER);
 					if (dragonslayer != null)
 						if (!dragonslayer.finished())
 							if (dragonslayer.getStage() > 0)
@@ -341,10 +342,10 @@ public class Npc extends Mob {
 				break;
 				
 				case 196: // Elvarg
-					Quest q = player.getQuest(17);
+					Quest q = player.getQuest(Config.Quests.DRAGON_SLAYER);
 					if (q != null) {
 						if (q.getStage() == 3 && !q.finished()) {
-							player.finishQuest(17);
+							player.finishQuest(Config.Quests.DRAGON_SLAYER);
 							player.sendQuestPointUpdate();
 							player.sendMessage("You have completed the Dragon Slayer!");
 							player.sendMessage("You have now earned the right to wear Rune Platemail armor.");
@@ -490,7 +491,7 @@ public class Npc extends Mob {
 	private Player findVictim() {
 		for (Player p : World.getZone(this.getX(), this.getY()).getPlayers()) {
 			if (p.withinRange(this, 2)) {
-				if ((p.getCombatLevel() > 2 * super.getCombatLevel() && !getLocation().inWilderness()) || p.isMod() || p.isDev() || p.isBusy() || System.currentTimeMillis() - p.getCombatTimer() < 500 || System.currentTimeMillis() - p.getRunTimer() < 3000 || !p.nextTo(this))	
+				if ((p.getCombatLevel() > 2 * super.getCombatLevel() && !getLocation().inWilderness()) ||  p.isInvulnerable() /*p.isMod() || p.isDev()*/ || p.isBusy() || System.currentTimeMillis() - p.getCombatTimer() < 500 || System.currentTimeMillis() - p.getRunTimer() < 3000 || !p.nextTo(this))	
 					continue;
 				if (getID() == 232) {
 					for (Player player : getViewArea().getPlayersInView())

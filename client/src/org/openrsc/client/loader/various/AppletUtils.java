@@ -22,9 +22,9 @@ public class AppletUtils {
 	public static int height = 334;
 
 	public static final File CACHE = new File(
-			System.getProperty("user.home") + File.separator + "openrsc");
+			System.getProperty("user.home") + File.separator + ".openrsc");
 
-	public static final File CACHEFILE = new File(CACHE + "/" + "openrsc.zip");
+	public static final File CACHEFILE = new File("./openrsc.zip");
 
 	public static String DISPLAY_MESSAGE = "Loading...";
 
