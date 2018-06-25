@@ -56,11 +56,8 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 		if (AppletUtils.doDirChecks())
 			try {
 				AppletUtils.DISPLAY_MESSAGE = "Downloading cache ";
-				new VirtualBrowser().getRaw(new URL("http://localhost/play/openrsc.zip"), new ProgressCallback() {
-<<<<<<< HEAD
-                                //new VirtualBrowser().getRaw(new URL("http://openrsc.com/play/openrsc.zip"), new ProgressCallback() {
-=======
->>>>>>> pr/15
+				new VirtualBrowser().getRaw(new URL("http://localhost/downloads/openrsc.zip"), new ProgressCallback() {
+
 					@Override
 					public void onComplete(byte[] bytes) {
 						try {

@@ -57,13 +57,12 @@ import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
 
 import com.rscdaemon.scripting.quest.Quest;
-<<<<<<< HEAD
 import org.openrsc.server.Config;
-=======
+
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import org.apache.commons.lang.StringEscapeUtils;
->>>>>>> pr/15
+
 
 /**
  * A Transaction for handling player login requests.
@@ -204,7 +203,7 @@ public final class Login
 		throws
 			SQLException
 	{
-		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`group_id`, `login_date`, `logout_date`, `login_ip`, `death_time`, `quests`, `combat`, `x`, `y`, `fatigue`, `combatstyle`, `block_chat`, `block_private`, `block_trade`, `block_duel`, `block_global`, `cameraauto`, `killnotify`, `onemouse`, `soundoff`, `showroof`, `autoscreenshot`, `combatwindow`, `haircolour`, `topcolour`, `trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`, `skulled`, `kills`, `deaths`, `muted`, `store_employee`, `draynor_hopper`, `guild_hopper`, `banana_job`, `bananas_in_crate`, `rum_in_karamja_crate`, `rum_in_sarim_crate`, `has_traiborn_key`, `collecting_bones`, `bones`, `balls_of_wool`, `killed_skeleton`, `leela_has_key`, `lever_A_down`, `lever_B_down`, `lever_C_down`, `lever_D_down`, `lever_E_down`, `lever_F_down`, `lady_patches`, `on_crandor`, `has_map_piece`, `railing1`, `railing2`, `railing3`, `railing4`, `railing5`, `railing6`, `pipe`, `barrel`, `axle`, `shaft`, `poison`, `online`, `exp_attack`, `exp_defense`, `exp_strength`, `exp_hits`, `exp_ranged`, `exp_prayer`, `exp_magic`, `exp_cooking`, `exp_woodcut`, `exp_fletching`, `exp_fishing`, `exp_firemaking`, `exp_crafting`, `exp_smithing`, `exp_mining`, `exp_herblaw`, `exp_agility`, `exp_thieving`, `exp_runecrafting`, `cur_attack`, `cur_defense`, `cur_strength`, `cur_hits`, `cur_ranged`, `cur_prayer`, `cur_magic`, `cur_cooking`, `cur_woodcut`, `cur_fletching`, `cur_fishing`, `cur_firemaking`, `cur_crafting`, `cur_smithing`, `cur_mining`, `cur_herblaw`, `cur_agility`, `cur_thieving`, `cur_runecrafting`, `users`.`sub_expires`, (SELECT COUNT(`id`) FROM `messages` WHERE `showed` = '0' AND `show_message` = '1' AND `owner` = `rscd_players`.`owner`) AS `unread_messages`, (SELECT `time` FROM `recovery_questions` WHERE `account` = `rscd_players`.`owner` ORDER BY `time` DESC LIMIT 1) AS `recoveries_questions` FROM `rscd_players` JOIN `rscd_experience` ON `rscd_players`.`user` = `rscd_experience`.`user` JOIN `rscd_curstats` ON `rscd_players`.`user` = `rscd_curstats`.`user` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `rscd_players`.`user` = '" + DataConversions.usernameToHash(username) + "'"))
+		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`group_id`, `login_date`, `logout_date`, `login_ip`, `death_time`, `quests`, `combat`, `x`, `y`, `fatigue`, `combatstyle`, `block_chat`, `block_private`, `block_trade`, `block_duel`, `block_global`, `cameraauto`, `killnotify`, `onemouse`, `soundoff`, `showroof`, `autoscreenshot`, `combatwindow`, `haircolour`, `topcolour`, `trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`, `skulled`, `kills`, `deaths`, `muted`, `store_employee`, `draynor_hopper`, `guild_hopper`, `banana_job`, `bananas_in_crate`, `rum_in_karamja_crate`, `rum_in_sarim_crate`, `has_traiborn_key`, `collecting_bones`, `bones`, `balls_of_wool`, `killed_skeleton`, `leela_has_key`, `lever_A_down`, `lever_B_down`, `lever_C_down`, `lever_D_down`, `lever_E_down`, `lever_F_down`, `lady_patches`, `on_crandor`, `has_map_piece`, `railing1`, `railing2`, `railing3`, `railing4`, `railing5`, `railing6`, `pipe`, `barrel`, `axle`, `shaft`, `poison`, `online`, `exp_attack`, `exp_defense`, `exp_strength`, `exp_hits`, `exp_ranged`, `exp_prayer`, `exp_magic`, `exp_cooking`, `exp_woodcut`, `exp_fletching`, `exp_fishing`, `exp_firemaking`, `exp_crafting`, `exp_smithing`, `exp_mining`, `exp_herblaw`, `exp_agility`, `exp_thieving`, `exp_runecrafting`, `cur_attack`, `cur_defense`, `cur_strength`, `cur_hits`, `cur_ranged`, `cur_prayer`, `cur_magic`, `cur_cooking`, `cur_woodcut`, `cur_fletching`, `cur_fishing`, `cur_firemaking`, `cur_crafting`, `cur_smithing`, `cur_mining`, `cur_herblaw`, `cur_agility`, `cur_thieving`, `cur_runecrafting`, (SELECT COUNT(`id`) FROM `messages` WHERE `showed` = '0' AND `show_message` = '1' AND `owner` = `rscd_players`.`owner`) AS `unread_messages`, (SELECT `time` FROM `recovery_questions` WHERE `account` = `rscd_players`.`owner` ORDER BY `time` DESC LIMIT 1) AS `recoveries_questions` FROM `rscd_players` JOIN `rscd_experience` ON `rscd_players`.`user` = `rscd_experience`.`user` JOIN `rscd_curstats` ON `rscd_players`.`user` = `rscd_curstats`.`user` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `rscd_players`.`user` = '" + DataConversions.usernameToHash(username) + "'"))
 		{
 			if(rs.next())
 			{
@@ -243,7 +242,6 @@ public final class Login
 				player.setKills(rs.getInt("kills"));
 				player.setDeaths(rs.getInt("deaths"));
 				player.setMuted(rs.getInt("muted"));
-				player.setSubscriptionExpires(rs.getLong("sub_expires"));
 				player.setUnreadMessages(rs.getInt("unread_messages"));
 				player.setRecoveryQuestions(rs.getLong("recoveries_questions"));	
 
@@ -407,56 +405,21 @@ public final class Login
 		Statement statement = connection.createStatement();
         long usernameHash   = DataConversions.usernameToHash(username);
 
-<<<<<<< HEAD
-		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`pass`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + DataConversions.usernameToHash(username) + "'"))
-=======
-		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`password`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id`, `sub_expires` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + usernameHash + "'"))
->>>>>>> pr/15
+		try(ResultSet rs = statement.executeQuery("SELECT `owner`, `rscd_players`.`pass`, `rscd_players`.`password_salt`, `login_ip`, `banned`, `delete_date`, `rscd_players`.`group_id` FROM `rscd_players` JOIN `users` ON `rscd_players`.`owner` = `users`.`id` WHERE `user` = '" + usernameHash + "'"))
 		{
 			if(rs.next() && rs.getInt("delete_date") == 0)
 			{
 				
 				int banned = rs.getInt("banned");
-<<<<<<< HEAD
                                 
-				if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
-=======
-				
-                /*System.out.println("Input Password: " + password);
-                System.out.println("MD5 Password: " + DataConversions.md5(password));
-                System.out.println("Salt: " + rs.getString("password_salt"));
-                System.out.println("Password + Salt: " + rs.getString("password_salt") + DataConversions.md5(password));
-                System.out.println("Guessed Password: " + DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password)));
-                System.out.println("Stored Password: " + rs.getString("password"));*/
-                
-				if(rs.getString("password").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
->>>>>>> pr/15
+				//if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
+                                if(rs.getString("pass").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{
 						sendLoginResponse(LoginResponse.CHARACTER_BANNED);
 					}
-<<<<<<< HEAD
                                         load(statement);
-=======
-                    else
-                    {
-                        load(statement);
-                    }
-					/*else
-					{
-						boolean isSubscriber = ((rs.getInt("sub_expires") - DataConversions.getTimeStamp()) > 0 ? true : false);
-						// If the player is subbed or if the player is staff or if the client dimensions are smaller than MAX_NON_SUB_WIDTH, load.
-						if(isSubscriber || rs.getInt("group_id") != 4 || clientWidth < MAX_NON_SUB_WIDTH)
-						{
-							load(statement);
-						}
-						else
-						{// referenced a single time in the project, so here it is.
-							sendLoginResponse(LoginResponse.CLIENT_DIMENSIONS_TOO_LARGE);
-						}
-					}*/
->>>>>>> pr/15
 				}
 				else
 				{ // Password is wrong
@@ -464,10 +427,6 @@ public final class Login
 				}
 			}
 			else
-<<<<<<< HEAD
-			{
-				sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
-=======
 			{ //User does not exist ... create it
 				//sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
                 
@@ -491,7 +450,7 @@ public final class Login
                 // Insert a character
                 Statement players   = connection.createStatement();
                 int playersResult   = players.executeUpdate(
-                    "INSERT INTO `rscd_players` (owner,user,username,password,password_salt,creation_date,creation_ip)"
+                    "INSERT INTO `rscd_players` (owner,user,username,pass,password_salt,creation_date,creation_ip)"
                      + " VALUES ("
                         + owner + ","
                         + "'" + usernameHash + "',"// user
@@ -520,7 +479,7 @@ public final class Login
                 experience.close();
                 
                 load(statement);
->>>>>>> pr/15
+//>>>>>>> pr/15
 			}
 		}
 		catch(SQLException e)

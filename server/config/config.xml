@@ -19,8 +19,8 @@
 
 	<entry key="dbhost">127.0.0.1</entry>
 	<entry key="dbname">openrsc</entry>
-	<entry key="dblogin">rsc</entry>
-	<entry key="dbpass">bR3FWRFxaeKdacHW</entry>
+	<entry key="dblogin">root</entry>
+	<entry key="dbpass">malware</entry>
 	
 	<entry key="configdbname">openrsc_config</entry>
 	<entry key="logdbname">openrsc_logs</entry>

@@ -5,10 +5,6 @@ import java.net.InetSocketAddress;
 public class Config 
 {
 	public static String IP = "localhost";
-<<<<<<< HEAD
-        //public static String IP = "game.openrsc.com";
-=======
->>>>>>> pr/15
 	public static int PORT = 53595;
 	public static InetSocketAddress ADDR = new InetSocketAddress(IP, PORT);	
 	public static int CLIENT_VERSION = 7;
