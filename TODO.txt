@@ -12,28 +12,6 @@
 
 - Remove all references to RSCU/RSCUnity/RSC Unity
 
-- Update landscape from latest client.
-
-
----------------------
--   Rares Changes   -
----------------------
-
-Drinking half wine:
-same as normal wine ... needs to be implemented
-
-Eating a pumpkin:
-You eat the pumpkin
-
-Eating an easter egg:
-You eat the easter egg
-
-- Christmas Cracker pull messages ... also has cracker above the puller's head ... prize is party hat and silver ore ... other side gets a random item
-You pull a christmas cracker
-You get the prize from the cracker
-You pull a christmas cracker
-The person you pull the cracker with gets the prize
-
 
 ---------------------
 -   Quest Changes   -
