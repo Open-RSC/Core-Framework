@@ -2,13 +2,9 @@
 -  Core Changes   -
 -------------------
 
-- Re-evaluate existing events
-
 - Configure wilderness to not cycle between f2p/p2p
 
 - wilderness command box has incorrectly rendered % ... % isn't rendering as a newline at all
-
-- Change stat numbers in function calls to an enum for better readability.
 
 - Remove all references to RSCU/RSCUnity/RSC Unity
 
@@ -20,5 +16,3 @@
 - Password does not replace : character (Client: DataOperations.java Function: addCharacters)
 
 - Simplify exp boost multipliers. Fix some defects in the original code. Player.increaseXp
-
-- Gerrant does nothing in the Heros Quest. Is this correct? If not implement needed behaviour
