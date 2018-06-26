@@ -1,13 +1,10 @@
-Dialog requests:
-Casting a god spell before completion of the mage arena outside of the mage arena.
-Message for using disk of returning
-
-Misc:
-When exactly is Charge spell acquired in the mage arena miniquest?
-
 -------------------
 -  Core Changes   -
 -------------------
+
+- Commit changes to openrsc_config database ... def_mining, def_fish, def_fishing for tutorial island. Retest tutorial island afterward.
+
+
 
 - remove event as a staff type ... re-evaluate existing events
 
@@ -187,6 +184,10 @@ CommandHandler.java
 - Completely remove runecrafting. Remove item definitions, and runecrafting altar object definitions, and code associated thereof.
 
 - Player.isBlackarm and Player.isPhoenix are both not used. Along with the field in the DB. Remove them OR change quest checking to check the player instead. Would also need to save blackarm/phoenix state.
+
+- Remove global message when a player gains a level >= 95 Player.increaseXp
+
+- Simplify exp boost multipliers. Fix some defects in the original code. Player.increaseXp
 
 -------------------
 -      Subs       -
