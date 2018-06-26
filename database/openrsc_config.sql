@@ -659,7 +659,7 @@ CREATE TABLE `def_item` (
   `quest` tinyint(1) NOT NULL DEFAULT '0',
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `notable` int(1) NOT NULL,
-  `tradable` int(1) NOT NULL DEFAULT '0',
+  `tradable` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3001 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
