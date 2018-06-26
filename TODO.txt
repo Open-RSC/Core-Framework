@@ -2,29 +2,15 @@
 -  Core Changes   -
 -------------------
 
-- remove event as a staff type ... re-evaluate existing events
+- Re-evaluate existing events
 
-- wilderness is always P2P ... configure to not cycle
+- Configure wilderness to not cycle between f2p/p2p
 
 - wilderness command box has incorrectly rendered % ... % isn't rendering as a newline at all
 
 - Change stat numbers in function calls to an enum for better readability.
 
 - Remove all references to RSCU/RSCUnity/RSC Unity
-
-
----------------------
--   Quest Changes   -
----------------------
-
-
-- unimplemented quests: Gertrude's Cat, Murder Mystery, Digsite, Grand Tree, Watchtower, Shilo Village, Underground Pass, Observatory Quest, Sea Slug, Waterfall Quest, Temple of Ikov, Tribal Totem, Family Crest, The Hazel Cult, The Holy Grail, Scorpion Catcher, Dwarf Canon, Tourist Trap, Fight Arena, Witch's House
-
-- Gerrant does nothing in the Heros Quest. Is this correct? If not implement needed behaviour
-
-- special message setting up dwarf canon near engineer ... 78x95 tiles
-it is not permitted to set up a cannon...
-...this close to the dwarf black guard
 
 
 -------------------
@@ -35,21 +21,4 @@ it is not permitted to set up a cannon...
 
 - Simplify exp boost multipliers. Fix some defects in the original code. Player.increaseXp
 
--------------------
--      Subs       -
--------------------
-
-- Higher EXP Rate (config.xml, Player.increaseXP)
-- Subscribers sleep faster (Player.sleep, Player.temporaryFatigueThrottle)
-- Subscribers fatigue slower (Player.increaseXP)
-- Subscribers can use pool portals more often. (Player.canWarp)
-- Subscribers can have more auction house slots. (AuctionHouseHandler.java)
-- Double Drops from mods (Npc.killedBy)
-- Subscribers craft 2x runes  (ObjectAction.java, craftRunes)
-- Subscribers have 2x mining (ObjectAction.java, handleMining)
-- Subscribers have 2x woodcutting (ObjectAction.java, handleWoodcutting)
-- Subscribers have 2x fishing (ObjectAction.java, handleFishing)
-- [Removed] Subscribers can resend messages from history.
-- [Removed] Subscribers can resize window. (JFrameDelegate.onLogin)
-- [Removed] Subscribers can report. (ReportAbuseHandler.handlePacket)
-- [Removed] Subscribers can use the Gnome Glider
+- Gerrant does nothing in the Heros Quest. Is this correct? If not implement needed behaviour
