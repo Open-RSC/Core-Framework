@@ -361,8 +361,13 @@ public final class DataConversions {
     public static String generateSalt() {
         int len = 30;
         StringBuilder sb = new StringBuilder( len );
-        for( int i = 0; i < len; i++ ) 
-            sb.append( characters[secureRandom.nextInt(characters.length)] );
+        for( int i = 0; i < len; i++ )
+        {
+            int ran         = secureRandom.nextInt(characters.length);
+            char character  = characters[ran];
+            if(character == '\\') character = '`'; // replace backslash because MySQL escape makes this into a new line
+            sb.append( character );
+        }
         return sb.toString();
     }
 
