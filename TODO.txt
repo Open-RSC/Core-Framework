@@ -2,8 +2,6 @@
 -  Core Changes   -
 -------------------
 
-- wilderness command box has incorrectly rendered % ... % isn't rendering as a newline at all
-
 - Remove all references to RSCU/RSCUnity/RSC Unity
 
 
