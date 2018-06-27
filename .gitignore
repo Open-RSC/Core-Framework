@@ -22,3 +22,8 @@
 server/Open_RSC_Server.jar
 html/cache/*
 !html/cache/.htaccess
+/Tools/RSC Map Generator/build/
+/Tools/RSC Map Generator/dist/
+/Tools/RSC Map Generator/nbproject/private/
+/Tools/Sprite Editor/build/
+/Tools/Sprite Editor/dist/

@@ -1,0 +1,1189 @@
+0: Tree
+1: Tree
+2: Well
+3: Table
+4: Treestump
+5: Ladder
+6: Ladder
+7: Chair
+8: logs
+9: Longtable
+10: Throne
+11: Range
+12: Gravestone
+13: Gravestone
+14: Bed
+15: Bed
+16: bar
+17: Chest
+18: Chest
+19: Altar
+20: Post
+21: Support
+22: barrel
+23: Bench
+24: Portrait
+25: candles
+26: fountain
+27: landscape
+28: Millstones
+29: Counter
+30: Stall
+31: Target
+32: PalmTree
+33: PalmTree
+34: Fern
+35: Cactus
+36: Bullrushes
+37: Flower
+38: Mushroom
+39: Coffin
+40: Coffin
+41: stairs
+42: stairs
+43: stairs
+44: stairs
+45: railing
+46: pillar
+47: Bookcase
+48: Sink
+49: Dummy
+50: anvil
+51: Torch
+52: hopper
+53: chute
+54: cart
+55: sacks
+56: cupboard
+57: Gate
+58: gate
+59: gate
+60: gate
+61: signpost
+62: signpost
+63: doors
+64: doors
+65: signpost
+66: signpost
+67: bookcase
+68: henge
+69: Dolmen
+70: Tree
+71: cupboard
+72: Wheat
+73: sign
+74: sails
+75: sign
+76: sign
+77: Drain
+78: manhole
+79: manhole
+80: pipe
+81: Chest
+82: Chest
+83: barrel
+84: cupboard
+85: cupboard
+86: fountain
+87: signpost
+88: Tree
+89: sign
+90: sign
+91: sign
+92: sign
+93: gate
+94: gate
+95: sign
+96: sign
+97: fire
+98: Rock
+99: Rock
+100: Rock
+101: Rock
+102: Rock
+103: Rock
+104: Rock
+105: Rock
+106: Rock
+107: Rock
+108: Rock
+109: Rock
+110: Rock
+111: Rock
+112: Rock
+113: Rock
+114: Rock
+115: Rock
+116: web
+117: web
+118: furnace
+119: Cook's Range
+120: Machine
+121: Spinning wheel
+122: Lever
+123: Lever
+124: LeverA
+125: LeverB
+126: LeverC
+127: LeverD
+128: LeverE
+129: LeverF
+130: Ladder
+131: signpost
+132: signpost
+133: signpost
+134: Compost Heap
+135: Coffin
+136: Coffin
+137: gate
+138: gate
+139: sign
+140: cupboard
+141: cupboard
+142: doors
+143: torch
+144: Altar
+145: Shield
+146: Grill
+147: Cauldron
+148: Grill
+149: Mine Cart
+150: Buffers
+151: Track
+152: Track
+153: Track
+154: Hole
+155: ship
+156: ship
+157: ship
+158: Emergency escape ladder
+159: sign
+160: sign
+161: ship
+162: ship
+163: ship
+164: Rocks
+165: Rocks
+166: Rocks
+167: Rocks
+168: Rocks
+169: Rocks
+170: Rocks
+171: Rocks
+172: Rocks
+173: hopper
+174: cupboard
+175: cupboard
+176: Rocks
+177: Doric's anvil
+178: pottery oven
+179: potter's wheel
+180: gate
+181: gate
+182: crate
+183: Banana tree
+184: Banana tree
+185: crate
+186: Chest
+187: Chest
+188: Flower
+189: sign
+190: sign
+191: Potato
+192: fish
+193: fish
+194: fish
+195: Rock
+196: Rock
+197: Rocks
+198: Ladder
+199: Ladder
+200: Monks Altar
+201: Ladder
+202: Coffin
+203: Coffin
+204: Smashed table
+205: Fungus
+206: Smashed chair
+207: Broken pillar
+208: Fallen tree
+209: Danger Sign
+210: Rock
+211: Rock
+212: Rocks
+213: Gravestone
+214: bone
+215: bone
+216: carcass
+217: animalskull
+218: Vine
+219: Vine
+220: Vine
+221: Chest
+222: Chest
+223: Ladder
+224: ship
+225: ship
+226: hole
+227: Ladder
+228: Chest
+229: Chest
+230: Chest
+231: Chest
+232: hole
+233: ship
+234: ship
+235: Altar of Guthix
+236: The Cauldron of Thunder
+237: Tree
+238: ship
+239: ship
+240: ship
+241: ship
+242: ship
+243: ship
+244: Ladder
+245: Dramen Tree
+246: hopper
+247: Chest
+248: Chest
+249: Ladder
+250: sign
+251: sign
+252: gate
+253: gate
+254: gate
+255: Door mat
+256: gate
+257: Cauldron
+258: cupboard
+259: cupboard
+260: gate
+261: fish
+262: sign
+263: cupboard
+264: cupboard
+265: Chest
+266: Chest
+267: sign
+268: signpost
+269: Rockslide
+270: Ladder
+271: fish
+272: barrel
+273: table
+274: Fireplace
+275: Egg
+276: Eggs
+277: Stalagmites
+278: Stool
+279: Bench
+280: table
+281: table
+282: fountain of heros
+283: bush
+284: hedge
+285: flower
+286: plant
+287: Giant crystal
+288: sign
+289: sign
+290: crate
+291: crate
+292: ship
+293: ship
+294: beehive
+295: Ladder
+296: Altar
+297: sign
+298: signpost
+299: Archway
+300: Obelisk of water
+301: Obelisk of fire
+302: sand pit
+303: Obelisk of air
+304: Obelisk of earth
+305: gate
+306: Oak Tree
+307: Willow Tree
+308: Maple Tree
+309: Yew Tree
+310: Tree
+311: gate
+312: sign
+313: flax
+314: Large treestump
+315: Rocks
+316: Lever
+317: Lever
+318: Lever
+319: gate
+320: ship
+321: ship
+322: Bakers Stall
+323: Silk Stall
+324: Fur Stall
+325: Silver Stall
+326: Spices Stall
+327: gems Stall
+328: crate
+329: crate
+330: sign
+331: stairs
+332: Chest
+333: Chest
+334: Chest
+335: Chest
+336: Chest
+337: Chest
+338: Chest
+339: Chest
+340: Chest
+341: empty stall
+342: stairs
+343: hopper
+344: signpost
+345: sign
+346: gate
+347: gate
+348: Lever
+349: Lever
+350: pipe
+351: fish
+352: fish
+353: fish
+354: fish
+355: Vine
+356: gate
+357: gate
+358: gate
+359: stairs
+360: broken cart
+361: Lever
+362: clock pole blue
+363: clock pole red
+364: clock pole purple
+365: clock pole black
+366: wallclockface
+367: Lever Bracket
+368: Lever
+369: stairs
+370: stairs
+371: gate
+372: gate
+373: Lever
+374: Lever
+375: Foodtrough
+376: fish
+377: spearwall
+378: hornedskull
+379: Chest
+380: Chest
+381: guardscupboard
+382: guardscupboard
+383: Coal truck
+384: ship
+385: ship
+386: ship
+387: Tree
+388: Ballista
+389: largespear
+390: spirit tree
+391: young spirit Tree
+392: gate
+393: wall
+394: tree
+395: tree
+396: Fern
+397: Fern
+398: Fern
+399: Fern
+400: fly trap
+401: Fern
+402: Fern
+403: plant
+404: plant
+405: plant
+406: stone head
+407: dead Tree
+408: sacks
+409: khazard open Chest
+410: khazard shut Chest
+411: doorframe
+412: Sewer valve
+413: Sewer valve 2
+414: Sewer valve 3
+415: Sewer valve 4
+416: Sewer valve 5
+417: Cave entrance
+418: Log bridge
+419: Log bridge
+420: tree platform
+421: tree platform
+422: gate
+423: tree platform
+424: tree platform
+425: Log bridge
+426: Log bridge
+427: tree platform
+428: tree platform
+429: Tribal brew
+430: Pineapple tree
+431: Pineapple tree
+432: log raft
+433: log raft
+434: Tomb of hazeel
+435: range
+436: Bookcase
+437: Carnillean Chest
+438: Carnillean Chest
+439: crate
+440: Butlers cupboard
+441: Butlers cupboard
+442: gate
+443: gate
+444: Cattle furnace
+445: Ardounge wall
+446: Ardounge wall corner
+447: Dug up soil
+448: Pile of mud
+449: large Sewer pipe
+450: Ardounge wall gateway
+451: cupboard
+452: cupboard
+453: Fishing crane
+454: Rowboat
+455: Damaged Rowboat
+456: barrel
+457: gate
+458: Ladder
+459: Fishing crane
+460: Fishing crane
+461: Waterfall
+462: leaflessTree
+463: leaflessTree
+464: log raft
+465: doors
+466: Well
+467: Tomb of glarial
+468: Waterfall
+469: Waterfall
+470: Bookcase
+471: doors
+472: doors
+473: Stone stand
+474: Stone stand
+475: Stone stand
+476: Stone stand
+477: Stone stand
+478: Stone stand
+479: Glarial's Gravestone
+480: gate
+481: crate
+482: leaflessTree
+483: Statue of glarial
+484: Chalice of eternity
+485: Chalice of eternity
+486: doors
+487: Lever
+488: Lever
+489: log raft remains
+490: Tree
+491:  Range
+492: crate
+493: fish
+494: Watch tower
+495: signpost
+496: Rocks
+497: doors
+498: Rope ladder
+499: cupboard
+500: cupboard
+501: Rope ladder
+502: Cooking pot
+503: Gallow
+504: gate
+505: crate
+506: cupboard
+507: cupboard
+508: gate
+509: cupboard
+510: cupboard
+511: sign
+512: grand tree
+513: gate
+514: gate
+515: Rocks
+516: Rocks
+517: Rocks
+518: Rocks
+519: Rocks
+520: Rocks
+521: Rocks
+522: Rocks
+523: Rocks
+524: Log bridge
+525: Watch tower
+526: Log bridge
+527: climbing rocks
+528: Ledge
+529: Ledge
+530: log
+531: log
+532: Rocks
+533: Rocks
+534: Rocks
+535: Rocks
+536: Rocks
+537: Rocks
+538: Rocks
+539: Rocks
+540: Rocks
+541: Rocks
+542: Rocks
+543: Rocks
+544: Rocks
+545: Rocks
+546: Rocks
+547: Rocks
+548: Rocks
+549: Rocks
+550: Rocks
+551: Rocks
+552: Rocks
+553: PalmTree
+554: Scorched Earth
+555: Rocks
+556: sign
+557: fish
+558: Rocky Walkway
+559: Rocky Walkway
+560: Rocky Walkway
+561: Rocky Walkway
+562: fight Dummy
+563: gate
+564: Jungle Vine
+565: statue
+566: sign
+567: grand tree
+568: grand tree
+569: grand tree
+570: grand tree
+571: grand tree
+572: Hillside Entrance
+573: tree
+574: Log bridge
+575: Tree platform
+576: Tree platform
+577: Metalic Dungeon Gate
+578: Log bridge
+579: Log bridge
+580: Watch tower
+581: Watch tower
+582: Shallow water
+583: Doors
+584: grand tree
+585: Tree Ladder
+586: Tree Ladder
+587: blurberrys cocktail bar
+588: Gem Rocks
+589: Giannes place
+590: ropeswing
+591: net
+592: Frame
+593: Tree
+594: Tree
+595: Tree
+596: cart
+597: fence
+598: beam
+599: Sign
+600: Sign
+601: Sign
+602: Sign
+603: Sign
+604: Sign
+605: Sign
+606: Sign
+607: Sign
+608: Sign
+609: Root
+610: Root
+611: Metal Gate
+612: Metal Gate
+613: A farm cart
+614: Ledge
+615: Ledge
+616: Ladder
+617: cage
+618: glider
+619: cupboard
+620: cupboard
+621: stairs
+622: glider
+623: gate
+624: gate
+625: chaos altar
+626: Gnome stronghold gate
+627: ropeswing
+628: ropeswing
+629: stairs
+630: stairs
+631: Chest
+632: Chest
+633: Pile of rubble
+634: Stone stand
+635: Watch tower
+636: Pile of rubble
+637: Root
+638: Root
+639: Root
+640: Sign
+641: Hammock
+642: Goal
+643: stone tile
+644: Chest
+645: Chest
+646: Watch tower
+647: net
+648: Watch tower
+649: Watch tower
+650: ropeswing
+651: Bumpy Dirt
+652: pipe
+653: net
+654: pipe
+655: log
+656: pipe
+657: pipe
+658: Handholds
+659: Ladder
+660: gate
+661: stronghold spirit Tree
+662: Tree
+663: Tree
+664: Tree
+665: Spiked pit
+666: Spiked pit
+667: Cave
+668: stone pebble
+669: Pile of rubble
+670: Pile of rubble
+671: pipe
+672: pipe
+673: Stone
+674: Stone
+675: ropeswing
+676: log
+677: net
+678: Ledge
+679: Handholds
+680: log
+681: log
+682: Rotten Gallows
+683: Pile of rubble
+684: ropeswing
+685: ropeswing
+686: ocks
+687: Tree
+688: Well stacked rocks
+689: Tomb Dolmen
+690: Handholds
+691: Bridge Blockade
+692: Log Bridge
+693: Handholds
+694: Tree
+695: Tree
+696: Wet rocks
+697: Smashed table
+698: Crude Raft
+699: Daconia rock
+700: statue
+701: Stepping stones
+702: gate
+703: gate
+704: gate
+705: pipe
+706: ropeswing
+707: Stone
+708: Ledge
+709: Vine
+710: Rocks
+711: Wooden Gate
+712: Wooden Gate
+713: Stone bridge
+714: Stone bridge
+715: Stone bridge
+716: Stone bridge
+717: Stone platform
+718: fence
+719: Rocks
+720: Stone bridge
+721: Stone bridge
+722: Gate of Iban
+723: Wooden Door
+724: Tomb Dolmen
+725: Cave entrance
+726: Old bridge
+727: Old bridge
+728: Crumbled rock
+729: stalagmite
+730: stalagmite
+731: Rocks
+732: Ledge
+733: Lever
+734: stalactite
+735: stalactite
+736: stalactite
+737: Rocks
+738: Rocks
+739: Rocks
+740: Rocks
+741: Rocks
+742: Rocks
+743: Rocks
+744: Rocks
+745: Rocks
+746: Rocks
+747: Rocks
+748: Rocks
+749: Rocks
+750: Ledge
+751: Ledge
+752: Ledge
+753: Ledge
+754: Swamp
+755: Swamp
+756: Rocks
+757: Rocks
+758: Rocks
+759: Rocks
+760: Rocks
+761: Rocks
+762: Rocks
+763: Rocks
+764: Rocks
+765: Rocks
+766: Rocks
+767: Pile of mud
+768: Travel Cart
+769: Travel Cart
+770: Rocks
+771: stalactite
+772: Rocks
+773: Rocks
+774: Rocks
+775: sign
+776: Ladder
+777: Grill
+778: Spiked pit
+779: signpost
+780: Ship
+781: Ship
+782: Grill
+783: sacks
+784: Zamorakian Temple
+785: Grill
+786: Grill
+787: Grill
+788: Grill
+789: Grill
+790: Grill
+791: Grill
+792: Rocks
+793: Rocks
+794: Tomb Doors
+795: Swamp
+796: Rocks
+797: Rocks
+798: stalactite
+799: stalactite
+800: Spiked pit
+801: Lever
+802: Cage
+803: Cage
+804: Rocks
+805: Spear trap
+806: Rocks
+807: Rocks
+808: Rocks
+809: Rocks
+810: Rocks
+811: Rocks
+812: Ledge
+813: Furnace
+814: Well
+815: Passage
+816: Passage
+817: Passage
+818: stalagmite
+819: Rocks
+820: Rocks
+821: Rocks
+822: Rocks
+823: Rocks
+824: Rocks
+825: Passage
+826: snap trap
+827: Wooden planks
+828: Passage
+829: Passage
+830: Flames of zamorak
+831: Platform
+832: Rock
+833: Rock
+834: Rock
+835: Rock
+836: wall grill
+837: Ledge
+838: wall grill
+839: Dug up soil
+840: Dug up soil
+841: Pile of mud
+842: stalagmite
+843: Pile of mud
+844: Pile of mud
+845: Pile of mud
+846: Pile of mud
+847: Pile of mud
+848: Spiked pit
+849: Rocks
+850: Rocks
+851: Rocks
+852: Rocks
+853: Rocks
+854: Rocks
+855: Rocks
+856: Rocks
+857: Rocks
+858: Rocks
+859: Rocks
+860: Rocks
+861: Ledge
+862: Ledge
+863: Ledge
+864: Ledge
+865: Ledge
+866: Ledge
+867: Boulder
+868: crate
+869: Door
+870: Platform
+871: Cage remains
+872: Ledge
+873: Passage
+874: Passage
+875: Gate of Zamorak
+876: Rocks
+877: Bridge support
+878: Tomb of Iban
+879: Claws of Iban
+880: barrel
+881: Rock
+882: Rocks
+883: Rocks
+884: Swamp
+885: Chest
+886: Stone bridge
+887: cage
+888: cage
+889: Stone steps
+890: Pile of mud
+891: Stone bridge
+892: Stone bridge
+893: Stone bridge
+894: Stone bridge
+895: Stone bridge
+896: Stone bridge
+897: Stone bridge
+898: Stone bridge
+899: Stone bridge
+900: Stone bridge
+901: Stone bridge
+902: Stone bridge
+903: Stone bridge
+904: Stone bridge
+905: Stone bridge
+906: Stone bridge
+907: Stone bridge
+908: Stone bridge
+909: Stone bridge
+910: Stone bridge
+911: Chest
+912: Chest
+913: Pit of the Damned
+914: Open Door
+915: signpost
+916: Stone Gate
+917: Chest
+918: Zodiac
+919: Chest
+920: Ladder
+921: Stone steps
+922: Rock
+923: Rock
+924: Rock
+925: Telescope
+926: Gate
+927: sacks
+928: Ladder
+929: Chest
+930: Chest
+931: Bookcase
+932: Iron Gate
+933: Ladder
+934: Chest
+935: Chest
+936: Chest
+937: Chest
+938: Rockslide
+939: Altar
+940: column
+941: Grave of Scorpius
+942: Bank Chest
+943: dwarf multicannon
+944: Disturbed sand
+945: Disturbed sand
+946: dwarf multicannon base
+947: dwarf multicannon stand
+948: dwarf multicannon barrels
+949: Cave
+950: Cave
+951: fence
+952: signpost
+953: Rocks
+954: Rocks
+955: Cave entrance
+956: Chest
+957: Chest
+958: Wooden Doors
+959: Pedestal
+960: bush
+961: bush
+962: Standard
+963: Mining Cave
+964: Mining Cave
+965: Rocks
+966: Lift
+967: Mining Barrel
+968: Hole
+969: Hole
+970: Cave
+971: Cave
+972: Cave
+973: Counter
+974: Track
+975: Cave
+976: Mine Cart
+977: Lift Platform
+978: Chest
+979: Chest
+980: Watch tower
+981: Ladder
+982: Cave entrance
+983: Pile of mud
+984: Cave
+985: Ladder
+986: crate
+987: crate
+988: Gate
+989: Gate
+990: bush
+991: bush
+992: bush
+993: bush
+994: multicannon
+995: Rocks
+996: Rocks
+997: Ladder
+998: Cave entrance
+999: Counter
+1000: Chest
+1001: Chest
+1002: Chest
+1003: Chest
+1004: Bookcase
+1005: Captains Chest
+1006: Experimental Anvil
+1007: Rocks
+1008: Rocks
+1009: Column
+1010: Wall
+1011: Wall
+1012: Wall
+1013: Wall
+1014: Lever
+1015: Lever
+1016: Wall
+1017: Ladder
+1018: Wall
+1019: Gate
+1020: Gate
+1021: Ladder
+1022: shock
+1023: Desk
+1024: Cave
+1025: Mining Cart
+1026: Rock of Dalgroth
+1027: entrance
+1028: Dried Cactus
+1029: climbing rocks
+1030: Rocks
+1031: lightning
+1032: Crude Desk
+1033: Heavy Metal Gate
+1034: Counter
+1035: Crude bed
+1036: flames
+1037: Carved Rock
+1038: USE
+1039: crate
+1040: crate
+1041: barrel
+1042: Brick
+1043: Brick
+1044: Brick
+1045: Brick
+1046: Brick
+1047: Brick
+1048: Barrier
+1049: buried skeleton
+1050: Brick
+1051: Brick
+1052: Specimen tray
+1053: winch
+1054: crate
+1055: crate
+1056: Urn
+1057: buried skeleton
+1058: panning point
+1059: Rocks
+1060: signpost
+1061: signpost
+1062: signpost
+1063: signpost
+1064: signpost
+1065: soil
+1066: soil
+1067: soil
+1068: Gate
+1069: ship
+1070: barrel
+1071: Leak
+1072: bush
+1073: bush
+1074: cupboard
+1075: sacks
+1076: sacks
+1077: Leak
+1078: cupboard
+1079: Wrought Mithril Gates
+1080: Legends Hall Doors
+1081: Camp bed
+1082: barrel
+1083: barrel
+1084: Chest
+1085: Chest
+1086: Dense Jungle Tree
+1087: Jungle tree stump
+1088: signpost
+1089: gate
+1090: Bookcase
+1091: Dense Jungle Tree
+1092: Dense Jungle Tree
+1093: Spray
+1094: Spray
+1095: winch
+1096: Brick
+1097: Rope
+1098: Rope
+1099: Dense Jungle Palm
+1100: Dense Jungle Palm
+1101: Trawler net
+1102: Trawler net
+1103: Brick
+1104: Chest
+1105: Chest
+1106: Trawler catch
+1107: Yommi Tree
+1108: Grown Yommi Tree
+1109: Chopped Yommi Tree
+1110: Trimmed Yommi Tree
+1111: Totem Pole
+1112: Baby Yommi Tree
+1113: Fertile earth
+1114: Rock Hewn Stairs
+1115: Hanging rope
+1116: Rocks
+1117: Boulder
+1118: dwarf multicannon
+1119: dwarf multicannon base
+1120: dwarf multicannon stand
+1121: dwarf multicannon barrels
+1122: rock
+1123: Rock Hewn Stairs
+1124: Rock Hewn Stairs
+1125: Rock Hewn Stairs
+1126: Compost Heap
+1127: beehive
+1128: Drain
+1129: web
+1130: fountain
+1131: Sinclair Crest
+1132: barrel
+1133: barrel
+1134: barrel
+1135: barrel
+1136: barrel
+1137: barrel
+1138: Flour Barrel
+1139: sacks
+1140: gate
+1141: Dead Yommi Tree
+1142: clawspell
+1143: Rocks
+1144: crate
+1145: Cavernous Opening
+1146: Ancient Lava Furnace
+1147: Spellcharge
+1148: Rocks
+1149: cupboard
+1150: sacks
+1151: Rock
+1152: Saradomin stone
+1153: Guthix stone
+1154: Zamorak stone
+1155: Magical pool
+1156: Wooden Beam
+1157: Rope down into darkness
+1158: Cave entrance
+1159: Cave entrance
+1160: Ancient Wooden Doors
+1161: Table
+1162: Crude bed
+1163: Tall Reeds
+1164: Goblin foot prints
+1165: Dark Metal Gate
+1166: Magical pool
+1167: Rope Up
+1168: Half buried remains
+1169: Totem Pole
+1170: Totem Pole
+1171: Comfy bed
+1172: Rotten Yommi Tree
+1173: Rotten Yommi Tree
+1174: Rotten Yommi Tree
+1175: Rotten Totem Pole
+1176: Leafy Palm Tree
+1177: Grand Viziers Desk
+1178: Strange Barrel
+1179: ship
+1180: ship
+1181: ship
+1182: digsite bed
+1183: Tea stall
+1184: Boulder
+1185: Boulder
+1186: Damaged Earth
+1187: Ladder
+1188: Ladder
