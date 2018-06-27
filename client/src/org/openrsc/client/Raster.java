@@ -1769,61 +1769,64 @@ public class Raster implements ImageProducer, ImageObserver {
         drawString(s, i - textWidth(s, k) / 2, j, k, l);
     }
 
-    public void drawBoxTextColour(String s, int i, int j, int k, int l, int i1) {
+    public void drawBoxTextColour(String s, int x, int y, int font, int colour, int wrapWidth) {
         try {
-            int j1 = 0;
-            byte abyte0[] = fontArray[k];
-            int k1 = 0;
-            int l1 = 0;
-            for (int i2 = 0; i2 < s.length(); i2++) {
-                if (s.charAt(i2) == '@' && i2 + 4 < s.length() && s.charAt(i2 + 4) == '@')
-                    i2 += 4;
-                else if (s.charAt(i2) == '~' && i2 + 4 < s.length() && s.charAt(i2 + 4) == '~')
-                    i2 += 4;
-                else if (s.charAt(i2) == '~' && i2 + 5 < s.length() && s.charAt(i2 + 5) == '~')
+            int width = 0;
+            byte[] fontData = fontArray[font];
+            int lastLineEndsAt = 0;
+            int lastBreak = 0;
+            for (int i = 0; i < s.length(); i++) {
+                if (s.charAt(i) == '@' && i + 4 < s.length() && s.charAt(i + 4) == '@')
+                    i += 4;
+                else if (s.charAt(i) == '~' && i + 4 < s.length() && s.charAt(i + 4) == '~')
+                    i += 4;
+                else if (s.charAt(i) == '~' && i + 5 < s.length() && s.charAt(i + 5) == '~')
                 {
-                	i2 += 5;
+                	i += 5;
                 }
                 else
-                    j1 += abyte0[charIndexes[s.charAt(i2)] + 7];
-                if (s.charAt(i2) == ' ')
-                    l1 = i2;
-                if (s.charAt(i2) == '%') {
-                    l1 = i2;
-                    j1 = 1000;
+                    width += fontData[charIndexes[s.charAt(i)] + 7];
+                if (s.charAt(i) == ' ')
+                    lastBreak = i;
+                if (s.charAt(i) == '%') {
+                    lastBreak = i;
+                    width = 1000;
                 }
-                if (j1 > i1) {
-                    if (l1 <= k1)
-                        l1 = i2;
+                if (width > wrapWidth) {
+                    int lineEndsAt  = lastBreak;
+                    if (lastBreak <= lastLineEndsAt)
+                    {
+                        lineEndsAt = lastBreak = i;
+                        lineEndsAt++; // There has been no break at which to start the new line. We will split a word. When splitting a word, increment line ends at because of the indexing substr uses. We do NOT want this in the other cases because it would include the % sign
+                    }
                     
-                    StringBuilder colour        = new StringBuilder();
-                    StringBuilder regexBuilder  = new StringBuilder(s.substring(0, k1));
+                    StringBuilder colourCode    = new StringBuilder();
+                    StringBuilder regexBuilder  = new StringBuilder(s.substring(0, lastLineEndsAt));
                     String regexCheck           = regexBuilder.reverse().toString();
                     Pattern regex               = Pattern.compile("(@.{3}@)");
                     Matcher match               = regex.matcher(regexCheck);
 
                     if(match.find())
-                        colour  = colour.append(match.group(0)).reverse();
+                        colourCode  = colourCode.append(match.group(0)).reverse();
                     
-                    drawCenteredString(colour + s.substring(k1, l1 + 1), i, j, k, l);
-                    j1 = 0;
-                    k1 = i2 = l1 + 1;
-                    j += messageFontHeight(k);
+                    drawCenteredString(colourCode + s.substring(lastLineEndsAt, lineEndsAt), x, y, font, colour);
+                    width = 0;
+                    lastLineEndsAt = i = lastBreak + 1;
+                    y += messageFontHeight(font);
                 }
             }
 
-            if (j1 > 0) {
-                StringBuilder colour        = new StringBuilder();
-                StringBuilder regexBuilder  = new StringBuilder(s.substring(0, k1));
+            if (width > 0) {
+                StringBuilder colourCode    = new StringBuilder();
+                StringBuilder regexBuilder  = new StringBuilder(s.substring(0, lastLineEndsAt));
                 String regexCheck           = regexBuilder.reverse().toString();
                 Pattern regex               = Pattern.compile("(@.{3}@)");
                 Matcher match               = regex.matcher(regexCheck);
 
                 if(match.find())
-                    colour  = colour.append(match.group(0)).reverse();
+                    colourCode  = colourCode.append(match.group(0)).reverse();
                 
-                drawCenteredString(colour + s.substring(k1), i, j, k, l);
-                return;
+                drawCenteredString(colourCode + s.substring(lastLineEndsAt), x, y, font, colour);
             }
         }
         catch (Exception exception) { }
