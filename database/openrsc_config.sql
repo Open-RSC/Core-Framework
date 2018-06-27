@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
+-- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
--- Host: database:3306
--- Generation Time: Jun 27, 2018 at 01:42 PM
--- Server version: 10.1.29-MariaDB-6
--- PHP Version: 7.2.5-0ubuntu0.18.04.1
+-- Host: 127.0.0.1:3306
+-- Generation Time: Jun 27, 2018 at 08:18 PM
+-- Server version: 5.7.21
+-- PHP Version: 5.6.35
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -26,11 +28,13 @@ SET time_zone = "+00:00";
 -- Table structure for table `conf_npc`
 --
 
-CREATE TABLE `conf_npc` (
+DROP TABLE IF EXISTS `conf_npc`;
+CREATE TABLE IF NOT EXISTS `conf_npc` (
   `npc_id` int(4) NOT NULL,
   `class_name` varchar(255) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=314 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `conf_npc`
@@ -304,11 +308,13 @@ INSERT INTO `conf_npc` (`npc_id`, `class_name`, `id`) VALUES
 -- Table structure for table `conf_packet`
 --
 
-CREATE TABLE `conf_packet` (
+DROP TABLE IF EXISTS `conf_packet`;
+CREATE TABLE IF NOT EXISTS `conf_packet` (
   `packet_id` int(4) NOT NULL,
   `class_name` varchar(255) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `conf_packet`
@@ -407,11 +413,14 @@ INSERT INTO `conf_packet` (`packet_id`, `class_name`, `id`) VALUES
 -- Table structure for table `conf_web_packet`
 --
 
-CREATE TABLE `conf_web_packet` (
+DROP TABLE IF EXISTS `conf_web_packet`;
+CREATE TABLE IF NOT EXISTS `conf_web_packet` (
   `packet_id` int(3) NOT NULL,
   `class_name` varchar(255) NOT NULL,
-  `id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `conf_web_packet`
@@ -428,26 +437,19 @@ INSERT INTO `conf_web_packet` (`packet_id`, `class_name`, `id`) VALUES
 -- Table structure for table `def_advert`
 --
 
-CREATE TABLE `def_advert` (
+DROP TABLE IF EXISTS `def_advert`;
+CREATE TABLE IF NOT EXISTS `def_advert` (
   `advert` varchar(255) NOT NULL,
-  `id` int(6) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_advert`
 --
 
 INSERT INTO `def_advert` (`advert`, `id`) VALUES
-('@gre@RSCE:@whi@ There\'s currently@gre@ %online @whi@players online openrsc!', 1),
-('@gre@RSCE: @whi@Join us in Ventrilo: @gre@Ventrilo.openrsc.net @whi@(@gre@4520@whi@)', 3),
-('@gre@RSCE:@whi@ Please type ::VOTE daily to help openrsc grow', 4),
-('@gre@RSCE:@whi@ Check the forums regularly for up-to-date news and announcements!', 6),
-('@gre@RSCE: @whi@Join us in IRC: @gre@irc.rizon.net@whi@:@gre@6667 @whi@(@gre@#openrsc@whi@)', 8),
-('@gre@RSCE:@whi@ Read the rules to avoid being banned. There\'s no excuse.', 9),
-('@gre@RSCE:@whi@ The wilderness state is currently:@gre@ %wildernessstate', 11),
-('@gre@RSCE:@whi@ Did you know that you can get 50% faster XP by subscribing?', 20),
-('@gre@RSCE:@whi@ Please click the website ads once a day to help fund openrsc!', 16),
-('@gre@RSCE:@whi@ Buy a subscription to help fund us, it\'s only £4.50', 18);
+('@gre@Goyim:@whi@ There\'s currently@gre@ %online @whi@players online!', 1);
 
 -- --------------------------------------------------------
 
@@ -455,7 +457,8 @@ INSERT INTO `def_advert` (`advert`, `id`) VALUES
 -- Table structure for table `def_agility`
 --
 
-CREATE TABLE `def_agility` (
+DROP TABLE IF EXISTS `def_agility`;
+CREATE TABLE IF NOT EXISTS `def_agility` (
   `course_id` int(2) NOT NULL,
   `object_id` int(4) NOT NULL,
   `level` int(2) NOT NULL,
@@ -505,7 +508,8 @@ INSERT INTO `def_agility` (`course_id`, `object_id`, `level`, `experience`, `suc
 -- Table structure for table `def_agility_course`
 --
 
-CREATE TABLE `def_agility_course` (
+DROP TABLE IF EXISTS `def_agility_course`;
+CREATE TABLE IF NOT EXISTS `def_agility_course` (
   `course_id` int(2) NOT NULL,
   `experience` int(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -526,13 +530,15 @@ INSERT INTO `def_agility_course` (`course_id`, `experience`) VALUES
 -- Table structure for table `def_arrow_head`
 --
 
-CREATE TABLE `def_arrow_head` (
+DROP TABLE IF EXISTS `def_arrow_head`;
+CREATE TABLE IF NOT EXISTS `def_arrow_head` (
   `arrowhead_id` int(5) NOT NULL,
   `arrow_id` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `experience` double(5,1) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_arrow_head`
@@ -552,13 +558,15 @@ INSERT INTO `def_arrow_head` (`arrowhead_id`, `arrow_id`, `level`, `experience`,
 -- Table structure for table `def_cert`
 --
 
-CREATE TABLE `def_cert` (
+DROP TABLE IF EXISTS `def_cert`;
+CREATE TABLE IF NOT EXISTS `def_cert` (
   `certer_id` int(5) NOT NULL,
   `cert_name` varchar(255) NOT NULL,
   `cert_id` int(5) NOT NULL,
   `item_id` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_cert`
@@ -623,11 +631,13 @@ INSERT INTO `def_cert` (`certer_id`, `cert_name`, `cert_id`, `item_id`, `id`) VA
 -- Table structure for table `def_certer`
 --
 
-CREATE TABLE `def_certer` (
+DROP TABLE IF EXISTS `def_certer`;
+CREATE TABLE IF NOT EXISTS `def_certer` (
   `npc_id` int(5) NOT NULL,
   `type` varchar(255) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_certer`
@@ -657,7 +667,8 @@ INSERT INTO `def_certer` (`npc_id`, `type`, `id`) VALUES
 -- Table structure for table `def_chest`
 --
 
-CREATE TABLE `def_chest` (
+DROP TABLE IF EXISTS `def_chest`;
+CREATE TABLE IF NOT EXISTS `def_chest` (
   `chest_id` int(4) NOT NULL,
   `level` int(4) NOT NULL,
   `experience` int(5) NOT NULL,
@@ -685,12 +696,14 @@ INSERT INTO `def_chest` (`chest_id`, `level`, `experience`, `lockpick_required`,
 -- Table structure for table `def_chest_loot`
 --
 
-CREATE TABLE `def_chest_loot` (
-  `id` int(10) NOT NULL,
+DROP TABLE IF EXISTS `def_chest_loot`;
+CREATE TABLE IF NOT EXISTS `def_chest_loot` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `chest_id` int(4) NOT NULL,
   `item_id` int(4) NOT NULL,
-  `item_amount` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `item_amount` int(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_chest_loot`
@@ -717,14 +730,16 @@ INSERT INTO `def_chest_loot` (`id`, `chest_id`, `item_id`, `item_amount`) VALUES
 -- Table structure for table `def_cooking`
 --
 
-CREATE TABLE `def_cooking` (
+DROP TABLE IF EXISTS `def_cooking`;
+CREATE TABLE IF NOT EXISTS `def_cooking` (
   `raw_id` int(5) NOT NULL,
   `cooked_id` int(5) NOT NULL,
   `burned_id` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
   `level` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_cooking`
@@ -766,12 +781,14 @@ INSERT INTO `def_cooking` (`raw_id`, `cooked_id`, `burned_id`, `experience`, `le
 -- Table structure for table `def_crafting`
 --
 
-CREATE TABLE `def_crafting` (
+DROP TABLE IF EXISTS `def_crafting`;
+CREATE TABLE IF NOT EXISTS `def_crafting` (
   `level` int(5) NOT NULL,
   `item_id` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_crafting`
@@ -803,12 +820,14 @@ INSERT INTO `def_crafting` (`level`, `item_id`, `experience`, `id`) VALUES
 -- Table structure for table `def_crystal_key_chest`
 --
 
-CREATE TABLE `def_crystal_key_chest` (
+DROP TABLE IF EXISTS `def_crystal_key_chest`;
+CREATE TABLE IF NOT EXISTS `def_crystal_key_chest` (
   `reward_id` int(5) NOT NULL,
   `item_id` int(4) NOT NULL,
   `item_amount` int(10) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_crystal_key_chest`
@@ -836,13 +855,15 @@ INSERT INTO `def_crystal_key_chest` (`reward_id`, `item_id`, `item_amount`, `id`
 -- Table structure for table `def_dart_tip`
 --
 
-CREATE TABLE `def_dart_tip` (
+DROP TABLE IF EXISTS `def_dart_tip`;
+CREATE TABLE IF NOT EXISTS `def_dart_tip` (
   `tip_id` int(5) NOT NULL,
   `dart_id` int(5) NOT NULL,
   `experience` double(5,1) NOT NULL,
   `level` int(2) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_dart_tip`
@@ -862,7 +883,8 @@ INSERT INTO `def_dart_tip` (`tip_id`, `dart_id`, `experience`, `level`, `id`) VA
 -- Table structure for table `def_door`
 --
 
-CREATE TABLE `def_door` (
+DROP TABLE IF EXISTS `def_door`;
+CREATE TABLE IF NOT EXISTS `def_door` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `command1` varchar(255) NOT NULL,
@@ -873,8 +895,9 @@ CREATE TABLE `def_door` (
   `door_type` tinyint(1) NOT NULL,
   `unknown` tinyint(1) NOT NULL,
   `blocks_ranged` tinyint(1) NOT NULL DEFAULT '0',
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=251 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_door`
@@ -1138,14 +1161,16 @@ INSERT INTO `def_door` (`name`, `description`, `command1`, `command2`, `model_va
 -- Table structure for table `def_drop`
 --
 
-CREATE TABLE `def_drop` (
+DROP TABLE IF EXISTS `def_drop`;
+CREATE TABLE IF NOT EXISTS `def_drop` (
   `npc` int(5) NOT NULL,
   `drop_id` int(5) NOT NULL,
   `drop_amount` int(10) NOT NULL,
   `drop_weight` int(5) NOT NULL,
-  `id` int(5) NOT NULL,
-  `rsc` tinyint(1) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `rsc` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=18583 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_drop`
@@ -3828,14 +3853,16 @@ INSERT INTO `def_drop` (`npc`, `drop_id`, `drop_amount`, `drop_weight`, `id`, `r
 -- Table structure for table `def_edible_heals`
 --
 
-CREATE TABLE `def_edible_heals` (
+DROP TABLE IF EXISTS `def_edible_heals`;
+CREATE TABLE IF NOT EXISTS `def_edible_heals` (
   `food_id` int(5) NOT NULL,
   `heals` int(5) NOT NULL,
   `replacement` int(4) NOT NULL DEFAULT '-1',
   `eat_message` varchar(100) NOT NULL DEFAULT 'You eat the %item%',
   `heal_message` varchar(100) NOT NULL DEFAULT 'It heals some health',
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_edible_heals`
@@ -3959,15 +3986,17 @@ INSERT INTO `def_edible_heals` (`food_id`, `heals`, `replacement`, `eat_message`
 -- Table structure for table `def_fish`
 --
 
-CREATE TABLE `def_fish` (
+DROP TABLE IF EXISTS `def_fish`;
+CREATE TABLE IF NOT EXISTS `def_fish` (
   `object_id` int(5) NOT NULL,
   `net_id` int(5) NOT NULL,
   `bait_id` int(5) NOT NULL,
   `fish_id` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_fish`
@@ -4011,12 +4040,14 @@ INSERT INTO `def_fish` (`object_id`, `net_id`, `bait_id`, `fish_id`, `level`, `e
 -- Table structure for table `def_fishing`
 --
 
-CREATE TABLE `def_fishing` (
+DROP TABLE IF EXISTS `def_fishing`;
+CREATE TABLE IF NOT EXISTS `def_fishing` (
   `object_id` int(5) NOT NULL,
   `net_id` int(5) NOT NULL,
   `bait_id` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_fishing`
@@ -4048,13 +4079,15 @@ INSERT INTO `def_fishing` (`object_id`, `net_id`, `bait_id`, `id`) VALUES
 -- Table structure for table `def_gem`
 --
 
-CREATE TABLE `def_gem` (
+DROP TABLE IF EXISTS `def_gem`;
+CREATE TABLE IF NOT EXISTS `def_gem` (
   `uncut_id` int(5) NOT NULL,
   `cut_id` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_gem`
@@ -4076,13 +4109,15 @@ INSERT INTO `def_gem` (`uncut_id`, `cut_id`, `level`, `experience`, `id`) VALUES
 -- Table structure for table `def_herb`
 --
 
-CREATE TABLE `def_herb` (
+DROP TABLE IF EXISTS `def_herb`;
+CREATE TABLE IF NOT EXISTS `def_herb` (
   `herb_id` int(5) NOT NULL,
   `potion_id` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_herb`
@@ -4106,14 +4141,16 @@ INSERT INTO `def_herb` (`herb_id`, `potion_id`, `level`, `experience`, `id`) VAL
 -- Table structure for table `def_herb_second`
 --
 
-CREATE TABLE `def_herb_second` (
+DROP TABLE IF EXISTS `def_herb_second`;
+CREATE TABLE IF NOT EXISTS `def_herb_second` (
   `secondary_id` int(5) NOT NULL,
   `unfinished_id` int(5) NOT NULL,
   `potion_id` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_herb_second`
@@ -4140,7 +4177,8 @@ INSERT INTO `def_herb_second` (`secondary_id`, `unfinished_id`, `potion_id`, `le
 -- Table structure for table `def_item`
 --
 
-CREATE TABLE `def_item` (
+DROP TABLE IF EXISTS `def_item`;
+CREATE TABLE IF NOT EXISTS `def_item` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `command` varchar(255) NOT NULL,
@@ -4153,1322 +4191,1324 @@ CREATE TABLE `def_item` (
   `violent` tinyint(1) NOT NULL DEFAULT '0',
   `p2p` tinyint(1) NOT NULL,
   `quest` tinyint(1) NOT NULL DEFAULT '0',
-  `id` int(5) NOT NULL,
-  `notable` int(1) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `notable` int(1) NOT NULL,
+  `tradable` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3001 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_item`
 --
 
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
-('Iron Mace', 'A spiky mace', '', 0, 63, 0, 0, 1, 15654365, 1, 0, 0, 1, 1305),
-('Iron Short Sword', 'A razor sharp sword', '', 1, 91, 0, 0, 1, 15654365, 1, 0, 0, 2, 1306),
-('Iron Kite Shield', 'A large metal shield', '', 2, 238, 0, 0, 1, 15654365, 1, 0, 0, 3, 1307),
-('Iron Square Shield', 'A medium metal shield', '', 3, 168, 0, 0, 1, 15654365, 1, 0, 0, 4, 1308),
-('Wooden Shield', 'A solid wooden shield', '', 4, 20, 0, 0, 1, 0, 1, 0, 0, 5, 1309),
-('Medium Iron Helmet', 'A medium sized helmet', '', 5, 84, 0, 0, 1, 15654365, 1, 0, 0, 6, 1310),
-('Large Iron Helmet', 'A full face helmet', '', 6, 154, 0, 0, 1, 15654365, 1, 0, 0, 7, 1311),
-('Iron Chain Mail Body', 'A series of connected metal rings', '', 7, 210, 0, 0, 1, 15654365, 1, 0, 0, 8, 1312),
-('Iron Plate Mail Body', 'Provides excellent protection', '', 8, 560, 0, 0, 1, 15654365, 1, 0, 0, 9, 1313),
-('Iron Plate Mail Legs', 'These look pretty heavy', '', 9, 280, 0, 0, 1, 15654365, 1, 0, 0, 10, 1314),
-('Coins', 'Lovely money!', '', 10, 1, 0, 1, 0, 0, 0, 0, 0, 11, 0),
-('Bronze Arrows', 'Arrows with bronze heads', '', 11, 2, 0, 1, 0, 16737817, 1, 0, 0, 12, 0),
-('Iron Axe', 'A woodcutters axe', '', 12, 56, 0, 0, 1, 15654365, 1, 0, 0, 13, 1315),
-('Knife', 'A dangerous looking knife', '', 13, 6, 0, 0, 0, 0, 0, 0, 0, 14, 1316),
-('Logs', 'A number of wooden logs', '', 14, 4, 0, 0, 0, 0, 0, 0, 0, 15, 1317),
-('Leather Armour', 'Better than no armour!', '', 15, 21, 0, 0, 1, 0, 1, 0, 0, 16, 1318),
-('Leather Gloves', 'These will keep my hands warm!', '', 17, 6, 0, 0, 1, 0, 0, 0, 0, 17, 1319),
-('Boots', 'Comfortable leather boots', '', 16, 6, 0, 0, 1, 0, 0, 0, 0, 18, 1320),
-('Cabbage', 'Yuck I don\'t like cabbage', 'Eat', 18, 1, 0, 0, 0, 0, 0, 0, 0, 19, 1321),
-('Egg', 'A nice fresh egg', '', 19, 4, 0, 0, 0, 0, 0, 0, 0, 20, 1322),
-('Bones', 'Ew it\'s a pile of bones', 'Bury', 20, 1, 0, 0, 0, 0, 0, 0, 0, 21, 1323),
-('Bucket', 'It\'s a wooden bucket', '', 22, 2, 0, 0, 0, 1052688, 0, 0, 0, 22, 1324),
-('Milk', 'It\'s a bucket of milk', '', 22, 6, 0, 0, 0, 0, 0, 0, 0, 23, 1325),
-('Flour', 'A little heap of flour', '', 23, 2, 0, 0, 0, 0, 0, 0, 0, 24, 1326),
-('Amulet of GhostSpeak', 'It lets me talk to ghosts', '', 24, 35, 0, 0, 1, 0, 0, 0, 1, 25, 1327),
-('Silverlight Key 1', 'A key given to me by Wizard Traiborn', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 26, 1328),
-('Silverlight Key 2', 'A key given to me by Captain Rovin', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 27, 1329),
-('Skull', 'A spooky looking skull', '', 26, 1, 0, 0, 0, 0, 0, 0, 1, 28, 1330),
-('Iron Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 0, 0, 29, 1331),
-('Grain', 'Some wheat heads', '', 27, 2, 0, 0, 0, 0, 0, 0, 0, 30, 1332),
-('Book', '', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 31, 1333),
-('Fire-Rune', 'One of the 4 basic elemental runes', '', 30, 4, 0, 1, 0, 0, 0, 0, 0, 32, 0),
-('Water-Rune', 'One of the 4 basic elemental runes', '', 31, 4, 0, 1, 0, 0, 0, 0, 0, 33, 0),
-('Air-Rune', 'One of the 4 basic elemental runes', '', 32, 4, 0, 1, 0, 0, 0, 0, 0, 34, 0),
-('Earth-Rune', 'One of the 4 basic elemental runes', '', 33, 4, 0, 1, 0, 0, 0, 0, 0, 35, 0),
-('Mind-Rune', 'Used for low level missile spells', '', 34, 3, 0, 1, 0, 0, 0, 0, 0, 36, 0),
-('Body-Rune', 'Used for curse spells', '', 35, 3, 0, 1, 0, 0, 0, 0, 0, 37, 0),
-('Life-Rune', 'Used for summon spells', '', 36, 1, 0, 1, 0, 0, 0, 0, 0, 38, 0),
-('Death-Rune', 'Used for high level missile spells', '', 37, 125, 0, 1, 0, 0, 0, 0, 0, 39, 0),
-('Needle', 'Used with a thread to make clothes', '', 38, 1, 0, 1, 0, 0, 0, 0, 0, 40, 0),
-('Nature-Rune', 'Used for alchemy spells', '', 39, 7, 0, 1, 0, 0, 0, 0, 0, 41, 0),
-('Chaos-Rune', 'Used for mid level missile spells', '', 40, 100, 0, 1, 0, 0, 0, 0, 0, 42, 0),
-('Law-Rune', 'Used for teleport spells', '', 41, 12, 0, 1, 0, 0, 0, 0, 0, 43, 0),
-('Thread', 'Used with a needle to make clothes', '', 42, 1, 0, 1, 0, 0, 0, 0, 0, 44, 0),
-('Holy Symbol of Saradomin', 'This needs a string putting on it', '', 43, 200, 0, 0, 0, 0, 0, 0, 0, 45, 1334),
-('Unblessed Holy Symbol', 'This needs blessing', '', 44, 200, 0, 0, 1, 0, 0, 0, 0, 46, 1335),
-('Cosmic-Rune', 'Used for enchant spells', '', 45, 15, 0, 1, 0, 0, 0, 0, 0, 47, 0),
-('Key', 'The key to get into the phoenix gang', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 1, 48, 1336),
-('Key', 'The key to the phoenix gang\'s weapons store', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 0, 49, 1337),
-('Scroll', 'An intelligence Report', '', 29, 5, 0, 0, 0, 0, 0, 0, 1, 50, 1338),
-('Water', 'It\'s a bucket of water', '', 22, 6, 0, 0, 0, 5724145, 0, 0, 0, 51, 1339),
-('Silverlight Key 3', 'A key I found in a drain', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 52, 1340),
-('Silverlight', 'A magic sword', '', 81, 50, 0, 0, 1, 0, 1, 0, 0, 53, 1341),
-('Broken Shield', 'Half of the shield of Arrav', '', 46, 1, 0, 0, 0, 0, 0, 0, 0, 54, 1342),
-('Broken Shield', 'Half of the shield of Arrav', '', 47, 1, 0, 0, 0, 0, 0, 0, 0, 55, 1343),
-('Cadavaberries', 'Poisonous berries', '', 21, 1, 0, 0, 0, 15161265, 0, 0, 0, 56, 1344),
-('Message', 'A message from Juliet to Romeo', '', 29, 1, 0, 0, 0, 0, 0, 0, 1, 57, 1345),
-('Cadava', 'I\'m meant to give this to Juliet', '', 48, 1, 0, 0, 0, 11620466, 0, 0, 1, 58, 1346),
-('Potion', 'this is meant to be good for spots', '', 48, 1, 0, 0, 0, 5289585, 0, 0, 0, 59, 1347),
-('Phoenix Crossbow', 'Former property of the phoenix gang', '', 49, 4, 0, 0, 1, 0, 1, 0, 0, 60, 1348),
-('Crossbow', 'This fires crossbow bolts', '', 49, 70, 0, 0, 1, 0, 1, 0, 0, 61, 1349),
-('Certificate', 'I can use this to claim a reward from the king', '', 29, 1, 0, 0, 0, 0, 0, 0, 0, 62, 1350),
-('bronze Dagger', 'Short but pointy', '', 80, 10, 0, 0, 1, 16737817, 1, 0, 0, 63, 1351),
-('Steel Dagger', 'Short but pointy', '', 80, 125, 0, 0, 1, 15658734, 1, 0, 0, 64, 1352),
-('Mithril Dagger', 'Short but pointy', '', 80, 325, 0, 0, 1, 10072780, 1, 0, 0, 65, 1353),
-('Adamantite Dagger', 'Short but pointy', '', 80, 800, 0, 0, 1, 11717785, 1, 0, 0, 66, 1354),
-('Bronze Short Sword', 'A razor sharp sword', '', 1, 26, 0, 0, 1, 16737817, 1, 0, 0, 67, 1355),
-('Steel Short Sword', 'A razor sharp sword', '', 1, 400, 0, 0, 1, 15658734, 1, 0, 0, 68, 1356),
-('Mithril Short Sword', 'A razor sharp sword', '', 1, 845, 0, 0, 1, 10072780, 1, 0, 0, 69, 1357),
-('Adamantite Short Sword', 'A razor sharp sword', '', 1, 2080, 0, 0, 1, 11717785, 1, 0, 0, 70, 1358),
-('Bronze Long Sword', 'A razor sharp sword', '', 81, 40, 0, 0, 1, 16737817, 1, 0, 0, 71, 1359),
-('Iron Long Sword', 'A razor sharp sword', '', 81, 140, 0, 0, 1, 15654365, 1, 0, 0, 72, 1360),
-('Steel Long Sword', 'A razor sharp sword', '', 81, 600, 0, 0, 1, 15658734, 1, 0, 0, 73, 1361),
-('Mithril Long Sword', 'A razor sharp sword', '', 81, 1600, 0, 0, 1, 10072780, 1, 0, 0, 74, 1362),
-('Adamantite Long Sword', 'A razor sharp sword', '', 81, 3400, 0, 0, 1, 11717785, 1, 0, 0, 75, 1363),
-('Rune Long Sword', 'A razor sharp sword', '', 81, 32000, 0, 0, 1, 65535, 1, 0, 0, 76, 1364),
-('Bronze 2-Handed Sword', 'A very large sword', '', 82, 150, 0, 0, 1, 16737817, 1, 0, 0, 77, 1365),
-('Iron 2-Handed Sword', 'A very large sword', '', 82, 380, 0, 0, 1, 15654365, 1, 0, 0, 78, 1366),
-('Steel 2-Handed Sword', 'A very large sword', '', 82, 1000, 0, 0, 1, 15658734, 1, 0, 0, 79, 1367),
-('Mithril 2-Handed Sword', 'A very large sword', '', 82, 4200, 0, 0, 1, 10072780, 1, 0, 0, 80, 1368),
-('Adamantite 2-Handed Sword', 'A very large sword', '', 82, 6400, 0, 0, 1, 11717785, 1, 0, 0, 81, 1369),
-('Rune 2-Handed Sword', 'A very large sword', '', 82, 64000, 0, 0, 1, 65535, 1, 0, 0, 82, 1370),
-('Bronze Scimitar', 'A vicious curved sword', '', 83, 32, 0, 0, 1, 16737817, 1, 0, 0, 83, 1371),
-('Iron Scimitar', 'A vicious curved sword', '', 83, 112, 0, 0, 1, 15654365, 1, 0, 0, 84, 1372),
-('Steel Scimitar', 'A vicious curved sword', '', 83, 600, 0, 0, 1, 15658734, 1, 0, 0, 85, 1373),
-('Mithril Scimitar', 'A vicious curved sword', '', 83, 1600, 0, 0, 1, 10072780, 1, 0, 0, 86, 1374),
-('Adamantite Scimitar', 'A vicious curved sword', '', 83, 3000, 0, 0, 1, 11717785, 1, 0, 0, 87, 1375),
-('bronze Axe', 'A woodcutters axe', '', 12, 16, 0, 0, 1, 16737817, 1, 0, 0, 88, 1376),
-('Steel Axe', 'A woodcutters axe', '', 12, 600, 0, 0, 1, 15658734, 1, 0, 0, 89, 1377),
-('Iron Battle Axe', 'A vicious looking axe', '', 84, 182, 0, 0, 1, 15654365, 1, 0, 0, 90, 1378),
-('Steel Battle Axe', 'A vicious looking axe', '', 84, 650, 0, 0, 1, 15658734, 1, 0, 0, 91, 1379),
-('Mithril Battle Axe', 'A vicious looking axe', '', 84, 2400, 0, 0, 1, 10072780, 1, 0, 0, 92, 1380),
-('Adamantite Battle Axe', 'A vicious looking axe', '', 84, 5200, 0, 0, 1, 11717785, 1, 0, 0, 93, 1381),
-('Rune Battle Axe', 'A vicious looking axe', '', 84, 41600, 0, 0, 1, 65535, 1, 0, 0, 94, 1382),
-('Bronze Mace', 'A spiky mace', '', 0, 18, 0, 0, 1, 16737817, 1, 0, 0, 95, 1383),
-('Steel Mace', 'A spiky mace', '', 0, 225, 0, 0, 1, 15658734, 1, 0, 0, 96, 1384),
-('Mithril Mace', 'A spiky mace', '', 0, 585, 0, 0, 1, 10072780, 1, 0, 0, 97, 1385),
-('Adamantite Mace', 'A spiky mace', '', 0, 1440, 0, 0, 1, 11717785, 1, 0, 0, 98, 1386),
-('Rune Mace', 'A spiky mace', '', 0, 14400, 0, 0, 1, 65535, 1, 0, 0, 99, 1387),
-('Brass Key', 'I wonder what this is the key to', '', 25, 1, 0, 0, 0, 16750848, 0, 0, 0, 100, 1388),
-('Staff', 'It\'s a slightly magical stick', '', 85, 15, 0, 0, 1, 10072780, 1, 0, 0, 101, 1389),
-('Staff of Air', 'A Magical staff', '', 91, 1500, 0, 0, 1, 65535, 1, 0, 0, 102, 1390),
-('Staff of Water', 'A Magical staff', '', 91, 1500, 0, 0, 1, 255, 1, 0, 0, 103, 1391),
-('Staff of Earth', 'A Magical staff', '', 91, 1500, 0, 0, 1, 7353600, 1, 0, 0, 104, 1392),
-('Medium Bronze Helmet', 'A medium sized helmet', '', 5, 24, 0, 0, 1, 16737817, 1, 0, 0, 105, 1393),
-('Medium Steel Helmet', 'A medium sized helmet', '', 5, 300, 0, 0, 1, 15658734, 1, 0, 0, 106, 1394),
-('Medium Mithril Helmet', 'A medium sized helmet', '', 5, 780, 0, 0, 1, 10072780, 1, 0, 0, 107, 1395),
-('Medium Adamantite Helmet', 'A medium sized helmet', '', 5, 1920, 0, 0, 1, 11717785, 1, 0, 0, 108, 1396),
-('Large Bronze Helmet', 'A full face helmet', '', 6, 44, 0, 0, 1, 16737817, 1, 0, 0, 109, 1397),
-('Large Steel Helmet', 'A full face helmet', '', 6, 550, 0, 0, 1, 15658734, 1, 0, 0, 110, 1398),
-('Large Mithril Helmet', 'A full face helmet', '', 6, 1430, 0, 0, 1, 10072780, 1, 0, 0, 111, 1399),
-('Large Adamantite Helmet', 'A full face helmet', '', 6, 3520, 0, 0, 1, 11717785, 1, 0, 0, 112, 1400),
-('Large Rune Helmet', 'A full face helmet', '', 6, 35200, 0, 0, 1, 65535, 1, 0, 0, 113, 1401),
-('Bronze Chain Mail Body', 'A series of connected metal rings', '', 7, 60, 0, 0, 1, 16737817, 1, 0, 0, 114, 1402),
-('Steel Chain Mail Body', 'A series of connected metal rings', '', 7, 750, 0, 0, 1, 15658734, 1, 0, 0, 115, 1403),
-('Mithril Chain Mail Body', 'A series of connected metal rings', '', 7, 1950, 0, 0, 1, 10072780, 1, 0, 0, 116, 1404),
-('Adamantite Chain Mail Body', 'A series of connected metal rings', '', 7, 4800, 0, 0, 1, 11717785, 1, 0, 0, 117, 1405),
-('Bronze Plate Mail Body', 'Provides excellent protection', '', 8, 160, 0, 0, 1, 16737817, 1, 0, 0, 118, 1406),
-('Steel Plate Mail Body', 'Provides excellent protection', '', 8, 2000, 0, 0, 1, 15658734, 1, 0, 0, 119, 1407),
-('Mithril Plate Mail Body', 'Provides excellent protection', '', 8, 5200, 0, 0, 1, 10072780, 1, 0, 0, 120, 1408),
-('Adamantite Plate Mail Body', 'Provides excellent protection', '', 8, 12800, 0, 0, 1, 11717785, 1, 0, 0, 121, 1409),
-('Steel Plate Mail Legs', 'These look pretty heavy', '', 9, 1000, 0, 0, 1, 15658734, 1, 0, 0, 122, 1410),
-('Mithril Plate Mail Legs', 'These look pretty heavy', '', 9, 2600, 0, 0, 1, 10072780, 1, 0, 0, 123, 1411),
-('Adamantite Plate Mail Legs', 'These look pretty heavy', '', 9, 6400, 0, 0, 1, 11717785, 1, 0, 0, 124, 1412),
-('Bronze Square Shield', 'A medium metal shield', '', 3, 48, 0, 0, 1, 16737817, 1, 0, 0, 125, 1413),
-('Steel Square Shield', 'A medium metal shield', '', 3, 600, 0, 0, 1, 15658734, 1, 0, 0, 126, 1414),
-('Mithril Square Shield', 'A medium metal shield', '', 3, 1560, 0, 0, 1, 10072780, 1, 0, 0, 127, 1415),
-('Adamantite Square Shield', 'A medium metal shield', '', 3, 3840, 0, 0, 1, 11717785, 1, 0, 0, 128, 1416),
-('Bronze Kite Shield', 'A large metal shield', '', 2, 68, 0, 0, 1, 16737817, 1, 0, 0, 129, 1417),
-('Steel Kite Shield', 'A large metal shield', '', 2, 850, 0, 0, 1, 15658734, 1, 0, 0, 130, 1418),
-('Mithril Kite Shield', 'A large metal shield', '', 2, 2210, 0, 0, 1, 10072780, 1, 0, 0, 131, 1419),
-('Adamantite Kite Shield', 'A large metal shield', '', 2, 5440, 0, 0, 1, 11717785, 1, 0, 0, 132, 1420),
-('Cooked Meat', 'Mmm this looks tasty', 'Eat', 60, 4, 0, 0, 0, 13395507, 0, 0, 0, 133, 1421),
-('Raw Chicken', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 134, 1422),
-('Burnt Meat', 'Oh dear', '', 60, 1, 0, 0, 0, 5000268, 0, 0, 0, 135, 1423),
-('Pot', 'This pot is empty', '', 61, 1, 0, 0, 0, 16748885, 0, 0, 0, 136, 1424),
-('Flour', 'There is flour in this pot', '', 62, 10, 0, 0, 0, 0, 0, 0, 0, 137, 1425),
-('Bread Dough', 'Some uncooked dough', '', 63, 1, 0, 0, 0, 0, 0, 0, 0, 138, 1426),
-('Bread', 'Nice crispy bread', 'Eat', 64, 12, 0, 0, 0, 16739379, 0, 0, 0, 139, 1427),
-('Burnt Bread', 'This bread is ruined!', '', 64, 1, 0, 0, 0, 5000268, 0, 0, 0, 140, 1428),
-('Jug', 'This jug is empty', '', 65, 1, 0, 0, 0, 65856, 0, 0, 0, 141, 1429),
-('Water', 'It\'s full of water', '', 65, 1, 0, 0, 0, 12632319, 0, 0, 0, 142, 1430),
-('Wine', 'It\'s full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 0, 143, 1431),
-('Grapes', 'Good grapes for wine making', '', 21, 1, 0, 0, 0, 9386967, 0, 0, 0, 144, 1432),
-('Shears', 'For shearing sheep', '', 66, 1, 0, 0, 0, 0, 0, 0, 0, 145, 1433),
-('Wool', 'I think this came from a sheep', '', 67, 1, 0, 0, 0, 0, 0, 0, 0, 146, 1434),
-('Fur', 'This would make warm clothing', '', 68, 10, 0, 0, 0, 12288534, 0, 0, 0, 147, 1435),
-('Cow Hide', 'I should take this to the tannery', '', 69, 1, 0, 0, 0, 0, 0, 0, 0, 148, 1436),
-('Leather', 'It\'s a piece of leather', '', 69, 1, 0, 0, 0, 16757299, 0, 0, 0, 149, 1437),
-('Clay', 'Some hard dry clay', '', 70, 1, 0, 0, 0, 15046937, 0, 0, 0, 150, 1438),
-('Copper Ore', 'this needs refining', '', 70, 3, 0, 0, 0, 16737817, 0, 0, 0, 151, 1439),
-('Iron Ore', 'this needs refining', '', 70, 17, 0, 0, 0, 11704729, 0, 0, 0, 152, 1440),
-('Gold', 'this needs refining', '', 73, 150, 0, 0, 0, 16763980, 0, 0, 0, 153, 1441),
-('Mithril Ore', 'this needs refining', '', 70, 162, 0, 0, 0, 10072780, 0, 0, 0, 154, 1442),
-('Adamantite Ore', 'this needs refining', '', 70, 400, 0, 0, 0, 11717785, 0, 0, 0, 155, 1443),
-('Coal', 'hmm a non-renewable energy source!', '', 71, 45, 0, 0, 0, 0, 0, 0, 0, 156, 1444),
-('Bronze Pickaxe', 'Used for mining', '', 72, 1, 0, 0, 0, 16737817, 0, 0, 0, 157, 1445),
-('Uncut Diamond', 'this would be worth more cut', '', 73, 200, 0, 0, 0, 0, 0, 0, 0, 158, 1446),
-('Uncut Ruby', 'this would be worth more cut', '', 73, 100, 0, 0, 0, 16724736, 0, 0, 0, 159, 1447),
-('Uncut Emerald', 'this would be worth more cut', '', 73, 50, 0, 0, 0, 3394611, 0, 0, 0, 160, 1448),
-('Uncut Sapphire', 'this would be worth more cut', '', 73, 25, 0, 0, 0, 19711, 0, 0, 0, 161, 1449),
-('Diamond', 'this looks valuable', '', 74, 2000, 0, 0, 0, 0, 0, 0, 0, 162, 1450),
-('Ruby', 'this looks valuable', '', 74, 1000, 0, 0, 0, 16724736, 0, 0, 0, 163, 1451),
-('Emerald', 'this looks valuable', '', 74, 500, 0, 0, 0, 3394611, 0, 0, 0, 164, 1452),
-('Sapphire', 'this looks valuable', '', 74, 250, 0, 0, 0, 19711, 0, 0, 0, 165, 1453),
-('Muddy Guam', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 166, 1454),
-('Tinderbox', 'useful for lighting a fire', '', 76, 1, 0, 0, 0, 0, 0, 0, 0, 167, 1455),
-('Chisel', 'good for detailed crafting', '', 77, 1, 0, 0, 0, 0, 0, 0, 0, 168, 1456),
-('Hammer', 'good for hitting things!', '', 78, 1, 0, 0, 0, 0, 0, 0, 0, 169, 1457),
-('Bronze Bar', 'it\'s a bar of bronze', '', 79, 8, 0, 0, 0, 16737817, 0, 0, 0, 170, 1458),
-('Iron Bar', 'it\'s a bar of iron', '', 79, 28, 0, 0, 0, 15654365, 0, 0, 0, 171, 1459),
-('Steel Bar', 'it\'s a bar of steel', '', 79, 100, 0, 0, 0, 15658734, 0, 0, 0, 172, 1460),
-('Gold Bar', 'this looks valuable', '', 79, 300, 0, 0, 0, 16763980, 0, 0, 0, 173, 1461),
-('Mithril Bar', 'it\'s a bar of mithril', '', 79, 300, 0, 0, 0, 10072780, 0, 0, 0, 174, 1462),
-('Adamantite Bar', 'it\'s a bar of adamantite', '', 79, 640, 0, 0, 0, 11717785, 0, 0, 0, 175, 1463),
-('Pressure Gauge', 'It looks like part of a machine', '', 50, 1, 0, 0, 0, 0, 0, 0, 1, 176, 1464),
-('Fish Food', 'Keeps  your pet fish strong and healthy', '', 51, 1, 0, 0, 0, 0, 0, 0, 0, 177, 1465),
-('Poison', 'This stuff looks nasty', '', 52, 1, 0, 0, 0, 0, 0, 0, 0, 178, 1466),
-('Poisoned Fish Food', 'Doesn\'t seem very nice to the poor fishes', '', 51, 1, 0, 0, 0, 0, 0, 0, 1, 179, 1467),
-('Spinach Roll', 'A home made spinach thing', '', 53, 1, 0, 0, 0, 0, 0, 0, 0, 180, 1468),
-('Bad Wine', 'Oh dear', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 0, 181, 1469),
-('Ashes', 'A heap of ashes', '', 23, 2, 0, 0, 0, 11184810, 0, 0, 0, 182, 1470),
-('Apron', 'A mostly clean apron', '', 58, 2, 0, 0, 1, 0, 0, 0, 0, 183, 1471),
-('Cape', 'A bright red cape', '', 59, 2, 0, 0, 1, 16711680, 0, 0, 0, 184, 1472),
-('Wizards Robe', 'I can do magic better in this', '', 87, 5, 0, 0, 1, 255, 0, 0, 0, 185, 1473),
-('Wizardshat', 'A silly pointed hat', '', 86, 5, 0, 0, 1, 255, 0, 0, 0, 186, 1474),
-('Brass Necklace', 'I\'d prefer a gold one', '', 438, 30, 0, 0, 1, 0, 0, 0, 0, 187, 1475),
-('Skirt', 'A ladies skirt', '', 88, 5, 0, 0, 1, 255, 0, 0, 0, 188, 1476),
-('Longbow', 'A Nice sturdy bow', '', 54, 80, 0, 0, 1, 65280, 1, 0, 0, 189, 1477),
-('Shortbow', 'Short but effective', '', 55, 50, 0, 0, 1, 65280, 1, 0, 0, 190, 1478),
-('Crossbow Bolts', 'Good if you have a crossbow!', '', 56, 3, 0, 1, 0, 0, 1, 0, 0, 191, 0),
-('Apron', 'this will help keep my clothes clean', '', 58, 2, 0, 0, 1, 9789488, 0, 0, 0, 192, 1479),
-('Chef\'s Hat', 'What a silly hat', '', 89, 2, 0, 0, 1, 0, 0, 0, 0, 193, 1480),
-('Beer', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 194, 1481),
-('Skirt', 'A ladies skirt', '', 88, 5, 0, 0, 1, 16036851, 0, 0, 0, 195, 1482),
-('Skirt', 'A ladies skirt', '', 88, 5, 0, 0, 1, 4210752, 0, 0, 0, 196, 1483),
-('Black Plate Mail Body', 'Provides excellent protection', '', 8, 3840, 0, 0, 1, 3158064, 1, 0, 0, 197, 1484),
-('Staff of Fire', 'A Magical staff', '', 91, 1500, 0, 0, 1, 16711680, 1, 0, 0, 198, 1485),
-('Magic Staff', 'A Magical staff', '', 91, 200, 0, 0, 1, 16777215, 1, 0, 0, 199, 1486),
-('Wizardshat', 'A silly pointed hat', '', 86, 5, 0, 0, 1, 4210752, 0, 0, 0, 200, 1487),
-('Silk', 'It\'s a sheet of silk', '', 92, 0, 0, 0, 0, 16724172, 0, 0, 0, 201, 1488),
-('Flier', 'Get your axes from Bob\'s axes', '', 29, 1, 0, 0, 0, 0, 0, 0, 0, 202, 1489),
-('Tin Ore', 'this needs refining', '', 70, 3, 0, 0, 0, 13810105, 0, 0, 0, 203, 1490),
-('Mithril Axe', 'A powerful axe', '', 12, 520, 0, 0, 1, 10072780, 1, 0, 0, 204, 1491),
-('Adamantite Axe', 'A powerful axe', '', 12, 1280, 0, 0, 1, 11717785, 1, 0, 0, 205, 1492),
-('Bronze Battle Axe', 'A vicious looking axe', '', 84, 52, 0, 0, 1, 16737817, 1, 0, 0, 206, 1493),
-('Bronze Plate Mail Legs', 'These look pretty heavy', '', 9, 80, 0, 0, 1, 16737817, 1, 0, 0, 207, 1494),
-('Ball of Wool', 'Spun from sheeps wool', '', 93, 2, 0, 0, 0, 0, 0, 0, 0, 208, 1495),
-('Oil Can', 'Its pretty full', '', 94, 3, 0, 0, 0, 0, 0, 0, 1, 209, 1496),
-('Cape', 'A warm black cape', '', 59, 7, 0, 0, 1, 2434341, 0, 0, 0, 210, 1497),
-('Kebab', 'A meaty Kebab', 'eat', 95, 3, 0, 0, 0, 0, 0, 0, 0, 211, 1498),
-('Spade', 'A fairly small spade', 'Dig', 96, 3, 0, 0, 0, 0, 0, 0, 0, 212, 1499),
-('Closet Key', 'A slightly smelly key', '', 25, 1, 0, 0, 0, 16772608, 0, 0, 0, 213, 1500),
-('Rubber Tube', 'Its slightly charred', '', 97, 3, 0, 0, 0, 0, 0, 0, 1, 214, 1501),
-('Bronze Plated Skirt', 'Designer leg protection', '', 88, 80, 0, 0, 1, 8400921, 1, 0, 0, 215, 1502),
-('Iron Plated Skirt', 'Designer leg protection', '', 88, 280, 0, 0, 1, 7824998, 1, 0, 0, 216, 1503),
-('Black Robe', 'I can do magic better in this', '', 87, 500, 0, 0, 1, 4210752, 0, 0, 0, 217, 1504),
-('Stake', 'A very pointy stick', '', 98, 8, 0, 0, 1, 16737817, 0, 0, 1, 218, 1505),
-('Garlic', 'A clove of garlic', '', 99, 3, 0, 0, 0, 0, 0, 0, 0, 219, 1506),
-('Red Spiders Eggs', 'eewww', '', 100, 7, 0, 0, 0, 0, 0, 0, 0, 220, 1507),
-('Limpwurt Root', 'the root of a limpwurt plant', '', 101, 7, 0, 0, 0, 0, 0, 0, 0, 221, 1508),
-('Strength Potion', '4 doses of strength potion', 'Drink', 48, 1000, 0, 0, 0, 15658544, 0, 0, 0, 222, 1509),
-('Strength Potion', '3 doses of strength potion', 'Drink', 48, 10, 0, 0, 0, 15658544, 0, 0, 0, 223, 1510),
-('Strength Potion', '2 doses of strength potion', 'Drink', 436, 5, 0, 0, 0, 15658544, 0, 0, 0, 224, 1511),
-('Strength Potion', '1 dose of strength potion', 'Drink', 437, 0, 0, 0, 0, 15658544, 0, 0, 0, 225, 1512),
-('Steel Plated Skirt', 'designer leg protection', '', 88, 1000, 0, 0, 1, 7829367, 1, 0, 0, 226, 1513),
-('Mithril Plated Skirt', 'Designer Leg protection', '', 88, 2600, 0, 0, 1, 2245205, 1, 0, 0, 227, 1514),
-('Adamantite Plated Skirt', 'Designer leg protection', '', 88, 6400, 0, 0, 1, 4347170, 1, 0, 0, 228, 1515),
-('Cabbage', 'Yuck I don\'t like cabbage', 'Eat', 18, 1, 0, 0, 0, 0, 0, 0, 0, 229, 1516),
-('Cape', 'A thick Blue Cape', '', 59, 32, 0, 0, 1, 4210926, 0, 0, 0, 230, 1517),
-('Large Black Helmet', 'A full face helmet', '', 6, 1056, 0, 0, 1, 4210752, 1, 0, 0, 231, 1518),
-('Red Bead', 'A small round red bead', '', 102, 4, 0, 0, 0, 16711680, 0, 0, 0, 232, 1519),
-('Yellow Bead', 'A small round yellow bead', '', 102, 4, 0, 0, 0, 16776960, 0, 0, 0, 233, 1520),
-('Black Bead', 'A small round black bead', '', 102, 4, 0, 0, 0, 4210752, 0, 0, 0, 234, 1521),
-('White Bead', 'A small round white bead', '', 102, 4, 0, 0, 0, 16777215, 0, 0, 0, 235, 1522),
-('Amulet of Accuracy', 'It increases my aim', '', 24, 100, 0, 0, 1, 0, 0, 0, 0, 236, 1523),
-('Redberries', 'Very bright red berries', '', 21, 3, 0, 0, 0, 16711680, 0, 0, 0, 237, 1524),
-('Rope', 'A Coil of rope', '', 103, 18, 0, 0, 0, 0, 0, 0, 0, 238, 1525),
-('Reddye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 16711680, 0, 0, 0, 239, 1526),
-('Yellowdye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 16776960, 0, 0, 0, 240, 1527),
-('Paste', 'A bottle off skin coloured paste', '', 104, 5, 0, 0, 0, 15523008, 0, 0, 1, 241, 1528),
-('Onion', 'A strong smelling onion', '', 99, 3, 0, 0, 0, 15641190, 0, 0, 0, 242, 1529),
-('Bronze Key', 'A heavy key', '', 25, 1, 0, 0, 0, 16737817, 0, 0, 1, 243, 1530),
-('Soft Clay', 'Clay that\'s ready to be used', '', 105, 2, 0, 0, 0, 0, 0, 0, 0, 244, 1531),
-('Wig', 'A blonde wig', '', 106, 2, 0, 0, 0, 16763992, 0, 0, 1, 245, 1532),
-('Wig', 'A wig made from wool', '', 106, 2, 0, 0, 0, 0, 0, 0, 1, 246, 1533),
-('Half Full Wine Jug', 'It\'s half full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 0, 247, 1534),
-('Keyprint', 'An imprint of a key in a lump of clay', '', 107, 2, 0, 0, 0, 0, 0, 0, 1, 248, 1535),
-('Black Plate Mail Legs', 'These look pretty heavy', '', 9, 1920, 0, 0, 1, 4210752, 1, 0, 0, 249, 1536),
-('Banana', 'Mmm this looks tasty', 'Eat', 108, 2, 0, 0, 0, 0, 0, 0, 0, 250, 1537),
-('Pastry Dough', 'Some uncooked dough', '', 63, 1, 0, 0, 0, 0, 0, 0, 0, 251, 1538),
-('Pie Dish', 'For making pies in', '', 110, 3, 0, 0, 0, 15634261, 0, 0, 0, 252, 1539),
-('Cooking Apple', 'I wonder what i can make with this', '', 109, 1, 0, 0, 0, 0, 0, 0, 0, 253, 1540),
-('Pie Shell', 'I need to find a filling for this pie', '', 111, 1, 0, 0, 0, 0, 0, 0, 0, 254, 1541),
-('Uncooked Apple Pie', 'I need to cook this first', '', 112, 1, 0, 0, 0, 16633518, 0, 0, 0, 255, 1542),
-('Uncooked Meat Pie', 'I need to cook this first', '', 112, 1, 0, 0, 0, 16633518, 0, 0, 0, 256, 1543),
-('Uncooked Redberry Pie', 'I need to cook this first', '', 112, 1, 0, 0, 0, 16633518, 0, 0, 0, 257, 1544),
-('Apple Pie', 'Mmm Apple pie', 'eat', 112, 30, 0, 0, 0, 11168819, 0, 0, 0, 258, 1545),
-('Redberry Pie', 'Looks tasty', 'eat', 112, 12, 0, 0, 0, 11168819, 0, 0, 0, 259, 1546),
-('Meat Pie', 'Mighty and meaty', 'eat', 112, 15, 0, 0, 0, 11168819, 0, 0, 0, 260, 1547),
-('Burntpie', 'Oops', 'empty dish', 112, 1, 0, 0, 0, 5000268, 0, 0, 0, 261, 1548),
-('Half a Meat Pie', 'Mighty and meaty', 'eat', 113, 10, 0, 0, 0, 11168819, 0, 0, 0, 262, 1549),
-('Half a Redberry Pie', 'Looks tasty', 'eat', 113, 4, 0, 0, 0, 11168819, 0, 0, 0, 263, 1550),
-('Half an Apple Pie', 'Mmm Apple pie', 'eat', 113, 5, 0, 0, 0, 11168819, 0, 0, 0, 264, 1551),
-('Portrait', 'It\'s a picture of a knight', '', 114, 3, 0, 0, 0, 0, 0, 0, 1, 265, 1552),
-('Faladian Knight\'s Sword', 'A razor sharp sword', '', 115, 200, 0, 0, 1, 15654365, 1, 0, 1, 266, 1553),
-('Blurite Ore', 'What Strange stuff', '', 70, 3, 0, 0, 0, 5263598, 0, 0, 1, 267, 1554),
-('Asgarnian Ale', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 268, 1555),
-('Wizard\'s Mind Bomb', 'It\'s got strange bubbles in it', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 269, 1556),
-('Dwarven Stout', 'A Pint of thick dark beer', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 270, 1557),
-('Eye of Newt', 'It seems to be looking at me', '', 116, 3, 0, 0, 0, 0, 0, 0, 0, 271, 1558),
-('Rat\'s Tail', 'A bit of rat', '', 117, 3, 0, 0, 0, 0, 0, 0, 1, 272, 1559),
-('Bluedye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 255, 0, 0, 0, 273, 1560),
-('Goblin Armour', 'Armour Designed to fit Goblins', '', 118, 49, 0, 0, 0, 65535, 0, 0, 0, 274, 1561),
-('Goblin Armour', 'Armour Designed to fit Goblins', '', 118, 49, 0, 0, 0, 16750912, 0, 0, 0, 275, 1562),
-('Goblin Armour', 'Armour Designed to fit Goblins', '', 118, 49, 0, 0, 0, 255, 0, 0, 0, 276, 1563),
-('Unstrung Longbow', 'I need to find a string for this', '', 119, 60, 0, 0, 0, 65280, 1, 0, 0, 277, 1564),
-('Unstrung Shortbow', 'I need to find a string for this', '', 120, 23, 0, 0, 0, 65280, 1, 0, 0, 278, 1565),
-('Unfired Pie Dish', 'I need to put this in a pottery oven', '', 110, 3, 0, 0, 0, 15632503, 0, 0, 0, 279, 1566),
-('Unfired Pot', 'I need to put this in a pottery oven', '', 61, 1, 0, 0, 0, 15632503, 0, 0, 0, 280, 1567),
-('Arrow Shafts', 'I need to attach feathers to these', '', 121, 1, 0, 1, 0, 0, 1, 1, 0, 281, 0),
-('Woad Leaf', 'slightly bluish leaves', '', 122, 1, 0, 1, 0, 0, 0, 0, 0, 282, 0),
-('Orangedye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 16755200, 0, 0, 0, 283, 1568),
-('Gold Ring', 'A valuable ring', '', 123, 350, 0, 0, 0, 16763980, 0, 0, 0, 284, 1569),
-('Sapphire Ring', 'A valuable ring', '', 123, 900, 0, 0, 0, 19711, 0, 0, 0, 285, 1570),
-('Emerald Ring', 'A valuable ring', '', 123, 1275, 0, 0, 0, 3394611, 0, 0, 0, 286, 1571),
-('Ruby Ring', 'A valuable ring', '', 123, 2025, 0, 0, 0, 16724736, 0, 0, 0, 287, 1572),
-('Diamond Ring', 'A valuable ring', '', 123, 3525, 0, 0, 0, 0, 0, 0, 0, 288, 1573),
-('Gold Necklace', 'I wonder if this is valuable', '', 57, 450, 0, 0, 1, 16763980, 0, 0, 0, 289, 1574),
-('Sapphire Necklace', 'I wonder if this is valuable', '', 57, 1050, 0, 0, 1, 19711, 0, 0, 0, 290, 1575),
-('Emerald Necklace', 'I wonder if this is valuable', '', 57, 1425, 0, 0, 1, 3394611, 0, 0, 0, 291, 1576),
-('Ruby Necklace', 'I wonder if this is valuable', '', 57, 2175, 0, 0, 1, 16724736, 0, 0, 0, 292, 1577),
-('Diamond Necklace', 'I wonder if this is valuable', '', 57, 3675, 0, 0, 1, 0, 0, 0, 0, 293, 1578),
-('Ring Mould', 'Used to make gold rings', '', 127, 5, 0, 0, 0, 0, 0, 0, 0, 294, 1579),
-('Amulet Mould', 'Used to make gold amulets', '', 128, 5, 0, 0, 0, 0, 0, 0, 0, 295, 1580),
-('Necklace mould', 'Used to make gold necklaces', '', 129, 5, 0, 0, 0, 0, 0, 0, 0, 296, 1581),
-('Gold Amulet', 'It needs a string so I can wear it', '', 126, 350, 0, 0, 0, 16763980, 0, 0, 0, 297, 1582),
-('Sapphire Amulet', 'It needs a string so I can wear it', '', 126, 900, 0, 0, 0, 19711, 0, 0, 0, 298, 1583),
-('Emerald Amulet', 'It needs a string so I can wear it', '', 126, 1275, 0, 0, 0, 3394611, 0, 0, 0, 299, 1584),
-('Ruby Amulet', 'It needs a string so I can make wear it', '', 126, 2025, 0, 0, 0, 16724736, 0, 0, 0, 300, 1585),
-('Diamond Amulet', 'It needs a string so I can wear it', '', 126, 3525, 0, 0, 0, 0, 0, 0, 0, 301, 1586),
-('Gold Amulet', 'I wonder if I can get this enchanted', '', 125, 350, 0, 0, 1, 16763980, 0, 0, 0, 302, 1587),
-('Sapphire Amulet', 'I wonder if I can get this enchanted', '', 125, 900, 0, 0, 1, 19711, 0, 0, 0, 303, 1588),
-('Emerald Amulet', 'I wonder if I can get this enchanted', '', 125, 1275, 0, 0, 1, 3394611, 0, 0, 0, 304, 1589),
-('Ruby Amulet', 'I wonder if I can get this enchanted', '', 125, 2025, 0, 0, 1, 16724736, 0, 0, 0, 305, 1590),
-('Diamond Amulet', 'I wonder if I can get this enchanted', '', 125, 3525, 0, 0, 1, 0, 0, 0, 0, 306, 1591),
-('Superchisel', 'I wonder if I can get this enchanted', 'twiddle', 126, 3525, 0, 0, 0, 0, 0, 0, 0, 307, 1592),
-('Mace of Zamorak', 'This mace gives me the creeps', '', 0, 4500, 0, 0, 1, 13408690, 1, 0, 0, 308, 1593),
-('Bronze Plate Mail Top', 'Armour designed for females', '', 130, 160, 0, 0, 1, 16737817, 1, 0, 0, 309, 1594),
-('Steel Plate Mail Top', 'Armour designed for females', '', 130, 2000, 0, 0, 1, 15658734, 1, 0, 0, 310, 1595),
-('Mithril Plate Mail Top', 'Armour designed for females', '', 130, 5200, 0, 0, 1, 10072780, 1, 0, 0, 311, 1596),
-('Adamantite Plate Mail Top', 'Armour designed for females', '', 130, 12800, 0, 0, 1, 11717785, 1, 0, 0, 312, 1597),
-('Iron Plate Mail Top', 'Armour designed for females', '', 130, 560, 0, 0, 1, 15654365, 1, 0, 0, 313, 1598),
-('Black Plate Mail Top', 'Armour designed for females', '', 130, 3840, 0, 0, 1, 3158064, 1, 0, 0, 314, 1599),
-('Sapphire Amulet of Magic', 'It improves my magic', '', 125, 900, 0, 0, 1, 19711, 0, 0, 0, 315, 1600),
-('Emerald Amulet of Protection', 'It improves my defense', '', 125, 1275, 0, 0, 1, 3394611, 0, 0, 0, 316, 1601),
-('Ruby Amulet of Strength', 'It improves my damage', '', 125, 5000, 0, 0, 1, 16724736, 0, 0, 0, 317, 1602),
-('Diamond Amulet of Power', 'A powerful amulet', '', 125, 3525, 0, 0, 1, 0, 0, 0, 0, 318, 1603),
-('Karamja Rum', 'A very strong spirit brewed in Karamja', '', 131, 30, 0, 0, 0, 0, 0, 0, 0, 319, 1604),
-('Cheese', 'It\'s got holes in it', 'Eat', 150, 4, 0, 0, 0, 0, 0, 0, 0, 320, 1605),
-('Tomato', 'This would make good ketchup', 'Eat', 151, 4, 0, 0, 0, 0, 0, 0, 0, 321, 1606),
-('Pizza Base', 'I need to add some tomato next', '', 152, 4, 0, 0, 0, 16768184, 0, 0, 0, 322, 1607),
-('Burnt Pizza', 'Oh dear!', '', 152, 1, 0, 0, 0, 4210752, 0, 0, 0, 323, 1608),
-('Incomplete Pizza', 'I need to add some cheese next', '', 153, 10, 0, 0, 0, 0, 0, 0, 0, 324, 1609),
-('Uncooked Pizza', 'This needs cooking', '', 154, 25, 0, 0, 0, 0, 0, 0, 0, 325, 1610),
-('Plain Pizza', 'A cheese and tomato pizza', 'Eat', 154, 40, 0, 0, 0, 0, 0, 0, 0, 326, 1611),
-('Meat Pizza', 'A pizza with bits of meat on it', 'Eat', 155, 50, 0, 0, 0, 16756316, 0, 0, 0, 327, 1612),
-('Anchovie Pizza', 'A Pizza with Anchovies', 'Eat', 155, 60, 0, 0, 0, 11447982, 0, 0, 0, 328, 1613),
-('Half Meat Pizza', 'Half of this pizza has been eaten', 'Eat', 156, 25, 0, 0, 0, 16756316, 0, 0, 0, 329, 1614),
-('Half Anchovie Pizza', 'Half of this pizza has been eaten', 'Eat', 156, 30, 0, 0, 0, 11447982, 0, 0, 0, 330, 1615),
-('Cake', 'A plain sponge cake', 'Eat', 157, 40, 0, 0, 0, 16763289, 0, 0, 0, 331, 1616),
-('Burnt Cake', 'Argh what a mess!', '', 157, 1, 0, 0, 0, 4210752, 0, 0, 0, 332, 1617),
-('Chocolate Cake', 'This looks very tasty!', 'Eat', 157, 70, 0, 0, 0, 16744524, 0, 0, 0, 333, 1618),
-('Partial Cake', 'Someone has eaten a big chunk of this cake', 'Eat', 158, 30, 0, 0, 0, 16763289, 0, 0, 0, 334, 1619),
-('Partial Chocolate Cake', 'Someone has eaten a big chunk of this cake', 'Eat', 158, 50, 0, 0, 0, 16744524, 0, 0, 0, 335, 1620),
-('Slice of Cake', 'I\'d rather have a whole cake!', 'Eat', 159, 10, 0, 0, 0, 16763289, 0, 0, 0, 336, 1621),
-('Chocolate Slice', 'A slice of chocolate cake', 'Eat', 159, 30, 0, 0, 0, 16744524, 0, 0, 0, 337, 1622),
-('Chocolate Bar', 'It\'s a bar of chocolate', 'Eat', 160, 10, 0, 0, 0, 0, 0, 0, 0, 338, 1623),
-('Cake Tin', 'Useful for baking cakes', '', 177, 10, 0, 0, 0, 0, 0, 0, 0, 339, 1624),
-('Uncooked Cake', 'Now all I need to do is cook it', '', 178, 20, 0, 0, 0, 16769248, 0, 0, 0, 340, 1625),
-('Unfired Bowl', 'I need to put this in a pottery oven', '', 161, 2, 0, 0, 0, 15632503, 0, 0, 0, 341, 1626),
-('Bowl', 'Useful for mixing things', '', 161, 4, 0, 0, 0, 16757606, 0, 0, 0, 342, 1627),
-('Bowl of Water', 'It\'s a bowl of water', '', 162, 3, 0, 0, 0, 255, 0, 0, 0, 343, 1628),
-('Incomplete Stew', 'I need to add some meat too', '', 162, 4, 0, 0, 0, 10066355, 0, 0, 0, 344, 1629),
-('Incomplete Stew', 'I need to add some potato too', '', 162, 4, 0, 0, 0, 10066355, 0, 0, 0, 345, 1630),
-('Uncooked Stew', 'I need to cook this', '', 162, 10, 0, 0, 0, 13415270, 0, 0, 0, 346, 1631),
-('Stew', 'It\'s a meat and potato stew', 'Eat', 162, 20, 0, 0, 0, 10046464, 0, 0, 0, 347, 1632),
-('Burnt Stew', 'Eew it\'s horribly burnt', 'Empty', 162, 1, 0, 0, 0, 3158064, 0, 0, 0, 348, 1633),
-('Potato', 'Can be used to make stew', '', 163, 1, 0, 0, 0, 0, 0, 0, 0, 349, 1634),
-('Raw Shrimp', 'I should try cooking this', '', 164, 5, 0, 0, 0, 16752800, 0, 0, 0, 350, 1635),
-('Shrimp', 'Some nicely cooked fish', 'Eat', 164, 5, 0, 0, 0, 16740464, 0, 0, 0, 351, 1636),
-('Raw Anchovies', 'I should try cooking this', '', 164, 15, 0, 0, 0, 10526975, 0, 0, 0, 352, 1637),
-('Anchovies', 'Some nicely cooked fish', 'Eat', 164, 15, 0, 0, 0, 7368959, 0, 0, 0, 353, 1638),
-('Burnt Fish', 'Oops!', '', 164, 1, 0, 0, 0, 4210752, 0, 0, 0, 354, 1639),
-('Raw Sardine', 'I should try cooking this', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 0, 355, 1640),
-('Sardine', 'Some nicely cooked fish', 'Eat', 165, 10, 0, 0, 0, 7405424, 0, 0, 0, 356, 1641),
-('Raw Salmon', 'I should try cooking this', '', 165, 0, 0, 0, 0, 0, 0, 0, 0, 357, 1642),
-('Salmon', 'Some nicely cooked fish', 'Eat', 165, 0, 0, 0, 0, 12619920, 0, 0, 0, 358, 1643),
-('Raw Trout', 'I should try cooking this', '', 165, 0, 0, 0, 0, 16752800, 0, 0, 0, 359, 1644),
-('Trout', 'Some nicely cooked fish', 'Eat', 165, 0, 0, 0, 0, 16740464, 0, 0, 0, 360, 1645),
-('Burnt Fish', 'Oops!', '', 165, 1, 0, 0, 0, 4210752, 0, 0, 0, 361, 1646),
-('Raw Herring', 'I should try cooking this', '', 166, 15, 0, 0, 0, 0, 0, 0, 0, 362, 1647),
-('Herring', 'Some nicely cooked fish', 'Eat', 166, 15, 0, 0, 0, 12619920, 0, 0, 0, 363, 1648),
-('Raw Pike', 'I should try cooking this', '', 166, 25, 0, 0, 0, 10526975, 0, 0, 0, 364, 1649),
-('Pike', 'Some nicely cooked fish', 'Eat', 166, 25, 0, 0, 0, 7368959, 0, 0, 0, 365, 1650),
-('Burnt Fish', 'Oops!', '', 166, 1, 0, 0, 0, 4210752, 0, 0, 0, 366, 1651),
-('Raw Tuna', 'I should try cooking this', '', 167, 0, 0, 0, 0, 0, 0, 0, 0, 367, 1652),
-('Tuna', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 12619920, 0, 0, 0, 368, 1653),
-('Burnt Fish', 'Oops!', '', 167, 1, 0, 0, 0, 4210752, 0, 0, 0, 369, 1654),
-('Raw Swordfish', 'I should try cooking this', '', 168, 0, 0, 0, 0, 16752895, 0, 0, 0, 370, 1655),
-('Swordfish', 'I\'d better be careful eating this!', 'Eat', 168, 250, 0, 0, 0, 12611776, 0, 0, 0, 371, 1656),
-('Burnt Swordfish', 'Oops!', '', 168, 1, 0, 0, 0, 4210752, 0, 0, 0, 372, 1657),
-('Raw Lobster', 'I should try cooking this', '', 169, 0, 0, 0, 0, 16711680, 0, 0, 0, 373, 1658),
-('Lobster', 'This looks tricky to eat', 'Eat', 169, 0, 0, 0, 0, 11558912, 0, 0, 0, 374, 1659),
-('Burnt Lobster', 'Oops!', '', 169, 1, 0, 0, 0, 4210752, 0, 0, 0, 375, 1660),
-('Lobster Pot', 'Useful for catching lobsters', '', 170, 20, 0, 0, 0, 0, 0, 0, 0, 376, 1661),
-('Net', 'Useful for catching small fish', '', 171, 5, 0, 0, 0, 0, 0, 0, 0, 377, 1662),
-('Fishing Rod', 'Useful for catching sardine or herring', '', 172, 5, 0, 0, 0, 0, 0, 0, 0, 378, 1663),
-('Fly Fishing Rod', 'Useful for catching salmon or trout', '', 173, 5, 0, 0, 0, 0, 0, 0, 0, 379, 1664),
-('Harpoon', 'Useful for catching really big fish', '', 174, 5, 0, 0, 0, 0, 0, 0, 0, 380, 1665),
-('Fishing Bait', 'For use with a fishing rod', '', 175, 3, 0, 1, 0, 0, 0, 0, 0, 381, 0),
-('Feather', 'Used for fly-fishing', '', 176, 2, 0, 1, 0, 0, 0, 0, 0, 382, 0),
-('Chest Key', 'A key to One eyed Hector\'s chest', '', 25, 1, 0, 0, 0, 11206485, 0, 0, 1, 383, 1666),
-('Silver', 'this needs refining', '', 134, 75, 0, 0, 0, 0, 0, 0, 0, 384, 1667),
-('Silver Bar', 'this looks valuable', '', 79, 150, 0, 0, 0, 0, 0, 0, 0, 385, 1668),
-('Holy Symbol of Saradomin', 'This improves my prayer', '', 44, 300, 0, 0, 1, 0, 0, 0, 0, 386, 1669),
-('Holy Symbol Mould', 'Used to make Holy Symbols', '', 132, 5, 0, 0, 0, 0, 0, 0, 0, 387, 1670),
-('Disk of Returning', 'Used to get out of Thordur\'s blackhole', 'spin', 133, 12, 0, 0, 0, 0, 0, 0, 0, 388, 1671),
-('Monks Robe', 'I feel closer to the God\'s when I am wearing this', '', 87, 40, 0, 0, 1, 10510400, 0, 0, 0, 389, 1672),
-('Monks Robe', 'Keeps a monk\'s legs nice and warm', '', 88, 30, 0, 0, 1, 10510400, 0, 0, 0, 390, 1673),
-('Red Key', 'A painted key', '', 25, 1, 0, 0, 0, 16711680, 0, 0, 1, 391, 1674),
-('Orange Key', 'A painted key', '', 25, 1, 0, 0, 0, 14394154, 0, 0, 1, 392, 1675),
-('Yellow Key', 'A painted key', '', 25, 1, 0, 0, 0, 16777045, 0, 0, 1, 393, 1676),
-('Blue Key', 'A painted key', '', 25, 1, 0, 0, 0, 255, 0, 0, 1, 394, 1677),
-('Magenta Key', 'A painted key', '', 25, 1, 0, 0, 0, 16711935, 0, 0, 1, 395, 1678),
-('Black Key', 'A painted key', '', 25, 1, 0, 0, 0, 4210752, 0, 0, 1, 396, 1679),
-('Rune Dagger', 'Short but pointy', '', 80, 8000, 0, 0, 1, 65535, 1, 0, 0, 397, 1680),
-('Rune Short Sword', 'A razor sharp sword', '', 1, 20800, 0, 0, 1, 65535, 1, 0, 0, 398, 1681),
-('Rune Scimitar', 'A vicious curved sword', '', 83, 25600, 0, 0, 1, 65535, 1, 0, 0, 399, 1682),
-('Medium Rune Helmet', 'A medium sized helmet', '', 5, 19200, 0, 0, 1, 65535, 1, 0, 0, 400, 1683),
-('Rune Chain Mail Body', 'A series of connected metal rings', '', 7, 50000, 0, 0, 1, 65535, 1, 0, 0, 401, 1684),
-('Rune Plate Mail Body', 'Provides excellent protection', '', 8, 65000, 0, 0, 1, 65535, 1, 0, 0, 402, 1685),
-('Rune Plate Mail Legs', 'These look pretty heavy', '', 9, 64000, 0, 0, 1, 65535, 1, 0, 0, 403, 1686),
-('Rune Square Shield', 'A medium metal shield', '', 3, 38400, 0, 0, 1, 56797, 1, 0, 0, 404, 1687),
-('Rune Kite Shield', 'A large metal shield', '', 2, 54400, 0, 0, 1, 56797, 1, 0, 0, 405, 1688),
-('Rune Axe', 'A powerful axe', '', 12, 12800, 0, 0, 1, 65535, 1, 0, 0, 406, 1689),
-('Rune Skirt', 'Designer leg protection', '', 88, 64000, 0, 0, 1, 26214, 1, 0, 0, 407, 1690),
-('Rune Plate Mail Top', 'Armour designed for females', '', 130, 65000, 0, 0, 1, 65535, 1, 0, 0, 408, 1691),
-('Runite Bar', 'it\'s a bar of runite', '', 79, 5000, 0, 0, 0, 56797, 0, 0, 0, 409, 1692),
-('Runite Ore', 'this needs refining', '', 70, 3200, 0, 0, 0, 56797, 0, 0, 0, 410, 1693),
-('Plank', 'This doesn\'t look very useful', '', 135, 1, 0, 0, 0, 0, 0, 0, 0, 411, 1694),
-('Tile', 'This doesn\'t look very useful', '', 136, 1, 0, 0, 0, 0, 0, 0, 0, 412, 1695),
-('Skull', 'A spooky looking skull', '', 26, 1, 0, 0, 0, 0, 0, 0, 1, 413, 1696),
-('Big Bones', 'Ew it\'s a pile of bones', 'Bury', 137, 1, 0, 0, 0, 0, 0, 0, 0, 414, 1697),
-('Muddy key', 'It looks like a key to a chest', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 0, 415, 1698),
-('Map', 'A map showing the way to the Isle of Crandor', '', 138, 1, 0, 0, 0, 0, 0, 0, 1, 416, 1699),
-('Map Piece', 'I need some more of the map for this to be useful', '', 139, 1, 0, 0, 0, 0, 0, 0, 1, 417, 1700),
-('Map Piece', 'I need some more of the map for this to be useful', '', 140, 1, 0, 0, 0, 0, 0, 0, 1, 418, 1701),
-('Map Piece', 'I need some more of the map for this to be useful', '', 141, 1, 0, 0, 0, 0, 0, 0, 1, 419, 1702),
-('Nails', 'Nails made from steel', '', 142, 3, 0, 1, 0, 0, 0, 0, 0, 420, 0),
-('Anti Dragon Breath Shield', 'Helps prevent damage from dragons', '', 143, 20, 0, 0, 1, 0, 1, 0, 0, 421, 1703),
-('Maze Key', 'The key to the entrance of Melzar\'s maze', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 0, 422, 1704),
-('Pumpkin', 'Happy halloween', 'eat', 149, 10, 0, 0, 0, 0, 0, 0, 0, 423, 1705),
-('Black Dagger', 'Short but pointy', '', 80, 240, 0, 0, 1, 3158064, 1, 0, 0, 424, 1706),
-('Black Short Sword', 'A razor sharp sword', '', 1, 624, 0, 0, 1, 3158064, 1, 0, 0, 425, 1707),
-('Black Long Sword', 'A razor sharp sword', '', 81, 960, 0, 0, 1, 3158064, 1, 0, 0, 426, 1708),
-('Black 2-Handed Sword', 'A very large sword', '', 82, 1920, 0, 0, 1, 3158064, 1, 0, 0, 427, 1709),
-('Black Scimitar', 'A vicious curved sword', '', 83, 768, 0, 0, 1, 3158064, 1, 0, 0, 428, 1710),
-('Black Axe', 'A sinister looking axe', '', 12, 384, 0, 0, 1, 3158064, 1, 0, 0, 429, 1711),
-('Black Battle Axe', 'A vicious looking axe', '', 84, 1248, 0, 0, 1, 3158064, 1, 0, 0, 430, 1712),
-('Black Mace', 'A spikey mace', '', 0, 432, 0, 0, 1, 3158064, 1, 0, 0, 431, 1713),
-('Black Chain Mail Body', 'A series of connected metal rings', '', 7, 1440, 0, 0, 1, 3158064, 1, 0, 0, 432, 1714),
-('Black Square Shield', 'A medium metal shield', '', 3, 1152, 0, 0, 1, 3158064, 1, 0, 0, 433, 1715),
-('Black Kite Shield', 'A large metal shield', '', 2, 1632, 0, 0, 1, 3158064, 1, 0, 0, 434, 1716),
-('Black Plated skirt', 'designer leg protection', '', 88, 1920, 0, 0, 1, 1118481, 1, 0, 0, 435, 1717),
-('Muddy Marrentill', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 436, 1718),
-('Muddy Tarromin', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 437, 1719),
-('Muddy Harralander', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 438, 1720),
-('Muddy Ranarr Weed', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 439, 1721),
-('Muddy Irit Leaf', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 440, 1722),
-('Muddy Avantoe', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 441, 1723),
-('Muddy Kwuarm', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 442, 1724),
-('Muddy Cadantine', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 443, 1725),
-('Muddy Dwarf Weed', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 444, 1726),
-('Guam Leaf', 'A herb used in attack potion making', '', 75, 3, 0, 0, 0, 0, 0, 1, 0, 445, 1727),
-('Marrentill', 'A herb used in poison cures', '', 75, 5, 0, 0, 0, 0, 0, 1, 0, 446, 1728),
-('Tarromin', 'A useful herb', '', 75, 11, 0, 0, 0, 0, 0, 1, 0, 447, 1729),
-('Harralander', 'A useful herb', '', 75, 20, 0, 0, 0, 0, 0, 1, 0, 448, 1730),
-('Ranarr Weed', 'A useful herb', '', 75, 25, 0, 0, 0, 0, 0, 1, 0, 449, 1731),
-('Irit Leaf', 'A useful herb', '', 75, 40, 0, 0, 0, 0, 0, 1, 0, 450, 1732),
-('Avantoe', 'A useful herb', '', 75, 48, 0, 0, 0, 0, 0, 1, 0, 451, 1733),
-('Kwuarm', 'A powerful herb', '', 75, 54, 0, 0, 0, 0, 0, 1, 0, 452, 1734),
-('Cadantine', 'A powerful herb', '', 75, 65, 0, 0, 0, 0, 0, 1, 0, 453, 1735),
-('Dwarf Weed', 'A powerful herb', '', 75, 70, 0, 0, 0, 0, 0, 1, 0, 454, 1736),
-('Unfinished Guam Potion', 'I need another ingredient to finish this Guam potion', '', 48, 3, 0, 0, 0, 10073782, 0, 0, 0, 455, 1737),
-('Unfinished Marrentill Potion', 'I need another ingredient to finish this Marrentill potion', '', 48, 5, 0, 0, 0, 11966902, 0, 0, 0, 456, 1738),
-('Unfinished Tarromin Potion', 'I need another ingredient to finish this Tarromin potion', '', 48, 11, 0, 0, 0, 11974297, 0, 0, 0, 457, 1739),
-('Unfinished Harralander Potion', 'I need another ingredient to finish this Harralander potion', '', 48, 20, 0, 0, 0, 11966873, 0, 0, 0, 458, 1740),
-('Unfinished Ranarr Potion', 'I need another ingredient to finish this Ranarr potion', '', 48, 25, 0, 0, 0, 10073753, 0, 0, 0, 459, 1741),
-('Unfinished Irit Potion', 'I need another ingredient to finish this Irit potion', '', 48, 40, 0, 0, 0, 10066358, 0, 0, 0, 460, 1742),
-('Unfinished Avantoe Potion', 'I need another ingredient to finish this Avantoe potion', '', 48, 48, 0, 0, 0, 10066329, 0, 0, 0, 461, 1743),
-('Unfinished Kwuarm Potion', 'I need another ingredient to finish this Kwuarm potion', '', 48, 54, 0, 0, 0, 11974326, 0, 0, 0, 462, 1744),
-('Unfinished Cadantine Potion', 'I need another ingredient to finish this Cadantine potion', '', 48, 65, 0, 0, 0, 13743769, 0, 0, 0, 463, 1745),
-('Unfinished Dwarfweed Potion', 'I need another ingredient to finish this Dwarfweed potion', '', 48, 70, 0, 0, 0, 10073809, 0, 0, 0, 464, 1746),
-('Vial', 'It\'s full of water', '', 48, 2, 0, 0, 0, 11197951, 0, 0, 0, 465, 1747),
-('Vial', 'This vial is empty', '', 144, 2, 0, 0, 0, 0, 0, 0, 0, 466, 1748),
-('Unicorn Horn', 'Poor unicorn', '', 145, 20, 0, 0, 0, 0, 0, 0, 0, 467, 1749),
-('Blue Dragon Scale', 'A large shiny scale', '', 146, 50, 0, 0, 0, 0, 0, 0, 0, 468, 1750),
-('Pestle and Mortar', 'I can grind things for potions in this', '', 147, 4, 0, 0, 0, 0, 0, 1, 0, 469, 1751),
-('Snape Grass', 'Strange spikey grass', '', 148, 10, 0, 0, 0, 0, 0, 1, 0, 470, 1752),
-('Medium Black Helmet', 'A medium sized helmet', '', 5, 576, 0, 0, 1, 3158064, 1, 0, 0, 471, 1753),
-('White Berries', 'Poisonous berries', '', 21, 10, 0, 0, 0, 0, 0, 1, 0, 472, 1754),
-('Ground Blue Dragon Scale', 'This stuff isn\'t good for you', '', 23, 40, 0, 0, 0, 35071, 0, 0, 0, 473, 1755),
-('Ground Unicorn Horn', 'A useful potion ingredient', '', 23, 20, 0, 0, 0, 15645520, 0, 0, 0, 474, 1756),
-('Attack Potion', '3 doses of attack potion', 'Drink', 48, 12, 0, 0, 0, 3206894, 0, 1, 0, 475, 1757),
-('Attack Potion', '2 doses of attack potion', 'Drink', 436, 9, 0, 0, 0, 3206894, 0, 1, 0, 476, 1758),
-('Attack Potion', '1 dose of attack potion', 'Drink', 437, 6, 0, 0, 0, 3206894, 0, 1, 0, 477, 1759),
-('Stat Restoration Potion', '3 doses of stat restoration potion', 'Drink', 48, 88, 0, 0, 0, 15609904, 0, 1, 0, 478, 1760),
-('Stat Restoration Potion', '2 doses of stat restoration potion', 'Drink', 436, 66, 0, 0, 0, 15609904, 0, 1, 0, 479, 1761),
-('Stat Restoration Potion', '1 dose of stat restoration potion', 'Drink', 437, 44, 0, 0, 0, 15609904, 0, 1, 0, 480, 1762),
-('Defense Potion', '3 doses of defense potion', 'Drink', 48, 120, 0, 0, 0, 3206704, 0, 1, 0, 481, 1763),
-('Defense Potion', '2 doses of defense potion', 'Drink', 436, 90, 0, 0, 0, 3206704, 0, 1, 0, 482, 1764),
-('Defense Potion', '1 dose of defense potion', 'Drink', 437, 60, 0, 0, 0, 3206704, 0, 1, 0, 483, 1765),
-('Restore Prayer Potion', '3 doses of restore prayer potion', 'Drink', 48, 152, 0, 0, 0, 3206809, 0, 1, 0, 484, 1766),
-('Restore Prayer Potion', '2 doses of restore prayer potion', 'Drink', 436, 114, 0, 0, 0, 3206809, 0, 1, 0, 485, 1767),
-('Restore Prayer Potion', '1 dose of restore prayer potion', 'Drink', 437, 76, 0, 0, 0, 3206809, 0, 1, 0, 486, 1768),
-('Super Attack Potion', '3 doses of attack potion', 'Drink', 48, 5000, 0, 0, 0, 3158254, 0, 1, 0, 487, 1769),
-('Super Attack Potion', '2 doses of attack potion', 'Drink', 436, 1000, 0, 0, 0, 3158254, 0, 1, 0, 488, 1770),
-('Super Attack Potion', '1 dose of attack potion', 'Drink', 437, 1000, 0, 0, 0, 3158254, 0, 1, 0, 489, 1771),
-('Fishing Potion', '3 doses of fishing potion', 'Drink', 48, 200, 0, 0, 0, 3158064, 0, 1, 0, 490, 1772),
-('Fishing Potion', '2 doses of fishing potion', 'Drink', 436, 150, 0, 0, 0, 3158064, 0, 1, 0, 491, 1773),
-('Fishing Potion', '1 dose of fishing potion', 'Drink', 437, 100, 0, 0, 0, 3158064, 0, 1, 0, 492, 1774),
-('Super Strength Potion', '3 doses of strength potion', 'Drink', 48, 5000, 0, 0, 0, 15658734, 0, 1, 0, 493, 1775),
-('Super Strength Potion', '2 doses of strength potion', 'Drink', 436, 1000, 0, 0, 0, 15658734, 0, 1, 0, 494, 1776),
-('Super Strength Potion', '1 dose of strength potion', 'Drink', 437, 1000, 0, 0, 0, 15658734, 0, 1, 0, 495, 1777),
-('Super Defense Potion', '3 doses of defense potion', 'Drink', 48, 5000, 0, 0, 0, 15644208, 0, 1, 0, 496, 1778),
-('Super Defense Potion', '2 doses of defense potion', 'Drink', 436, 1000, 0, 0, 0, 15644208, 0, 1, 0, 497, 1779),
-('Super Defense Potion', '1 dose of defense potion', 'Drink', 437, 1000, 0, 0, 0, 15644208, 0, 1, 0, 498, 1780),
-('Ranging Potion', '3 doses of ranging potion', 'Drink', 48, 288, 0, 0, 0, 3192558, 0, 1, 0, 499, 1781),
-('Ranging Potion', '2 doses of ranging potion', 'Drink', 436, 216, 0, 0, 0, 3192558, 0, 1, 0, 500, 1782),
-('Ranging Potion', '1 dose of ranging potion', 'Drink', 437, 144, 0, 0, 0, 3192558, 0, 1, 0, 501, 1783),
-('Wine of Zamorak', 'It\'s full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 1, 0, 502, 1784),
-('Raw Bear Meat', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 503, 1785),
-('Raw Rat Meat', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 504, 1786),
-('Raw Beef', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 505, 1787),
-('Enchanted Bear Meat', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 506, 1788),
-('Enchanted Rat Meat', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 507, 1789),
-('Enchanted Beef', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 508, 1790),
-('Enchanted Chicken Meat', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 509, 1791),
-('Dramen Staff', 'A magical staff cut from the dramen tree', '', 85, 15, 0, 0, 1, 10072780, 1, 1, 1, 510, 1792),
-('Dramen Branch', 'I need to make this into a staff', '', 179, 15, 0, 0, 0, 10072780, 0, 0, 1, 511, 1793),
-('Cape', 'A thick Green cape', '', 59, 32, 0, 0, 1, 4246592, 0, 0, 0, 512, 1794),
-('Cape', 'A thick yellow cape', '', 59, 32, 0, 0, 1, 15658560, 0, 0, 0, 513, 1795),
-('Cape', 'A thick Orange cape', '', 59, 32, 0, 0, 1, 15636736, 0, 0, 0, 514, 1796),
-('Cape', 'A thick purple cape', '', 59, 32, 0, 0, 1, 11141341, 0, 0, 0, 515, 1797),
-('Greendye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 65280, 0, 0, 0, 516, 1798),
-('Purpledye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 11141375, 0, 1, 0, 517, 1799),
-('Iron Ore Certificate', 'Each certificate exchangable at draynor market for 5 iron ore', '', 180, 10, 0, 1, 0, 15654365, 0, 0, 0, 518, 0),
-('Coal Certificate', 'Each certificate exchangable at draynor market for 5 coal', '', 180, 20, 0, 1, 0, 4210752, 0, 0, 0, 519, 0),
-('Mithril Ore Certificate', 'Each certificate exchangable at draynor market for 5 mithril ore', '', 180, 30, 0, 1, 0, 10072780, 0, 0, 0, 520, 0),
-('Silver Certificate', 'Each certificate exchangable at draynor market for 5 silver nuggets', '', 180, 15, 0, 1, 0, 0, 0, 0, 0, 521, 0),
-('Gold Certificate', 'Each certificate exchangable at draynor market for 5 gold nuggets', '', 180, 25, 0, 1, 0, 16763980, 0, 0, 0, 522, 0),
-('Dragonstone Amulet', 'A very powerful amulet', '', 125, 17625, 0, 0, 1, 12255487, 0, 1, 0, 523, 1800),
-('Dragonstone', 'This looks very valuable', '', 74, 10000, 0, 0, 0, 12255487, 0, 0, 0, 524, 1801),
-('Dragonstone Amulet', 'It needs a string so I can wear it', '', 126, 17625, 0, 0, 0, 12255487, 0, 1, 0, 525, 1802),
-('Crystal Key', 'A very shiny key', '', 25, 1, 0, 0, 0, 15663103, 0, 0, 0, 526, 1803),
-('Half of a Key', 'A very shiny key', '', 181, 1, 0, 0, 0, 15663103, 0, 0, 1, 527, 1804);
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
-('Half of a Key', 'A very shiny key', '', 182, 1, 0, 0, 0, 15663103, 0, 0, 1, 528, 1805),
-('Iron Bar Certificate', 'Each certificate exchangable at draynor market for 5 iron bars', '', 180, 10, 0, 1, 0, 15654365, 0, 0, 0, 529, 0),
-('Steel Bar Certificate', 'Each certificate exchangable at draynor market for 5 steel bars', '', 180, 20, 0, 1, 0, 15658734, 0, 0, 0, 530, 0),
-('Mithril Bar Certificate', 'Each certificate exchangable at draynor market for 5 mithril bars', '', 180, 30, 0, 1, 0, 10072780, 0, 0, 0, 531, 0),
-('Silver Bar Certificate', 'Each certificate exchangable at draynor market for 5 silver bars', '', 180, 15, 0, 1, 0, 0, 0, 0, 0, 532, 0),
-('Gold Bar Certificate', 'Each certificate exchangable at draynor market for 5 gold bars', '', 180, 25, 0, 1, 0, 16763980, 0, 0, 0, 533, 0),
-('Lobster Certificate', 'Each certificate exchangable at draynor market for 5 lobsters', '', 180, 10, 0, 1, 0, 11558912, 0, 0, 0, 534, 0),
-('Raw Lobster Certificate', 'Each certificate exchangable at draynor market for 5 raw lobsters', '', 180, 10, 0, 1, 0, 16711680, 0, 0, 0, 535, 0),
-('Swordfish Certificate', 'Each certificate exchangable at draynor market for 5 swordfish', '', 180, 3000, 0, 1, 0, 12611776, 0, 0, 0, 536, 0),
-('Raw Swordfish Certificate', 'Each certificate exchangable at draynor market for 5 raw swordfish', '', 180, 10, 0, 1, 0, 16752895, 0, 0, 0, 537, 0),
-('Diary', 'Property of Nora.T.Hag', 'read', 28, 1, 0, 0, 0, 11206570, 0, 0, 1, 538, 1806),
-('Front Door Key', 'A house key', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 1, 539, 1807),
-('Ball', 'A child\'s ball', '', 183, 1, 0, 0, 0, 0, 0, 0, 1, 540, 1808),
-('Magnet', 'A very attractive magnet', '', 184, 3, 0, 0, 0, 0, 0, 0, 1, 541, 1809),
-('Grey Wolf Fur', 'This would make warm clothing', '', 68, 50, 0, 0, 0, 15658734, 0, 0, 0, 542, 1810),
-('Uncut Dragonstone', 'this would be worth more cut', '', 73, 1000, 0, 0, 0, 12255487, 0, 0, 0, 543, 1811),
-('Dragonstone Ring', 'A valuable ring', '', 123, 17625, 0, 0, 0, 12255487, 0, 0, 0, 544, 1812),
-('Dragonstone Necklace', 'I wonder if this is valuable', '', 57, 18375, 0, 0, 1, 12255487, 0, 0, 0, 545, 1813),
-('Raw Shark', 'I should try cooking this', '', 185, 495, 0, 0, 0, 5263488, 0, 0, 0, 546, 1814),
-('Shark', 'I\'d better be careful eating this!', 'Eat', 185, 0, 0, 0, 0, 11558912, 0, 1, 0, 547, 1815),
-('Burnt Shark', 'Oops!', '', 185, 0, 0, 0, 0, 4210752, 0, 0, 0, 548, 1816),
-('Big Net', 'Useful for catching lots of fish', '', 186, 20, 0, 0, 0, 0, 0, 0, 0, 549, 1817),
-('Casket', 'I hope there is treasure in it', 'open', 187, 50, 0, 0, 0, 0, 0, 0, 0, 550, 1818),
-('Raw Cod', 'I should try cooking this', '', 165, 25, 0, 0, 0, 10526924, 0, 0, 0, 551, 1819),
-('Cod', 'Some nicely cooked fish', 'Eat', 165, 25, 0, 0, 0, 7368908, 0, 0, 0, 552, 1820),
-('Raw Mackerel', 'I should try cooking this', '', 166, 17, 0, 0, 0, 13421728, 0, 0, 0, 553, 1821),
-('Mackerel', 'Some nicely cooked fish', 'Eat', 166, 17, 0, 0, 0, 13421680, 0, 0, 0, 554, 1822),
-('Raw Bass', 'I should try cooking this', '', 167, 120, 0, 0, 0, 16752800, 0, 0, 0, 555, 1823),
-('Bass', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 16740464, 0, 1, 0, 556, 1824),
-('Ice Gloves', 'These will keep my hands cold!', '', 17, 6, 0, 0, 1, 11202303, 0, 1, 1, 557, 1825),
-('Firebird Feather', 'A red hot feather', '', 176, 2, 0, 0, 0, 16711680, 0, 0, 1, 558, 1826),
-('Firebird Feather', 'This is cool enough to hold now', '', 176, 2, 0, 0, 0, 16768256, 0, 0, 1, 559, 1827),
-('Poisoned Iron Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 1, 0, 560, 1828),
-('Poisoned bronze Dagger', 'Short but pointy', '', 80, 10, 0, 0, 1, 16737817, 1, 1, 0, 561, 1829),
-('Poisoned Steel Dagger', 'Short but pointy', '', 80, 125, 0, 0, 1, 15658734, 1, 1, 0, 562, 1830),
-('Poisoned Mithril Dagger', 'Short but pointy', '', 80, 325, 0, 0, 1, 10072780, 1, 1, 0, 563, 1831),
-('Poisoned Rune Dagger', 'Short but pointy', '', 80, 8000, 0, 0, 1, 65535, 1, 1, 0, 564, 1832),
-('Poisoned Adamantite Dagger', 'Short but pointy', '', 80, 800, 0, 0, 1, 11717785, 1, 1, 0, 565, 1833),
-('Poisoned Black Dagger', 'Short but pointy', '', 80, 240, 0, 0, 1, 3158064, 1, 1, 0, 566, 1834),
-('Cure Poison Potion', '3 doses of cure poison potion', 'Drink', 48, 288, 0, 0, 0, 6749969, 0, 0, 0, 567, 1835),
-('Cure Poison Potion', '2 doses of cure poison potion', 'Drink', 436, 216, 0, 0, 0, 6749969, 0, 0, 0, 568, 1836),
-('Cure Poison Potion', '1 dose of cure poison potion', 'Drink', 437, 144, 0, 0, 0, 6749969, 0, 0, 0, 569, 1837),
-('Poison Antidote', '3 doses of anti poison potion', 'Drink', 48, 288, 0, 0, 0, 16716134, 0, 0, 0, 570, 1838),
-('Poison Antidote', '2 doses of anti poison potion', 'Drink', 436, 216, 0, 0, 0, 16716134, 0, 0, 0, 571, 1839),
-('Poison Antidote', '1 dose of anti poison potion', 'Drink', 437, 144, 0, 0, 0, 16716134, 0, 0, 0, 572, 1840),
-('Weapon Poison', 'For use on daggers and arrows', '', 48, 144, 0, 0, 0, 1140479, 0, 0, 0, 573, 1841),
-('ID Paper', 'ID of Hartigen the black knight', '', 29, 1, 0, 0, 0, 0, 0, 0, 1, 574, 1842),
-('Poison Bronze Arrows', 'Venomous looking arrows', '', 206, 2, 0, 1, 0, 16737817, 1, 1, 0, 575, 0),
-('Christmas Cracker', 'Use on another player to pull it', '', 188, 1, 0, 0, 0, 16711680, 0, 0, 0, 576, 1843),
-('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 16711680, 0, 0, 0, 577, 1844),
-('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 16776960, 0, 0, 0, 578, 1845),
-('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 255, 0, 0, 0, 579, 1846),
-('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 65280, 0, 0, 0, 580, 1847),
-('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 16711935, 0, 0, 0, 581, 1848),
-('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 0, 0, 0, 0, 582, 1849),
-('Miscellaneous Key', 'I wonder what this unlocks', '', 25, 1, 0, 0, 0, 14509670, 0, 0, 0, 583, 1850),
-('Bunch of Keys', 'Some keys on a keyring', '', 190, 2, 0, 0, 0, 0, 0, 0, 1, 584, 1851),
-('Whisky', 'A bottle of Draynor Malt', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 585, 1852),
-('Candlestick', 'A valuable candlestick', '', 192, 5, 0, 0, 0, 0, 0, 0, 0, 586, 1853),
-('Master Thief Armband', 'This denotes a great act of thievery', '', 193, 2, 0, 0, 0, 0, 0, 0, 1, 587, 1854),
-('Blamish Snail Slime', 'Yuck', '', 104, 5, 0, 0, 0, 15663086, 0, 0, 1, 588, 1855),
-('Blamish Oil', 'made from the finest snail slime', '', 48, 10, 0, 0, 0, 15663086, 0, 0, 1, 589, 1856),
-('Oily Fishing Rod', 'A rod covered in Blamish oil', '', 172, 15, 0, 0, 0, 0, 0, 0, 1, 590, 1857),
-('Lava Eel', 'Strange it looks cooler now it\'s been cooked', 'eat', 194, 150, 0, 0, 0, 11558912, 0, 1, 1, 591, 1858),
-('Raw Lava Eel', 'A very strange eel', '', 194, 150, 0, 0, 0, 16711680, 0, 0, 1, 592, 1859),
-('Poison Crossbow Bolts', 'Good if you have a crossbow!', '', 56, 3, 0, 1, 0, 0, 1, 0, 0, 593, 0),
-('Dragon Sword', 'A Razor sharp sword', '', 273, 100000, 0, 0, 1, 16711748, 1, 1, 0, 594, 1860),
-('Dragon Axe', 'A vicious looking axe', '', 272, 200000, 0, 0, 1, 16711748, 1, 1, 0, 595, 1861),
-('Jail Keys', 'Keys to the black knight jail', '', 190, 2, 0, 0, 0, 0, 0, 0, 1, 596, 1862),
-('Dusty Key', 'A key given to me by Velrak', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 0, 597, 1863),
-('Charged Dragonstone Amulet', 'A very powerful amulet', 'rub', 125, 25000, 0, 0, 1, 12255487, 0, 1, 0, 598, 1864),
-('Grog', 'A murky glass of some sort of drink', 'drink', 90, 3, 0, 0, 0, 0, 0, 0, 0, 599, 1865),
-('Candle', 'An unlit candle', '', 195, 3, 0, 0, 0, 0, 0, 0, 0, 600, 1866),
-('Black Candle', 'A spooky but unlit candle', '', 195, 3, 0, 0, 0, 2105376, 0, 0, 1, 601, 1867),
-('Candle', 'A small slowly burning candle', '', 196, 3, 0, 0, 0, 0, 0, 0, 0, 602, 1868),
-('Black Candle', 'A spooky candle', '', 196, 3, 0, 0, 0, 2105376, 0, 0, 1, 603, 1869),
-('Insect Repellant', 'Drives away all known 6 legged creatures', '', 197, 3, 0, 0, 0, 0, 0, 0, 0, 604, 1870),
-('Bat Bones', 'Ew it\'s a pile of bones', 'Bury', 20, 1, 0, 0, 0, 0, 0, 1, 0, 605, 1871),
-('Wax Bucket', 'It\'s a wooden bucket', '', 22, 2, 0, 0, 0, 16777181, 0, 0, 0, 606, 1872),
-('Excalibur', 'This used to belong to king Arthur', '', 115, 200, 0, 0, 1, 10072780, 1, 0, 1, 607, 1873),
-('Druids Robe', 'I feel closer to the Gods when I am wearing this', '', 87, 40, 0, 0, 1, 16777215, 0, 0, 0, 608, 1874),
-('Druids Robe', 'Keeps a druids\'s knees nice and warm', '', 88, 30, 0, 0, 1, 16777215, 0, 0, 0, 609, 1875),
-('Eye Patch', 'It makes me look very piratical', '', 198, 2, 0, 0, 1, 0, 0, 1, 0, 610, 1876),
-('Unenchanted Dragonstone Amulet', 'I wonder if I can get this enchanted', '', 125, 17625, 0, 0, 1, 12255487, 0, 0, 0, 611, 1877),
-('Unpowered Orb', 'I\'d prefer it if it was powered', '', 199, 100, 0, 0, 0, 0, 0, 0, 0, 612, 1878),
-('Fire Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 16711680, 0, 0, 0, 613, 1879),
-('Water Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 255, 0, 0, 0, 614, 1880),
-('Battlestaff', 'It\'s a slightly magical stick', '', 85, 7000, 0, 0, 1, 10072780, 1, 1, 0, 615, 1881),
-('Battlestaff of Fire', 'A Magical staff', '', 91, 15500, 0, 0, 1, 16711680, 1, 1, 0, 616, 1882),
-('Battlestaff of Water', 'A Magical staff', '', 91, 15500, 0, 0, 1, 255, 1, 0, 0, 617, 1883),
-('Battlestaff of Air', 'A Magical staff', '', 91, 15500, 0, 0, 1, 65535, 1, 1, 0, 618, 1884),
-('Battlestaff of Earth', 'A Magical staff', '', 91, 15500, 0, 0, 1, 7353600, 1, 1, 0, 619, 1885),
-('Blood-Rune', 'Used for high level missile spells', '', 200, 300, 0, 1, 0, 0, 0, 1, 0, 620, 0),
-('Beer Glass', 'I need to fill this with beer', '', 201, 2, 0, 0, 0, 0, 0, 0, 0, 621, 1886),
-('Glassblowing Pipe', 'Use on molten glass to make things', '', 202, 2, 0, 0, 0, 0, 0, 1, 0, 622, 1887),
-('Seaweed', 'slightly damp seaweed', '', 203, 2, 0, 0, 0, 0, 0, 1, 0, 623, 1888),
-('Molten Glass', 'hot glass ready to be blown', '', 204, 2, 0, 0, 0, 0, 0, 0, 0, 624, 1889),
-('Soda Ash', 'one of the ingredients for making glass', '', 23, 2, 0, 0, 0, 0, 0, 0, 0, 625, 1890),
-('Sand', 'one of the ingredients for making glass', '', 22, 2, 0, 0, 0, 16763904, 0, 0, 0, 626, 1891),
-('Air Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 65535, 0, 0, 0, 627, 1892),
-('Earth Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 7353600, 0, 0, 0, 628, 1893),
-('Bass Certificate', 'Each certificate exchangable at Catherby for 5 bass', '', 180, 10, 0, 1, 0, 16740464, 0, 0, 0, 629, 0),
-('Raw Bass Certificate', 'Each certificate exchangable at Catherby for 5 raw bass', '', 180, 10, 0, 1, 0, 16752800, 0, 0, 0, 630, 0),
-('Shark Certificate', 'Each certificate exchangable at Catherby for 5 shark', '', 180, 10, 0, 1, 0, 11558912, 0, 0, 0, 631, 0),
-('Raw Shark Certificate', 'Each certificate exchangable at Catherby for 5 raw shark', '', 180, 10, 0, 1, 0, 5263488, 0, 0, 0, 632, 0),
-('Oak Logs', 'Logs cut from an oak tree', '', 14, 20, 0, 0, 0, 0, 0, 0, 0, 633, 1894),
-('Willow Logs', 'Logs cut from a willow tree', '', 14, 40, 0, 0, 0, 0, 0, 0, 0, 634, 1895),
-('Maple Logs', 'Logs cut from a maple tree', '', 14, 80, 0, 0, 0, 0, 0, 0, 0, 635, 1896),
-('Yew Logs', 'Logs cut from a yew tree', '', 14, 160, 0, 0, 0, 0, 0, 0, 0, 636, 1897),
-('Magic Logs', 'Logs made from magical wood', '', 14, 320, 0, 0, 0, 0, 0, 0, 0, 637, 1898),
-('Headless Arrows', 'I need to attach arrow heads to these', '', 205, 1, 0, 1, 0, 0, 1, 1, 0, 638, 0),
-('Iron Arrows', 'Arrows with iron heads', '', 11, 6, 0, 1, 0, 15654365, 1, 1, 0, 639, 0),
-('Poison Iron Arrows', 'Venomous looking arrows', '', 206, 6, 0, 1, 0, 15654365, 1, 1, 0, 640, 0),
-('Steel Arrows', 'Arrows with steel heads', '', 11, 24, 0, 1, 0, 15658734, 1, 1, 0, 641, 0),
-('Poison Steel Arrows', 'Venomous looking arrows', '', 206, 24, 0, 1, 0, 15658734, 1, 1, 0, 642, 0),
-('Mithril Arrows', 'Arrows with mithril heads', '', 11, 64, 0, 1, 0, 9614028, 1, 1, 0, 643, 0),
-('Poison Mithril Arrows', 'Venomous looking arrows', '', 206, 64, 0, 1, 0, 9614028, 1, 1, 0, 644, 0),
-('Adamantite Arrows', 'Arrows with adamantite heads', '', 11, 160, 0, 1, 0, 11717785, 1, 1, 0, 645, 0),
-('Poison Adamantite Arrows', 'Venomous looking arrows', '', 206, 160, 0, 1, 0, 11717785, 1, 1, 0, 646, 0),
-('Rune Arrows', 'Arrows with rune heads', '', 11, 800, 0, 1, 0, 65535, 1, 1, 0, 647, 0),
-('Poison Rune Arrows', 'Venomous looking arrows', '', 206, 800, 0, 1, 0, 65535, 1, 1, 0, 648, 0),
-('Oak Longbow', 'A Nice sturdy bow', '', 54, 160, 0, 0, 1, 255, 1, 1, 0, 649, 1899),
-('Oak Shortbow', 'Short but effective', '', 55, 100, 0, 0, 1, 255, 1, 1, 0, 650, 1900),
-('Willow Longbow', 'A Nice sturdy bow', '', 54, 320, 0, 0, 1, 16776960, 1, 1, 0, 651, 1901),
-('Willow Shortbow', 'Short but effective', '', 55, 200, 0, 0, 1, 16776960, 1, 1, 0, 652, 1902),
-('Maple Longbow', 'A Nice sturdy bow', '', 54, 640, 0, 0, 1, 16746496, 1, 1, 0, 653, 1903),
-('Maple Shortbow', 'Short but effective', '', 55, 400, 0, 0, 1, 16746496, 1, 1, 0, 654, 1904),
-('Yew Longbow', 'A Nice sturdy bow', '', 54, 1280, 0, 0, 1, 16711680, 1, 1, 0, 655, 1905),
-('Yew Shortbow', 'Short but effective', '', 55, 800, 0, 0, 1, 16711680, 1, 1, 0, 656, 1906),
-('Magic Longbow', 'A Nice sturdy bow', '', 54, 2800, 0, 0, 1, 4210752, 1, 1, 0, 657, 1907),
-('Magic Shortbow', 'Short but effective', '', 55, 2000, 0, 0, 1, 4210752, 1, 1, 0, 658, 1908),
-('Unstrung Oak Longbow', 'I need to find a string for this', '', 119, 80, 0, 0, 0, 255, 1, 0, 0, 659, 1909),
-('Unstrung Oak Shortbow', 'I need to find a string for this', '', 120, 50, 0, 0, 0, 255, 1, 0, 0, 660, 1910),
-('Unstrung Willow Longbow', 'I need to find a string for this', '', 119, 160, 0, 0, 0, 16776960, 1, 0, 0, 661, 1911),
-('Unstrung Willow Shortbow', 'I need to find a string for this', '', 120, 100, 0, 0, 0, 16776960, 1, 0, 0, 662, 1912),
-('Unstrung Maple Longbow', 'I need to find a string for this', '', 119, 320, 0, 0, 0, 16744448, 1, 0, 0, 663, 1913),
-('Unstrung Maple Shortbow', 'I need to find a string for this', '', 120, 200, 0, 0, 0, 16744448, 1, 0, 0, 664, 1914),
-('Unstrung Yew Longbow', 'I need to find a string for this', '', 119, 640, 0, 0, 0, 16711680, 1, 0, 0, 665, 1915),
-('Unstrung Yew Shortbow', 'I need to find a string for this', '', 120, 400, 0, 0, 0, 16711680, 1, 0, 0, 666, 1916),
-('Unstrung Magic Longbow', 'I need to find a string for this', '', 119, 1280, 0, 0, 0, 4210752, 1, 0, 0, 667, 1917),
-('Unstrung Magic Shortbow', 'I need to find a string for this', '', 120, 800, 0, 0, 0, 4210752, 1, 0, 0, 668, 1918),
-('Barcrawl Card', 'The official Alfred Grimhand barcrawl', 'read', 180, 10, 0, 0, 0, 0, 0, 0, 1, 669, 1919),
-('Bronze Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 1, 0, 1, 0, 16737817, 1, 1, 0, 670, 0),
-('Iron Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 3, 0, 1, 0, 15658717, 1, 1, 0, 671, 0),
-('Steel Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 12, 0, 1, 0, 15658734, 1, 1, 0, 672, 0),
-('Mithril Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 32, 0, 1, 0, 10072780, 1, 1, 0, 673, 0),
-('Adamantite Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 80, 0, 1, 0, 11717785, 1, 1, 0, 674, 0),
-('Rune Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 400, 0, 1, 0, 65535, 1, 1, 0, 675, 0),
-('Flax', 'I should use this with a spinning wheel', '', 209, 5, 0, 0, 0, 0, 0, 0, 0, 676, 1920),
-('Bow String', 'I need a bow handle to attach this too', '', 208, 10, 0, 0, 0, 0, 1, 0, 0, 677, 1921),
-('Easter Egg', 'Happy Easter', 'eat', 210, 10, 0, 0, 0, 0, 0, 0, 0, 678, 1922),
-('Scorpion Cage', 'I need to catch some scorpions in this', '', 211, 10, 0, 0, 0, 0, 0, 0, 1, 679, 1923),
-('Scorpion Cage', 'It has 1 scorpion in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 680, 1924),
-('Scorpion Cage', 'It has 2 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 681, 1925),
-('Scorpion Cage', 'It has 3 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 682, 1926),
-('Enchanted Battlestaff of Fire', 'A Magical staff', '', 91, 42500, 0, 0, 1, 16711680, 1, 1, 0, 683, 1927),
-('Enchanted Battlestaff of Water', 'A Magical staff', '', 91, 42500, 0, 0, 1, 255, 1, 1, 0, 684, 1928),
-('Enchanted Battlestaff of Air', 'A Magical staff', '', 91, 42500, 0, 0, 1, 65535, 1, 1, 0, 685, 1929),
-('Enchanted Battlestaff of Earth', 'A Magical staff', '', 91, 42500, 0, 0, 1, 7353600, 1, 1, 0, 686, 1930),
-('Scorpion Cage', 'It has 1 scorpion in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 687, 1931),
-('Scorpion Cage', 'It has 1 scorpion in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 688, 1932),
-('Scorpion Cage', 'It has 2 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 689, 1933),
-('Scorpion Cage', 'It has 2 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 690, 1934),
-('Gold', 'this needs refining', '', 73, 150, 0, 0, 0, 16763980, 0, 0, 0, 691, 1935),
-('Gold Bar', 'this looks valuable', '', 79, 300, 0, 0, 0, 16763980, 0, 0, 0, 692, 1936),
-('Ruby Ring', 'A valuable ring', '', 123, 2025, 0, 0, 0, 16724736, 0, 0, 0, 693, 1937),
-('Ruby Necklace', 'I wonder if this is valuable', '', 57, 2175, 0, 0, 1, 16724736, 0, 0, 0, 694, 1938),
-('Family Crest', 'The crest of a varrocian noble family', '', 213, 10, 0, 0, 0, 0, 0, 0, 1, 695, 1939),
-('Crest Fragment', 'Part of the Fitzharmon family crest', '', 214, 10, 0, 0, 0, 0, 0, 0, 1, 696, 1940),
-('Crest Fragment', 'Part of the Fitzharmon family crest', '', 215, 10, 0, 0, 0, 0, 0, 0, 1, 697, 1941),
-('Crest Fragment', 'Part of the Fitzharmon family crest', '', 216, 10, 0, 0, 0, 0, 0, 0, 1, 698, 1942),
-('Steel Gauntlets', 'Very handy armour', '', 217, 6, 0, 0, 1, 12303291, 1, 1, 0, 699, 1943),
-('Gauntlets of Goldsmithing', 'metal gloves for gold making', '', 217, 6, 0, 0, 1, 16777130, 1, 1, 1, 700, 1944),
-('Gauntlets of Cooking', 'Used for cooking fish', '', 217, 6, 0, 0, 1, 14540253, 1, 1, 1, 701, 1945),
-('Gauntlets of Chaos', 'improves bolt spells', '', 217, 6, 0, 0, 1, 16755370, 1, 1, 1, 702, 1946),
-('Robe of Zamorak', 'A robe worn by worshippers of Zamorak', '', 87, 30, 0, 0, 1, 16711680, 0, 0, 0, 703, 1947),
-('Robe of Zamorak', 'A robe worn by worshippers of Zamorak', '', 88, 30, 0, 0, 1, 16711680, 0, 0, 0, 704, 1948),
-('Address Label', 'To lord Handelmort- Handelmort mansion', '', 218, 10, 0, 0, 0, 0, 0, 0, 1, 705, 1949),
-('Tribal Totem', 'It represents some sort of tribal god', '', 219, 10, 0, 0, 0, 0, 0, 0, 1, 706, 1950),
-('Tourist Guide', 'Your definitive guide to Ardougne', 'read', 28, 1, 0, 0, 0, 11184895, 0, 0, 0, 707, 1951),
-('Spice', 'Put it in uncooked stew to make curry', '', 62, 230, 0, 0, 0, 16711680, 0, 0, 0, 708, 1952),
-('Uncooked Curry', 'I need to cook this', '', 162, 10, 0, 0, 0, 15643494, 0, 0, 0, 709, 1953),
-('Curry', 'It\'s a spicey hot curry', 'Eat', 162, 20, 0, 0, 0, 12274688, 0, 1, 0, 710, 1954),
-('Burnt Curry', 'Eew it\'s horribly burnt', 'Empty', 162, 1, 0, 0, 0, 5255216, 0, 0, 0, 711, 1955),
-('Yew Logs Certificate', 'Each certificate exchangable at Ardougne for 5 yew logs', '', 180, 10, 0, 1, 0, 11558912, 0, 0, 0, 712, 0),
-('Maple Logs Certificate', 'Each certificate exchangable at Ardougne for 5 maple logs', '', 180, 20, 0, 1, 0, 11558912, 0, 0, 0, 713, 0),
-('Willow Logs Certificate', 'Each certificate exchangable at Ardougne for 5 willow logs', '', 180, 30, 0, 1, 0, 11558912, 0, 0, 0, 714, 0),
-('Lockpick', 'It makes picking some locks easier', '', 220, 20, 0, 0, 0, 0, 0, 0, 0, 715, 1956),
-('Red Vine Worms', 'Strange little red worms', '', 175, 3, 0, 1, 0, 16711680, 0, 0, 1, 716, 0),
-('Blanket', 'A child\'s blanket', '', 92, 5, 0, 0, 0, 56831, 0, 0, 0, 717, 1957),
-('Raw Giant Carp', 'I should try cooking this', '', 165, 50, 0, 0, 0, 80, 0, 0, 1, 718, 1958),
-('Giant Carp', 'Some nicely cooked fish', 'Eat', 165, 50, 0, 0, 0, 12619984, 0, 0, 1, 719, 1959),
-('Fishing Competition Pass', 'Admits one to the Hemenster fishing competition', '', 218, 10, 0, 0, 0, 0, 0, 0, 1, 720, 1960),
-('Hemenster Fishing Trophy', 'Hurrah you won a fishing competition', '', 221, 20, 0, 0, 0, 16763980, 0, 0, 1, 721, 1961),
-('Pendant of Lucien', 'Gets me through the chamber of fear', '', 222, 12, 0, 0, 1, 3158064, 0, 0, 1, 722, 1962),
-('Ice Arrows', 'Wearing these makes me feel like I am floating', '', 223, 6, 0, 0, 1, 16742144, 0, 1, 1, 723, 1963),
-('Ice Arrows', 'Can only be fired with yew or magic bows', '', 11, 2, 0, 1, 0, 11206655, 1, 0, 1, 724, 0),
-('Lever', 'This was once attached to something', '', 224, 20, 0, 0, 0, 0, 0, 0, 1, 725, 1964),
-('Staff of Armadyl', 'A Magical staff', '', 91, 15, 0, 0, 1, 16776960, 1, 0, 1, 726, 1965),
-('Pendant of Armadyl', 'Allows me to fight Lucien', '', 222, 12, 0, 0, 1, 0, 0, 0, 1, 727, 1966),
-('Large Cog', ' A large old cog', '', 241, 10, 0, 0, 0, 255, 0, 0, 1, 728, 1967),
-('Large Cog', ' A large old cog', '', 240, 10, 0, 0, 0, 0, 0, 0, 1, 729, 1968),
-('Large Cog', ' A large old cog', '', 241, 10, 0, 0, 0, 16711680, 0, 0, 1, 730, 1969),
-('Large Cog', ' A large old cog', '', 241, 10, 0, 0, 0, 13369548, 0, 0, 1, 731, 1970),
-('Rat Poison', 'This stuff looks nasty', '', 52, 1, 0, 0, 0, 0, 0, 0, 0, 732, 1971),
-('Shiny Key', 'Quite a small key', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 1, 733, 1972),
-('Khazard Helmet', 'A medium sized helmet', '', 5, 10, 0, 0, 1, 11250603, 1, 0, 0, 734, 1973),
-('Khazard Chainmail', 'A series of connected metal rings', '', 7, 10, 0, 0, 1, 11250603, 1, 0, 0, 735, 1974),
-('Khali Brew', 'A bottle of khazard\'s worst brew', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 736, 1975),
-('Khazard Cell Keys', 'Keys for General Khazard\'s cells', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 737, 1976),
-('Poison Chalice', 'A strange looking drink', 'drink', 225, 20, 0, 0, 0, 11206400, 0, 0, 1, 738, 1977),
-('Magic Whistle', 'A small tin whistle', 'blow', 226, 10, 0, 0, 0, 0, 0, 0, 1, 739, 1978),
-('Cup of Tea', 'A nice cup of tea', 'drink', 227, 10, 0, 0, 0, 0, 0, 0, 0, 740, 1979),
-('Orb of Protection', 'a strange glowing green orb', '', 242, 1, 0, 0, 0, 14540253, 0, 0, 1, 741, 1980),
-('Orbs of Protection', 'two strange glowing green orbs', '', 243, 1, 0, 0, 0, 14540253, 0, 0, 1, 742, 1981),
-('Holy Table Napkin', 'a cloth given to me by sir Galahad', '', 92, 10, 0, 0, 0, 0, 0, 0, 1, 743, 1982),
-('Bell', 'I wonder what happens when i ring it', 'ring', 228, 1, 0, 0, 0, 0, 0, 0, 1, 744, 1983),
-('Gnome Emerald Amulet of protection', 'It improves my defense', '', 125, 5000, 0, 0, 1, 3394611, 0, 1, 1, 745, 1984),
-('Magic Golden Feather', 'It will point the way for me', 'blow on', 176, 2, 0, 0, 0, 16776960, 0, 0, 1, 746, 1985),
-('Holy Grail', 'A holy and powerful artifact', '', 229, 1, 0, 0, 0, 0, 0, 0, 1, 747, 1986),
-('Script of Hazeel', 'An old scroll with strange ancient text', '', 244, 1, 0, 0, 0, 14540253, 0, 0, 1, 748, 1987),
-('Pineapple', 'It can be cut up with a knife', '', 124, 1, 0, 0, 0, 0, 0, 0, 0, 749, 1988),
-('Pineapple Ring', 'Exotic fruit', 'eat', 230, 1, 0, 0, 0, 0, 0, 0, 0, 750, 1989),
-('Pineapple Pizza', 'A tropicana pizza', 'Eat', 155, 100, 0, 0, 0, 16777079, 0, 1, 0, 751, 1990),
-('Half Pineapple Pizza', 'Half of this pizza has been eaten', 'Eat', 156, 50, 0, 0, 0, 16777079, 0, 1, 0, 752, 1991),
-('Magic Scroll', 'Maybe I should read it', 'read', 244, 1, 0, 0, 0, 0, 0, 0, 1, 753, 1992),
-('Mark of Hazeel', 'A large metal amulet', '', 245, 0, 0, 0, 0, 14540253, 0, 0, 1, 754, 1993),
-('Bloody Axe of Zamorak', 'A vicious looking axe', '', 246, 5000, 0, 0, 1, 15658734, 0, 0, 1, 755, 1994),
-('Carnillean Armour', 'the carnillean family armour', '', 247, 65, 0, 0, 0, 15658734, 1, 0, 1, 756, 1995),
-('Carnillean Key', 'An old rusty key', '', 25, 1, 0, 0, 0, 16772608, 0, 0, 1, 757, 1996),
-('Cattle Prod', 'An old cattle prod', '', 248, 15, 0, 0, 0, 16772608, 0, 0, 1, 758, 1997),
-('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 759, 1998),
-('Poisoned Animal Feed', 'This looks nasty', '', 250, 0, 0, 0, 0, 14540253, 0, 0, 1, 760, 1999),
-('Protective Jacket', 'A thick heavy leather top', '', 251, 50, 0, 0, 1, 14540253, 0, 0, 1, 761, 2000),
-('Protective Trousers', 'A thick pair of leather trousers', '', 252, 50, 0, 0, 1, 15654365, 0, 0, 1, 762, 2001),
-('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 763, 2002),
-('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 764, 2003),
-('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 765, 2004),
-('Dwellberries', 'some rather pretty blue berries', 'eat', 253, 4, 0, 0, 0, 0, 0, 0, 1, 766, 2005),
-('Gasmask', 'Stops me breathing nasty stuff', '', 232, 2, 0, 0, 1, 0, 0, 0, 1, 767, 2006),
-('Picture', 'A picture of a lady called Elena', '', 233, 2, 0, 0, 0, 0, 0, 0, 1, 768, 2007),
-('Book', 'Turnip growing for beginners', 'read', 28, 1, 0, 0, 0, 16755455, 0, 0, 1, 769, 2008),
-('Seaslug', 'a rather nasty looking crustacean', '', 254, 4, 0, 0, 0, 0, 0, 0, 0, 770, 2009),
-('Chocolaty Milk', 'Milk with chocolate in it', 'drink', 22, 2, 0, 0, 0, 9785408, 0, 0, 1, 771, 2010),
-('Hangover Cure', 'It doesn\'t look very tasty', '', 22, 2, 0, 0, 0, 8757312, 0, 0, 1, 772, 2011),
-('Chocolate Dust', 'I prefer it in a bar shape', '', 23, 2, 0, 0, 0, 9461792, 0, 0, 0, 773, 2012),
-('Torch', 'A unlit home made torch', '', 255, 4, 0, 0, 0, 0, 0, 0, 0, 774, 2013),
-('Torch', 'A lit home made torch', '', 256, 4, 0, 0, 0, 0, 0, 0, 0, 775, 2014),
-('Warrant', 'A search warrant for a house in Ardougne', '', 29, 5, 0, 0, 0, 0, 0, 0, 1, 776, 2015),
-('Damp Sticks', 'Some damp wooden sticks', '', 257, 0, 0, 0, 0, 0, 0, 0, 0, 777, 2016),
-('Dry Sticks', 'Some dry wooden sticks', 'rub together', 258, 0, 0, 0, 0, 0, 0, 0, 0, 778, 2017),
-('Broken Glass', 'Glass from a broken window pane', '', 259, 0, 0, 0, 0, 0, 0, 0, 0, 779, 2018),
-('Oyster Pearls', 'I could work wonders with these and a chisel', '', 260, 1400, 0, 0, 0, 0, 0, 0, 0, 780, 2019),
-('Little Key', 'Quite a small key', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 1, 781, 2020),
-('Scruffy Note', 'It seems to say hongorer lure', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 782, 2021),
-('Glarial\'s Amulet', 'A bright green gem set in a necklace', '', 261, 1, 0, 0, 1, 12303291, 0, 0, 1, 783, 2022),
-('Swamp Tar', 'A foul smelling thick tar like substance', '', 262, 1, 0, 1, 0, 12303291, 0, 0, 0, 784, 0),
-('Uncooked Swamp Paste', 'A thick tar like substance mixed with flour', '', 263, 1, 0, 1, 0, 12303291, 0, 0, 0, 785, 0),
-('Swamp Paste', 'A tar like substance mixed with flour and warmed', '', 263, 30, 0, 1, 0, 12303291, 0, 0, 0, 786, 0),
-('Oyster Pearl Bolts', 'Great if you have a crossbow!', '', 266, 110, 0, 1, 0, 0, 0, 0, 0, 787, 0),
-('Glarial\'s Pebble', 'A small pebble with elven inscription', '', 264, 1, 0, 0, 0, 12303291, 0, 0, 1, 788, 2023),
-('Book on Baxtorian', 'A book on elven history in north runescape', 'read', 28, 2, 0, 0, 0, 0, 0, 0, 1, 789, 2024),
-('Large Key', 'I wonder what this is the key to', '', 25, 1, 0, 0, 0, 16750848, 0, 0, 1, 790, 2025),
-('Oyster Pearl Bolt Tips', 'Can be used to improve crossbow bolts', '', 265, 56, 0, 1, 0, 12303291, 1, 0, 0, 791, 0),
-('Oyster', 'It\'s empty', '', 267, 5, 0, 0, 0, 0, 0, 0, 0, 792, 2026),
-('Oyster Pearls', 'I could work wonders with these and a chisel', '', 268, 112, 0, 0, 0, 0, 0, 0, 0, 793, 2027),
-('Oyster', 'It\'s a rare oyster', 'open', 269, 200, 0, 0, 0, 0, 0, 0, 0, 794, 2028),
-('Soil', 'It\'s a bucket of fine soil', '', 22, 2, 0, 0, 0, 12285815, 0, 0, 0, 795, 2029),
-('Dragon Medium Helmet', 'A medium sized helmet', '', 271, 100000, 0, 0, 1, 16711748, 1, 1, 0, 796, 2030),
-('Mithril Seed', 'Magical seeds in a mithril case', 'open', 270, 200, 0, 1, 0, 0, 0, 1, 0, 797, 0),
-('An Old Key', 'A door key', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 1, 798, 2031),
-('Pigeon Cage', 'It\'s for holding pigeons', '', 274, 1, 0, 0, 0, 15636736, 0, 0, 0, 799, 2032),
-('Messenger Pigeons', 'some very plump birds', 'release', 275, 1, 0, 0, 0, 15636736, 0, 1, 0, 800, 2033),
-('Bird Feed', 'A selection of mixed seeds', '', 276, 1, 0, 0, 0, 15636736, 0, 1, 0, 801, 2034),
-('Rotten Apples', 'Yuck!', 'eat', 277, 1, 0, 0, 0, 15636736, 0, 0, 0, 802, 2035),
-('Doctors Gown', 'I do feel clever wearing this', '', 87, 40, 0, 0, 1, 16777215, 0, 0, 1, 803, 2036),
-('Bronze Key', 'A heavy key', '', 25, 1, 0, 0, 0, 16737817, 0, 0, 1, 804, 2037),
-('Distillator', 'It\'s for seperating compounds', '', 278, 1, 0, 0, 0, 16737817, 0, 0, 1, 805, 2038),
-('Glarial\'s Urn', 'An urn containing glarials ashes', '', 279, 1, 0, 0, 0, 0, 0, 0, 1, 806, 2039),
-('Glarial\'s Urn', 'An empty metal urn', '', 280, 1, 0, 0, 0, 0, 0, 0, 1, 807, 2040),
-('Priest Robe', 'I feel closer to saradomin in this', '', 87, 500, 0, 0, 1, 1052688, 0, 0, 0, 808, 2041),
-('Priest Gown', 'I feel closer to saradomin in this', '', 88, 500, 0, 0, 1, 1052688, 0, 0, 0, 809, 2042),
-('Liquid Honey', 'This isn\'t worth much', '', 48, 0, 0, 0, 0, 16776960, 0, 0, 1, 810, 2043),
-('Ethenea', 'An expensive colourless liquid', '', 48, 10, 0, 0, 0, 11184827, 0, 0, 1, 811, 2044),
-('Sulphuric Broline', 'it\'s highly poisonous', '', 48, 1, 0, 0, 0, 11966902, 0, 0, 1, 812, 2045),
-('Plague Sample', 'An air tight tin container', '', 281, 1, 0, 0, 0, 0, 0, 0, 1, 813, 2046),
-('Touch Paper', 'For scientific testing', '', 282, 1, 0, 0, 0, 0, 0, 0, 1, 814, 2047),
-('Dragon Bones', 'Ew it\'s a pile of bones', 'Bury', 137, 1, 0, 0, 0, 0, 0, 0, 0, 815, 2048),
-('Muddy Snake Weed', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 816, 2049),
-('Snake Weed', 'A very rare jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 817, 2050),
-('Muddy Ardrigal', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 818, 2051),
-('Ardrigal', 'An interesting', '', 435, 5, 0, 0, 0, 0, 0, 0, 1, 819, 2052),
-('Muddy Sito Foil', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 820, 2053),
-('Sito Foil', 'An rare species of jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 821, 2054),
-('Muddy Volencia Moss', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 822, 2055),
-('Volencia Moss', 'A very rare species of jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 823, 2056),
-('Muddy Rogues Purse', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 824, 2057),
-('Rogues Purse', ' A rare species of jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 825, 2058),
-('Soul-Rune', 'Used for high level curse spells', '', 235, 350, 0, 1, 0, 0, 0, 0, 0, 826, 0),
-('King Lathas Amulet', 'The amulet is red', '', 125, 10, 0, 0, 1, 13382451, 0, 0, 1, 827, 2059),
-('Bronze Spear', 'A bronze tipped spear', '', 283, 4, 0, 0, 1, 16737817, 1, 0, 0, 828, 2060),
-('Halloween Mask', 'aaaarrrghhh ... i\'m a monster', '', 284, 15, 0, 0, 1, 65280, 0, 0, 0, 829, 2061),
-('Dragon Bitter', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 830, 2062),
-('Greenmans Ale', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 831, 2063),
-('Halloween Mask', 'aaaarrrghhh ... i\'m a monster', '', 284, 15, 0, 0, 1, 16711680, 0, 0, 0, 832, 2064),
-('Halloween Mask', 'aaaarrrghhh ... i\'m a monster', '', 284, 15, 0, 0, 1, 255, 0, 0, 0, 833, 2065),
-('Cocktail Glass', 'For sipping cocktails', '', 285, 0, 0, 0, 0, 0, 0, 0, 0, 834, 2066),
-('Cocktail Shaker', 'For mixing cocktails', 'pour', 286, 2, 0, 0, 0, 0, 0, 0, 0, 835, 2067),
-('Bone Key', 'A key delicately carved key made from a single piece of bone', 'Look', 25, 1, 0, 0, 0, 16777215, 0, 0, 1, 836, 2068),
-('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 16755370, 0, 1, 0, 837, 2069),
-('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 11206570, 0, 1, 0, 838, 2070),
-('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 11184895, 0, 1, 0, 839, 2071),
-('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 16777164, 0, 1, 0, 840, 2072),
-('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 13434879, 0, 1, 0, 841, 2073),
-('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 16755370, 0, 1, 0, 842, 2074),
-('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 11206570, 0, 1, 0, 843, 2075),
-('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 11184895, 0, 1, 0, 844, 2076),
-('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 16777164, 0, 1, 0, 845, 2077),
-('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 13434879, 0, 1, 0, 846, 2078),
-('Gnome Top', 'rometti - the ultimate in gnome design', '', 87, 1500, 0, 0, 1, 16755370, 0, 1, 0, 847, 2079),
-('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 11206570, 0, 1, 0, 848, 2080),
-('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 11184895, 0, 1, 0, 849, 2081),
-('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 16777164, 0, 1, 0, 850, 2082),
-('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 13434879, 0, 1, 0, 851, 2083),
-('Gnome Cocktail Guide', 'A book on tree gnome cocktails', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 0, 852, 2084),
-('Beads of the Dead', 'A curious looking neck ornament', '', 24, 35, 0, 0, 1, 16737817, 0, 0, 1, 853, 2085),
-('Cocktail Glass', 'For sipping cocktails', 'drink', 288, 2, 0, 0, 0, 0, 0, 0, 0, 854, 2086),
-('Cocktail Glass', 'For sipping cocktails', 'drink', 289, 2, 0, 0, 0, 0, 0, 0, 0, 855, 2087),
-('Lemon', 'It\'s very fresh', 'eat', 290, 2, 0, 0, 0, 0, 0, 0, 0, 856, 2088),
-('Lemon Slices', 'It\'s very fresh', 'eat', 291, 2, 0, 0, 0, 16763952, 0, 0, 0, 857, 2089),
-('Orange', 'It\'s very fresh', 'eat', 292, 2, 0, 0, 0, 0, 0, 0, 0, 858, 2090),
-('Orange Slices', 'It\'s very fresh', 'eat', 291, 2, 0, 0, 0, 16760880, 0, 0, 0, 859, 2091),
-('Diced Orange', 'Fresh chunks of orange', 'eat', 293, 2, 0, 0, 0, 16760880, 0, 0, 0, 860, 2092),
-('Diced Lemon', 'Fresh chunks of lemon', 'eat', 293, 2, 0, 0, 0, 16763952, 0, 0, 0, 861, 2093),
-('Fresh Pineapple', 'It can be cut up with a knife', 'eat', 124, 1, 0, 0, 0, 0, 0, 0, 0, 862, 2094),
-('Pineapple Chunks', 'Fresh chunks of pineapple', 'eat', 293, 1, 0, 0, 0, 16760880, 0, 0, 0, 863, 2095),
-('Lime', 'It\'s very fresh', 'eat', 294, 2, 0, 0, 0, 0, 0, 0, 0, 864, 2096),
-('Lime Chunks', 'Fresh chunks of lime', 'eat', 293, 1, 0, 0, 0, 65280, 0, 0, 0, 865, 2097),
-('Lime Slices', 'It\'s very fresh', 'eat', 291, 2, 0, 0, 0, 65280, 0, 0, 0, 866, 2098),
-('Fruit Blast', 'A cool refreshing fruit mix', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 867, 2099),
-('Odd Looking Cocktail', 'A cool refreshing mix', 'drink', 289, 2, 0, 0, 0, 0, 0, 0, 0, 868, 2100),
-('Whisky', 'A locally brewed Malt', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 869, 2101),
-('Vodka', 'A strong spirit', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 870, 2102),
-('Gin', 'A strong spirit', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 871, 2103),
-('Cream', 'Fresh cream', 'eat', 296, 2, 0, 0, 0, 0, 0, 0, 0, 872, 2104),
-('Drunk Dragon', 'A warm creamy alcoholic beverage', 'drink', 297, 2, 0, 0, 0, 0, 0, 0, 0, 873, 2105),
-('Equa Leaves', 'Small sweet smelling leaves', 'eat', 298, 2, 0, 0, 0, 0, 0, 0, 0, 874, 2106),
-('SGG', 'A short green guy..looks good', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 875, 2107),
-('Chocolate Saturday', 'A warm creamy alcoholic beverage', 'drink', 297, 2, 0, 0, 0, 0, 0, 0, 0, 876, 2108),
-('Brandy', 'A strong spirit', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 877, 2109),
-('Blurberry Special', 'Looks good..smells strong', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 878, 2110),
-('Wizard Blizzard', 'Looks like a strange mix', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 879, 2111),
-('Pineapple Punch', 'A fresh healthy fruit mix', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 880, 2112),
-('Gnomebatta Dough', 'Dough formed into a base', '', 300, 2, 0, 0, 0, 0, 0, 0, 0, 881, 2113),
-('Gianne Dough', 'It\'s made from a secret recipe', 'mould', 301, 2, 0, 0, 0, 0, 0, 0, 0, 882, 2114),
-('Gnomebowl Dough', 'Dough formed into a bowl shape', '', 302, 2, 0, 0, 0, 0, 0, 0, 0, 883, 2115),
-('Gnomecrunchie Dough', 'Dough formed into cookie shapes', '', 303, 2, 0, 0, 0, 0, 0, 0, 0, 884, 2116),
-('Gnomebatta', 'A baked dough base', '', 300, 2, 0, 0, 0, 0, 0, 0, 0, 885, 2117),
-('Gnomebowl', 'A baked dough bowl', 'eat', 302, 2, 0, 0, 0, 0, 0, 0, 0, 886, 2118),
-('Gnomebatta', 'It\'s burnt to a sinder', '', 304, 2, 0, 0, 0, 0, 0, 0, 0, 887, 2119),
-('Gnomecrunchie', 'They\'re burnt to a sinder', '', 306, 2, 0, 0, 0, 0, 0, 0, 0, 888, 2120),
-('Gnomebowl', 'It\'s burnt to a sinder', '', 305, 2, 0, 0, 0, 0, 0, 0, 0, 889, 2121),
-('Uncut Red Topaz', 'A semi precious stone', '', 73, 40, 0, 0, 0, 16525133, 0, 0, 0, 890, 2122),
-('Uncut Jade', 'A semi precious stone', '', 73, 30, 0, 0, 0, 10025880, 0, 0, 0, 891, 2123),
-('Uncut Opal', 'A semi precious stone', '', 73, 20, 0, 0, 0, 16777124, 0, 0, 0, 892, 2124),
-('Red Topaz', 'A semi precious stone', '', 74, 200, 0, 0, 0, 16525133, 0, 0, 0, 893, 2125),
-('Jade', 'A semi precious stone', '', 74, 150, 0, 0, 0, 10025880, 0, 0, 0, 894, 2126),
-('Opal', 'A semi precious stone', '', 74, 100, 0, 0, 0, 16777124, 0, 0, 0, 895, 2127),
-('Swamp Toad', 'Slippery little blighters', 'remove legs', 307, 2, 0, 0, 0, 0, 0, 0, 0, 896, 2128),
-('Toad Legs', 'Gnome delicacy apparently', 'eat', 308, 2, 0, 0, 0, 0, 0, 0, 0, 897, 2129),
-('King Worm', 'Gnome delicacy apparently', 'eat', 309, 2, 0, 0, 0, 0, 0, 0, 0, 898, 2130),
-('Gnome Spice', 'Aluft Giannes secret reciepe', '', 310, 2, 0, 0, 0, 0, 0, 0, 0, 899, 2131),
-('Gianne Cook Book', 'Aluft Giannes favorite dishes', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 0, 900, 2132),
-('Gnomecrunchie', 'yum ... smells good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 901, 2133),
-('Cheese and Tomato Batta', 'Smells really good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 902, 2134),
-('Toad Batta', 'actually smells quite good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 903, 2135),
-('Gnome Batta', 'smells like pants', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 904, 2136),
-('Worm Batta', 'actually smells quite good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 905, 2137),
-('Fruit Batta', 'actually smells quite good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 906, 2138),
-('Veg Batta', 'well..it looks healthy', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 907, 2139),
-('Chocolate Bomb', 'Looks great', 'eat', 313, 2, 0, 0, 0, 0, 0, 0, 0, 908, 2140),
-('Vegball', 'Looks pretty healthy', 'eat', 314, 2, 0, 0, 0, 0, 0, 0, 0, 909, 2141),
-('Worm Hole', 'actually smells quite good', 'eat', 315, 2, 0, 0, 0, 0, 0, 0, 0, 910, 2142),
-('Tangled Toads Legs', 'actually smells quite good', 'eat', 316, 2, 0, 0, 0, 0, 0, 0, 0, 911, 2143),
-('Choc Crunchies', 'yum ... smells good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 912, 2144),
-('Worm Crunchies', 'actually smells quite good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 913, 2145),
-('Toad Crunchies', 'actually smells quite good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 914, 2146),
-('Spice Crunchies', 'yum ... smells good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 915, 2147),
-('Crushed Gemstone', 'A gemstone that has been smashed', '', 23, 2, 0, 0, 0, 16777215, 0, 0, 0, 916, 2148),
-('Blurberry Badge', 'an official cocktail maker', '', 317, 2, 0, 0, 0, 16711680, 0, 0, 0, 917, 2149),
-('Gianne Badge', 'an official gianne chef', '', 317, 2, 0, 0, 0, 65280, 0, 0, 0, 918, 2150),
-('Tree Gnome Translation', 'Translate the old gnome tounge', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 1, 919, 2151),
-('Bark Sample', 'A sample from the grand tree', '', 318, 2, 0, 0, 0, 0, 0, 0, 1, 920, 2152),
-('War Ship', 'A model of a karamja warship', 'play with', 319, 2, 0, 0, 0, 0, 0, 0, 1, 921, 2153),
-('Gloughs Journal', 'Glough\'s private notes', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 1, 922, 2154),
-('Invoice', 'A note with foreman\'s timber order', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 923, 2155),
-('Ugthanki Kebab', 'A strange smelling Kebab made from Ugthanki meat - it doesn\'t look too good', 'eat', 95, 20, 0, 0, 0, 0, 0, 0, 0, 924, 2156),
-('Special Curry', 'It\'s a spicy hot curry', 'Eat', 162, 20, 0, 0, 0, 12274688, 0, 1, 0, 925, 2157),
-('Glough\'s Key', 'Glough left this at anita\'s', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 926, 2158),
-('Glough\'s Notes', 'Scribbled notes and diagrams', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 927, 2159),
-('Pebble', 'The pebble has an inscription', '', 321, 2, 0, 0, 0, 0, 0, 0, 1, 928, 2160),
-('Pebble', 'The pebble has an inscription', '', 322, 2, 0, 0, 0, 0, 0, 0, 1, 929, 2161),
-('Pebble', 'The pebble has an inscription', '', 323, 2, 0, 0, 0, 0, 0, 0, 1, 930, 2162),
-('Pebble', 'The pebble has an inscription', '', 324, 2, 0, 0, 0, 0, 0, 0, 1, 931, 2163),
-('Daconia Rock', 'A magicaly crafted stone', '', 73, 40, 0, 0, 0, 14540253, 0, 0, 1, 932, 2164),
-('Sinister Key', 'You get a sense of dread from this key', '', 25, 1, 0, 0, 0, 1118481, 0, 0, 0, 933, 2165),
-('Muddy Torstol', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 934, 2166),
-('Torstol', 'A useful herb', '', 75, 25, 0, 0, 0, 0, 0, 0, 0, 935, 2167),
-('Unfinished Torstol Potion', 'I need Jangerberries to finish this Torstol potion', '', 48, 25, 0, 0, 0, 12285696, 0, 0, 0, 936, 2168),
-('Jangerberries', 'They don\'t look very ripe', 'eat', 21, 1, 0, 0, 0, 4497408, 0, 0, 0, 937, 2169),
-('Fruit Blast', 'A cool refreshing fruit mix', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 938, 2170),
-('Blurberry Special', 'Looks good..smells strong', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 939, 2171),
-('Wizard Blizzard', 'Looks like a strange mix', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 940, 2172),
-('Pineapple Punch', 'A fresh healthy fruit mix', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 941, 2173),
-('SGG', 'A short green guy..looks good', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 942, 2174),
-('Chocolate Saturday', 'A warm creamy alcoholic beverage', 'drink', 297, 30, 0, 0, 0, 0, 0, 0, 0, 943, 2175),
-('Drunk Dragon', 'A warm creamy alcoholic beverage', 'drink', 297, 30, 0, 0, 0, 0, 0, 0, 0, 944, 2176),
-('Cheese and Tomato Batta', 'Smells really good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 945, 2177),
-('Toad Batta', 'actually smells quite good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 946, 2178),
-('Gnome Batta', 'smells like pants', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 947, 2179),
-('Worm Batta', 'actually smells quite good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 948, 2180),
-('Fruit Batta', 'actually smells quite good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 949, 2181),
-('Veg Batta', 'well..it looks healthy', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 950, 2182),
-('Chocolate Bomb', 'Looks great', 'eat', 313, 160, 0, 0, 0, 0, 0, 0, 0, 951, 2183),
-('Vegball', 'Looks pretty healthy', 'eat', 314, 150, 0, 0, 0, 0, 0, 0, 0, 952, 2184),
-('Worm Hole', 'actually smells quite good', 'eat', 315, 150, 0, 0, 0, 0, 0, 0, 0, 953, 2185),
-('Tangled Toads Legs', 'actually smells quite good', 'eat', 316, 160, 0, 0, 0, 0, 0, 0, 0, 954, 2186),
-('Choc Crunchies', 'yum ... smells good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 955, 2187),
-('Worm Crunchies', 'actually smells quite good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 956, 2188),
-('Toad Crunchies', 'actually smells quite good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 957, 2189),
-('Spice Crunchies', 'yum ... smells good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 958, 2190),
-('Stone-Plaque', 'A stone plaque with carved letters in it', 'Read', 236, 5, 0, 0, 0, 0, 0, 0, 1, 959, 2191),
-('Tattered Scroll', 'An ancient tattered scroll', 'Read', 29, 5, 0, 0, 0, 255, 0, 0, 1, 960, 2192),
-('Crumpled Scroll', 'An ancient crumpled scroll', 'Read', 29, 5, 0, 0, 0, 12648448, 0, 0, 1, 961, 2193),
-('Bervirius Tomb Notes', 'Notes taken from the tomb of Bervirius', 'Read', 29, 5, 0, 0, 0, 16776960, 0, 0, 1, 962, 2194),
-('Zadimus Corpse Corpse', 'The remains of Zadimus', 'Bury', 237, 1, 0, 0, 0, 15400622, 0, 0, 1, 963, 2195),
-('Potion of Zamorak', 'It looks scary', 'drink', 48, 25, 0, 0, 0, 15636736, 0, 1, 0, 964, 2196),
-('Potion of Zamorak', 'It looks scary', 'drink', 436, 25, 0, 0, 0, 15636736, 0, 1, 0, 965, 2197),
-('Potion of Zamorak', 'It looks scary', 'drink', 437, 25, 0, 0, 0, 15636736, 0, 1, 0, 966, 2198),
-('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 16755370, 0, 0, 0, 967, 2199),
-('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 11206570, 0, 1, 0, 968, 2200),
-('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 11184895, 0, 1, 0, 969, 2201),
-('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 16777164, 0, 1, 0, 970, 2202),
-('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 13434879, 0, 1, 0, 971, 2203),
-('Santa\'s Hat', 'It\'s a Santa Claus\' hat', '', 325, 10, 0, 0, 1, 0, 0, 0, 0, 972, 2204),
-('Locating Crystal', 'A magical crystal sphere', 'Activate', 199, 100, 0, 0, 0, 12648447, 0, 0, 1, 973, 2205),
-('Sword Pommel', 'An ivory sword pommel', '', 334, 100, 0, 0, 0, 16777088, 0, 0, 1, 974, 2206),
-('Bone Shard', 'A slender piece of bone', 'Look', 238, 1, 0, 0, 0, 0, 0, 0, 1, 975, 2207),
-('Steel Wire', 'Useful for crafting items', '', 326, 200, 0, 0, 0, 0, 0, 0, 1, 976, 2208),
-('Rashiliya Corpse', 'The remains of the Zombie Queen', '', 239, 1, 0, 0, 0, 16777152, 0, 0, 0, 977, 2209),
-('Rock of Ages Corpse', 'The remains of the Rock of Ages', 'Bury', 237, 1, 0, 0, 0, 16744576, 0, 0, 0, 978, 2210),
-('Reset Crystal', 'Helps reset things in game', 'Activate', 199, 100, 0, 0, 0, 182474, 0, 0, 1, 979, 2211),
-('Bronze Wire', 'Useful for crafting items', '', 326, 20, 0, 0, 0, 16737817, 0, 0, 1, 980, 2212),
-('Present', 'Click to use this on a friend', '', 330, 160, 0, 0, 0, 0, 0, 0, 0, 981, 2213),
-('Gnome Ball', 'Lets play', 'shoot', 327, 10, 0, 0, 0, 0, 0, 0, 0, 982, 2214),
-('Papyrus', 'Used for making notes', '', 282, 9, 0, 0, 0, 0, 0, 0, 1, 983, 2215),
-('A lump of Charcoal', 'a lump of cooked coal good for making marks.', '', 73, 45, 0, 0, 0, 2105376, 0, 0, 1, 984, 2216),
-('Arrow', 'linen wrapped around an arrow head', '', 328, 10, 0, 0, 0, 0, 1, 0, 1, 985, 2217),
-('Lit Arrow', 'A flamming arrow', '', 329, 10, 0, 1, 0, 0, 1, 0, 1, 986, 0),
-('Rocks', 'A few Large rocks', '', 331, 10, 0, 0, 0, 0, 0, 0, 1, 987, 2218),
-('Paramaya Rest Ticket', 'Allows you to rest in the luxurius Paramaya Inn', '', 218, 5, 0, 0, 0, 0, 0, 0, 1, 988, 2219),
-('Ship Ticket', 'Allows you passage on the \'Lady of the Waves\' ship.', '', 218, 5, 0, 0, 0, 8454143, 0, 0, 1, 989, 2220),
-('Damp Cloth', 'It smells as if it\'s been doused in alcohol', '', 92, 10, 0, 0, 0, 0, 0, 0, 1, 990, 2221),
-('Desert Boots', 'Boots made specially for the desert', '', 223, 20, 0, 0, 1, 16777215, 0, 1, 0, 991, 2222),
-('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 333, 10, 0, 0, 0, 0, 0, 0, 1, 992, 2223),
-('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 345, 10, 0, 0, 0, 0, 0, 0, 1, 993, 2224),
-('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 346, 10, 0, 0, 0, 0, 0, 0, 1, 994, 2225),
-('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 347, 10, 0, 0, 0, 0, 0, 0, 1, 995, 2226),
-('Railing', 'A broken metal rod', '', 335, 10, 0, 0, 0, 0, 0, 0, 1, 996, 2227),
-('Randas\'s Journal', 'An old journal with several pages missing', 'read', 28, 1, 0, 0, 0, 15641258, 0, 0, 1, 997, 2228),
-('Unicorn Horn', 'Poor unicorn went splat!', '', 145, 20, 0, 0, 0, 0, 0, 0, 0, 998, 2229),
-('Coat of Arms', 'A symbol of truth and all that is good', '', 348, 10, 0, 0, 0, 0, 0, 0, 1, 999, 2230),
-('Coat of Arms', 'A symbol of truth and all that is good', '', 336, 10, 0, 0, 0, 0, 0, 0, 1, 1000, 2231),
-('Staff of Iban', 'It\'s a slightly magical stick', '', 337, 15, 0, 0, 1, 0, 1, 1, 0, 1001, 2232),
-('Dwarf Brew', 'It\'s a bucket of home made brew', '', 22, 2, 0, 0, 0, 12285815, 0, 0, 1, 1002, 2233),
-('Iban\'s Ashes', 'A heap of ashes', '', 23, 2, 0, 0, 0, 11184810, 0, 0, 1, 1003, 2234),
-('Cat', 'She\'s sleeping..i think!', '', 338, 2, 0, 0, 0, 11184810, 0, 0, 1, 1004, 2235),
-('A Doll of Iban', 'A strange doll made from sticks and cloth', 'search', 339, 2, 0, 0, 0, 11184810, 0, 0, 1, 1005, 2236),
-('Old Journal', 'I wonder who wrote this!', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 1006, 2237),
-('Klank\'s Gauntlets', 'Heavy hand protection', '', 217, 5000, 0, 0, 1, 12303291, 1, 1, 0, 1007, 2238),
-('Iban\'s Shadow', 'A dark mystical liquid', '', 340, 2, 0, 0, 0, 11184810, 0, 0, 1, 1008, 2239),
-('Iban\'s Conscience', 'The remains of a dove that died long ago', '', 341, 2, 0, 0, 0, 11184810, 0, 0, 1, 1009, 2240),
-('Amulet of Othainian', 'A strange looking amulet', '', 125, 0, 0, 0, 1, 12255487, 0, 0, 1, 1010, 2241),
-('Amulet of Doomion', 'A strange looking amulet', '', 125, 0, 0, 0, 1, 12255487, 0, 0, 1, 1011, 2242),
-('Amulet of Holthion', 'A strange looking amulet', '', 125, 0, 0, 0, 1, 12255487, 0, 0, 1, 1012, 2243),
-('Keep Key', 'A small prison key', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 1, 1013, 2244),
-('Bronze Throwing Dart', 'A deadly throwing dart with a bronze tip.', '', 231, 2, 0, 1, 1, 16737817, 1, 1, 0, 1014, 0),
-('Prototype Throwing Dart', 'A proto type of a deadly throwing dart.', '', 231, 70, 0, 1, 0, 16737817, 1, 1, 1, 1015, 0),
-('Iron Throwing Dart', 'A deadly throwing dart with an iron tip.', '', 231, 5, 0, 1, 1, 15654365, 1, 1, 0, 1016, 0),
-('Full Water Skin', 'A skinful of water', '', 343, 30, 0, 0, 0, 8404992, 0, 0, 0, 1017, 2245),
-('Lens Mould', 'A peculiar mould in the shape of a disc', '', 342, 10, 0, 0, 0, 0, 0, 0, 1, 1018, 2246),
-('Lens', 'A perfectly formed glass disc', '', 344, 10, 0, 0, 0, 0, 0, 0, 1, 1019, 2247),
-('Desert Robe', 'Cool light robe to wear in the desert', '', 88, 500, 0, 0, 1, 16777215, 0, 0, 0, 1020, 2248),
-('Desert Shirt', 'A light cool shirt to wear in the desert', '', 87, 500, 0, 0, 1, 16777215, 0, 0, 0, 1021, 2249),
-('Metal Key', 'A large metalic key.', '', 25, 1, 0, 0, 0, 12632256, 0, 0, 1, 1022, 2250),
-('Slaves Robe Bottom', 'A dirty desert skirt', '', 88, 500, 0, 0, 1, 8421376, 0, 0, 0, 1023, 2251),
-('Slaves Robe Top', 'A dirty desert shirt', '', 87, 500, 0, 0, 1, 8421376, 0, 0, 0, 1024, 2252),
-('Steel Throwing Dart', 'A deadly throwing dart with a steel tip.', '', 231, 20, 0, 1, 1, 15658734, 1, 1, 0, 1025, 0),
-('Astrology Book', 'A book on Astrology in runescape', 'Read', 28, 2, 0, 0, 0, 0, 0, 0, 0, 1026, 2253),
-('Unholy Symbol Mould', 'use this with silver in a furnace', '', 349, 200, 0, 0, 0, 0, 0, 0, 0, 1027, 2254),
-('Unholy Symbol of Zamorak', 'this needs stringing', '', 350, 200, 0, 0, 0, 0, 0, 0, 0, 1028, 2255),
-('Unblessed Unholy Symbol of Zamorak', 'this needs blessing', '', 351, 200, 0, 0, 1, 0, 0, 0, 0, 1029, 2256),
-('Unholy Symbol of Zamorak', 'a symbol indicating allegiance to Zamorak', '', 351, 200, 0, 0, 1, 0, 0, 0, 0, 1030, 2257),
-('Shantay Desert Pass', 'Allows you into the desert through the Shantay pass worth 5 gold.', '', 218, 5, 0, 1, 0, 13083169, 0, 0, 0, 1031, 0),
-('Staff of Iban', 'The staff is damaged', 'wield', 337, 15, 0, 0, 0, 0, 1, 0, 0, 1032, 2258),
-('Dwarf Cannon Base', 'bang', 'set down', 352, 200000, 0, 0, 0, 0, 1, 0, 0, 1033, 2259),
-('Dwarf Cannon Stand', 'bang', '', 353, 200000, 0, 0, 0, 0, 1, 0, 0, 1034, 2260),
-('Dwarf Cannon Barrels', 'bang', '', 354, 200000, 0, 0, 0, 0, 1, 0, 0, 1035, 2261),
-('Dwarf Cannon Furnace', 'bang', '', 355, 200000, 0, 0, 0, 0, 1, 0, 0, 1036, 2262);
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
-('Fingernails', 'Ugh gross!', '', 356, 0, 0, 0, 0, 0, 0, 0, 1, 1037, 2263),
-('Powering crystal1', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 16777011, 0, 0, 1, 1038, 2264),
-('Mining Barrel', 'A roughly constructed barrel for carrying rock.', '', 358, 100, 0, 0, 0, 65280, 0, 0, 1, 1039, 2265),
-('Ana in a Barrel', 'A roughly constructed barrel with an Ana in it!', 'Look', 359, 100, 0, 0, 0, 16711680, 0, 0, 1, 1040, 2266),
-('Stolen Gold', 'I wish I could spend it', '', 79, 300, 0, 0, 0, 16763980, 0, 0, 1, 1041, 2267),
-('Multi Cannon Ball', 'A heavy metal spiked ball', '', 332, 10, 0, 1, 0, 0, 1, 0, 0, 1042, 0),
-('Railing', 'A metal railing replacement', '', 335, 10, 0, 0, 0, 0, 0, 0, 1, 1043, 2268),
-('Ogre Tooth', 'big sharp and nasty', '', 360, 0, 0, 0, 0, 0, 0, 0, 1, 1044, 2269),
-('Ogre Relic', 'A grotesque symbol of the ogres', '', 361, 0, 0, 0, 0, 0, 0, 0, 1, 1045, 2270),
-('Skavid Map', 'A map of cave locations', '', 362, 0, 0, 0, 0, 0, 0, 0, 1, 1046, 2271),
-('Dwarf Remains', 'The remains of a dwarf savaged by goblins', '', 237, 1, 0, 0, 0, 16744576, 0, 0, 1, 1047, 2272),
-('Key', 'A key for a chest', '', 25, 1, 0, 0, 0, 16750848, 0, 0, 1, 1048, 2273),
-('Ogre Relic Part', 'A piece of a statue', '', 363, 0, 0, 0, 0, 0, 0, 0, 1, 1049, 2274),
-('Ogre Relic Part', 'A piece of a statue', '', 364, 0, 0, 0, 0, 0, 0, 0, 1, 1050, 2275),
-('Ogre Relic Part', 'A piece of a statue', '', 365, 0, 0, 0, 0, 0, 0, 0, 1, 1051, 2276),
-('Ground Bat Bones', 'The ground bones of a bat', '', 23, 20, 0, 0, 0, 15645520, 0, 0, 0, 1052, 2277),
-('Unfinished Shaman Potion', 'I need another ingredient to finish the shaman potion', '', 48, 3, 0, 0, 0, 56576, 0, 0, 0, 1053, 2278),
-('Ogre Potion', 'A strange liquid', '', 48, 120, 0, 0, 0, 13434726, 0, 0, 1, 1054, 2279),
-('Magic Ogre Potion', 'A strange liquid that bubbles with power', '', 48, 120, 0, 0, 0, 6750156, 0, 0, 1, 1055, 2280),
-('Tool Kit', 'These could be handy!', '', 366, 120, 0, 0, 0, 15654365, 0, 0, 1, 1056, 2281),
-('Nulodion\'s Notes', 'Construction notes for dwarf cannon ammo', 'read', 234, 1, 0, 0, 0, 0, 0, 0, 1, 1057, 2282),
-('Cannon Ammo Mould', 'Used to make cannon ammo', '', 367, 5, 0, 0, 0, 0, 0, 0, 0, 1058, 2283),
-('Tenti Pineapple', 'The most delicious in the whole of Kharid', '', 124, 1, 0, 0, 0, 0, 0, 0, 1, 1059, 2284),
-('Bedobin Copy Key', 'A copy of a key for the captains of the mining camps chest', '', 25, 20, 0, 0, 0, 4194304, 0, 0, 1, 1060, 2285),
-('Technical Plans', 'Very technical looking plans for making a thrown weapon of some sort', 'Read', 218, 500, 0, 0, 0, 12632256, 0, 0, 1, 1061, 2286),
-('Rock Cake', 'Yum... I think!', 'eat', 368, 0, 0, 0, 0, 0, 0, 0, 1, 1062, 2287),
-('Bronze Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 1, 0, 1, 0, 16737817, 1, 1, 0, 1063, 0),
-('Iron Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 3, 0, 1, 0, 15654365, 1, 1, 0, 1064, 0),
-('Steel Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 9, 0, 1, 0, 15658734, 1, 1, 0, 1065, 0),
-('Mithril Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 25, 0, 1, 0, 10072780, 1, 1, 0, 1066, 0),
-('Adamantite Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 65, 0, 1, 0, 11717785, 1, 1, 0, 1067, 0),
-('Rune Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 350, 0, 1, 0, 65535, 1, 1, 0, 1068, 0),
-('Mithril Throwing Dart', 'A deadly throwing dart with a mithril tip.', '', 231, 50, 0, 1, 1, 10072780, 1, 1, 0, 1069, 0),
-('Adamantite Throwing Dart', 'A deadly throwing dart with an adamantite tip.', '', 231, 130, 0, 1, 1, 11717785, 1, 1, 0, 1070, 0),
-('Rune Throwing Dart', 'A deadly throwing dart with a runite tip.', '', 231, 700, 0, 1, 1, 65535, 1, 1, 0, 1071, 0),
-('Prototype Dart Tip', 'Dangerous looking dart tip - needs feathers for flight', '', 207, 1, 0, 1, 0, 16737817, 1, 1, 0, 1072, 0),
-('Info Document', 'read to access variable choices', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 1073, 2288),
-('Instruction Manual', 'An old note book', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 1074, 2289),
-('Unfinished Potion', 'I need another ingredient to finish this potion', '', 48, 3, 0, 0, 0, 6750054, 0, 0, 0, 1075, 2290),
-('Iron Throwing Knife', 'A finely balanced knife', '', 80, 6, 0, 0, 1, 15654365, 1, 0, 0, 1076, 2291),
-('Bronze Throwing Knife', 'A finely balanced knife', '', 80, 2, 0, 0, 1, 16737817, 1, 0, 0, 1077, 2292),
-('Steel Throwing Knife', 'A finely balanced knife', '', 80, 21, 0, 0, 1, 15658734, 1, 0, 0, 1078, 2293),
-('Mithril Throwing Knife', 'A finely balanced knife', '', 80, 54, 0, 0, 1, 10072780, 1, 0, 0, 1079, 2294),
-('Adamantite Throwing Knife', 'A finely balanced knife', '', 80, 133, 0, 0, 1, 11717785, 1, 0, 0, 1080, 2295),
-('Rune Throwing Knife', 'A finely balanced knife', '', 80, 333, 0, 0, 1, 65535, 1, 0, 0, 1081, 2296),
-('Black Throwing Knife', 'A finely balanced knife', '', 80, 37, 0, 0, 1, 3158064, 1, 0, 0, 1082, 2297),
-('Water Skin Mostly Full', 'A half full skin of water', '', 343, 27, 0, 0, 0, 8404992, 0, 0, 0, 1083, 2298),
-('Water Skin Mostly Empty', 'A half empty skin of water', '', 343, 24, 0, 0, 0, 8404992, 0, 0, 0, 1084, 2299),
-('Water Skin Mouthful Left', 'A waterskin with a mouthful of water left', '', 343, 18, 0, 0, 0, 8404992, 0, 0, 0, 1085, 2300),
-('Empty Water Skin', 'A completely empty waterskin', '', 343, 15, 0, 0, 0, 8404992, 0, 0, 0, 1086, 2301),
-('Nightshade', 'Deadly!', 'eat', 370, 30, 0, 0, 0, 0, 0, 0, 1, 1087, 2302),
-('Shaman Robe', 'This has been left by one of the dead ogre shaman', 'search', 87, 40, 0, 0, 0, 10510400, 0, 0, 1, 1088, 2303),
-('Iron Spear', 'An iron tipped spear', '', 283, 13, 0, 0, 1, 15654365, 1, 0, 0, 1089, 2304),
-('Steel Spear', 'A steel tipped spear', '', 283, 46, 0, 0, 1, 15658734, 1, 0, 0, 1090, 2305),
-('Mithril Spear', 'A mithril tipped spear', '', 283, 119, 0, 0, 1, 10072780, 1, 0, 0, 1091, 2306),
-('Adamantite Spear', 'An adamantite tipped spear', '', 283, 293, 0, 0, 1, 11717785, 1, 0, 0, 1092, 2307),
-('Rune Spear', 'A rune tipped spear', '', 283, 1000, 0, 0, 1, 56797, 1, 0, 0, 1093, 2308),
-('Cat', 'it\'s fluffs', 'Stroke', 338, 2, 0, 0, 0, 11184810, 0, 0, 1, 1094, 2309),
-('Seasoned Sardine', 'They don\'t smell any better', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 0, 1095, 2310),
-('Kittens', 'purrr', '', 372, 2, 0, 0, 0, 11184810, 0, 0, 1, 1096, 2311),
-('Kitten', 'purrr', 'stroke', 371, 2, 0, 0, 0, 11184810, 0, 0, 1, 1097, 2312),
-('Wrought Iron Key', 'This key clears unlocks a very sturdy gate of some sort.', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 1098, 2313),
-('Cell Door Key', 'A roughly hewn key', '', 25, 1, 0, 0, 0, 16384, 0, 0, 1, 1099, 2314),
-('A Free Shantay Disclaimer', 'Very important information.', 'Read', 218, 1, 0, 0, 0, 16711680, 0, 0, 0, 1100, 2315),
-('Doogle leaves', 'Small sweet smelling leaves', '', 298, 2, 0, 0, 0, 0, 0, 0, 0, 1101, 2316),
-('Raw Ugthanki Meat', 'I need to cook this first', '', 60, 2, 0, 0, 0, 16744640, 0, 0, 0, 1102, 2317),
-('Tasty Ugthanki Kebab', 'A fresh Kebab made from Ugthanki meat', 'eat', 320, 20, 0, 0, 0, 0, 0, 0, 0, 1103, 2318),
-('Cooked Ugthanki Meat', 'Freshly cooked Ugthanki meat', 'Eat', 60, 5, 0, 0, 0, 13395507, 0, 0, 0, 1104, 2319),
-('Uncooked Pitta Bread', 'I need to cook this.', '', 152, 4, 0, 0, 0, 0, 0, 0, 0, 1105, 2320),
-('Pitta Bread', 'Mmmm I need to add some other ingredients yet.', '', 152, 10, 0, 0, 0, 16768184, 0, 0, 0, 1106, 2321),
-('Tomato Mixture', 'A mixture of tomatoes in a bowl', '', 162, 3, 0, 0, 0, 16711680, 0, 0, 0, 1107, 2322),
-('Onion Mixture', 'A mixture of onions in a bowl', '', 162, 3, 0, 0, 0, 16776960, 0, 0, 0, 1108, 2323),
-('Onion and Tomato Mixture', 'A mixture of onions and tomatoes in a bowl', '', 162, 3, 0, 0, 0, 16744512, 0, 0, 0, 1109, 2324),
-('Onion and Tomato and Ugthanki Mix', 'A mixture of onions and tomatoes and Ugthanki meat in a bowl', '', 162, 3, 0, 0, 0, 5977890, 0, 0, 0, 1110, 2325),
-('Burnt Pitta Bread', 'Urgh - it\'s all burnt', '', 152, 1, 0, 0, 0, 4194304, 0, 0, 0, 1111, 2326),
-('Panning Tray', 'used for panning gold', 'search', 373, 1, 0, 0, 0, 4194304, 0, 0, 1, 1112, 2327),
-('Panning Tray', 'this tray contains gold nuggets', 'take gold', 374, 1, 0, 0, 0, 4194304, 0, 0, 1, 1113, 2328),
-('Panning Tray', 'this tray contains mud', 'search', 375, 1, 0, 0, 0, 4194304, 0, 0, 1, 1114, 2329),
-('Rock Pick', 'a sharp pick for cracking rocks', '', 376, 1, 0, 0, 0, 4194304, 0, 0, 0, 1115, 2330),
-('Specimen Brush', 'stiff brush for cleaning specimens', '', 377, 1, 0, 0, 0, 4194304, 0, 0, 0, 1116, 2331),
-('Specimen Jar', 'a jar for holding soil samples', '', 378, 1, 0, 0, 0, 4194304, 0, 0, 0, 1117, 2332),
-('Rock Sample', 'A rock sample', '', 379, 1, 0, 0, 0, 4194304, 0, 0, 0, 1118, 2333),
-('Gold Nuggets', 'Real gold pieces!', '', 380, 1, 0, 1, 0, 4194304, 0, 0, 0, 1119, 0),
-('Cat', 'looks like a healthy one', '', 381, 1, 0, 0, 0, 4194304, 0, 0, 1, 1120, 2334),
-('Scrumpled Piece of Paper', 'A piece of paper with barely legible writing - looks like a recipe!', 'Read', 218, 10, 0, 0, 0, 16317080, 0, 0, 0, 1121, 2335),
-('Digsite Info', 'IAN ONLY', 'read', 382, 63, 0, 0, 0, 0, 0, 0, 0, 1122, 2336),
-('Poisoned Bronze Throwing Dart', 'A venomous throwing dart with a bronze tip.', '', 384, 2, 0, 1, 1, 16737817, 1, 1, 0, 1123, 0),
-('Poisoned Iron Throwing Dart', 'A venomous throwing dart with an iron tip.', '', 384, 5, 0, 1, 1, 16737817, 1, 1, 0, 1124, 0),
-('Poisoned Steel Throwing Dart', 'A venomous throwing dart with a steel tip.', '', 384, 20, 0, 1, 1, 15658734, 1, 1, 0, 1125, 0),
-('Poisoned Mithril Throwing Dart', 'A venomous throwing dart with a mithril tip.', '', 384, 50, 0, 1, 1, 10072780, 1, 1, 0, 1126, 0),
-('Poisoned Adamantite Throwing Dart', 'A venomous throwing dart with an adamantite tip.', '', 384, 130, 0, 1, 1, 11717785, 1, 1, 0, 1127, 0),
-('Poisoned Rune Throwing Dart', 'A deadly venomous dart with a runite tip.', '', 384, 700, 0, 1, 1, 65535, 1, 1, 0, 1128, 0),
-('Poisoned Bronze Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 2, 0, 0, 1, 16737817, 1, 0, 0, 1129, 2337),
-('Poisoned Iron Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 6, 0, 0, 1, 15654365, 1, 0, 0, 1130, 2338),
-('Poisoned Steel Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 21, 0, 0, 1, 15658734, 1, 0, 0, 1131, 2339),
-('Poisoned Mithril Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 54, 0, 0, 1, 10072780, 1, 0, 0, 1132, 2340),
-('Poisoned Black Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 37, 0, 0, 1, 3158064, 1, 0, 0, 1133, 2341),
-('Poisoned Adamantite Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 133, 0, 0, 1, 11717785, 1, 0, 0, 1134, 2342),
-('Poisoned Rune Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 333, 0, 0, 1, 65535, 1, 0, 0, 1135, 2343),
-('Poisoned Bronze Spear', 'A bronze tipped spear with added venom ', '', 383, 4, 0, 0, 1, 16737817, 1, 0, 0, 1136, 2344),
-('Poisoned Iron Spear', 'An iron tipped spear with added venom', '', 383, 13, 0, 0, 1, 15654365, 1, 0, 0, 1137, 2345),
-('Poisoned Steel Spear', 'A steel tipped spear with added venom', '', 383, 46, 0, 0, 1, 15658734, 1, 0, 0, 1138, 2346),
-('Poisoned Mithril Spear', 'A mithril tipped spear with added venom', '', 383, 119, 0, 0, 1, 10072780, 1, 0, 0, 1139, 2347),
-('Poisoned Adamantite Spear', 'An adamantite tipped spear with added venom', '', 383, 293, 0, 0, 1, 11717785, 1, 0, 0, 1140, 2348),
-('Poisoned Rune Spear', 'A rune tipped spear with added venom', '', 383, 1000, 0, 0, 1, 56797, 1, 0, 0, 1141, 2349),
-('Book of Experimental Chemistry', 'A book on experiments with volatile chemicals', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 1142, 2350),
-('Level 1 Certificate', 'A Certificate of education', 'read', 29, 1, 0, 0, 0, 0, 0, 0, 1, 1143, 2351),
-('Level 2 Certificate', 'A Certificate of education', 'read', 29, 1, 0, 0, 0, 0, 0, 0, 1, 1144, 2352),
-('Level 3 Certificate', 'A Certificate of education', 'read', 29, 1, 0, 0, 0, 0, 0, 0, 1, 1145, 2353),
-('Trowel', 'A small device for digging', '', 386, 1, 0, 0, 0, 0, 0, 0, 0, 1146, 2354),
-('Stamped Letter of Recommendation', 'A stamped scroll with a recommendation on it', '', 402, 1, 0, 0, 0, 0, 0, 0, 1, 1147, 2355),
-('Unstamped Letter of Recommendation', 'I hereby recommend this student to undertake the Varrock City earth sciences exams', '', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1148, 2356),
-('Rock Sample', 'A rock sample', '', 388, 1, 0, 0, 0, 4194304, 0, 0, 1, 1149, 2357),
-('Rock Sample', 'A rock sample', '', 389, 1, 0, 0, 0, 4194304, 0, 0, 1, 1150, 2358),
-('Cracked Rock Sample', 'It\'s been cracked open', '', 387, 1, 0, 0, 0, 4194304, 0, 0, 1, 1151, 2359),
-('Belt Buckle', 'been here some time', '', 390, 1, 0, 0, 0, 4194304, 0, 0, 1, 1152, 2360),
-('Powering Crystal2', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 16738047, 0, 0, 1, 1153, 2361),
-('Powering Crystal3', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 6750207, 0, 0, 1, 1154, 2362),
-('Powering Crystal4', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 3407667, 0, 0, 1, 1155, 2363),
-('Old Boot', 'that\'s been here some time', '', 391, 1, 0, 0, 0, 4194304, 0, 0, 0, 1156, 2364),
-('Bunny Ears', 'Get another from the clothes shop if you die', '', 392, 1, 0, 0, 1, 4194304, 0, 0, 0, 1157, 2365),
-('Damaged Armour', 'that\'s been here some time', '', 393, 1, 0, 0, 0, 4194304, 0, 0, 0, 1158, 2366),
-('Damaged Armour', 'that\'s been here some time', '', 394, 1, 0, 0, 0, 4194304, 0, 0, 0, 1159, 2367),
-('Rusty Sword', 'that\'s been here some time', '', 395, 1, 0, 0, 0, 4194304, 0, 0, 0, 1160, 2368),
-('Ammonium Nitrate', 'An acrid chemical', '', 23, 20, 0, 0, 0, 16777164, 0, 0, 1, 1161, 2369),
-('Nitroglycerin', 'A strong acidic formula', '', 48, 2, 0, 0, 0, 16750848, 0, 0, 1, 1162, 2370),
-('Old Tooth', 'a large single tooth', '', 360, 0, 0, 0, 0, 0, 0, 0, 0, 1163, 2371),
-('Radimus Scrolls', 'Scrolls that Radimus gave you', 'Read Scrolls', 29, 5, 0, 0, 0, 8421504, 0, 0, 1, 1164, 2372),
-('Chest Key', 'A small key for a chest', '', 25, 1, 0, 0, 0, 16763904, 0, 0, 0, 1165, 2373),
-('Broken Arrow', 'that\'s been here some time', '', 396, 1, 0, 0, 0, 4194304, 0, 0, 0, 1166, 2374),
-('Buttons', 'they\'ve been here some time', '', 397, 1, 0, 0, 0, 4194304, 0, 0, 0, 1167, 2375),
-('Broken Staff', 'that\'s been here some time', '', 398, 1, 0, 0, 0, 4194304, 0, 0, 0, 1168, 2376),
-('vase', 'An old vase', '', 279, 1, 0, 0, 0, 0, 0, 0, 0, 1169, 2377),
-('Ceramic Remains', 'some ancient pottery', '', 399, 1, 0, 0, 0, 4194304, 0, 0, 0, 1170, 2378),
-('Broken Glass', 'smashed glass', '', 259, 0, 0, 0, 0, 0, 0, 0, 1, 1171, 2379),
-('Unidentified Powder', 'Who knows what this is for?', '', 23, 20, 0, 0, 0, 16777164, 0, 0, 1, 1172, 2380),
-('Machette', 'A purpose built tool for cutting through thick jungle.', '', 432, 40, 0, 0, 1, 8421504, 1, 0, 1, 1173, 2381),
-('Scroll', 'A letter written by the expert', 'read', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1174, 2382),
-('Stone Tablet', 'some ancient script is engraved on here', 'read', 400, 1, 0, 0, 0, 4194304, 0, 0, 1, 1175, 2383),
-('Talisman of Zaros', 'an ancient item', '', 401, 1, 0, 0, 0, 4194304, 0, 0, 1, 1176, 2384),
-('Explosive Compound', 'A dark mystical powder', '', 48, 2, 0, 0, 0, 51, 0, 0, 1, 1177, 2385),
-('Bull Roarer', 'A sound producing instrument - it may attract attention', 'Swing', 418, 1, 0, 0, 0, 7552262, 0, 0, 1, 1178, 2386),
-('Mixed Chemicals', 'A pungent mix of 2 chemicals', '', 48, 2, 0, 0, 0, 16777113, 0, 0, 1, 1179, 2387),
-('Ground Charcoal', 'Powdered charcoal!', '', 23, 20, 0, 0, 0, 2236962, 0, 0, 1, 1180, 2388),
-('Mixed Chemicals', 'A pungent mix of 3 chemicals', '', 48, 2, 0, 0, 0, 13408512, 0, 0, 1, 1181, 2389),
-('Spell Scroll', 'A magical scroll', 'read', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1182, 2390),
-('Yommi Tree Seed', 'A magical seed that grows into a Yommi tree - these need to be germinated', 'Inspect', 270, 200, 0, 1, 0, 65280, 0, 0, 1, 1183, 0),
-('Totem Pole', 'A well crafted totem pole', '', 403, 500, 0, 0, 0, 65280, 0, 0, 1, 1184, 2391),
-('Dwarf Cannon Base', 'bang', 'set down', 352, 200000, 0, 0, 0, 0, 1, 0, 0, 1185, 2392),
-('Dwarf Cannon Stand', 'bang', '', 353, 200000, 0, 0, 0, 0, 1, 0, 0, 1186, 2393),
-('Dwarf Cannon Barrels', 'bang', '', 354, 200000, 0, 0, 0, 0, 1, 0, 0, 1187, 2394),
-('Dwarf Cannon Furnace', 'bang', '', 355, 150000, 0, 0, 0, 0, 1, 0, 0, 1188, 2395),
-('Golden Bowl', 'A specially made bowl constructed out of pure gold', '', 404, 1000, 0, 0, 0, 0, 0, 0, 1, 1189, 2396),
-('Golden Bowl with Pure Water', 'A golden bowl filled with pure water', '', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1190, 2397),
-('Raw Manta Ray', 'A rare catch!', '', 406, 500, 0, 0, 0, 255, 0, 0, 0, 1191, 2398),
-('Manta Ray', 'A rare catch!', 'eat', 407, 500, 0, 0, 0, 255, 0, 1, 0, 1192, 2399),
-('Raw Sea Turtle', 'A rare catch!', '', 408, 500, 0, 0, 0, 255, 0, 0, 0, 1193, 2400),
-('Sea Turtle', 'Tasty!', 'eat', 409, 500, 0, 0, 0, 255, 0, 1, 0, 1194, 2401),
-('Annas Silver Necklace', 'A necklace coated with silver', '', 24, 1, 0, 0, 1, 0, 0, 0, 1, 1195, 2402),
-('Bobs Silver Teacup', 'A tea cup coated with silver', '', 227, 1, 0, 0, 0, 0, 0, 0, 1, 1196, 2403),
-('Carols Silver Bottle', 'A little bottle coated with silver', '', 104, 1, 0, 0, 0, 0, 0, 0, 1, 1197, 2404),
-('Davids Silver Book', 'An ornamental book coated with silver', '', 28, 1, 0, 0, 0, 0, 0, 0, 1, 1198, 2405),
-('Elizabeths Silver Needle', 'An ornamental needle coated with silver', '', 38, 1, 0, 0, 0, 0, 0, 0, 1, 1199, 2406),
-('Franks Silver Pot', 'A small pot coated with silver', '', 61, 1, 0, 0, 0, 0, 0, 0, 1, 1200, 2407),
-('Thread', 'A piece of red thread discovered at the scene of the crime', '', 208, 1, 0, 0, 0, 16711680, 0, 0, 1, 1201, 2408),
-('Thread', 'A piece of green thread discovered at the scene of the crime', '', 208, 1, 0, 0, 0, 65280, 0, 0, 1, 1202, 2409),
-('Thread', 'A piece of blue thread discovered at the scene of the crime', '', 208, 1, 0, 0, 0, 255, 0, 0, 1, 1203, 2410),
-('Flypaper', 'Sticky paper for catching flies', '', 415, 1, 0, 0, 0, 14540253, 0, 0, 1, 1204, 2411),
-('Murder Scene Pot', 'The pot has a sickly smell of poison mixed with wine', '', 61, 1, 0, 0, 0, 16711680, 0, 0, 1, 1205, 2412),
-('A Silver Dagger', 'Dagger Found at crime scene', '', 80, 1, 0, 0, 1, 0, 1, 0, 1, 1206, 2413),
-('Murderers Fingerprint', 'An impression of the murderers fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1207, 2414),
-('Annas Fingerprint', 'An impression of Annas fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1208, 2415),
-('Bobs Fingerprint', 'An impression of Bobs fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1209, 2416),
-('Carols Fingerprint', 'An impression of Carols fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1210, 2417),
-('Davids Fingerprint', 'An impression of Davids fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1211, 2418),
-('Elizabeths Fingerprint', 'An impression of Elizabeths fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1212, 2419),
-('Franks Fingerprint', 'An impression of Franks fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1213, 2420),
-('Zamorak Cape', 'A cape from the almighty zamorak', '', 59, 150000, 0, 0, 1, 16711680, 0, 1, 0, 1214, 2421),
-('Saradomin Cape', 'A cape from the almighty saradomin', '', 59, 150000, 0, 0, 1, 4210926, 0, 1, 0, 1215, 2422),
-('Guthix Cape', 'A cape from the almighty guthix', '', 59, 150000, 0, 0, 1, 4246592, 0, 1, 0, 1216, 2423),
-('Staff of Zamorak', 'It\'s a stick of the gods', '', 337, 150000, 0, 0, 1, 0, 1, 1, 0, 1217, 2424),
-('Staff of Guthix', 'It\'s a stick of the gods', '', 85, 150000, 0, 0, 1, 10072780, 1, 1, 0, 1218, 2425),
-('Staff of Saradomin', 'It\'s a stick of the gods', '', 414, 150000, 0, 0, 1, 10072780, 1, 1, 0, 1219, 2426),
-('A Chunk of Crystal', 'A reddish crystal fragment - it looks like it formed a shape at one time.', '', 410, 2000, 0, 0, 0, 0, 0, 0, 1, 1220, 2427),
-('A Lump of Crystal', 'A reddish crystal fragment - it looks like it formed a shape at one time.', '', 411, 2000, 0, 0, 0, 0, 0, 0, 1, 1221, 2428),
-('A Hunk of Crystal', 'A reddish crystal fragment - it looks like it formed a shape at one time.', '', 412, 2000, 0, 0, 0, 0, 0, 0, 1, 1222, 2429),
-('A Red Crystal', 'A heart shaped red crystal ', 'Inspect', 413, 2000, 0, 0, 0, 0, 0, 0, 1, 1223, 2430),
-('Unidentified Fingerprint', 'An impression of the murderers fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1224, 2431),
-('Annas Silver Necklace', 'A silver necklace coated with flour', '', 24, 1, 0, 0, 1, 0, 0, 0, 1, 1225, 2432),
-('Bobs Silver Teacup', 'A silver tea cup coated with flour', '', 227, 1, 0, 0, 0, 0, 0, 0, 1, 1226, 2433),
-('Carols Silver Bottle', 'A little silver bottle coated with flour', '', 104, 1, 0, 0, 0, 0, 0, 0, 1, 1227, 2434),
-('Davids Silver Book', 'An ornamental silver book coated with flour', '', 28, 1, 0, 0, 0, 0, 0, 0, 1, 1228, 2435),
-('Elizabeths Silver Needle', 'An ornamental silver needle coated with flour', '', 38, 1, 0, 0, 0, 0, 0, 0, 1, 1229, 2436),
-('Franks Silver Pot', 'A small silver pot coated with flour', '', 61, 1, 0, 0, 0, 0, 0, 0, 1, 1230, 2437),
-('A Silver Dagger', 'Dagger Found at crime scene coated with flour', '', 80, 1, 0, 0, 1, 0, 1, 0, 1, 1231, 2438),
-('A Glowing Red Crystal', 'A glowing heart shaped red crystal - great magic must be present in this item', '', 419, 2000, 0, 0, 0, 0, 0, 0, 1, 1232, 2439),
-('Unidentified Liquid', 'A strong acidic formula', '', 48, 2, 0, 0, 0, 16750848, 0, 0, 1, 1233, 2440),
-('Radimus Scrolls', 'Mission briefing and the completed map of Karamja - Sir Radimus will be pleased...', 'Read Scrolls', 29, 5, 0, 0, 0, 8421504, 0, 0, 1, 1234, 2441),
-('Robe', 'A worn robe', '', 87, 15, 0, 0, 1, 255, 0, 0, 0, 1235, 2442),
-('Armour', 'An unusually red armour', '', 118, 40, 0, 0, 0, 13369344, 0, 0, 1, 1236, 2443),
-('Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 0, 0, 1237, 2444),
-('Eye Patch', 'It makes me look very piratical', '', 198, 2, 0, 0, 1, 0, 0, 0, 0, 1238, 2445),
-('Booking of Binding', 'An ancient tome on Demonology', 'read', 28, 1, 0, 0, 0, 15641258, 0, 0, 1, 1239, 2446),
-('Holy Water Vial', 'A deadly potion against evil kin', 'Throw', 48, 3, 0, 0, 1, 10073782, 0, 0, 1, 1240, 2447),
-('Enchanted Vial', 'This enchanted vial is empty - but is ready for magical liquids.', '', 144, 200, 0, 0, 0, 16646109, 0, 0, 1, 1241, 2448),
-('Scribbled Notes', 'It looks like a page ripped from a book', 'Read', 427, 20, 0, 0, 0, 8421376, 0, 0, 1, 1242, 2449),
-('Scrawled Notes', 'It looks like a page ripped from a book', 'Read', 427, 20, 0, 0, 0, 14066524, 0, 0, 1, 1243, 2450),
-('Scatched Notes', 'It looks like a page ripped from a book', 'Read', 427, 20, 0, 0, 0, 11909701, 0, 0, 1, 1244, 2451),
-('Shamans Tome', 'An ancient tome on various subjects...', 'read', 299, 1, 0, 0, 0, 15641258, 0, 0, 1, 1245, 2452),
-('Edible Seaweed', 'slightly damp seaweed', 'eat', 203, 2, 0, 0, 0, 0, 0, 0, 0, 1246, 2453),
-('Rough Sketch of a Bowl', 'A roughly sketched picture of a bowl made from metal', 'Read', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1247, 2454),
-('Burnt Manta Ray', 'oops!', '', 430, 500, 0, 0, 0, 255, 0, 0, 0, 1248, 2455),
-('Burnt Sea Turtle', 'oops!', '', 431, 500, 0, 0, 0, 255, 0, 0, 0, 1249, 2456),
-('Cut Reed Plant', 'A narrow long tube - it might be useful for something', '', 202, 2, 0, 0, 0, 65280, 0, 0, 1, 1250, 2457),
-('Magical Fire Pass', 'A pass which allows you to cross the flaming walls into the Flaming Octagon', '', 29, 1, 0, 0, 0, 16711680, 0, 0, 1, 1251, 2458),
-('Snakes Weed Solution', 'Snakes weed in water - part of a potion', '', 48, 1, 0, 0, 0, 8454016, 0, 0, 1, 1252, 2459),
-('Ardrigal Solution', 'Ardrigal herb in water - part of a potion', '', 48, 1, 0, 0, 0, 8388608, 0, 0, 1, 1253, 2460),
-('Gujuo Potion', 'A potion to help against fear of the supernatural', 'Drink', 48, 1, 0, 0, 0, 8405056, 0, 0, 1, 1254, 2461),
-('Germinated Yommi Tree Seed', 'A magical seed that grows into a Yommi tree - these have been germinated.', 'Inspect', 270, 200, 0, 1, 0, 65280, 0, 0, 1, 1255, 0),
-('Dark Dagger', 'An unusual looking dagger made of dark shiny obsidian', '', 420, 91, 0, 0, 1, 0, 1, 0, 1, 1256, 2462),
-('Glowing Dark Dagger', 'An unusual looking dagger made of dark shiny obsidian - it has an unnatural glow .', '', 421, 91, 0, 0, 1, 0, 1, 0, 1, 1257, 2463),
-('Holy Force Spell', 'A powerful incantation - it affects spirits of the underworld', 'Cast', 423, 1, 0, 0, 0, 0, 0, 0, 1, 1258, 2464),
-('Iron Pickaxe', 'Used for mining', '', 72, 140, 0, 0, 0, 15654365, 0, 0, 0, 1259, 2465),
-('Steel Pickaxe', 'Requires level 6 mining to use', '', 72, 500, 0, 0, 0, 15658734, 0, 0, 0, 1260, 2466),
-('Mithril Pickaxe', 'Requires level 21 mining to use', '', 72, 1300, 0, 0, 0, 10072780, 0, 0, 0, 1261, 2467),
-('Adamantite Pickaxe', 'Requires level 31 mining to use', '', 72, 3200, 0, 0, 0, 11717785, 0, 0, 0, 1262, 2468),
-('Rune Pickaxe', 'Requires level 41 mining to use', '', 72, 32000, 0, 0, 0, 65535, 0, 0, 0, 1263, 2469),
-('Sleeping Bag', 'Not as comfy as a bed but better than nothing', 'sleep', 422, 30, 0, 0, 0, 0, 0, 0, 0, 1264, 2470),
-('Blue Wizards Hat', 'An ancient wizards hat.', '', 86, 2, 0, 0, 1, 255, 0, 0, 0, 1265, 2471),
-('Gilded Totem Pole', 'A well crafted totem pole - given to you as a gift from Gujuo', 'Inspect', 403, 20, 0, 0, 0, 65280, 0, 0, 1, 1266, 2472),
-('Blessed Golden Bowl', 'A specially made bowl constructed out of pure gold - it looks magical somehow', '', 404, 1000, 0, 0, 0, 0, 0, 0, 1, 1267, 2473),
-('Blessed Golden Bowl with Pure Water', 'A golden bowl filled with pure water - it looks magical somehow', '', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1268, 2474),
-('Raw Oomlie Meat', 'Raw meat from the Oomlie bird', '', 60, 10, 0, 0, 0, 16747571, 0, 0, 0, 1269, 2475),
-('Cooked Oomlie Meat Parcel', 'Deliciously cooked Oomlie meat in a palm leaf pouch.', 'eat', 433, 35, 0, 0, 0, 13395507, 0, 0, 0, 1270, 2476),
-('Dragon Bone Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 0, 0, 0, 0, 1271, 0),
-('Limpwurt Root Certificate', 'Exchangable at Catherby for 5', '', 180, 10, 0, 1, 0, 0, 0, 0, 0, 1272, 0),
-('Prayer Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 3206809, 0, 0, 0, 1273, 0),
-('Super Attack Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 3158254, 0, 0, 0, 1274, 0),
-('Super Defense Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 15644208, 0, 0, 0, 1275, 0),
-('Super Strength Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 15658734, 0, 0, 0, 1276, 0),
-('Half Dragon Square Shield', 'The Right Half of an ancient and powerful looking Dragon Square shield.', '', 425, 750000, 0, 0, 0, 15654365, 1, 0, 0, 1277, 2477),
-('Half Dragon Square Shield', 'Left Half of an ancient and powerful looking Dragon Square shield.', '', 424, 110000, 0, 0, 0, 15654365, 1, 0, 0, 1278, 2478),
-('Dragon Square Shield', 'An ancient and powerful looking Dragon Square shield.', '', 426, 500000, 0, 0, 1, 13500416, 1, 1, 0, 1279, 2479),
-('Palm Tree Leaf', 'A thick green plam leaf - natives use this to cook meat in', '', 428, 5, 0, 0, 0, 0, 0, 0, 0, 1280, 2480),
-('Raw Oomlie Meat Parcel', 'Oomlie meat in a palm leaf pouch - just needs to be cooked.', '', 429, 16, 0, 0, 0, 16747571, 0, 0, 0, 1281, 2481),
-('Burnt Oomlie Meat Parcel', 'Oomlie meat in a palm leaf pouch - it\'s burnt.', '', 429, 1, 0, 0, 0, 4194304, 0, 0, 0, 1282, 2482),
-('Bailing Bucket', 'It\'s a water tight bucket', '', 22, 10, 0, 0, 0, 1052688, 0, 0, 0, 1283, 2483),
-('Plank', 'Damaged remains of the ship', '', 135, 1, 0, 0, 0, 0, 0, 0, 0, 1284, 2484),
-('Arcenia Root', 'the root of an arcenia plant', '', 101, 7, 0, 0, 0, 0, 0, 0, 1, 1285, 2485),
-('Display Tea', 'A nice cup of tea - for display only', '', 227, 10, 0, 0, 0, 0, 0, 0, 0, 1286, 2486),
-('Blessed Golden Bowl with Plain Water', 'A golden bowl filled with plain water', 'Empty', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1287, 2487),
-('Golden Bowl with Plain Water', 'A golden bowl filled with plain water', 'Empty', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1288, 2488),
-('Cape of Legends', 'A beautiful cape', '', 59, 5000, 0, 0, 1, 16777215, 1, 1, 0, 1289, 2489),
-('Scythe', 'Looks deadly.', '', 434, 15, 0, 0, 1, 0, 1, 0, 0, 1290, 2490),
-('Rune Essence', 'An Uncharged Rune Stone', '', 439, 0, 0, 0, 0, 0, 0, 0, 0, 1291, 2491),
-('Body talisman', 'A mysterious power emanates from the talisman...', 'Locate', 440, 6, 0, 0, 0, 0, 0, 0, 0, 1292, 2492),
-('Air talisman', 'A mysterious power emanates from the talisman...', 'Locate', 441, 6, 0, 0, 0, 0, 0, 0, 0, 1293, 2493),
-('Water talisman', 'A mysterious power emanates from the talisman...', 'Locate', 442, 6, 0, 0, 0, 0, 0, 0, 0, 1294, 2494),
-('Fire talisman', 'A mysterious power emanates from the talisman...', 'Locate', 443, 6, 0, 0, 0, 0, 0, 0, 0, 1295, 2495),
-('Earth talisman', 'A mysterious power emanates from the talisman...', 'Locate', 444, 6, 0, 0, 0, 0, 0, 0, 0, 1296, 2496),
-('Nature talisman', 'A mysterious power emanates from the talisman...', 'Locate', 445, 6, 0, 0, 0, 0, 0, 0, 0, 1297, 2497),
-('Law talisman', 'A mysterious power emanates from the talisman...', 'Locate', 446, 6, 0, 0, 0, 0, 0, 0, 0, 1298, 2498),
-('Cosmic talisman', 'A mysterious power emanates from the talisman...', 'Locate', 447, 6, 0, 0, 0, 0, 0, 0, 0, 1299, 2499),
-('Chaos talisman', 'A mysterious power emanates from the talisman...', 'Locate', 448, 6, 0, 0, 0, 0, 0, 0, 0, 1300, 2500),
-('Death talisman', 'A mysterious power emanates from the talisman...', 'Locate', 449, 6, 0, 0, 0, 0, 0, 0, 0, 1301, 2501),
-('Blood talisman', 'A mysterious power emanates from the talisman...', 'Locate', 450, 6, 0, 0, 0, 0, 0, 0, 0, 1302, 2502),
-('Soul talisman', 'A mysterious power emanates from the talisman...', 'Locate', 451, 6, 0, 0, 0, 0, 0, 0, 0, 1303, 2503),
-('Mind talisman', 'A mysterious power emanates from the talisman...', 'Locate', 452, 6, 0, 0, 0, 0, 0, 0, 0, 1304, 2504),
-('RSCUnity Subscription Card', 'This allows you to subscribe your account for 30 days!', 'Redeem', 180, 0, 0, 0, 0, 1315860, 0, 0, 0, 1305, 0);
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`, `tradable`) VALUES
+('Iron Mace', 'A spiky mace', '', 0, 63, 0, 0, 1, 15654365, 1, 0, 0, 0, 1305, 1),
+('Iron Short Sword', 'A razor sharp sword', '', 1, 91, 0, 0, 1, 15654365, 1, 0, 0, 1, 1306, 1),
+('Iron Kite Shield', 'A large metal shield', '', 2, 238, 0, 0, 1, 15654365, 1, 0, 0, 2, 1307, 1),
+('Iron Square Shield', 'A medium metal shield', '', 3, 168, 0, 0, 1, 15654365, 1, 0, 0, 3, 1308, 1),
+('Wooden Shield', 'A solid wooden shield', '', 4, 20, 0, 0, 1, 0, 1, 0, 0, 4, 1309, 1),
+('Medium Iron Helmet', 'A medium sized helmet', '', 5, 84, 0, 0, 1, 15654365, 1, 0, 0, 5, 1310, 1),
+('Large Iron Helmet', 'A full face helmet', '', 6, 154, 0, 0, 1, 15654365, 1, 0, 0, 6, 1311, 1),
+('Iron Chain Mail Body', 'A series of connected metal rings', '', 7, 210, 0, 0, 1, 15654365, 1, 0, 0, 7, 1312, 1),
+('Iron Plate Mail Body', 'Provides excellent protection', '', 8, 560, 0, 0, 1, 15654365, 1, 0, 0, 8, 1313, 1),
+('Iron Plate Mail Legs', 'These look pretty heavy', '', 9, 280, 0, 0, 1, 15654365, 1, 0, 0, 9, 1314, 1),
+('Coins', 'Lovely money!', '', 10, 1, 0, 1, 0, 0, 0, 0, 0, 10, 0, 1),
+('Bronze Arrows', 'Arrows with bronze heads', '', 11, 2, 0, 1, 0, 16737817, 1, 0, 0, 11, 0, 1),
+('Iron Axe', 'A woodcutters axe', '', 12, 56, 0, 0, 1, 15654365, 1, 0, 0, 12, 1315, 1),
+('Knife', 'A dangerous looking knife', '', 13, 6, 0, 0, 0, 0, 0, 0, 0, 13, 1316, 1),
+('Logs', 'A number of wooden logs', '', 14, 4, 0, 0, 0, 0, 0, 0, 0, 14, 1317, 1),
+('Leather Armour', 'Better than no armour!', '', 15, 21, 0, 0, 1, 0, 1, 0, 0, 15, 1318, 1),
+('Leather Gloves', 'These will keep my hands warm!', '', 17, 6, 0, 0, 1, 0, 0, 0, 0, 16, 1319, 1),
+('Boots', 'Comfortable leather boots', '', 16, 6, 0, 0, 1, 0, 0, 0, 0, 17, 1320, 1),
+('Cabbage', 'Yuck I don\'t like cabbage', 'Eat', 18, 1, 0, 0, 0, 0, 0, 0, 0, 18, 1321, 1),
+('Egg', 'A nice fresh egg', '', 19, 4, 0, 0, 0, 0, 0, 0, 0, 19, 1322, 1),
+('Bones', 'Ew it\'s a pile of bones', 'Bury', 20, 1, 0, 0, 0, 0, 0, 0, 0, 20, 1323, 1),
+('Bucket', 'It\'s a wooden bucket', '', 22, 2, 0, 0, 0, 1052688, 0, 0, 0, 21, 1324, 1),
+('Milk', 'It\'s a bucket of milk', '', 22, 6, 0, 0, 0, 0, 0, 0, 0, 22, 1325, 1),
+('Flour', 'A little heap of flour', '', 23, 2, 0, 0, 0, 0, 0, 0, 0, 23, 1326, 0),
+('Amulet of GhostSpeak', 'It lets me talk to ghosts', '', 24, 35, 0, 0, 1, 0, 0, 0, 1, 24, 1327, 0),
+('Silverlight Key 1', 'A key given to me by Wizard Traiborn', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 25, 1328, 0),
+('Silverlight Key 2', 'A key given to me by Captain Rovin', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 26, 1329, 0),
+('Skull', 'A spooky looking skull', '', 26, 1, 0, 0, 0, 0, 0, 0, 1, 27, 1330, 0),
+('Iron Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 0, 0, 28, 1331, 1),
+('Grain', 'Some wheat heads', '', 27, 2, 0, 0, 0, 0, 0, 0, 0, 29, 1332, 1),
+('Book', '', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 30, 1333, 0),
+('Fire-Rune', 'One of the 4 basic elemental runes', '', 30, 4, 0, 1, 0, 0, 0, 0, 0, 31, 0, 1),
+('Water-Rune', 'One of the 4 basic elemental runes', '', 31, 4, 0, 1, 0, 0, 0, 0, 0, 32, 0, 1),
+('Air-Rune', 'One of the 4 basic elemental runes', '', 32, 4, 0, 1, 0, 0, 0, 0, 0, 33, 0, 1),
+('Earth-Rune', 'One of the 4 basic elemental runes', '', 33, 4, 0, 1, 0, 0, 0, 0, 0, 34, 0, 1),
+('Mind-Rune', 'Used for low level missile spells', '', 34, 3, 0, 1, 0, 0, 0, 0, 0, 35, 0, 1),
+('Body-Rune', 'Used for curse spells', '', 35, 3, 0, 1, 0, 0, 0, 0, 0, 36, 0, 1),
+('Life-Rune', 'Used for summon spells', '', 36, 1, 0, 1, 0, 0, 0, 0, 0, 37, 0, 1),
+('Death-Rune', 'Used for high level missile spells', '', 37, 125, 0, 1, 0, 0, 0, 0, 0, 38, 0, 1),
+('Needle', 'Used with a thread to make clothes', '', 38, 1, 0, 1, 0, 0, 0, 0, 0, 39, 0, 1),
+('Nature-Rune', 'Used for alchemy spells', '', 39, 7, 0, 1, 0, 0, 0, 0, 0, 40, 0, 1),
+('Chaos-Rune', 'Used for mid level missile spells', '', 40, 100, 0, 1, 0, 0, 0, 0, 0, 41, 0, 1),
+('Law-Rune', 'Used for teleport spells', '', 41, 12, 0, 1, 0, 0, 0, 0, 0, 42, 0, 1),
+('Thread', 'Used with a needle to make clothes', '', 42, 1, 0, 1, 0, 0, 0, 0, 0, 43, 0, 1),
+('Holy Symbol of Saradomin', 'This needs a string putting on it', '', 43, 200, 0, 0, 0, 0, 0, 0, 0, 44, 1334, 1),
+('Unblessed Holy Symbol', 'This needs blessing', '', 44, 200, 0, 0, 1, 0, 0, 0, 0, 45, 1335, 1),
+('Cosmic-Rune', 'Used for enchant spells', '', 45, 15, 0, 1, 0, 0, 0, 0, 0, 46, 0, 1),
+('Key', 'The key to get into the phoenix gang', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 1, 47, 1336, 0),
+('Key', 'The key to the phoenix gang\'s weapons store', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 0, 48, 1337, 1),
+('Scroll', 'An intelligence Report', '', 29, 5, 0, 0, 0, 0, 0, 0, 1, 49, 1338, 1),
+('Water', 'It\'s a bucket of water', '', 22, 6, 0, 0, 0, 5724145, 0, 0, 0, 50, 1339, 1),
+('Silverlight Key 3', 'A key I found in a drain', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 51, 1340, 0),
+('Silverlight', 'A magic sword', '', 81, 50, 0, 0, 1, 0, 1, 0, 0, 52, 1341, 1),
+('Broken Shield', 'Half of the shield of Arrav', '', 46, 1, 0, 0, 0, 0, 0, 0, 0, 53, 1342, 1),
+('Broken Shield', 'Half of the shield of Arrav', '', 47, 1, 0, 0, 0, 0, 0, 0, 0, 54, 1343, 1),
+('Cadavaberries', 'Poisonous berries', '', 21, 1, 0, 0, 0, 15161265, 0, 0, 0, 55, 1344, 1),
+('Message', 'A message from Juliet to Romeo', '', 29, 1, 0, 0, 0, 0, 0, 0, 1, 56, 1345, 1),
+('Cadava', 'I\'m meant to give this to Juliet', '', 48, 1, 0, 0, 0, 11620466, 0, 0, 1, 57, 1346, 0),
+('Potion', 'this is meant to be good for spots', '', 48, 1, 0, 0, 0, 5289585, 0, 0, 0, 58, 1347, 1),
+('Phoenix Crossbow', 'Former property of the phoenix gang', '', 49, 4, 0, 0, 1, 0, 1, 0, 0, 59, 1348, 1),
+('Crossbow', 'This fires crossbow bolts', '', 49, 70, 0, 0, 1, 0, 1, 0, 0, 60, 1349, 1),
+('Certificate', 'I can use this to claim a reward from the king', '', 29, 1, 0, 0, 0, 0, 0, 0, 0, 61, 1350, 1),
+('bronze Dagger', 'Short but pointy', '', 80, 10, 0, 0, 1, 16737817, 1, 0, 0, 62, 1351, 1),
+('Steel Dagger', 'Short but pointy', '', 80, 125, 0, 0, 1, 15658734, 1, 0, 0, 63, 1352, 1),
+('Mithril Dagger', 'Short but pointy', '', 80, 325, 0, 0, 1, 10072780, 1, 0, 0, 64, 1353, 1),
+('Adamantite Dagger', 'Short but pointy', '', 80, 800, 0, 0, 1, 11717785, 1, 0, 0, 65, 1354, 1),
+('Bronze Short Sword', 'A razor sharp sword', '', 1, 26, 0, 0, 1, 16737817, 1, 0, 0, 66, 1355, 1),
+('Steel Short Sword', 'A razor sharp sword', '', 1, 400, 0, 0, 1, 15658734, 1, 0, 0, 67, 1356, 1),
+('Mithril Short Sword', 'A razor sharp sword', '', 1, 845, 0, 0, 1, 10072780, 1, 0, 0, 68, 1357, 1),
+('Adamantite Short Sword', 'A razor sharp sword', '', 1, 2080, 0, 0, 1, 11717785, 1, 0, 0, 69, 1358, 1),
+('Bronze Long Sword', 'A razor sharp sword', '', 81, 40, 0, 0, 1, 16737817, 1, 0, 0, 70, 1359, 1),
+('Iron Long Sword', 'A razor sharp sword', '', 81, 140, 0, 0, 1, 15654365, 1, 0, 0, 71, 1360, 1),
+('Steel Long Sword', 'A razor sharp sword', '', 81, 600, 0, 0, 1, 15658734, 1, 0, 0, 72, 1361, 1),
+('Mithril Long Sword', 'A razor sharp sword', '', 81, 1600, 0, 0, 1, 10072780, 1, 0, 0, 73, 1362, 1),
+('Adamantite Long Sword', 'A razor sharp sword', '', 81, 3400, 0, 0, 1, 11717785, 1, 0, 0, 74, 1363, 1),
+('Rune Long Sword', 'A razor sharp sword', '', 81, 32000, 0, 0, 1, 65535, 1, 0, 0, 75, 1364, 1),
+('Bronze 2-Handed Sword', 'A very large sword', '', 82, 150, 0, 0, 1, 16737817, 1, 0, 0, 76, 1365, 1),
+('Iron 2-Handed Sword', 'A very large sword', '', 82, 380, 0, 0, 1, 15654365, 1, 0, 0, 77, 1366, 1),
+('Steel 2-Handed Sword', 'A very large sword', '', 82, 1000, 0, 0, 1, 15658734, 1, 0, 0, 78, 1367, 1),
+('Mithril 2-Handed Sword', 'A very large sword', '', 82, 4200, 0, 0, 1, 10072780, 1, 0, 0, 79, 1368, 1),
+('Adamantite 2-Handed Sword', 'A very large sword', '', 82, 6400, 0, 0, 1, 11717785, 1, 0, 0, 80, 1369, 1),
+('Rune 2-Handed Sword', 'A very large sword', '', 82, 64000, 0, 0, 1, 65535, 1, 0, 0, 81, 1370, 1),
+('Bronze Scimitar', 'A vicious curved sword', '', 83, 32, 0, 0, 1, 16737817, 1, 0, 0, 82, 1371, 1),
+('Iron Scimitar', 'A vicious curved sword', '', 83, 112, 0, 0, 1, 15654365, 1, 0, 0, 83, 1372, 1),
+('Steel Scimitar', 'A vicious curved sword', '', 83, 600, 0, 0, 1, 15658734, 1, 0, 0, 84, 1373, 1),
+('Mithril Scimitar', 'A vicious curved sword', '', 83, 1600, 0, 0, 1, 10072780, 1, 0, 0, 85, 1374, 1),
+('Adamantite Scimitar', 'A vicious curved sword', '', 83, 3000, 0, 0, 1, 11717785, 1, 0, 0, 86, 1375, 1),
+('bronze Axe', 'A woodcutters axe', '', 12, 16, 0, 0, 1, 16737817, 1, 0, 0, 87, 1376, 1),
+('Steel Axe', 'A woodcutters axe', '', 12, 600, 0, 0, 1, 15658734, 1, 0, 0, 88, 1377, 1),
+('Iron Battle Axe', 'A vicious looking axe', '', 84, 182, 0, 0, 1, 15654365, 1, 0, 0, 89, 1378, 1),
+('Steel Battle Axe', 'A vicious looking axe', '', 84, 650, 0, 0, 1, 15658734, 1, 0, 0, 90, 1379, 1),
+('Mithril Battle Axe', 'A vicious looking axe', '', 84, 2400, 0, 0, 1, 10072780, 1, 0, 0, 91, 1380, 1),
+('Adamantite Battle Axe', 'A vicious looking axe', '', 84, 5200, 0, 0, 1, 11717785, 1, 0, 0, 92, 1381, 1),
+('Rune Battle Axe', 'A vicious looking axe', '', 84, 41600, 0, 0, 1, 65535, 1, 0, 0, 93, 1382, 1),
+('Bronze Mace', 'A spiky mace', '', 0, 18, 0, 0, 1, 16737817, 1, 0, 0, 94, 1383, 1),
+('Steel Mace', 'A spiky mace', '', 0, 225, 0, 0, 1, 15658734, 1, 0, 0, 95, 1384, 1),
+('Mithril Mace', 'A spiky mace', '', 0, 585, 0, 0, 1, 10072780, 1, 0, 0, 96, 1385, 1),
+('Adamantite Mace', 'A spiky mace', '', 0, 1440, 0, 0, 1, 11717785, 1, 0, 0, 97, 1386, 1),
+('Rune Mace', 'A spiky mace', '', 0, 14400, 0, 0, 1, 65535, 1, 0, 0, 98, 1387, 1),
+('Brass Key', 'I wonder what this is the key to', '', 25, 1, 0, 0, 0, 16750848, 0, 0, 0, 99, 1388, 1),
+('Staff', 'It\'s a slightly magical stick', '', 85, 15, 0, 0, 1, 10072780, 1, 0, 0, 100, 1389, 1),
+('Staff of Air', 'A Magical staff', '', 91, 1500, 0, 0, 1, 65535, 1, 0, 0, 101, 1390, 1),
+('Staff of Water', 'A Magical staff', '', 91, 1500, 0, 0, 1, 255, 1, 0, 0, 102, 1391, 1),
+('Staff of Earth', 'A Magical staff', '', 91, 1500, 0, 0, 1, 7353600, 1, 0, 0, 103, 1392, 1),
+('Medium Bronze Helmet', 'A medium sized helmet', '', 5, 24, 0, 0, 1, 16737817, 1, 0, 0, 104, 1393, 1),
+('Medium Steel Helmet', 'A medium sized helmet', '', 5, 300, 0, 0, 1, 15658734, 1, 0, 0, 105, 1394, 1),
+('Medium Mithril Helmet', 'A medium sized helmet', '', 5, 780, 0, 0, 1, 10072780, 1, 0, 0, 106, 1395, 1),
+('Medium Adamantite Helmet', 'A medium sized helmet', '', 5, 1920, 0, 0, 1, 11717785, 1, 0, 0, 107, 1396, 1),
+('Large Bronze Helmet', 'A full face helmet', '', 6, 44, 0, 0, 1, 16737817, 1, 0, 0, 108, 1397, 1),
+('Large Steel Helmet', 'A full face helmet', '', 6, 550, 0, 0, 1, 15658734, 1, 0, 0, 109, 1398, 1),
+('Large Mithril Helmet', 'A full face helmet', '', 6, 1430, 0, 0, 1, 10072780, 1, 0, 0, 110, 1399, 1),
+('Large Adamantite Helmet', 'A full face helmet', '', 6, 3520, 0, 0, 1, 11717785, 1, 0, 0, 111, 1400, 1),
+('Large Rune Helmet', 'A full face helmet', '', 6, 35200, 0, 0, 1, 65535, 1, 0, 0, 112, 1401, 1),
+('Bronze Chain Mail Body', 'A series of connected metal rings', '', 7, 60, 0, 0, 1, 16737817, 1, 0, 0, 113, 1402, 1),
+('Steel Chain Mail Body', 'A series of connected metal rings', '', 7, 750, 0, 0, 1, 15658734, 1, 0, 0, 114, 1403, 1),
+('Mithril Chain Mail Body', 'A series of connected metal rings', '', 7, 1950, 0, 0, 1, 10072780, 1, 0, 0, 115, 1404, 1),
+('Adamantite Chain Mail Body', 'A series of connected metal rings', '', 7, 4800, 0, 0, 1, 11717785, 1, 0, 0, 116, 1405, 1),
+('Bronze Plate Mail Body', 'Provides excellent protection', '', 8, 160, 0, 0, 1, 16737817, 1, 0, 0, 117, 1406, 1),
+('Steel Plate Mail Body', 'Provides excellent protection', '', 8, 2000, 0, 0, 1, 15658734, 1, 0, 0, 118, 1407, 1),
+('Mithril Plate Mail Body', 'Provides excellent protection', '', 8, 5200, 0, 0, 1, 10072780, 1, 0, 0, 119, 1408, 1),
+('Adamantite Plate Mail Body', 'Provides excellent protection', '', 8, 12800, 0, 0, 1, 11717785, 1, 0, 0, 120, 1409, 1),
+('Steel Plate Mail Legs', 'These look pretty heavy', '', 9, 1000, 0, 0, 1, 15658734, 1, 0, 0, 121, 1410, 1),
+('Mithril Plate Mail Legs', 'These look pretty heavy', '', 9, 2600, 0, 0, 1, 10072780, 1, 0, 0, 122, 1411, 1),
+('Adamantite Plate Mail Legs', 'These look pretty heavy', '', 9, 6400, 0, 0, 1, 11717785, 1, 0, 0, 123, 1412, 1),
+('Bronze Square Shield', 'A medium metal shield', '', 3, 48, 0, 0, 1, 16737817, 1, 0, 0, 124, 1413, 1),
+('Steel Square Shield', 'A medium metal shield', '', 3, 600, 0, 0, 1, 15658734, 1, 0, 0, 125, 1414, 1),
+('Mithril Square Shield', 'A medium metal shield', '', 3, 1560, 0, 0, 1, 10072780, 1, 0, 0, 126, 1415, 1),
+('Adamantite Square Shield', 'A medium metal shield', '', 3, 3840, 0, 0, 1, 11717785, 1, 0, 0, 127, 1416, 1),
+('Bronze Kite Shield', 'A large metal shield', '', 2, 68, 0, 0, 1, 16737817, 1, 0, 0, 128, 1417, 1),
+('Steel Kite Shield', 'A large metal shield', '', 2, 850, 0, 0, 1, 15658734, 1, 0, 0, 129, 1418, 1),
+('Mithril Kite Shield', 'A large metal shield', '', 2, 2210, 0, 0, 1, 10072780, 1, 0, 0, 130, 1419, 1),
+('Adamantite Kite Shield', 'A large metal shield', '', 2, 5440, 0, 0, 1, 11717785, 1, 0, 0, 131, 1420, 1),
+('Cooked Meat', 'Mmm this looks tasty', 'Eat', 60, 4, 0, 0, 0, 13395507, 0, 0, 0, 132, 1421, 1),
+('Raw Chicken', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 133, 1422, 1),
+('Burnt Meat', 'Oh dear', '', 60, 1, 0, 0, 0, 5000268, 0, 0, 0, 134, 1423, 1),
+('Pot', 'This pot is empty', '', 61, 1, 0, 0, 0, 16748885, 0, 0, 0, 135, 1424, 1),
+('Flour', 'There is flour in this pot', '', 62, 10, 0, 0, 0, 0, 0, 0, 0, 136, 1425, 1),
+('Bread Dough', 'Some uncooked dough', '', 63, 1, 0, 0, 0, 0, 0, 0, 0, 137, 1426, 1),
+('Bread', 'Nice crispy bread', 'Eat', 64, 12, 0, 0, 0, 16739379, 0, 0, 0, 138, 1427, 1),
+('Burnt Bread', 'This bread is ruined!', '', 64, 1, 0, 0, 0, 5000268, 0, 0, 0, 139, 1428, 1),
+('Jug', 'This jug is empty', '', 65, 1, 0, 0, 0, 65856, 0, 0, 0, 140, 1429, 1),
+('Water', 'It\'s full of water', '', 65, 1, 0, 0, 0, 12632319, 0, 0, 0, 141, 1430, 1),
+('Wine', 'It\'s full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 0, 142, 1431, 1),
+('Grapes', 'Good grapes for wine making', '', 21, 1, 0, 0, 0, 9386967, 0, 0, 0, 143, 1432, 1),
+('Shears', 'For shearing sheep', '', 66, 1, 0, 0, 0, 0, 0, 0, 0, 144, 1433, 1),
+('Wool', 'I think this came from a sheep', '', 67, 1, 0, 0, 0, 0, 0, 0, 0, 145, 1434, 1),
+('Fur', 'This would make warm clothing', '', 68, 10, 0, 0, 0, 12288534, 0, 0, 0, 146, 1435, 1),
+('Cow Hide', 'I should take this to the tannery', '', 69, 1, 0, 0, 0, 0, 0, 0, 0, 147, 1436, 1),
+('Leather', 'It\'s a piece of leather', '', 69, 1, 0, 0, 0, 16757299, 0, 0, 0, 148, 1437, 1),
+('Clay', 'Some hard dry clay', '', 70, 1, 0, 0, 0, 15046937, 0, 0, 0, 149, 1438, 1),
+('Copper Ore', 'this needs refining', '', 70, 3, 0, 0, 0, 16737817, 0, 0, 0, 150, 1439, 1),
+('Iron Ore', 'this needs refining', '', 70, 17, 0, 0, 0, 11704729, 0, 0, 0, 151, 1440, 1),
+('Gold', 'this needs refining', '', 73, 150, 0, 0, 0, 16763980, 0, 0, 0, 152, 1441, 1),
+('Mithril Ore', 'this needs refining', '', 70, 162, 0, 0, 0, 10072780, 0, 0, 0, 153, 1442, 1),
+('Adamantite Ore', 'this needs refining', '', 70, 400, 0, 0, 0, 11717785, 0, 0, 0, 154, 1443, 1),
+('Coal', 'hmm a non-renewable energy source!', '', 71, 45, 0, 0, 0, 0, 0, 0, 0, 155, 1444, 1),
+('Bronze Pickaxe', 'Used for mining', '', 72, 1, 0, 0, 0, 16737817, 0, 0, 0, 156, 1445, 1),
+('Uncut Diamond', 'this would be worth more cut', '', 73, 200, 0, 0, 0, 0, 0, 0, 0, 157, 1446, 1),
+('Uncut Ruby', 'this would be worth more cut', '', 73, 100, 0, 0, 0, 16724736, 0, 0, 0, 158, 1447, 1),
+('Uncut Emerald', 'this would be worth more cut', '', 73, 50, 0, 0, 0, 3394611, 0, 0, 0, 159, 1448, 1),
+('Uncut Sapphire', 'this would be worth more cut', '', 73, 25, 0, 0, 0, 19711, 0, 0, 0, 160, 1449, 1),
+('Diamond', 'this looks valuable', '', 74, 2000, 0, 0, 0, 0, 0, 0, 0, 161, 1450, 1),
+('Ruby', 'this looks valuable', '', 74, 1000, 0, 0, 0, 16724736, 0, 0, 0, 162, 1451, 1),
+('Emerald', 'this looks valuable', '', 74, 500, 0, 0, 0, 3394611, 0, 0, 0, 163, 1452, 1),
+('Sapphire', 'this looks valuable', '', 74, 250, 0, 0, 0, 19711, 0, 0, 0, 164, 1453, 1),
+('Muddy Guam', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 165, 1454, 1),
+('Tinderbox', 'useful for lighting a fire', '', 76, 1, 0, 0, 0, 0, 0, 0, 0, 166, 1455, 1),
+('Chisel', 'good for detailed crafting', '', 77, 1, 0, 0, 0, 0, 0, 0, 0, 167, 1456, 1),
+('Hammer', 'good for hitting things!', '', 78, 1, 0, 0, 0, 0, 0, 0, 0, 168, 1457, 1),
+('Bronze Bar', 'it\'s a bar of bronze', '', 79, 8, 0, 0, 0, 16737817, 0, 0, 0, 169, 1458, 1),
+('Iron Bar', 'it\'s a bar of iron', '', 79, 28, 0, 0, 0, 15654365, 0, 0, 0, 170, 1459, 1),
+('Steel Bar', 'it\'s a bar of steel', '', 79, 100, 0, 0, 0, 15658734, 0, 0, 0, 171, 1460, 1),
+('Gold Bar', 'this looks valuable', '', 79, 300, 0, 0, 0, 16763980, 0, 0, 0, 172, 1461, 1),
+('Mithril Bar', 'it\'s a bar of mithril', '', 79, 300, 0, 0, 0, 10072780, 0, 0, 0, 173, 1462, 1),
+('Adamantite Bar', 'it\'s a bar of adamantite', '', 79, 640, 0, 0, 0, 11717785, 0, 0, 0, 174, 1463, 1),
+('Pressure Gauge', 'It looks like part of a machine', '', 50, 1, 0, 0, 0, 0, 0, 0, 1, 175, 1464, 0),
+('Fish Food', 'Keeps  your pet fish strong and healthy', '', 51, 1, 0, 0, 0, 0, 0, 0, 0, 176, 1465, 1),
+('Poison', 'This stuff looks nasty', '', 52, 1, 0, 0, 0, 0, 0, 0, 0, 177, 1466, 1),
+('Poisoned Fish Food', 'Doesn\'t seem very nice to the poor fishes', '', 51, 1, 0, 0, 0, 0, 0, 0, 1, 178, 1467, 0),
+('Spinach Roll', 'A home made spinach thing', '', 53, 1, 0, 0, 0, 0, 0, 0, 0, 179, 1468, 1),
+('Bad Wine', 'Oh dear', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 0, 180, 1469, 1),
+('Ashes', 'A heap of ashes', '', 23, 2, 0, 0, 0, 11184810, 0, 0, 0, 181, 1470, 1),
+('Apron', 'A mostly clean apron', '', 58, 2, 0, 0, 1, 0, 0, 0, 0, 182, 1471, 1),
+('Cape', 'A bright red cape', '', 59, 2, 0, 0, 1, 16711680, 0, 0, 0, 183, 1472, 1),
+('Wizards Robe', 'I can do magic better in this', '', 87, 5, 0, 0, 1, 255, 0, 0, 0, 184, 1473, 1),
+('Wizardshat', 'A silly pointed hat', '', 86, 5, 0, 0, 1, 255, 0, 0, 0, 185, 1474, 1),
+('Brass Necklace', 'I\'d prefer a gold one', '', 438, 30, 0, 0, 1, 0, 0, 0, 0, 186, 1475, 1),
+('Skirt', 'A ladies skirt', '', 88, 5, 0, 0, 1, 255, 0, 0, 0, 187, 1476, 1),
+('Longbow', 'A Nice sturdy bow', '', 54, 80, 0, 0, 1, 65280, 1, 0, 0, 188, 1477, 1),
+('Shortbow', 'Short but effective', '', 55, 50, 0, 0, 1, 65280, 1, 0, 0, 189, 1478, 1),
+('Crossbow Bolts', 'Good if you have a crossbow!', '', 56, 3, 0, 1, 0, 0, 1, 0, 0, 190, 0, 1),
+('Apron', 'this will help keep my clothes clean', '', 58, 2, 0, 0, 1, 9789488, 0, 0, 0, 191, 1479, 1),
+('Chef\'s Hat', 'What a silly hat', '', 89, 2, 0, 0, 1, 0, 0, 0, 0, 192, 1480, 1),
+('Beer', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 193, 1481, 1),
+('Skirt', 'A ladies skirt', '', 88, 5, 0, 0, 1, 16036851, 0, 0, 0, 194, 1482, 1),
+('Skirt', 'A ladies skirt', '', 88, 5, 0, 0, 1, 4210752, 0, 0, 0, 195, 1483, 1),
+('Black Plate Mail Body', 'Provides excellent protection', '', 8, 3840, 0, 0, 1, 3158064, 1, 0, 0, 196, 1484, 1),
+('Staff of Fire', 'A Magical staff', '', 91, 1500, 0, 0, 1, 16711680, 1, 0, 0, 197, 1485, 1),
+('Magic Staff', 'A Magical staff', '', 91, 200, 0, 0, 1, 16777215, 1, 0, 0, 198, 1486, 1),
+('Wizardshat', 'A silly pointed hat', '', 86, 5, 0, 0, 1, 4210752, 0, 0, 0, 199, 1487, 1),
+('Silk', 'It\'s a sheet of silk', '', 92, 0, 0, 0, 0, 16724172, 0, 0, 0, 200, 1488, 1),
+('Flier', 'Get your axes from Bob\'s axes', '', 29, 1, 0, 0, 0, 0, 0, 0, 0, 201, 1489, 1),
+('Tin Ore', 'this needs refining', '', 70, 3, 0, 0, 0, 13810105, 0, 0, 0, 202, 1490, 1),
+('Mithril Axe', 'A powerful axe', '', 12, 520, 0, 0, 1, 10072780, 1, 0, 0, 203, 1491, 1),
+('Adamantite Axe', 'A powerful axe', '', 12, 1280, 0, 0, 1, 11717785, 1, 0, 0, 204, 1492, 1),
+('Bronze Battle Axe', 'A vicious looking axe', '', 84, 52, 0, 0, 1, 16737817, 1, 0, 0, 205, 1493, 1),
+('Bronze Plate Mail Legs', 'These look pretty heavy', '', 9, 80, 0, 0, 1, 16737817, 1, 0, 0, 206, 1494, 1),
+('Ball of Wool', 'Spun from sheeps wool', '', 93, 2, 0, 0, 0, 0, 0, 0, 0, 207, 1495, 1),
+('Oil Can', 'Its pretty full', '', 94, 3, 0, 0, 0, 0, 0, 0, 1, 208, 1496, 0),
+('Cape', 'A warm black cape', '', 59, 7, 0, 0, 1, 2434341, 0, 0, 0, 209, 1497, 1),
+('Kebab', 'A meaty Kebab', 'eat', 95, 3, 0, 0, 0, 0, 0, 0, 0, 210, 1498, 1),
+('Spade', 'A fairly small spade', 'Dig', 96, 3, 0, 0, 0, 0, 0, 0, 0, 211, 1499, 1),
+('Closet Key', 'A slightly smelly key', '', 25, 1, 0, 0, 0, 16772608, 0, 0, 0, 212, 1500, 0),
+('Rubber Tube', 'Its slightly charred', '', 97, 3, 0, 0, 0, 0, 0, 0, 1, 213, 1501, 0),
+('Bronze Plated Skirt', 'Designer leg protection', '', 88, 80, 0, 0, 1, 8400921, 1, 0, 0, 214, 1502, 1),
+('Iron Plated Skirt', 'Designer leg protection', '', 88, 280, 0, 0, 1, 7824998, 1, 0, 0, 215, 1503, 1),
+('Black Robe', 'I can do magic better in this', '', 87, 500, 0, 0, 1, 4210752, 0, 0, 0, 216, 1504, 1),
+('Stake', 'A very pointy stick', '', 98, 8, 0, 0, 1, 16737817, 0, 0, 1, 217, 1505, 0),
+('Garlic', 'A clove of garlic', '', 99, 3, 0, 0, 0, 0, 0, 0, 0, 218, 1506, 1),
+('Red Spiders Eggs', 'eewww', '', 100, 7, 0, 0, 0, 0, 0, 0, 0, 219, 1507, 1),
+('Limpwurt Root', 'the root of a limpwurt plant', '', 101, 7, 0, 0, 0, 0, 0, 0, 0, 220, 1508, 1),
+('Strength Potion', '4 doses of strength potion', 'Drink', 48, 1000, 0, 0, 0, 15658544, 0, 0, 0, 221, 1509, 1),
+('Strength Potion', '3 doses of strength potion', 'Drink', 48, 10, 0, 0, 0, 15658544, 0, 0, 0, 222, 1510, 1),
+('Strength Potion', '2 doses of strength potion', 'Drink', 436, 5, 0, 0, 0, 15658544, 0, 0, 0, 223, 1511, 1),
+('Strength Potion', '1 dose of strength potion', 'Drink', 437, 0, 0, 0, 0, 15658544, 0, 0, 0, 224, 1512, 1),
+('Steel Plated Skirt', 'designer leg protection', '', 88, 1000, 0, 0, 1, 7829367, 1, 0, 0, 225, 1513, 1),
+('Mithril Plated Skirt', 'Designer Leg protection', '', 88, 2600, 0, 0, 1, 2245205, 1, 0, 0, 226, 1514, 1),
+('Adamantite Plated Skirt', 'Designer leg protection', '', 88, 6400, 0, 0, 1, 4347170, 1, 0, 0, 227, 1515, 1),
+('Cabbage', 'Yuck I don\'t like cabbage', 'Eat', 18, 1, 0, 0, 0, 0, 0, 0, 0, 228, 1516, 1),
+('Cape', 'A thick Blue Cape', '', 59, 32, 0, 0, 1, 4210926, 0, 0, 0, 229, 1517, 1),
+('Large Black Helmet', 'A full face helmet', '', 6, 1056, 0, 0, 1, 4210752, 1, 0, 0, 230, 1518, 1),
+('Red Bead', 'A small round red bead', '', 102, 4, 0, 0, 0, 16711680, 0, 0, 0, 231, 1519, 1),
+('Yellow Bead', 'A small round yellow bead', '', 102, 4, 0, 0, 0, 16776960, 0, 0, 0, 232, 1520, 1),
+('Black Bead', 'A small round black bead', '', 102, 4, 0, 0, 0, 4210752, 0, 0, 0, 233, 1521, 1),
+('White Bead', 'A small round white bead', '', 102, 4, 0, 0, 0, 16777215, 0, 0, 0, 234, 1522, 1),
+('Amulet of Accuracy', 'It increases my aim', '', 24, 100, 0, 0, 1, 0, 0, 0, 0, 235, 1523, 1),
+('Redberries', 'Very bright red berries', '', 21, 3, 0, 0, 0, 16711680, 0, 0, 0, 236, 1524, 1),
+('Rope', 'A Coil of rope', '', 103, 18, 0, 0, 0, 0, 0, 0, 0, 237, 1525, 1),
+('Reddye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 16711680, 0, 0, 0, 238, 1526, 1),
+('Yellowdye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 16776960, 0, 0, 0, 239, 1527, 1),
+('Paste', 'A bottle off skin coloured paste', '', 104, 5, 0, 0, 0, 15523008, 0, 0, 1, 240, 1528, 0),
+('Onion', 'A strong smelling onion', '', 99, 3, 0, 0, 0, 15641190, 0, 0, 0, 241, 1529, 1),
+('Bronze Key', 'A heavy key', '', 25, 1, 0, 0, 0, 16737817, 0, 0, 1, 242, 1530, 0),
+('Soft Clay', 'Clay that\'s ready to be used', '', 105, 2, 0, 0, 0, 0, 0, 0, 0, 243, 1531, 1),
+('Wig', 'A blonde wig', '', 106, 2, 0, 0, 0, 16763992, 0, 0, 1, 244, 1532, 0),
+('Wig', 'A wig made from wool', '', 106, 2, 0, 0, 0, 0, 0, 0, 1, 245, 1533, 0),
+('Half Full Wine Jug', 'It\'s half full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 0, 246, 1534, 1),
+('Keyprint', 'An imprint of a key in a lump of clay', '', 107, 2, 0, 0, 0, 0, 0, 0, 1, 247, 1535, 0),
+('Black Plate Mail Legs', 'These look pretty heavy', '', 9, 1920, 0, 0, 1, 4210752, 1, 0, 0, 248, 1536, 1),
+('Banana', 'Mmm this looks tasty', 'Eat', 108, 2, 0, 0, 0, 0, 0, 0, 0, 249, 1537, 1),
+('Pastry Dough', 'Some uncooked dough', '', 63, 1, 0, 0, 0, 0, 0, 0, 0, 250, 1538, 1),
+('Pie Dish', 'For making pies in', '', 110, 3, 0, 0, 0, 15634261, 0, 0, 0, 251, 1539, 1),
+('Cooking Apple', 'I wonder what i can make with this', '', 109, 1, 0, 0, 0, 0, 0, 0, 0, 252, 1540, 1),
+('Pie Shell', 'I need to find a filling for this pie', '', 111, 1, 0, 0, 0, 0, 0, 0, 0, 253, 1541, 1),
+('Uncooked Apple Pie', 'I need to cook this first', '', 112, 1, 0, 0, 0, 16633518, 0, 0, 0, 254, 1542, 1),
+('Uncooked Meat Pie', 'I need to cook this first', '', 112, 1, 0, 0, 0, 16633518, 0, 0, 0, 255, 1543, 1),
+('Uncooked Redberry Pie', 'I need to cook this first', '', 112, 1, 0, 0, 0, 16633518, 0, 0, 0, 256, 1544, 1),
+('Apple Pie', 'Mmm Apple pie', 'eat', 112, 30, 0, 0, 0, 11168819, 0, 0, 0, 257, 1545, 1),
+('Redberry Pie', 'Looks tasty', 'eat', 112, 12, 0, 0, 0, 11168819, 0, 0, 0, 258, 1546, 1),
+('Meat Pie', 'Mighty and meaty', 'eat', 112, 15, 0, 0, 0, 11168819, 0, 0, 0, 259, 1547, 1),
+('Burntpie', 'Oops', 'empty dish', 112, 1, 0, 0, 0, 5000268, 0, 0, 0, 260, 1548, 1),
+('Half a Meat Pie', 'Mighty and meaty', 'eat', 113, 10, 0, 0, 0, 11168819, 0, 0, 0, 261, 1549, 1),
+('Half a Redberry Pie', 'Looks tasty', 'eat', 113, 4, 0, 0, 0, 11168819, 0, 0, 0, 262, 1550, 1),
+('Half an Apple Pie', 'Mmm Apple pie', 'eat', 113, 5, 0, 0, 0, 11168819, 0, 0, 0, 263, 1551, 1),
+('Portrait', 'It\'s a picture of a knight', '', 114, 3, 0, 0, 0, 0, 0, 0, 1, 264, 1552, 0),
+('Faladian Knight\'s Sword', 'A razor sharp sword', '', 115, 200, 0, 0, 1, 15654365, 1, 0, 1, 265, 1553, 0),
+('Blurite Ore', 'What Strange stuff', '', 70, 3, 0, 0, 0, 5263598, 0, 0, 1, 266, 1554, 0),
+('Asgarnian Ale', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 267, 1555, 1),
+('Wizard\'s Mind Bomb', 'It\'s got strange bubbles in it', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 268, 1556, 1),
+('Dwarven Stout', 'A Pint of thick dark beer', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 269, 1557, 1),
+('Eye of Newt', 'It seems to be looking at me', '', 116, 3, 0, 0, 0, 0, 0, 0, 0, 270, 1558, 1),
+('Rat\'s Tail', 'A bit of rat', '', 117, 3, 0, 0, 0, 0, 0, 0, 1, 271, 1559, 0),
+('Bluedye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 255, 0, 0, 0, 272, 1560, 1),
+('Goblin Armour', 'Armour Designed to fit Goblins', '', 118, 49, 0, 0, 0, 65535, 0, 0, 0, 273, 1561, 1),
+('Goblin Armour', 'Armour Designed to fit Goblins', '', 118, 49, 0, 0, 0, 16750912, 0, 0, 0, 274, 1562, 0),
+('Goblin Armour', 'Armour Designed to fit Goblins', '', 118, 49, 0, 0, 0, 255, 0, 0, 0, 275, 1563, 0),
+('Unstrung Longbow', 'I need to find a string for this', '', 119, 60, 0, 0, 0, 65280, 1, 0, 0, 276, 1564, 1),
+('Unstrung Shortbow', 'I need to find a string for this', '', 120, 23, 0, 0, 0, 65280, 1, 0, 0, 277, 1565, 1),
+('Unfired Pie Dish', 'I need to put this in a pottery oven', '', 110, 3, 0, 0, 0, 15632503, 0, 0, 0, 278, 1566, 1),
+('Unfired Pot', 'I need to put this in a pottery oven', '', 61, 1, 0, 0, 0, 15632503, 0, 0, 0, 279, 1567, 1),
+('Arrow Shafts', 'I need to attach feathers to these', '', 121, 1, 0, 1, 0, 0, 1, 1, 0, 280, 0, 1),
+('Woad Leaf', 'slightly bluish leaves', '', 122, 1, 0, 1, 0, 0, 0, 0, 0, 281, 0, 1),
+('Orangedye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 16755200, 0, 0, 0, 282, 1568, 1),
+('Gold Ring', 'A valuable ring', '', 123, 350, 0, 0, 0, 16763980, 0, 0, 0, 283, 1569, 1),
+('Sapphire Ring', 'A valuable ring', '', 123, 900, 0, 0, 0, 19711, 0, 0, 0, 284, 1570, 1),
+('Emerald Ring', 'A valuable ring', '', 123, 1275, 0, 0, 0, 3394611, 0, 0, 0, 285, 1571, 1),
+('Ruby Ring', 'A valuable ring', '', 123, 2025, 0, 0, 0, 16724736, 0, 0, 0, 286, 1572, 1),
+('Diamond Ring', 'A valuable ring', '', 123, 3525, 0, 0, 0, 0, 0, 0, 0, 287, 1573, 1),
+('Gold Necklace', 'I wonder if this is valuable', '', 57, 450, 0, 0, 1, 16763980, 0, 0, 0, 288, 1574, 1),
+('Sapphire Necklace', 'I wonder if this is valuable', '', 57, 1050, 0, 0, 1, 19711, 0, 0, 0, 289, 1575, 1),
+('Emerald Necklace', 'I wonder if this is valuable', '', 57, 1425, 0, 0, 1, 3394611, 0, 0, 0, 290, 1576, 1),
+('Ruby Necklace', 'I wonder if this is valuable', '', 57, 2175, 0, 0, 1, 16724736, 0, 0, 0, 291, 1577, 1),
+('Diamond Necklace', 'I wonder if this is valuable', '', 57, 3675, 0, 0, 1, 0, 0, 0, 0, 292, 1578, 1),
+('Ring Mould', 'Used to make gold rings', '', 127, 5, 0, 0, 0, 0, 0, 0, 0, 293, 1579, 1),
+('Amulet Mould', 'Used to make gold amulets', '', 128, 5, 0, 0, 0, 0, 0, 0, 0, 294, 1580, 1),
+('Necklace mould', 'Used to make gold necklaces', '', 129, 5, 0, 0, 0, 0, 0, 0, 0, 295, 1581, 1),
+('Gold Amulet', 'It needs a string so I can wear it', '', 126, 350, 0, 0, 0, 16763980, 0, 0, 0, 296, 1582, 1),
+('Sapphire Amulet', 'It needs a string so I can wear it', '', 126, 900, 0, 0, 0, 19711, 0, 0, 0, 297, 1583, 1),
+('Emerald Amulet', 'It needs a string so I can wear it', '', 126, 1275, 0, 0, 0, 3394611, 0, 0, 0, 298, 1584, 1),
+('Ruby Amulet', 'It needs a string so I can make wear it', '', 126, 2025, 0, 0, 0, 16724736, 0, 0, 0, 299, 1585, 1),
+('Diamond Amulet', 'It needs a string so I can wear it', '', 126, 3525, 0, 0, 0, 0, 0, 0, 0, 300, 1586, 1),
+('Gold Amulet', 'I wonder if I can get this enchanted', '', 125, 350, 0, 0, 1, 16763980, 0, 0, 0, 301, 1587, 1),
+('Sapphire Amulet', 'I wonder if I can get this enchanted', '', 125, 900, 0, 0, 1, 19711, 0, 0, 0, 302, 1588, 1),
+('Emerald Amulet', 'I wonder if I can get this enchanted', '', 125, 1275, 0, 0, 1, 3394611, 0, 0, 0, 303, 1589, 1),
+('Ruby Amulet', 'I wonder if I can get this enchanted', '', 125, 2025, 0, 0, 1, 16724736, 0, 0, 0, 304, 1590, 1),
+('Diamond Amulet', 'I wonder if I can get this enchanted', '', 125, 3525, 0, 0, 1, 0, 0, 0, 0, 305, 1591, 1),
+('Superchisel', 'I wonder if I can get this enchanted', 'twiddle', 126, 3525, 0, 0, 0, 0, 0, 0, 0, 306, 1592, 1),
+('Mace of Zamorak', 'This mace gives me the creeps', '', 0, 4500, 0, 0, 1, 13408690, 1, 0, 0, 307, 1593, 1),
+('Bronze Plate Mail Top', 'Armour designed for females', '', 130, 160, 0, 0, 1, 16737817, 1, 0, 0, 308, 1594, 1),
+('Steel Plate Mail Top', 'Armour designed for females', '', 130, 2000, 0, 0, 1, 15658734, 1, 0, 0, 309, 1595, 1),
+('Mithril Plate Mail Top', 'Armour designed for females', '', 130, 5200, 0, 0, 1, 10072780, 1, 0, 0, 310, 1596, 1),
+('Adamantite Plate Mail Top', 'Armour designed for females', '', 130, 12800, 0, 0, 1, 11717785, 1, 0, 0, 311, 1597, 1),
+('Iron Plate Mail Top', 'Armour designed for females', '', 130, 560, 0, 0, 1, 15654365, 1, 0, 0, 312, 1598, 1),
+('Black Plate Mail Top', 'Armour designed for females', '', 130, 3840, 0, 0, 1, 3158064, 1, 0, 0, 313, 1599, 1),
+('Sapphire Amulet of Magic', 'It improves my magic', '', 125, 900, 0, 0, 1, 19711, 0, 0, 0, 314, 1600, 1),
+('Emerald Amulet of Protection', 'It improves my defense', '', 125, 1275, 0, 0, 1, 3394611, 0, 0, 0, 315, 1601, 1),
+('Ruby Amulet of Strength', 'It improves my damage', '', 125, 5000, 0, 0, 1, 16724736, 0, 0, 0, 316, 1602, 1),
+('Diamond Amulet of Power', 'A powerful amulet', '', 125, 3525, 0, 0, 1, 0, 0, 0, 0, 317, 1603, 1),
+('Karamja Rum', 'A very strong spirit brewed in Karamja', '', 131, 30, 0, 0, 0, 0, 0, 0, 0, 318, 1604, 0),
+('Cheese', 'It\'s got holes in it', 'Eat', 150, 4, 0, 0, 0, 0, 0, 0, 0, 319, 1605, 1),
+('Tomato', 'This would make good ketchup', 'Eat', 151, 4, 0, 0, 0, 0, 0, 0, 0, 320, 1606, 1),
+('Pizza Base', 'I need to add some tomato next', '', 152, 4, 0, 0, 0, 16768184, 0, 0, 0, 321, 1607, 1),
+('Burnt Pizza', 'Oh dear!', '', 152, 1, 0, 0, 0, 4210752, 0, 0, 0, 322, 1608, 1),
+('Incomplete Pizza', 'I need to add some cheese next', '', 153, 10, 0, 0, 0, 0, 0, 0, 0, 323, 1609, 1),
+('Uncooked Pizza', 'This needs cooking', '', 154, 25, 0, 0, 0, 0, 0, 0, 0, 324, 1610, 1),
+('Plain Pizza', 'A cheese and tomato pizza', 'Eat', 154, 40, 0, 0, 0, 0, 0, 0, 0, 325, 1611, 1),
+('Meat Pizza', 'A pizza with bits of meat on it', 'Eat', 155, 50, 0, 0, 0, 16756316, 0, 0, 0, 326, 1612, 1),
+('Anchovie Pizza', 'A Pizza with Anchovies', 'Eat', 155, 60, 0, 0, 0, 11447982, 0, 0, 0, 327, 1613, 1),
+('Half Meat Pizza', 'Half of this pizza has been eaten', 'Eat', 156, 25, 0, 0, 0, 16756316, 0, 0, 0, 328, 1614, 1),
+('Half Anchovie Pizza', 'Half of this pizza has been eaten', 'Eat', 156, 30, 0, 0, 0, 11447982, 0, 0, 0, 329, 1615, 1),
+('Cake', 'A plain sponge cake', 'Eat', 157, 40, 0, 0, 0, 16763289, 0, 0, 0, 330, 1616, 1),
+('Burnt Cake', 'Argh what a mess!', '', 157, 1, 0, 0, 0, 4210752, 0, 0, 0, 331, 1617, 1),
+('Chocolate Cake', 'This looks very tasty!', 'Eat', 157, 70, 0, 0, 0, 16744524, 0, 0, 0, 332, 1618, 1),
+('Partial Cake', 'Someone has eaten a big chunk of this cake', 'Eat', 158, 30, 0, 0, 0, 16763289, 0, 0, 0, 333, 1619, 1),
+('Partial Chocolate Cake', 'Someone has eaten a big chunk of this cake', 'Eat', 158, 50, 0, 0, 0, 16744524, 0, 0, 0, 334, 1620, 1),
+('Slice of Cake', 'I\'d rather have a whole cake!', 'Eat', 159, 10, 0, 0, 0, 16763289, 0, 0, 0, 335, 1621, 1),
+('Chocolate Slice', 'A slice of chocolate cake', 'Eat', 159, 30, 0, 0, 0, 16744524, 0, 0, 0, 336, 1622, 1),
+('Chocolate Bar', 'It\'s a bar of chocolate', 'Eat', 160, 10, 0, 0, 0, 0, 0, 0, 0, 337, 1623, 1),
+('Cake Tin', 'Useful for baking cakes', '', 177, 10, 0, 0, 0, 0, 0, 0, 0, 338, 1624, 1),
+('Uncooked Cake', 'Now all I need to do is cook it', '', 178, 20, 0, 0, 0, 16769248, 0, 0, 0, 339, 1625, 1),
+('Unfired Bowl', 'I need to put this in a pottery oven', '', 161, 2, 0, 0, 0, 15632503, 0, 0, 0, 340, 1626, 1),
+('Bowl', 'Useful for mixing things', '', 161, 4, 0, 0, 0, 16757606, 0, 0, 0, 341, 1627, 1),
+('Bowl of Water', 'It\'s a bowl of water', '', 162, 3, 0, 0, 0, 255, 0, 0, 0, 342, 1628, 1),
+('Incomplete Stew', 'I need to add some meat too', '', 162, 4, 0, 0, 0, 10066355, 0, 0, 0, 343, 1629, 1),
+('Incomplete Stew', 'I need to add some potato too', '', 162, 4, 0, 0, 0, 10066355, 0, 0, 0, 344, 1630, 1),
+('Uncooked Stew', 'I need to cook this', '', 162, 10, 0, 0, 0, 13415270, 0, 0, 0, 345, 1631, 1),
+('Stew', 'It\'s a meat and potato stew', 'Eat', 162, 20, 0, 0, 0, 10046464, 0, 0, 0, 346, 1632, 1),
+('Burnt Stew', 'Eew it\'s horribly burnt', 'Empty', 162, 1, 0, 0, 0, 3158064, 0, 0, 0, 347, 1633, 1),
+('Potato', 'Can be used to make stew', '', 163, 1, 0, 0, 0, 0, 0, 0, 0, 348, 1634, 1),
+('Raw Shrimp', 'I should try cooking this', '', 164, 5, 0, 0, 0, 16752800, 0, 0, 0, 349, 1635, 1),
+('Shrimp', 'Some nicely cooked fish', 'Eat', 164, 5, 0, 0, 0, 16740464, 0, 0, 0, 350, 1636, 1),
+('Raw Anchovies', 'I should try cooking this', '', 164, 15, 0, 0, 0, 10526975, 0, 0, 0, 351, 1637, 1),
+('Anchovies', 'Some nicely cooked fish', 'Eat', 164, 15, 0, 0, 0, 7368959, 0, 0, 0, 352, 1638, 1),
+('Burnt Fish', 'Oops!', '', 164, 1, 0, 0, 0, 4210752, 0, 0, 0, 353, 1639, 1),
+('Raw Sardine', 'I should try cooking this', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 0, 354, 1640, 1),
+('Sardine', 'Some nicely cooked fish', 'Eat', 165, 10, 0, 0, 0, 7405424, 0, 0, 0, 355, 1641, 1),
+('Raw Salmon', 'I should try cooking this', '', 165, 0, 0, 0, 0, 0, 0, 0, 0, 356, 1642, 1),
+('Salmon', 'Some nicely cooked fish', 'Eat', 165, 0, 0, 0, 0, 12619920, 0, 0, 0, 357, 1643, 1),
+('Raw Trout', 'I should try cooking this', '', 165, 0, 0, 0, 0, 16752800, 0, 0, 0, 358, 1644, 1),
+('Trout', 'Some nicely cooked fish', 'Eat', 165, 0, 0, 0, 0, 16740464, 0, 0, 0, 359, 1645, 1),
+('Burnt Fish', 'Oops!', '', 165, 1, 0, 0, 0, 4210752, 0, 0, 0, 360, 1646, 1),
+('Raw Herring', 'I should try cooking this', '', 166, 15, 0, 0, 0, 0, 0, 0, 0, 361, 1647, 1),
+('Herring', 'Some nicely cooked fish', 'Eat', 166, 15, 0, 0, 0, 12619920, 0, 0, 0, 362, 1648, 1),
+('Raw Pike', 'I should try cooking this', '', 166, 25, 0, 0, 0, 10526975, 0, 0, 0, 363, 1649, 1),
+('Pike', 'Some nicely cooked fish', 'Eat', 166, 25, 0, 0, 0, 7368959, 0, 0, 0, 364, 1650, 1),
+('Burnt Fish', 'Oops!', '', 166, 1, 0, 0, 0, 4210752, 0, 0, 0, 365, 1651, 1),
+('Raw Tuna', 'I should try cooking this', '', 167, 0, 0, 0, 0, 0, 0, 0, 0, 366, 1652, 1),
+('Tuna', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 12619920, 0, 0, 0, 367, 1653, 1),
+('Burnt Fish', 'Oops!', '', 167, 1, 0, 0, 0, 4210752, 0, 0, 0, 368, 1654, 1),
+('Raw Swordfish', 'I should try cooking this', '', 168, 0, 0, 0, 0, 16752895, 0, 0, 0, 369, 1655, 1),
+('Swordfish', 'I\'d better be careful eating this!', 'Eat', 168, 250, 0, 0, 0, 12611776, 0, 0, 0, 370, 1656, 1),
+('Burnt Swordfish', 'Oops!', '', 168, 1, 0, 0, 0, 4210752, 0, 0, 0, 371, 1657, 1),
+('Raw Lobster', 'I should try cooking this', '', 169, 0, 0, 0, 0, 16711680, 0, 0, 0, 372, 1658, 1),
+('Lobster', 'This looks tricky to eat', 'Eat', 169, 0, 0, 0, 0, 11558912, 0, 0, 0, 373, 1659, 1),
+('Burnt Lobster', 'Oops!', '', 169, 1, 0, 0, 0, 4210752, 0, 0, 0, 374, 1660, 1),
+('Lobster Pot', 'Useful for catching lobsters', '', 170, 20, 0, 0, 0, 0, 0, 0, 0, 375, 1661, 1),
+('Net', 'Useful for catching small fish', '', 171, 5, 0, 0, 0, 0, 0, 0, 0, 376, 1662, 1),
+('Fishing Rod', 'Useful for catching sardine or herring', '', 172, 5, 0, 0, 0, 0, 0, 0, 0, 377, 1663, 1),
+('Fly Fishing Rod', 'Useful for catching salmon or trout', '', 173, 5, 0, 0, 0, 0, 0, 0, 0, 378, 1664, 1),
+('Harpoon', 'Useful for catching really big fish', '', 174, 5, 0, 0, 0, 0, 0, 0, 0, 379, 1665, 1),
+('Fishing Bait', 'For use with a fishing rod', '', 175, 3, 0, 1, 0, 0, 0, 0, 0, 380, 0, 1),
+('Feather', 'Used for fly-fishing', '', 176, 2, 0, 1, 0, 0, 0, 0, 0, 381, 0, 1),
+('Chest Key', 'A key to One eyed Hector\'s chest', '', 25, 1, 0, 0, 0, 11206485, 0, 0, 1, 382, 1666, 0),
+('Silver', 'this needs refining', '', 134, 75, 0, 0, 0, 0, 0, 0, 0, 383, 1667, 1),
+('Silver Bar', 'this looks valuable', '', 79, 150, 0, 0, 0, 0, 0, 0, 0, 384, 1668, 1),
+('Holy Symbol of Saradomin', 'This improves my prayer', '', 44, 300, 0, 0, 1, 0, 0, 0, 0, 385, 1669, 1),
+('Holy Symbol Mould', 'Used to make Holy Symbols', '', 132, 5, 0, 0, 0, 0, 0, 0, 0, 386, 1670, 1),
+('Disk of Returning', 'Used to get out of Thordur\'s blackhole', 'spin', 133, 12, 0, 0, 0, 0, 0, 0, 0, 387, 1671, 1),
+('Monks Robe', 'I feel closer to the God\'s when I am wearing this', '', 87, 40, 0, 0, 1, 10510400, 0, 0, 0, 388, 1672, 1),
+('Monks Robe', 'Keeps a monk\'s legs nice and warm', '', 88, 30, 0, 0, 1, 10510400, 0, 0, 0, 389, 1673, 1),
+('Red Key', 'A painted key', '', 25, 1, 0, 0, 0, 16711680, 0, 0, 1, 390, 1674, 0),
+('Orange Key', 'A painted key', '', 25, 1, 0, 0, 0, 14394154, 0, 0, 1, 391, 1675, 0),
+('Yellow Key', 'A painted key', '', 25, 1, 0, 0, 0, 16777045, 0, 0, 1, 392, 1676, 0),
+('Blue Key', 'A painted key', '', 25, 1, 0, 0, 0, 255, 0, 0, 1, 393, 1677, 0),
+('Magenta Key', 'A painted key', '', 25, 1, 0, 0, 0, 16711935, 0, 0, 1, 394, 1678, 0),
+('Black Key', 'A painted key', '', 25, 1, 0, 0, 0, 4210752, 0, 0, 1, 395, 1679, 0),
+('Rune Dagger', 'Short but pointy', '', 80, 8000, 0, 0, 1, 65535, 1, 0, 0, 396, 1680, 1),
+('Rune Short Sword', 'A razor sharp sword', '', 1, 20800, 0, 0, 1, 65535, 1, 0, 0, 397, 1681, 1),
+('Rune Scimitar', 'A vicious curved sword', '', 83, 25600, 0, 0, 1, 65535, 1, 0, 0, 398, 1682, 1),
+('Medium Rune Helmet', 'A medium sized helmet', '', 5, 19200, 0, 0, 1, 65535, 1, 0, 0, 399, 1683, 1),
+('Rune Chain Mail Body', 'A series of connected metal rings', '', 7, 50000, 0, 0, 1, 65535, 1, 0, 0, 400, 1684, 1),
+('Rune Plate Mail Body', 'Provides excellent protection', '', 8, 65000, 0, 0, 1, 65535, 1, 0, 0, 401, 1685, 1),
+('Rune Plate Mail Legs', 'These look pretty heavy', '', 9, 64000, 0, 0, 1, 65535, 1, 0, 0, 402, 1686, 1),
+('Rune Square Shield', 'A medium metal shield', '', 3, 38400, 0, 0, 1, 56797, 1, 0, 0, 403, 1687, 1),
+('Rune Kite Shield', 'A large metal shield', '', 2, 54400, 0, 0, 1, 56797, 1, 0, 0, 404, 1688, 1),
+('Rune Axe', 'A powerful axe', '', 12, 12800, 0, 0, 1, 65535, 1, 0, 0, 405, 1689, 1),
+('Rune Skirt', 'Designer leg protection', '', 88, 64000, 0, 0, 1, 26214, 1, 0, 0, 406, 1690, 1),
+('Rune Plate Mail Top', 'Armour designed for females', '', 130, 65000, 0, 0, 1, 65535, 1, 0, 0, 407, 1691, 1),
+('Runite Bar', 'it\'s a bar of runite', '', 79, 5000, 0, 0, 0, 56797, 0, 0, 0, 408, 1692, 1),
+('Runite Ore', 'this needs refining', '', 70, 3200, 0, 0, 0, 56797, 0, 0, 0, 409, 1693, 1),
+('Plank', 'This doesn\'t look very useful', '', 135, 1, 0, 0, 0, 0, 0, 0, 0, 410, 1694, 1),
+('Tile', 'This doesn\'t look very useful', '', 136, 1, 0, 0, 0, 0, 0, 0, 0, 411, 1695, 1),
+('Skull', 'A spooky looking skull', '', 26, 1, 0, 0, 0, 0, 0, 0, 1, 412, 1696, 1),
+('Big Bones', 'Ew it\'s a pile of bones', 'Bury', 137, 1, 0, 0, 0, 0, 0, 0, 0, 413, 1697, 1),
+('Muddy key', 'It looks like a key to a chest', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 0, 414, 1698, 1),
+('Map', 'A map showing the way to the Isle of Crandor', '', 138, 1, 0, 0, 0, 0, 0, 0, 1, 415, 1699, 0),
+('Map Piece', 'I need some more of the map for this to be useful', '', 139, 1, 0, 0, 0, 0, 0, 0, 1, 416, 1700, 0),
+('Map Piece', 'I need some more of the map for this to be useful', '', 140, 1, 0, 0, 0, 0, 0, 0, 1, 417, 1701, 0),
+('Map Piece', 'I need some more of the map for this to be useful', '', 141, 1, 0, 0, 0, 0, 0, 0, 1, 418, 1702, 0),
+('Nails', 'Nails made from steel', '', 142, 3, 0, 1, 0, 0, 0, 0, 0, 419, 0, 1),
+('Anti Dragon Breath Shield', 'Helps prevent damage from dragons', '', 143, 20, 0, 0, 1, 0, 1, 0, 0, 420, 1703, 1),
+('Maze Key', 'The key to the entrance of Melzar\'s maze', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 0, 421, 1704, 1),
+('Pumpkin', 'Happy halloween', 'eat', 149, 10, 0, 0, 0, 0, 0, 0, 0, 422, 1705, 1),
+('Black Dagger', 'Short but pointy', '', 80, 240, 0, 0, 1, 3158064, 1, 0, 0, 423, 1706, 1),
+('Black Short Sword', 'A razor sharp sword', '', 1, 624, 0, 0, 1, 3158064, 1, 0, 0, 424, 1707, 1),
+('Black Long Sword', 'A razor sharp sword', '', 81, 960, 0, 0, 1, 3158064, 1, 0, 0, 425, 1708, 1),
+('Black 2-Handed Sword', 'A very large sword', '', 82, 1920, 0, 0, 1, 3158064, 1, 0, 0, 426, 1709, 1),
+('Black Scimitar', 'A vicious curved sword', '', 83, 768, 0, 0, 1, 3158064, 1, 0, 0, 427, 1710, 1),
+('Black Axe', 'A sinister looking axe', '', 12, 384, 0, 0, 1, 3158064, 1, 0, 0, 428, 1711, 1),
+('Black Battle Axe', 'A vicious looking axe', '', 84, 1248, 0, 0, 1, 3158064, 1, 0, 0, 429, 1712, 1),
+('Black Mace', 'A spikey mace', '', 0, 432, 0, 0, 1, 3158064, 1, 0, 0, 430, 1713, 1),
+('Black Chain Mail Body', 'A series of connected metal rings', '', 7, 1440, 0, 0, 1, 3158064, 1, 0, 0, 431, 1714, 1),
+('Black Square Shield', 'A medium metal shield', '', 3, 1152, 0, 0, 1, 3158064, 1, 0, 0, 432, 1715, 1),
+('Black Kite Shield', 'A large metal shield', '', 2, 1632, 0, 0, 1, 3158064, 1, 0, 0, 433, 1716, 1),
+('Black Plated skirt', 'designer leg protection', '', 88, 1920, 0, 0, 1, 1118481, 1, 0, 0, 434, 1717, 1),
+('Muddy Marrentill', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 435, 1718, 1),
+('Muddy Tarromin', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 436, 1719, 1),
+('Muddy Harralander', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 437, 1720, 1),
+('Muddy Ranarr Weed', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 438, 1721, 1),
+('Muddy Irit Leaf', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 439, 1722, 1),
+('Muddy Avantoe', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 440, 1723, 1),
+('Muddy Kwuarm', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 441, 1724, 1),
+('Muddy Cadantine', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 442, 1725, 1),
+('Muddy Dwarf Weed', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 443, 1726, 1),
+('Guam Leaf', 'A herb used in attack potion making', '', 75, 3, 0, 0, 0, 0, 0, 1, 0, 444, 1727, 1),
+('Marrentill', 'A herb used in poison cures', '', 75, 5, 0, 0, 0, 0, 0, 1, 0, 445, 1728, 1),
+('Tarromin', 'A useful herb', '', 75, 11, 0, 0, 0, 0, 0, 1, 0, 446, 1729, 1),
+('Harralander', 'A useful herb', '', 75, 20, 0, 0, 0, 0, 0, 1, 0, 447, 1730, 1),
+('Ranarr Weed', 'A useful herb', '', 75, 25, 0, 0, 0, 0, 0, 1, 0, 448, 1731, 1),
+('Irit Leaf', 'A useful herb', '', 75, 40, 0, 0, 0, 0, 0, 1, 0, 449, 1732, 1),
+('Avantoe', 'A useful herb', '', 75, 48, 0, 0, 0, 0, 0, 1, 0, 450, 1733, 1),
+('Kwuarm', 'A powerful herb', '', 75, 54, 0, 0, 0, 0, 0, 1, 0, 451, 1734, 1),
+('Cadantine', 'A powerful herb', '', 75, 65, 0, 0, 0, 0, 0, 1, 0, 452, 1735, 1),
+('Dwarf Weed', 'A powerful herb', '', 75, 70, 0, 0, 0, 0, 0, 1, 0, 453, 1736, 1),
+('Unfinished Guam Potion', 'I need another ingredient to finish this Guam potion', '', 48, 3, 0, 0, 0, 10073782, 0, 0, 0, 454, 1737, 1),
+('Unfinished Marrentill Potion', 'I need another ingredient to finish this Marrentill potion', '', 48, 5, 0, 0, 0, 11966902, 0, 0, 0, 455, 1738, 1),
+('Unfinished Tarromin Potion', 'I need another ingredient to finish this Tarromin potion', '', 48, 11, 0, 0, 0, 11974297, 0, 0, 0, 456, 1739, 1),
+('Unfinished Harralander Potion', 'I need another ingredient to finish this Harralander potion', '', 48, 20, 0, 0, 0, 11966873, 0, 0, 0, 457, 1740, 1),
+('Unfinished Ranarr Potion', 'I need another ingredient to finish this Ranarr potion', '', 48, 25, 0, 0, 0, 10073753, 0, 0, 0, 458, 1741, 1),
+('Unfinished Irit Potion', 'I need another ingredient to finish this Irit potion', '', 48, 40, 0, 0, 0, 10066358, 0, 0, 0, 459, 1742, 1),
+('Unfinished Avantoe Potion', 'I need another ingredient to finish this Avantoe potion', '', 48, 48, 0, 0, 0, 10066329, 0, 0, 0, 460, 1743, 1),
+('Unfinished Kwuarm Potion', 'I need another ingredient to finish this Kwuarm potion', '', 48, 54, 0, 0, 0, 11974326, 0, 0, 0, 461, 1744, 1),
+('Unfinished Cadantine Potion', 'I need another ingredient to finish this Cadantine potion', '', 48, 65, 0, 0, 0, 13743769, 0, 0, 0, 462, 1745, 1),
+('Unfinished Dwarfweed Potion', 'I need another ingredient to finish this Dwarfweed potion', '', 48, 70, 0, 0, 0, 10073809, 0, 0, 0, 463, 1746, 1),
+('Vial', 'It\'s full of water', '', 48, 2, 0, 0, 0, 11197951, 0, 0, 0, 464, 1747, 1),
+('Vial', 'This vial is empty', '', 144, 2, 0, 0, 0, 0, 0, 0, 0, 465, 1748, 1),
+('Unicorn Horn', 'Poor unicorn', '', 145, 20, 0, 0, 0, 0, 0, 0, 0, 466, 1749, 1),
+('Blue Dragon Scale', 'A large shiny scale', '', 146, 50, 0, 0, 0, 0, 0, 0, 0, 467, 1750, 1),
+('Pestle and Mortar', 'I can grind things for potions in this', '', 147, 4, 0, 0, 0, 0, 0, 1, 0, 468, 1751, 1),
+('Snape Grass', 'Strange spikey grass', '', 148, 10, 0, 0, 0, 0, 0, 1, 0, 469, 1752, 1),
+('Medium Black Helmet', 'A medium sized helmet', '', 5, 576, 0, 0, 1, 3158064, 1, 0, 0, 470, 1753, 1),
+('White Berries', 'Poisonous berries', '', 21, 10, 0, 0, 0, 0, 0, 1, 0, 471, 1754, 1),
+('Ground Blue Dragon Scale', 'This stuff isn\'t good for you', '', 23, 40, 0, 0, 0, 35071, 0, 0, 0, 472, 1755, 1),
+('Ground Unicorn Horn', 'A useful potion ingredient', '', 23, 20, 0, 0, 0, 15645520, 0, 0, 0, 473, 1756, 1),
+('Attack Potion', '3 doses of attack potion', 'Drink', 48, 12, 0, 0, 0, 3206894, 0, 1, 0, 474, 1757, 1),
+('Attack Potion', '2 doses of attack potion', 'Drink', 436, 9, 0, 0, 0, 3206894, 0, 1, 0, 475, 1758, 1),
+('Attack Potion', '1 dose of attack potion', 'Drink', 437, 6, 0, 0, 0, 3206894, 0, 1, 0, 476, 1759, 1),
+('Stat Restoration Potion', '3 doses of stat restoration potion', 'Drink', 48, 88, 0, 0, 0, 15609904, 0, 1, 0, 477, 1760, 1),
+('Stat Restoration Potion', '2 doses of stat restoration potion', 'Drink', 436, 66, 0, 0, 0, 15609904, 0, 1, 0, 478, 1761, 1),
+('Stat Restoration Potion', '1 dose of stat restoration potion', 'Drink', 437, 44, 0, 0, 0, 15609904, 0, 1, 0, 479, 1762, 1),
+('Defense Potion', '3 doses of defense potion', 'Drink', 48, 120, 0, 0, 0, 3206704, 0, 1, 0, 480, 1763, 1),
+('Defense Potion', '2 doses of defense potion', 'Drink', 436, 90, 0, 0, 0, 3206704, 0, 1, 0, 481, 1764, 1),
+('Defense Potion', '1 dose of defense potion', 'Drink', 437, 60, 0, 0, 0, 3206704, 0, 1, 0, 482, 1765, 1),
+('Restore Prayer Potion', '3 doses of restore prayer potion', 'Drink', 48, 152, 0, 0, 0, 3206809, 0, 1, 0, 483, 1766, 1),
+('Restore Prayer Potion', '2 doses of restore prayer potion', 'Drink', 436, 114, 0, 0, 0, 3206809, 0, 1, 0, 484, 1767, 1),
+('Restore Prayer Potion', '1 dose of restore prayer potion', 'Drink', 437, 76, 0, 0, 0, 3206809, 0, 1, 0, 485, 1768, 1),
+('Super Attack Potion', '3 doses of attack potion', 'Drink', 48, 5000, 0, 0, 0, 3158254, 0, 1, 0, 486, 1769, 1),
+('Super Attack Potion', '2 doses of attack potion', 'Drink', 436, 1000, 0, 0, 0, 3158254, 0, 1, 0, 487, 1770, 1),
+('Super Attack Potion', '1 dose of attack potion', 'Drink', 437, 1000, 0, 0, 0, 3158254, 0, 1, 0, 488, 1771, 1),
+('Fishing Potion', '3 doses of fishing potion', 'Drink', 48, 200, 0, 0, 0, 3158064, 0, 1, 0, 489, 1772, 1),
+('Fishing Potion', '2 doses of fishing potion', 'Drink', 436, 150, 0, 0, 0, 3158064, 0, 1, 0, 490, 1773, 1),
+('Fishing Potion', '1 dose of fishing potion', 'Drink', 437, 100, 0, 0, 0, 3158064, 0, 1, 0, 491, 1774, 1),
+('Super Strength Potion', '3 doses of strength potion', 'Drink', 48, 5000, 0, 0, 0, 15658734, 0, 1, 0, 492, 1775, 1),
+('Super Strength Potion', '2 doses of strength potion', 'Drink', 436, 1000, 0, 0, 0, 15658734, 0, 1, 0, 493, 1776, 1),
+('Super Strength Potion', '1 dose of strength potion', 'Drink', 437, 1000, 0, 0, 0, 15658734, 0, 1, 0, 494, 1777, 1),
+('Super Defense Potion', '3 doses of defense potion', 'Drink', 48, 5000, 0, 0, 0, 15644208, 0, 1, 0, 495, 1778, 1),
+('Super Defense Potion', '2 doses of defense potion', 'Drink', 436, 1000, 0, 0, 0, 15644208, 0, 1, 0, 496, 1779, 1),
+('Super Defense Potion', '1 dose of defense potion', 'Drink', 437, 1000, 0, 0, 0, 15644208, 0, 1, 0, 497, 1780, 1),
+('Ranging Potion', '3 doses of ranging potion', 'Drink', 48, 288, 0, 0, 0, 3192558, 0, 1, 0, 498, 1781, 1),
+('Ranging Potion', '2 doses of ranging potion', 'Drink', 436, 216, 0, 0, 0, 3192558, 0, 1, 0, 499, 1782, 1),
+('Ranging Potion', '1 dose of ranging potion', 'Drink', 437, 144, 0, 0, 0, 3192558, 0, 1, 0, 500, 1783, 1),
+('Wine of Zamorak', 'It\'s full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 1, 0, 501, 1784, 1),
+('Raw Bear Meat', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 502, 1785, 1),
+('Raw Rat Meat', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 503, 1786, 1),
+('Raw Beef', 'I need to cook this first', '', 60, 1, 0, 0, 0, 16747571, 0, 0, 0, 504, 1787, 1),
+('Enchanted Bear Meat', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 505, 1788, 0),
+('Enchanted Rat Meat', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 506, 1789, 0),
+('Enchanted Beef', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 507, 1790, 0),
+('Enchanted Chicken Meat', 'I don\'t fancy eating this now', '', 60, 1, 0, 0, 0, 13495347, 0, 0, 1, 508, 1791, 0),
+('Dramen Staff', 'A magical staff cut from the dramen tree', '', 85, 15, 0, 0, 1, 10072780, 1, 1, 1, 509, 1792, 0),
+('Dramen Branch', 'I need to make this into a staff', '', 179, 15, 0, 0, 0, 10072780, 0, 0, 1, 510, 1793, 0),
+('Cape', 'A thick Green cape', '', 59, 32, 0, 0, 1, 4246592, 0, 0, 0, 511, 1794, 1);
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`, `tradable`) VALUES
+('Cape', 'A thick yellow cape', '', 59, 32, 0, 0, 1, 15658560, 0, 0, 0, 512, 1795, 1),
+('Cape', 'A thick Orange cape', '', 59, 32, 0, 0, 1, 15636736, 0, 0, 0, 513, 1796, 1),
+('Cape', 'A thick purple cape', '', 59, 32, 0, 0, 1, 11141341, 0, 0, 0, 514, 1797, 1),
+('Greendye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 65280, 0, 0, 0, 515, 1798, 1),
+('Purpledye', 'A little bottle of dye', '', 104, 5, 0, 0, 0, 11141375, 0, 1, 0, 516, 1799, 1),
+('Iron Ore Certificate', 'Each certificate exchangable at draynor market for 5 iron ore', '', 180, 10, 0, 1, 0, 15654365, 0, 0, 0, 517, 0, 1),
+('Coal Certificate', 'Each certificate exchangable at draynor market for 5 coal', '', 180, 20, 0, 1, 0, 4210752, 0, 0, 0, 518, 0, 1),
+('Mithril Ore Certificate', 'Each certificate exchangable at draynor market for 5 mithril ore', '', 180, 30, 0, 1, 0, 10072780, 0, 0, 0, 519, 0, 1),
+('Silver Certificate', 'Each certificate exchangable at draynor market for 5 silver nuggets', '', 180, 15, 0, 1, 0, 0, 0, 0, 0, 520, 0, 1),
+('Gold Certificate', 'Each certificate exchangable at draynor market for 5 gold nuggets', '', 180, 25, 0, 1, 0, 16763980, 0, 0, 0, 521, 0, 1),
+('Dragonstone Amulet', 'A very powerful amulet', '', 125, 17625, 0, 0, 1, 12255487, 0, 1, 0, 522, 1800, 1),
+('Dragonstone', 'This looks very valuable', '', 74, 10000, 0, 0, 0, 12255487, 0, 0, 0, 523, 1801, 1),
+('Dragonstone Amulet', 'It needs a string so I can wear it', '', 126, 17625, 0, 0, 0, 12255487, 0, 1, 0, 524, 1802, 1),
+('Crystal Key', 'A very shiny key', '', 25, 1, 0, 0, 0, 15663103, 0, 0, 0, 525, 1803, 1),
+('Half of a Key', 'A very shiny key', '', 181, 1, 0, 0, 0, 15663103, 0, 0, 1, 526, 1804, 1),
+('Half of a Key', 'A very shiny key', '', 182, 1, 0, 0, 0, 15663103, 0, 0, 1, 527, 1805, 1),
+('Iron Bar Certificate', 'Each certificate exchangable at draynor market for 5 iron bars', '', 180, 10, 0, 1, 0, 15654365, 0, 0, 0, 528, 0, 1),
+('Steel Bar Certificate', 'Each certificate exchangable at draynor market for 5 steel bars', '', 180, 20, 0, 1, 0, 15658734, 0, 0, 0, 529, 0, 1),
+('Mithril Bar Certificate', 'Each certificate exchangable at draynor market for 5 mithril bars', '', 180, 30, 0, 1, 0, 10072780, 0, 0, 0, 530, 0, 1),
+('Silver Bar Certificate', 'Each certificate exchangable at draynor market for 5 silver bars', '', 180, 15, 0, 1, 0, 0, 0, 0, 0, 531, 0, 1),
+('Gold Bar Certificate', 'Each certificate exchangable at draynor market for 5 gold bars', '', 180, 25, 0, 1, 0, 16763980, 0, 0, 0, 532, 0, 1),
+('Lobster Certificate', 'Each certificate exchangable at draynor market for 5 lobsters', '', 180, 10, 0, 1, 0, 11558912, 0, 0, 0, 533, 0, 1),
+('Raw Lobster Certificate', 'Each certificate exchangable at draynor market for 5 raw lobsters', '', 180, 10, 0, 1, 0, 16711680, 0, 0, 0, 534, 0, 1),
+('Swordfish Certificate', 'Each certificate exchangable at draynor market for 5 swordfish', '', 180, 3000, 0, 1, 0, 12611776, 0, 0, 0, 535, 0, 1),
+('Raw Swordfish Certificate', 'Each certificate exchangable at draynor market for 5 raw swordfish', '', 180, 10, 0, 1, 0, 16752895, 0, 0, 0, 536, 0, 1),
+('Diary', 'Property of Nora.T.Hag', 'read', 28, 1, 0, 0, 0, 11206570, 0, 0, 1, 537, 1806, 1),
+('Front Door Key', 'A house key', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 1, 538, 1807, 0),
+('Ball', 'A child\'s ball', '', 183, 1, 0, 0, 0, 0, 0, 0, 1, 539, 1808, 0),
+('Magnet', 'A very attractive magnet', '', 184, 3, 0, 0, 0, 0, 0, 0, 1, 540, 1809, 0),
+('Grey Wolf Fur', 'This would make warm clothing', '', 68, 50, 0, 0, 0, 15658734, 0, 0, 0, 541, 1810, 1),
+('Uncut Dragonstone', 'this would be worth more cut', '', 73, 1000, 0, 0, 0, 12255487, 0, 0, 0, 542, 1811, 1),
+('Dragonstone Ring', 'A valuable ring', '', 123, 17625, 0, 0, 0, 12255487, 0, 0, 0, 543, 1812, 1),
+('Dragonstone Necklace', 'I wonder if this is valuable', '', 57, 18375, 0, 0, 1, 12255487, 0, 0, 0, 544, 1813, 1),
+('Raw Shark', 'I should try cooking this', '', 185, 495, 0, 0, 0, 5263488, 0, 0, 0, 545, 1814, 1),
+('Shark', 'I\'d better be careful eating this!', 'Eat', 185, 0, 0, 0, 0, 11558912, 0, 1, 0, 546, 1815, 1),
+('Burnt Shark', 'Oops!', '', 185, 0, 0, 0, 0, 4210752, 0, 0, 0, 547, 1816, 1),
+('Big Net', 'Useful for catching lots of fish', '', 186, 20, 0, 0, 0, 0, 0, 0, 0, 548, 1817, 1),
+('Casket', 'I hope there is treasure in it', 'open', 187, 50, 0, 0, 0, 0, 0, 0, 0, 549, 1818, 1),
+('Raw Cod', 'I should try cooking this', '', 165, 25, 0, 0, 0, 10526924, 0, 0, 0, 550, 1819, 1),
+('Cod', 'Some nicely cooked fish', 'Eat', 165, 25, 0, 0, 0, 7368908, 0, 0, 0, 551, 1820, 1),
+('Raw Mackerel', 'I should try cooking this', '', 166, 17, 0, 0, 0, 13421728, 0, 0, 0, 552, 1821, 1),
+('Mackerel', 'Some nicely cooked fish', 'Eat', 166, 17, 0, 0, 0, 13421680, 0, 0, 0, 553, 1822, 1),
+('Raw Bass', 'I should try cooking this', '', 167, 120, 0, 0, 0, 16752800, 0, 0, 0, 554, 1823, 1),
+('Bass', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 16740464, 0, 1, 0, 555, 1824, 1),
+('Ice Gloves', 'These will keep my hands cold!', '', 17, 6, 0, 0, 1, 11202303, 0, 1, 1, 556, 1825, 0),
+('Firebird Feather', 'A red hot feather', '', 176, 2, 0, 0, 0, 16711680, 0, 0, 1, 557, 1826, 0),
+('Firebird Feather', 'This is cool enough to hold now', '', 176, 2, 0, 0, 0, 16768256, 0, 0, 1, 558, 1827, 0),
+('Poisoned Iron Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 1, 0, 559, 1828, 1),
+('Poisoned bronze Dagger', 'Short but pointy', '', 80, 10, 0, 0, 1, 16737817, 1, 1, 0, 560, 1829, 1),
+('Poisoned Steel Dagger', 'Short but pointy', '', 80, 125, 0, 0, 1, 15658734, 1, 1, 0, 561, 1830, 1),
+('Poisoned Mithril Dagger', 'Short but pointy', '', 80, 325, 0, 0, 1, 10072780, 1, 1, 0, 562, 1831, 1),
+('Poisoned Rune Dagger', 'Short but pointy', '', 80, 8000, 0, 0, 1, 65535, 1, 1, 0, 563, 1832, 1),
+('Poisoned Adamantite Dagger', 'Short but pointy', '', 80, 800, 0, 0, 1, 11717785, 1, 1, 0, 564, 1833, 1),
+('Poisoned Black Dagger', 'Short but pointy', '', 80, 240, 0, 0, 1, 3158064, 1, 1, 0, 565, 1834, 1),
+('Cure Poison Potion', '3 doses of cure poison potion', 'Drink', 48, 288, 0, 0, 0, 6749969, 0, 0, 0, 566, 1835, 1),
+('Cure Poison Potion', '2 doses of cure poison potion', 'Drink', 436, 216, 0, 0, 0, 6749969, 0, 0, 0, 567, 1836, 1),
+('Cure Poison Potion', '1 dose of cure poison potion', 'Drink', 437, 144, 0, 0, 0, 6749969, 0, 0, 0, 568, 1837, 1),
+('Poison Antidote', '3 doses of anti poison potion', 'Drink', 48, 288, 0, 0, 0, 16716134, 0, 0, 0, 569, 1838, 1),
+('Poison Antidote', '2 doses of anti poison potion', 'Drink', 436, 216, 0, 0, 0, 16716134, 0, 0, 0, 570, 1839, 1),
+('Poison Antidote', '1 dose of anti poison potion', 'Drink', 437, 144, 0, 0, 0, 16716134, 0, 0, 0, 571, 1840, 1),
+('Weapon Poison', 'For use on daggers and arrows', '', 48, 144, 0, 0, 0, 1140479, 0, 0, 0, 572, 1841, 1),
+('ID Paper', 'ID of Hartigen the black knight', '', 29, 1, 0, 0, 0, 0, 0, 0, 1, 573, 1842, 1),
+('Poison Bronze Arrows', 'Venomous looking arrows', '', 206, 2, 0, 1, 0, 16737817, 1, 1, 0, 574, 0, 1),
+('Christmas Cracker', 'Use on another player to pull it', '', 188, 1, 0, 0, 0, 16711680, 0, 0, 0, 575, 1843, 1),
+('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 16711680, 0, 0, 0, 576, 1844, 1),
+('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 16776960, 0, 0, 0, 577, 1845, 1),
+('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 255, 0, 0, 0, 578, 1846, 1),
+('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 65280, 0, 0, 0, 579, 1847, 1),
+('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 16711935, 0, 0, 0, 580, 1848, 1),
+('Party Hat', 'Party!!!', '', 189, 2, 0, 0, 1, 0, 0, 0, 0, 581, 1849, 1),
+('Miscellaneous Key', 'I wonder what this unlocks', '', 25, 1, 0, 0, 0, 14509670, 0, 0, 0, 582, 1850, 1),
+('Bunch of Keys', 'Some keys on a keyring', '', 190, 2, 0, 0, 0, 0, 0, 0, 1, 583, 1851, 1),
+('Whisky', 'A bottle of Draynor Malt', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 584, 1852, 1),
+('Candlestick', 'A valuable candlestick', '', 192, 5, 0, 0, 0, 0, 0, 0, 0, 585, 1853, 1),
+('Master Thief Armband', 'This denotes a great act of thievery', '', 193, 2, 0, 0, 0, 0, 0, 0, 1, 586, 1854, 0),
+('Blamish Snail Slime', 'Yuck', '', 104, 5, 0, 0, 0, 15663086, 0, 0, 1, 587, 1855, 0),
+('Blamish Oil', 'made from the finest snail slime', '', 48, 10, 0, 0, 0, 15663086, 0, 0, 1, 588, 1856, 0),
+('Oily Fishing Rod', 'A rod covered in Blamish oil', '', 172, 15, 0, 0, 0, 0, 0, 0, 1, 589, 1857, 0),
+('Lava Eel', 'Strange it looks cooler now it\'s been cooked', 'eat', 194, 150, 0, 0, 0, 11558912, 0, 1, 1, 590, 1858, 0),
+('Raw Lava Eel', 'A very strange eel', '', 194, 150, 0, 0, 0, 16711680, 0, 0, 1, 591, 1859, 0),
+('Poison Crossbow Bolts', 'Good if you have a crossbow!', '', 56, 3, 0, 1, 0, 0, 1, 0, 0, 592, 0, 1),
+('Dragon Sword', 'A Razor sharp sword', '', 273, 100000, 0, 0, 1, 16711748, 1, 1, 0, 593, 1860, 1),
+('Dragon Axe', 'A vicious looking axe', '', 272, 200000, 0, 0, 1, 16711748, 1, 1, 0, 594, 1861, 1),
+('Jail Keys', 'Keys to the black knight jail', '', 190, 2, 0, 0, 0, 0, 0, 0, 1, 595, 1862, 0),
+('Dusty Key', 'A key given to me by Velrak', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 0, 596, 1863, 0),
+('Charged Dragonstone Amulet', 'A very powerful amulet', 'rub', 125, 25000, 0, 0, 1, 12255487, 0, 1, 0, 597, 1864, 1),
+('Grog', 'A murky glass of some sort of drink', 'drink', 90, 3, 0, 0, 0, 0, 0, 0, 0, 598, 1865, 1),
+('Candle', 'An unlit candle', '', 195, 3, 0, 0, 0, 0, 0, 0, 0, 599, 1866, 0),
+('Black Candle', 'A spooky but unlit candle', '', 195, 3, 0, 0, 0, 2105376, 0, 0, 1, 600, 1867, 0),
+('Candle', 'A small slowly burning candle', '', 196, 3, 0, 0, 0, 0, 0, 0, 0, 601, 1868, 0),
+('Black Candle', 'A spooky candle', '', 196, 3, 0, 0, 0, 2105376, 0, 0, 1, 602, 1869, 0),
+('Insect Repellant', 'Drives away all known 6 legged creatures', '', 197, 3, 0, 0, 0, 0, 0, 0, 0, 603, 1870, 0),
+('Bat Bones', 'Ew it\'s a pile of bones', 'Bury', 20, 1, 0, 0, 0, 0, 0, 1, 0, 604, 1871, 1),
+('Wax Bucket', 'It\'s a wooden bucket', '', 22, 2, 0, 0, 0, 16777181, 0, 0, 0, 605, 1872, 0),
+('Excalibur', 'This used to belong to king Arthur', '', 115, 200, 0, 0, 1, 10072780, 1, 0, 1, 606, 1873, 0),
+('Druids Robe', 'I feel closer to the Gods when I am wearing this', '', 87, 40, 0, 0, 1, 16777215, 0, 0, 0, 607, 1874, 1),
+('Druids Robe', 'Keeps a druids\'s knees nice and warm', '', 88, 30, 0, 0, 1, 16777215, 0, 0, 0, 608, 1875, 1),
+('Eye Patch', 'It makes me look very piratical', '', 198, 2, 0, 0, 1, 0, 0, 1, 0, 609, 1876, 1),
+('Unenchanted Dragonstone Amulet', 'I wonder if I can get this enchanted', '', 125, 17625, 0, 0, 1, 12255487, 0, 0, 0, 610, 1877, 1),
+('Unpowered Orb', 'I\'d prefer it if it was powered', '', 199, 100, 0, 0, 0, 0, 0, 0, 0, 611, 1878, 1),
+('Fire Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 16711680, 0, 0, 0, 612, 1879, 1),
+('Water Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 255, 0, 0, 0, 613, 1880, 1),
+('Battlestaff', 'It\'s a slightly magical stick', '', 85, 7000, 0, 0, 1, 10072780, 1, 1, 0, 614, 1881, 1),
+('Battlestaff of Fire', 'A Magical staff', '', 91, 15500, 0, 0, 1, 16711680, 1, 1, 0, 615, 1882, 1),
+('Battlestaff of Water', 'A Magical staff', '', 91, 15500, 0, 0, 1, 255, 1, 0, 0, 616, 1883, 1),
+('Battlestaff of Air', 'A Magical staff', '', 91, 15500, 0, 0, 1, 65535, 1, 1, 0, 617, 1884, 1),
+('Battlestaff of Earth', 'A Magical staff', '', 91, 15500, 0, 0, 1, 7353600, 1, 1, 0, 618, 1885, 1),
+('Blood-Rune', 'Used for high level missile spells', '', 200, 300, 0, 1, 0, 0, 0, 1, 0, 619, 0, 1),
+('Beer Glass', 'I need to fill this with beer', '', 201, 2, 0, 0, 0, 0, 0, 0, 0, 620, 1886, 1),
+('Glassblowing Pipe', 'Use on molten glass to make things', '', 202, 2, 0, 0, 0, 0, 0, 1, 0, 621, 1887, 1),
+('Seaweed', 'slightly damp seaweed', '', 203, 2, 0, 0, 0, 0, 0, 1, 0, 622, 1888, 1),
+('Molten Glass', 'hot glass ready to be blown', '', 204, 2, 0, 0, 0, 0, 0, 0, 0, 623, 1889, 1),
+('Soda Ash', 'one of the ingredients for making glass', '', 23, 2, 0, 0, 0, 0, 0, 0, 0, 624, 1890, 1),
+('Sand', 'one of the ingredients for making glass', '', 22, 2, 0, 0, 0, 16763904, 0, 0, 0, 625, 1891, 1),
+('Air Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 65535, 0, 0, 0, 626, 1892, 1),
+('Earth Orb', 'A magic glowing orb', '', 199, 300, 0, 0, 0, 7353600, 0, 0, 0, 627, 1893, 1),
+('Bass Certificate', 'Each certificate exchangable at Catherby for 5 bass', '', 180, 10, 0, 1, 0, 16740464, 0, 0, 0, 628, 0, 1),
+('Raw Bass Certificate', 'Each certificate exchangable at Catherby for 5 raw bass', '', 180, 10, 0, 1, 0, 16752800, 0, 0, 0, 629, 0, 1),
+('Shark Certificate', 'Each certificate exchangable at Catherby for 5 shark', '', 180, 10, 0, 1, 0, 11558912, 0, 0, 0, 630, 0, 1),
+('Raw Shark Certificate', 'Each certificate exchangable at Catherby for 5 raw shark', '', 180, 10, 0, 1, 0, 5263488, 0, 0, 0, 631, 0, 1),
+('Oak Logs', 'Logs cut from an oak tree', '', 14, 20, 0, 0, 0, 0, 0, 0, 0, 632, 1894, 1),
+('Willow Logs', 'Logs cut from a willow tree', '', 14, 40, 0, 0, 0, 0, 0, 0, 0, 633, 1895, 1),
+('Maple Logs', 'Logs cut from a maple tree', '', 14, 80, 0, 0, 0, 0, 0, 0, 0, 634, 1896, 1),
+('Yew Logs', 'Logs cut from a yew tree', '', 14, 160, 0, 0, 0, 0, 0, 0, 0, 635, 1897, 1),
+('Magic Logs', 'Logs made from magical wood', '', 14, 320, 0, 0, 0, 0, 0, 0, 0, 636, 1898, 1),
+('Headless Arrows', 'I need to attach arrow heads to these', '', 205, 1, 0, 1, 0, 0, 1, 1, 0, 637, 0, 1),
+('Iron Arrows', 'Arrows with iron heads', '', 11, 6, 0, 1, 0, 15654365, 1, 1, 0, 638, 0, 1),
+('Poison Iron Arrows', 'Venomous looking arrows', '', 206, 6, 0, 1, 0, 15654365, 1, 1, 0, 639, 0, 1),
+('Steel Arrows', 'Arrows with steel heads', '', 11, 24, 0, 1, 0, 15658734, 1, 1, 0, 640, 0, 1),
+('Poison Steel Arrows', 'Venomous looking arrows', '', 206, 24, 0, 1, 0, 15658734, 1, 1, 0, 641, 0, 1),
+('Mithril Arrows', 'Arrows with mithril heads', '', 11, 64, 0, 1, 0, 9614028, 1, 1, 0, 642, 0, 1),
+('Poison Mithril Arrows', 'Venomous looking arrows', '', 206, 64, 0, 1, 0, 9614028, 1, 1, 0, 643, 0, 1),
+('Adamantite Arrows', 'Arrows with adamantite heads', '', 11, 160, 0, 1, 0, 11717785, 1, 1, 0, 644, 0, 1),
+('Poison Adamantite Arrows', 'Venomous looking arrows', '', 206, 160, 0, 1, 0, 11717785, 1, 1, 0, 645, 0, 1),
+('Rune Arrows', 'Arrows with rune heads', '', 11, 800, 0, 1, 0, 65535, 1, 1, 0, 646, 0, 1),
+('Poison Rune Arrows', 'Venomous looking arrows', '', 206, 800, 0, 1, 0, 65535, 1, 1, 0, 647, 0, 1),
+('Oak Longbow', 'A Nice sturdy bow', '', 54, 160, 0, 0, 1, 255, 1, 1, 0, 648, 1899, 1),
+('Oak Shortbow', 'Short but effective', '', 55, 100, 0, 0, 1, 255, 1, 1, 0, 649, 1900, 1),
+('Willow Longbow', 'A Nice sturdy bow', '', 54, 320, 0, 0, 1, 16776960, 1, 1, 0, 650, 1901, 1),
+('Willow Shortbow', 'Short but effective', '', 55, 200, 0, 0, 1, 16776960, 1, 1, 0, 651, 1902, 1),
+('Maple Longbow', 'A Nice sturdy bow', '', 54, 640, 0, 0, 1, 16746496, 1, 1, 0, 652, 1903, 1),
+('Maple Shortbow', 'Short but effective', '', 55, 400, 0, 0, 1, 16746496, 1, 1, 0, 653, 1904, 1),
+('Yew Longbow', 'A Nice sturdy bow', '', 54, 1280, 0, 0, 1, 16711680, 1, 1, 0, 654, 1905, 1),
+('Yew Shortbow', 'Short but effective', '', 55, 800, 0, 0, 1, 16711680, 1, 1, 0, 655, 1906, 1),
+('Magic Longbow', 'A Nice sturdy bow', '', 54, 2800, 0, 0, 1, 4210752, 1, 1, 0, 656, 1907, 1),
+('Magic Shortbow', 'Short but effective', '', 55, 2000, 0, 0, 1, 4210752, 1, 1, 0, 657, 1908, 1),
+('Unstrung Oak Longbow', 'I need to find a string for this', '', 119, 80, 0, 0, 0, 255, 1, 0, 0, 658, 1909, 1),
+('Unstrung Oak Shortbow', 'I need to find a string for this', '', 120, 50, 0, 0, 0, 255, 1, 0, 0, 659, 1910, 1),
+('Unstrung Willow Longbow', 'I need to find a string for this', '', 119, 160, 0, 0, 0, 16776960, 1, 0, 0, 660, 1911, 1),
+('Unstrung Willow Shortbow', 'I need to find a string for this', '', 120, 100, 0, 0, 0, 16776960, 1, 0, 0, 661, 1912, 1),
+('Unstrung Maple Longbow', 'I need to find a string for this', '', 119, 320, 0, 0, 0, 16744448, 1, 0, 0, 662, 1913, 1),
+('Unstrung Maple Shortbow', 'I need to find a string for this', '', 120, 200, 0, 0, 0, 16744448, 1, 0, 0, 663, 1914, 1),
+('Unstrung Yew Longbow', 'I need to find a string for this', '', 119, 640, 0, 0, 0, 16711680, 1, 0, 0, 664, 1915, 1),
+('Unstrung Yew Shortbow', 'I need to find a string for this', '', 120, 400, 0, 0, 0, 16711680, 1, 0, 0, 665, 1916, 1),
+('Unstrung Magic Longbow', 'I need to find a string for this', '', 119, 1280, 0, 0, 0, 4210752, 1, 0, 0, 666, 1917, 1),
+('Unstrung Magic Shortbow', 'I need to find a string for this', '', 120, 800, 0, 0, 0, 4210752, 1, 0, 0, 667, 1918, 1),
+('Barcrawl Card', 'The official Alfred Grimhand barcrawl', 'read', 180, 10, 0, 0, 0, 0, 0, 0, 1, 668, 1919, 0),
+('Bronze Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 1, 0, 1, 0, 16737817, 1, 1, 0, 669, 0, 1),
+('Iron Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 3, 0, 1, 0, 15658717, 1, 1, 0, 670, 0, 1),
+('Steel Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 12, 0, 1, 0, 15658734, 1, 1, 0, 671, 0, 1),
+('Mithril Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 32, 0, 1, 0, 10072780, 1, 1, 0, 672, 0, 1),
+('Adamantite Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 80, 0, 1, 0, 11717785, 1, 1, 0, 673, 0, 1),
+('Rune Arrow Heads', 'Not much use without the rest of the arrow!', '', 207, 400, 0, 1, 0, 65535, 1, 1, 0, 674, 0, 1),
+('Flax', 'I should use this with a spinning wheel', '', 209, 5, 0, 0, 0, 0, 0, 0, 0, 675, 1920, 1),
+('Bow String', 'I need a bow handle to attach this too', '', 208, 10, 0, 0, 0, 0, 1, 0, 0, 676, 1921, 1),
+('Easter Egg', 'Happy Easter', 'eat', 210, 10, 0, 0, 0, 0, 0, 0, 0, 677, 1922, 1),
+('Scorpion Cage', 'I need to catch some scorpions in this', '', 211, 10, 0, 0, 0, 0, 0, 0, 1, 678, 1923, 0),
+('Scorpion Cage', 'It has 1 scorpion in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 679, 1924, 0),
+('Scorpion Cage', 'It has 2 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 680, 1925, 0),
+('Scorpion Cage', 'It has 3 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 681, 1926, 0),
+('Enchanted Battlestaff of Fire', 'A Magical staff', '', 91, 42500, 0, 0, 1, 16711680, 1, 1, 0, 682, 1927, 1),
+('Enchanted Battlestaff of Water', 'A Magical staff', '', 91, 42500, 0, 0, 1, 255, 1, 1, 0, 683, 1928, 1),
+('Enchanted Battlestaff of Air', 'A Magical staff', '', 91, 42500, 0, 0, 1, 65535, 1, 1, 0, 684, 1929, 1),
+('Enchanted Battlestaff of Earth', 'A Magical staff', '', 91, 42500, 0, 0, 1, 7353600, 1, 1, 0, 685, 1930, 1),
+('Scorpion Cage', 'It has 1 scorpion in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 686, 1931, 0),
+('Scorpion Cage', 'It has 1 scorpion in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 687, 1932, 0),
+('Scorpion Cage', 'It has 2 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 688, 1933, 0),
+('Scorpion Cage', 'It has 2 scorpions in it', '', 212, 10, 0, 0, 0, 0, 0, 0, 1, 689, 1934, 0),
+('Gold', 'this needs refining', '', 73, 150, 0, 0, 0, 16763980, 0, 0, 0, 690, 1935, 0),
+('Gold Bar', 'this looks valuable', '', 79, 300, 0, 0, 0, 16763980, 0, 0, 0, 691, 1936, 0),
+('Ruby Ring', 'A valuable ring', '', 123, 2025, 0, 0, 0, 16724736, 0, 0, 0, 692, 1937, 0),
+('Ruby Necklace', 'I wonder if this is valuable', '', 57, 2175, 0, 0, 1, 16724736, 0, 0, 0, 693, 1938, 0),
+('Family Crest', 'The crest of a varrocian noble family', '', 213, 10, 0, 0, 0, 0, 0, 0, 1, 694, 1939, 0),
+('Crest Fragment', 'Part of the Fitzharmon family crest', '', 214, 10, 0, 0, 0, 0, 0, 0, 1, 695, 1940, 0),
+('Crest Fragment', 'Part of the Fitzharmon family crest', '', 215, 10, 0, 0, 0, 0, 0, 0, 1, 696, 1941, 0),
+('Crest Fragment', 'Part of the Fitzharmon family crest', '', 216, 10, 0, 0, 0, 0, 0, 0, 1, 697, 1942, 0),
+('Steel Gauntlets', 'Very handy armour', '', 217, 6, 0, 0, 1, 12303291, 1, 1, 0, 698, 1943, 0),
+('Gauntlets of Goldsmithing', 'metal gloves for gold making', '', 217, 6, 0, 0, 1, 16777130, 1, 1, 1, 699, 1944, 0),
+('Gauntlets of Cooking', 'Used for cooking fish', '', 217, 6, 0, 0, 1, 14540253, 1, 1, 1, 700, 1945, 0),
+('Gauntlets of Chaos', 'improves bolt spells', '', 217, 6, 0, 0, 1, 16755370, 1, 1, 1, 701, 1946, 0),
+('Robe of Zamorak', 'A robe worn by worshippers of Zamorak', '', 87, 30, 0, 0, 1, 16711680, 0, 0, 0, 702, 1947, 1),
+('Robe of Zamorak', 'A robe worn by worshippers of Zamorak', '', 88, 30, 0, 0, 1, 16711680, 0, 0, 0, 703, 1948, 1),
+('Address Label', 'To lord Handelmort- Handelmort mansion', '', 218, 10, 0, 0, 0, 0, 0, 0, 1, 704, 1949, 0),
+('Tribal Totem', 'It represents some sort of tribal god', '', 219, 10, 0, 0, 0, 0, 0, 0, 1, 705, 1950, 0),
+('Tourist Guide', 'Your definitive guide to Ardougne', 'read', 28, 1, 0, 0, 0, 11184895, 0, 0, 0, 706, 1951, 1),
+('Spice', 'Put it in uncooked stew to make curry', '', 62, 230, 0, 0, 0, 16711680, 0, 0, 0, 707, 1952, 1),
+('Uncooked Curry', 'I need to cook this', '', 162, 10, 0, 0, 0, 15643494, 0, 0, 0, 708, 1953, 1),
+('Curry', 'It\'s a spicey hot curry', 'Eat', 162, 20, 0, 0, 0, 12274688, 0, 1, 0, 709, 1954, 1),
+('Burnt Curry', 'Eew it\'s horribly burnt', 'Empty', 162, 1, 0, 0, 0, 5255216, 0, 0, 0, 710, 1955, 1),
+('Yew Logs Certificate', 'Each certificate exchangable at Ardougne for 5 yew logs', '', 180, 10, 0, 1, 0, 11558912, 0, 0, 0, 711, 0, 1),
+('Maple Logs Certificate', 'Each certificate exchangable at Ardougne for 5 maple logs', '', 180, 20, 0, 1, 0, 11558912, 0, 0, 0, 712, 0, 1),
+('Willow Logs Certificate', 'Each certificate exchangable at Ardougne for 5 willow logs', '', 180, 30, 0, 1, 0, 11558912, 0, 0, 0, 713, 0, 1),
+('Lockpick', 'It makes picking some locks easier', '', 220, 20, 0, 0, 0, 0, 0, 0, 0, 714, 1956, 1),
+('Red Vine Worms', 'Strange little red worms', '', 175, 3, 0, 1, 0, 16711680, 0, 0, 1, 715, 0, 0),
+('Blanket', 'A child\'s blanket', '', 92, 5, 0, 0, 0, 56831, 0, 0, 0, 716, 1957, 0),
+('Raw Giant Carp', 'I should try cooking this', '', 165, 50, 0, 0, 0, 80, 0, 0, 1, 717, 1958, 0),
+('Giant Carp', 'Some nicely cooked fish', 'Eat', 165, 50, 0, 0, 0, 12619984, 0, 0, 1, 718, 1959, 0),
+('Fishing Competition Pass', 'Admits one to the Hemenster fishing competition', '', 218, 10, 0, 0, 0, 0, 0, 0, 1, 719, 1960, 0),
+('Hemenster Fishing Trophy', 'Hurrah you won a fishing competition', '', 221, 20, 0, 0, 0, 16763980, 0, 0, 1, 720, 1961, 0),
+('Pendant of Lucien', 'Gets me through the chamber of fear', '', 222, 12, 0, 0, 1, 3158064, 0, 0, 1, 721, 1962, 0),
+('Ice Arrows', 'Wearing these makes me feel like I am floating', '', 223, 6, 0, 0, 1, 16742144, 0, 1, 1, 722, 1963, 0),
+('Ice Arrows', 'Can only be fired with yew or magic bows', '', 11, 2, 0, 1, 0, 11206655, 1, 0, 1, 723, 0, 0),
+('Lever', 'This was once attached to something', '', 224, 20, 0, 0, 0, 0, 0, 0, 1, 724, 1964, 0),
+('Staff of Armadyl', 'A Magical staff', '', 91, 15, 0, 0, 1, 16776960, 1, 0, 1, 725, 1965, 0),
+('Pendant of Armadyl', 'Allows me to fight Lucien', '', 222, 12, 0, 0, 1, 0, 0, 0, 1, 726, 1966, 0),
+('Large Cog', ' A large old cog', '', 241, 10, 0, 0, 0, 255, 0, 0, 1, 727, 1967, 0),
+('Large Cog', ' A large old cog', '', 240, 10, 0, 0, 0, 0, 0, 0, 1, 728, 1968, 0),
+('Large Cog', ' A large old cog', '', 241, 10, 0, 0, 0, 16711680, 0, 0, 1, 729, 1969, 0),
+('Large Cog', ' A large old cog', '', 241, 10, 0, 0, 0, 13369548, 0, 0, 1, 730, 1970, 0),
+('Rat Poison', 'This stuff looks nasty', '', 52, 1, 0, 0, 0, 0, 0, 0, 0, 731, 1971, 1),
+('Shiny Key', 'Quite a small key', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 1, 732, 1972, 0),
+('Khazard Helmet', 'A medium sized helmet', '', 5, 10, 0, 0, 1, 11250603, 1, 0, 0, 733, 1973, 0),
+('Khazard Chainmail', 'A series of connected metal rings', '', 7, 10, 0, 0, 1, 11250603, 1, 0, 0, 734, 1974, 0),
+('Khali Brew', 'A bottle of khazard\'s worst brew', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 735, 1975, 1),
+('Khazard Cell Keys', 'Keys for General Khazard\'s cells', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 736, 1976, 0),
+('Poison Chalice', 'A strange looking drink', 'drink', 225, 20, 0, 0, 0, 11206400, 0, 0, 1, 737, 1977, 0),
+('Magic Whistle', 'A small tin whistle', 'blow', 226, 10, 0, 0, 0, 0, 0, 0, 1, 738, 1978, 0),
+('Cup of Tea', 'A nice cup of tea', 'drink', 227, 10, 0, 0, 0, 0, 0, 0, 0, 739, 1979, 1),
+('Orb of Protection', 'a strange glowing green orb', '', 242, 1, 0, 0, 0, 14540253, 0, 0, 1, 740, 1980, 0),
+('Orbs of Protection', 'two strange glowing green orbs', '', 243, 1, 0, 0, 0, 14540253, 0, 0, 1, 741, 1981, 0),
+('Holy Table Napkin', 'a cloth given to me by sir Galahad', '', 92, 10, 0, 0, 0, 0, 0, 0, 1, 742, 1982, 0),
+('Bell', 'I wonder what happens when i ring it', 'ring', 228, 1, 0, 0, 0, 0, 0, 0, 1, 743, 1983, 0),
+('Gnome Emerald Amulet of protection', 'It improves my defense', '', 125, 5000, 0, 0, 1, 3394611, 0, 1, 1, 744, 1984, 0),
+('Magic Golden Feather', 'It will point the way for me', 'blow on', 176, 2, 0, 0, 0, 16776960, 0, 0, 1, 745, 1985, 0),
+('Holy Grail', 'A holy and powerful artifact', '', 229, 1, 0, 0, 0, 0, 0, 0, 1, 746, 1986, 0),
+('Script of Hazeel', 'An old scroll with strange ancient text', '', 244, 1, 0, 0, 0, 14540253, 0, 0, 1, 747, 1987, 0),
+('Pineapple', 'It can be cut up with a knife', '', 124, 1, 0, 0, 0, 0, 0, 0, 0, 748, 1988, 1),
+('Pineapple Ring', 'Exotic fruit', 'eat', 230, 1, 0, 0, 0, 0, 0, 0, 0, 749, 1989, 1),
+('Pineapple Pizza', 'A tropicana pizza', 'Eat', 155, 100, 0, 0, 0, 16777079, 0, 1, 0, 750, 1990, 1),
+('Half Pineapple Pizza', 'Half of this pizza has been eaten', 'Eat', 156, 50, 0, 0, 0, 16777079, 0, 1, 0, 751, 1991, 1),
+('Magic Scroll', 'Maybe I should read it', 'read', 244, 1, 0, 0, 0, 0, 0, 0, 1, 752, 1992, 0),
+('Mark of Hazeel', 'A large metal amulet', '', 245, 0, 0, 0, 0, 14540253, 0, 0, 1, 753, 1993, 0),
+('Bloody Axe of Zamorak', 'A vicious looking axe', '', 246, 5000, 0, 0, 1, 15658734, 0, 0, 1, 754, 1994, 0),
+('Carnillean Armour', 'the carnillean family armour', '', 247, 65, 0, 0, 0, 15658734, 1, 0, 1, 755, 1995, 0),
+('Carnillean Key', 'An old rusty key', '', 25, 1, 0, 0, 0, 16772608, 0, 0, 1, 756, 1996, 0),
+('Cattle Prod', 'An old cattle prod', '', 248, 15, 0, 0, 0, 16772608, 0, 0, 1, 757, 1997, 0),
+('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 758, 1998, 0),
+('Poisoned Animal Feed', 'This looks nasty', '', 250, 0, 0, 0, 0, 14540253, 0, 0, 1, 759, 1999, 0),
+('Protective Jacket', 'A thick heavy leather top', '', 251, 50, 0, 0, 1, 14540253, 0, 0, 1, 760, 2000, 0),
+('Protective Trousers', 'A thick pair of leather trousers', '', 252, 50, 0, 0, 1, 15654365, 0, 0, 1, 761, 2001, 0),
+('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 762, 2002, 0),
+('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 763, 2003, 0),
+('Plagued Sheep Remains', 'These sheep remains are infected', '', 20, 0, 0, 0, 0, 14540253, 0, 0, 1, 764, 2004, 0),
+('Dwellberries', 'some rather pretty blue berries', 'eat', 253, 4, 0, 0, 0, 0, 0, 0, 1, 765, 2005, 1),
+('Gasmask', 'Stops me breathing nasty stuff', '', 232, 2, 0, 0, 1, 0, 0, 0, 1, 766, 2006, 0),
+('Picture', 'A picture of a lady called Elena', '', 233, 2, 0, 0, 0, 0, 0, 0, 1, 767, 2007, 0),
+('Book', 'Turnip growing for beginners', 'read', 28, 1, 0, 0, 0, 16755455, 0, 0, 1, 768, 2008, 0),
+('Seaslug', 'a rather nasty looking crustacean', '', 254, 4, 0, 0, 0, 0, 0, 0, 0, 769, 2009, 0),
+('Chocolaty Milk', 'Milk with chocolate in it', 'drink', 22, 2, 0, 0, 0, 9785408, 0, 0, 1, 770, 2010, 0),
+('Hangover Cure', 'It doesn\'t look very tasty', '', 22, 2, 0, 0, 0, 8757312, 0, 0, 1, 771, 2011, 0),
+('Chocolate Dust', 'I prefer it in a bar shape', '', 23, 2, 0, 0, 0, 9461792, 0, 0, 0, 772, 2012, 1),
+('Torch', 'A unlit home made torch', '', 255, 4, 0, 0, 0, 0, 0, 0, 0, 773, 2013, 0),
+('Torch', 'A lit home made torch', '', 256, 4, 0, 0, 0, 0, 0, 0, 0, 774, 2014, 0),
+('Warrant', 'A search warrant for a house in Ardougne', '', 29, 5, 0, 0, 0, 0, 0, 0, 1, 775, 2015, 0),
+('Damp Sticks', 'Some damp wooden sticks', '', 257, 0, 0, 0, 0, 0, 0, 0, 0, 776, 2016, 0),
+('Dry Sticks', 'Some dry wooden sticks', 'rub together', 258, 0, 0, 0, 0, 0, 0, 0, 0, 777, 2017, 0),
+('Broken Glass', 'Glass from a broken window pane', '', 259, 0, 0, 0, 0, 0, 0, 0, 0, 778, 2018, 0),
+('Oyster Pearls', 'I could work wonders with these and a chisel', '', 260, 1400, 0, 0, 0, 0, 0, 0, 0, 779, 2019, 1),
+('Little Key', 'Quite a small key', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 1, 780, 2020, 0),
+('Scruffy Note', 'It seems to say hongorer lure', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 781, 2021, 1),
+('Glarial\'s Amulet', 'A bright green gem set in a necklace', '', 261, 1, 0, 0, 1, 12303291, 0, 0, 1, 782, 2022, 0),
+('Swamp Tar', 'A foul smelling thick tar like substance', '', 262, 1, 0, 1, 0, 12303291, 0, 0, 0, 783, 0, 1),
+('Uncooked Swamp Paste', 'A thick tar like substance mixed with flour', '', 263, 1, 0, 1, 0, 12303291, 0, 0, 0, 784, 0, 1),
+('Swamp Paste', 'A tar like substance mixed with flour and warmed', '', 263, 30, 0, 1, 0, 12303291, 0, 0, 0, 785, 0, 1),
+('Oyster Pearl Bolts', 'Great if you have a crossbow!', '', 266, 110, 0, 1, 0, 0, 0, 0, 0, 786, 0, 1),
+('Glarial\'s Pebble', 'A small pebble with elven inscription', '', 264, 1, 0, 0, 0, 12303291, 0, 0, 1, 787, 2023, 0),
+('Book on Baxtorian', 'A book on elven history in north runescape', 'read', 28, 2, 0, 0, 0, 0, 0, 0, 1, 788, 2024, 0),
+('Large Key', 'I wonder what this is the key to', '', 25, 1, 0, 0, 0, 16750848, 0, 0, 1, 789, 2025, 0),
+('Oyster Pearl Bolt Tips', 'Can be used to improve crossbow bolts', '', 265, 56, 0, 1, 0, 12303291, 1, 0, 0, 790, 0, 1),
+('Oyster', 'It\'s empty', '', 267, 5, 0, 0, 0, 0, 0, 0, 0, 791, 2026, 1),
+('Oyster Pearls', 'I could work wonders with these and a chisel', '', 268, 112, 0, 0, 0, 0, 0, 0, 0, 792, 2027, 1),
+('Oyster', 'It\'s a rare oyster', 'open', 269, 200, 0, 0, 0, 0, 0, 0, 0, 793, 2028, 1),
+('Soil', 'It\'s a bucket of fine soil', '', 22, 2, 0, 0, 0, 12285815, 0, 0, 0, 794, 2029, 0),
+('Dragon Medium Helmet', 'A medium sized helmet', '', 271, 100000, 0, 0, 1, 16711748, 1, 1, 0, 795, 2030, 1),
+('Mithril Seed', 'Magical seeds in a mithril case', 'open', 270, 200, 0, 1, 0, 0, 0, 1, 0, 796, 0, 0),
+('An Old Key', 'A door key', '', 25, 1, 0, 0, 0, 15636736, 0, 0, 1, 797, 2031, 0),
+('Pigeon Cage', 'It\'s for holding pigeons', '', 274, 1, 0, 0, 0, 15636736, 0, 0, 0, 798, 2032, 0),
+('Messenger Pigeons', 'some very plump birds', 'release', 275, 1, 0, 0, 0, 15636736, 0, 1, 0, 799, 2033, 0),
+('Bird Feed', 'A selection of mixed seeds', '', 276, 1, 0, 0, 0, 15636736, 0, 1, 0, 800, 2034, 0),
+('Rotten Apples', 'Yuck!', 'eat', 277, 1, 0, 0, 0, 15636736, 0, 0, 0, 801, 2035, 0),
+('Doctors Gown', 'I do feel clever wearing this', '', 87, 40, 0, 0, 1, 16777215, 0, 0, 1, 802, 2036, 0),
+('Bronze Key', 'A heavy key', '', 25, 1, 0, 0, 0, 16737817, 0, 0, 1, 803, 2037, 0),
+('Distillator', 'It\'s for seperating compounds', '', 278, 1, 0, 0, 0, 16737817, 0, 0, 1, 804, 2038, 0),
+('Glarial\'s Urn', 'An urn containing glarials ashes', '', 279, 1, 0, 0, 0, 0, 0, 0, 1, 805, 2039, 0),
+('Glarial\'s Urn', 'An empty metal urn', '', 280, 1, 0, 0, 0, 0, 0, 0, 1, 806, 2040, 0),
+('Priest Robe', 'I feel closer to saradomin in this', '', 87, 500, 0, 0, 1, 1052688, 0, 0, 0, 807, 2041, 1),
+('Priest Gown', 'I feel closer to saradomin in this', '', 88, 500, 0, 0, 1, 1052688, 0, 0, 0, 808, 2042, 1),
+('Liquid Honey', 'This isn\'t worth much', '', 48, 0, 0, 0, 0, 16776960, 0, 0, 1, 809, 2043, 0),
+('Ethenea', 'An expensive colourless liquid', '', 48, 10, 0, 0, 0, 11184827, 0, 0, 1, 810, 2044, 0),
+('Sulphuric Broline', 'it\'s highly poisonous', '', 48, 1, 0, 0, 0, 11966902, 0, 0, 1, 811, 2045, 0),
+('Plague Sample', 'An air tight tin container', '', 281, 1, 0, 0, 0, 0, 0, 0, 1, 812, 2046, 0),
+('Touch Paper', 'For scientific testing', '', 282, 1, 0, 0, 0, 0, 0, 0, 1, 813, 2047, 0),
+('Dragon Bones', 'Ew it\'s a pile of bones', 'Bury', 137, 1, 0, 0, 0, 0, 0, 0, 0, 814, 2048, 1),
+('Muddy Snake Weed', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 815, 2049, 0),
+('Snake Weed', 'A very rare jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 816, 2050, 0),
+('Muddy Ardrigal', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 817, 2051, 0),
+('Ardrigal', 'An interesting', '', 435, 5, 0, 0, 0, 0, 0, 0, 1, 818, 2052, 0),
+('Muddy Sito Foil', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 819, 2053, 0),
+('Sito Foil', 'An rare species of jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 820, 2054, 0),
+('Muddy Volencia Moss', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 821, 2055, 0),
+('Volencia Moss', 'A very rare species of jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 822, 2056, 0),
+('Muddy Rogues Purse', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 1, 823, 2057, 0),
+('Rogues Purse', ' A rare species of jungle herb', '', 75, 5, 0, 0, 0, 0, 0, 0, 1, 824, 2058, 0),
+('Soul-Rune', 'Used for high level curse spells', '', 235, 350, 0, 1, 0, 0, 0, 0, 0, 825, 0, 1),
+('King Lathas Amulet', 'The amulet is red', '', 125, 10, 0, 0, 1, 13382451, 0, 0, 1, 826, 2059, 0),
+('Bronze Spear', 'A bronze tipped spear', '', 283, 4, 0, 0, 1, 16737817, 1, 0, 0, 827, 2060, 1),
+('Halloween Mask', 'aaaarrrghhh ... i\'m a monster', '', 284, 15, 0, 0, 1, 65280, 0, 0, 0, 828, 2061, 1),
+('Dragon Bitter', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 829, 2062, 1),
+('Greenmans Ale', 'A glass of frothy ale', 'drink', 90, 2, 0, 0, 0, 0, 0, 0, 0, 830, 2063, 1),
+('Halloween Mask', 'aaaarrrghhh ... i\'m a monster', '', 284, 15, 0, 0, 1, 16711680, 0, 0, 0, 831, 2064, 1),
+('Halloween Mask', 'aaaarrrghhh ... i\'m a monster', '', 284, 15, 0, 0, 1, 255, 0, 0, 0, 832, 2065, 1),
+('Cocktail Glass', 'For sipping cocktails', '', 285, 0, 0, 0, 0, 0, 0, 0, 0, 833, 2066, 1),
+('Cocktail Shaker', 'For mixing cocktails', 'pour', 286, 2, 0, 0, 0, 0, 0, 0, 0, 834, 2067, 1),
+('Bone Key', 'A key delicately carved key made from a single piece of bone', 'Look', 25, 1, 0, 0, 0, 16777215, 0, 0, 1, 835, 2068, 0),
+('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 16755370, 0, 1, 0, 836, 2069, 1),
+('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 11206570, 0, 1, 0, 837, 2070, 1),
+('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 11184895, 0, 1, 0, 838, 2071, 1),
+('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 16777164, 0, 1, 0, 839, 2072, 1),
+('Gnome Robe', 'A high fashion robe', '', 88, 1000, 0, 0, 1, 13434879, 0, 1, 0, 840, 2073, 1),
+('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 16755370, 0, 1, 0, 841, 2074, 1),
+('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 11206570, 0, 1, 0, 842, 2075, 1),
+('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 11184895, 0, 1, 0, 843, 2076, 1),
+('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 16777164, 0, 1, 0, 844, 2077, 1),
+('Gnomes Hat', 'A silly pointed hat', '', 86, 500, 0, 0, 1, 13434879, 0, 1, 0, 845, 2078, 1),
+('Gnome Top', 'rometti - the ultimate in gnome design', '', 87, 1500, 0, 0, 1, 16755370, 0, 1, 0, 846, 2079, 1),
+('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 11206570, 0, 1, 0, 847, 2080, 1),
+('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 11184895, 0, 1, 0, 848, 2081, 1),
+('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 16777164, 0, 1, 0, 849, 2082, 1),
+('Gnome Top', 'rometti - the only name in gnome fashion!', '', 87, 1500, 0, 0, 1, 13434879, 0, 1, 0, 850, 2083, 1),
+('Gnome Cocktail Guide', 'A book on tree gnome cocktails', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 0, 851, 2084, 1),
+('Beads of the Dead', 'A curious looking neck ornament', '', 24, 35, 0, 0, 1, 16737817, 0, 0, 1, 852, 2085, 0),
+('Cocktail Glass', 'For sipping cocktails', 'drink', 288, 2, 0, 0, 0, 0, 0, 0, 0, 853, 2086, 1),
+('Cocktail Glass', 'For sipping cocktails', 'drink', 289, 2, 0, 0, 0, 0, 0, 0, 0, 854, 2087, 1),
+('Lemon', 'It\'s very fresh', 'eat', 290, 2, 0, 0, 0, 0, 0, 0, 0, 855, 2088, 1),
+('Lemon Slices', 'It\'s very fresh', 'eat', 291, 2, 0, 0, 0, 16763952, 0, 0, 0, 856, 2089, 1),
+('Orange', 'It\'s very fresh', 'eat', 292, 2, 0, 0, 0, 0, 0, 0, 0, 857, 2090, 1),
+('Orange Slices', 'It\'s very fresh', 'eat', 291, 2, 0, 0, 0, 16760880, 0, 0, 0, 858, 2091, 1),
+('Diced Orange', 'Fresh chunks of orange', 'eat', 293, 2, 0, 0, 0, 16760880, 0, 0, 0, 859, 2092, 1),
+('Diced Lemon', 'Fresh chunks of lemon', 'eat', 293, 2, 0, 0, 0, 16763952, 0, 0, 0, 860, 2093, 1),
+('Fresh Pineapple', 'It can be cut up with a knife', 'eat', 124, 1, 0, 0, 0, 0, 0, 0, 0, 861, 2094, 1),
+('Pineapple Chunks', 'Fresh chunks of pineapple', 'eat', 293, 1, 0, 0, 0, 16760880, 0, 0, 0, 862, 2095, 1),
+('Lime', 'It\'s very fresh', 'eat', 294, 2, 0, 0, 0, 0, 0, 0, 0, 863, 2096, 1),
+('Lime Chunks', 'Fresh chunks of lime', 'eat', 293, 1, 0, 0, 0, 65280, 0, 0, 0, 864, 2097, 1),
+('Lime Slices', 'It\'s very fresh', 'eat', 291, 2, 0, 0, 0, 65280, 0, 0, 0, 865, 2098, 1),
+('Fruit Blast', 'A cool refreshing fruit mix', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 866, 2099, 1),
+('Odd Looking Cocktail', 'A cool refreshing mix', 'drink', 289, 2, 0, 0, 0, 0, 0, 0, 0, 867, 2100, 1),
+('Whisky', 'A locally brewed Malt', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 868, 2101, 1),
+('Vodka', 'A strong spirit', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 869, 2102, 1),
+('Gin', 'A strong spirit', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 870, 2103, 1),
+('Cream', 'Fresh cream', 'eat', 296, 2, 0, 0, 0, 0, 0, 0, 0, 871, 2104, 1),
+('Drunk Dragon', 'A warm creamy alcoholic beverage', 'drink', 297, 2, 0, 0, 0, 0, 0, 0, 0, 872, 2105, 1),
+('Equa Leaves', 'Small sweet smelling leaves', 'eat', 298, 2, 0, 0, 0, 0, 0, 0, 0, 873, 2106, 1),
+('SGG', 'A short green guy..looks good', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 874, 2107, 1),
+('Chocolate Saturday', 'A warm creamy alcoholic beverage', 'drink', 297, 2, 0, 0, 0, 0, 0, 0, 0, 875, 2108, 1),
+('Brandy', 'A strong spirit', 'drink', 191, 5, 0, 0, 0, 16755200, 0, 0, 0, 876, 2109, 1),
+('Blurberry Special', 'Looks good..smells strong', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 877, 2110, 1),
+('Wizard Blizzard', 'Looks like a strange mix', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 878, 2111, 1),
+('Pineapple Punch', 'A fresh healthy fruit mix', 'drink', 295, 2, 0, 0, 0, 0, 0, 0, 0, 879, 2112, 1),
+('Gnomebatta Dough', 'Dough formed into a base', '', 300, 2, 0, 0, 0, 0, 0, 0, 0, 880, 2113, 1),
+('Gianne Dough', 'It\'s made from a secret recipe', 'mould', 301, 2, 0, 0, 0, 0, 0, 0, 0, 881, 2114, 1),
+('Gnomebowl Dough', 'Dough formed into a bowl shape', '', 302, 2, 0, 0, 0, 0, 0, 0, 0, 882, 2115, 1),
+('Gnomecrunchie Dough', 'Dough formed into cookie shapes', '', 303, 2, 0, 0, 0, 0, 0, 0, 0, 883, 2116, 1),
+('Gnomebatta', 'A baked dough base', '', 300, 2, 0, 0, 0, 0, 0, 0, 0, 884, 2117, 1),
+('Gnomebowl', 'A baked dough bowl', 'eat', 302, 2, 0, 0, 0, 0, 0, 0, 0, 885, 2118, 1),
+('Gnomebatta', 'It\'s burnt to a sinder', '', 304, 2, 0, 0, 0, 0, 0, 0, 0, 886, 2119, 1),
+('Gnomecrunchie', 'They\'re burnt to a sinder', '', 306, 2, 0, 0, 0, 0, 0, 0, 0, 887, 2120, 1),
+('Gnomebowl', 'It\'s burnt to a sinder', '', 305, 2, 0, 0, 0, 0, 0, 0, 0, 888, 2121, 1),
+('Uncut Red Topaz', 'A semi precious stone', '', 73, 40, 0, 0, 0, 16525133, 0, 0, 0, 889, 2122, 1),
+('Uncut Jade', 'A semi precious stone', '', 73, 30, 0, 0, 0, 10025880, 0, 0, 0, 890, 2123, 1),
+('Uncut Opal', 'A semi precious stone', '', 73, 20, 0, 0, 0, 16777124, 0, 0, 0, 891, 2124, 1),
+('Red Topaz', 'A semi precious stone', '', 74, 200, 0, 0, 0, 16525133, 0, 0, 0, 892, 2125, 1),
+('Jade', 'A semi precious stone', '', 74, 150, 0, 0, 0, 10025880, 0, 0, 0, 893, 2126, 1),
+('Opal', 'A semi precious stone', '', 74, 100, 0, 0, 0, 16777124, 0, 0, 0, 894, 2127, 1),
+('Swamp Toad', 'Slippery little blighters', 'remove legs', 307, 2, 0, 0, 0, 0, 0, 0, 0, 895, 2128, 1),
+('Toad Legs', 'Gnome delicacy apparently', 'eat', 308, 2, 0, 0, 0, 0, 0, 0, 0, 896, 2129, 1),
+('King Worm', 'Gnome delicacy apparently', 'eat', 309, 2, 0, 0, 0, 0, 0, 0, 0, 897, 2130, 1),
+('Gnome Spice', 'Aluft Giannes secret reciepe', '', 310, 2, 0, 0, 0, 0, 0, 0, 0, 898, 2131, 1),
+('Gianne Cook Book', 'Aluft Giannes favorite dishes', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 0, 899, 2132, 1),
+('Gnomecrunchie', 'yum ... smells good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 900, 2133, 1),
+('Cheese and Tomato Batta', 'Smells really good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 901, 2134, 1),
+('Toad Batta', 'actually smells quite good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 902, 2135, 1),
+('Gnome Batta', 'smells like pants', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 903, 2136, 1),
+('Worm Batta', 'actually smells quite good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 904, 2137, 1),
+('Fruit Batta', 'actually smells quite good', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 905, 2138, 1),
+('Veg Batta', 'well..it looks healthy', 'eat', 312, 2, 0, 0, 0, 0, 0, 0, 0, 906, 2139, 1),
+('Chocolate Bomb', 'Looks great', 'eat', 313, 2, 0, 0, 0, 0, 0, 0, 0, 907, 2140, 1),
+('Vegball', 'Looks pretty healthy', 'eat', 314, 2, 0, 0, 0, 0, 0, 0, 0, 908, 2141, 1),
+('Worm Hole', 'actually smells quite good', 'eat', 315, 2, 0, 0, 0, 0, 0, 0, 0, 909, 2142, 1),
+('Tangled Toads Legs', 'actually smells quite good', 'eat', 316, 2, 0, 0, 0, 0, 0, 0, 0, 910, 2143, 1),
+('Choc Crunchies', 'yum ... smells good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 911, 2144, 1),
+('Worm Crunchies', 'actually smells quite good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 912, 2145, 1),
+('Toad Crunchies', 'actually smells quite good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 913, 2146, 1),
+('Spice Crunchies', 'yum ... smells good', 'eat', 311, 2, 0, 0, 0, 0, 0, 0, 0, 914, 2147, 1),
+('Crushed Gemstone', 'A gemstone that has been smashed', '', 23, 2, 0, 0, 0, 16777215, 0, 0, 0, 915, 2148, 1),
+('Blurberry Badge', 'an official cocktail maker', '', 317, 2, 0, 0, 0, 16711680, 0, 0, 0, 916, 2149, 1),
+('Gianne Badge', 'an official gianne chef', '', 317, 2, 0, 0, 0, 65280, 0, 0, 0, 917, 2150, 1),
+('Tree Gnome Translation', 'Translate the old gnome tounge', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 1, 918, 2151, 1),
+('Bark Sample', 'A sample from the grand tree', '', 318, 2, 0, 0, 0, 0, 0, 0, 1, 919, 2152, 0),
+('War Ship', 'A model of a karamja warship', 'play with', 319, 2, 0, 0, 0, 0, 0, 0, 1, 920, 2153, 1),
+('Gloughs Journal', 'Glough\'s private notes', 'read', 299, 2, 0, 0, 0, 0, 0, 0, 1, 921, 2154, 0),
+('Invoice', 'A note with foreman\'s timber order', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 922, 2155, 0),
+('Ugthanki Kebab', 'A strange smelling Kebab made from Ugthanki meat - it doesn\'t look too good', 'eat', 95, 20, 0, 0, 0, 0, 0, 0, 0, 923, 2156, 1),
+('Special Curry', 'It\'s a spicy hot curry', 'Eat', 162, 20, 0, 0, 0, 12274688, 0, 1, 0, 924, 2157, 1),
+('Glough\'s Key', 'Glough left this at anita\'s', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 925, 2158, 0),
+('Glough\'s Notes', 'Scribbled notes and diagrams', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 926, 2159, 0),
+('Pebble', 'The pebble has an inscription', '', 321, 2, 0, 0, 0, 0, 0, 0, 1, 927, 2160, 0),
+('Pebble', 'The pebble has an inscription', '', 322, 2, 0, 0, 0, 0, 0, 0, 1, 928, 2161, 0),
+('Pebble', 'The pebble has an inscription', '', 323, 2, 0, 0, 0, 0, 0, 0, 1, 929, 2162, 0),
+('Pebble', 'The pebble has an inscription', '', 324, 2, 0, 0, 0, 0, 0, 0, 1, 930, 2163, 0),
+('Daconia Rock', 'A magicaly crafted stone', '', 73, 40, 0, 0, 0, 14540253, 0, 0, 1, 931, 2164, 0),
+('Sinister Key', 'You get a sense of dread from this key', '', 25, 1, 0, 0, 0, 1118481, 0, 0, 0, 932, 2165, 1),
+('Muddy Torstol', 'I need to clean this', 'Clean', 435, 1, 0, 0, 0, 0, 0, 1, 0, 933, 2166, 1),
+('Torstol', 'A useful herb', '', 75, 25, 0, 0, 0, 0, 0, 0, 0, 934, 2167, 1),
+('Unfinished Torstol Potion', 'I need Jangerberries to finish this Torstol potion', '', 48, 25, 0, 0, 0, 12285696, 0, 0, 0, 935, 2168, 1),
+('Jangerberries', 'They don\'t look very ripe', 'eat', 21, 1, 0, 0, 0, 4497408, 0, 0, 0, 936, 2169, 1),
+('Fruit Blast', 'A cool refreshing fruit mix', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 937, 2170, 1),
+('Blurberry Special', 'Looks good..smells strong', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 938, 2171, 1),
+('Wizard Blizzard', 'Looks like a strange mix', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 939, 2172, 1),
+('Pineapple Punch', 'A fresh healthy fruit mix', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 940, 2173, 1),
+('SGG', 'A short green guy..looks good', 'drink', 295, 30, 0, 0, 0, 0, 0, 0, 0, 941, 2174, 1),
+('Chocolate Saturday', 'A warm creamy alcoholic beverage', 'drink', 297, 30, 0, 0, 0, 0, 0, 0, 0, 942, 2175, 1),
+('Drunk Dragon', 'A warm creamy alcoholic beverage', 'drink', 297, 30, 0, 0, 0, 0, 0, 0, 0, 943, 2176, 1),
+('Cheese and Tomato Batta', 'Smells really good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 944, 2177, 1),
+('Toad Batta', 'actually smells quite good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 945, 2178, 1),
+('Gnome Batta', 'smells like pants', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 946, 2179, 1),
+('Worm Batta', 'actually smells quite good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 947, 2180, 1),
+('Fruit Batta', 'actually smells quite good', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 948, 2181, 1),
+('Veg Batta', 'well..it looks healthy', 'eat', 312, 120, 0, 0, 0, 0, 0, 0, 0, 949, 2182, 1),
+('Chocolate Bomb', 'Looks great', 'eat', 313, 160, 0, 0, 0, 0, 0, 0, 0, 950, 2183, 1),
+('Vegball', 'Looks pretty healthy', 'eat', 314, 150, 0, 0, 0, 0, 0, 0, 0, 951, 2184, 1),
+('Worm Hole', 'actually smells quite good', 'eat', 315, 150, 0, 0, 0, 0, 0, 0, 0, 952, 2185, 1),
+('Tangled Toads Legs', 'actually smells quite good', 'eat', 316, 160, 0, 0, 0, 0, 0, 0, 0, 953, 2186, 1),
+('Choc Crunchies', 'yum ... smells good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 954, 2187, 1),
+('Worm Crunchies', 'actually smells quite good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 955, 2188, 1),
+('Toad Crunchies', 'actually smells quite good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 956, 2189, 1),
+('Spice Crunchies', 'yum ... smells good', 'eat', 311, 85, 0, 0, 0, 0, 0, 0, 0, 957, 2190, 1),
+('Stone-Plaque', 'A stone plaque with carved letters in it', 'Read', 236, 5, 0, 0, 0, 0, 0, 0, 1, 958, 2191, 0),
+('Tattered Scroll', 'An ancient tattered scroll', 'Read', 29, 5, 0, 0, 0, 255, 0, 0, 1, 959, 2192, 0),
+('Crumpled Scroll', 'An ancient crumpled scroll', 'Read', 29, 5, 0, 0, 0, 12648448, 0, 0, 1, 960, 2193, 0),
+('Bervirius Tomb Notes', 'Notes taken from the tomb of Bervirius', 'Read', 29, 5, 0, 0, 0, 16776960, 0, 0, 1, 961, 2194, 0),
+('Zadimus Corpse Corpse', 'The remains of Zadimus', 'Bury', 237, 1, 0, 0, 0, 15400622, 0, 0, 1, 962, 2195, 0),
+('Potion of Zamorak', 'It looks scary', 'drink', 48, 25, 0, 0, 0, 15636736, 0, 1, 0, 963, 2196, 1),
+('Potion of Zamorak', 'It looks scary', 'drink', 436, 25, 0, 0, 0, 15636736, 0, 1, 0, 964, 2197, 1),
+('Potion of Zamorak', 'It looks scary', 'drink', 437, 25, 0, 0, 0, 15636736, 0, 1, 0, 965, 2198, 1),
+('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 16755370, 0, 0, 0, 966, 2199, 1),
+('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 11206570, 0, 1, 0, 967, 2200, 1),
+('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 11184895, 0, 1, 0, 968, 2201, 1),
+('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 16777164, 0, 1, 0, 969, 2202, 1),
+('Boots', 'They\'re soft and silky', '', 223, 2000, 0, 0, 1, 13434879, 0, 1, 0, 970, 2203, 1),
+('Santa\'s Hat', 'It\'s a Santa Claus\' hat', '', 325, 10, 0, 0, 1, 0, 0, 0, 0, 971, 2204, 1),
+('Locating Crystal', 'A magical crystal sphere', 'Activate', 199, 100, 0, 0, 0, 12648447, 0, 0, 1, 972, 2205, 0),
+('Sword Pommel', 'An ivory sword pommel', '', 334, 100, 0, 0, 0, 16777088, 0, 0, 1, 973, 2206, 0),
+('Bone Shard', 'A slender piece of bone', 'Look', 238, 1, 0, 0, 0, 0, 0, 0, 1, 974, 2207, 0),
+('Steel Wire', 'Useful for crafting items', '', 326, 200, 0, 0, 0, 0, 0, 0, 1, 975, 2208, 1),
+('Rashiliya Corpse', 'The remains of the Zombie Queen', '', 239, 1, 0, 0, 0, 16777152, 0, 0, 0, 976, 2209, 0),
+('Rock of Ages Corpse', 'The remains of the Rock of Ages', 'Bury', 237, 1, 0, 0, 0, 16744576, 0, 0, 0, 977, 2210, 0),
+('Reset Crystal', 'Helps reset things in game', 'Activate', 199, 100, 0, 0, 0, 182474, 0, 0, 1, 978, 2211, 1),
+('Bronze Wire', 'Useful for crafting items', '', 326, 20, 0, 0, 0, 16737817, 0, 0, 1, 979, 2212, 1),
+('Present', 'Click to use this on a friend', '', 330, 160, 0, 0, 0, 0, 0, 0, 0, 980, 2213, 1),
+('Gnome Ball', 'Lets play', 'shoot', 327, 10, 0, 0, 0, 0, 0, 0, 0, 981, 2214, 0),
+('Papyrus', 'Used for making notes', '', 282, 9, 0, 0, 0, 0, 0, 0, 1, 982, 2215, 1),
+('A lump of Charcoal', 'a lump of cooked coal good for making marks.', '', 73, 45, 0, 0, 0, 2105376, 0, 0, 1, 983, 2216, 1),
+('Arrow', 'linen wrapped around an arrow head', '', 328, 10, 0, 0, 0, 0, 1, 0, 1, 984, 2217, 0),
+('Lit Arrow', 'A flamming arrow', '', 329, 10, 0, 1, 0, 0, 1, 0, 1, 985, 0, 0),
+('Rocks', 'A few Large rocks', '', 331, 10, 0, 0, 0, 0, 0, 0, 1, 986, 2218, 0),
+('Paramaya Rest Ticket', 'Allows you to rest in the luxurius Paramaya Inn', '', 218, 5, 0, 0, 0, 0, 0, 0, 1, 987, 2219, 0),
+('Ship Ticket', 'Allows you passage on the \'Lady of the Waves\' ship.', '', 218, 5, 0, 0, 0, 8454143, 0, 0, 1, 988, 2220, 0),
+('Damp Cloth', 'It smells as if it\'s been doused in alcohol', '', 92, 10, 0, 0, 0, 0, 0, 0, 1, 989, 2221, 0),
+('Desert Boots', 'Boots made specially for the desert', '', 223, 20, 0, 0, 1, 16777215, 0, 1, 0, 990, 2222, 1),
+('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 333, 10, 0, 0, 0, 0, 0, 0, 1, 991, 2223, 0),
+('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 345, 10, 0, 0, 0, 0, 0, 0, 1, 992, 2224, 0),
+('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 346, 10, 0, 0, 0, 0, 0, 0, 1, 993, 2225, 0),
+('Orb of Light', 'The orb gives you a safe peaceful feeling', '', 347, 10, 0, 0, 0, 0, 0, 0, 1, 994, 2226, 0),
+('Railing', 'A broken metal rod', '', 335, 10, 0, 0, 0, 0, 0, 0, 1, 995, 2227, 0),
+('Randas\'s Journal', 'An old journal with several pages missing', 'read', 28, 1, 0, 0, 0, 15641258, 0, 0, 1, 996, 2228, 0),
+('Unicorn Horn', 'Poor unicorn went splat!', '', 145, 20, 0, 0, 0, 0, 0, 0, 0, 997, 2229, 0),
+('Coat of Arms', 'A symbol of truth and all that is good', '', 348, 10, 0, 0, 0, 0, 0, 0, 1, 998, 2230, 0),
+('Coat of Arms', 'A symbol of truth and all that is good', '', 336, 10, 0, 0, 0, 0, 0, 0, 1, 999, 2231, 0),
+('Staff of Iban', 'It\'s a slightly magical stick', '', 337, 15, 0, 0, 1, 0, 1, 1, 0, 1000, 2232, 0),
+('Dwarf Brew', 'It\'s a bucket of home made brew', '', 22, 2, 0, 0, 0, 12285815, 0, 0, 1, 1001, 2233, 0),
+('Iban\'s Ashes', 'A heap of ashes', '', 23, 2, 0, 0, 0, 11184810, 0, 0, 1, 1002, 2234, 0),
+('Cat', 'She\'s sleeping..i think!', '', 338, 2, 0, 0, 0, 11184810, 0, 0, 1, 1003, 2235, 0),
+('A Doll of Iban', 'A strange doll made from sticks and cloth', 'search', 339, 2, 0, 0, 0, 11184810, 0, 0, 1, 1004, 2236, 0);
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`, `tradable`) VALUES
+('Old Journal', 'I wonder who wrote this!', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 1005, 2237, 0),
+('Klank\'s Gauntlets', 'Heavy hand protection', '', 217, 5000, 0, 0, 1, 12303291, 1, 1, 0, 1006, 2238, 0),
+('Iban\'s Shadow', 'A dark mystical liquid', '', 340, 2, 0, 0, 0, 11184810, 0, 0, 1, 1007, 2239, 0),
+('Iban\'s Conscience', 'The remains of a dove that died long ago', '', 341, 2, 0, 0, 0, 11184810, 0, 0, 1, 1008, 2240, 0),
+('Amulet of Othainian', 'A strange looking amulet', '', 125, 0, 0, 0, 1, 12255487, 0, 0, 1, 1009, 2241, 0),
+('Amulet of Doomion', 'A strange looking amulet', '', 125, 0, 0, 0, 1, 12255487, 0, 0, 1, 1010, 2242, 0),
+('Amulet of Holthion', 'A strange looking amulet', '', 125, 0, 0, 0, 1, 12255487, 0, 0, 1, 1011, 2243, 0),
+('Keep Key', 'A small prison key', '', 25, 1, 0, 0, 0, 12303291, 0, 0, 1, 1012, 2244, 0),
+('Bronze Throwing Dart', 'A deadly throwing dart with a bronze tip.', '', 231, 2, 0, 1, 1, 16737817, 1, 1, 0, 1013, 0, 1),
+('Prototype Throwing Dart', 'A proto type of a deadly throwing dart.', '', 231, 70, 0, 1, 0, 16737817, 1, 1, 1, 1014, 0, 0),
+('Iron Throwing Dart', 'A deadly throwing dart with an iron tip.', '', 231, 5, 0, 1, 1, 15654365, 1, 1, 0, 1015, 0, 1),
+('Full Water Skin', 'A skinful of water', '', 343, 30, 0, 0, 0, 8404992, 0, 0, 0, 1016, 2245, 1),
+('Lens Mould', 'A peculiar mould in the shape of a disc', '', 342, 10, 0, 0, 0, 0, 0, 0, 1, 1017, 2246, 0),
+('Lens', 'A perfectly formed glass disc', '', 344, 10, 0, 0, 0, 0, 0, 0, 1, 1018, 2247, 0),
+('Desert Robe', 'Cool light robe to wear in the desert', '', 88, 500, 0, 0, 1, 16777215, 0, 0, 0, 1019, 2248, 1),
+('Desert Shirt', 'A light cool shirt to wear in the desert', '', 87, 500, 0, 0, 1, 16777215, 0, 0, 0, 1020, 2249, 1),
+('Metal Key', 'A large metalic key.', '', 25, 1, 0, 0, 0, 12632256, 0, 0, 1, 1021, 2250, 0),
+('Slaves Robe Bottom', 'A dirty desert skirt', '', 88, 500, 0, 0, 1, 8421376, 0, 0, 0, 1022, 2251, 1),
+('Slaves Robe Top', 'A dirty desert shirt', '', 87, 500, 0, 0, 1, 8421376, 0, 0, 0, 1023, 2252, 1),
+('Steel Throwing Dart', 'A deadly throwing dart with a steel tip.', '', 231, 20, 0, 1, 1, 15658734, 1, 1, 0, 1024, 0, 1),
+('Astrology Book', 'A book on Astrology in runescape', 'Read', 28, 2, 0, 0, 0, 0, 0, 0, 0, 1025, 2253, 0),
+('Unholy Symbol Mould', 'use this with silver in a furnace', '', 349, 200, 0, 0, 0, 0, 0, 0, 0, 1026, 2254, 0),
+('Unholy Symbol of Zamorak', 'this needs stringing', '', 350, 200, 0, 0, 0, 0, 0, 0, 0, 1027, 2255, 0),
+('Unblessed Unholy Symbol of Zamorak', 'this needs blessing', '', 351, 200, 0, 0, 1, 0, 0, 0, 0, 1028, 2256, 0),
+('Unholy Symbol of Zamorak', 'a symbol indicating allegiance to Zamorak', '', 351, 200, 0, 0, 1, 0, 0, 0, 0, 1029, 2257, 0),
+('Shantay Desert Pass', 'Allows you into the desert through the Shantay pass worth 5 gold.', '', 218, 5, 0, 1, 0, 13083169, 0, 0, 0, 1030, 0, 0),
+('Staff of Iban', 'The staff is damaged', 'wield', 337, 15, 0, 0, 0, 0, 1, 0, 0, 1031, 2258, 0),
+('Dwarf Cannon Base', 'bang', 'set down', 352, 200000, 0, 0, 0, 0, 1, 0, 0, 1032, 2259, 1),
+('Dwarf Cannon Stand', 'bang', '', 353, 200000, 0, 0, 0, 0, 1, 0, 0, 1033, 2260, 1),
+('Dwarf Cannon Barrels', 'bang', '', 354, 200000, 0, 0, 0, 0, 1, 0, 0, 1034, 2261, 1),
+('Dwarf Cannon Furnace', 'bang', '', 355, 200000, 0, 0, 0, 0, 1, 0, 0, 1035, 2262, 1),
+('Fingernails', 'Ugh gross!', '', 356, 0, 0, 0, 0, 0, 0, 0, 1, 1036, 2263, 0),
+('Powering crystal1', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 16777011, 0, 0, 1, 1037, 2264, 0),
+('Mining Barrel', 'A roughly constructed barrel for carrying rock.', '', 358, 100, 0, 0, 0, 65280, 0, 0, 1, 1038, 2265, 0),
+('Ana in a Barrel', 'A roughly constructed barrel with an Ana in it!', 'Look', 359, 100, 0, 0, 0, 16711680, 0, 0, 1, 1039, 2266, 0),
+('Stolen Gold', 'I wish I could spend it', '', 79, 300, 0, 0, 0, 16763980, 0, 0, 1, 1040, 2267, 0),
+('Multi Cannon Ball', 'A heavy metal spiked ball', '', 332, 10, 0, 1, 0, 0, 1, 0, 0, 1041, 0, 1),
+('Railing', 'A metal railing replacement', '', 335, 10, 0, 0, 0, 0, 0, 0, 1, 1042, 2268, 0),
+('Ogre Tooth', 'big sharp and nasty', '', 360, 0, 0, 0, 0, 0, 0, 0, 1, 1043, 2269, 0),
+('Ogre Relic', 'A grotesque symbol of the ogres', '', 361, 0, 0, 0, 0, 0, 0, 0, 1, 1044, 2270, 0),
+('Skavid Map', 'A map of cave locations', '', 362, 0, 0, 0, 0, 0, 0, 0, 1, 1045, 2271, 0),
+('Dwarf Remains', 'The remains of a dwarf savaged by goblins', '', 237, 1, 0, 0, 0, 16744576, 0, 0, 1, 1046, 2272, 0),
+('Key', 'A key for a chest', '', 25, 1, 0, 0, 0, 16750848, 0, 0, 1, 1047, 2273, 0),
+('Ogre Relic Part', 'A piece of a statue', '', 363, 0, 0, 0, 0, 0, 0, 0, 1, 1048, 2274, 0),
+('Ogre Relic Part', 'A piece of a statue', '', 364, 0, 0, 0, 0, 0, 0, 0, 1, 1049, 2275, 0),
+('Ogre Relic Part', 'A piece of a statue', '', 365, 0, 0, 0, 0, 0, 0, 0, 1, 1050, 2276, 0),
+('Ground Bat Bones', 'The ground bones of a bat', '', 23, 20, 0, 0, 0, 15645520, 0, 0, 0, 1051, 2277, 0),
+('Unfinished Shaman Potion', 'I need another ingredient to finish the shaman potion', '', 48, 3, 0, 0, 0, 56576, 0, 0, 0, 1052, 2278, 0),
+('Ogre Potion', 'A strange liquid', '', 48, 120, 0, 0, 0, 13434726, 0, 0, 1, 1053, 2279, 0),
+('Magic Ogre Potion', 'A strange liquid that bubbles with power', '', 48, 120, 0, 0, 0, 6750156, 0, 0, 1, 1054, 2280, 0),
+('Tool Kit', 'These could be handy!', '', 366, 120, 0, 0, 0, 15654365, 0, 0, 1, 1055, 2281, 0),
+('Nulodion\'s Notes', 'Construction notes for dwarf cannon ammo', 'read', 234, 1, 0, 0, 0, 0, 0, 0, 1, 1056, 2282, 0),
+('Cannon Ammo Mould', 'Used to make cannon ammo', '', 367, 5, 0, 0, 0, 0, 0, 0, 0, 1057, 2283, 1),
+('Tenti Pineapple', 'The most delicious in the whole of Kharid', '', 124, 1, 0, 0, 0, 0, 0, 0, 1, 1058, 2284, 0),
+('Bedobin Copy Key', 'A copy of a key for the captains of the mining camps chest', '', 25, 20, 0, 0, 0, 4194304, 0, 0, 1, 1059, 2285, 0),
+('Technical Plans', 'Very technical looking plans for making a thrown weapon of some sort', 'Read', 218, 500, 0, 0, 0, 12632256, 0, 0, 1, 1060, 2286, 0),
+('Rock Cake', 'Yum... I think!', 'eat', 368, 0, 0, 0, 0, 0, 0, 0, 1, 1061, 2287, 0),
+('Bronze Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 1, 0, 1, 0, 16737817, 1, 1, 0, 1062, 0, 1),
+('Iron Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 3, 0, 1, 0, 15654365, 1, 1, 0, 1063, 0, 1),
+('Steel Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 9, 0, 1, 0, 15658734, 1, 1, 0, 1064, 0, 1),
+('Mithril Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 25, 0, 1, 0, 10072780, 1, 1, 0, 1065, 0, 1),
+('Adamantite Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 65, 0, 1, 0, 11717785, 1, 1, 0, 1066, 0, 1),
+('Rune Dart Tips', 'Dangerous looking dart tips - need feathers for flight', '', 369, 350, 0, 1, 0, 65535, 1, 1, 0, 1067, 0, 1),
+('Mithril Throwing Dart', 'A deadly throwing dart with a mithril tip.', '', 231, 50, 0, 1, 1, 10072780, 1, 1, 0, 1068, 0, 1),
+('Adamantite Throwing Dart', 'A deadly throwing dart with an adamantite tip.', '', 231, 130, 0, 1, 1, 11717785, 1, 1, 0, 1069, 0, 1),
+('Rune Throwing Dart', 'A deadly throwing dart with a runite tip.', '', 231, 700, 0, 1, 1, 65535, 1, 1, 0, 1070, 0, 1),
+('Prototype Dart Tip', 'Dangerous looking dart tip - needs feathers for flight', '', 207, 1, 0, 1, 0, 16737817, 1, 1, 0, 1071, 0, 0),
+('Info Document', 'read to access variable choices', 'read', 234, 2, 0, 0, 0, 0, 0, 0, 1, 1072, 2288, 0),
+('Instruction Manual', 'An old note book', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 1073, 2289, 0),
+('Unfinished Potion', 'I need another ingredient to finish this potion', '', 48, 3, 0, 0, 0, 6750054, 0, 0, 0, 1074, 2290, 0),
+('Iron Throwing Knife', 'A finely balanced knife', '', 80, 6, 0, 0, 1, 15654365, 1, 0, 0, 1075, 2291, 1),
+('Bronze Throwing Knife', 'A finely balanced knife', '', 80, 2, 0, 0, 1, 16737817, 1, 0, 0, 1076, 2292, 1),
+('Steel Throwing Knife', 'A finely balanced knife', '', 80, 21, 0, 0, 1, 15658734, 1, 0, 0, 1077, 2293, 1),
+('Mithril Throwing Knife', 'A finely balanced knife', '', 80, 54, 0, 0, 1, 10072780, 1, 0, 0, 1078, 2294, 1),
+('Adamantite Throwing Knife', 'A finely balanced knife', '', 80, 133, 0, 0, 1, 11717785, 1, 0, 0, 1079, 2295, 1),
+('Rune Throwing Knife', 'A finely balanced knife', '', 80, 333, 0, 0, 1, 65535, 1, 0, 0, 1080, 2296, 1),
+('Black Throwing Knife', 'A finely balanced knife', '', 80, 37, 0, 0, 1, 3158064, 1, 0, 0, 1081, 2297, 1),
+('Water Skin Mostly Full', 'A half full skin of water', '', 343, 27, 0, 0, 0, 8404992, 0, 0, 0, 1082, 2298, 1),
+('Water Skin Mostly Empty', 'A half empty skin of water', '', 343, 24, 0, 0, 0, 8404992, 0, 0, 0, 1083, 2299, 1),
+('Water Skin Mouthful Left', 'A waterskin with a mouthful of water left', '', 343, 18, 0, 0, 0, 8404992, 0, 0, 0, 1084, 2300, 1),
+('Empty Water Skin', 'A completely empty waterskin', '', 343, 15, 0, 0, 0, 8404992, 0, 0, 0, 1085, 2301, 1),
+('Nightshade', 'Deadly!', 'eat', 370, 30, 0, 0, 0, 0, 0, 0, 1, 1086, 2302, 0),
+('Shaman Robe', 'This has been left by one of the dead ogre shaman', 'search', 87, 40, 0, 0, 0, 10510400, 0, 0, 1, 1087, 2303, 0),
+('Iron Spear', 'An iron tipped spear', '', 283, 13, 0, 0, 1, 15654365, 1, 0, 0, 1088, 2304, 1),
+('Steel Spear', 'A steel tipped spear', '', 283, 46, 0, 0, 1, 15658734, 1, 0, 0, 1089, 2305, 1),
+('Mithril Spear', 'A mithril tipped spear', '', 283, 119, 0, 0, 1, 10072780, 1, 0, 0, 1090, 2306, 1),
+('Adamantite Spear', 'An adamantite tipped spear', '', 283, 293, 0, 0, 1, 11717785, 1, 0, 0, 1091, 2307, 1),
+('Rune Spear', 'A rune tipped spear', '', 283, 1000, 0, 0, 1, 56797, 1, 0, 0, 1092, 2308, 1),
+('Cat', 'it\'s fluffs', 'Stroke', 338, 2, 0, 0, 0, 11184810, 0, 0, 1, 1093, 2309, 0),
+('Seasoned Sardine', 'They don\'t smell any better', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 0, 1094, 2310, 1),
+('Kittens', 'purrr', '', 372, 2, 0, 0, 0, 11184810, 0, 0, 1, 1095, 2311, 0),
+('Kitten', 'purrr', 'stroke', 371, 2, 0, 0, 0, 11184810, 0, 0, 1, 1096, 2312, 0),
+('Wrought Iron Key', 'This key clears unlocks a very sturdy gate of some sort.', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 1, 1097, 2313, 0),
+('Cell Door Key', 'A roughly hewn key', '', 25, 1, 0, 0, 0, 16384, 0, 0, 1, 1098, 2314, 0),
+('A Free Shantay Disclaimer', 'Very important information.', 'Read', 218, 1, 0, 0, 0, 16711680, 0, 0, 0, 1099, 2315, 1),
+('Doogle leaves', 'Small sweet smelling leaves', '', 298, 2, 0, 0, 0, 0, 0, 0, 0, 1100, 2316, 1),
+('Raw Ugthanki Meat', 'I need to cook this first', '', 60, 2, 0, 0, 0, 16744640, 0, 0, 0, 1101, 2317, 1),
+('Tasty Ugthanki Kebab', 'A fresh Kebab made from Ugthanki meat', 'eat', 320, 20, 0, 0, 0, 0, 0, 0, 0, 1102, 2318, 1),
+('Cooked Ugthanki Meat', 'Freshly cooked Ugthanki meat', 'Eat', 60, 5, 0, 0, 0, 13395507, 0, 0, 0, 1103, 2319, 1),
+('Uncooked Pitta Bread', 'I need to cook this.', '', 152, 4, 0, 0, 0, 0, 0, 0, 0, 1104, 2320, 1),
+('Pitta Bread', 'Mmmm I need to add some other ingredients yet.', '', 152, 10, 0, 0, 0, 16768184, 0, 0, 0, 1105, 2321, 1),
+('Tomato Mixture', 'A mixture of tomatoes in a bowl', '', 162, 3, 0, 0, 0, 16711680, 0, 0, 0, 1106, 2322, 1),
+('Onion Mixture', 'A mixture of onions in a bowl', '', 162, 3, 0, 0, 0, 16776960, 0, 0, 0, 1107, 2323, 1),
+('Onion and Tomato Mixture', 'A mixture of onions and tomatoes in a bowl', '', 162, 3, 0, 0, 0, 16744512, 0, 0, 0, 1108, 2324, 1),
+('Onion and Tomato and Ugthanki Mix', 'A mixture of onions and tomatoes and Ugthanki meat in a bowl', '', 162, 3, 0, 0, 0, 5977890, 0, 0, 0, 1109, 2325, 1),
+('Burnt Pitta Bread', 'Urgh - it\'s all burnt', '', 152, 1, 0, 0, 0, 4194304, 0, 0, 0, 1110, 2326, 1),
+('Panning Tray', 'used for panning gold', 'search', 373, 1, 0, 0, 0, 4194304, 0, 0, 1, 1111, 2327, 0),
+('Panning Tray', 'this tray contains gold nuggets', 'take gold', 374, 1, 0, 0, 0, 4194304, 0, 0, 1, 1112, 2328, 0),
+('Panning Tray', 'this tray contains mud', 'search', 375, 1, 0, 0, 0, 4194304, 0, 0, 1, 1113, 2329, 0),
+('Rock Pick', 'a sharp pick for cracking rocks', '', 376, 1, 0, 0, 0, 4194304, 0, 0, 0, 1114, 2330, 0),
+('Specimen Brush', 'stiff brush for cleaning specimens', '', 377, 1, 0, 0, 0, 4194304, 0, 0, 0, 1115, 2331, 0),
+('Specimen Jar', 'a jar for holding soil samples', '', 378, 1, 0, 0, 0, 4194304, 0, 0, 0, 1116, 2332, 0),
+('Rock Sample', 'A rock sample', '', 379, 1, 0, 0, 0, 4194304, 0, 0, 0, 1117, 2333, 0),
+('Gold Nuggets', 'Real gold pieces!', '', 380, 1, 0, 1, 0, 4194304, 0, 0, 0, 1118, 0, 0),
+('Cat', 'looks like a healthy one', '', 381, 1, 0, 0, 0, 4194304, 0, 0, 1, 1119, 2334, 1),
+('Scrumpled Piece of Paper', 'A piece of paper with barely legible writing - looks like a recipe!', 'Read', 218, 10, 0, 0, 0, 16317080, 0, 0, 0, 1120, 2335, 1),
+('Digsite Info', 'IAN ONLY', 'read', 382, 63, 0, 0, 0, 0, 0, 0, 0, 1121, 2336, 0),
+('Poisoned Bronze Throwing Dart', 'A venomous throwing dart with a bronze tip.', '', 384, 2, 0, 1, 1, 16737817, 1, 1, 0, 1122, 0, 1),
+('Poisoned Iron Throwing Dart', 'A venomous throwing dart with an iron tip.', '', 384, 5, 0, 1, 1, 16737817, 1, 1, 0, 1123, 0, 1),
+('Poisoned Steel Throwing Dart', 'A venomous throwing dart with a steel tip.', '', 384, 20, 0, 1, 1, 15658734, 1, 1, 0, 1124, 0, 1),
+('Poisoned Mithril Throwing Dart', 'A venomous throwing dart with a mithril tip.', '', 384, 50, 0, 1, 1, 10072780, 1, 1, 0, 1125, 0, 1),
+('Poisoned Adamantite Throwing Dart', 'A venomous throwing dart with an adamantite tip.', '', 384, 130, 0, 1, 1, 11717785, 1, 1, 0, 1126, 0, 1),
+('Poisoned Rune Throwing Dart', 'A deadly venomous dart with a runite tip.', '', 384, 700, 0, 1, 1, 65535, 1, 1, 0, 1127, 0, 1),
+('Poisoned Bronze Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 2, 0, 0, 1, 16737817, 1, 0, 0, 1128, 2337, 1),
+('Poisoned Iron Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 6, 0, 0, 1, 15654365, 1, 0, 0, 1129, 2338, 1),
+('Poisoned Steel Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 21, 0, 0, 1, 15658734, 1, 0, 0, 1130, 2339, 1),
+('Poisoned Mithril Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 54, 0, 0, 1, 10072780, 1, 0, 0, 1131, 2340, 1),
+('Poisoned Black Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 37, 0, 0, 1, 3158064, 1, 0, 0, 1132, 2341, 1),
+('Poisoned Adamantite Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 133, 0, 0, 1, 11717785, 1, 0, 0, 1133, 2342, 1),
+('Poisoned Rune Throwing Knife', 'A finely balanced knife with a coating of venom', '', 385, 333, 0, 0, 1, 65535, 1, 0, 0, 1134, 2343, 1),
+('Poisoned Bronze Spear', 'A bronze tipped spear with added venom ', '', 383, 4, 0, 0, 1, 16737817, 1, 0, 0, 1135, 2344, 1),
+('Poisoned Iron Spear', 'An iron tipped spear with added venom', '', 383, 13, 0, 0, 1, 15654365, 1, 0, 0, 1136, 2345, 1),
+('Poisoned Steel Spear', 'A steel tipped spear with added venom', '', 383, 46, 0, 0, 1, 15658734, 1, 0, 0, 1137, 2346, 1),
+('Poisoned Mithril Spear', 'A mithril tipped spear with added venom', '', 383, 119, 0, 0, 1, 10072780, 1, 0, 0, 1138, 2347, 1),
+('Poisoned Adamantite Spear', 'An adamantite tipped spear with added venom', '', 383, 293, 0, 0, 1, 11717785, 1, 0, 0, 1139, 2348, 1),
+('Poisoned Rune Spear', 'A rune tipped spear with added venom', '', 383, 1000, 0, 0, 1, 56797, 1, 0, 0, 1140, 2349, 1),
+('Book of Experimental Chemistry', 'A book on experiments with volatile chemicals', 'read', 28, 1, 0, 0, 0, 16755370, 0, 0, 1, 1141, 2350, 0),
+('Level 1 Certificate', 'A Certificate of education', 'read', 29, 1, 0, 0, 0, 0, 0, 0, 1, 1142, 2351, 0),
+('Level 2 Certificate', 'A Certificate of education', 'read', 29, 1, 0, 0, 0, 0, 0, 0, 1, 1143, 2352, 0),
+('Level 3 Certificate', 'A Certificate of education', 'read', 29, 1, 0, 0, 0, 0, 0, 0, 1, 1144, 2353, 0),
+('Trowel', 'A small device for digging', '', 386, 1, 0, 0, 0, 0, 0, 0, 0, 1145, 2354, 0),
+('Stamped Letter of Recommendation', 'A stamped scroll with a recommendation on it', '', 402, 1, 0, 0, 0, 0, 0, 0, 1, 1146, 2355, 0),
+('Unstamped Letter of Recommendation', 'I hereby recommend this student to undertake the Varrock City earth sciences exams', '', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1147, 2356, 0),
+('Rock Sample', 'A rock sample', '', 388, 1, 0, 0, 0, 4194304, 0, 0, 1, 1148, 2357, 0),
+('Rock Sample', 'A rock sample', '', 389, 1, 0, 0, 0, 4194304, 0, 0, 1, 1149, 2358, 0),
+('Cracked Rock Sample', 'It\'s been cracked open', '', 387, 1, 0, 0, 0, 4194304, 0, 0, 1, 1150, 2359, 0),
+('Belt Buckle', 'been here some time', '', 390, 1, 0, 0, 0, 4194304, 0, 0, 1, 1151, 2360, 0),
+('Powering Crystal2', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 16738047, 0, 0, 1, 1152, 2361, 0),
+('Powering Crystal3', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 6750207, 0, 0, 1, 1153, 2362, 0),
+('Powering Crystal4', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 3407667, 0, 0, 1, 1154, 2363, 0),
+('Old Boot', 'that\'s been here some time', '', 391, 1, 0, 0, 0, 4194304, 0, 0, 0, 1155, 2364, 0),
+('Bunny Ears', 'Get another from the clothes shop if you die', '', 392, 1, 0, 0, 1, 4194304, 0, 0, 0, 1156, 2365, 0),
+('Damaged Armour', 'that\'s been here some time', '', 393, 1, 0, 0, 0, 4194304, 0, 0, 0, 1157, 2366, 0),
+('Damaged Armour', 'that\'s been here some time', '', 394, 1, 0, 0, 0, 4194304, 0, 0, 0, 1158, 2367, 0),
+('Rusty Sword', 'that\'s been here some time', '', 395, 1, 0, 0, 0, 4194304, 0, 0, 0, 1159, 2368, 0),
+('Ammonium Nitrate', 'An acrid chemical', '', 23, 20, 0, 0, 0, 16777164, 0, 0, 1, 1160, 2369, 0),
+('Nitroglycerin', 'A strong acidic formula', '', 48, 2, 0, 0, 0, 16750848, 0, 0, 1, 1161, 2370, 0),
+('Old Tooth', 'a large single tooth', '', 360, 0, 0, 0, 0, 0, 0, 0, 0, 1162, 2371, 0),
+('Radimus Scrolls', 'Scrolls that Radimus gave you', 'Read Scrolls', 29, 5, 0, 0, 0, 8421504, 0, 0, 1, 1163, 2372, 0),
+('Chest Key', 'A small key for a chest', '', 25, 1, 0, 0, 0, 16763904, 0, 0, 0, 1164, 2373, 0),
+('Broken Arrow', 'that\'s been here some time', '', 396, 1, 0, 0, 0, 4194304, 0, 0, 0, 1165, 2374, 0),
+('Buttons', 'they\'ve been here some time', '', 397, 1, 0, 0, 0, 4194304, 0, 0, 0, 1166, 2375, 0),
+('Broken Staff', 'that\'s been here some time', '', 398, 1, 0, 0, 0, 4194304, 0, 0, 0, 1167, 2376, 0),
+('vase', 'An old vase', '', 279, 1, 0, 0, 0, 0, 0, 0, 0, 1168, 2377, 0),
+('Ceramic Remains', 'some ancient pottery', '', 399, 1, 0, 0, 0, 4194304, 0, 0, 0, 1169, 2378, 0),
+('Broken Glass', 'smashed glass', '', 259, 0, 0, 0, 0, 0, 0, 0, 1, 1170, 2379, 0),
+('Unidentified Powder', 'Who knows what this is for?', '', 23, 20, 0, 0, 0, 16777164, 0, 0, 1, 1171, 2380, 0),
+('Machette', 'A purpose built tool for cutting through thick jungle.', '', 432, 40, 0, 0, 1, 8421504, 1, 0, 1, 1172, 2381, 1),
+('Scroll', 'A letter written by the expert', 'read', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1173, 2382, 0),
+('Stone Tablet', 'some ancient script is engraved on here', 'read', 400, 1, 0, 0, 0, 4194304, 0, 0, 1, 1174, 2383, 0),
+('Talisman of Zaros', 'an ancient item', '', 401, 1, 0, 0, 0, 4194304, 0, 0, 1, 1175, 2384, 0),
+('Explosive Compound', 'A dark mystical powder', '', 48, 2, 0, 0, 0, 51, 0, 0, 1, 1176, 2385, 0),
+('Bull Roarer', 'A sound producing instrument - it may attract attention', 'Swing', 418, 1, 0, 0, 0, 7552262, 0, 0, 1, 1177, 2386, 0),
+('Mixed Chemicals', 'A pungent mix of 2 chemicals', '', 48, 2, 0, 0, 0, 16777113, 0, 0, 1, 1178, 2387, 0),
+('Ground Charcoal', 'Powdered charcoal!', '', 23, 20, 0, 0, 0, 2236962, 0, 0, 1, 1179, 2388, 1),
+('Mixed Chemicals', 'A pungent mix of 3 chemicals', '', 48, 2, 0, 0, 0, 13408512, 0, 0, 1, 1180, 2389, 0),
+('Spell Scroll', 'A magical scroll', 'read', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1181, 2390, 0),
+('Yommi Tree Seed', 'A magical seed that grows into a Yommi tree - these need to be germinated', 'Inspect', 270, 200, 0, 1, 0, 65280, 0, 0, 1, 1182, 0, 0),
+('Totem Pole', 'A well crafted totem pole', '', 403, 500, 0, 0, 0, 65280, 0, 0, 1, 1183, 2391, 0),
+('Dwarf Cannon Base', 'bang', 'set down', 352, 200000, 0, 0, 0, 0, 1, 0, 0, 1184, 2392, 1),
+('Dwarf Cannon Stand', 'bang', '', 353, 200000, 0, 0, 0, 0, 1, 0, 0, 1185, 2393, 1),
+('Dwarf Cannon Barrels', 'bang', '', 354, 200000, 0, 0, 0, 0, 1, 0, 0, 1186, 2394, 1),
+('Dwarf Cannon Furnace', 'bang', '', 355, 150000, 0, 0, 0, 0, 1, 0, 0, 1187, 2395, 1),
+('Golden Bowl', 'A specially made bowl constructed out of pure gold', '', 404, 1000, 0, 0, 0, 0, 0, 0, 1, 1188, 2396, 0),
+('Golden Bowl with Pure Water', 'A golden bowl filled with pure water', '', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1189, 2397, 0),
+('Raw Manta Ray', 'A rare catch!', '', 406, 500, 0, 0, 0, 255, 0, 0, 0, 1190, 2398, 1),
+('Manta Ray', 'A rare catch!', 'eat', 407, 500, 0, 0, 0, 255, 0, 1, 0, 1191, 2399, 1),
+('Raw Sea Turtle', 'A rare catch!', '', 408, 500, 0, 0, 0, 255, 0, 0, 0, 1192, 2400, 1),
+('Sea Turtle', 'Tasty!', 'eat', 409, 500, 0, 0, 0, 255, 0, 1, 0, 1193, 2401, 1),
+('Annas Silver Necklace', 'A necklace coated with silver', '', 24, 1, 0, 0, 1, 0, 0, 0, 1, 1194, 2402, 0),
+('Bobs Silver Teacup', 'A tea cup coated with silver', '', 227, 1, 0, 0, 0, 0, 0, 0, 1, 1195, 2403, 0),
+('Carols Silver Bottle', 'A little bottle coated with silver', '', 104, 1, 0, 0, 0, 0, 0, 0, 1, 1196, 2404, 0),
+('Davids Silver Book', 'An ornamental book coated with silver', '', 28, 1, 0, 0, 0, 0, 0, 0, 1, 1197, 2405, 0),
+('Elizabeths Silver Needle', 'An ornamental needle coated with silver', '', 38, 1, 0, 0, 0, 0, 0, 0, 1, 1198, 2406, 0),
+('Franks Silver Pot', 'A small pot coated with silver', '', 61, 1, 0, 0, 0, 0, 0, 0, 1, 1199, 2407, 0),
+('Thread', 'A piece of red thread discovered at the scene of the crime', '', 208, 1, 0, 0, 0, 16711680, 0, 0, 1, 1200, 2408, 0),
+('Thread', 'A piece of green thread discovered at the scene of the crime', '', 208, 1, 0, 0, 0, 65280, 0, 0, 1, 1201, 2409, 0),
+('Thread', 'A piece of blue thread discovered at the scene of the crime', '', 208, 1, 0, 0, 0, 255, 0, 0, 1, 1202, 2410, 0),
+('Flypaper', 'Sticky paper for catching flies', '', 415, 1, 0, 0, 0, 14540253, 0, 0, 1, 1203, 2411, 0),
+('Murder Scene Pot', 'The pot has a sickly smell of poison mixed with wine', '', 61, 1, 0, 0, 0, 16711680, 0, 0, 1, 1204, 2412, 0),
+('A Silver Dagger', 'Dagger Found at crime scene', '', 80, 1, 0, 0, 1, 0, 1, 0, 1, 1205, 2413, 0),
+('Murderers Fingerprint', 'An impression of the murderers fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1206, 2414, 0),
+('Annas Fingerprint', 'An impression of Annas fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1207, 2415, 0),
+('Bobs Fingerprint', 'An impression of Bobs fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1208, 2416, 0),
+('Carols Fingerprint', 'An impression of Carols fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1209, 2417, 0),
+('Davids Fingerprint', 'An impression of Davids fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1210, 2418, 0),
+('Elizabeths Fingerprint', 'An impression of Elizabeths fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1211, 2419, 0),
+('Franks Fingerprint', 'An impression of Franks fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1212, 2420, 0),
+('Zamorak Cape', 'A cape from the almighty zamorak', '', 59, 150000, 0, 0, 1, 16711680, 0, 1, 0, 1213, 2421, 0),
+('Saradomin Cape', 'A cape from the almighty saradomin', '', 59, 150000, 0, 0, 1, 4210926, 0, 1, 0, 1214, 2422, 0),
+('Guthix Cape', 'A cape from the almighty guthix', '', 59, 150000, 0, 0, 1, 4246592, 0, 1, 0, 1215, 2423, 0),
+('Staff of Zamorak', 'It\'s a stick of the gods', '', 337, 150000, 0, 0, 1, 0, 1, 1, 0, 1216, 2424, 0),
+('Staff of Guthix', 'It\'s a stick of the gods', '', 85, 150000, 0, 0, 1, 10072780, 1, 1, 0, 1217, 2425, 0),
+('Staff of Saradomin', 'It\'s a stick of the gods', '', 414, 150000, 0, 0, 1, 10072780, 1, 1, 0, 1218, 2426, 0),
+('A Chunk of Crystal', 'A reddish crystal fragment - it looks like it formed a shape at one time.', '', 410, 2000, 0, 0, 0, 0, 0, 0, 1, 1219, 2427, 0),
+('A Lump of Crystal', 'A reddish crystal fragment - it looks like it formed a shape at one time.', '', 411, 2000, 0, 0, 0, 0, 0, 0, 1, 1220, 2428, 0),
+('A Hunk of Crystal', 'A reddish crystal fragment - it looks like it formed a shape at one time.', '', 412, 2000, 0, 0, 0, 0, 0, 0, 1, 1221, 2429, 0),
+('A Red Crystal', 'A heart shaped red crystal ', 'Inspect', 413, 2000, 0, 0, 0, 0, 0, 0, 1, 1222, 2430, 0),
+('Unidentified Fingerprint', 'An impression of the murderers fingerprint', '', 416, 1, 0, 0, 0, 14540253, 0, 0, 1, 1223, 2431, 0),
+('Annas Silver Necklace', 'A silver necklace coated with flour', '', 24, 1, 0, 0, 1, 0, 0, 0, 1, 1224, 2432, 0),
+('Bobs Silver Teacup', 'A silver tea cup coated with flour', '', 227, 1, 0, 0, 0, 0, 0, 0, 1, 1225, 2433, 0),
+('Carols Silver Bottle', 'A little silver bottle coated with flour', '', 104, 1, 0, 0, 0, 0, 0, 0, 1, 1226, 2434, 0),
+('Davids Silver Book', 'An ornamental silver book coated with flour', '', 28, 1, 0, 0, 0, 0, 0, 0, 1, 1227, 2435, 0),
+('Elizabeths Silver Needle', 'An ornamental silver needle coated with flour', '', 38, 1, 0, 0, 0, 0, 0, 0, 1, 1228, 2436, 0),
+('Franks Silver Pot', 'A small silver pot coated with flour', '', 61, 1, 0, 0, 0, 0, 0, 0, 1, 1229, 2437, 0),
+('A Silver Dagger', 'Dagger Found at crime scene coated with flour', '', 80, 1, 0, 0, 1, 0, 1, 0, 1, 1230, 2438, 0),
+('A Glowing Red Crystal', 'A glowing heart shaped red crystal - great magic must be present in this item', '', 419, 2000, 0, 0, 0, 0, 0, 0, 1, 1231, 2439, 0),
+('Unidentified Liquid', 'A strong acidic formula', '', 48, 2, 0, 0, 0, 16750848, 0, 0, 1, 1232, 2440, 0),
+('Radimus Scrolls', 'Mission briefing and the completed map of Karamja - Sir Radimus will be pleased...', 'Read Scrolls', 29, 5, 0, 0, 0, 8421504, 0, 0, 1, 1233, 2441, 0),
+('Robe', 'A worn robe', '', 87, 15, 0, 0, 1, 255, 0, 0, 0, 1234, 2442, 0),
+('Armour', 'An unusually red armour', '', 118, 40, 0, 0, 0, 13369344, 0, 0, 1, 1235, 2443, 0),
+('Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 0, 0, 1236, 2444, 0),
+('Eye Patch', 'It makes me look very piratical', '', 198, 2, 0, 0, 1, 0, 0, 0, 0, 1237, 2445, 0),
+('Booking of Binding', 'An ancient tome on Demonology', 'read', 28, 1, 0, 0, 0, 15641258, 0, 0, 1, 1238, 2446, 0),
+('Holy Water Vial', 'A deadly potion against evil kin', 'Throw', 48, 3, 0, 0, 1, 10073782, 0, 0, 1, 1239, 2447, 0),
+('Enchanted Vial', 'This enchanted vial is empty - but is ready for magical liquids.', '', 144, 200, 0, 0, 0, 16646109, 0, 0, 1, 1240, 2448, 0),
+('Scribbled Notes', 'It looks like a page ripped from a book', 'Read', 427, 20, 0, 0, 0, 8421376, 0, 0, 1, 1241, 2449, 0),
+('Scrawled Notes', 'It looks like a page ripped from a book', 'Read', 427, 20, 0, 0, 0, 14066524, 0, 0, 1, 1242, 2450, 0),
+('Scatched Notes', 'It looks like a page ripped from a book', 'Read', 427, 20, 0, 0, 0, 11909701, 0, 0, 1, 1243, 2451, 0),
+('Shamans Tome', 'An ancient tome on various subjects...', 'read', 299, 1, 0, 0, 0, 15641258, 0, 0, 1, 1244, 2452, 0),
+('Edible Seaweed', 'slightly damp seaweed', 'eat', 203, 2, 0, 0, 0, 0, 0, 0, 0, 1245, 2453, 1),
+('Rough Sketch of a Bowl', 'A roughly sketched picture of a bowl made from metal', 'Read', 29, 5, 0, 0, 0, 0, 0, 0, 1, 1246, 2454, 0),
+('Burnt Manta Ray', 'oops!', '', 430, 500, 0, 0, 0, 255, 0, 0, 0, 1247, 2455, 1),
+('Burnt Sea Turtle', 'oops!', '', 431, 500, 0, 0, 0, 255, 0, 0, 0, 1248, 2456, 1),
+('Cut Reed Plant', 'A narrow long tube - it might be useful for something', '', 202, 2, 0, 0, 0, 65280, 0, 0, 1, 1249, 2457, 1),
+('Magical Fire Pass', 'A pass which allows you to cross the flaming walls into the Flaming Octagon', '', 29, 1, 0, 0, 0, 16711680, 0, 0, 1, 1250, 2458, 0),
+('Snakes Weed Solution', 'Snakes weed in water - part of a potion', '', 48, 1, 0, 0, 0, 8454016, 0, 0, 1, 1251, 2459, 0),
+('Ardrigal Solution', 'Ardrigal herb in water - part of a potion', '', 48, 1, 0, 0, 0, 8388608, 0, 0, 1, 1252, 2460, 0),
+('Gujuo Potion', 'A potion to help against fear of the supernatural', 'Drink', 48, 1, 0, 0, 0, 8405056, 0, 0, 1, 1253, 2461, 0),
+('Germinated Yommi Tree Seed', 'A magical seed that grows into a Yommi tree - these have been germinated.', 'Inspect', 270, 200, 0, 1, 0, 65280, 0, 0, 1, 1254, 0, 0),
+('Dark Dagger', 'An unusual looking dagger made of dark shiny obsidian', '', 420, 91, 0, 0, 1, 0, 1, 0, 1, 1255, 2462, 0),
+('Glowing Dark Dagger', 'An unusual looking dagger made of dark shiny obsidian - it has an unnatural glow .', '', 421, 91, 0, 0, 1, 0, 1, 0, 1, 1256, 2463, 0),
+('Holy Force Spell', 'A powerful incantation - it affects spirits of the underworld', 'Cast', 423, 1, 0, 0, 0, 0, 0, 0, 1, 1257, 2464, 0),
+('Iron Pickaxe', 'Used for mining', '', 72, 140, 0, 0, 0, 15654365, 0, 0, 0, 1258, 2465, 1),
+('Steel Pickaxe', 'Requires level 6 mining to use', '', 72, 500, 0, 0, 0, 15658734, 0, 0, 0, 1259, 2466, 1),
+('Mithril Pickaxe', 'Requires level 21 mining to use', '', 72, 1300, 0, 0, 0, 10072780, 0, 0, 0, 1260, 2467, 1),
+('Adamantite Pickaxe', 'Requires level 31 mining to use', '', 72, 3200, 0, 0, 0, 11717785, 0, 0, 0, 1261, 2468, 1),
+('Rune Pickaxe', 'Requires level 41 mining to use', '', 72, 32000, 0, 0, 0, 65535, 0, 0, 0, 1262, 2469, 1),
+('Sleeping Bag', 'Not as comfy as a bed but better than nothing', 'sleep', 422, 30, 0, 0, 0, 0, 0, 0, 0, 1263, 2470, 1),
+('Blue Wizards Hat', 'An ancient wizards hat.', '', 86, 2, 0, 0, 1, 255, 0, 0, 0, 1264, 2471, 0),
+('Gilded Totem Pole', 'A well crafted totem pole - given to you as a gift from Gujuo', 'Inspect', 403, 20, 0, 0, 0, 65280, 0, 0, 1, 1265, 2472, 0),
+('Blessed Golden Bowl', 'A specially made bowl constructed out of pure gold - it looks magical somehow', '', 404, 1000, 0, 0, 0, 0, 0, 0, 1, 1266, 2473, 0),
+('Blessed Golden Bowl with Pure Water', 'A golden bowl filled with pure water - it looks magical somehow', '', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1267, 2474, 0),
+('Raw Oomlie Meat', 'Raw meat from the Oomlie bird', '', 60, 10, 0, 0, 0, 16747571, 0, 0, 0, 1268, 2475, 1),
+('Cooked Oomlie Meat Parcel', 'Deliciously cooked Oomlie meat in a palm leaf pouch.', 'eat', 433, 35, 0, 0, 0, 13395507, 0, 0, 0, 1269, 2476, 1),
+('Dragon Bone Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 0, 0, 0, 0, 1270, 0, 1),
+('Limpwurt Root Certificate', 'Exchangable at Catherby for 5', '', 180, 10, 0, 1, 0, 0, 0, 0, 0, 1271, 0, 1),
+('Prayer Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 3206809, 0, 0, 0, 1272, 0, 1),
+('Super Attack Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 3158254, 0, 0, 0, 1273, 0, 1),
+('Super Defense Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 15644208, 0, 0, 0, 1274, 0, 1),
+('Super Strength Potion Certificate', 'Exchangable at Yanille for 5', '', 180, 10, 0, 1, 0, 15658734, 0, 0, 0, 1275, 0, 1),
+('Half Dragon Square Shield', 'The Right Half of an ancient and powerful looking Dragon Square shield.', '', 425, 750000, 0, 0, 0, 15654365, 1, 0, 0, 1276, 2477, 1),
+('Half Dragon Square Shield', 'Left Half of an ancient and powerful looking Dragon Square shield.', '', 424, 110000, 0, 0, 0, 15654365, 1, 0, 0, 1277, 2478, 1),
+('Dragon Square Shield', 'An ancient and powerful looking Dragon Square shield.', '', 426, 500000, 0, 0, 1, 13500416, 1, 1, 0, 1278, 2479, 1),
+('Palm Tree Leaf', 'A thick green plam leaf - natives use this to cook meat in', '', 428, 5, 0, 0, 0, 0, 0, 0, 0, 1279, 2480, 1),
+('Raw Oomlie Meat Parcel', 'Oomlie meat in a palm leaf pouch - just needs to be cooked.', '', 429, 16, 0, 0, 0, 16747571, 0, 0, 0, 1280, 2481, 1),
+('Burnt Oomlie Meat Parcel', 'Oomlie meat in a palm leaf pouch - it\'s burnt.', '', 429, 1, 0, 0, 0, 4194304, 0, 0, 0, 1281, 2482, 1),
+('Bailing Bucket', 'It\'s a water tight bucket', '', 22, 10, 0, 0, 0, 1052688, 0, 0, 0, 1282, 2483, 1),
+('Plank', 'Damaged remains of the ship', '', 135, 1, 0, 0, 0, 0, 0, 0, 0, 1283, 2484, 1),
+('Arcenia Root', 'the root of an arcenia plant', '', 101, 7, 0, 0, 0, 0, 0, 0, 1, 1284, 2485, 0),
+('Display Tea', 'A nice cup of tea - for display only', '', 227, 10, 0, 0, 0, 0, 0, 0, 0, 1285, 2486, 1),
+('Blessed Golden Bowl with Plain Water', 'A golden bowl filled with plain water', 'Empty', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1286, 2487, 0),
+('Golden Bowl with Plain Water', 'A golden bowl filled with plain water', 'Empty', 405, 1000, 0, 0, 0, 8454143, 0, 0, 1, 1287, 2488, 0),
+('Cape of Legends', 'A beautiful cape', '', 59, 5000, 0, 0, 1, 16777215, 1, 1, 0, 1288, 2489, 0),
+('Scythe', 'Looks deadly.', '', 434, 15, 0, 0, 1, 0, 1, 0, 0, 1289, 2490, 0),
+('Rune Essence', 'An Uncharged Rune Stone', '', 439, 0, 0, 0, 0, 0, 0, 0, 0, 1290, 2491, 1),
+('Body talisman', 'A mysterious power emanates from the talisman...', 'Locate', 440, 6, 0, 0, 0, 0, 0, 0, 0, 1291, 2492, 1),
+('Air talisman', 'A mysterious power emanates from the talisman...', 'Locate', 441, 6, 0, 0, 0, 0, 0, 0, 0, 1292, 2493, 1),
+('Water talisman', 'A mysterious power emanates from the talisman...', 'Locate', 442, 6, 0, 0, 0, 0, 0, 0, 0, 1293, 2494, 1),
+('Fire talisman', 'A mysterious power emanates from the talisman...', 'Locate', 443, 6, 0, 0, 0, 0, 0, 0, 0, 1294, 2495, 1),
+('Earth talisman', 'A mysterious power emanates from the talisman...', 'Locate', 444, 6, 0, 0, 0, 0, 0, 0, 0, 1295, 2496, 1),
+('Nature talisman', 'A mysterious power emanates from the talisman...', 'Locate', 445, 6, 0, 0, 0, 0, 0, 0, 0, 1296, 2497, 1),
+('Law talisman', 'A mysterious power emanates from the talisman...', 'Locate', 446, 6, 0, 0, 0, 0, 0, 0, 0, 1297, 2498, 1),
+('Cosmic talisman', 'A mysterious power emanates from the talisman...', 'Locate', 447, 6, 0, 0, 0, 0, 0, 0, 0, 1298, 2499, 1),
+('Chaos talisman', 'A mysterious power emanates from the talisman...', 'Locate', 448, 6, 0, 0, 0, 0, 0, 0, 0, 1299, 2500, 1),
+('Death talisman', 'A mysterious power emanates from the talisman...', 'Locate', 449, 6, 0, 0, 0, 0, 0, 0, 0, 1300, 2501, 1),
+('Blood talisman', 'A mysterious power emanates from the talisman...', 'Locate', 450, 6, 0, 0, 0, 0, 0, 0, 0, 1301, 2502, 1),
+('Soul talisman', 'A mysterious power emanates from the talisman...', 'Locate', 451, 6, 0, 0, 0, 0, 0, 0, 0, 1302, 2503, 1),
+('Mind talisman', 'A mysterious power emanates from the talisman...', 'Locate', 452, 6, 0, 0, 0, 0, 0, 0, 0, 1303, 2504, 1),
+('Subscription Card', 'This allows you to subscribe your account for 30 days!', 'Redeem', 180, 0, 0, 0, 0, 1315860, 0, 0, 0, 1304, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -5476,7 +5516,8 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 -- Table structure for table `def_log_cut`
 --
 
-CREATE TABLE `def_log_cut` (
+DROP TABLE IF EXISTS `def_log_cut`;
+CREATE TABLE IF NOT EXISTS `def_log_cut` (
   `log` int(5) NOT NULL,
   `shaft_amount` int(5) NOT NULL,
   `shaft_level` int(5) NOT NULL,
@@ -5486,8 +5527,9 @@ CREATE TABLE `def_log_cut` (
   `longbow_id` int(5) NOT NULL,
   `longbow_level` int(5) NOT NULL,
   `longbow_experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_log_cut`
@@ -5507,14 +5549,16 @@ INSERT INTO `def_log_cut` (`log`, `shaft_amount`, `shaft_level`, `shortbow_id`, 
 -- Table structure for table `def_mining`
 --
 
-CREATE TABLE `def_mining` (
+DROP TABLE IF EXISTS `def_mining`;
+CREATE TABLE IF NOT EXISTS `def_mining` (
   `rock_id` int(5) NOT NULL,
   `ore_id` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `respawn_time` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_mining`
@@ -5546,7 +5590,8 @@ INSERT INTO `def_mining` (`rock_id`, `ore_id`, `experience`, `level`, `respawn_t
 (1195, 891, 20, 40, 40, 23),
 (1196, 159, 20, 40, 40, 24),
 (176, 266, 15, 10, 30, 26),
-(1203, 1290, 5, 1, 3, 27);
+(1203, 1290, 5, 1, 3, 27),
+(98, 202, 18, 1, 1, 28);
 
 -- --------------------------------------------------------
 
@@ -5554,7 +5599,8 @@ INSERT INTO `def_mining` (`rock_id`, `ore_id`, `experience`, `level`, `respawn_t
 -- Table structure for table `def_npc`
 --
 
-CREATE TABLE `def_npc` (
+DROP TABLE IF EXISTS `def_npc`;
+CREATE TABLE IF NOT EXISTS `def_npc` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `command` varchar(20) DEFAULT NULL,
@@ -5591,813 +5637,814 @@ CREATE TABLE `def_npc` (
   `combat_model` int(5) NOT NULL,
   `combat_sprite` int(5) NOT NULL,
   `undead` tinyint(1) NOT NULL,
-  `id` int(5) NOT NULL,
-  `dragon` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `dragon` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=824 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_npc`
 --
 
 INSERT INTO `def_npc` (`name`, `description`, `command`, `attack`, `defense`, `strength`, `hits`, `attackable`, `aggressive`, `follows`, `respawn`, `retreat`, `retreat_hits`, `block`, `sprite1`, `sprite2`, `sprite3`, `sprite4`, `sprite5`, `sprite6`, `sprite7`, `sprite8`, `sprite9`, `sprite10`, `sprite11`, `sprite12`, `hair_colour`, `top_colour`, `bottom_colour`, `skin_colour`, `camera1`, `camera2`, `walk_model`, `combat_model`, `combat_sprite`, `undead`, `id`, `dragon`) VALUES
-('Unicorn', 'It\'s a unicorn', '', 21, 23, 23, 19, 1, 0, 0, 40, 1, 3, 0, 130, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 230, 6, 6, 7, 0, 1, 0),
-('Bob', 'An axe seller', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, 0, 2, 0),
-('Sheep', 'A very wooly sheep', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 3, 0),
-('Chicken', 'Yep definitely a chicken', '', 3, 4, 4, 3, 1, 0, 0, 40, 1, 1, 0, 132, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 4, 0),
-('Goblin', 'An ugly green creature', '', 16, 13, 14, 12, 1, 0, 0, 40, 1, 2, 0, 142, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 5, 0),
-('Hans', 'A castle servant', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 65280, 15523536, 145, 220, 6, 6, 5, 0, 6, 0),
-('Cow', 'It\'s a multi purpose cow', '', 9, 9, 8, 8, 1, 0, 0, 40, 1, 1, 0, 128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 327, 240, 6, 6, 45, 0, 7, 0),
-('Cook', 'The head cook of Lumbridge castle', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 8, 0),
-('Bear', 'Eek! A bear!', '', 25, 26, 23, 25, 1, 0, 0, 40, 1, 4, 0, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 9, 0),
-('Priest', 'A priest of Saradomin', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2105376, 3, 15523536, 145, 220, 6, 6, 5, 0, 10, 0),
-('Urhney', 'He looks a little grumpy', '', 10, 10, 10, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2105376, 3, 15523536, 145, 220, 6, 6, 5, 0, 11, 0),
-('Man', 'One of runescapes many citizens', 'pickpocket', 11, 11, 8, 7, 1, 0, 0, 5, 0, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 12, 0),
-('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 13, 0),
-('Camel', 'Oh its a camel', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 127, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 208, 208, 6, 6, 5, 0, 14, 0),
-('Gypsy', 'An old gypsy lady', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 65280, 15523536, 145, 220, 6, 6, 5, 0, 15, 0),
-('Ghost', 'Ooh spooky', '', 15, 15, 15, 5, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 16, 0),
-('Sir Prysin', 'One of the king\'s knights', '', 30, 20, 60, 50, 0, 0, 0, 40, 0, 0, 0, 13, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 17, 0),
-('Traiborn The Wizard', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 18, 0),
-('Captain Rovin', 'The head of the palace guard', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 19, 0),
-('Rat', 'Overgrown vermin', '', 10, 10, 10, 5, 1, 0, 0, 40, 1, 1, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 20, 0),
-('Reldo', 'I think he\'s the librarian', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 65280, 15523536, 145, 220, 6, 6, 5, 0, 21, 0),
-('Mugger', 'He jumps out and attacks people', '', 15, 8, 10, 8, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 22, 0),
-('Lesser Demon', 'Lesser but still pretty big', '', 78, 80, 79, 79, 1, 1, 1, 40, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 23, 0),
-('Giant Spider', 'I think this spider has been genetically modified', '', 10, 10, 10, 5, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 24, 0),
-('Man', 'A shifty looking man', '', 30, 30, 30, 30, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 25, 0),
-('Jonny The Beard', 'I can see why he\'s called the beard', '', 10, 5, 20, 8, 1, 0, 0, 40, 1, 1, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 255, 15523536, 145, 220, 6, 6, 5, 0, 26, 0),
-('Baraek', 'A fur trader', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 27, 0),
-('Katrine', 'She doesn\'t look to friendly', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 28, 0),
-('Jake', 'A scruffy looking chap', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16711680, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 29, 0),
-('Rat', 'A small muddy rat', '', 3, 2, 4, 2, 1, 0, 0, 40, 1, 1, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 115, 45, 7, 7, 10, 0, 30, 0),
-('Romeo', 'He looks mildly confused', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 255, 8409120, 15523536, 125, 220, 6, 6, 5, 0, 31, 0),
-('Juliet', 'She looks a little stressed', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 15645552, 16036851, 16036851, 15523536, 125, 225, 6, 6, 5, 0, 32, 0),
-('Father Lawrence', 'A kindly looking priest', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 2105376, 3, 15523536, 145, 220, 6, 6, 5, 0, 33, 0),
-('Apothecary', 'I wonder if he has any good potions', '', 10, 5, 5, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 34, 0),
-('Spider', 'Incey wincey', '', 5, 1, 2, 2, 1, 0, 0, 40, 1, 1, 0, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 40, 35, 6, 6, 5, 0, 35, 0),
-('Delrith', 'A freshly summoned demon', '', 42, 37, 35, 7, 1, 0, 0, 40, 1, 1, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 36, 0),
-('Veronica', 'She doesn\'t look too happy', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 37, 0),
-('Weaponsmaster', 'The phoenix gang quartermaster', '', 35, 28, 20, 20, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 38, 0),
-('Professor Oddenstein', 'A mad scientist if I ever saw one', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 39, 0),
-('Curator', 'He looks like he\'s daydreaming', '', 3, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 2, 8409120, 15523536, 145, 200, 6, 6, 5, 0, 40, 0),
-('Skeleton', 'It rattles as it walks', '', 24, 23, 20, 17, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 41, 0),
-('Zombie', 'The living dead', '', 23, 23, 28, 24, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 42, 0),
-('King', 'King Roald the VIII', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 62, 1, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 43, 0),
-('Giant Bat', 'An angry flying rodent', '', 32, 32, 32, 32, 1, 1, 1, 40, 0, 0, 1, 138, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 225, 195, 5, 3, 5, 0, 44, 0),
-('Bartender', 'A friendly barman', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 155, 220, 6, 6, 5, 0, 45, 0),
-('Skeleton', 'It rattles as it walks', '', 32, 35, 30, 29, 1, 1, 1, 40, 0, 0, 1, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 46, 0),
-('Skeleton', 'It rattles as it walks', '', 27, 28, 24, 24, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 47, 0),
-('Rat', 'overgrown vermin', '', 16, 15, 12, 10, 1, 0, 0, 40, 1, 2, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 48, 0),
-('Horvik The Armourer', 'He looks strong', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 49, 0),
-('Bear', 'A bear', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 50, 0),
-('Skeleton', 'It rattles when it walks', '', 20, 21, 18, 18, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 51, 0),
-('Shopkeeper', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 52, 0),
-('Zombie', 'The living dead', '', 18, 19, 20, 22, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 53, 0),
-('Ghost', 'Ooh spooky', '', 23, 23, 30, 25, 1, 0, 0, 40, 1, 4, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 54, 0),
-('Aubury', 'I think he might be a shop keeper', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 55, 0),
-('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 56, 0),
-('Shopkeeper', 'I can buy swords off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 57, 0),
-('Darkwizard', 'He works evil magic', '', 15, 12, 15, 12, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 58, 0),
-('Lowe', 'The owner of the archery store', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 16761440, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 59, 0),
-('Thessalia', 'A young shop assistant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, 0, 60, 0),
-('Darkwizard', 'He works evil magic', '', 27, 27, 24, 24, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 61, 0),
-('Giant', 'A very large foe', '', 37, 40, 36, 35, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 8409120, 15523536, 218, 330, 6, 6, 5, 0, 62, 0),
-('Goblin', 'An ugly green creature', '', 8, 9, 9, 5, 1, 0, 0, 40, 1, 1, 0, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 63, 0),
-('Farmer', 'He grows the crops in this area', 'pickpocket', 15, 18, 16, 12, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 64, 0),
-('Thief', 'He\'ll take anything that isn\'t nailed down', '', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 65, 0),
-('Guard', 'He tries to keep order around here', 'pickpocket', 31, 31, 30, 22, 1, 0, 0, 7, 0, 4, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 66, 0),
-('Black Knight', 'A sinister looking knight', '', 45, 48, 50, 42, 1, 0, 0, 40, 0, 7, 0, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 67, 0),
-('Hobgoblin', 'A large ugly green creature', '', 32, 34, 34, 29, 1, 1, 1, 40, 0, 0, 1, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 285, 268, 9, 8, 7, 0, 68, 0),
-('Zombie', 'The living dead', '', 32, 35, 31, 30, 1, 1, 1, 40, 0, 0, 1, 136, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 69, 0),
-('Zaff', 'He trades in staffs', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 76, 81, -1, -1, -1, -1, 3158064, 2, 3, 10056486, 145, 220, 6, 6, 5, 0, 70, 0),
-('Scorpion', 'An extremely vicious scorpion', '', 21, 22, 24, 17, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 362, 208, 7, 7, 45, 0, 71, 0),
-('Silk Trader', 'He sells silk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16724172, 16724172, 13415270, 145, 220, 6, 6, 5, 0, 72, 0),
-('Man', 'One of Runescapes many citizens', 'pickpocket', 11, 11, 8, 7, 1, 0, 0, 5, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 73, 0),
-('Guide', 'He gives hints to new adventurers', '', 0, 0, 0, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 32768, 8388863, 13415270, 145, 220, 6, 6, 5, 0, 74, 0),
-('Giant Spider', 'I think this spider has been genetically modified', '', 30, 34, 31, 32, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 180, 156, 6, 6, 5, 0, 75, 0),
-('Peksa', 'A helmet salesman', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 70, -1, -1, -1, -1, -1, -1, 15645552, 2, 3, 15523536, 160, 230, 6, 6, 5, 0, 76, 0),
-('Barbarian', 'Not civilised looking', '', 18, 18, 15, 14, 1, 0, 0, 40, 1, 2, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 15645552, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 77, 0),
-('Fred The Farmer', 'An old farmer', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 8409120, 8409136, 15523536, 160, 230, 6, 6, 5, 0, 78, 0),
-('Gunthor The Brave', 'He sure in hell doesn\'t look so brave..', '', 80, 38, 55, 35, 1, 0, 1, 40, 0, 0, 1, 6, 1, 2, -1, 109, 70, -1, -1, -1, -1, -1, -1, 15645552, 16732192, 8409120, 15523536, 165, 245, 6, 6, 5, 0, 79, 0),
-('Witch', 'She\'s got warts', '', 35, 30, 25, 10, 1, 0, 0, 40, 1, 2, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 80, 0),
-('Ghost', 'Ooh spooky', '', 23, 23, 30, 25, 1, 0, 0, 40, 1, 4, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 81, 0),
-('Wizard', 'An old wizard', '', 18, 18, 15, 14, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 82, 0),
-('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 83, 0),
-('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 84, 0),
-('Zeke', 'He sells Scimitars', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 70, -1, -1, -1, -1, -1, 63, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, 0, 85, 0),
-('Louie Legs', 'He might want to sell something', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 37, -1, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 86, 0),
-('Warrior', 'A member of Al Kharid\'s military', 'pickpocket', 20, 18, 17, 19, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, 98, 48, -1, -1, -1, -1, -1, -1, -1, 1, 13385932, 3, 13415270, 145, 220, 6, 6, 5, 0, 87, 0),
-('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 13415270, 120, 220, 6, 6, 5, 0, 88, 0),
-('Shop Assistant', 'Maybe she\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 13415270, 145, 220, 6, 6, 5, 0, 89, 0),
-('Highwayman', 'He holds up passers by', '', 14, 13, 15, 13, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, 47, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 90, 0),
-('Kebab Seller', 'A seller of strange food', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 1, 8409120, 8409120, 13415270, 120, 220, 6, 6, 5, 0, 91, 0),
-('Chicken', 'Yep definitely a chicken', '', 3, 4, 4, 3, 0, 0, 0, 40, 0, 0, 0, 132, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 92, 0),
-('Ernest', 'A former chicken', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 93, 0),
-('Monk', 'A Peaceful monk', '', 12, 12, 13, 15, 1, 0, 0, 40, 1, 3, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 94, 0),
-('Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 95, 0),
-('Banker', 'He can look after my money', 'Quick Bank', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 96, 0),
-('Count Draynor', 'A vicious vampire', '', 40, 35, 65, 35, 1, 0, 0, 40, 1, 6, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 16576224, 140, 230, 6, 6, 5, 0, 97, 0),
-('Morgan', 'A frigtened villager', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16267666, 10464124, 15523536, 155, 220, 6, 6, 5, 0, 98, 0),
-('Dr Harlow', 'His nose is very red', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 99, 0),
-('Deadly Red Spider', 'I think this spider has been genetically modified', '', 40, 35, 36, 35, 1, 1, 1, 40, 0, 0, 1, 126, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 100, 0),
-('Guard', 'He\'s here to guard this fortress', 'pickpocket', 31, 31, 30, 22, 1, 0, 0, 7, 1, 4, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 101, 0),
-('Cassie', 'She sells shields', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 102, 0),
-('White Knight', 'A chivalrous knight', '', 55, 58, 60, 52, 1, 0, 0, 40, 1, 9, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 103, 0),
-('Ranael', 'A shopkeeper of some sort', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 93, -1, -1, -1, -1, 16753488, 14518442, 3, 13415270, 145, 235, 6, 6, 5, 0, 104, 0),
-('Moss Giant', 'his beard seems to have a life of its own', '', 62, 65, 61, 60, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 7838054, 8409120, 8409120, 14483408, 261, 396, 6, 6, 5, 0, 105, 0),
-('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 106, 0),
-('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 107, 0),
-('Witch', 'She\'s got warts', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 108, 0),
-('Black Knight', 'A sinister looking knight', '', 45, 48, 50, 42, 1, 0, 0, 40, 0, 7, 0, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 109, 0),
-('Greldo', 'A small green warty creature', '', 8, 9, 9, 5, 1, 0, 0, 40, 1, 1, 0, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 110, 0),
-('Sir Amik Varze', 'The head of the White Knights', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 111, 0),
-('Guildmaster', 'He\'s in charge of this place', '', 40, 40, 40, 40, 0, 0, 0, 40, 0, 0, 0, 3, 29, 38, 48, -1, -1, -1, -1, -1, -1, -1, -1, 1, 13385932, 3, 13415270, 145, 220, 6, 6, 5, 0, 112, 0),
-('Valaine', 'She runs the champion\'s store', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 3211263, 3, 15523536, 145, 220, 6, 6, 5, 0, 113, 0),
-('Drogo', 'He runs a mining store', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 114, 0),
-('Imp', 'A cheeky little imp', '', 4, 5, 4, 8, 1, 0, 0, 40, 1, 1, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 74, 70, 11, 11, 5, 0, 115, 0),
-('Flynn', 'The mace salesman', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 116, 0),
-('Wyson The Gardener', 'An old gardener', '', 10, 8, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8947848, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 117, 0),
-('Wizard Mizgog', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 118, 0),
-('Prince Ali', 'A young prince', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62, 1, 15618286, 15658576, 13415270, 140, 215, 6, 6, 5, 0, 119, 0),
-('Hassan', 'the Chancellor to the emir', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 62, 1, 16777215, 16777215, 13415270, 150, 220, 6, 6, 5, 0, 120, 0),
-('Osman', 'He looks a little shifty', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 82, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 121, 0),
-('Joe', 'Lady Keli\'s head guard', '', 40, 40, 40, 40, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 116, -1, 22, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 155, 230, 6, 6, 5, 0, 122, 0),
-('Leela', 'She comes from Al Kharid', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 1, 12285781, 3, 13415270, 140, 215, 6, 6, 5, 0, 123, 0),
-('Lady Keli', 'An Infamous bandit', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 16763992, 15618286, 3, 15523536, 145, 220, 6, 6, 5, 0, 124, 0),
-('Ned', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 125, 0),
-('Aggie', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 16711680, 3, 15523536, 155, 220, 6, 6, 5, 0, 126, 0),
-('Prince Ali', 'That is an effective disguise', '', 10, 10, 10, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 16763992, 15618286, 3, 15523536, 140, 215, 6, 6, 5, 0, 127, 0),
-('Jailguard', 'I wonder what he\'s guarding', '', 34, 36, 34, 32, 1, 0, 0, 40, 1, 5, 0, 5, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 16763992, 2, 3, 15523536, 155, 230, 6, 6, 5, 0, 128, 0),
-('Redbeard Frank', 'A pirate', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1, 15630384, 2, 255, 15523536, 145, 220, 6, 6, 5, 0, 129, 0),
-('Wydin', 'A grocer', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 160, 220, 6, 6, 5, 0, 130, 0),
-('Shop Assistant', 'I can buy swords off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 131, 0),
-('Brian', 'An axe seller', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 132, 0),
-('Squire', 'A young squire', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 14535800, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 133, 0),
-('Head Chef', 'He looks after the chef\'s guild', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, 0, 134, 0),
-('Thurgo', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 15658734, 8409200, 8409120, 13415270, 121, 176, 6, 6, 5, 0, 135, 0),
-('Ice Giant', 'He\'s got icicles in his beard', '', 67, 70, 66, 70, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 6724027, 8425710, 8409120, 5623807, 261, 396, 6, 6, 5, 0, 136, 0),
-('King Scorpion', 'Wow scorpions shouldn\'t grow that big', '', 40, 39, 38, 30, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 543, 312, 7, 7, 45, 0, 137, 0),
-('Pirate', 'A vicious pirate', '', 35, 30, 25, 20, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1, 1, 15658615, 14483456, 15523536, 145, 220, 6, 6, 5, 0, 138, 0),
-('Sir Vyvin', 'One of the white knights of Falador', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 139, 0),
-('Monk of Zamorak', 'An evil cleric', '', 28, 28, 32, 30, 1, 0, 0, 40, 1, 5, 0, 7, 1, 2, -1, 116, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 140, 0),
-('Monk of Zamorak', 'An evil cleric', '', 18, 18, 22, 20, 1, 0, 0, 40, 1, 3, 0, 7, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 141, 0),
-('Wayne', 'An armourer', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 140, 210, 6, 6, 5, 0, 142, 0),
-('Barmaid', 'a pretty barmaid', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16753488, 16777008, 3, 15523536, 145, 220, 6, 6, 5, 0, 143, 0),
-('Dwarven Shopkeeper', 'I wonder if he wants to buy any of my junk', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, 9, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 144, 0),
-('Doric', 'A dwarven smith', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, 10, -1, 16753488, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 145, 0),
-('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 146, 0),
-('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 147, 0),
-('Guide', 'She gives hints to new adventurers', '', 0, 0, 0, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 32768, 8388863, 13415270, 145, 220, 6, 6, 5, 0, 148, 0),
-('Hetty', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 3182640, 16711680, 3, 15531728, 155, 220, 6, 6, 5, 0, 149, 0),
-('Betty', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 155, 220, 6, 6, 5, 0, 150, 0),
-('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 151, 0),
-('General Wartface', 'An ugly green creature', '', 16, 13, 14, 12, 0, 0, 0, 40, 0, 0, 0, 142, 141, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 264, 250, 9, 8, 5, 0, 152, 0),
-('General Bentnoze', 'An ugly green creature', '', 16, 13, 14, 12, 0, 0, 0, 40, 0, 0, 0, 142, 140, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 264, 250, 9, 8, 5, 0, 153, 0),
-('Goblin', 'An ugly green creature', '', 16, 13, 14, 12, 1, 0, 0, 40, 1, 2, 0, 142, 140, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 154, 0),
-('Goblin', 'An ugly green creature', '', 16, 13, 14, 12, 1, 0, 0, 40, 1, 2, 0, 142, 141, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 155, 0),
-('Herquin', 'A gem merchant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16753488, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 156, 0),
-('Rommik', 'The owner of the crafting shop', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 157, 0),
-('Grum', 'Grum the goldsmith', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 7368816, 7368816, 15523536, 130, 220, 6, 6, 5, 0, 158, 0),
-('Ice Warrior', 'A strange inhuman warrior', '', 57, 59, 56, 59, 1, 1, 1, 40, 0, 0, 1, 7, 1, 44, 100, 118, -1, 35, -1, -1, -1, -1, -1, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, 0, 159, 0),
-('Warrior', 'A skilled fighter', 'pickpocket', 35, 30, 25, 20, 1, 0, 0, 40, 1, 3, 0, 3, 56, 38, -1, 109, -1, -1, -1, -1, -1, -1, -1, 16753488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 160, 0),
-('Thrander', 'A smith of some sort', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 161, 0),
+('Unicorn', 'It\'s a unicorn', '', 21, 23, 23, 19, 1, 0, 0, 40, 1, 3, 0, 130, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 230, 6, 6, 7, 0, 0, 0),
+('Bob', 'An axe seller', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, 0, 1, 0),
+('Sheep', 'A very wooly sheep', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 2, 0),
+('Chicken', 'Yep definitely a chicken', '', 3, 4, 4, 3, 1, 0, 0, 40, 1, 1, 0, 132, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 3, 0),
+('Goblin', 'An ugly green creature', '', 16, 13, 14, 12, 1, 0, 0, 40, 1, 2, 0, 142, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 4, 0),
+('Hans', 'A castle servant', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 65280, 15523536, 145, 220, 6, 6, 5, 0, 5, 0),
+('Cow', 'It\'s a multi purpose cow', '', 9, 9, 8, 8, 1, 0, 0, 40, 1, 1, 0, 128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 327, 240, 6, 6, 45, 0, 6, 0),
+('Cook', 'The head cook of Lumbridge castle', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 7, 0),
+('Bear', 'Eek! A bear!', '', 25, 26, 23, 25, 1, 0, 0, 40, 1, 4, 0, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 8, 0),
+('Priest', 'A priest of Saradomin', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2105376, 3, 15523536, 145, 220, 6, 6, 5, 0, 9, 0),
+('Urhney', 'He looks a little grumpy', '', 10, 10, 10, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2105376, 3, 15523536, 145, 220, 6, 6, 5, 0, 10, 0),
+('Man', 'One of runescapes many citizens', 'pickpocket', 11, 11, 8, 7, 1, 0, 0, 5, 0, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 11, 0),
+('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 12, 0),
+('Camel', 'Oh its a camel', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 127, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 208, 208, 6, 6, 5, 0, 13, 0),
+('Gypsy', 'An old gypsy lady', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 65280, 15523536, 145, 220, 6, 6, 5, 0, 14, 0),
+('Ghost', 'Ooh spooky', '', 15, 15, 15, 5, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 15, 0),
+('Sir Prysin', 'One of the king\'s knights', '', 30, 20, 60, 50, 0, 0, 0, 40, 0, 0, 0, 13, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 16, 0),
+('Traiborn The Wizard', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 17, 0),
+('Captain Rovin', 'The head of the palace guard', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 18, 0),
+('Rat', 'Overgrown vermin', '', 10, 10, 10, 5, 1, 0, 0, 40, 1, 1, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 19, 0),
+('Reldo', 'I think he\'s the librarian', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 65280, 15523536, 145, 220, 6, 6, 5, 0, 20, 0),
+('Mugger', 'He jumps out and attacks people', '', 15, 8, 10, 8, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 21, 0),
+('Lesser Demon', 'Lesser but still pretty big', '', 78, 80, 79, 79, 1, 1, 1, 40, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 22, 0),
+('Giant Spider', 'I think this spider has been genetically modified', '', 10, 10, 10, 5, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 23, 0),
+('Man', 'A shifty looking man', '', 30, 30, 30, 30, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 24, 0),
+('Jonny The Beard', 'I can see why he\'s called the beard', '', 10, 5, 20, 8, 1, 0, 0, 40, 1, 1, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 255, 15523536, 145, 220, 6, 6, 5, 0, 25, 0),
+('Baraek', 'A fur trader', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 26, 0),
+('Katrine', 'She doesn\'t look to friendly', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 27, 0),
+('Jake', 'A scruffy looking chap', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16711680, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 28, 0),
+('Rat', 'A small muddy rat', '', 3, 2, 4, 2, 1, 0, 0, 40, 1, 1, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 115, 45, 7, 7, 10, 0, 29, 0),
+('Romeo', 'He looks mildly confused', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 255, 8409120, 15523536, 125, 220, 6, 6, 5, 0, 30, 0),
+('Juliet', 'She looks a little stressed', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 15645552, 16036851, 16036851, 15523536, 125, 225, 6, 6, 5, 0, 31, 0),
+('Father Lawrence', 'A kindly looking priest', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 2105376, 3, 15523536, 145, 220, 6, 6, 5, 0, 32, 0),
+('Apothecary', 'I wonder if he has any good potions', '', 10, 5, 5, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 33, 0),
+('Spider', 'Incey wincey', '', 5, 1, 2, 2, 1, 0, 0, 40, 1, 1, 0, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 40, 35, 6, 6, 5, 0, 34, 0),
+('Delrith', 'A freshly summoned demon', '', 42, 37, 35, 7, 1, 0, 0, 40, 1, 1, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 35, 0),
+('Veronica', 'She doesn\'t look too happy', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 36, 0),
+('Weaponsmaster', 'The phoenix gang quartermaster', '', 35, 28, 20, 20, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 37, 0),
+('Professor Oddenstein', 'A mad scientist if I ever saw one', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 38, 0),
+('Curator', 'He looks like he\'s daydreaming', '', 3, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 2, 8409120, 15523536, 145, 200, 6, 6, 5, 0, 39, 0),
+('Skeleton', 'It rattles as it walks', '', 24, 23, 20, 17, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 40, 0),
+('Zombie', 'The living dead', '', 23, 23, 28, 24, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 41, 0),
+('King', 'King Roald the VIII', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 62, 1, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 42, 0),
+('Giant Bat', 'An angry flying rodent', '', 32, 32, 32, 32, 1, 1, 1, 40, 0, 0, 1, 138, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 225, 195, 5, 3, 5, 0, 43, 0),
+('Bartender', 'A friendly barman', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 155, 220, 6, 6, 5, 0, 44, 0),
+('Skeleton', 'It rattles as it walks', '', 32, 35, 30, 29, 1, 1, 1, 40, 0, 0, 1, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 45, 0),
+('Skeleton', 'It rattles as it walks', '', 27, 28, 24, 24, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 46, 0),
+('Rat', 'overgrown vermin', '', 16, 15, 12, 10, 1, 0, 0, 40, 1, 2, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 47, 0),
+('Horvik The Armourer', 'He looks strong', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 48, 0),
+('Bear', 'A bear', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 49, 0),
+('Skeleton', 'It rattles when it walks', '', 20, 21, 18, 18, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 50, 0),
+('Shopkeeper', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 51, 0),
+('Zombie', 'The living dead', '', 18, 19, 20, 22, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 52, 0),
+('Ghost', 'Ooh spooky', '', 23, 23, 30, 25, 1, 0, 0, 40, 1, 4, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 53, 0),
+('Aubury', 'I think he might be a shop keeper', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 54, 0),
+('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 55, 0),
+('Shopkeeper', 'I can buy swords off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 56, 0),
+('Darkwizard', 'He works evil magic', '', 15, 12, 15, 12, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 57, 0),
+('Lowe', 'The owner of the archery store', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 16761440, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 58, 0),
+('Thessalia', 'A young shop assistant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, 0, 59, 0),
+('Darkwizard', 'He works evil magic', '', 27, 27, 24, 24, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 60, 0),
+('Giant', 'A very large foe', '', 37, 40, 36, 35, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 8409120, 15523536, 218, 330, 6, 6, 5, 0, 61, 0),
+('Goblin', 'An ugly green creature', '', 8, 9, 9, 5, 1, 0, 0, 40, 1, 1, 0, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 62, 0),
+('Farmer', 'He grows the crops in this area', 'pickpocket', 15, 18, 16, 12, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 63, 0),
+('Thief', 'He\'ll take anything that isn\'t nailed down', '', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 64, 0),
+('Guard', 'He tries to keep order around here', 'pickpocket', 31, 31, 30, 22, 1, 0, 0, 7, 0, 4, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 65, 0),
+('Black Knight', 'A sinister looking knight', '', 45, 48, 50, 42, 1, 0, 0, 40, 0, 7, 0, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 66, 0),
+('Hobgoblin', 'A large ugly green creature', '', 32, 34, 34, 29, 1, 1, 1, 40, 0, 0, 1, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 285, 268, 9, 8, 7, 0, 67, 0),
+('Zombie', 'The living dead', '', 32, 35, 31, 30, 1, 1, 1, 40, 0, 0, 1, 136, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 68, 0),
+('Zaff', 'He trades in staffs', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 76, 81, -1, -1, -1, -1, 3158064, 2, 3, 10056486, 145, 220, 6, 6, 5, 0, 69, 0),
+('Scorpion', 'An extremely vicious scorpion', '', 21, 22, 24, 17, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 362, 208, 7, 7, 45, 0, 70, 0),
+('Silk Trader', 'He sells silk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16724172, 16724172, 13415270, 145, 220, 6, 6, 5, 0, 71, 0),
+('Man', 'One of Runescapes many citizens', 'pickpocket', 11, 11, 8, 7, 1, 0, 0, 5, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 72, 0),
+('Guide', 'He gives hints to new adventurers', '', 0, 0, 0, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 32768, 8388863, 13415270, 145, 220, 6, 6, 5, 0, 73, 0),
+('Giant Spider', 'I think this spider has been genetically modified', '', 30, 34, 31, 32, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 180, 156, 6, 6, 5, 0, 74, 0),
+('Peksa', 'A helmet salesman', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 70, -1, -1, -1, -1, -1, -1, 15645552, 2, 3, 15523536, 160, 230, 6, 6, 5, 0, 75, 0),
+('Barbarian', 'Not civilised looking', '', 18, 18, 15, 14, 1, 0, 0, 40, 1, 2, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 15645552, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 76, 0),
+('Fred The Farmer', 'An old farmer', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 8409120, 8409136, 15523536, 160, 230, 6, 6, 5, 0, 77, 0),
+('Gunthor The Brave', 'He sure in hell doesn\'t look so brave..', '', 80, 38, 55, 35, 1, 0, 1, 40, 0, 0, 1, 6, 1, 2, -1, 109, 70, -1, -1, -1, -1, -1, -1, 15645552, 16732192, 8409120, 15523536, 165, 245, 6, 6, 5, 0, 78, 0),
+('Witch', 'She\'s got warts', '', 35, 30, 25, 10, 1, 0, 0, 40, 1, 2, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 79, 0),
+('Ghost', 'Ooh spooky', '', 23, 23, 30, 25, 1, 0, 0, 40, 1, 4, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 80, 0),
+('Wizard', 'An old wizard', '', 18, 18, 15, 14, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 81, 0),
+('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 82, 0),
+('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 83, 0),
+('Zeke', 'He sells Scimitars', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 70, -1, -1, -1, -1, -1, 63, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, 0, 84, 0),
+('Louie Legs', 'He might want to sell something', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 37, -1, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 85, 0),
+('Warrior', 'A member of Al Kharid\'s military', 'pickpocket', 20, 18, 17, 19, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, 98, 48, -1, -1, -1, -1, -1, -1, -1, 1, 13385932, 3, 13415270, 145, 220, 6, 6, 5, 0, 86, 0),
+('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 13415270, 120, 220, 6, 6, 5, 0, 87, 0),
+('Shop Assistant', 'Maybe she\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 13415270, 145, 220, 6, 6, 5, 0, 88, 0),
+('Highwayman', 'He holds up passers by', '', 14, 13, 15, 13, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, 47, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 89, 0),
+('Kebab Seller', 'A seller of strange food', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 1, 8409120, 8409120, 13415270, 120, 220, 6, 6, 5, 0, 90, 0),
+('Chicken', 'Yep definitely a chicken', '', 3, 4, 4, 3, 0, 0, 0, 40, 0, 0, 0, 132, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 91, 0),
+('Ernest', 'A former chicken', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 92, 0),
+('Monk', 'A Peaceful monk', '', 12, 12, 13, 15, 1, 0, 0, 40, 1, 3, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 93, 0),
+('Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 94, 0),
+('Banker', 'He can look after my money', 'Quick Bank', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 95, 0),
+('Count Draynor', 'A vicious vampire', '', 40, 35, 65, 35, 1, 0, 0, 40, 1, 6, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 16576224, 140, 230, 6, 6, 5, 0, 96, 0),
+('Morgan', 'A frigtened villager', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16267666, 10464124, 15523536, 155, 220, 6, 6, 5, 0, 97, 0),
+('Dr Harlow', 'His nose is very red', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 98, 0),
+('Deadly Red Spider', 'I think this spider has been genetically modified', '', 40, 35, 36, 35, 1, 1, 1, 40, 0, 0, 1, 126, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 99, 0),
+('Guard', 'He\'s here to guard this fortress', 'pickpocket', 31, 31, 30, 22, 1, 0, 0, 7, 1, 4, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 100, 0),
+('Cassie', 'She sells shields', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 101, 0),
+('White Knight', 'A chivalrous knight', '', 55, 58, 60, 52, 1, 0, 0, 40, 1, 9, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 102, 0),
+('Ranael', 'A shopkeeper of some sort', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 93, -1, -1, -1, -1, 16753488, 14518442, 3, 13415270, 145, 235, 6, 6, 5, 0, 103, 0),
+('Moss Giant', 'his beard seems to have a life of its own', '', 62, 65, 61, 60, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 7838054, 8409120, 8409120, 14483408, 261, 396, 6, 6, 5, 0, 104, 0),
+('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 105, 0),
+('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 106, 0),
+('Witch', 'She\'s got warts', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 107, 0),
+('Black Knight', 'A sinister looking knight', '', 45, 48, 50, 42, 1, 0, 0, 40, 0, 7, 0, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 108, 0),
+('Greldo', 'A small green warty creature', '', 8, 9, 9, 5, 1, 0, 0, 40, 1, 1, 0, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 109, 0),
+('Sir Amik Varze', 'The head of the White Knights', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 110, 0),
+('Guildmaster', 'He\'s in charge of this place', '', 40, 40, 40, 40, 0, 0, 0, 40, 0, 0, 0, 3, 29, 38, 48, -1, -1, -1, -1, -1, -1, -1, -1, 1, 13385932, 3, 13415270, 145, 220, 6, 6, 5, 0, 111, 0),
+('Valaine', 'She runs the champion\'s store', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 3211263, 3, 15523536, 145, 220, 6, 6, 5, 0, 112, 0),
+('Drogo', 'He runs a mining store', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 113, 0),
+('Imp', 'A cheeky little imp', '', 4, 5, 4, 8, 1, 0, 0, 40, 1, 1, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 74, 70, 11, 11, 5, 0, 114, 0),
+('Flynn', 'The mace salesman', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 115, 0),
+('Wyson The Gardener', 'An old gardener', '', 10, 8, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8947848, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 116, 0),
+('Wizard Mizgog', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 117, 0),
+('Prince Ali', 'A young prince', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62, 1, 15618286, 15658576, 13415270, 140, 215, 6, 6, 5, 0, 118, 0),
+('Hassan', 'the Chancellor to the emir', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 62, 1, 16777215, 16777215, 13415270, 150, 220, 6, 6, 5, 0, 119, 0),
+('Osman', 'He looks a little shifty', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 82, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 120, 0),
+('Joe', 'Lady Keli\'s head guard', '', 40, 40, 40, 40, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 116, -1, 22, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 155, 230, 6, 6, 5, 0, 121, 0),
+('Leela', 'She comes from Al Kharid', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 1, 12285781, 3, 13415270, 140, 215, 6, 6, 5, 0, 122, 0),
+('Lady Keli', 'An Infamous bandit', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 16763992, 15618286, 3, 15523536, 145, 220, 6, 6, 5, 0, 123, 0),
+('Ned', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 124, 0),
+('Aggie', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 16711680, 3, 15523536, 155, 220, 6, 6, 5, 0, 125, 0),
+('Prince Ali', 'That is an effective disguise', '', 10, 10, 10, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 16763992, 15618286, 3, 15523536, 140, 215, 6, 6, 5, 0, 126, 0),
+('Jailguard', 'I wonder what he\'s guarding', '', 34, 36, 34, 32, 1, 0, 0, 40, 1, 5, 0, 5, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 16763992, 2, 3, 15523536, 155, 230, 6, 6, 5, 0, 127, 0),
+('Redbeard Frank', 'A pirate', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1, 15630384, 2, 255, 15523536, 145, 220, 6, 6, 5, 0, 128, 0),
+('Wydin', 'A grocer', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 160, 220, 6, 6, 5, 0, 129, 0),
+('Shop Assistant', 'I can buy swords off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 130, 0),
+('Brian', 'An axe seller', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 131, 0),
+('Squire', 'A young squire', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 14535800, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 132, 0),
+('Head Chef', 'He looks after the chef\'s guild', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, 0, 133, 0),
+('Thurgo', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 15658734, 8409200, 8409120, 13415270, 121, 176, 6, 6, 5, 0, 134, 0),
+('Ice Giant', 'He\'s got icicles in his beard', '', 67, 70, 66, 70, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 6724027, 8425710, 8409120, 5623807, 261, 396, 6, 6, 5, 0, 135, 0),
+('King Scorpion', 'Wow scorpions shouldn\'t grow that big', '', 40, 39, 38, 30, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 543, 312, 7, 7, 45, 0, 136, 0),
+('Pirate', 'A vicious pirate', '', 35, 30, 25, 20, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1, 1, 15658615, 14483456, 15523536, 145, 220, 6, 6, 5, 0, 137, 0),
+('Sir Vyvin', 'One of the white knights of Falador', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 138, 0),
+('Monk of Zamorak', 'An evil cleric', '', 28, 28, 32, 30, 1, 0, 0, 40, 1, 5, 0, 7, 1, 2, -1, 116, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 139, 0),
+('Monk of Zamorak', 'An evil cleric', '', 18, 18, 22, 20, 1, 0, 0, 40, 1, 3, 0, 7, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 140, 0),
+('Wayne', 'An armourer', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 140, 210, 6, 6, 5, 0, 141, 0),
+('Barmaid', 'a pretty barmaid', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16753488, 16777008, 3, 15523536, 145, 220, 6, 6, 5, 0, 142, 0),
+('Dwarven Shopkeeper', 'I wonder if he wants to buy any of my junk', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, 9, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 143, 0),
+('Doric', 'A dwarven smith', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, 10, -1, 16753488, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 144, 0),
+('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 145, 0),
+('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 146, 0),
+('Guide', 'She gives hints to new adventurers', '', 0, 0, 0, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 32768, 8388863, 13415270, 145, 220, 6, 6, 5, 0, 147, 0),
+('Hetty', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 3182640, 16711680, 3, 15531728, 155, 220, 6, 6, 5, 0, 148, 0),
+('Betty', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 155, 220, 6, 6, 5, 0, 149, 0),
+('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 150, 0),
+('General Wartface', 'An ugly green creature', '', 16, 13, 14, 12, 0, 0, 0, 40, 0, 0, 0, 142, 141, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 264, 250, 9, 8, 5, 0, 151, 0),
+('General Bentnoze', 'An ugly green creature', '', 16, 13, 14, 12, 0, 0, 0, 40, 0, 0, 0, 142, 140, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 264, 250, 9, 8, 5, 0, 152, 0),
+('Goblin', 'An ugly green creature', '', 16, 13, 14, 12, 1, 0, 0, 40, 1, 2, 0, 142, 140, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 153, 0),
+('Goblin', 'An ugly green creature', '', 16, 13, 14, 12, 1, 0, 0, 40, 1, 2, 0, 142, 141, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 154, 0),
+('Herquin', 'A gem merchant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16753488, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 155, 0),
+('Rommik', 'The owner of the crafting shop', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 156, 0),
+('Grum', 'Grum the goldsmith', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 7368816, 7368816, 15523536, 130, 220, 6, 6, 5, 0, 157, 0),
+('Ice Warrior', 'A strange inhuman warrior', '', 57, 59, 56, 59, 1, 1, 1, 40, 0, 0, 1, 7, 1, 44, 100, 118, -1, 35, -1, -1, -1, -1, -1, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, 0, 158, 0),
+('Warrior', 'A skilled fighter', 'pickpocket', 35, 30, 25, 20, 1, 0, 0, 40, 1, 3, 0, 3, 56, 38, -1, 109, -1, -1, -1, -1, -1, -1, -1, 16753488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 159, 0),
+('Thrander', 'A smith of some sort', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 160, 0),
+('Border Guard', 'a guard from Al Kharid', '', 20, 18, 17, 19, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 48, -1, 70, -1, -1, -1, -1, -1, -1, 1, 13385881, 3, 13415270, 145, 220, 6, 6, 5, 0, 161, 0),
 ('Border Guard', 'a guard from Al Kharid', '', 20, 18, 17, 19, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 48, -1, 70, -1, -1, -1, -1, -1, -1, 1, 13385881, 3, 13415270, 145, 220, 6, 6, 5, 0, 162, 0),
-('Border Guard', 'a guard from Al Kharid', '', 20, 18, 17, 19, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 48, -1, 70, -1, -1, -1, -1, -1, -1, 1, 13385881, 3, 13415270, 145, 220, 6, 6, 5, 0, 163, 0),
-('Customs Officer', 'She is here to stop smugglers', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 0, 4, 38, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 164, 0),
-('Luthas', 'The owner of the banana plantation', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 9461792, 160, 220, 6, 6, 5, 0, 165, 0),
-('Zambo', 'He will sell me exotic rum', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13398064, 3198139, 3, 9461792, 160, 220, 6, 6, 5, 0, 166, 0),
-('Captain Tobias', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 167, 0),
-('Gerrant', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 168, 0),
-('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 9461792, 120, 220, 6, 6, 5, 0, 169, 0),
-('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 9461792, 145, 220, 6, 6, 5, 0, 170, 0),
-('Seaman Lorris', 'A young sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 171, 0),
-('Seaman Thresnor', 'A young sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 172, 0),
-('Tanner', 'He makes leather', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 8409120, 8409120, 13415270, 125, 220, 6, 6, 5, 0, 173, 0),
-('Dommik', 'The owner of the crafting shop', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 174, 0),
-('Abbot Langley', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 175, 0),
-('Thordur', 'He runs a a tourist attraction', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 176, 0),
-('Brother Jered', 'human', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, 0, 177, 0),
-('Rat', 'Overgrown vermin', '', 16, 15, 12, 10, 1, 1, 1, 40, 0, 0, 1, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 178, 0),
-('Ghost', 'Ooh spooky', '', 23, 23, 30, 25, 1, 0, 0, 40, 1, 4, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 179, 0),
-('Skeleton', 'it rattles when it walks', '', 32, 35, 30, 29, 1, 1, 1, 40, 0, 0, 1, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 180, 0),
-('Zombie', 'the living dead', '', 32, 35, 31, 30, 1, 1, 1, 40, 0, 0, 1, 136, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 181, 0),
-('Lesser Demon', 'Lesser but still very big', '', 78, 80, 79, 79, 1, 1, 1, 40, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 182, 0),
-('Melzar The Mad', 'He looks totally insane', '', 47, 47, 44, 44, 1, 0, 0, 40, 1, 7, 0, 6, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1, 1, 2, 3, 16776944, 145, 220, 6, 6, 5, 0, 183, 0),
-('Scavvo', 'He has lopsided eyes', '', 10, 10, 10, 10, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 7356480, 3, 15523536, 145, 220, 6, 6, 5, 0, 184, 0),
-('Greater Demon', 'big red and incredibly evil', '', 86, 88, 87, 87, 1, 1, 1, 40, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 185, 0),
-('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 186, 0),
-('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 187, 0),
-('Oziach', 'A strange little man', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 6307872, 8440864, 8440864, 15523536, 145, 205, 6, 6, 5, 0, 188, 0),
-('Bear', 'Eek! A bear!', '', 27, 28, 25, 27, 1, 1, 1, 40, 0, 0, 1, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 189, 0),
-('Black Knight', 'An armoured follower of Zamorak', '', 45, 48, 50, 42, 1, 0, 0, 40, 0, 7, 0, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 190, 0),
-('Chaos Dwarf', 'a dwarf gone bad', '', 58, 60, 59, 61, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 110, 71, 22, -1, -1, -1, -1, -1, 14495808, 14495808, 14495808, 14495808, 135, 185, 6, 6, 5, 0, 191, 0),
-('Dwarf', 'A dwarf who looks after the mining guild', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 192, 0),
-('Wormbrain', 'Dumb even by goblin standards', '', 8, 9, 9, 5, 1, 0, 0, 40, 1, 1, 0, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 193, 0),
-('Klarense', 'A young sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, 46, -1, -1, -1, -1, 16752704, 221, 4, 15523536, 160, 220, 6, 6, 5, 0, 194, 0),
-('Ned', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 195, 0),
-('Skeleton', 'A Taller than normal skeleton', '', 52, 55, 50, 59, 1, 1, 1, 40, 0, 0, 1, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 259, 281, 11, 11, 12, 1, 196, 0),
-('Dragon', 'A powerful and ancient dragon', '', 110, 110, 110, 110, 1, 1, 1, 30, 0, 0, 1, 144, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 452, 326, 10, 7, 70, 0, 197, 1),
-('Oracle', 'A mystic of unknown race', '', 57, 59, 56, 59, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6724027, 14544622, 14544622, 5619694, 110, 180, 6, 6, 5, 0, 198, 0),
-('Duke of Lumbridge', 'Duke Horacio of Lumbridge', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 64, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 199, 0),
-('Dark Warrior', 'A warrior touched by chaos', '', 20, 23, 25, 17, 1, 0, 0, 40, 1, 3, 0, 0, 32, 42, -1, 114, 75, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 200, 0),
-('Druid', 'A worshipper of Guthix', '', 28, 28, 32, 30, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 201, 0),
-('Red Dragon', 'A big powerful dragon', '', 150, 150, 150, 140, 1, 1, 1, 40, 0, 0, 1, 145, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 452, 326, 10, 7, 70, 0, 202, 1),
-('Blue Dragon', 'A mother dragon', '', 110, 105, 115, 105, 1, 1, 1, 30, 0, 0, 1, 146, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 452, 326, 10, 7, 70, 0, 203, 1),
-('Baby Blue Dragon', 'Young but still dangerous', '', 50, 50, 50, 50, 1, 1, 1, 40, 0, 0, 1, 146, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 226, 163, 10, 7, 30, 0, 204, 0),
-('Kaqemeex', 'A wise druid', '', 28, 28, 32, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 14540253, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 205, 0),
-('Sanfew', 'An old druid', '', 28, 28, 32, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 206, 0),
-('Suit of Armour', 'A dusty old suit of armour', '', 30, 28, 30, 29, 0, 0, 0, 40, 0, 0, 0, -1, 28, 37, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 207, 0),
-('Adventurer', 'A cleric', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16753248, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 208, 0),
-('Adventurer', 'A wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 122, -1, 77, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 209, 0),
-('Adventurer', 'A Warrior', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 5, 28, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 210, 0),
-('Adventurer', 'An archer', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 107, -1, -1, -1, 46, -1, -1, 63, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, 0, 211, 0),
-('Leprechaun', 'A funny little man who lives in a tree', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 5271616, 5286432, 5286432, 15523536, 103, 141, 6, 6, 5, 0, 212, 0),
+('Customs Officer', 'She is here to stop smugglers', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 0, 4, 38, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 163, 0),
+('Luthas', 'The owner of the banana plantation', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 9461792, 160, 220, 6, 6, 5, 0, 164, 0),
+('Zambo', 'He will sell me exotic rum', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13398064, 3198139, 3, 9461792, 160, 220, 6, 6, 5, 0, 165, 0),
+('Captain Tobias', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 166, 0),
+('Gerrant', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 167, 0),
+('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 9461792, 120, 220, 6, 6, 5, 0, 168, 0),
+('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 9461792, 145, 220, 6, 6, 5, 0, 169, 0),
+('Seaman Lorris', 'A young sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 170, 0),
+('Seaman Thresnor', 'A young sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 171, 0),
+('Tanner', 'He makes leather', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 8409120, 8409120, 13415270, 125, 220, 6, 6, 5, 0, 172, 0),
+('Dommik', 'The owner of the crafting shop', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 173, 0),
+('Abbot Langley', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 174, 0),
+('Thordur', 'He runs a a tourist attraction', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 175, 0),
+('Brother Jered', 'human', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, 0, 176, 0),
+('Rat', 'Overgrown vermin', '', 16, 15, 12, 10, 1, 1, 1, 40, 0, 0, 1, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 177, 0),
+('Ghost', 'Ooh spooky', '', 23, 23, 30, 25, 1, 0, 0, 40, 1, 4, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 178, 0),
+('Skeleton', 'it rattles when it walks', '', 32, 35, 30, 29, 1, 1, 1, 40, 0, 0, 1, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 179, 0),
+('Zombie', 'the living dead', '', 32, 35, 31, 30, 1, 1, 1, 40, 0, 0, 1, 136, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 180, 0),
+('Lesser Demon', 'Lesser but still very big', '', 78, 80, 79, 79, 1, 1, 1, 40, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 181, 0),
+('Melzar The Mad', 'He looks totally insane', '', 47, 47, 44, 44, 1, 0, 0, 40, 1, 7, 0, 6, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1, 1, 2, 3, 16776944, 145, 220, 6, 6, 5, 0, 182, 0),
+('Scavvo', 'He has lopsided eyes', '', 10, 10, 10, 10, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 7356480, 3, 15523536, 145, 220, 6, 6, 5, 0, 183, 0),
+('Greater Demon', 'big red and incredibly evil', '', 86, 88, 87, 87, 1, 1, 1, 40, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 184, 0),
+('Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 185, 0),
+('Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 186, 0),
+('Oziach', 'A strange little man', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 6307872, 8440864, 8440864, 15523536, 145, 205, 6, 6, 5, 0, 187, 0),
+('Bear', 'Eek! A bear!', '', 27, 28, 25, 27, 1, 1, 1, 40, 0, 0, 1, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 188, 0),
+('Black Knight', 'An armoured follower of Zamorak', '', 45, 48, 50, 42, 1, 0, 0, 40, 0, 7, 0, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 189, 0),
+('Chaos Dwarf', 'a dwarf gone bad', '', 58, 60, 59, 61, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 110, 71, 22, -1, -1, -1, -1, -1, 14495808, 14495808, 14495808, 14495808, 135, 185, 6, 6, 5, 0, 190, 0),
+('Dwarf', 'A dwarf who looks after the mining guild', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, 0, 191, 0),
+('Wormbrain', 'Dumb even by goblin standards', '', 8, 9, 9, 5, 1, 0, 0, 40, 1, 1, 0, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 192, 0),
+('Klarense', 'A young sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, 46, -1, -1, -1, -1, 16752704, 221, 4, 15523536, 160, 220, 6, 6, 5, 0, 193, 0),
+('Ned', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 194, 0),
+('Skeleton', 'A Taller than normal skeleton', '', 52, 55, 50, 59, 1, 1, 1, 40, 0, 0, 1, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 259, 281, 11, 11, 12, 1, 195, 0),
+('Dragon', 'A powerful and ancient dragon', '', 110, 110, 110, 110, 1, 1, 1, 30, 0, 0, 1, 144, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 452, 326, 10, 7, 70, 0, 196, 1),
+('Oracle', 'A mystic of unknown race', '', 57, 59, 56, 59, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6724027, 14544622, 14544622, 5619694, 110, 180, 6, 6, 5, 0, 197, 0),
+('Duke of Lumbridge', 'Duke Horacio of Lumbridge', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 64, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 198, 0),
+('Dark Warrior', 'A warrior touched by chaos', '', 20, 23, 25, 17, 1, 0, 0, 40, 1, 3, 0, 0, 32, 42, -1, 114, 75, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 199, 0),
+('Druid', 'A worshipper of Guthix', '', 28, 28, 32, 30, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 200, 0),
+('Red Dragon', 'A big powerful dragon', '', 150, 150, 150, 140, 1, 1, 1, 40, 0, 0, 1, 145, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 452, 326, 10, 7, 70, 0, 201, 1),
+('Blue Dragon', 'A mother dragon', '', 110, 105, 115, 105, 1, 1, 1, 30, 0, 0, 1, 146, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 452, 326, 10, 7, 70, 0, 202, 1),
+('Baby Blue Dragon', 'Young but still dangerous', '', 50, 50, 50, 50, 1, 1, 1, 40, 0, 0, 1, 146, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 226, 163, 10, 7, 30, 0, 203, 0),
+('Kaqemeex', 'A wise druid', '', 28, 28, 32, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 14540253, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 204, 0),
+('Sanfew', 'An old druid', '', 28, 28, 32, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 205, 0),
+('Suit of Armour', 'A dusty old suit of armour', '', 30, 28, 30, 29, 0, 0, 0, 40, 0, 0, 0, -1, 28, 37, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 206, 0),
+('Adventurer', 'A cleric', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16753248, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 207, 0),
+('Adventurer', 'A wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 122, -1, 77, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 208, 0),
+('Adventurer', 'A Warrior', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 5, 28, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 209, 0),
+('Adventurer', 'An archer', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 107, -1, -1, -1, 46, -1, -1, 63, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, 0, 210, 0),
+('Leprechaun', 'A funny little man who lives in a tree', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 5271616, 5286432, 5286432, 15523536, 103, 141, 6, 6, 5, 0, 211, 0),
+('Monk of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 212, 0),
 ('Monk of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 213, 0),
-('Monk of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 214, 0),
-('Zombie', 'The living dead', '', 32, 35, 31, 30, 1, 1, 1, 40, 0, 0, 1, 136, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 215, 0),
-('Monk of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 216, 0),
-('Tree Spirit', 'Ooh spooky', '', 100, 105, 90, 85, 1, 0, 1, 40, 1, 14, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 241, 292, 9, 9, 5, 0, 217, 0),
-('Cow', 'It\'s a dairy cow', '', 9, 9, 8, 8, 0, 0, 0, 40, 0, 0, 0, 128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 327, 240, 6, 6, 45, 0, 218, 0),
-('Irksol', 'Is he invisible or just a set of floating clothes?', '', 115, 115, 115, 115, 0, 0, 0, 40, 0, 0, 0, 78, 82, 88, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, 0, 219, 0),
-('Fairy Lunderwin', 'A fairy merchant', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 94, 143, 6, 6, 5, 0, 220, 0),
-('Jakut', 'An unusual looking merchant', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3180748, 65280, 65280, 9461792, 145, 260, 6, 6, 5, 0, 221, 0),
-('Doorman', 'He guards the entrance to the faerie market', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 0, 1, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1, 3189418, 3170508, 3206894, 15523536, 145, 220, 6, 6, 5, 0, 222, 0),
-('Fairy Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, 0, 223, 0),
-('Fairy Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, 0, 224, 0),
-('Fairy Banker', 'He can look after my money', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 15523536, 94, 143, 6, 6, 5, 0, 225, 0),
-('Giles', 'He runs an ore exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 226, 0),
-('Miles', 'He runs a bar exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772761, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 227, 0),
-('Niles', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 228, 0),
-('Gaius', 'he sells very big swords', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 229, 0),
-('Fairy Ladder Attendant', 'A worker in the faerie market', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, 0, 230, 0),
-('Jatix', 'A hard working druid', '', 28, 28, 32, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 85, -1, -1, -1, -1, -1, 11184810, 65535, 16777215, 15392466, 145, 220, 6, 6, 5, 0, 231, 0),
-('Master Crafter', 'The man in charge of the crafter\'s guild', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 232, 0),
-('Bandit', 'He\'s ready for a fight', '', 32, 26, 33, 27, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 233, 0),
-('Noterazzo', 'A bandit shopkeeper', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 117, -1, -1, -1, -1, -1, -1, -1, 62, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 234, 0),
-('Bandit', 'A wilderness outlaw', '', 32, 26, 33, 27, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 63, 1, 221, 3, 15523536, 145, 220, 6, 6, 5, 0, 235, 0),
-('Fat Tony', 'A Gourmet Pizza chef', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 160, 220, 6, 6, 5, 0, 236, 0),
-('Donny The Lad', 'A bandit leader', '', 42, 36, 43, 37, 1, 0, 0, 40, 1, 6, 0, 5, 1, 2, 49, 98, -1, -1, -1, -1, -1, -1, 62, 16752704, 8060928, 3, 15523536, 145, 220, 6, 6, 5, 0, 237, 0),
-('Black Heather', 'A bandit leader', '', 42, 36, 43, 37, 1, 0, 0, 40, 1, 6, 0, 3, 4, 2, 109, 98, -1, -1, -1, -1, -1, -1, 62, 1, 8060928, 3, 15523536, 145, 220, 6, 6, 5, 0, 238, 0),
-('Speedy Keith', 'A bandit leader', '', 42, 36, 43, 37, 1, 0, 0, 40, 1, 6, 0, 0, 1, 2, 49, -1, -1, 22, -1, -1, -1, -1, 62, 16752704, 8060928, 3, 15523536, 150, 230, 6, 6, 5, 0, 239, 0),
-('White Wolf Sentry', 'A vicious mountain wolf', '', 30, 31, 32, 34, 1, 1, 1, 40, 0, 0, 1, 147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 240, 0),
-('Boy', 'He doesn\'t seem very happy', '', 42, 36, 43, 37, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 8060928, 3, 15523536, 100, 147, 6, 6, 5, 0, 241, 0),
-('Rat', 'He seems to live here', '', 3, 2, 4, 2, 0, 0, 0, 40, 0, 0, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 115, 45, 7, 7, 10, 0, 242, 0),
-('Nora T Hag', 'She\'s got warts', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15527632, 155, 220, 6, 6, 5, 0, 243, 0),
-('Grey Wolf', 'A sinister looking wolf', '', 60, 65, 62, 69, 1, 1, 1, 40, 0, 0, 1, 148, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 244, 0),
-('Evil Red Man', 'I\'ve not seen anyone like this before', '', 200, 170, 200, 300, 1, 1, 1, 50, 0, 0, 1, 7, 1, 2, -1, -1, -1, 84, -1, -1, -1, -1, -1, 14495808, 14495808, 14495808, 14495808, 150, 185, 6, 6, 5, 0, 245, 0),
-('Cave Spider', 'Eek, a cave spider, spooky.', '', 90, 85, 81, 85, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 246, 0),
-('Cave Bear', 'Eek! A bear!', '', 95, 87, 90, 100, 1, 1, 1, 40, 0, 0, 1, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 247, 0),
-('Cave Wolf', 'A sinister looking wolf', '', 99, 175, 97, 120, 1, 1, 1, 40, 0, 0, 1, 148, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 248, 0),
-('White Wolf', 'A vicious mountain wolf', '', 40, 41, 42, 44, 1, 1, 1, 40, 0, 0, 1, 147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 249, 0),
-('Pack Leader', 'A vicious mountain wolf', '', 70, 71, 72, 74, 1, 1, 1, 40, 0, 0, 1, 147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 312, 238, 6, 10, 30, 0, 250, 0),
-('Harry', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 251, 0),
-('Thug', 'He likes hitting things', '', 19, 17, 20, 18, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 255, 15523536, 155, 230, 6, 6, 5, 0, 252, 0),
-('Firebird', 'Probably not a chicken', '', 6, 7, 7, 5, 1, 0, 0, 40, 1, 1, 0, 156, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 253, 0),
-('Achetties', 'One of Asgarnia\'s greatest heros', '', 45, 48, 50, 42, 0, 0, 0, 40, 0, 0, 0, 3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 254, 0),
-('Ice Queen', 'The leader of the ice warriors', '', 105, 104, 101, 104, 1, 0, 0, 40, 1, 17, 0, 7, 4, 44, 100, 118, -1, -1, -1, 155, -1, -1, 64, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, 0, 255, 0),
-('Grubor', 'A rough looking thief', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 150, 220, 6, 6, 5, 0, 256, 0),
-('Trobert', 'A well dressed thief', '', 14, 13, 15, 13, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, 51, -1, -1, -1, -1, -1, -1, 79, 67, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 257, 0),
-('Garv', 'A diligent guard', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, 110, -1, 75, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 258, 0),
-('Guard', 'A vicious pirate', '', 35, 30, 25, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 48, 163, 22, -1, -1, -1, -1, -1, 1, 15658615, 14483456, 15523536, 145, 220, 6, 6, 5, 0, 259, 0),
-('Grip', 'Scar face petes head guard', '', 31, 31, 60, 62, 1, 0, 0, 40, 1, 10, 0, 0, 1, 42, 110, -1, 75, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 152, 231, 6, 6, 5, 0, 260, 0),
-('Alfonse The Waiter', 'He should get a clean apron', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 261, 0),
-('Charlie The Cook', 'Head cook of the Shrimp and parrot', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 15641122, 15523536, 145, 220, 6, 6, 5, 0, 262, 0),
-('Guard Dog', 'He doesn\'t seem pleased to see me', '', 45, 46, 47, 49, 1, 1, 1, 40, 0, 0, 1, 159, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 247, 188, 6, 10, 30, 0, 263, 0),
-('Ice Spider', 'I think this spider has been genetically modified', '', 60, 65, 66, 65, 1, 1, 1, 40, 0, 0, 1, 160, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 132, 114, 6, 6, 5, 0, 264, 0),
-('Pirate', 'A vicious pirate', '', 38, 33, 28, 23, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 48, 163, -1, -1, -1, -1, -1, -1, 1, 7829248, 6684672, 15523536, 145, 220, 6, 6, 5, 0, 265, 0),
-('Jailer', 'Guards prisoners for the black knights', '', 50, 53, 55, 47, 1, 1, 1, 40, 0, 0, 1, 6, 32, 42, -1, 114, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 266, 0),
-('Lord Darquarius', 'A black knight commander', '', 75, 78, 80, 72, 1, 0, 0, 40, 1, 12, 0, 0, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 267, 0),
-('Seth', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 14508096, 9461792, 145, 220, 6, 6, 5, 0, 268, 0),
-('Banker', 'He can look after my money', 'Quick Bank', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 269, 0),
-('Helemos', 'A retired hero', '', 45, 48, 50, 42, 0, 0, 0, 40, 0, 0, 0, 6, 33, 41, 102, 52, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 270, 0),
-('Chaos Druid', 'A crazy evil druid', '', 18, 18, 22, 20, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 271, 0);
+('Zombie', 'The living dead', '', 32, 35, 31, 30, 1, 1, 1, 40, 0, 0, 1, 136, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 214, 0),
+('Monk of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 215, 0),
+('Tree Spirit', 'Ooh spooky', '', 100, 105, 90, 85, 1, 0, 1, 40, 1, 14, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 241, 292, 9, 9, 5, 0, 216, 0),
+('Cow', 'It\'s a dairy cow', '', 9, 9, 8, 8, 0, 0, 0, 40, 0, 0, 0, 128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 327, 240, 6, 6, 45, 0, 217, 0),
+('Irksol', 'Is he invisible or just a set of floating clothes?', '', 115, 115, 115, 115, 0, 0, 0, 40, 0, 0, 0, 78, 82, 88, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, 0, 218, 0),
+('Fairy Lunderwin', 'A fairy merchant', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 94, 143, 6, 6, 5, 0, 219, 0),
+('Jakut', 'An unusual looking merchant', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3180748, 65280, 65280, 9461792, 145, 260, 6, 6, 5, 0, 220, 0),
+('Doorman', 'He guards the entrance to the faerie market', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 0, 1, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1, 3189418, 3170508, 3206894, 15523536, 145, 220, 6, 6, 5, 0, 221, 0),
+('Fairy Shopkeeper', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, 0, 222, 0),
+('Fairy Shop Assistant', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 6307872, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, 0, 223, 0),
+('Fairy Banker', 'He can look after my money', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 15523536, 94, 143, 6, 6, 5, 0, 224, 0),
+('Giles', 'He runs an ore exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 225, 0),
+('Miles', 'He runs a bar exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772761, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 226, 0),
+('Niles', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 227, 0),
+('Gaius', 'he sells very big swords', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 228, 0),
+('Fairy Ladder Attendant', 'A worker in the faerie market', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, 0, 229, 0),
+('Jatix', 'A hard working druid', '', 28, 28, 32, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 85, -1, -1, -1, -1, -1, 11184810, 65535, 16777215, 15392466, 145, 220, 6, 6, 5, 0, 230, 0),
+('Master Crafter', 'The man in charge of the crafter\'s guild', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 231, 0),
+('Bandit', 'He\'s ready for a fight', '', 32, 26, 33, 27, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 232, 0),
+('Noterazzo', 'A bandit shopkeeper', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 117, -1, -1, -1, -1, -1, -1, -1, 62, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 233, 0),
+('Bandit', 'A wilderness outlaw', '', 32, 26, 33, 27, 1, 1, 1, 40, 0, 0, 1, 0, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 63, 1, 221, 3, 15523536, 145, 220, 6, 6, 5, 0, 234, 0),
+('Fat Tony', 'A Gourmet Pizza chef', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 160, 220, 6, 6, 5, 0, 235, 0),
+('Donny The Lad', 'A bandit leader', '', 42, 36, 43, 37, 1, 0, 0, 40, 1, 6, 0, 5, 1, 2, 49, 98, -1, -1, -1, -1, -1, -1, 62, 16752704, 8060928, 3, 15523536, 145, 220, 6, 6, 5, 0, 236, 0),
+('Black Heather', 'A bandit leader', '', 42, 36, 43, 37, 1, 0, 0, 40, 1, 6, 0, 3, 4, 2, 109, 98, -1, -1, -1, -1, -1, -1, 62, 1, 8060928, 3, 15523536, 145, 220, 6, 6, 5, 0, 237, 0),
+('Speedy Keith', 'A bandit leader', '', 42, 36, 43, 37, 1, 0, 0, 40, 1, 6, 0, 0, 1, 2, 49, -1, -1, 22, -1, -1, -1, -1, 62, 16752704, 8060928, 3, 15523536, 150, 230, 6, 6, 5, 0, 238, 0),
+('White Wolf Sentry', 'A vicious mountain wolf', '', 30, 31, 32, 34, 1, 1, 1, 40, 0, 0, 1, 147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 239, 0),
+('Boy', 'He doesn\'t seem very happy', '', 42, 36, 43, 37, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 8060928, 3, 15523536, 100, 147, 6, 6, 5, 0, 240, 0),
+('Rat', 'He seems to live here', '', 3, 2, 4, 2, 0, 0, 0, 40, 0, 0, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 115, 45, 7, 7, 10, 0, 241, 0),
+('Nora T Hag', 'She\'s got warts', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15527632, 155, 220, 6, 6, 5, 0, 242, 0),
+('Grey Wolf', 'A sinister looking wolf', '', 60, 65, 62, 69, 1, 1, 1, 40, 0, 0, 1, 148, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 243, 0),
+('Evil Red Man', 'I\'ve not seen anyone like this before', '', 200, 170, 200, 300, 1, 1, 1, 50, 0, 0, 1, 7, 1, 2, -1, -1, -1, 84, -1, -1, -1, -1, -1, 14495808, 14495808, 14495808, 14495808, 150, 185, 6, 6, 5, 0, 244, 0),
+('Cave Spider', 'Eek, a cave spider, spooky.', '', 90, 85, 81, 85, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 245, 0),
+('Cave Bear', 'Eek! A bear!', '', 95, 87, 90, 100, 1, 1, 1, 40, 0, 0, 1, 131, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 262, 247, 6, 9, 30, 0, 246, 0),
+('Cave Wolf', 'A sinister looking wolf', '', 99, 175, 97, 120, 1, 1, 1, 40, 0, 0, 1, 148, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 247, 0),
+('White Wolf', 'A vicious mountain wolf', '', 40, 41, 42, 44, 1, 1, 1, 40, 0, 0, 1, 147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 248, 0),
+('Pack Leader', 'A vicious mountain wolf', '', 70, 71, 72, 74, 1, 1, 1, 40, 0, 0, 1, 147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 312, 238, 6, 10, 30, 0, 249, 0),
+('Harry', 'I wonder what he\'s got for sale', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 250, 0),
+('Thug', 'He likes hitting things', '', 19, 17, 20, 18, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 255, 15523536, 155, 230, 6, 6, 5, 0, 251, 0),
+('Firebird', 'Probably not a chicken', '', 6, 7, 7, 5, 1, 0, 0, 40, 1, 1, 0, 156, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 252, 0),
+('Achetties', 'One of Asgarnia\'s greatest heros', '', 45, 48, 50, 42, 0, 0, 0, 40, 0, 0, 0, 3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 253, 0),
+('Ice Queen', 'The leader of the ice warriors', '', 105, 104, 101, 104, 1, 0, 0, 40, 1, 17, 0, 7, 4, 44, 100, 118, -1, -1, -1, 155, -1, -1, 64, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, 0, 254, 0),
+('Grubor', 'A rough looking thief', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 150, 220, 6, 6, 5, 0, 255, 0),
+('Trobert', 'A well dressed thief', '', 14, 13, 15, 13, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, 51, -1, -1, -1, -1, -1, -1, 79, 67, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 256, 0),
+('Garv', 'A diligent guard', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, 110, -1, 75, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 257, 0),
+('Guard', 'A vicious pirate', '', 35, 30, 25, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 48, 163, 22, -1, -1, -1, -1, -1, 1, 15658615, 14483456, 15523536, 145, 220, 6, 6, 5, 0, 258, 0),
+('Grip', 'Scar face petes head guard', '', 31, 31, 60, 62, 1, 0, 0, 40, 1, 10, 0, 0, 1, 42, 110, -1, 75, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 152, 231, 6, 6, 5, 0, 259, 0),
+('Alfonse The Waiter', 'He should get a clean apron', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 260, 0),
+('Charlie The Cook', 'Head cook of the Shrimp and parrot', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 15641122, 15523536, 145, 220, 6, 6, 5, 0, 261, 0),
+('Guard Dog', 'He doesn\'t seem pleased to see me', '', 45, 46, 47, 49, 1, 1, 1, 40, 0, 0, 1, 159, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 247, 188, 6, 10, 30, 0, 262, 0),
+('Ice Spider', 'I think this spider has been genetically modified', '', 60, 65, 66, 65, 1, 1, 1, 40, 0, 0, 1, 160, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 132, 114, 6, 6, 5, 0, 263, 0),
+('Pirate', 'A vicious pirate', '', 38, 33, 28, 23, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 48, 163, -1, -1, -1, -1, -1, -1, 1, 7829248, 6684672, 15523536, 145, 220, 6, 6, 5, 0, 264, 0),
+('Jailer', 'Guards prisoners for the black knights', '', 50, 53, 55, 47, 1, 1, 1, 40, 0, 0, 1, 6, 32, 42, -1, 114, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 265, 0),
+('Lord Darquarius', 'A black knight commander', '', 75, 78, 80, 72, 1, 0, 0, 40, 1, 12, 0, 0, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 266, 0),
+('Seth', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 14508096, 9461792, 145, 220, 6, 6, 5, 0, 267, 0),
+('Banker', 'He can look after my money', 'Quick Bank', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 268, 0),
+('Helemos', 'A retired hero', '', 45, 48, 50, 42, 0, 0, 0, 40, 0, 0, 0, 6, 33, 41, 102, 52, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 269, 0),
+('Chaos Druid', 'A crazy evil druid', '', 18, 18, 22, 20, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 270, 0);
 INSERT INTO `def_npc` (`name`, `description`, `command`, `attack`, `defense`, `strength`, `hits`, `attackable`, `aggressive`, `follows`, `respawn`, `retreat`, `retreat_hits`, `block`, `sprite1`, `sprite2`, `sprite3`, `sprite4`, `sprite5`, `sprite6`, `sprite7`, `sprite8`, `sprite9`, `sprite10`, `sprite11`, `sprite12`, `hair_colour`, `top_colour`, `bottom_colour`, `skin_colour`, `camera1`, `camera2`, `walk_model`, `combat_model`, `combat_sprite`, `undead`, `id`, `dragon`) VALUES
-('Poison Scorpion', 'It has a very vicious looking tail', '', 26, 27, 29, 23, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 362, 208, 7, 7, 45, 0, 272, 0),
-('Velrak The Explorer', 'he looks cold and hungry', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 8952166, 9461792, 145, 220, 6, 6, 5, 0, 273, 0),
-('Sir Lancelot', 'A knight of the round table', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 3, 34, 43, 101, 49, -1, -1, -1, -1, -1, -1, 62, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 274, 0),
-('Sir Gawain', 'A knight of the round table', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 5, 34, 43, 100, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 275, 0),
-('King Arthur', 'A wise old king', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 0, 34, 43, -1, 49, 150, -1, -1, -1, -1, -1, 68, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 276, 0),
-('Sir Mordred', 'An evil knight', '', 57, 60, 62, 54, 1, 0, 0, 40, 1, 9, 0, 18, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 64, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 277, 0),
-('Renegade Knight', 'He isn\'t very friendly', '', 50, 53, 55, 48, 1, 1, 1, 40, 0, 0, 1, 18, 32, 42, -1, 53, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 278, 0),
-('Davon', 'An amulet trader', '', 35, 30, 25, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 48, -1, 45, -1, -1, -1, -1, -1, 1, 15658615, 10289152, 11312784, 145, 220, 6, 6, 5, 0, 279, 0),
-('Bartender', 'I could get some grog off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 163, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 280, 0),
-('Arhein', 'A merchant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 13381836, 3, 13415270, 145, 220, 6, 6, 5, 0, 281, 0),
-('Morgan Le Faye', 'An evil sorceress', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 122, -1, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15527632, 155, 220, 6, 6, 5, 0, 282, 0),
-('Candlemaker', 'He makes and sells candles', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 283, 0),
+('Poison Scorpion', 'It has a very vicious looking tail', '', 26, 27, 29, 23, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 362, 208, 7, 7, 45, 0, 271, 0),
+('Velrak The Explorer', 'he looks cold and hungry', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 8952166, 9461792, 145, 220, 6, 6, 5, 0, 272, 0),
+('Sir Lancelot', 'A knight of the round table', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 3, 34, 43, 101, 49, -1, -1, -1, -1, -1, -1, 62, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 273, 0),
+('Sir Gawain', 'A knight of the round table', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 5, 34, 43, 100, 49, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 274, 0),
+('King Arthur', 'A wise old king', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 0, 34, 43, -1, 49, 150, -1, -1, -1, -1, -1, 68, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 275, 0),
+('Sir Mordred', 'An evil knight', '', 57, 60, 62, 54, 1, 0, 0, 40, 1, 9, 0, 18, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 64, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 276, 0),
+('Renegade Knight', 'He isn\'t very friendly', '', 50, 53, 55, 48, 1, 1, 1, 40, 0, 0, 1, 18, 32, 42, -1, 53, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 277, 0),
+('Davon', 'An amulet trader', '', 35, 30, 25, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 48, -1, 45, -1, -1, -1, -1, -1, 1, 15658615, 10289152, 11312784, 145, 220, 6, 6, 5, 0, 278, 0),
+('Bartender', 'I could get some grog off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 163, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 279, 0),
+('Arhein', 'A merchant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 13381836, 3, 13415270, 145, 220, 6, 6, 5, 0, 280, 0),
+('Morgan Le Faye', 'An evil sorceress', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 122, -1, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15527632, 155, 220, 6, 6, 5, 0, 281, 0),
+('Candlemaker', 'He makes and sells candles', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 282, 0),
+('Lady', 'She has a hint of magic about her', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 283, 0),
 ('Lady', 'She has a hint of magic about her', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 284, 0),
 ('Lady', 'She has a hint of magic about her', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 285, 0),
-('Lady', 'She has a hint of magic about her', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 286, 0),
-('Beggar', 'A scruffy looking chap', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16768256, 2, 3, 15523536, 135, 220, 6, 6, 5, 0, 287, 0),
-('Merlin', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 288, 0),
-('Thrantax', 'A freshly summoned demon', '', 90, 90, 90, 90, 0, 0, 0, 40, 0, 0, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 289, 0),
-('Hickton', 'The owner of the archery store', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8409136, 14483456, 3, 15523536, 145, 220, 6, 6, 5, 0, 290, 0),
-('Black Demon', 'A big scary jet black demon', '', 155, 158, 157, 157, 1, 1, 1, 40, 0, 0, 1, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 291, 0),
-('Black Dragon', 'A fierce dragon with black scales!', '', 210, 170, 190, 190, 1, 1, 1, 30, 0, 0, 1, 165, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 542, 391, 10, 7, 84, 0, 292, 1),
-('Poison Spider', 'I think this spider has been genetically modified', '', 60, 68, 62, 64, 1, 1, 1, 40, 0, 0, 1, 166, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 180, 156, 6, 6, 5, 0, 293, 0),
-('Monk of Zamorak', 'An evil cleric', '', 48, 48, 52, 40, 1, 0, 0, 40, 1, 7, 0, 7, 1, 2, -1, 122, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 294, 0),
-('Hellhound', 'Hello nice doggy', '', 115, 114, 112, 116, 1, 1, 1, 40, 0, 0, 1, 167, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 312, 237, 6, 10, 36, 0, 295, 0),
-('Animated Axe', 'a magic axe with a mind of it\'s own', '', 48, 48, 45, 44, 1, 1, 1, 20, 0, 0, 1, -1, -1, -1, -1, 109, -1, -1, -1, -1, -1, -1, -1, 15645552, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 296, 0),
-('Black Unicorn', 'It\'s a sort of unicorn', '', 31, 33, 33, 29, 1, 1, 1, 40, 0, 0, 1, 168, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 230, 6, 6, 7, 0, 297, 0),
-('Frincos', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 298, 0),
-('Otherworldly Being', 'Is he invisible or just a set of floating clothes?', '', 66, 66, 66, 66, 1, 1, 1, 40, 0, 0, 1, 78, 82, 88, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, 0, 299, 0),
-('Owen', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 16772761, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 300, 0),
-('Thormac The Sorceror', 'A powerful sorcerrer', '', 27, 27, 24, 24, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 82, -1, -1, -1, -1, -1, 1, 2, 3, 10056486, 145, 220, 6, 6, 5, 0, 301, 0),
-('Seer', 'An old wizard', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 76, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 302, 0),
+('Beggar', 'A scruffy looking chap', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16768256, 2, 3, 15523536, 135, 220, 6, 6, 5, 0, 286, 0),
+('Merlin', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 287, 0),
+('Thrantax', 'A freshly summoned demon', '', 90, 90, 90, 90, 0, 0, 0, 40, 0, 0, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 288, 0),
+('Hickton', 'The owner of the archery store', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8409136, 14483456, 3, 15523536, 145, 220, 6, 6, 5, 0, 289, 0),
+('Black Demon', 'A big scary jet black demon', '', 155, 158, 157, 157, 1, 1, 1, 40, 0, 0, 1, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 290, 0),
+('Black Dragon', 'A fierce dragon with black scales!', '', 210, 170, 190, 190, 1, 1, 1, 30, 0, 0, 1, 165, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 542, 391, 10, 7, 84, 0, 291, 1),
+('Poison Spider', 'I think this spider has been genetically modified', '', 60, 68, 62, 64, 1, 1, 1, 40, 0, 0, 1, 166, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 180, 156, 6, 6, 5, 0, 292, 0),
+('Monk of Zamorak', 'An evil cleric', '', 48, 48, 52, 40, 1, 0, 0, 40, 1, 7, 0, 7, 1, 2, -1, 122, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 293, 0),
+('Hellhound', 'Hello nice doggy', '', 115, 114, 112, 116, 1, 1, 1, 40, 0, 0, 1, 167, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 312, 237, 6, 10, 36, 0, 294, 0),
+('Animated Axe', 'a magic axe with a mind of it\'s own', '', 48, 48, 45, 44, 1, 1, 1, 20, 0, 0, 1, -1, -1, -1, -1, 109, -1, -1, -1, -1, -1, -1, -1, 15645552, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 295, 0),
+('Black Unicorn', 'It\'s a sort of unicorn', '', 31, 33, 33, 29, 1, 1, 1, 40, 0, 0, 1, 168, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 230, 6, 6, 7, 0, 296, 0),
+('Frincos', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 297, 0),
+('Otherworldly Being', 'Is he invisible or just a set of floating clothes?', '', 66, 66, 66, 66, 1, 1, 1, 40, 0, 0, 1, 78, 82, 88, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, 0, 298, 0),
+('Owen', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 16772761, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 299, 0),
+('Thormac The Sorceror', 'A powerful sorcerrer', '', 27, 27, 24, 24, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 82, -1, -1, -1, -1, -1, 1, 2, 3, 10056486, 145, 220, 6, 6, 5, 0, 300, 0),
+('Seer', 'An old wizard', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 76, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 301, 0),
+('Kharid Scorpion', 'a smaller less dangerous scorpion', '', 21, 22, 24, 17, 0, 0, 0, 40, 0, 0, 0, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 302, 0),
 ('Kharid Scorpion', 'a smaller less dangerous scorpion', '', 21, 22, 24, 17, 0, 0, 0, 40, 0, 0, 0, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 303, 0),
 ('Kharid Scorpion', 'a smaller less dangerous scorpion', '', 21, 22, 24, 17, 0, 0, 0, 40, 0, 0, 0, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 304, 0),
-('Kharid Scorpion', 'a smaller less dangerous scorpion', '', 21, 22, 24, 17, 0, 0, 0, 40, 0, 0, 0, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 305, 0),
-('Barbarian Guard', 'Not very civilised', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 28, -1, -1, -1, -1, -1, 15645552, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 306, 0),
-('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 307, 0),
-('Man', 'A well dressed nobleman', '', 11, 11, 8, 7, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 66, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 308, 0),
-('Gem Trader', 'He sells gems', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 3211212, 3211212, 13415270, 145, 220, 6, 6, 5, 0, 309, 0),
-('Dimintheis', 'A well dressed nobleman', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 62, 1, 7811157, 3, 15523536, 145, 220, 6, 6, 5, 0, 310, 0),
-('Chef', 'A busy looking chef', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 14540032, 15523536, 145, 220, 6, 6, 5, 0, 311, 0),
-('Hobgoblin', 'An ugly green creature', '', 49, 48, 47, 49, 1, 1, 1, 40, 0, 0, 1, 142, 140, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 314, 295, 9, 8, 5, 0, 312, 0),
-('Ogre', 'A large dim looking humanoid', '', 72, 70, 33, 60, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 313, 0),
-('Boot The Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 20, -1, -1, -1, -1, -1, 7360576, 10502176, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 314, 0),
-('Wizard', 'A young wizard', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, 122, -1, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 315, 0),
-('Chronozon', 'Chronozon the blood demon', '', 183, 182, 60, 60, 1, 1, 1, 40, 0, 0, 1, 169, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 316, 0),
-('Captain Barnaby', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 317, 0),
-('Customs Official', 'She\'s here to stop smugglers', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 0, 4, 38, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 318, 0),
-('Man', 'One of Runescape\'s citizens', 'pickpocket', 11, 11, 8, 7, 1, 0, 0, 5, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 319, 0),
-('Farmer', 'An humble peasant', 'pickpocket', 15, 18, 16, 12, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 320, 0),
-('Warrior', 'A skilled fighter', 'pickpocket', 35, 30, 25, 20, 1, 0, 0, 40, 1, 3, 0, 3, 56, 38, -1, 109, -1, -1, -1, -1, -1, -1, -1, 16753488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 321, 0),
-('Guard', 'He tries to keep the law and order around here', 'pickpocket', 31, 31, 30, 22, 1, 0, 0, 7, 1, 4, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 322, 0),
-('Knight', 'A knight of Ardougne', 'pickpocket', 55, 58, 60, 52, 1, 0, 0, 40, 1, 9, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, 64, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 323, 0),
-('Paladin', 'A paladin of Ardougne', 'pickpocket', 85, 88, 55, 57, 1, 0, 0, 40, 1, 10, 0, 6, 34, 43, 101, 119, -1, -1, -1, -1, -1, -1, 66, 16760880, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 324, 0),
-('Hero', 'A Hero of Ardougne', 'pickpocket', 85, 88, 80, 82, 1, 0, 0, 40, 1, 14, 0, 0, 33, 41, 102, 52, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 325, 0),
-('Baker', 'He sells hot baked bread', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 16777215, 8912896, 15523536, 145, 220, 6, 6, 5, 0, 326, 0),
-('Silk Merchant', 'He buys silk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16724172, 16724172, 15523536, 145, 220, 6, 6, 5, 0, 327, 0),
-('Fur Trader', 'A buyer and seller of animal furs', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 67, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 328, 0),
-('Silver Merchant', 'He deals in silver', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 66, 3158064, 16764108, 16764108, 15523536, 145, 220, 6, 6, 5, 0, 329, 0),
-('Spice Merchant', 'He sells exotic spices', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 1, 16777215, 8912896, 13415270, 145, 220, 6, 6, 5, 0, 330, 0),
-('Gem Merchant', 'He sells gems', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 3211212, 3211212, 15523536, 145, 220, 6, 6, 5, 0, 331, 0),
-('Zenesha', 'A shopkeeper of some sort', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, 56, 93, -1, -1, -1, -1, 16753488, 14518442, 3, 15523536, 145, 235, 6, 6, 5, 0, 332, 0),
-('Kangai Mau', 'A tribesman', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 9461792, 16724016, 9461792, 160, 220, 6, 6, 5, 0, 333, 0),
-('Wizard Cromperty', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 122, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 334, 0),
-('RPDT Employee', 'A delivery man', '', 12, 12, 12, 13, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 170, 170, 9461792, 145, 220, 6, 6, 5, 0, 335, 0),
-('Horacio', 'An old gardener', '', 10, 8, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8947848, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 336, 0),
-('Aemad', 'He helps run the adventurers store', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 337, 0),
-('Kortan', 'He helps run the adventurers store', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 338, 0),
-('Zoo Keeper', 'He looks after Ardougne city zoo', '', 20, 20, 20, 20, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 187, 187, 15523536, 160, 220, 6, 6, 5, 0, 339, 0),
-('Make Over Mage', 'He can change how I look', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, -1, 84, -1, -1, -1, -1, 68, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, 0, 340, 0),
-('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 341, 0),
-('Chuck', 'A wood merchant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, -1, -1, -1, -1, -1, -1, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 342, 0),
-('Rogue', 'He needs a shave', 'pickpocket', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 343, 0),
-('Shadow Spider', 'Is it a spider or is it a shadow', '', 54, 52, 51, 55, 1, 1, 1, 20, 0, 0, 1, 170, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 132, 114, 6, 6, 5, 0, 344, 0),
-('Fire Giant', 'A big guy with red glowing skin', '', 110, 105, 112, 111, 1, 1, 1, 25, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 12255232, 16742195, 16742195, 16724787, 261, 396, 6, 6, 5, 0, 345, 0),
-('Grandpa Jack', 'A wistful old man', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, -1, -1, -1, -1, -1, -1, -1, 15658734, 12277060, 3, 15523536, 160, 220, 6, 6, 5, 0, 346, 0),
-('Sinister Stranger', 'not your average fisherman', '', 40, 35, 65, 35, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 16576224, 140, 240, 6, 6, 5, 0, 347, 0),
-('Bonzo', 'He runs a bone exchange stall', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 348, 0),
-('Forester', 'He looks after McGrubor\'s wood', '', 24, 23, 22, 17, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 107, -1, 45, -1, -1, 11, -1, -1, 1, 56576, 43520, 15523536, 145, 220, 6, 6, 5, 0, 349, 0),
-('Morris', 'Fishing competition organiser', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 150, 220, 6, 6, 5, 0, 350, 0),
-('Brother Omad', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 351, 0),
-('Thief', 'A dastardly blanket thief', '', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, 48, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 352, 0),
-('Head Thief', 'A dastardly blanket thief', '', 34, 33, 32, 37, 1, 0, 0, 40, 1, 6, 0, 6, 1, 2, -1, 50, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, 0, 353, 0),
-('Big Dave', 'A well built fisherman', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 165, 242, 6, 6, 5, 0, 354, 0),
-('Joshua', 'A grumpy fisherman', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 230, 6, 6, 5, 0, 355, 0),
-('Mountain Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 1, 7360544, 7360544, 15523536, 130, 180, 6, 6, 5, 0, 356, 0),
-('Mountain Dwarf', 'A short angry guy', '', 30, 30, 27, 26, 1, 0, 0, 40, 1, 4, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 1, 7360544, 7360544, 15523536, 130, 180, 6, 6, 5, 0, 357, 0),
-('Brother Cedric', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, 0, 358, 0),
-('Necromancer', 'A crazy evil necromancer', '', 28, 28, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16777215, 65535, 255, 16768722, 145, 220, 6, 6, 5, 0, 359, 0),
-('Zombie', 'The living dead', '', 23, 23, 28, 24, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 360, 0),
-('Lucien', 'He walks with a slight limp', '', 24, 23, 22, 17, 0, 0, 0, 40, 0, 0, 0, 18, 1, 2, -1, -1, -1, 82, 88, 46, 11, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 361, 0),
-('The Fire Warrior of Lesarkus', 'A strange red humanoid', '', 72, 72, 50, 59, 1, 0, 0, 40, 1, 10, 0, 7, 1, 36, 97, 108, -1, 20, -1, -1, -1, -1, -1, 16750950, 15634560, 15634560, 16752469, 150, 250, 6, 6, 5, 0, 362, 0),
-('Guardian of Armadyl', 'A worshipper of Armadyl', '', 58, 58, 52, 50, 0, 0, 0, 40, 0, 0, 0, 6, 1, 41, -1, -1, -1, 85, -1, -1, -1, -1, -1, 16772778, 65535, 255, 13415270, 145, 220, 6, 6, 5, 0, 363, 0),
-('Guardian of Armadyl', 'A worshipper of Armadyl', '', 58, 58, 52, 50, 0, 0, 0, 40, 0, 0, 0, 3, 4, 41, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772778, 16777215, 255, 13415270, 145, 220, 6, 6, 5, 0, 364, 0),
-('Lucien', 'He walks with a limp', '', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 18, 1, 2, -1, -1, -1, 82, 88, 46, 11, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 365, 0),
-('Winelda', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 16711680, 3, 15531984, 155, 220, 6, 6, 5, 0, 366, 0),
-('Brother Kojo', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, 0, 367, 0),
-('Dungeon Rat', 'Overgrown vermin', '', 20, 22, 10, 12, 1, 0, 0, 40, 1, 2, 0, 172, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 368, 0),
-('Master Fisher', 'The man in charge of the fishing guild', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 369, 0),
-('Orven', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 16772761, 16711680, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 370, 0),
-('Padik', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772761, 16711680, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 371, 0),
-('Shopkeeper', 'He smells of fish', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 372, 0),
-('Lady Servil', 'She look\'s wealthy', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 373, 0),
-('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 374, 0),
+('Barbarian Guard', 'Not very civilised', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 28, -1, -1, -1, -1, -1, 15645552, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 305, 0),
+('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 306, 0),
+('Man', 'A well dressed nobleman', '', 11, 11, 8, 7, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 66, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 307, 0),
+('Gem Trader', 'He sells gems', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 3211212, 3211212, 13415270, 145, 220, 6, 6, 5, 0, 308, 0),
+('Dimintheis', 'A well dressed nobleman', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 62, 1, 7811157, 3, 15523536, 145, 220, 6, 6, 5, 0, 309, 0),
+('Chef', 'A busy looking chef', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 14540032, 15523536, 145, 220, 6, 6, 5, 0, 310, 0),
+('Hobgoblin', 'An ugly green creature', '', 49, 48, 47, 49, 1, 1, 1, 40, 0, 0, 1, 142, 140, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 314, 295, 9, 8, 5, 0, 311, 0),
+('Ogre', 'A large dim looking humanoid', '', 72, 70, 33, 60, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 312, 0),
+('Boot The Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 20, -1, -1, -1, -1, -1, 7360576, 10502176, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 313, 0),
+('Wizard', 'A young wizard', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, 122, -1, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 314, 0),
+('Chronozon', 'Chronozon the blood demon', '', 183, 182, 60, 60, 1, 1, 1, 40, 0, 0, 1, 169, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 315, 0),
+('Captain Barnaby', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 316, 0),
+('Customs Official', 'She\'s here to stop smugglers', '', 23, 14, 12, 15, 0, 0, 0, 40, 0, 0, 0, 0, 4, 38, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 317, 0),
+('Man', 'One of Runescape\'s citizens', 'pickpocket', 11, 11, 8, 7, 1, 0, 0, 5, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 318, 0),
+('Farmer', 'An humble peasant', 'pickpocket', 15, 18, 16, 12, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 319, 0),
+('Warrior', 'A skilled fighter', 'pickpocket', 35, 30, 25, 20, 1, 0, 0, 40, 1, 3, 0, 3, 56, 38, -1, 109, -1, -1, -1, -1, -1, -1, -1, 16753488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 320, 0),
+('Guard', 'He tries to keep the law and order around here', 'pickpocket', 31, 31, 30, 22, 1, 0, 0, 7, 1, 4, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 321, 0),
+('Knight', 'A knight of Ardougne', 'pickpocket', 55, 58, 60, 52, 1, 0, 0, 40, 1, 9, 0, 19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, 64, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 322, 0),
+('Paladin', 'A paladin of Ardougne', 'pickpocket', 85, 88, 55, 57, 1, 0, 0, 40, 1, 10, 0, 6, 34, 43, 101, 119, -1, -1, -1, -1, -1, -1, 66, 16760880, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 323, 0),
+('Hero', 'A Hero of Ardougne', 'pickpocket', 85, 88, 80, 82, 1, 0, 0, 40, 1, 14, 0, 0, 33, 41, 102, 52, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 324, 0),
+('Baker', 'He sells hot baked bread', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 16777215, 8912896, 15523536, 145, 220, 6, 6, 5, 0, 325, 0),
+('Silk Merchant', 'He buys silk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16724172, 16724172, 15523536, 145, 220, 6, 6, 5, 0, 326, 0),
+('Fur Trader', 'A buyer and seller of animal furs', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 67, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 327, 0),
+('Silver Merchant', 'He deals in silver', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 66, 3158064, 16764108, 16764108, 15523536, 145, 220, 6, 6, 5, 0, 328, 0),
+('Spice Merchant', 'He sells exotic spices', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 1, 16777215, 8912896, 13415270, 145, 220, 6, 6, 5, 0, 329, 0),
+('Gem Merchant', 'He sells gems', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 3211212, 3211212, 15523536, 145, 220, 6, 6, 5, 0, 330, 0),
+('Zenesha', 'A shopkeeper of some sort', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, 56, 93, -1, -1, -1, -1, 16753488, 14518442, 3, 15523536, 145, 235, 6, 6, 5, 0, 331, 0),
+('Kangai Mau', 'A tribesman', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 9461792, 16724016, 9461792, 160, 220, 6, 6, 5, 0, 332, 0),
+('Wizard Cromperty', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 122, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 333, 0),
+('RPDT Employee', 'A delivery man', '', 12, 12, 12, 13, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 170, 170, 9461792, 145, 220, 6, 6, 5, 0, 334, 0),
+('Horacio', 'An old gardener', '', 10, 8, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8947848, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 335, 0),
+('Aemad', 'He helps run the adventurers store', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 336, 0),
+('Kortan', 'He helps run the adventurers store', '', 15, 6, 22, 22, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, 0, 337, 0),
+('Zoo Keeper', 'He looks after Ardougne city zoo', '', 20, 20, 20, 20, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 187, 187, 15523536, 160, 220, 6, 6, 5, 0, 338, 0),
+('Make Over Mage', 'He can change how I look', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, -1, 84, -1, -1, -1, -1, 68, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, 0, 339, 0),
+('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 340, 0),
+('Chuck', 'A wood merchant', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, -1, -1, -1, -1, -1, -1, -1, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 341, 0),
+('Rogue', 'He needs a shave', 'pickpocket', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 342, 0),
+('Shadow Spider', 'Is it a spider or is it a shadow', '', 54, 52, 51, 55, 1, 1, 1, 20, 0, 0, 1, 170, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 132, 114, 6, 6, 5, 0, 343, 0),
+('Fire Giant', 'A big guy with red glowing skin', '', 110, 105, 112, 111, 1, 1, 1, 25, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 12255232, 16742195, 16742195, 16724787, 261, 396, 6, 6, 5, 0, 344, 0),
+('Grandpa Jack', 'A wistful old man', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, -1, -1, -1, -1, -1, -1, -1, 15658734, 12277060, 3, 15523536, 160, 220, 6, 6, 5, 0, 345, 0),
+('Sinister Stranger', 'not your average fisherman', '', 40, 35, 65, 35, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 16576224, 140, 240, 6, 6, 5, 0, 346, 0),
+('Bonzo', 'He runs a bone exchange stall', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 347, 0),
+('Forester', 'He looks after McGrubor\'s wood', '', 24, 23, 22, 17, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 107, -1, 45, -1, -1, 11, -1, -1, 1, 56576, 43520, 15523536, 145, 220, 6, 6, 5, 0, 348, 0),
+('Morris', 'Fishing competition organiser', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 3, 15523536, 150, 220, 6, 6, 5, 0, 349, 0),
+('Brother Omad', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 350, 0),
+('Thief', 'A dastardly blanket thief', '', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, 48, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 351, 0),
+('Head Thief', 'A dastardly blanket thief', '', 34, 33, 32, 37, 1, 0, 0, 40, 1, 6, 0, 6, 1, 2, -1, 50, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, 0, 352, 0),
+('Big Dave', 'A well built fisherman', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 165, 242, 6, 6, 5, 0, 353, 0),
+('Joshua', 'A grumpy fisherman', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 230, 6, 6, 5, 0, 354, 0),
+('Mountain Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 1, 7360544, 7360544, 15523536, 130, 180, 6, 6, 5, 0, 355, 0),
+('Mountain Dwarf', 'A short angry guy', '', 30, 30, 27, 26, 1, 0, 0, 40, 1, 4, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 1, 7360544, 7360544, 15523536, 130, 180, 6, 6, 5, 0, 356, 0),
+('Brother Cedric', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, 0, 357, 0),
+('Necromancer', 'A crazy evil necromancer', '', 28, 28, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16777215, 65535, 255, 16768722, 145, 220, 6, 6, 5, 0, 358, 0),
+('Zombie', 'The living dead', '', 23, 23, 28, 24, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 359, 0),
+('Lucien', 'He walks with a slight limp', '', 24, 23, 22, 17, 0, 0, 0, 40, 0, 0, 0, 18, 1, 2, -1, -1, -1, 82, 88, 46, 11, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 360, 0),
+('The Fire Warrior of Lesarkus', 'A strange red humanoid', '', 72, 72, 50, 59, 1, 0, 0, 40, 1, 10, 0, 7, 1, 36, 97, 108, -1, 20, -1, -1, -1, -1, -1, 16750950, 15634560, 15634560, 16752469, 150, 250, 6, 6, 5, 0, 361, 0),
+('Guardian of Armadyl', 'A worshipper of Armadyl', '', 58, 58, 52, 50, 0, 0, 0, 40, 0, 0, 0, 6, 1, 41, -1, -1, -1, 85, -1, -1, -1, -1, -1, 16772778, 65535, 255, 13415270, 145, 220, 6, 6, 5, 0, 362, 0),
+('Guardian of Armadyl', 'A worshipper of Armadyl', '', 58, 58, 52, 50, 0, 0, 0, 40, 0, 0, 0, 3, 4, 41, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772778, 16777215, 255, 13415270, 145, 220, 6, 6, 5, 0, 363, 0),
+('Lucien', 'He walks with a limp', '', 24, 23, 22, 17, 1, 0, 0, 40, 1, 3, 0, 18, 1, 2, -1, -1, -1, 82, 88, 46, 11, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 364, 0),
+('Winelda', 'A witch', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 16711680, 3, 15531984, 155, 220, 6, 6, 5, 0, 365, 0),
+('Brother Kojo', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, 0, 366, 0),
+('Dungeon Rat', 'Overgrown vermin', '', 20, 22, 10, 12, 1, 0, 0, 40, 1, 2, 0, 172, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 367, 0),
+('Master Fisher', 'The man in charge of the fishing guild', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 368, 0),
+('Orven', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 16772761, 16711680, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 369, 0),
+('Padik', 'He runs a fish exchange store', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772761, 16711680, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 370, 0),
+('Shopkeeper', 'He smells of fish', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 371, 0),
+('Lady Servil', 'She look\'s wealthy', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 372, 0),
+('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 373, 0),
+('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 374, 0),
 ('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 375, 0),
-('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 376, 0),
-('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, 117, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 377, 0),
-('Jeremy Servil', 'A young squire', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 14535800, 2, 3, 15523536, 120, 140, 6, 6, 5, 0, 378, 0),
-('Justin Servil', 'Jeremy servil\'s father', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 12307576, 2, 3, 15523536, 120, 220, 6, 6, 5, 0, 379, 0),
-('Fightslave Joe', 'He look\'s mistreated and weak', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 380, 0),
-('Fightslave Kelvin', 'He look\'s mistreated and weak', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 381, 0),
-('Local', 'A scruffy looking chap', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16768256, 2, 3, 15523536, 135, 220, 6, 6, 5, 0, 382, 0),
-('Khazard Bartender', 'A tough looking barman', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 155, 220, 6, 6, 5, 0, 383, 0),
-('General Khazard', 'He look\'s real nasty', '', 75, 78, 80, 170, 1, 0, 0, 40, 1, 28, 0, 18, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 384, 0),
-('Khazard Ogre', 'Khazard\'s strongest ogre warrior', '', 72, 70, 33, 60, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 385, 0),
-('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, 117, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 386, 0),
-('Khazard Scorpion', 'A large angry scorpion', '', 50, 49, 48, 40, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 543, 312, 7, 7, 45, 0, 387, 0),
-('Hengrad', 'He look\'s mistreated and weak', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 388, 0),
-('Bouncer', 'Hello nice doggy', '', 130, 130, 135, 116, 1, 1, 1, 40, 0, 0, 1, 167, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 312, 237, 6, 10, 36, 0, 389, 0),
-('Stankers', 'A cheerful looking fellow', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8453920, 8409120, 14467993, 120, 220, 6, 6, 5, 0, 390, 0),
-('Docky', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 391, 0),
-('Shopkeeper', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 392, 0),
-('Fairy Queen', 'A very little queen', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 150, -1, 86, -1, -1, -1, 66, 16765040, 16777215, 16777215, 9461792, 94, 143, 6, 6, 5, 0, 393, 0),
-('Merlin', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 394, 0),
-('Crone', 'A strange old lady', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 122, -1, 82, 88, -1, -1, -1, 63, 5255248, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 395, 0),
-('High Priest of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, 79, -1, 3158064, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 396, 0),
-('Elkoy', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 397, 0),
-('Remsai', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 398, 0),
-('Bolkoy', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 399, 0),
-('Local Gnome', 'It\'s a young tree gnome', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8973960, 36864, 90, 110, 6, 6, 5, 0, 400, 0),
-('King Bolren', 'King of the tree gnome village', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62, 1, 16776960, 2280584, 36864, 100, 150, 6, 6, 5, 0, 401, 0),
-('Black Knight Titan', 'He is one huge son of a gun...', '', 150, 165, 160, 142, 1, 1, 1, 40, 0, 0, 1, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 209, 314, 6, 6, 5, 0, 402, 0),
-('Kalron', 'he look\'s lost', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8973824, 36864, 90, 110, 6, 6, 5, 0, 403, 0),
-('Brother Galahad', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, 62, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 404, 0),
-('Tracker 1', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 405, 0),
-('Tracker 2', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 406, 0),
-('Tracker 3', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 407, 0),
-('Khazard Troop', 'It\'s one of General Khazard\'s warrior\'s', '', 31, 31, 30, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, 98, 117, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 408, 0),
-('Commander Montai', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, 108, 175, -1, -1, -1, -1, -1, -1, 1, 255, 8965256, 36864, 90, 130, 6, 6, 5, 0, 409, 0),
-('Gnome Troop', 'It\'s a tree gnome trooper', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, 107, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 4508808, 36864, 90, 130, 6, 6, 5, 0, 410, 0),
-('Khazard Warlord', 'He look\'s real nasty', '', 75, 78, 80, 170, 0, 0, 0, 40, 0, 28, 0, 0, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 411, 0),
-('Sir Percival', 'He\'s covered in pieces of straw', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 19, 34, 43, 101, 49, -1, -1, -1, -1, -1, -1, 62, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 412, 0),
-('Fisher King', 'an old king', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 154, -1, -1, -1, -1, 80, 62, 15658734, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 413, 0),
-('Maiden', 'She has a far away look in her eyes', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 15645552, 16777215, 16777215, 15523536, 125, 225, 6, 6, 5, 0, 414, 0),
-('Fisherman', 'an old fisherman', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 15636787, 11184810, 15523536, 145, 220, 6, 6, 5, 0, 415, 0),
-('King Percival', 'The new fisher king', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 0, 34, 43, 101, 49, 154, -1, -1, -1, -1, -1, 62, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 416, 0),
-('Unhappy Peasant', 'He looks tired and hungry', '', 25, 28, 26, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 417, 0),
-('Happy Peasant', 'He looks well fed and full of energy', '', 25, 28, 26, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 418, 0),
-('Ceril', 'It\'s Sir ceril carnillean a local noblemen', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 13415270, 145, 220, 6, 6, 5, 0, 419, 0),
-('Butler', 'It\'s the carnillean family butler', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 420, 0),
-('Carnillean Guard', 'It\'s a carnillean family guard', '', 31, 31, 30, 22, 1, 0, 0, 10, 1, 4, 0, 0, 1, 2, -1, 117, 70, 21, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 421, 0),
-('Tribesman', 'A primative warrior', '', 38, 40, 39, 39, 1, 1, 1, 40, 0, 0, 1, 5, 1, 2, 97, 48, -1, 45, -1, -1, -1, -1, -1, 1, 9461792, 9461792, 7360528, 145, 220, 6, 6, 5, 0, 422, 0),
-('Henryeta', 'It\'s a wealthy looking woman', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 15645552, 16777215, 16777215, 15523536, 125, 225, 6, 6, 5, 0, 423, 0),
-('Philipe', 'It\'s a young well dressed boy', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 14535800, 2, 3, 15523536, 120, 140, 6, 6, 5, 0, 424, 0),
-('Clivet', 'A strange looking man in black ', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 160, 220, 6, 6, 5, 0, 425, 0),
-('Cult Member', 'An suspicous looking man in black ', '', 20, 20, 20, 20, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 160, 220, 6, 6, 5, 0, 426, 0),
-('Lord Hazeel', 'He could do with some sun', '', 75, 78, 80, 170, 1, 0, 0, 40, 1, 28, 0, 18, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 427, 0),
-('Alomone', 'A musculer looking man in black ', '', 48, 56, 46, 20, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 110, -1, -1, -1, -1, -1, -1, -1, 3, 2, 3, 13415270, 160, 220, 6, 6, 5, 0, 428, 0),
-('Khazard Commander', 'It\'s one of General Khazard\'s commander\'s', '', 50, 45, 50, 22, 1, 0, 0, 40, 1, 4, 0, 6, 1, 2, 98, 110, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 429, 0),
-('Claus', 'the carnillean family cook', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 430, 0),
-('1st Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 431, 0),
-('2nd Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 432, 0),
-('3rd Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 433, 0),
-('4th Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 434, 0),
-('Farmer Brumty', 'He looks after livestock in this area', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 435, 0),
-('Doctor Orbon', 'A local doctor', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 436, 0),
-('Councillor Halgrive', 'A town counceller', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 437, 0),
-('Edmond', 'A local civilian', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 12255487, 16777215, 9461792, 160, 220, 6, 6, 5, 0, 438, 0),
-('Citizen', 'He look\'s tired', '', 12, 10, 11, 13, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 439, 0),
-('Citizen', 'He look\'s frightened', '', 10, 8, 10, 13, 1, 0, 0, 40, 1, 2, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 440, 0),
-('Citizen', 'She look\'s frustrated', '', 11, 14, 10, 13, 1, 0, 0, 40, 1, 2, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 441, 0),
-('Citizen', 'He look\'s angry', '', 20, 18, 20, 23, 1, 0, 0, 40, 1, 4, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16728064, 12603424, 5263392, 13415270, 145, 220, 6, 6, 5, 0, 442, 0),
-('Citizen', 'He look\'s disillusioned', '', 18, 20, 12, 10, 1, 0, 0, 40, 1, 2, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6307872, 10506320, 3174432, 13415270, 145, 220, 6, 6, 5, 0, 443, 0),
-('Jethick', 'A cynical old man', '', 18, 20, 12, 10, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 5263488, 3158048, 15523536, 145, 220, 6, 6, 5, 0, 444, 0),
-('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 445, 0),
-('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 446, 0),
-('Ted Rehnison', 'The head of the Rehnison family', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 8409120, 8409136, 15523536, 160, 230, 6, 6, 5, 0, 447, 0),
-('Martha Rehnison', 'A fairly poor looking woman', '', 11, 14, 10, 13, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 160, 220, 6, 6, 5, 0, 448, 0),
-('Billy Rehnison', 'The Rehnisons eldest son', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 8388688, 8409120, 15523536, 125, 220, 6, 6, 5, 0, 449, 0),
-('Milli Rehnison', 'She doesn\'t seem very happy', '', 42, 36, 43, 37, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1, 16752704, 8060928, 3, 15523536, 112, 198, 6, 6, 5, 0, 450, 0),
-('Alrena', 'She look\'s concerned', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 451, 0),
-('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 452, 0),
-('Clerk', 'A bueracratic administrator', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16759632, 16021427, 12303291, 14470816, 138, 205, 6, 6, 5, 0, 453, 0),
-('Carla', 'She look\'s upset', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 454, 0),
-('Bravek', 'The city warder of West Ardougne', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 64, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 455, 0),
-('Caroline', 'A well dressed middle aged lady', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 456, 0),
+('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, 117, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 376, 0),
+('Jeremy Servil', 'A young squire', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 14535800, 2, 3, 15523536, 120, 140, 6, 6, 5, 0, 377, 0),
+('Justin Servil', 'Jeremy servil\'s father', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 12307576, 2, 3, 15523536, 120, 220, 6, 6, 5, 0, 378, 0),
+('Fightslave Joe', 'He look\'s mistreated and weak', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 379, 0),
+('Fightslave Kelvin', 'He look\'s mistreated and weak', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 380, 0),
+('Local', 'A scruffy looking chap', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16768256, 2, 3, 15523536, 135, 220, 6, 6, 5, 0, 381, 0),
+('Khazard Bartender', 'A tough looking barman', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 155, 220, 6, 6, 5, 0, 382, 0),
+('General Khazard', 'He look\'s real nasty', '', 75, 78, 80, 170, 1, 0, 0, 40, 1, 28, 0, 18, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 383, 0),
+('Khazard Ogre', 'Khazard\'s strongest ogre warrior', '', 72, 70, 33, 60, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 384, 0),
+('Guard', 'It\'s one of General Khazard\'s guard\'s', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, 117, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 385, 0),
+('Khazard Scorpion', 'A large angry scorpion', '', 50, 49, 48, 40, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 543, 312, 7, 7, 45, 0, 386, 0),
+('Hengrad', 'He look\'s mistreated and weak', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 387, 0),
+('Bouncer', 'Hello nice doggy', '', 130, 130, 135, 116, 1, 1, 1, 40, 0, 0, 1, 167, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 312, 237, 6, 10, 36, 0, 388, 0),
+('Stankers', 'A cheerful looking fellow', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8453920, 8409120, 14467993, 120, 220, 6, 6, 5, 0, 389, 0),
+('Docky', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 390, 0),
+('Shopkeeper', 'Maybe he\'d like to buy some of my junk', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 391, 0),
+('Fairy Queen', 'A very little queen', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 150, -1, 86, -1, -1, -1, 66, 16765040, 16777215, 16777215, 9461792, 94, 143, 6, 6, 5, 0, 392, 0),
+('Merlin', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 393, 0),
+('Crone', 'A strange old lady', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 122, -1, 82, 88, -1, -1, -1, 63, 5255248, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 394, 0),
+('High Priest of Entrana', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, 79, -1, 3158064, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 395, 0),
+('Elkoy', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 396, 0),
+('Remsai', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 397, 0),
+('Bolkoy', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 398, 0),
+('Local Gnome', 'It\'s a young tree gnome', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8973960, 36864, 90, 110, 6, 6, 5, 0, 399, 0),
+('King Bolren', 'King of the tree gnome village', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62, 1, 16776960, 2280584, 36864, 100, 150, 6, 6, 5, 0, 400, 0),
+('Black Knight Titan', 'He is one huge son of a gun...', '', 150, 165, 160, 142, 1, 1, 1, 40, 0, 0, 1, 18, 32, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 209, 314, 6, 6, 5, 0, 401, 0),
+('Kalron', 'he look\'s lost', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8973824, 36864, 90, 110, 6, 6, 5, 0, 402, 0),
+('Brother Galahad', 'A Peaceful monk', '', 12, 12, 13, 15, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, 62, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 403, 0),
+('Tracker 1', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 404, 0),
+('Tracker 2', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 405, 0),
+('Tracker 3', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 8965256, 36864, 90, 130, 6, 6, 5, 0, 406, 0),
+('Khazard Troop', 'It\'s one of General Khazard\'s warrior\'s', '', 31, 31, 30, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, 98, 117, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 407, 0),
+('Commander Montai', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, 108, 175, -1, -1, -1, -1, -1, -1, 1, 255, 8965256, 36864, 90, 130, 6, 6, 5, 0, 408, 0),
+('Gnome Troop', 'It\'s a tree gnome trooper', '', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, 107, 175, -1, -1, -1, -1, -1, -1, 1, 16711680, 4508808, 36864, 90, 130, 6, 6, 5, 0, 409, 0),
+('Khazard Warlord', 'He look\'s real nasty', '', 75, 78, 80, 170, 0, 0, 0, 40, 0, 28, 0, 0, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 410, 0),
+('Sir Percival', 'He\'s covered in pieces of straw', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 19, 34, 43, 101, 49, -1, -1, -1, -1, -1, -1, 62, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 411, 0),
+('Fisher King', 'an old king', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 154, -1, -1, -1, -1, 80, 62, 15658734, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 412, 0),
+('Maiden', 'She has a far away look in her eyes', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 15645552, 16777215, 16777215, 15523536, 125, 225, 6, 6, 5, 0, 413, 0),
+('Fisherman', 'an old fisherman', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 15636787, 11184810, 15523536, 145, 220, 6, 6, 5, 0, 414, 0),
+('King Percival', 'The new fisher king', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 0, 34, 43, 101, 49, 154, -1, -1, -1, -1, -1, 62, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 415, 0),
+('Unhappy Peasant', 'He looks tired and hungry', '', 25, 28, 26, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 416, 0),
+('Happy Peasant', 'He looks well fed and full of energy', '', 25, 28, 26, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 417, 0),
+('Ceril', 'It\'s Sir ceril carnillean a local noblemen', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 13415270, 145, 220, 6, 6, 5, 0, 418, 0),
+('Butler', 'It\'s the carnillean family butler', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 419, 0),
+('Carnillean Guard', 'It\'s a carnillean family guard', '', 31, 31, 30, 22, 1, 0, 0, 10, 1, 4, 0, 0, 1, 2, -1, 117, 70, 21, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 420, 0),
+('Tribesman', 'A primative warrior', '', 38, 40, 39, 39, 1, 1, 1, 40, 0, 0, 1, 5, 1, 2, 97, 48, -1, 45, -1, -1, -1, -1, -1, 1, 9461792, 9461792, 7360528, 145, 220, 6, 6, 5, 0, 421, 0),
+('Henryeta', 'It\'s a wealthy looking woman', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 15645552, 16777215, 16777215, 15523536, 125, 225, 6, 6, 5, 0, 422, 0),
+('Philipe', 'It\'s a young well dressed boy', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1, 14535800, 2, 3, 15523536, 120, 140, 6, 6, 5, 0, 423, 0),
+('Clivet', 'A strange looking man in black ', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 160, 220, 6, 6, 5, 0, 424, 0),
+('Cult Member', 'An suspicous looking man in black ', '', 20, 20, 20, 20, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 160, 220, 6, 6, 5, 0, 425, 0),
+('Lord Hazeel', 'He could do with some sun', '', 75, 78, 80, 170, 1, 0, 0, 40, 1, 28, 0, 18, 32, 42, 103, 53, -1, -1, -1, -1, -1, -1, 63, 1, 2, 3, 9461792, 145, 220, 6, 6, 5, 0, 426, 0),
+('Alomone', 'A musculer looking man in black ', '', 48, 56, 46, 20, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 110, -1, -1, -1, -1, -1, -1, -1, 3, 2, 3, 13415270, 160, 220, 6, 6, 5, 0, 427, 0),
+('Khazard Commander', 'It\'s one of General Khazard\'s commander\'s', '', 50, 45, 50, 22, 1, 0, 0, 40, 1, 4, 0, 6, 1, 2, 98, 110, 173, 174, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 428, 0),
+('Claus', 'the carnillean family cook', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 429, 0),
+('1st Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 430, 0),
+('2nd Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 431, 0),
+('3rd Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 432, 0),
+('4th Plague Sheep', 'The sheep has the plague', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 170, 124, 6, 6, 5, 0, 433, 0),
+('Farmer Brumty', 'He looks after livestock in this area', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 434, 0),
+('Doctor Orbon', 'A local doctor', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 435, 0),
+('Councillor Halgrive', 'A town counceller', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, 0, 436, 0),
+('Edmond', 'A local civilian', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 12255487, 16777215, 9461792, 160, 220, 6, 6, 5, 0, 437, 0),
+('Citizen', 'He look\'s tired', '', 12, 10, 11, 13, 1, 0, 0, 40, 1, 2, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 438, 0),
+('Citizen', 'He look\'s frightened', '', 10, 8, 10, 13, 1, 0, 0, 40, 1, 2, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 439, 0),
+('Citizen', 'She look\'s frustrated', '', 11, 14, 10, 13, 1, 0, 0, 40, 1, 2, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 440, 0),
+('Citizen', 'He look\'s angry', '', 20, 18, 20, 23, 1, 0, 0, 40, 1, 4, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16728064, 12603424, 5263392, 13415270, 145, 220, 6, 6, 5, 0, 441, 0),
+('Citizen', 'He look\'s disillusioned', '', 18, 20, 12, 10, 1, 0, 0, 40, 1, 2, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6307872, 10506320, 3174432, 13415270, 145, 220, 6, 6, 5, 0, 442, 0),
+('Jethick', 'A cynical old man', '', 18, 20, 12, 10, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 5263488, 3158048, 15523536, 145, 220, 6, 6, 5, 0, 443, 0),
+('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 444, 0),
+('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 445, 0),
+('Ted Rehnison', 'The head of the Rehnison family', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 8409120, 8409136, 15523536, 160, 230, 6, 6, 5, 0, 446, 0),
+('Martha Rehnison', 'A fairly poor looking woman', '', 11, 14, 10, 13, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 160, 220, 6, 6, 5, 0, 447, 0),
+('Billy Rehnison', 'The Rehnisons eldest son', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 8388688, 8409120, 15523536, 125, 220, 6, 6, 5, 0, 448, 0),
+('Milli Rehnison', 'She doesn\'t seem very happy', '', 42, 36, 43, 37, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1, 16752704, 8060928, 3, 15523536, 112, 198, 6, 6, 5, 0, 449, 0),
+('Alrena', 'She look\'s concerned', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 450, 0),
+('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 451, 0),
+('Clerk', 'A bueracratic administrator', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16759632, 16021427, 12303291, 14470816, 138, 205, 6, 6, 5, 0, 452, 0),
+('Carla', 'She look\'s upset', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 453, 0),
+('Bravek', 'The city warder of West Ardougne', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 79, 64, 1, 16711680, 3, 15523536, 145, 220, 6, 6, 5, 0, 454, 0),
+('Caroline', 'A well dressed middle aged lady', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 455, 0),
+('Holgart', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 456, 0),
 ('Holgart', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 457, 0),
 ('Holgart', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 458, 0),
-('Holgart', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 459, 0),
-('Kent', 'Caroline\'s husband', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 8388688, 8409120, 15523536, 125, 220, 6, 6, 5, 0, 460, 0),
-('Bailey', 'The fishing platform cook', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 461, 0),
-('Kennith', 'A young scared looking boy', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 140, 6, 6, 5, 0, 462, 0),
-('Platform Fisherman', 'an emotionless fisherman', '', 15, 15, 60, 30, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 16763904, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 463, 0),
-('Platform Fisherman', 'an emotionless fisherman', '', 15, 15, 60, 30, 1, 0, 0, 40, 1, 5, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 12255453, 14531532, 15523536, 145, 220, 6, 6, 5, 0, 464, 0),
-('Platform Fisherman', 'an emotionless fisherman', '', 15, 15, 60, 30, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, 0, 465, 0),
-('Elena', 'She doesn\'t look too happy', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 13542224, 13408767, 3, 15523536, 140, 220, 6, 6, 5, 0, 466, 0),
-('Jinno', 'He doesn\'t seem to mind his lack of legs', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 467, 0),
-('Watto', 'He doesn\'t seem to mind his lack of legs', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772761, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 468, 0),
-('Recruiter', 'A member of the Ardougne royal army', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15643488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 469, 0),
-('Head Mourner', 'In charge of people with silly outfits', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, 63, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 470, 0),
-('Almera', 'A woman of the wilderness', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 471, 0),
-('Hudon', 'A young boisterous looking lad', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 140, 6, 6, 5, 0, 472, 0),
-('Hadley', 'A happy looking fellow', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, 0, 473, 0),
-('Rat', 'Overgrown vermin', '', 15, 8, 2, 3, 1, 0, 0, 40, 1, 1, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 474, 0),
-('Combat Instructor', 'He will tell me how to fight', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, 64, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 475, 0),
-('Golrie', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 13417420, 14535850, 36864, 90, 130, 6, 6, 5, 0, 476, 0),
-('Guide', 'She gives hints to new adventurers', '', 0, 0, 0, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 122, -1, -1, -1, -1, -1, -1, -1, 1, 32768, 8388863, 13415270, 145, 220, 6, 6, 5, 0, 477, 0),
-('King Black Dragon', 'The biggest meanest dragon around', '', 315, 170, 300, 325, 1, 1, 1, 180, 0, 0, 1, 165, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 542, 391, 10, 7, 84, 0, 478, 1),
-('Cooking Instructor', 'Talk to him to learn about runescape food', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 479, 0),
-('Fishing Instructor', 'He smells of fish', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 480, 0),
-('Financial Advisor', 'He knows about money', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 7368816, 7368816, 15523536, 130, 220, 6, 6, 5, 0, 481, 0),
-('Gerald', 'An old fisherman', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 482, 0),
-('Mining Instructor', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 69, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 483, 0),
-('Elena', 'She looks concerned', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 13542224, 13408767, 3, 15523536, 140, 220, 6, 6, 5, 0, 484, 0),
-('Omart', 'A nervous looking fellow', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, 0, 485, 0),
-('Bank Assistant', 'She can look after my stuff', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 7368816, 7368816, 15523536, 145, 220, 6, 6, 5, 0, 486, 0),
-('Jerico', 'He looks friendly enough', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 487, 0),
-('Kilron', 'He looks shifty', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 488, 0),
-('Guidor\'s Wife', 'She looks rather concerned', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 489, 0),
-('Quest Advisor', 'I wonder what advise he has to impart', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 37, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 490, 0),
-('Chemist', 'human', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 491, 0),
+('Kent', 'Caroline\'s husband', '', 20, 40, 60, 60, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16761440, 8388688, 8409120, 15523536, 125, 220, 6, 6, 5, 0, 459, 0),
+('Bailey', 'The fishing platform cook', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 460, 0),
+('Kennith', 'A young scared looking boy', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 140, 6, 6, 5, 0, 461, 0),
+('Platform Fisherman', 'an emotionless fisherman', '', 15, 15, 60, 30, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 16763904, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 462, 0),
+('Platform Fisherman', 'an emotionless fisherman', '', 15, 15, 60, 30, 1, 0, 0, 40, 1, 5, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 12255453, 14531532, 15523536, 145, 220, 6, 6, 5, 0, 463, 0),
+('Platform Fisherman', 'an emotionless fisherman', '', 15, 15, 60, 30, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, 0, 464, 0),
+('Elena', 'She doesn\'t look too happy', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 13542224, 13408767, 3, 15523536, 140, 220, 6, 6, 5, 0, 465, 0),
+('Jinno', 'He doesn\'t seem to mind his lack of legs', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 466, 0),
+('Watto', 'He doesn\'t seem to mind his lack of legs', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16772761, 255, 14508096, 15523536, 145, 220, 6, 6, 5, 0, 467, 0),
+('Recruiter', 'A member of the Ardougne royal army', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15643488, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 468, 0),
+('Head Mourner', 'In charge of people with silly outfits', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, 63, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 469, 0),
+('Almera', 'A woman of the wilderness', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 470, 0),
+('Hudon', 'A young boisterous looking lad', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 140, 6, 6, 5, 0, 471, 0),
+('Hadley', 'A happy looking fellow', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, 0, 472, 0),
+('Rat', 'Overgrown vermin', '', 15, 8, 2, 3, 1, 0, 0, 40, 1, 1, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 346, 136, 7, 7, 45, 0, 473, 0),
+('Combat Instructor', 'He will tell me how to fight', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, 64, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 474, 0),
+('Golrie', 'It\'s a tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 13417420, 14535850, 36864, 90, 130, 6, 6, 5, 0, 475, 0),
+('Guide', 'She gives hints to new adventurers', '', 0, 0, 0, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, 122, -1, -1, -1, -1, -1, -1, -1, 1, 32768, 8388863, 13415270, 145, 220, 6, 6, 5, 0, 476, 0),
+('King Black Dragon', 'The biggest meanest dragon around', '', 315, 170, 300, 325, 1, 1, 1, 180, 0, 0, 1, 165, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 542, 391, 10, 7, 84, 0, 477, 1),
+('Cooking Instructor', 'Talk to him to learn about runescape food', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 478, 0),
+('Fishing Instructor', 'He smells of fish', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 479, 0),
+('Financial Advisor', 'He knows about money', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 7368816, 7368816, 15523536, 130, 220, 6, 6, 5, 0, 480, 0),
+('Gerald', 'An old fisherman', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 481, 0),
+('Mining Instructor', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 69, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 482, 0),
+('Elena', 'She looks concerned', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 13542224, 13408767, 3, 15523536, 140, 220, 6, 6, 5, 0, 483, 0),
+('Omart', 'A nervous looking fellow', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, 0, 484, 0),
+('Bank Assistant', 'She can look after my stuff', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15921906, 7368816, 7368816, 15523536, 145, 220, 6, 6, 5, 0, 485, 0),
+('Jerico', 'He looks friendly enough', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 486, 0),
+('Kilron', 'He looks shifty', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 487, 0),
+('Guidor\'s Wife', 'She looks rather concerned', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 488, 0),
+('Quest Advisor', 'I wonder what advise he has to impart', '', 40, 30, 70, 65, 0, 0, 0, 40, 0, 0, 0, 0, 28, 37, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 489, 0),
+('Chemist', 'human', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 490, 0),
+('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 491, 0),
 ('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 492, 0),
-('Mourner', 'A mourner or plague healer', '', 2, 2, 2, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 493, 0),
-('Wilderness Guide', 'He\'s ready for a fight', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 64, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 494, 0),
-('Magic Instructor', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 495, 0),
-('Mourner', 'A mourner or plague healer', '', 20, 30, 20, 19, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 496, 0),
-('Community Instructor', 'This is the last advisor - honest', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 16746544, 16021427, 12303291, 14470816, 138, 205, 6, 6, 5, 0, 497, 0),
-('Boatman', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, 45, -1, 6710886, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 498, 0),
-('Skeleton Mage', 'It rattles as it walks', '', 24, 23, 20, 17, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 499, 0),
-('Controls Guide', 'He\'s ready for a fight', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 500, 0),
-('Nurse Sarah', 'She\'s quite a looker', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 15643488, 16777215, 16777215, 15523536, 140, 220, 6, 6, 5, 0, 501, 0),
-('Tailor', 'He\'s ready for a party', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 502, 0),
-('Mourner', 'A mourner or plague healer', '', 30, 25, 20, 25, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 503, 0),
-('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 504, 0),
-('Chemist', 'He looks clever enough', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 505, 0),
-('Chancy', 'He\'s ready for a bet', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 506, 0),
-('Hops', 'He\'s drunk', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 507, 0),
-('DeVinci', 'He has a colourful personality', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 11189213, 11189213, 15523536, 145, 220, 6, 6, 5, 0, 508, 0),
-('Guidor', 'He\'s not that ill', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 62, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 509, 0),
-('Chancy', 'He\'s ready for a bet', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 510, 0),
-('Hops', 'He\'s drunk', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 511, 0),
-('DeVinci', 'He has a colourful personality', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 11189213, 11189213, 15523536, 145, 220, 6, 6, 5, 0, 512, 0),
-('King Lathas', 'King Lanthas of east Ardougne', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 62, 1, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 513, 0),
-('Head Wizard', 'He runs the wizards guild', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 514, 0),
-('Magic Store Owner', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 515, 0),
-('Wizard Frumscone', 'A confused looking wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 516, 0),
-('Target Practice Zombie', 'The living dead', '', 23, 23, 28, 24, 1, 0, 0, 40, 1, 4, 0, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 517, 0),
-('Trufitus', 'A wise old witch doctor', '', 10, 5, 5, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 122, -1, -1, 83, 87, -1, -1, -1, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 518, 0),
-('Colonel Radick', 'A soldier of the town of Yanille', '', 40, 30, 70, 65, 1, 0, 0, 40, 1, 11, 0, 6, 28, 37, -1, 109, -1, -1, -1, -1, -1, -1, 62, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 519, 0),
-('Soldier', 'A soldier of the town of Yanille', '', 31, 31, 30, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, 48, 70, 45, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 520, 0),
-('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 521, 0),
-('Jungle Spider', 'A venomous deadly spider', '', 45, 47, 46, 50, 1, 1, 1, 40, 0, 0, 1, 179, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 522, 0),
-('Jiminua', 'She looks very interested in selling some of her wares.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, 83, 87, -1, -1, -1, 10, 10, 8409136, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 523, 0),
-('Jogre', 'An aggressive humanoid', '', 72, 70, 33, 60, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 180, -1, -1, -1, -1, -1, -1, -1, 3852326, 3329330, 37633, 3978097, 212, 280, 6, 6, 5, 0, 524, 0),
-('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 525, 0),
-('Ogre', 'Useful for ranged training', '', 72, 70, 33, 60, 1, 1, 1, 45, 0, 0, 1, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 526, 0),
+('Wilderness Guide', 'He\'s ready for a fight', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 64, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 493, 0),
+('Magic Instructor', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 494, 0),
+('Mourner', 'A mourner or plague healer', '', 20, 30, 20, 19, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 495, 0),
+('Community Instructor', 'This is the last advisor - honest', '', 2, 2, 4, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 16746544, 16021427, 12303291, 14470816, 138, 205, 6, 6, 5, 0, 496, 0),
+('Boatman', 'An old sailor', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, 45, -1, 6710886, 255, 3, 15523536, 160, 220, 6, 6, 5, 0, 497, 0),
+('Skeleton Mage', 'It rattles as it walks', '', 24, 23, 20, 17, 1, 1, 1, 40, 0, 0, 1, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 216, 234, 11, 11, 5, 1, 498, 0),
+('Controls Guide', 'He\'s ready for a fight', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 499, 0),
+('Nurse Sarah', 'She\'s quite a looker', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1, 15643488, 16777215, 16777215, 15523536, 140, 220, 6, 6, 5, 0, 500, 0),
+('Tailor', 'He\'s ready for a party', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 501, 0),
+('Mourner', 'A mourner or plague healer', '', 30, 25, 20, 25, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, 177, 83, 176, 46, 11, 45, -1, 3158064, 16711680, 16711680, 13415270, 145, 220, 6, 6, 5, 0, 502, 0),
+('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 503, 0),
+('Chemist', 'He looks clever enough', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 504, 0),
+('Chancy', 'He\'s ready for a bet', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 505, 0),
+('Hops', 'He\'s drunk', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 506, 0),
+('DeVinci', 'He has a colourful personality', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 11189213, 11189213, 15523536, 145, 220, 6, 6, 5, 0, 507, 0),
+('Guidor', 'He\'s not that ill', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 62, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 508, 0),
+('Chancy', 'He\'s ready for a bet', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 509, 0),
+('Hops', 'He\'s drunk', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 510, 0),
+('DeVinci', 'He has a colourful personality', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1, 16746544, 11189213, 11189213, 15523536, 145, 220, 6, 6, 5, 0, 511, 0),
+('King Lathas', 'King Lanthas of east Ardougne', '', 15, 15, 60, 30, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 62, 1, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 512, 0),
+('Head Wizard', 'He runs the wizards guild', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 513, 0),
+('Magic Store Owner', 'An old wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 514, 0),
+('Wizard Frumscone', 'A confused looking wizard', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 515, 0),
+('Target Practice Zombie', 'The living dead', '', 23, 23, 28, 24, 1, 0, 0, 40, 1, 4, 0, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 516, 0),
+('Trufitus', 'A wise old witch doctor', '', 10, 5, 5, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 122, -1, -1, 83, 87, -1, -1, -1, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 517, 0),
+('Colonel Radick', 'A soldier of the town of Yanille', '', 40, 30, 70, 65, 1, 0, 0, 40, 1, 11, 0, 6, 28, 37, -1, 109, -1, -1, -1, -1, -1, -1, 62, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 518, 0),
+('Soldier', 'A soldier of the town of Yanille', '', 31, 31, 30, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, 48, 70, 45, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 519, 0),
+('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 520, 0),
+('Jungle Spider', 'A venomous deadly spider', '', 45, 47, 46, 50, 1, 1, 1, 40, 0, 0, 1, 179, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 120, 104, 6, 6, 5, 0, 521, 0),
+('Jiminua', 'She looks very interested in selling some of her wares.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, 83, 87, -1, -1, -1, 10, 10, 8409136, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 522, 0),
+('Jogre', 'An aggressive humanoid', '', 72, 70, 33, 60, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 180, -1, -1, -1, -1, -1, -1, -1, 3852326, 3329330, 37633, 3978097, 212, 280, 6, 6, 5, 0, 523, 0),
+('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 524, 0),
+('Ogre', 'Useful for ranged training', '', 72, 70, 33, 60, 1, 1, 1, 45, 0, 0, 1, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 525, 0),
+('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 526, 0),
 ('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 527, 0),
-('Guard', 'He tries to keep order around here', '', 31, 31, 30, 22, 0, 0, 0, 7, 0, 0, 0, 0, 1, 2, -1, -1, 69, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 528, 0),
-('Shop Keeper', 'he sells weapons', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 529, 0),
-('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 530, 0),
-('Frenita', 'runs a cookery shop', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16752704, 8409120, 8409120, 15523536, 160, 220, 6, 6, 5, 0, 531, 0),
-('Ogre Chieftan', 'A slightly bigger uglier ogre', '', 92, 90, 53, 80, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 532, 0),
-('Rometti', 'It\'s a well dressed tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 192, 197, 187, -1, 204, -1, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 533, 0),
-('Rashiliyia', 'A willowy ethereal being who floats above the ground', '', 80, 80, 80, 80, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, 201, 202, -1, -1, -1, 65, 1, 2, 3, 3978097, 155, 220, 6, 6, 5, 0, 534, 0);
+('Shop Keeper', 'he sells weapons', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 528, 0),
+('Bartender', 'I could get a beer off him', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 529, 0),
+('Frenita', 'runs a cookery shop', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16752704, 8409120, 8409120, 15523536, 160, 220, 6, 6, 5, 0, 530, 0),
+('Ogre Chieftan', 'A slightly bigger uglier ogre', '', 92, 90, 53, 80, 1, 1, 1, 40, 0, 0, 1, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 531, 0),
+('Rometti', 'It\'s a well dressed tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 192, 197, 187, -1, 204, -1, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 532, 0),
+('Rashiliyia', 'A willowy ethereal being who floats above the ground', '', 80, 80, 80, 80, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, 201, 202, -1, -1, -1, 65, 1, 2, 3, 3978097, 155, 220, 6, 6, 5, 0, 533, 0);
 INSERT INTO `def_npc` (`name`, `description`, `command`, `attack`, `defense`, `strength`, `hits`, `attackable`, `aggressive`, `follows`, `respawn`, `retreat`, `retreat_hits`, `block`, `sprite1`, `sprite2`, `sprite3`, `sprite4`, `sprite5`, `sprite6`, `sprite7`, `sprite8`, `sprite9`, `sprite10`, `sprite11`, `sprite12`, `hair_colour`, `top_colour`, `bottom_colour`, `skin_colour`, `camera1`, `camera2`, `walk_model`, `combat_model`, `combat_sprite`, `undead`, `id`, `dragon`) VALUES
-('Blurberry', 'It\'s a red faced tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 193, -1, -1, -1, -1, -1, -1, 1, 11184895, 14535850, 36864, 110, 140, 6, 6, 5, 0, 535, 0),
-('Heckel Funch', 'It\'s another jolly tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 195, -1, -1, -1, -1, 10, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 536, 0),
-('Aluft Gianne', 'It\'s a tree gnome chef', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 13434879, 14535901, 36864, 90, 130, 6, 6, 5, 0, 537, 0),
-('Hudo Glenfad', 'It\'s another jolly tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 195, -1, -1, -1, -1, 10, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 538, 0),
-('Irena', 'human', '', 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 1, 12285781, 3, 13415270, 140, 215, 6, 6, 5, 0, 539, 0),
-('Mosol', 'A jungle warrior', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, 180, -1, -1, -1, -1, -1, -1, -1, -1, 1, 9461792, 9461792, 9461792, 160, 220, 6, 6, 5, 0, 540, 0),
-('Gnome Banker', 'It\'s tree gnome banker', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 1052688, 1052688, 36864, 90, 130, 6, 6, 5, 0, 541, 0),
-('King Narnode Shareen', 'It\'s a gnome he look\'s important', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62, 1, 16776960, 16711424, 36864, 100, 150, 6, 6, 5, 0, 542, 0),
-('UndeadOne', 'One of Rashaliyas Minions', '', 80, 50, 59, 59, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 543, 0),
-('Drucas', 'engraver', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 82, -1, -1, -1, -1, -1, 1, 2, 3, 11766848, 145, 220, 6, 6, 5, 0, 544, 0),
-('Tourist', 'human', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 545, 0),
-('King Narnode Shareen', 'It\'s a gnome he look\'s important', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62, 1, 16776960, 16711424, 36864, 100, 150, 6, 6, 5, 0, 546, 0),
-('Hazelmere', 'An ancient looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 192, -1, -1, -1, -1, -1, -1, 1, 16776960, 2280584, 36864, 100, 150, 6, 6, 5, 0, 547, 0),
-('Glough', 'An rough looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 548, 0),
-('Shar', 'Concerned about the economy', 'b38c40', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 11766848, 145, 220, 6, 6, 5, 0, 549, 0),
-('Shantay', 'human', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 1, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 550, 0),
-('Charlie', 'Poor guy?', '', 0, 0, 0, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 551, 0),
-('Gnome Guard', 'A tree gnome guard', '', 31, 31, 31, 31, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, 98, 180, 175, 22, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 552, 0),
-('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 553, 0),
-('Mehman', 'local', '805030', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 11766848, 145, 220, 6, 6, 5, 0, 554, 0),
-('Ana', 'This lady doesn\'t look as if she belongs here.', '', 17, 18, 15, 16, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 555, 0),
-('Chaos Druid warrior', 'A crazy evil druid', '', 48, 48, 42, 40, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 84, 42, -1, -1, -1, -1, 1, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 556, 0),
-('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 557, 0),
+('Blurberry', 'It\'s a red faced tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 193, -1, -1, -1, -1, -1, -1, 1, 11184895, 14535850, 36864, 110, 140, 6, 6, 5, 0, 534, 0),
+('Heckel Funch', 'It\'s another jolly tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 195, -1, -1, -1, -1, 10, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 535, 0),
+('Aluft Gianne', 'It\'s a tree gnome chef', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 13434879, 14535901, 36864, 90, 130, 6, 6, 5, 0, 536, 0),
+('Hudo Glenfad', 'It\'s another jolly tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, 195, -1, -1, -1, -1, 10, -1, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, 0, 537, 0),
+('Irena', 'human', '', 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, -1, -1, -1, -1, 1, 12285781, 3, 13415270, 140, 215, 6, 6, 5, 0, 538, 0),
+('Mosol', 'A jungle warrior', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, 180, -1, -1, -1, -1, -1, -1, -1, -1, 1, 9461792, 9461792, 9461792, 160, 220, 6, 6, 5, 0, 539, 0),
+('Gnome Banker', 'It\'s tree gnome banker', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 1052688, 1052688, 36864, 90, 130, 6, 6, 5, 0, 540, 0),
+('King Narnode Shareen', 'It\'s a gnome he look\'s important', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62, 1, 16776960, 16711424, 36864, 100, 150, 6, 6, 5, 0, 541, 0),
+('UndeadOne', 'One of Rashaliyas Minions', '', 80, 50, 59, 59, 1, 1, 1, 40, 0, 0, 1, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 1, 542, 0),
+('Drucas', 'engraver', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 82, -1, -1, -1, -1, -1, 1, 2, 3, 11766848, 145, 220, 6, 6, 5, 0, 543, 0),
+('Tourist', 'human', '', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 544, 0),
+('King Narnode Shareen', 'It\'s a gnome he look\'s important', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62, 1, 16776960, 16711424, 36864, 100, 150, 6, 6, 5, 0, 545, 0),
+('Hazelmere', 'An ancient looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 192, -1, -1, -1, -1, -1, -1, 1, 16776960, 2280584, 36864, 100, 150, 6, 6, 5, 0, 546, 0),
+('Glough', 'An rough looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 547, 0),
+('Shar', 'Concerned about the economy', 'b38c40', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 16761440, 2, 8409120, 11766848, 145, 220, 6, 6, 5, 0, 548, 0),
+('Shantay', 'human', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 1, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 549, 0),
+('Charlie', 'Poor guy?', '', 0, 0, 0, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 550, 0),
+('Gnome Guard', 'A tree gnome guard', '', 31, 31, 31, 31, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, 98, 180, 175, 22, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 551, 0),
+('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 552, 0),
+('Mehman', 'local', '805030', 32, 26, 33, 27, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16746544, 2, 3, 11766848, 145, 220, 6, 6, 5, 0, 553, 0),
+('Ana', 'This lady doesn\'t look as if she belongs here.', '', 17, 18, 15, 16, 0, 0, 0, 40, 0, 0, 0, 3, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 554, 0),
+('Chaos Druid warrior', 'A crazy evil druid', '', 48, 48, 42, 40, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 84, 42, -1, -1, -1, -1, 1, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 555, 0),
+('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 556, 0),
+('Shipyard Worker', 'He look\'s busy', '', 48, 48, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 557, 0),
 ('Shipyard Worker', 'He look\'s busy', '', 48, 48, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 558, 0),
-('Shipyard Worker', 'He look\'s busy', '', 48, 48, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 8409120, 8409120, 11766848, 120, 220, 6, 6, 5, 0, 559, 0),
-('Shipyard Worker', 'He look\'s busy', '', 48, 48, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 8409120, 8409120, 7360528, 120, 220, 6, 6, 5, 0, 560, 0),
+('Shipyard Worker', 'He look\'s busy', '', 48, 48, 42, 40, 1, 0, 0, 40, 1, 7, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1, 3158064, 8409120, 8409120, 7360528, 120, 220, 6, 6, 5, 0, 559, 0),
+('Shipyard Foreman', 'He look\'s busy', '', 60, 69, 60, 59, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 22, -1, 46, -1, -1, -1, 3158064, 8409120, 8409120, 7360528, 120, 220, 6, 6, 5, 0, 560, 0),
 ('Shipyard Foreman', 'He look\'s busy', '', 60, 69, 60, 59, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 22, -1, 46, -1, -1, -1, 3158064, 8409120, 8409120, 7360528, 120, 220, 6, 6, 5, 0, 561, 0),
-('Shipyard Foreman', 'He look\'s busy', '', 60, 69, 60, 59, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 22, -1, 46, -1, -1, -1, 3158064, 8409120, 8409120, 7360528, 120, 220, 6, 6, 5, 0, 562, 0),
-('Gnome Guard', 'A tree gnome guard', '', 23, 23, 23, 23, 1, 0, 0, 40, 1, 4, 0, 6, 1, 2, 98, 180, 175, 22, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 563, 0),
+('Gnome Guard', 'A tree gnome guard', '', 23, 23, 23, 23, 1, 0, 0, 40, 1, 4, 0, 6, 1, 2, 98, 180, 175, 22, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 562, 0),
+('Femi', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 563, 0),
 ('Femi', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 564, 0),
-('Femi', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 565, 0),
-('Anita', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 193, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 566, 0),
-('Glough', 'An rough looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 567, 0),
-('Salarin The Twisted', 'A crazy evil druid', '', 68, 68, 72, 70, 1, 0, 0, 40, 1, 12, 0, 6, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 14483456, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 568, 0),
-('Black Demon', 'A big scary jet black demon', '', 195, 100, 195, 160, 1, 1, 1, 180, 0, 0, 1, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 398, 401, 11, 11, 30, 0, 569, 0),
+('Anita', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 193, -1, -1, -1, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 565, 0),
+('Glough', 'An rough looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 566, 0),
+('Salarin The Twisted', 'A crazy evil druid', '', 68, 68, 72, 70, 1, 0, 0, 40, 1, 12, 0, 6, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 14483456, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 567, 0),
+('Black Demon', 'A big scary jet black demon', '', 195, 100, 195, 160, 1, 1, 1, 180, 0, 0, 1, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 398, 401, 11, 11, 30, 0, 568, 0),
+('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 569, 0),
 ('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 570, 0),
 ('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 571, 0),
 ('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 572, 0),
-('Gnome Pilot', 'He can fly the glider', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 573, 0),
-('Sigbert The Adventurer', 'A Warrior', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 5, 28, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 574, 0),
-('Yanille Watchman', 'He watches out for invading ogres', 'pickpocket', 41, 41, 30, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, 70, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 575, 0),
-('Tower Guard', 'He stops people going up the tower', '', 41, 41, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 70, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 576, 0),
+('Sigbert The Adventurer', 'A Warrior', '', 55, 58, 60, 52, 0, 0, 0, 40, 0, 0, 0, 5, 28, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 573, 0),
+('Yanille Watchman', 'He watches out for invading ogres', 'pickpocket', 41, 41, 30, 22, 1, 0, 0, 40, 1, 4, 0, 0, 1, 2, -1, -1, 70, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 574, 0),
+('Tower Guard', 'He stops people going up the tower', '', 41, 41, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 70, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 575, 0),
+('Gnome Trainer', 'He can advise on training', '', 11, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 576, 0),
 ('Gnome Trainer', 'He can advise on training', '', 11, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 577, 0),
 ('Gnome Trainer', 'He can advise on training', '', 11, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 578, 0),
-('Gnome Trainer', 'He can advise on training', '', 11, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 579, 0),
-('Gnome Trainer', 'He can advise on training', 'pickpocket', 11, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 580, 0),
-('Blurberry Barman', 'He serves cocktails', 'pickpocket', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16776960, 16711424, 36864, 90, 120, 6, 6, 5, 0, 581, 0),
-('Gnome Waiter', 'He can serve you gnome food', 'pickpocket', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 194, -1, -1, -1, -1, -1, -1, 1, 16777164, 3158064, 36864, 90, 120, 6, 6, 5, 0, 582, 0),
-('Gnome Guard', 'A tree gnome guard', 'pickpocket', 31, 17, 31, 31, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, 98, 106, 175, 22, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 583, 0),
-('Gnome Child', 'that\'s a little gnome', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 192, 198, 189, -1, 204, -1, -1, 1, 16776960, 16711680, 36864, 80, 100, 6, 6, 5, 0, 584, 0),
-('Earth Warrior', 'A strange inhuman warrior', '', 52, 54, 51, 54, 1, 0, 0, 40, 1, 9, 0, 7, 1, 2, 97, 47, -1, 45, -1, -1, -1, -1, -1, 6724027, 7356448, 7356448, 9461792, 150, 250, 6, 6, 5, 0, 585, 0),
-('Gnome Child', 'He\'s a little fellow', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 191, 200, 186, -1, 207, -1, -1, 1, 16711935, 65280, 36864, 80, 100, 6, 6, 5, 0, 586, 0),
-('Gnome Child', 'hello little gnome', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 193, 196, 188, -1, 203, -1, -1, 1, 16711884, 255, 36864, 80, 100, 6, 6, 5, 0, 587, 0),
-('Gulluck', 'He sells weapons', '', 10, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 116, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 588, 0),
-('Gunnjorn', 'Not civilised looking', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 589, 0),
-('Zadimus', 'Ghostly Visage of the dead Zadimus', '', 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 0, 590, 0),
-('Brimstail', 'An ancient looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 192, -1, -1, -1, -1, -1, 62, 1, 16776960, 2280584, 36864, 100, 150, 6, 6, 5, 0, 591, 0),
-('Gnome Child', 'He\'s a little fellow', 'pickpocket', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 195, 198, 190, -1, 205, -1, -1, 1, 16711884, 255, 36864, 80, 100, 6, 6, 5, 0, 592, 0),
-('Gnome Local', 'A tree gnome villager', 'pickpocket', 9, 9, 9, 9, 1, 0, 0, 40, 1, 2, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 593, 0),
-('Gnome Local', 'A tree gnome villager', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 3, 4, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 90, 120, 6, 6, 5, 0, 594, 0),
-('Moss Giant', 'his beard seems to have a life of its own', '', 62, 65, 61, 60, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 7838054, 8409120, 8409120, 14483408, 261, 396, 6, 6, 5, 0, 595, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 7798801, 8409120, 36864, 100, 140, 6, 6, 5, 0, 596, 0),
-('Goalie', 'A gnome ball goal catcher', '', 70, 70, 70, 70, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 191, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 120, 6, 6, 5, 0, 597, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 10027110, 8409120, 36864, 100, 140, 6, 6, 5, 0, 598, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 191, -1, -1, 46, -1, -1, -1, 1, 10027110, 8409120, 36864, 100, 140, 6, 6, 5, 0, 599, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 192, -1, -1, 46, -1, -1, -1, 1, 10027110, 8409120, 36864, 100, 140, 6, 6, 5, 0, 600, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 10027025, 8409120, 36864, 100, 140, 6, 6, 5, 0, 601, 0),
-('Referee', 'He controls the game', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 602, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 10027025, 8409120, 36864, 100, 140, 6, 6, 5, 0, 603, 0),
+('Gnome Trainer', 'He can advise on training', 'pickpocket', 11, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 579, 0),
+('Blurberry Barman', 'He serves cocktails', 'pickpocket', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 175, -1, -1, -1, -1, -1, -1, 1, 16776960, 16711424, 36864, 90, 120, 6, 6, 5, 0, 580, 0),
+('Gnome Waiter', 'He can serve you gnome food', 'pickpocket', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 194, -1, -1, -1, -1, -1, -1, 1, 16777164, 3158064, 36864, 90, 120, 6, 6, 5, 0, 581, 0),
+('Gnome Guard', 'A tree gnome guard', 'pickpocket', 31, 17, 31, 31, 1, 0, 0, 40, 1, 5, 0, 6, 1, 2, 98, 106, 175, 22, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 582, 0),
+('Gnome Child', 'that\'s a little gnome', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 192, 198, 189, -1, 204, -1, -1, 1, 16776960, 16711680, 36864, 80, 100, 6, 6, 5, 0, 583, 0),
+('Earth Warrior', 'A strange inhuman warrior', '', 52, 54, 51, 54, 1, 0, 0, 40, 1, 9, 0, 7, 1, 2, 97, 47, -1, 45, -1, -1, -1, -1, -1, 6724027, 7356448, 7356448, 9461792, 150, 250, 6, 6, 5, 0, 584, 0),
+('Gnome Child', 'He\'s a little fellow', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 191, 200, 186, -1, 207, -1, -1, 1, 16711935, 65280, 36864, 80, 100, 6, 6, 5, 0, 585, 0),
+('Gnome Child', 'hello little gnome', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 0, 1, 2, -1, -1, 193, 196, 188, -1, 203, -1, -1, 1, 16711884, 255, 36864, 80, 100, 6, 6, 5, 0, 586, 0),
+('Gulluck', 'He sells weapons', '', 10, 11, 11, 11, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 116, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 587, 0),
+('Gunnjorn', 'Not civilised looking', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 588, 0),
+('Zadimus', 'Ghostly Visage of the dead Zadimus', '', 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 0, 589, 0),
+('Brimstail', 'An ancient looking gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 192, -1, -1, -1, -1, -1, 62, 1, 16776960, 2280584, 36864, 100, 150, 6, 6, 5, 0, 590, 0),
+('Gnome Child', 'He\'s a little fellow', 'pickpocket', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 195, 198, 190, -1, 205, -1, -1, 1, 16711884, 255, 36864, 80, 100, 6, 6, 5, 0, 591, 0),
+('Gnome Local', 'A tree gnome villager', 'pickpocket', 9, 9, 9, 9, 1, 0, 0, 40, 1, 2, 0, 6, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 100, 140, 6, 6, 5, 0, 592, 0),
+('Gnome Local', 'A tree gnome villager', 'pickpocket', 3, 3, 3, 3, 1, 0, 0, 40, 1, 1, 0, 3, 4, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 8409120, 8409120, 36864, 90, 120, 6, 6, 5, 0, 593, 0),
+('Moss Giant', 'his beard seems to have a life of its own', '', 62, 65, 61, 60, 1, 1, 1, 40, 0, 0, 1, 6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1, 7838054, 8409120, 8409120, 14483408, 261, 396, 6, 6, 5, 0, 594, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 7798801, 8409120, 36864, 100, 140, 6, 6, 5, 0, 595, 0),
+('Goalie', 'A gnome ball goal catcher', '', 70, 70, 70, 70, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 191, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 120, 6, 6, 5, 0, 596, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 10027110, 8409120, 36864, 100, 140, 6, 6, 5, 0, 597, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 191, -1, -1, 46, -1, -1, -1, 1, 10027110, 8409120, 36864, 100, 140, 6, 6, 5, 0, 598, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 192, -1, -1, 46, -1, -1, -1, 1, 10027110, 8409120, 36864, 100, 140, 6, 6, 5, 0, 599, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 193, -1, -1, 46, -1, -1, -1, 1, 10027025, 8409120, 36864, 100, 140, 6, 6, 5, 0, 600, 0),
+('Referee', 'He controls the game', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 116, 69, -1, -1, -1, -1, -1, -1, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, 0, 601, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 10027025, 8409120, 36864, 100, 140, 6, 6, 5, 0, 602, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16752704, 8409120, 36864, 100, 140, 6, 6, 5, 0, 603, 0),
 ('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16752704, 8409120, 36864, 100, 140, 6, 6, 5, 0, 604, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16752704, 8409120, 36864, 100, 140, 6, 6, 5, 0, 605, 0),
+('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16760880, 8409120, 36864, 100, 140, 6, 6, 5, 0, 605, 0),
 ('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16760880, 8409120, 36864, 100, 140, 6, 6, 5, 0, 606, 0),
 ('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16760880, 8409120, 36864, 100, 140, 6, 6, 5, 0, 607, 0),
 ('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16760880, 8409120, 36864, 100, 140, 6, 6, 5, 0, 608, 0),
-('Gnome Baller', 'A tree gnome ball player', 'tackle', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16760880, 8409120, 36864, 100, 140, 6, 6, 5, 0, 609, 0),
+('Gnome Baller', 'He\'s on your team', 'pass to', 70, 70, 70, 70, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 140, 6, 6, 5, 0, 609, 0),
 ('Gnome Baller', 'He\'s on your team', 'pass to', 70, 70, 70, 70, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 140, 6, 6, 5, 0, 610, 0),
-('Gnome Baller', 'He\'s on your team', 'pass to', 70, 70, 70, 70, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 194, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 140, 6, 6, 5, 0, 611, 0),
+('Cheerleader', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 140, 6, 6, 5, 0, 611, 0),
 ('Cheerleader', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 140, 6, 6, 5, 0, 612, 0),
-('Cheerleader', 'It\'s a little tree gnome', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 175, -1, -1, 46, -1, -1, -1, 1, 16728064, 16728064, 36864, 100, 140, 6, 6, 5, 0, 613, 0),
-('Nazastarool Zombie', 'One of Rashaliyas Minions', '', 95, 90, 70, 80, 1, 0, 0, 40, 1, 13, 0, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 261, 388, 12, 12, 5, 1, 614, 0),
-('Nazastarool Skeleton', 'One of Rashaliyas Minions', '', 95, 90, 70, 80, 1, 0, 0, 40, 1, 13, 0, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 259, 281, 11, 11, 12, 1, 615, 0),
-('Nazastarool Ghost', 'One of Rashaliyas Minions', '', 95, 90, 70, 80, 1, 0, 0, 40, 1, 13, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 302, 365, 9, 9, 5, 1, 616, 0),
-('Fernahei', 'An enthusiastic fishing shop owner', '', 10, 5, 5, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, 10, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 617, 0),
-('Jungle Banker', 'He can look after my money', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 201, -1, -1, -1, 10, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 618, 0),
-('Cart Driver', 'He drives the cart', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 619, 0),
-('Cart Driver', 'He drives the cart', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16777215, 16777215, 7296823, 145, 220, 6, 6, 5, 0, 620, 0),
-('Shadi', 'He knows secret\'s that you don\'t know.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, 10, 10, 3158064, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 621, 0),
-('Kaleb', 'This is Kaleb Paramaya - a warm and friendly inn owner', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 10, 10, 16752704, 16777215, 7296823, 145, 220, 6, 6, 5, 0, 622, 0),
-('Yohnus', 'This is Yohnus - he runs the local blacksmiths', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 10, 10, 16752704, 16777215, 7296823, 145, 220, 6, 6, 5, 0, 623, 0),
-('Serevel', 'This is Serevel - he sells tickets for the \'Lady of the Waves\'', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 16752704, 16777215, 11766848, 145, 220, 6, 6, 5, 0, 624, 0),
-('Yanni', 'He sells fishing equipment.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 10, 10, 16777215, 16711680, 11766848, 145, 220, 6, 6, 5, 0, 625, 0),
-('Official', 'He helps the referee', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 1, 0, 0, 100, 130, 6, 6, 5, 0, 626, 0),
+('Nazastarool Zombie', 'One of Rashaliyas Minions', '', 95, 90, 70, 80, 1, 0, 0, 40, 1, 13, 0, 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 261, 388, 12, 12, 5, 1, 613, 0),
+('Nazastarool Skeleton', 'One of Rashaliyas Minions', '', 95, 90, 70, 80, 1, 0, 0, 40, 1, 13, 0, 134, 133, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 259, 281, 11, 11, 12, 1, 614, 0),
+('Nazastarool Ghost', 'One of Rashaliyas Minions', '', 95, 90, 70, 80, 1, 0, 0, 40, 1, 13, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 302, 365, 9, 9, 5, 1, 615, 0),
+('Fernahei', 'An enthusiastic fishing shop owner', '', 10, 5, 5, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, 10, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 616, 0),
+('Jungle Banker', 'He can look after my money', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 201, -1, -1, -1, 10, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 617, 0),
+('Cart Driver', 'He drives the cart', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 618, 0),
+('Cart Driver', 'He drives the cart', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3158064, 16777215, 16777215, 7296823, 145, 220, 6, 6, 5, 0, 619, 0),
+('Shadi', 'He knows secret\'s that you don\'t know.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, 10, 10, 3158064, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 620, 0),
+('Kaleb', 'This is Kaleb Paramaya - a warm and friendly inn owner', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 10, 10, 16752704, 16777215, 7296823, 145, 220, 6, 6, 5, 0, 621, 0),
+('Yohnus', 'This is Yohnus - he runs the local blacksmiths', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 10, 10, 16752704, 16777215, 7296823, 145, 220, 6, 6, 5, 0, 622, 0),
+('Serevel', 'This is Serevel - he sells tickets for the \'Lady of the Waves\'', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 16752704, 16777215, 11766848, 145, 220, 6, 6, 5, 0, 623, 0),
+('Yanni', 'He sells fishing equipment.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, 10, 10, 16777215, 16711680, 11766848, 145, 220, 6, 6, 5, 0, 624, 0),
+('Official', 'He helps the referee', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 1, 0, 0, 100, 130, 6, 6, 5, 0, 625, 0),
+('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 626, 0),
 ('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 627, 0),
 ('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 628, 0),
 ('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 629, 0),
-('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 630, 0),
-('Blessed Vermen', 'A undead servent of iban', '', 15, 7, 7, 30, 1, 0, 0, 40, 1, 5, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 115, 45, 7, 7, 10, 1, 631, 0),
-('Blessed Spider', 'One of iban\'s eight legged friends', '', 45, 34, 31, 32, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 180, 156, 6, 6, 5, 0, 632, 0),
-('Paladin', 'A paladin of Ardougne', '', 85, 88, 55, 57, 1, 0, 0, 40, 1, 10, 0, 6, 34, 43, 101, 119, -1, -1, -1, -1, -1, -1, 66, 16760880, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 633, 0),
-('Paladin', 'A paladin of Ardougne', '', 85, 88, 55, 57, 1, 1, 1, 45, 0, 0, 1, 5, 34, 43, 101, 119, -1, -1, -1, -1, -1, -1, 66, 16760880, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 634, 0),
+('Blessed Vermen', 'A undead servent of iban', '', 15, 7, 7, 30, 1, 0, 0, 40, 1, 5, 0, 123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 115, 45, 7, 7, 10, 1, 630, 0),
+('Blessed Spider', 'One of iban\'s eight legged friends', '', 45, 34, 31, 32, 1, 1, 1, 40, 0, 0, 1, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 180, 156, 6, 6, 5, 0, 631, 0),
+('Paladin', 'A paladin of Ardougne', '', 85, 88, 55, 57, 1, 0, 0, 40, 1, 10, 0, 6, 34, 43, 101, 119, -1, -1, -1, -1, -1, -1, 66, 16760880, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 632, 0),
+('Paladin', 'A paladin of Ardougne', '', 85, 88, 55, 57, 1, 1, 1, 45, 0, 0, 1, 5, 34, 43, 101, 119, -1, -1, -1, -1, -1, -1, 66, 16760880, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 633, 0),
+('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 634, 0),
 ('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 635, 0),
-('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 636, 0),
-('Slave', 'He seems to have been here a while', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 637, 0),
-('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 638, 0),
-('Slave', 'He seems to have been here a while', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 639, 0),
-('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 640, 0),
-('Slave', 'He seems to have been here a while', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 641, 0),
-('Kalrag', 'I think this is one of Ibans pets', '', 88, 78, 69, 78, 1, 0, 0, 40, 1, 13, 0, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 420, 404, 6, 6, 5, 0, 642, 0),
-('Niloof', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 643, 0),
-('Kardia The Witch', 'She\'s got warts', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 644, 0),
-('Souless', 'He seems an empty shell', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 16777215, 100, 200, 6, 6, 5, 0, 645, 0),
-('Othainian', 'big red and incredibly evil', '', 78, 78, 78, 78, 1, 0, 0, 40, 1, 13, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 646, 0),
-('Doomion', 'A big scary jet black demon', '', 98, 98, 98, 98, 1, 0, 0, 40, 1, 16, 0, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 647, 0),
-('Holthion', 'big red and incredibly evil', '', 78, 78, 78, 78, 1, 0, 0, 40, 1, 13, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 648, 0),
-('Klank', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 649, 0),
-('Iban', 'You feel terror just looking at him', '', 24, 23, 22, 17, 0, 0, 0, 40, 0, 0, 0, 18, 1, 2, -1, -1, -1, 82, 88, 46, 11, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 650, 0),
-('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 651, 0),
-('Goblin Guard', 'An imposing green creature', '', 48, 51, 51, 43, 1, 0, 0, 40, 1, 7, 0, 142, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 285, 268, 9, 8, 7, 0, 652, 0),
-('Observatory Professor', 'He works in the observatory', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, 46, -1, 9, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 653, 0),
-('Ugthanki', 'A dangerous type of spitting camel that can temporarily blind an opponent.', '', 45, 45, 45, 45, 1, 0, 0, 40, 1, 8, 0, 127, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 208, 208, 6, 6, 25, 0, 654, 0),
-('Observatory Assistant', 'The Professor\'s assistant', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 655, 0),
-('Souless', 'A servent to zamorak', '', 23, 23, 28, 24, 1, 0, 0, 40, 1, 4, 0, 210, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 0, 656, 0),
-('Dungeon Spider', 'A nasty poisonous arachnid', '', 25, 10, 20, 35, 1, 1, 1, 40, 0, 0, 1, 166, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 90, 78, 6, 6, 5, 0, 657, 0),
-('Kamen', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 658, 0),
-('Iban Disciple', 'An evil follower of Iban', '', 18, 18, 22, 20, 1, 0, 0, 40, 1, 3, 0, 7, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 659, 0),
-('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 660, 0),
-('Goblin', 'These goblins have grown strong', '', 24, 18, 20, 16, 1, 0, 0, 40, 1, 3, 0, 142, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 661, 0),
-('Chadwell', 'A sturdy looking gent', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, 46, -1, 10, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 662, 0),
-('Professor', 'The owner of the observatory', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, 46, -1, 9, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 663, 0),
-('San Tojalon', 'The animated spirit of San Tojalon', '', 120, 120, 120, 120, 1, 1, 1, 40, 0, 0, 1, -1, -1, -1, 99, 49, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 664, 0),
-('Ghost', 'A doomed victim of zamorak', '', 33, 30, 33, 20, 1, 0, 0, 40, 1, 3, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 665, 0),
-('Spirit of Scorpius', 'The undead spirit of the follower of Zamorak', '', 100, 100, 100, 100, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 666, 0),
-('Scorpion', 'There are nasty scorpions around this grave', '', 21, 22, 24, 17, 0, 0, 0, 40, 0, 0, 0, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 667, 0),
-('Dark Mage', 'He works in the ways of dark magic', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, -1, 84, -1, -1, -1, -1, 68, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, 0, 668, 0),
-('Mercenary', 'He seems to be guarding an area', '', 48, 32, 60, 60, 1, 0, 0, 40, 1, 10, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 669, 0),
-('Mercenary Captain', 'He\'s in control of the local guards.', 'watch', 48, 48, 80, 80, 1, 0, 0, 40, 1, 13, 0, 6, 1, 2, -1, 51, 71, 22, -1, -1, -1, -1, 62, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 670, 0),
-('Mercenary', 'He seems to be guarding an area', '', 48, 32, 30, 48, 1, 0, 0, 40, 1, 8, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 671, 0),
-('Mining Slave', 'A chained slave forced to mines.', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 672, 0),
-('Watchtower Wizard', 'A learned man', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 673, 0),
-('Ogre Shaman', 'An intelligent form of ogre', '', 100, 100, 100, 100, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 122, 75, 21, -1, -1, 11, 79, 83, 3381504, 10027263, 26367, 26367, 222, 294, 6, 6, 5, 0, 674, 0),
-('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10079385, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 675, 0),
+('Slave', 'He seems to have been here a while', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 636, 0),
+('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 637, 0),
+('Slave', 'He seems to have been here a while', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16752704, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 638, 0),
+('Slave', 'He seems possessed', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 639, 0),
+('Slave', 'He seems to have been here a while', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 640, 0),
+('Kalrag', 'I think this is one of Ibans pets', '', 88, 78, 69, 78, 1, 0, 0, 40, 1, 13, 0, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 420, 404, 6, 6, 5, 0, 641, 0),
+('Niloof', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 642, 0),
+('Kardia The Witch', 'She\'s got warts', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 78, -1, 88, -1, -1, -1, 63, 1, 2, 3, 15523536, 155, 220, 6, 6, 5, 0, 643, 0),
+('Souless', 'He seems an empty shell', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 8409120, 8409120, 16777215, 100, 200, 6, 6, 5, 0, 644, 0),
+('Othainian', 'big red and incredibly evil', '', 78, 78, 78, 78, 1, 0, 0, 40, 1, 13, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 645, 0),
+('Doomion', 'A big scary jet black demon', '', 98, 98, 98, 98, 1, 0, 0, 40, 1, 16, 0, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 646, 0),
+('Holthion', 'big red and incredibly evil', '', 78, 78, 78, 78, 1, 0, 0, 40, 1, 13, 0, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 647, 0),
+('Klank', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 648, 0),
+('Iban', 'You feel terror just looking at him', '', 24, 23, 22, 17, 0, 0, 0, 40, 0, 0, 0, 18, 1, 2, -1, -1, -1, 82, 88, 46, 11, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 649, 0),
+('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 650, 0),
+('Goblin Guard', 'An imposing green creature', '', 48, 51, 51, 43, 1, 0, 0, 40, 1, 7, 0, 142, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 285, 268, 9, 8, 7, 0, 651, 0),
+('Observatory Professor', 'He works in the observatory', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, 46, -1, 9, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 652, 0),
+('Ugthanki', 'A dangerous type of spitting camel that can temporarily blind an opponent.', '', 45, 45, 45, 45, 1, 0, 0, 40, 1, 8, 0, 127, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 208, 208, 6, 6, 25, 0, 653, 0),
+('Observatory Assistant', 'The Professor\'s assistant', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 654, 0),
+('Souless', 'A servent to zamorak', '', 23, 23, 28, 24, 1, 0, 0, 40, 1, 4, 0, 210, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 174, 259, 12, 12, 5, 0, 655, 0),
+('Dungeon Spider', 'A nasty poisonous arachnid', '', 25, 10, 20, 35, 1, 1, 1, 40, 0, 0, 1, 166, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 90, 78, 6, 6, 5, 0, 656, 0),
+('Kamen', 'A short angry guy', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, 0, 657, 0),
+('Iban Disciple', 'An evil follower of Iban', '', 18, 18, 22, 20, 1, 0, 0, 40, 1, 3, 0, 7, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, 0, 658, 0),
+('Koftik', 'The kings top tracker', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 659, 0),
+('Goblin', 'These goblins have grown strong', '', 24, 18, 20, 16, 1, 0, 0, 40, 1, 3, 0, 142, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 219, 206, 9, 8, 5, 0, 660, 0),
+('Chadwell', 'A sturdy looking gent', '', 18, 18, 15, 14, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, 46, -1, 10, -1, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, 0, 661, 0),
+('Professor', 'The owner of the observatory', '', 3, 3, 3, 7, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, -1, -1, 46, -1, 9, -1, 16777215, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 662, 0),
+('San Tojalon', 'The animated spirit of San Tojalon', '', 120, 120, 120, 120, 1, 1, 1, 40, 0, 0, 1, -1, -1, -1, 99, 49, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 663, 0),
+('Ghost', 'A doomed victim of zamorak', '', 33, 30, 33, 20, 1, 0, 0, 40, 1, 3, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 664, 0),
+('Spirit of Scorpius', 'The undead spirit of the follower of Zamorak', '', 100, 100, 100, 100, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 1, 665, 0),
+('Scorpion', 'There are nasty scorpions around this grave', '', 21, 22, 24, 17, 0, 0, 0, 40, 0, 0, 0, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 666, 0),
+('Dark Mage', 'He works in the ways of dark magic', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, -1, 84, -1, -1, -1, -1, 68, 3158064, 16763952, 15609986, 13415270, 145, 220, 6, 6, 5, 0, 667, 0),
+('Mercenary', 'He seems to be guarding an area', '', 48, 32, 60, 60, 1, 0, 0, 40, 1, 10, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 668, 0),
+('Mercenary Captain', 'He\'s in control of the local guards.', 'watch', 48, 48, 80, 80, 1, 0, 0, 40, 1, 13, 0, 6, 1, 2, -1, 51, 71, 22, -1, -1, -1, -1, 62, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 669, 0),
+('Mercenary', 'He seems to be guarding an area', '', 48, 32, 30, 48, 1, 0, 0, 40, 1, 8, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 670, 0),
+('Mining Slave', 'A chained slave forced to mines.', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 671, 0),
+('Watchtower Wizard', 'A learned man', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 672, 0),
+('Ogre Shaman', 'An intelligent form of ogre', '', 100, 100, 100, 100, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 122, 75, 21, -1, -1, 11, 79, 83, 3381504, 10027263, 26367, 26367, 222, 294, 6, 6, 5, 0, 673, 0),
+('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10079385, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 674, 0),
+('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 114, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 675, 0),
 ('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 114, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 676, 0),
-('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 114, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 677, 0),
-('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 678, 0),
+('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 677, 0),
+('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 678, 0),
 ('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 679, 0),
-('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 680, 0),
-('Og', 'The chieftan of this ogre tribe', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 681, 0),
-('Grew', 'The chieftan of this ogre tribe', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 682, 0),
-('Toban', 'The chieftan of this ogre tribe', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 683, 0),
-('Gorad', 'A high ranking ogre official', '', 92, 90, 53, 80, 1, 0, 0, 40, 1, 13, 0, 7, 1, 2, -1, 119, 70, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 684, 0),
-('Ogre Guard', 'this creature looks very tough', '', 98, 90, 99, 99, 1, 0, 0, 40, 1, 17, 0, 7, 1, 2, -1, 114, -1, 24, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 233, 320, 6, 6, 5, 0, 685, 0),
-('Yanille Watchman', 'A captured guard of Yanille', '', 41, 41, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 70, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 686, 0),
-('Ogre Merchant', 'He sells ogre-inspired items', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 687, 0),
-('Ogre Trader', 'He trades in metals', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 688, 0),
+('Og', 'The chieftan of this ogre tribe', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 680, 0),
+('Grew', 'The chieftan of this ogre tribe', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 681, 0),
+('Toban', 'The chieftan of this ogre tribe', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 682, 0),
+('Gorad', 'A high ranking ogre official', '', 92, 90, 53, 80, 1, 0, 0, 40, 1, 13, 0, 7, 1, 2, -1, 119, 70, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 683, 0),
+('Ogre Guard', 'this creature looks very tough', '', 98, 90, 99, 99, 1, 0, 0, 40, 1, 17, 0, 7, 1, 2, -1, 114, -1, 24, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 233, 320, 6, 6, 5, 0, 684, 0),
+('Yanille Watchman', 'A captured guard of Yanille', '', 41, 41, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 70, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 685, 0),
+('Ogre Merchant', 'He sells ogre-inspired items', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 686, 0),
+('Ogre Trader', 'He trades in metals', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 687, 0),
+('Ogre Trader', 'He trades in food', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 688, 0),
 ('Ogre Trader', 'He trades in food', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 689, 0),
-('Ogre Trader', 'He trades in food', '', 72, 70, 33, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 690, 0),
-('Mercenary', 'He seems to be guarding an area', '', 48, 32, 30, 48, 1, 0, 0, 40, 1, 8, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 691, 0),
-('City Guard', 'high ranking ogre guards', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, 70, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 692, 0),
-('Mercenary', 'He seems to be guarding this area', '', 48, 32, 30, 48, 1, 0, 0, 40, 1, 8, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 693, 0),
-('Lawgof', 'He guards the mines', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 694, 0),
-('Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 695, 0),
-('Lollk', 'He looks scared', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 3158064, 3158064, 15523536, 90, 130, 6, 6, 5, 0, 696, 0),
-('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 697, 0),
-('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 1, 0, 0, 40, 1, 13, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 698, 0),
-('Nulodion', 'He\'s the head of black guard weapon development', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 699, 0),
-('Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 700, 0),
-('Al Shabim', 'The leader of a nomadic Bedabin desert people - sometimes referred to as the \'Tenti\'s\'', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 154, 85, 86, 155, 211, 80, 215, 1, 2105376, 3, 6307872, 145, 220, 6, 6, 5, 0, 701, 0),
-('Bedabin Nomad', 'A Bedabin nomad - they live in the harshest extremes in the desert', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 1, 2105376, 3, 6307872, 145, 220, 6, 6, 5, 0, 702, 0),
-('Captain Siad', 'He\'s in control of the whole mining camp.', '', 48, 48, 48, 48, 1, 0, 0, 40, 1, 8, 0, 6, 1, 2, -1, 51, 150, 22, -1, -1, -1, -1, 68, 1, 16777215, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 703, 0),
-('Bedabin Nomad Guard', 'A Bedabin nomad guard - he\'s protecting something important', '', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 5, 1, 2, -1, 48, -1, 85, 86, -1, -1, -1, -1, 1, 2105376, 3, 6307872, 145, 220, 6, 6, 5, 0, 704, 0),
-('Ogre Citizen', 'A denizen of Gu\'Tanoth', '', 72, 70, 33, 60, 1, 0, 0, 40, 1, 10, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 705, 0),
-('Rock of Ages', 'A tiny little minion, ready to crush your pixelated skull', '', 150, 150, 170, 850, 1, 1, 1, 300, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 74, 70, 11, 11, 5, 0, 706, 0),
-('Ogre', 'A large dim looking humanoid', '', 72, 70, 33, 60, 1, 0, 0, 40, 1, 10, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 707, 0),
+('Mercenary', 'He seems to be guarding an area', '', 48, 32, 30, 48, 1, 0, 0, 40, 1, 8, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 690, 0),
+('City Guard', 'high ranking ogre guards', '', 92, 90, 53, 80, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 119, 70, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 691, 0),
+('Mercenary', 'He seems to be guarding this area', '', 48, 32, 30, 48, 1, 0, 0, 40, 1, 8, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 692, 0),
+('Lawgof', 'He guards the mines', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 693, 0),
+('Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 694, 0),
+('Lollk', 'He looks scared', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 3158064, 3158064, 15523536, 90, 130, 6, 6, 5, 0, 695, 0),
+('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 696, 0),
+('Ogre Guard', 'These ogres protect the city', '', 92, 90, 53, 80, 1, 0, 0, 40, 1, 13, 0, 7, 1, 2, -1, 119, -1, 22, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 222, 294, 6, 6, 5, 0, 697, 0),
+('Nulodion', 'He\'s the head of black guard weapon development', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 698, 0),
+('Dwarf', 'A short angry guy', '', 20, 20, 17, 16, 1, 0, 0, 40, 1, 3, 0, 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 699, 0),
+('Al Shabim', 'The leader of a nomadic Bedabin desert people - sometimes referred to as the \'Tenti\'s\'', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 154, 85, 86, 155, 211, 80, 215, 1, 2105376, 3, 6307872, 145, 220, 6, 6, 5, 0, 700, 0),
+('Bedabin Nomad', 'A Bedabin nomad - they live in the harshest extremes in the desert', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 1, 2105376, 3, 6307872, 145, 220, 6, 6, 5, 0, 701, 0),
+('Captain Siad', 'He\'s in control of the whole mining camp.', '', 48, 48, 48, 48, 1, 0, 0, 40, 1, 8, 0, 6, 1, 2, -1, 51, 150, 22, -1, -1, -1, -1, 68, 1, 16777215, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 702, 0),
+('Bedabin Nomad Guard', 'A Bedabin nomad guard - he\'s protecting something important', '', 70, 70, 70, 70, 1, 0, 0, 40, 1, 12, 0, 5, 1, 2, -1, 48, -1, 85, 86, -1, -1, -1, -1, 1, 2105376, 3, 6307872, 145, 220, 6, 6, 5, 0, 703, 0),
+('Ogre Citizen', 'A denizen of Gu\'Tanoth', '', 72, 70, 33, 60, 1, 0, 0, 40, 1, 10, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 704, 0),
+('Rock of Ages', 'A tiny little minion, ready to crush your pixelated skull', '', 150, 150, 170, 850, 1, 1, 1, 300, 0, 0, 1, 124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 74, 70, 11, 11, 5, 0, 705, 0),
+('Ogre', 'A large dim looking humanoid', '', 72, 70, 33, 60, 1, 0, 0, 40, 1, 10, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 706, 0),
+('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 707, 0),
 ('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 708, 0),
 ('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 709, 0),
-('Skavid', 'Servant race to the ogres', '', 3, 3, 3, 3, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, -1, 117, -1, 45, -1, -1, -1, -1, -1, 629145, 10066329, 10066329, 10066329, 96, 176, 6, 6, 5, 0, 710, 0),
-('Draft Mercenary Guard', 'He\'s quickly drafted in to deal with trouble makers', '', 48, 32, 60, 60, 1, 0, 0, 40, 1, 10, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 711, 0),
-('Mining Cart Driver', 'He drives the mining cart', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 16760880, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 712, 0),
-('Kolodion', 'He runs the mage arena', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 70, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 713, 0),
-('Kolodion', 'He runs the mage arena', '', 20, 10, 15, 3, 1, 0, 0, 40, 1, 1, 0, 6, 1, 2, -1, 122, 70, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 714, 0),
-('Gertrude', 'A busy housewife', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 16763992, 15618286, 3, 15523536, 145, 220, 6, 6, 5, 0, 715, 0),
-('Shilop', 'A young boisterous looking lad', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 140, 6, 6, 5, 0, 716, 0),
-('Rowdy Guard', 'He looks as if he\'s spoiling for trouble', '', 48, 32, 60, 60, 1, 0, 0, 40, 1, 10, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 717, 0),
-('Shantay Pass Guard', 'He seems to be guarding the Shantay Pass', '', 32, 32, 32, 32, 1, 0, 0, 40, 1, 5, 0, 5, 1, 2, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, 0, 718, 0),
-('Rowdy Slave', 'A slave who\'s looking for trouble.', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 719, 0),
-('Shantay Pass Guard', 'He seems to be guarding the Shantay Pass', '', 32, 32, 32, 32, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, 0, 720, 0),
-('Assistant', 'He is an assistant to Shantay and helps him to run the pass.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 721, 0),
-('Desert Wolf', 'A vicious Desert wolf', '', 30, 31, 32, 34, 1, 1, 1, 40, 0, 0, 1, 216, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 722, 0),
-('Workman', 'This person is working on the site', 'pickpocket', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, 10, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 723, 0),
-('Examiner', 'As you examine the examiner you examine that she is indeed an examiner!!', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 724, 0),
-('Student', 'A student busily digging!', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, 46, 11, -1, -1, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, 0, 725, 0),
-('Student', 'A student busily digging!', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 52224, 15658576, 13415270, 140, 215, 6, 6, 5, 0, 726, 0),
-('Guide', 'This person specialises in panning for gold', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 10053120, 6697728, 15523536, 145, 220, 6, 6, 5, 0, 727, 0),
-('Billy', 'He fixes your Dragon Squares for a small fee!', '', 20, 18, 17, 19, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 16737792, 3, 10053171, 145, 220, 6, 6, 5, 0, 728, 0),
-('Sil', 'Don\'t let his looks dazzle you', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16777215, 16711680, 6697728, 145, 220, 6, 6, 5, 0, 729, 0),
-('Civillian', 'He looks aggitated!', '', 20, 18, 17, 19, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 16737792, 3, 10053171, 145, 220, 6, 6, 5, 0, 730, 0),
-('Civillian', 'She looks aggitated!', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, 46, 11, -1, -1, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, 0, 731, 0),
-('Civillian', 'She looks aggitated!', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 732, 0),
-('Civillian', 'He looks aggitated!', 'pickpocket', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 733, 0),
+('Draft Mercenary Guard', 'He\'s quickly drafted in to deal with trouble makers', '', 48, 32, 60, 60, 1, 0, 0, 40, 1, 10, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 710, 0),
+('Mining Cart Driver', 'He drives the mining cart', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1, 16760880, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, 0, 711, 0),
+('Kolodion', 'He runs the mage arena', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, 122, 70, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 712, 0),
+('Kolodion', 'He runs the mage arena', '', 20, 10, 15, 3, 1, 0, 0, 40, 1, 1, 0, 6, 1, 2, -1, 122, 70, 76, 81, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 713, 0),
+('Gertrude', 'A busy housewife', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 89, -1, -1, -1, -1, 16763992, 15618286, 3, 15523536, 145, 220, 6, 6, 5, 0, 714, 0),
+('Shilop', 'A young boisterous looking lad', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 140, 6, 6, 5, 0, 715, 0),
+('Rowdy Guard', 'He looks as if he\'s spoiling for trouble', '', 48, 32, 60, 60, 1, 0, 0, 40, 1, 10, 0, 5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, 0, 716, 0),
+('Shantay Pass Guard', 'He seems to be guarding the Shantay Pass', '', 32, 32, 32, 32, 1, 0, 0, 40, 1, 5, 0, 5, 1, 2, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, 0, 717, 0),
+('Rowdy Slave', 'A slave who\'s looking for trouble.', '', 17, 18, 15, 16, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 718, 0),
+('Shantay Pass Guard', 'He seems to be guarding the Shantay Pass', '', 32, 32, 32, 32, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 49, -1, -1, -1, -1, -1, -1, -1, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, 0, 719, 0),
+('Assistant', 'He is an assistant to Shantay and helps him to run the pass.', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 720, 0),
+('Desert Wolf', 'A vicious Desert wolf', '', 30, 31, 32, 34, 1, 1, 1, 40, 0, 0, 1, 216, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 721, 0),
+('Workman', 'This person is working on the site', 'pickpocket', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, 10, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 722, 0),
+('Examiner', 'As you examine the examiner you examine that she is indeed an examiner!!', '', 1, 1, 1, 5, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15643488, 255, 3, 15523536, 140, 220, 6, 6, 5, 0, 723, 0),
+('Student', 'A student busily digging!', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, 46, 11, -1, -1, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, 0, 724, 0),
+('Student', 'A student busily digging!', '', 20, 20, 20, 20, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 52224, 15658576, 13415270, 140, 215, 6, 6, 5, 0, 725, 0),
+('Guide', 'This person specialises in panning for gold', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 10053120, 6697728, 15523536, 145, 220, 6, 6, 5, 0, 726, 0),
+('Billy', 'He fixes your Dragon Squares for a small fee!', '', 20, 18, 17, 19, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 16737792, 3, 10053171, 145, 220, 6, 6, 5, 0, 727, 0),
+('Sil', 'Don\'t let his looks dazzle you', '', 20, 20, 20, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16777215, 16711680, 6697728, 145, 220, 6, 6, 5, 0, 728, 0),
+('Civillian', 'He looks aggitated!', '', 20, 18, 17, 19, 1, 0, 0, 40, 1, 3, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, -1, -1, 1, 16737792, 3, 10053171, 145, 220, 6, 6, 5, 0, 729, 0),
+('Civillian', 'She looks aggitated!', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 88, 46, 11, -1, -1, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, 0, 730, 0),
+('Civillian', 'She looks aggitated!', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 731, 0),
+('Civillian', 'He looks aggitated!', 'pickpocket', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, 0, 732, 0),
+('Murphy', 'The man in charge of the fishing trawler', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 733, 0),
 ('Murphy', 'The man in charge of the fishing trawler', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 734, 0),
-('Murphy', 'The man in charge of the fishing trawler', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 735, 0),
-('Sir Radimus Erkle', 'A huge muscular man in charge of the Legends Guild', '', 10, 5, 20, 8, 0, 0, 0, 40, 0, 0, 0, 6, 1, 41, -1, 52, 74, 25, -1, -1, -1, 80, 68, 16777215, 13415270, 13415270, 13415270, 145, 220, 6, 6, 5, 0, 736, 0),
-('Legends Guild Guard', 'This guard is protecting the entrance to the Legends Guild.', '', 50, 50, 50, 50, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 180, 72, 23, 94, -1, -1, -1, 215, 6307872, 13415270, 13415270, 13415270, 145, 220, 6, 6, 5, 0, 737, 0),
-('Escaping Mining Slave', 'An emancipated slave with cool Desert Clothes.', '', 17, 18, 15, 16, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 85, 86, -1, 211, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 738, 0),
-('Workman', 'This person is working in the mine', 'pickpocket', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, 10, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 739, 0),
-('Murphy', 'The man in charge of the fishing trawler', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 740, 0),
-('Echned Zekin', 'An evil spirit of the underworld.', '', 50, 50, 50, 50, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 0, 741, 0),
-('Donovan The Handyman', 'It\'s the family odd jobs man', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 742, 0),
-('Pierre The Dog Handler', 'It\'s the guy who looks after the family guard dog', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 743, 0),
-('Hobbes The Butler', 'It\'s the family butler', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 744, 0),
-('Louisa The Cook', 'It\'s the family cook', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 745, 0),
-('Mary The Maid', 'The family maid', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 746, 0),
-('Stanford The Gardener', 'It\'s the family Gardener', '', 10, 8, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 155, 230, 6, 6, 5, 0, 747, 0),
-('Guard', 'He looks like he\'s in over his head here', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 71, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 748, 0),
-('Guard Dog', 'He doesn\'t seem pleased to see me', '', 45, 46, 47, 49, 0, 0, 0, 40, 0, 0, 0, 159, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 247, 188, 6, 10, 30, 0, 749, 0),
-('Guard', 'He tries to keep law and order around here', '', 10, 8, 8, 7, 0, 0, 0, 7, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 155, 230, 6, 6, 5, 0, 750, 0),
-('Man', 'A thirsty looking man', '', 11, 11, 8, 7, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 751, 0),
-('Anna Sinclair', 'The first child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 65280, 15523536, 145, 220, 6, 6, 5, 0, 752, 0),
-('Bob Sinclair', 'The second child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 753, 0),
-('Carol Sinclair', 'The third child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 754, 0),
-('David Sinclair', 'The fourth child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 65280, 65280, 15523536, 145, 220, 6, 6, 5, 0, 755, 0),
-('Elizabeth Sinclair', 'The fifth child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 65280, 255, 15523536, 145, 220, 6, 6, 5, 0, 756, 0),
-('Frank Sinclair', 'The sixth child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 757, 0),
-('Kolodion', 'He\'s a shape shifter', '', 72, 70, 55, 65, 1, 0, 0, 40, 1, 11, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 758, 0),
-('Kolodion', 'He\'s a shape shifter', '', 47, 78, 69, 78, 1, 0, 0, 40, 1, 13, 0, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 420, 404, 6, 6, 5, 0, 759, 0),
-('Kolodion', 'He\'s a shape shifter', '', 58, 23, 28, 78, 1, 0, 0, 40, 1, 13, 0, 210, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 270, 390, 12, 12, 5, 0, 760, 0),
-('Kolodion', 'He\'s a shape shifter', '', 105, 98, 85, 107, 1, 0, 0, 40, 1, 18, 0, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 761, 0),
-('Irvig Senay', 'The animated spirit of Irvig Senay', '', 125, 125, 125, 125, 1, 0, 0, 40, 1, 21, 0, -1, -1, -1, 100, 50, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 762, 0),
-('Ranalph Devere', 'The animated spirit of Ranalph Devere', '', 130, 130, 130, 130, 1, 0, 0, 40, 1, 22, 0, -1, -1, -1, 102, 52, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 763, 0),
-('Poison Salesman', 'Peter Potter - Poison Purveyor', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16711680, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 764, 0),
-('Gujuo', 'A tall charismatic looking guy who holds the chest key.', '', 60, 60, 60, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, 97, 219, -1, 221, 220, -1, -1, -1, -1, 0, 9461792, 9461792, 9461792, 145, 220, 6, 6, 5, 0, 765, 0),
-('Jungle Forester', 'A woodsman who specialises in large and exotic timber', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 108, -1, -1, -1, 46, -1, -1, 65, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 766, 0),
-('Ungadulu', 'An ancient looking Shaman', '', 75, 75, 75, 75, 1, 0, 0, 40, 1, 13, 0, 6, 1, 2, 122, -1, -1, 85, 86, -1, -1, -1, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 767, 0),
-('Justice', 'A old wise man', '', 75, 75, 75, 75, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 180, -1, -1, 85, 86, -1, -1, -1, -1, 16728064, 7296823, 7296823, 7296823, 148, 224, 6, 6, 5, 0, 768, 0),
-('Death Wing', 'A supernatural creature of the underworld', '', 80, 80, 80, 80, 1, 0, 0, 40, 1, 13, 0, 138, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 225, 195, 5, 3, 5, 0, 769, 0),
-('Nezikchened', 'An ancient powerful Demon of the Underworld...', '', 175, 178, 177, 160, 1, 0, 0, 40, 1, 27, 0, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 770, 0),
-('Dwarf Cannon Engineer', 'He\'s the head of black guard weapon development', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 771, 0),
-('Dwarf Commander', 'He guards the mines', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 772, 0),
-('Viyeldi', 'The spirit of a dead sorcerer', '', 80, 80, 80, 80, 1, 0, 0, 40, 1, 13, 0, -1, 1, 2, 122, -1, 77, 76, 81, 155, -1, -1, 64, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 773, 0),
-('Nurmof', 'He sells pickaxes', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 774, 0),
-('Fatigue Expert', 'He looks wide awake', '', 10, 8, 10, 13, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 775, 0),
-('Karamja Wolf', 'A hungry wolf', '', 61, 61, 61, 61, 1, 1, 1, 40, 0, 0, 1, 222, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 776, 0),
-('Jungle Savage', 'A savage and fearless Jungle warrior', '', 100, 100, 60, 90, 1, 0, 0, 40, 1, 15, 0, 5, 1, 2, -1, 180, -1, 45, -1, -1, -1, -1, -1, 1, 9461792, 9461792, 7360528, 145, 220, 6, 6, 5, 0, 777, 0),
-('Oomlie Bird', 'A variety of flightless jungle fowl - it has a sharp beak and a bad temper.', '', 50, 20, 20, 40, 1, 0, 0, 40, 1, 7, 0, 223, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 778, 0),
-('Sidney Smith', 'Sidney Smith - Certification clerk', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 16711935, 16744703, 8404992, 145, 220, 6, 6, 5, 0, 779, 0),
-('Siegfried Erkle', 'An eccentric shop keeper - related to the Grand Vizier of the Legends Guild', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 14518442, 3, 13415270, 145, 235, 6, 6, 5, 0, 780, 0),
-('Tea Seller', 'He has delicious tea to buy', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 781, 0),
-('Wilough', 'A young son of gertrudes', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 120, 6, 6, 5, 0, 782, 0),
-('Philop', 'Gertrudes youngest', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 80, 100, 6, 6, 5, 0, 783, 0),
-('Kanel', 'Gertrudes youngest\'s twin brother', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 80, 100, 6, 6, 5, 0, 784, 0),
-('Chamber Guardian', 'He hasn\'t seen much sun latley', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 785, 0),
-('Sir Radimus Erkle', 'A huge muscular man in charge of the Legends Guild', '', 10, 5, 20, 8, 0, 0, 0, 40, 0, 0, 0, 6, 1, 41, -1, 52, 74, 25, -1, -1, -1, 80, 68, 16777215, 13415270, 13415270, 13415270, 145, 220, 6, 6, 5, 0, 786, 0),
-('Pit Scorpion', 'Very vicious little scorpions', '', 33, 48, 30, 32, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 787, 0),
-('Shadow Warrior', 'A sinsistar shadowy figure', '', 120, 150, 65, 150, 1, 1, 1, 40, 0, 0, 1, 3, 1, 2, 53, -1, -1, 227, -1, -1, 226, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 788, 0),
-('Fionella', 'She runs the legend\'s general store', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 186, -1, 207, -1, -1, 16752704, 3211263, 3, 13415270, 145, 220, 6, 6, 5, 0, 789, 0);
+('Sir Radimus Erkle', 'A huge muscular man in charge of the Legends Guild', '', 10, 5, 20, 8, 0, 0, 0, 40, 0, 0, 0, 6, 1, 41, -1, 52, 74, 25, -1, -1, -1, 80, 68, 16777215, 13415270, 13415270, 13415270, 145, 220, 6, 6, 5, 0, 735, 0),
+('Legends Guild Guard', 'This guard is protecting the entrance to the Legends Guild.', '', 50, 50, 50, 50, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 180, 72, 23, 94, -1, -1, -1, 215, 6307872, 13415270, 13415270, 13415270, 145, 220, 6, 6, 5, 0, 736, 0),
+('Escaping Mining Slave', 'An emancipated slave with cool Desert Clothes.', '', 17, 18, 15, 16, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, 85, 86, -1, 211, -1, -1, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, 0, 737, 0),
+('Workman', 'This person is working in the mine', 'pickpocket', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, 11, 10, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 738, 0),
+('Murphy', 'The man in charge of the fishing trawler', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 739, 0),
+('Echned Zekin', 'An evil spirit of the underworld.', '', 50, 50, 50, 50, 0, 0, 0, 40, 0, 0, 0, 137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 201, 243, 9, 9, 5, 0, 740, 0),
+('Donovan The Handyman', 'It\'s the family odd jobs man', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 741, 0),
+('Pierre The Dog Handler', 'It\'s the guy who looks after the family guard dog', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 742, 0),
+('Hobbes The Butler', 'It\'s the family butler', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 743, 0),
+('Louisa The Cook', 'It\'s the family cook', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 744, 0),
+('Mary The Maid', 'The family maid', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 745, 0),
+('Stanford The Gardener', 'It\'s the family Gardener', '', 10, 8, 8, 7, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 155, 230, 6, 6, 5, 0, 746, 0),
+('Guard', 'He looks like he\'s in over his head here', '', 31, 31, 30, 22, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, 71, 22, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 747, 0),
+('Guard Dog', 'He doesn\'t seem pleased to see me', '', 45, 46, 47, 49, 0, 0, 0, 40, 0, 0, 0, 159, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 247, 188, 6, 10, 30, 0, 748, 0),
+('Guard', 'He tries to keep law and order around here', '', 10, 8, 8, 7, 0, 0, 0, 7, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 13415270, 155, 230, 6, 6, 5, 0, 749, 0),
+('Man', 'A thirsty looking man', '', 11, 11, 8, 7, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 750, 0),
+('Anna Sinclair', 'The first child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 65280, 15523536, 145, 220, 6, 6, 5, 0, 751, 0),
+('Bob Sinclair', 'The second child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 16711680, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 752, 0),
+('Carol Sinclair', 'The third child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 16711680, 15523536, 145, 220, 6, 6, 5, 0, 753, 0),
+('David Sinclair', 'The fourth child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 65280, 65280, 15523536, 145, 220, 6, 6, 5, 0, 754, 0),
+('Elizabeth Sinclair', 'The fifth child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 65280, 255, 15523536, 145, 220, 6, 6, 5, 0, 755, 0),
+('Frank Sinclair', 'The sixth child of the late Lord Sinclair', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 756, 0),
+('Kolodion', 'He\'s a shape shifter', '', 72, 70, 55, 65, 1, 0, 0, 40, 1, 11, 0, 7, 1, 2, -1, -1, -1, 45, -1, -1, 11, -1, -1, 11550752, 6299664, 6299664, 10056486, 212, 280, 6, 6, 5, 0, 757, 0),
+('Kolodion', 'He\'s a shape shifter', '', 47, 78, 69, 78, 1, 0, 0, 40, 1, 13, 0, 125, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 420, 404, 6, 6, 5, 0, 758, 0),
+('Kolodion', 'He\'s a shape shifter', '', 58, 23, 28, 78, 1, 0, 0, 40, 1, 13, 0, 210, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 270, 390, 12, 12, 5, 0, 759, 0),
+('Kolodion', 'He\'s a shape shifter', '', 105, 98, 85, 107, 1, 0, 0, 40, 1, 18, 0, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 760, 0),
+('Irvig Senay', 'The animated spirit of Irvig Senay', '', 125, 125, 125, 125, 1, 0, 0, 40, 1, 21, 0, -1, -1, -1, 100, 50, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 761, 0),
+('Ranalph Devere', 'The animated spirit of Ranalph Devere', '', 130, 130, 130, 130, 1, 0, 0, 40, 1, 22, 0, -1, -1, -1, 102, 52, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, 0, 762, 0),
+('Poison Salesman', 'Peter Potter - Poison Purveyor', '', 9, 7, 8, 5, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16711680, 2, 3, 15523536, 145, 220, 6, 6, 5, 0, 763, 0),
+('Gujuo', 'A tall charismatic looking guy who holds the chest key.', '', 60, 60, 60, 60, 0, 0, 0, 40, 0, 0, 0, 7, 1, 2, 97, 219, -1, 221, 220, -1, -1, -1, -1, 0, 9461792, 9461792, 9461792, 145, 220, 6, 6, 5, 0, 764, 0),
+('Jungle Forester', 'A woodsman who specialises in large and exotic timber', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, 108, -1, -1, -1, 46, -1, -1, 65, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 765, 0),
+('Ungadulu', 'An ancient looking Shaman', '', 75, 75, 75, 75, 1, 0, 0, 40, 1, 13, 0, 6, 1, 2, 122, -1, -1, 85, 86, -1, -1, -1, -1, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, 0, 766, 0),
+('Justice', 'A old wise man', '', 75, 75, 75, 75, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, 180, -1, -1, 85, 86, -1, -1, -1, -1, 16728064, 7296823, 7296823, 7296823, 148, 224, 6, 6, 5, 0, 767, 0),
+('Death Wing', 'A supernatural creature of the underworld', '', 80, 80, 80, 80, 1, 0, 0, 40, 1, 13, 0, 138, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 225, 195, 5, 3, 5, 0, 768, 0),
+('Nezikchened', 'An ancient powerful Demon of the Underworld...', '', 175, 178, 177, 160, 1, 0, 0, 40, 1, 27, 0, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, 769, 0),
+('Dwarf Cannon Engineer', 'He\'s the head of black guard weapon development', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 770, 0),
+('Dwarf Commander', 'He guards the mines', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 771, 0),
+('Viyeldi', 'The spirit of a dead sorcerer', '', 80, 80, 80, 80, 1, 0, 0, 40, 1, 13, 0, -1, 1, 2, 122, -1, 77, 76, 81, 155, -1, -1, 64, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 772, 0),
+('Nurmof', 'He sells pickaxes', '', 20, 20, 17, 16, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 773, 0),
+('Fatigue Expert', 'He looks wide awake', '', 10, 8, 10, 13, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, 0, 774, 0),
+('Karamja Wolf', 'A hungry wolf', '', 61, 61, 61, 61, 1, 1, 1, 40, 0, 0, 1, 222, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 260, 198, 6, 10, 30, 0, 775, 0),
+('Jungle Savage', 'A savage and fearless Jungle warrior', '', 100, 100, 60, 90, 1, 0, 0, 40, 1, 15, 0, 5, 1, 2, -1, 180, -1, 45, -1, -1, -1, -1, -1, 1, 9461792, 9461792, 7360528, 145, 220, 6, 6, 5, 0, 776, 0),
+('Oomlie Bird', 'A variety of flightless jungle fowl - it has a sharp beak and a bad temper.', '', 50, 20, 20, 40, 1, 0, 0, 40, 1, 7, 0, 223, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 70, 62, 6, 6, 5, 0, 777, 0),
+('Sidney Smith', 'Sidney Smith - Certification clerk', '', 30, 30, 30, 30, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 16711935, 16744703, 8404992, 145, 220, 6, 6, 5, 0, 778, 0),
+('Siegfried Erkle', 'An eccentric shop keeper - related to the Grand Vizier of the Legends Guild', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16753488, 14518442, 3, 13415270, 145, 235, 6, 6, 5, 0, 779, 0),
+('Tea Seller', 'He has delicious tea to buy', '', 11, 11, 8, 7, 0, 0, 0, 40, 0, 0, 0, 5, 1, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, 0, 780, 0),
+('Wilough', 'A young son of gertrudes', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 100, 120, 6, 6, 5, 0, 781, 0),
+('Philop', 'Gertrudes youngest', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 80, 100, 6, 6, 5, 0, 782, 0),
+('Kanel', 'Gertrudes youngest\'s twin brother', '', 0, 0, 0, 3, 0, 0, 0, 40, 0, 0, 0, 0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 14535800, 11193464, 3, 15523536, 80, 100, 6, 6, 5, 0, 783, 0),
+('Chamber Guardian', 'He hasn\'t seen much sun latley', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 784, 0),
+('Sir Radimus Erkle', 'A huge muscular man in charge of the Legends Guild', '', 10, 5, 20, 8, 0, 0, 0, 40, 0, 0, 0, 6, 1, 41, -1, 52, 74, 25, -1, -1, -1, 80, 68, 16777215, 13415270, 13415270, 13415270, 145, 220, 6, 6, 5, 0, 785, 0),
+('Pit Scorpion', 'Very vicious little scorpions', '', 33, 48, 30, 32, 1, 1, 1, 40, 0, 0, 1, 143, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 121, 69, 7, 7, 45, 0, 786, 0),
+('Shadow Warrior', 'A sinsistar shadowy figure', '', 120, 150, 65, 150, 1, 1, 1, 40, 0, 0, 1, 3, 1, 2, 53, -1, -1, 227, -1, -1, 226, -1, -1, 1, 2, 3, 4, 145, 220, 6, 6, 5, 0, 787, 0),
+('Fionella', 'She runs the legend\'s general store', '', 35, 30, 25, 10, 0, 0, 0, 40, 0, 0, 0, 3, 4, 2, -1, -1, -1, -1, 186, -1, 207, -1, -1, 16752704, 3211263, 3, 13415270, 145, 220, 6, 6, 5, 0, 788, 0);
 INSERT INTO `def_npc` (`name`, `description`, `command`, `attack`, `defense`, `strength`, `hits`, `attackable`, `aggressive`, `follows`, `respawn`, `retreat`, `retreat_hits`, `block`, `sprite1`, `sprite2`, `sprite3`, `sprite4`, `sprite5`, `sprite6`, `sprite7`, `sprite8`, `sprite9`, `sprite10`, `sprite11`, `sprite12`, `hair_colour`, `top_colour`, `bottom_colour`, `skin_colour`, `camera1`, `camera2`, `walk_model`, `combat_model`, `combat_sprite`, `undead`, `id`, `dragon`) VALUES
-('Battle Mage', 'He kills in the name of guthix', '', 0, 0, 90, 120, 1, 0, 0, 40, 1, 20, 0, 6, 1, 2, -1, 122, 192, -1, -1, -1, -1, -1, 65, 1, 8413216, 8409120, 36864, 100, 150, 6, 6, 5, 0, 790, 0),
-('Battle Mage', 'He kills in the name of zamarok', '', 0, 0, 90, 120, 1, 0, 0, 40, 1, 20, 0, 6, 1, 2, -1, 209, -1, 82, 88, -1, -1, -1, 62, 1, 2, 3, 16776944, 145, 220, 6, 6, 5, 0, 791, 0),
-('Battle Mage', 'He kills in the name of Saradomin', '', 0, 0, 90, 120, 1, 0, 0, 40, 1, 20, 0, 6, 1, 2, -1, 218, -1, 85, 86, -1, -1, -1, 64, 3158064, 16763952, 15609986, 9461792, 145, 220, 6, 6, 5, 0, 792, 0),
-('Gundai', 'He must get lonely out here', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 793, 0),
-('Lundail', 'He sells rune stones', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 794, 0),
-('Subscription Vendor', 'He can subscribe your account in exchange for a Subscription Card', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 795, 0);
+('Battle Mage', 'He kills in the name of guthix', '', 0, 0, 90, 120, 1, 0, 0, 40, 1, 20, 0, 6, 1, 2, -1, 122, 192, -1, -1, -1, -1, -1, 65, 1, 8413216, 8409120, 36864, 100, 150, 6, 6, 5, 0, 789, 0),
+('Battle Mage', 'He kills in the name of zamarok', '', 0, 0, 90, 120, 1, 0, 0, 40, 1, 20, 0, 6, 1, 2, -1, 209, -1, 82, 88, -1, -1, -1, 62, 1, 2, 3, 16776944, 145, 220, 6, 6, 5, 0, 790, 0),
+('Battle Mage', 'He kills in the name of Saradomin', '', 0, 0, 90, 120, 1, 0, 0, 40, 1, 20, 0, 6, 1, 2, -1, 218, -1, 85, 86, -1, -1, -1, 64, 3158064, 16763952, 15609986, 9461792, 145, 220, 6, 6, 5, 0, 791, 0),
+('Gundai', 'He must get lonely out here', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 792, 0),
+('Lundail', 'He sells rune stones', '', 15, 18, 16, 12, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0, 793, 0),
+('Subscription Vendor', 'He can subscribe your account in exchange for a Subscription Card', '', 20, 10, 15, 3, 0, 0, 0, 40, 0, 0, 0, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 794, 0);
 
 -- --------------------------------------------------------
 
@@ -6405,7 +6452,8 @@ INSERT INTO `def_npc` (`name`, `description`, `command`, `attack`, `defense`, `s
 -- Table structure for table `def_object`
 --
 
-CREATE TABLE `def_object` (
+DROP TABLE IF EXISTS `def_object`;
+CREATE TABLE IF NOT EXISTS `def_object` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `command1` varchar(255) NOT NULL,
@@ -6416,8 +6464,9 @@ CREATE TABLE `def_object` (
   `ground_item_var` int(3) NOT NULL,
   `object_model` varchar(255) NOT NULL,
   `blocks_ranged` tinyint(1) NOT NULL DEFAULT '0',
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1227 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_object`
@@ -7657,7 +7706,8 @@ INSERT INTO `def_object` (`name`, `description`, `command1`, `command2`, `type`,
 -- Table structure for table `def_picklock_door`
 --
 
-CREATE TABLE `def_picklock_door` (
+DROP TABLE IF EXISTS `def_picklock_door`;
+CREATE TABLE IF NOT EXISTS `def_picklock_door` (
   `door_id` int(11) NOT NULL,
   `level` int(2) NOT NULL,
   `experience` int(5) NOT NULL,
@@ -7683,13 +7733,15 @@ INSERT INTO `def_picklock_door` (`door_id`, `level`, `experience`, `picklock_req
 -- Table structure for table `def_pickpocket`
 --
 
-CREATE TABLE `def_pickpocket` (
-  `id` int(10) NOT NULL,
+DROP TABLE IF EXISTS `def_pickpocket`;
+CREATE TABLE IF NOT EXISTS `def_pickpocket` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `npc_id` int(4) NOT NULL,
   `level` int(2) NOT NULL,
   `experience` int(5) NOT NULL,
-  `caught_message` varchar(100) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `caught_message` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_pickpocket`
@@ -7726,7 +7778,8 @@ INSERT INTO `def_pickpocket` (`id`, `npc_id`, `level`, `experience`, `caught_mes
 -- Table structure for table `def_pickpocket_loot`
 --
 
-CREATE TABLE `def_pickpocket_loot` (
+DROP TABLE IF EXISTS `def_pickpocket_loot`;
+CREATE TABLE IF NOT EXISTS `def_pickpocket_loot` (
   `npc_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `item_amount` int(11) NOT NULL
@@ -7828,13 +7881,15 @@ INSERT INTO `def_pickpocket_loot` (`npc_id`, `item_id`, `item_amount`) VALUES
 -- Table structure for table `def_prayer`
 --
 
-CREATE TABLE `def_prayer` (
+DROP TABLE IF EXISTS `def_prayer`;
+CREATE TABLE IF NOT EXISTS `def_prayer` (
   `level` varchar(20) NOT NULL,
   `drain_rate` int(2) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_prayer`
@@ -7862,12 +7917,14 @@ INSERT INTO `def_prayer` (`level`, `drain_rate`, `name`, `description`, `id`) VA
 -- Table structure for table `def_required_stats`
 --
 
-CREATE TABLE `def_required_stats` (
+DROP TABLE IF EXISTS `def_required_stats`;
+CREATE TABLE IF NOT EXISTS `def_required_stats` (
   `item_id` int(5) NOT NULL,
   `stat` int(2) NOT NULL,
   `level` int(2) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=151 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_required_stats`
@@ -8030,7 +8087,8 @@ INSERT INTO `def_required_stats` (`item_id`, `stat`, `level`, `id`) VALUES
 -- Table structure for table `def_shops`
 --
 
-CREATE TABLE `def_shops` (
+DROP TABLE IF EXISTS `def_shops`;
+CREATE TABLE IF NOT EXISTS `def_shops` (
   `shop_id` int(3) NOT NULL,
   `general` tinyint(1) NOT NULL,
   `sell_modifier` int(4) NOT NULL,
@@ -8043,8 +8101,9 @@ CREATE TABLE `def_shops` (
   `greeting` varchar(255) NOT NULL,
   `yes` varchar(255) NOT NULL,
   `no` varchar(255) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_shops`
@@ -8128,12 +8187,14 @@ INSERT INTO `def_shops` (`shop_id`, `general`, `sell_modifier`, `buy_modifier`, 
 -- Table structure for table `def_shop_items`
 --
 
-CREATE TABLE `def_shop_items` (
+DROP TABLE IF EXISTS `def_shop_items`;
+CREATE TABLE IF NOT EXISTS `def_shop_items` (
   `shop_id` int(3) NOT NULL,
   `item_id` varchar(255) NOT NULL,
   `item_amount` int(4) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=687 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_shop_items`
@@ -8706,15 +8767,17 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 -- Table structure for table `def_smelting`
 --
 
-CREATE TABLE `def_smelting` (
+DROP TABLE IF EXISTS `def_smelting`;
+CREATE TABLE IF NOT EXISTS `def_smelting` (
   `ore` int(5) NOT NULL,
   `bar` int(5) NOT NULL,
   `alternate_ore` int(5) DEFAULT NULL,
   `alternate_amount` int(5) DEFAULT NULL,
   `level` int(2) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_smelting`
@@ -8737,13 +8800,15 @@ INSERT INTO `def_smelting` (`ore`, `bar`, `alternate_ore`, `alternate_amount`, `
 -- Table structure for table `def_smithing`
 --
 
-CREATE TABLE `def_smithing` (
+DROP TABLE IF EXISTS `def_smithing`;
+CREATE TABLE IF NOT EXISTS `def_smithing` (
   `level` int(5) NOT NULL,
   `bars` int(5) NOT NULL,
   `item_id` int(5) NOT NULL,
   `amount` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=127 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_smithing`
@@ -8883,7 +8948,8 @@ INSERT INTO `def_smithing` (`level`, `bars`, `item_id`, `amount`, `id`) VALUES
 -- Table structure for table `def_spell`
 --
 
-CREATE TABLE `def_spell` (
+DROP TABLE IF EXISTS `def_spell`;
+CREATE TABLE IF NOT EXISTS `def_spell` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `level` int(2) NOT NULL,
@@ -8896,8 +8962,9 @@ CREATE TABLE `def_spell` (
   `required_rune3` int(4) DEFAULT NULL,
   `amount3` int(4) DEFAULT NULL,
   `experience` int(4) DEFAULT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_spell`
@@ -8960,11 +9027,13 @@ INSERT INTO `def_spell` (`name`, `description`, `level`, `type`, `rune_count`, `
 -- Table structure for table `def_spell_aggressive`
 --
 
-CREATE TABLE `def_spell_aggressive` (
+DROP TABLE IF EXISTS `def_spell_aggressive`;
+CREATE TABLE IF NOT EXISTS `def_spell_aggressive` (
   `spell_id` int(5) NOT NULL,
   `spell_power` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_spell_aggressive`
@@ -8999,7 +9068,8 @@ INSERT INTO `def_spell_aggressive` (`spell_id`, `spell_power`, `id`) VALUES
 -- Table structure for table `def_stall_guardian`
 --
 
-CREATE TABLE `def_stall_guardian` (
+DROP TABLE IF EXISTS `def_stall_guardian`;
+CREATE TABLE IF NOT EXISTS `def_stall_guardian` (
   `stall_id` int(4) NOT NULL,
   `guardian` int(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -9031,7 +9101,8 @@ INSERT INTO `def_stall_guardian` (`stall_id`, `guardian`) VALUES
 -- Table structure for table `def_stall_loot`
 --
 
-CREATE TABLE `def_stall_loot` (
+DROP TABLE IF EXISTS `def_stall_loot`;
+CREATE TABLE IF NOT EXISTS `def_stall_loot` (
   `stall_id` int(4) NOT NULL,
   `item_id` int(4) NOT NULL,
   `item_amount` int(8) NOT NULL
@@ -9058,7 +9129,8 @@ INSERT INTO `def_stall_loot` (`stall_id`, `item_id`, `item_amount`) VALUES
 -- Table structure for table `def_stall_thieving`
 --
 
-CREATE TABLE `def_stall_thieving` (
+DROP TABLE IF EXISTS `def_stall_thieving`;
+CREATE TABLE IF NOT EXISTS `def_stall_thieving` (
   `stall_id` int(4) NOT NULL,
   `level` int(2) NOT NULL,
   `experience` int(5) NOT NULL,
@@ -9084,14 +9156,16 @@ INSERT INTO `def_stall_thieving` (`stall_id`, `level`, `experience`, `owner`, `r
 -- Table structure for table `def_tele_points`
 --
 
-CREATE TABLE `def_tele_points` (
+DROP TABLE IF EXISTS `def_tele_points`;
+CREATE TABLE IF NOT EXISTS `def_tele_points` (
   `point_x` int(5) NOT NULL,
   `point_y` int(5) NOT NULL,
   `destination_x` int(5) NOT NULL,
   `destination_y` int(5) NOT NULL,
   `command` varchar(255) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_tele_points`
@@ -9147,12 +9221,14 @@ INSERT INTO `def_tele_points` (`point_x`, `point_y`, `destination_x`, `destinati
 -- Table structure for table `def_tile`
 --
 
-CREATE TABLE `def_tile` (
+DROP TABLE IF EXISTS `def_tile`;
+CREATE TABLE IF NOT EXISTS `def_tile` (
   `colour` int(8) NOT NULL,
   `unknown` tinyint(1) NOT NULL,
   `object_type` tinyint(1) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_tile`
@@ -9216,13 +9292,15 @@ INSERT INTO `def_tile` (`colour`, `unknown`, `object_type`, `id`) VALUES
 -- Table structure for table `def_unidentified_herb`
 --
 
-CREATE TABLE `def_unidentified_herb` (
+DROP TABLE IF EXISTS `def_unidentified_herb`;
+CREATE TABLE IF NOT EXISTS `def_unidentified_herb` (
   `unidentified_id` int(5) NOT NULL,
   `identified_id` int(5) NOT NULL,
   `level` int(5) NOT NULL,
   `experience` int(5) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_unidentified_herb`
@@ -9251,7 +9329,8 @@ INSERT INTO `def_unidentified_herb` (`unidentified_id`, `identified_id`, `level`
 -- Table structure for table `def_wieldable`
 --
 
-CREATE TABLE `def_wieldable` (
+DROP TABLE IF EXISTS `def_wieldable`;
+CREATE TABLE IF NOT EXISTS `def_wieldable` (
   `item_id` int(5) NOT NULL,
   `sprite` int(5) NOT NULL,
   `type` int(5) NOT NULL,
@@ -9263,8 +9342,9 @@ CREATE TABLE `def_wieldable` (
   `prayer_points` int(5) NOT NULL,
   `range_points` int(5) NOT NULL,
   `female_only` tinyint(1) NOT NULL,
-  `id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=364 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_wieldable`
@@ -9619,7 +9699,8 @@ INSERT INTO `def_wieldable` (`item_id`, `sprite`, `type`, `wield_position`, `arm
 -- Table structure for table `def_woodcut`
 --
 
-CREATE TABLE `def_woodcut` (
+DROP TABLE IF EXISTS `def_woodcut`;
+CREATE TABLE IF NOT EXISTS `def_woodcut` (
   `tree_id` int(4) NOT NULL,
   `experience` int(4) NOT NULL,
   `level` int(5) NOT NULL,
@@ -9648,7 +9729,8 @@ INSERT INTO `def_woodcut` (`tree_id`, `experience`, `level`, `fell`, `log_id`, `
 -- Table structure for table `executors`
 --
 
-CREATE TABLE `executors` (
+DROP TABLE IF EXISTS `executors`;
+CREATE TABLE IF NOT EXISTS `executors` (
   `class` varchar(255) NOT NULL,
   `id` int(4) NOT NULL,
   `quest_id` int(11) NOT NULL
@@ -9660,14 +9742,17 @@ CREATE TABLE `executors` (
 -- Table structure for table `spawn_item`
 --
 
-CREATE TABLE `spawn_item` (
+DROP TABLE IF EXISTS `spawn_item`;
+CREATE TABLE IF NOT EXISTS `spawn_item` (
   `item` int(4) NOT NULL,
   `x` int(4) NOT NULL,
   `y` int(4) NOT NULL,
   `amount` int(4) NOT NULL,
   `respawn` int(4) NOT NULL,
-  `id` int(6) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `item` (`item`)
+) ENGINE=MyISAM AUTO_INCREMENT=576 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_item`
@@ -10240,7 +10325,8 @@ INSERT INTO `spawn_item` (`item`, `x`, `y`, `amount`, `respawn`, `id`) VALUES
 -- Table structure for table `spawn_npc`
 --
 
-CREATE TABLE `spawn_npc` (
+DROP TABLE IF EXISTS `spawn_npc`;
+CREATE TABLE IF NOT EXISTS `spawn_npc` (
   `npc` int(4) NOT NULL,
   `start_x` int(4) NOT NULL,
   `start_y` int(4) NOT NULL,
@@ -10249,8 +10335,11 @@ CREATE TABLE `spawn_npc` (
   `max_x` int(4) NOT NULL,
   `max_y` int(4) NOT NULL,
   `direction` int(1) NOT NULL DEFAULT '1',
-  `id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `npc` (`npc`),
+  KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2949 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_npc`
@@ -12997,7 +13086,10 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 (406, 672, 635, 669, 632, 674, 637, 1, 2942),
 (404, 654, 626, 654, 626, 654, 626, 1, 2943),
 (405, 648, 628, 647, 628, 650, 629, 1, 2944),
-(794, 214, 460, 214, 460, 220, 460, 1, 2629);
+(794, 214, 460, 214, 460, 220, 460, 1, 2629),
+(3, 220, 756, 218, 754, 222, 758, 1, 2946),
+(3, 218, 755, 216, 753, 220, 757, 1, 2947),
+(3, 219, 756, 217, 754, 221, 758, 1, 2948);
 
 -- --------------------------------------------------------
 
@@ -13005,14 +13097,17 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 -- Table structure for table `spawn_object`
 --
 
-CREATE TABLE `spawn_object` (
+DROP TABLE IF EXISTS `spawn_object`;
+CREATE TABLE IF NOT EXISTS `spawn_object` (
   `object` int(4) NOT NULL,
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `x` int(4) NOT NULL,
   `y` int(4) NOT NULL,
   `direction` tinyint(1) NOT NULL,
-  `id` int(6) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `object` (`object`)
+) ENGINE=MyISAM AUTO_INCREMENT=31388 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_object`
@@ -41353,471 +41448,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (730, 0, 442, 3377, 0, 31361),
 (730, 0, 443, 3376, 0, 31362),
 (730, 0, 437, 3375, 0, 31364);
+COMMIT;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `conf_npc`
---
-ALTER TABLE `conf_npc`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `conf_packet`
---
-ALTER TABLE `conf_packet`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `conf_web_packet`
---
-ALTER TABLE `conf_web_packet`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id` (`id`);
-
---
--- Indexes for table `def_advert`
---
-ALTER TABLE `def_advert`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_arrow_head`
---
-ALTER TABLE `def_arrow_head`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_cert`
---
-ALTER TABLE `def_cert`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_certer`
---
-ALTER TABLE `def_certer`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_chest_loot`
---
-ALTER TABLE `def_chest_loot`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_cooking`
---
-ALTER TABLE `def_cooking`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_crafting`
---
-ALTER TABLE `def_crafting`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_crystal_key_chest`
---
-ALTER TABLE `def_crystal_key_chest`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_dart_tip`
---
-ALTER TABLE `def_dart_tip`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_door`
---
-ALTER TABLE `def_door`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_drop`
---
-ALTER TABLE `def_drop`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_edible_heals`
---
-ALTER TABLE `def_edible_heals`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_fish`
---
-ALTER TABLE `def_fish`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_fishing`
---
-ALTER TABLE `def_fishing`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_gem`
---
-ALTER TABLE `def_gem`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_herb`
---
-ALTER TABLE `def_herb`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_herb_second`
---
-ALTER TABLE `def_herb_second`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_item`
---
-ALTER TABLE `def_item`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_log_cut`
---
-ALTER TABLE `def_log_cut`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_mining`
---
-ALTER TABLE `def_mining`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_npc`
---
-ALTER TABLE `def_npc`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_object`
---
-ALTER TABLE `def_object`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_pickpocket`
---
-ALTER TABLE `def_pickpocket`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_prayer`
---
-ALTER TABLE `def_prayer`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_required_stats`
---
-ALTER TABLE `def_required_stats`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_shops`
---
-ALTER TABLE `def_shops`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_shop_items`
---
-ALTER TABLE `def_shop_items`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_smelting`
---
-ALTER TABLE `def_smelting`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_smithing`
---
-ALTER TABLE `def_smithing`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_spell`
---
-ALTER TABLE `def_spell`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_spell_aggressive`
---
-ALTER TABLE `def_spell_aggressive`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_tele_points`
---
-ALTER TABLE `def_tele_points`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_tile`
---
-ALTER TABLE `def_tile`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_unidentified_herb`
---
-ALTER TABLE `def_unidentified_herb`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `def_wieldable`
---
-ALTER TABLE `def_wieldable`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `spawn_item`
---
-ALTER TABLE `spawn_item`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `item` (`item`);
-
---
--- Indexes for table `spawn_npc`
---
-ALTER TABLE `spawn_npc`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `npc` (`npc`),
-  ADD KEY `id` (`id`);
-
---
--- Indexes for table `spawn_object`
---
-ALTER TABLE `spawn_object`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `object` (`object`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `conf_npc`
---
-ALTER TABLE `conf_npc`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=314;
---
--- AUTO_INCREMENT for table `conf_packet`
---
-ALTER TABLE `conf_packet`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
---
--- AUTO_INCREMENT for table `conf_web_packet`
---
-ALTER TABLE `conf_web_packet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
---
--- AUTO_INCREMENT for table `def_advert`
---
-ALTER TABLE `def_advert`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `def_arrow_head`
---
-ALTER TABLE `def_arrow_head`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `def_cert`
---
-ALTER TABLE `def_cert`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
---
--- AUTO_INCREMENT for table `def_certer`
---
-ALTER TABLE `def_certer`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
---
--- AUTO_INCREMENT for table `def_chest_loot`
---
-ALTER TABLE `def_chest_loot`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
---
--- AUTO_INCREMENT for table `def_cooking`
---
-ALTER TABLE `def_cooking`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
---
--- AUTO_INCREMENT for table `def_crafting`
---
-ALTER TABLE `def_crafting`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
---
--- AUTO_INCREMENT for table `def_crystal_key_chest`
---
-ALTER TABLE `def_crystal_key_chest`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
---
--- AUTO_INCREMENT for table `def_dart_tip`
---
-ALTER TABLE `def_dart_tip`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `def_door`
---
-ALTER TABLE `def_door`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
---
--- AUTO_INCREMENT for table `def_drop`
---
-ALTER TABLE `def_drop`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18583;
---
--- AUTO_INCREMENT for table `def_edible_heals`
---
-ALTER TABLE `def_edible_heals`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
---
--- AUTO_INCREMENT for table `def_fish`
---
-ALTER TABLE `def_fish`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
---
--- AUTO_INCREMENT for table `def_fishing`
---
-ALTER TABLE `def_fishing`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
---
--- AUTO_INCREMENT for table `def_gem`
---
-ALTER TABLE `def_gem`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT for table `def_herb`
---
-ALTER TABLE `def_herb`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
---
--- AUTO_INCREMENT for table `def_herb_second`
---
-ALTER TABLE `def_herb_second`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
---
--- AUTO_INCREMENT for table `def_item`
---
-ALTER TABLE `def_item`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1306;
---
--- AUTO_INCREMENT for table `def_log_cut`
---
-ALTER TABLE `def_log_cut`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `def_mining`
---
-ALTER TABLE `def_mining`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
---
--- AUTO_INCREMENT for table `def_npc`
---
-ALTER TABLE `def_npc`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=824;
---
--- AUTO_INCREMENT for table `def_object`
---
-ALTER TABLE `def_object`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1227;
---
--- AUTO_INCREMENT for table `def_pickpocket`
---
-ALTER TABLE `def_pickpocket`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
---
--- AUTO_INCREMENT for table `def_prayer`
---
-ALTER TABLE `def_prayer`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
---
--- AUTO_INCREMENT for table `def_required_stats`
---
-ALTER TABLE `def_required_stats`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
---
--- AUTO_INCREMENT for table `def_shops`
---
-ALTER TABLE `def_shops`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
---
--- AUTO_INCREMENT for table `def_shop_items`
---
-ALTER TABLE `def_shop_items`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=687;
---
--- AUTO_INCREMENT for table `def_smelting`
---
-ALTER TABLE `def_smelting`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
---
--- AUTO_INCREMENT for table `def_smithing`
---
-ALTER TABLE `def_smithing`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
---
--- AUTO_INCREMENT for table `def_spell`
---
-ALTER TABLE `def_spell`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
---
--- AUTO_INCREMENT for table `def_spell_aggressive`
---
-ALTER TABLE `def_spell_aggressive`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
---
--- AUTO_INCREMENT for table `def_tele_points`
---
-ALTER TABLE `def_tele_points`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
---
--- AUTO_INCREMENT for table `def_tile`
---
-ALTER TABLE `def_tile`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
---
--- AUTO_INCREMENT for table `def_unidentified_herb`
---
-ALTER TABLE `def_unidentified_herb`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
---
--- AUTO_INCREMENT for table `def_wieldable`
---
-ALTER TABLE `def_wieldable`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=364;
---
--- AUTO_INCREMENT for table `spawn_item`
---
-ALTER TABLE `spawn_item`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=576;
---
--- AUTO_INCREMENT for table `spawn_npc`
---
-ALTER TABLE `spawn_npc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2946;
---
--- AUTO_INCREMENT for table `spawn_object`
---
-ALTER TABLE `spawn_object`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31388;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
