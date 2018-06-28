@@ -3875,7 +3875,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			sendMessage("@gre@You just advanced " + advanced + " " + Formulae.STAT_ARRAY[stat] + " level!");
 			sendSound("advance", false);
 			
-			if (level >= 95) {
+			/*if (level >= 95) {
 				synchronized (World.getPlayers()) {
 					for (Player player : World.getPlayers())
 						player.sendNotification(Config.PREFIX + "Congratulations " + getUsername() + " on reaching level-" + level + " in " + Formulae.STAT_ARRAY[stat] + "!");
@@ -3884,7 +3884,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				Logger.log(new eventLog(getUsernameHash(), getAccount(), getIP(), DataConversions.getTimeStamp(), "<strong>" + getUsername() + "</strong>" + " has reached level-" + level + " in " + Formulae.STAT_ARRAY[stat] + "!"));
 			}
 			if(level == 99)
-				getActionSender().sendTakeScreenshot();
+				getActionSender().sendTakeScreenshot();*/
 			int combat = Formulae.getCombatlevel(maxStat);
 			if (combat != combatLevel)
 				setCombatLevel(combat);
