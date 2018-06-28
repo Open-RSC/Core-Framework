@@ -30,3 +30,7 @@ Client/nbproject/private/private.properties
 Launcher/nbproject/private/private.xml
 Launcher/nbproject/private/private.properties
 Server/nbproject/private/private.properties
+/Client/nbproject/private/
+/client/nbproject/private/
+/Server/nbproject/private/
+/server/nbproject/private/
