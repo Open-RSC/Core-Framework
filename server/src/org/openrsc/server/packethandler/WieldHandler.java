@@ -106,11 +106,21 @@ public class WieldHandler implements PacketHandler {
 								wieldItem(player, item);
 								break;
                             case 401: // rune platebody
-                                Quest q = player.getQuest(Config.Quests.DRAGON_SLAYER);
-                                if(q == null || !q.finished())
+                                Quest dragonSlayer = player.getQuest(Config.Quests.DRAGON_SLAYER);
+                                if(dragonSlayer == null || !dragonSlayer.finished())
                                 {
                                     player.sendMessage("you have not earned the right to wear this yet");
                                     player.sendMessage("you need to complete the dragon slayer quest");
+                                    break;
+                                }
+								wieldItem(player, item);
+                                break;
+                            case 593: // dragon sword
+                                Quest lostCity = player.getQuest(Config.Quests.LOST_CITY);
+                                if(lostCity == null || !lostCity.finished())
+                                {
+                                    player.sendMessage("you have not earned the right to wear this yet");
+                                    player.sendMessage("you need to complete the Lost city of zenaris quest");
                                     break;
                                 }
 								wieldItem(player, item);
