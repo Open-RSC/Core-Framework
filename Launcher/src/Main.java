@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -141,7 +142,7 @@ class Browser extends Region {
         double w = getWidth();
         double h = getHeight();
         double tbHeight = browser.prefHeight(w);
-        layoutInArea(browser,0,40,w,760,0,HPos.CENTER, VPos.CENTER);
+        layoutInArea(browser,0,40,w,720,0,HPos.CENTER, VPos.CENTER);
         layoutInArea(toolBar,0,0,w,tbHeight,0,HPos.CENTER,VPos.CENTER);	
 	}
 	 
@@ -270,12 +271,10 @@ class Browser extends Region {
                 clientVer[i] = "";
             }
 			File baseDir = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER);
-			if (!baseDir.isDirectory())
-			{
+			if (!baseDir.isDirectory()) {
 			baseDir.mkdir();
 			}
-			if((new File(System.getProperty("user.home")
-			+ File.separator + CACHE_FOLDER	+ File.separator + CACHE_FILENAME)).exists())
+			if((new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME)).exists())
             {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME);
             }
@@ -338,7 +337,7 @@ class Browser extends Region {
                         }
                         byte0 = 0;
                         System.out.println((new StringBuilder()).append(s1).append(" - Download complete.").toString());
-			unzip_cache(); // Extracts the downloaded archive
+			unzip_cache();
                     }
                 }
                 j++;
