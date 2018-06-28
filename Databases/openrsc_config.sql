@@ -4728,7 +4728,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Dragonstone Amulet', 'It needs a string so I can wear it', '', 126, 17625, 0, 0, 0, 12255487, 0, 1, 1, 524, 1802),
 ('Crystal Key', 'A very shiny key', '', 25, 1, 0, 0, 0, 15663103, 0, 0, 1, 525, 1803),
 ('Half of a Key', 'A very shiny key', '', 181, 1, 0, 0, 0, 15663103, 0, 0, 1, 526, 1804);
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`, `notable`) VALUES
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
 ('Half of a Key', 'A very shiny key', '', 182, 1, 0, 0, 0, 15663103, 0, 0, 1, 527, 1805),
 ('Iron Bar Certificate', 'Each certificate exchangable at draynor market for 5 iron bars', '', 180, 10, 0, 1, 0, 15654365, 0, 0, 1, 528, 0),
 ('Steel Bar Certificate', 'Each certificate exchangable at draynor market for 5 steel bars', '', 180, 20, 0, 1, 0, 15658734, 0, 0, 1, 529, 0),
@@ -5238,7 +5238,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Dwarf Cannon Stand', 'bang', '', 353, 200000, 0, 0, 0, 0, 1, 0, 1, 1033, 2260),
 ('Dwarf Cannon Barrels', 'bang', '', 354, 200000, 0, 0, 0, 0, 1, 0, 1, 1034, 2261),
 ('Dwarf Cannon Furnace', 'bang', '', 355, 200000, 0, 0, 0, 0, 1, 0, 1, 1035, 2262);
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`, `notable`) VALUES
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
 ('Fingernails', 'Ugh gross!', '', 356, 0, 0, 0, 0, 0, 0, 0, 0, 1036, 2263),
 ('Powering crystal1', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 16777011, 0, 0, 0, 1037, 2264),
 ('Mining Barrel', 'A roughly constructed barrel for carrying rock.', '', 358, 100, 0, 0, 0, 65280, 0, 0, 0, 1038, 2265),
