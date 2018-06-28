@@ -57,7 +57,7 @@ public class Main extends Application {
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
-    private static String URL = "https://openrsc.com";
+    private static String URL = "https://www.openrsc.com";
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";
@@ -337,7 +337,7 @@ class Browser extends Region {
                         }
                         byte0 = 0;
                         System.out.println((new StringBuilder()).append(s1).append(" - Download complete.").toString());
-			unzip_cache();
+			unzip_client();
                     }
                 }
                 j++;
@@ -371,7 +371,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extracted successfully.");
+	System.out.println("Game client cache data update extract finished.");
     }
     
     public static void unzip_cache() throws Exception {
@@ -393,7 +393,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extracted successfully.");
+	System.out.println("Game client cache data update extract finished.");
     }
     
     /**
