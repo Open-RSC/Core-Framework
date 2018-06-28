@@ -187,7 +187,7 @@ public class AuctionHouse extends GraphicalOverlay {
 				} else {
 					inventoryItemBoxes[i].setFillHovering(0xFF0000);
 					if (mc.inventoryItems[newIndex] == 10
-							|| EntityHandler.getItemDef(mc.inventoryItems[newIndex]).quest) {
+							|| !EntityHandler.getItemDef(mc.inventoryItems[newIndex]).tradable) {
 						offset++;
 						i--;
 						continue;

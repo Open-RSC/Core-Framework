@@ -37,7 +37,7 @@ public class AuctionHouseHandler implements PacketHandler {
 			int itemID = p.readShort();
 			long itemAmount = p.readLong();
 			price = p.readLong();
-			if (EntityHandler.getItemDef(itemID).questItem() || itemID == 10) {
+			if (!EntityHandler.getItemDef(itemID).isTradable() || itemID == 10) {
 				player.sendMessage(Config.PREFIX + "This item cannot be sold in the auction house.");
 				return;
 			}

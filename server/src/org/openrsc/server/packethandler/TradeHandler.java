@@ -230,7 +230,7 @@ public class TradeHandler implements PacketHandler {
 							tradeOffer.add(tItem);
 						}
 						for (InvItem item : tradeOffer.getItems()) {
-							if (item.getDef().questItem() || tradeOffer.countId(item.getID()) > player.getInventory().countId(item.getID())) {
+							if (!item.getDef().isTradable() || tradeOffer.countId(item.getID()) > player.getInventory().countId(item.getID())) {
 								Logger.log(new ExploitLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "TradeHandler (8)", DataConversions.getTimeStamp()));
 								unsetOptions(player);
 								unsetOptions(affectedPlayer);

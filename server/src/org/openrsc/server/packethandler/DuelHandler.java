@@ -203,7 +203,7 @@ public class DuelHandler implements PacketHandler {
 						int count = (int)p.readByte();
 						for (int slot = 0; slot < count; slot++) {
 							InvItem tItem = new InvItem(p.readShort(), p.readLong());
-							if (tItem.getDef().questItem() || tItem.getAmount() < 1) {
+							if (!tItem.getDef().isTradable() || tItem.getAmount() < 1) {
 								Logger.log(new ExploitLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "DuelHandler (7)", DataConversions.getTimeStamp()));
 								continue;
 							}

@@ -47,7 +47,7 @@ public final class EntityHandler {
 			Pattern pattern = Pattern.compile("^" + search);
 			for (int i = 0; i < items.length; i++) {
 				ItemDef def = items[i];
-				if (def.quest)
+				if (!def.tradable)
 					continue;
 				Matcher matcher = pattern.matcher(def.getName().toLowerCase());
 				if (matcher.find()) {

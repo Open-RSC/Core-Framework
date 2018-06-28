@@ -51,7 +51,7 @@ implements PacketHandler
 				{
 					return;
 				}
-				if(def.questItem()) return;
+				//if(!def.isTradable()) return;
 
 				amount = p.readLong();
 				if (amount < 1) {
@@ -139,7 +139,10 @@ implements PacketHandler
 					return;
 				}
 
-				if(def.questItem()) return;
+				if(!def.isTradable()){
+                    player.sendMessage("This object can't be sold in shops");
+                    return;
+                }
 
 				amount = p.readLong();
 				if (amount < 1) {

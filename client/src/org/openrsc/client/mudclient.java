@@ -7144,7 +7144,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							boolean flag = false;
 							int l1 = 0;
 							int k2 = inventoryItems[k];
-							if (EntityHandler.getItemDef(k2).quest) {
+							if (!EntityHandler.getItemDef(k2).tradable) {
 								if (!qItem)
 									displayMessage("This object cannot be traded with other players", 3, 0);
 								qItem = true;
@@ -9315,7 +9315,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								boolean flag1 = false;
 								int l1 = 0;
 								int k2 = inventoryItems[k];
-								if (EntityHandler.getItemDef(k2).quest) {
+								if (!EntityHandler.getItemDef(k2).tradable) {
 									if (!qItem) {
 										displayMessage("This object cannot be added to a duel offer", 3, 0);
 									}

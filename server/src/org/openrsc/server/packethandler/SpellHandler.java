@@ -706,11 +706,12 @@ public class SpellHandler implements PacketHandler {
 					player.sendMessage("Nothing interesting happens");
 				break;
 			case 10: // Low level Alchemy
-				if (affectedItem.getDef().questItem())
+                // Non tradable items can be alched.
+				/*if (!affectedItem.getDef().isTradable())
 				{
 					player.sendMessage("This item cannot be alched.");
 					return;
-				}
+				}*/
 				if (affectedItem.getID() == 10) {
 					player.sendMessage("That's already made of gold!");
 					return;
@@ -782,7 +783,7 @@ public class SpellHandler implements PacketHandler {
 					player.sendMessage("Nothing interesting happens");
 				break;
 			case 28: // High level alchemy
-				if (affectedItem.getDef().questItem())
+				if (!affectedItem.getDef().isTradable())
 				{
 					player.sendMessage("This item cannot be alched.");
 					return;

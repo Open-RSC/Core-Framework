@@ -943,7 +943,7 @@ public class WorldLoader {
 							(result.getInt("stackable") == 1 ? true : false),
 							(result.getInt("wieldable") == 1 ? true : false), result.getInt("sprite"),
 							result.getInt("picture_mask"), (result.getInt("violent") == 1 ? true : false),
-							(result.getInt("p2p") == 1 ? true : false), (result.getInt("quest") == 1 ? true : false),
+							(result.getInt("p2p") == 1 ? true : false), (result.getInt("tradable") == 1 ? true : false),
 							result.getInt("notable")));
 					index++;
 				}

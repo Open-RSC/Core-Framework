@@ -270,10 +270,12 @@ class Browser extends Region {
                 clientVer[i] = "";
             }
 			File baseDir = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER);
-			if (!baseDir.isDirectory()) {
+			if (!baseDir.isDirectory())
+			{
 			baseDir.mkdir();
 			}
-			if((new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME)).exists())
+			if((new File(System.getProperty("user.home")
+			+ File.separator + CACHE_FOLDER	+ File.separator + CACHE_FILENAME)).exists())
             {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME);
             }
@@ -336,7 +338,7 @@ class Browser extends Region {
                         }
                         byte0 = 0;
                         System.out.println((new StringBuilder()).append(s1).append(" - Download complete.").toString());
-			unzip_cache();
+			unzip_cache(); // Extracts the downloaded archive
                     }
                 }
                 j++;
