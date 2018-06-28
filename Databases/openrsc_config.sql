@@ -4190,7 +4190,7 @@ CREATE TABLE IF NOT EXISTS `def_item` (
   `picture_mask` int(10) NOT NULL,
   `violent` tinyint(1) NOT NULL DEFAULT '0',
   `p2p` tinyint(1) NOT NULL,
-  `tradable` tinyint(1) NOT NULL DEFAULT '0',
+  `quest` tinyint(1) NOT NULL DEFAULT '0',
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `notable` int(1) NOT NULL,
   PRIMARY KEY (`id`)
