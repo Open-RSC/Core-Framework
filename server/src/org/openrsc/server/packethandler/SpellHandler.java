@@ -654,7 +654,7 @@ public class SpellHandler implements PacketHandler {
 				owner.resetAllExceptDueling();
 				switch(id) {
 					case 16: // Telekinetic Grab
-                        if(affectedItem.getID() == 1156 || affectedItem.getID() == 1289)
+                        if(affectedItem.getID() == 1156 || affectedItem.getID() == 1289) // Bunny Ears and Scythe
                         {
 							owner.sendMessage("I can't use telekeneic grab on this object");
 							return;
