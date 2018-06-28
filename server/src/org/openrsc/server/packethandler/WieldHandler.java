@@ -135,7 +135,7 @@ public class WieldHandler implements PacketHandler {
                                 }
 								wieldItem(player, item);
                                 break;
-                            case 1278: // dragon axe
+                            case 1278: // dragon square shield
                                 Quest legendsQuest = player.getQuest(Config.Quests.LEGENDS_QUEST);
                                 if(legendsQuest == null || !legendsQuest.finished())
                                 {
