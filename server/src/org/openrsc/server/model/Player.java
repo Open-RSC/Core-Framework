@@ -3750,10 +3750,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void incQuestExp(int stat, int amount) {
-		if (fatigue >= 100) {
+		/*if (fatigue >= 100) {
 			sendMessage("@gre@You recieve no experience from this quest");
 			return;
-		}
+		}*/
 		exp[stat] += amount;
 		if (exp[stat] < 0)
 			exp[stat] = 0;
