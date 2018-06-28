@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<quests>
+<!-- Step 1, fill out the quest info in xml -->
+
+	<quest>
+		<id>12</id>
+		<name>The Sheep Shearer</name>
+		<points>1</points>
+		<rewards>
+			<!-- 60 Coins-->
+			<item id = '10' amount = '60'/>
+			<experience stat = 'CRAFTING' amount = '580'/>
+		</rewards>
+	</quest>
+	
+	<quest>
+		<id>14</id>
+		<name>Vampire Slayer</name>
+		<points>1</points>
+		<rewards>
+			<!-- 60 Coins-->
+			<item id = '10' amount = '60'/>
+			<experience stat = 'CRAFTING' amount = '580'/>
+		</rewards>
+	</quest>
+	
+</quests>
