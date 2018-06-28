@@ -7,7 +7,7 @@ public class ItemDef extends EntityDef {
 	public boolean stackable;
 	public boolean wieldable;
 	public int pictureMask;
-	public boolean quest;
+	public boolean tradable;
 	private long lastChange = System.currentTimeMillis();
     private int lastCol = 10030000;
     private boolean reverse = false;
@@ -16,7 +16,7 @@ public class ItemDef extends EntityDef {
 	private final int baseTokenPrice;
 
     
-	public ItemDef(String name, String description, String command, int basePrice, int baseTokenPrice, int sprite, boolean stackable, boolean wieldable, int pictureMask, boolean quest, int id)
+	public ItemDef(String name, String description, String command, int basePrice, int baseTokenPrice, int sprite, boolean stackable, boolean wieldable, int pictureMask, boolean tradable, int id)
 	{
 		super(name, description, id);
 		this.command = command;
@@ -26,7 +26,7 @@ public class ItemDef extends EntityDef {
 		this.stackable = stackable;
 		this.wieldable = wieldable;
 		this.pictureMask = pictureMask;
-		this.quest = quest;
+		this.tradable = tradable;
 		this.id = id;
 	}
 	
@@ -39,7 +39,7 @@ public class ItemDef extends EntityDef {
 		this.stackable = item.stackable;
 		this.wieldable = false;
 		this.pictureMask = item.pictureMask;
-		this.quest = item.quest;
+		this.tradable = item.tradable;
 		this.id = id;
 		this.note = true;
 		this.orgId = orgId;

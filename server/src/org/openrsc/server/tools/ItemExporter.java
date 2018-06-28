@@ -51,7 +51,7 @@ public final class ItemExporter {
 			out.writeInt(def.getPictureMask());
 			out.writeBoolean(def.isStackable());
 			out.writeBoolean(def.isWieldable());
-			out.writeBoolean(def.questItem());
+			out.writeBoolean(!def.isTradable());
             
             /*System.out.println("Name Length: " + def.getName().length());
             System.out.println("Name: " + def.getName());
@@ -65,7 +65,7 @@ public final class ItemExporter {
             System.out.println("Picture Mask: " + def.getPictureMask());
             System.out.println("Is Stackable: " + def.isStackable());
             System.out.println("Is Wieldable: " + def.isWieldable());
-            System.out.println("Is Quest Item: " + def.questItem());
+            System.out.println("Is Quest Item: " + def.isTradable());
             System.out.println("---------------------------");*/
 		}
 		Files.write(Paths.get("items.dat"), baos.toByteArray());

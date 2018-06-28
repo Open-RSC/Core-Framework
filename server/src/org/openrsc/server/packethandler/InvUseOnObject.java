@@ -1915,7 +1915,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				break;
 		      			case 17:
 		      			case 18:
-		      				if (item.getDef().questItem())
+		      				if (!item.getDef().isTradable())
 		      				{
 		      					owner.sendMessage("You cannot use " + item.getDef().getName() + " with this chest");
 		      					return;

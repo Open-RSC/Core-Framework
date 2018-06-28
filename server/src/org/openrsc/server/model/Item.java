@@ -36,8 +36,8 @@ public final class Item extends Entity {
 	public boolean visibleTo(Player p) {
 		if (p == null)
 			return false;
-		if (getDef().questItem() && location.inWilderness())
-			return false;
+		/*if (!getDef().isTradable() && location.inWilderness())
+			return false;*/
 		if (owners == null) {
 			return true;
 		}
@@ -47,7 +47,7 @@ public final class Item extends Entity {
 			if (p.equals(pl))
 				return true;
 		}
-		return System.currentTimeMillis() - spawnedTime > 60000;
+		return getDef().isTradable() && System.currentTimeMillis() - spawnedTime > 60000;
 	}
 	
 	public ItemLoc getLoc() {

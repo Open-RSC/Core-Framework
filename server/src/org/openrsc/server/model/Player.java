@@ -3132,7 +3132,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					iterator.remove();
 					log.addLostItem(item);
 					
-					//if (item.getDef().questItem())
+					//if (item.getDef().isTradable())
 					//	World.registerEntity(new Item(item.getID(), getX(), getY(), item.getAmount(), this));
 					if(mob instanceof Npc) // hack :(  this entire routine should be redone at some point. ready to test this bug now.
 					{

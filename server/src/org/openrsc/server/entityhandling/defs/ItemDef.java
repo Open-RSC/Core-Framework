@@ -11,10 +11,10 @@ public class ItemDef extends EntityDef {
 	private int pictureMask;
 	private boolean violent;
 	private boolean p2p;
-	private boolean quest;
+	private boolean tradable;
 	private int note = 0;
 	
-	public ItemDef(String name, String description, String command, int basePrice, int baseTokenPrice, boolean stackable, boolean wieldable, int sprite, int pictureMask, boolean violent, boolean p2p, boolean quest, int note) {
+	public ItemDef(String name, String description, String command, int basePrice, int baseTokenPrice, boolean stackable, boolean wieldable, int sprite, int pictureMask, boolean violent, boolean p2p, boolean tradable, int note) {
 		this.name = name;
 		this.description = description;
 		this.command = command;
@@ -26,12 +26,12 @@ public class ItemDef extends EntityDef {
 		this.pictureMask = pictureMask;
 		this.violent = violent;
 		this.p2p = p2p;
-		this.quest = quest;
+		this.tradable = tradable;
 		this.setNote(note);
 	}
 	
-	public final boolean questItem() {
-		return quest;
+	public final boolean isTradable() {
+		return tradable;
 	}
 	
 	public final boolean isP2P() {
