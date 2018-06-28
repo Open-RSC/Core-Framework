@@ -261,7 +261,7 @@ public final class World
 		worldLoader.loadWorld();
 		scriptManager.loadListeners("com.rscdaemon.scripting.listener");
 		scriptManager.loadScripts("com.rscdaemon.scripts");
-		minuteChecks();
+		//minuteChecks(); Disabling autorestart, weaken/godspell day changes
 	}
 		
 	private static void minuteChecks() 
