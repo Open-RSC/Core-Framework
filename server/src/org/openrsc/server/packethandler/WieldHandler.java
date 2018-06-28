@@ -135,6 +135,16 @@ public class WieldHandler implements PacketHandler {
                                 }
 								wieldItem(player, item);
                                 break;
+                            case 1278: // dragon axe
+                                Quest legendsQuest = player.getQuest(Config.Quests.LEGENDS_QUEST);
+                                if(legendsQuest == null || !legendsQuest.finished())
+                                {
+                                    player.sendMessage("you have not earned the right to wear this yet");
+                                    player.sendMessage("you need to complete the legend's guild quest");
+                                    break;
+                                }
+								wieldItem(player, item);
+                                break;
 							default:
 								wieldItem(player, item);
 								break;
