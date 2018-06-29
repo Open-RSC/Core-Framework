@@ -114,9 +114,9 @@ class Browser extends Region {
             @Override
             public void handle(Event t) {
                 try {
-                    updateClient();
                     updateCache();
-                    //launchGame();
+                    updateClient();
+                    launchGame();
                     exit();
                             } catch (IOException ex) {
                     Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
@@ -337,7 +337,7 @@ class Browser extends Region {
                         }
                         byte0 = 0;
                         System.out.println((new StringBuilder()).append(s1).append(" - Download complete.").toString());
-			unzip_client();
+			unzip_cache();
                     }
                 }
                 j++;
