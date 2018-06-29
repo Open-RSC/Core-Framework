@@ -4190,7 +4190,7 @@ CREATE TABLE IF NOT EXISTS `def_item` (
   `picture_mask` int(10) NOT NULL,
   `violent` tinyint(1) NOT NULL DEFAULT '0',
   `p2p` tinyint(1) NOT NULL,
-  `quest` tinyint(1) NOT NULL DEFAULT '0',
+  `tradable` tinyint(1) NOT NULL DEFAULT '0',
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `notable` int(1) NOT NULL,
   PRIMARY KEY (`id`)
@@ -4200,7 +4200,7 @@ CREATE TABLE IF NOT EXISTS `def_item` (
 -- Dumping data for table `def_item`
 --
 
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`, `notable`) VALUES
 ('Iron Mace', 'A spiky mace', '', 0, 63, 0, 0, 1, 15654365, 1, 0, 1, 0, 1305),
 ('Iron Short Sword', 'A razor sharp sword', '', 1, 91, 0, 0, 1, 15654365, 1, 0, 1, 1, 1306),
 ('Iron Kite Shield', 'A large metal shield', '', 2, 238, 0, 0, 1, 15654365, 1, 0, 1, 2, 1307),
