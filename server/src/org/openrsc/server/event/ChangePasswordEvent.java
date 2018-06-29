@@ -40,5 +40,6 @@ public class ChangePasswordEvent extends TimedEvent {
     
     public void onComplete() {
 	    owner.sendMessage(Config.PREFIX + " Password not changed.");
+	    owner.sendMessage(Config.PREFIX + " Type ::changepassword [new_password] to try again.");
     }
 }
