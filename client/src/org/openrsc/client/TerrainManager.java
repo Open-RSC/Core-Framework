@@ -1306,7 +1306,7 @@ public class TerrainManager
     public void loadSection(int sectionX, int sectionY, int height, int sector) {
     	ZipFile landscapeFile = null;
         try {
-        	landscapeFile = new ZipFile(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "landscape"));
+        	landscapeFile = new ZipFile(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "landscape"));
         } catch (Exception e) {
         	// Optional to alert the user.
             e.printStackTrace();
