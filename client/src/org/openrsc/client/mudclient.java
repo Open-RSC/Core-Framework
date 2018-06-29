@@ -131,7 +131,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public static final void main(String[] args) throws Exception {
                 //Download updated caches
                 //if (!AppletUtils.CACHEFILE.exists())
-                org.openrsc.client.loader.WebClientLoader.downloadCache();
+                //org.openrsc.client.loader.WebClientLoader.downloadCache();
                 
 		int width = Config.DEFAULT_WINDOW_WIDTH;
 		int height = Config.DEFAULT_WINDOW_HEIGHT;
