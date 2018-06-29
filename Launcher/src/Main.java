@@ -270,14 +270,6 @@ class Browser extends Region {
                 serverVer[i] = "";
                 clientVer[i] = "";
             }
-			File data = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + "data");
-			if (!data.isDirectory()) {
-			data.mkdir();
-			}
-                        File media = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + "media");
-			if (!media.isDirectory()) {
-			media.mkdir();
-			}
 			if((new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME)).exists())
             {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME);
