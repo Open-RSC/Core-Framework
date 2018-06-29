@@ -955,7 +955,7 @@ public class WorldLoader {
 								result.getInt("sprite"), result.getInt("picture_mask"),
 								(result.getInt("violent") == 1 ? true : false),
 								(result.getInt("p2p") == 1 ? true : false),
-								(result.getInt("quest") == 1 ? true : false), 0));
+								(result.getInt("tradable") == 1 ? true : false), 0));
 					}
 				}
 			}
