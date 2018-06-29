@@ -114,8 +114,8 @@ class Browser extends Region {
             @Override
             public void handle(Event t) {
                 try {
-                    updateCache();
                     updateClient();
+                    updateCache();
                     launchGame();
                     exit();
                             } catch (IOException ex) {
@@ -270,9 +270,13 @@ class Browser extends Region {
                 serverVer[i] = "";
                 clientVer[i] = "";
             }
-			File baseDir = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER);
-			if (!baseDir.isDirectory()) {
-			baseDir.mkdir();
+			File data = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + "data");
+			if (!data.isDirectory()) {
+			data.mkdir();
+			}
+                        File media = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + "media");
+			if (!media.isDirectory()) {
+			media.mkdir();
 			}
 			if((new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME)).exists())
             {
@@ -371,7 +375,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extract finished.");
+	System.out.println("Game client extract finished.");
     }
     
     public static void unzip_cache() throws Exception {
@@ -393,7 +397,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extract finished.");
+	System.out.println("Game cache update extract finished.");
     }
     
     /**
