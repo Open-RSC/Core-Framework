@@ -95,7 +95,7 @@ public abstract class openrsc<Delegate_T extends ImplementationDelegate>
 		this.delegate = container;
 		Image img = null;
 		try {
-			img = ImageIO.read(Resources.load("/data/logo"));
+			img = ImageIO.read(Resources.load("/logo"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

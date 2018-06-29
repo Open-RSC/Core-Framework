@@ -1028,7 +1028,7 @@ public final class EntityHandler {
 	
 	private static void loadGameObjects() {
 		try {
-			DataInputStream in = new DataInputStream(Resources.load("/data/objects.dat"));
+			DataInputStream in = new DataInputStream(Resources.load("/objects.dat"));
 			objects = new GameObjectDef[in.readInt()];
 			String[] strs = new String[5];
 			int[] ints = new int[4];
@@ -1055,7 +1055,7 @@ public final class EntityHandler {
 	
 	private static void loadItems() { 
 		try {
-			DataInputStream in = new DataInputStream(Resources.load("/data/items.dat"));
+			DataInputStream in = new DataInputStream(Resources.load("/items.dat"));
 			items = new ItemDef[in.readInt()];
 			String[] strs = new String[3];
 			int[] ints = new int[4];
@@ -1109,7 +1109,7 @@ public final class EntityHandler {
 	
 	public static void loadNpcs() { 
 		try {
-			DataInputStream in = new DataInputStream(Resources.load("/data/npcs.dat"));
+			DataInputStream in = new DataInputStream(Resources.load("/npcs.dat"));
 			npcs = new NPCDef[in.readInt()];
 			String[] strs = new String[3];
 			int[] ints = new int[13];
