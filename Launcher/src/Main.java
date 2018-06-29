@@ -116,7 +116,7 @@ class Browser extends Region {
                 try {
                     updateClient();
                     updateCache();
-                    //launchGame();
+                    launchGame();
                     exit();
                             } catch (IOException ex) {
                     Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
@@ -270,9 +270,13 @@ class Browser extends Region {
                 serverVer[i] = "";
                 clientVer[i] = "";
             }
-			File baseDir = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER);
-			if (!baseDir.isDirectory()) {
-			baseDir.mkdir();
+			File data = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + "data");
+			if (!data.isDirectory()) {
+			data.mkdir();
+			}
+                        File media = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + "media");
+			if (!media.isDirectory()) {
+			media.mkdir();
 			}
 			if((new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME)).exists())
             {
@@ -337,7 +341,7 @@ class Browser extends Region {
                         }
                         byte0 = 0;
                         System.out.println((new StringBuilder()).append(s1).append(" - Download complete.").toString());
-			unzip_client();
+			unzip_cache();
                     }
                 }
                 j++;
@@ -371,7 +375,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extract finished.");
+	System.out.println("Game client extract finished.");
     }
     
     public static void unzip_cache() throws Exception {
@@ -393,7 +397,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extract finished.");
+	System.out.println("Game cache update extract finished.");
     }
     
     /**
