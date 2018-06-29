@@ -23,7 +23,6 @@ public class ChangePasswordEvent extends TimedEvent {
 	}
 	
 	public void confirmPassword(String confirmedPassword){
-        System.out.println("confirmPassword, newPassword: '" + newPassword + "', confirmedPassword: '" + confirmedPassword + "'");
         if(newPassword.equals(confirmedPassword)){
             // Update the password as it is confirmed.
             // TODO: This should go back to mudclient.currentPass to automatically have the password for next login
