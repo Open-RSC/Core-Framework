@@ -7,11 +7,14 @@ import java.util.Random;
 
 import com.rscdaemon.scripting.Skill;
 import com.runescape.entity.attribute.DropItemAttr;
+import java.util.Iterator;
 
 import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
 import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.entityhandling.EntityHandler;
+import org.openrsc.server.event.ChangePasswordEvent;
+import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
@@ -1644,29 +1647,92 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage("Invalid Syntax - Usage: weakens <boolean> eg. 'weakens true'");
 				return;
 			}
+		} else
+        /*
+         * Change password
+         */
+        if (cmd.equals("changepassword")) 
+		{
+			if (args.length != 1) 
+			{
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: CHANGEPASSWORD [new_password]");
+				return;
+			}
+            
+            // Check if a player already has a password change event.
+            ArrayList events = World.getDelayedEventHandler().getEvents();
+            Iterator<DelayedEvent> iterator = events.iterator();
+            while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+                
+                if(!(event instanceof ChangePasswordEvent)) continue;
+                
+                if(event.belongsTo(player)) {
+                    player.sendMessage(Config.PREFIX + "You have already initiated a password change.");
+                    player.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
+                }
+            }
+			
+			World.getDelayedEventHandler().add(new ChangePasswordEvent(player, args[0]));
+            player.sendMessage(Config.PREFIX + "Password change initiated.");
+            player.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
 		}
 		else
-			if (cmd.equals("startlottery") && (player.isMod() || player.isDev() || player.isEvent())) 
+        /*
+         * Change password
+         */
+		if (cmd.equals("confirmpassword")) 
+		{
+			if (args.length != 1) 
 			{
-	        if (!World.lotteryRunning())
-	                if (args.length != 1)
-	                        player.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
-	                else
-	                        try {
-	                                World.startLottery(Integer.parseInt(args[0]));
-	                        } catch (Exception e) {}       
-	                          
-					} 
-					else 
-					if (cmd.equals("stoplottery") && (player.isMod() || player.isDev() || player.isEvent())) 
-					{
-					if (World.lotteryRunning())
-						World.stopLottery();
-					else
-						player.sendMessage(Config.PREFIX + " There's no lottery running right now");
-					}
-				}
-		public static final ArrayList<String> statArray = new ArrayList<String>(){{
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: CONFIRMPASSWORD [new_password]");
+				return;
+			}
+            
+            // Look for the existing password change event...
+            ChangePasswordEvent originatingEvent = null;
+            ArrayList events = World.getDelayedEventHandler().getEvents();
+            Iterator<DelayedEvent> iterator = events.iterator();
+            while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+                
+                if(!(event instanceof ChangePasswordEvent)) continue;
+                
+                if(event.belongsTo(player)) {
+                    originatingEvent = (ChangePasswordEvent)event;
+                    break;
+                }
+            }
+            
+            if(originatingEvent == null){
+                player.sendMessage(Config.PREFIX + "You have not initiated a password change.");
+                player.sendMessage(Config.PREFIX + "Type ::changepassword [new_password] to change your password.");
+                return;
+            }
+            
+            originatingEvent.confirmPassword(args[0]);
+		}
+		else
+        if (cmd.equals("startlottery") && (player.isMod() || player.isDev() || player.isEvent())) 
+        {
+            if (!World.lotteryRunning())
+                if (args.length != 1)
+                    player.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
+                else
+                    try {
+                        World.startLottery(Integer.parseInt(args[0]));
+                    } catch (Exception e) {}       
+        } 
+        else 
+        if (cmd.equals("stoplottery") && (player.isMod() || player.isDev() || player.isEvent())) 
+        {
+            if (World.lotteryRunning())
+                World.stopLottery();
+            else
+                player.sendMessage(Config.PREFIX + " There's no lottery running right now");
+        }
+    }
+	public static final ArrayList<String> statArray = new ArrayList<String>(){{
 		add("attack"); add("defense"); add("strength"); add("hits"); add("ranged"); add("prayer"); add("magic"); add("cooking"); add("woodcut"); add("fletching"); add("fishing"); add("firemaking"); add("crafting"); add("smithing"); add("mining"); add("herblaw"); add("agility"); add("thieving"); add("runecrafting");
 	}};	
 }

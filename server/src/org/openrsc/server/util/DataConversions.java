@@ -417,4 +417,8 @@ public final class DataConversions {
                     }
                     return "";
 	}
+        
+    public static String hashPassword(String password, String salt){
+        return DataConversions.sha512(salt + DataConversions.md5(password));
+    }
 }
