@@ -384,7 +384,7 @@ public final class Login
 				sendLoginResponse(LoginResponse.MYSQL_ERROR);
 			}
 		}
-			}
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -413,13 +413,14 @@ public final class Login
 				int banned = rs.getInt("banned");
                                 
 				//if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
-                                if(rs.getString("pass").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
+                //if(rs.getString("pass").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
+                if(rs.getString("pass").equalsIgnoreCase(DataConversions.hashPassword(password, rs.getString("password_salt"))))
 				{
 					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
 					{
 						sendLoginResponse(LoginResponse.CHARACTER_BANNED);
 					}
-                                        load(statement);
+                        load(statement);
 				}
 				else
 				{ // Password is wrong
@@ -431,7 +432,7 @@ public final class Login
 				//sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
                 
                 String salt         = DataConversions.generateSalt();
-                String pass         = DataConversions.sha512(salt + DataConversions.md5(password));
+                String pass         = DataConversions.hashPassword(password, salt);
                 String creation_ip  = ((InetSocketAddress)session.getRemoteAddress()).getAddress().getHostAddress();
                 int owner           = -1;
                 
