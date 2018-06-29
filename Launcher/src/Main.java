@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -56,7 +57,7 @@ public class Main extends Application {
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
-    private static String URL = "https://openrsc.com";
+    private static String URL = "https://www.openrsc.com";
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";
@@ -141,7 +142,7 @@ class Browser extends Region {
         double w = getWidth();
         double h = getHeight();
         double tbHeight = browser.prefHeight(w);
-        layoutInArea(browser,0,40,w,760,0,HPos.CENTER, VPos.CENTER);
+        layoutInArea(browser,0,40,w,720,0,HPos.CENTER, VPos.CENTER);
         layoutInArea(toolBar,0,0,w,tbHeight,0,HPos.CENTER,VPos.CENTER);	
 	}
 	 
@@ -270,12 +271,10 @@ class Browser extends Region {
                 clientVer[i] = "";
             }
 			File baseDir = new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER);
-			if (!baseDir.isDirectory())
-			{
+			if (!baseDir.isDirectory()) {
 			baseDir.mkdir();
 			}
-			if((new File(System.getProperty("user.home")
-			+ File.separator + CACHE_FOLDER	+ File.separator + CACHE_FILENAME)).exists())
+			if((new File(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME)).exists())
             {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME);
             }
@@ -338,7 +337,7 @@ class Browser extends Region {
                         }
                         byte0 = 0;
                         System.out.println((new StringBuilder()).append(s1).append(" - Download complete.").toString());
-			unzip_cache(); // Extracts the downloaded archive
+			unzip_client();
                     }
                 }
                 j++;
@@ -372,7 +371,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extracted successfully.");
+	System.out.println("Game client cache data update extract finished.");
     }
     
     public static void unzip_cache() throws Exception {
@@ -394,7 +393,7 @@ class Browser extends Region {
 		zentry = zinstream.getNextEntry();
 	}
 	zinstream.close();
-	System.out.println("Game client cache data update extracted successfully.");
+	System.out.println("Game client cache data update extract finished.");
     }
     
     /**

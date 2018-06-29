@@ -51,7 +51,7 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 	@Override
 	public void componentShown(ComponentEvent arg0) {}
 
-	public static void downloadCache() {
+	/*public static void downloadCache() {
 		AppletUtils.DISPLAY_MESSAGE = "Checking dictionarys";
 		if (AppletUtils.doDirChecks())
 			try {
@@ -87,7 +87,7 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 			}
 		else
 			AppletUtils.DISPLAY_MESSAGE = "Dictionarys can not be created";
-	}
+	}*/
 
 	@Override
 	public final Container getContainerImpl() {
@@ -186,8 +186,8 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 
 	@Override
 	public void run() {
-		if (!AppletUtils.CACHEFILE.exists())
-			downloadCache();
+		//if (!AppletUtils.CACHEFILE.exists())
+			//downloadCache();
 		AppletUtils.DISPLAY_MESSAGE = "Loading client";
 		System.out.println(AppletUtils.width + " " + AppletUtils.height);
 		super.setBackground(Color.BLACK); // hack;
