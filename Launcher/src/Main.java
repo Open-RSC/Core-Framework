@@ -193,11 +193,8 @@ class Browser extends Region {
             {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CLIENT_FILENAME);
             }
-                        
-            URL url = new URL(URL + "/url.txt");
-            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String s = bufferedreader.readLine();
-            bufferedreader.close();
+
+            String s = URL + "/downloads";
             URL url1 = new URL((new StringBuilder()).append(s).append("/hashes.txt").toString());
             Properties properties = new Properties();
             InputStream inputstream = url1.openStream();
@@ -274,11 +271,8 @@ class Browser extends Region {
             {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME);
             }
-                        
-            URL url = new URL(URL + "/url.txt");
-            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String s = bufferedreader.readLine();
-            bufferedreader.close();
+
+            String s = URL + "/downloads";
             URL url1 = new URL((new StringBuilder()).append(s).append("/hashes.txt").toString());
             Properties properties = new Properties();
             InputStream inputstream = url1.openStream();
