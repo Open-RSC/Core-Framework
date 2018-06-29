@@ -1089,7 +1089,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				"lightning3", "clawspell2", "clawspell3", "clawspell4", "clawspell5", "spellcharge2", "spellcharge3" };
 		for (String name : modelNames)
 			EntityHandler.storeModel(name);
-		byte[] models = DataOperations.load(Resources.load("/data/models"));
+		byte[] models = DataOperations.load(Resources.load("/models"));
 		if (models == null) {
 			lastLoadedNull = true;
 			return;
@@ -10972,7 +10972,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public void loadFonts() {
 		byte byte_arr[] = null;
 		try {
-			byte_arr = DataFileDecrypter.load(Resources.load("/data/jagex.jag"));
+			byte_arr = DataFileDecrypter.load(Resources.load("/jagex.jag"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

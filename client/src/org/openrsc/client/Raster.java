@@ -71,7 +71,7 @@ public class Raster implements ImageProducer, ImageObserver {
             component.prepareImage(image, component);
         }
         
-       	ZipInputStream is = new ZipInputStream(Resources.load("/data/sprites"));
+       	ZipInputStream is = new ZipInputStream(Resources.load("/sprites"));
         ZipEntry e = null;
         try {
 			while((e = is.getNextEntry()) != null)
