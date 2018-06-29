@@ -13,12 +13,7 @@ public class ChangePasswordEvent extends TimedEvent {
     private String newPassword;
     
 	public ChangePasswordEvent(Player owner, String newPassword) {
-		super(owner, 100, 30*1000);
-        this.newPassword = newPassword;
-	}
-	
-	public ChangePasswordEvent(Player owner, String newPassword, int delay) {
-		super(owner, delay, 30*1000);
+		super(owner, 30*1000);
         this.newPassword = newPassword;
 	}
 	
@@ -28,6 +23,7 @@ public class ChangePasswordEvent extends TimedEvent {
             // TODO: This should go back to mudclient.currentPass to automatically have the password for next login
             
             ServerBootstrap.getDatabaseService().submit(new ChangePassword(owner, newPassword));
+            stop();
             
             owner.sendMessage(Config.PREFIX + " Password changed.");
         }
