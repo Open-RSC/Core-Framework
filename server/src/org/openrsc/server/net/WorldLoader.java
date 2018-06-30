@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -930,36 +931,63 @@ public class WorldLoader {
 		return spells;
 	}
 
-	private ArrayList<ItemDef> loadItemDefinitions() throws SQLException {
-		ArrayList<ItemDef> items = new ArrayList<ItemDef>();
+	private HashMap<Integer, ItemDef> loadItemDefinitions() throws SQLException {
+		HashMap<Integer, ItemDef> items = new HashMap<Integer, ItemDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_item`"); //Regular items.
 				int index = 0;
 				while (result.next()) {
-					items.add(new ItemDef(result.getString("name"), result.getString("description"),
-							result.getString("command"), result.getInt("base_price"), result.getInt("base_token_price"),
+					items.put(
+                        result.getInt("id"),
+                        new ItemDef(
+                            result.getInt("id"),
+                            result.getString("name"), result.getString("description"),
+							result.getString("command"), result.getInt("base_price"),
+                            result.getInt("base_token_price"),
 							(result.getInt("stackable") == 1 ? true : false),
-							(result.getInt("wieldable") == 1 ? true : false), result.getInt("sprite"),
-							result.getInt("picture_mask"), (result.getInt("violent") == 1 ? true : false),
-							(result.getInt("p2p") == 1 ? true : false), (result.getInt("tradable") == 1 ? true : false),
-							result.getInt("notable")));
+							(result.getInt("wieldable") == 1 ? true : false),
+                            result.getInt("sprite"),
+							result.getInt("picture_mask"),
+                            (result.getInt("violent") == 1 ? true : false),
+							(result.getInt("p2p") == 1 ? true : false),
+                            (result.getInt("tradable") == 1 ? true : false)
+                        )
+                    );
 					index++;
 				}
-				result = statement.executeQuery("SELECT * FROM `def_item`"); //Noted items.
+                result.beforeFirst();
+				//result = statement.executeQuery("SELECT * FROM `def_item`"); //Noted items.
 				while (result.next()) {
 					if (result.getInt("stackable") == 0) {
-						items.add(new ItemDef(result.getString("name") + " Note", result.getString("description"), "",
-								result.getInt("base_price"), result.getInt("base_token_price"), true, false,
-								result.getInt("sprite"), result.getInt("picture_mask"),
+						items.put(
+                            result.getInt("id") + Config.NOTE_ITEM_ID_BASE,
+                            new ItemDef(
+                                result.getInt("id") + Config.NOTE_ITEM_ID_BASE,
+                                result.getString("name") + " Note",
+                                result.getString("description"),
+                                "",
+								result.getInt("base_price"),
+                                result.getInt("base_token_price"),
+                                true,
+                                false,
+								result.getInt("sprite"),
+                                result.getInt("picture_mask"),
 								(result.getInt("violent") == 1 ? true : false),
 								(result.getInt("p2p") == 1 ? true : false),
-								(result.getInt("tradable") == 1 ? true : false), 0));
+								(result.getInt("tradable") == 1 ? true : false)
+                            )
+                        );
 					}
 				}
 			}
 		}
+        
+        /*for (Map.Entry<Integer, ItemDef> entry : items.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue().getName());
+        }*/
+        
 		return items;
 	}
 

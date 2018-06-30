@@ -9,6 +9,7 @@ import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
 import org.apache.mina.common.IoSession;
+import org.openrsc.server.logging.model.ErrorLog;
 import org.openrsc.server.model.Bank;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Inventory;
@@ -28,6 +29,7 @@ public class BankHandler implements PacketHandler {
 				Inventory inventory = player.getInventory();
 				InvItem item;
 				int itemID, slot;
+                ItemDef itemDef;
 				long amount;
 				switch (pID) {
 				case 26: // Close bank
@@ -37,16 +39,16 @@ public class BankHandler implements PacketHandler {
 				case 25: // Deposit item
 					itemID = p.readShort();
 					amount = p.readLong();
+                    itemDef = EntityHandler.getItemDef(itemID);
 					if (amount < 1 || inventory.countId(itemID) < amount) {
 						Logger.log(new ExploitLog(player.getUsernameHash(), player.getAccount(), player.getIP(),
 								"BankHandler (1)", DataConversions.getTimeStamp()));
 					} else {
-						if (EntityHandler.getItemDef(itemID).isStackable()
-								|| EntityHandler.getItemDef(itemID).getName().endsWith(" Note")) {
+						if (itemDef.isStackable() || itemDef.isNote()) {
 							item = new InvItem(itemID, amount);
 							if (bank.canHold(item) && inventory.remove(item) > -1) {
-								if (EntityHandler.getItemDef(itemID).getName().endsWith(" Note")) {
-									int newID = EntityHandler.getItemNoteReal(itemID);
+								if (itemDef.isNote()) {
+									int newID = itemDef.getOriginalItemID();
 									if (newID != -1) {
 										bank.add(new InvItem(newID, amount));
 										slot = bank.getFirstIndexById(newID);
@@ -91,12 +93,13 @@ public class BankHandler implements PacketHandler {
 				case 24: // Withdraw item
 					itemID = p.readShort();
 					amount = p.readLong();
+                    itemDef = EntityHandler.getItemDef(itemID);
 					boolean note = p.readInt() == 1;
 					if (amount < 1 || bank.countId(itemID) < amount) {
 						Logger.log(new ExploitLog(player.getUsernameHash(), player.getAccount(), player.getIP(),
 								"BankHandler (2)", DataConversions.getTimeStamp()));
 					} else {
-						switch (itemID) {
+						/*switch (itemID) {
 						case 415:
 						case 416:
 							if (!player.hasMapPieceA()) {
@@ -104,27 +107,27 @@ public class BankHandler implements PacketHandler {
 								return;
 							}
 							break;
-						}
+						}*/
 						slot = bank.getFirstIndexById(itemID);
 						if (note) {
-							if (EntityHandler.getItemDef(itemID).getNote() > 0) {
-								int noteID = EntityHandler.getItemDef(itemID).getNote();
-								ItemDef newNote = EntityHandler.getItemDef(noteID);								
-								if (newNote.getName().endsWith(" Note")) {
-									int newID = EntityHandler.getItemDef(itemID).getNote();
-									if (newID != -1) {
-										item = new InvItem(itemID, amount);
-										if (inventory.canHold(item) && bank.remove(item) > -1) {
-											inventory.add(new InvItem(newID, amount));
-											player.sendInventory();
-										} else
-											player.sendMessage("You don't have enough room to hold everything!");
-									}
-								}
+							if (itemDef.isNotable()) {
+								int noteID = itemDef.getNote();
+								ItemDef newNote = EntityHandler.getItemDef(noteID);
+                                int newID = newNote.getID();
+								if (newNote.isNote()) {
+                                    item = new InvItem(itemID, amount);
+                                    if (inventory.canHold(item) && bank.remove(item) > -1) {
+                                        inventory.add(new InvItem(newID, amount));
+                                        player.sendInventory();
+                                    } else
+                                        player.sendMessage("You don't have enough room to hold everything!");
+								} else {
+                                    Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "Attempted to withdraw a note that isn't a note. Original Item: " + itemID + ", Note: " + newID, DataConversions.getTimeStamp()));
+                                }
 							} else {
-								player.sendMessage("Item isn't notable!");
+								player.sendMessage("Object isn't notable!");
 							}
-						} else if (EntityHandler.getItemDef(itemID).isStackable()) {
+						} else if (itemDef.isStackable()) {
 							item = new InvItem(itemID, amount);
 							if (inventory.canHold(item) && bank.remove(item) > -1) {
 

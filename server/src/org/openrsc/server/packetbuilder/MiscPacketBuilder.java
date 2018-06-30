@@ -801,7 +801,7 @@ public final class MiscPacketBuilder {
 		/* 616 */ for (InvItem item : this.player.getInventory().getItems()) {
 			/* 617 */ s.addShort(item.getID() + ((item.isWielded()) ? 32768 : 0));
 
-			/* 618 */ if (item.getDef().isStackable() || item.getDef().getName().endsWith(" Note")) {
+			/* 618 */ if (item.getDef().isStackable() || item.getDef().isNote()) {
 				/* 619 */ s.addLong(item.getAmount());
 				// System.out.println(item.getID());
 			}

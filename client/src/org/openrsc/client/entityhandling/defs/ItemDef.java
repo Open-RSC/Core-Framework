@@ -30,7 +30,7 @@ public class ItemDef extends EntityDef {
 		this.id = id;
 	}
 	
-	public ItemDef(ItemDef item, int id, int orgId) {
+	public ItemDef(ItemDef item, int id) {
 		super(item.name+" Note", "", id);
 		this.command = "";
 		this.basePrice = item.basePrice;
@@ -42,7 +42,7 @@ public class ItemDef extends EntityDef {
 		this.tradable = item.tradable;
 		this.id = id;
 		this.note = true;
-		this.orgId = orgId;
+		this.orgId = item.id;
 	}
 	
 	public final int getBaseTokenPrice()
@@ -71,10 +71,10 @@ public class ItemDef extends EntityDef {
 	}
 	
 	public int getPictureMask() {
-		if (id == 1335 || id == 1336)
+		/*if (id == 1335 || id == 1336)
 			return (int)(Math.random() * 167772150);
 		
-		/*else if (id == 1352) {
+		else if (id == 1352) {
     	    if (System.currentTimeMillis() - lastChange > 10) {
     	        lastChange = System.currentTimeMillis();
     	        if (!reverse)
@@ -85,14 +85,12 @@ public class ItemDef extends EntityDef {
     	        	reverse = !reverse;
     	    }
 	        return lastCol;
-		}*/
-		else
+		}
+		else*/
 			return pictureMask;
 	}
 
 	public boolean isNote() {
-		if (this.getName().endsWith(" Note"))
-			return true;
 		return note;
 	}
 
