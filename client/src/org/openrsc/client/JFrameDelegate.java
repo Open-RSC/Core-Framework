@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
@@ -158,7 +159,7 @@ public class JFrameDelegate
 	@Override
 	public final void mousePressed(MouseEvent e)
 	{
-		instance.mouseDown(e.isMetaDown(), e.getX() - super.getInsets().left, e.getY() - super.getInsets().top);
+		instance.mouseDown(SwingUtilities.isRightMouseButton(e), e.getX() - super.getInsets().left, e.getY() - super.getInsets().top);
 	}
 
 	/**
