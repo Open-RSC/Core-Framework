@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 27, 2018 at 08:49 PM
+-- Generation Time: Jun 30, 2018 at 07:07 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -4726,8 +4726,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Dragonstone', 'This looks very valuable', '', 74, 10000, 0, 0, 0, 12255487, 0, 0, 1, 523),
 ('Dragonstone Amulet', 'It needs a string so I can wear it', '', 126, 17625, 0, 0, 0, 12255487, 0, 1, 1, 524),
 ('Crystal Key', 'A very shiny key', '', 25, 1, 0, 0, 0, 15663103, 0, 0, 1, 525),
-('Half of a Key', 'A very shiny key', '', 181, 1, 0, 0, 0, 15663103, 0, 0, 1, 526, 1804);
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
+('Half of a Key', 'A very shiny key', '', 181, 1, 0, 0, 0, 15663103, 0, 0, 1, 526),
 ('Half of a Key', 'A very shiny key', '', 182, 1, 0, 0, 0, 15663103, 0, 0, 1, 527),
 ('Iron Bar Certificate', 'Each certificate exchangable at draynor market for 5 iron bars', '', 180, 10, 0, 1, 0, 15654365, 0, 0, 1, 528),
 ('Steel Bar Certificate', 'Each certificate exchangable at draynor market for 5 steel bars', '', 180, 20, 0, 1, 0, 15658734, 0, 0, 1, 529),
@@ -4757,7 +4756,8 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Mackerel', 'Some nicely cooked fish', 'Eat', 166, 17, 0, 0, 0, 13421680, 0, 0, 1, 553),
 ('Raw Bass', 'I should try cooking this', '', 167, 120, 0, 0, 0, 16752800, 0, 0, 1, 554),
 ('Bass', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 16740464, 0, 1, 1, 555),
-('Ice Gloves', 'These will keep my hands cold!', '', 17, 6, 0, 0, 1, 11202303, 0, 1, 0, 556),
+('Ice Gloves', 'These will keep my hands cold!', '', 17, 6, 0, 0, 1, 11202303, 0, 1, 0, 556);
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`) VALUES
 ('Firebird Feather', 'A red hot feather', '', 176, 2, 0, 0, 0, 16711680, 0, 0, 0, 557),
 ('Firebird Feather', 'This is cool enough to hold now', '', 176, 2, 0, 0, 0, 16768256, 0, 0, 0, 558),
 ('Poisoned Iron Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 1, 1, 559),
@@ -5236,8 +5236,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Dwarf Cannon Base', 'bang', 'set down', 352, 200000, 0, 0, 0, 0, 1, 0, 1, 1032),
 ('Dwarf Cannon Stand', 'bang', '', 353, 200000, 0, 0, 0, 0, 1, 0, 1, 1033),
 ('Dwarf Cannon Barrels', 'bang', '', 354, 200000, 0, 0, 0, 0, 1, 0, 1, 1034),
-('Dwarf Cannon Furnace', 'bang', '', 355, 200000, 0, 0, 0, 0, 1, 0, 1, 1035, 2262);
-INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `quest`, `id`, `notable`) VALUES
+('Dwarf Cannon Furnace', 'bang', '', 355, 200000, 0, 0, 0, 0, 1, 0, 1, 1035),
 ('Fingernails', 'Ugh gross!', '', 356, 0, 0, 0, 0, 0, 0, 0, 0, 1036),
 ('Powering crystal1', 'An intricately cut gemstone', '', 357, 0, 0, 0, 0, 16777011, 0, 0, 0, 1037),
 ('Mining Barrel', 'A roughly constructed barrel for carrying rock.', '', 358, 100, 0, 0, 0, 65280, 0, 0, 0, 1038),
@@ -5296,7 +5295,8 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Adamantite Spear', 'An adamantite tipped spear', '', 283, 293, 0, 0, 1, 11717785, 1, 0, 1, 1091),
 ('Rune Spear', 'A rune tipped spear', '', 283, 1000, 0, 0, 1, 56797, 1, 0, 1, 1092),
 ('Cat', 'it\'s fluffs', 'Stroke', 338, 2, 0, 0, 0, 11184810, 0, 0, 0, 1093),
-('Seasoned Sardine', 'They don\'t smell any better', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 1, 1094),
+('Seasoned Sardine', 'They don\'t smell any better', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 1, 1094);
+INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`) VALUES
 ('Kittens', 'purrr', '', 372, 2, 0, 0, 0, 11184810, 0, 0, 0, 1095),
 ('Kitten', 'purrr', 'stroke', 371, 2, 0, 0, 0, 11184810, 0, 0, 0, 1096),
 ('Wrought Iron Key', 'This key clears unlocks a very sturdy gate of some sort.', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 0, 1097),
