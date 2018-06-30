@@ -12,6 +12,8 @@ public class Config {
 	public static int RUNECRAFTING_AMOUNT_MULTIPLIER;
 	/** The maximum number of players allowed in the wilderness per IP */
 	public static int ALLOWED_CONCURRENT_IPS_IN_WILDERNESS = 2;
+    
+    public static final int NOTE_ITEM_ID_BASE = 10000;
 	
 	public static final String WILDERNESS_ENTRY_BLOCKED_MESSAGE = "You may only enter the wilderness on " + Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS + " character(s) at a time.";
 	

@@ -721,11 +721,15 @@ public class SpellHandler implements PacketHandler {
 					player.sendMessage("That's already made of gold!");
 					return;
 				}
+				if (affectedItem.getDef().isNote()) {
+					player.sendMessage("I can not perform alchemy on that object!");
+					return;
+				}
 				if (!checkAndRemoveRunes(player, spell))
 					return;
 				if (player.getInventory().remove(affectedItem) > -1) {
 					long value = (int)(affectedItem.getDef().getBasePrice() * 0.3D);
-					if(affectedItem.getDef().isStackable() || affectedItem.getDef().getName().endsWith(" Note"))
+					if(affectedItem.getDef().isStackable()/* || affectedItem.getDef().isNote()*/)
 						value = value * affectedItem.getAmount();
 					player.getInventory().add(new InvItem(10, value)); // 30%
 				}
@@ -798,11 +802,15 @@ public class SpellHandler implements PacketHandler {
 					player.sendMessage("That's already made of gold!");
 					return;
 				}
+				if (affectedItem.getDef().isNote()) {
+					player.sendMessage("I can not perform alchemy on that object!");
+					return;
+				}
 				if (!checkAndRemoveRunes(player, spell))
 					return;
 				if (player.getInventory().remove(affectedItem) > -1) {
 					long value = (int)(affectedItem.getDef().getBasePrice() * 0.6D);
-					if(affectedItem.getDef().isStackable() || affectedItem.getDef().getName().endsWith(" Note"))
+					if(affectedItem.getDef().isStackable() /*|| affectedItem.getDef().isNote()*/)
 						value = value * affectedItem.getAmount();
 					player.getInventory().add(new InvItem(10, value)); // 60%
 				}

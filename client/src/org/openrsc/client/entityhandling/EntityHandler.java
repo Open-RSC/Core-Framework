@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.openrsc.client.Config;
 
 import org.openrsc.client.Resources;
 import org.openrsc.client.entityhandling.defs.DoorDef;
@@ -34,7 +36,7 @@ public final class EntityHandler {
     private static ArrayList<String> models = new ArrayList<String>();
 	
     private static NPCDef[] npcs = new NPCDef[0];
-    private static ItemDef[] items = new ItemDef[0];
+    private static HashMap<Integer, ItemDef> items = new HashMap<Integer, ItemDef>();
     private static GameObjectDef[] objects = new GameObjectDef[0];
     
     private static int invPictureCount = 0;
@@ -45,13 +47,13 @@ public final class EntityHandler {
 		
 		try {
 			Pattern pattern = Pattern.compile("^" + search);
-			for (int i = 0; i < items.length; i++) {
-				ItemDef def = items[i];
+			for (Map.Entry<Integer, ItemDef> entry : items.entrySet()) {
+				ItemDef def = entry.getValue();
 				if (!def.tradable)
 					continue;
 				Matcher matcher = pattern.matcher(def.getName().toLowerCase());
 				if (matcher.find()) {
-					matches.add(new Pair<ItemDef, Integer>(def, i));
+					matches.add(new Pair<ItemDef, Integer>(def, entry.getKey()));
 				}
 			}
 			Collections.sort(matches, new Comparator<Pair<ItemDef, Integer>>() {
@@ -93,14 +95,11 @@ public final class EntityHandler {
     }
 
     public static int itemCount() {
-        return items.length;
+        return items.size();
     }
 
     public static ItemDef getItemDef(int id) {
-        if (id < 0 || id >= items.length) {
-            return null;
-        }
-        return items[id];
+        return items.get(id);
     }
 
     public static int textureCount() {
@@ -1056,12 +1055,13 @@ public final class EntityHandler {
 	private static void loadItems() { 
 		try {
 			DataInputStream in = new DataInputStream(Resources.load("/items.dat"));
-			items = new ItemDef[in.readInt()];
+			//items = new ItemDef[in.readInt()];
 			String[] strs = new String[3];
 			int[] ints = new int[4];
 			boolean[] bools = new boolean[3];
+            int numberItems = in.readInt();
 			
-			for (int i = 0; i < items.length; i++) {
+			for (int i = 0; i < numberItems; i++) {
 				for (int j = 0; j < strs.length; j++) {
 					int len = in.readByte();
 					byte[] str = new byte[len];
@@ -1074,33 +1074,24 @@ public final class EntityHandler {
 				for (int j = 0; j < bools.length; j++) {
 					bools[j] = in.readBoolean();
 				}
-				items[i] = new ItemDef(strs[0], strs[1], strs[2],
-						ints[0], ints[1], ints[2], bools[0], bools[1],
-						ints[3], bools[2], i);
+				items.put(
+                    i,
+                    new ItemDef(strs[0], strs[1], strs[2],
+                                ints[0], ints[1], ints[2], bools[0], bools[1],
+                                ints[3], bools[2], i)
+                );
 			}
-			List<ItemDef> notable = new ArrayList<>();
-			for (int i = 0; i < items.length; i++) {
-				ItemDef item = items[i];
+            
+            HashMap<Integer, ItemDef> notedItems = new HashMap<Integer, ItemDef>();
+            for (Map.Entry<Integer, ItemDef> entry : items.entrySet()) {
+				ItemDef item = entry.getValue();
 				if(!item.isStackable())  {
-					notable.add(item);
+                    int newID = entry.getKey()+Config.NOTE_ITEM_ID_BASE;
+                    notedItems.put(newID, new ItemDef(item,newID));
 				}
 			}
-			int add = 0;
-			ItemDef[] newItems = new ItemDef[items.length+notable.size()];
-			for (int i = 0; i < newItems.length; i++) {
-				if(i < items.length) {
-					ItemDef item = items[i];
-					newItems[i] = item;
-				}
-			}
-			int index = 0;
-			for(ItemDef note : notable) {
-				newItems[index+items.length]= new ItemDef(note,index+items.length, note.id);
-				int itemID = note.id;
-				itemID++;
-				index++;
-			}
-			items = newItems;
+            items.putAll(notedItems);
+            
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1165,9 +1156,9 @@ public final class EntityHandler {
 	        loadNpcs();
 	        loadItems();
 	        loadGameObjects();
-	        for (int id = 0; id < items.length; id++) {
-	            if (items[id].getSprite() + 1 > invPictureCount) {
-	                invPictureCount = items[id].getSprite() + 1;
+            for (Map.Entry<Integer, ItemDef> entry : items.entrySet()) {
+	            if (entry.getValue().getSprite() + 1 > invPictureCount) {
+	                invPictureCount = entry.getValue().getSprite() + 1;
 	            }
 	        }
 

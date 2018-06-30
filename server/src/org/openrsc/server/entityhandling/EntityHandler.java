@@ -70,7 +70,7 @@ public class EntityHandler {
 	private static ArrayList<GameObjectDef> gameObjects;
 	private static ArrayList<NPCDef> npcs;
 	private static ArrayList<PrayerDef> prayers;
-	private static ArrayList<ItemDef> items;
+	private static HashMap<Integer, ItemDef> items;
 	private static ArrayList<TileDef> tiles;
 	private static ArrayList<SpellDef> spells;
 	private static ArrayList<ItemCraftingDef> itemCrafting;
@@ -117,7 +117,7 @@ public class EntityHandler {
 	public static void setGameObjectDefinitions(ArrayList<GameObjectDef> gameObjectDefs) {gameObjects = gameObjectDefs;}
 	public static void setNpcDefinitions(ArrayList<NPCDef> npcDefs) {npcs = npcDefs;}
 	public static void setPrayerDefinitions(ArrayList<PrayerDef> prayerDefs) {prayers = prayerDefs;}
-	public static void setItemDefinitions(ArrayList<ItemDef> itemDefs) {items = itemDefs;}
+	public static void setItemDefinitions(HashMap<Integer, ItemDef> itemDefs) {items = itemDefs;}
 	public static void setTileDefinitions(ArrayList<TileDef> tileDefs) {tiles = tileDefs;}
 	public static void setSpellDefinitions(ArrayList<SpellDef> spellDefs) {spells = spellDefs;}
 	public static void setCraftingDefinitions(ArrayList<ItemCraftingDef> itemCraftingDefs) {itemCrafting = itemCraftingDefs;}
@@ -290,39 +290,10 @@ public class EntityHandler {
 	}
 	
 	public static ItemDef getItemDef(int id) {
-		if(id < 0 || id >= items.size()) {
-			return null;
-		}
 		return items.get(id);
 	}
-	
-	public static ItemDef getItemNote(int id) {
-		if(id < 0 || id >= items.size()) {
-			return null;
-		}
-		for(ItemDef item : items) {
-			if(item.getNote() == id) {
-				return item;
-			}
-		}
-		return null;
-	}
-	
-	public static int getItemNoteReal(int id) {
-		if(id < 0 || id >= items.size()) {
-			return -1;
-		}
-		int index = 0;
-		for(ItemDef item : items) {
-			if(item.getNote() == id) {
-				return index;
-			}
-			index++;
-		}
-		return -1;
-	}
 		
-	public static ArrayList<ItemDef> getItems() {
+	public static HashMap<Integer, ItemDef> getItems() {
 		return items;
 	}
 	

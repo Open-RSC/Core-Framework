@@ -170,24 +170,24 @@ public class Auctioneer implements NpcHandler {
 			owner.getActionSender().sendMessage("Come back at a later point in time when you have some free space for items.");
 			return false;
 		}
-		if (!EntityHandler.getItemDef(auction.getID()).isStackable()
-				&& !EntityHandler.getItemDef(auction.getID()).getName().endsWith(" Note")) {
+        ItemDef itemDef = EntityHandler.getItemDef(auction.getID());
+		if (!itemDef.isStackable() && !itemDef.isNote()) {
 			for (int i = 0; i < auction.getAmount(); i++)
 				owner.getBank().add(new InvItem(auction.getID(), 1));
 			int slot = owner.getBank().getFirstIndexById(auction.getID());
 			if (slot > -1)
 				owner.updateBankItem(slot, auction.getID(), owner.getBank().countId(auction.getID()));
-			owner.getActionSender().sendMessage("You have collected " + auction.getAmount() + "x " + EntityHandler.getItemDef(auction.getID()).getName() + ".");
+			owner.getActionSender().sendMessage("You have collected " + auction.getAmount() + "x " + itemDef.getName() + ".");
 			return true;
 		} else {
-			if (EntityHandler.getItemDef(auction.getID()).getName().endsWith(" Note")) {
-				int newID = EntityHandler.getItemNoteReal(auction.getID());
+			if (itemDef.isNote()) {
+				int newID = itemDef.getOriginalItemID();
 				if (newID != -1) {
 					owner.getBank().add(new InvItem(newID, auction.getAmount()));
 					int slot = owner.getBank().getFirstIndexById(newID);
 					if (slot > -1)
 						owner.updateBankItem(slot, newID, owner.getBank().countId(newID));
-					owner.getActionSender().sendMessage("You have collected " + auction.getAmount() + "x " + EntityHandler.getItemDef(auction.getID()).getName() + ".");
+					owner.getActionSender().sendMessage("You have collected " + auction.getAmount() + "x " + itemDef.getName() + ".");
 					return true;
 				}
 			} else {
@@ -195,7 +195,7 @@ public class Auctioneer implements NpcHandler {
 				int slot = owner.getBank().getFirstIndexById(auction.getID());
 				if (slot > -1)
 					owner.updateBankItem(slot, auction.getID(), owner.getBank().countId(auction.getID()));
-				owner.getActionSender().sendMessage("You have collected " + auction.getAmount() + "x " + EntityHandler.getItemDef(auction.getID()).getName() + ".");
+				owner.getActionSender().sendMessage("You have collected " + auction.getAmount() + "x " + itemDef.getName() + ".");
 				return true;
 			}
 		}

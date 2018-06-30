@@ -96,6 +96,7 @@ public class InvUseOnPlayer implements PacketHandler {
 						
 							default:
 								owner.sendMessage("Nothing interesting happens");
+                                affectedPlayer.sendMessage(owner.getStaffName() + " tried to use a " + item.getDef().getName() + " on you!");
 								break;
 						}
 				}

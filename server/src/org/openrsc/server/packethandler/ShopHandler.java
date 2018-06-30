@@ -139,7 +139,7 @@ implements PacketHandler
 					return;
 				}
 
-				if(!def.isTradable()){
+				if(!def.isTradable() || def.isNote()){
                     player.sendMessage("This object can't be sold in shops");
                     return;
                 }
@@ -179,9 +179,12 @@ implements PacketHandler
 					InvItem playerItem = new InvItem(id, amount);
 					player.getInventory().remove(playerItem);
 					player.getInventory().add(new InvItem(CURRENCY_ID, value * amount));
+                    /*
+                    Can not sell notes to shops
 					//Check if it's noted
-					if(playerItem.getDef().getName().endsWith(" Note"))
-						playerItem = new InvItem(EntityHandler.getItemNoteReal(id), amount);
+					if(playerItem.getDef().isNote())
+						playerItem = new InvItem(playerItem.getDef().getOriginalItemID(), amount);
+                    */
 					shop.add(playerItem);
 				} else {
 					for (int i = 0; i < amount; ++i) {

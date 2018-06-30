@@ -1,5 +1,4 @@
 package org.openrsc.server.packethandler;
-import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.net.Packet;
@@ -10,6 +9,7 @@ import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
+import org.openrsc.server.entityhandling.defs.ItemDef;
 import org.openrsc.server.model.*;
 
 public class InvUseOnNpc implements PacketHandler {
@@ -43,26 +43,27 @@ public class InvUseOnNpc implements PacketHandler {
 							Bank bank = player.getBank();//Use same code as banking so no duping
 							long amount = item.getAmount();
 							int itemID = item.getID();
+                            ItemDef itemDef = EntityHandler.getItemDef(itemID);
 							int slot = -1;
 							if (amount < 1 || inventory.countId(itemID) < amount) {
 								Logger.log(new ExploitLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "BankHandler (1)", DataConversions.getTimeStamp()));
 							} else {
-								if (EntityHandler.getItemDef(itemID).isStackable() || EntityHandler.getItemDef(itemID).getName().endsWith(" Note")) {
+								if (itemDef.isStackable() || itemDef.isNote()) {
 									InvItem item = new InvItem(itemID, amount);
 									if (bank.canHold(item) && inventory.remove(item) > -1) {
-										if(EntityHandler.getItemDef(itemID).getName().endsWith(" Note")) {
-											int newID = EntityHandler.getItemNoteReal(itemID);
+										if(itemDef.isNote()) {
+											int newID = itemDef.getOriginalItemID();
 											if(newID != -1) {
 												bank.add(new InvItem(newID, amount));
 												slot = bank.getFirstIndexById(newID);
 												if (slot > -1) {
 													player.sendInventory();
 												}
-												player.sendMessage("You deposited "+item.getDef().getName()+" x "+amount);
+												player.sendMessage("You deposited "+itemDef.getName()+" x "+amount);
 											}
 										} else {
 											bank.add(item);
-											player.sendMessage("You deposited "+item.getDef().getName()+" x "+amount);
+											player.sendMessage("You deposited "+itemDef.getName()+" x "+amount);
 										}
 									} else
 										player.sendMessage("You don't have room for that in your bank");
@@ -79,7 +80,7 @@ public class InvUseOnNpc implements PacketHandler {
 										}						
 										if (bank.canHold(item) && inventory.remove(item) > -1) {
 											bank.add(item);
-											player.sendMessage("You deposited "+item.getDef().getName()+" x "+amount);
+											player.sendMessage("You deposited "+itemDef.getName()+" x "+amount);
 										} else {
 											player.sendMessage("You don't have room for that in your bank");
 											break;
