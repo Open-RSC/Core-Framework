@@ -130,9 +130,6 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 				loginScreenPrint("Client dimensions are too large.", "Please subscribe if you want a larger client.");
 			} else if (loginResponse == 14) { // Database Service Offline..
 				loginScreenPrint("Login Service Offline", "Please try again in a few mins");
-			} else if (loginResponse == 15) {
-				loginScreenPrint(Config.TOO_MANY_CHARS_IN_WILDERNESS_TEXT_A,
-						Config.TOO_MANY_CHARS_IN_WILDERNESS_TEXT_B);
 			} else {
 				loginScreenPrint("Error unable to login.", "Unrecognised response code.");
 			}
