@@ -11536,13 +11536,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public boolean drawIntegerInputBox = false;
 	public boolean showLoot = true;
 	public boolean FIGHT_MENU = false;
-
-	public static String SITE_URL = "http://openrsc.com";
-
 	public String logFile = "";
 	public String logName = "";
 	public int logType = 0;
-
 	public int MOVIE_FPS = 30;
 	public int tradeWindowX;
 	public int tradeWindowY;
