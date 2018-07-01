@@ -51,44 +51,6 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 	@Override
 	public void componentShown(ComponentEvent arg0) {}
 
-	/*public static void downloadCache() {
-		AppletUtils.DISPLAY_MESSAGE = "Checking dictionarys";
-		if (AppletUtils.doDirChecks())
-			try {
-				AppletUtils.DISPLAY_MESSAGE = "Downloading cache ";
-				new VirtualBrowser().getRaw(new URL("http://cache.openrsc.com/downloads/openrsc.zip"), new ProgressCallback() {
-
-					@Override
-					public void onComplete(byte[] bytes) {
-						try {
-							final FileOutputStream fos = new FileOutputStream(AppletUtils.CACHEFILE.getPath());
-							fos.write(bytes);
-							fos.close();
-						} catch (final IOException e) {
-							AppletUtils.percentage = 0;
-							AppletUtils.DISPLAY_MESSAGE = "Failed to save cache";
-						}
-						AppletUtils.DISPLAY_MESSAGE = "Cache downloaded...";
-					}
-
-					@Override
-					public void update(int pos, int length) {
-						AppletUtils.percentage = pos * 100 / length;
-					}
-				});
-                
-				AppletUtils.DISPLAY_MESSAGE = "Deleting old cache";
-				for (final File file : AppletUtils.CACHE.listFiles())
-					file.delete();
-                AppletUtils.extractFolder(AppletUtils.CACHEFILE.getPath(), AppletUtils.CACHE.toString());
-			} catch (final MalformedURLException e) {
-				AppletUtils.percentage = 0;
-				AppletUtils.DISPLAY_MESSAGE = "Failed to grab cache";
-			}
-		else
-			AppletUtils.DISPLAY_MESSAGE = "Dictionarys can not be created";
-	}*/
-
 	@Override
 	public final Container getContainerImpl() {
 		return this;
