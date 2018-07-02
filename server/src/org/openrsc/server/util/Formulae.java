@@ -451,9 +451,9 @@ public class Formulae {
 		return -1;
 	}
  
-	public static int combatExperience(Mob mob) {
-		double exp = ((mob.getCombatLevel() * 10) + 10) * 1.5D;
-		return (int)(mob instanceof Player? (exp / 4D) : exp);
+	public static int totalCombatExperience(Mob mob) {
+		double exp = (mob.getCombatLevel() * 2) + 20;
+        return (int)exp;
 	}
 
 	private static double addPrayers(boolean first, boolean second, boolean third) {
