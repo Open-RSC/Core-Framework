@@ -37,7 +37,7 @@ public class AppletLoader
 		Runnable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final static String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	private MediaTracker mediaTracker;
@@ -53,7 +53,7 @@ public class AppletLoader
 	String[] dataMirrors;
 
 	public String cache;
-	
+
 	private openrsc<AppletLoader> instance;
 
 	private boolean canStart = true;
@@ -69,16 +69,11 @@ public class AppletLoader
 			return;
 		}
 	}
-	
+
 	// Entry point for the openrsc web applet
 	public void init() {
 		width = Integer.parseInt(getParameter("width"));
 		height = (int) (width * 0.73046875 - 40);
-		if(getParameter("siteCache") != null) {
-			cache = getParameter("siteCache");
-		} else {
-			cache = "openrsc.com/play";
-		}
 		/// Set ip and port if directed to...
 		if(getParameter("ip") != null && getParameter("port") != null)
 		{
@@ -149,13 +144,13 @@ public class AppletLoader
 
 	private boolean img;
 	private boolean all;
-	
+
 	@Override
 	public void paint(Graphics gfx)
 	{
 
 	}
-	
+
 	public final void update(Graphics g) {
 		paint(g);
 	}
@@ -166,7 +161,7 @@ public class AppletLoader
 		FontMetrics fontmetrics = getFontMetrics(font);
 		Font font1 = new Font("Helvetica", 0, 13);
 		FontMetrics fontmetrics1 = getFontMetrics(font1);
-		Font font2 = new Font("TimesRoman", 0, 15); 
+		Font font2 = new Font("TimesRoman", 0, 15);
 		FontMetrics fontmetrics2 = getFontMetrics(font2);
 		if (all || !img && mediaTracker.checkAll(true)) {
 			if (!img || mediaTracker.checkAll(true)) {
@@ -207,7 +202,7 @@ public class AppletLoader
 		g.drawString(s2, (width / 2) - fontmetrics2.stringWidth(s2) / 2,
 				(height / 2) - 167 + 207);
 	}
-	
+
 	private boolean fileDownloaded = false;
 
 	private void download() {
@@ -311,14 +306,14 @@ public class AppletLoader
 	}
 
 
-	
+
 	/*************************************************************/
 	/** Forward events from the applet to the openrsc game  */
 	/**                                                          */
 	/**  Note: Events are only forwarded once the game is loaded */
 	/**                                                          */
 	/*************************************************************/
-	
+
 	@Override
 	public final void keyPressed(KeyEvent e)
 	{
@@ -346,7 +341,7 @@ public class AppletLoader
 	{
 		instance.mouseDrag(e.isMetaDown(), e.getX(), e.getY());
 	}
-	
+
 	@Override
 	public final void mouseExited(MouseEvent e)
 	{
@@ -373,7 +368,7 @@ public class AppletLoader
 
 	@Override
 	public final void mouseClicked(MouseEvent e) { /* Intentionally Empty */ }
-	
+
 	@Override
 	public final void mouseWheelMoved(MouseWheelEvent e)
 	{
@@ -389,12 +384,12 @@ public class AppletLoader
 	@Override
 	public void onLogin() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onLogout() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

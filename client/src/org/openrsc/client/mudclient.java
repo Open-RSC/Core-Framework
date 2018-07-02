@@ -132,7 +132,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
                 //Download updated caches
                 //if (!AppletUtils.CACHEFILE.exists())
                 //org.openrsc.client.loader.WebClientLoader.downloadCache();
-                
+
 		int width = Config.DEFAULT_WINDOW_WIDTH;
 		int height = Config.DEFAULT_WINDOW_HEIGHT;
 		File CF = new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf");
@@ -603,7 +603,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.storeSpriteVert(SPRITE_MEDIA_START + 10, (windowWidth / 2) - 256, (windowHeight / 2) - 167, 512,
 				200);
 	}
-    
+
 	public boolean mouseWithinCenteredCoords(int x, int y, int width, int height) {
 		int halfWidth = width / 2, halfHeight = height / 2;
 		return mouseX > (x - halfWidth) && mouseX < (x + halfWidth) && mouseY > (y - halfHeight)
@@ -1832,7 +1832,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					menuID[menuLength] = 660;
 					menuActionType[menuLength] = currentInventorySlot;
 					menuLength++;
-					
+
 					if (inventoryCount(i2) > 1) {
 						if (!itemDef.isStackable()) {
 							menuText1[menuLength] = "Drop All";
@@ -3360,7 +3360,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				gameCamera.removeModel(engineHandle.aModelArrayArray580[2][i]);
 				gameCamera.removeModel(engineHandle.aModelArrayArray598[2][i]);
 			}
-			
+
             if(!zoomCamera)
             {
                 amountToZoom -= 200;
@@ -3641,7 +3641,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			}
 			i9 += 13;
 			drawString("@gre@FPS: @whi@" + FPS, 6, i9, 1, 0xffff00);
-            
+
 			/*i9 += 13;
 			gameGraphics.drawString("@gre@Camera Rotation: @whi@" + cameraRotation, 6, i9, 1, 0xffff00);
 			i9 += 13;
@@ -6279,7 +6279,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				kfr = "Please wait...";
 			}
 			int x = (windowWidth / 2) - (190 / 2), y = (windowHeight / 2) + 120;
-			
+
 			if (mouseX >= x && mouseX <= x + 190 && mouseY >= y && mouseY <= y + 30) {
 				if (super.lastMouseDownButton != 0) {
 					super.streamClass.createPacket(70);
@@ -6426,7 +6426,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			cameraRotation = cameraRotation + 2 & 0xff;
 		else if (super.rightArrowKeyDown)
 			cameraRotation = cameraRotation - 2 & 0xff;
-        
+
         /*if (zoomCamera && cameraHeight > 550)
             cameraHeight -= 4;
         else if (!zoomCamera && cameraHeight < 750)
@@ -6441,7 +6441,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
             cameraHeight -= 4;
             amountToZoom += 4;
         }
-        
+
 		if (actionPictureType > 0)
 			actionPictureType--;
 		else if (actionPictureType < 0)
@@ -6810,7 +6810,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			messagesArray[k] = messagesArray[k - 1];
 			messagesTimeout[k] = messagesTimeout[k - 1];
 		}
-        
+
 		messagesArray[0] = message;
 		messagesTimeout[0] = 300;
 		if (gameMenu.topIndex[chatHistoryHandle] == gameMenu.menuListTextCount[chatHistoryHandle] - 4)
@@ -11536,9 +11536,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public boolean drawIntegerInputBox = false;
 	public boolean showLoot = true;
 	public boolean FIGHT_MENU = false;
-
-	public static String SITE_URL = "http://openrsc.com";
-
 	public String logFile = "";
 	public String logName = "";
 	public int logType = 0;
