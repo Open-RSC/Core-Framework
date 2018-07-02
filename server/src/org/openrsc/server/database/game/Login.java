@@ -409,79 +409,67 @@ public final class Login
 		{
 			if(rs.next() && rs.getInt("delete_date") == 0)
 			{
-				
 				int banned = rs.getInt("banned");
-                                
-				//if(rs.getString("pass").equalsIgnoreCase(DataConversions.hmac("SHA512", rs.getString("password_salt") + password, Config.HMAC_PASS)))
-                //if(rs.getString("pass").equalsIgnoreCase(DataConversions.sha512(rs.getString("password_salt") + DataConversions.md5(password))))
-                if(rs.getString("pass").equalsIgnoreCase(DataConversions.hashPassword(password, rs.getString("password_salt"))))
-				{
-					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0)))
-					{
+                                if(rs.getString("pass").equalsIgnoreCase(DataConversions.hashPassword(password, rs.getString("password_salt")))) {
+					if(banned == 1 || (banned != 0 && (banned - DataConversions.getTimeStamp() > 0))) {
 						sendLoginResponse(LoginResponse.CHARACTER_BANNED);
 					}
-                        load(statement);
+                                        load(statement);
 				}
-				else
-				{ // Password is wrong
+                                else { // Password is wrong
 					sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
 				}
 			}
-			else
-			{ //User does not exist ... create it
-				//sendLoginResponse(LoginResponse.INVALID_CREDENTIALS);
-                
-                String salt         = DataConversions.generateSalt();
-                String pass         = DataConversions.hashPassword(password, salt);
-                String creation_ip  = ((InetSocketAddress)session.getRemoteAddress()).getAddress().getHostAddress();
-                int owner           = -1;
-                
-                // Insert forum user ... not used.
-                // TODO: Check for failure.
-                Statement user      = connection.createStatement();
-                user.executeUpdate("INSERT INTO `users` (username) VALUES ('" + StringEscapeUtils.escapeSql(username) + "');", Statement.RETURN_GENERATED_KEYS);
-                ResultSet userRs    = user.getGeneratedKeys();
-                if (userRs.next())
-                    owner           = userRs.getInt(1);
-                else
-                    sendLoginResponse(LoginResponse.MYSQL_ERROR);
-                userRs.close();
-                user.close();
+                        else { //User does not exist ... create it
+                                String salt = DataConversions.generateSalt();
+                                String pass = DataConversions.hashPassword(password, salt);
+                                String creation_ip = ((InetSocketAddress)session.getRemoteAddress()).getAddress().getHostAddress();
+                                int owner = -1;
 
-                // Insert a character
-                Statement players   = connection.createStatement();
-                int playersResult   = players.executeUpdate(
-                    "INSERT INTO `rscd_players` (owner,user,username,pass,password_salt,creation_date,creation_ip)"
-                     + " VALUES ("
-                        + owner + ","
-                        + "'" + usernameHash + "',"// user
-                        + "'" + StringEscapeUtils.escapeSql(username) + "',"// username
-                        + "'" + pass + "'," // password
-                        + "'" + StringEscapeUtils.escapeSql(salt) + "'," // salt
-                        + Instant.now().getEpochSecond() + "," // creation_date
-                        + "'" + creation_ip + "'" // creation_ip
-                    + ");"
-                );
-                players.close();
-                
-                if(playersResult != 1)
-                    sendLoginResponse(LoginResponse.MYSQL_ERROR);
-                
-                // Insert character stats
-                // TODO: Check for failure
-                Statement curstats  = connection.createStatement();
-                curstats.executeUpdate("INSERT INTO `rscd_curstats` (user) VALUES ('" + usernameHash + "');");
-                curstats.close();
-                
-                // Insert character stats
-                // TODO: Check for failure
-                Statement experience    = connection.createStatement();
-                experience.executeUpdate("INSERT INTO `rscd_experience` (user) VALUES ('" + usernameHash + "');");
-                experience.close();
-                
-                load(statement);
-//>>>>>>> pr/15
-			}
+                                // Insert forum user ... not used.
+                                // TODO: Check for failure.
+                                Statement user = connection.createStatement();
+                                user.executeUpdate("INSERT INTO `users` (username) VALUES ('" + StringEscapeUtils.escapeSql(username) + "');", Statement.RETURN_GENERATED_KEYS);
+                                ResultSet userRs = user.getGeneratedKeys();
+                                if (userRs.next())
+                                        owner = userRs.getInt(1);
+                                else
+                                        sendLoginResponse(LoginResponse.MYSQL_ERROR);
+                                userRs.close();
+                                user.close();
+
+                                // Insert a character
+                                Statement players   = connection.createStatement();
+                                int playersResult   = players.executeUpdate(
+                                    "INSERT INTO `rscd_players` (owner,user,username,pass,password_salt,creation_date,creation_ip)"
+                                     + " VALUES ("
+                                        + owner + ","
+                                        + "'" + usernameHash + "',"// user
+                                        + "'" + StringEscapeUtils.escapeSql(username) + "',"// username
+                                        + "'" + pass + "'," // password
+                                        + "'" + StringEscapeUtils.escapeSql(salt) + "'," // salt
+                                        + Instant.now().getEpochSecond() + "," // creation_date
+                                        + "'" + creation_ip + "'" // creation_ip
+                                    + ");"
+                                );
+                                players.close();
+
+                                if(playersResult != 1)
+                                    sendLoginResponse(LoginResponse.MYSQL_ERROR);
+
+                                // Insert character stats
+                                // TODO: Check for failure
+                                Statement curstats  = connection.createStatement();
+                                curstats.executeUpdate("INSERT INTO `rscd_curstats` (user) VALUES ('" + usernameHash + "');");
+                                curstats.close();
+
+                                // Insert character stats
+                                // TODO: Check for failure
+                                Statement experience    = connection.createStatement();
+                                experience.executeUpdate("INSERT INTO `rscd_experience` (user) VALUES ('" + usernameHash + "');");
+                                experience.close();
+                                load(statement);
+                        }
 		}
 		catch(SQLException e)
 		{
@@ -501,5 +489,4 @@ public final class Login
 	{
 		return false;
 	}
-
 }
