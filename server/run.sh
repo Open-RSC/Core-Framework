@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ant runserver
+ant compile && ant runserver
