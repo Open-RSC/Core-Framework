@@ -74,6 +74,11 @@ public class AppletLoader
 	public void init() {
 		width = Integer.parseInt(getParameter("width"));
 		height = (int) (width * 0.73046875 - 40);
+		if(getParameter("siteCache") != null) {
+			cache = getParameter("siteCache");
+		} else {
+			cache = "openrsc.com/play";
+		}
 		/// Set ip and port if directed to...
 		if(getParameter("ip") != null && getParameter("port") != null)
 		{

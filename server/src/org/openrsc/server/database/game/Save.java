@@ -41,6 +41,7 @@ import java.util.Map;
 import org.openrsc.server.database.DefaultTransaction;
 import org.openrsc.server.database.Transaction;
 import org.openrsc.server.database.TransactionListener;
+import org.openrsc.server.database.web.AvatarGenerator;
 import org.openrsc.server.model.Bank;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Inventory;
@@ -55,6 +56,9 @@ public class Save
 	extends
 		DefaultTransaction
 {
+	
+	private final static AvatarGenerator avatarGenerator =
+			new AvatarGenerator();
 	
 	public final class DefaultSaveListener
 		implements
@@ -330,6 +334,7 @@ public class Save
 		{
 			connection.setAutoCommit(true);
 		}
+		avatarGenerator.generateAvatar(usernameHash, playerAppearance, wornItems);
 		return Transaction.TRANSACTION_SUCCESS;
 	}
 

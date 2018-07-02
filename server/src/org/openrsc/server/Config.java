@@ -17,6 +17,8 @@ public class Config {
 	
 	public static final String WILDERNESS_ENTRY_BLOCKED_MESSAGE = "You may only enter the wilderness on " + Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS + " character(s) at a time.";
 	
+	public static String AVATAR_DIR = "/usr/share/nginx/html/";
+	
 	public static void initConfig(File file) throws IOException {
 		SERVER_NAME    = "Open RSC";
 		PREFIX         = "@gre@OpenRSC:@whi@ "; // Prefix that is sent before every custom (non-RSC) message (such as commands).
@@ -28,6 +30,14 @@ public class Config {
 		Properties props = new Properties();
 		props.loadFromXML(new FileInputStream(file));
 		SHUTDOWN_TIME_MILLIS = Integer.parseInt(props.getProperty("shutdown_time_millis"));
+
+		String dir = props.getProperty("avatar_dir");
+
+		if(dir != null)
+		{
+			AVATAR_DIR = dir;
+		}
+		
 		SERVER_VERSION = Integer.parseInt(props.getProperty("version"));
 		SERVER_IP      = props.getProperty("ip");
 		SERVER_PORT    = Integer.parseInt(props.getProperty("port"));
