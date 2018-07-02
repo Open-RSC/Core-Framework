@@ -73,7 +73,7 @@ public class WorldLoader {
 
 	public void writeQuery(String query) throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				statement.executeUpdate(query);
 			}
@@ -130,7 +130,7 @@ public class WorldLoader {
 
 	private void loadStaffCommands() {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet rs = statement
 						.executeQuery("SELECT * FROM " + Config.STAFF_TELEPORT_LOCATION_DATABASE)) {
@@ -151,7 +151,7 @@ public class WorldLoader {
 
 	public void saveAuctionHouse() {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				statement.executeUpdate("TRUNCATE " + Config.AUCTIONS_TABLE);
 				for (Auction auction : World.getWorld().getAuctionHouse().getAllAuctions())
@@ -170,7 +170,7 @@ public class WorldLoader {
 
 	public void deleteAuction(Auction a) {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				int ret = statement.executeUpdate("DELETE FROM " + Config.AUCTIONS_TABLE + " WHERE `owner`='"
 						+ DataConversions.usernameToHash(a.getOwner()) + "' AND `sold`='" + (a.isSold() ? 1 : 0)
@@ -187,7 +187,7 @@ public class WorldLoader {
 
 	public void addAuction(Auction auction) {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				int ret = statement.executeUpdate("INSERT INTO " + Config.AUCTIONS_TABLE
 						+ "(`owner`, `sold`, `itemID`, `itemAmount`, `itemPrice`, `canceled`, `created`) VALUES ('"
@@ -204,7 +204,7 @@ public class WorldLoader {
 	
 	public boolean canPortal(Player player) {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet rs = statement
 						.executeQuery("SELECT online, x, y, death_time, logout_date FROM rscd_players WHERE login_ip='"
@@ -230,7 +230,7 @@ public class WorldLoader {
 	public boolean canEnterWild(Player player) {
 		int wildCount = 0;
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet rs = statement.executeQuery(
 						"SELECT online, x, y FROM rscd_players WHERE login_ip='" + player.getIP() + "'")) {
@@ -252,7 +252,7 @@ public class WorldLoader {
 
 	private void loadAuctionHouse() {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet rs = statement.executeQuery("SELECT * FROM " + Config.AUCTIONS_TABLE)) {
 					while (rs.next()) {
@@ -280,7 +280,7 @@ public class WorldLoader {
 	public HashMap<Integer, AgilityCourseDef> loadAgilityCourseDefinitions() throws SQLException {
 		HashMap<Integer, AgilityCourseDef> defs = new HashMap<Integer, AgilityCourseDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT `course_id`, `experience` FROM `def_agility_course`");
 				while (result.next()) {
@@ -294,7 +294,7 @@ public class WorldLoader {
 	public HashMap<Integer, AgilityDef> loadAgilityDefinitons() throws SQLException {
 		HashMap<Integer, AgilityDef> defs = new HashMap<Integer, AgilityDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_agility`");
 				while (result.next()) {
@@ -314,7 +314,7 @@ public class WorldLoader {
 	public HashMap<Integer, WoodcutDef> loadWoodcuttingDefinitions() throws SQLException {
 		HashMap<Integer, WoodcutDef> defs = new HashMap<Integer, WoodcutDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_woodcut`");
 				while (result.next()) {
@@ -330,7 +330,7 @@ public class WorldLoader {
 	public HashMap<Integer, PicklockDoorDefinition> loadPicklockDoorDefinitions() throws SQLException {
 		HashMap<Integer, PicklockDoorDefinition> picklockDoorDefinitions = new HashMap<Integer, PicklockDoorDefinition>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_picklock_door`");
 				while (result.next()) {
@@ -346,7 +346,7 @@ public class WorldLoader {
 	public HashMap<Integer, ChestDef> loadChestDefinitions() throws SQLException {
 		HashMap<Integer, ChestDef> chests = new HashMap<Integer, ChestDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_chest`");
 				while (result.next()) {
@@ -358,7 +358,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_chest_loot`");
 				while (result.next()) {
@@ -373,7 +373,7 @@ public class WorldLoader {
 	public HashMap<Integer, PickPocketDef> loadPickPocketDefinitions() throws SQLException {
 		HashMap<Integer, PickPocketDef> pickPockets = new HashMap<Integer, PickPocketDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_pickpocket`");
 				while (result.next()) {
@@ -383,7 +383,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_pickpocket_loot`");
 				while (result.next()) {
@@ -398,7 +398,7 @@ public class WorldLoader {
 	public HashMap<Integer, StallThievingDefinition> loadStallThievingDefinitions() throws SQLException {
 		HashMap<Integer, StallThievingDefinition> stallThieving = new HashMap<Integer, StallThievingDefinition>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_stall_thieving`");
 				while (result.next()) {
@@ -408,7 +408,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_stall_loot`");
 				while (result.next()) {
@@ -418,7 +418,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_stall_guardian`");
 				while (result.next()) {
@@ -432,7 +432,7 @@ public class WorldLoader {
 	private void loadShopDefinitions() throws SQLException {
 		HashMap<Integer, Shop> shopsMap = new HashMap<Integer, Shop>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM  `def_shops`");
 				while (result.next()) {
@@ -448,7 +448,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_shop_items` ORDER BY `id` ASC");
 				while (result.next()) {
@@ -465,7 +465,7 @@ public class WorldLoader {
 	private void loadWebHandlers() throws SQLException {
 		HashMap<String, ArrayList<Integer>> webHandlers = new HashMap<String, ArrayList<Integer>>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `conf_web_packet`");
 				while (result.next()) {
@@ -495,7 +495,7 @@ public class WorldLoader {
 	private void loadPacketHandlers() throws SQLException {
 		HashMap<String, ArrayList<Integer>> packetHandlerDefs = new HashMap<String, ArrayList<Integer>>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `conf_packet`");
 				while (result.next()) {
@@ -528,7 +528,7 @@ public class WorldLoader {
 		}
 		HashMap<String, ArrayList<Integer>> npcHandlerDefs = new HashMap<String, ArrayList<Integer>>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `conf_npc`");
 				while (result.next()) {
@@ -560,7 +560,7 @@ public class WorldLoader {
 	private HashMap<Integer, CerterDef> loadCerterDefinitions() throws SQLException {
 		HashMap<Integer, CerterDef> certerDefs = new HashMap<Integer, CerterDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_certer`");
 				while (result.next()) {
@@ -569,7 +569,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_cert`");
 				while (result.next()) {
@@ -584,7 +584,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemWieldableDef> loadItemWieldableDefinitions() throws SQLException {
 		HashMap<Integer, ItemWieldableDef> defs = new HashMap<Integer, ItemWieldableDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM  `def_wieldable`");
 				while (result.next()) {
@@ -598,7 +598,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_required_stats`");
 				while (result.next()) {
@@ -626,7 +626,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemUnIdentHerbDef> loadUnidentifiedHerbDefinitions() throws SQLException {
 		HashMap<Integer, ItemUnIdentHerbDef> unidentifiedDefs = new HashMap<Integer, ItemUnIdentHerbDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_unidentified_herb`");
 				while (result.next()) {
@@ -641,7 +641,7 @@ public class WorldLoader {
 	private ArrayList<ItemSmithingDef> loadSmithingDefinitions() throws SQLException {
 		ArrayList<ItemSmithingDef> smithingDefs = new ArrayList<ItemSmithingDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_smithing`");
 				while (result.next()) {
@@ -656,7 +656,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemSmeltingDef> loadSmeltingDefinitions() throws SQLException {
 		HashMap<Integer, ItemSmeltingDef> smeltingDefs = new HashMap<Integer, ItemSmeltingDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_smelting`");
 				while (result.next()) {
@@ -677,7 +677,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemLogCutDef> loadLogCutDefinitions() throws SQLException {
 		HashMap<Integer, ItemLogCutDef> logCutDefs = new HashMap<Integer, ItemLogCutDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_log_cut`");
 				while (result.next()) {
@@ -695,7 +695,7 @@ public class WorldLoader {
 	private ArrayList<ItemHerbSecond> loadHerbSecondaryDefinitions() throws SQLException {
 		ArrayList<ItemHerbSecond> secondaries = new ArrayList<ItemHerbSecond>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_herb_second`");
 				while (result.next()) {
@@ -710,7 +710,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemHerbDef> loadHerbDefinitions() throws SQLException {
 		HashMap<Integer, ItemHerbDef> herbs = new HashMap<Integer, ItemHerbDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_herb`");
 				while (result.next()) {
@@ -725,7 +725,7 @@ public class WorldLoader {
 	public HashMap<Integer, ItemGemDef> loadGemDefinitions() throws SQLException {
 		HashMap<Integer, ItemGemDef> gems = new HashMap<Integer, ItemGemDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_gem`");
 				while (result.next()) {
@@ -740,7 +740,7 @@ public class WorldLoader {
 	public HashMap<Integer, ItemEdibleDef> loadItemEdibleHeals() throws SQLException {
 		HashMap<Integer, ItemEdibleDef> edibleHeals = new HashMap<Integer, ItemEdibleDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_edible_heals`");
 				while (result.next()) {
@@ -756,7 +756,7 @@ public class WorldLoader {
 	public HashMap<Integer, ItemDartTipDef> loadDartTipDefinitions() throws SQLException {
 		HashMap<Integer, ItemDartTipDef> tips = new HashMap<Integer, ItemDartTipDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_dart_tip`");
 				while (result.next()) {
@@ -771,7 +771,7 @@ public class WorldLoader {
 	public ArrayList<ItemCraftingDef> loadCraftingDefinitions() throws SQLException {
 		ArrayList<ItemCraftingDef> defs = new ArrayList<ItemCraftingDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_crafting`");
 				while (result.next()) {
@@ -786,7 +786,7 @@ public class WorldLoader {
 	public HashMap<Integer, ItemArrowHeadDef> loadArrowHeadDefinitions() throws SQLException {
 		HashMap<Integer, ItemArrowHeadDef> arrowheads = new HashMap<Integer, ItemArrowHeadDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_arrow_head`");
 				while (result.next()) {
@@ -801,7 +801,7 @@ public class WorldLoader {
 	public HashMap<Integer, ObjectMiningDef> loadMiningDefinitions() throws SQLException {
 		HashMap<Integer, ObjectMiningDef> defs = new HashMap<Integer, ObjectMiningDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_mining`");
 				while (result.next()) {
@@ -816,7 +816,7 @@ public class WorldLoader {
 	private HashMap<Point, TelePoint> loadObjectTelePoints() throws SQLException {
 		HashMap<Point, TelePoint> objectTelePoints = new HashMap<Point, TelePoint>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_tele_points`");
 				while (result.next()) {
@@ -832,7 +832,7 @@ public class WorldLoader {
 	private HashMap<Integer, Integer> loadSpellAggressiveLvl() throws SQLException {
 		HashMap<Integer, Integer> spellAggressiveLvl = new HashMap<Integer, Integer>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_spell_aggressive`");
 				while (result.next()) {
@@ -846,7 +846,7 @@ public class WorldLoader {
 	private HashMap<Integer, ArrayList<ObjectFishingDef>> loadFishingDefinitions() throws SQLException {
 		HashMap<Integer, ArrayList<ObjectFishingDef>> objectFishingDefs = new HashMap<Integer, ArrayList<ObjectFishingDef>>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_fishing`");
 				while (result.next()) {
@@ -862,7 +862,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_fish`");
 				while (result.next()) {
@@ -891,7 +891,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemCookingDef> loadCookingDefinitions() throws SQLException {
 		HashMap<Integer, ItemCookingDef> defs = new HashMap<Integer, ItemCookingDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_cooking`");
 				while (result.next()) {
@@ -906,7 +906,7 @@ public class WorldLoader {
 	private ArrayList<SpellDef> loadSpellDefinitions() throws SQLException {
 		ArrayList<SpellDef> spells = new ArrayList<SpellDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_spell`");
 				while (result.next()) {
@@ -934,7 +934,7 @@ public class WorldLoader {
 	private HashMap<Integer, ItemDef> loadItemDefinitions() throws SQLException {
 		HashMap<Integer, ItemDef> items = new HashMap<Integer, ItemDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_item`"); //Regular items.
 				int index = 0;
@@ -994,7 +994,7 @@ public class WorldLoader {
 	private ArrayList<GameObjectDef> loadGameObjectDefinitions() throws SQLException {
 		ArrayList<GameObjectDef> gameObjects = new ArrayList<GameObjectDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_object`");
 				while (result.next()) {
@@ -1018,7 +1018,7 @@ public class WorldLoader {
 	public ArrayList<TileDef> loadTileDefinitions() throws SQLException {
 		ArrayList<TileDef> tiles = new ArrayList<TileDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_tile`");
 				while (result.next()) {
@@ -1036,7 +1036,7 @@ public class WorldLoader {
 	private ArrayList<PrayerDef> loadPrayerDefinitions() throws SQLException {
 		ArrayList<PrayerDef> prayers = new ArrayList<PrayerDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_prayer`");
 				while (result.next()) {
@@ -1053,7 +1053,7 @@ public class WorldLoader {
 	public ArrayList<DoorDef> loadDoorDefinitions() throws SQLException {
 		ArrayList<DoorDef> doors = new ArrayList<DoorDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_door`");
 				while (result.next()) {
@@ -1076,7 +1076,7 @@ public class WorldLoader {
 	private ArrayList<NPCDef> loadNpcDefinitions() throws SQLException {
 		ArrayList<NPCDef> npcs = new ArrayList<NPCDef>();
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_npc`");
 				while (result.next()) {
@@ -1118,7 +1118,7 @@ public class WorldLoader {
 			}
 		}
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `def_drop`");
 				while (result.next()) {
@@ -1133,7 +1133,7 @@ public class WorldLoader {
 
 	private void loadGameObjectLocations() throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery("SELECT * FROM `spawn_object`");
 				while (result.next()) {
@@ -1156,7 +1156,7 @@ public class WorldLoader {
 
 	private void loadItemLocations() throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement
 						.executeQuery("SELECT `item`, `x`, `y`, `amount`, `respawn` FROM `spawn_item`");
@@ -1170,7 +1170,7 @@ public class WorldLoader {
 
 	public void loadNpcLocations() throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.CONFIG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
+				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
 				ResultSet result = statement.executeQuery(
 						"SELECT `npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`, `max_y`, `direction` FROM `spawn_npc`");
