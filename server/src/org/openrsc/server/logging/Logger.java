@@ -38,7 +38,7 @@ public class Logger extends Thread {
 		throws
 			SQLException
 	{
-		connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" + Config.LOG_DB_NAME, Config.DB_LOGIN, Config.DB_PASS);
+		connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" + Config.LOG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS);
 		globalMessageLog = new StringBuffer("INSERT INTO `game_global` (`user`, `account`, `ip`, `time`, `message`) VALUES ");
 		globalMessageLogResetLength = globalMessageLog.length();
 		

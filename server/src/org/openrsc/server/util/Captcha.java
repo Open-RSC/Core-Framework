@@ -24,7 +24,7 @@ public class Captcha
 	
 	static
 	{
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS))
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" +  Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS))
 		{
 			try(Statement statement = connection.createStatement())
 			{
