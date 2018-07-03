@@ -529,7 +529,7 @@ public final class World
 			if (!players.contains(player)) {
 				player.setInitialized();
 				players.add(player);
-				System.out.println("Added:   " + player.getUsername());
+				//System.out.println("Added:   " + player.getUsername());
 				player.load();
 			} else {
 				player.getSession().close();

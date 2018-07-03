@@ -144,8 +144,8 @@ public final class DefaultDatabaseService
 						code = Transaction.UNHANDLED_EXCEPTION;
 						e.printStackTrace();
 					}
-					System.out.println("Transaction " + t + " completed with " + 
-							"exit code [" + code + "]");
+					//System.out.println("Transaction " + t + " completed with " + 
+					//		"exit code [" + code + "]");
 					///logger.debug("Transaction " + t + " completed with " + 
 					///		"exit code [" + code + "]");
 

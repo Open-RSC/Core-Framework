@@ -2908,7 +2908,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			World.getDelayedEventHandler().add(healthRestoreEvent);
 			World.getDelayedEventHandler().add(statRestoreEvent);
 			
-			World.getDelayedEventHandler().add(new DelayedEvent(this, 900000) {
+			World.getDelayedEventHandler().add(new DelayedEvent(this, 10000) { //autosaves players every 10 seconds
 				public void run() {
 					Save s = new Save(owner);
 					ServerBootstrap.getDatabaseService().submit(s, s.new DefaultSaveListener());

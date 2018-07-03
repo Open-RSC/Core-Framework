@@ -59,6 +59,10 @@ public class Save
 	
 	private final static AvatarGenerator avatarGenerator =
 			new AvatarGenerator();
+
+    public Save() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
 	public final class DefaultSaveListener
 		implements
@@ -67,7 +71,7 @@ public class Save
 		@Override
 		public void onSuccess()
 		{
-			System.out.println("Saved: " + DataConversions.hashToUsername(usernameHash));
+			//System.out.println("Saved: " + DataConversions.hashToUsername(usernameHash));
 		}
 
 		@Override
