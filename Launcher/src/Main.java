@@ -1,11 +1,9 @@
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Properties;
@@ -23,6 +21,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.Image;
@@ -72,15 +72,15 @@ class Browser extends Region {
     };
     private static String[] captions = new String[]{
         "News",
-        "Player",
-        "Media",
-        "Forum"
+        "Board",
+        "Game Chat",
+        "World Map"
     };
     private static String[] urls = new String[]{
-        URL + "/updaternews.php",
-        URL + "/updaterplayer.php",
-        URL + "/updatermedia.php",
-        URL + "/board/index.php"
+        URL + "/launchernews.php",
+        URL + "/board/index.php",
+        URL + "/launcherchat.php",
+        URL + "/worldmap.php"
     };
     final ImageView selectedImage = new ImageView();
     final Hyperlink[] hpls = new Hyperlink[captions.length];
@@ -114,11 +114,17 @@ class Browser extends Region {
             @Override
             public void handle(Event t) {
                 try {
-                    updateClient();
-                    updateCache();
-                    launchGame();
-                    exit();
-                            } catch (IOException ex) {
+                        double version = Double.parseDouble(System.getProperty("java.specification.version"));
+                        if (version > 1.8) { //checks to see if installed version of java is JRE 9 or above (1.8 is incompatible)
+                                updateClient();
+                                updateCache();
+                                launchGame();
+                                exit();
+                        } else {
+                                version();
+                        }
+                    } catch (IOException ex) {
+                        
                     Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
                     Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
@@ -176,8 +182,20 @@ class Browser extends Region {
 
         return s1;
     }
+    
+    public static void version() throws IOException {
+        Alert a = new Alert(AlertType.WARNING);
+        a.setTitle("Outdated Java version detected!");
+        a.setHeaderText("Outdated Java version detected!");
+        a.setResizable(false);
+        String version = System.getProperty("java.version");
+        String content = String.format("Found version: Java %s.\n\nPlease upgrade your Java installation to the latest version (JRE 9 or higher) in order to play.\n\nVisit: https://goo.gl/s4kkXM", version);
+        a.setContentText(content);
+        a.showAndWait();
+    }
+    
     /**
-     * This is the update method where it downloads a copy of the client cache archive from the web server and then checks the server's MD5 hash against it.
+     * This is the update method where it downloads a copy of the client cache archive from the web server and then checks the server's MD5 hash against it for subsequent updates.
      */
     public static void updateClient() throws IOException {
         try {
