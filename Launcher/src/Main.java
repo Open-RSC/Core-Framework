@@ -114,15 +114,15 @@ class Browser extends Region {
             @Override
             public void handle(Event t) {
                 try {
-                        double version = Double.parseDouble(System.getProperty("java.specification.version"));
-                        if (version > 1.8) { //checks to see if installed version of java is JRE 9 or above (1.8 is incompatible)
+                        //double version = Double.parseDouble(System.getProperty("java.specification.version"));
+                        //if (version > 1.8) { //checks to see if installed version of java is JRE 9 or above (1.8 is incompatible)
                                 updateClient();
                                 updateCache();
                                 launchGame();
                                 exit();
-                        } else {
-                                version();
-                        }
+                        //} else {
+                        //        version();
+                        //}
                     } catch (IOException ex) {
                         
                     Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);

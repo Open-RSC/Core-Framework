@@ -2,7 +2,7 @@ package com.runescape;
 
 import java.io.InputStream;
 
-import sun.audio.AudioPlayer;
+//import sun.audio.AudioPlayer;
 
 public class AudioReader extends InputStream {
 
@@ -11,11 +11,11 @@ public class AudioReader extends InputStream {
 	private int length;
 
 	public AudioReader() {
-		AudioPlayer.player.start(this);
+		//AudioPlayer.player.start(this);
 	}
 
 	public void stopAudio() {
-		AudioPlayer.player.stop(this);
+		//AudioPlayer.player.stop(this);
 	}
 
 	public void loadData(byte[] abyte0, int i, int j) {
