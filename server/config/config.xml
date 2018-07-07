@@ -23,7 +23,7 @@
 	<entry key="webport">53594</entry>
 
         <!-- Database connection -->
-	<entry key="dbhost">127.0.0.1</entry>
+	<entry key="dbhost">localhost</entry>
 	<entry key="dbname">openrsc</entry>
 	<entry key="dblogin">root</entry>
 	<entry key="dbpass">root</entry>
