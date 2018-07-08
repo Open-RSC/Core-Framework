@@ -57,7 +57,7 @@ public class Main extends Application {
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
-    private static String URL = "https://www.openrsc.com";
+    private static String URL = "http://localhost";
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";
@@ -132,7 +132,7 @@ class Browser extends Region {
             }           
         });
         
-        webEngine.load(URL + "/updaternews.php");
+        webEngine.load(URL + "/launchernews.php");
         getChildren().add(toolBar);
         getChildren().add(browser);
     }
