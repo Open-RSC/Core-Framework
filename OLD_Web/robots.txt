@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /backstage/
-Disallow: /admin/
-Disallow: /cgi-bin/
