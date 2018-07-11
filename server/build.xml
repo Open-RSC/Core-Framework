@@ -42,8 +42,6 @@
           <jvmarg value="-Xmn512m" />
           <jvmarg value="-Xms1024m" />
           <jvmarg value="-Xmx1024m" />
-          <jvmarg value="-XX:+UseConcMarkSweepGC" />
-          <jvmarg value="-XX:+UseParNewGC" />
           <jvmarg value="-XX:SurvivorRatio=2" />
           <jvmarg value="-XX:NewRatio=8" />
             <classpath>
