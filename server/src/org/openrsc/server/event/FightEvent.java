@@ -215,7 +215,7 @@ public class FightEvent extends DelayedEvent implements IFightEvent {
   				((Npc)opponent).killedBy((Player)attacker);
   			if (attacker instanceof Player && !(opponent instanceof Npc)) {
   				Player attackerPlayer = (Player)attacker;
-	      			int xp = DataConversions.roundUp(Formulae.totalCombatExperience(opponent) / 4D);
+	      			int xp = Formulae.combatExperience(opponent);
 	      			switch (attackerPlayer.getCombatStyle()) {
 						case 0:
 							attackerPlayer.increaseXP(0, xp, 0);

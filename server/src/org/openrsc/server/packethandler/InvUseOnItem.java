@@ -1061,17 +1061,17 @@ public class InvUseOnItem implements PacketHandler {
 							case 0:
 								result = new InvItem(620, 1);
 								reqLvl = 1;
-								exp = 18;
+								exp = 70;
 								break;
 							case 1:
 								result = new InvItem(465, 1);
 								reqLvl = 33;
-								exp = 35;
+								exp = 140;
 								break;
 							case 2:
 								result = new InvItem(611, 1);
 								reqLvl = 46;
-								exp = 53;
+								exp = 210;
 								break;
 							default:
 								return;
@@ -1209,17 +1209,17 @@ public class InvUseOnItem implements PacketHandler {
 							case 0:
 								result = new InvItem(15, 1);
 								reqLvl = 14;
-								exp = 25;
+								exp = 100;
 								break;
 							case 1:
 								result = new InvItem(16, 1);
 								reqLvl = 1;
-								exp = 14;
+								exp = 56;
 								break;
 							case 2:
 								result = new InvItem(17, 1);
 								reqLvl = 7;
-								exp = 17;
+								exp = 65;
 								break;
 							default:
 								return;
@@ -1386,7 +1386,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(189, 1));
-								owner.increaseXP(9, 5, 1);
+								owner.increaseXP(9, 20, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1403,7 +1403,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(188, 1));
-								owner.increaseXP(9, 10, 1);
+								owner.increaseXP(9, 40, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1420,7 +1420,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(649, 1));
-								owner.increaseXP(9, 17, 1);
+								owner.increaseXP(9, 66, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1437,7 +1437,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(648, 1));
-								owner.increaseXP(9, 25, 1);
+								owner.increaseXP(9, 100, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1454,7 +1454,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(651, 1));
-								owner.increaseXP(9, 33, 1);
+								owner.increaseXP(9, 133, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1471,7 +1471,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(650, 1));
-								owner.increaseXP(9, 42, 1);
+								owner.increaseXP(9, 166, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1488,7 +1488,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(653, 1));
-								owner.increaseXP(9, 50, 1);
+								owner.increaseXP(9, 200, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1505,7 +1505,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(652, 1));
-								owner.increaseXP(9, 58, 1);
+								owner.increaseXP(9, 233, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1522,7 +1522,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(655, 1));
-								owner.increaseXP(9, 67, 1);
+								owner.increaseXP(9, 266, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1539,7 +1539,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(654, 1));
-								owner.increaseXP(9, 75, 1);
+								owner.increaseXP(9, 300, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1556,7 +1556,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(657, 1));
-								owner.increaseXP(9, 83, 1);
+								owner.increaseXP(9, 333, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1573,7 +1573,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(656, 1));
-								owner.increaseXP(9, 92, 1);
+								owner.increaseXP(9, 366, 1);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}

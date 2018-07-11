@@ -27,10 +27,10 @@ public class Prayer
 			
 	static
 	{
-		remains.put(NORMAL_BONES, new RemainsDescriptor(3.5f, false));
-		remains.put(BAT_BONES, new RemainsDescriptor(4.0f, true));
-		remains.put(BIG_BONES, new RemainsDescriptor(12.0f, true));
-		remains.put(DRAGON_BONES, new RemainsDescriptor(60.0f, true));
+		remains.put(NORMAL_BONES, new RemainsDescriptor(15, false));
+		remains.put(BAT_BONES, new RemainsDescriptor(18, true));
+		remains.put(BIG_BONES, new RemainsDescriptor(50, true));
+		remains.put(DRAGON_BONES, new RemainsDescriptor(240, true));
 	}
 	
 	@Override
@@ -49,11 +49,11 @@ public class Prayer
 
 	private final static class RemainsDescriptor
 	{
-		final float experience;
+		final int experience;
 		@SuppressWarnings("unused")
 		final boolean membersOnly;
 		
-		RemainsDescriptor(float experience, boolean membersOnly)
+		RemainsDescriptor(int experience, boolean membersOnly)
 		{
 			this.experience = experience;
 			this.membersOnly = membersOnly;

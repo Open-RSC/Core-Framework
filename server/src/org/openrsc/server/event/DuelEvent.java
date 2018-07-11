@@ -77,7 +77,7 @@ public class DuelEvent extends DelayedEvent implements IFightEvent {
 		
   		if(newHp <= 0) {
   			opponent.killedBy(attacker, true);
-      			int exp = DataConversions.roundUp(Formulae.totalCombatExperience(opponent) / 4D);
+      			int exp = Formulae.combatExperience(opponent);
       			switch(attacker.getCombatStyle()) {
 				case 0:
 					attacker.increaseXP(0, exp, 0);

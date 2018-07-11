@@ -2205,9 +2205,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (playerStatExperience[k1] >= experienceArray[i3])
 					k2 = experienceArray[i3 + 1];
 
-			drawString("Total xp: " + insertCommas("" + playerStatExperience[k1]), x + 5, y, 1, 0xffffff);
+			drawString("Total xp: " + insertCommas("" + (playerStatExperience[k1] / 4)), x + 5, y, 1, 0xffffff);
 			y += 12;
-			drawString("Next level at: " + insertCommas("" + k2), x + 5, y, 1, 0xffffff);
+			drawString("Next level at: " + insertCommas("" + (k2 / 4)), x + 5, y, 1, 0xffffff);
 			// y += 12;
 			// drawString("Required XP: " + insertCommas("" + (k2 -
 			// playerStatExperience[k1])), x + 5, y, 1, 0xffffff);
@@ -4378,9 +4378,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		int i = 0;
 		for (int j = 0; j < 99; j++) {
 			int k = j + 1;
-			int i1 = (int) ((double) k + 300D * Math.pow(2D, (double) k / 7D));
+			int i1 = (int) (k + 300D * Math.pow(2.0D, k / 7D));
 			i += i1;
-			experienceArray[j] = (i & 0xffffffc) / 4;
+			experienceArray[j] = i & 0xffffffc;
 		}
 		super.updateLoadingProgress(0, "Loading fonts...");
 		loadFonts();
