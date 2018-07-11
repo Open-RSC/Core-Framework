@@ -370,7 +370,7 @@ public class Npc extends Mob {
 				if (p != null) {
 					if(!p.isDueling()) {
 						int exp;
-						float partialExp = DataConversions.roundUp(Formulae.totalCombatExperience(this) / 4D);
+						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getDef().getHits()));
 						switch (p.getCombatStyle()) {
 							case 0:
@@ -412,7 +412,7 @@ public class Npc extends Mob {
 				if (p != null) {
 					if (!p.isDueling()) {
 						int exp;
-						float partialExp = DataConversions.roundUp(Formulae.totalCombatExperience(this) / 4D);
+						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getDef().getHits()));
 						p.increaseXP(4, exp * 3, 1);
 						p.sendStat(4);

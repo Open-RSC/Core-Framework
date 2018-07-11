@@ -1052,7 +1052,7 @@ public class InvUseOnObject implements PacketHandler {
 		      										InvItem result = new InvItem(results[option]);
 		      										owner.sendMessage("You make a " + result.getDef().getName());
 		      										owner.getInventory().add(result);
-		      										owner.increaseXP(12, 50, 1);
+		      										owner.increaseXP(12, 200, 1);
 		      										owner.sendStat(12);
 		      										owner.sendInventory();
 		      									}
@@ -1075,7 +1075,7 @@ public class InvUseOnObject implements PacketHandler {
 				      						owner.sendMessage("It mixes to make some molten glass");
 				      						owner.getInventory().add(new InvItem(623, 1));
 				      						owner.getInventory().add(new InvItem(21, 1));
-				      						owner.increaseXP(12, 20, 1);
+				      						owner.increaseXP(12, 80, 1);
 				      						owner.sendStat(12);
 				      						owner.sendInventory();
 				      					}
@@ -1605,7 +1605,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		      				public void action() {
 				      						if (owner.getInventory().remove(item) > -1) {
 				      							owner.getInventory().add(new InvItem(207, 1));
-				      							owner.increaseXP(12, 3, 1);
+				      							owner.increaseXP(12, 10, 1);
 				      							owner.sendStat(12);
 				      							owner.sendInventory();
 				      						}
@@ -1623,7 +1623,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		      					public void action() {
 				      						if (owner.getInventory().remove(item) > -1) {
 				      							owner.getInventory().add(new InvItem(676, 1));
-				      							owner.increaseXP(12, 15, 1);
+				      							owner.increaseXP(12, 60, 1);
 				      							owner.sendStat(12);
 				      							owner.sendInventory();
 				      						}
@@ -1832,17 +1832,17 @@ public class InvUseOnObject implements PacketHandler {
 										case 0:
 											result = new InvItem(279, 1);
 											reqLvl = 1;
-											exp = 6;
+											exp = 50;
 											break;
 										case 1:
 											result = new InvItem(278, 1);
 											reqLvl = 4;
-											exp = 10;
+											exp = 100;
 											break;
 										case 2:
 											result = new InvItem(340, 1);
 											reqLvl = 7;
-											exp = 10;
+											exp = 100;
 											break;
 										default:
 											owner.sendMessage("Nothing interesting happens");

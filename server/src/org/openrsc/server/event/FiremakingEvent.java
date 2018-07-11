@@ -29,7 +29,7 @@ public class FiremakingEvent extends ShortEvent {
 						}
 					}
 				});
-				owner.increaseXP(11, 25 + (owner.getMaxStat(11) * 1.75D), 1);
+				owner.increaseXP(11, 25 + (owner.getMaxStat(11) * 7), 1);
 				owner.sendStat(11);
 			} else
 				owner.sendMessage("You fail to light a fire");

@@ -406,7 +406,7 @@ public class Formulae {
     }
 
 	public static int getSmithingExp(int barID, int barCount) {
-		int[] exps = {13, 25, 37, 50, 83, 74};
+		int[] exps = {50, 100, 150, 200, 250, 300};
 		int type = getBarType(barID);
 		if (type < 0)
 			return 0;
@@ -451,7 +451,7 @@ public class Formulae {
 		return -1;
 	}
  
-	public static int totalCombatExperience(Mob mob) {
+	public static int combatExperience(Mob mob) {
 		double exp = (mob.getCombatLevel() * 2) + 20;
         return (int)exp;
 	}
