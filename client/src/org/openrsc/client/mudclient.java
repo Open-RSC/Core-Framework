@@ -4375,12 +4375,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void loadGame() {
-		int i = 0;
-		for (int j = 0; j < 99; j++) {
-			int k = j + 1;
-			int i1 = (int) (k + 300D * Math.pow(2.0D, k / 7D));
-			i += i1;
-			experienceArray[j] = i & 0xffffffc;
+		int experience = 0;
+		for (int i = 0; i < 99; i++) {
+			int experienceFactor = i + 1;
+			int experienceIncrease = (int) (experienceFactor + 300D * Math.pow(2.0D, experienceFactor / 7D));
+			experience += experienceIncrease;
+			experienceArray[i] = experience & 0xffffffc;
 		}
 		super.updateLoadingProgress(0, "Loading fonts...");
 		loadFonts();

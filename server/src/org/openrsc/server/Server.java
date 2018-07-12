@@ -18,6 +18,7 @@ import org.openrsc.server.networking.WebConnectionHandler;
 
 import com.rscdaemon.concurrent.ConfigurableThreadFactory;
 import com.rscdaemon.concurrent.ConfigurableThreadFactory.ConfigurationBuilder;
+import org.openrsc.server.util.Formulae;
 
 public final class Server
 {
@@ -44,6 +45,7 @@ public final class Server
 		Logger logger = new Logger();
 		logger.setDaemon(true);
 		logger.start();
+        Formulae.populateExperience();
 		World.load();
 		engine.start();
 		try
