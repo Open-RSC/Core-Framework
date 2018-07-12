@@ -68,6 +68,7 @@ public class PlayerRangeEvent extends DelayedEvent {
 						}
 						Projectile projectile = new Projectile(owner, target, 2);
 						target.setLastDamage(damage);
+                        target.updateKillStealing(owner, damage, 1);
 						int newHp = target.getHits() - damage;
 						target.setHits(newHp);
 						playersToInform.addAll(owner.getViewArea().getPlayersInView());
