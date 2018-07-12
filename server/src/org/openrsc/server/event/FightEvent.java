@@ -218,26 +218,26 @@ public class FightEvent extends DelayedEvent implements IFightEvent {
 	      			int xp = Formulae.combatExperience(opponent);
 	      			switch (attackerPlayer.getCombatStyle()) {
 						case 0:
-							attackerPlayer.increaseXP(0, xp, 0);
-							attackerPlayer.increaseXP(1, xp, 0);
-							attackerPlayer.increaseXP(2, xp, 0);
+							attackerPlayer.increaseXP(0, xp, 1);
+							attackerPlayer.increaseXP(1, xp, 1);
+							attackerPlayer.increaseXP(2, xp, 1);
 							attackerPlayer.sendStat(0);
 							attackerPlayer.sendStat(1);
 							attackerPlayer.sendStat(2);
 						break;
 						
 						case 1:
-							attackerPlayer.increaseXP(2, xp * 3, 0);
+							attackerPlayer.increaseXP(2, xp * 3, 1);
 							attackerPlayer.sendStat(2);
 						break;
 						
 						case 2:
-							attackerPlayer.increaseXP(0, xp * 3, 0);
+							attackerPlayer.increaseXP(0, xp * 3, 1);
 							attackerPlayer.sendStat(0);
 						break;
 						
 						case 3:
-							attackerPlayer.increaseXP(1, xp * 3, 0);
+							attackerPlayer.increaseXP(1, xp * 3, 1);
 							attackerPlayer.sendStat(1);
 						break;
 	      			}

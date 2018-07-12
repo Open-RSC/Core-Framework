@@ -80,26 +80,26 @@ public class DuelEvent extends DelayedEvent implements IFightEvent {
       			int exp = Formulae.combatExperience(opponent);
       			switch(attacker.getCombatStyle()) {
 				case 0:
-					attacker.increaseXP(0, exp, 0);
-					attacker.increaseXP(1, exp, 0);
-					attacker.increaseXP(2, exp, 0);
+					attacker.increaseXP(0, exp, 1);
+					attacker.increaseXP(1, exp, 1);
+					attacker.increaseXP(2, exp, 1);
 					attacker.sendStat(0);
 					attacker.sendStat(1);
 					attacker.sendStat(2);
 				break;
 				
 				case 1:
-					attacker.increaseXP(2, exp * 3, 0);
+					attacker.increaseXP(2, exp * 3, 1);
 					attacker.sendStat(2);
 				break;
 				
 				case 2:
-					attacker.increaseXP(0, exp * 3, 0);
+					attacker.increaseXP(0, exp * 3, 1);
 					attacker.sendStat(0);
 				break;
 				
 				case 3:
-					attacker.increaseXP(1, exp * 3, 0);
+					attacker.increaseXP(1, exp * 3, 1);
 					attacker.sendStat(1);
 				break;
 			}
