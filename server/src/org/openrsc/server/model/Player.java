@@ -3282,7 +3282,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getMaxStat(3)));
-						p.increaseXP(4, exp * 3, 1);
+						p.increaseXP(4, exp * 4, 1);
 						p.sendStat(4);
 					}
 				}
