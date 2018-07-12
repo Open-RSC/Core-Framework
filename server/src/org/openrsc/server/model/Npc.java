@@ -390,7 +390,7 @@ public class Npc extends Mob {
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getDef().getHits()));
-						p.increaseXP(4, exp * 3, 1);
+						p.increaseXP(4, exp * 4, 1);
 						p.sendStat(4);
 					}
 				}
