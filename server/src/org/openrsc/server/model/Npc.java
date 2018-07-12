@@ -178,30 +178,6 @@ public class Npc extends Mob {
 		}
 		removed = true;
 	}
-
-	protected HashMap<Player, Integer> totalDamageTable = new HashMap<Player, Integer>(), rangeDamageTable = new HashMap<Player, Integer>(), meleeDamageTable = new HashMap<Player, Integer>();
-	
-	public void updateKillStealing(Player player, int damage, int attackType) {
-		if (totalDamageTable.containsKey(player))
-				totalDamageTable.put(player, (totalDamageTable.get(player) + damage));
-		else
-			totalDamageTable.put(player, damage);
-		switch (attackType) {
-			case 0:
-				if (meleeDamageTable.containsKey(player))
-					meleeDamageTable.put(player, (meleeDamageTable.get(player) + damage));
-				else
-					meleeDamageTable.put(player, damage);
-			break;
-			
-			case 1:
-				if (rangeDamageTable.containsKey(player))
-					rangeDamageTable.put(player, (rangeDamageTable.get(player) + damage));
-				else
-					rangeDamageTable.put(player, damage);
-			break;
-		}
-	}
 	
 	public void killedBy(Npc npc) {
 		Mob opponent = super.getOpponent();
@@ -421,9 +397,10 @@ public class Npc extends Mob {
 			}
 			meleeDamageTable.clear();
 			rangeDamageTable.clear();
+            magicDamageTable.clear();
 			totalDamageTable.clear();
 		} else
-			Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "Kill-Stealing fucked up - killer was not in damage table", DataConversions.getTimeStamp()));
+			Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "NPC Loot Drop Error: Killing player not found", DataConversions.getTimeStamp()));
 	}
 
 	public int getCombatStyle() {
