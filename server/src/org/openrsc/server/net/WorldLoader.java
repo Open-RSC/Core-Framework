@@ -707,7 +707,7 @@ public class WorldLoader {
 		return secondaries;
 	}
 
-	private HashMap<Integer, ItemHerbDef> loadHerbDefinitions() throws SQLException {
+	public HashMap<Integer, ItemHerbDef> loadHerbDefinitions() throws SQLException {
 		HashMap<Integer, ItemHerbDef> herbs = new HashMap<Integer, ItemHerbDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
