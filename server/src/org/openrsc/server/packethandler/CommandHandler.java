@@ -589,7 +589,7 @@ public class CommandHandler implements PacketHandler
 		/*
 		 * Teleport single-click
 		 */
-		if (cmd.equals("teleport") && (player.isMod() || player.isDev() || player.isEvent())) 
+		if ((cmd.equals("teleport") || cmd.equals("tp")) && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			player.resetLevers();
 			if (args.length == 0) 
@@ -1434,7 +1434,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} else if (cmd.equals("refreshwoodcut") && player.isAdmin()) {
 			try {
-				EntityHandler.setPicklockDoorDefinitions(World.getWorldLoader().loadPicklockDoorDefinitions());
+				EntityHandler.setPicklockDoorDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
