@@ -128,7 +128,7 @@ public class WorldLoader {
 		System.gc();
 	}
 
-	private void loadStaffCommands() {
+	public void loadStaffCommands() {
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
@@ -250,7 +250,7 @@ public class WorldLoader {
 	}
 	*/
 
-	private void loadAuctionHouse() {
+	public void loadAuctionHouse() {
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
@@ -429,7 +429,7 @@ public class WorldLoader {
 		return stallThieving;
 	}
 
-	private void loadShopDefinitions() throws SQLException {
+	public void loadShopDefinitions() throws SQLException {
 		HashMap<Integer, Shop> shopsMap = new HashMap<Integer, Shop>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -462,7 +462,7 @@ public class WorldLoader {
 		}
 	}
 
-	private void loadWebHandlers() throws SQLException {
+	public void loadWebHandlers() throws SQLException {
 		HashMap<String, ArrayList<Integer>> webHandlers = new HashMap<String, ArrayList<Integer>>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -492,7 +492,7 @@ public class WorldLoader {
 		}
 	}
 
-	private void loadPacketHandlers() throws SQLException {
+	public void loadPacketHandlers() throws SQLException {
 		HashMap<String, ArrayList<Integer>> packetHandlerDefs = new HashMap<String, ArrayList<Integer>>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -581,7 +581,7 @@ public class WorldLoader {
 		return certerDefs;
 	}
 
-	private HashMap<Integer, ItemWieldableDef> loadItemWieldableDefinitions() throws SQLException {
+	public HashMap<Integer, ItemWieldableDef> loadItemWieldableDefinitions() throws SQLException {
 		HashMap<Integer, ItemWieldableDef> defs = new HashMap<Integer, ItemWieldableDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -610,7 +610,7 @@ public class WorldLoader {
 		return defs;
 	}
 
-	private void loadChatFilter() throws SQLException {
+	public void loadChatFilter() throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" + Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
@@ -638,7 +638,7 @@ public class WorldLoader {
 		return unidentifiedDefs;
 	}
 
-	private ArrayList<ItemSmithingDef> loadSmithingDefinitions() throws SQLException {
+	public ArrayList<ItemSmithingDef> loadSmithingDefinitions() throws SQLException {
 		ArrayList<ItemSmithingDef> smithingDefs = new ArrayList<ItemSmithingDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -653,7 +653,7 @@ public class WorldLoader {
 		return smithingDefs;
 	}
 
-	private HashMap<Integer, ItemSmeltingDef> loadSmeltingDefinitions() throws SQLException {
+	public HashMap<Integer, ItemSmeltingDef> loadSmeltingDefinitions() throws SQLException {
 		HashMap<Integer, ItemSmeltingDef> smeltingDefs = new HashMap<Integer, ItemSmeltingDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -674,7 +674,7 @@ public class WorldLoader {
 		return smeltingDefs;
 	}
 
-	private HashMap<Integer, ItemLogCutDef> loadLogCutDefinitions() throws SQLException {
+	public HashMap<Integer, ItemLogCutDef> loadLogCutDefinitions() throws SQLException {
 		HashMap<Integer, ItemLogCutDef> logCutDefs = new HashMap<Integer, ItemLogCutDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -692,7 +692,7 @@ public class WorldLoader {
 		return logCutDefs;
 	}
 
-	private ArrayList<ItemHerbSecond> loadHerbSecondaryDefinitions() throws SQLException {
+	public ArrayList<ItemHerbSecond> loadHerbSecondaryDefinitions() throws SQLException {
 		ArrayList<ItemHerbSecond> secondaries = new ArrayList<ItemHerbSecond>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -813,7 +813,7 @@ public class WorldLoader {
 		return defs;
 	}
 
-	private HashMap<Point, TelePoint> loadObjectTelePoints() throws SQLException {
+	public HashMap<Point, TelePoint> loadObjectTelePoints() throws SQLException {
 		HashMap<Point, TelePoint> objectTelePoints = new HashMap<Point, TelePoint>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -829,7 +829,7 @@ public class WorldLoader {
 		return objectTelePoints;
 	}
 
-	private HashMap<Integer, Integer> loadSpellAggressiveLvl() throws SQLException {
+	public HashMap<Integer, Integer> loadSpellAggressiveLvl() throws SQLException {
 		HashMap<Integer, Integer> spellAggressiveLvl = new HashMap<Integer, Integer>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -888,7 +888,7 @@ public class WorldLoader {
 		return objectFishingDefs;
 	}
 
-	private HashMap<Integer, ItemCookingDef> loadCookingDefinitions() throws SQLException {
+	public HashMap<Integer, ItemCookingDef> loadCookingDefinitions() throws SQLException {
 		HashMap<Integer, ItemCookingDef> defs = new HashMap<Integer, ItemCookingDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -903,7 +903,7 @@ public class WorldLoader {
 		return defs;
 	}
 
-	private ArrayList<SpellDef> loadSpellDefinitions() throws SQLException {
+	public ArrayList<SpellDef> loadSpellDefinitions() throws SQLException {
 		ArrayList<SpellDef> spells = new ArrayList<SpellDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -931,7 +931,7 @@ public class WorldLoader {
 		return spells;
 	}
 
-	private HashMap<Integer, ItemDef> loadItemDefinitions() throws SQLException {
+	public HashMap<Integer, ItemDef> loadItemDefinitions() throws SQLException {
 		HashMap<Integer, ItemDef> items = new HashMap<Integer, ItemDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -991,7 +991,7 @@ public class WorldLoader {
 		return items;
 	}
 
-	private ArrayList<GameObjectDef> loadGameObjectDefinitions() throws SQLException {
+	public ArrayList<GameObjectDef> loadGameObjectDefinitions() throws SQLException {
 		ArrayList<GameObjectDef> gameObjects = new ArrayList<GameObjectDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -1033,7 +1033,7 @@ public class WorldLoader {
 		return tiles;
 	}
 
-	private ArrayList<PrayerDef> loadPrayerDefinitions() throws SQLException {
+	public ArrayList<PrayerDef> loadPrayerDefinitions() throws SQLException {
 		ArrayList<PrayerDef> prayers = new ArrayList<PrayerDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -1073,7 +1073,7 @@ public class WorldLoader {
 		return doors;
 	}
 
-	private ArrayList<NPCDef> loadNpcDefinitions() throws SQLException {
+	public ArrayList<NPCDef> loadNpcDefinitions() throws SQLException {
 		ArrayList<NPCDef> npcs = new ArrayList<NPCDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
@@ -1131,7 +1131,7 @@ public class WorldLoader {
 		return npcs;
 	}
 
-	private void loadGameObjectLocations() throws SQLException {
+	public void loadGameObjectLocations() throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
@@ -1154,7 +1154,7 @@ public class WorldLoader {
 		}
 	}
 
-	private void loadItemLocations() throws SQLException {
+	public void loadItemLocations() throws SQLException {
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
 			try (Statement statement = connection.createStatement()) {
