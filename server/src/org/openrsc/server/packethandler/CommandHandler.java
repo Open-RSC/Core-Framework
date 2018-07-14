@@ -1491,9 +1491,16 @@ public class CommandHandler implements PacketHandler
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}  else if (cmd.equals("refreshherbs") && player.isAdmin()) {
+		} else if (cmd.equals("refreshherbs") && player.isAdmin()) {
 			try {
 				EntityHandler.setHerbDefinitions(World.getWorldLoader().loadHerbDefinitions());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (cmd.equals("refreshunidentifiedherbs") && player.isAdmin()) {
+			try {
+				EntityHandler.setUnidentifiedHerbDefinitions(World.getWorldLoader().loadUnidentifiedHerbDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

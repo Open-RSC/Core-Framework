@@ -623,7 +623,7 @@ public class WorldLoader {
 		}
 	}
 
-	private HashMap<Integer, ItemUnIdentHerbDef> loadUnidentifiedHerbDefinitions() throws SQLException {
+	public HashMap<Integer, ItemUnIdentHerbDef> loadUnidentifiedHerbDefinitions() throws SQLException {
 		HashMap<Integer, ItemUnIdentHerbDef> unidentifiedDefs = new HashMap<Integer, ItemUnIdentHerbDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
