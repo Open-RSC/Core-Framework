@@ -1432,6 +1432,13 @@ public class CommandHandler implements PacketHandler
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (cmd.equals("refreshpickpocket") && player.isAdmin()) {
+			try {
+				EntityHandler.setPickPocketDefinitions(World.getWorldLoader().loadPickPocketDefinitions());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (cmd.equals("refreshwoodcut") && player.isAdmin()) {
 			try {
 				EntityHandler.setWoodcutDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
