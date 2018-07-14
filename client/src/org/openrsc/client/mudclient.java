@@ -9248,7 +9248,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			/// Theory: Improper synchronization between input and rendering.
 			/// Try it out and let me know. (preferably w/o obfuscation on your
 			/// end..)
-			System.err.println("Error Code RSCE_ERR_WALK_SYNC");
+			System.err.println("Error Code OPENRSC_ERR_WALK_SYNC");
 		}
 	}
 
