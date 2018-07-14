@@ -618,6 +618,28 @@ public class CommandHandler implements PacketHandler
 				}
 			}			
 		} 
+        else if((cmd.equalsIgnoreCase("appearance")) && (player.isAdmin())) {
+			if (args.length > 0) 
+			{
+				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+				
+				if (p != null) 
+				{
+                    p.setChangingAppearance(true);
+                    p.getActionSender().sendAppearanceScreen();
+				} 
+				else
+				{
+					player.sendMessage(Config.PREFIX + "Invalid name");	
+				}
+			} 
+			else 
+			{
+                player.setChangingAppearance(true);
+                player.getActionSender().sendAppearanceScreen();
+			}
+			return;
+		}
 		else
 		if (cmd.equals("summon") && (player.isMod() || player.isDev())) 
 		{
