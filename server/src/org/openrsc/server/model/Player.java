@@ -3139,7 +3139,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						World.registerEntity(new Item(item.getID(), getX(), getY(), item.getAmount(), (Player[])null));
 					}
 					else {
-							World.registerEntity(new Item(item.getID(), getX(), getY(), item.getAmount(), owners));
+						World.registerEntity(new Item(item.getID(), getX(), getY(), item.getAmount(), owners));
 					}
 				}
 				removeSkull();
@@ -3232,6 +3232,66 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		sendWorldInfo();
 		sendEquipmentStats();
 		sendInventory();
+        
+        if (mob instanceof Player) {
+			for (Player p : meleeDamageTable.keySet()) {
+				if (p != null) {
+					if(!p.isDueling()) {
+						int exp;
+						float partialExp = Formulae.combatExperience(this);
+						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getMaxStat(3)));
+						switch (p.getCombatStyle()) {
+							case 0:
+								p.increaseXP(0, exp, 1);
+								p.increaseXP(1, exp, 1);
+								p.increaseXP(2, exp, 1);
+								p.increaseXP(3, exp, 1);
+								p.sendStat(0);
+								p.sendStat(1);
+								p.sendStat(2);
+								p.sendStat(3);
+							break;
+							
+							case 1:
+								p.increaseXP(2, exp * 3, 1);
+								p.sendStat(2);
+								p.increaseXP(3, exp, 1);
+								p.sendStat(3);							
+							break;
+							
+							case 2:
+								p.increaseXP(0, exp * 3, 1);
+								p.sendStat(0);
+								p.increaseXP(3, exp, 1);
+								p.sendStat(3);							
+							break;
+							
+							case 3:
+								p.increaseXP(1, exp * 3, 1);
+								p.sendStat(1);
+								p.increaseXP(3, exp, 1);
+								p.sendStat(3);
+							break;
+						}
+					}
+				}
+			}
+			for(Player p : rangeDamageTable.keySet()) {
+				if (p != null) {
+					if (!p.isDueling()) {
+						int exp;
+						float partialExp = Formulae.combatExperience(this);
+						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getMaxStat(3)));
+						p.increaseXP(4, exp * 4, 1);
+						p.sendStat(4);
+					}
+				}
+			}
+			meleeDamageTable.clear();
+			rangeDamageTable.clear();
+            magicDamageTable.clear();
+			totalDamageTable.clear();
+        }
 	}
 	
 	public DMVictoryEvent dmVictoryEvent;
