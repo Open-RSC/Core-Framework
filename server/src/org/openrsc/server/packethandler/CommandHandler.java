@@ -351,7 +351,6 @@ public class CommandHandler implements PacketHandler
 						{
 							fatigue = 100;
 						}
-						// Quick-Fix 3.9.2013, 6:46PM EST
 						p.setFatigue((int)(18750 * (fatigue / 100.0D)));
 						p.sendFatigue();
 						player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
