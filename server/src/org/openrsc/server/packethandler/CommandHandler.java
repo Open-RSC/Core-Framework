@@ -125,9 +125,6 @@ public class CommandHandler implements PacketHandler
 		}
 		if (cmd.equals("say") || cmd.equals("s")) 
 		{
-			if ((player.isMod()) || ((player.isDev())) || ((player.isAdmin())) || ((player.isEvent())))
-				return;
-			
 			if (player.getPrivacySetting(4)) 
 			{
 				if (!World.global && !player.isMod())
