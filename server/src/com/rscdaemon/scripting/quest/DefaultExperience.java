@@ -58,7 +58,7 @@ public class DefaultExperience
 		private static final long	serialVersionUID	= 5490364223522609322L;
 
 		private final Skill skill;
-		private final float amount;
+		private final int amount;
 		
 		Proxy(DefaultExperience obj)
 		{
@@ -76,7 +76,7 @@ public class DefaultExperience
 	private final Skill skill;
 	
 	/// The amount of experience to grant
-	private final float amount;
+	private final int amount;
 
 	/// @see java.io.Serializable
 	private Object writeReplace()
@@ -95,7 +95,7 @@ public class DefaultExperience
 	 * @param amount the amount of experience to grant
 	 * 
 	 */
-	public DefaultExperience(Skill skill, float amount)
+	public DefaultExperience(Skill skill, int amount)
 	{
 		this.skill = skill;
 		this.amount = amount;
@@ -108,8 +108,7 @@ public class DefaultExperience
 	@Override
 	public void grant(Player recipient)
 	{
-		
-		recipient.increaseXP(skill.ordinal(), amount, 0);
+		recipient.increaseXP(skill.ordinal(), amount, true);
 	}
 
 	/**

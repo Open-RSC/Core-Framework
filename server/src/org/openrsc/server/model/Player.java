@@ -316,8 +316,8 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	
 	private int[] wornItems = new int[12];
 	private int[] curStat = new int[19], maxStat = new int[19];
-	private double[] exp = new double[19];
-	private double fatigue = 0, temporaryFatigue = 0;
+	private int[] exp = new int[19];
+	private int fatigue = 0, temporaryFatigue = 0;
 
 	private byte lastSpellRandom = 0;
 	
@@ -2115,27 +2115,27 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		return getCurStat(0);
 	}
 	
-	public void setFatigue(double fatigue) {
+	public void setFatigue(int fatigue) {
 		this.fatigue = fatigue;
 	}
 	
-	public double getFatigue() {
+	public int getFatigue() {
 		return fatigue;
 	}
 	
-	public double getTemporaryFatigue() {
+	public int getTemporaryFatigue() {
 		return temporaryFatigue;
 	}
 	
-	public double[] getExps() {
+	public int[] getExps() {
 		return exp;
 	}
 	
-	public double getExp(int id) {
+	public int getExp(int id) {
 		return exp[id];
 	}
 	
-	public void setExp(double[] lvls) {
+	public void setExp(int[] lvls) {
 		exp = lvls;
 	}	
 	
@@ -2276,7 +2276,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					}
 					if (Player.this.sleepImage == null) {
 						Player.this.sendSuccess();
-						Player.this.setFatigue(0.0D);
+						Player.this.setFatigue(0);
 						Player.this.sendFatigue();
 						Player.this.sendMessage("You wake up - feeling refreshed");
 					} else {
@@ -2293,7 +2293,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	private void temporaryFatigueThrottle() {
 		fatigueEvent = new DelayedEvent(this, 600) {
 			public void run() {
-				double tick = sleepingBag ? 5.6 : 28;
+				int tick = sleepingBag ? 350 : 700;
 				if (isSub())
 					tick *= 2;
 				if (temporaryFatigue - tick < 0)
@@ -3242,10 +3242,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getMaxStat(3)));
 						switch (p.getCombatStyle()) {
 							case 0:
-								p.increaseXP(0, exp, 1);
-								p.increaseXP(1, exp, 1);
-								p.increaseXP(2, exp, 1);
-								p.increaseXP(3, exp, 1);
+								p.increaseXP(0, exp, true);
+								p.increaseXP(1, exp, true);
+								p.increaseXP(2, exp, true);
+								p.increaseXP(3, exp, true);
 								p.sendStat(0);
 								p.sendStat(1);
 								p.sendStat(2);
@@ -3253,23 +3253,23 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 							break;
 							
 							case 1:
-								p.increaseXP(2, exp * 3, 1);
+								p.increaseXP(2, exp * 3, true);
 								p.sendStat(2);
-								p.increaseXP(3, exp, 1);
+								p.increaseXP(3, exp, true);
 								p.sendStat(3);							
 							break;
 							
 							case 2:
-								p.increaseXP(0, exp * 3, 1);
+								p.increaseXP(0, exp * 3, true);
 								p.sendStat(0);
-								p.increaseXP(3, exp, 1);
+								p.increaseXP(3, exp, true);
 								p.sendStat(3);							
 							break;
 							
 							case 3:
-								p.increaseXP(1, exp * 3, 1);
+								p.increaseXP(1, exp * 3, true);
 								p.sendStat(1);
-								p.increaseXP(3, exp, 1);
+								p.increaseXP(3, exp, true);
 								p.sendStat(3);
 							break;
 						}
@@ -3282,7 +3282,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getMaxStat(3)));
-						p.increaseXP(4, exp * 4, 1);
+						p.increaseXP(4, exp * 4, true);
 						p.sendStat(4);
 					}
 				}
@@ -3810,7 +3810,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void incQuestExp(int stat, int amount) {
-		/*if (fatigue >= 100) {
+		/*if (fatigue >= 18750) {
 			sendMessage("@gre@You recieve no experience from this quest");
 			return;
 		}*/
@@ -3835,36 +3835,43 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				setCombatLevel(combat);
 		}		
 	}
+    
+	public void increaseXP(int stat, int xp) {
+        increaseXP(stat, xp, true);
+    }
 	
-	public void increaseXP(int stat, double xp, double newFatigue) {
-		if(getLocation().onTutorialIsland()) 
-			return;
-		
+	public void increaseXP(int stat, int xp, boolean useFatigue) {
 		if (isDMing)
 			return;
 		
-		if (fatigue >= 100 && lastXP + 100 < System.currentTimeMillis()) { // Fix for 'fatigued' characters
-			for (int i = 0; i <= (stat <= 3 && newFatigue > 0 ? 2 : 0); i++) // Combat stats show the message 4 times, others once
-				sendMessage("@gre@You are too tired to gain experience, get some rest!");
-			return;
+        if(useFatigue)
+        {
+            if(fatigue >= 18750)
+            {
+                sendMessage("@gre@You are too tired to gain experience, get some rest!");
+                return;
+            }
+            
+            if(fatigue >= 18000)
+                sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
+            
+            fatigue += isSub() ? xp / 4 : xp;
+            if (fatigue > 18750)
+                fatigue = 18750;
+            sendFatigue();
+        }
+        
+		if (getLocation().onTutorialIsland()) {
+			if (exp[stat] + xp > 200) {
+				if (stat != 3) {
+					exp[stat] = 200;
+				} else {
+					exp[stat] = 1200;
+				}
+			}
 		}
-	
-		lastXP = System.currentTimeMillis(); // Fix for 'fatigued' characters
-		
-		if (isSub())
-			newFatigue = newFatigue / 4.0;
-		fatigue += newFatigue;
-		if (fatigue > 100)
-			fatigue = 100;
-		sendFatigue();
-		
-		
-		/*
-		 * Rewritten to compensate
-		 * for the config values
-		 * by Pyru.
-		 */
-		if (isSub() && stat > 6) // If subbed, and non-combat skills.
+
+		if (isSub() && stat > 6) // Non combat, subbed
 		{
 			if (getLocation().inWilderness())
 			{
@@ -3872,32 +3879,16 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					xp *= (Config.skulled_xp_bonus + Config.skill_xp_sub);
 				else
 					xp *= (Config.wild_xp_bonus + Config.skill_xp_sub);
-				
-				//System.out.println("current xp: " + xp + "SUB IN WILD and stat: " + stat + "Non combat");
 			}
 			else
 			{
 				xp *= Config.skill_xp_sub;
-				//System.out.println("current xp: " + xp + "SUB NOT IN WILD and stat: " + stat + "Non combat");
 			}
 		} 
 		else 
-		if (!isSub() && stat > 6) // Non subbed, in wild, non-combat
+		if (!isSub() && stat > 6) // Non combat, non subbed
 		{
-			if (getLocation().inWilderness())
-			{
-				if (isSkulled())
-					xp *= (Config.skulled_xp_bonus + Config.skill_xp_sub);
-				else
-					xp *= (Config.wild_xp_bonus + Config.skill_xp_sub);
-				
-				//System.out.println("current xp: " + xp + "NOT SUB IN WILD and stat: " + stat + "non-combat");
-			}
-			else
-			{
-				xp *= Config.skill_xp;
-				//System.out.println("current xp: " + xp + "NOT SUB NOT IN WILD and stat: " + stat + "non-combat");
-			}
+			xp *= Config.skill_xp;
 		}
 		else
 		if (isSub() && stat <= 6) // Combat, subbed.
@@ -3909,23 +3900,22 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				else
 					xp *= (Config.combat_xp_sub + Config.wild_xp_bonus);
 				
-				//System.out.println("current xp: " + xp + "SUB, IN WILD and stat: " + stat + "Combat");
 			}
 			else
 			{
 				xp *= Config.combat_xp_sub;
-				//System.out.println("current xp: " + xp + "SUB, NOT IN WILD and stat: " + stat + "Combat");
 			}
 		}
-		else
+        else // combat, nonsubbed
 		{
-			xp *= Config.combat_xp;
-			//System.out.println("current xp: " + xp + "NON SUB, NOT IN WILD and stat: " + stat);
+            xp *= Config.combat_xp;
 		}
 						
-		exp[stat] += xp;
+        exp[stat] += xp;
+        
 		if (exp[stat] < 0)
 			exp[stat] = 0;
+        
 		int level = Formulae.experienceToLevel((int) exp[stat]);
 		if (level != maxStat[stat]) {
 			int advanced = level - maxStat[stat];

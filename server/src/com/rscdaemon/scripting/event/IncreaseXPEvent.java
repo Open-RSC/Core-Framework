@@ -11,8 +11,8 @@ public class IncreaseXPEvent
 		ChainableEvent
 {
 	private final Skill skill;
-	private final float amount;
-	public IncreaseXPEvent(Script script, Skill skill, float amount)
+	private final int amount;
+	public IncreaseXPEvent(Script script, Skill skill, int amount)
 	{
 		super(script, 0);
 		this.skill = skill;
@@ -23,7 +23,7 @@ public class IncreaseXPEvent
 	public void run()
 	{
 		Player owner = super.script.__internal_get_variable(ScriptVariable.OWNER);
-		owner.increaseXP(skill.ordinal(), amount, 1);
+		owner.increaseXP(skill.ordinal(), amount, true);
 		owner.sendStat(skill.ordinal());
 		super.scheduleNext();
 	}

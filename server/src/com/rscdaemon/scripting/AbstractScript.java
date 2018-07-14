@@ -557,7 +557,7 @@ public abstract class AbstractScript
 	}
 	
 	@Override
-	public final void IncreaseXP(Skill skill, float amount)
+	public final void IncreaseXP(Skill skill, int amount)
 	{
 		scope.addLast(new IncreaseXPEvent(this, skill, amount));
 	}

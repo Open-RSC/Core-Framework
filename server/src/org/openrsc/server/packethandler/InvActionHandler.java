@@ -964,7 +964,7 @@ public class InvActionHandler implements PacketHandler {
 						owner.getInventory().remove(item);
 						owner.getInventory().add(newItem);
 						owner.sendMessage("You clean the mud off the " + newItem.getDef().getName());
-						owner.increaseXP(15, herb.getExp(), 1);
+						owner.increaseXP(15, herb.getExp(), true);
 						owner.sendStat(15);
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -984,16 +984,16 @@ public class InvActionHandler implements PacketHandler {
 				owner.getInventory().remove(item);
 				switch(item.getID()) {
 					case 20: // Bones
-						owner.increaseXP(5, 15, 1);
+						owner.increaseXP(5, 15, true);
 						break;						
 					case 604: // Bat Bones
-						owner.increaseXP(5, 18, 1);
+						owner.increaseXP(5, 18, true);
 						break;
 					case 413: // Big Bones
-						owner.increaseXP(5, 50, 1);
+						owner.increaseXP(5, 50, true);
 						break;
 					case 814: // Dragon Bones
-						owner.increaseXP(5, 240, 1);
+						owner.increaseXP(5, 240, true);
 						break;
 				}
 				owner.sendStat(5);

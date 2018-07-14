@@ -2145,7 +2145,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			y += 13;
 		}
 		y -= 1;
-		drawString("Fatigue: @yel@" + fatigue + "%", x + 5, y, 1, 0xffffff);
+		drawString("Fatigue: @yel@" + (fatigue * 100 / 750) + "%", x + 5, y, 1, 0xffffff);
 		y = retain;
 
 		for (int currentStat = 9; currentStat < 18; currentStat++) {
@@ -3322,7 +3322,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				gameGraphics.drawCenteredString("ZZZ",  windowWidth - (int)(Math.random() * 80D), (int)(Math.random() * (double)windowHeight), 5, (int)(Math.random() * 16777215D));
 			gameGraphics.drawCenteredString("You are sleeping", x, y, 7, 0xffff00);
 			y += 40;
-			gameGraphics.drawCenteredString("Fatigue: " + fatigue + "%", x, y, 7, 0xffff00);
+			gameGraphics.drawCenteredString("Fatigue: " + (this.fatigue * 100 / 750) + "%", x, y, 7, 0xffff00);
 			y += 50;
 			gameGraphics.drawCenteredString("When you want to wake up just use your", x, y, 5, 0xffffff);
 			y += 20;
@@ -3632,7 +3632,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawString("@gre@Prayer: @whi@" + playerStatCurrent[5] + "@gre@/@whi@" + playerStatBase[5], 6, i9, 1,
 					0xffff00);
 			i9 += 13;
-			drawString("@gre@Fatigue: @whi@" + fatigue + "%", 6, i9, 1, 0xffff00);
+			drawString("@gre@Fatigue: @whi@" + (fatigue * 100 / 750) + "%", 6, i9, 1, 0xffff00);
 			if (ourPlayer.admin > 0 && ourPlayer.admin < 4) {
 				i9 += 13;
 				drawString(
@@ -8972,7 +8972,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				}
 				showScrollableServerMessageBox = true;
 			} else if (command == 126) {
-				fatigue = DataOperations.getUnsignedByte(data[1]);
+				fatigue = DataOperations.readInt(data, 1);
 			} else if (command == 202)
 				playersOnline = DataOperations.getUnsigned2Bytes(data, 1);
 			else if (command == 203)
@@ -11505,7 +11505,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public ArrayList<String> messages = new ArrayList<String>();
 	public int currentChat = 0;
 	public long serverStartTime = 0;
-	public long fatigue;
+	//public int fatigueSleeping = 0;
+	public int fatigue;
 	public int playersOnline;
 	public int ownerID;
 	public int kills;

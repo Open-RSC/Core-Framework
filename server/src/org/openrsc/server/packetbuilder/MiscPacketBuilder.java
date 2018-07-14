@@ -357,7 +357,7 @@ public final class MiscPacketBuilder {
 	/*     */ public void sendFatigue() {
 		/* 206 */ RSCPacketBuilder s = new RSCPacketBuilder();
 		/* 207 */ s.setID(126);
-		/* 208 */ s.addByte((byte) player.getFatigue());
+		/* 208 */ s.addInt(player.getFatigue() / 25);
 		/* 209 */ this.player.getSession().write(s.toPacket());
 		/*     */ }
 
@@ -365,7 +365,7 @@ public final class MiscPacketBuilder {
 	/*     */ public void sendTemporaryFatigue() {
 		/* 213 */ RSCPacketBuilder s = new RSCPacketBuilder();
 		/* 214 */ s.setID(126);
-		/* 215 */ s.addByte((byte) this.player.getTemporaryFatigue());
+		/* 215 */ s.addInt(player.getTemporaryFatigue());
 		/* 216 */ this.player.getSession().write(s.toPacket());
 		/*     */ }
 
