@@ -117,8 +117,10 @@ public class Config {
 		public static final int DIGSITE = 47;
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
-                public static final int JOIN_BLACKARM_GANG = 50;
-                public static final int JOIN_PHOENIX_GANG = 51;
-                public static final int TUTORIAL_ISLAND = 100;
-        }
+        
+        /* Miniquests */
+        public static final int JOIN_BLACKARM_GANG = 50;
+        public static final int JOIN_PHOENIX_GANG = 51;
+        public static final int TUTORIAL_ISLAND = 100;
+    }
 }
