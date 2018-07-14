@@ -1,5 +1,6 @@
 package org.openrsc.server.model;
 
+import java.util.HashMap;
 import org.openrsc.server.event.IFightEvent;
 import org.openrsc.server.states.Action;
 import org.openrsc.server.states.CombatState;
@@ -384,5 +385,39 @@ public abstract class Mob extends Entity {
 	
 	public int getCurStat(int i) {
 		return 1;
+	}
+    
+	protected HashMap<Player, Integer>totalDamageTable = new HashMap<Player, Integer>();
+    protected HashMap<Player, Integer>rangeDamageTable = new HashMap<Player, Integer>();
+    protected HashMap<Player, Integer>meleeDamageTable = new HashMap<Player, Integer>();
+    protected HashMap<Player, Integer>magicDamageTable = new HashMap<Player, Integer>();
+	
+	public void updateKillStealing(Player player, int damage, int attackType) {
+		if (totalDamageTable.containsKey(player))
+				totalDamageTable.put(player, (totalDamageTable.get(player) + damage));
+		else
+			totalDamageTable.put(player, damage);
+		switch (attackType) {
+			case 0:
+				if (meleeDamageTable.containsKey(player))
+					meleeDamageTable.put(player, (meleeDamageTable.get(player) + damage));
+				else
+					meleeDamageTable.put(player, damage);
+			break;
+			
+			case 1:
+				if (rangeDamageTable.containsKey(player))
+					rangeDamageTable.put(player, (rangeDamageTable.get(player) + damage));
+				else
+					rangeDamageTable.put(player, damage);
+			break;
+            
+			case 2:
+				if (magicDamageTable.containsKey(player))
+					magicDamageTable.put(player, (magicDamageTable.get(player) + damage));
+				else
+					magicDamageTable.put(player, damage);
+			break;
+		}
 	}
 }
