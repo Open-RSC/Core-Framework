@@ -3963,13 +3963,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						if (playerArray[i2].admin != 4 && playerArray[i2].admin != 7 && playerArray[i2].admin != 5) {
 							s = "";
 						}
-						if (System.currentTimeMillis() - playerArray[i2].lastMoved >= 60 * 5 * 1000) {
+						/*if (System.currentTimeMillis() - playerArray[i2].lastMoved >= 60 * 5 * 1000) {
 							long afkTime = System.currentTimeMillis() - playerArray[i2].lastMoved;
 							long seconds = (afkTime / 1000) % 60;
 							long minutes = (afkTime / (1000 * 60)) % 60;
 							s += "@whi@ AFK: " + (minutes < 10 ? "0" + minutes : minutes) + ":"
 									+ (seconds < 10 ? "0" + seconds : seconds);
-						}
+						}*/
 						if (playerArray[i2].level > 0) {
 							if (selectedSpell >= 0) {
 								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 1
