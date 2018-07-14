@@ -1434,7 +1434,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} else if (cmd.equals("refreshwoodcut") && player.isAdmin()) {
 			try {
-				EntityHandler.setPicklockDoorDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
+				EntityHandler.setWoodcutDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
