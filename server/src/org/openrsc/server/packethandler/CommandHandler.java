@@ -421,7 +421,7 @@ public class CommandHandler implements PacketHandler
 			if (p != null) 
 			{
 				if (p.isDueling() && !player.isAdmin())
-					player.sendMessage(Config.PREFIX + "You cannot put players who are dueling");	
+					player.sendMessage(Config.PREFIX + "You cannot kick players who are dueling");	
 				else 
 				{				
 					World.unregisterEntity(p);
@@ -644,35 +644,6 @@ public class CommandHandler implements PacketHandler
 					p.setReturnPoint();
 					p.teleport(player.getX(), player.getY(), false);
 					Logger.log(new GenericLog(player.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));					
-				}
-			} 
-			else
-			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
-			}
-		} 
-		else 
-		if (cmd.equals("put") && (player.isMod() || player.isDev() || player.isEvent())) 
-		{
-			if (args.length != 1) 
-			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: PUT [name]");
-				return;
-			}
-			
-			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-			
-			if (p != null)
-			{
-				if (p.isDueling() && !player.isAdmin())
-				{
-					player.sendMessage(Config.PREFIX + "You cannot put players who are dueling");	
-				}
-				else
-				{
-					p.setReturnPoint();
-					p.teleport(225, 447, false);
-					Logger.log(new GenericLog(player.getUsername() + " put " + p.getUsername(), DataConversions.getTimeStamp()));
 				}
 			} 
 			else
