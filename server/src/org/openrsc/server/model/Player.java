@@ -1937,7 +1937,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		} else {
 			if (isSub) {
 				isSub = false;
-				if (!isMod())
+				if (groupID == 5)
 					updateGroupID(4);
 				sendAlert("Your subscription period has expired.");
 			}
