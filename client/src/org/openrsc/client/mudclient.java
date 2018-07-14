@@ -2402,7 +2402,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3200)
 			displayMessage(EntityHandler.getItemDef(actionType).getDescription()
-					+ (ourPlayer.admin == 1 ? " (" + actionType + ": " + (groundItemX[actionType] + areaX) + ", "
+					+ (ourPlayer.groupID == 1 ? " (" + actionType + ": " + (groundItemX[actionType] + areaX) + ", "
 							+ (groundItemY[actionType] + areaY) + ")" : ""),
 					3, 0);
 		if (currentMenuID == 300) {
@@ -2443,7 +2443,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3300)
 			displayMessage(
-					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.admin == 1 ? " (" + actionType
+					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType
 							+ ": " + (doorX[actionType] + areaX) + ", " + (doorY[actionType] + areaY) + ")" : ""),
 					3, 0);
 		if (currentMenuID == 400) {
@@ -2482,7 +2482,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3400)
 			displayMessage(
-					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.admin == 1 ? " (" + actionType
+					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType
 							+ ": " + (objectX[actionType] + areaX) + ", " + (objectY[actionType] + areaY) + ")" : ""),
 					3, 0);
 		if (currentMenuID == 600) {
@@ -2492,7 +2492,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 787) { /* admin cancel auction house entry */
+		if (currentMenuID == 787) { /* groupID cancel auction house entry */
 			super.cancelAuction(actionVariable);
 		}
 		if (currentMenuID == 610) {
@@ -2547,7 +2547,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			mouseOverMenu = 0;
 		}
 		if (currentMenuID == 3600) {
-			if (ourPlayer.admin == 1)
+			if (ourPlayer.groupID == 1)
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription() + " ("
 						+ EntityHandler.getItemDef(actionType).id + ")", 3, 0);
 			else
@@ -2600,7 +2600,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3700)
 			displayMessage(EntityHandler.getNpcDef(actionType).getDescription()
-					+ (ourPlayer.admin == 1 ? " (" + actionType + ")" : ""), 3, 0);
+					+ (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""), 3, 0);
 		if (currentMenuID == 800) {
 			int i3 = (actionX - 64) / 128;
 			int i5 = (actionY - 64) / 128;
@@ -3245,7 +3245,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	@Override
 	public final boolean isSubscriber() {
-		return ourPlayer.admin != 4;
+		return ourPlayer.groupID != 4;
 	}
 
 	public final void resetLoginVars() {
@@ -3633,7 +3633,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					0xffff00);
 			i9 += 13;
 			drawString("@gre@Fatigue: @whi@" + (fatigue * 100 / 750) + "%", 6, i9, 1, 0xffff00);
-			if (ourPlayer.admin > 0 && ourPlayer.admin < 4) {
+			if (ourPlayer.groupID > 0 && ourPlayer.groupID < 4) {
 				i9 += 13;
 				drawString(
 						"@gre@Coordinates: @blu@X@gre@:@whi@ " + (sectionX + areaX) + "@gre@, " + "@blu@Y@gre@: @whi@" + (sectionY + areaY),
@@ -3960,7 +3960,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						if (k3 > 9)
 							s = "@gre@";
 						s = " " + s + "(level-" + playerArray[i2].level + ")";
-						if (playerArray[i2].admin != 4 && playerArray[i2].admin != 7 && playerArray[i2].admin != 5) {
+						if (playerArray[i2].groupID != 4 && playerArray[i2].groupID != 7 && playerArray[i2].groupID != 5) {
 							s = "";
 						}
 						/*if (System.currentTimeMillis() - playerArray[i2].lastMoved >= 60 * 5 * 1000) {
@@ -3996,13 +3996,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							} else {
 								if (i > 0 && (playerArray[i2].currentY - 64) / 128 + wildY + areaY < 2203) {
 									menuText1[menuLength] = "Attack";
-									if (playerArray[i2].admin == 1)
+									if (playerArray[i2].groupID == 1)
 										menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 2)
+									else if (playerArray[i2].groupID == 2)
 										menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 6)
+									else if (playerArray[i2].groupID == 6)
 										menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 7)
+									else if (playerArray[i2].groupID == 7)
 										menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
 									else
 										menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
@@ -4016,13 +4016,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuLength++;
 								} else {
 									menuText1[menuLength] = "Duel with";
-									if (playerArray[i2].admin == 1)
+									if (playerArray[i2].groupID == 1)
 										menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 2)
+									else if (playerArray[i2].groupID == 2)
 										menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 6)
+									else if (playerArray[i2].groupID == 6)
 										menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 7)
+									else if (playerArray[i2].groupID == 7)
 										menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
 									else
 										menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
@@ -4033,13 +4033,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuLength++;
 								}
 								menuText1[menuLength] = "Trade with";
-								if (playerArray[i2].admin == 1)
+								if (playerArray[i2].groupID == 1)
 									menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].admin == 2)
+								else if (playerArray[i2].groupID == 2)
 									menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].admin == 6)
+								else if (playerArray[i2].groupID == 6)
 									menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].admin == 7)
+								else if (playerArray[i2].groupID == 7)
 									menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
 								else
 									menuText2[menuLength] = "@whi@" + playerArray[i2].name + "@whi@" + s;
@@ -4049,13 +4049,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 								/*
 								 * menuText1[menuLength] = "Report abuse"; if
-								 * (playerArray[i2].admin == 1)
+								 * (playerArray[i2].groupID == 1)
 								 * menuText2[menuLength] = "#adm#@yel@" +
 								 * playerArray[i2].name + "@whi@" + s; else if
-								 * (playerArray[i2].admin == 2)
+								 * (playerArray[i2].groupID == 2)
 								 * menuText2[menuLength] = "#mod#@whi@" +
 								 * playerArray[i2].name + "@whi@" + s; else if
-								 * (playerArray[i2].admin == 3)
+								 * (playerArray[i2].groupID == 3)
 								 * menuText2[menuLength] = "#dev#@red@" +
 								 * playerArray[i2].name + "@whi@" + s; else
 								 * menuText2[menuLength] = "@whi@" +
@@ -4067,13 +4067,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								if ((sectionX + areaX) > 192 && (sectionX + areaX) < 240 && (sectionY + areaY) > 2881
 										&& (sectionY + areaY) < 2927) { // DMARENA
 									menuText1[menuLength] = "Death Match with";
-									if (playerArray[i2].admin == 1)
+									if (playerArray[i2].groupID == 1)
 										menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 2)
+									else if (playerArray[i2].groupID == 2)
 										menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 6)
+									else if (playerArray[i2].groupID == 6)
 										menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].admin == 7)
+									else if (playerArray[i2].groupID == 7)
 										menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
 									else
 										menuText2[menuLength] = "@whi@" + playerArray[i2].name + "@whi@" + s;
@@ -4083,13 +4083,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								}
 
 								menuText1[menuLength] = "Follow";
-								if (playerArray[i2].admin == 1)
+								if (playerArray[i2].groupID == 1)
 									menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].admin == 2)
+								else if (playerArray[i2].groupID == 2)
 									menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].admin == 6)
+								else if (playerArray[i2].groupID == 6)
 									menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].admin == 7)
+								else if (playerArray[i2].groupID == 7)
 									menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
 								else
 									menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
@@ -4363,7 +4363,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				menuActionY[menuLength] = engineHandle.selectedY[l1];
 				menuLength++;
 			}
-			if (ourPlayer.admin == 1 || ourPlayer.admin == 2 || ourPlayer.admin == 6 || ourPlayer.admin == 7) {
+			if (ourPlayer.groupID == 1 || ourPlayer.groupID == 2 || ourPlayer.groupID == 6 || ourPlayer.groupID == 7) {
 				menuText1[menuLength] = "Teleport here";
 				menuText2[menuLength] = "";
 				menuID[menuLength] = 921;
@@ -8062,7 +8062,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						displayQuestMessage("@whi@" + mob.name + ": " + mob.lastMessage);
 						return;
 					} else if (mobUpdateType == 2)
-						displayRegularChat(mob.name, mob.admin, mob.lastMessage);
+						displayRegularChat(mob.name, mob.groupID, mob.lastMessage);
 				}
 				mobUpdateOffset += messageLength;
 			}
@@ -8247,16 +8247,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				}
 				Mob mob = mobArray[mobArrayIndex];
 				if (mob != null) {
-					int old = mob.admin;
+					int old = mob.groupID;
 					mob.colourHairType = data[mobUpdateOffset++] & 0xff;
 					mob.colourTopType = data[mobUpdateOffset++] & 0xff;
 					mob.colourBottomType = data[mobUpdateOffset++] & 0xff;
 					mob.colourSkinType = data[mobUpdateOffset++] & 0xff;
 					mob.level = data[mobUpdateOffset++] & 0xff;
 					mob.skull = data[mobUpdateOffset++] & 0xff;
-					mob.admin = data[mobUpdateOffset++] & 0xff;
+					mob.groupID = data[mobUpdateOffset++] & 0xff;
 					if (mob == ourPlayer) {
-						if (init || ourPlayer.admin != old && ourPlayer.admin != 4) {
+						if (init || ourPlayer.groupID != old && ourPlayer.groupID != 4) {
 							init = false;
 							delegate.onLogin();
 						}
@@ -8457,9 +8457,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			} else if (command == 54) {
 				hpbu.update(length, data);
 			} else if (command == 222) {
-				int old = ourPlayer.admin;
-				ourPlayer.admin = DataOperations.getUnsignedByte(data[1]);
-				if (old != ourPlayer.admin && ourPlayer.admin != 4) {
+				int old = ourPlayer.groupID;
+				ourPlayer.groupID = DataOperations.getUnsignedByte(data[1]);
+				if (old != ourPlayer.groupID && ourPlayer.groupID != 4) {
 					delegate.onLogin();
 				}
 			} else if (command == 3) {

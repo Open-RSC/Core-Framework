@@ -5,7 +5,7 @@ public final class Mob {
 	/**
 	* Appearance Values
 	*/
-    public int admin;
+    public int groupID;
     public long nameLong;
     public String name;
     public int serverIndex;
