@@ -1439,6 +1439,13 @@ public class CommandHandler implements PacketHandler
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (cmd.equals("refreshfishing") && player.isAdmin()) {
+			try {
+				EntityHandler.setFishingDefinitions(World.getWorldLoader().loadFishingDefinitions());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if(cmd.equals("refreshnpchandlers") && player.isAdmin()) {
 			try {
 				World.getWorldLoader().loadNpcHandlers();

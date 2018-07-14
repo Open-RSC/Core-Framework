@@ -843,7 +843,7 @@ public class WorldLoader {
 		return spellAggressiveLvl;
 	}
 
-	private HashMap<Integer, ArrayList<ObjectFishingDef>> loadFishingDefinitions() throws SQLException {
+	public HashMap<Integer, ArrayList<ObjectFishingDef>> loadFishingDefinitions() throws SQLException {
 		HashMap<Integer, ArrayList<ObjectFishingDef>> objectFishingDefs = new HashMap<Integer, ArrayList<ObjectFishingDef>>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
