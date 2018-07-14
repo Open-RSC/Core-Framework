@@ -1462,6 +1462,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} else if (cmd.equals("refreshagility") && player.isAdmin()) {
 			try {
+				EntityHandler.setAgilityCourseDefinitions(World.getWorldLoader().loadAgilityCourseDefinitions());
 				EntityHandler.setAgilityDefinitions(World.getWorldLoader().loadAgilityDefinitons());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
