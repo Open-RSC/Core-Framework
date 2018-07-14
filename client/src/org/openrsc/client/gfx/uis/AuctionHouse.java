@@ -297,7 +297,7 @@ public class AuctionHouse extends GraphicalOverlay {
 							mc.setValue = false;
 						}
 					} else if (button == 2 && !mc.tester
-							&& (mc.ourPlayer.admin == 1 || mc.ourPlayer.admin == 2)) {
+							&& (mc.ourPlayer.groupID == 1 || mc.ourPlayer.groupID == 2)) {
 						mc.tradeWindowX = x;
 						mc.tradeWindowY = y;
 
