@@ -899,9 +899,9 @@ public final class World
 
 	public static void getLotteryPot(Player player) {
 	        if (lotteryRunning)
-	                player.sendMessage("@gre@RSCU@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@!");
+	                player.sendMessage(Config.PREFIX + "@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@!");
 	        else
-	                player.sendMessage("@gre@RSCU:@whi@ There's currently no lottery running");
+	                player.sendMessage(Config.PREFIX + "@whi@ There's currently no lottery running");
 	}
 
 	public static void startLottery(int price) {

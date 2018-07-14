@@ -287,8 +287,3 @@ import org.openrsc.server.util.Formulae;
 /* 325 */     session.write(Integer.valueOf(reply));
 /*     */   }
 /*     */ }
-
-/* Location:           C:\Users\Freelancer\Desktop\rsce_stable\zilent_rsce\openrsc.jar
- * Qualified Name:     org.openrsc.server.packethandler.web.StaffActionHandler
- * JD-Core Version:    0.5.4
- */

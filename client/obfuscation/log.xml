@@ -740,7 +740,7 @@
    <field old="LCYV_mudclient_SHKE_7 I" new="rd"/>
    <field old="MOD B" new="Vd"/>
    <field old="MOVIE_FPS I" new="Ce"/>
-   <field old="RSCU_DIR Ljava/lang/String;" new="bb"/>
+   <field old="OPENRSC_DIR Ljava/lang/String;" new="bb"/>
    <field old="SHOW_NAMES Z" new="dC"/>
    <field old="SIDE_MENU Z" new="Xc"/>
    <field old="SITE_URL Ljava/lang/String;" new="C"/>
