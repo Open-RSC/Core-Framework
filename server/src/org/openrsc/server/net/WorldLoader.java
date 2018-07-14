@@ -557,7 +557,7 @@ public class WorldLoader {
 		}
 	}
 
-	private HashMap<Integer, CerterDef> loadCerterDefinitions() throws SQLException {
+	public HashMap<Integer, CerterDef> loadCerterDefinitions() throws SQLException {
 		HashMap<Integer, CerterDef> certerDefs = new HashMap<Integer, CerterDef>();
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://" + Config.DB_HOST + "/" +  Config.CONFIG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS)) {
