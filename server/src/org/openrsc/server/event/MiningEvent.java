@@ -50,7 +50,7 @@ public class MiningEvent extends DelayedEvent {
 					} else {
 						owner.getInventory().add(ore);
 						owner.sendMessage("You manage to obtain some " + ore.getDef().getName() + ".");
-						owner.increaseXP(14, def.getExp(), 1);
+						owner.increaseXP(14, def.getExp(), true);
 						owner.sendStat(14);
 						World.registerEntity(new GameObject(object.getLocation(), 98, object.getDirection(), object.getType()));
 						World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);

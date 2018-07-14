@@ -136,7 +136,7 @@ public interface Script
 	void NarrativeDialog(String... messages);
 
 	void ShowItemBubble(int itemID);
-	void IncreaseXP(Skill skill, float amount);
+	void IncreaseXP(Skill skill, int amount);
 	
 	/// Bank Access
 	void OpenBank(int delay);

@@ -1016,7 +1016,7 @@ public class InvUseOnObject implements PacketHandler {
 		      												InvItem result = new InvItem(def.getItemID(), 1);
 		      												owner.sendMessage("You make a " + result.getDef().getName());
 		      												owner.getInventory().add(result);
-		      												owner.increaseXP(12, def.getExp(), 1);
+		      												owner.increaseXP(12, def.getExp(), true);
 		      												owner.sendStat(12);
 		      												owner.sendInventory();
 		      											}
@@ -1052,7 +1052,7 @@ public class InvUseOnObject implements PacketHandler {
 		      										InvItem result = new InvItem(results[option]);
 		      										owner.sendMessage("You make a " + result.getDef().getName());
 		      										owner.getInventory().add(result);
-		      										owner.increaseXP(12, 200, 1);
+		      										owner.increaseXP(12, 200, true);
 		      										owner.sendStat(12);
 		      										owner.sendInventory();
 		      									}
@@ -1075,7 +1075,7 @@ public class InvUseOnObject implements PacketHandler {
 				      						owner.sendMessage("It mixes to make some molten glass");
 				      						owner.getInventory().add(new InvItem(623, 1));
 				      						owner.getInventory().add(new InvItem(21, 1));
-				      						owner.increaseXP(12, 80, 1);
+				      						owner.increaseXP(12, 80, true);
 				      						owner.sendStat(12);
 				      						owner.sendInventory();
 				      					}
@@ -1116,7 +1116,7 @@ public class InvUseOnObject implements PacketHandler {
 											}
 											owner.getInventory().add(bar);
 											owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
-											owner.increaseXP(13, def.getExp(), 1);
+											owner.increaseXP(13, def.getExp(), true);
 											owner.sendStat(13);
 											owner.sendInventory();
 										}
@@ -1387,7 +1387,7 @@ public class InvUseOnObject implements PacketHandler {
 	      										}
 	      										owner.sendMessage("You hammer the metal into some nails");
 	      										owner.getInventory().add(new InvItem(419, 2));
-	      										owner.increaseXP(13, Formulae.getSmithingExp(171, 1), 1);
+	      										owner.increaseXP(13, Formulae.getSmithingExp(171, 1), true);
 	      										owner.sendStat(13);
 	      										owner.sendInventory();
 	      										break;
@@ -1605,7 +1605,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		      				public void action() {
 				      						if (owner.getInventory().remove(item) > -1) {
 				      							owner.getInventory().add(new InvItem(207, 1));
-				      							owner.increaseXP(12, 10, 1);
+				      							owner.increaseXP(12, 10, true);
 				      							owner.sendStat(12);
 				      							owner.sendInventory();
 				      						}
@@ -1623,7 +1623,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		      					public void action() {
 				      						if (owner.getInventory().remove(item) > -1) {
 				      							owner.getInventory().add(new InvItem(676, 1));
-				      							owner.increaseXP(12, 60, 1);
+				      							owner.increaseXP(12, 60, true);
 				      							owner.sendStat(12);
 				      							owner.sendInventory();
 				      						}
@@ -1856,7 +1856,7 @@ public class InvUseOnObject implements PacketHandler {
   										showBubble();
   										owner.sendMessage("You make a " + result.getDef().getName());
   										owner.getInventory().add(result);
-  										owner.increaseXP(12, exp, 1);
+  										owner.increaseXP(12, exp, true);
   										owner.sendStat(12);
   										owner.sendInventory();
   									}
@@ -1904,7 +1904,7 @@ public class InvUseOnObject implements PacketHandler {
       				      				else {
 	      		      						owner.sendMessage("You take out the " + result.getDef().getName());
 	      		      						owner.getInventory().add(result);
-	      		      						owner.increaseXP(12, exp, 1);
+	      		      						owner.increaseXP(12, exp, true);
 	      		      						owner.sendStat(12);
       				      				}
       				      				owner.sendInventory();
@@ -2020,7 +2020,7 @@ public class InvUseOnObject implements PacketHandler {
 						if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
 							owner.getInventory().add(cookedFood);
 							owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
-							owner.increaseXP(7, cookingDef.getExp(), 1);
+							owner.increaseXP(7, cookingDef.getExp(), true);
 							owner.sendStat(7);
 						} else {
 							owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
@@ -2068,7 +2068,7 @@ public class InvUseOnObject implements PacketHandler {
 					for(int x = 0;x < def.getAmount();x++)
 						owner.getInventory().add(new InvItem(def.getItemID(), 1));
 				}
-				owner.increaseXP(13, Formulae.getSmithingExp(barID, def.getRequiredBars()), 1);
+				owner.increaseXP(13, Formulae.getSmithingExp(barID, def.getRequiredBars()), true);
 				owner.sendStat(13);
 				owner.sendInventory();
 			}

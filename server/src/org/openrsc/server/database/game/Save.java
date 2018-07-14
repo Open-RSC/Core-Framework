@@ -104,11 +104,11 @@ public class Save
 	private ArrayList<Long> ignores;
 	private String currentIP;
 	private int skillTotal, x, y, kills, deaths, combat, combatStyle, combatWindow, bones, ballsOfWool, bananasInCrate, leverA, leverB, leverC, leverD, leverE, leverF, ladyPatches, poison;
-	private double fatigue;
+	private int fatigue;
 	private long logoutDate;
 	private long deathTime;
 	private int[] curStats;
-	double[] curExp;
+	private int[] curExp;
 	private boolean railing1, railing2, railing3, railing4, railing5, railing6, axle, shaft, pipe, barrel;
 	private Map<Integer, Quest> quests;
 	

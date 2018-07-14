@@ -48,7 +48,7 @@ public class QuestFactory
 				_points = true;
 				break;
 			case "EXPERIENCE":
-				rewards.add(new DefaultExperience(Skill.valueOf(atts.getValue("stat").toUpperCase()), Float.parseFloat(atts.getValue("amount"))));
+				rewards.add(new DefaultExperience(Skill.valueOf(atts.getValue("stat").toUpperCase()), Integer.parseInt(atts.getValue("amount"))));
 				break;
 			case "ITEM":
 				rewards.add(new DefaultItem(Integer.parseInt(atts.getValue("id")), Integer.parseInt(atts.getValue("amount")), atts.getValue("message")));

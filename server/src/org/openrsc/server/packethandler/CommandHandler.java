@@ -346,8 +346,6 @@ public class CommandHandler implements PacketHandler
 					if (p != null) 
 					{
 						int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
-						// Quick-Fix 3.9.2013, 6:46PM EST
-						// Fixes "fatigue dupe" detected by drax, only allow fatigue between 0 and 100
 						if(fatigue < 0)
 						{
 							fatigue = 0;
@@ -357,10 +355,10 @@ public class CommandHandler implements PacketHandler
 							fatigue = 100;
 						}
 						// Quick-Fix 3.9.2013, 6:46PM EST
-						p.setFatigue(fatigue);
+						p.setFatigue((int)(18750 * (fatigue / 100.0D)));
 						p.sendFatigue();
-						player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + fatigue + "%");
-						Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + fatigue + "%", DataConversions.getTimeStamp()));
+						player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
+						Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
 					} 
 					else
 					{
@@ -369,7 +367,7 @@ public class CommandHandler implements PacketHandler
 				} 
 				else 
 				{
-					player.setFatigue(100);
+					player.setFatigue(18750);
 					player.sendFatigue();
 				}
 			}
@@ -405,7 +403,7 @@ public class CommandHandler implements PacketHandler
 			
 			if (p != null) 
 			{
-				player.sendAlert(p.getUsername() + " (" + p.getStatus() + ") at " + player.getLocation().toString() + " (" + player.getLocation().getDescription() + ") % % Logged in: " + (DataConversions.getTimeStamp() - player.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - player.getLastMoved()) / 1000) + " % % Fatigue: " + p.getFatigue() + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
+				player.sendAlert(p.getUsername() + " (" + p.getStatus() + ") at " + player.getLocation().toString() + " (" + player.getLocation().getDescription() + ") % % Logged in: " + (DataConversions.getTimeStamp() - player.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - player.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
 			} 
 			else
 				player.sendMessage(Config.PREFIX + "Invalid name");

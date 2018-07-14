@@ -25,7 +25,7 @@ public class AgilityCourseDef {
 				return;
 			}
 		}
-		player.increaseXP(16, experience, 1);
+		player.increaseXP(16, experience, true);
 		for(ArrayList<Player> toRemove : completedObstacles.values()) {
 			toRemove.remove(player);
 		}

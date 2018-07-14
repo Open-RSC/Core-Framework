@@ -775,7 +775,7 @@ public class SpellHandler implements PacketHandler {
 		      		}
 		      		player.sendMessage("You make a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
   					player.getInventory().add(bar);
-  					player.increaseXP(13, smeltingDef.getExp(), 1);
+  					player.increaseXP(13, smeltingDef.getExp(), true);
   					player.sendStat(13);
   					player.sendInventory();
   				}
@@ -1072,7 +1072,7 @@ public class SpellHandler implements PacketHandler {
 		player.sendSound("spellok", false);
 		if (message)
 			player.sendMessage(string);
-		player.increaseXP(6, spell.getExp(), 1);
+		player.increaseXP(6, spell.getExp(), true);
 		player.setCastTimer();
 	}
 	
