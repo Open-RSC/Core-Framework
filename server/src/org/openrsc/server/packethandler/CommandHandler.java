@@ -705,9 +705,15 @@ public class CommandHandler implements PacketHandler
 		else 
 		if (cmd.equals("jail") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
+			if (args.length != 1) 
+			{
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: JAIL [name]");
+				return;
+			}
+            
 			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			
-			if (!p.isAdmin()) 
+			if (p.getGroupID() >= 4) 
 			{
 				p.teleport(793, 24, false);
 				player.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
@@ -715,16 +721,30 @@ public class CommandHandler implements PacketHandler
 			} 
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
+				player.sendMessage(Config.PREFIX + "Can not jail staff");
 			}
 		} 
 		else 
 		if (cmd.equals("release") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
-			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-			p.teleport(225, 447, false);
-			p.sendAlert("You have been released from jail.");
-			player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+			if (args.length != 1) 
+			{
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: RELEASE [name]");
+				return;
+			}
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+            
+			if (p.getGroupID() >= 4) 
+			{
+                p.teleport(225, 447, false);
+                p.sendAlert("You have been released from jail.");
+                player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+			} 
+			else
+			{
+				player.sendMessage(Config.PREFIX + "Can not jail staff");
+			}
 		} 
 		else 
 		if (cmd.equals("goto") && (player.isMod() || player.isDev())) 
