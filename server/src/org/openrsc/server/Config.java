@@ -51,6 +51,7 @@ public class Config {
 		wild_xp_bonus = Float.parseFloat(props.getProperty("wild_xp_bonus"));
 		skulled_xp_bonus = Float.parseFloat(props.getProperty("skulled_xp_bonus"));
 		RUNECRAFTING_AMOUNT_MULTIPLIER = Integer.parseInt(props.getProperty("runecrafting_amount_multiplier"));
+        MAX_CONNECTIONS_PER_IP = Integer.parseInt(props.getProperty("max_connections_per_ip"));
 
 		if(props.containsKey("staff_teleport_locations_db"))
 		{
@@ -60,7 +61,7 @@ public class Config {
 	}
 
 	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME, IRC_SERVER, IRC_CHANNEL, IRC_USERNAME, IRC_PASSWORD, IRC_GREET_1, IRC_GREET_2, IRC_GREET_3;
-	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS;
+	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_CONNECTIONS_PER_IP;
 	public static float combat_xp, combat_xp_sub, skill_xp, skill_xp_sub, wild_xp_bonus, skulled_xp_bonus;
 	public static long START_TIME;
 	public static boolean LOGGING, IRC, IRC_DEBUG, IRC_NOTIFY, PK_MODE;
