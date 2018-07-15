@@ -817,7 +817,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("restart") && (player.isAdmin() || player.isDev()))
+		if ((cmd.equals("restart") || cmd.equals("update")) && (player.isAdmin() || player.isDev()))
 		{
 			String message = "";
 			if (args.length > 0) {
@@ -828,19 +828,6 @@ public class CommandHandler implements PacketHandler
 			World.getWorld().getEventPump().submit(new ShutdownEvent(true, message));
 		}
 		else 
-		if (cmd.equals("update") && player.isAdmin())
-		{
-			String message = "";
-			if (args.length > 0) 
-			{
-				for (String s : args)
-				{
-					message += (s + " ");
-				}
-				message = message.substring(0, message.length() - 1);
-			}
-			World.getWorld().getEventPump().submit(new ShutdownEvent(false, message));
-		} 
 		if (cmd.equals("item") && player.isAdmin())
 		{
 			if (args.length < 1 || args.length > 2)
