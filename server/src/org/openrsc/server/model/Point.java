@@ -54,6 +54,10 @@ public class Point {
 	public boolean isInSeersPartyHall() {
 		return inBounds(490, 464, 500, 471) || inBounds(490, 1408, 500, 1415);
 	}
+    
+    public boolean isInJail() {
+        return inBounds(783, 10, 801, 31);
+    }
 	
 	public final int getY() {
 		return y;

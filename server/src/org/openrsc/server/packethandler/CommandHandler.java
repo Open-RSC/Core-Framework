@@ -371,7 +371,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: IP [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -391,7 +391,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: INFO [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -412,7 +412,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: KICK [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}	
 			
@@ -438,7 +438,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: BAN [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -463,7 +463,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: UNBAN [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -476,7 +476,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: MUTE [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -499,7 +499,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: UMMUTE [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -616,7 +616,14 @@ public class CommandHandler implements PacketHandler
 				{
 					player.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
 				}
-			}			
+            }
+			else if (args.length == 3) 
+			{
+				if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
+				{
+					player.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+				}
+			}	
 		} 
         else if((cmd.equalsIgnoreCase("appearance")) && (player.isAdmin())) {
 			if (args.length > 0) 
@@ -645,7 +652,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: SUMMON [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -653,20 +660,27 @@ public class CommandHandler implements PacketHandler
 			
 			if (p != null) 
 			{
-				if (p.getLocation().inCtf())
-					player.sendMessage(Config.PREFIX + "You cannot summon players who are in CTF");
-				else
-				if (p.isDueling() && !player.isAdmin())
-					player.sendMessage(Config.PREFIX + "You cannot summon players who are dueling");
-				else 
-				if (player.getLocation().inWilderness() && !player.isAdmin())
-					player.sendMessage(Config.PREFIX + "You cannot summon players into the wilderness");
-				else 
-				{
-					p.setReturnPoint();
-					p.teleport(player.getX(), player.getY(), false);
-					Logger.log(new GenericLog(player.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));					
-				}
+                if(p.getGroupID() >= 4)
+                {
+                    if (p.getLocation().inCtf())
+                        player.sendMessage(Config.PREFIX + "You cannot summon players who are in CTF");
+                    else
+                    if (p.isDueling() && !player.isAdmin())
+                        player.sendMessage(Config.PREFIX + "You cannot summon players who are dueling");
+                    else 
+                    if (player.getLocation().inWilderness() && !player.isAdmin())
+                        player.sendMessage(Config.PREFIX + "You cannot summon players into the wilderness");
+                    else 
+                    {
+                        p.setReturnPoint();
+                        p.teleport(player.getX(), player.getY(), false);
+                        Logger.log(new GenericLog(player.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));					
+                    }
+                }
+                else
+                {
+                    player.sendMessage(Config.PREFIX + "Staff members can not be summoned");
+                }
 			} 
 			else
 			{
@@ -678,7 +692,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: RETURN [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -686,16 +700,23 @@ public class CommandHandler implements PacketHandler
 			
 			if (p != null) 
 			{
-				if (p.wasSummoned()) 
-				{
-					p.setSummoned(false);
-					p.teleport(p.getReturnX(), p.getReturnY(), false);
-					Logger.log(new GenericLog(player.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
-				} 
-				else
-				{
-					player.sendMessage(Config.PREFIX + p.getUsername() + " has no return point set");
-				}
+                if(p.getGroupID() >= 4)
+                {
+                    if (p.wasSummoned()) 
+                    {
+                        p.setSummoned(false);
+                        p.teleport(p.getReturnX(), p.getReturnY(), false);
+                        Logger.log(new GenericLog(player.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
+                    } 
+                    else
+                    {
+                        player.sendMessage(Config.PREFIX + p.getUsername() + " has no return point set");
+                    }
+                }
+                else
+                {
+                    player.sendMessage(Config.PREFIX + "Staff members can not be summoned");
+                }
 			} 
 			else
 			{
@@ -707,7 +728,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: JAIL [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -717,9 +738,16 @@ public class CommandHandler implements PacketHandler
 			{
                 if (p.getGroupID() >= 4) 
                 {
-                    p.teleport(793, 24, false);
-                    player.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
-                    p.sendAlert("You have been jailed.");
+                    if(!p.getLocation().isInJail())
+                    {
+                        p.teleport(793, 24, false);
+                        player.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
+                        p.sendAlert("You have been jailed.");
+                    }
+                    else
+                    {
+                        player.sendMessage(Config.PREFIX + p.getUsername() + " is already in jail");
+                    }
                 } 
                 else
                 {
@@ -736,7 +764,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: RELEASE [name]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -746,13 +774,20 @@ public class CommandHandler implements PacketHandler
 			{
                 if (p.getGroupID() >= 4) 
                 {
-                    p.teleport(120, 648, false);
-                    p.sendAlert("You have been released from jail.");
-                    player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+                    if(p.getLocation().isInJail())
+                    {
+                        p.teleport(120, 648, false);
+                        p.sendAlert("You have been released from jail.");
+                        player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+                    }
+                    else
+                    {
+                        player.sendMessage(Config.PREFIX + p.getUsername() + " is not in jail");
+                    }
                 } 
                 else
                 {
-                    player.sendMessage(Config.PREFIX + "Staff members can not be jailed");
+                    player.sendMessage(Config.PREFIX + "Staff members can not be released");
                 }
             }
 			else
@@ -761,18 +796,24 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("goto") && (player.isMod() || player.isDev())) 
+		if ((cmd.equals("goto") || cmd.equals("tpto") || cmd.equals("teleportto")) && (player.isMod() || player.isDev())) 
 		{
+			if (args.length != 1) 
+			{
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				return;
+			}
+            
 			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			
-			if (p == null)
+            if(p != null)
+            {
+                player.teleport(p.getX(), p.getY(), false);
+                Logger.log(new GenericLog(player.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
+            }
+ 			else
 			{
-				p = World.getRandomPlayer();
-			}
-			if (!p.isAdmin()) 
-			{
-				player.teleport(p.getX(), p.getY(), false);
-				Logger.log(new GenericLog(player.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
+				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
 		else 
