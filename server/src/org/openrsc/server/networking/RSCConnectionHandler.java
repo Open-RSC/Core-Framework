@@ -7,6 +7,7 @@ import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.openrsc.server.Config;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ConnectionLog;
 import org.openrsc.server.model.Player;
@@ -67,7 +68,7 @@ implements IoHandler
 		}
 	}
 
-	private final ConnectionLimiter limiter = new ConnectionLimiter(5, 400);
+	private final ConnectionLimiter limiter = new ConnectionLimiter(Config.MAX_CONNECTIONS_PER_IP, 400);
 	/*private final static RSCPacket PROXY_DENIED;
 	private final static RSCPacket ALLOW_LOGIN;
 	
