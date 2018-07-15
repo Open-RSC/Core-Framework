@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.openrsc.server.Config;
+import static org.openrsc.server.Config.DB_NAME;
+import static org.openrsc.server.Config.SERVER_IP;
 
 // fuck java.util.logging...
 public class AccountManager
@@ -53,8 +56,7 @@ public class AccountManager
 			SQLException
 	{
 		OUT.println("Removing banned accounts...");
-                //needs to use config for credentials
-		AccountManager mgr = new AccountManager("localhost", "openrsc", "root", "malware");
+		AccountManager mgr = new AccountManager(Config.SERVER_IP, Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS);
 		mgr.deleteBannedPlayers();
 	}
 	
