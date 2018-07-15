@@ -711,17 +711,24 @@ public class CommandHandler implements PacketHandler
 				return;
 			}
             
-			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-			
-			if (p.getGroupID() >= 4) 
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if (p != null) 
 			{
-				p.teleport(793, 24, false);
-				player.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
-				p.sendAlert("You have been jailed.");
-			} 
+                if (p.getGroupID() >= 4) 
+                {
+                    p.teleport(793, 24, false);
+                    player.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
+                    p.sendAlert("You have been jailed.");
+                } 
+                else
+                {
+                    player.sendMessage(Config.PREFIX + "Staff members can not be jailed");
+                }
+            }
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Can not jail staff");
+				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
 		else 
@@ -735,15 +742,22 @@ public class CommandHandler implements PacketHandler
             
             Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
             
-			if (p.getGroupID() >= 4) 
+			if (p != null) 
 			{
-                p.teleport(225, 447, false);
-                p.sendAlert("You have been released from jail.");
-                player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
-			} 
+                if (p.getGroupID() >= 4) 
+                {
+                    p.teleport(225, 447, false);
+                    p.sendAlert("You have been released from jail.");
+                    player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+                } 
+                else
+                {
+                    player.sendMessage(Config.PREFIX + "Staff members can not be jailed");
+                }
+            }
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Can not jail staff");
+				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
 		else 
