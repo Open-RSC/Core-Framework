@@ -66,7 +66,7 @@ public class SessionRequest
 		}
 		@SuppressWarnings("unused")
 		byte unused_remove_me = p.readByte();
-		if("OpenRSC".equals(p.readString().trim()))
+		if("RSCE".equals(p.readString().trim()))
 		{
 			/// Generate a random key
 			Long serverKey = DataConversions.getRandom().nextLong();
