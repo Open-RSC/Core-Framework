@@ -746,7 +746,7 @@ public class CommandHandler implements PacketHandler
 			{
                 if (p.getGroupID() >= 4) 
                 {
-                    p.teleport(225, 447, false);
+                    p.teleport(120, 648, false);
                     p.sendAlert("You have been released from jail.");
                     player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
                 } 
