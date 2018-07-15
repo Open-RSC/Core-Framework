@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<!-- Set which ID the master fisher gives out when it's F2P Wilderness -->
-	<entry key="f2p_free_fish_id">359</entry>
-
-        <!-- Set which ID the master fisher gives out when it's P2P Wilderness -->
-	<entry key="p2p_free_fish_id">357</entry>
-
         <!-- The amount to multiply the generated runes by -->
 	<entry key="runecrafting_amount_multiplier">1</entry>
 
