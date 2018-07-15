@@ -3,6 +3,7 @@ package org.openrsc.client;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.Socket;
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 import org.openrsc.client.util.DataConversions;
@@ -58,7 +59,7 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 			long l = DataOperations.stringLength12ToLong(user);
 			streamClass.createPacket(2);
 			streamClass.addByte((int) (l >> 16 & 31L));
-			streamClass.addString(new String(pingpacket));
+			streamClass.addString(pingpacket);
 			streamClass.finalisePacket();
 			sessionID = streamClass.read8ByteLong();
 			if (sessionID == 0L) {
@@ -66,8 +67,8 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 				return;
 			}
 			int sessionRotationKeys[] = new int[4];
-			sessionRotationKeys[0] = (int) (Math.random() * 99999999D);
-			sessionRotationKeys[1] = (int) (Math.random() * 99999999D);
+			sessionRotationKeys[0] = (int) (loginRandom.nextInt());
+			sessionRotationKeys[1] = (int) (loginRandom.nextInt());
 			sessionRotationKeys[2] = (int) (sessionID >> 32);
 			sessionRotationKeys[3] = (int) sessionID;
 			DataEncryption dataEncryption = new DataEncryption(new byte[500]);
@@ -475,8 +476,9 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 
 	public Long lastPrivateMessageSender = null;
 
+    private SecureRandom loginRandom = new SecureRandom();
 	public static int maxPacketReadCount;
-	public byte[] pingpacket = { 82, 83, 67, 69 };
+	private String pingpacket = "OpenRSC";
 	String username;
 	String password;
 	public StreamClass streamClass;

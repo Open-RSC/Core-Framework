@@ -260,6 +260,10 @@ public final class DataConversions {
 	public static Random getRandom() {
 		return random;
 	}
+    
+    public static SecureRandom getSecureRandom() {
+        return secureRandom;
+    }
 
 	/**
 	 * Generates a pseudo-random integral value in the range of [low, high] 

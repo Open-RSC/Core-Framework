@@ -66,10 +66,10 @@ public class SessionRequest
 		}
 		@SuppressWarnings("unused")
 		byte unused_remove_me = p.readByte();
-		if("RSCE".equals(p.readString().trim()))
+		if("OpenRSC".equals(p.readString().trim()))
 		{
 			/// Generate a random key
-			Long serverKey = DataConversions.getRandom().nextLong();
+			Long serverKey = DataConversions.getSecureRandom().nextLong();
 			
 			/// Attach that key to the session
 			session.setAttachment(serverKey);
