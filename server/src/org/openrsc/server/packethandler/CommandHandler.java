@@ -674,7 +674,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else 
-		if (cmd.equals("return") && player.isMod()) 
+		if (cmd.equals("return") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
 			{
