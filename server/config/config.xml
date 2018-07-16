@@ -15,7 +15,7 @@
 	<entry key="ip">0.0.0.0</entry>
 	<entry key="port">53595</entry>
 	<entry key="webport">53594</entry>
-        <entry key="max_connections_per_ip">5</entry>
+        <entry key="max_logins_per_ip">5</entry>
 
         <!-- Database connection -->
 	<entry key="dbhost">localhost</entry>

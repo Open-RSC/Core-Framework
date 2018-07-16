@@ -59,11 +59,20 @@ public final class GameEngine
 			{		
 				if(World.getPlayerByOwner(load.getAccount()) == null)
 				{
-					load.getSession().write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.LOGIN_SUCCESS.ordinal()).toPacket());
-					World.registerEntity(load);
-					// Quick-Fix 3.9.2013 Fixes player login logging
-					Logger.log(new PlayerLoginLog(load.getUsernameHash(), load.getAccount(), load.getIP(), (int)(System.currentTimeMillis() / 1000)));
-					// Quick-Fix 3.9.2013
+                    if(
+                        Config.MAX_LOGINS_PER_IP <= 0 ||
+                        (Config.MAX_LOGINS_PER_IP > 0 && World.getPlayersByIp(load.getIP()).count() < Config.MAX_LOGINS_PER_IP)
+                    )
+                    {
+                        load.getSession().write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.LOGIN_SUCCESS.ordinal()).toPacket());
+                        World.registerEntity(load);
+                        Logger.log(new PlayerLoginLog(load.getUsernameHash(), load.getAccount(), load.getIP(), (int)(System.currentTimeMillis() / 1000)));
+                    }
+                    else
+                    {
+                        load.getSession().write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.IP_ALREADY_IN_USE.ordinal()).toPacket());
+                        load.getSession().close();
+                    }
 				}
 				else
 				{
