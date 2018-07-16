@@ -8,10 +8,12 @@ import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.openrsc.server.Config;
+import org.openrsc.server.LoginResponse;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ConnectionLog;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.net.RSCPacket;
+import org.openrsc.server.packetbuilder.RSCPacketBuilder;
 import org.openrsc.server.util.Pair;
 
 public class RSCConnectionHandler
@@ -68,7 +70,7 @@ implements IoHandler
 		}
 	}
 
-	private final ConnectionLimiter limiter = new ConnectionLimiter(Config.MAX_CONNECTIONS_PER_IP, 400);
+	private final ConnectionLimiter limiter = new ConnectionLimiter(5, 400);
 	/*private final static RSCPacket PROXY_DENIED;
 	private final static RSCPacket ALLOW_LOGIN;
 	
