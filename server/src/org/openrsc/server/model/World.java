@@ -849,6 +849,16 @@ public final class World
 				return player;
 		return null;
 	}	
+    
+    public static EntityList<Player> getPlayersByIp(String ip) {
+        EntityList<Player> playersByIp = new EntityList();
+        
+		for (Player player : players)
+			if (player.getIP().trim().equalsIgnoreCase(ip.trim()))
+                playersByIp.add(player);
+                
+        return playersByIp;
+    }
 	
 	public static Npc getNpc(int idx) {
 		return npcs.get(idx);
