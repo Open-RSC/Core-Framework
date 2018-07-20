@@ -13,8 +13,8 @@ public class Config {
 	public static int ALLOWED_CONCURRENT_IPS_IN_WILDERNESS = 2;
     public static final int NOTE_ITEM_ID_BASE = 10000;
 	public static final String WILDERNESS_ENTRY_BLOCKED_MESSAGE = "You may only enter the wilderness on " + Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS + " character(s) at a time.";
-	public static String AVATAR_DIR = "avatars/";
-        
+	public static String AVATAR_DIR;
+
 	public static void initConfig(File file) throws IOException {
 		SERVER_NAME    = "Open RSC";
 		PREFIX         = "@gre@OpenRSC:@whi@ "; // Prefix that is sent before every custom (non-RSC) message (such as commands).
@@ -25,36 +25,41 @@ public class Config {
 
 		Properties props = new Properties();
 		props.loadFromXML(new FileInputStream(file));
-		SHUTDOWN_TIME_MILLIS = Integer.parseInt(props.getProperty("shutdown_time_millis"));
 
-		String dir = props.getProperty("avatar_dir");
-		if(dir != null)
-		{
-			AVATAR_DIR = dir;
-		}
+		// Booleans
+		ENABLE_FATIGUE = Boolean.parseBoolean(props.getProperty("ENABLE_FATIGUE"));
+		ENABLE_SLEEP_WORDS = Boolean.parseBoolean(props.getProperty("ENABLE_SLEEP_WORDS"));
+		BAN_FAILED_SLEEP = Boolean.parseBoolean(props.getProperty("BAN_FAILED_SLEEP"));
+		ALLOW_WEAKENS = Boolean.parseBoolean(props.getProperty("ALLOW_WEAKENS"));
+		ALLOW_GODSPELLS	= Boolean.parseBoolean(props.getProperty("ALLOW_GODSPELLS"));
 
-		SERVER_VERSION = Integer.parseInt(props.getProperty("version"));
-		SERVER_IP = props.getProperty("ip");
-		SERVER_PORT = Integer.parseInt(props.getProperty("port"));
-		WEB_PORT = Integer.parseInt(props.getProperty("webport"));
-		DB_HOST = props.getProperty("dbhost");
-		DB_NAME = props.getProperty("dbname");
-		DB_LOGIN = props.getProperty("dblogin");
-		DB_PASS = props.getProperty("dbpass");
-		CONFIG_DB_NAME = props.getProperty("configdbname");
-		LOG_DB_NAME = props.getProperty("logdbname");
-		TOOLS_DB_NAME = props.getProperty("toolsdbname");
-		combat_xp = Float.parseFloat(props.getProperty("combat_xp"));
-		combat_xp_sub = Float.parseFloat(props.getProperty("combat_xp_sub"));
-		skill_xp = Float.parseFloat(props.getProperty("skill_xp"));
-		skill_xp_sub = Float.parseFloat(props.getProperty("skill_xp_sub"));
-		wild_xp_bonus = Float.parseFloat(props.getProperty("wild_xp_bonus"));
-		skulled_xp_bonus = Float.parseFloat(props.getProperty("skulled_xp_bonus"));
-		RUNECRAFTING_AMOUNT_MULTIPLIER = Integer.parseInt(props.getProperty("runecrafting_amount_multiplier"));
-        MAX_LOGINS_PER_IP = Integer.parseInt(props.getProperty("max_logins_per_ip"));
+		// Integers
+		SERVER_VERSION = Integer.parseInt(props.getProperty("SERVER_VERSION"));
+		SERVER_PORT = Integer.parseInt(props.getProperty("SERVER_PORT"));
+		WEB_PORT = Integer.parseInt(props.getProperty("WEB_PORT"));
+		RUNECRAFTING_AMOUNT_MULTIPLIER = Integer.parseInt(props.getProperty("RUNECRAFTING_AMOUNT_MULTIPLIER"));
+		MAX_LOGINS_PER_IP = Integer.parseInt(props.getProperty("MAX_LOGINS_PER_IP"));
+		SHUTDOWN_TIME_MILLIS = Integer.parseInt(props.getProperty("SHUTDOWN_TIME_MILLIS"));
 
-		if(props.containsKey("staff_teleport_locations_db"))
-		{
+		// Floats
+		COMBAT_XP_RATE = Float.parseFloat(props.getProperty("COMBAT_XP_RATE"));
+		COMBAT_XP_SUB = COMBAT_XP_RATE;
+		SKILL_XP_RATE = Float.parseFloat(props.getProperty("SKILL_XP_RATE"));
+		SKILL_XP_SUB = SKILL_XP_RATE;
+		WILD_XP_BONUS = Float.parseFloat(props.getProperty("WILD_XP_BONUS"));
+		SKULLED_XP_BONUS = Float.parseFloat(props.getProperty("SKULLED_XP_BONUS"));
+
+		// Strings
+		SERVER_IP = props.getProperty("SERVER_IP");
+		DB_HOST = props.getProperty("DB_HOST");
+		DB_NAME = props.getProperty("DB_NAME");
+		DB_LOGIN = props.getProperty("DB_LOGIN");
+		DB_PASS = props.getProperty("DB_PASS");
+		CONFIG_DB_NAME = props.getProperty("CONFIG_DB_NAME");
+		LOG_DB_NAME = props.getProperty("LOG_DB_NAME");
+		TOOLS_DB_NAME = props.getProperty("TOOLS_DB_NAME");
+		AVATAR_DIR = props.getProperty("AVATAR_DIR");
+		if(props.containsKey("staff_teleport_locations_db")) {
 			STAFF_TELEPORT_LOCATION_DATABASE = props.getProperty("staff_teleport_locations_db");
 		}
 		props.clear();
@@ -62,10 +67,9 @@ public class Config {
 
 	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME, IRC_SERVER, IRC_CHANNEL, IRC_USERNAME, IRC_PASSWORD, IRC_GREET_1, IRC_GREET_2, IRC_GREET_3;
 	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_LOGINS_PER_IP;
-	public static float combat_xp, combat_xp_sub, skill_xp, skill_xp_sub, wild_xp_bonus, skulled_xp_bonus;
+	public static float COMBAT_XP_RATE, COMBAT_XP_SUB, SKILL_XP_RATE, SKILL_XP_SUB, WILD_XP_BONUS, SKULLED_XP_BONUS;
 	public static long START_TIME;
-	public static boolean LOGGING, IRC, IRC_DEBUG, IRC_NOTIFY, PK_MODE;
-	public static boolean ALLOW_WEAKENS = true, ALLOW_GODSPELLS = true;
+	public static boolean LOGGING, PK_MODE, BAN_FAILED_SLEEP, ALLOW_WEAKENS, ALLOW_GODSPELLS, ENABLE_SLEEP_WORDS, ENABLE_FATIGUE;
 
 	public static final class Quests {
 		public static final int BLACK_KNIGHTS_FORTRESS = 0;
@@ -119,7 +123,7 @@ public class Config {
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
         
-        /* Miniquests */
+        // Miniquests
         public static final int JOIN_BLACKARM_GANG = 50;
         public static final int JOIN_PHOENIX_GANG = 51;
         public static final int TUTORIAL_ISLAND = 100;

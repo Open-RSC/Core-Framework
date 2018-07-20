@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
-import org.openrsc.server.Server;
 import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.core.Watcher;
 import org.openrsc.server.database.DefaultTransaction;
@@ -2251,18 +2250,23 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		this.sleepingBag = (bag);
 			if (this.sleepEvent != null)
 				this.sleepEvent.stop();
-			if (this.sleepCount >= 10) {
-				synchronized (World.getPlayers()) {
-					for (Player p : World.getPlayers()) {
-						if (p.isMod()) {
-							p.sendAlert(getUsername() + " was banned for getting 10 sleep words wrong");
+
+			if (Config.BAN_FAILED_SLEEP) {
+					// Bans if 10 sleep words are incorrect
+					if (this.sleepCount >= 10) {
+						synchronized (World.getPlayers()) {
+							for (Player p : World.getPlayers()) {
+								if (p.isMod()) {
+									p.sendAlert(getUsername() + " was banned for getting 10 sleep words wrong");
+								}
+							}
 						}
+						Logger.log(new GenericLog(getUsername() + " was banned for getting 10 sleep words wrong", DataConversions.getTimeStamp()));
+						ban();
 					}
-				}
-				Logger.log(new GenericLog(getUsername() + " was banned for getting 10 sleep words wrong", DataConversions.getTimeStamp()));
-				ban();
 			}
-			this.sleepEvent = new DelayedEvent(this, (this.fatigueEvent == null) ? DataConversions.random(100, 500) : DataConversions.random((isSub()) ? 1000 : 2000, (isSub()) ? 4000 : 8000)) {
+
+			this.sleepEvent = new DelayedEvent(this, (this.fatigueEvent == null) ? DataConversions.random(100, 500) : DataConversions.random((isSub()) ? 100 : 500, (isSub()) ? 100 : 500)) {
 				public void run() {
 					Pair<String, BufferedImage> pair = Captcha.getCaptcha();
 					if (pair == null) {
@@ -3876,19 +3880,19 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			if (getLocation().inWilderness())
 			{
 				if (isSkulled())
-					xp *= (Config.skulled_xp_bonus + Config.skill_xp_sub);
+					xp *= (Config.SKULLED_XP_BONUS + Config.SKILL_XP_SUB);
 				else
-					xp *= (Config.wild_xp_bonus + Config.skill_xp_sub);
+					xp *= (Config.WILD_XP_BONUS + Config.SKILL_XP_SUB);
 			}
 			else
 			{
-				xp *= Config.skill_xp_sub;
+				xp *= Config.SKILL_XP_SUB;
 			}
 		} 
 		else 
 		if (!isSub() && stat > 6) // Non combat, non subbed
 		{
-			xp *= Config.skill_xp;
+			xp *= Config.SKILL_XP_RATE;
 		}
 		else
 		if (isSub() && stat <= 6) // Combat, subbed.
@@ -3896,19 +3900,19 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			if (getLocation().inWilderness()) // Combat, in wilderness
 			{
 				if (isSkulled())
-					xp *= (Config.combat_xp_sub + Config.skulled_xp_bonus);
+					xp *= (Config.COMBAT_XP_SUB + Config.SKULLED_XP_BONUS);
 				else
-					xp *= (Config.combat_xp_sub + Config.wild_xp_bonus);
+					xp *= (Config.COMBAT_XP_SUB + Config.WILD_XP_BONUS);
 				
 			}
 			else
 			{
-				xp *= Config.combat_xp_sub;
+				xp *= Config.COMBAT_XP_SUB;
 			}
 		}
         else // combat, nonsubbed
 		{
-            xp *= Config.combat_xp;
+            xp *= Config.COMBAT_XP_RATE;
 		}
 						
         exp[stat] += xp;
