@@ -38,7 +38,6 @@
     <target name="runserver">
         <java classname="org.openrsc.server.Server" fork="true">
           <arg value="config/config.xml" />
-          <jvmarg value="-verbose:gc" />
           <jvmarg value="-Xmn512m" />
           <jvmarg value="-Xms1024m" />
           <jvmarg value="-Xmx1024m" />

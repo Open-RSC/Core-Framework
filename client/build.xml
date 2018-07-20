@@ -21,7 +21,6 @@
 
     <target name="runclient">
         <java classname="org.openrsc.client.mudclient" fork="true">
-          <jvmarg value="-verbose:gc" />
             <classpath>
               <pathelement path="${jar}/" />
             </classpath>
