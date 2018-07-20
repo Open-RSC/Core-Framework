@@ -2266,11 +2266,21 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					}
 			}
 
+			// if (Config.ENABLE_SLEEP_WORDS) {
+
 			this.sleepEvent = new DelayedEvent(this, (this.fatigueEvent == null) ? DataConversions.random(100, 500) : DataConversions.random((isSub()) ? 100 : 500, (isSub()) ? 100 : 500)) {
 				public void run() {
+					if (Config.DISABLE_SLEEP_WORDS) {
+						Player.this.sendSuccess();
+						Player.this.setFatigue(0);
+						Player.this.sendFatigue();
+						Player.this.sendMessage("You wake up - feeling refreshed");
+						Player.this.sleepEvent.stop();
+						Player.this.sleepEvent = null;
+					} else {
 					Pair<String, BufferedImage> pair = Captcha.getCaptcha();
 					if (pair == null) {
-						Logger.log(new GenericLog("A BUG HAS BEEN FOUND WITH THE CAPTCHA! (NULL PAIR RETURNED!)\n This could mean that no captchas are currently loaded!", (int)System.currentTimeMillis()));
+						Logger.log(new GenericLog("A BUG HAS BEEN FOUND WITH THE CAPTCHA! (NULL PAIR RETURNED!)\n This could mean that no captchas are currently loaded!", (int) System.currentTimeMillis()));
 						return;
 					}
 					Player.this.sleepImage = pair.getSecond();
@@ -2289,6 +2299,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					}
 					Player.this.sleepEvent.stop();
 					Player.this.sleepEvent = null;
+					}
 				}
 			};
 			World.getDelayedEventHandler().add(this.sleepEvent);

@@ -39,7 +39,7 @@
 	<entry key="ALLOW_GODSPELLS">true</entry>
 
 		<!-- Sleeping related -->
-	<entry key="ENABLE_FATIGUE">true</entry>
-	<entry key="ENABLE_SLEEP_WORDS">false</entry>
+	<entry key="DISABLE_FATIGUE">true</entry>
+	<entry key="DISABLE_SLEEP_WORDS">true</entry>
 	<entry key="BAN_FAILED_SLEEP">false</entry>
 </properties>

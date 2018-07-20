@@ -27,8 +27,8 @@ public class Config {
 		props.loadFromXML(new FileInputStream(file));
 
 		// Booleans
-		ENABLE_FATIGUE = Boolean.parseBoolean(props.getProperty("ENABLE_FATIGUE"));
-		ENABLE_SLEEP_WORDS = Boolean.parseBoolean(props.getProperty("ENABLE_SLEEP_WORDS"));
+		DISABLE_FATIGUE = Boolean.parseBoolean(props.getProperty("DISABLE_FATIGUE"));
+		DISABLE_SLEEP_WORDS = Boolean.parseBoolean(props.getProperty("DISABLE_SLEEP_WORDS"));
 		BAN_FAILED_SLEEP = Boolean.parseBoolean(props.getProperty("BAN_FAILED_SLEEP"));
 		ALLOW_WEAKENS = Boolean.parseBoolean(props.getProperty("ALLOW_WEAKENS"));
 		ALLOW_GODSPELLS	= Boolean.parseBoolean(props.getProperty("ALLOW_GODSPELLS"));
@@ -69,7 +69,7 @@ public class Config {
 	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_LOGINS_PER_IP;
 	public static float COMBAT_XP_RATE, COMBAT_XP_SUB, SKILL_XP_RATE, SKILL_XP_SUB, WILD_XP_BONUS, SKULLED_XP_BONUS;
 	public static long START_TIME;
-	public static boolean LOGGING, PK_MODE, BAN_FAILED_SLEEP, ALLOW_WEAKENS, ALLOW_GODSPELLS, ENABLE_SLEEP_WORDS, ENABLE_FATIGUE;
+	public static boolean LOGGING, PK_MODE, BAN_FAILED_SLEEP, ALLOW_WEAKENS, ALLOW_GODSPELLS, DISABLE_SLEEP_WORDS, DISABLE_FATIGUE;
 
 	public static final class Quests {
 		public static final int BLACK_KNIGHTS_FORTRESS = 0;
