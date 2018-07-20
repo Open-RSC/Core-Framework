@@ -967,7 +967,7 @@ CREATE TABLE `rscd_players` (
   `skill_total_rank` int(10) DEFAULT NULL,
   `x` smallint(4) NOT NULL DEFAULT 217,
   `y` smallint(4) NOT NULL DEFAULT 745,
-  `fatigue` int(3) NOT NULL DEFAULT 0,
+  `fatigue` int(6) NOT NULL DEFAULT 0,
   `combatstyle` tinyint(1) NOT NULL DEFAULT 0,
   `block_chat` tinyint(1) NOT NULL DEFAULT 0,
   `block_private` tinyint(1) NOT NULL DEFAULT 0,
