@@ -83,11 +83,7 @@ import org.openrsc.server.Config;
 		{
 			if(connection == null || !connection.isValid(0))
 			{
-				connection = DriverManager.getConnection(
-						"jdbc:mysql://" + 
-						Config.DB_HOST + "/" + Config.DB_NAME, 
-						Config.DB_LOGIN, 
-						Config.DB_PASS);
+				connection = ConnectionFactory.getDbConnection();
 			}
 		}
 		catch (SQLException e)
