@@ -30,6 +30,9 @@ import org.openrsc.server.event.MiniEvent;
 import org.openrsc.server.event.NpcRangeEvent;
 import org.openrsc.server.event.PlayerRangeEvent;
 import org.openrsc.server.event.SingleEvent;
+import org.openrsc.server.internal.DefaultFatigueApplicator;
+import org.openrsc.server.internal.FatigueApplicator;
+import org.openrsc.server.internal.NoOpFatigueApplicator;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.DeathLog;
 import org.openrsc.server.logging.model.ErrorLog;
@@ -53,6 +56,11 @@ import com.rscdaemon.util.IPTrackerPredicate;
 @SuppressWarnings("serial")
 public final class Player extends Mob implements Watcher, Comparable<Player>
 {
+	private static final FatigueApplicator fatigueApplicator =
+			Config.DISABLE_FATIGUE ?
+					new NoOpFatigueApplicator() :
+					new DefaultFatigueApplicator();
+
 	// @serial
 	private Map<Integer, com.rscdaemon.scripting.quest.Quest> scriptableQuests;
 	
@@ -2115,7 +2123,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void setFatigue(int fatigue) {
-		this.fatigue = fatigue;
+		this.fatigue = fatigueApplicator.getFatigueIncrement(fatigue);
 	}
 	
 	public int getFatigue() {
@@ -2247,6 +2255,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void sleep(boolean bag) {
+		if (!fatigueApplicator.isFatigueEnabled()) {
+			return;
+		}
+
 		this.sleepingBag = (bag);
 			if (this.sleepEvent != null)
 				this.sleepEvent.stop();
@@ -2286,7 +2298,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					Player.this.sleepImage = pair.getSecond();
 					if (Player.this.fatigueEvent == null) {
 						Player.this.temporaryFatigueThrottle();
-						Player.this.temporaryFatigue = Player.this.fatigue;
+						Player.this.temporaryFatigue = Player.this.getFatigue();
 					}
 					if (Player.this.sleepImage == null) {
 						Player.this.sendSuccess();
@@ -2306,20 +2318,24 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		}
 	
 	private void temporaryFatigueThrottle() {
-		fatigueEvent = new DelayedEvent(this, 600) {
-			public void run() {
-				int tick = sleepingBag ? 350 : 700;
-				if (isSub())
-					tick *= 2;
-				if (temporaryFatigue - tick < 0)
-					temporaryFatigue = 0;
-				else
-					temporaryFatigue -= tick;
-				sendTemporaryFatigue();
-			}
-		};
+        if (!fatigueApplicator.isFatigueEnabled()) {
+            return;
+        }
 
-		World.getDelayedEventHandler().add(fatigueEvent);	
+        fatigueEvent = new DelayedEvent(this, 600) {
+            public void run() {
+                int tick = sleepingBag ? 350 : 700;
+                if (isSub())
+                    tick *= 2;
+                if (temporaryFatigue - tick < 0)
+                    temporaryFatigue = 0;
+                else
+                    temporaryFatigue -= tick;
+                sendTemporaryFatigue();
+            }
+        };
+
+        World.getDelayedEventHandler().add(fatigueEvent);
 	}
 
 	public boolean tradeDuelThrottling() {
@@ -3257,10 +3273,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getMaxStat(3)));
 						switch (p.getCombatStyle()) {
 							case 0:
-								p.increaseXP(0, exp, true);
-								p.increaseXP(1, exp, true);
-								p.increaseXP(2, exp, true);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(0, exp);
+								p.increaseXP(1, exp);
+								p.increaseXP(2, exp);
+								p.increaseXP(3, exp);
 								p.sendStat(0);
 								p.sendStat(1);
 								p.sendStat(2);
@@ -3268,23 +3284,23 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 							break;
 							
 							case 1:
-								p.increaseXP(2, exp * 3, true);
+								p.increaseXP(2, exp * 3);
 								p.sendStat(2);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(3, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 2:
-								p.increaseXP(0, exp * 3, true);
+								p.increaseXP(0, exp * 3);
 								p.sendStat(0);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(3, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 3:
-								p.increaseXP(1, exp * 3, true);
+								p.increaseXP(1, exp * 3);
 								p.sendStat(1);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(3, exp);
 								p.sendStat(3);
 							break;
 						}
@@ -3297,7 +3313,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getMaxStat(3)));
-						p.increaseXP(4, exp * 4, true);
+						p.increaseXP(4, exp * 4);
 						p.sendStat(4);
 					}
 				}
@@ -3850,31 +3866,38 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				setCombatLevel(combat);
 		}		
 	}
-    
-	public void increaseXP(int stat, int xp) {
-        increaseXP(stat, xp, true);
-    }
+
+	private void applyFatigue(int xp) {
+	    if (!fatigueApplicator.isFatigueEnabled()) {
+	        return;
+        }
+
+        int currentFatigue = getFatigue();
+        if(currentFatigue >= 18750) {
+            sendMessage("@gre@You are too tired to gain experience, get some rest!");
+            return;
+        }
+
+        if(currentFatigue >= 18000) {
+            sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
+        }
+
+        currentFatigue += isSub() ? xp / 4 : xp;
+
+        // Clamp the fatigue at a maximum value.
+        if (currentFatigue > 18750) {
+            currentFatigue = 18750;
+        }
+
+        setFatigue(currentFatigue);
+        sendFatigue();
+	}
 	
-	public void increaseXP(int stat, int xp, boolean useFatigue) {
+	public void increaseXP(int stat, int xp) {
 		if (isDMing)
 			return;
-		
-        if(useFatigue)
-        {
-            if(fatigue >= 18750)
-            {
-                sendMessage("@gre@You are too tired to gain experience, get some rest!");
-                return;
-            }
-            
-            if(fatigue >= 18000)
-                sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
-            
-            fatigue += isSub() ? xp / 4 : xp;
-            if (fatigue > 18750)
-                fatigue = 18750;
-            sendFatigue();
-        }
+
+		applyFatigue(xp);
         
 		if (getLocation().onTutorialIsland()) {
 			if (exp[stat] + xp > 200) {

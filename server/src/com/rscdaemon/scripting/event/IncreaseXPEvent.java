@@ -23,7 +23,7 @@ public class IncreaseXPEvent
 	public void run()
 	{
 		Player owner = super.script.__internal_get_variable(ScriptVariable.OWNER);
-		owner.increaseXP(skill.ordinal(), amount, true);
+		owner.increaseXP(skill.ordinal(), amount);
 		owner.sendStat(skill.ordinal());
 		super.scheduleNext();
 	}

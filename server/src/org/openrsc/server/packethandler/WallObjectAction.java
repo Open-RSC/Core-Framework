@@ -2716,7 +2716,7 @@ public class WallObjectAction implements PacketHandler {
 										if(Formulae.thievingFormula(owner.getMaxStat(17), lockedDoor.getLevel())) {
 											owner.sendMessage("You sucessfully unlocked the " + object.getDoorDef().name);
 											owner.sendSound("opendoor", false);
-											owner.increaseXP(17, lockedDoor.getExperience(), true);
+											owner.increaseXP(17, lockedDoor.getExperience());
 											owner.sendStat(17);
 											int newX = 0;
 											int newY = 0;

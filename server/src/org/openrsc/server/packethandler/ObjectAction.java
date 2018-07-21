@@ -309,7 +309,7 @@ public class ObjectAction implements PacketHandler {
 								}
 								owner.teleport(owner.getX(), owner.getY(), true);
 								owner.sendMessage("You craft " + (total > 1 ? total : "the") + " " + EntityHandler.getItemDef(1339).getName() + " into " + amountTotal + " " + EntityHandler.getItemDef(item).getName() + (amountTotal > 1 ? "s" : ""));
-								owner.increaseXP(18, (exp * 2), true);
+								owner.increaseXP(18, (exp * 2));
 								owner.sendStat(18);							
 							} else
 								owner.sendMessage("You need a " + EntityHandler.getItemDef(talisman).getName() + " to craft on this altar");
@@ -3131,10 +3131,7 @@ public class ObjectAction implements PacketHandler {
 					}
 					
 					private void handleRest() {
-						if (System.currentTimeMillis() - owner.getLastSleep()  > 500) {
-							owner.sendMessage("You rest on the bed");
-							owner.sleep();
-						}
+					    handleSleepObject("You rest on the bed");
 					}
 					
 					/*
@@ -3142,12 +3139,21 @@ public class ObjectAction implements PacketHandler {
 					 */
 					private void handleHammock()
 					{
-						if (System.currentTimeMillis() - player.getLastSleep() > 500)
-						{
-							owner.sendMessage("You rest on the hammock");
-							owner.sleep();
-						}
+                        handleSleepObject("You rest on the hammock");
 					}
+
+					private void handleSleepObject(String message) {
+					    if (Config.DISABLE_FATIGUE) {
+					        owner.sendMessage("Fatigue is disabled on this server.");
+					        return;
+                        }
+
+                        if (System.currentTimeMillis() - player.getLastSleep() > 500)
+                        {
+                            owner.sendMessage(message);
+                            owner.sleep();
+                        }
+                    }
 					
 					private void handleSearchForTraps() {
 						if (object.getID() != 338) {
@@ -3174,7 +3180,7 @@ public class ObjectAction implements PacketHandler {
 													public void finished() {
 														World.registerEntity(new GameObject(object.getLocation(), 338, object.getDirection(), object.getType()));
 														World.delayedSpawnObject(object.getLoc(), chest.getRespawnTime());
-														owner.increaseXP(17, chest.getExperience(), true);
+														owner.increaseXP(17, chest.getExperience());
 														owner.sendStat(17);
 														for (InvItem item : chest.getLoot())
 															owner.getInventory().add(item);
@@ -3226,7 +3232,7 @@ public class ObjectAction implements PacketHandler {
 												owner.sendMessage("You successfully thieved from the " + object.getGameObjectDef().name);
 												owner.getInventory().add(stall.getLoot());
 												owner.sendInventory();
-												owner.increaseXP(17, stall.getExperience(), true);
+												owner.increaseXP(17, stall.getExperience());
 												owner.sendStat(17);
 											}
 										} else if (guardian.getID() == stall.getOwner()) {
@@ -3542,7 +3548,7 @@ public class ObjectAction implements PacketHandler {
 												final InvItem ore = new InvItem(def.getOreId());
 												owner.getInventory().add(ore);
 												owner.sendMessage("You manage to obtain some " + ore.getDef().getName() + ".");
-												owner.increaseXP(14, def.getExp(), true);
+												owner.increaseXP(14, def.getExp());
 												owner.sendStat(14);
 												World.registerEntity(new GameObject(object.getLocation(), 98, object.getDirection(), object.getType()));
 												World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
@@ -3788,7 +3794,7 @@ public class ObjectAction implements PacketHandler {
 										owner.getInventory().add(log);
 										owner.sendMessage("You get some wood");
 										owner.sendInventory();
-										owner.increaseXP(8, def.getExperience(), true);
+										owner.increaseXP(8, def.getExperience());
 										owner.sendStat(8);
 										owner.setBusy(false);
 										if (DataConversions.random(1, 100) <= def.getFell()) 
@@ -3897,7 +3903,7 @@ public class ObjectAction implements PacketHandler {
 													owner.getInventory().add(fish);
 													owner.sendMessage("You catch a " + fish.getDef().getName() + ".");
 													owner.sendInventory();
-													owner.increaseXP(10, def.getExp(), true);
+													owner.increaseXP(10, def.getExp());
 													owner.sendStat(10);
 												} else
 													owner.sendMessage("You fail to catch anything.");

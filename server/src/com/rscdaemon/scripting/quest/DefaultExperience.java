@@ -108,7 +108,7 @@ public class DefaultExperience
 	@Override
 	public void grant(Player recipient)
 	{
-		recipient.increaseXP(skill.ordinal(), amount, true);
+		recipient.increaseXP(skill.ordinal(), amount);
 	}
 
 	/**

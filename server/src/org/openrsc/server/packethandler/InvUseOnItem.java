@@ -1083,7 +1083,7 @@ public class InvUseOnItem implements PacketHandler {
 						if (owner.getInventory().remove(glass) > -1) {
 							owner.sendMessage("You make a " + result.getDef().getName());
 							owner.getInventory().add(result);
-							owner.increaseXP(12, exp, true);
+							owner.increaseXP(12, exp);
 							owner.sendStat(12);
 							owner.sendInventory();
 						}
@@ -1181,7 +1181,7 @@ public class InvUseOnItem implements PacketHandler {
 		if (player.getInventory().remove(second) > -1 && player.getInventory().remove(unfinished) > -1) {
 			player.sendMessage("You mix the " + second.getDef().getName() + " with the " + unfinished.getDef().getName());
 			player.getInventory().add(new InvItem(def.getPotionID(), 1));
-			player.increaseXP(15, def.getExp(), true);
+			player.increaseXP(15, def.getExp());
 			player.sendStat(15);
 			player.sendInventory();
 		}
@@ -1231,7 +1231,7 @@ public class InvUseOnItem implements PacketHandler {
 						if (owner.getInventory().remove(leather) > -1) {
 							owner.sendMessage("You make some " + result.getDef().getName());
 							owner.getInventory().add(result);
-							owner.increaseXP(12, exp, true);
+							owner.increaseXP(12, exp);
 							owner.sendStat(12);
 							owner.sendInventory();
 						}
@@ -1312,7 +1312,7 @@ public class InvUseOnItem implements PacketHandler {
 				if (owner.getInventory().remove(feathers.getID(), amt) > -1 && owner.getInventory().remove(item.getID(), amt) > -1) {
 					owner.sendMessage("You attach the feathers to the " + item.getDef().getName());
 					owner.getInventory().add(newItm);
-					owner.increaseXP(9, xp, true);
+					owner.increaseXP(9, xp);
 					owner.sendStat(9);
 					owner.sendInventory();
 				}
@@ -1336,7 +1336,7 @@ public class InvUseOnItem implements PacketHandler {
 					owner.sendMessage("You cut the " + cutGem.getDef().getName());
 					owner.sendSound("chisel", false);
 					owner.getInventory().add(cutGem);
-					owner.increaseXP(12, gemDef.getExp(), true);
+					owner.increaseXP(12, gemDef.getExp());
 					owner.sendStat(12);
 					owner.sendInventory();
 				}
@@ -1365,7 +1365,7 @@ public class InvUseOnItem implements PacketHandler {
 				if (owner.getInventory().remove(headlessArrows.getID(), amt) > -1 && owner.getInventory().remove(arrowHeads.getID(), amt) > -1) {
 					owner.sendMessage("You attach the heads to the arrows");
 					owner.getInventory().add(new InvItem(headDef.getArrowID(), amt));
-					owner.increaseXP(9, (int)(headDef.getExp() * (double)amt), true);
+					owner.increaseXP(9, (int)(headDef.getExp() * (double)amt));
 					owner.sendStat(9);
 					owner.sendInventory();
 				}
@@ -1386,7 +1386,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(189, 1));
-								owner.increaseXP(9, 20, true);
+								owner.increaseXP(9, 20);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1403,7 +1403,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(188, 1));
-								owner.increaseXP(9, 40, true);
+								owner.increaseXP(9, 40);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1420,7 +1420,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(649, 1));
-								owner.increaseXP(9, 66, true);
+								owner.increaseXP(9, 66);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1437,7 +1437,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(648, 1));
-								owner.increaseXP(9, 100, true);
+								owner.increaseXP(9, 100);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1454,7 +1454,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(651, 1));
-								owner.increaseXP(9, 133, true);
+								owner.increaseXP(9, 133);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1471,7 +1471,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(650, 1));
-								owner.increaseXP(9, 166, true);
+								owner.increaseXP(9, 166);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1488,7 +1488,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(653, 1));
-								owner.increaseXP(9, 200, true);
+								owner.increaseXP(9, 200);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1505,7 +1505,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(652, 1));
-								owner.increaseXP(9, 233, true);
+								owner.increaseXP(9, 233);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1522,7 +1522,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(655, 1));
-								owner.increaseXP(9, 266, true);
+								owner.increaseXP(9, 266);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1539,7 +1539,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(654, 1));
-								owner.increaseXP(9, 300, true);
+								owner.increaseXP(9, 300);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1556,7 +1556,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(657, 1));
-								owner.increaseXP(9, 333, true);
+								owner.increaseXP(9, 333);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1573,7 +1573,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(656, 1));
-								owner.increaseXP(9, 366, true);
+								owner.increaseXP(9, 366);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1625,7 +1625,7 @@ public class InvUseOnItem implements PacketHandler {
 						if (owner.getInventory().remove(log) > -1) {
 							owner.sendMessage("You make a " + result.getDef().getName());
 							owner.getInventory().add(result);
-							owner.increaseXP(9, exp, true);
+							owner.increaseXP(9, exp);
 							owner.sendStat(9);
 							owner.sendInventory();
 						}
@@ -1651,7 +1651,7 @@ public class InvUseOnItem implements PacketHandler {
 				if (owner.getInventory().remove(vial) > -1 && owner.getInventory().remove(herb) > -1) {
 					owner.sendMessage("You add the " + herb.getDef().getName() + " to the water");
 					owner.getInventory().add(new InvItem(herbDef.getPotionId(), 1));
-					owner.increaseXP(15, herbDef.getExp(), true);
+					owner.increaseXP(15, herbDef.getExp());
 					owner.sendStat(15);
 					owner.sendInventory();
 				}
