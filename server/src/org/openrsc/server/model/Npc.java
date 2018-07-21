@@ -350,10 +350,10 @@ public class Npc extends Mob {
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getDef().getHits()));
 						switch (p.getCombatStyle()) {
 							case 0:
-								p.increaseXP(0, exp, true);
-								p.increaseXP(1, exp, true);
-								p.increaseXP(2, exp, true);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(0, exp);
+								p.increaseXP(1, exp);
+								p.increaseXP(2, exp);
+								p.increaseXP(3, exp);
 								p.sendStat(0);
 								p.sendStat(1);
 								p.sendStat(2);
@@ -361,23 +361,23 @@ public class Npc extends Mob {
 							break;
 							
 							case 1:
-								p.increaseXP(2, exp * 3, true);
+								p.increaseXP(2, exp * 3);
 								p.sendStat(2);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(3, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 2:
-								p.increaseXP(0, exp * 3, true);
+								p.increaseXP(0, exp * 3);
 								p.sendStat(0);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(3, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 3:
-								p.increaseXP(1, exp * 3, true);
+								p.increaseXP(1, exp * 3);
 								p.sendStat(1);
-								p.increaseXP(3, exp, true);
+								p.increaseXP(3, exp);
 								p.sendStat(3);
 							break;
 						}
@@ -390,7 +390,7 @@ public class Npc extends Mob {
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getDef().getHits()));
-						p.increaseXP(4, exp * 4, true);
+						p.increaseXP(4, exp * 4);
 						p.sendStat(4);
 					}
 				}
