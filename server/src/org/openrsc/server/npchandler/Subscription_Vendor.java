@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import org.openrsc.server.Config;
 import org.openrsc.server.ServerBootstrap;
+import org.openrsc.server.database.ConnectionFactory;
 import org.openrsc.server.database.DefaultTransaction;
 import org.openrsc.server.database.game.Save;
 import org.openrsc.server.event.DelayedQuestChat;
@@ -116,7 +117,7 @@ public class Subscription_Vendor implements NpcHandler {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Let me check..."}) {
 			public void finished() {
 				int cardAvailable = 0;
-				try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" +  Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS))
+				try(Connection connection = ConnectionFactory.getDbConnection())
 				{
 					try(Statement statement = connection.createStatement())
 					{
