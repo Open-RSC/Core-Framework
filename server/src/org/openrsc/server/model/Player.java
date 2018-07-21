@@ -3866,38 +3866,32 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				setCombatLevel(combat);
 		}		
 	}
-
-	private void applyFatigue(int xp) {
-	    if (!fatigueApplicator.isFatigueEnabled()) {
-	        return;
-        }
-
-        int currentFatigue = getFatigue();
-        if(currentFatigue >= 18750) {
-            sendMessage("@gre@You are too tired to gain experience, get some rest!");
-            return;
-        }
-
-        if(currentFatigue >= 18000) {
-            sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
-        }
-
-        currentFatigue += isSub() ? xp / 4 : xp;
-
-        // Clamp the fatigue at a maximum value.
-        if (currentFatigue > 18750) {
-            currentFatigue = 18750;
-        }
-
-        setFatigue(currentFatigue);
-        sendFatigue();
-	}
 	
 	public void increaseXP(int stat, int xp) {
 		if (isDMing)
 			return;
 
-		applyFatigue(xp);
+		if (fatigueApplicator.isFatigueEnabled()) {
+			int currentFatigue = getFatigue();
+			if(currentFatigue >= 18750) {
+				sendMessage("@gre@You are too tired to gain experience, get some rest!");
+				return;
+			}
+
+			if(currentFatigue >= 18000) {
+				sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
+			}
+
+			currentFatigue += isSub() ? xp / 4 : xp;
+
+			// Clamp the fatigue at a maximum value.
+			if (currentFatigue > 18750) {
+				currentFatigue = 18750;
+			}
+
+			setFatigue(currentFatigue);
+			sendFatigue();
+		}
         
 		if (getLocation().onTutorialIsland()) {
 			if (exp[stat] + xp > 200) {
