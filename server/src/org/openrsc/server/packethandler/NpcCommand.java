@@ -69,7 +69,7 @@ public class NpcCommand implements PacketHandler {
 												owner.sendMessage("You successfully stole from the " + affectedNpc.getDef().name);
 												owner.getInventory().add(pickpocket.getLoot());
 												owner.sendInventory();
-												owner.increaseXP(17, pickpocket.getExperience(), true);
+												owner.increaseXP(17, pickpocket.getExperience());
 												owner.sendStat(17);
 												owner.setStatus(Action.IDLE);
 											} else {
