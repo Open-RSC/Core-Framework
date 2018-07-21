@@ -228,6 +228,11 @@ public class InvActionHandler implements PacketHandler {
 						case 1263: //Sleeping Bag
 							if (item.getID() == 1263 && !player.inCombat())
 							{
+							    if (Config.DISABLE_FATIGUE) {
+							        player.sendMessage("Fatigue is disabled on this server.");
+							        break;
+                                }
+
 								if (System.currentTimeMillis() - player.getLastSleep() > 500)
 								{
 									player.sleep(true);
@@ -964,7 +969,7 @@ public class InvActionHandler implements PacketHandler {
 						owner.getInventory().remove(item);
 						owner.getInventory().add(newItem);
 						owner.sendMessage("You clean the mud off the " + newItem.getDef().getName());
-						owner.increaseXP(15, herb.getExp(), true);
+						owner.increaseXP(15, herb.getExp());
 						owner.sendStat(15);
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -984,16 +989,16 @@ public class InvActionHandler implements PacketHandler {
 				owner.getInventory().remove(item);
 				switch(item.getID()) {
 					case 20: // Bones
-						owner.increaseXP(5, 15, true);
+						owner.increaseXP(5, 15);
 						break;						
 					case 604: // Bat Bones
-						owner.increaseXP(5, 18, true);
+						owner.increaseXP(5, 18);
 						break;
 					case 413: // Big Bones
-						owner.increaseXP(5, 50, true);
+						owner.increaseXP(5, 50);
 						break;
 					case 814: // Dragon Bones
-						owner.increaseXP(5, 240, true);
+						owner.increaseXP(5, 240);
 						break;
 				}
 				owner.sendStat(5);
