@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.openrsc.server.Config;
+import org.openrsc.server.database.ConnectionFactory;
+
 import static org.openrsc.server.Config.DB_NAME;
 import static org.openrsc.server.Config.SERVER_IP;
 
@@ -108,7 +110,7 @@ public class AccountManager
 			SQLException
 	{
 		String query = "SELECT rscd_players.user AS PlayerHash, rscd_players.username AS PlayerName, rscd_players.owner AS PlayerOwner, FROM_UNIXTIME( rscd_players.login_date ) AS PlayerLastLogin FROM `rscd_players` INNER JOIN users ON rscd_players.owner = users.id WHERE users.banned = '1' AND ( FROM_UNIXTIME( rscd_players.login_date ) <= ( NOW( ) - INTERVAL 14 DAY ))";
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://"+host+"/"+database+"?autoReconnect=true", user, pass))
+		try(Connection connection = ConnectionFactory.getDbConnection(host, database, user, pass))
 		{
 			try(Statement statement = connection.createStatement())
 			{
@@ -134,7 +136,7 @@ public class AccountManager
 		throws
 			SQLException
 	{
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://"+host+"/"+database+"?autoReconnect=true", user, pass))
+		try(Connection connection = ConnectionFactory.getDbConnection(host, database, user, pass))
 		{
 			connection.setAutoCommit(false);
 			deletePlayer(username, connection);
@@ -175,7 +177,7 @@ public class AccountManager
 		throws
 			SQLException
 	{
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://"+host+"/"+database+"?autoReconnect=true", user, pass))
+		try(Connection connection = ConnectionFactory.getDbConnection(host, database, user, pass))
 		{
 			connection.setAutoCommit(false);
 			try(Statement statement = connection.createStatement())

@@ -15,6 +15,7 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import org.openrsc.server.Config;
+import org.openrsc.server.database.ConnectionFactory;
 
 public class Captcha
 {
@@ -24,7 +25,7 @@ public class Captcha
 	
 	static
 	{
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" +  Config.DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS))
+		try(Connection connection = ConnectionFactory.getDbConnection())
 		{
 			try(Statement statement = connection.createStatement())
 			{

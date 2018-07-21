@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.openrsc.server.Config;
+import org.openrsc.server.database.ConnectionFactory;
 import org.openrsc.server.logging.model.AutoBanLog;
 import org.openrsc.server.logging.model.ChatLog;
 import org.openrsc.server.logging.model.DeathLog;
@@ -38,7 +39,7 @@ public class Logger extends Thread {
 		throws
 			SQLException
 	{
-		connection = DriverManager.getConnection("jdbc:mysql://" + Config.DB_HOST + "/" + Config.LOG_DB_NAME + "?autoReconnect=true", Config.DB_LOGIN, Config.DB_PASS);
+		connection = ConnectionFactory.getLogDbConnection();
 		globalMessageLog = new StringBuffer("INSERT INTO `game_global` (`user`, `account`, `ip`, `time`, `message`) VALUES ");
 		globalMessageLogResetLength = globalMessageLog.length();
 		
