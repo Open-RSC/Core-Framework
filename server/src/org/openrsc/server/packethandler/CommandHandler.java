@@ -1854,7 +1854,7 @@ public class CommandHandler implements PacketHandler
 			} else {
 				if (World.eventPoint != null) {
 					if (!owner.getLocation().inWilderness() && !owner.isTrading() && !owner.isBusy() && !owner.accessingShop() && !owner.accessingBank() && !owner.isDueling()) {
-						if(owner.getLocation().inBounds(792, 23, 794, 25))
+						if(owner.getLocation().isInJail())
 						{
 							owner.sendMessage(Config.PREFIX + "You cannot use ::event whilst being jailed.");
 							return;
