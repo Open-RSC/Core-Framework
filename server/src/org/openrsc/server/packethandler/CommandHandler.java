@@ -78,9 +78,16 @@ public class CommandHandler implements PacketHandler
 		player.setLastCommand(System.currentTimeMillis());
 		if ((cmd.equals("coords")) && (player.isMod() || player.isDev())) 
 		{
-			player.sendMessage(player.getLocation()+" ");
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        player;
+            
+            if(p == null)
+                player.sendMessage(Config.PREFIX + "Invalid player");
+            else
+                player.sendMessage(Config.PREFIX + player.getLocation()+" ");
 		}
-		
+        else
 		if (cmd.equals("online") && player.isMod()) 
 		{
 			StringBuilder sb = new StringBuilder();
@@ -100,11 +107,6 @@ public class CommandHandler implements PacketHandler
 			}
 			player.getActionSender().sendScrollableAlert(sb.toString());
 		}
-		else 
-		if (cmd.equals("wilderness"))
-		{
-			player.sendAlert("Wilderness: " + (!World.isP2PWilderness() ? "@gre@F2P" : "@gre@P2P") + "%" + "God Spells: " + (Config.ALLOW_GODSPELLS ? "@gre@Enabled" : "@red@Disabled") + "%" + "Weakens: " + (Config.ALLOW_WEAKENS ? "@gre@Enabled" : "@red@Disabled"));
-		}
 		else
 		/*
 		 * Set invisible
@@ -117,12 +119,13 @@ public class CommandHandler implements PacketHandler
 			for (Player x : player.getViewArea().getPlayersInView())
 			x.removeWatchedPlayer(player);
 		} 
-		else
+        else // leave CTF event
 		if (cmd.equalsIgnoreCase("leavectf") && player.getLocation().inCtf())
 		{
 			player.removeFromCtf(player);
 			player.sendAlert("You have been removed from CTF");
 		}
+        else // use global chat
 		if (cmd.equals("say") || cmd.equals("s")) 
 		{
 			if (player.getPrivacySetting(4)) 
@@ -172,74 +175,54 @@ public class CommandHandler implements PacketHandler
 			} 
 			else
 				player.sendMessage(Config.PREFIX + "You cannot use Global Chat as you have it disabled");
-			} 
-			else 
-			/*
-			 * Alert player
-			 */
-			if (cmd.equals("alert") && player.isMod()) 
-			{
-				String message = "";
-				if (args.length > 0) 
-				{
-					Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-					if (p != null)
-					{
-						for (int i = 1; i < args.length; i++)
-						message += args[i] + " ";
-						p.sendAlert((player.getStaffName()) + ":@whi@ " + message);
-						player.sendMessage(Config.PREFIX + "Alert sent");
-						Logger.log(new GenericLog(player.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
-					}
-				} 
+		} 
+        else 
+        /*
+         * Alert player
+         */
+        if (cmd.equals("alert") && player.isMod()) 
+        {
+            String message = "";
+            if (args.length > 0) 
+            {
+                Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+                if (p != null)
+                {
+                    for (int i = 1; i < args.length; i++)
+                    message += args[i] + " ";
+                    p.sendAlert((player.getStaffName()) + ":@whi@ " + message);
+                    player.sendMessage(Config.PREFIX + "Alert sent");
+                    Logger.log(new GenericLog(player.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
+                }
+                else
+                    player.sendMessage(Config.PREFIX + "Invalid player");
+            } 
 			else
-			player.sendMessage(Config.PREFIX + "Syntax: ALERT [name] [message]");	
+                player.sendMessage(Config.PREFIX + "Syntax: ALERT [name] [message]");	
 		} 
 		else
-		if (cmd.equals("1vs1") && player.isAdmin())
-		{
-			if(args.length != 1)
-			{
-				player.sendMessage("Invalid Syntax - Usage: 1vs1 <boolean> eg. '1vs1 true'");
-				return;
-			}
-			try
-			{
-				Config.PK_MODE = Boolean.parseBoolean(args[0]);
-				for(Player p : World.getPlayers())
-				{
-					p.sendNotification(Config.PREFIX + "1 VS 1 mode has been " + (Config.PK_MODE ? "enabled" : "disabled"));
-				}
-			}
-			catch(Exception e)
-			{
-				player.sendMessage("Invalid Syntax - Usage: 1vs1 <boolean> eg. '1vs1 true'");
-				return;
-			}
-		}
-		else
-			if (cmd.equals("iplimit") && player.isAdmin())
-			{
-				if(args.length != 1)
-				{
-					player.sendMessage("Invalid Syntax - Usage: iplimit <amount> eg. 'iplimit 2'");
-					return;
-				}
-				try
-				{
-					Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS = Integer.parseInt(args[0]);
-					for(Player p : World.getPlayers())
-					{
-						p.sendNotification(Config.PREFIX + "The wilderness has been limited to " + Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS );
-					}
-				}
-				catch(Exception e)
-				{
-					player.sendMessage("Invalid Syntax - Usage: iplimit <amount> eg. 'iplimit 2'");
-					return;
-				}
-			}
-		else
+        if (cmd.equals("iplimit") && player.isAdmin())
+        {
+            if(args.length != 1)
+            {
+                player.sendMessage("Invalid Syntax - Usage: iplimit [amount]");
+                return;
+            }
+            try
+            {
+                Config.MAX_LOGINS_PER_IP = Integer.parseInt(args[0]);
+                for(Player p : World.getPlayers())
+                {
+                    p.sendNotification(Config.PREFIX + "Max logins per IP has been set to: " + Config.MAX_LOGINS_PER_IP );
+                }
+            }
+            catch(Exception e)
+            {
+                player.sendMessage("Invalid Syntax - Usage: iplimit [amount]");
+                return;
+            }
+        }
+        else // Give a player a skull
 		if (cmd.equals("skull")) 
 		{
 			if (args.length > 0 && player.isAdmin() || player.isMod()) 
@@ -260,10 +243,7 @@ public class CommandHandler implements PacketHandler
 				player.addSkull(1200000);
 			}
 		} 
-		else 
-		/*
-		 * Heal player
-		 */
+		else // Heal a player
 		if (cmd.equals("heal") && player.isAdmin()) 
 		{
 			if (args.length > 0) 
@@ -1183,7 +1163,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} else if (cmd.equals("npcevent") && player.isAdmin()) {
 			if (args.length < 1) {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent <npc_id> <npc_amount> <item_id> [<item_amount>]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent [npc_id] [npc_amount] [item_id] [item_amount]");
 				return;
 			}
 			int npcID, npcAmt = 0, random = 0;
@@ -1382,7 +1362,7 @@ public class CommandHandler implements PacketHandler
 		}  
 		else if (cmd.equals("playertalk") && player.isAdmin()) {
 			if (args.length < 2) {
-				player.sendMessage(Config.PREFIX + "Invalid syntax. Try ::PLAYERTALK <player> <msg>");
+				player.sendMessage(Config.PREFIX + "Invalid syntax. ::PLAYERTALK [player] [msg]");
 				return;
 			}
 			String msg = "";
@@ -1695,7 +1675,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if(args.length != 1)
 			{
-				player.sendMessage("Invalid Syntax - Usage: godspells <boolean> eg. 'godspells true'");
+				player.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
 				return;
 			}
 			try
@@ -1708,7 +1688,7 @@ public class CommandHandler implements PacketHandler
 			}
 			catch(Exception e)
 			{
-				player.sendMessage("Invalid Syntax - Usage: godspells <boolean> eg. 'godspells true'");
+				player.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
 				return;
 			}
 		}
@@ -1716,7 +1696,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if(args.length != 1)
 			{
-				player.sendMessage("Invalid Syntax - Usage: weakens <boolean> eg. 'weakens true'");
+				player.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
 				return;
 			}
 			try
@@ -1729,7 +1709,7 @@ public class CommandHandler implements PacketHandler
 			}
 			catch(Exception e)
 			{
-				player.sendMessage("Invalid Syntax - Usage: weakens <boolean> eg. 'weakens true'");
+				player.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
 				return;
 			}
 		} else
