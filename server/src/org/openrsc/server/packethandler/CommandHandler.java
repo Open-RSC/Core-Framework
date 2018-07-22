@@ -40,6 +40,8 @@ import org.openrsc.server.util.Formulae;
 
 public class CommandHandler implements PacketHandler 
 {
+    private static String badSyntaxPrefix = Config.PREFIX + "Invalid Syntax - Usage: ::";
+    
 	public void handlePacket(Packet p, IoSession session) throws Exception 
 	{
 		Player player = (Player)session.getAttachment();
@@ -192,17 +194,17 @@ public class CommandHandler implements PacketHandler
                     Logger.log(new GenericLog(player.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
                 }
                 else
-                    player.sendMessage(Config.PREFIX + "Invalid player");
+                    player.sendMessage(Config.PREFIX + "Invalid name");
             } 
 			else
-                player.sendMessage(Config.PREFIX + "Syntax: " + cmd.toUpperCase() + " [name] [message]");	
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
 		} 
 		else
         if (cmd.equalsIgnoreCase("iplimit") && player.isAdmin())
         {
             if(args.length != 1)
             {
-                player.sendMessage("Invalid Syntax - Usage: " + cmd.toUpperCase() + " [amount]");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [amount]");
                 return;
             }
             try
@@ -216,7 +218,7 @@ public class CommandHandler implements PacketHandler
             }
             catch(NumberFormatException e)
             {
-                player.sendMessage("Invalid Syntax - Usage: iplimit [amount]");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [amount]");
                 return;
             }
         }
@@ -225,7 +227,7 @@ public class CommandHandler implements PacketHandler
 		{
             if(args.length == 0)
             {
-                player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player]");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -301,7 +303,7 @@ public class CommandHandler implements PacketHandler
         {
             if(args.length == 0)
             {
-                player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player]");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -324,7 +326,7 @@ public class CommandHandler implements PacketHandler
                 }
                 catch(NumberFormatException e)
                 {
-                    player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player] [amount]");
+                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
                     return;
                 }
                 player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
@@ -371,7 +373,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}	
 			
@@ -394,7 +396,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -416,7 +418,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -429,7 +431,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -448,7 +450,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -490,7 +492,7 @@ public class CommandHandler implements PacketHandler
 				} 
 				catch(NumberFormatException ex)
                 {
-                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [npc_id] [duration]");
+                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [duration]");
                     return;
                 }
 				int duration = 0;
@@ -507,7 +509,7 @@ public class CommandHandler implements PacketHandler
 					} 
                     catch(NumberFormatException ex)
                     {
-                        player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [npc_id] [duration]");
+                        player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [duration]");
                         return;
                     }
                 }
@@ -577,7 +579,7 @@ public class CommandHandler implements PacketHandler
                     }
                     catch(NumberFormatException e)
                     {
-                        player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [x] [y]");
+                        player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y]");
                         return;
                     }
 				}
@@ -606,7 +608,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -648,7 +650,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -686,7 +688,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -705,16 +707,19 @@ public class CommandHandler implements PacketHandler
                     else
                     {
                         player.sendMessage(Config.PREFIX + p.getUsername() + " is already in jail");
+                        return;
                     }
                 } 
                 else
                 {
                     player.sendMessage(Config.PREFIX + "Staff members can not be jailed");
+                    return;
                 }
             }
 			else
 			{
 				player.sendMessage(Config.PREFIX + "Invalid name");
+                return;
 			}
 		} 
 		else // Release a player from jail
@@ -722,7 +727,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -746,11 +751,13 @@ public class CommandHandler implements PacketHandler
                 else
                 {
                     player.sendMessage(Config.PREFIX + "Staff members can not be released");
+                    return;
                 }
             }
 			else
 			{
 				player.sendMessage(Config.PREFIX + "Invalid name");
+                return;
 			}
 		} 
 		else // Go to a player's location
@@ -758,7 +765,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -790,7 +797,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length < 1 || args.length > 2)
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [id] [amount]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
 			}
 			else 
 			{
@@ -827,7 +834,7 @@ public class CommandHandler implements PacketHandler
                 }
                 catch (NumberFormatException e)
                 {
-                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [id] [amount]");
+                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
                     return;
                 }
 			}
@@ -837,8 +844,8 @@ public class CommandHandler implements PacketHandler
 		{
             if(args.length == 0)
             {
-                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
-                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " delete" + (player.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " delete" + (player.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
                 return;
             }
             
@@ -846,7 +853,7 @@ public class CommandHandler implements PacketHandler
             {
                 if(args.length <= 1)
                 {
-                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
+                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
                     return;
                 }
                 try
@@ -882,7 +889,7 @@ public class CommandHandler implements PacketHandler
                 }
                 catch(NumberFormatException e)
                 {
-                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
+                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
                     return;
                 }
             }
@@ -918,13 +925,19 @@ public class CommandHandler implements PacketHandler
                     }
                 }
             }
+            else
+            {
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " delete" + (player.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
+                return;
+            }
 		} 
         else // Wipe player's inventory.
 		if (cmd.equalsIgnoreCase("wipeinventory") && player.isAdmin()) 
 		{
             if(args.length == 0)
             {
-                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [player]");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -951,7 +964,7 @@ public class CommandHandler implements PacketHandler
         {
             if(args.length == 0)
             {
-                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [player]");
+                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -971,7 +984,7 @@ public class CommandHandler implements PacketHandler
         {
 			if (args.length == 1)
             {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [player]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -1008,7 +1021,7 @@ public class CommandHandler implements PacketHandler
         {
 			if (args.length < 2)
             {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [user] [amount]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [user] [amount]");
                 return;
             }
             try
@@ -1034,11 +1047,11 @@ public class CommandHandler implements PacketHandler
             }
             catch (NumberFormatException e)
             {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [user] [amount]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [user] [amount]");
                 return;
             }
 		}
-        else
+        else // set each of the specified players stats
         if (cmd.equalsIgnoreCase("stats") && player.isAdmin())
         {
 			int level = 99;
@@ -1048,8 +1061,8 @@ public class CommandHandler implements PacketHandler
 				} catch (Exception e) { }
 			}
 			
-			if (level > 255) {
-				level = 255;
+			if (level > 99) {
+				level = 99;
 			}
 			if (level < 1) {
 				level = 1;
