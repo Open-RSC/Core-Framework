@@ -1358,129 +1358,179 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equalsIgnoreCase("massnpc") && owner.isAdmin()) {
-			if (args.length != 1) {
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: NPC [id]");
+		}
+        else // spawns multiple of a specific NPC type
+        if (cmd.equalsIgnoreCase("massnpc") && owner.isAdmin())
+        {
+			if (args.length < 2)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [duration_minutes]");
 				return;
 			}
-			int id = Integer.parseInt(args[0]);
-			if (EntityHandler.getNpcDef(id) != null) {
-				int x = 0;
-				int y = 0;
-				int baseX = owner.getX();
-				int baseY = owner.getY();
-				int nextX = 0;
-				int nextY = 0;
-				int dX = 0;
-				int dY = 0;
-				int minX = 0;
-				int minY = 0;
-				int maxX = 0;
-				int maxY = 0;
-				int scanned = 0;
-				while (scanned < 400) {
-					scanned++;
-					if (dX < 0) {
-						x -= 1;
-						if (x == minX) {
-							dX = 0;
-							dY = nextY;
-							if (dY < 0)
-								minY -= 1;
-							else
-								maxY += 1;
-							nextX = 1;
-						}
-					} else if (dX > 0) {
-						x += 1;
-						if (x == maxX) {
-							dX = 0;
-							dY = nextY;
-							if (dY < 0)
-								minY -=1;
-							else
-								maxY += 1;
-							nextX = -1;
-						}
-					} else {
-						if (dY < 0) {
-							y -= 1;
-							if (y == minY) {
-								dY = 0;
-								dX = nextX;
-								if (dX < 0)
-									minX -= 1;
-								else
-									maxX += 1;
-								nextY = 1;
-							}
-						} else if (dY > 0) {
-							y += 1;
-							if (y == maxY) {
-								dY = 0;
-								dX = nextX;
-								if (dX < 0)
-									minX -= 1;
-								else
-									maxX += 1;
-								nextY = -1;
-							}
-						} else {
-							minY -= 1;
-							dY = -1;
-							nextX = 1;
-						}
-					}
-					if (!((baseX + x) < 0 || (baseY + y) < 0 || ((baseX + x) >= World.MAX_WIDTH) || ((baseY + y) >= World.MAX_HEIGHT))) {
-						if ((World.mapValues[baseX + x][baseY + y] & 64) == 0) {
-							final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
-							n.setRespawn(false);
-							World.registerEntity(n);
-							World.getDelayedEventHandler().add(new SingleEvent(null, 60000) {
-								public void action() {
-									Mob opponent = n.getOpponent();
-									if (opponent != null)
-										opponent.resetCombat(CombatState.ERROR);
-									n.resetCombat(CombatState.ERROR);
-									n.remove();
-								}
-							});
-						}
-					}
-				}
-			}
+            
+            try
+            {
+                int id = Integer.parseInt(args[0]);
+                int amount = Integer.parseInt(args[1]);
+                int duration = args.length >= 3 ? Integer.parseInt(args[2]) : 1;
+                if (EntityHandler.getNpcDef(id) != null) {
+                    int x = 0;
+                    int y = 0;
+                    int baseX = owner.getX();
+                    int baseY = owner.getY();
+                    int nextX = 0;
+                    int nextY = 0;
+                    int dX = 0;
+                    int dY = 0;
+                    int minX = 0;
+                    int minY = 0;
+                    int maxX = 0;
+                    int maxY = 0;
+                    for(int i = 0; i < amount; i++)
+                    {
+                        if (dX < 0) {
+                            x -= 1;
+                            if (x == minX) {
+                                dX = 0;
+                                dY = nextY;
+                                if (dY < 0)
+                                    minY -= 1;
+                                else
+                                    maxY += 1;
+                                nextX = 1;
+                            }
+                        } else if (dX > 0) {
+                            x += 1;
+                            if (x == maxX) {
+                                dX = 0;
+                                dY = nextY;
+                                if (dY < 0)
+                                    minY -=1;
+                                else
+                                    maxY += 1;
+                                nextX = -1;
+                            }
+                        } else {
+                            if (dY < 0) {
+                                y -= 1;
+                                if (y == minY) {
+                                    dY = 0;
+                                    dX = nextX;
+                                    if (dX < 0)
+                                        minX -= 1;
+                                    else
+                                        maxX += 1;
+                                    nextY = 1;
+                                }
+                            } else if (dY > 0) {
+                                y += 1;
+                                if (y == maxY) {
+                                    dY = 0;
+                                    dX = nextX;
+                                    if (dX < 0)
+                                        minX -= 1;
+                                    else
+                                        maxX += 1;
+                                    nextY = -1;
+                                }
+                            } else {
+                                minY -= 1;
+                                dY = -1;
+                                nextX = 1;
+                            }
+                        }
+                        if (!((baseX + x) < 0 || (baseY + y) < 0 || ((baseX + x) >= World.MAX_WIDTH) || ((baseY + y) >= World.MAX_HEIGHT))) {
+                            if ((World.mapValues[baseX + x][baseY + y] & 64) == 0) {
+                                final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
+                                n.setRespawn(false);
+                                World.registerEntity(n);
+                                World.getDelayedEventHandler().add(new SingleEvent(null, duration * 60000) {
+                                    public void action() {
+                                        Mob opponent = n.getOpponent();
+                                        if (opponent != null)
+                                            opponent.resetCombat(CombatState.ERROR);
+                                        n.resetCombat(CombatState.ERROR);
+                                        n.remove();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch(NumberFormatException e)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [duration_minutes]");
+                return;
+            }
 		}  
-		else if (cmd.equalsIgnoreCase("playertalk") && owner.isAdmin()) {
-			if (args.length < 2) {
-				owner.sendMessage(Config.PREFIX + "Invalid syntax. ::PLAYERTALK [player] [msg]");
+        else // Talk as another player
+        if (cmd.equalsIgnoreCase("playertalk") && owner.isAdmin())
+        {
+			if (args.length < 2)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [msg]");
 				return;
 			}
+            
 			String msg = "";
-			for (int i = 1; i < args.length; i++) {
+            
+			for (int i = 1; i < args.length; i++)
 				msg += args[i] + " ";
-			}
-			Player pl = World.getPlayer(DataConversions.usernameToHash(args[0]));
-			if (pl == null) {
-				owner.sendMessage(Config.PREFIX + "Invalid Player");
+            
+			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+			if (p == null)
+            {
+				owner.sendMessage(Config.PREFIX + "Invalid name");
 				return;
 			}
-			pl.addMessageToChatQueue(msg);
-		} else if (cmd.equalsIgnoreCase("npctalk") && owner.isAdmin()) {
-			String newStr = "";
-			for (int i = 1; i < args.length; i++)
-				newStr = newStr += args[i] + " ";
-					
-			final Npc n = World.getNpc(Integer.parseInt(args[0]), owner.getX() - 10, owner.getX() + 10, owner.getY() - 10, owner.getY() + 10);
-			
-			if (n != null) {
-				for (Player p : owner.getViewArea().getPlayersInView())
-					p.informOfNpcMessage(new ChatMessage(n, newStr, p));		
-			} else
-				owner.sendMessage(Config.PREFIX + "Invalid NPC");
-		} if (cmd.equalsIgnoreCase("stat") && owner.isAdmin()) {
-			if (args.length < 2 || args.length > 3)
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: STAT [stat] [level] [user]");
-			else {
+			p.addMessageToChatQueue(msg);
+            Logger.log(new GenericLog(owner.getUsername() + " said \"" + msg + "\" as " + p.getUsername(), DataConversions.getTimeStamp()));
+		}
+        else // Talk as an NPC
+        if (cmd.equalsIgnoreCase("npctalk") && owner.isAdmin())
+        {
+            if(args.length < 2)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
+                return;
+            }
+            
+            try
+            {
+                int npc_id      = Integer.parseInt(args[0]);
+
+                String newStr = "";
+                for (int i = 1; i < args.length; i++)
+                    newStr = newStr += args[i] + " ";
+
+                final Npc n = World.getNpc(npc_id, owner.getX() - 10, owner.getX() + 10, owner.getY() - 10, owner.getY() + 10);
+
+                if (n != null)
+                {
+                    for (Player p : owner.getViewArea().getPlayersInView())
+                        p.informOfNpcMessage(new ChatMessage(n, newStr, p));		
+                }
+                else
+                {
+                    owner.sendMessage(Config.PREFIX + "NPC could not be found");
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                
+            }
+		}
+        else // modify a specific stat
+        if (cmd.equalsIgnoreCase("stat") && owner.isAdmin())
+        {
+			if (args.length != 3)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [stat] [level] [user]");
+                return;
+            }
+            try
+			{
 				byte stat = -1;
 				if ((stat = (byte)statArray.indexOf(args[0])) != -1) {
 					int level = Integer.parseInt(args[1]);
@@ -1514,6 +1564,11 @@ public class CommandHandler implements PacketHandler
 				} else
 					owner.sendMessage(Config.PREFIX + "Invalid stat");
 			}
+            catch (NumberFormatException e)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [stat] [level] [user]");
+                return;
+            }
 		} else if (cmd.equalsIgnoreCase("smitenpc") && (owner.isAdmin() || owner.isDev())) {
 			if (args.length == 2) {
 				try {
