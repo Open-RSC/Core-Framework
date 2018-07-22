@@ -210,7 +210,7 @@ public class CommandHandler implements PacketHandler
                     p.sendNotification(Config.PREFIX + "Max logins per IP has been set to: " + Config.MAX_LOGINS_PER_IP );
                 }
             }
-            catch(Exception e)
+            catch(NumberFormatException e)
             {
                 player.sendMessage("Invalid Syntax - Usage: iplimit [amount]");
                 return;
@@ -310,7 +310,7 @@ public class CommandHandler implements PacketHandler
                         p.setFatigue((int)(18750 * (fatigue / 100.0D)));
                         p.sendFatigue();
                     }
-                    catch(Exception e)
+                    catch(NumberFormatException e)
                     {
                         player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player] [amount]");
                         return;
@@ -482,7 +482,11 @@ public class CommandHandler implements PacketHandler
 				{
 					id = Integer.parseInt(args[0]);
 				} 
-				catch(Exception ex) {}
+				catch(NumberFormatException ex)
+                {
+                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [npc_id] [duration]");
+                    return;
+                }
 				int duration = 0;
 				if (args.length == 1)
 				{
@@ -495,8 +499,12 @@ public class CommandHandler implements PacketHandler
 					{
 						duration = Integer.parseInt(args[1]) * 60000;
 					} 
-					catch(Exception ex) {}
-				}
+                    catch(NumberFormatException ex)
+                    {
+                        player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [npc_id] [duration]");
+                        return;
+                    }
+                }
 				if (EntityHandler.getNpcDef(id) != null) 
 				{
 					final Npc n = new Npc(id, player.getX(), player.getY(), player.getX() - 2, player.getX() + 2, player.getY() - 2, player.getY() + 2);
@@ -557,7 +565,15 @@ public class CommandHandler implements PacketHandler
 			{
 				if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
 				{
-					player.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                    try
+                    {
+                        player.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [x] [y]");
+                        return;
+                    }
 				}
 			}	
 		} 
@@ -761,27 +777,34 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length < 1 || args.length > 2)
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: ITEM [id] [amount]");
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [id] [amount]");
 			}
 			else 
 			{
-				int id = Integer.parseInt(args[0]);
-				if (EntityHandler.getItemDef(id) != null) 
-				{
-					long amount = 1;
-					if (args.length == 2 && EntityHandler.getItemDef(id).isStackable())
-					{
-						amount = Long.parseLong(args[1]);
-					}
-					InvItem i = new InvItem(id, amount);
-					player.getInventory().add(i);
-					player.sendInventory();
-					Logger.log(new GenericLog(player.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
-				} 
-				else
-				{
-					player.sendMessage(Config.PREFIX + "Invalid ID");
-				}
+                try
+                {
+                    int id = Integer.parseInt(args[0]);
+                    if (EntityHandler.getItemDef(id) != null) 
+                    {
+                        long amount = 1;
+                        if (args.length == 2 && EntityHandler.getItemDef(id).isStackable())
+                        {
+                            amount = Long.parseLong(args[1]);
+                        }
+                        InvItem i = new InvItem(id, amount);
+                        player.getInventory().add(i);
+                        player.sendInventory();
+                        Logger.log(new GenericLog(player.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
+                    } 
+                    else
+                    {
+                        player.sendMessage(Config.PREFIX + "Invalid ID");
+                    }
+                }
+                catch (NumberFormatException e)
+                {
+                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [id] [amount]");
+                }
 			}
 		} 
 		if (cmd.equals("object") && (player.isAdmin() || player.isDev()))
