@@ -1103,37 +1103,43 @@ public class CommandHandler implements PacketHandler
 						p.teleport(owner.getX(), owner.getY(), true);
 					}
 				}
+                owner.sendMessage(Config.PREFIX + "All players summoned");
 			} else if (args.length == 2) {
 				int width = -1;
 				int height = -1;
 				try {
 					width = Integer.parseInt(args[0]);
 					height = Integer.parseInt(args[1]);
-				} catch(Exception ex) {
-					owner.sendMessage(Config.PREFIX + "Invalid dimensions");
 				}
-				if (width > 0 && height > 0) {
-					Random rand = new Random(System.currentTimeMillis());
-					synchronized (World.getPlayers()) {
-						for (Player p : World.getPlayers()) {
-							if (p != owner) {
-								int x = rand.nextInt(width);
-								int y = rand.nextInt(height);
-								boolean XModifier = (rand.nextInt(2) == 0 ? false : true);
-								boolean YModifier = (rand.nextInt(2) == 0 ? false : true);
-								if (XModifier)
-									x = -x;
-								if (YModifier)
-									y = -y;
-								p.setReturnPoint();
-								p.resetLevers();
-								p.teleport(owner.getX() + x, owner.getY() + y, false);
-							}
-						}
-					}
+                catch(NumberFormatException e)
+                {
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y] - supplied dimensions were invalid");
+                    return;
 				}
+                Random rand = DataConversions.getRandom();
+                synchronized (World.getPlayers()) {
+                    for (Player p : World.getPlayers()) {
+                        if (p != owner) {
+                            int x = rand.nextInt(width);
+                            int y = rand.nextInt(height);
+                            boolean XModifier = rand.nextInt(2) == 0;
+                            boolean YModifier = rand.nextInt(2) == 0;
+                            if (XModifier)
+                                x = -x;
+                            if (YModifier)
+                                y = -y;
+                            p.setReturnPoint();
+                            p.resetLevers();
+                            p.teleport(owner.getX() + x, owner.getY() + y, false);
+                        }
+                    }
+                }
+                owner.sendMessage(Config.PREFIX + "All players summoned");
 			}	
-		} else if(cmd.equalsIgnoreCase("returnall") && owner.isAdmin()) {
+		}
+        else // return all players who have been summoned
+        if(cmd.equalsIgnoreCase("returnall") && owner.isAdmin())
+        {
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
 					if (p != null) {
@@ -1144,6 +1150,7 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
+            owner.sendMessage(Config.PREFIX + "All players summoned");
 		} else if (cmd.equalsIgnoreCase("massitem") && owner.isAdmin()) {
 			if (args.length != 2) {
 				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: MASSITEM [id] [amount]");

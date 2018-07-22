@@ -91,7 +91,6 @@ public class Formulae {
 	public static final int[] potions2Dose = {223, 475, 478, 481, 484, 487, 490, 493, 496, 499, 567, 570};
 	public static final int[] potions3Dose = {222, 474, 477, 480, 483, 486, 489, 492, 495, 498, 566, 569};
 	public static int[] dragonIds = {196, 201, 202, 291, 477};
-	private static Random r = new Random();
 	public static final int[] longBowIds = {LONGBOW, OAK_LONGBOW, WILLOW_LONGBOW, MAPLE_LONGBOW, YEW_LONGBOW, MAGIC_LONGBOW };
 	public static final int[] shortBowIds = {SHORTBOW, OAK_SHORTBOW, WILLOW_SHORTBOW, MAPLE_SHORTBOW, YEW_SHORTBOW, MAGIC_SHORTBOW };
 	public static final int[][] arrowsF2P = {{1}, {11}};
@@ -110,8 +109,9 @@ public class Formulae {
     }
 
 	public static boolean agilityFormula(int attemptLevel, int obstacleLevel) {
+        Random random = DataConversions.getRandom();
 		int delta = attemptLevel - obstacleLevel;
-		boolean c = r.nextInt((delta + 1) * 2) > r.nextInt(delta + 1) * r.nextInt((int)((r.nextInt(10000) % (delta + 1)) + 1) * 10);
+		boolean c = random.nextInt((delta + 1) * 2) > random.nextInt(delta + 1) * random.nextInt((int)((random.nextInt(10000) % (delta + 1)) + 1) * 10);
 		return c;
 	}
 
@@ -124,7 +124,7 @@ public class Formulae {
 			if (diff >= maxLvl[i] && diff < maxLvl[i] + 5)
 				index = i;
 		int Chance = (chance[index] < 27 ? 27 : chance[index]);
-		return r.nextInt(100) < Chance;
+		return DataConversions.getRandom().nextInt(100) < Chance;
 	}
 
 	public static Npc isPlayerCaughtThievingStall(final Player owner, final StallThievingDefinition stall) {
@@ -203,7 +203,7 @@ public class Formulae {
 	};
 
 	public static final boolean loseArrow(int arrowID) {
-		return r.nextInt(projectileLostTable.get(arrowID).intValue()) == 0;
+		return DataConversions.getRandom().nextInt(projectileLostTable.get(arrowID).intValue()) == 0;
 	}
 
 	public static int getWoodcuttingAxe(Player player) {
@@ -237,7 +237,7 @@ public class Formulae {
 	}
 
 	public static int rand(int low, int high) {
-		return low + r.nextInt(high - low);
+		return low + DataConversions.getRandom().nextInt(high - low);
 	}
 
 	public static int getPotionDose(int id) {
@@ -280,7 +280,7 @@ public class Formulae {
 	}
 
 	public static boolean catchThief(int level, int requiredLevel) {
-		double rand = ((r.nextDouble() * 100) + 1) / 100;
+		double rand = ((DataConversions.getRandom().nextDouble() * 100) + 1) / 100;
 		double success = getMiningFailPercent((double)level, (double)requiredLevel) / 100.0;
 
 		if (success < 0.35)

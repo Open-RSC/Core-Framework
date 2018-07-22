@@ -1920,7 +1920,7 @@ public class InvUseOnObject implements PacketHandler {
 		      					owner.sendMessage("You cannot use " + item.getDef().getName() + " with this chest");
 		      					return;
 		      				}
-							Random rand = new Random(System.currentTimeMillis());
+							Random rand = DataConversions.getRandom();
 							if (item.getID() == 1355 || item.getID() == 1353 || item.getID() == 1354)
 							{
 								player.sendMessage("You cannot use this item here.");
@@ -1933,7 +1933,7 @@ public class InvUseOnObject implements PacketHandler {
 							
 								World.getDelayedEventHandler().add(new SingleEvent(owner, rand.nextInt(5000)) {
 									public void action() {
-										Random rand = new Random(System.currentTimeMillis());
+										Random rand = DataConversions.getRandom();
 										Item drop = new Item(item.getID(), rand.nextInt(9) + 492, rand.nextInt(8) + 1408, (item.getDef().isStackable() ? item.getAmount() : 1), (Player[])null);
 										World.registerEntity(drop);
 										
