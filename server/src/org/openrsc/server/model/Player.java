@@ -3135,7 +3135,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			getActionSender().sendMessage("Your items are safe in CTF");
 		}
 		else {
-			if (!this.getLocation().isInWarZone() || !World.islandSafe) {
+			if (!this.getLocation().isInWarZone() || !World.safeCombat) {
 				DeathLog log = new DeathLog(usernameHash, account, IP, getX(), getY(), DataConversions.getTimeStamp());
 				inventory.sort();
 				ListIterator<InvItem> iterator = inventory.iterator();

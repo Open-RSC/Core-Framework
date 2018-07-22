@@ -201,8 +201,9 @@ public final class World
 	public static boolean global = true, dueling = true;
 
 	private static WorldLoader worldLoader;
-	public static boolean islandCombat, eventRunning = false;
-	public static boolean islandSafe = true;
+	public static boolean eventRunning = false;
+    public static boolean pvpEnabled = true;
+	public static boolean safeCombat = false;
 	public static boolean muted = false;
 	public static Point eventPoint = null;
 	public static int eventLow, eventHigh;
