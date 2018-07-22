@@ -82,12 +82,12 @@ public class CommandHandler implements PacketHandler
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
                         player;
             
-            if(p == null)
-                player.sendMessage(Config.PREFIX + "Invalid player");
+            if(p != null)
+                player.sendMessage(Config.PREFIX + "is at X: " + player.getLocation().getX() + ", Y: " + player.getLocation().getY());
             else
-                player.sendMessage(Config.PREFIX + player.getLocation()+" ");
+                player.sendMessage(Config.PREFIX + "Invalid name");
 		}
-        else
+        else // Show online players
 		if (cmd.equals("online") && player.isMod()) 
 		{
 			StringBuilder sb = new StringBuilder();
@@ -107,10 +107,7 @@ public class CommandHandler implements PacketHandler
 			}
 			player.getActionSender().sendScrollableAlert(sb.toString());
 		}
-		else
-		/*
-		 * Set invisible
-		 */
+        else // toggle invisibility
 		if (cmd.equals("invisible") && (player.isMod() || player.isDev())) 
 		{
 			player.invisible = !player.invisible;
@@ -176,10 +173,7 @@ public class CommandHandler implements PacketHandler
 			else
 				player.sendMessage(Config.PREFIX + "You cannot use Global Chat as you have it disabled");
 		} 
-        else 
-        /*
-         * Alert player
-         */
+        else // Send an alert to a player
         if (cmd.equals("alert") && player.isMod()) 
         {
             String message = "";
@@ -246,25 +240,17 @@ public class CommandHandler implements PacketHandler
 		else // Heal a player
 		if (cmd.equals("heal") && player.isAdmin()) 
 		{
-			if (args.length > 0) 
-			{
-				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-				
-				if (p != null) 
-				{
-					p.setCurStat(3, p.getMaxStat(3));
-					p.sendStat(3);
-				} 
-				else
-				{
-					player.sendMessage(Config.PREFIX + "Invalid name");	
-				}
-			} 
-			else 
-			{
-				player.setCurStat(3, player.getMaxStat(3));
-				player.sendStat(3);
-			}
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        player;
+            
+            if(p != null)
+            {
+                p.setCurStat(3, p.getMaxStat(3));
+                p.sendStat(3);
+            }
+            else
+                player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else 
 		/*
