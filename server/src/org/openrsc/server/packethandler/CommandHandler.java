@@ -1244,11 +1244,16 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
                 return;
             }
-		} else if (cmd.equalsIgnoreCase("npcevent") && owner.isAdmin()) {
-			if (args.length < 1) {
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent [npc_id] [npc_amount] [item_id] [item_amount]");
+		}
+        else // spawn NPCs who drop a specified item on death (only one NPC will drop the loot)
+        if (cmd.equalsIgnoreCase("npcevent") && owner.isAdmin())
+        {
+			if (args.length < 4)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] [item_amount]");
 				return;
 			}
+            
 			int npcID, npcAmt = 0, random = 0;
 			InvItem item = null;
 			try {
@@ -1258,10 +1263,12 @@ public class CommandHandler implements PacketHandler
 				int amount = args.length > 2 ? Integer.parseInt(args[3]) : 1;
 				item = new InvItem(id, amount);
 				random = DataConversions.random(0, npcAmt);
-			} catch (Exception e) {
-				owner.sendMessage(Config.PREFIX + "Error parsing command.");
+			} catch (NumberFormatException e)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] [item_amount]");
 				return;
 			}
+            
 			int x = 0;
 			int y = 0;
 			int baseX = owner.getX();
