@@ -1021,7 +1021,7 @@ public class CommandHandler implements PacketHandler
         {
 			if (args.length < 2)
             {
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [user] [amount]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
                 return;
             }
             try
@@ -1047,36 +1047,54 @@ public class CommandHandler implements PacketHandler
             }
             catch (NumberFormatException e)
             {
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [user] [amount]");
+				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
                 return;
             }
 		}
         else // set each of the specified players stats
         if (cmd.equalsIgnoreCase("stats") && player.isAdmin())
         {
-			int level = 99;
-			if (args.length > 0) {
-				try {
-					level = Integer.parseInt(args[0]);
-				} catch (Exception e) { }
-			}
-			
-			if (level > 99) {
-				level = 99;
-			}
-			if (level < 1) {
-				level = 1;
-			}
-			
-			for (Skill skill : Skill.values()) {
-				player.setCurStat(skill.ordinal(), level);
-				player.setMaxStat(skill.ordinal(), level);
-				player.setExp(skill.ordinal(), Formulae.lvlToXp(level));
-			}
-			player.setCombatLevel(Formulae.getCombatlevel(player.getMaxStats()));
-			player.sendStats();
-			player.sendMessage(Config.PREFIX + "Set all stats to level " + level + ".");
-		} else if (cmd.equalsIgnoreCase("summonall") && player.isAdmin()){
+            Player p = args.length > 1 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        player;
+            
+            if(p != null)
+            {
+                try
+                {
+                    int levelArg    = args.length > 1 ? 1 : 0;
+                    int level       = Integer.parseInt(args[levelArg]);
+                    
+                    if (level > 99) 
+                        level = 99;
+                    if (level < 1) 
+                        level = 1;
+                    
+                    for (Skill skill : Skill.values()) {
+                        p.setCurStat(skill.ordinal(), level);
+                        p.setMaxStat(skill.ordinal(), level);
+                        p.setExp(skill.ordinal(), Formulae.lvlToXp(level));
+                    }
+                    p.setCombatLevel(Formulae.getCombatlevel(p.getMaxStats()));
+                    p.sendStats();
+                    p.sendMessage(Config.PREFIX + "All of your stats have been set to level " + level + " by an admin");
+                    player.sendMessage(Config.PREFIX + "All of " + p.getUsername() + "'s stats have been set to level " + level);
+                }
+                catch(NumberFormatException e)
+                {
+                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [level]");
+                    return;
+                }
+            }
+            else
+            {
+                player.sendMessage(Config.PREFIX + "Invalid name");
+                return;
+            }
+		}
+        else // summon all players in the world
+        if (cmd.equalsIgnoreCase("summonall") && player.isAdmin())
+        {
 			if (args.length == 0) {
 				synchronized (World.getPlayers()) {
 					for (Player p : World.getPlayers()) {
