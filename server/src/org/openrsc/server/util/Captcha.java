@@ -21,8 +21,6 @@ public class Captcha
 {
 	private static Vector<Pair<String, BufferedImage>> captchas = null;
 	
-	private final static Random rand = new Random(System.currentTimeMillis());
-	
 	static
 	{
 		try(Connection connection = ConnectionFactory.getDbConnection())
@@ -53,6 +51,6 @@ public class Captcha
 		{
 			return null;
 		}
-		return captchas.get(rand.nextInt(captchas.size()));
+		return captchas.get(DataConversions.getRandom().nextInt(captchas.size()));
 	}
 }
