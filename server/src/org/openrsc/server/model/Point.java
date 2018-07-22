@@ -56,7 +56,7 @@ public class Point {
 	}
     
     public boolean isInJail() {
-        return inBounds(783, 10, 801, 31);
+        return inBounds(792, 23, 794, 25);
     }
 	
 	public final int getY() {
