@@ -192,14 +192,14 @@ public class CommandHandler implements PacketHandler
                     player.sendMessage(Config.PREFIX + "Invalid player");
             } 
 			else
-                player.sendMessage(Config.PREFIX + "Syntax: ALERT [name] [message]");	
+                player.sendMessage(Config.PREFIX + "Syntax: " + cmd.toUpperCase() + " [name] [message]");	
 		} 
 		else
         if (cmd.equals("iplimit") && player.isAdmin())
         {
             if(args.length != 1)
             {
-                player.sendMessage("Invalid Syntax - Usage: iplimit [amount]");
+                player.sendMessage("Invalid Syntax - Usage: " + cmd.toUpperCase() + " [amount]");
                 return;
             }
             try
@@ -312,7 +312,7 @@ public class CommandHandler implements PacketHandler
                     }
                     catch(Exception e)
                     {
-                        player.sendMessage("Invalid Syntax - Usage: ::FATIGUE [player] [amount]");
+                        player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player] [amount]");
                         return;
                     }
                     player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
@@ -329,24 +329,21 @@ public class CommandHandler implements PacketHandler
                 player.sendFatigue();
             }
         }
+        else // Show a player's IP address
 		if (cmd.equals("ip") && player.isAdmin()) 
 		{
-			if (args.length != 1) 
-			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
-				return;
-			}
-			
-			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-			
-			if (p != null) 
-			{
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        player;
+            
+            if(p != null)
+            {
 				long requestee = player.getUsernameHash();
 				p.requestLocalhost(requestee);
 				Logger.log(new GenericLog(player.getUsername() + " requested " + p.getUsername() + "'s IP", DataConversions.getTimeStamp()));
-			} 
-			else
-				player.sendMessage(Config.PREFIX + "Invalid name");
+            }
+            else
+                player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else 
 		if (cmd.equals("info") && player.isMod()) 
