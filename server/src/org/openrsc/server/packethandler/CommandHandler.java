@@ -13,6 +13,7 @@ import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
 import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.entityhandling.EntityHandler;
+import org.openrsc.server.entityhandling.defs.GameObjectDef;
 import org.openrsc.server.entityhandling.defs.ItemDef;
 import org.openrsc.server.event.ChangePasswordEvent;
 import org.openrsc.server.event.DelayedEvent;
@@ -816,73 +817,93 @@ public class CommandHandler implements PacketHandler
                 catch (NumberFormatException e)
                 {
                     player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [id] [amount]");
+                    return;
                 }
 			}
 		}
-        else
+        else // Spawn or remove an object
 		if (cmd.equals("object") && (player.isAdmin() || player.isDev()))
 		{
-			switch (args.length) {
-				case 0: // Remove Object (from both in-game and database)
-					GameObject o = World.getZone(player.getX(), player.getY()).getObjectAt(player.getX(), player.getY());
-					if (o != null) {
-						World.unregisterEntity(o);
-						try {
-							World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + player.getX() + "' AND `y` = '" + player.getY() + "'");
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				break;
-					
-				case 1: // Create Object (default direction)
-					if (EntityHandler.getGameObjectDef(Integer.parseInt(args[0])) != null)
-						World.registerEntity(new GameObject(player.getLocation(), Integer.parseInt(args[0]), 0, 0));
-					else	
+            if(args.length == 0)
+            {
+                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
+                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " delete" + (player.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
+                return;
+            }
+            
+            if(args[0].equalsIgnoreCase("create"))
+            {
+                if(args.length <= 1)
+                {
+                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
+                    return;
+                }
+                try
+                {
+                    int object_id           = Integer.parseInt(args[1]);
+                    GameObjectDef objectDef = EntityHandler.getGameObjectDef(object_id);
+                    int direction           = args.length >= 3 ? Integer.parseInt(args[2]) : 0;
+                    
+                    if(objectDef == null)
+                    {
 						player.sendMessage(Config.PREFIX + "Invalid ID");
-				break;
-					
-				case 2: // Create Object (custom direction OR saving object to database)
-					boolean SQL = args[1].equalsIgnoreCase("true");
-					if (EntityHandler.getGameObjectDef(Integer.parseInt(args[0])) != null) {
-						if (SQL) {
+                        return;
+                    }
+                    
+                    World.registerEntity(new GameObject(player.getLocation(), object_id, direction, 0));
+                    player.sendMessage(Config.PREFIX + "Created " + objectDef.getName());
+                    
+                    if(player.isAdmin() && args.length >= 4)
+                    {
+                        boolean sql = Boolean.parseBoolean(args[3]);
+                        if(sql)
+                        {
 							try {
-								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + Integer.parseInt(args[0]) + "', '" + player.getX() + "', '" + player.getY() + "', '" + 0 + "')");
-							} catch (NumberFormatException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + object_id + "', '" + player.getX() + "', '" + player.getY() + "', '" + direction + "')");
+                                player.sendMessage(Config.PREFIX + "Object added to database");
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							player.sendMessage(Config.PREFIX + "Added object " + Integer.parseInt(args[0]) + " to database");
-						}
-						World.registerEntity(new GameObject(player.getLocation(), Integer.parseInt(args[0]), Integer.parseInt(args[1]), 0));
-					} else
-						player.sendMessage(Config.PREFIX + "Invalid ID");
-				break;
-				
-				case 3: // Create Object (custom direction AND saving object to database)
-					SQL = args[2].equalsIgnoreCase("true");
-					if (EntityHandler.getGameObjectDef(Integer.parseInt(args[0])) != null) {
-						if (SQL) {
-							try {
-								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + Integer.parseInt(args[0]) + "', '" + player.getX() + "', '" + player.getY() + "', '" + Integer.parseInt(args[1]) + "')");
-							} catch (NumberFormatException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							player.sendMessage(Config.PREFIX + "Added object " + Integer.parseInt(args[0]) + " to database");
-						}
-						World.registerEntity(new GameObject(player.getLocation(), Integer.parseInt(args[0]), Integer.parseInt(args[1]), 0));
-					} else
-						player.sendMessage(Config.PREFIX + "Invalid ID");
-				break;
-			}
+                        }
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
+                    return;
+                }
+            }
+            else
+            if(args[0].equalsIgnoreCase("delete"))
+            {
+               GameObject o = World.getZone(player.getX(), player.getY()).getObjectAt(player.getX(), player.getY());
+               if(o == null)
+               {
+                   player.sendMessage(Config.PREFIX + "There is no object at your current location.");
+               }
+               else
+               {
+                   World.unregisterEntity(o);
+                   player.sendMessage(Config.PREFIX + "Removed " + o.getGameObjectDef().getName());
+               }
+               
+                if(player.isAdmin() && args.length >= 2)
+                {
+                    boolean sql = Boolean.parseBoolean(args[1]);
+
+                    if(sql)
+                    {
+                        try {
+                            World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + player.getX() + "' AND `y` = '" + player.getY() + "'");
+                            player.sendMessage(Config.PREFIX + "Object removed from database");
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
 		} 
 		else 
 		if (cmd.equals("door") && (player.isAdmin() || player.isDev()))
