@@ -905,101 +905,101 @@ public final class World
 	private static ArrayList<Player> lotteryEntries, lotterySent = new ArrayList<Player>();
 
 	public static boolean lotteryRunning() {
-	        return lotteryRunning;
+	    return lotteryRunning;
 	}
 
 	public static void getLotteryPot(Player player) {
-	        if (lotteryRunning)
-	                player.sendMessage(Config.PREFIX + "@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@!");
-	        else
-	                player.sendMessage(Config.PREFIX + "@whi@ There's currently no lottery running");
+        if (lotteryRunning)
+            player.sendMessage(Config.PREFIX + "@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@!");
+        else
+            player.sendMessage(Config.PREFIX + "@whi@ There's currently no lottery running");
 	}
 
 	public static void startLottery(int price) {
-	        lotteryRunning = true;
-	        lotteryPrice = price;
-	        lotteryPot = lotteryNotify = 0;
-	        lotteryEntries = lotterySent = new ArrayList<Player>();
-	       
-	        for (Player informee : World.getPlayers()) {
-	                informee.sendNotification("@gre@Lottery:@whi@ Each entry is @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@. Type @gre@::LOTTERY@whi@ to purchase a ticket!");
-	                informee.sendNotification("@gre@Lottery:@whi@ Open RSC Lottery is now running!");
-	        }               
+        lotteryRunning = true;
+        lotteryPrice = price;
+        lotteryPot = lotteryNotify = 0;
+        lotteryEntries = lotterySent = new ArrayList<Player>();
+
+        for (Player informee : World.getPlayers()) {
+            informee.sendNotification("@gre@Lottery:@whi@ Each entry is @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@. Type @gre@::LOTTERY@whi@ to purchase a ticket!");
+            informee.sendNotification("@gre@Lottery:@whi@ Open RSC Lottery is now running!");
+        }               
 	}
 
 	public static void findLotteryWinner() {
-	        Player p = null;
-	        p = lotteryEntries.get(lotteryEntries.size() == 1 ? 0 : Formulae.rand(0, lotteryEntries.size() - 1));
-	        if (p != null) {
-	                InvItem coins = new InvItem(10);
-	                coins.setAmount(lotteryPot);
-	                p.getInventory().add(coins);
-	                p.sendInventory();
-	                p.sendAlert("Congratulations! You have won the lottery! % % @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@ has been added to your inventory. Thanks for playing!", false);
+        Player p = null;
+        p = lotteryEntries.get(lotteryEntries.size() == 1 ? 0 : Formulae.rand(0, lotteryEntries.size() - 1));
+        if (p != null) {
+            InvItem coins = new InvItem(10);
+            coins.setAmount(lotteryPot);
+            p.getInventory().add(coins);
+            p.sendInventory();
+            p.sendAlert("Congratulations! You have won the lottery! % % @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@ has been added to your inventory. Thanks for playing!", false);
 
-	                for (Player informee : World.getPlayers())
-	                        informee.sendNotification("@gre@Lottery:@whi@ " + p.getUsername() + " has won the lottery and is now @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@ richer!");
-	               
-	                for (Player informee : lotteryEntries) {
-	                        if (informee != p && !informee.getLocation().inWilderness() && !lotterySent.contains(informee)) {
-	                                informee.sendAlert(p.getUsername() + " has won the lottery and is now @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@ richer! % % Thanks for playing and better luck next time.", false);
-	                                lotterySent.add(informee);
-	                        }
-	                }
-	                lotterySent = new ArrayList<Player>();                                               
-	        }
-	        return;
+            for (Player informee : World.getPlayers())
+                informee.sendNotification("@gre@Lottery:@whi@ " + p.getUsername() + " has won the lottery and is now @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@ richer!");
+
+            for (Player informee : lotteryEntries) {
+                if (informee != p && !informee.getLocation().inWilderness() && !lotterySent.contains(informee)) {
+                    informee.sendAlert(p.getUsername() + " has won the lottery and is now @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@ richer! % % Thanks for playing and better luck next time.", false);
+                    lotterySent.add(informee);
+                }
+            }
+            lotterySent = new ArrayList<Player>();                                               
+        }
+        return;
 	}
 
 	public static void stopLottery() {
-	        if (lotteryEntries.size() > 0)
-	                findLotteryWinner();               
-	        else
-	                for (Player informee : World.getPlayers())
-	                        informee.sendNotification("@gre@Lottery:@whi@ The lottery has been stopped. No-one entered.");       
-	        lotteryRunning = false;
-	        lotteryPrice = lotteryPot = lotteryNotify = 0;
-	        lotteryEntries = lotterySent = new ArrayList<Player>();               
+        if (lotteryEntries.size() > 0)
+            findLotteryWinner();               
+        else
+            for (Player informee : World.getPlayers())
+                informee.sendNotification("@gre@Lottery:@whi@ The lottery has been stopped. No-one entered.");       
+        lotteryRunning = false;
+        lotteryPrice = lotteryPot = lotteryNotify = 0;
+        lotteryEntries = lotterySent = new ArrayList<Player>();               
 	}       
 
 	public static void buyTicket(Player player) {
-	        if (player.getBank().countId(10) < lotteryPrice && player.getInventory().countId(10) < lotteryPrice) {
-	                player.sendMessage(Config.PREFIX + "It seems that you don't have enough to buy a lottery ticket...");
-	                player.sendMessage(Config.PREFIX + "Please ensure that you have @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@ in your inventory or bank and try again");
-	        } else if (player.getLocation().inWilderness())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst in the wilderness");
-	        else if (player.isDueling())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are dueling");
-	        else if (player.isTrading())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are trading");
-	        else if (player.isBusy())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're set as busy");
-	        else if (player.accessingBank())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're banking");
-	        else if (player.isMod())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery on a staff character");
-	        else if (player.accessingShop())
-	                player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're in a shop");
-	        else {
-	                if (player.getInventory().countId(10) >= lotteryPrice) {
-	                        if (player.getInventory().remove(new InvItem(10, lotteryPrice)) == -1)
-	                                return;
-	                } else if (player.getBank().countId(10) >= lotteryPrice) {
-	                        if (player.getBank().remove(10, lotteryPrice) == -1)
-	                                return;
-	                }
-		            player.sendInventory();
-	                lotteryPot += (lotteryPrice - (lotteryPrice / 4.5));
-	                lotteryEntries.add(player);
-	                player.sendAlert("You have successfully bought a lottery ticket for " + DataConversions.insertCommas("" + lotteryPrice) + " GP % % @red@Note:@whi@ If you logout during the lottery you will be removed from the draw with no refund!", false);
-	                lotterySent = new ArrayList<Player>();
-	                if (lotteryNotify < 10)
-	                        lotteryNotify++;
-	                else {
-	                        for (Player informee : World.getPlayers())
-	                                informee.sendNotification(Config.PREFIX + " The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@! Type @gre@::LOTTERY@whi@ to enter.");                                       
-	                        lotteryNotify = 0;
-	                }                               
-	        }               
+        if (player.getBank().countId(10) < lotteryPrice && player.getInventory().countId(10) < lotteryPrice) {
+            player.sendMessage(Config.PREFIX + "It seems that you don't have enough to buy a lottery ticket...");
+            player.sendMessage(Config.PREFIX + "Please ensure that you have @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@ in your inventory or bank and try again");
+        } else if (player.getLocation().inWilderness())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst in the wilderness");
+        else if (player.isDueling())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are dueling");
+        else if (player.isTrading())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are trading");
+        else if (player.isBusy())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're set as busy");
+        else if (player.accessingBank())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're banking");
+        else if (player.isMod())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery on a staff character");
+        else if (player.accessingShop())
+            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're in a shop");
+        else {
+            if (player.getInventory().countId(10) >= lotteryPrice) {
+                if (player.getInventory().remove(new InvItem(10, lotteryPrice)) == -1)
+                    return;
+            } else if (player.getBank().countId(10) >= lotteryPrice) {
+                if (player.getBank().remove(10, lotteryPrice) == -1)
+                    return;
+            }
+            player.sendInventory();
+            lotteryPot += (lotteryPrice - (lotteryPrice / 4.5));
+            lotteryEntries.add(player);
+            player.sendAlert("You have successfully bought a lottery ticket for " + DataConversions.insertCommas("" + lotteryPrice) + " GP % % @red@Note:@whi@ If you logout during the lottery you will be removed from the draw with no refund!", false);
+            lotterySent = new ArrayList<Player>();
+            if (lotteryNotify < 10)
+                lotteryNotify++;
+            else {
+                for (Player informee : World.getPlayers())
+                    informee.sendNotification(Config.PREFIX + " The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@! Type @gre@::LOTTERY@whi@ to enter.");                                       
+                lotteryNotify = 0;
+            }                               
+        }               
 	}
 }
