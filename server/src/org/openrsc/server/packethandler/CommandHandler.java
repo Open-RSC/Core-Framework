@@ -360,10 +360,7 @@ public class CommandHandler implements PacketHandler
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else 
-		/*
-		 * Kick player
-		 */
+		else // Kick a player
 		if (cmd.equals("kick") && player.isMod()) 
 		{
 			if (args.length != 1) 
@@ -386,10 +383,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		}
-		else 
-		/*
-		 * Ban player
-		 */
+		else // Ban a player
 		if (cmd.equals("ban") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -411,10 +405,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been banned");
 			} 
 		}
-		else 
-		/*
-		 * Unban player
-		 */
+		else // Unban a player
 		if (cmd.equals("unban") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -427,7 +418,7 @@ public class CommandHandler implements PacketHandler
 			Logger.log(new GenericLog(player.getUsername() + " unbanned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
 			player.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");				
 		}
-		else 
+		else // Mute a player
 		if (cmd.equals("mute") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -446,11 +437,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + p.getUsername() + " has been muted");	
 			}
 		} 
-		else 
-		/*
-		 * Unmute player
-		 * ::unmute <playername>
-		 */
+		else // Unmute a player
 		if (cmd.equals("unmute") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -469,11 +456,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + p.getUsername() + " has been unmuted");	
 			}		
 		}
-		else 
-		/*
-		 * Spawn NPC
-		 * ::npc <id> 
-		 */
+		else // spawn/remove an NPC
 		if (cmd.equals("npc") && (player.isAdmin() || player.isDev())) 
 		{
 			if (args.length == 0) 
@@ -541,10 +524,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		} 
-		else 
-		/*
-		 * Teleport single-click
-		 */
+		else // Teleport
 		if ((cmd.equals("teleport") || cmd.equals("tp")) && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			player.resetLevers();
@@ -581,27 +561,20 @@ public class CommandHandler implements PacketHandler
 				}
 			}	
 		} 
-        else if((cmd.equalsIgnoreCase("appearance")) && (player.isAdmin())) {
-			if (args.length > 0) 
-			{
-				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-				
-				if (p != null) 
-				{
-                    p.setChangingAppearance(true);
-                    p.getActionSender().sendAppearanceScreen();
-				} 
-				else
-				{
-					player.sendMessage(Config.PREFIX + "Invalid name");	
-				}
-			} 
-			else 
-			{
-                player.setChangingAppearance(true);
-                player.getActionSender().sendAppearanceScreen();
-			}
-			return;
+        else // Show appearance change screen
+        if((cmd.equalsIgnoreCase("appearance")) && (player.isAdmin()))
+        {
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        player;
+            
+            if(p != null)
+            {
+                p.setChangingAppearance(true);
+                p.getActionSender().sendAppearanceScreen();
+            }
+            else
+                player.sendMessage(Config.PREFIX + "Invalid name");
 		}
 		else
 		if (cmd.equals("summon") && (player.isMod() || player.isDev())) 
