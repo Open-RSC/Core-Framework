@@ -119,7 +119,7 @@ public class CommandHandler implements PacketHandler
 			x.removeWatchedPlayer(player);
 		} 
         else // leave CTF event
-		if (cmd.equalsIgnoreCaseIgnoreCase("leavectf") && player.getLocation().inCtf())
+		if (cmd.equalsIgnoreCase("leavectf") && player.getLocation().inCtf())
 		{
 			player.removeFromCtf(player);
 			player.sendAlert("You have been removed from CTF");
@@ -907,7 +907,7 @@ public class CommandHandler implements PacketHandler
 		} 
 
 		else
-		if (cmd.equalsIgnoreCase("wipeinventory") && player.isMod()) 
+		if (cmd.equalsIgnoreCase("wipeinventory") && player.isAdmin()) 
 		{
 			for (InvItem i : player.getInventory().getItems()) {
 				if (player.getInventory().get(i).isWielded()) {
