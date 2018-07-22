@@ -187,7 +187,7 @@ public class CommandHandler implements PacketHandler
                     for (int i = 1; i < args.length; i++)
                     message += args[i] + " ";
                     p.sendAlert((player.getStaffName()) + ":@whi@ " + message);
-                    player.sendMessage(Config.PREFIX + "Alert sent");
+                    player.sendMessage(Config.PREFIX + "Alerted " + p.getUsername());
                     Logger.log(new GenericLog(player.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
                 }
                 else
@@ -211,6 +211,7 @@ public class CommandHandler implements PacketHandler
                 {
                     p.sendNotification(Config.PREFIX + "Max logins per IP has been set to: " + Config.MAX_LOGINS_PER_IP );
                 }
+                Logger.log(new GenericLog(player.getUsername() + " has set MAX_LOGINS_PER_IP to " + Config.MAX_LOGINS_PER_IP, DataConversions.getTimeStamp()));
             }
             catch(NumberFormatException e)
             {
@@ -219,25 +220,26 @@ public class CommandHandler implements PacketHandler
             }
         }
         else // Give a player a skull
-		if (cmd.equalsIgnoreCase("skull")) 
+		if (cmd.equalsIgnoreCase("skull") && (player.isAdmin() || player.isMod())) 
 		{
-			if (args.length > 0 && player.isAdmin() || player.isMod()) 
-			{
-				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-				
-				if (p != null)
-				{
-					p.addSkull(1200000);
-				}
-				else
-				{
-					player.sendMessage(Config.PREFIX + "Invalid name");	
-				}
-			} 
-			else
-			{
-				player.addSkull(1200000);
-			}
+            if(args.length == 0)
+            {
+                player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player]");
+                return;
+            }
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+            if (p != null)
+            {
+                p.addSkull(1200000);
+                p.sendMessage(Config.PREFIX + "You have been healed by an admin");
+                player.sendMessage(Config.PREFIX + "Skulled: " + p.getUsername());
+                Logger.log(new GenericLog(player.getUsername() + " skulled " + p.getUsername(), DataConversions.getTimeStamp()));
+            }
+            else
+            {
+                player.sendMessage(Config.PREFIX + "Invalid name");	
+            }
 		} 
 		else // Heal a player
 		if (cmd.equalsIgnoreCase("heal") && player.isAdmin()) 
@@ -250,6 +252,9 @@ public class CommandHandler implements PacketHandler
             {
                 p.setCurStat(3, p.getMaxStat(3));
                 p.sendStat(3);
+                p.sendMessage(Config.PREFIX + "You have been healed by an admin");
+                player.sendMessage(Config.PREFIX + "Healed: " + p.getUsername());
+                Logger.log(new GenericLog(player.getUsername() + " healed " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
@@ -291,44 +296,42 @@ public class CommandHandler implements PacketHandler
 			}			
 		} 
         else // Fatigue player
-        if (cmd.equalsIgnoreCase("fatigue")) 
+        if (cmd.equalsIgnoreCase("fatigue") && player.isMod()) 
         {
-            if (args.length > 0 && player.isMod()) 
+            if(args.length == 0)
             {
-                Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-                if (p != null) 
+                player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player]");
+                return;
+            }
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+            if (p != null) 
+            {
+                try
                 {
-                    try
+                    int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
+                    if(fatigue < 0)
                     {
-                        int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
-                        if(fatigue < 0)
-                        {
-                            fatigue = 0;
-                        }
-                        if(fatigue > 100)
-                        {
-                            fatigue = 100;
-                        }
-                        p.setFatigue((int)(18750 * (fatigue / 100.0D)));
-                        p.sendFatigue();
+                        fatigue = 0;
                     }
-                    catch(NumberFormatException e)
+                    if(fatigue > 100)
                     {
-                        player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player] [amount]");
-                        return;
+                        fatigue = 100;
                     }
-                    player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
-                    Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
-                } 
-                else
-                {
-                    player.sendMessage(Config.PREFIX + "Invalid name");	
+                    p.setFatigue((int)(18750 * (fatigue / 100.0D)));
+                    p.sendFatigue();
                 }
+                catch(NumberFormatException e)
+                {
+                    player.sendMessage("Invalid Syntax - Usage: ::" + cmd.toUpperCase() + " [player] [amount]");
+                    return;
+                }
+                player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
+                Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
             } 
-            else 
+            else
             {
-                player.setFatigue(18750);
-                player.sendFatigue();
+                player.sendMessage(Config.PREFIX + "Invalid name");	
             }
         }
         else // Show a player's IP address
@@ -341,7 +344,8 @@ public class CommandHandler implements PacketHandler
             if(p != null)
             {
 				long requestee = player.getUsernameHash();
-				p.requestLocalhost(requestee);
+				//p.requestLocalhost(requestee);
+                player.sendMessage(Config.PREFIX + p.getUsername() + " IP address: " + p.getIP());
 				Logger.log(new GenericLog(player.getUsername() + " requested " + p.getUsername() + "'s IP", DataConversions.getTimeStamp()));
             }
             else
@@ -357,7 +361,6 @@ public class CommandHandler implements PacketHandler
             if(p != null)
             {
 				player.sendAlert(p.getUsername() + " (" + p.getStatus() + ") at " + player.getLocation().toString() + " (" + player.getLocation().getDescription() + ") % % Logged in: " + (DataConversions.getTimeStamp() - player.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - player.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
-
             }
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
@@ -588,8 +591,11 @@ public class CommandHandler implements PacketHandler
             
             if(p != null)
             {
+                String confirmMessage = player.getUsername() + " has been sent the change appearance screen";
                 p.setChangingAppearance(true);
                 p.getActionSender().sendAppearanceScreen();
+                player.sendMessage(Config.PREFIX + confirmMessage);
+                Logger.log(new GenericLog(confirmMessage + " by " + player.getUsername(), DataConversions.getTimeStamp()));	
             }
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
@@ -619,9 +625,11 @@ public class CommandHandler implements PacketHandler
                         player.sendMessage(Config.PREFIX + "You cannot summon players into the wilderness");
                     else 
                     {
+                        String summonMessage = player.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")";
                         p.setReturnPoint();
                         p.teleport(player.getX(), player.getY(), false);
-                        Logger.log(new GenericLog(player.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));					
+                        player.sendMessage(Config.PREFIX + summonMessage);
+                        Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));					
                     }
                 }
                 else
@@ -651,9 +659,11 @@ public class CommandHandler implements PacketHandler
                 {
                     if (p.wasSummoned()) 
                     {
+                        String returnMessage = player.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")";
                         p.setSummoned(false);
                         p.teleport(p.getReturnX(), p.getReturnY(), false);
-                        Logger.log(new GenericLog(player.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
+                        player.sendMessage(Config.PREFIX + returnMessage);
+                        Logger.log(new GenericLog(returnMessage, DataConversions.getTimeStamp()));
                     } 
                     else
                     {
