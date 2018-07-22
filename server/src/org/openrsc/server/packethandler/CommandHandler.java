@@ -917,7 +917,7 @@ public class CommandHandler implements PacketHandler
 			}
 			player.getInventory().getItems().clear();
 			player.sendInventory();
-		} else if (cmd.equalsIgnoreCase("wipebank") && player.isMod())
+		} else if (cmd.equalsIgnoreCase("wipebank") && player.isAdmin())
 			player.getBank().getItems().clear();			
 		else if (cmd.equalsIgnoreCase("kill") && player.isAdmin()) {
 			if (args.length != 1)
