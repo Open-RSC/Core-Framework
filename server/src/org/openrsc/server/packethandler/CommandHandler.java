@@ -1921,7 +1921,7 @@ public class CommandHandler implements PacketHandler
             Logger.log(new GenericLog(owner.getUsername() + " removed " + args[0] + " from the IP ban list", DataConversions.getTimeStamp()));
 		}
         else // check server time
-        if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date"))
+        if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime"))
         {
 			owner.sendMessage(Config.PREFIX + Config.SERVER_NAME + "'s time/date is:@gre@ " + new java.util.Date().toString());
 		}
@@ -1952,27 +1952,37 @@ public class CommandHandler implements PacketHandler
         if (cmd.equalsIgnoreCase("lottery"))
         {
 	        if (World.lotteryRunning())
-	                World.buyTicket(owner);
+	            World.buyTicket(owner);
 	        else
-	                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
+	            owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
 		}
         else // Check the current lottry pot
         if (cmd.equalsIgnoreCase("lotterypot"))
         {
 	        World.getLotteryPot(owner);     
 		}
-		else
+        else // Start lottery
         if (cmd.equalsIgnoreCase("startlottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
         {
             if (!World.lotteryRunning())
-                if (args.length != 1)
-                    owner.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
-                else
-                    try {
-                        World.startLottery(Integer.parseInt(args[0]));
-                    } catch (Exception e) {}       
+            {
+                if (args.length < 1)
+                {
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [price]");
+                    return;
+                }
+                try
+                {
+                    World.startLottery(Integer.parseInt(args[0]));
+                }
+                catch (NumberFormatException e)
+                {
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [price]");
+                    return;
+                }
+            }
         } 
-        else 
+        else // stop lottery
         if (cmd.equalsIgnoreCase("stoplottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
         {
             if (World.lotteryRunning())
