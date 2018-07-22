@@ -13,6 +13,7 @@ import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
 import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.entityhandling.EntityHandler;
+import org.openrsc.server.entityhandling.defs.ItemDef;
 import org.openrsc.server.event.ChangePasswordEvent;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
@@ -784,15 +785,26 @@ public class CommandHandler implements PacketHandler
                 try
                 {
                     int id = Integer.parseInt(args[0]);
+                    ItemDef itemDef = EntityHandler.getItemDef(id);
                     if (EntityHandler.getItemDef(id) != null) 
                     {
                         long amount = 1;
-                        if (args.length == 2 && EntityHandler.getItemDef(id).isStackable())
-                        {
+                        if (args.length == 2)
                             amount = Long.parseLong(args[1]);
+
+                        if(itemDef.isStackable())
+                        {
+                            InvItem invItem = new InvItem(id, amount);
+                            player.getInventory().add(invItem);
                         }
-                        InvItem i = new InvItem(id, amount);
-                        player.getInventory().add(i);
+                        else
+                        {
+                            for(int i = 0; i < amount; i++)
+                            {
+                                InvItem invItem = new InvItem(id, amount);
+                                player.getInventory().add(invItem);
+                            }
+                        }
                         player.sendInventory();
                         Logger.log(new GenericLog(player.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
                     } 
@@ -806,7 +818,8 @@ public class CommandHandler implements PacketHandler
                     player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [id] [amount]");
                 }
 			}
-		} 
+		}
+        else
 		if (cmd.equals("object") && (player.isAdmin() || player.isDev()))
 		{
 			switch (args.length) {
