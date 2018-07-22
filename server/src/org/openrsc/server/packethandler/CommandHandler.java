@@ -1995,7 +1995,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: CHANGEPASSWORD [new_password]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [new_password]");
 				return;
 			}
             
@@ -2009,7 +2009,7 @@ public class CommandHandler implements PacketHandler
                 
                 if(event.belongsTo(owner)) {
                     owner.sendMessage(Config.PREFIX + "You have already initiated a password change.");
-                    owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
+                    owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] to finish.");
                 }
             }
 			
@@ -2022,7 +2022,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: CONFIRMPASSWORD [new_password]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [new_password]");
 				return;
 			}
             
