@@ -72,7 +72,7 @@ public class CommandHandler implements PacketHandler
 		}
 	}
 	
-	public void handleCommand(String cmd, final String[] args, final Player player) 
+	public void handleCommand(String cmd, final String[] args, final Player owner) 
 	{
 		for (int index = 0; index < args.length - 1; index++) 
 		{
@@ -80,20 +80,20 @@ public class CommandHandler implements PacketHandler
 			args[index] = args[index].replace("_", " ");
 		}
 		
-		player.setLastCommand(System.currentTimeMillis());
-		if ((cmd.equalsIgnoreCase("coords")) && (player.isMod() || player.isDev())) 
+		owner.setLastCommand(System.currentTimeMillis());
+		if ((cmd.equalsIgnoreCase("coords")) && (owner.isMod() || owner.isDev())) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        player;
+                        owner;
             
             if(p != null)
-                player.sendMessage(Config.PREFIX + "is at X: " + player.getLocation().getX() + ", Y: " + player.getLocation().getY());
+                owner.sendMessage(Config.PREFIX + "is at X: " + owner.getLocation().getX() + ", Y: " + owner.getLocation().getY());
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
         else // Show online players
-		if (cmd.equalsIgnoreCase("online") && player.isMod()) 
+		if (cmd.equalsIgnoreCase("online") && owner.isMod()) 
 		{
 			StringBuilder sb = new StringBuilder();
 			synchronized (World.getPlayers()) 
@@ -103,83 +103,83 @@ public class CommandHandler implements PacketHandler
 				for (Player p : players) 
 				{
 					Point loc = p.getLocation();
-					if (player.isSub())
+					if (owner.isSub())
 						sb.append("@whi@").append(p.getUsername()).append(loc.inWilderness() ? " @red@".concat("Wilderness").concat("\n") : "\n");
 					else
-					if (player.isMod())
+					if (owner.isMod())
 						sb.append("@whi@").append(p.getUsername()).append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
 				}
 			}
-			player.getActionSender().sendScrollableAlert(sb.toString());
+			owner.getActionSender().sendScrollableAlert(sb.toString());
 		}
         else // toggle invisibility
-		if (cmd.equalsIgnoreCase("invisible") && (player.isMod() || player.isDev())) 
+		if (cmd.equalsIgnoreCase("invisible") && (owner.isMod() || owner.isDev())) 
 		{
-			player.invisible = !player.invisible;
-			player.sendMessage(Config.PREFIX + "You are now " + (player.invisible ? "invisible" : "visible"));
-			if (player.invisible)
-			for (Player x : player.getViewArea().getPlayersInView())
-			x.removeWatchedPlayer(player);
+			owner.invisible = !owner.invisible;
+			owner.sendMessage(Config.PREFIX + "You are now " + (owner.invisible ? "invisible" : "visible"));
+			if (owner.invisible)
+			for (Player x : owner.getViewArea().getPlayersInView())
+			x.removeWatchedPlayer(owner);
 		} 
         else // leave CTF event
-		if (cmd.equalsIgnoreCase("leavectf") && player.getLocation().inCtf())
+		if (cmd.equalsIgnoreCase("leavectf") && owner.getLocation().inCtf())
 		{
-			player.removeFromCtf(player);
-			player.sendAlert("You have been removed from CTF");
+			owner.removeFromCtf(owner);
+			owner.sendAlert("You have been removed from CTF");
 		}
         else // use global chat
 		if (cmd.equalsIgnoreCase("say") || cmd.equalsIgnoreCase("s")) 
 		{
-			if (player.getPrivacySetting(4)) 
+			if (owner.getPrivacySetting(4)) 
 			{
-				if (!World.global && !player.isMod())
-					player.sendMessage(Config.PREFIX + "Global Chat is currently disabled");
+				if (!World.global && !owner.isMod())
+					owner.sendMessage(Config.PREFIX + "Global Chat is currently disabled");
 				else 
-				if (World.muted && !player.isMod())
-					player.sendMessage(Config.PREFIX + "The world is muted");				
+				if (World.muted && !owner.isMod())
+					owner.sendMessage(Config.PREFIX + "The world is muted");				
 				else 
-				if (player.getMuted() > 0)
-					player.sendMessage(Config.PREFIX + "You are muted");		
+				if (owner.getMuted() > 0)
+					owner.sendMessage(Config.PREFIX + "You are muted");		
 				else
-				if (System.currentTimeMillis() - player.getLastGlobal() < 10000 && !player.isMod())
-					player.sendMessage(Config.PREFIX + "There's a 10 second delay using Global Chat");
+				if (System.currentTimeMillis() - owner.getLastGlobal() < 10000 && !owner.isMod())
+					owner.sendMessage(Config.PREFIX + "There's a 10 second delay using Global Chat");
 				else 
 				{	
-					player.setLastGlobal(System.currentTimeMillis());
+					owner.setLastGlobal(System.currentTimeMillis());
 					String message = "";
 					for (int i = 0; i < args.length; i++) 
 					{
 						message = message += args[i] + " ";
 					}
 						
-					Logger.log(new GlobalLog(player.getUsernameHash(), player.getAccount(), player.getIP(), message, DataConversions.getTimeStamp()));
+					Logger.log(new GlobalLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), message, DataConversions.getTimeStamp()));
 					synchronized (World.getPlayers()) 
 					{
 						for (Player p : World.getPlayers()) 
 						{
-							if (player.isAdmin())
-								p.sendNotification("#adm#@yel@" + player.getUsername() + ":@whi@ " + message);
+							if (owner.isAdmin())
+								p.sendNotification("#adm#@yel@" + owner.getUsername() + ":@whi@ " + message);
 							else
-							if (player.isMod())
-								p.sendNotification("#mod#@whi@" + player.getUsername() + ":@whi@ " + message);
+							if (owner.isMod())
+								p.sendNotification("#mod#@whi@" + owner.getUsername() + ":@whi@ " + message);
 							else
-							if (player.isDev())
-								p.sendNotification("#dev#@red@" + player.getUsername() + ":@whi@ " + message);
+							if (owner.isDev())
+								p.sendNotification("#dev#@red@" + owner.getUsername() + ":@whi@ " + message);
 							else
-							if (player.isEvent())
-								p.sendNotification("#eve#@eve@" + player.getUsername() + ":@whi@ " + message);
+							if (owner.isEvent())
+								p.sendNotification("#eve#@eve@" + owner.getUsername() + ":@whi@ " + message);
 							else 
-							if (!p.getIgnoreList().contains(player.getUsernameHash()) && p.getPrivacySetting(4) == true || player.isMod())
-								p.sendGlobalMessage(player.getUsernameHash(), player.getGroupID() == 4 ? (player.isSub() ? 5 : 4) : player.getGroupID(), message);
+							if (!p.getIgnoreList().contains(owner.getUsernameHash()) && p.getPrivacySetting(4) == true || owner.isMod())
+								p.sendGlobalMessage(owner.getUsernameHash(), owner.getGroupID() == 4 ? (owner.isSub() ? 5 : 4) : owner.getGroupID(), message);
 						}						
 					}
 				}
 			} 
 			else
-				player.sendMessage(Config.PREFIX + "You cannot use Global Chat as you have it disabled");
+				owner.sendMessage(Config.PREFIX + "You cannot use Global Chat as you have it disabled");
 		} 
-        else // Send an alert to a player
-        if (cmd.equalsIgnoreCase("alert") && player.isMod()) 
+        else // Send an alert to a owner
+        if (cmd.equalsIgnoreCase("alert") && owner.isMod()) 
         {
             String message = "";
             if (args.length > 0) 
@@ -189,22 +189,22 @@ public class CommandHandler implements PacketHandler
                 {
                     for (int i = 1; i < args.length; i++)
                     message += args[i] + " ";
-                    p.sendAlert((player.getStaffName()) + ":@whi@ " + message);
-                    player.sendMessage(Config.PREFIX + "Alerted " + p.getUsername());
-                    Logger.log(new GenericLog(player.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
+                    p.sendAlert((owner.getStaffName()) + ":@whi@ " + message);
+                    owner.sendMessage(Config.PREFIX + "Alerted " + p.getUsername());
+                    Logger.log(new GenericLog(owner.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
                 }
                 else
-                    player.sendMessage(Config.PREFIX + "Invalid name");
+                    owner.sendMessage(Config.PREFIX + "Invalid name");
             } 
 			else
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
 		} 
 		else
-        if (cmd.equalsIgnoreCase("iplimit") && player.isAdmin())
+        if (cmd.equalsIgnoreCase("iplimit") && owner.isAdmin())
         {
             if(args.length != 1)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [amount]");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [amount]");
                 return;
             }
             try
@@ -214,20 +214,20 @@ public class CommandHandler implements PacketHandler
                 {
                     p.sendNotification(Config.PREFIX + "Max logins per IP has been set to: " + Config.MAX_LOGINS_PER_IP );
                 }
-                Logger.log(new GenericLog(player.getUsername() + " has set MAX_LOGINS_PER_IP to " + Config.MAX_LOGINS_PER_IP, DataConversions.getTimeStamp()));
+                Logger.log(new GenericLog(owner.getUsername() + " has set MAX_LOGINS_PER_IP to " + Config.MAX_LOGINS_PER_IP, DataConversions.getTimeStamp()));
             }
             catch(NumberFormatException e)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [amount]");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [amount]");
                 return;
             }
         }
-        else // Give a player a skull
-		if (cmd.equalsIgnoreCase("skull") && (player.isAdmin() || player.isMod())) 
+        else // Give a owner a skull
+		if (cmd.equalsIgnoreCase("skull") && (owner.isAdmin() || owner.isMod())) 
 		{
             if(args.length == 0)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -236,74 +236,74 @@ public class CommandHandler implements PacketHandler
             {
                 p.addSkull(1200000);
                 p.sendMessage(Config.PREFIX + "You have been healed by an admin");
-                player.sendMessage(Config.PREFIX + "Skulled: " + p.getUsername());
-                Logger.log(new GenericLog(player.getUsername() + " skulled " + p.getUsername(), DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + "Skulled: " + p.getUsername());
+                Logger.log(new GenericLog(owner.getUsername() + " skulled " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
             {
-                player.sendMessage(Config.PREFIX + "Invalid name");	
+                owner.sendMessage(Config.PREFIX + "Invalid name");	
             }
 		} 
-		else // Heal a player
-		if (cmd.equalsIgnoreCase("heal") && player.isAdmin()) 
+		else // Heal a owner
+		if (cmd.equalsIgnoreCase("heal") && owner.isAdmin()) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        player;
+                        owner;
             
             if(p != null)
             {
                 p.setCurStat(3, p.getMaxStat(3));
                 p.sendStat(3);
                 p.sendMessage(Config.PREFIX + "You have been healed by an admin");
-                player.sendMessage(Config.PREFIX + "Healed: " + p.getUsername());
-                Logger.log(new GenericLog(player.getUsername() + " healed " + p.getUsername(), DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + "Healed: " + p.getUsername());
+                Logger.log(new GenericLog(owner.getUsername() + " healed " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else // Toggle global chat
-		if(cmd.equalsIgnoreCase("global") && player.isMod()) 
+		if(cmd.equalsIgnoreCase("global") && owner.isMod()) 
 		{
 			World.global = !World.global;
 			synchronized (World.getPlayers()) 
 			{
 				for (Player p : World.getPlayers()) 
 				{
-					p.sendNotification(Config.PREFIX + "Global Chat has been " + (World.global ? "enabled" : "disabled") + " by " + player.getStaffName());
+					p.sendNotification(Config.PREFIX + "Global Chat has been " + (World.global ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
 			}
 		} 
 		else // Toggle if dueling is allowed
-		if(cmd.equalsIgnoreCase("dueling") && player.isMod())
+		if(cmd.equalsIgnoreCase("dueling") && owner.isMod())
 		{
 			World.dueling = !World.dueling;
 			synchronized (World.getPlayers()) 
 			{
 				for (Player p : World.getPlayers()) 
 				{
-					p.sendNotification(Config.PREFIX + "Dueling has been " + (World.dueling ? "enabled" : "disabled") + " by " + player.getStaffName());
+					p.sendNotification(Config.PREFIX + "Dueling has been " + (World.dueling ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
 			}	
 		} 
 		else // Mute world
-		if (cmd.equalsIgnoreCase("muted") && player.isAdmin()) 
+		if (cmd.equalsIgnoreCase("muted") && owner.isAdmin()) 
 		{
 			World.muted = !World.muted;
 			synchronized (World.getPlayers()) 
 			{
 				for (Player p : World.getPlayers()) 
 				{
-					p.sendNotification(Config.PREFIX + "World Mute has been " + (World.muted ? "enabled" : "disabled") + " by " + player.getStaffName());
+					p.sendNotification(Config.PREFIX + "World Mute has been " + (World.muted ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
 			}			
 		} 
-        else // Fatigue player
-        if (cmd.equalsIgnoreCase("fatigue") && player.isMod()) 
+        else // Fatigue owner
+        if (cmd.equalsIgnoreCase("fatigue") && owner.isMod()) 
         {
             if(args.length == 0)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -326,54 +326,54 @@ public class CommandHandler implements PacketHandler
                 }
                 catch(NumberFormatException e)
                 {
-                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
                     return;
                 }
-                player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
-                Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
+                Logger.log(new GenericLog(owner.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
             } 
             else
             {
-                player.sendMessage(Config.PREFIX + "Invalid name");	
+                owner.sendMessage(Config.PREFIX + "Invalid name");	
             }
         }
-        else // Show a player's IP address
-		if (cmd.equalsIgnoreCase("ip") && player.isAdmin()) 
+        else // Show a owner's IP address
+		if (cmd.equalsIgnoreCase("ip") && owner.isAdmin()) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        player;
+                        owner;
             
             if(p != null)
             {
-				long requestee = player.getUsernameHash();
+				long requestee = owner.getUsernameHash();
 				//p.requestLocalhost(requestee);
-                player.sendMessage(Config.PREFIX + p.getUsername() + " IP address: " + p.getIP());
-				Logger.log(new GenericLog(player.getUsername() + " requested " + p.getUsername() + "'s IP", DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + p.getUsername() + " IP address: " + p.getIP());
+				Logger.log(new GenericLog(owner.getUsername() + " requested " + p.getUsername() + "'s IP", DataConversions.getTimeStamp()));
             }
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else // Show info about a player
-		if (cmd.equalsIgnoreCase("info") && player.isMod()) 
+		else // Show info about a owner
+		if (cmd.equalsIgnoreCase("info") && owner.isMod()) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        player;
+                        owner;
             
             if(p != null)
             {
-				player.sendAlert(p.getUsername() + " (" + p.getStatus() + ") at " + player.getLocation().toString() + " (" + player.getLocation().getDescription() + ") % % Logged in: " + (DataConversions.getTimeStamp() - player.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - player.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
+				owner.sendAlert(p.getUsername() + " (" + p.getStatus() + ") at " + owner.getLocation().toString() + " (" + owner.getLocation().getDescription() + ") % % Logged in: " + (DataConversions.getTimeStamp() - owner.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - owner.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
             }
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else // Kick a player
-		if (cmd.equalsIgnoreCase("kick") && player.isMod()) 
+		else // Kick a owner
+		if (cmd.equalsIgnoreCase("kick") && owner.isMod()) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}	
 			
@@ -381,22 +381,22 @@ public class CommandHandler implements PacketHandler
 			
 			if (p != null) 
 			{
-				if (p.isDueling() && !player.isAdmin())
-					player.sendMessage(Config.PREFIX + "You cannot kick players who are dueling");	
+				if (p.isDueling() && !owner.isAdmin())
+					owner.sendMessage(Config.PREFIX + "You cannot kick players who are dueling");	
 				else 
 				{				
 					World.unregisterEntity(p);
-					player.sendMessage(Config.PREFIX + p.getUsername() + " has been kicked");
-					Logger.log(new GenericLog(player.getUsername() + " kicked " + p.getUsername(), DataConversions.getTimeStamp()));
+					owner.sendMessage(Config.PREFIX + p.getUsername() + " has been kicked");
+					Logger.log(new GenericLog(owner.getUsername() + " kicked " + p.getUsername(), DataConversions.getTimeStamp()));
 				}
 			}
 		}
-		else // Ban a player
-		if (cmd.equalsIgnoreCase("ban") && (player.isMod() || player.isDev())) 
+		else // Ban a owner
+		if (cmd.equalsIgnoreCase("ban") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -409,29 +409,29 @@ public class CommandHandler implements PacketHandler
 			else 
 			{
 				ServerBootstrap.getDatabaseService().submit(new Player.BanTransaction(DataConversions.usernameToHash(args[0]), true));
-				Logger.log(new GenericLog(player.getUsername() + " banned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
-				player.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been banned");
+				Logger.log(new GenericLog(owner.getUsername() + " banned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
+				owner.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been banned");
 			} 
 		}
-		else // Unban a player
-		if (cmd.equalsIgnoreCase("unban") && (player.isMod() || player.isDev())) 
+		else // Unban a owner
+		if (cmd.equalsIgnoreCase("unban") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
 			ServerBootstrap.getDatabaseService().submit(new Player.BanTransaction(DataConversions.usernameToHash(args[0]), false));			
-			Logger.log(new GenericLog(player.getUsername() + " unbanned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
-			player.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");				
+			Logger.log(new GenericLog(owner.getUsername() + " unbanned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
+			owner.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");				
 		}
-		else // Mute a player
-		if (cmd.equalsIgnoreCase("mute") && (player.isMod() || player.isDev())) 
+		else // Mute a owner
+		if (cmd.equalsIgnoreCase("mute") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -440,17 +440,17 @@ public class CommandHandler implements PacketHandler
 			if (p != null) 
 			{
 				p.mute(0);										
-				Logger.log(new GenericLog(player.getUsername() + " muted " + p.getUsername(), DataConversions.getTimeStamp()));
+				Logger.log(new GenericLog(owner.getUsername() + " muted " + p.getUsername(), DataConversions.getTimeStamp()));
 				ServerBootstrap.getDatabaseService().submit(new Player.MuteTransaction(DataConversions.usernameToHash(args[0]), true));
-				player.sendMessage(Config.PREFIX + p.getUsername() + " has been muted");	
+				owner.sendMessage(Config.PREFIX + p.getUsername() + " has been muted");	
 			}
 		} 
-		else // Unmute a player
-		if (cmd.equalsIgnoreCase("unmute") && (player.isMod() || player.isDev())) 
+		else // Unmute a owner
+		if (cmd.equalsIgnoreCase("unmute") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -459,17 +459,17 @@ public class CommandHandler implements PacketHandler
 			if (p != null) 
 			{
 				p.unmute();										
-				Logger.log(new GenericLog(player.getUsername() + " unmuted " + p.getUsername(), DataConversions.getTimeStamp()));
+				Logger.log(new GenericLog(owner.getUsername() + " unmuted " + p.getUsername(), DataConversions.getTimeStamp()));
 				ServerBootstrap.getDatabaseService().submit(new Player.MuteTransaction(DataConversions.usernameToHash(args[0]), false));
-				player.sendMessage(Config.PREFIX + p.getUsername() + " has been unmuted");	
+				owner.sendMessage(Config.PREFIX + p.getUsername() + " has been unmuted");	
 			}		
 		}
 		else // spawn/remove an NPC
-		if (cmd.equalsIgnoreCase("npc") && (player.isAdmin() || player.isDev())) 
+		if (cmd.equalsIgnoreCase("npc") && (owner.isAdmin() || owner.isDev())) 
 		{
 			if (args.length == 0) 
 			{
-				for (Npc n : World.getZone(player.getX(), player.getY()).getNpcsAt(player.getX(), player.getY())) 
+				for (Npc n : World.getZone(owner.getX(), owner.getY()).getNpcsAt(owner.getX(), owner.getY())) 
 				{
 					Mob opponent = n.getOpponent();
 					
@@ -492,7 +492,7 @@ public class CommandHandler implements PacketHandler
 				} 
 				catch(NumberFormatException ex)
                 {
-                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [duration]");
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [duration]");
                     return;
                 }
 				int duration = 0;
@@ -509,13 +509,13 @@ public class CommandHandler implements PacketHandler
 					} 
                     catch(NumberFormatException ex)
                     {
-                        player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [duration]");
+                        owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [duration]");
                         return;
                     }
                 }
 				if (EntityHandler.getNpcDef(id) != null) 
 				{
-					final Npc n = new Npc(id, player.getX(), player.getY(), player.getX() - 2, player.getX() + 2, player.getY() - 2, player.getY() + 2);
+					final Npc n = new Npc(id, owner.getX(), owner.getY(), owner.getX() - 2, owner.getX() + 2, owner.getY() - 2, owner.getY() + 2);
 					n.setRespawn(false);
 					World.registerEntity(n);
 					World.getDelayedEventHandler().add(new SingleEvent(null, duration) 
@@ -536,37 +536,37 @@ public class CommandHandler implements PacketHandler
 				} 
 				else
 				{
-					player.sendMessage(Config.PREFIX + "Invalid ID");
+					owner.sendMessage(Config.PREFIX + "Invalid ID");
 				}
 			}
 		} 
 		else // Teleport
-		if ((cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp")) && (player.isMod() || player.isDev() || player.isEvent())) 
+		if ((cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp")) && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
-			player.resetLevers();
+			owner.resetLevers();
 			if (args.length == 0) 
 			{
-				player.teleport = !player.teleport;
-				player.sendMessage(Config.PREFIX + "Single click teleport " + (player.teleport ? "enabled" : "disabled"));
+				owner.teleport = !owner.teleport;
+				owner.sendMessage(Config.PREFIX + "Single click teleport " + (owner.teleport ? "enabled" : "disabled"));
 			} 
 			else 
 			if (args.length == 1) 
 			{
 				if(!EntityHandler.getTeleportManager().containsTeleport(args[0]))
 				{
-					player.sendMessage(Config.PREFIX + "Teleport location \"" + args[0] + "\" does not exist");
-					player.sendMessage(Config.PREFIX + "hint: you can add it via the website");
+					owner.sendMessage(Config.PREFIX + "Teleport location \"" + args[0] + "\" does not exist");
+					owner.sendMessage(Config.PREFIX + "hint: you can add it via the website");
 				}
 				else
 				{
-					player.teleport(EntityHandler.getTeleportManager().getTeleport(args[0]), false);
+					owner.teleport(EntityHandler.getTeleportManager().getTeleport(args[0]), false);
 				}
 			} 
 			else if (args.length == 2) 
 			{
 				if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
 				{
-					player.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+					owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
 				}
             }
 			else if (args.length == 3) 
@@ -575,40 +575,40 @@ public class CommandHandler implements PacketHandler
 				{
                     try
                     {
-                        player.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                        owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
                     }
                     catch(NumberFormatException e)
                     {
-                        player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y]");
+                        owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y]");
                         return;
                     }
 				}
 			}	
 		} 
         else // Show appearance change screen
-        if((cmd.equalsIgnoreCase("appearance")) && (player.isAdmin()))
+        if((cmd.equalsIgnoreCase("appearance")) && (owner.isAdmin()))
         {
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        player;
+                        owner;
             
             if(p != null)
             {
-                String confirmMessage = player.getUsername() + " has been sent the change appearance screen";
+                String confirmMessage = owner.getUsername() + " has been sent the change appearance screen";
                 p.setChangingAppearance(true);
                 p.getActionSender().sendAppearanceScreen();
-                player.sendMessage(Config.PREFIX + confirmMessage);
-                Logger.log(new GenericLog(confirmMessage + " by " + player.getUsername(), DataConversions.getTimeStamp()));	
+                owner.sendMessage(Config.PREFIX + confirmMessage);
+                Logger.log(new GenericLog(confirmMessage + " by " + owner.getUsername(), DataConversions.getTimeStamp()));	
             }
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
-        else // Summon a player
-		if (cmd.equalsIgnoreCase("summon") && (player.isMod() || player.isDev())) 
+        else // Summon a owner
+		if (cmd.equalsIgnoreCase("summon") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -619,38 +619,38 @@ public class CommandHandler implements PacketHandler
                 if(p.getGroupID() >= 4)
                 {
                     if (p.getLocation().inCtf())
-                        player.sendMessage(Config.PREFIX + "You cannot summon players who are in CTF");
+                        owner.sendMessage(Config.PREFIX + "You cannot summon players who are in CTF");
                     else
-                    if (p.isDueling() && !player.isAdmin())
-                        player.sendMessage(Config.PREFIX + "You cannot summon players who are dueling");
+                    if (p.isDueling() && !owner.isAdmin())
+                        owner.sendMessage(Config.PREFIX + "You cannot summon players who are dueling");
                     else 
-                    if (player.getLocation().inWilderness() && !player.isAdmin())
-                        player.sendMessage(Config.PREFIX + "You cannot summon players into the wilderness");
+                    if (owner.getLocation().inWilderness() && !owner.isAdmin())
+                        owner.sendMessage(Config.PREFIX + "You cannot summon players into the wilderness");
                     else 
                     {
-                        String summonMessage = player.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")";
+                        String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")";
                         p.setReturnPoint();
-                        p.teleport(player.getX(), player.getY(), false);
-                        player.sendMessage(Config.PREFIX + summonMessage);
+                        p.teleport(owner.getX(), owner.getY(), false);
+                        owner.sendMessage(Config.PREFIX + summonMessage);
                         Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));					
                     }
                 }
                 else
                 {
-                    player.sendMessage(Config.PREFIX + "Staff members can not be summoned");
+                    owner.sendMessage(Config.PREFIX + "Staff members can not be summoned");
                 }
 			} 
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else // Return a player to where they were before summoning
-		if (cmd.equalsIgnoreCase("return") && (player.isMod() || player.isDev())) 
+		else // Return a owner to where they were before summoning
+		if (cmd.equalsIgnoreCase("return") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 			
@@ -662,33 +662,33 @@ public class CommandHandler implements PacketHandler
                 {
                     if (p.wasSummoned()) 
                     {
-                        String returnMessage = player.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")";
+                        String returnMessage = owner.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")";
                         p.setSummoned(false);
                         p.teleport(p.getReturnX(), p.getReturnY(), false);
-                        player.sendMessage(Config.PREFIX + returnMessage);
+                        owner.sendMessage(Config.PREFIX + returnMessage);
                         Logger.log(new GenericLog(returnMessage, DataConversions.getTimeStamp()));
                     } 
                     else
                     {
-                        player.sendMessage(Config.PREFIX + p.getUsername() + " has no return point set");
+                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has no return point set");
                     }
                 }
                 else
                 {
-                    player.sendMessage(Config.PREFIX + "Staff members can not be summoned");
+                    owner.sendMessage(Config.PREFIX + "Staff members can not be summoned");
                 }
 			} 
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else // Jail a player
-		if (cmd.equalsIgnoreCase("jail") && (player.isMod() || player.isDev() || player.isEvent())) 
+		else // Jail a owner
+		if (cmd.equalsIgnoreCase("jail") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -701,33 +701,33 @@ public class CommandHandler implements PacketHandler
                     if(!p.getLocation().isInJail())
                     {
                         p.teleport(793, 24, false);
-                        player.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
+                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
                         p.sendAlert("You have been jailed.");
                     }
                     else
                     {
-                        player.sendMessage(Config.PREFIX + p.getUsername() + " is already in jail");
+                        owner.sendMessage(Config.PREFIX + p.getUsername() + " is already in jail");
                         return;
                     }
                 } 
                 else
                 {
-                    player.sendMessage(Config.PREFIX + "Staff members can not be jailed");
+                    owner.sendMessage(Config.PREFIX + "Staff members can not be jailed");
                     return;
                 }
             }
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.PREFIX + "Invalid name");
                 return;
 			}
 		} 
-		else // Release a player from jail
-		if (cmd.equalsIgnoreCase("release") && (player.isMod() || player.isDev() || player.isEvent())) 
+		else // Release a owner from jail
+		if (cmd.equalsIgnoreCase("release") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -741,31 +741,31 @@ public class CommandHandler implements PacketHandler
                     {
                         p.teleport(120, 648, false);
                         p.sendAlert("You have been released from jail.");
-                        player.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
                     }
                     else
                     {
-                        player.sendMessage(Config.PREFIX + p.getUsername() + " is not in jail");
+                        owner.sendMessage(Config.PREFIX + p.getUsername() + " is not in jail");
                     }
                 } 
                 else
                 {
-                    player.sendMessage(Config.PREFIX + "Staff members can not be released");
+                    owner.sendMessage(Config.PREFIX + "Staff members can not be released");
                     return;
                 }
             }
 			else
 			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.PREFIX + "Invalid name");
                 return;
 			}
 		} 
-		else // Go to a player's location
-		if ((cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) && (player.isMod() || player.isDev())) 
+		else // Go to a owner's location
+		if ((cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
             
@@ -773,16 +773,16 @@ public class CommandHandler implements PacketHandler
 			
             if(p != null)
             {
-                player.teleport(p.getX(), p.getY(), false);
-                Logger.log(new GenericLog(player.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
+                owner.teleport(p.getX(), p.getY(), false);
+                Logger.log(new GenericLog(owner.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
             }
  			else
 			{
-				player.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
 		else // Restart server
-		if ((cmd.equalsIgnoreCase("restart") || cmd.equalsIgnoreCase("update")) && (player.isAdmin() || player.isDev()))
+		if ((cmd.equalsIgnoreCase("restart") || cmd.equalsIgnoreCase("update")) && (owner.isAdmin() || owner.isDev()))
 		{
 			String message = "";
 			if (args.length > 0) {
@@ -793,11 +793,11 @@ public class CommandHandler implements PacketHandler
 			World.getWorld().getEventPump().submit(new ShutdownEvent(true, message));
 		}
 		else // spawn an item
-		if (cmd.equalsIgnoreCase("item") && player.isAdmin())
+		if (cmd.equalsIgnoreCase("item") && owner.isAdmin())
 		{
 			if (args.length < 1 || args.length > 2)
 			{
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
 			}
 			else 
 			{
@@ -814,38 +814,38 @@ public class CommandHandler implements PacketHandler
                         if(itemDef.isStackable())
                         {
                             InvItem invItem = new InvItem(id, amount);
-                            player.getInventory().add(invItem);
+                            owner.getInventory().add(invItem);
                         }
                         else
                         {
                             for(int i = 0; i < amount; i++)
                             {
                                 InvItem invItem = new InvItem(id, amount);
-                                player.getInventory().add(invItem);
+                                owner.getInventory().add(invItem);
                             }
                         }
-                        player.sendInventory();
-                        Logger.log(new GenericLog(player.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
+                        owner.sendInventory();
+                        Logger.log(new GenericLog(owner.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
                     } 
                     else
                     {
-                        player.sendMessage(Config.PREFIX + "Invalid ID");
+                        owner.sendMessage(Config.PREFIX + "Invalid ID");
                     }
                 }
                 catch (NumberFormatException e)
                 {
-                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
                     return;
                 }
 			}
 		}
         else // Spawn or remove an object
-		if (cmd.equalsIgnoreCase("object") && (player.isAdmin() || player.isDev()))
+		if (cmd.equalsIgnoreCase("object") && (owner.isAdmin() || owner.isDev()))
 		{
             if(args.length == 0)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " delete" + (player.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (owner.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " delete" + (owner.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
                 return;
             }
             
@@ -853,7 +853,7 @@ public class CommandHandler implements PacketHandler
             {
                 if(args.length <= 1)
                 {
-                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (owner.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
                     return;
                 }
                 try
@@ -864,22 +864,22 @@ public class CommandHandler implements PacketHandler
                     
                     if(objectDef == null)
                     {
-						player.sendMessage(Config.PREFIX + "Invalid ID");
+						owner.sendMessage(Config.PREFIX + "Invalid ID");
                         return;
                     }
                     
-                    World.registerEntity(new GameObject(player.getLocation(), object_id, direction, 0));
-                    player.sendMessage(Config.PREFIX + "Created " + objectDef.getName());
+                    World.registerEntity(new GameObject(owner.getLocation(), object_id, direction, 0));
+                    owner.sendMessage(Config.PREFIX + "Created " + objectDef.getName());
                     
-                    if(player.isAdmin() && args.length >= 4)
+                    if(owner.isAdmin() && args.length >= 4)
                     {
                         boolean sql = Boolean.parseBoolean(args[3]);
                         if(sql)
                         {
 							try {
-								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + object_id + "', '" + player.getX() + "', '" + player.getY() + "', '" + direction + "')");
-                                player.sendMessage(Config.PREFIX + "Object added to database");
-                                Logger.log(new GenericLog(player.getUsername() + " added object to database. id: " + object_id + ", direction: " + direction + ", location: " + player.getLocation(), DataConversions.getTimeStamp()));
+								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + object_id + "', '" + owner.getX() + "', '" + owner.getY() + "', '" + direction + "')");
+                                owner.sendMessage(Config.PREFIX + "Object added to database");
+                                Logger.log(new GenericLog(owner.getUsername() + " added object to database. id: " + object_id + ", direction: " + direction + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -889,35 +889,35 @@ public class CommandHandler implements PacketHandler
                 }
                 catch(NumberFormatException e)
                 {
-                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (owner.isAdmin() ? " [from_database] eg. '::object create 1 true'" : "") + " OR");
                     return;
                 }
             }
             else
             if(args[0].equalsIgnoreCase("delete"))
             {
-               GameObject o = World.getZone(player.getX(), player.getY()).getObjectAt(player.getX(), player.getY());
+               GameObject o = World.getZone(owner.getX(), owner.getY()).getObjectAt(owner.getX(), owner.getY());
                if(o == null)
                {
-                   player.sendMessage(Config.PREFIX + "There is no object at your current location.");
+                   owner.sendMessage(Config.PREFIX + "There is no object at your current location.");
                    return;
                }
                else
                {
                    World.unregisterEntity(o);
-                   player.sendMessage(Config.PREFIX + "Removed " + o.getGameObjectDef().getName());
+                   owner.sendMessage(Config.PREFIX + "Removed " + o.getGameObjectDef().getName());
                }
                
-                if(player.isAdmin() && args.length >= 2)
+                if(owner.isAdmin() && args.length >= 2)
                 {
                     boolean sql = Boolean.parseBoolean(args[1]);
 
                     if(sql)
                     {
                         try {
-                            World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + player.getX() + "' AND `y` = '" + player.getY() + "'");
-                            player.sendMessage(Config.PREFIX + "Object removed from database");
-                            Logger.log(new GenericLog(player.getUsername() + " remvoed object from database. id: " + o.getID() + ", location: " + player.getLocation(), DataConversions.getTimeStamp()));
+                            World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + owner.getX() + "' AND `y` = '" + owner.getY() + "'");
+                            owner.sendMessage(Config.PREFIX + "Object removed from database");
+                            Logger.log(new GenericLog(owner.getUsername() + " remvoed object from database. id: " + o.getID() + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
                         } catch (SQLException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -927,17 +927,17 @@ public class CommandHandler implements PacketHandler
             }
             else
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (player.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " delete" + (player.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " create [object_id] [direction]" + (owner.isAdmin() ? " [from_database] eg. '::object create 1 0 true'" : "") + " OR");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " delete" + (owner.isAdmin() ? " [from_database] eg. '::object delete true'" : ""));
                 return;
             }
 		} 
-        else // Wipe player's inventory.
-		if (cmd.equalsIgnoreCase("wipeinventory") && player.isAdmin()) 
+        else // Wipe owner's inventory.
+		if (cmd.equalsIgnoreCase("wipeinventory") && owner.isAdmin()) 
 		{
             if(args.length == 0)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -953,18 +953,18 @@ public class CommandHandler implements PacketHandler
                 p.getInventory().getItems().clear();
                 p.sendInventory();
                 p.sendMessage(Config.PREFIX + "Your inventory has been wiped by an admin");
-                player.sendMessage(Config.PREFIX + "Wiped inventory of " + p.getUsername());
-                Logger.log(new GenericLog(player.getUsername() + " wiped the inventory of " + p.getUsername(), DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + "Wiped inventory of " + p.getUsername());
+                Logger.log(new GenericLog(owner.getUsername() + " wiped the inventory of " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
-        else // Wipe player's bank
-        if (cmd.equalsIgnoreCase("wipebank") && player.isAdmin())
+        else // Wipe owner's bank
+        if (cmd.equalsIgnoreCase("wipebank") && owner.isAdmin())
         {
             if(args.length == 0)
             {
-                player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
@@ -973,55 +973,55 @@ public class CommandHandler implements PacketHandler
             {
                 p.getBank().getItems().clear();
                 p.sendMessage(Config.PREFIX + "Your bank has been wiped by an admin");
-                player.sendMessage(Config.PREFIX + "Wiped bank of " + p.getUsername());
-                Logger.log(new GenericLog(player.getUsername() + " wiped the bank of " + p.getUsername(), DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + "Wiped bank of " + p.getUsername());
+                Logger.log(new GenericLog(owner.getUsername() + " wiped the bank of " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
         }
-        else // Kill a player
-        if (cmd.equalsIgnoreCase("kill") && player.isAdmin())
+        else // Kill a owner
+        if (cmd.equalsIgnoreCase("kill") && owner.isAdmin())
         {
 			if (args.length == 1)
             {
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
             }
             
             Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
             if (p == null)
             {
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
                 return;
             }
             
             p.setLastDamage(99);
             p.setHits(p.getHits() - 99);
             ArrayList<Player> playersToInform = new ArrayList<Player>();
-            playersToInform.addAll(player.getViewArea().getPlayersInView());
+            playersToInform.addAll(owner.getViewArea().getPlayersInView());
             playersToInform.addAll(p.getViewArea().getPlayersInView());
             for (Player i : playersToInform)
                 i.informOfModifiedHits(p);
             p.sendStat(3);
             if (p.getHits() <= 0)
             {
-                p.killedBy(player, false);
+                p.killedBy(owner, false);
                 p.sendMessage(Config.PREFIX + "You have been killed by an admin");
-                player.sendMessage(Config.PREFIX + "Killed " + p.getUsername());
-                Logger.log(new GenericLog(player.getUsername() + " killed [command] " + p.getUsername(), DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + "Killed " + p.getUsername());
+                Logger.log(new GenericLog(owner.getUsername() + " killed [command] " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
             {
-                player.sendMessage(Config.PREFIX + "Could not kill " + p.getUsername());
-                Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), player.getUsername() + " unable to kill [command] " + p.getUsername(), DataConversions.getTimeStamp()));
+                owner.sendMessage(Config.PREFIX + "Could not kill " + p.getUsername());
+                Logger.log(new ErrorLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), owner.getUsername() + " unable to kill [command] " + p.getUsername(), DataConversions.getTimeStamp()));
             }
         }
-        else // Damage a player.
-        if (cmd.equalsIgnoreCase("damage") && player.isAdmin())
+        else // Damage a owner.
+        if (cmd.equalsIgnoreCase("damage") && owner.isAdmin())
         {
 			if (args.length < 2)
             {
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
                 return;
             }
             try
@@ -1032,31 +1032,31 @@ public class CommandHandler implements PacketHandler
                     p.setLastDamage(damage);
                     p.setHits(p.getHits() - damage);
                     ArrayList<Player> playersToInform = new ArrayList<Player>();
-                    playersToInform.addAll(player.getViewArea().getPlayersInView());
+                    playersToInform.addAll(owner.getViewArea().getPlayersInView());
                     playersToInform.addAll(p.getViewArea().getPlayersInView());
                     for(Player i : playersToInform)
                         i.informOfModifiedHits(p);
                     p.sendStat(3);
                     if (p.getHits() <= 0)
-                        p.killedBy(player, false);
+                        p.killedBy(owner, false);
                     
                     p.sendMessage(Config.PREFIX + "You have been taken " + damage + " damage from an admin");
-                    player.sendMessage(Config.PREFIX + "Damaged " + p.getUsername() + " " + damage + " hits");
-                    Logger.log(new GenericLog(player.getUsername() + " damaged [" + damage + "] " + p.getUsername(), DataConversions.getTimeStamp()));
+                    owner.sendMessage(Config.PREFIX + "Damaged " + p.getUsername() + " " + damage + " hits");
+                    Logger.log(new GenericLog(owner.getUsername() + " damaged [" + damage + "] " + p.getUsername(), DataConversions.getTimeStamp()));
                 }
             }
             catch (NumberFormatException e)
             {
-				player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
                 return;
             }
 		}
         else // set each of the specified players stats
-        if (cmd.equalsIgnoreCase("stats") && player.isAdmin())
+        if (cmd.equalsIgnoreCase("stats") && owner.isAdmin())
         {
             Player p = args.length > 1 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        player;
+                        owner;
             
             if(p != null)
             {
@@ -1078,29 +1078,29 @@ public class CommandHandler implements PacketHandler
                     p.setCombatLevel(Formulae.getCombatlevel(p.getMaxStats()));
                     p.sendStats();
                     p.sendMessage(Config.PREFIX + "All of your stats have been set to level " + level + " by an admin");
-                    player.sendMessage(Config.PREFIX + "All of " + p.getUsername() + "'s stats have been set to level " + level);
+                    owner.sendMessage(Config.PREFIX + "All of " + p.getUsername() + "'s stats have been set to level " + level);
                 }
                 catch(NumberFormatException e)
                 {
-                    player.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [level]");
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [level]");
                     return;
                 }
             }
             else
             {
-                player.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.PREFIX + "Invalid name");
                 return;
             }
 		}
         else // summon all players in the world
-        if (cmd.equalsIgnoreCase("summonall") && player.isAdmin())
+        if (cmd.equalsIgnoreCase("summonall") && owner.isAdmin())
         {
 			if (args.length == 0) {
 				synchronized (World.getPlayers()) {
 					for (Player p : World.getPlayers()) {
 						p.setReturnPoint();
 						p.resetLevers();
-						p.teleport(player.getX(), player.getY(), true);
+						p.teleport(owner.getX(), owner.getY(), true);
 					}
 				}
 			} else if (args.length == 2) {
@@ -1110,13 +1110,13 @@ public class CommandHandler implements PacketHandler
 					width = Integer.parseInt(args[0]);
 					height = Integer.parseInt(args[1]);
 				} catch(Exception ex) {
-					player.sendMessage(Config.PREFIX + "Invalid dimensions");
+					owner.sendMessage(Config.PREFIX + "Invalid dimensions");
 				}
 				if (width > 0 && height > 0) {
 					Random rand = new Random(System.currentTimeMillis());
 					synchronized (World.getPlayers()) {
 						for (Player p : World.getPlayers()) {
-							if (p != player) {
+							if (p != owner) {
 								int x = rand.nextInt(width);
 								int y = rand.nextInt(height);
 								boolean XModifier = (rand.nextInt(2) == 0 ? false : true);
@@ -1127,13 +1127,13 @@ public class CommandHandler implements PacketHandler
 									y = -y;
 								p.setReturnPoint();
 								p.resetLevers();
-								p.teleport(player.getX() + x, player.getY() + y, false);
+								p.teleport(owner.getX() + x, owner.getY() + y, false);
 							}
 						}
 					}
 				}
 			}	
-		} else if(cmd.equalsIgnoreCase("returnall") && player.isAdmin()) {
+		} else if(cmd.equalsIgnoreCase("returnall") && owner.isAdmin()) {
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
 					if (p != null) {
@@ -1144,9 +1144,9 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equalsIgnoreCase("massitem") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("massitem") && owner.isAdmin()) {
 			if (args.length != 2) {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: MASSITEM [id] [amount]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: MASSITEM [id] [amount]");
 				return;
 			}
 			int id = Integer.parseInt(args[0]);
@@ -1154,8 +1154,8 @@ public class CommandHandler implements PacketHandler
 			if (EntityHandler.getItemDef(id) != null) {
 				int x = 0;
 				int y = 0;
-				int baseX = player.getX();
-				int baseY = player.getY();
+				int baseX = owner.getX();
+				int baseY = owner.getY();
 				int nextX = 0;
 				int nextY = 0;
 				int dX = 0;
@@ -1224,9 +1224,9 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equalsIgnoreCase("npcevent") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("npcevent") && owner.isAdmin()) {
 			if (args.length < 1) {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent [npc_id] [npc_amount] [item_id] [item_amount]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent [npc_id] [npc_amount] [item_id] [item_amount]");
 				return;
 			}
 			int npcID, npcAmt = 0, random = 0;
@@ -1239,13 +1239,13 @@ public class CommandHandler implements PacketHandler
 				item = new InvItem(id, amount);
 				random = DataConversions.random(0, npcAmt);
 			} catch (Exception e) {
-				player.sendMessage(Config.PREFIX + "Error parsing command.");
+				owner.sendMessage(Config.PREFIX + "Error parsing command.");
 				return;
 			}
 			int x = 0;
 			int y = 0;
-			int baseX = player.getX();
-			int baseY = player.getY();
+			int baseX = owner.getX();
+			int baseY = owner.getY();
 			int nextX = 0;
 			int nextY = 0;
 			int dX = 0;
@@ -1331,17 +1331,17 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-		} else if (cmd.equalsIgnoreCase("massnpc") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("massnpc") && owner.isAdmin()) {
 			if (args.length != 1) {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: NPC [id]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: NPC [id]");
 				return;
 			}
 			int id = Integer.parseInt(args[0]);
 			if (EntityHandler.getNpcDef(id) != null) {
 				int x = 0;
 				int y = 0;
-				int baseX = player.getX();
-				int baseY = player.getY();
+				int baseX = owner.getX();
+				int baseY = owner.getY();
 				int nextX = 0;
 				int nextY = 0;
 				int dX = 0;
@@ -1423,9 +1423,9 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		}  
-		else if (cmd.equalsIgnoreCase("playertalk") && player.isAdmin()) {
+		else if (cmd.equalsIgnoreCase("playertalk") && owner.isAdmin()) {
 			if (args.length < 2) {
-				player.sendMessage(Config.PREFIX + "Invalid syntax. ::PLAYERTALK [player] [msg]");
+				owner.sendMessage(Config.PREFIX + "Invalid syntax. ::PLAYERTALK [player] [msg]");
 				return;
 			}
 			String msg = "";
@@ -1434,31 +1434,31 @@ public class CommandHandler implements PacketHandler
 			}
 			Player pl = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			if (pl == null) {
-				player.sendMessage(Config.PREFIX + "Invalid Player");
+				owner.sendMessage(Config.PREFIX + "Invalid Player");
 				return;
 			}
 			pl.addMessageToChatQueue(msg);
-		} else if (cmd.equalsIgnoreCase("npctalk") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("npctalk") && owner.isAdmin()) {
 			String newStr = "";
 			for (int i = 1; i < args.length; i++)
 				newStr = newStr += args[i] + " ";
 					
-			final Npc n = World.getNpc(Integer.parseInt(args[0]), player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+			final Npc n = World.getNpc(Integer.parseInt(args[0]), owner.getX() - 10, owner.getX() + 10, owner.getY() - 10, owner.getY() + 10);
 			
 			if (n != null) {
-				for (Player p : player.getViewArea().getPlayersInView())
+				for (Player p : owner.getViewArea().getPlayersInView())
 					p.informOfNpcMessage(new ChatMessage(n, newStr, p));		
 			} else
-				player.sendMessage(Config.PREFIX + "Invalid NPC");
-		} if (cmd.equalsIgnoreCase("stat") && player.isAdmin()) {
+				owner.sendMessage(Config.PREFIX + "Invalid NPC");
+		} if (cmd.equalsIgnoreCase("stat") && owner.isAdmin()) {
 			if (args.length < 2 || args.length > 3)
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: STAT [stat] [level] [user]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: STAT [stat] [level] [user]");
 			else {
 				byte stat = -1;
 				if ((stat = (byte)statArray.indexOf(args[0])) != -1) {
 					int level = Integer.parseInt(args[1]);
 					if(level < 100 && level >= 1) {
-						Player playerToEdit = player;
+						Player playerToEdit = owner;
 						if(args.length == 3) {
 							playerToEdit = World.getPlayer(DataConversions.usernameToHash(args[2]));
 						}
@@ -1474,24 +1474,24 @@ public class CommandHandler implements PacketHandler
 							}
 							playerToEdit.setCombatLevel(Formulae.getCombatlevel(playerToEdit.getMaxStats()));
 							playerToEdit.sendStats();
-							if (playerToEdit == player)
-								player.sendMessage(Config.PREFIX + "You set your " + statArray.get(stat) + " to " + level);
+							if (playerToEdit == owner)
+								owner.sendMessage(Config.PREFIX + "You set your " + statArray.get(stat) + " to " + level);
 							else {
-								player.sendMessage(Config.PREFIX + "Successfully edited " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " to " + level);
-								playerToEdit.sendMessage(Config.PREFIX + player.getUsername() + " has set your " + statArray.get(stat) + " to " + level);
+								owner.sendMessage(Config.PREFIX + "Successfully edited " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " to " + level);
+								playerToEdit.sendMessage(Config.PREFIX + owner.getUsername() + " has set your " + statArray.get(stat) + " to " + level);
 							}
 						} else
-							player.sendMessage(Config.PREFIX + "Invalid name");
+							owner.sendMessage(Config.PREFIX + "Invalid name");
 					} else
-						player.sendMessage(Config.PREFIX + "Invalid level");
+						owner.sendMessage(Config.PREFIX + "Invalid level");
 				} else
-					player.sendMessage(Config.PREFIX + "Invalid stat");
+					owner.sendMessage(Config.PREFIX + "Invalid stat");
 			}
-		} else if (cmd.equalsIgnoreCase("smitenpc") && (player.isAdmin() || player.isDev())) {
+		} else if (cmd.equalsIgnoreCase("smitenpc") && (owner.isAdmin() || owner.isDev())) {
 			if (args.length == 2) {
 				try {
 					int id = Integer.parseInt(args[0]);
-					Npc n = World.getNpc(id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+					Npc n = World.getNpc(id, owner.getX() - 10, owner.getX() + 10, owner.getY() - 10, owner.getY() + 10);
 					if (n != null) {
 						try {
 							int damage = Integer.parseInt(args[1]);
@@ -1503,62 +1503,62 @@ public class CommandHandler implements PacketHandler
 							World.registerEntity(sara);
 							World.delayedRemoveObject(sara, 600);
 							if (n.getHits() < 1)
-								n.killedBy(player);
+								n.killedBy(owner);
 						} catch(Exception ex) {}
 					}
 				} catch(Exception e) {}
 			} else
-				player.sendMessage(Config.PREFIX + "Invalid args: SMITENPC [ID] [DAMAGE]");
-		} else if (cmd.equalsIgnoreCase("refreshchests") && player.isAdmin()) {
+				owner.sendMessage(Config.PREFIX + "Invalid args: SMITENPC [ID] [DAMAGE]");
+		} else if (cmd.equalsIgnoreCase("refreshchests") && owner.isAdmin()) {
 			try {
 				EntityHandler.setChestDefinitions(World.getWorldLoader().loadChestDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshstalls") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshstalls") && owner.isAdmin()) {
 			try {
 				EntityHandler.setStallThievingDefinitions(World.getWorldLoader().loadStallThievingDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshlockeddoors") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshlockeddoors") && owner.isAdmin()) {
 			try {
 				EntityHandler.setPicklockDoorDefinitions(World.getWorldLoader().loadPicklockDoorDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshpickpocket") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshpickpocket") && owner.isAdmin()) {
 			try {
 				EntityHandler.setPickPocketDefinitions(World.getWorldLoader().loadPickPocketDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshwoodcut") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshwoodcut") && owner.isAdmin()) {
 			try {
 				EntityHandler.setWoodcutDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshfishing") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshfishing") && owner.isAdmin()) {
 			try {
 				EntityHandler.setFishingDefinitions(World.getWorldLoader().loadFishingDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if(cmd.equalsIgnoreCase("refreshnpchandlers") && player.isAdmin()) {
+		} else if(cmd.equalsIgnoreCase("refreshnpchandlers") && owner.isAdmin()) {
 			try {
 				World.getWorldLoader().loadNpcHandlers();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshagility") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshagility") && owner.isAdmin()) {
 			try {
 				EntityHandler.setAgilityCourseDefinitions(World.getWorldLoader().loadAgilityCourseDefinitions());
 				EntityHandler.setAgilityDefinitions(World.getWorldLoader().loadAgilityDefinitons());
@@ -1566,14 +1566,14 @@ public class CommandHandler implements PacketHandler
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshedibles") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshedibles") && owner.isAdmin()) {
 			try {
 				EntityHandler.setItemHealingDefinitions(World.getWorldLoader().loadItemEdibleHeals());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshnpcs") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshnpcs") && owner.isAdmin()) {
 			for (Npc n : World.getNpcs())
 				n.unconditionalRemove();
 			try {
@@ -1582,21 +1582,21 @@ public class CommandHandler implements PacketHandler
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshcerters") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshcerters") && owner.isAdmin()) {
 			try {
 				EntityHandler.setCerterDefinitions(World.getWorldLoader().loadCerterDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshherbs") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshherbs") && owner.isAdmin()) {
 			try {
 				EntityHandler.setHerbDefinitions(World.getWorldLoader().loadHerbDefinitions());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshunidentifiedherbs") && player.isAdmin()) {
+		} else if (cmd.equalsIgnoreCase("refreshunidentifiedherbs") && owner.isAdmin()) {
 			try {
 				EntityHandler.setUnidentifiedHerbDefinitions(World.getWorldLoader().loadUnidentifiedHerbDefinitions());
 			} catch (SQLException e) {
@@ -1605,7 +1605,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} else if (cmd.equalsIgnoreCase("event")) {
 			if (args.length > 1) {
-				if (player.isMod() || player.isEvent()) {
+				if (owner.isMod() || owner.isEvent()) {
 					if (!World.eventRunning) {
 						try {
 							int low = Integer.parseInt(args[0]);
@@ -1613,59 +1613,59 @@ public class CommandHandler implements PacketHandler
 							if (low <= high && low >= 3 && high <= 123) {
 								World.eventLow = low;
 								World.eventHigh = high;
-								World.setEvent(player.getX(), player.getY());
+								World.setEvent(owner.getX(), owner.getY());
 								synchronized (World.getPlayers()) {
 									for (Player p : World.getPlayers()) {
 										p.sendNotification(Config.PREFIX + "Type @gre@::EVENT@whi@ to join the event!");
-										if (player.getLocation().inWilderness())
+										if (owner.getLocation().inWilderness())
 											p.sendNotification(Config.PREFIX + "@red@Warning:@whi@ This event is located in the wilderness!");									
 										p.sendNotification(Config.PREFIX + "@yel@Level Restriction:@whi@ Level " + low + (low != high ? " to Level " + high : ""));
-										p.sendNotification(Config.PREFIX + "An event has been set by " + player.getStaffName());
+										p.sendNotification(Config.PREFIX + "An event has been set by " + owner.getStaffName());
 									}
 								}
 							} else
-								player.sendMessage(Config.PREFIX + "Invalid level range");
+								owner.sendMessage(Config.PREFIX + "Invalid level range");
 						} catch(Exception e) {
-							player.sendMessage(Config.PREFIX + "Invalid level range");
+							owner.sendMessage(Config.PREFIX + "Invalid level range");
 						}							
 					} else
-						player.sendMessage(Config.PREFIX + "There is already an event running!");
+						owner.sendMessage(Config.PREFIX + "There is already an event running!");
 				} else
-					player.sendMessage(Config.PREFIX + "Invalid args! Syntax EVENT");
+					owner.sendMessage(Config.PREFIX + "Invalid args! Syntax EVENT");
 			} else {
 				if (World.eventPoint != null) {
-					if (!player.getLocation().inWilderness() && !player.isTrading() && !player.isBusy() && !player.accessingShop() && !player.accessingBank() && !player.isDueling()) {
-						if(player.getLocation().inBounds(792, 23, 794, 25))
+					if (!owner.getLocation().inWilderness() && !owner.isTrading() && !owner.isBusy() && !owner.accessingShop() && !owner.accessingBank() && !owner.isDueling()) {
+						if(owner.getLocation().inBounds(792, 23, 794, 25))
 						{
-							player.sendMessage(Config.PREFIX + "You cannot use ::event whilst being jailed.");
+							owner.sendMessage(Config.PREFIX + "You cannot use ::event whilst being jailed.");
 							return;
 						}
-						if (!World.joinEvent(player))
-							player.sendMessage(Config.PREFIX + "You aren't eligible for this event");
+						if (!World.joinEvent(owner))
+							owner.sendMessage(Config.PREFIX + "You aren't eligible for this event");
 					} else
-						player.sendMessage(Config.PREFIX + "You cannot enroll in this event right now");
+						owner.sendMessage(Config.PREFIX + "You cannot enroll in this event right now");
 				}
 			}
 		} else 
-			if (cmd.equalsIgnoreCase("endevent") && (player.isMod() || player.isDev() || player.isEvent())) 
+			if (cmd.equalsIgnoreCase("endevent") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 			{
 			if (World.eventRunning) {
 				World.setEvent(-1, -1);
 				synchronized (World.getPlayers()) {
 					for (Player p : World.getPlayers())
-						p.sendNotification(Config.PREFIX + "Event registration has been closed by " + player.getStaffName());	
+						p.sendNotification(Config.PREFIX + "Event registration has been closed by " + owner.getStaffName());	
 				}
 			} else 
-				player.sendMessage(Config.PREFIX + "No event is currently running");
-			} else if (cmd.equalsIgnoreCase("islandsafe") && (player.isEvent() || player.isMod())) {
+				owner.sendMessage(Config.PREFIX + "No event is currently running");
+			} else if (cmd.equalsIgnoreCase("islandsafe") && (owner.isEvent() || owner.isMod())) {
 				World.islandSafe = !World.islandSafe;
-				player.sendMessage(Config.PREFIX + "Safe mode " + (World.islandSafe ? "enabled" : "disabled"));
-			} else if (cmd.equalsIgnoreCase("islandcombat") && (player.isEvent() || player.isMod())) {
+				owner.sendMessage(Config.PREFIX + "Safe mode " + (World.islandSafe ? "enabled" : "disabled"));
+			} else if (cmd.equalsIgnoreCase("islandcombat") && (owner.isEvent() || owner.isMod())) {
 				World.islandCombat = !World.islandCombat;
-				player.sendMessage(Config.PREFIX + "Combat " + (World.islandCombat ? "disabled" : "enabled"));
-			} else if(cmd.equalsIgnoreCase("ipban") && player.isAdmin()) {
+				owner.sendMessage(Config.PREFIX + "Combat " + (World.islandCombat ? "disabled" : "enabled"));
+			} else if(cmd.equalsIgnoreCase("ipban") && owner.isAdmin()) {
 			if (args.length != 1) {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: IPBAN [ip]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: IPBAN [ip]");
 				return;
 			}
 				new Thread(
@@ -1683,10 +1683,10 @@ public class CommandHandler implements PacketHandler
 					}
 				).start();
 				
-				player.sendMessage(Config.PREFIX + args[0] + " was successfully IP banned");
-		} else if (cmd.equalsIgnoreCase("unipban") && player.isAdmin()) {
+				owner.sendMessage(Config.PREFIX + args[0] + " was successfully IP banned");
+		} else if (cmd.equalsIgnoreCase("unipban") && owner.isAdmin()) {
 			if (args.length != 1) {
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: UNIPBAN [ip]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: UNIPBAN [ip]");
 				return;
 			}
 				new Thread(
@@ -1703,42 +1703,42 @@ public class CommandHandler implements PacketHandler
 							}
 						}
 					).start();	
-				player.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
+				owner.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
 		} else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date")) {
-			player.sendMessage(Config.PREFIX + Config.SERVER_NAME + "'s time/date is:@gre@ " + new java.util.Date().toString());
+			owner.sendMessage(Config.PREFIX + Config.SERVER_NAME + "'s time/date is:@gre@ " + new java.util.Date().toString());
 		} else if (cmd.equalsIgnoreCase("skiptutorial")) {
-			if (player.getLocation().onTutorialIsland())
+			if (owner.getLocation().onTutorialIsland())
 			{
-				for (InvItem i : player.getInventory().getItems()) {
-					if (player.getInventory().get(i).isWielded()) {
-						player.getInventory().get(i).setWield(false);
-						player.updateWornItems(i.getWieldableDef().getWieldPos(), player.getPlayerAppearance().getSprite(i.getWieldableDef().getWieldPos()));
+				for (InvItem i : owner.getInventory().getItems()) {
+					if (owner.getInventory().get(i).isWielded()) {
+						owner.getInventory().get(i).setWield(false);
+						owner.updateWornItems(i.getWieldableDef().getWieldPos(), owner.getPlayerAppearance().getSprite(i.getWieldableDef().getWieldPos()));
 					}	
 				}
-				player.getInventory().getItems().clear();
-				player.sendInventory();			
-				player.getInventory().add(new InvItem(70, 1));
-				player.getInventory().add(new InvItem(1263, 1));
-				player.getInventory().add(new InvItem(156, 1));
-				player.getInventory().add(new InvItem(4, 1));
-				player.getInventory().add(new InvItem(87, 1));
-				player.getInventory().add(new InvItem(376, 1));
-				player.sendInventory();
-				player.teleport(122, 647, false);
+				owner.getInventory().getItems().clear();
+				owner.sendInventory();			
+				owner.getInventory().add(new InvItem(70, 1));
+				owner.getInventory().add(new InvItem(1263, 1));
+				owner.getInventory().add(new InvItem(156, 1));
+				owner.getInventory().add(new InvItem(4, 1));
+				owner.getInventory().add(new InvItem(87, 1));
+				owner.getInventory().add(new InvItem(376, 1));
+				owner.sendInventory();
+				owner.teleport(122, 647, false);
 			}
 		} else if (cmd.equalsIgnoreCase("lottery")) {
 	        if (World.lotteryRunning())
-	                World.buyTicket(player);
+	                World.buyTicket(owner);
 	        else
-	                player.sendMessage(Config.PREFIX + " There's no lottery running right now");
+	                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
 		} else if (cmd.equalsIgnoreCase("lotterypot")) {
-	        World.getLotteryPot(player);     
+	        World.getLotteryPot(owner);     
 		} 
-		else if(cmd.equalsIgnoreCase("godspells") && player.isAdmin())
+		else if(cmd.equalsIgnoreCase("godspells") && owner.isAdmin())
 		{
 			if(args.length != 1)
 			{
-				player.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
+				owner.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
 				return;
 			}
 			try
@@ -1751,15 +1751,15 @@ public class CommandHandler implements PacketHandler
 			}
 			catch(Exception e)
 			{
-				player.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
+				owner.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
 				return;
 			}
 		}
-		else if(cmd.equalsIgnoreCase("weakens") && player.isAdmin())
+		else if(cmd.equalsIgnoreCase("weakens") && owner.isAdmin())
 		{
 			if(args.length != 1)
 			{
-				player.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
+				owner.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
 				return;
 			}
 			try
@@ -1772,7 +1772,7 @@ public class CommandHandler implements PacketHandler
 			}
 			catch(Exception e)
 			{
-				player.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
+				owner.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
 				return;
 			}
 		} else
@@ -1783,11 +1783,11 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: CHANGEPASSWORD [new_password]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: CHANGEPASSWORD [new_password]");
 				return;
 			}
             
-            // Check if a player already has a password change event.
+            // Check if a owner already has a password change event.
             ArrayList events = World.getDelayedEventHandler().getEvents();
             Iterator<DelayedEvent> iterator = events.iterator();
             while (iterator.hasNext()) {
@@ -1795,15 +1795,15 @@ public class CommandHandler implements PacketHandler
                 
                 if(!(event instanceof ChangePasswordEvent)) continue;
                 
-                if(event.belongsTo(player)) {
-                    player.sendMessage(Config.PREFIX + "You have already initiated a password change.");
-                    player.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
+                if(event.belongsTo(owner)) {
+                    owner.sendMessage(Config.PREFIX + "You have already initiated a password change.");
+                    owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
                 }
             }
 			
-			World.getDelayedEventHandler().add(new ChangePasswordEvent(player, args[0]));
-            player.sendMessage(Config.PREFIX + "Password change initiated.");
-            player.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
+			World.getDelayedEventHandler().add(new ChangePasswordEvent(owner, args[0]));
+            owner.sendMessage(Config.PREFIX + "Password change initiated.");
+            owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
 		}
 		else
         /*
@@ -1813,7 +1813,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (args.length != 1) 
 			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: CONFIRMPASSWORD [new_password]");
+				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: CONFIRMPASSWORD [new_password]");
 				return;
 			}
             
@@ -1826,38 +1826,38 @@ public class CommandHandler implements PacketHandler
                 
                 if(!(event instanceof ChangePasswordEvent)) continue;
                 
-                if(event.belongsTo(player)) {
+                if(event.belongsTo(owner)) {
                     originatingEvent = (ChangePasswordEvent)event;
                     break;
                 }
             }
             
             if(originatingEvent == null){
-                player.sendMessage(Config.PREFIX + "You have not initiated a password change.");
-                player.sendMessage(Config.PREFIX + "Type ::changepassword [new_password] to change your password.");
+                owner.sendMessage(Config.PREFIX + "You have not initiated a password change.");
+                owner.sendMessage(Config.PREFIX + "Type ::changepassword [new_password] to change your password.");
                 return;
             }
             
             originatingEvent.confirmPassword(args[0]);
 		}
 		else
-        if (cmd.equalsIgnoreCase("startlottery") && (player.isMod() || player.isDev() || player.isEvent())) 
+        if (cmd.equalsIgnoreCase("startlottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
         {
             if (!World.lotteryRunning())
                 if (args.length != 1)
-                    player.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
+                    owner.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
                 else
                     try {
                         World.startLottery(Integer.parseInt(args[0]));
                     } catch (Exception e) {}       
         } 
         else 
-        if (cmd.equalsIgnoreCase("stoplottery") && (player.isMod() || player.isDev() || player.isEvent())) 
+        if (cmd.equalsIgnoreCase("stoplottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
         {
             if (World.lotteryRunning())
                 World.stopLottery();
             else
-                player.sendMessage(Config.PREFIX + " There's no lottery running right now");
+                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
         }
     }
 	public static final ArrayList<String> statArray = new ArrayList<String>(){{
