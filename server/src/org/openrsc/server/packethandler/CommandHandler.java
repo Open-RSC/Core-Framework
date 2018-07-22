@@ -252,10 +252,7 @@ public class CommandHandler implements PacketHandler
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else 
-		/*
-		 * Toggle global
-		 */
+		else // Toggle global chat
 		if(cmd.equals("global") && player.isMod()) 
 		{
 			World.global = !World.global;
@@ -267,10 +264,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		} 
-		else 
-		/*
-		 * Toggle dueling
-		 */
+		else // Toggle if dueling is allowed
 		if(cmd.equals("dueling") && player.isMod())
 		{
 			World.dueling = !World.dueling;
@@ -282,10 +276,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}	
 		} 
-		else 
-		/*
-		 * Mute world
-		 */
+		else // Mute world
 		if (cmd.equals("muted") && player.isAdmin()) 
 		{
 			World.muted = !World.muted;
@@ -297,42 +288,47 @@ public class CommandHandler implements PacketHandler
 				}
 			}			
 		} 
-		else
-			/*
-			 * Fatigue player
-			 */
-			if (cmd.equals("fatigue")) 
-			{
-				if (args.length > 0 && player.isMod()) 
-				{
-					Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-					if (p != null) 
-					{
-						int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
-						if(fatigue < 0)
-						{
-							fatigue = 0;
-						}
-						if(fatigue > 100)
-						{
-							fatigue = 100;
-						}
-						p.setFatigue((int)(18750 * (fatigue / 100.0D)));
-						p.sendFatigue();
-						player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
-						Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
-					} 
-					else
-					{
-						player.sendMessage(Config.PREFIX + "Invalid name");	
-					}
-				} 
-				else 
-				{
-					player.setFatigue(18750);
-					player.sendFatigue();
-				}
-			}
+        else // Fatigue player
+        if (cmd.equals("fatigue")) 
+        {
+            if (args.length > 0 && player.isMod()) 
+            {
+                Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+                if (p != null) 
+                {
+                    try
+                    {
+                        int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
+                        if(fatigue < 0)
+                        {
+                            fatigue = 0;
+                        }
+                        if(fatigue > 100)
+                        {
+                            fatigue = 100;
+                        }
+                        p.setFatigue((int)(18750 * (fatigue / 100.0D)));
+                        p.sendFatigue();
+                    }
+                    catch(Exception e)
+                    {
+                        player.sendMessage("Invalid Syntax - Usage: ::FATIGUE [player] [amount]");
+                        return;
+                    }
+                    player.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
+                    Logger.log(new GenericLog(player.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
+                } 
+                else
+                {
+                    player.sendMessage(Config.PREFIX + "Invalid name");	
+                }
+            } 
+            else 
+            {
+                player.setFatigue(18750);
+                player.sendFatigue();
+            }
+        }
 		if (cmd.equals("ip") && player.isAdmin()) 
 		{
 			if (args.length != 1) 
