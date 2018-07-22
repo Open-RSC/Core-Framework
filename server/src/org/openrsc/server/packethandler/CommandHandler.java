@@ -580,7 +580,7 @@ public class CommandHandler implements PacketHandler
 			}	
 		} 
         else // Show appearance change screen
-        if((cmd.equalsIgnoreCaseIgnoreCase("appearance")) && (player.isAdmin()))
+        if((cmd.equalsIgnoreCase("appearance")) && (player.isAdmin()))
         {
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
