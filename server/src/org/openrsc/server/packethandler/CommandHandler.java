@@ -345,23 +345,20 @@ public class CommandHandler implements PacketHandler
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else 
+		else // Show info about a player
 		if (cmd.equals("info") && player.isMod()) 
 		{
-			if (args.length != 1) 
-			{
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [name]");
-				return;
-			}
-			
-			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-			
-			if (p != null) 
-			{
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        player;
+            
+            if(p != null)
+            {
 				player.sendAlert(p.getUsername() + " (" + p.getStatus() + ") at " + player.getLocation().toString() + " (" + player.getLocation().getDescription() + ") % % Logged in: " + (DataConversions.getTimeStamp() - player.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - player.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
-			} 
-			else
-				player.sendMessage(Config.PREFIX + "Invalid name");
+
+            }
+            else
+                player.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else 
 		/*
