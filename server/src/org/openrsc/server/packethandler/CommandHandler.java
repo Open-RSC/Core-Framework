@@ -576,7 +576,7 @@ public class CommandHandler implements PacketHandler
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
 		}
-		else
+        else // Summon a player
 		if (cmd.equals("summon") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -616,7 +616,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else 
+		else // Return a player to where they were before summoning
 		if (cmd.equals("return") && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -652,7 +652,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else 
+		else // Jail a player
 		if (cmd.equals("jail") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			if (args.length != 1) 
@@ -688,7 +688,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else 
+		else // Release a player from jail
 		if (cmd.equals("release") && (player.isMod() || player.isDev() || player.isEvent())) 
 		{
 			if (args.length != 1) 
@@ -724,7 +724,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else 
+		else // Go to a player's location
 		if ((cmd.equals("goto") || cmd.equals("tpto") || cmd.equals("teleportto")) && (player.isMod() || player.isDev())) 
 		{
 			if (args.length != 1) 
@@ -745,7 +745,7 @@ public class CommandHandler implements PacketHandler
 				player.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else 
+		else // Restart server
 		if ((cmd.equals("restart") || cmd.equals("update")) && (player.isAdmin() || player.isDev()))
 		{
 			String message = "";
@@ -756,7 +756,7 @@ public class CommandHandler implements PacketHandler
 			}
 			World.getWorld().getEventPump().submit(new ShutdownEvent(true, message));
 		}
-		else 
+		else // spawn an item
 		if (cmd.equals("item") && player.isAdmin())
 		{
 			if (args.length < 1 || args.length > 2)
