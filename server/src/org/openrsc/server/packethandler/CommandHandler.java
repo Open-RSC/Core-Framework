@@ -905,20 +905,49 @@ public class CommandHandler implements PacketHandler
                 }
             }
 		} 
-
-		else
+        else // Wipe player's inventory.
 		if (cmd.equalsIgnoreCase("wipeinventory") && player.isAdmin()) 
 		{
-			for (InvItem i : player.getInventory().getItems()) {
-				if (player.getInventory().get(i).isWielded()) {
-					player.getInventory().get(i).setWield(false);
-					player.updateWornItems(i.getWieldableDef().getWieldPos(), player.getPlayerAppearance().getSprite(i.getWieldableDef().getWieldPos()));
-				}	
-			}
-			player.getInventory().getItems().clear();
-			player.sendInventory();
-		} else if (cmd.equalsIgnoreCase("wipebank") && player.isAdmin())
-			player.getBank().getItems().clear();			
+            if(args.length == 0)
+            {
+                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [player]");
+                return;
+            }
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));            
+            if(p != null)
+            {
+                for (InvItem i : p.getInventory().getItems()) {
+                    if (p.getInventory().get(i).isWielded()) {
+                        p.getInventory().get(i).setWield(false);
+                        p.updateWornItems(i.getWieldableDef().getWieldPos(), p.getPlayerAppearance().getSprite(i.getWieldableDef().getWieldPos()));
+                    }	
+                }
+                p.getInventory().getItems().clear();
+                p.sendInventory();
+                player.sendMessage(Config.PREFIX + "Wiped inventory of: " + p.getUsername());
+            }
+            else
+                player.sendMessage(Config.PREFIX + "Invalid name");
+		}
+        else // Wipe player's bank
+        if (cmd.equalsIgnoreCase("wipebank") && player.isAdmin())
+        {
+            if(args.length == 0)
+            {
+                player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [player]");
+                return;
+            }
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));            
+            if(p != null)
+            {
+                p.getBank().getItems().clear();
+                player.sendMessage(Config.PREFIX + "Wiped bank of: " + p.getUsername());
+            }
+            else
+                player.sendMessage(Config.PREFIX + "Invalid name");
+        }
 		else if (cmd.equalsIgnoreCase("kill") && player.isAdmin()) {
 			if (args.length != 1)
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: KILL [user]");
