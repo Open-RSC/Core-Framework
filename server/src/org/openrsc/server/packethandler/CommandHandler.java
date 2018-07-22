@@ -15,6 +15,7 @@ import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.entityhandling.defs.GameObjectDef;
 import org.openrsc.server.entityhandling.defs.ItemDef;
+import org.openrsc.server.entityhandling.defs.NPCDef;
 import org.openrsc.server.event.ChangePasswordEvent;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
@@ -1017,7 +1018,7 @@ public class CommandHandler implements PacketHandler
             }
         }
         else // Damage a owner.
-        if (cmd.equalsIgnoreCase("damage") && owner.isAdmin())
+        if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg")) && owner.isAdmin())
         {
 			if (args.length < 2)
             {
@@ -1079,6 +1080,7 @@ public class CommandHandler implements PacketHandler
                     p.sendStats();
                     p.sendMessage(Config.PREFIX + "All of your stats have been set to level " + level + " by an admin");
                     owner.sendMessage(Config.PREFIX + "All of " + p.getUsername() + "'s stats have been set to level " + level);
+                    Logger.log(new GenericLog(owner.getUsername() + " has set all of " + p.getUsername() + "'s stats to " + level, DataConversions.getTimeStamp()));
                 }
                 catch(NumberFormatException e)
                 {
@@ -1150,7 +1152,7 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
-            owner.sendMessage(Config.PREFIX + "All players summoned");
+            owner.sendMessage(Config.PREFIX + "All players who have been summoned were returned");
 		}
         else
         if(cmd.equalsIgnoreCase("massitem") && owner.isAdmin())
@@ -1163,9 +1165,11 @@ public class CommandHandler implements PacketHandler
             
             try
             {
-                int id = Integer.parseInt(args[0]);
-                int amount = Integer.parseInt(args[1]);
-                if (EntityHandler.getItemDef(id) != null) {
+                int id          = Integer.parseInt(args[0]);
+                int amount      = Integer.parseInt(args[1]);
+                ItemDef itemDef = EntityHandler.getItemDef(id);
+                if (itemDef != null)
+                {
                     int x = 0;
                     int y = 0;
                     int baseX = owner.getX();
@@ -1237,6 +1241,13 @@ public class CommandHandler implements PacketHandler
                                 World.registerEntity(new Item(id, baseX + x, baseY + y, amount, (Player[])null));
                         }
                     }
+                    owner.sendMessage(Config.PREFIX + "Spawned " + amount + " " + itemDef.getName());
+                    return;
+                }
+                else
+                {
+                    owner.sendMessage(Config.PREFIX + "Invalid ID");
+                    return;
                 }
             }
             catch (NumberFormatException e)
@@ -1254,20 +1265,37 @@ public class CommandHandler implements PacketHandler
 				return;
 			}
             
-			int npcID, npcAmt = 0, random = 0;
-			InvItem item = null;
+			int npcID, npcAmt = 0, random = 0, id = 0, amount = 0;
+			InvItem item;
+            ItemDef itemDef;
+            NPCDef npcDef;
 			try {
 				npcID = Integer.parseInt(args[0]);
 				npcAmt = Integer.parseInt(args[1]);
-				int id = Integer.parseInt(args[2]);
-				int amount = args.length > 2 ? Integer.parseInt(args[3]) : 1;
+				id = Integer.parseInt(args[2]);
+				amount = args.length > 2 ? Integer.parseInt(args[3]) : 1;
 				item = new InvItem(id, amount);
 				random = DataConversions.random(0, npcAmt);
-			} catch (NumberFormatException e)
+                itemDef = EntityHandler.getItemDef(id);
+                npcDef = EntityHandler.getNpcDef(npcID);
+			}
+            catch (NumberFormatException e)
             {
 				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] [item_amount]");
 				return;
 			}
+            
+            if(itemDef == null)
+            {
+				owner.sendMessage(Config.PREFIX + "Invalid item_id");
+				return;
+            }
+            
+            if(npcDef == null)
+            {
+				owner.sendMessage(Config.PREFIX + "Invalid npc_id");
+				return;
+            }
             
 			int x = 0;
 			int y = 0;
@@ -1358,6 +1386,8 @@ public class CommandHandler implements PacketHandler
 					}
 				}
 			}
+            owner.sendMessage(Config.PREFIX + "Spawned " + npcAmt + " " + npcDef.getName());
+            owner.sendMessage(Config.PREFIX + "Loot is " + amount + " " + itemDef.getName());
 		}
         else // spawns multiple of a specific NPC type
         if (cmd.equalsIgnoreCase("massnpc") && owner.isAdmin())
@@ -1373,6 +1403,14 @@ public class CommandHandler implements PacketHandler
                 int id = Integer.parseInt(args[0]);
                 int amount = Integer.parseInt(args[1]);
                 int duration = args.length >= 3 ? Integer.parseInt(args[2]) : 1;
+                NPCDef npcDef   = EntityHandler.getNpcDef(id);
+                
+                if(npcDef == null)
+                {
+                    owner.sendMessage(Config.PREFIX + "Invalid ID");
+                    return;
+                }
+                
                 if (EntityHandler.getNpcDef(id) != null) {
                     int x = 0;
                     int y = 0;
@@ -1457,6 +1495,8 @@ public class CommandHandler implements PacketHandler
                         }
                     }
                 }
+                
+                owner.sendMessage(Config.PREFIX + "Spawned " + amount + " " + npcDef.getName());
             }
             catch(NumberFormatException e)
             {
@@ -1518,7 +1558,8 @@ public class CommandHandler implements PacketHandler
             }
             catch (NumberFormatException e)
             {
-                
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
+                return;
             }
 		}
         else // modify a specific stat
@@ -1526,13 +1567,15 @@ public class CommandHandler implements PacketHandler
         {
 			if (args.length != 3)
             {
-				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [stat] [level] [user]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [stat] [level] [name]");
                 return;
             }
             try
 			{
+                int statIndex   = Integer.parseInt(args[0]);
 				byte stat = -1;
-				if ((stat = (byte)statArray.indexOf(args[0])) != -1) {
+				if ((stat = (byte)statArray.indexOf(statIndex)) != -1)
+                {
 					int level = Integer.parseInt(args[1]);
 					if(level < 100 && level >= 1) {
 						Player playerToEdit = owner;
@@ -1554,8 +1597,10 @@ public class CommandHandler implements PacketHandler
 							if (playerToEdit == owner)
 								owner.sendMessage(Config.PREFIX + "You set your " + statArray.get(stat) + " to " + level);
 							else {
+                                playerToEdit.sendMessage(Config.PREFIX + "Your " + statArray.get(stat) + " has been set to " + level + " by an admin");
 								owner.sendMessage(Config.PREFIX + "Successfully edited " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " to " + level);
 								playerToEdit.sendMessage(Config.PREFIX + owner.getUsername() + " has set your " + statArray.get(stat) + " to " + level);
+                                Logger.log(new GenericLog(owner.getUsername() + " has set " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " stat to " + level, DataConversions.getTimeStamp()));
 							}
 						} else
 							owner.sendMessage(Config.PREFIX + "Invalid name");
@@ -1569,28 +1614,51 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [stat] [level] [user]");
                 return;
             }
-		} else if (cmd.equalsIgnoreCase("smitenpc") && (owner.isAdmin() || owner.isDev())) {
-			if (args.length == 2) {
-				try {
-					int id = Integer.parseInt(args[0]);
-					Npc n = World.getNpc(id, owner.getX() - 10, owner.getX() + 10, owner.getY() - 10, owner.getY() + 10);
-					if (n != null) {
-						try {
-							int damage = Integer.parseInt(args[1]);
-							n.setLastDamage(damage);
-							n.setHits(n.getHits() - damage);
-							for (Player p : n.getViewArea().getPlayersInView())
-								p.informOfModifiedHits(n);
-							GameObject sara = new GameObject(n.getLocation(), 1031, 0, 0);
-							World.registerEntity(sara);
-							World.delayedRemoveObject(sara, 600);
-							if (n.getHits() < 1)
-								n.killedBy(owner);
-						} catch(Exception ex) {}
-					}
-				} catch(Exception e) {}
-			} else
-				owner.sendMessage(Config.PREFIX + "Invalid args: SMITENPC [ID] [DAMAGE]");
+		}
+        else // Damage an NPC
+        if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc")) && (owner.isAdmin() || owner.isDev())) {
+			if (args.length < 2)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [damage]");
+                return;
+            }
+            
+            try
+            {
+                int id = Integer.parseInt(args[0]);
+                Npc n = World.getNpc(id, owner.getX() - 10, owner.getX() + 10, owner.getY() - 10, owner.getY() + 10);
+                if (n != null)
+                {
+                    try
+                    {
+                        int damage = Integer.parseInt(args[1]);
+                        n.setLastDamage(damage);
+                        n.setHits(n.getHits() - damage);
+                        for (Player p : n.getViewArea().getPlayersInView())
+                            p.informOfModifiedHits(n);
+                        GameObject sara = new GameObject(n.getLocation(), 1031, 0, 0);
+                        World.registerEntity(sara);
+                        World.delayedRemoveObject(sara, 600);
+                        if (n.getHits() < 1)
+                            n.killedBy(owner);
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [damage]");
+                        return;
+                    }
+                }
+                else
+                {
+                    owner.sendMessage(Config.PREFIX + "Unable to find the specified NPC");
+                    return;
+                }
+            }
+            catch(NumberFormatException e)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [damage]");
+                return;
+            }
 		} else if (cmd.equalsIgnoreCase("refreshchests") && owner.isAdmin()) {
 			try {
 				EntityHandler.setChestDefinitions(World.getWorldLoader().loadChestDefinitions());
