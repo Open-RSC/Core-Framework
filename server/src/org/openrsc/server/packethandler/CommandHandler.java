@@ -966,7 +966,7 @@ public class CommandHandler implements PacketHandler
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
         }
-		else
+        else // Kill a player
         if (cmd.equalsIgnoreCase("kill") && player.isAdmin())
         {
 			if (args.length == 1)
@@ -1003,28 +1003,44 @@ public class CommandHandler implements PacketHandler
                 Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), player.getUsername() + " unable to kill [command] " + p.getUsername(), DataConversions.getTimeStamp()));
             }
         }
-        else
+        else // Damage a player.
         if (cmd.equalsIgnoreCase("damage") && player.isAdmin())
         {
-			if (args.length != 2)
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: DAMAGE [user] [amount]");
-			else {
-				int damage = Integer.parseInt(args[1]);
-				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-				if (p != null) {
-					p.setLastDamage(damage);
-					p.setHits(p.getHits() - damage);
-					ArrayList<Player> playersToInform = new ArrayList<Player>();
-					playersToInform.addAll(player.getViewArea().getPlayersInView());
-					playersToInform.addAll(p.getViewArea().getPlayersInView());
-					for(Player i : playersToInform)
-						i.informOfModifiedHits(p);
-					p.sendStat(3);
-					if (p.getHits() <= 0)
-						p.killedBy(player, false);	
-				}
-			}
-		} else if (cmd.equalsIgnoreCase("stats") && player.isAdmin()) {
+			if (args.length < 2)
+            {
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [user] [amount]");
+                return;
+            }
+            try
+            {
+                int damage = Integer.parseInt(args[1]);
+                Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+                if (p != null) {
+                    p.setLastDamage(damage);
+                    p.setHits(p.getHits() - damage);
+                    ArrayList<Player> playersToInform = new ArrayList<Player>();
+                    playersToInform.addAll(player.getViewArea().getPlayersInView());
+                    playersToInform.addAll(p.getViewArea().getPlayersInView());
+                    for(Player i : playersToInform)
+                        i.informOfModifiedHits(p);
+                    p.sendStat(3);
+                    if (p.getHits() <= 0)
+                        p.killedBy(player, false);
+                    
+                    p.sendMessage(Config.PREFIX + "You have been taken " + damage + " damage from an admin");
+                    player.sendMessage(Config.PREFIX + "Damaged " + p.getUsername() + " " + damage + " hits");
+                    Logger.log(new GenericLog(player.getUsername() + " damaged [" + damage + "] " + p.getUsername(), DataConversions.getTimeStamp()));
+                }
+            }
+            catch (NumberFormatException e)
+            {
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [user] [amount]");
+                return;
+            }
+		}
+        else
+        if (cmd.equalsIgnoreCase("stats") && player.isAdmin())
+        {
 			int level = 99;
 			if (args.length > 0) {
 				try {
