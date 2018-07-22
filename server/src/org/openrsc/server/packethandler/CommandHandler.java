@@ -8,6 +8,8 @@ import java.util.Random;
 import com.rscdaemon.scripting.Skill;
 import com.runescape.entity.attribute.DropItemAttr;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
@@ -42,6 +44,7 @@ import org.openrsc.server.util.Formulae;
 public class CommandHandler implements PacketHandler 
 {
     private static String badSyntaxPrefix = Config.PREFIX + "Invalid Syntax - Usage: ::";
+    Pattern ipRegex = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
     
 	public void handlePacket(Packet p, IoSession session) throws Exception 
 	{
@@ -1851,10 +1854,20 @@ public class CommandHandler implements PacketHandler
         else // ipban
         if(cmd.equalsIgnoreCase("ipban") && owner.isAdmin())
         {
-            if (args.length != 1) {
-                owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: IPBAN [ip]");
+            if (args.length != 1)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [ip]");
                 return;
             }
+            
+            Matcher ipMatcher = ipRegex.matcher(args[0]);
+            
+            if(!ipMatcher.find())
+            {
+                owner.sendMessage(Config.PREFIX + "Input was not correctly formatted as an IP address");
+                return;
+            }
+            
             new Thread(
                 new Runnable()
                 {
@@ -1862,7 +1875,7 @@ public class CommandHandler implements PacketHandler
                     public final void run()
                     {
                         try {
-                            Runtime.getRuntime().exec("IPTABLES -A INPUT -s " + args[0] + " -j DROP");
+                            Runtime.getRuntime().exec("IPTABLES -A INPUT -s '" + args[0] + "' -j DROP");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -1870,30 +1883,42 @@ public class CommandHandler implements PacketHandler
                 }
             ).start();
 
-            owner.sendMessage(Config.PREFIX + args[0] + " was successfully IP banned");
+            owner.sendMessage(Config.PREFIX + args[0] + " was IP banned");
+            Logger.log(new GenericLog(owner.getUsername() + " IP banned " + args[0], DataConversions.getTimeStamp()));
 		}
         else // unipban
         if (cmd.equalsIgnoreCase("unipban") && owner.isAdmin())
         {
-			if (args.length != 1) {
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: UNIPBAN [ip]");
+			if (args.length != 1)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [ip]");
 				return;
 			}
-				new Thread(
-						new Runnable()
-						{
-							@Override
-							public final void run()
-							{
-								try {
-									Runtime.getRuntime().exec("IPTABLES -D INPUT -s " + args[0] + " -j ACCEPT");
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					).start();	
-				owner.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
+            
+            Matcher ipMatcher = ipRegex.matcher(args[0]);
+            
+            if(!ipMatcher.find())
+            {
+                owner.sendMessage(Config.PREFIX + "Input was not correctly formatted as an IP address");
+                return;
+            }
+            
+            new Thread(
+                new Runnable()
+                {
+                    @Override
+                    public final void run()
+                    {
+                        try {
+                            Runtime.getRuntime().exec("IPTABLES -D INPUT -s '" + args[0] + "' -j ACCEPT");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            ).start();	
+            owner.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
+            Logger.log(new GenericLog(owner.getUsername() + " removed " + args[0] + " from the IP ban list", DataConversions.getTimeStamp()));
 		}
         else // check server time
         if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date"))
@@ -1935,7 +1960,26 @@ public class CommandHandler implements PacketHandler
         if (cmd.equalsIgnoreCase("lotterypot"))
         {
 	        World.getLotteryPot(owner);     
-		} 
+		}
+		else
+        if (cmd.equalsIgnoreCase("startlottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
+        {
+            if (!World.lotteryRunning())
+                if (args.length != 1)
+                    owner.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
+                else
+                    try {
+                        World.startLottery(Integer.parseInt(args[0]));
+                    } catch (Exception e) {}       
+        } 
+        else 
+        if (cmd.equalsIgnoreCase("stoplottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
+        {
+            if (World.lotteryRunning())
+                World.stopLottery();
+            else
+                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
+        }
         else // Change your password
         if (cmd.equalsIgnoreCase("changepassword")) 
 		{
@@ -1995,25 +2039,6 @@ public class CommandHandler implements PacketHandler
             
             originatingEvent.confirmPassword(args[0]);
 		}
-		else
-        if (cmd.equalsIgnoreCase("startlottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
-        {
-            if (!World.lotteryRunning())
-                if (args.length != 1)
-                    owner.sendMessage(Config.PREFIX + " Invalid args. Syntax: STARTLOTTERY [price]");
-                else
-                    try {
-                        World.startLottery(Integer.parseInt(args[0]));
-                    } catch (Exception e) {}       
-        } 
-        else 
-        if (cmd.equalsIgnoreCase("stoplottery") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
-        {
-            if (World.lotteryRunning())
-                World.stopLottery();
-            else
-                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
-        }
         /*
          * Removed event commands
          * When reimplemented, save the place that user was at to go back to.
