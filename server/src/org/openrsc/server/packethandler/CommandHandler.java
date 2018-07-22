@@ -1819,7 +1819,10 @@ public class CommandHandler implements PacketHandler
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("event")) {
+		}
+        else // start world event or join world event
+        if (cmd.equalsIgnoreCase("event"))
+        {
 			if (args.length > 1) {
 				if (owner.isMod() || owner.isEvent()) {
 					if (!World.eventRunning) {
@@ -1862,45 +1865,58 @@ public class CommandHandler implements PacketHandler
 						owner.sendMessage(Config.PREFIX + "You cannot enroll in this event right now");
 				}
 			}
-		} else 
-			if (cmd.equalsIgnoreCase("endevent") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
-			{
-			if (World.eventRunning) {
-				World.setEvent(-1, -1);
-				synchronized (World.getPlayers()) {
-					for (Player p : World.getPlayers())
-						p.sendNotification(Config.PREFIX + "Event registration has been closed by " + owner.getStaffName());	
-				}
-			} else 
-				owner.sendMessage(Config.PREFIX + "No event is currently running");
-			} else if (cmd.equalsIgnoreCase("islandsafe") && (owner.isEvent() || owner.isMod())) {
-				World.islandSafe = !World.islandSafe;
-				owner.sendMessage(Config.PREFIX + "Safe mode " + (World.islandSafe ? "enabled" : "disabled"));
-			} else if (cmd.equalsIgnoreCase("islandcombat") && (owner.isEvent() || owner.isMod())) {
-				World.islandCombat = !World.islandCombat;
-				owner.sendMessage(Config.PREFIX + "Combat " + (World.islandCombat ? "disabled" : "enabled"));
-			} else if(cmd.equalsIgnoreCase("ipban") && owner.isAdmin()) {
-			if (args.length != 1) {
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: IPBAN [ip]");
-				return;
-			}
-				new Thread(
-					new Runnable()
-					{
-						@Override
-						public final void run()
-						{
-							try {
-								Runtime.getRuntime().exec("IPTABLES -A INPUT -s " + args[0] + " -j DROP");
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				).start();
-				
-				owner.sendMessage(Config.PREFIX + args[0] + " was successfully IP banned");
-		} else if (cmd.equalsIgnoreCase("unipban") && owner.isAdmin()) {
+		}
+        else // end world event
+        if (cmd.equalsIgnoreCase("endevent") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
+        {
+            if (World.eventRunning) {
+                World.setEvent(-1, -1);
+                synchronized (World.getPlayers()) {
+                    for (Player p : World.getPlayers())
+                        p.sendNotification(Config.PREFIX + "Event registration has been closed by " + owner.getStaffName());	
+                }
+            } else 
+                owner.sendMessage(Config.PREFIX + "No event is currently running");
+        }
+        else // ???
+        if (cmd.equalsIgnoreCase("islandsafe") && (owner.isEvent() || owner.isMod()))
+        {
+            World.islandSafe = !World.islandSafe;
+            owner.sendMessage(Config.PREFIX + "Safe mode " + (World.islandSafe ? "enabled" : "disabled"));
+        }
+        else // ???
+        if (cmd.equalsIgnoreCase("islandcombat") && (owner.isEvent() || owner.isMod()))
+        {
+            World.islandCombat = !World.islandCombat;
+            owner.sendMessage(Config.PREFIX + "Combat " + (World.islandCombat ? "disabled" : "enabled"));
+        }
+        else // ipban
+        if(cmd.equalsIgnoreCase("ipban") && owner.isAdmin())
+        {
+            if (args.length != 1) {
+                owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: IPBAN [ip]");
+                return;
+            }
+            new Thread(
+                new Runnable()
+                {
+                    @Override
+                    public final void run()
+                    {
+                        try {
+                            Runtime.getRuntime().exec("IPTABLES -A INPUT -s " + args[0] + " -j DROP");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            ).start();
+
+            owner.sendMessage(Config.PREFIX + args[0] + " was successfully IP banned");
+		}
+        else // unipban
+        if (cmd.equalsIgnoreCase("unipban") && owner.isAdmin())
+        {
 			if (args.length != 1) {
 				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: UNIPBAN [ip]");
 				return;
@@ -1920,9 +1936,15 @@ public class CommandHandler implements PacketHandler
 						}
 					).start();	
 				owner.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
-		} else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date")) {
+		}
+        else // check server time
+        if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date"))
+        {
 			owner.sendMessage(Config.PREFIX + Config.SERVER_NAME + "'s time/date is:@gre@ " + new java.util.Date().toString());
-		} else if (cmd.equalsIgnoreCase("skiptutorial")) {
+		}
+        else // skip tutorial island
+        if (cmd.equalsIgnoreCase("skiptutorial"))
+        {
 			if (owner.getLocation().onTutorialIsland())
 			{
 				for (InvItem i : owner.getInventory().getItems()) {
@@ -1942,59 +1964,21 @@ public class CommandHandler implements PacketHandler
 				owner.sendInventory();
 				owner.teleport(122, 647, false);
 			}
-		} else if (cmd.equalsIgnoreCase("lottery")) {
+		}
+        else // Buy a lottery ticket
+        if (cmd.equalsIgnoreCase("lottery"))
+        {
 	        if (World.lotteryRunning())
 	                World.buyTicket(owner);
 	        else
 	                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
-		} else if (cmd.equalsIgnoreCase("lotterypot")) {
+		}
+        else // Check the current lottry pot
+        if (cmd.equalsIgnoreCase("lotterypot"))
+        {
 	        World.getLotteryPot(owner);     
 		} 
-		else if(cmd.equalsIgnoreCase("godspells") && owner.isAdmin())
-		{
-			if(args.length != 1)
-			{
-				owner.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
-				return;
-			}
-			try
-			{
-				Config.ALLOW_GODSPELLS = Boolean.parseBoolean(args[0]);
-				for(Player p : World.getPlayers())
-				{
-					p.sendNotification(Config.PREFIX + "Godspells have been " + (Config.ALLOW_GODSPELLS ? "enabled" : "disabled"));
-				}
-			}
-			catch(Exception e)
-			{
-				owner.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
-				return;
-			}
-		}
-		else if(cmd.equalsIgnoreCase("weakens") && owner.isAdmin())
-		{
-			if(args.length != 1)
-			{
-				owner.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
-				return;
-			}
-			try
-			{
-				Config.ALLOW_WEAKENS = Boolean.parseBoolean(args[0]);
-				for(Player p : World.getPlayers())
-				{
-					p.sendNotification(Config.PREFIX + "Weaken spells have been " + (Config.ALLOW_WEAKENS ? "enabled" : "disabled"));
-				}
-			}
-			catch(Exception e)
-			{
-				owner.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
-				return;
-			}
-		} else
-        /*
-         * Change password
-         */
+        else // Change your password
         if (cmd.equalsIgnoreCase("changepassword")) 
 		{
 			if (args.length != 1) 
@@ -2021,10 +2005,7 @@ public class CommandHandler implements PacketHandler
             owner.sendMessage(Config.PREFIX + "Password change initiated.");
             owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
 		}
-		else
-        /*
-         * Change password
-         */
+        else // Confirm password change
 		if (cmd.equalsIgnoreCase("confirmpassword")) 
 		{
 			if (args.length != 1) 
@@ -2075,6 +2056,83 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
         }
+        /*
+         * Removed wilderness setting commands
+		else 
+		if (cmd.equals("wilderness"))
+		{
+			player.sendAlert("Wilderness: " + (!World.isP2PWilderness() ? "@gre@F2P" : "@gre@P2P") + "%" + "God Spells: " + (Config.ALLOW_GODSPELLS ? "@gre@Enabled" : "@red@Disabled") + "%" + "Weakens: " + (Config.ALLOW_WEAKENS ? "@gre@Enabled" : "@red@Disabled"));
+		}
+		else
+		if (cmd.equals("1vs1") && player.isAdmin())
+		{
+			if(args.length != 1)
+			{
+				player.sendMessage("Invalid Syntax - Usage: 1vs1 [boolean] eg. '::1vs1 true'");
+				return;
+			}
+			try
+			{
+				Config.PK_MODE = Boolean.parseBoolean(args[0]);
+				for(Player p : World.getPlayers())
+				{
+					p.sendNotification(Config.PREFIX + "1 VS 1 mode has been " + (Config.PK_MODE ? "enabled" : "disabled"));
+				}
+			}
+			catch(Exception e)
+			{
+				player.sendMessage("Invalid Syntax - Usage: 1vs1 [boolean] eg. '::1vs1 true'");
+				return;
+			}
+		}
+		else
+		if (cmd.equals("state"))
+		{
+			System.out.println(World.wildernessP2P);
+		}
+		else if(cmd.equalsIgnoreCase("godspells") && owner.isAdmin())
+		{
+			if(args.length != 1)
+			{
+				owner.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
+				return;
+			}
+			try
+			{
+				Config.ALLOW_GODSPELLS = Boolean.parseBoolean(args[0]);
+				for(Player p : World.getPlayers())
+				{
+					p.sendNotification(Config.PREFIX + "Godspells have been " + (Config.ALLOW_GODSPELLS ? "enabled" : "disabled"));
+				}
+			}
+			catch(Exception e)
+			{
+				owner.sendMessage("Invalid Syntax - Usage: godspells [boolean] eg. '::godspells true'");
+				return;
+			}
+		}
+		else if(cmd.equalsIgnoreCase("weakens") && owner.isAdmin())
+		{
+			if(args.length != 1)
+			{
+				owner.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
+				return;
+			}
+			try
+			{
+				Config.ALLOW_WEAKENS = Boolean.parseBoolean(args[0]);
+				for(Player p : World.getPlayers())
+				{
+					p.sendNotification(Config.PREFIX + "Weaken spells have been " + (Config.ALLOW_WEAKENS ? "enabled" : "disabled"));
+				}
+			}
+			catch(Exception e)
+			{
+				owner.sendMessage("Invalid Syntax - Usage: weakens [boolean] eg. '::weakens true'");
+				return;
+			}
+		}
+        */
     }
 	public static final ArrayList<String> statArray = new ArrayList<String>(){{
 		add("attack"); add("defense"); add("strength"); add("hits"); add("ranged"); add("prayer"); add("magic"); add("cooking"); add("woodcut"); add("fletching"); add("fishing"); add("firemaking"); add("crafting"); add("smithing"); add("mining"); add("herblaw"); add("agility"); add("thieving"); add("runecrafting");
