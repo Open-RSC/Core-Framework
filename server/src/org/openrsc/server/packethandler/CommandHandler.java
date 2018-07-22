@@ -1151,86 +1151,99 @@ public class CommandHandler implements PacketHandler
 				}
 			}
             owner.sendMessage(Config.PREFIX + "All players summoned");
-		} else if (cmd.equalsIgnoreCase("massitem") && owner.isAdmin()) {
-			if (args.length != 2) {
-				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: MASSITEM [id] [amount]");
+		}
+        else
+        if(cmd.equalsIgnoreCase("massitem") && owner.isAdmin())
+        {
+			if (args.length < 2)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
 				return;
 			}
-			int id = Integer.parseInt(args[0]);
-			int amount = Integer.parseInt(args[1]);
-			if (EntityHandler.getItemDef(id) != null) {
-				int x = 0;
-				int y = 0;
-				int baseX = owner.getX();
-				int baseY = owner.getY();
-				int nextX = 0;
-				int nextY = 0;
-				int dX = 0;
-				int dY = 0;
-				int minX = 0;
-				int minY = 0;
-				int maxX = 0;
-				int maxY = 0;
-				int scanned = 0;
-				while (scanned < amount) {
-					scanned++;
-					if (dX < 0) {
-						x -= 1;
-						if (x == minX) {
-							dX = 0;
-							dY = nextY;
-							if (dY < 0)
-								minY -= 1;
-							else
-								maxY += 1;
-							nextX = 1;
-						}
-					} else if (dX > 0) {
-						x += 1;
-						if (x == maxX) {
-							dX = 0;
-							dY = nextY;
-							if (dY < 0)
-								minY -=1;
-							else
-								maxY += 1;
-							nextX = -1;
-						}
-					} else {
-						if (dY < 0) {
-							y -= 1;
-							if (y == minY) {
-								dY = 0;
-								dX = nextX;
-								if (dX < 0)
-									minX -= 1;
-								else
-									maxX += 1;
-								nextY = 1;
-							}
-						} else if (dY > 0) {
-							y += 1;
-							if (y == maxY) {
-								dY = 0;
-								dX = nextX;
-								if (dX < 0)
-									minX -= 1;
-								else
-									maxX += 1;
-								nextY = -1;
-							}
-						} else {
-							minY -= 1;
-							dY = -1;
-							nextX = 1;
-						}
-					}
-					if (!((baseX + x) < 0 || (baseY + y) < 0 || ((baseX + x) >= World.MAX_WIDTH) || ((baseY + y) >= World.MAX_HEIGHT))) {
-						if ((World.mapValues[baseX + x][baseY + y] & 64) == 0)
-							World.registerEntity(new Item(id, baseX + x, baseY + y, amount, (Player[])null));
-					}
-				}
-			}
+            
+            try
+            {
+                int id = Integer.parseInt(args[0]);
+                int amount = Integer.parseInt(args[1]);
+                if (EntityHandler.getItemDef(id) != null) {
+                    int x = 0;
+                    int y = 0;
+                    int baseX = owner.getX();
+                    int baseY = owner.getY();
+                    int nextX = 0;
+                    int nextY = 0;
+                    int dX = 0;
+                    int dY = 0;
+                    int minX = 0;
+                    int minY = 0;
+                    int maxX = 0;
+                    int maxY = 0;
+                    int scanned = 0;
+                    while (scanned < amount) {
+                        scanned++;
+                        if (dX < 0) {
+                            x -= 1;
+                            if (x == minX) {
+                                dX = 0;
+                                dY = nextY;
+                                if (dY < 0)
+                                    minY -= 1;
+                                else
+                                    maxY += 1;
+                                nextX = 1;
+                            }
+                        } else if (dX > 0) {
+                            x += 1;
+                            if (x == maxX) {
+                                dX = 0;
+                                dY = nextY;
+                                if (dY < 0)
+                                    minY -=1;
+                                else
+                                    maxY += 1;
+                                nextX = -1;
+                            }
+                        } else {
+                            if (dY < 0) {
+                                y -= 1;
+                                if (y == minY) {
+                                    dY = 0;
+                                    dX = nextX;
+                                    if (dX < 0)
+                                        minX -= 1;
+                                    else
+                                        maxX += 1;
+                                    nextY = 1;
+                                }
+                            } else if (dY > 0) {
+                                y += 1;
+                                if (y == maxY) {
+                                    dY = 0;
+                                    dX = nextX;
+                                    if (dX < 0)
+                                        minX -= 1;
+                                    else
+                                        maxX += 1;
+                                    nextY = -1;
+                                }
+                            } else {
+                                minY -= 1;
+                                dY = -1;
+                                nextX = 1;
+                            }
+                        }
+                        if (!((baseX + x) < 0 || (baseY + y) < 0 || ((baseX + x) >= World.MAX_WIDTH) || ((baseY + y) >= World.MAX_HEIGHT))) {
+                            if ((World.mapValues[baseX + x][baseY + y] & 64) == 0)
+                                World.registerEntity(new Item(id, baseX + x, baseY + y, amount, (Player[])null));
+                        }
+                    }
+                }
+            }
+            catch (NumberFormatException e)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
+                return;
+            }
 		} else if (cmd.equalsIgnoreCase("npcevent") && owner.isAdmin()) {
 			if (args.length < 1) {
 				owner.sendMessage(Config.PREFIX + "Invalid args. Syntax: npcevent [npc_id] [npc_amount] [item_id] [item_amount]");
