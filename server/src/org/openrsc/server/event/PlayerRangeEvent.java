@@ -48,6 +48,14 @@ public class PlayerRangeEvent extends DelayedEvent {
 								return;
 							}
 						}
+                        
+						if (!target.getLocation().isInWarZone() || !World.pvpEnabled) 
+						{
+                            owner.sendMessage(Config.PREFIX + "PVP is currently disabled.");
+							owner.resetFollowing();
+							owner.resetPath();															
+							return;															
+						}
 						
 						int damage = Formulae.calcRangeHit(owner.getCurStat(4), owner.getRangePoints(), target.getArmourPoints(), arrowId);
 						owner.setSprite(Math.abs(target.getLocation().getX() - owner.getX()));

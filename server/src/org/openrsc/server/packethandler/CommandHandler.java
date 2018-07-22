@@ -1820,75 +1820,33 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
-        else // start world event or join world event
-        if (cmd.equalsIgnoreCase("event"))
+        else // safeCombat means players don't lose items on death
+        if (cmd.equalsIgnoreCase("safecombat") && (owner.isEvent() || owner.isMod()))
         {
-			if (args.length > 1) {
-				if (owner.isMod() || owner.isEvent()) {
-					if (!World.eventRunning) {
-						try {
-							int low = Integer.parseInt(args[0]);
-							int high = Integer.parseInt(args[1]);
-							if (low <= high && low >= 3 && high <= 123) {
-								World.eventLow = low;
-								World.eventHigh = high;
-								World.setEvent(owner.getX(), owner.getY());
-								synchronized (World.getPlayers()) {
-									for (Player p : World.getPlayers()) {
-										p.sendNotification(Config.PREFIX + "Type @gre@::EVENT@whi@ to join the event!");
-										if (owner.getLocation().inWilderness())
-											p.sendNotification(Config.PREFIX + "@red@Warning:@whi@ This event is located in the wilderness!");									
-										p.sendNotification(Config.PREFIX + "@yel@Level Restriction:@whi@ Level " + low + (low != high ? " to Level " + high : ""));
-										p.sendNotification(Config.PREFIX + "An event has been set by " + owner.getStaffName());
-									}
-								}
-							} else
-								owner.sendMessage(Config.PREFIX + "Invalid level range");
-						} catch(Exception e) {
-							owner.sendMessage(Config.PREFIX + "Invalid level range");
-						}							
-					} else
-						owner.sendMessage(Config.PREFIX + "There is already an event running!");
-				} else
-					owner.sendMessage(Config.PREFIX + "Invalid args! Syntax EVENT");
-			} else {
-				if (World.eventPoint != null) {
-					if (!owner.getLocation().inWilderness() && !owner.isTrading() && !owner.isBusy() && !owner.accessingShop() && !owner.accessingBank() && !owner.isDueling()) {
-						if(owner.getLocation().isInJail())
-						{
-							owner.sendMessage(Config.PREFIX + "You cannot use ::event whilst being jailed.");
-							return;
-						}
-						if (!World.joinEvent(owner))
-							owner.sendMessage(Config.PREFIX + "You aren't eligible for this event");
-					} else
-						owner.sendMessage(Config.PREFIX + "You cannot enroll in this event right now");
+            String stateText    = World.safeCombat ? "enabled" : "disabled";
+            World.safeCombat    = !World.safeCombat;
+			synchronized (World.getPlayers()) {
+				for (Player p : World.getPlayers()) {
+					if (p != null) {
+						p.sendMessage(Config.PREFIX + "Combat safe mode has been " + stateText);
+					}
 				}
 			}
-		}
-        else // end world event
-        if (cmd.equalsIgnoreCase("endevent") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
-        {
-            if (World.eventRunning) {
-                World.setEvent(-1, -1);
-                synchronized (World.getPlayers()) {
-                    for (Player p : World.getPlayers())
-                        p.sendNotification(Config.PREFIX + "Event registration has been closed by " + owner.getStaffName());	
-                }
-            } else 
-                owner.sendMessage(Config.PREFIX + "No event is currently running");
+            Logger.log(new GenericLog(owner.getUsername() + " set safecombat to " + stateText, DataConversions.getTimeStamp()));
         }
-        else // ???
-        if (cmd.equalsIgnoreCase("islandsafe") && (owner.isEvent() || owner.isMod()))
+        else // enable or disable pvp
+        if (cmd.equalsIgnoreCase("pvpenabled") && (owner.isEvent() || owner.isMod()))
         {
-            World.islandSafe = !World.islandSafe;
-            owner.sendMessage(Config.PREFIX + "Safe mode " + (World.islandSafe ? "enabled" : "disabled"));
-        }
-        else // ???
-        if (cmd.equalsIgnoreCase("islandcombat") && (owner.isEvent() || owner.isMod()))
-        {
-            World.islandCombat = !World.islandCombat;
-            owner.sendMessage(Config.PREFIX + "Combat " + (World.islandCombat ? "disabled" : "enabled"));
+            World.pvpEnabled    = !World.pvpEnabled;
+            String stateText    = World.pvpEnabled ? "enabled" : "disabled";
+			synchronized (World.getPlayers()) {
+				for (Player p : World.getPlayers()) {
+					if (p != null) {
+						p.sendMessage(Config.PREFIX + "PVP has been " + stateText);
+					}
+				}
+			}
+            Logger.log(new GenericLog(owner.getUsername() + " set PVP to " + stateText, DataConversions.getTimeStamp()));
         }
         else // ipban
         if(cmd.equalsIgnoreCase("ipban") && owner.isAdmin())
@@ -2056,6 +2014,68 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
         }
+        /*
+         * Removed event commands
+         * When reimplemented, save the place that user was at to go back to.
+        else // start world event or join world event
+        if (cmd.equalsIgnoreCase("event"))
+        {
+			if (args.length > 1) {
+				if (owner.isMod() || owner.isEvent()) {
+					if (!World.eventRunning) {
+						try {
+							int low = Integer.parseInt(args[0]);
+							int high = Integer.parseInt(args[1]);
+							if (low <= high && low >= 3 && high <= 123) {
+								World.eventLow = low;
+								World.eventHigh = high;
+								World.setEvent(owner.getX(), owner.getY());
+								synchronized (World.getPlayers()) {
+									for (Player p : World.getPlayers()) {
+										p.sendNotification(Config.PREFIX + "Type @gre@::EVENT@whi@ to join the event!");
+										if (owner.getLocation().inWilderness())
+											p.sendNotification(Config.PREFIX + "@red@Warning:@whi@ This event is located in the wilderness!");									
+										p.sendNotification(Config.PREFIX + "@yel@Level Restriction:@whi@ Level " + low + (low != high ? " to Level " + high : ""));
+										p.sendNotification(Config.PREFIX + "An event has been set by " + owner.getStaffName());
+									}
+								}
+							} else
+								owner.sendMessage(Config.PREFIX + "Invalid level range");
+						} catch(Exception e) {
+							owner.sendMessage(Config.PREFIX + "Invalid level range");
+						}							
+					} else
+						owner.sendMessage(Config.PREFIX + "There is already an event running!");
+				} else
+					owner.sendMessage(Config.PREFIX + "Invalid args! Syntax EVENT");
+			} else {
+				if (World.eventPoint != null) {
+					if (!owner.getLocation().inWilderness() && !owner.isTrading() && !owner.isBusy() && !owner.accessingShop() && !owner.accessingBank() && !owner.isDueling()) {
+						if(owner.getLocation().isInJail())
+						{
+							owner.sendMessage(Config.PREFIX + "You cannot use ::event whilst being jailed.");
+							return;
+						}
+						if (!World.joinEvent(owner))
+							owner.sendMessage(Config.PREFIX + "You aren't eligible for this event");
+					} else
+						owner.sendMessage(Config.PREFIX + "You cannot enroll in this event right now");
+				}
+			}
+		}
+        else // end world event
+        if (cmd.equalsIgnoreCase("endevent") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
+        {
+            if (World.eventRunning) {
+                World.setEvent(-1, -1);
+                synchronized (World.getPlayers()) {
+                    for (Player p : World.getPlayers())
+                        p.sendNotification(Config.PREFIX + "Event registration has been closed by " + owner.getStaffName());	
+                }
+            } else 
+                owner.sendMessage(Config.PREFIX + "No event is currently running");
+        }
+        */
         /*
          * Removed wilderness setting commands
 		else 

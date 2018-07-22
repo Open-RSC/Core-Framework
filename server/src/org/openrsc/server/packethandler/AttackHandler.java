@@ -33,91 +33,91 @@ public class AttackHandler implements PacketHandler {
 						if (pID == 18) {
 							final Player affectedPlayer = World.getPlayer(serverIndex);
 							if (affectedPlayer != null && !affectedPlayer.equals(player)) {
-								if (!affectedPlayer.getLocation().isInWarZone() || !World.islandCombat) {
-								if (!player.getLocation().isInDMArena() || (player.getLocation().isInDMArena() && affectedPlayer == player.getInDMWith())) 
-								{
-									if( affectedPlayer.isInvulnerable() /*!affectedPlayer.isDev() && !affectedPlayer.isMod() && !affectedPlayer.isEvent()*/) 
-									{
-										
-										player.setFollowing(affectedPlayer);
-										player.setStatus(Action.ATTACKING_MOB);
+								if (!affectedPlayer.getLocation().isInWarZone() || !World.pvpEnabled) {
+                                    if (!player.getLocation().isInDMArena() || (player.getLocation().isInDMArena() && affectedPlayer == player.getInDMWith())) 
+                                    {
+                                        if( affectedPlayer.isInvulnerable() /*!affectedPlayer.isDev() && !affectedPlayer.isMod() && !affectedPlayer.isEvent()*/) 
+                                        {
 
-										if (player.getRangeEquip() < 0) 
-										{
-											World.getDelayedEventHandler().add(new WalkToMobEvent(player, affectedPlayer, 2) 
-											{
-												public void arrived() 
-												{
-													owner.resetPath();
-													owner.resetFollowing();
-													
-													if (affectedPlayer.getCombatTimer() != 0 && !affectedPlayer.inCombat() && affectedPlayer.getCombatTimer() - System.currentTimeMillis() > -2000)
-														return;
+                                            player.setFollowing(affectedPlayer);
+                                            player.setStatus(Action.ATTACKING_MOB);
 
-													if (owner.isBusy() || affectedPlayer.isBusy() || !owner.nextTo(affectedPlayer) || !owner.withinRange(affectedPlayer, 2) || !owner.checkAttack(affectedPlayer, false) || owner.getStatus() != Action.ATTACKING_MOB || affectedPlayer.getStatus() == Action.FIGHTING_MOB) 
-													{
-														if (affectedPlayer.getStatus() == Action.FIGHTING_MOB)
-															owner.sendMessage("I can't get close enough");
+                                            if (player.getRangeEquip() < 0) 
+                                            {
+                                                World.getDelayedEventHandler().add(new WalkToMobEvent(player, affectedPlayer, 2) 
+                                                {
+                                                    public void arrived() 
+                                                    {
+                                                        owner.resetPath();
+                                                        owner.resetFollowing();
 
-														owner.resetFollowing();
-														return;
-													}
-													
-													owner.setSkulledOn(affectedPlayer);	
-													
-													if(!owner.isFighting() && !affectedPlayer.isFighting())
-													{
-														FightEvent fe = new FightEvent(owner, affectedPlayer);
-														owner.setFightEvent(fe);
-														affectedPlayer.setFightEvent(fe);
-														World.getDelayedEventHandler().add(fe);
-														affectedPlayer.setInCombatWith(player);
-														player.setInCombatWith(affectedPlayer);
-													}
-												}
-											});			
-										} 
-										else 
-										{
-											if (player.getLocation().isInDMArena() && player.getDMSetting(2)) 
-											{
-												player.sendMessage(Config.PREFIX + "Ranged cannot be used during this Death Match");
-												return;
-											}
+                                                        if (affectedPlayer.getCombatTimer() != 0 && !affectedPlayer.inCombat() && affectedPlayer.getCombatTimer() - System.currentTimeMillis() > -2000)
+                                                            return;
 
-											if (affectedPlayer.getCombatTimer() != 0 && !affectedPlayer.inCombat() && affectedPlayer.getCombatTimer() - System.currentTimeMillis() > -2000)
-												return;
+                                                        if (owner.isBusy() || affectedPlayer.isBusy() || !owner.nextTo(affectedPlayer) || !owner.withinRange(affectedPlayer, 2) || !owner.checkAttack(affectedPlayer, false) || owner.getStatus() != Action.ATTACKING_MOB || affectedPlayer.getStatus() == Action.FIGHTING_MOB) 
+                                                        {
+                                                            if (affectedPlayer.getStatus() == Action.FIGHTING_MOB)
+                                                                owner.sendMessage("I can't get close enough");
 
-											int radius = player.getRangeType(player.getRangeEquip());
-											World.getDelayedEventHandler().add(new WalkToMobEvent(player, affectedPlayer, radius) {
-												public void arrived() {
-													owner.resetPath();
-													if (!owner.isBusy() && owner.checkAttack(affectedPlayer, true) && owner.getStatus() == Action.ATTACKING_MOB) {
-														owner.resetAllExceptDMing();
-														owner.setStatus(Action.RANGING_MOB);
-														owner.setSkulledOn(affectedPlayer);
-														owner.setPlayerRangeEvent(new PlayerRangeEvent(owner, affectedPlayer), affectedPlayer.getUsernameHash());
-													}
-												}
-											});
-										}
-									} else {
-										player.sendMessage(Config.PREFIX + affectedPlayer.getUsername() + " is currently invulnerable!");
-										player.resetFollowing();
-										player.resetPath();
-									}
-								} else {
-									player.sendMessage(Config.PREFIX + "You aren't in a Death Match with " + affectedPlayer.getUsername());
-									player.resetFollowing();
-									player.resetPath();	
-								}
-							} else {
-								player.sendMessage("Combat is currently disabled on this island.");
-								player.resetFollowing();
-								player.resetPath();
-							}
-						}
-				} else if (pID == 19) {
+                                                            owner.resetFollowing();
+                                                            return;
+                                                        }
+
+                                                        owner.setSkulledOn(affectedPlayer);	
+
+                                                        if(!owner.isFighting() && !affectedPlayer.isFighting())
+                                                        {
+                                                            FightEvent fe = new FightEvent(owner, affectedPlayer);
+                                                            owner.setFightEvent(fe);
+                                                            affectedPlayer.setFightEvent(fe);
+                                                            World.getDelayedEventHandler().add(fe);
+                                                            affectedPlayer.setInCombatWith(player);
+                                                            player.setInCombatWith(affectedPlayer);
+                                                        }
+                                                    }
+                                                });			
+                                            } 
+                                            else 
+                                            {
+                                                if (player.getLocation().isInDMArena() && player.getDMSetting(2)) 
+                                                {
+                                                    player.sendMessage(Config.PREFIX + "Ranged cannot be used during this Death Match");
+                                                    return;
+                                                }
+
+                                                if (affectedPlayer.getCombatTimer() != 0 && !affectedPlayer.inCombat() && affectedPlayer.getCombatTimer() - System.currentTimeMillis() > -2000)
+                                                    return;
+
+                                                int radius = player.getRangeType(player.getRangeEquip());
+                                                World.getDelayedEventHandler().add(new WalkToMobEvent(player, affectedPlayer, radius) {
+                                                    public void arrived() {
+                                                        owner.resetPath();
+                                                        if (!owner.isBusy() && owner.checkAttack(affectedPlayer, true) && owner.getStatus() == Action.ATTACKING_MOB) {
+                                                            owner.resetAllExceptDMing();
+                                                            owner.setStatus(Action.RANGING_MOB);
+                                                            owner.setSkulledOn(affectedPlayer);
+                                                            owner.setPlayerRangeEvent(new PlayerRangeEvent(owner, affectedPlayer), affectedPlayer.getUsernameHash());
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            player.sendMessage(Config.PREFIX + affectedPlayer.getUsername() + " is currently invulnerable!");
+                                            player.resetFollowing();
+                                            player.resetPath();
+                                        }
+                                    } else {
+                                        player.sendMessage(Config.PREFIX + "You aren't in a Death Match with " + affectedPlayer.getUsername());
+                                        player.resetFollowing();
+                                        player.resetPath();	
+                                    }
+                                } else {
+                                    player.sendMessage(Config.PREFIX + "PVP is currently disabled.");
+                                    player.resetFollowing();
+                                    player.resetPath();
+                                }
+                            }
+                        } else if (pID == 19) {
 							final Npc npc = World.getNpc(serverIndex);
 							if (npc != null) {
 								switch (npc.getID()) {

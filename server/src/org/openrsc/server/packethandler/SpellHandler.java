@@ -126,6 +126,14 @@ public class SpellHandler implements PacketHandler {
 							player.resetPath();															
 							return;															
 						}
+                        
+						if (!affectedPlayer.getLocation().isInWarZone() || !World.pvpEnabled) 
+						{
+                            player.sendMessage(Config.PREFIX + "PVP is currently disabled.");
+							player.resetFollowing();
+							player.resetPath();															
+							return;															
+						}
 						
 						if (player.isDMing() && player.getDMSetting(1)) 
 						{
