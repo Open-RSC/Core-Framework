@@ -20,6 +20,7 @@ import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
+import org.openrsc.server.logging.model.ErrorLog;
 import org.openrsc.server.logging.model.GenericLog;
 import org.openrsc.server.logging.model.GlobalLog;
 import org.openrsc.server.model.ChatMessage;
@@ -871,6 +872,7 @@ public class CommandHandler implements PacketHandler
 							try {
 								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + object_id + "', '" + player.getX() + "', '" + player.getY() + "', '" + direction + "')");
                                 player.sendMessage(Config.PREFIX + "Object added to database");
+                                Logger.log(new GenericLog(player.getUsername() + " added object to database. id: " + object_id + ", direction: " + direction + ", location: " + player.getLocation(), DataConversions.getTimeStamp()));
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -891,6 +893,7 @@ public class CommandHandler implements PacketHandler
                if(o == null)
                {
                    player.sendMessage(Config.PREFIX + "There is no object at your current location.");
+                   return;
                }
                else
                {
@@ -907,6 +910,7 @@ public class CommandHandler implements PacketHandler
                         try {
                             World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + player.getX() + "' AND `y` = '" + player.getY() + "'");
                             player.sendMessage(Config.PREFIX + "Object removed from database");
+                            Logger.log(new GenericLog(player.getUsername() + " remvoed object from database. id: " + o.getID() + ", location: " + player.getLocation(), DataConversions.getTimeStamp()));
                         } catch (SQLException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -935,7 +939,9 @@ public class CommandHandler implements PacketHandler
                 }
                 p.getInventory().getItems().clear();
                 p.sendInventory();
-                player.sendMessage(Config.PREFIX + "Wiped inventory of: " + p.getUsername());
+                p.sendMessage(Config.PREFIX + "Your inventory has been wiped by an admin");
+                player.sendMessage(Config.PREFIX + "Wiped inventory of " + p.getUsername());
+                Logger.log(new GenericLog(player.getUsername() + " wiped the inventory of " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
@@ -953,30 +959,53 @@ public class CommandHandler implements PacketHandler
             if(p != null)
             {
                 p.getBank().getItems().clear();
-                player.sendMessage(Config.PREFIX + "Wiped bank of: " + p.getUsername());
+                p.sendMessage(Config.PREFIX + "Your bank has been wiped by an admin");
+                player.sendMessage(Config.PREFIX + "Wiped bank of " + p.getUsername());
+                Logger.log(new GenericLog(player.getUsername() + " wiped the bank of " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
                 player.sendMessage(Config.PREFIX + "Invalid name");
         }
-		else if (cmd.equalsIgnoreCase("kill") && player.isAdmin()) {
-			if (args.length != 1)
-				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: KILL [user]");
-			else {
-				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-				if (p != null) {
-					p.setLastDamage(99);
-					p.setHits(p.getHits() - 99);
-					ArrayList<Player> playersToInform = new ArrayList<Player>();
-					playersToInform.addAll(player.getViewArea().getPlayersInView());
-					playersToInform.addAll(p.getViewArea().getPlayersInView());
-					for (Player i : playersToInform)
-						i.informOfModifiedHits(p);
-					p.sendStat(3);
-					if (p.getHits() <= 0)
-						p.killedBy(player, false);						
-				}
-			}
-		} else if (cmd.equalsIgnoreCase("damage") && player.isAdmin()) {
+		else
+        if (cmd.equalsIgnoreCase("kill") && player.isAdmin())
+        {
+			if (args.length == 1)
+            {
+				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: " + cmd.toUpperCase() + " [player]");
+                return;
+            }
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+            if (p == null)
+            {
+                player.sendMessage(Config.PREFIX + "Invalid name");
+                return;
+            }
+            
+            p.setLastDamage(99);
+            p.setHits(p.getHits() - 99);
+            ArrayList<Player> playersToInform = new ArrayList<Player>();
+            playersToInform.addAll(player.getViewArea().getPlayersInView());
+            playersToInform.addAll(p.getViewArea().getPlayersInView());
+            for (Player i : playersToInform)
+                i.informOfModifiedHits(p);
+            p.sendStat(3);
+            if (p.getHits() <= 0)
+            {
+                p.killedBy(player, false);
+                p.sendMessage(Config.PREFIX + "You have been killed by an admin");
+                player.sendMessage(Config.PREFIX + "Killed " + p.getUsername());
+                Logger.log(new GenericLog(player.getUsername() + " killed [command] " + p.getUsername(), DataConversions.getTimeStamp()));
+            }
+            else
+            {
+                player.sendMessage(Config.PREFIX + "Could not kill " + p.getUsername());
+                Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), player.getUsername() + " unable to kill [command] " + p.getUsername(), DataConversions.getTimeStamp()));
+            }
+        }
+        else
+        if (cmd.equalsIgnoreCase("damage") && player.isAdmin())
+        {
 			if (args.length != 2)
 				player.sendMessage(Config.PREFIX + "Invalid args. Syntax: DAMAGE [user] [amount]");
 			else {
