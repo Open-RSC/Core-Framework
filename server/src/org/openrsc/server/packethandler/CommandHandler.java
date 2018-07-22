@@ -1242,6 +1242,7 @@ public class CommandHandler implements PacketHandler
                         }
                     }
                     owner.sendMessage(Config.PREFIX + "Spawned " + amount + " " + itemDef.getName());
+                    Logger.log(new GenericLog(owner.getUsername() + " spawned (mass) " + amount + " " + itemDef.getName(), DataConversions.getTimeStamp()));
                     return;
                 }
                 else
@@ -1659,96 +1660,161 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [damage]");
                 return;
             }
-		} else if (cmd.equalsIgnoreCase("refreshchests") && owner.isAdmin()) {
+		}
+        else // refresh chest definitions
+        if (cmd.equalsIgnoreCase("refreshchests") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setChestDefinitions(World.getWorldLoader().loadChestDefinitions());
+                owner.sendMessage(Config.PREFIX + "Chest definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed chest definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshstalls") && owner.isAdmin()) {
+		}
+        else // Refresh thieving stall definitions
+        if (cmd.equalsIgnoreCase("refreshstalls") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setStallThievingDefinitions(World.getWorldLoader().loadStallThievingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Thieving stall definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed thieving stall definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshlockeddoors") && owner.isAdmin()) {
+		}
+        else // Refresh lockpick definitions
+        if (cmd.equalsIgnoreCase("refreshlockeddoors") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setPicklockDoorDefinitions(World.getWorldLoader().loadPicklockDoorDefinitions());
+                owner.sendMessage(Config.PREFIX + "Lockpick door definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed thieving lockpick door definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshpickpocket") && owner.isAdmin()) {
+		}
+        else // Refresh pickpocket definitions
+        if (cmd.equalsIgnoreCase("refreshpickpocket") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setPickPocketDefinitions(World.getWorldLoader().loadPickPocketDefinitions());
+                owner.sendMessage(Config.PREFIX + "Pickpocket definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed thieving pickpocket definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshwoodcut") && owner.isAdmin()) {
+		}
+        else // Refresh woodcut definitions
+        if (cmd.equalsIgnoreCase("refreshwoodcut") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setWoodcutDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Woodcut definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed woodcut definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshfishing") && owner.isAdmin()) {
+		}
+        else // Refresh fisning definitions
+        if (cmd.equalsIgnoreCase("refreshfishing") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setFishingDefinitions(World.getWorldLoader().loadFishingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Fishing definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed fishing definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if(cmd.equalsIgnoreCase("refreshnpchandlers") && owner.isAdmin()) {
+		}
+        else // refresh NPC handlers
+        if(cmd.equalsIgnoreCase("refreshnpchandlers") && owner.isAdmin())
+        {
 			try {
 				World.getWorldLoader().loadNpcHandlers();
+                owner.sendMessage(Config.PREFIX + "NPC handlers refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed NPC handlers", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshagility") && owner.isAdmin()) {
+		}
+        else // Refresh agility and agility course definitions
+        if (cmd.equalsIgnoreCase("refreshagility") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setAgilityCourseDefinitions(World.getWorldLoader().loadAgilityCourseDefinitions());
 				EntityHandler.setAgilityDefinitions(World.getWorldLoader().loadAgilityDefinitons());
+                owner.sendMessage(Config.PREFIX + "Agility definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed agility and agility course definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshedibles") && owner.isAdmin()) {
+		}
+        else // Refresh Item Edible Heals definitions
+        if (cmd.equalsIgnoreCase("refreshedibles") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setItemHealingDefinitions(World.getWorldLoader().loadItemEdibleHeals());
+                owner.sendMessage(Config.PREFIX + "Edible definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed edible definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshnpcs") && owner.isAdmin()) {
+		}
+        else // removes and reloads all NPCs in the world
+        if (cmd.equalsIgnoreCase("refreshnpcs") && owner.isAdmin())
+        {
 			for (Npc n : World.getNpcs())
 				n.unconditionalRemove();
 			try {
 				World.getWorldLoader().loadNpcLocations();
+                owner.sendMessage(Config.PREFIX + "NPCs refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed NPCs", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshcerters") && owner.isAdmin()) {
+		}
+        else // refresh certer definitions
+        if (cmd.equalsIgnoreCase("refreshcerters") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setCerterDefinitions(World.getWorldLoader().loadCerterDefinitions());
+                owner.sendMessage(Config.PREFIX + "Certer definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed certer definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshherbs") && owner.isAdmin()) {
+		}
+        else // refresh herb definitions
+        if (cmd.equalsIgnoreCase("refreshherbs") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setHerbDefinitions(World.getWorldLoader().loadHerbDefinitions());
+                owner.sendMessage(Config.PREFIX + "Herb definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed herb definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (cmd.equalsIgnoreCase("refreshunidentifiedherbs") && owner.isAdmin()) {
+		}
+        else // refresh unidentified herb definitions
+        if (cmd.equalsIgnoreCase("refreshunidentifiedherbs") && owner.isAdmin())
+        {
 			try {
 				EntityHandler.setUnidentifiedHerbDefinitions(World.getWorldLoader().loadUnidentifiedHerbDefinitions());
+                owner.sendMessage(Config.PREFIX + "Unidentified herb definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed unidentified herb definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
