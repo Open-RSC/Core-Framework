@@ -56,6 +56,14 @@ public class PlayerRangeEvent extends DelayedEvent {
 							owner.resetPath();															
 							return;															
 						}
+                        
+                        if ( !target.isInvulnerable() /*affectedPlayer.isMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
+                        {
+                        	owner.sendMessage(Config.PREFIX + target.getUsername() + " is currently invulnerable!");
+                        	owner.resetFollowing();
+                        	owner.resetPath();
+                        	return;
+						}
 						
 						int damage = Formulae.calcRangeHit(owner.getCurStat(4), owner.getRangePoints(), target.getArmourPoints(), arrowId);
 						owner.setSprite(Math.abs(target.getLocation().getX() - owner.getX()));
