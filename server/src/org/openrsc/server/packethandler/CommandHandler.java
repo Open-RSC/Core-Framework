@@ -111,7 +111,7 @@ public class CommandHandler implements PacketHandler
 						sb.append("@whi@").append(p.getUsername()).append(loc.inWilderness() ? " @red@".concat("Wilderness").concat("\n") : "\n");
 					else
 					if (owner.isMod())
-						sb.append("@whi@").append(p.getUsername()).append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
+						sb.append("@whi@").append(p.getUsername() + " (" + p.getGroupID() + ")").append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
 				}
 			}
 			owner.getActionSender().sendScrollableAlert(sb.toString());
@@ -635,6 +635,7 @@ public class CommandHandler implements PacketHandler
                         String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")";
                         p.setReturnPoint();
                         p.teleport(owner.getX(), owner.getY(), false);
+                        p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
                         owner.sendMessage(Config.PREFIX + summonMessage);
                         Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));					
                     }
@@ -669,6 +670,7 @@ public class CommandHandler implements PacketHandler
                         String returnMessage = owner.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")";
                         p.setSummoned(false);
                         p.teleport(p.getReturnX(), p.getReturnY(), false);
+                        p.sendMessage(Config.PREFIX + "You have been returned to your original location by " + owner.getStaffName());
                         owner.sendMessage(Config.PREFIX + returnMessage);
                         Logger.log(new GenericLog(returnMessage, DataConversions.getTimeStamp()));
                     } 
