@@ -36,7 +36,7 @@ public class AttackHandler implements PacketHandler {
 								if (!affectedPlayer.getLocation().isInWarZone() || !World.pvpEnabled) {
                                     if (!player.getLocation().isInDMArena() || (player.getLocation().isInDMArena() && affectedPlayer == player.getInDMWith())) 
                                     {
-                                        if( affectedPlayer.isInvulnerable() /*!affectedPlayer.isDev() && !affectedPlayer.isMod() && !affectedPlayer.isEvent()*/) 
+                                        if( !affectedPlayer.isInvulnerable() /*!affectedPlayer.isDev() && !affectedPlayer.isMod() && !affectedPlayer.isEvent()*/) 
                                         {
 
                                             player.setFollowing(affectedPlayer);
