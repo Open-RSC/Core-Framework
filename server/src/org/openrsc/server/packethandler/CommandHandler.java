@@ -1173,7 +1173,14 @@ public class CommandHandler implements PacketHandler
 			if (args.length == 0) {
 				synchronized (World.getPlayers()) {
 					for (Player p : World.getPlayers()) {
-						p.setReturnPoint();
+                        if(p == null)
+                            continue;
+                        
+                        if(p.getGroupID() < 4)
+                            continue;
+                        
+                        if(!p.wasSummoned())
+                            p.setReturnPoint();
 						p.resetLevers();
 						p.teleport(owner.getX(), owner.getY(), true);
 					}
@@ -1217,12 +1224,17 @@ public class CommandHandler implements PacketHandler
         {
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
-					if (p != null) {
-						if (p.wasSummoned()) {
-							p.setSummoned(false);
-							p.teleport(p.getReturnX(), p.getReturnY(), false);
-						}
-					}
+					if (p != null)
+                        continue; 
+
+                    if(p.getGroupID() < 4)
+                        continue;
+                    
+                    if (!p.wasSummoned())
+                        continue;
+                    
+                    p.setSummoned(false);
+                    p.teleport(p.getReturnX(), p.getReturnY(), false);
 				}
 			}
             owner.sendMessage(Config.PREFIX + "All players who have been summoned were returned");
