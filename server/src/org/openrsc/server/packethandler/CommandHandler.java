@@ -2178,6 +2178,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh door definitions
+        if (cmd.equalsIgnoreCase("refreshdoors") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setDoorDefinitions(World.getWorldLoader().loadDoorDefinitions());
+                owner.sendMessage(Config.PREFIX + "Door definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed door definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
