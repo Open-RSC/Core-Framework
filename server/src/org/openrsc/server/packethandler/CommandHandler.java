@@ -2218,9 +2218,33 @@ public class CommandHandler implements PacketHandler
         if (cmd.equalsIgnoreCase("refreshchatfilter") && owner.isAdmin())
         {
 			try {
-				World.getWorldLoader().loadShopDefinitions();
+				World.getWorldLoader().loadChatFilter();
                 owner.sendMessage(Config.PREFIX + "Chat filter refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed chat filter", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+        else // refresh packet handlers
+        if (cmd.equalsIgnoreCase("refreshpackethandlers") && owner.isAdmin())
+        {
+			try {
+				World.getWorldLoader().loadPacketHandlers();
+                owner.sendMessage(Config.PREFIX + "Packet handlers refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed packet handlers", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+        else // refresh web packet handlers
+        if (cmd.equalsIgnoreCase("refreshwebhandlers") && owner.isAdmin())
+        {
+			try {
+				World.getWorldLoader().loadWebHandlers();
+                owner.sendMessage(Config.PREFIX + "Web packet handlers refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed web packet handlers", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
