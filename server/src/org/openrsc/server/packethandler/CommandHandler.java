@@ -747,12 +747,22 @@ public class CommandHandler implements PacketHandler
                     } 
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has no return point set");
+                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has not been summoned");
                     }
                 }
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "Staff members can not be summoned");
+                    if(owner.getUsernameHash() == p.getUsernameHash())
+                    {
+                        // You can return yourself. Example would be after using ::tpto
+                        owner.setSummoned(false);
+                        owner.teleport(p.getReturnX(), p.getReturnY(), false);
+                        owner.sendMessage(Config.PREFIX + "You have been returned to your original location");
+                    }
+                    else
+                    {
+                        owner.sendMessage(Config.PREFIX + "Other staff members can not be returned");
+                    }
                 }
 			} 
 			else
