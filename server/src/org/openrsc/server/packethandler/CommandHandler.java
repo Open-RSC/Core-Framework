@@ -111,7 +111,7 @@ public class CommandHandler implements PacketHandler
 						sb.append("@whi@").append(p.getUsername()).append(loc.inWilderness() ? " @red@".concat("Wilderness").concat("\n") : "\n");
 					else
 					if (owner.isMod())
-						sb.append("@whi@").append(p.getUsername() + " (" + p.getGroupID() + ")").append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
+						sb.append("@whi@").append(p.getStaffName()).append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
 				}
 			}
 			owner.getActionSender().sendScrollableAlert(sb.toString());
