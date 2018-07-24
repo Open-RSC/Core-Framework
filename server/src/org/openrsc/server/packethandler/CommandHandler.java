@@ -1941,6 +1941,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh log cut definitions
+        if (cmd.equalsIgnoreCase("refreshlogcut") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setLogCutDefinitions(World.getWorldLoader().loadLogCutDefinitions());
+                owner.sendMessage(Config.PREFIX + "Log cut definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed log cut definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
