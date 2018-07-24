@@ -2099,7 +2099,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setTelePointDefinitions(World.getWorldLoader().loadObjectTelePoints());
-                owner.sendMessage(Config.PREFIX + "Spell telepoint definitions refreshed");
+                owner.sendMessage(Config.PREFIX + "Telepoint definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed telepoint definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
