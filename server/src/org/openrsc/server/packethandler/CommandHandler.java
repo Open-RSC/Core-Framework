@@ -349,6 +349,7 @@ public class CommandHandler implements PacketHandler
 					p.sendNotification(Config.PREFIX + "Global Chat has been " + (World.global ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
 			}
+            Logger.log(new GenericLog(owner.getUsername() + " set global chat to " + (World.global ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
 		} 
 		else // Toggle if dueling is allowed
 		if(cmd.equalsIgnoreCase("dueling") && owner.isMod())
@@ -360,7 +361,8 @@ public class CommandHandler implements PacketHandler
 				{
 					p.sendNotification(Config.PREFIX + "Dueling has been " + (World.dueling ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
-			}	
+            }
+            Logger.log(new GenericLog(owner.getUsername() + " set dueling to " + (World.dueling ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
 		} 
 		else // Mute world
 		if (cmd.equalsIgnoreCase("muted") && owner.isAdmin()) 
@@ -372,7 +374,8 @@ public class CommandHandler implements PacketHandler
 				{
 					p.sendNotification(Config.PREFIX + "World Mute has been " + (World.muted ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
-			}			
+			}
+            Logger.log(new GenericLog(owner.getUsername() + " set global chat to " + (World.muted ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
 		} 
         else // Fatigue owner
         if (cmd.equalsIgnoreCase("fatigue") && owner.isMod()) 
