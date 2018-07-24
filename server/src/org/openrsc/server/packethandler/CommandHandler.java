@@ -1929,6 +1929,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh smelting definitions
+        if (cmd.equalsIgnoreCase("refreshsmelting") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setSmithingDefinitions(World.getWorldLoader().loadSmithingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Smelting definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed smelting definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // safeCombat means players don't lose items on death
         if (cmd.equalsIgnoreCase("safecombat") && (owner.isEvent() || owner.isMod()))
         {
