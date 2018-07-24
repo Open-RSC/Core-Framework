@@ -690,6 +690,9 @@ public class CommandHandler implements PacketHandler
 			{
                 if(p.getGroupID() >= 4)
                 {
+                    if (p.wasSummoned())
+                        owner.sendMessage(Config.PREFIX + "You cannot summon a player who is already summoned");
+                    else
                     if (p.getLocation().inCtf())
                         owner.sendMessage(Config.PREFIX + "You cannot summon players who are in CTF");
                     else
