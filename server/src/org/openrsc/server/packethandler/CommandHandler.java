@@ -2106,6 +2106,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh crafting definitions
+        if (cmd.equalsIgnoreCase("refreshcooking") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setCookingDefinitions(World.getWorldLoader().loadCookingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Cooking definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed cooking definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
