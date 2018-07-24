@@ -1187,7 +1187,7 @@ public class CommandHandler implements PacketHandler
                         p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
 					}
 				}
-                String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + owner.getX() + ", " + owner.getY() + ")";
+                String summonMessage = owner.getUsername() + " summoned all players to " + "(" + owner.getX() + ", " + owner.getY() + ")";
                 owner.sendMessage(Config.PREFIX + summonMessage);
                 Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));
 			} else if (args.length == 2) {
@@ -1224,7 +1224,7 @@ public class CommandHandler implements PacketHandler
                         }
                     }
                 }
-                String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + owner.getX() + ", " + owner.getY() + ")";
+                String summonMessage = owner.getUsername() + " summoned all players to " + "(" + owner.getX() + ", " + owner.getY() + ")";
                 owner.sendMessage(Config.PREFIX + summonMessage);
                 Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));
             }
