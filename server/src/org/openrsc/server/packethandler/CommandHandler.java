@@ -1905,6 +1905,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh item wieldable definitions
+        if (cmd.equalsIgnoreCase("refreshitemwieldable") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setItemWieldableDefinitions(World.getWorldLoader().loadItemWieldableDefinitions());
+                owner.sendMessage(Config.PREFIX + "Item wieldable refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed item wieldable definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // safeCombat means players don't lose items on death
         if (cmd.equalsIgnoreCase("safecombat") && (owner.isEvent() || owner.isMod()))
         {
