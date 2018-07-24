@@ -1910,8 +1910,20 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setItemWieldableDefinitions(World.getWorldLoader().loadItemWieldableDefinitions());
-                owner.sendMessage(Config.PREFIX + "Item wieldable refreshed");
+                owner.sendMessage(Config.PREFIX + "Item wieldable definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed item wieldable definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+        else // refresh smithing definitions
+        if (cmd.equalsIgnoreCase("refreshsmithing") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setSmithingDefinitions(World.getWorldLoader().loadSmithingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Smithing definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed smithing definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
