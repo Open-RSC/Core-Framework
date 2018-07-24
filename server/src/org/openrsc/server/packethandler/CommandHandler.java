@@ -1234,7 +1234,7 @@ public class CommandHandler implements PacketHandler
         {
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
-					if (p != null)
+					if (p == null)
                         continue; 
 
                     if(p.getGroupID() < 4)
