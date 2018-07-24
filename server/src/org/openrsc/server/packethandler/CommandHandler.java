@@ -278,7 +278,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(Config.PREFIX + "Invalid name");	
             }
 		} 
-		else // Heal a owner
+		else // Heal a player
 		if (cmd.equalsIgnoreCase("heal") && owner.isAdmin()) 
 		{
             Player p = args.length > 0 ? 
@@ -295,6 +295,48 @@ public class CommandHandler implements PacketHandler
             }
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
+		}
+		else // Set a player's HP
+		if ((cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits")) && owner.isAdmin()) 
+		{
+            if(args.length < 1)
+            {
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [hp] [name]");
+                return;
+            }
+            
+            try
+            {
+                Player p = args.length > 1 ? 
+                            World.getPlayer(DataConversions.usernameToHash(args[1])) :
+                            owner;
+
+                if(p != null)
+                {
+                    int newHits = Integer.parseInt(args[0]);
+                    
+                    if(newHits > p.getMaxStat(3))
+                        newHits = p.getMaxStat(3);
+                    if(newHits < 0)
+                        newHits = 0;
+                    
+                    p.setCurStat(3, newHits);
+                    p.sendStat(3);
+                    if (p.getHits() <= 0)
+                        p.killedBy(owner, false);
+                    
+                    p.sendMessage(Config.PREFIX + "Your hits have been set to " + newHits + " by an admin");
+                    owner.sendMessage(Config.PREFIX + "Set " + p.getUsername() + "'s hits to " + newHits);
+                    Logger.log(new GenericLog(owner.getUsername() + " set " + p.getUsername() + "'s hits to " + newHits, DataConversions.getTimeStamp()));
+                }
+                else
+                    owner.sendMessage(Config.PREFIX + "Invalid name");
+            }
+            catch (NumberFormatException e)
+            {
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [hp] [name]");
+                return;
+            }
 		} 
 		else // Toggle global chat
 		if(cmd.equalsIgnoreCase("global") && owner.isMod()) 
@@ -348,13 +390,9 @@ public class CommandHandler implements PacketHandler
                 {
                     int fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
                     if(fatigue < 0)
-                    {
                         fatigue = 0;
-                    }
                     if(fatigue > 100)
-                    {
                         fatigue = 100;
-                    }
                     p.setFatigue((int)(18750 * (fatigue / 100.0D)));
                     p.sendFatigue();
                 }
