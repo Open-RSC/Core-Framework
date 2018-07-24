@@ -1977,6 +1977,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh crafting definitions
+        if (cmd.equalsIgnoreCase("refreshcrafting") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setCraftingDefinitions(World.getWorldLoader().loadCraftingDefinitions());
+                owner.sendMessage(Config.PREFIX + "Crafting definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed crafting definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
