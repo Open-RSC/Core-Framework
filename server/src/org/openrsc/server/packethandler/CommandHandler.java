@@ -2058,7 +2058,7 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
-        else // refresh crafting definitions
+        else // refresh arrow heads definitions
         if (cmd.equalsIgnoreCase("refresharrowheads") && owner.isAdmin())
         {
 			try {
@@ -2070,7 +2070,7 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
-        else // refresh crafting definitions
+        else // refresh mining definitions
         if (cmd.equalsIgnoreCase("refreshmining") && owner.isAdmin())
         {
 			try {
@@ -2082,7 +2082,7 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
-        else // refresh crafting definitions
+        else // refresh spell aggressiveness definitions
         if (cmd.equalsIgnoreCase("refreshspellaggressive") && owner.isAdmin())
         {
 			try {
@@ -2094,7 +2094,7 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
-        else // refresh crafting definitions
+        else // refresh telepoint definitions
         if (cmd.equalsIgnoreCase("refreshtelepoints") && owner.isAdmin())
         {
 			try {
@@ -2106,7 +2106,7 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
-        else // refresh crafting definitions
+        else // refresh cooking definitions
         if (cmd.equalsIgnoreCase("refreshcooking") && owner.isAdmin())
         {
 			try {
