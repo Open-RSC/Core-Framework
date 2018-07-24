@@ -2250,6 +2250,44 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh teleport locations
+        if (cmd.equalsIgnoreCase("refreshteleport") && owner.isAdmin())
+        {
+            World.getWorldLoader().loadStaffCommands();
+            owner.sendMessage(Config.PREFIX + "Staff teleport locations refreshed");
+            Logger.log(new GenericLog(owner.getUsername() + " refreshed staff teleport locations", DataConversions.getTimeStamp()));
+		}
+        else // refresh landscape
+        if (cmd.equalsIgnoreCase("refreshlandscape") && owner.isAdmin())
+        {
+            World.getWorldLoader().loadLandscape();
+            owner.sendMessage(Config.PREFIX + "Landscape refreshed. NOTE this does not refresh clients currently connected");
+            Logger.log(new GenericLog(owner.getUsername() + " refreshed landscape", DataConversions.getTimeStamp()));
+		}
+        else // refresh game objects
+        if (cmd.equalsIgnoreCase("refreshobjects") && owner.isAdmin())
+        {
+			try {
+                World.getWorldLoader().loadGameObjectLocations();
+                owner.sendMessage(Config.PREFIX + "Game objects refresh");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed game objects", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+        else // refresh item spawns
+        if (cmd.equalsIgnoreCase("refreshitems") && owner.isAdmin())
+        {
+			try {
+                World.getWorldLoader().loadItemLocations();
+                owner.sendMessage(Config.PREFIX + "Item spawns refresh");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed item spawns", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
