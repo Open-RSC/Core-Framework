@@ -2190,6 +2190,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh npc definitions
+        if (cmd.equalsIgnoreCase("refreshnpcdefs") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setNpcDefinitions(World.getWorldLoader().loadNpcDefinitions());
+                owner.sendMessage(Config.PREFIX + "NPC definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed NPC definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
