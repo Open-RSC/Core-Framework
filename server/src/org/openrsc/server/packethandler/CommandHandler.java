@@ -1181,11 +1181,15 @@ public class CommandHandler implements PacketHandler
                         
                         if(!p.wasSummoned())
                             p.setReturnPoint();
+                        
 						p.resetLevers();
 						p.teleport(owner.getX(), owner.getY(), true);
+                        p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
 					}
 				}
-                owner.sendMessage(Config.PREFIX + "All players summoned");
+                String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + owner.getX() + ", " + owner.getY() + ")";
+                owner.sendMessage(Config.PREFIX + summonMessage);
+                Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));
 			} else if (args.length == 2) {
 				int width = -1;
 				int height = -1;
@@ -1210,14 +1214,20 @@ public class CommandHandler implements PacketHandler
                                 x = -x;
                             if (YModifier)
                                 y = -y;
-                            p.setReturnPoint();
+                            
+                            if(!p.wasSummoned())
+                                p.setReturnPoint();
+                            
                             p.resetLevers();
                             p.teleport(owner.getX() + x, owner.getY() + y, false);
+                            p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
                         }
                     }
                 }
-                owner.sendMessage(Config.PREFIX + "All players summoned");
-			}	
+                String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + owner.getX() + ", " + owner.getY() + ")";
+                owner.sendMessage(Config.PREFIX + summonMessage);
+                Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));
+            }
 		}
         else // return all players who have been summoned
         if(cmd.equalsIgnoreCase("returnall") && owner.isAdmin())
