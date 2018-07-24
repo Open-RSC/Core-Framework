@@ -1965,6 +1965,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh dart tip definitions
+        if (cmd.equalsIgnoreCase("refreshdarttips") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setDartTipDefinitions(World.getWorldLoader().loadDartTipDefinitions());
+                owner.sendMessage(Config.PREFIX + "Dart tip definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed dart tip definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // reload the entire world
         if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
         {
