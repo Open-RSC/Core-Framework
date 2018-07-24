@@ -2203,12 +2203,24 @@ public class CommandHandler implements PacketHandler
 			}
 		}
         else // refresh shops
-        if (cmd.equalsIgnoreCase("refreshshopss") && owner.isAdmin())
+        if (cmd.equalsIgnoreCase("refreshshops") && owner.isAdmin())
         {
 			try {
 				World.getWorldLoader().loadShopDefinitions();
                 owner.sendMessage(Config.PREFIX + "Shops refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed shops", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+        else // refresh chatfilter
+        if (cmd.equalsIgnoreCase("refreshchatfilter") && owner.isAdmin())
+        {
+			try {
+				World.getWorldLoader().loadShopDefinitions();
+                owner.sendMessage(Config.PREFIX + "Chat filter refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed chat filter", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
