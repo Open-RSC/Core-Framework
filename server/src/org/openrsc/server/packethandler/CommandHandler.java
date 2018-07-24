@@ -116,14 +116,44 @@ public class CommandHandler implements PacketHandler
 			}
 			owner.getActionSender().sendScrollableAlert(sb.toString());
 		}
+        else // toggle invulnerability
+		if ((cmd.equalsIgnoreCase("invulnerable")) && (owner.isMod() || owner.isDev())) 
+		{
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        owner;
+            
+            if(p != null)
+            {
+                p.toggleInvulnerable();
+                String invulnerableText = p.isInvulnerable() ? "invulnerable" : "vulnerable";
+                owner.sendMessage(Config.PREFIX + p.getUsername() + " has been turned " + invulnerableText);
+                p.sendMessage(Config.PREFIX + "An admin has made you " + invulnerableText);
+                Logger.log(new GenericLog(owner.getUsername() + " has made " + p.getUsername() + " " + invulnerableText, DataConversions.getTimeStamp()));
+            }
+            else
+            {
+                owner.sendMessage(Config.PREFIX + "Invalid name");
+            }
+		}
         else // toggle invisibility
 		if (cmd.equalsIgnoreCase("invisible") && (owner.isMod() || owner.isDev())) 
 		{
-			owner.invisible = !owner.invisible;
-			owner.sendMessage(Config.PREFIX + "You are now " + (owner.invisible ? "invisible" : "visible"));
-			if (owner.invisible)
-			for (Player x : owner.getViewArea().getPlayersInView())
-			x.removeWatchedPlayer(owner);
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        owner;
+            
+            if(p != null)
+            {
+                p.toggleInvisible();
+                String invisibleText = owner.isInvisible() ? "invisible" : "visible";
+                owner.sendMessage(Config.PREFIX + p.getUsername() + " is now " + invisibleText);
+                p.sendMessage(Config.PREFIX + "An admin has made you " + invisibleText);
+            }
+            else
+            {
+                owner.sendMessage(Config.PREFIX + "Invalid name");
+            }
 		} 
         else // leave CTF event
 		if (cmd.equalsIgnoreCase("leavectf") && owner.getLocation().inCtf())

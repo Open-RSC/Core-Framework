@@ -410,6 +410,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public static ArrayList<Player> ctfRed = new ArrayList<Player>();
     
     private boolean isInvulnerable = false;
+	private boolean invisible = false;
 	
 	/**
 	 * List of players who have attacked you last
@@ -1952,9 +1953,9 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		}
 	}
     
-	public void setInvulnerable(boolean invulnerable)
+	public void setInvulnerable(boolean isInvulnerable)
     {
-		isInvulnerable = invulnerable;
+		this.isInvulnerable = isInvulnerable;
 	}
     
     public boolean toggleInvulnerable()
@@ -1966,6 +1967,29 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
     public boolean isInvulnerable()
     {
         return isInvulnerable;
+    }
+    
+	public void setInvisible(boolean invisible)
+    {
+		this.invisible = invisible;
+        
+        if (this.invisible)
+            for (Player x : this.getViewArea().getPlayersInView())
+                x.removeWatchedPlayer(this);
+        else
+            for (Player x : this.getViewArea().getPlayersInView())
+                x.informOfPlayer(this);
+	}
+    
+    public boolean toggleInvisible()
+    {
+        setInvulnerable(!invisible);
+        return invisible;
+    }
+	
+    public boolean isInvisible()
+    {
+        return invisible;
     }
     
 	public boolean isMod() {
@@ -4005,8 +4029,6 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		return false;
 	}
 	
-	public boolean invisible;
-
 	public void resetLevers() {
 		setLeverA(false);
 		setLeverB(false);
