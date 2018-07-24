@@ -1941,6 +1941,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // reload the entire world
+        if ((cmd.equalsIgnoreCase("refreshworld") || cmd.equalsIgnoreCase("reloadworld")) && owner.isAdmin())
+        {
+			try {
+				World.load();
+                owner.sendMessage(Config.PREFIX + "World reloaded");
+                Logger.log(new GenericLog(owner.getUsername() + " reloaded the world", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // safeCombat means players don't lose items on death
         if (cmd.equalsIgnoreCase("safecombat") && (owner.isEvent() || owner.isMod()))
         {
