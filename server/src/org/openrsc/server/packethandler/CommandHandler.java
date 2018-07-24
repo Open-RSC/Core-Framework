@@ -615,7 +615,6 @@ public class CommandHandler implements PacketHandler
 		else // Teleport
 		if ((cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp")) && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
-			owner.resetLevers();
 			if (args.length == 0) 
 			{
 				owner.teleport = !owner.teleport;
@@ -631,30 +630,59 @@ public class CommandHandler implements PacketHandler
 				}
 				else
 				{
+                    owner.resetLevers();
+                    owner.setReturnPoint();
 					owner.teleport(EntityHandler.getTeleportManager().getTeleport(args[0]), false);
+                    Logger.log(new GenericLog(owner.getUsername() + " has teleported to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
 				}
 			} 
 			else if (args.length == 2) 
 			{
-				if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
-				{
-					owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                try
+                {
+                    if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
+                    {
+                        owner.resetLevers();
+                        owner.setReturnPoint();
+                        owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                        owner.sendMessage(Config.PREFIX + "Teleported to (" + owner.getX() + ", " + owner.getY() + ")");
+                        Logger.log(new GenericLog(owner.getUsername() + " has teleported to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
+                    }
 				}
+                catch(NumberFormatException e)
+                {
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y]");
+                    return;
+                }
             }
 			else if (args.length == 3) 
 			{
-				if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
-				{
-                    try
+                try
+                {
+                    Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+                    if(p != null)
                     {
-                        owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                        if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
+                        {
+                            p.resetLevers();
+                            p.setReturnPoint();
+                            p.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
+                            String teleportText = owner.getUsername() + " has teleported " + p.getUsername() + " to (" + owner.getX() + ", " + owner.getY() + ")";
+                            p.sendMessage(Config.PREFIX + "You have been teleported by " + owner.getUsername());
+                            owner.sendMessage(Config.PREFIX + teleportText);
+                            Logger.log(new GenericLog(teleportText, DataConversions.getTimeStamp()));
+                        }
                     }
-                    catch(NumberFormatException e)
+                    else
                     {
-                        owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y]");
-                        return;
+                        owner.sendMessage(Config.PREFIX + "Invalid name");
                     }
 				}
+                catch(NumberFormatException e)
+                {
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y] [name]");
+                    return;
+                }
 			}	
 		} 
         else // Show appearance change screen
@@ -724,13 +752,9 @@ public class CommandHandler implements PacketHandler
 		else // Return a owner to where they were before summoning
 		if (cmd.equalsIgnoreCase("return") && (owner.isMod() || owner.isDev())) 
 		{
-			if (args.length != 1) 
-			{
-				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
-				return;
-			}
-			
-			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        owner;
 			
 			if (p != null) 
 			{
@@ -755,9 +779,17 @@ public class CommandHandler implements PacketHandler
                     if(owner.getUsernameHash() == p.getUsernameHash())
                     {
                         // You can return yourself. Example would be after using ::tpto
-                        owner.setSummoned(false);
-                        owner.teleport(p.getReturnX(), p.getReturnY(), false);
-                        owner.sendMessage(Config.PREFIX + "You have been returned to your original location");
+                        if(owner.wasSummoned())
+                        {
+                            owner.setSummoned(false);
+                            owner.teleport(p.getReturnX(), p.getReturnY(), false);
+                            Logger.log(new GenericLog(owner.getUsername() + " has returned to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
+                            owner.sendMessage(Config.PREFIX + "You have been returned to your original location");
+                        }
+                        else
+                        {
+                            owner.sendMessage(Config.PREFIX + "You have no return point set.");
+                        }
                     }
                     else
                     {
@@ -790,6 +822,7 @@ public class CommandHandler implements PacketHandler
                         p.teleport(793, 24, false);
                         owner.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
                         p.sendAlert("You have been jailed.");
+                        Logger.log(new GenericLog(owner.getUsername() + " has jailed " + p.getUsername(), DataConversions.getTimeStamp()));
                     }
                     else
                     {
