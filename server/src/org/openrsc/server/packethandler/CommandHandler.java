@@ -1893,6 +1893,18 @@ public class CommandHandler implements PacketHandler
 				e.printStackTrace();
 			}
 		}
+        else // refresh secondary herb definitions
+        if (cmd.equalsIgnoreCase("refreshsecondaryherbs") && owner.isAdmin())
+        {
+			try {
+				EntityHandler.setUnidentifiedHerbDefinitions(World.getWorldLoader().loadUnidentifiedHerbDefinitions());
+                owner.sendMessage(Config.PREFIX + "Unidentified herb definitions refreshed");
+                Logger.log(new GenericLog(owner.getUsername() + " refreshed unidentified herb definitions", DataConversions.getTimeStamp()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         else // safeCombat means players don't lose items on death
         if (cmd.equalsIgnoreCase("safecombat") && (owner.isEvent() || owner.isMod()))
         {
