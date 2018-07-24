@@ -860,6 +860,7 @@ public class CommandHandler implements PacketHandler
 			
             if(p != null)
             {
+                owner.setReturnPoint();
                 owner.teleport(p.getX(), p.getY(), false);
                 Logger.log(new GenericLog(owner.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
             }
