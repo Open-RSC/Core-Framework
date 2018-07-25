@@ -74,24 +74,35 @@ public class PlayerLogin
 			session.close();
 			return;
 		}
-		RSCPacket loginPacket = DataConversions.decryptRSA(p.readBytes(p.readByte()));
-		int[] sessionKeys = new int[4];
+		long[] sessionKeys = new long[2];
 		for (int key = 0; key < sessionKeys.length; key++)
-			sessionKeys[key] = loginPacket.readInt();
+        {
+            long sessionKey = p.readLong();
+            System.out.println("sessionKey[" + key + "]: " + sessionKey);
+			sessionKeys[key] = sessionKey;
+        }
+        
 		long serverKey = (Long)session.getAttachment();
-		
-		if((serverKey >> 32) != sessionKeys[2] || (int)serverKey != sessionKeys[3])
+        long compareKey = sessionKeys[0];
+        
+        //System.out.println("sesssion.getAttachment() serverKey: " + serverKey);
+        //System.out.println("sesssion.getAttachment() compareKey: " + compareKey);
+        
+		if(serverKey != compareKey)
 		{
 			session.write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.SESSION_REJECTED.ordinal()).toPacket());
 			session.close();
 			return;
 		}
-		int clientWidth = loginPacket.readInt();
+		int clientWidth = p.readInt();
+        
+		RSCPacket loginPacket = DataConversions.decryptRSA(p.readBytes(p.readByte()));
+        
 		String username = loginPacket.readString(20).trim();
 		loginPacket.skip(1);
 		String password = loginPacket.readString(20).trim();
-
 		loginPacket.skip(1);
+        
 		ServerBootstrap.getDatabaseService().submit(new Login(username, password, session, clientWidth));
 	}
 }

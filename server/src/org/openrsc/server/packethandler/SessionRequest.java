@@ -66,10 +66,14 @@ public class SessionRequest
 		}
 		@SuppressWarnings("unused")
 		byte unused_remove_me = p.readByte();
-		if("OpenRSC".equals(p.readString().trim()))
+        String cmpText = "OpenRSC";
+        String packetText = p.readString().trim();
+		if("OpenRSC".equals(packetText))
 		{
 			/// Generate a random key
 			Long serverKey = DataConversions.getSecureRandom().nextLong();
+            
+            System.out.println("serverKey: " + serverKey);
 			
 			/// Attach that key to the session
 			session.setAttachment(serverKey);
