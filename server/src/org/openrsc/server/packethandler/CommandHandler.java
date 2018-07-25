@@ -438,7 +438,7 @@ public class CommandHandler implements PacketHandler
                         owner;
             
             if(p != null)
-				owner.sendAlert(p.getStaffName() + " (" + p.getStatus() + ") at " + owner.getLocation().toString() + " (" + owner.getLocation().getDescription() + ") % % Group ID: " + p.getGroupID() + " % % Logged in: " + (DataConversions.getTimeStamp() - owner.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - owner.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
+				owner.sendAlert(p.getStaffName() + "@whi@ (" + p.getStatus() + ") at " + owner.getLocation().toString() + " (" + owner.getLocation().getDescription() + ") % % @gre@Group ID:@whi@ " + p.getGroupID() + " % % @gre@Logged in:@whi@ " + (DataConversions.getTimeStamp() - owner.getLastLogin()) + " seconds % % @gre@Last moved:@whi@ " + (int)((System.currentTimeMillis() - owner.getLastMoved()) / 1000) + " % % @gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " % %@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false"), true);
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
