@@ -463,7 +463,7 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else // Show player's inventory
+		else // Show player's bank
 		if (cmd.equalsIgnoreCase("bank") && owner.isAdmin()) 
 		{
             Player p = args.length > 0 ? 
