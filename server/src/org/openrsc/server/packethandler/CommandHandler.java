@@ -213,7 +213,7 @@ public class CommandHandler implements PacketHandler
 			else
 				owner.sendMessage(Config.PREFIX + "You cannot use Global Chat as you have it disabled");
 		} 
-        else // Send an alert to a owner
+        else // Send an alert to a player
         if (cmd.equalsIgnoreCase("alert") && owner.isMod()) 
         {
             String message = "";
@@ -257,7 +257,7 @@ public class CommandHandler implements PacketHandler
                 return;
             }
         }
-        else // Give a owner a skull
+        else // Give a player a skull
 		if (cmd.equalsIgnoreCase("skull") && (owner.isAdmin() || owner.isMod())) 
 		{
             if(args.length == 0)
@@ -378,7 +378,7 @@ public class CommandHandler implements PacketHandler
 			}
             Logger.log(new GenericLog(owner.getUsername() + " set global chat to " + (World.muted ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
 		} 
-        else // Fatigue owner
+        else // Fatigue player
         if (cmd.equalsIgnoreCase("fatigue") && owner.isMod()) 
         {
             if(args.length == 0)
@@ -413,7 +413,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(Config.PREFIX + "Invalid name");	
             }
         }
-        else // Show a owner's IP address
+        else // Show a player's IP address
 		if (cmd.equalsIgnoreCase("ip") && owner.isAdmin()) 
 		{
             Player p = args.length > 0 ? 
@@ -430,7 +430,7 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else // Show info about a owner
+		else // Show info about a player
 		if (cmd.equalsIgnoreCase("info") && owner.isMod()) 
 		{
             Player p = args.length > 0 ? 
@@ -444,7 +444,7 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else // Kick a owner
+		else // Kick a player
 		if (cmd.equalsIgnoreCase("kick") && owner.isMod()) 
 		{
 			if (args.length != 1) 
@@ -467,7 +467,7 @@ public class CommandHandler implements PacketHandler
 				}
 			}
 		}
-		else // Ban a owner
+		else // Ban a player
 		if (cmd.equalsIgnoreCase("ban") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
@@ -489,7 +489,7 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been banned");
 			} 
 		}
-		else // Unban a owner
+		else // Unban a player
 		if (cmd.equalsIgnoreCase("unban") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
@@ -502,7 +502,7 @@ public class CommandHandler implements PacketHandler
 			Logger.log(new GenericLog(owner.getUsername() + " unbanned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
 			owner.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");				
 		}
-		else // Mute a owner
+		else // Mute a player
 		if (cmd.equalsIgnoreCase("mute") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
@@ -521,7 +521,7 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(Config.PREFIX + p.getUsername() + " has been muted");	
 			}
 		} 
-		else // Unmute a owner
+		else // Unmute a player
 		if (cmd.equalsIgnoreCase("unmute") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
@@ -707,7 +707,7 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
-        else // Summon a owner
+        else // Summon a player
 		if (cmd.equalsIgnoreCase("summon") && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
@@ -753,7 +753,7 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else // Return a owner to where they were before summoning
+		else // Return a player to where they were before summoning
 		if (cmd.equalsIgnoreCase("return") && (owner.isMod() || owner.isDev())) 
 		{
             Player p = args.length > 0 ? 
@@ -806,7 +806,7 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(Config.PREFIX + "Invalid name");
 			}
 		} 
-		else // Jail a owner
+		else // Jail a player
 		if (cmd.equalsIgnoreCase("jail") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
 			if (args.length != 1) 
@@ -846,7 +846,7 @@ public class CommandHandler implements PacketHandler
                 return;
 			}
 		} 
-		else // Release a owner from jail
+		else // Release a player from jail
 		if (cmd.equalsIgnoreCase("release") && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
 			if (args.length != 1) 
@@ -866,6 +866,7 @@ public class CommandHandler implements PacketHandler
                         p.teleport(120, 648, false);
                         p.sendAlert("You have been released from jail.");
                         owner.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+                        Logger.log(new GenericLog(owner.getUsername() + " has released " + p.getUsername() + " from jail", DataConversions.getTimeStamp()));
                     }
                     else
                     {
@@ -884,7 +885,7 @@ public class CommandHandler implements PacketHandler
                 return;
 			}
 		} 
-		else // Go to a owner's location
+		else // Go to a player's location
 		if ((cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) && (owner.isMod() || owner.isDev())) 
 		{
 			if (args.length != 1) 
@@ -915,6 +916,7 @@ public class CommandHandler implements PacketHandler
 					message += (s + " ");
 				message = message.substring(0, message.length() - 1);
 			}
+            Logger.log(new GenericLog(owner.getUsername() + " restarted the server.", DataConversions.getTimeStamp()));
 			World.getWorld().getEventPump().submit(new ShutdownEvent(true, message));
 		}
 		else // spawn an item
@@ -950,6 +952,7 @@ public class CommandHandler implements PacketHandler
                             }
                         }
                         owner.sendInventory();
+                        owner.sendMessage(Config.PREFIX + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).name);
                         Logger.log(new GenericLog(owner.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
                     } 
                     else
@@ -1057,7 +1060,7 @@ public class CommandHandler implements PacketHandler
                 return;
             }
 		} 
-        else // Wipe owner's inventory.
+        else // Wipe player's inventory.
 		if (cmd.equalsIgnoreCase("wipeinventory") && owner.isAdmin()) 
 		{
             if(args.length == 0)
@@ -1084,7 +1087,7 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
-        else // Wipe owner's bank
+        else // Wipe player's bank
         if (cmd.equalsIgnoreCase("wipebank") && owner.isAdmin())
         {
             if(args.length == 0)
@@ -1104,7 +1107,7 @@ public class CommandHandler implements PacketHandler
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
         }
-        else // Kill a owner
+        else // Kill a player
         if (cmd.equalsIgnoreCase("kill") && owner.isAdmin())
         {
 			if (args.length == 1)
@@ -1141,7 +1144,7 @@ public class CommandHandler implements PacketHandler
                 Logger.log(new ErrorLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), owner.getUsername() + " unable to kill [command] " + p.getUsername(), DataConversions.getTimeStamp()));
             }
         }
-        else // Damage a owner.
+        else // Damage a player.
         if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg")) && owner.isAdmin())
         {
 			if (args.length < 2)
@@ -1300,7 +1303,7 @@ public class CommandHandler implements PacketHandler
 			}
             owner.sendMessage(Config.PREFIX + "All players who have been summoned were returned");
 		}
-        else
+        else // spawn items around you
         if(cmd.equalsIgnoreCase("massitem") && owner.isAdmin())
         {
 			if (args.length < 2)
@@ -1709,7 +1712,7 @@ public class CommandHandler implements PacketHandler
                 return;
             }
 		}
-        else // modify a specific stat
+        else // modify a specific stat of a player
         if (cmd.equalsIgnoreCase("stat") && owner.isAdmin())
         {
 			if (args.length != 3)
