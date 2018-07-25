@@ -443,7 +443,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else // check a player's group
-		if (cmd.equalsIgnoreCase("group") && owner.isMod()) 
+		if ((cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("permissions")) && owner.getGroupID() < 4) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
