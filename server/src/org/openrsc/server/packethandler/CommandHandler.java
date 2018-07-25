@@ -10,6 +10,7 @@ import com.runescape.entity.attribute.DropItemAttr;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 
 import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
@@ -439,6 +440,26 @@ public class CommandHandler implements PacketHandler
             
             if(p != null)
 				owner.sendAlert(p.getStaffName() + "@whi@ (" + p.getStatus() + ") at " + owner.getLocation().toString() + " (" + owner.getLocation().getDescription() + ") % % @gre@Group ID:@whi@ " + p.getGroupID() + " % % @gre@Logged in:@whi@ " + (DataConversions.getTimeStamp() - owner.getLastLogin()) + " seconds % % @gre@Last moved:@whi@ " + (int)((System.currentTimeMillis() - owner.getLastMoved()) / 1000) + " % % @gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " % %@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false"), true);
+            else
+                owner.sendMessage(Config.PREFIX + "Invalid name");
+		}
+		else // Show player's inventory
+		if (cmd.equalsIgnoreCase("inventory") && owner.isMod()) 
+		{
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        owner;
+            
+            if(p != null)
+            {
+                ArrayList<InvItem> inventory    = p.getInventory().getItems();
+                ArrayList<String> itemStrings   = new ArrayList<String>();
+                
+                for(InvItem invItem : inventory)
+                    itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
+                
+                owner.sendAlert("@blu@Inventory of " + p.getStaffName() + "%" + StringUtils.join(itemStrings, ", "), true);
+            }
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
