@@ -66,18 +66,14 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 				loginScreenPrint("Login server offline.", "Please try again in a few mins");
 				return;
 			}
-			int sessionRotationKeys[] = new int[4];
-			sessionRotationKeys[0] = (int) (loginRandom.nextInt());
-			sessionRotationKeys[1] = (int) (loginRandom.nextInt());
-			sessionRotationKeys[2] = (int) (sessionID >> 32);
-			sessionRotationKeys[3] = (int) sessionID;
+			long sessionRotationKeys[] = new long[2];
+			sessionRotationKeys[0] = sessionID;
+			sessionRotationKeys[1] = loginRandom.nextLong();
+            //System.out.println("sesssion.getAttachment() serverKey: " + sessionID);
+            //System.out.println("sessionKey[0]: " + sessionID);
+            //System.out.println("sessionKey[1]: " + loginRandom.nextLong());
 			DataEncryption dataEncryption = new DataEncryption(new byte[500]);
 			dataEncryption.offset = 0;
-			dataEncryption.add4ByteInt(sessionRotationKeys[0]);
-			dataEncryption.add4ByteInt(sessionRotationKeys[1]);
-			dataEncryption.add4ByteInt(sessionRotationKeys[2]);
-			dataEncryption.add4ByteInt(sessionRotationKeys[3]);
-			dataEncryption.add4ByteInt(gW);
 			dataEncryption.addString(user);
 			dataEncryption.addString(pass);
 			dataEncryption.encryptPacketWithKeys(key, modulus);
@@ -87,6 +83,9 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
 			else
 				streamClass.addByte(0);
 			streamClass.add2ByteInt(Config.CLIENT_VERSION);
+			streamClass.addLong(sessionRotationKeys[0]);
+			streamClass.addLong(sessionRotationKeys[1]);
+			streamClass.add4ByteInt(gW);
 			streamClass.addBytes(dataEncryption.packet, 0, dataEncryption.offset);
 			streamClass.finalisePacket();
 			int loginResponse = streamClass.readInputStream();
