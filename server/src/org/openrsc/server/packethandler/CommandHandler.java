@@ -1066,8 +1066,8 @@ public class CommandHandler implements PacketHandler
                         {
 							try {
 								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + object_id + "', '" + owner.getX() + "', '" + owner.getY() + "', '" + direction + "')");
-                                owner.sendMessage(Config.PREFIX + "Object added to database");
-                                Logger.log(new GenericLog(owner.getUsername() + " added object to database. id: " + object_id + ", direction: " + direction + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
+                                owner.sendMessage(Config.PREFIX + "Object '" + objectDef.getName() + "(" + owner.getLocation() + ")' added to database");
+                                Logger.log(new GenericLog(owner.getUsername() + " added object to database. name: " + objectDef.getName() + ", id: " + object_id + ", direction: " + direction + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -1104,8 +1104,8 @@ public class CommandHandler implements PacketHandler
                     {
                         try {
                             World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + owner.getX() + "' AND `y` = '" + owner.getY() + "'");
-                            owner.sendMessage(Config.PREFIX + "Object removed from database");
-                            Logger.log(new GenericLog(owner.getUsername() + " remvoed object from database. id: " + o.getID() + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
+                            owner.sendMessage(Config.PREFIX + "Object '" + o.getGameObjectDef().getName() + "(" + owner.getLocation() + ")' removed from database");
+                            Logger.log(new GenericLog(owner.getUsername() + " remvoed object from database. name: " + o.getGameObjectDef().getName() + ", id: " + o.getID() + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
                         } catch (SQLException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
