@@ -444,7 +444,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
 		else // Show player's inventory
-		if (cmd.equalsIgnoreCase("inventory") && owner.isMod()) 
+		if (cmd.equalsIgnoreCase("inventory") && owner.isAdmin()) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
@@ -459,6 +459,35 @@ public class CommandHandler implements PacketHandler
                     itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
                 
                 owner.sendAlert("@blu@Inventory of " + p.getStaffName() + "%" + StringUtils.join(itemStrings, ", "), true);
+            }
+            else
+                owner.sendMessage(Config.PREFIX + "Invalid name");
+		} 
+		else // Show player's inventory
+		if (cmd.equalsIgnoreCase("bank") && owner.isAdmin()) 
+		{
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        owner;
+            
+            if(p != null)
+            {
+                // Show bank screen to yourself
+                if(p.getUsernameHash() == owner.getUsernameHash())
+                {
+                    owner.setAccessingBank(true);
+                    owner.showBank();
+                }
+                else
+                {
+                    ArrayList<InvItem> inventory    = p.getBank().getItems();
+                    ArrayList<String> itemStrings   = new ArrayList<String>();
+
+                    for(InvItem invItem : inventory)
+                        itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
+
+                    owner.sendAlert("@blu@Bank of " + p.getStaffName() + "%" + StringUtils.join(itemStrings, ", "), true);
+                }
             }
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
