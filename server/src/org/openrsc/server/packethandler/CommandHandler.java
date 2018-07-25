@@ -438,9 +438,19 @@ public class CommandHandler implements PacketHandler
                         owner;
             
             if(p != null)
-            {
 				owner.sendAlert(p.getStaffName() + " (" + p.getStatus() + ") at " + owner.getLocation().toString() + " (" + owner.getLocation().getDescription() + ") % % Group ID: " + p.getGroupID() + " % % Logged in: " + (DataConversions.getTimeStamp() - owner.getLastLogin()) + " seconds % % Last moved: " + (int)((System.currentTimeMillis() - owner.getLastMoved()) / 1000) + " % % Fatigue: " + ((p.getFatigue() / 25) * 100 / 750) + " % %Busy: " + (p.isBusy() ? "true" : "false"), true);
-            }
+            else
+                owner.sendMessage(Config.PREFIX + "Invalid name");
+		} 
+		else // check a player's group
+		if (cmd.equalsIgnoreCase("group") && owner.isMod()) 
+		{
+            Player p = args.length > 0 ? 
+                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
+                        owner;
+            
+            if(p != null)
+				owner.sendMessage(p.getStaffName() + " has group ID: " + p.getGroupID());
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
