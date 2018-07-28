@@ -770,7 +770,7 @@ CREATE TABLE `rscd_experience` (
   `exp_attack` int(9) NOT NULL DEFAULT 0,
   `exp_defense` int(9) NOT NULL DEFAULT 0,
   `exp_strength` int(9) NOT NULL DEFAULT 0,
-  `exp_hits` int(9) NOT NULL DEFAULT 1154,
+  `exp_hits` int(9) NOT NULL DEFAULT 4616,
   `exp_ranged` int(9) NOT NULL DEFAULT 0,
   `exp_prayer` int(9) NOT NULL DEFAULT 0,
   `exp_magic` int(9) NOT NULL DEFAULT 0,
