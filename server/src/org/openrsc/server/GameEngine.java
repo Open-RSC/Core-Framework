@@ -61,7 +61,7 @@ public final class GameEngine
 				{
                     if(
                         Config.MAX_LOGINS_PER_IP <= 0 ||
-                        (Config.MAX_LOGINS_PER_IP > 0 && World.getPlayersByIp(load.getIP()).count() < Config.MAX_LOGINS_PER_IP)
+                        (Config.MAX_LOGINS_PER_IP > 0 && World.getPlayersByIp(load.getIP()).size() < Config.MAX_LOGINS_PER_IP)
                     )
                     {
                         load.getSession().write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.LOGIN_SUCCESS.ordinal()).toPacket());

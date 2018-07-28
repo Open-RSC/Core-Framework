@@ -851,8 +851,8 @@ public final class World
 		return null;
 	}	
     
-    public static EntityList<Player> getPlayersByIp(String ip) {
-        EntityList<Player> playersByIp = new EntityList();
+    public static ArrayList<Player> getPlayersByIp(String ip) {
+        ArrayList<Player> playersByIp = new ArrayList();
         
 		for (Player player : players)
 			if (player.getIP().trim().equalsIgnoreCase(ip.trim()))
