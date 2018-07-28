@@ -78,7 +78,7 @@ public class PlayerLogin
 		for (int key = 0; key < sessionKeys.length; key++)
         {
             long sessionKey = p.readLong();
-            System.out.println("sessionKey[" + key + "]: " + sessionKey);
+            //System.out.println("sessionKey[" + key + "]: " + sessionKey);
 			sessionKeys[key] = sessionKey;
         }
         
