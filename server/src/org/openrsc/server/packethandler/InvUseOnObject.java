@@ -1043,8 +1043,12 @@ public class InvUseOnObject implements PacketHandler {
 		        									owner.sendMessage("You need a " + EntityHandler.getItemDef(moulds[option]).getName() + " to make a " + reply);
 		        									return;
 		        								}
-		        								if (owner.getCurStat(12) < 16) {
+		        								if (option == 0 && owner.getCurStat(12) < 16) {
 		      		      		      				owner.sendMessage("You need a crafting level of 16 to make this");
+		      		      		      				return;
+		      		      		      			}
+                                                else if(option == 1 && owner.getCurStat(12) < 17) {
+		      		      		      				owner.sendMessage("You need a crafting level of 17 to make this");
 		      		      		      				return;
 		      		      		      			}
 		      									if (owner.getInventory().remove(item) > -1) {
