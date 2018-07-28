@@ -516,17 +516,17 @@ public final class World
 				}
 			}
 			/** Wilderness IP Filter access point */
-				for(Player p : players) {
-					try {
-						if (p.getAccount() == player.getAccount()) {
-							player.getSession().close();
-							return;
-						}
-					} catch(Exception e) {
-						System.out.println("Exception caught with null owner");
-						return;
-					}
-				}
+            for(Player p : players) {
+                try {
+                    if (p.getAccount() == player.getAccount()) {
+                        player.getSession().close();
+                        return;
+                    }
+                } catch(Exception e) {
+                    System.out.println("Exception caught with null owner");
+                    return;
+                }
+            }
 			if (!players.contains(player)) {
 				player.setInitialized();
 				players.add(player);
