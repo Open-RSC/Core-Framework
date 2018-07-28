@@ -73,7 +73,7 @@ public class SessionRequest
 			/// Generate a random key
 			Long serverKey = DataConversions.getSecureRandom().nextLong();
             
-            System.out.println("serverKey: " + serverKey);
+            //System.out.println("serverKey: " + serverKey);
 			
 			/// Attach that key to the session
 			session.setAttachment(serverKey);
