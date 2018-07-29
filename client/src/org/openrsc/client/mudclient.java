@@ -3968,7 +3968,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							s = "@gre@";
 						if (playerArray[i2].isInvulnerable/*playerArray[i2].groupID != 4 && playerArray[i2].groupID != 7 && playerArray[i2].groupID != 5*/) {
 							s = "@bla@";
-						}						s = " " + s + "(level-" + playerArray[i2].level + ")";
+						}
+                        s = " " + s + "(level-" + playerArray[i2].level + ")";
 						/*if (System.currentTimeMillis() - playerArray[i2].lastMoved >= 60 * 5 * 1000) {
 							long afkTime = System.currentTimeMillis() - playerArray[i2].lastMoved;
 							long seconds = (afkTime / 1000) % 60;
