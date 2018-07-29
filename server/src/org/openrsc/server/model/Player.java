@@ -3663,7 +3663,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		if (super.ourAppearanceChanged)
 			needingUpdates.add(this);
 		for (Player p : watchedPlayers.getKnownEntities()) {
-			if (needsAppearanceUpdateFor(p) && !p.isInvisible())
+			if (needsAppearanceUpdateFor(p) && (!p.isInvisible() || this.isAdmin()))
 				needingUpdates.add(p);
 		}
 		return needingUpdates;
