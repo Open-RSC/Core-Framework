@@ -1430,10 +1430,10 @@ public class Raster implements ImageProducer, ImageObserver {
     }
     
     public void spriteClip4(int i, int j, int k, int l, int i1, int overlay, int k1, int l1, boolean flag) {
-        spriteClip4(i, j, k, l, i1, overlay, k1, l1, flag, 256);
+        spriteClip4(i, j, k, l, i1, overlay, k1, l1, flag, 256, 0x00FFFFFF);
     }
 
-    public void spriteClip4(int i, int j, int k, int l, int i1, int overlay, int k1, int l1, boolean flag, int opacity) {
+    public void spriteClip4(int i, int j, int k, int l, int i1, int overlay, int k1, int l1, boolean flag, int opacity, int colourTransform) {
         try {
             if (overlay == 0)
                 overlay = 0xffffff;
@@ -1484,29 +1484,25 @@ public class Raster implements ImageProducer, ImageObserver {
                 i5 = 2;
             if (k1 == 0xffffff) {
                 if (!flag) {
-                    spritePlotTransparent(opacity, imagePixelArray, sprites[i1].getPixels(), 0, k2, l2, j4, k, l, j3, k3, i2, overlay, i3, l3, i5);
+                    spritePlotTransparent(opacity, colourTransform, imagePixelArray, sprites[i1].getPixels(), 0, k2, l2, j4, k, l, j3, k3, i2, overlay, i3, l3, i5);
                     return;
                 } else {
-                    spritePlotTransparent(opacity, imagePixelArray, sprites[i1].getPixels(), 0, (sprites[i1].getWidth() << 16) - k2 - 1, l2, j4, k, l, -j3, k3, i2, overlay, i3, l3, i5);
+                    spritePlotTransparent(opacity, colourTransform, imagePixelArray, sprites[i1].getPixels(), 0, (sprites[i1].getWidth() << 16) - k2 - 1, l2, j4, k, l, -j3, k3, i2, overlay, i3, l3, i5);
                     return;
                 }
             }
             if (!flag) {
-                spritePlotTransparent(opacity, imagePixelArray, sprites[i1].getPixels(), 0, k2, l2, j4, k, l, j3, k3, i2, overlay, k1, i3, l3, i5);
+                spritePlotTransparent(opacity, colourTransform, imagePixelArray, sprites[i1].getPixels(), 0, k2, l2, j4, k, l, j3, k3, i2, overlay, k1, i3, l3, i5);
                 return;
             } else {
-                spritePlotTransparent(opacity, imagePixelArray, sprites[i1].getPixels(), 0, (sprites[i1].getWidth() << 16) - k2 - 1, l2, j4, k, l, -j3, k3, i2, overlay, k1, i3, l3, i5);
+                spritePlotTransparent(opacity, colourTransform, imagePixelArray, sprites[i1].getPixels(), 0, (sprites[i1].getWidth() << 16) - k2 - 1, l2, j4, k, l, -j3, k3, i2, overlay, k1, i3, l3, i5);
                 return;
             }
         }
         catch (Exception _ex) { }
     }
     
-    private void spritePlotTransparent(int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3) {
-        spritePlotTransparent(256, ai, ai1, i, j, k, l, i1, j1, k1, l1, i2, overlay, k2, l2, i3);
-    }
-    
-    private void spritePlotTransparent(int opacity, int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3) {
+    private void spritePlotTransparent(int opacity, int colourTransform, int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3) {
         int i4 = overlay >> 16 & 0xff; //R
         int j4 = overlay >> 8 & 0xff;  //G
         int k4 = overlay & 0xff;       //B
@@ -1543,15 +1539,18 @@ public class Raster implements ImageProducer, ImageObserver {
                                 l3 = (l3 * k4) >> 8;
                             }
                             
-                            int spriteR = j3 * opacity;
-                            int spriteG = k3 * opacity;
-                            int spriteB = l3 * opacity;
+                            int spriteR = ((j3 * ((colourTransform >> 16) & 0xFF)) >> 8) * opacity;
+                            int spriteG = ((k3 * ((colourTransform >> 8) & 0xFF)) >> 8) * opacity;
+                            int spriteB = ((l3 * (colourTransform & 0xFF)) >> 8) * opacity;
                             
                             int canvasR = (ai[k6 + l] >> 16 & 0xff) * inverseOpacity;
                             int canvasG = (ai[k6 + l] >> 8 & 0xff) * inverseOpacity;
                             int canvasB = (ai[k6 + l] & 0xff) * inverseOpacity;
                             
-                            int finalColour = (((spriteR + canvasR) >> 8) << 16) + (((spriteG + canvasG) >> 8) << 8) + ((spriteB + canvasB) >> 8);
+                            int finalColour = 
+                                    (((spriteR + canvasR) >> 8) << 16) +
+                                    (((spriteG + canvasG) >> 8) << 8) +
+                                    ((spriteB + canvasB) >> 8);
                             ai[k6 + l] = finalColour;
                                /*
                             int j3 = i >> 16 & 0xff;
@@ -1578,11 +1577,7 @@ public class Raster implements ImageProducer, ImageObserver {
         catch (Exception _ex) { }
     }
 
-    private void spritePlotTransparent(int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3, int j3){
-        spritePlotTransparent(256, ai, ai1, i, j, k, l, i1, j1, k1, l1, i2, overlay, k2, l2, i3, j3);
-    }
-    
-    private void spritePlotTransparent(int opacity, int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3, int j3) {
+    private void spritePlotTransparent(int opacity, int colourTransform, int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3, int j3) {
         int j4 = overlay >> 16 & 0xff;
         int k4 = overlay >> 8 & 0xff;
         int l4 = overlay & 0xff;
@@ -1625,15 +1620,18 @@ public class Raster implements ImageProducer, ImageObserver {
                                 i4 = (i4 * k5) >> 8;
                             }
                                 
-                            int spriteR = k3 * opacity;
-                            int spriteG = l3 * opacity;
-                            int spriteB = i4 * opacity;
+                            int spriteR = ((k3 * ((colourTransform >> 16) & 0xFF)) >> 8) * opacity;
+                            int spriteG = ((l3 * ((colourTransform >> 8) & 0xFF)) >> 8) * opacity;
+                            int spriteB = ((i4 * (colourTransform & 0xFF)) >> 8) * opacity;
                             
                             int canvasR = (ai[k7 + l] >> 16 & 0xff) * inverseOpacity;
                             int canvasG = (ai[k7 + l] >> 8 & 0xff) * inverseOpacity;
                             int canvasB = (ai[k7 + l] & 0xff) * inverseOpacity;
                             
-                            int finalColour = (((spriteR + canvasR) >> 8) << 16) + (((spriteG + canvasG) >> 8) << 8) + ((spriteB + canvasB) >> 8);
+                            int finalColour = 
+                                    (((spriteR + canvasR) >> 8) << 16) + 
+                                    (((spriteG + canvasG) >> 8) << 8) + 
+                                    ((spriteB + canvasB) >> 8);
                             ai[k7 + l] = finalColour;
                             /*
                             int k3 = i >> 16 & 0xff;
