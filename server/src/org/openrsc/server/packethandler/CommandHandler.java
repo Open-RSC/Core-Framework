@@ -150,7 +150,7 @@ public class CommandHandler implements PacketHandler
             if(p != null)
             {
                 p.toggleInvisible();
-                String invisibleText = owner.isInvisible() ? "invisible" : "visible";
+                String invisibleText = p.isInvisible() ? "invisible" : "visible";
                 owner.sendMessage(Config.PREFIX + p.getUsername() + " is now " + invisibleText);
                 p.sendMessage(Config.PREFIX + "An admin has made you " + invisibleText);
                 Logger.log(new GenericLog(owner.getUsername() + " has made " + p.getUsername() + " " + invisibleText, DataConversions.getTimeStamp()));
