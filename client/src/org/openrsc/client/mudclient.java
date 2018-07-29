@@ -2401,9 +2401,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 		}
 		if (currentMenuID == 3200)
-			displayMessage(EntityHandler.getItemDef(actionType).getDescription()
-					+ (ourPlayer.groupID == 1 ? " (" + actionType + ": " + (groundItemX[actionType] + areaX) + ", "
-							+ (groundItemY[actionType] + areaY) + ")" : ""),
+			displayMessage(
+                    EntityHandler.getItemDef(actionType).getDescription()
+					+ (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""),
 					3, 0);
 		if (currentMenuID == 300) {
 			walkToAction(actionX, actionY, actionType, "hi");
@@ -2443,8 +2443,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3300)
 			displayMessage(
-					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType
-							+ ": " + (doorX[actionType] + areaX) + ", " + (doorY[actionType] + areaY) + ")" : ""),
+					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""),
 					3, 0);
 		if (currentMenuID == 400) {
 			walkToObject(actionX, actionY, actionType, actionVariable);
@@ -2482,8 +2481,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3400)
 			displayMessage(
-					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType
-							+ ": " + (objectX[actionType] + areaX) + ", " + (objectY[actionType] + areaY) + ")" : ""),
+					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""),
 					3, 0);
 		if (currentMenuID == 600) {
 			super.streamClass.createPacket(31);
@@ -3491,13 +3489,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j7 = anIntArray757[k3] * 128 + 64;
 			int j9 = anIntArray782[k3];
 			if (j9 == 0) {
-				gameCamera.method268(50000 + k3, l4, -engineHandle.bilinearInterpolate(l4, j7), j7, 128, 256,
-						k3 + 50000);
+				gameCamera.method268(60000 + k3, l4, -engineHandle.bilinearInterpolate(l4, j7), j7, 128, 256,
+						k3 + 60000);
 				fightCount++;
 			}
 			if (j9 == 1) {
-				gameCamera.method268(50000 + k3, l4, -engineHandle.bilinearInterpolate(l4, j7), j7, 128, 64,
-						k3 + 50000);
+				gameCamera.method268(60000 + k3, l4, -engineHandle.bilinearInterpolate(l4, j7), j7, 128, 64,
+						k3 + 60000);
 				fightCount++;
 			}
 		}

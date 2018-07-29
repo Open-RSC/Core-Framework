@@ -33,6 +33,7 @@ public class ItemDef extends EntityDef {
 	public ItemDef(ItemDef item, int id) {
 		super(item.name+" Note", "", id);
 		this.command = "";
+        this.description = this.name;
 		this.basePrice = item.basePrice;
 		this.baseTokenPrice = item.baseTokenPrice;
 		this.sprite = item.sprite;

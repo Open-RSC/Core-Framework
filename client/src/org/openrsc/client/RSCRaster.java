@@ -10,8 +10,8 @@ public final class RSCRaster extends Raster {
     
     public final void method245(int windowX, int windowY, int k, int l, int index, int j1, int k1) {
 
-        if (index >= 50000) {
-            _mudclient.method71(windowX, windowY, k, l, index - 50000, j1, k1);
+        if (index >= 60000) {
+            _mudclient.method71(windowX, windowY, k, l, index - 60000, j1, k1);
             return;
         }
         if (index >= 40000) {
