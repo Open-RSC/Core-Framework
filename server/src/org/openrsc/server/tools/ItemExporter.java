@@ -67,7 +67,7 @@ public final class ItemExporter {
             System.out.println("Picture Mask: " + def.getPictureMask());
             System.out.println("Is Stackable: " + def.isStackable());
             System.out.println("Is Wieldable: " + def.isWieldable());
-            System.out.println("Is Quest Item: " + def.isTradable());
+            System.out.println("Is Tradable: " + def.isTradable());
             System.out.println("---------------------------");
 		}
         System.out.println("Total Items: " + EntityHandler.itemCount());
