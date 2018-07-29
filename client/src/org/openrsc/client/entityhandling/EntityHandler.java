@@ -1057,7 +1057,7 @@ public final class EntityHandler {
 			DataInputStream in = new DataInputStream(Resources.load("/items.dat"));
 			//items = new ItemDef[in.readInt()];
 			String[] strs = new String[3];
-			int[] ints = new int[4];
+			int[] ints = new int[5];
 			boolean[] bools = new boolean[3];
             int numberItems = in.readInt();
 			
@@ -1074,11 +1074,16 @@ public final class EntityHandler {
 				for (int j = 0; j < bools.length; j++) {
 					bools[j] = in.readBoolean();
 				}
+                
+                // Do not add notes yet.
+                // TODO: This should be solved as note items not being put into items.dat
+                if(ints[4] >= Config.NOTE_ITEM_ID_BASE) continue;
+                
 				items.put(
-                    i,
-                    new ItemDef(strs[0], strs[1], strs[2],
-                                ints[0], ints[1], ints[2], bools[0], bools[1],
-                                ints[3], bools[2], i)
+                    ints[4],
+                        new ItemDef(strs[0], strs[1], strs[2],
+                                    ints[0], ints[1], ints[2], bools[0], bools[1],
+                                    ints[3], bools[2], ints[4])
                 );
 			}
             

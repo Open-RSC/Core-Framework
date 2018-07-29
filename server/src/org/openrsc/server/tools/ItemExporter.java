@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import org.openrsc.server.Config;
 import org.openrsc.server.entityhandling.EntityHandler;
@@ -37,8 +38,7 @@ public final class ItemExporter {
 		DataOutputStream out = new DataOutputStream(baos);
 		out.writeInt(EntityHandler.itemCount());
 		
-		for (int i = 0; i < EntityHandler.itemCount(); i++) {
-			ItemDef def = EntityHandler.getItemDef(i);
+        for(ItemDef def : EntityHandler.getItems().values()){
 			out.writeByte(def.getName().length());
 			out.writeBytes(def.getName());
 			out.writeByte(def.getDescription().length());
@@ -49,25 +49,28 @@ public final class ItemExporter {
 			out.writeInt(def.getBaseTokenPrice());
 			out.writeInt(def.getSprite());
 			out.writeInt(def.getPictureMask());
+            out.writeInt(def.getID());
 			out.writeBoolean(def.isStackable());
 			out.writeBoolean(def.isWieldable());
 			out.writeBoolean(!def.isTradable());
             
-            /*System.out.println("Name Length: " + def.getName().length());
+            System.out.println("ID: " + def.getID());
+            System.out.println("Name Length: " + def.getName().length());
             System.out.println("Name: " + def.getName());
             System.out.println("Description Length: " + def.getDescription().length());
             System.out.println("Description: " + def.getDescription());
             System.out.println("Command Length: " + def.getCommand().length());
-            System.out.println("Base Price: " + def.getCommand());
-            System.out.println("Command: " + def.getBasePrice());
+            System.out.println("Command: " + def.getCommand());
+            System.out.println("Base Price: " + def.getBasePrice());
             System.out.println("Base Token Price: " + def.getBaseTokenPrice());
             System.out.println("Sprite: " + def.getSprite());
             System.out.println("Picture Mask: " + def.getPictureMask());
             System.out.println("Is Stackable: " + def.isStackable());
             System.out.println("Is Wieldable: " + def.isWieldable());
             System.out.println("Is Quest Item: " + def.isTradable());
-            System.out.println("---------------------------");*/
+            System.out.println("---------------------------");
 		}
+        System.out.println("Total Items: " + EntityHandler.itemCount());
 		Files.write(Paths.get("items.dat"), baos.toByteArray());
 	}
 
