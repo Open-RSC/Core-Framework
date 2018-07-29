@@ -1961,7 +1961,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
     public boolean toggleInvulnerable()
     {
         setInvulnerable(!isInvulnerable());
-        return isInvulnerable(;
+        return isInvulnerable();
     }
 	
     public boolean isInvulnerable()
