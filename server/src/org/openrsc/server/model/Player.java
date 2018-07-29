@@ -1973,12 +1973,20 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
     {
 		this.invisible = invisible;
         
-        if (this.invisible)
-            for (Player x : this.getViewArea().getPlayersInView())
-                x.removeWatchedPlayer(this);
+        List<Player> playersInView = this.getViewArea().getPlayersInView();
+        
+        if (this.isInvisible())
+        {
+            for (Player remove : playersInView)
+                if(remove != this && !remove.isAdmin())
+                    remove.removeWatchedPlayer(this);
+        }
         else
-            for (Player x : this.getViewArea().getPlayersInView())
-                x.informOfPlayer(this);
+        {
+            for (Player informee : playersInView)
+                if(informee != this)
+                    informee.informOfPlayer(this);
+        }
 	}
     
     public boolean toggleInvisible()
@@ -3655,7 +3663,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		if (super.ourAppearanceChanged)
 			needingUpdates.add(this);
 		for (Player p : watchedPlayers.getKnownEntities()) {
-			if (needsAppearanceUpdateFor(p) && !p.invisible)
+			if (needsAppearanceUpdateFor(p) && !p.isInvisible())
 				needingUpdates.add(p);
 		}
 		return needingUpdates;
@@ -3706,9 +3714,9 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public void updateViewedPlayers() {
 		List<Player> playersInView = viewArea.getPlayersInView();
 		for (Player p : playersInView) {
-			if (p.getIndex() != getIndex() && p.loggedIn() && !p.invisible) {
-				p.informOfPlayer(this);
-				this.informOfPlayer(p);
+			if (p.getIndex() != getIndex() && p.loggedIn()) {
+                p.informOfPlayer(this);
+                this.informOfPlayer(p);
 			}
 		}
 	}
@@ -3782,13 +3790,13 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void informOfPlayer(Player p) {
-		if (!p.invisible && (!watchedPlayers.contains(p) || watchedPlayers.isRemoving(p)) && withinRange(p))
+		if ((!p.isInvisible() || this.isAdmin()) && (!watchedPlayers.contains(p) || watchedPlayers.isRemoving(p)) && withinRange(p))
 			watchedPlayers.add(p);
 	}
 	
 	public void revalidateWatchedPlayers() {
 		for (Player p : watchedPlayers.getKnownEntities()) {
-			if (!p.registered() || !withinRange(p) || !p.loggedIn() || p.invisible) {
+			if (!p.registered() || !withinRange(p) || !p.loggedIn() || p.isInvisible()) {
 				watchedPlayers.remove(p);
 				knownPlayersAppearanceIDs.remove(p.getIndex());
 				knownPlayersWornItemIDs.remove(p.getIndex());
