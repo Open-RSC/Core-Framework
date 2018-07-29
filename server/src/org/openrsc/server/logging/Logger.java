@@ -1,7 +1,6 @@
 package org.openrsc.server.logging;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -9,6 +8,7 @@ import org.openrsc.server.Config;
 import org.openrsc.server.database.ConnectionFactory;
 import org.openrsc.server.logging.model.AutoBanLog;
 import org.openrsc.server.logging.model.ChatLog;
+import org.openrsc.server.logging.model.CommandLog;
 import org.openrsc.server.logging.model.DeathLog;
 import org.openrsc.server.logging.model.DropLog;
 import org.openrsc.server.logging.model.DuelLog;
@@ -31,9 +31,9 @@ public class Logger extends Thread {
 	
 	private final Connection connection;
 	
-	private static StringBuffer globalMessageLog, privateMessageLog, dropLog, pickupLog, loginLog, tradeLog, exploitLog, duelLog, deathLog, chatLog, errorLog, genericLog, reportLog, shopLog, scriptLog, autoBanLog, eventLog;
+	private static StringBuffer globalMessageLog, privateMessageLog, dropLog, pickupLog, loginLog, tradeLog, exploitLog, duelLog, deathLog, chatLog, errorLog, genericLog, commandLog, reportLog, shopLog, scriptLog, autoBanLog, eventLog;
 
-	private static int globalMessageLogResetLength, privateMessageLogResetLength, dropLogResetLength, pickUpLogResetLength, loginLogResetLength, tradeLogResetLength, exploitLogResetLength, duelLogResetLength, deathLogResetLength, chatLogResetLength, errorLogResetLength, genericLogResetLength, reportLogResetLength, shopLogResetLength, scriptLogResetLength, autoBanLogResetLength, eventLogResetLength;
+	private static int globalMessageLogResetLength, privateMessageLogResetLength, dropLogResetLength, pickUpLogResetLength, loginLogResetLength, tradeLogResetLength, exploitLogResetLength, duelLogResetLength, deathLogResetLength, chatLogResetLength, errorLogResetLength, genericLogResetLength, commandLogResetLength, reportLogResetLength, shopLogResetLength, scriptLogResetLength, autoBanLogResetLength, eventLogResetLength;
 
 	public Logger()
 		throws
@@ -75,6 +75,9 @@ public class Logger extends Thread {
 		
 		genericLog = new StringBuffer("INSERT INTO `game_generic` (`message`, `time`) VALUES ");
 		genericLogResetLength = genericLog.length();
+        
+		commandLog = new StringBuffer("INSERT INTO `game_command` (`account`, `user`, `username`, `group_id`, `ip`, `command`, `time`) VALUES ");
+		commandLogResetLength = commandLog.length();
 		
 		reportLog = new StringBuffer("INSERT INTO `game_report` (`user`, `account`, `ip`, `reported`, `reported_account`, `reported_ip`, `time`, `rule`) VALUES ");
 		reportLogResetLength = reportLog.length();
@@ -129,6 +132,8 @@ public class Logger extends Thread {
 							statement.executeUpdate(errorLog.substring(0, errorLog.length() - 2));
 						if (genericLog.length() > genericLogResetLength)
 							statement.executeUpdate(genericLog.substring(0, genericLog.length() - 2));
+						if (commandLog.length() > commandLogResetLength)
+							statement.executeUpdate(commandLog.substring(0, commandLog.length() - 2));
 						if (reportLog.length() > reportLogResetLength)
 							statement.executeUpdate(reportLog.substring(0, reportLog.length() - 2));
 						if (shopLog.length() > shopLogResetLength)
@@ -257,13 +262,32 @@ public class Logger extends Thread {
 				} catch(OutOfMemoryError outOfMemoryError) {
 					outOfMemoryError("event-log");
 				}
+			} else if (log instanceof CommandLog) {
+				try {
+					appendCommandLog((CommandLog) log);
+				} catch(OutOfMemoryError outOfMemoryError) {
+					outOfMemoryError("command");
+				}
 			}	
+
 	}
 
 	private static final void appendGeneric(GenericLog log) throws OutOfMemoryError {
 		genericLog.append("('")
 		.append(log.getMessage())
 		.append("', " + log.getTime() + "), ");
+	}
+
+	private static final void appendCommandLog(CommandLog log) throws OutOfMemoryError {
+		commandLog.append("(")
+        .append(log.getOwner().getAccount() + ",")
+        .append("'" + log.getOwner().getUsernameHash() + "',")
+        .append("'" + log.getOwner().getUsername() + "',")
+        .append(log.getOwner().getGroupID() + ",")
+        .append("'" + log.getOwner().getIP()+ "',")
+		.append("'" + log.getMessage()+ "',")
+		.append(log.getTime())
+        .append("), ");
 	}
 	
 	private static final void appendReport(ReportLog log) throws OutOfMemoryError {
@@ -592,6 +616,7 @@ public class Logger extends Thread {
 		chatLog.delete(chatLogResetLength, chatLog.length());
 		errorLog.delete(errorLogResetLength, errorLog.length());
 		genericLog.delete(genericLogResetLength, genericLog.length());
+        commandLog.delete(commandLogResetLength, commandLog.length());
 		reportLog.delete(reportLogResetLength, reportLog.length());
 		shopLog.delete(shopLogResetLength, shopLog.length());
 		scriptLog.delete(scriptLogResetLength, scriptLog.length());

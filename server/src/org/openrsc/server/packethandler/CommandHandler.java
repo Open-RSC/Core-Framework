@@ -24,6 +24,7 @@ import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
+import org.openrsc.server.logging.model.CommandLog;
 import org.openrsc.server.logging.model.ErrorLog;
 import org.openrsc.server.logging.model.GenericLog;
 import org.openrsc.server.logging.model.GlobalLog;
@@ -84,6 +85,8 @@ public class CommandHandler implements PacketHandler
 			args[index] = args[index].replace("-", " ");
 			args[index] = args[index].replace("_", " ");
 		}
+        
+        Logger.log(new CommandLog(owner, cmd + " " + StringUtils.join(args, " "), DataConversions.getTimeStamp()));
 		
 		owner.setLastCommand(System.currentTimeMillis());
 		if ((cmd.equalsIgnoreCase("coords")) && (owner.isMod() || owner.isDev())) 
