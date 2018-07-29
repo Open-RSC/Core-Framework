@@ -421,18 +421,28 @@ CREATE TABLE `game_generic` (
   `time` int(10) NOT NULL,
   `id` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=36849 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `game_generic`
+-- Table structure for table `game_command`
 --
 
-LOCK TABLES `game_generic` WRITE;
-/*!40000 ALTER TABLE `game_generic` DISABLE KEYS */;
-INSERT INTO `game_generic` VALUES ('Testing requested Testings IP',1527882800,36780),('Testing summoned Testing to (103, 513)',1527883187,36781),('Testing summoned Testing to (103, 513)',1527883198,36782),('Testing put Testing',1527883207,36783),('Testing returned Testing to  (103, 513)',1527883246,36784),('Testing spawned 9999 Coins',1527883401,36785),('Testing spawned 1 Rune 2-Handed Sword',1527883404,36786),('Testing kicked Testing',1527883441,36787),('Testing spawned 99 Coins',1527884163,36788),('Testing spawned 99999999 Coins',1527885321,36789),('Testing spawned 1 Rune 2-Handed Sword',1527967924,36790),('Testing spawned 999999 Coins',1527968790,36791),('Testing spawned 1 Rune 2-Handed Sword',1527969496,36792),('Testing spawned 1 Dragon Medium Helmet',1527969627,36793),('Testing spawned 1 Rune Plate Mail Body',1527969676,36794),('Testing spawned 1 Rune Plate Mail Legs',1527969678,36795),('Testing spawned 1 Dragon Axe',1527969690,36796),('Testing spawned 1 Eye Patch',1527969712,36797),('Testing spawned 1 Charged Dragonstone Amulet',1527969729,36798),('Testing spawned 1 Cape of Legends',1527969741,36799),('Testing spawned 1 Scythe',1527969753,36800),('Testing spawned 1 Christmas Cracker',1527969760,36801),('Testing spawned 1 Party Hat',1527969771,36802),('Testing spawned 1 Party Hat',1527969777,36803),('Testing spawned 1 Pumpkin',1527969805,36804),('Testing spawned 1 Pumpkin',1527969810,36805),('Testing spawned 1 Santas Hat',1527969815,36806),('Testing spawned 99 Multi Cannon Ball',1527969844,36807),('Testing spawned 1 Dwarf Cannon Base',1527969852,36808),('Testing spawned 1 Dwarf Cannon Stand',1527969855,36809),('Testing spawned 1 Dwarf Cannon Barrels',1527969858,36810),('Testing spawned 1 Dwarf Cannon Furnace',1527969860,36811),('Testing spawned 1 Cat',1527969909,36812),('Testing spawned 1 Kittens',1527969929,36813),('Testing spawned 1 Kitten',1527969931,36814),('Testing spawned 1 Disk of Returning',1527969971,36815),('Testing spawned 1 Christmas Cracker',1527969998,36816),('Testing spawned 1 Crystal Key',1527970008,36817),('Testing spawned 1 ID Paper',1527970027,36818),('Testing spawned 9999 Poison Rune Arrows',1527970046,36819),('Testing spawned 1 Magic Longbow',1527970068,36820),('Testing spawned 1 Robe of Zamorak',1527970086,36821),('Testing spawned 1 Robe of Zamorak',1527970089,36822),('Testing spawned 1 Carnillean Armour',1527970125,36823),('Testing spawned 1 Gasmask',1527970142,36824),('Testing spawned 1 Halloween Mask',1527970173,36825),('Testing spawned 1 Halloween Mask',1527970175,36826),('Testing spawned 1 Cocktail Glass',1527970176,36827),('Testing spawned 1 Greenmans Ale',1527970181,36828),('Testing spawned 1 Gnome Ball',1527970229,36829),('Testing spawned 1 Halloween Mask',1527970251,36830),('Testing spawned 1 Party Hat',1527970301,36831),('Testing spawned 1 Party Hat',1527970303,36832),('Testing spawned 1 Party Hat',1527970305,36833),('Testing spawned 1 Party Hat',1527970307,36834),('Testing spawned 1 Party Hat',1527970310,36835),('Testing spawned 1 Miscellaneous Key',1527970314,36836),('Testing spawned 1 Whisky',1527970353,36837),('Testing spawned 1 Cat',1527970377,36838),('Testing spawned 1 Staff of Zamorak',1527970427,36839),('Testing spawned 1 Zamorak Cape',1527970439,36840),('Testing spawned 1 Sleeping Bag',1527970470,36841),('Testing spawned 1 Cup of Tea',1527970499,36842),('Testing spawned 1 Super Attack Potion',1527970518,36843),('Testing spawned 1 Super Defense Potion',1527970536,36844),('Testing spawned 1 Super Defense Potion',1527970547,36845),('Testing spawned 1 Super Strength Potion',1527970561,36846),('Testing spawned 1 Dragon Square Shield',1527970611,36847),('Testing spawned 1 Fresh Pineapple',1527970632,36848);
-/*!40000 ALTER TABLE `game_generic` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `game_command`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `game_command` (
+ `id` int NOT NULL AUTO_INCREMENT,
+ `account` int NOT NULL,
+ `user` varchar(45) NOT NULL,
+ `username` varchar(12) NOT NULL,
+ `group_id` int NOT NULL,
+ `ip` varchar(30) NOT NULL,
+ `command` varchar(255) NOT NULL,
+ `time` int NOT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `game_global`
