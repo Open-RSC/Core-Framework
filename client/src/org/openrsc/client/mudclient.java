@@ -1013,7 +1013,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						colour = characterTopBottomColours[mob.colourTopType];
 					else if (colour == 3)
 						colour = characterTopBottomColours[mob.colourBottomType];
-					gameGraphics.spriteClip4(windowX + k4, windowY + i5, l5, height, k5, colour, skinColour, j1, flag);
+                    
+                    int opacity = 256;
+                    if(mob.isInvisible)
+                        opacity = 128;
+                    
+					gameGraphics.spriteClip4(windowX + k4, windowY + i5, l5, height, k5, colour, skinColour, j1, flag, opacity);
 				}
 			}
 		}
@@ -8253,6 +8258,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					mob.level = data[mobUpdateOffset++] & 0xff;
 					mob.skull = data[mobUpdateOffset++] & 0xff;
 					mob.groupID = data[mobUpdateOffset++] & 0xff;
+                    mob.isInvisible = (data[mobUpdateOffset++] & 0xff) == 1 ? true : false;
+                    mob.isInvulnerable = (data[mobUpdateOffset++] & 0xff) == 1 ? true : false;
 					if (mob == ourPlayer) {
 						if (init || ourPlayer.groupID != old && ourPlayer.groupID != 4) {
 							init = false;

@@ -435,6 +435,10 @@ public final class ClientUpdater {
 				updates.addByte((byte)p.getCombatLevel());
 				updates.addByte((byte)(p.isSkulled() ? 1 : 0));
 				updates.addByte((byte)(p.isAdmin() ? 1 :(p.isMod() ? 2 : (p.isDev() ? 6 :  (p.isEvent() ? 7 : (p.isSub() ? 5 : 4))))));
+                /* Non kosher */
+                updates.addByte((byte)(p.isInvisible()?1:0));
+                updates.addByte((byte)(p.isInvulnerable()?1:0));
+                /* end non kosher */
 			}
 			player.getSession().write(updates.toPacket());
 		}

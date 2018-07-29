@@ -1932,6 +1932,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	
 	public void setGroupID(int id) {
 		groupID = id;
+        ourAppearanceChanged = true; // Trigger an appearance update to pass new group to the client.
 	}
 	
 	public int getGroupID() {
@@ -1956,6 +1957,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public void setInvulnerable(boolean isInvulnerable)
     {
 		this.isInvulnerable = isInvulnerable;
+        ourAppearanceChanged = true; // Trigger an appearance update to pass invulnerability to client
 	}
     
     public boolean toggleInvulnerable()
@@ -1972,6 +1974,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public void setInvisible(boolean invisible)
     {
 		this.invisible = invisible;
+        ourAppearanceChanged = true; // Trigger an appearance update to pass invisibility to client
         
         List<Player> playersInView = this.getViewArea().getPlayersInView();
         

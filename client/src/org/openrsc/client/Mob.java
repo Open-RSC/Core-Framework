@@ -42,4 +42,6 @@ public final class Mob {
     public int anInt176;
     public int skull;
     public long lastMoved = System.currentTimeMillis();
+    public boolean isInvisible = false;
+    public boolean isInvulnerable = false;
 }
