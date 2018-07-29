@@ -1018,7 +1018,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
                     if(mob.isInvisible)
                         opacity = 128;
                     
-					gameGraphics.spriteClip4(windowX + k4, windowY + i5, l5, height, k5, colour, skinColour, j1, flag, opacity);
+                    int colourTransform = 0xFFFFFFFF;
+                    if(mob.isInvulnerable)
+                        colourTransform = 0x20202020;
+                    
+					gameGraphics.spriteClip4(windowX + k4, windowY + i5, l5, height, k5, colour, skinColour, j1, flag, opacity, colourTransform);
 				}
 			}
 		}
