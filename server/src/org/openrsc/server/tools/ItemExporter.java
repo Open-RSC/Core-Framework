@@ -52,7 +52,7 @@ public final class ItemExporter {
             out.writeInt(def.getID());
 			out.writeBoolean(def.isStackable());
 			out.writeBoolean(def.isWieldable());
-			out.writeBoolean(!def.isTradable());
+			out.writeBoolean(def.isTradable());
             
             System.out.println("ID: " + def.getID());
             System.out.println("Name Length: " + def.getName().length());
