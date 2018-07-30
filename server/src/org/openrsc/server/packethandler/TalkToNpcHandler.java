@@ -28,6 +28,12 @@ public class TalkToNpcHandler implements PacketHandler {
 	
 	private void fireEvent(Player owner, Npc npc)
 	{
+        if(npc.getID() == 65)
+        {
+            owner.sendMessage("@whi@The Guard does not appear interested in talking");
+            return;
+        }
+        
 		if(!owner.getLocation().equals(npc.getLocation()))
 		{
 			npc.updateSprite(owner.getX(), owner.getY());
