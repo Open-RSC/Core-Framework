@@ -401,7 +401,7 @@ public class CommandHandler implements PacketHandler
                         fatigue = 0;
                     if(fatigue > 100)
                         fatigue = 100;
-                    p.setFatigue((int)(18750 * (fatigue / 100.0D)));
+                    p.setFatigue((int)(Player.MAX_FATIGUE * (fatigue / 100.0D)));
                     p.sendFatigue();
                 }
                 catch(NumberFormatException e)

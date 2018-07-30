@@ -411,6 +411,8 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
     
     private boolean isInvulnerable = false;
 	private boolean invisible = false;
+    
+    public static final int MAX_FATIGUE = 18750;
 	
 	/**
 	 * List of players who have attacked you last
@@ -2164,6 +2166,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public int getFatigue() {
 		return fatigue;
 	}
+    
+    public boolean isFatigued(){
+        return fatigue >= Player.MAX_FATIGUE;
+    }
 	
 	public int getTemporaryFatigue() {
 		return temporaryFatigue;
@@ -3487,14 +3493,14 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public final void removePrayerDrain(int prayerID) {
-			if(prayerID == 6) //rapid restore
-			{
-				healthRestoreEvent.setDelay(60000);
-			}
-			else if(prayerID == 7) //rapid heal
-			{
-				healthRestoreEvent.setDelay(60000);
-			}
+        if(prayerID == 6) //rapid restore
+        {
+            healthRestoreEvent.setDelay(60000);
+        }
+        else if(prayerID == 7) //rapid heal
+        {
+            healthRestoreEvent.setDelay(60000);
+        }
 		PrayerDef prayer = EntityHandler.getPrayerDef(prayerID);
 		drainRate -= prayer.getDrainRate();
 		if (drainRate <= 0) {
@@ -3876,7 +3882,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void incQuestExp(int stat, int amount) {
-		/*if (fatigue >= 18750) {
+		/*if (isFatigued()) {
 			sendMessage("@gre@You recieve no experience from this quest");
 			return;
 		}*/
@@ -3908,20 +3914,16 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 
 		if (fatigueApplicator.isFatigueEnabled()) {
 			int currentFatigue = getFatigue();
-			if(currentFatigue >= 18750) {
+			if(isFatigued()) {
 				sendMessage("@gre@You are too tired to gain experience, get some rest!");
 				return;
-			}
-
-			if(currentFatigue >= 18000) {
-				sendMessage("@gre@You start to feel tired, maybe you should rest soon.");
 			}
 
 			currentFatigue += isSub() ? xp / 4 : xp;
 
 			// Clamp the fatigue at a maximum value.
-			if (currentFatigue > 18750) {
-				currentFatigue = 18750;
+			if (currentFatigue > Player.MAX_FATIGUE) {
+				currentFatigue = Player.MAX_FATIGUE;
 			}
 
 			setFatigue(currentFatigue);

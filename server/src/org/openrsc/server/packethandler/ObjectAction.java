@@ -3491,7 +3491,7 @@ public class ObjectAction implements PacketHandler {
 						if (owner.getCancelBatch())
 							return;
 						
-						if (owner.getFatigue() > 18000)
+						if (owner.isFatigued())
 						{
 							owner.sendMessage("You are too tired to mine this rock.");
 							owner.cancelBatch = true;
@@ -3745,7 +3745,7 @@ public class ObjectAction implements PacketHandler {
 						if (owner.getCancelBatch())
 							return;
 						
-						if (owner.getFatigue() >= 18000)
+						if (owner.isFatigued())
 						{
 							owner.cancelBatch = true;
 							owner.sendMessage("You are too tired to chop this tree.");
@@ -3824,7 +3824,7 @@ public class ObjectAction implements PacketHandler {
 						if (owner.getCancelBatch())
 							return;
 						
-						if (owner.getFatigue() > 18000) 
+						if (owner.isFatigued()) 
 						{
 							owner.sendMessage("You are too tired to catch this fish");
 							owner.cancelBatch = true;
