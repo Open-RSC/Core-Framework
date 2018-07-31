@@ -959,7 +959,7 @@ CREATE TABLE `rscd_players` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` varchar(45) NOT NULL,
   `username` varchar(12) NOT NULL,
-  `group_id` int(10) DEFAULT 0,
+  `group_id` int(10) DEFAULT 4,
   `owner` int(5) NOT NULL,
   `combat` tinyint(3) NOT NULL DEFAULT 3,
   `combat_rank` int(10) DEFAULT NULL,
