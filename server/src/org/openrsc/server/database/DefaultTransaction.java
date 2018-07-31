@@ -59,7 +59,9 @@ import org.openrsc.server.Config;
 	/// The connection that is used in all <code>DefaultTransactions</code>
 	private static Connection connection;
 
-	static
+	// If enabled, causes error "Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary."
+        // Leaving this code in just in-case we encounter bugs due to it not being manually loaded.
+        /*static
 	{
 		try
 		{
@@ -70,7 +72,7 @@ import org.openrsc.server.Config;
 		{
 			throw new RuntimeException(e);
 		}
-	}
+	}*/
 		
 	/**
 	 * {@inheritDoc}

@@ -38,8 +38,11 @@
 	<entry key="ALLOW_WEAKENS">true</entry>
 	<entry key="ALLOW_GODSPELLS">true</entry>
 
-		<!-- Sleeping related -->
+	<!-- Sleeping related -->
 	<entry key="DISABLE_FATIGUE">true</entry>
 	<entry key="DISABLE_SLEEP_WORDS">true</entry>
 	<entry key="BAN_FAILED_SLEEP">false</entry>
+        
+	<!-- Custom features -->
+	<entry key="DISABLE_RUNECRAFTING">true</entry>
 </properties>

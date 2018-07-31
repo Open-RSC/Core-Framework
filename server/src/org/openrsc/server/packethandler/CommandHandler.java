@@ -680,7 +680,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else // Teleport
-		if ((cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp")) && (owner.isMod() || owner.isDev() || owner.isEvent())) 
+		if ((cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp") || cmd.equalsIgnoreCase("blink")) && (owner.isMod() || owner.isDev() || owner.isEvent())) 
 		{
 			if (args.length == 0) 
 			{

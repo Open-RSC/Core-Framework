@@ -231,7 +231,7 @@ public class InvActionHandler implements PacketHandler {
 							    if (Config.DISABLE_FATIGUE) {
 							        player.sendMessage("Fatigue is disabled on this server.");
 							        break;
-                                }
+							    }
 
 								if (System.currentTimeMillis() - player.getLastSleep() > 500)
 								{
@@ -246,54 +246,106 @@ public class InvActionHandler implements PacketHandler {
 							break;
 							
 						case 1291: // Body talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 332, 507));
 							showBubble(player, item);
 						break;
 						case 1292: // Air talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 299, 586));
 							showBubble(player, item);
 						break;
 						case 1293: // Water talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 175, 682));
 							showBubble(player, item);
 						break;
 						case 1294: // Fire talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 51, 646));
 							showBubble(player, item);
 						break;
 						case 1295: // Earth talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 85, 468));
 							showBubble(player, item);
 						break;
 						case 1296: // Nature talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 480, 671));
 							showBubble(player, item);
 						break;
 						case 1297: // Law talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 402, 539));
 							showBubble(player, item);
 						break;
 						case 1298: // Cosmic talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 149, 3538));
 							showBubble(player, item);
 						break;
 						case 1299: // Chaos talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 209, 394));
 							showBubble(player, item);
 						break;
 						case 1300: // Death talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 164, 119));
 							showBubble(player, item);
 						break;
 						case 1301: // Blood talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 254, 124));
 							showBubble(player, item);
 						break;
 						case 1302: // Soul talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 496, 533));
 							showBubble(player, item);
 						break;
 						case 1303: // Mind talisman
+							if (Config.DISABLE_RUNECRAFTING) {
+								player.sendMessage("Runecrafting is disabled on this server.");
+								break;
+							}
 							player.sendMessage(locateAltar(player.getX(), player.getY(), 234, 474));
 							showBubble(player, item);
 						break;

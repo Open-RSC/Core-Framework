@@ -479,6 +479,10 @@ public class InvUseOnObject implements PacketHandler {
 						case 1210: // Runecrafting
 							switch(item.getID()) {
 								case 1340: // Body talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 332 && object.getY() == 507) {
 										if (owner.getMaxStat(18) >= 20) {
@@ -500,6 +504,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1341: // Air talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);			
 									if (object.getX() == 299 && object.getY() == 586) {
 										if (owner.getMaxStat(18) >= 1) {
@@ -521,7 +529,11 @@ public class InvUseOnObject implements PacketHandler {
 									}								
 								break;
 								case 1342: // Water talisman
-									owner.setBusy(true);								
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
+									owner.setBusy(true);							
 									if (object.getX() == 175 && object.getY() == 682) {
 										if (owner.getMaxStat(18) >= 5) {
 											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
@@ -542,6 +554,10 @@ public class InvUseOnObject implements PacketHandler {
 									}									
 								break;
 								case 1343: // Fire talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 51 && object.getY() == 646) {
 										if (owner.getMaxStat(18) >= 14) {
@@ -563,6 +579,10 @@ public class InvUseOnObject implements PacketHandler {
 									}									
 								break;
 								case 1344: // Earth talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 85 && object.getY() == 468) {
 										if (owner.getMaxStat(18) >= 9) {
@@ -584,6 +604,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1345: // Nature talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);									
 									if (object.getX() == 480 && object.getY() == 671) {
 										if (owner.getMaxStat(18) >= 44) {
@@ -605,6 +629,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1346: // Law talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);					
 									if (object.getX() == 402 && object.getY() == 539) {
 										if (owner.getMaxStat(18) >= 54) {
@@ -626,6 +654,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1347: // Cosmic talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);									
 									if (object.getX() == 149 && object.getY() == 3538) {
 										if (owner.getMaxStat(18) >= 27) {
@@ -647,6 +679,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1348: // Chaos talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 209 && object.getY() == 394) {
 										if (owner.getMaxStat(18) >= 35) {
@@ -668,6 +704,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1349: // Death talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 164 && object.getY() == 119) {
 										if (owner.getMaxStat(18) >= 65) {
@@ -689,6 +729,10 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1350: // Blood talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 254 && object.getY() == 124) {
 										if (owner.getMaxStat(18) >= 77) {
@@ -710,27 +754,35 @@ public class InvUseOnObject implements PacketHandler {
 									}
 								break;
 								case 1351: // Soul talisman
-									owner.setBusy(true);						
-								if (object.getX() == 496 && object.getY() == 533) {
-									if (owner.getMaxStat(18) >= 90) {
-										player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-										World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-											public void action() {
-												owner.teleport(298, 3739, false);
-												owner.sendMessage("You feel a powerful force take hold of you.");
-												owner.setBusy(false);
-											}
-										});	
-									} else {
-										player.sendMessage("You need level 90 Runecrafting to craft on this alter");
-										owner.setBusy(false);
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
 									}
-								} else {
-									player.sendMessage("Nothing interesting happens");
-									owner.setBusy(false);
-								}
+									owner.setBusy(true);					
+                                                                        if (object.getX() == 496 && object.getY() == 533) {
+                                                                                if (owner.getMaxStat(18) >= 90) {
+                                                                                        player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
+                                                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
+                                                                                                public void action() {
+                                                                                                        owner.teleport(298, 3739, false);
+                                                                                                        owner.sendMessage("You feel a powerful force take hold of you.");
+                                                                                                        owner.setBusy(false);
+                                                                                                }
+                                                                                        });	
+                                                                                } else {
+                                                                                        player.sendMessage("You need level 90 Runecrafting to craft on this alter");
+                                                                                        owner.setBusy(false);
+                                                                                }
+                                                                        } else {
+                                                                                player.sendMessage("Nothing interesting happens");
+                                                                                owner.setBusy(false);
+                                                                        }
 								break;
 								case 1352: // Mind talisman
+									if (Config.DISABLE_RUNECRAFTING) {
+										player.sendMessage("Runecrafting is disabled on this server.");
+										break;
+									}
 									owner.setBusy(true);
 									if (object.getX() == 234 && object.getY() == 474) {
 										if (owner.getMaxStat(18) >= 2) {
