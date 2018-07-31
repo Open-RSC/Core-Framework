@@ -271,14 +271,14 @@ public class ObjectAction implements PacketHandler {
 				
 				private void craftRunes(final int item, int xp, double fatigue, int level, int talisman, int multiple) {
 					owner.setBusy(true);
-					if (owner.getInventory().contains(new InvItem(1339, 1))) {
+					if (owner.getInventory().contains(new InvItem(1290, 1))) {
 						if (owner.getMaxStat(18) >= level) {
 							if (owner.getInventory().contains(new InvItem(talisman, 1))) {
 								int total = 0;
 								int amountTotal = 0;
 								int exp = 0;
 								int amount = 1;
-								while (owner.getInventory().contains(new InvItem(1339, 1))) {
+								while (owner.getInventory().contains(new InvItem(1290, 1))) {
 									if (multiple != -1) {
 										for (int i = 0; i + multiple <= owner.getMaxStat(18); i += multiple)
 											amount++;
@@ -289,7 +289,7 @@ public class ObjectAction implements PacketHandler {
 									else
 										amount *= Config.RUNECRAFTING_AMOUNT_MULTIPLIER;
 									
-									owner.getInventory().remove(new InvItem(1339, 1));
+									owner.getInventory().remove(new InvItem(1290, 1));
 									owner.getInventory().add(new InvItem(item, amount));
 									owner.sendInventory();
 									exp += xp;
@@ -308,7 +308,7 @@ public class ObjectAction implements PacketHandler {
 									World.delayedRemoveObject(godSpellObject, 500);
 								}
 								owner.teleport(owner.getX(), owner.getY(), true);
-								owner.sendMessage("You craft " + (total > 1 ? total : "the") + " " + EntityHandler.getItemDef(1339).getName() + " into " + amountTotal + " " + EntityHandler.getItemDef(item).getName() + (amountTotal > 1 ? "s" : ""));
+								owner.sendMessage("You craft " + (total > 1 ? total : "the") + " " + EntityHandler.getItemDef(1290).getName() + " into " + amountTotal + " " + EntityHandler.getItemDef(item).getName() + (amountTotal > 1 ? "s" : ""));
 								owner.increaseXP(18, (exp * 2));
 								owner.sendStat(18);							
 							} else
@@ -316,66 +316,182 @@ public class ObjectAction implements PacketHandler {
 						} else
 							owner.sendMessage("You need level " + level + " Runecrafting to craft on this altar");
 					} else
-						owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1339).getName());
+						owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
 					owner.setBusy(false);
 				}
 				
 				private void handleCraft() {
 					switch (object.getID()) {
 						case 1197: // Air Alter
-							craftRunes(33, 5, 1, 1, 1341, 11);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+                                                        if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(33, 5, 1, 1, 1292, 11);
+                                                        }
+                                                        else
+                                                        {
+                                                            owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1198: // Mind Alter
-							craftRunes(35, 5, 1, 2, 1352, 14);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(35, 5, 1, 2, 1303, 14);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1199: // Fire Alter
-							craftRunes(31, 7, 1, 14, 1343, 35);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(31, 7, 1, 14, 1294, 35);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1200: // Earth Alter
-							craftRunes(34, 6, 1, 9, 1344, 26);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(34, 6, 1, 9, 1295, 26);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1201: // Water Alter
-							craftRunes(32, 6, 1, 5, 1342, 19);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(32, 6, 1, 5, 1923, 19);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1202: // Body Alter
-							craftRunes(36, 7, 1, 20, 1340, 46);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(36, 7, 1, 20, 1291, 46);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1203: // Cosmic Alter
-							craftRunes(46, 8, 2, 27, 1347, -1);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(46, 8, 2, 27, 1298, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
 						case 1204: // Nature Alter
-							craftRunes(40, 9, 2, 44, 1345, -1);
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(40, 9, 2, 44, 1296, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
-						case 1205: // Law Alter
-							craftRunes(42, 9, 2, 54, 1346, -1);
+						case 1211: // Law Alter
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(42, 9, 2, 54, 1297, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
-						case 1206: // Death Alter
-							craftRunes(38, 10, 3, 65, 1349, -1);
+						case 1212: // Death Alter
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+                                                        if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(38, 10, 3, 65, 1300, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
-						case 1207: // Blood Alter
-							craftRunes(619, 10, 3, 77, 1350, -1);
+						case 1213: // Blood Alter
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(619, 10, 3, 77, 1301, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;
-						
-						case 1208: // Soul Alter
-							craftRunes(825, 11, 4, 90, 1351, -1);
+						case 1214: // Soul Alter
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(825, 11, 4, 90, 1302, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;	
-						
-						case 1209: // Chaos Alter
-							craftRunes(41, 8, 2, 35, 1348, -1);
+						case 1215: // Chaos Alter
+							if (Config.DISABLE_RUNECRAFTING) {
+                                                                player.sendMessage("Runecrafting is disabled on this server.");
+                                                                break;
+							}
+							if (owner.getInventory().contains(new InvItem(1290, 1))) {
+                                                                craftRunes(41, 8, 2, 35, 1299, -1);
+                                                        }
+                                                        else
+                                                        {
+                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
+                                                        }
 						break;	
-							
-						default:
-								
+						default:	
 						break;
 					}
 				}

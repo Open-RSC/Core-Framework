@@ -11,7 +11,7 @@ public class Config {
 	public static int SHUTDOWN_TIME_MILLIS;
 	public static int RUNECRAFTING_AMOUNT_MULTIPLIER;
 	public static int ALLOWED_CONCURRENT_IPS_IN_WILDERNESS = 2;
-    public static final int NOTE_ITEM_ID_BASE = 10000;
+	public static final int NOTE_ITEM_ID_BASE = 10000;
 	public static final String WILDERNESS_ENTRY_BLOCKED_MESSAGE = "You may only enter the wilderness on " + Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS + " character(s) at a time.";
 	public static String AVATAR_DIR;
 
@@ -27,6 +27,7 @@ public class Config {
 		props.loadFromXML(new FileInputStream(file));
 
 		// Booleans
+		DISABLE_RUNECRAFTING = Boolean.parseBoolean(props.getProperty("DISABLE_RUNECRAFTING"));
 		DISABLE_FATIGUE = Boolean.parseBoolean(props.getProperty("DISABLE_FATIGUE"));
 		DISABLE_SLEEP_WORDS = Boolean.parseBoolean(props.getProperty("DISABLE_SLEEP_WORDS"));
 		BAN_FAILED_SLEEP = Boolean.parseBoolean(props.getProperty("BAN_FAILED_SLEEP"));
@@ -69,7 +70,7 @@ public class Config {
 	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_LOGINS_PER_IP;
 	public static float COMBAT_XP_RATE, COMBAT_XP_SUB, SKILL_XP_RATE, SKILL_XP_SUB, WILD_XP_BONUS, SKULLED_XP_BONUS;
 	public static long START_TIME;
-	public static boolean LOGGING, PK_MODE, BAN_FAILED_SLEEP, ALLOW_WEAKENS, ALLOW_GODSPELLS, DISABLE_SLEEP_WORDS, DISABLE_FATIGUE;
+	public static boolean LOGGING, PK_MODE, BAN_FAILED_SLEEP, ALLOW_WEAKENS, ALLOW_GODSPELLS, DISABLE_SLEEP_WORDS, DISABLE_FATIGUE, DISABLE_RUNECRAFTING;
 
 	public static final class Quests {
 		public static final int BLACK_KNIGHTS_FORTRESS = 0;
