@@ -7,7 +7,7 @@
 CREATE DATABASE IF NOT EXISTS `openrsc_logs`;
 use `openrsc_logs`;
 
-
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
@@ -23,8 +23,8 @@ use `openrsc_logs`;
 --
 
 DROP TABLE IF EXISTS `game_bans`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_bans` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `account` int(11) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `game_bans` (
   `reason` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_bans`
@@ -50,8 +50,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_chat`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_chat` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE `game_chat` (
   KEY `ip` (`ip`),
   KEY `user` (`user`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2714913 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_chat`
@@ -81,8 +81,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_collect`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_collect` (
   `user` bigint(20) NOT NULL,
   `account` int(11) NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE `game_collect` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`,`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_collect`
@@ -109,8 +109,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_connect`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_connect` (
   `ip` varchar(15) NOT NULL,
   `time` int(10) NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE `game_connect` (
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_connect`
@@ -134,8 +134,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_death`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_death` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -208,7 +208,7 @@ CREATE TABLE `game_death` (
   KEY `user` (`user`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1007129 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_death`
@@ -225,8 +225,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_drop`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_drop` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -243,7 +243,7 @@ CREATE TABLE `game_drop` (
   KEY `item` (`item`),
   KEY `amount` (`amount`)
 ) ENGINE=MyISAM AUTO_INCREMENT=496115 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_drop`
@@ -260,8 +260,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_duel`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_duel` (
   `user1` varchar(40) NOT NULL,
   `account1` int(11) DEFAULT NULL,
@@ -313,7 +313,7 @@ CREATE TABLE `game_duel` (
   KEY `user2` (`user2`),
   KEY `user2_ip` (`user2_ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=551932 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_duel`
@@ -329,8 +329,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_error`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_error` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -342,7 +342,7 @@ CREATE TABLE `game_error` (
   KEY `user` (`user`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=33540 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_error`
@@ -359,8 +359,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_event`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_event` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `user` varchar(40) NOT NULL,
@@ -370,7 +370,7 @@ CREATE TABLE `game_event` (
   `message` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_event`
@@ -386,8 +386,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_exploit`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_exploit` (
   `user` bigint(20) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -398,7 +398,7 @@ CREATE TABLE `game_exploit` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`)
 ) ENGINE=MyISAM AUTO_INCREMENT=13756616 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_exploit`
@@ -414,23 +414,23 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_generic`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_generic` (
   `message` varchar(255) NOT NULL,
   `time` int(10) NOT NULL,
   `id` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `game_command`
 --
 
 DROP TABLE IF EXISTS `game_command`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_command` (
  `id` int NOT NULL AUTO_INCREMENT,
  `account` int NOT NULL,
@@ -441,16 +441,16 @@ CREATE TABLE `game_command` (
  `command` varchar(255) NOT NULL,
  `time` int NOT NULL,
  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
-
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `game_global`
 --
 
 DROP TABLE IF EXISTS `game_global`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_global` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -463,7 +463,7 @@ CREATE TABLE `game_global` (
   KEY `ip` (`ip`),
   KEY `message` (`message`)
 ) ENGINE=MyISAM AUTO_INCREMENT=478867 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_global`
@@ -479,8 +479,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_login`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_login` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -492,7 +492,7 @@ CREATE TABLE `game_login` (
   KEY `user` (`user`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4182465 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_login`
@@ -509,8 +509,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_pickup`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_pickup` (
   `user` varchar(40) NOT NULL,
   `account` int(11) DEFAULT NULL,
@@ -527,7 +527,7 @@ CREATE TABLE `game_pickup` (
   KEY `item` (`item`),
   KEY `amount` (`amount`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3375410 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_pickup`
@@ -544,8 +544,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_pm`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_pm` (
   `sender` varchar(40) NOT NULL,
   `sender_account` int(11) DEFAULT NULL,
@@ -563,7 +563,7 @@ CREATE TABLE `game_pm` (
   KEY `reciever_ip` (`reciever_ip`),
   KEY `message` (`message`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11725351 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_pm`
@@ -579,8 +579,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_redeem`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_redeem` (
   `user` bigint(20) NOT NULL,
   `account` int(11) NOT NULL,
@@ -590,7 +590,7 @@ CREATE TABLE `game_redeem` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`,`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_redeem`
@@ -606,8 +606,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_report`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_report` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `user` bigint(20) NOT NULL,
@@ -626,7 +626,7 @@ CREATE TABLE `game_report` (
   KEY `reported_ip` (`reported_ip`),
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_report`
@@ -642,8 +642,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_report_actions`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_report_actions` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `report_id` int(10) NOT NULL,
@@ -653,7 +653,7 @@ CREATE TABLE `game_report_actions` (
   `duration` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_report_actions`
@@ -669,8 +669,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_report_comments`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_report_comments` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `report_id` int(10) NOT NULL,
@@ -679,7 +679,7 @@ CREATE TABLE `game_report_comments` (
   `message` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_report_comments`
@@ -695,8 +695,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_script`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_script` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user` bigint(20) NOT NULL,
@@ -709,7 +709,7 @@ CREATE TABLE `game_script` (
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_script`
@@ -725,8 +725,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_shop`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_shop` (
   `user` bigint(30) NOT NULL,
   `ip` varchar(15) NOT NULL,
@@ -739,7 +739,7 @@ CREATE TABLE `game_shop` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_shop`
@@ -756,8 +756,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `game_trade`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_trade` (
   `user1` varchar(40) NOT NULL,
   `account1` int(11) DEFAULT NULL,
@@ -821,7 +821,7 @@ CREATE TABLE `game_trade` (
   KEY `user2` (`user2`),
   KEY `user2_ip` (`user2_ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2333814 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `game_trade`
@@ -837,8 +837,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `loader_error`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `loader_error` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `message` text NOT NULL,
@@ -850,7 +850,7 @@ CREATE TABLE `loader_error` (
   `timestamp` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `loader_error`
@@ -866,8 +866,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_bank_wipe_recovery`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_bank_wipe_recovery` (
   `owner` int(6) NOT NULL,
   `id` smallint(4) NOT NULL,
@@ -876,7 +876,7 @@ CREATE TABLE `web_bank_wipe_recovery` (
   KEY `owner` (`owner`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_bank_wipe_recovery`
@@ -892,8 +892,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_create`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_create` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
   `user` varchar(25) NOT NULL,
@@ -905,7 +905,7 @@ CREATE TABLE `web_create` (
   KEY `owner` (`owner`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=89367 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_create`
@@ -921,8 +921,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_delete`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_delete` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
   `user` varchar(25) NOT NULL,
@@ -931,7 +931,7 @@ CREATE TABLE `web_delete` (
   `ip` varchar(15) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11249 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_delete`
@@ -947,8 +947,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_highscores`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_highscores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(25) CHARACTER SET latin1 NOT NULL,
@@ -962,7 +962,7 @@ CREATE TABLE `web_highscores` (
   KEY `ip` (`ip`),
   KEY `hs_pref` (`hs_pref`)
 ) ENGINE=MyISAM AUTO_INCREMENT=43586 DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_highscores`
@@ -978,8 +978,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_inv_wipe_recovery`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_inv_wipe_recovery` (
   `user` varchar(40) NOT NULL,
   `id` smallint(4) NOT NULL,
@@ -988,7 +988,7 @@ CREATE TABLE `web_inv_wipe_recovery` (
   `slot` tinyint(2) NOT NULL,
   KEY `user` (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_inv_wipe_recovery`
@@ -1004,8 +1004,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_legacy_transfer`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_legacy_transfer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transfer_date` varchar(20) NOT NULL,
@@ -1023,7 +1023,7 @@ CREATE TABLE `web_legacy_transfer` (
   `transferKey` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_legacy_transfer`
@@ -1039,8 +1039,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_login`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_login` (
   `ip` varchar(15) NOT NULL,
   `count` int(5) NOT NULL DEFAULT '0',
@@ -1048,7 +1048,7 @@ CREATE TABLE `web_login` (
   KEY `count` (`count`),
   KEY `ip_2` (`ip`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_login`
@@ -1064,8 +1064,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_logins`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_logins` (
   `account` int(10) NOT NULL,
   `ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
@@ -1074,7 +1074,7 @@ CREATE TABLE `web_logins` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_logins`
@@ -1090,8 +1090,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_password`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_password` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(25) NOT NULL,
@@ -1105,7 +1105,7 @@ CREATE TABLE `web_password` (
   KEY `ip` (`ip`),
   KEY `password` (`password`)
 ) ENGINE=MyISAM AUTO_INCREMENT=14842 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_password`
@@ -1121,8 +1121,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_recovery`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_recovery` (
   `account` int(10) NOT NULL,
   `ip` varchar(15) NOT NULL,
@@ -1131,7 +1131,7 @@ CREATE TABLE `web_recovery` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`,`ip`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_recovery`
@@ -1147,8 +1147,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_reduce`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_reduce` (
   `user` bigint(23) NOT NULL,
   `time` int(10) NOT NULL,
@@ -1159,7 +1159,7 @@ CREATE TABLE `web_reduce` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_reduce`
@@ -1175,8 +1175,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_rename`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_rename` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `owner` int(10) NOT NULL,
@@ -1188,7 +1188,7 @@ CREATE TABLE `web_rename` (
   KEY `id` (`id`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2152 DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_rename`
@@ -1204,8 +1204,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_rename_old`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_rename_old` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `user_id` int(10) NOT NULL,
@@ -1227,7 +1227,7 @@ CREATE TABLE `web_rename_old` (
   KEY `account` (`account`),
   KEY `ip` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1443 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_rename_old`
@@ -1243,8 +1243,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_staff_actions`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_staff_actions` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `owner` int(10) NOT NULL,
@@ -1255,7 +1255,7 @@ CREATE TABLE `web_staff_actions` (
   `action_date` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9438 DEFAULT CHARSET=utf8;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_staff_actions`
@@ -1271,8 +1271,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_statistics`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_statistics` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `time` int(10) NOT NULL,
@@ -1291,7 +1291,7 @@ CREATE TABLE `web_statistics` (
   PRIMARY KEY (`id`),
   KEY `time` (`time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_statistics`
@@ -1307,8 +1307,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_transfer`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_transfer` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
   `user` varchar(25) NOT NULL,
@@ -1318,7 +1318,7 @@ CREATE TABLE `web_transfer` (
   `to` int(6) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1274 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_transfer`
@@ -1334,8 +1334,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_v1transfer`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_v1transfer` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
   `user` varchar(25) NOT NULL,
@@ -1347,7 +1347,7 @@ CREATE TABLE `web_v1transfer` (
   `new_username` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8271 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_v1transfer`
@@ -1363,8 +1363,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `web_visit`;
-
-
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `web_visit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
@@ -1373,7 +1373,7 @@ CREATE TABLE `web_visit` (
   KEY `ip` (`ip`),
   KEY `ip_2` (`ip`)
 ) ENGINE=MyISAM AUTO_INCREMENT=156415 DEFAULT CHARSET=latin1;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `web_visit`
@@ -1388,7 +1388,7 @@ UNLOCK TABLES;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
