@@ -1,23 +1,25 @@
 MYSQL_DUMPS_DIR=./data/db
 
-start: init
-	docker-compose up -d
+start:
+	docker-compose -f docker-compose-travis.yml up -d
 
 stop:
-	@docker-compose down -v
+	@docker-compose -f docker-compose-travis.yml down -v
 
-restart: init
-	@docker-compose down -v
-	docker-compose up -d
+restart:
+	@docker-compose -f docker-compose-travis.yml down -v
+	docker-compose -f docker-compose-travis.yml up -d
 
-clone-game:
-	@$(shell git clone https://github.com/Open-RSC/Game.git)
+ps:
+	docker-compose -f docker-compose-travis.yml ps
+
+compile:
+	sudo ant -f server/build.xml compile
+	sudo ant -f client/build.xml compile
+	sudo ant -f Launcher/build.xml compile
 
 import-game:
-	@docker exec -i $(shell docker-compose ps -q mysqldb) mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Game/Databases/openrsc_config.sql 2>/dev/null
-	@docker exec -i $(shell docker-compose ps -q mysqldb) mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Game/Databases/openrsc_logs.sql 2>/dev/null
-	@docker exec -i $(shell docker-compose ps -q mysqldb) mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Game/Databases/openrsc.sql 2>/dev/null
-	@docker exec -i $(shell docker-compose ps -q mysqldb) mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Game/Databases/openrsc_tools.sql 2>/dev/null
-
-import-website:
-	@docker exec -i $(shell docker-compose ps -q mysqldb) mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Website/openrsc_forum.sql 2>/dev/null
+	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_config.sql
+	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_logs.sql
+	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc.sql
+	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_tools.sql
