@@ -1,0 +1,17 @@
+version: '3'
+services:
+
+    mysqldb:
+        image: mariadb:10.3.8
+        container_name: mysql
+        restart: always
+        environment:
+            - MYSQL_DATABASE=test
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_USER=dev
+            - MYSQL_PASSWORD=dev
+        ports:
+            - "3306:3306"
+        volumes:
+            - "./data/db/mysql:/var/lib/mysql"
+            - "./etc/mariadb/innodb-fix.cnf:/etc/mysql/conf.d/innodb-fix.cnf"

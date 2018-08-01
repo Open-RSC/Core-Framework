@@ -1,0 +1,4 @@
+[mysqld]
+innodb_flush_method=littlesync
+innodb_use_native_aio=OFF
+log_bin=ON
