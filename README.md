@@ -1,12 +1,8 @@
-# Open RSC core game files
+# Open RSC Core Game [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=master)](https://travis-ci.org/Open-RSC/Game)
 
-[![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=master)](https://travis-ci.org/Open-RSC/Game)
+The game client registers new players upon their first login attempt.
 
-Client registers players at first login.
-
-Forum username: "Marwolf"
-
-Forum password: "malware"
+PHPBB forum username and password: "Marwolf", "malware"
 
 Admin role is group_id = 1, players are group_id = 4.
 
