@@ -1,0 +1,19 @@
+sudo: required
+
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk9
+  - oraclejdk10
+  - openjdk8
+  - openjdk9
+  - openjdk10
+  - openjdk11
+
+before_install:
+  - sudo git clone https://github.com/Open-RSC/Game.git
+  - sudo chmod -R 777 Game
+
+script:
+  - sudo ant -f Game/server/build.xml compile
