@@ -14,9 +14,8 @@ ps:
 	docker-compose -f docker-compose-travis.yml ps
 
 compile:
-	sudo ant -f server/build.xml compile
-	sudo ant -f client/build.xml compile
-	sudo ant -f Launcher/build.xml compile
+	ant -f server/build.xml compile
+	ant -f client/build.xml compile
 
 import-game:
 	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_config.sql

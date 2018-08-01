@@ -1,5 +1,5 @@
 sudo: required
-
+dist: xenial
 language: java
 
 env:
@@ -18,16 +18,12 @@ jdk:
   - openjdk11
 
 before_install:
-  - sudo apt-get install openjfx -y
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - docker-compose -v
   - docker -v
   - sudo service mysql stop
-  - sudo git clone https://github.com/Open-RSC/Game.git
-  - sudo chmod -R 777 Game
-  - cd Game
 
 script:
   - sudo make start
