@@ -1,5 +1,7 @@
 # Open RSC Core Game [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=master)](https://travis-ci.org/Open-RSC/Game)
 
+![Death](https://i.imgur.com/tzLgEwV.png)
+
 The game client registers new players upon their first login attempt.
 
 PHPBB forum username and password: "Marwolf", "malware"
