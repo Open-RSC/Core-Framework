@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.rscdaemon.scripting.Skill;
 import com.runescape.entity.attribute.DropItemAttr;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,7 @@ import org.openrsc.server.logging.model.GenericLog;
 import org.openrsc.server.logging.model.GlobalLog;
 import org.openrsc.server.model.ChatMessage;
 import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.Group;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Item;
 import org.openrsc.server.model.Mob;
@@ -461,7 +463,7 @@ public class CommandHandler implements PacketHandler
                 for(InvItem invItem : inventory)
                     itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
                 
-                owner.sendAlert("@blu@Inventory of " + p.getStaffName() + "%" + StringUtils.join(itemStrings, ", "), true);
+                owner.sendAlert("@blu@Inventory of " + p.getStaffName() + "%@whi@" + StringUtils.join(itemStrings, ", "), true);
             }
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
@@ -489,76 +491,92 @@ public class CommandHandler implements PacketHandler
                     for(InvItem invItem : inventory)
                         itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
 
-                    owner.sendAlert("@blu@Bank of " + p.getStaffName() + "%" + StringUtils.join(itemStrings, ", "), true);
+                    owner.sendAlert("@blu@Bank of " + p.getStaffName() + "%@whi@" + StringUtils.join(itemStrings, ", "), true);
                 }
             }
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
-		else // check a player's group
+		else // check or set a player's group
 		if ((cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("rank")) && owner.isStaff()) 
 		{
-            Player p = args.length > 0 ? 
-                        World.getPlayer(DataConversions.usernameToHash(args[0])) :
-                        owner;
-            
-            if(p != null)
-				owner.sendMessage(p.getStaffName() + " has group ID: " + p.getGroupID());
-            else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
-		} 
-		else // Change a player's privilege level
-		if ((cmd.equalsIgnoreCase("setgroup") || cmd.equalsIgnoreCase("setrank")) && (owner.isAdmin())) 
-		{
-			if (args.length != 2) 
-			{
-				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [group_id]");
-				return;
-			}
+            if(args.length < 1)
+            {
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] OR to set a group");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [group_id/group_name]");
+                return;
+            }
             
             Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
-
-			if (p != null) 
-			{
+            if(p == null)
+            {
+                owner.sendMessage(Config.PREFIX + "Invalid name");
+                return;
+            }
+            if(args.length == 1)
+            {
+                owner.sendMessage(Config.PREFIX + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ")");
+            }
+            else
+            {
+                if(!owner.isAdmin())
+                    return;
+                    
+                int new_group = -1;
+                String groupName;
+                
                 try
                 {
-                    int new_group = Integer.parseInt(args[1]);
-                    // TODO: These IDs should be read from somehwere common with player.isStaff() checks
-                    switch(new_group)
-                    {
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 8:
-                        case 9:
-                        case 10:
-                        case 11:
-                            if(owner.getGroupID() >= new_group || owner.getGroupID() >= p.getGroupID())
-                            {
-                                owner.sendMessage("You do not have permissions to set " + p.getStaffName() + " to group " + new_group);
-                                return;
-                            }
-                            
-                            p.setGroupID(new_group);
-                            p.sendMessage(Config.PREFIX + owner.getStaffName() + " has set your group to " + new_group);
-                            owner.sendMessage(Config.PREFIX + "Set " + p.getStaffName() + " to group " + new_group);
-                            return;
-                        default:
-                            owner.sendMessage("Invalid group_id");
-                            return;
-                    }
+                    new_group = Integer.parseInt(args[1]);
+                    groupName = Group.GROUP_NAMES.get(new_group);
                 }
                 catch(NumberFormatException e)
                 {
-                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
+                    groupName   = "";
+                    for (int i = 1; i < args.length; i++)
+                        groupName += args[i] + " ";
+                    groupName   = groupName.trim();
+                    
+                    for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
+                        if(groupName.equalsIgnoreCase(entry.getValue())){
+                            new_group = entry.getKey();
+                            groupName = entry.getValue();
+                            break;
+                        }
+                    }
+                }
+                
+                if(Group.GROUP_NAMES.get(new_group) == null)
+                {
+                    owner.sendMessage(Config.PREFIX + "Invalid group_id or group_name");
                     return;
                 }
-            }
-			else
-			{
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+
+                if(owner.getGroupID() >= new_group || owner.getGroupID() >= p.getGroupID())
+                {
+                    owner.sendMessage(Config.PREFIX  + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
+                    return;
+                }
+
+                p.setGroupID(new_group);
+                p.sendMessage(Config.PREFIX + owner.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
+                owner.sendMessage(Config.PREFIX + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
                 return;
-			}
+            }
+		} 
+		else // Show player's bank
+		if ((cmd.equalsIgnoreCase("groups") || cmd.equalsIgnoreCase("ranks"))) 
+		{
+            ArrayList<String> groups    = new ArrayList();
+            for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
+                groups.add(Group.getStaffPrefix(entry.getKey()) + entry.getValue() + " (" + entry.getKey() + ")");
+            }
+            
+            owner.sendAlert(
+                "@whi@Server Groups:%" +
+                StringUtils.join(groups, "%"),
+                true
+            );
 		} 
 		else // Kick a player
 		if (cmd.equalsIgnoreCase("kick") && owner.isSuperMod()) 

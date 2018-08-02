@@ -103,7 +103,7 @@ public class Save
 	private ArrayList<Long> friends;
 	private ArrayList<Long> ignores;
 	private String currentIP;
-	private int skillTotal, x, y, kills, deaths, combat, combatStyle, combatWindow, bones, ballsOfWool, bananasInCrate, leverA, leverB, leverC, leverD, leverE, leverF, ladyPatches, poison;
+	private int skillTotal, x, y, kills, deaths, combat, combatStyle, combatWindow, bones, ballsOfWool, bananasInCrate, leverA, leverB, leverC, leverD, leverE, leverF, ladyPatches, poison, groupID;
 	private int fatigue;
 	private long logoutDate;
 	private long deathTime;
@@ -183,6 +183,7 @@ public class Save
 		this.barrel = player.isBarrelFixed();
 		this.pipe = player.isPipeFixed();
 		this.poison = player.getPoison();
+        this.groupID = player.getGroupID();
 		for (long friend : player.getFriendList())
 			this.friends.add(friend);
 		for (long ignore : player.getIgnoreList())
@@ -312,6 +313,7 @@ public class Save
 			.append("', `shaft` = ' " + (shaft ? 1 : 0))
 			.append("', `barrel` = ' " + (barrel ? 1 : 0))
 			.append("', `poison` = ' " + (poison))
+            .append("', `group_id` = ' " + (groupID))
 			.append("' WHERE `user` = '" + usernameHash + "'").toString());
 
 			//RSCD_EXPERIENCE

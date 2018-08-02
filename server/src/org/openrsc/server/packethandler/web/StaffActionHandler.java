@@ -5,6 +5,7 @@ import org.openrsc.server.Config;
 import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.model.GameObject;
+import org.openrsc.server.model.Group;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
@@ -75,7 +76,7 @@ import org.openrsc.server.util.Formulae;
 /*     */         else
 /*  79 */           p.setSubscriptionExpires(p.getSubscriptionExpires() + 60 * minutes);
 /*  80 */         if (!p.isSuperMod())
-/*  81 */           p.updateGroupID(5);
+/*  81 */           p.updateGroupID(Group.SUBSCRIBER);
 /*     */       }
 /*  83 */       sendReply(session, 0);
 /*  84 */       break;

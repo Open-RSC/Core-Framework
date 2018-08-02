@@ -1944,14 +1944,14 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public boolean isSub() {
 		if (DataConversions.getTimeStamp() < subscriptionExpires) {
 			isSub = true;
-            if (groupID == 10)
-                updateGroupID(11);
+            if (groupID == Group.USER)
+                updateGroupID(Group.SUBSCRIBER);
 			return true;
 		} else {
 			if (isSub) {
 				isSub = false;
-				if (groupID == 11)
-					updateGroupID(10);
+				if (groupID == Group.SUBSCRIBER)
+					updateGroupID(Group.USER);
 				sendAlert("Your subscription period has expired.");
 			}
 			return false;
@@ -2008,23 +2008,23 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
     }
     
 	public boolean isAdmin() {
-		return groupID == 1;
+		return groupID == Group.ADMIN;
 	}
     
 	public boolean isSuperMod() {
-		return groupID == 2 || isAdmin();
+		return groupID == Group.SUPER_MOD || isAdmin();
 	}
     
 	public boolean isMod() {
-		return groupID == 3 || isAdmin() || isSuperMod();
+		return groupID == Group.MOD || isAdmin() || isSuperMod();
 	}
 	
 	public boolean isDev() {
-		return groupID == 8 || isAdmin();
+		return groupID == Group.DEV || isAdmin();
 	}	
 	
 	public boolean isEvent() {
-		return groupID == 9 || isAdmin();
+		return groupID == Group.EVENT || isAdmin();
 	}
     
     public boolean isStaff(){
@@ -4363,22 +4363,9 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public void sendTradeAccept() {
 		actionSender.sendTradeAccept();
 	}
-
+    
 	public String getStaffName() {
-		if (isAdmin())
-			return "#adm#@gre@" + getUsername();
-		else if (isDev())
-			return "#dev#@red@" + getUsername();
-		else if (isSuperMod())
-			return "#mod#@blu@" + getUsername();
-		else if (isMod())
-			return "#mod#@yel@" + getUsername();
-		else if (isEvent())
-			return "#eve#@eve@" + getUsername();
-        else if(isSub())
-            return "@or2@" + getUsername();
-		else
-			return "@yel@" + getUsername();
+        return Group.getStaffPrefix(this.getGroupID()) + getUsername();
 	}
 	
 	public void sendAlert(String alert) {

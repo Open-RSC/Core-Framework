@@ -1956,7 +1956,7 @@ public class Raster implements ImageProducer, ImageObserver {
 					else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("sub"))
 						colour = 0xEEDDDD;
 					else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("eve"))
-						colour = 0x4DBD33;
+						colour = 0x4D33BD;
                     offset += 4;
                 } else
                 if (string.charAt(offset) == '~' && offset + 4 < string.length() && string.charAt(offset + 4) == '~') {
@@ -1995,7 +1995,7 @@ public class Raster implements ImageProducer, ImageObserver {
                     offset += 4;
                 } else if (string.charAt(offset) == '#' && offset + 4 < string.length() && string.charAt(offset + 4) == '#' && string.substring(offset + 1, offset + 4).equalsIgnoreCase("eve")) {
 					//spriteClip4(x - 12, y - 16, 30, 20, 2339, 16711680, 0, 0, false);
-					spriteClip4(x - 1, y - 10, 13, 11, 3150, 0x004DBD33, 0, 0, false);
+					spriteClip4(x - 1, y - 10, 13, 11, 3150, 0x4D33BD, 0, 0, false);
                     x += 14;
                     offset += 4;
                 } else {
