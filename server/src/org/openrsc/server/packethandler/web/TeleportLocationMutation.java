@@ -35,7 +35,7 @@ public class TeleportLocationMutation
 				sendReply(session, REPLY_SUCCESS);
 				for(Player player : World.getPlayers())
 				{
-					if(player.isAdmin() || player.isMod() || player.isDev())
+					if(player.isAdmin() || player.isSuperMod() || player.isDev())
 					{
 						player.sendMessage(Config.PREFIX + "A new teleport location has been created: \"" + alias + "\"");
 					}

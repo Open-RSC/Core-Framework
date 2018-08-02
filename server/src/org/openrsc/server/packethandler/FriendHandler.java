@@ -68,7 +68,7 @@ public class FriendHandler
 				player.removeIgnore(friend);
 				break;
 		case 48:
-				boolean avoidBlock = player.isMod();
+				boolean avoidBlock = player.isSuperMod();
 				if ((myFriend == null)
 					|| (!myFriend.loggedIn())
 					|| ((!myFriend.getPrivacySetting(1)) && (((myFriend

@@ -62,21 +62,6 @@ public final class DataConversions {
 			return s;  
 		return number_format(s.substring(0, s.length() - 3)) + "," + s.substring(s.length() - 3, s.length());  
 	}
-	
-	public static String getPlayerHeader(Player player) {
-		switch (player.getGroupID()) {
-		case 1:
-			return "#adm#@yel@";
-		case 2:
-			return "#mod#@whi@";
-		case 3:
-			return "#dev#@red@";
-		case 7:
-			return "@or2@";
-		default:
-			return "@yel@";
-		}
-	}
  
 	public static final ByteBuffer streamToBuffer(BufferedInputStream in) throws IOException {
 		byte[] buffer = new byte[in.available()];

@@ -44,8 +44,6 @@ public abstract class openrsc<Delegate_T extends ImplementationDelegate>
 	
 	private int exitTimeout;
 	
-	public abstract boolean isSubscriber();
-	
 	protected boolean f1;
 	protected boolean controlDown;
 	protected boolean leftArrowKeyDown;

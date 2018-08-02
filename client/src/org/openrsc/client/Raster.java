@@ -1910,17 +1910,17 @@ public class Raster implements ImageProducer, ImageObserver {
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("yel"))
                         colour = 0xffff00;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("gre"))
-                        colour = 65280;
+                        colour = 0x00ff00;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("blu"))
-                        colour = 255;
+                        colour = 0x0000ff;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("cya"))
-                        colour = 65535;
+                        colour = 0x00ffff;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("mag"))
                         colour = 0xff00ff;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("whi"))
                         colour = 0xffffff;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("bla"))
-                        colour = 0;
+                        colour = 0x000000;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("dre"))
                         colour = 0xc00000;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("ora"))
@@ -1939,6 +1939,20 @@ public class Raster implements ImageProducer, ImageObserver {
                         colour = 0x80ff00;
                     else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("gr3"))
                         colour = 0x40ff00;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("bl1"))
+                        colour = 0x4040ff;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("bl2"))
+                        colour = 0x0040ff;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("bl3"))
+                        colour = 0x4000ff;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("dgr"))
+                        colour = 0x00c000;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("dbl"))
+                        colour = 0x0000c0;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("dcy"))
+                        colour = 0x00c0c0;
+                    else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("dor"))
+                        colour = 0xc06020;
 					else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("sub"))
 						colour = 0xEEDDDD;
 					else if (string.substring(offset + 1, offset + 4).equalsIgnoreCase("eve"))
@@ -1966,22 +1980,22 @@ public class Raster implements ImageProducer, ImageObserver {
                 else
                 if (string.charAt(offset) == '#' && offset + 4 < string.length() && string.charAt(offset + 4) == '#' && string.substring(offset + 1, offset + 4).equalsIgnoreCase("adm")) {
                     //spriteClip4(x - 12, y - 16, 30, 20, 2339, -256, 0, 0, false);
-					spriteClip4(x - 1, y - 10, 13, 11, 3150, -256, 0, 0, false);
+					spriteClip4(x - 1, y - 10, 13, 11, 3150, 0x00FF00, 0, 0, false);
 					x += 14;
 					offset += 4;
                 } else if (string.charAt(offset) == '#' && offset + 4 < string.length() && string.charAt(offset + 4) == '#' && string.substring(offset + 1, offset + 4).equalsIgnoreCase("mod")) {
                     //spriteClip4(x - 12, y - 16, 30, 20, 2339, 0, 0, 0, false);
-                    spriteClip4(x - 1, y - 10, 13, 11, 3150, -2302756, 0, 0, false);
+                    spriteClip4(x - 1, y - 10, 13, 11, 3150, 0x0000FF, 0, 0, false);
                     x += 14;
                     offset += 4;
                 } else if (string.charAt(offset) == '#' && offset + 4 < string.length() && string.charAt(offset + 4) == '#' && string.substring(offset + 1, offset + 4).equalsIgnoreCase("dev")) {
 					//spriteClip4(x - 12, y - 16, 30, 20, 2339, 16711680, 0, 0, false);
-					spriteClip4(x - 1, y - 10, 13, 11, 3150, 16711680, 0, 0, false);
+					spriteClip4(x - 1, y - 10, 13, 11, 3150, 0xFF0000, 0, 0, false);
                     x += 14;
                     offset += 4;
                 } else if (string.charAt(offset) == '#' && offset + 4 < string.length() && string.charAt(offset + 4) == '#' && string.substring(offset + 1, offset + 4).equalsIgnoreCase("eve")) {
 					//spriteClip4(x - 12, y - 16, 30, 20, 2339, 16711680, 0, 0, false);
-					spriteClip4(x - 1, y - 10, 13, 11, 3150, 0x4DBD33, 0, 0, false);
+					spriteClip4(x - 1, y - 10, 13, 11, 3150, 0x004DBD33, 0, 0, false);
                     x += 14;
                     offset += 4;
                 } else {

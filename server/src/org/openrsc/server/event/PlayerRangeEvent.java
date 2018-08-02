@@ -57,7 +57,7 @@ public class PlayerRangeEvent extends DelayedEvent {
 							return;															
 						}
                         
-                        if ( target.isInvulnerable() /*affectedPlayer.isMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
+                        if ( target.isInvulnerable() /*affectedPlayer.isSuperMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
                         {
                         	owner.sendMessage(Config.PREFIX + target.getUsername() + " is currently invulnerable!");
                         	owner.resetFollowing();

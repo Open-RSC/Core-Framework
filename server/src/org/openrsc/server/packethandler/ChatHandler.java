@@ -20,7 +20,7 @@ public class ChatHandler implements PacketHandler {
 				sender.sendMessage(Config.PREFIX + "Chat is disabled on tutorial island.");
 				return;
 			}
-			if (!World.muted || sender.isMod()) {
+			if (!World.muted || sender.isSuperMod()) {
 				if (sender.getMuted() == 0) {
 					byte[] data = p.getData();
 					String message = DataConversions.byteToString(data, 0, data.length);

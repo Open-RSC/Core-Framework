@@ -468,7 +468,7 @@ public class Npc extends Mob {
 	private Player findVictim() {
 		for (Player p : World.getZone(this.getX(), this.getY()).getPlayers()) {
 			if (p.withinRange(this, 2)) {
-				if ((p.getCombatLevel() > 2 * super.getCombatLevel() && !getLocation().inWilderness()) ||  p.isInvulnerable() /*p.isMod() || p.isDev()*/ || p.isBusy() || System.currentTimeMillis() - p.getCombatTimer() < 500 || System.currentTimeMillis() - p.getRunTimer() < 3000 || !p.nextTo(this))	
+				if ((p.getCombatLevel() > 2 * super.getCombatLevel() && !getLocation().inWilderness()) ||  p.isInvulnerable() /*p.isSuperMod() || p.isDev()*/ || p.isBusy() || System.currentTimeMillis() - p.getCombatTimer() < 500 || System.currentTimeMillis() - p.getRunTimer() < 3000 || !p.nextTo(this))	
 					continue;
 				if (getID() == 232) {
 					for (Player player : getViewArea().getPlayersInView())

@@ -44,4 +44,88 @@ public final class Mob {
     public long lastMoved = System.currentTimeMillis();
     public boolean isInvisible = false;
     public boolean isInvulnerable = false;
+    
+    public static Mob dummyMob = new Mob();
+    
+	public boolean isSuperMod() {
+		return groupID == 2 || isAdmin();
+	}
+    
+	public boolean isMod() {
+		return groupID == 3 || isAdmin() || isSuperMod();
+	}
+	
+	public boolean isDev() {
+		return groupID == 8 || isAdmin();
+	}	
+	
+	public boolean isEvent()
+	{
+		return groupID == 9 || isAdmin();
+	}
+	
+	public boolean isAdmin() {
+		return groupID == 1;
+	}	
+    
+    public boolean isStaff(){
+        return isMod() || isDev() || isEvent();
+    }
+    
+    public boolean isSubscriber() {
+        return groupID == 11 || isStaff();
+    }
+    
+	public static final String getNameRankSprite(int rank) {
+        dummyMob.groupID = rank;
+        
+        if (dummyMob.isAdmin())
+            return "#adm#";
+        else if (dummyMob.isSuperMod())
+            return "#mod#";
+        else if (dummyMob.isMod())
+            return "#mod#";
+        else if (dummyMob.isDev())
+            return "#dev#";
+        else if (dummyMob.isEvent())
+            return "#eve#";
+        else
+            return "";
+	}
+
+	public static final String getNameRankColour(int rank) {
+        dummyMob.groupID = rank;
+        
+        if (dummyMob.isAdmin())
+            return "@gre@";
+        else if (dummyMob.isSuperMod())
+            return "@blu@";
+        else if (dummyMob.isMod())
+            return "@yel@";
+        else if (dummyMob.isDev())
+            return "@red@";
+        else if (dummyMob.isEvent())
+            return "@eve@";
+        else if (dummyMob.isSubscriber())
+            return "@or2@";
+        else
+            return "@yel@";
+	}
+    
+    public String getStaffName() {
+        if (this.isAdmin())
+            return "#adm#@gre@" + this.name;
+        else if (this.isSuperMod())
+            return "#mod#@blu@" + this.name;
+        else if (this.isSuperMod())
+            return "#mod#@yel@" + this.name;
+        else if (this.isDev())
+            return "#dev#@red@" + this.name;
+        else if (this.isEvent())
+            return "#eve#@eve@" + this.name;
+        else if (this.isSubscriber())
+            return "@or2@" + this.name;
+        else
+            return "@whi@" + this.name;
+    }
 }
