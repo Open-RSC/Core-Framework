@@ -1944,12 +1944,14 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	public boolean isSub() {
 		if (DataConversions.getTimeStamp() < subscriptionExpires) {
 			isSub = true;
+            if (groupID == 10)
+                updateGroupID(11);
 			return true;
 		} else {
 			if (isSub) {
 				isSub = false;
-				if (groupID == 5)
-					updateGroupID(4);
+				if (groupID == 11)
+					updateGroupID(10);
 				sendAlert("Your subscription period has expired.");
 			}
 			return false;
@@ -2005,22 +2007,29 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
         return invisible;
     }
     
-	public boolean isMod() {
+	public boolean isAdmin() {
+		return groupID == 1;
+	}
+    
+	public boolean isSuperMod() {
 		return groupID == 2 || isAdmin();
+	}
+    
+	public boolean isMod() {
+		return groupID == 3 || isAdmin() || isSuperMod();
 	}
 	
 	public boolean isDev() {
-		return groupID == 6 || isAdmin();
+		return groupID == 8 || isAdmin();
 	}	
 	
-	public boolean isEvent()
-	{
-		return groupID == 7 || isAdmin();
+	public boolean isEvent() {
+		return groupID == 9 || isAdmin();
 	}
-	
-	public boolean isAdmin() {
-		return groupID == 1;
-	}	
+    
+    public boolean isStaff(){
+        return isMod() || isDev() || isEvent();
+    }
 	
 	public Inventory getInventory() {
 		return inventory;
@@ -2309,7 +2318,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 					if (this.sleepCount >= 10) {
 						synchronized (World.getPlayers()) {
 							for (Player p : World.getPlayers()) {
-								if (p.isMod()) {
+								if (p.isSuperMod()) {
 									p.sendAlert(getUsername() + " was banned for getting 10 sleep words wrong");
 								}
 							}
@@ -4357,13 +4366,19 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 
 	public String getStaffName() {
 		if (isAdmin())
-			return "@yel@#adm#" + getUsername();
+			return "#adm#@gre@" + getUsername();
 		else if (isDev())
-			return "@red@#dev#" + getUsername();
+			return "#dev#@red@" + getUsername();
+		else if (isSuperMod())
+			return "#mod#@blu@" + getUsername();
 		else if (isMod())
-			return "@whi@#mod#" + getUsername();
+			return "#mod#@yel@" + getUsername();
+		else if (isEvent())
+			return "#eve#@eve@" + getUsername();
+        else if(isSub())
+            return "@or2@" + getUsername();
 		else
-			return getUsername();
+			return "@yel@" + getUsername();
 	}
 	
 	public void sendAlert(String alert) {

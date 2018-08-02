@@ -116,7 +116,7 @@ public class WebClientLoader extends Applet implements Runnable, ImplementationD
 
 	@Override
 	public void onLogin() {
-		if(this.instance.isSubscriber())
+		if(this.instance.ourPlayer.isSubscriber())
 		{
 //			super.setResizable(true);
 			super.setSize(super.getSize().width, super.getSize().height + 15);

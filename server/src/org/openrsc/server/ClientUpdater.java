@@ -87,9 +87,9 @@ public final class ClientUpdater {
 			for (Player recipient : sender.getViewArea().getPlayersInView()) {
 				if (!recipient.loggedIn())
 					continue;
-				if (!recipient.getPrivacySetting(0) && !recipient.isFriendsWith(sender.getUsernameHash()) && !sender.isMod())
+				if (!recipient.getPrivacySetting(0) && !recipient.isFriendsWith(sender.getUsernameHash()) && !sender.isSuperMod())
 					continue;
-				if (recipient.isIgnoring(sender.getUsernameHash()) && !sender.isMod())
+				if (recipient.isIgnoring(sender.getUsernameHash()) && !sender.isSuperMod())
 					continue;
 				recipient.informOfChatMessage(message);
 			}
@@ -132,7 +132,7 @@ public final class ClientUpdater {
 
 			if (curTime - p.getLastPing() > 30000 && !p.destroying()) {
 				p.destroy(false);
-			} else if (p.warnedToMove() && !p.isMod()) {
+			} else if (p.warnedToMove() && !p.isSuperMod()) {
 					if (curTime - p.getLastMoved() >= 60 * 30 * 1000 && p.loggedIn())
 						World.unregisterEntity(p);
 			} else {
@@ -434,7 +434,7 @@ public final class ClientUpdater {
 				updates.addByte(appearance.getSkinColour());
 				updates.addByte((byte)p.getCombatLevel());
 				updates.addByte((byte)(p.isSkulled() ? 1 : 0));
-				updates.addByte((byte)(p.isAdmin() ? 1 :(p.isMod() ? 2 : (p.isDev() ? 6 :  (p.isEvent() ? 7 : (p.isSub() ? 5 : 4))))));
+				updates.addByte((byte) p.getGroupID());
                 /* Non kosher */
                 updates.addByte((byte)(p.isInvisible()?1:0));
                 updates.addByte((byte)(p.isInvulnerable()?1:0));

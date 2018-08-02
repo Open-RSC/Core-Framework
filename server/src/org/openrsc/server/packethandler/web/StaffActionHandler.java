@@ -74,7 +74,7 @@ import org.openrsc.server.util.Formulae;
 /*  77 */           p.setSubscriptionExpires(DataConversions.getTimeStamp() + 60 * minutes);
 /*     */         else
 /*  79 */           p.setSubscriptionExpires(p.getSubscriptionExpires() + 60 * minutes);
-/*  80 */         if (!p.isMod())
+/*  80 */         if (!p.isSuperMod())
 /*  81 */           p.updateGroupID(5);
 /*     */       }
 /*  83 */       sendReply(session, 0);

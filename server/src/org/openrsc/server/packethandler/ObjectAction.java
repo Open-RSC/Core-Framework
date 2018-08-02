@@ -1143,7 +1143,7 @@ public class ObjectAction implements PacketHandler {
 					}
 					
 					private void handlePull() {
-						if (owner.getLocation().inWilderness() && System.currentTimeMillis() - owner.getLastMoved() < 5000 && System.currentTimeMillis() - owner.getCombatTimer() < 5000 && !owner.isMod())
+						if (owner.getLocation().inWilderness() && System.currentTimeMillis() - owner.getLastMoved() < 5000 && System.currentTimeMillis() - owner.getCombatTimer() < 5000 && !owner.isSuperMod())
 							owner.sendMessage("You must stand still for 5 seconds");
 						else {
 							switch (object.getID()) {	
@@ -1287,11 +1287,11 @@ public class ObjectAction implements PacketHandler {
 							owner.sendMessage(Config.PREFIX + "You have reached the IP limit for characters allowed in the wildereness.");
 						else if(!World.getWorldLoader().canPortal(owner))
 							owner.sendMessage(Config.PREFIX + "You must wait 15 seconds to use this portal after dying or logging out.");
-						else if (owner.getLocation().inWilderness() && System.currentTimeMillis() - owner.getLastMoved() < 15000 && !owner.isMod())
+						else if (owner.getLocation().inWilderness() && System.currentTimeMillis() - owner.getLastMoved() < 15000 && !owner.isSuperMod())
 							owner.sendMessage(Config.PREFIX + "You must stand still for 15 seconds before using a wilderness portal");
-						else if (System.currentTimeMillis() - owner.getCombatTimer() < 15000 && owner.getLocation().inWilderness() && !owner.isMod())
+						else if (System.currentTimeMillis() - owner.getCombatTimer() < 15000 && owner.getLocation().inWilderness() && !owner.isSuperMod())
 							owner.sendMessage(Config.PREFIX + "You must be out of combat for 15 seconds before using a wilderness portal");
-						else if (!owner.getLocation().isInDMArena() && owner.canWarp() && !owner.isMod())
+						else if (!owner.getLocation().isInDMArena() && owner.canWarp() && !owner.isSuperMod())
 							owner.sendMessage(Config.PREFIX + "You cannot warp at this time");
 						else {										
 							owner.sendMessage(Config.PREFIX + "Where would you like to teleport?");
@@ -3402,7 +3402,7 @@ public class ObjectAction implements PacketHandler {
 								{
 									// if not a mod and they've moved under 3 seconds or ran under 3 seconds, deny. What about if they're in combat for 3 seconds, then click the ladder?
 									// try.
-									if (!owner.isMod() && (System.currentTimeMillis() - owner.getLastMoved() < 3000 || System.currentTimeMillis() - owner.getRunTimer() < 3000 || owner.inCombat()))
+									if (!owner.isSuperMod() && (System.currentTimeMillis() - owner.getLastMoved() < 3000 || System.currentTimeMillis() - owner.getRunTimer() < 3000 || owner.inCombat()))
 									{
 										owner.sendMessage("You need to be standing still for 3 seconds, and out of combat, in order to climb-down this ladder.");
 										return;

@@ -49,7 +49,7 @@ public class AuctionHouseHandler implements PacketHandler {
 			for (Auction a : world.getAuctionHouse().getAuctions())
 				if (DataConversions.usernameToHash(a.getOwner()) == player.getUsernameHash())
 					totalPersonalAuctions++;
-			if (!player.isMod())
+			if (!player.isSuperMod())
 				if ((player.isSub() && totalPersonalAuctions >= 10)
 						|| (!player.isSub() && totalPersonalAuctions >= 5)) {
 					player.sendMessage("You have exceeded the amount of auctions listed for this account.");
@@ -194,12 +194,12 @@ public class AuctionHouseHandler implements PacketHandler {
 				player.getActionSender().sendMessage("Auction not found.");
 				return;
 			}
-			if (DataConversions.usernameToHash(auction.getOwner()) != player.getUsernameHash() && !player.isMod()) {
+			if (DataConversions.usernameToHash(auction.getOwner()) != player.getUsernameHash() && !player.isSuperMod()) {
 				player.getActionSender().sendMessage("This auction does not belong to you.");
 				return;
 			}
 			boolean modRemoved = DataConversions.usernameToHash(auction.getOwner()) != player.getUsernameHash()
-					&& player.isMod();
+					&& player.isSuperMod();
 			/*
 			 * for(Player p1 : world.getPlayers()) if(p1.isInAuctionHouse())
 			 * p1.getActionSender().removeFromAuctionHouse(auction,

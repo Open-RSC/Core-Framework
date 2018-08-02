@@ -976,7 +976,7 @@ public final class World
             player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're set as busy");
         else if (player.accessingBank())
             player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're banking");
-        else if (player.isMod())
+        else if (player.isSuperMod())
             player.sendMessage(Config.PREFIX + "You cannot enter the lottery on a staff character");
         else if (player.accessingShop())
             player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're in a shop");

@@ -2412,7 +2412,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (currentMenuID == 3200)
 			displayMessage(
                     EntityHandler.getItemDef(actionType).getDescription()
-					+ (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""),
+					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
 					3, 0);
 		if (currentMenuID == 300) {
 			walkToAction(actionX, actionY, actionType, "hi");
@@ -2452,7 +2452,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3300)
 			displayMessage(
-					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""),
+					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
 					3, 0);
 		if (currentMenuID == 400) {
 			walkToObject(actionX, actionY, actionType, actionVariable);
@@ -2490,7 +2490,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3400)
 			displayMessage(
-					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""),
+					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
 					3, 0);
 		if (currentMenuID == 600) {
 			super.streamClass.createPacket(31);
@@ -2554,7 +2554,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			mouseOverMenu = 0;
 		}
 		if (currentMenuID == 3600) {
-			if (ourPlayer.groupID == 1)
+			if (ourPlayer.isDev())
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription() + " ("
 						+ EntityHandler.getItemDef(actionType).id + ")", 3, 0);
 			else
@@ -2607,7 +2607,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3700)
 			displayMessage(EntityHandler.getNpcDef(actionType).getDescription()
-					+ (ourPlayer.groupID == 1 ? " (" + actionType + ")" : ""), 3, 0);
+					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, 0);
 		if (currentMenuID == 800) {
 			int i3 = (actionX - 64) / 128;
 			int i5 = (actionY - 64) / 128;
@@ -3250,11 +3250,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		return model;
 	}
 
-	@Override
-	public final boolean isSubscriber() {
-		return ourPlayer.groupID != 4;
-	}
-
 	public final void resetLoginVars() {
 		loggedIn = 0;
 		delegate.onLogout();
@@ -3640,7 +3635,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					0xffff00);
 			i9 += 13;
 			drawString("@gre@Fatigue: @whi@" + (fatigue * 100 / 750) + "%", 6, i9, 1, 0xffff00);
-			if (ourPlayer.groupID > 0 && ourPlayer.groupID < 4) {
+			if (ourPlayer.isStaff()) {
 				i9 += 13;
 				drawString(
 						"@gre@Coordinates: @blu@X@gre@:@whi@ " + (sectionX + areaX) + "@gre@, " + "@blu@Y@gre@: @whi@" + (sectionY + areaY),
@@ -3966,7 +3961,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							s = "@gr3@";
 						if (k3 > 9)
 							s = "@gre@";
-						if (playerArray[i2].isInvulnerable/*playerArray[i2].groupID != 4 && playerArray[i2].groupID != 7 && playerArray[i2].groupID != 5*/) {
+						if (playerArray[i2].isInvulnerable/*playerArray[i2].isStaff()*/) {
 							s = "@bla@";
 						}
                         s = " " + s + "(level-" + playerArray[i2].level + ")";
@@ -4003,16 +3998,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							} else {
 								if (i > 0 && (playerArray[i2].currentY - 64) / 128 + wildY + areaY < 2203) {
 									menuText1[menuLength] = "Attack";
-									if (playerArray[i2].groupID == 1)
-										menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 2)
-										menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 6)
-										menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 7)
-										menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
-									else
-										menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
+                                    menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
 									if (k3 >= 0 && k3 < 5)
 										menuID[menuLength] = 805;
 									else
@@ -4023,16 +4009,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuLength++;
 								} else {
 									menuText1[menuLength] = "Duel with";
-									if (playerArray[i2].groupID == 1)
-										menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 2)
-										menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 6)
-										menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 7)
-										menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
-									else
-										menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
+                                    menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
 									menuActionX[menuLength] = playerArray[i2].currentX;
 									menuActionY[menuLength] = playerArray[i2].currentY;
 									menuID[menuLength] = 2806;
@@ -4040,66 +4017,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuLength++;
 								}
 								menuText1[menuLength] = "Trade with";
-								if (playerArray[i2].groupID == 1)
-									menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].groupID == 2)
-									menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].groupID == 6)
-									menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].groupID == 7)
-									menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
-								else
-									menuText2[menuLength] = "@whi@" + playerArray[i2].name + "@whi@" + s;
+                                menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
 								menuID[menuLength] = 2810;
 								menuActionType[menuLength] = playerArray[i2].serverIndex;
 								menuLength++;
 
-								/*
-								 * menuText1[menuLength] = "Report abuse"; if
-								 * (playerArray[i2].groupID == 1)
-								 * menuText2[menuLength] = "#adm#@yel@" +
-								 * playerArray[i2].name + "@whi@" + s; else if
-								 * (playerArray[i2].groupID == 2)
-								 * menuText2[menuLength] = "#mod#@whi@" +
-								 * playerArray[i2].name + "@whi@" + s; else if
-								 * (playerArray[i2].groupID == 3)
-								 * menuText2[menuLength] = "#dev#@red@" +
-								 * playerArray[i2].name + "@whi@" + s; else
-								 * menuText2[menuLength] = "@whi@" +
-								 * playerArray[i2].name + "@whi@" + s;
-								 * menuID[menuLength] = 2930; reported =
-								 * playerArray[i2].name; menuLength++;
-								 */
-
 								if ((sectionX + areaX) > 192 && (sectionX + areaX) < 240 && (sectionY + areaY) > 2881
 										&& (sectionY + areaY) < 2927) { // DMARENA
 									menuText1[menuLength] = "Death Match with";
-									if (playerArray[i2].groupID == 1)
-										menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 2)
-										menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 6)
-										menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-									else if (playerArray[i2].groupID == 7)
-										menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
-									else
-										menuText2[menuLength] = "@whi@" + playerArray[i2].name + "@whi@" + s;
+                                    menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
 									menuID[menuLength] = 2815;
 									menuActionType[menuLength] = playerArray[i2].serverIndex;
 									menuLength++;
 								}
 
 								menuText1[menuLength] = "Follow";
-								if (playerArray[i2].groupID == 1)
-									menuText2[menuLength] = "#adm#@yel@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].groupID == 2)
-									menuText2[menuLength] = "#mod#@whi@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].groupID == 6)
-									menuText2[menuLength] = "#dev#@red@" + playerArray[i2].name + "@whi@" + s;
-								else if (playerArray[i2].groupID == 7)
-									menuText2[menuLength] = "#eve#@eve@" + playerArray[i2].name + "@whi@" + s;
-								else
-									menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
+                                menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
 								menuID[menuLength] = 2820;
 								menuActionType[menuLength] = playerArray[i2].serverIndex;
 								menuLength++;
@@ -4370,7 +4303,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				menuActionY[menuLength] = engineHandle.selectedY[l1];
 				menuLength++;
 			}
-			if (ourPlayer.groupID == 1 || ourPlayer.groupID == 2 || ourPlayer.groupID == 6 || ourPlayer.groupID == 7) {
+			if (ourPlayer.isSuperMod() || ourPlayer.isDev() ||ourPlayer.isEvent()) {
 				menuText1[menuLength] = "Teleport here";
 				menuText2[menuLength] = "";
 				menuID[menuLength] = 921;
@@ -6749,46 +6682,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		characterDesignAcceptButton = characterDesignMenu.makeButton(i, j, 200, 30);
 	}
 
-	public static final byte ADM = (byte) 1;
-	public static final byte MOD = (byte) 2;
-	public static final byte SUB = (byte) 5;
-	public static final byte DEV = (byte) 6;
-	public static final byte EVE = (byte) 7;
-
-	public final String getNameRankSprite(int rank) {
-		switch (rank) {
-		case ADM:
-			return "#adm#";
-		case MOD:
-			return "#mod#";
-		case DEV:
-			return "#dev#";
-		case EVE:
-			return "#eve#";
-		default:
-			return "";
-		}
-	}
-
-	public final String getNameRankColour(int rank) {
-		switch (rank) {
-		case ADM:
-			return "@yel@";
-		case MOD:
-			return "@whi@";
-		case DEV:
-			return "@red@";
-		case SUB:
-			return "@or2@";
-		case EVE:
-			return "@eve@";
-		default:
-			return "@yel@";
-		}
-	}
-
 	public final void displayGlobalChat(String mobName, int rank, String message) {
-		String header = getNameRankColour(rank) + getNameRankSprite(rank) + mobName + ":@whi@ ";
+		String header = Mob.getNameRankColour(rank) + Mob.getNameRankSprite(rank) + mobName + ":@whi@ ";
 		message = header + message;
 		if (messagesTab != 0 && messagesTab != 5) {
 			anInt954 = 200;
@@ -6806,8 +6701,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayRegularChat(String mobName, int rank, String message) {
-		String nameColour = getNameRankColour(rank);
-		String nameSprite = getNameRankSprite(rank);
+		String nameColour = Mob.getNameRankColour(rank);
+		String nameSprite = Mob.getNameRankSprite(rank);
 		String header = "";
 		header += nameColour + nameSprite + mobName + ":@yel@ ";
 		message = header + message;
@@ -6893,7 +6788,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayPrivateMessage(long mobUsernameHash, String message, int rank, boolean sent) {
-		String user = (rank == SUB || rank == 4 ? "" : getNameRankSprite(rank))
+		String user = Mob.getNameRankSprite(rank)
 				+ DataConversions.hashToUsername(mobUsernameHash) + "@cya@";
 		message = "@cya@" + (sent ? "You tell " + user + ": " : user + " tells you: ") + message;
 		if (messagesTab != 0) {
@@ -6926,28 +6821,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				message = header + message.substring(5);
 			}
 		}
-		String nameColour = "@yel@";
+		String nameColour = Mob.getNameRankColour(mobRank);
+        message = Mob.getNameRankSprite(mobRank) + message;
 
-		switch (mobRank) {
-		case ADM:
-			message = "#adm#" + message;
-			break;
-		case MOD:
-			message = "#mod#" + message;
-			nameColour = "@whi@";
-			break;
-		case DEV:
-			message = "#dev#" + message;
-			nameColour = "@red@";
-			break;
-		case EVE:
-			message = "#eve#" + message;
-			nameColour = "@eve@";
-			break;
-		case SUB:
-			nameColour = "@or2@";
-		default:
-		}
 		switch (type) {
 		case 5:
 			message = "@whi@" + message;
@@ -8265,7 +8141,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
                     mob.isInvisible = (data[mobUpdateOffset++] & 0xff) == 1 ? true : false;
                     mob.isInvulnerable = (data[mobUpdateOffset++] & 0xff) == 1 ? true : false;
 					if (mob == ourPlayer) {
-						if (init || ourPlayer.groupID != old && ourPlayer.groupID != 4) {
+						if (init || ourPlayer.groupID != old && ourPlayer.isStaff()) {
 							init = false;
 							delegate.onLogin();
 						}
@@ -8468,7 +8344,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			} else if (command == 222) {
 				int old = ourPlayer.groupID;
 				ourPlayer.groupID = DataOperations.getUnsignedByte(data[1]);
-				if (old != ourPlayer.groupID && ourPlayer.groupID != 4) {
+				if (old != ourPlayer.groupID && ourPlayer.isStaff()) {
 					delegate.onLogin();
 				}
 			} else if (command == 3) {
@@ -8496,7 +8372,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			} else if (command == 27) {
 				hgopu.update(command, length, data);
 			} else if (command == 49) {
-				displayMessage("Please tell Pyru (command 49): " + DataOperations.readInt(data, 1), 3, 0);
+				displayMessage("Please tell Kenix/Marwolf (command 49): " + DataOperations.readInt(data, 1), 3, 0);
 			} else if (command == 114) {
 				int invOffset = 1;
 				inventoryCount = data[invOffset++] & 0xff;
