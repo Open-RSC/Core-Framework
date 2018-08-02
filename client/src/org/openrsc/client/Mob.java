@@ -117,7 +117,7 @@ public final class Mob {
             return "#adm#@gre@" + this.name;
         else if (this.isSuperMod())
             return "#mod#@blu@" + this.name;
-        else if (this.isSuperMod())
+        else if (this.isMod())
             return "#mod#@yel@" + this.name;
         else if (this.isDev())
             return "#dev#@red@" + this.name;
