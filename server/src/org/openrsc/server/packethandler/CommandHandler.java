@@ -496,7 +496,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		} 
 		else // check a player's group
-		if ((cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("permissions")) && owner.isStaff()) 
+		if ((cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("rank")) && owner.isStaff()) 
 		{
             Player p = args.length > 0 ? 
                         World.getPlayer(DataConversions.usernameToHash(args[0])) :
@@ -506,6 +506,59 @@ public class CommandHandler implements PacketHandler
 				owner.sendMessage(p.getStaffName() + " has group ID: " + p.getGroupID());
             else
                 owner.sendMessage(Config.PREFIX + "Invalid name");
+		} 
+		else // Change a player's privilege level
+		if ((cmd.equalsIgnoreCase("setgroup") || cmd.equalsIgnoreCase("setrank")) && (owner.isAdmin())) 
+		{
+			if (args.length != 2) 
+			{
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [group_id]");
+				return;
+			}
+            
+            Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if (p != null) 
+			{
+                try
+                {
+                    int new_group = Integer.parseInt(args[1]);
+                    // TODO: These IDs should be read from somehwere common with player.isStaff() checks
+                    switch(new_group)
+                    {
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 8:
+                        case 9:
+                        case 10:
+                        case 11:
+                            if(owner.getGroupID() >= new_group || owner.getGroupID() >= p.getGroupID())
+                            {
+                                owner.sendMessage("You do not have permissions to set " + p.getStaffName() + " to group " + new_group);
+                                return;
+                            }
+                            
+                            p.setGroupID(new_group);
+                            p.sendMessage(Config.PREFIX + owner.getStaffName() + " has set your group to " + new_group);
+                            owner.sendMessage(Config.PREFIX + "Set " + p.getStaffName() + " to group " + new_group);
+                            return;
+                        default:
+                            owner.sendMessage("Invalid group_id");
+                            return;
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+                    owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
+                    return;
+                }
+            }
+			else
+			{
+				owner.sendMessage(Config.PREFIX + "Invalid name");
+                return;
+			}
 		} 
 		else // Kick a player
 		if (cmd.equalsIgnoreCase("kick") && owner.isSuperMod()) 
