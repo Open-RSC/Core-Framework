@@ -771,6 +771,7 @@ public class CommandHandler implements PacketHandler
                     owner.resetLevers();
                     owner.setReturnPoint();
 					owner.teleport(EntityHandler.getTeleportManager().getTeleport(args[0]), false);
+                    owner.sendMessage(Config.PREFIX + "You have teleported to " + owner.getLocation());
                     Logger.log(new GenericLog(owner.getUsername() + " has teleported to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
 				}
 			} 
@@ -783,7 +784,7 @@ public class CommandHandler implements PacketHandler
                         owner.resetLevers();
                         owner.setReturnPoint();
                         owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
-                        owner.sendMessage(Config.PREFIX + "Teleported to (" + owner.getX() + ", " + owner.getY() + ")");
+                        owner.sendMessage(Config.PREFIX + "You have teleported to " + owner.getLocation());
                         Logger.log(new GenericLog(owner.getUsername() + " has teleported to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
                     }
 				}
@@ -1034,6 +1035,7 @@ public class CommandHandler implements PacketHandler
             {
                 owner.setReturnPoint();
                 owner.teleport(p.getX(), p.getY(), false);
+                owner.sendMessage(Config.PREFIX + "You have teleported to " + owner.getLocation());
                 Logger.log(new GenericLog(owner.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
             }
  			else
@@ -1178,7 +1180,7 @@ public class CommandHandler implements PacketHandler
                     {
                         try {
                             World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + owner.getX() + "' AND `y` = '" + owner.getY() + "'");
-                            owner.sendMessage(Config.PREFIX + "Object '" + o.getGameObjectDef().getName() + "(" + owner.getLocation() + ")' removed from database");
+                            owner.sendMessage(Config.PREFIX + "Object '" + o.getGameObjectDef().getName() + " (" + owner.getLocation() + ")' removed from database");
                             Logger.log(new GenericLog(owner.getUsername() + " remvoed object from database. name: " + o.getGameObjectDef().getName() + ", id: " + o.getID() + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
                         } catch (SQLException e) {
                             // TODO Auto-generated catch block

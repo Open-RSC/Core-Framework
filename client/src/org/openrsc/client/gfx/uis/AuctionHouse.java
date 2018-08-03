@@ -560,7 +560,7 @@ public class AuctionHouse extends GraphicalOverlay {
 			@Override
 			public void action(int x, int y, int button) {
 				// SORT ITEMS
-				mc.displayMessage("TODO: Sort items", 3, 0);
+				mc.displayMessage("TODO: Sort items", 3, -1);
 			}
 		});
 		frame.add(view.sortBy);

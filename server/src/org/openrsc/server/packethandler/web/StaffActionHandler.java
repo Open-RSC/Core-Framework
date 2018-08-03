@@ -75,8 +75,7 @@ import org.openrsc.server.util.Formulae;
 /*  77 */           p.setSubscriptionExpires(DataConversions.getTimeStamp() + 60 * minutes);
 /*     */         else
 /*  79 */           p.setSubscriptionExpires(p.getSubscriptionExpires() + 60 * minutes);
-/*  80 */         if (!p.isSuperMod())
-/*  81 */           p.updateGroupID(Group.SUBSCRIBER);
+/*  81 */         p.setGroupID(Group.SUBSCRIBER);
 /*     */       }
 /*  83 */       sendReply(session, 0);
 /*  84 */       break;
@@ -180,7 +179,6 @@ import org.openrsc.server.util.Formulae;
 /*     */       }
 /* 209 */       int groupID = packet.readInt();
 /* 210 */       p.setGroupID(groupID);
-/* 211 */       p.updateGroupID(groupID);
 /* 212 */       sendReply(session, 0);
 /*     */ 
 /* 214 */       break;
