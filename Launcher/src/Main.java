@@ -57,8 +57,9 @@ public class Main extends Application {
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
-    private static String URL = "http://localhost";
-    private static String Tomcat = URL+":8082";
+    private static String Secure = "https://";
+    private static String Domain = "localhost";
+    private static String Tomcat = "http://"+Domain+":8080";
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";
@@ -73,15 +74,9 @@ class Browser extends Region {
     };
     private static String[] captions = new String[]{
         "News"
-        //"Board",
-        //"Game Chat",
-        //"World Map"
     };
     private static String[] urls = new String[]{
-        URL
-        //URL + "/board/index.php",
-        //URL + "/launcherchat.php",
-        //URL + "/worldmap.php"
+        Secure+Domain
     };
     final ImageView selectedImage = new ImageView();
     final Hyperlink[] hpls = new Hyperlink[captions.length];
@@ -133,7 +128,7 @@ class Browser extends Region {
             }           
         });
         
-        webEngine.load(URL);
+        webEngine.load(Secure+Domain);
         getChildren().add(toolBar);
         getChildren().add(browser);
     }
