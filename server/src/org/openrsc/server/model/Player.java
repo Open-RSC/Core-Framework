@@ -2610,8 +2610,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	
 	public void setSkulledOn(Player player) {
 		player.addAttackedBy(this);
-		if (System.currentTimeMillis() - lastAttackedBy(player) > 1200000)
-			addSkull(1200000);
+        /*if (System.currentTimeMillis() - lastAttackedBy(player) > 1200000)
+			addSkull(1200000);*/
+		if (!wasAttackedBy(player))
+			addSkull();
 	}
 	
 	public long getSubscriptionExpires() {
@@ -3412,7 +3414,8 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public void addAttackedBy(Player p) {
-		attackedBy.put(p.getUsernameHash(), System.currentTimeMillis());
+        if(!p.wasAttackedBy(this))
+            attackedBy.put(p.getUsernameHash(), System.currentTimeMillis());
 	}
 	
 	public long lastAttackedBy(Player p) {
@@ -3421,6 +3424,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			return time;
 		return 0;
 	}
+    
+    public boolean wasAttackedBy(Player p) {
+		return attackedBy.get(p.getUsernameHash()) != null;
+    }
 	
 	public boolean checkAttack(Mob mob, boolean missile) {
 		if (mob instanceof Player) {
@@ -3647,6 +3654,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			return skullEvent.timeTillNextRun();
 		return 0;
 	}
+    
+    public void addSkull() {
+        addSkull(1200000);
+    }
 	
 	public void addSkull(long timeLeft) {
 		if (!isSkulled()) {
