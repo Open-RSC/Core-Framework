@@ -314,10 +314,20 @@ public class CommandHandler implements PacketHandler
             Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
             if (p != null)
             {
-                p.addSkull(1200000);
-                p.sendMessage(Config.PREFIX + "You have been healed by an admin");
-                owner.sendMessage(Config.PREFIX + "Skulled: " + p.getUsername());
-                Logger.log(new GenericLog(owner.getUsername() + " skulled " + p.getUsername(), DataConversions.getTimeStamp()));
+                String skullMessage;
+                if(p.isSkulled())
+                {
+                    p.removeSkull();
+                    skullMessage = "removed";
+                }
+                else
+                {
+                    p.addSkull(1200000);
+                    skullMessage = "added";
+                }
+                p.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + " by an admin");
+                owner.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + " to " + p.getUsername());
+                Logger.log(new GenericLog(owner.getUsername() + skullMessage + " skull to " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
             {
