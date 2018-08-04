@@ -4381,7 +4381,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
     }
 	
 	public void sendGraciousAlert(final String alert, boolean big) {
-		if (/*getLocation().inWilderness() ||*/ isDueling || isDMing || isTrading || accessingBank() || accessingShop()) {
+		if (/*getLocation().inWilderness() ||*/ isFighting() || isDueling || isDMing || isTrading || accessingBank() || accessingShop()) {
 			World.getDelayedEventHandler().add(new SingleEvent(null, 1000) {
 				public void action() {
 					sendGraciousAlert(alert);
