@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.2
+-- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
--- Host: mysql
--- Generation Time: Jul 08, 2018 at 02:09 AM
--- Server version: 5.7.22
--- PHP Version: 7.2.6
+-- Host: 127.0.0.1:3306
+-- Generation Time: Aug 04, 2018 at 09:07 PM
+-- Server version: 5.7.21
+-- PHP Version: 5.6.35
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -480,29 +480,30 @@ CREATE TABLE IF NOT EXISTS `def_agility` (
 --
 
 INSERT INTO `def_agility` (`course_id`, `object_id`, `level`, `experience`, `success_x`, `success_y`, `fail_x`, `fail_y`, `damage_rate`, `attempt_message`, `level_not_high_enough_message`, `Description`) VALUES
-(0, 655, 1, 1, 692, 500, -1, -1, 0, 'You stand on the slippery log', '', 'Gnome Stronghold Slippery Log'),
-(0, 647, 1, 8, 692, 1448, -1, -1, 0, 'You climb the net', '', 'gnome net 1'),
-(0, 648, 1, 7, 692, 2395, -1, -1, 0, 'You pull yourself up the tree', '', 'Gnome tower 1'),
-(0, 650, 1, 8, 685, 2396, -1, -1, 0, 'You reach out and grab the rope swing', '', 'Gnome rope 1'),
-(0, 649, 1, 7, 683, 504, -1, -1, 0, 'You hang down from the tower', '', 'fall down gnome agility'),
-(0, 653, 1, 8, 683, 501, -1, -1, 0, 'you take a few steps back', '', 'climb net gnome agility'),
-(0, 654, 1, 8, 683, 494, -1, -1, 0, 'You squeeze into the pipe', '', ''),
-(2, 705, 52, 13, 294, 112, -1, -1, 0, 'You squeeze through the pipe', '', 'Wilderness Agility Course Pipe'),
-(2, 706, 52, 25, 292, 108, 292, 2941, 16, 'You grab the rope and try to swing across', '', 'Wilderness Agility Course Rope Swing'),
-(2, 707, 52, 20, 297, 106, 292, 104, 21, 'You stand on the stepping stones', '', 'Wilderness Agility Course Stepping Stones'),
-(2, 708, 52, 20, 301, 112, 298, 2945, 17, 'You stand on the ledge', '', 'Wilderness Agility Course Ledge'),
-(2, 709, 52, 20, 304, 120, -1, -1, 0, 'You climb up the cliff', '', 'Wilderness Agility Course Vines'),
-(1, 675, 35, 20, 486, 559, 486, 3389, 12, 'You grab the rope and try and swing across', '', ''),
-(1, 677, 35, 12, 496, 1507, -1, -1, 12, 'You climb up the netting', '', ''),
-(1, 678, 35, 20, 501, 1506, 499, 563, 12, 'You put your foot on the ledge and try to edge across', '', ''),
-(1, 163, 35, 5, -1, -1, -1, -1, 0, 'You jump over the wall', '', ''),
-(1, 164, 35, 5, -1, -1, -1, -1, 0, 'You jump over the wall', '', ''),
-(-1, 679, 35, 5, 496, 555, -1, -1, 0, 'You climb up the wall', '', ''),
-(1, 676, 35, 0, 492, 563, 489, 560, 12, 'You stand on the slippery log', '', 'Barbarian Agility Course Log'),
-(-1, 672, 35, 5, 487, 551, -1, -1, 0, 'You squeeze through the pipe', '', ''),
-(-1, 671, 35, 5, 487, 554, -1, -1, 0, 'You squeeze through the pipe', '', ''),
-(-1, 703, 52, 15, 298, 125, 300, 130, 0, '', '', ''),
-(-1, 704, 52, 15, 298, 134, 301, 130, 0, '', '', '');
+(0, 655, 1, 30, 692, 500, -1, -1, 0, 'You stand on the slippery log', '', 'Gnome Stronghold Slippery Log'),
+(0, 647, 1, 30, 692, 1448, -1, -1, 0, 'You climb the net', '', 'gnome net 1'),
+(0, 648, 1, 30, 692, 2395, -1, -1, 0, 'You pull yourself up the tree', '', 'Gnome tower 1'),
+(0, 650, 1, 30, 685, 2396, -1, -1, 0, 'You reach out and grab the rope swing', '', 'Gnome rope 1'),
+(0, 649, 1, 30, 683, 504, -1, -1, 0, 'You hang down from the tower', '', 'fall down gnome agility'),
+(0, 653, 1, 30, 683, 501, -1, -1, 0, 'you take a few steps back', '', 'climb net gnome agility'),
+(0, 654, 1, 30, 683, 494, -1, -1, 0, 'You squeeze into the pipe', '', ''),
+(2, 705, 52, 50, 294, 112, -1, -1, 0, 'You squeeze through the pipe', '', 'Wilderness Agility Course Pipe'),
+(2, 706, 52, 100, 292, 108, 292, 2941, 16, 'You grab the rope and try to swing across', '', 'Wilderness Agility Course Rope Swing'),
+(2, 707, 52, 80, 297, 106, 292, 104, 21, 'You stand on the stepping stones', '', 'Wilderness Agility Course Stepping Stones'),
+(2, 708, 52, 80, 301, 112, 298, 2945, 17, 'You stand on the ledge', '', 'Wilderness Agility Course Ledge'),
+(2, 709, 52, 80, 304, 120, -1, -1, 0, 'You climb up the cliff', '', 'Wilderness Agility Course Vines'),
+(1, 675, 35, 80, 486, 559, 486, 3389, 12, 'You grab the rope and try and swing across', '', ''),
+(1, 677, 35, 50, 496, 1507, -1, -1, 12, 'You climb up the netting', '', ''),
+(1, 678, 35, 80, 501, 1506, 499, 563, 12, 'You put your foot on the ledge and try to edge across', '', ''),
+(1, 163, 35, 20, -1, -1, -1, -1, 0, 'You jump over the wall', '', ''),
+(1, 164, 35, 20, -1, -1, -1, -1, 0, 'You jump over the wall', '', ''),
+(-1, 679, 35, 20, 497, 555, -1, -1, 0, 'You climb up the wall', '', ''),
+(-1, 679, 35, 20, 496, 555, -1, -1, 0, 'You climb up the wall', '', ''),
+(1, 676, 35, 50, 492, 563, 489, 560, 12, 'You stand on the slippery log', '', 'Barbarian Agility Course Log'),
+(-1, 672, 35, 20, 487, 551, -1, -1, 0, 'You squeeze through the pipe', '', ''),
+(-1, 671, 35, 20, 487, 554, -1, -1, 0, 'You squeeze through the pipe', '', ''),
+(-1, 703, 52, 90, 298, 125, 300, 130, 0, 'You go through the gate and try to edge over the ridge', '', ''),
+(-1, 704, 52, 90, 298, 134, 301, 130, 0, 'You go through the gate and try to edge over the ridge', '', '');
 
 -- --------------------------------------------------------
 
@@ -521,9 +522,9 @@ CREATE TABLE IF NOT EXISTS `def_agility_course` (
 --
 
 INSERT INTO `def_agility_course` (`course_id`, `experience`) VALUES
-(1, 200),
-(0, 100),
-(2, 375),
+(1, 300),
+(0, 150),
+(2, 1500),
 (-1, 0);
 
 -- --------------------------------------------------------
@@ -547,12 +548,12 @@ CREATE TABLE IF NOT EXISTS `def_arrow_head` (
 --
 
 INSERT INTO `def_arrow_head` (`arrowhead_id`, `arrow_id`, `level`, `experience`, `id`) VALUES
-(669, 11, 1, 1.0, 1),
-(670, 638, 15, 2.0, 2),
-(671, 640, 30, 4.5, 3),
-(672, 642, 45, 7.0, 4),
-(673, 644, 60, 9.5, 5),
-(674, 646, 75, 12.0, 6);
+(669, 11, 5, 5.0, 1),
+(670, 638, 20, 10.0, 2),
+(671, 640, 35, 15.0, 3),
+(672, 642, 55, 20.0, 4),
+(673, 644, 75, 25.0, 5),
+(674, 646, 90, 30.0, 6);
 
 -- --------------------------------------------------------
 
@@ -568,7 +569,7 @@ CREATE TABLE IF NOT EXISTS `def_cert` (
   `item_id` int(5) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=84 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_cert`
@@ -685,11 +686,23 @@ CREATE TABLE IF NOT EXISTS `def_chest` (
 --
 
 INSERT INTO `def_chest` (`chest_id`, `level`, `experience`, `lockpick_required`, `respawn`, `teleport_x`, `teleport_y`) VALUES
-(340, 40, 250, 0, 15000, 612, 569),
-(334, 40, 10, 0, 30000, -1, -1),
+(333, 72, 2000, 0, 500000, -1, -1),
+(334, 13, 30, 0, 10000, -1, -1),
+(335, 28, 100, 0, 25000, -1, -1),
+(336, 43, 500, 0, 100000, -1, -1),
 (337, 50, 12, 0, 120000, -1, -1),
-(336, 30, 13, 0, 120000, -1, -1),
-(333, 72, 39, 0, 300000, -1, -1),
+(338, 72, 2000, 0, 500000, 537, 605),
+(340, 59, 1000, 0, 250000, 612, 569),
+(379, 47, 600, 1, 150000, -1, -1),
+(1197, 75, 23, 0, 150000, 537, 605),
+(333, 72, 2000, 0, 500000, -1, -1),
+(334, 13, 30, 0, 10000, -1, -1),
+(335, 28, 100, 0, 25000, -1, -1),
+(336, 43, 500, 0, 100000, -1, -1),
+(337, 50, 12, 0, 120000, -1, -1),
+(338, 72, 2000, 0, 500000, 537, 605),
+(340, 59, 1000, 0, 250000, 612, 569),
+(379, 47, 600, 1, 150000, -1, -1),
 (1197, 75, 23, 0, 150000, 537, 605);
 
 -- --------------------------------------------------------
@@ -705,17 +718,15 @@ CREATE TABLE IF NOT EXISTS `def_chest_loot` (
   `item_id` int(4) NOT NULL,
   `item_amount` int(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_chest_loot`
 --
 
 INSERT INTO `def_chest_loot` (`id`, `chest_id`, `item_id`, `item_amount`) VALUES
-(1, 340, 10, 50),
 (2, 340, 619, 2),
-(3, 334, 40, 2),
-(4, 334, 10, 40),
+(4, 334, 10, 10),
 (5, 337, 671, 40),
 (6, 337, 10, 50),
 (7, 336, 10, 50),
@@ -724,7 +735,15 @@ INSERT INTO `def_chest_loot` (`id`, `chest_id`, `item_id`, `item_amount`) VALUES
 (10, 333, 160, 1),
 (11, 333, 10, 100),
 (12, 1197, 38, 2),
-(13, 1197, 10, 50);
+(13, 1197, 10, 50),
+(14, 335, 10, 3),
+(15, 335, 40, 1),
+(16, 379, 10, 20),
+(17, 379, 671, 5),
+(18, 338, 545, 1),
+(19, 338, 154, 1),
+(20, 338, 160, 1),
+(21, 338, 10, 1000);
 
 -- --------------------------------------------------------
 
@@ -748,34 +767,34 @@ CREATE TABLE IF NOT EXISTS `def_cooking` (
 --
 
 INSERT INTO `def_cooking` (`raw_id`, `cooked_id`, `burned_id`, `experience`, `level`, `id`) VALUES
-(133, 132, 134, 30, 1, 1),
-(502, 132, 134, 30, 1, 2),
-(503, 132, 134, 30, 1, 3),
-(504, 132, 134, 30, 1, 4),
-(349, 350, 353, 30, 1, 5),
-(137, 138, 139, 40, 1, 6),
-(354, 355, 360, 40, 1, 7),
-(361, 362, 365, 50, 5, 8),
-(256, 258, 260, 60, 10, 9),
-(351, 352, 353, 30, 15, 10),
-(552, 553, 365, 60, 1, 11),
-(358, 359, 360, 70, 15, 12),
-(550, 551, 365, 75, 1, 13),
-(255, 259, 260, 80, 20, 14),
-(363, 364, 365, 80, 20, 15),
-(345, 346, 347, 90, 25, 16),
-(356, 357, 360, 90, 25, 17),
-(254, 257, 260, 100, 30, 18),
-(366, 367, 368, 100, 30, 19),
-(324, 325, 322, 110, 35, 20),
-(339, 330, 331, 120, 40, 21),
-(372, 373, 374, 120, 40, 22),
-(369, 370, 371, 140, 45, 23),
-(554, 555, 368, 130, 42, 24),
-(545, 546, 547, 210, 80, 25),
-(1192, 1193, 1248, 275, 85, 26),
-(708, 709, 710, 125, 60, 27),
-(1190, 1191, 1247, 216, 91, 28);
+(133, 132, 134, 160, 1, 1),
+(502, 132, 134, 160, 1, 2),
+(503, 132, 134, 160, 1, 3),
+(504, 132, 134, 160, 1, 4),
+(349, 350, 353, 120, 1, 5),
+(137, 138, 139, 160, 1, 6),
+(354, 355, 360, 160, 1, 7),
+(361, 362, 365, 200, 5, 8),
+(256, 258, 260, 240, 10, 9),
+(351, 352, 353, 120, 1, 10),
+(552, 553, 365, 200, 10, 11),
+(358, 359, 360, 280, 15, 12),
+(550, 551, 365, 300, 18, 13),
+(255, 259, 260, 320, 20, 14),
+(363, 364, 365, 320, 20, 15),
+(345, 346, 347, 360, 25, 16),
+(356, 357, 360, 360, 25, 17),
+(254, 257, 260, 400, 30, 18),
+(366, 367, 368, 400, 30, 19),
+(324, 325, 322, 440, 35, 20),
+(339, 330, 331, 480, 40, 21),
+(372, 373, 374, 480, 40, 22),
+(369, 370, 371, 560, 45, 23),
+(554, 555, 368, 520, 43, 24),
+(545, 546, 547, 840, 80, 25),
+(1192, 1193, 1248, 846, 82, 26),
+(708, 709, 710, 500, 60, 27),
+(1190, 1191, 1247, 864, 91, 28);
 
 -- --------------------------------------------------------
 
@@ -797,24 +816,24 @@ CREATE TABLE IF NOT EXISTS `def_crafting` (
 --
 
 INSERT INTO `def_crafting` (`level`, `item_id`, `experience`, `id`) VALUES
-(5, 283, 15, 1),
-(6, 288, 20, 2),
-(8, 296, 30, 3),
-(8, 284, 40, 4),
-(10, 289, 55, 5),
-(13, 297, 65, 6),
-(18, 285, 55, 7),
-(24, 290, 60, 8),
-(30, 298, 70, 9),
-(30, 286, 70, 10),
-(40, 291, 75, 11),
-(50, 299, 85, 12),
-(42, 287, 85, 13),
-(56, 292, 90, 14),
-(70, 300, 100, 15),
-(55, 543, 100, 16),
-(72, 544, 105, 17),
-(80, 524, 150, 18);
+(5, 283, 60, 1),
+(6, 288, 80, 2),
+(8, 296, 120, 3),
+(8, 284, 160, 4),
+(10, 289, 220, 5),
+(13, 297, 260, 6),
+(18, 285, 220, 7),
+(24, 290, 240, 8),
+(30, 298, 280, 9),
+(30, 286, 280, 10),
+(40, 291, 300, 11),
+(50, 299, 340, 12),
+(42, 287, 340, 13),
+(56, 292, 360, 14),
+(70, 300, 400, 15),
+(55, 543, 400, 16),
+(72, 544, 420, 17),
+(80, 524, 600, 18);
 
 -- --------------------------------------------------------
 
@@ -872,12 +891,12 @@ CREATE TABLE IF NOT EXISTS `def_dart_tip` (
 --
 
 INSERT INTO `def_dart_tip` (`tip_id`, `dart_id`, `experience`, `level`, `id`) VALUES
-(1062, 1013, 1.0, 1, 1),
-(1063, 1015, 2.0, 15, 2),
-(1064, 1024, 4.5, 30, 3),
-(1065, 1068, 7.0, 45, 4),
-(1066, 1069, 9.5, 60, 5),
-(1067, 1070, 12.0, 75, 6);
+(1062, 1013, 50.0, 4, 1),
+(1063, 1015, 100.0, 19, 2),
+(1064, 1024, 150.0, 34, 3),
+(1065, 1068, 200.0, 54, 4),
+(1066, 1069, 250.0, 74, 5),
+(1067, 1070, 300.0, 89, 6);
 
 -- --------------------------------------------------------
 
@@ -3871,114 +3890,116 @@ CREATE TABLE IF NOT EXISTS `def_edible_heals` (
 --
 
 INSERT INTO `def_edible_heals` (`food_id`, `heals`, `replacement`, `eat_message`, `heal_message`, `id`) VALUES
-(551, 7, -1, 'You eat the %item%', 'It heals some health', 1),
-(1102, 19, -1, 'You eat the %item%', 'It heals some health', 2),
-(1103, 8, -1, 'You eat the %item%', 'It heals some health', 3),
-(546, 20, -1, 'You eat the %item%', 'It heals some health', 4),
-(555, 13, -1, 'You eat the %item%', 'It heals some health', 5),
-(553, 6, -1, 'You eat the %item%', 'It heals some health', 6),
+(18, 1, -1, 'You eat the %item%. Yuck!', 'It heals some health anyway', 10),
+(132, 3, -1, 'You eat the %item%', 'It heals some health', 75),
+(138, 4, -1, 'You eat the %item%', 'It heals some health', 64),
+(179, 2, -1, 'You eat the %item%', 'It heals some health', 96),
+(210, 2, -1, 'You eat the %item%', 'It heals some health', 107),
+(228, 1, -1, 'You eat the %item%', 'It heals some health', 111),
+(249, 2, -1, 'You eat the %item%', 'It heals some health', 113),
+(257, 5, 263, 'You eat the %item%', 'It heals some health', 9),
 (258, 3, 262, 'You eat the %item%', 'It heals some health', 7),
 (259, 4, 261, 'You eat the %item%', 'It heals some health', 8),
-(257, 5, 263, 'You eat the %item%', 'It heals some health', 9),
-(18, 1, -1, 'You eat the %item%. Yuck!', 'It heals some health anyway', 10),
+(261, 4, 251, 'You eat the %item%', 'It heals some health', 14),
 (262, 3, 251, 'You eat the %item%', 'It heals some health', 11),
 (263, 5, 251, 'You eat the %item%', 'It heals some health', 12),
-(801, -2, -1, 'You eat the %item%', 'It heals some health', 13),
-(261, 4, 251, 'You eat the %item%', 'It heals some health', 14),
 (319, 2, -1, 'You eat the %item%', 'It heals some health', 15),
-(885, 0, -1, 'You eat the %item%', 'It heals some health', 16),
-(337, 2, -1, 'You eat the %item%', 'It heals some health', 17),
-(336, 5, -1, 'You eat the %item%', 'It heals some health', 18),
-(350, 3, -1, 'You eat the %item%', 'It heals some health', 19),
-(346, 9, -1, 'You eat the %item%', 'It heals some health', 21),
-(326, 7, 328, 'You eat the %item%', 'It heals some health', 23),
-(864, 1, -1, 'You eat the %item%', 'It heals some health', 24),
-(327, 8, 329, 'You eat the %item%', 'It heals some health', 26),
-(865, 1, -1, 'You eat the %item%', 'It heals some health', 27),
-(325, 10, -1, 'You eat the %item%', 'It heals some health', 28),
 (320, 2, -1, 'You eat the %item%', 'It heals some health', 30),
-(871, 0, -1, 'You eat the %item%', 'It heals some health', 32),
-(334, 5, 336, 'You eat the %item%', 'It heals some health', 33),
-(335, 4, -1, 'You eat the %item%', 'It heals some health', 34),
-(873, 0, -1, 'You eat the %item%', 'It heals some health', 35),
-(332, 5, 334, 'You eat the %item%', 'It heals some health', 36),
-(333, 4, 335, 'You eat the %item%', 'It heals some health', 37),
-(330, 4, 333, 'You eat the %item%', 'It heals some health', 38),
+(325, 11, -1, 'You eat the %item%', 'It heals some health', 28),
+(326, 7, 328, 'You eat the %item%', 'It heals some health', 23),
+(327, 8, 329, 'You eat the %item%', 'It heals some health', 26),
 (328, 7, -1, 'You eat the %item%', 'It heals some health', 39),
 (329, 8, -1, 'You eat the %item%', 'It heals some health', 40),
-(373, 12, -1, 'You eat the %item%', 'It heals some health', 41),
-(855, 1, -1, 'You eat the %item%', 'It heals some health', 42),
-(370, 14, -1, 'You eat the %item%', 'It heals some health', 43),
-(859, 1, -1, 'You eat the %item%', 'It heals some health', 44),
-(858, 1, -1, 'You eat the %item%', 'It heals some health', 45),
-(857, 1, -1, 'You eat the %item%', 'It heals some health', 46),
-(856, 1, -1, 'You eat the %item%', 'It heals some health', 47),
-(863, 1, -1, 'You eat the %item%', 'It heals some health', 48),
-(862, 0, -1, 'You eat the %item%', 'It heals some health', 49),
-(590, 14, -1, 'You eat the %item%', 'It heals some health', 50),
-(861, 0, -1, 'You eat the %item%', 'It heals some health', 51),
-(1061, 4, -1, 'You eat the %item%', 'It heals some health', 52),
-(860, 1, -1, 'You eat the %item%', 'It heals some health', 53),
+(330, 4, 333, 'You eat the %item%', 'It heals some health', 38),
+(332, 5, 334, 'You eat the %item%', 'It heals some health', 36),
+(333, 4, 335, 'You eat the %item%', 'It heals some health', 37),
+(334, 5, 336, 'You eat the %item%', 'It heals some health', 33),
+(335, 4, -1, 'You eat the %item%', 'It heals some health', 34),
+(336, 5, -1, 'You eat the %item%', 'It heals some health', 18),
+(337, 3, -1, 'You eat the %item%', 'It heals some health', 17),
+(346, 9, -1, 'You eat the %item%', 'It heals some health', 21),
+(350, 3, -1, 'You eat the %item%', 'It heals some health', 19),
+(352, 1, -1, 'You eat the %item%', 'It heals some health', 56),
+(355, 4, -1, 'You eat the %item%', 'It heals some health', 58),
 (357, 9, -1, 'You eat the %item%', 'It heals some health', 54),
 (359, 7, -1, 'You eat the %item%', 'It heals some health', 55),
-(352, 2, -1, 'You eat the %item%', 'It heals some health', 56),
-(1086, 0, -1, 'You eat the %item%', 'It heals some health', 57),
-(355, 4, -1, 'You eat the %item%', 'It heals some health', 58),
+(362, 5, -1, 'You eat the %item%', 'It heals some health', 61),
 (364, 8, -1, 'You eat the %item%', 'It heals some health', 59),
 (367, 10, -1, 'You eat the %item%', 'It heals some health', 60),
-(362, 5, -1, 'You eat the %item%', 'It heals some health', 61),
-(956, 0, -1, 'You eat the %item%', 'It heals some health', 62),
-(957, 0, -1, 'You eat the %item%', 'It heals some health', 63),
-(138, 4, -1, 'You eat the %item%', 'It heals some health', 64),
+(370, 14, -1, 'You eat the %item%', 'It heals some health', 43),
+(373, 12, -1, 'You eat the %item%', 'It heals some health', 41),
+(422, 14, -1, 'You eat the %item%', 'It heals some health', 101),
+(546, 20, -1, 'You eat the %item%', 'It heals some health', 4),
+(551, 7, -1, 'You eat the %item%', 'It heals some health', 1),
+(553, 6, -1, 'You eat the %item%', 'It heals some health', 6),
+(555, 13, -1, 'You eat the %item%', 'It heals some health', 5),
+(590, 14, -1, 'You eat the %item%', 'It heals some health', 50),
+(677, 12, -1, 'You eat the %item%', 'It heals some health', 71),
+(709, 19, -1, 'You eat the %item%', 'It heals some health', 112),
+(718, 6, -1, 'You eat the %item%', 'It heals some health', 109),
+(749, 2, -1, 'You eat the %item%', 'It heals some health', 105),
+(750, 10, 751, 'You eat the %item%', 'It heals some health', 104),
+(751, 10, -1, 'You eat the %item%', 'It heals some health', 103),
+(765, 1, -1, 'You eat the %item%', 'It heals some health', 106),
+(801, 0, -1, 'You eat the %item%', 'It heals some health', 13),
+(855, 2, -1, 'You eat the %item%', 'It heals some health', 42),
+(856, 1, -1, 'You eat the %item%', 'It heals some health', 47),
+(857, 2, -1, 'You eat the %item%', 'It heals some health', 46),
+(858, 2, -1, 'You eat the %item%', 'It heals some health', 45),
+(859, 2, -1, 'You eat the %item%', 'It heals some health', 44),
+(860, 1, -1, 'You eat the %item%', 'It heals some health', 53),
+(861, 2, -1, 'You eat the %item%', 'It heals some health', 51),
+(862, 2, -1, 'You eat the %item%', 'It heals some health', 49),
+(863, 2, -1, 'You eat the %item%', 'It heals some health', 48),
+(864, 2, -1, 'You eat the %item%', 'It heals some health', 24),
+(865, 1, -1, 'You eat the %item%', 'It heals some health', 27),
+(871, 1, -1, 'You eat the %item%', 'It heals some health', 32),
+(873, 1, -1, 'You eat the %item%', 'It heals some health', 35),
+(885, 0, -1, 'You eat the %item%', 'It heals some health', 16),
+(896, 3, -1, 'You eat the %item%', 'They\'re a bit chewy', 102),
+(897, 2, -1, 'You eat the %item%', 'It heals some health', 100),
+(900, 0, -1, 'You eat the %item%', 'It heals some health', 99),
+(901, 11, -1, 'You eat the %item%', 'It heals some health', 98),
+(902, 11, -1, 'You eat the %item%', 'It heals some health', 97),
+(903, 0, -1, 'You eat the %item%', 'It heals some health', 95),
+(904, 11, -1, 'You eat the %item%', 'It heals some health', 94),
+(905, 11, -1, 'You eat the %item%', 'It heals some health', 93),
+(906, 11, -1, 'You eat the %item%', 'It heals some health', 92),
+(907, 15, -1, 'You eat the %item%', 'It heals some health', 91),
+(908, 12, -1, 'You eat the %item%', 'It heals some health', 90),
+(909, 12, -1, 'You eat the %item%', 'It heals some health', 88),
+(910, 15, -1, 'You eat the %item%', 'It heals some health', 87),
+(911, 7, -1, 'You eat the %item%', 'It heals some health', 86),
+(912, 8, -1, 'You eat the %item%', 'It heals some health', 84),
+(913, 8, -1, 'You eat the %item%', 'It heals some health', 85),
+(914, 7, -1, 'You eat the %item%', 'It heals some health', 83),
+(923, 0, -1, 'You eat the %item%', 'It heals some health', 82),
+(924, 0, -1, 'You eat the %item%', 'It heals some health', 81),
+(936, 2, -1, 'You eat the %item%', 'It heals some health', 79),
+(944, 0, -1, 'You eat the %item%', 'It heals some health', 74),
+(945, 0, -1, 'You eat the %item%', 'It heals some health', 76),
+(946, 0, -1, 'You eat the %item%', 'It heals some health', 77),
+(947, 0, -1, 'You eat the %item%', 'It heals some health', 78),
+(948, 0, -1, 'You eat the %item%', 'It heals some health', 69),
+(949, 0, -1, 'You eat the %item%', 'It heals some health', 70),
+(950, 0, -1, 'You eat the %item%', 'It heals some health', 72),
+(951, 0, -1, 'You eat the %item%', 'It heals some health', 73),
 (952, 0, -1, 'You eat the %item%', 'It heals some health', 65),
 (953, 0, -1, 'You eat the %item%', 'It heals some health', 66),
 (954, 0, -1, 'You eat the %item%', 'It heals some health', 67),
 (955, 0, -1, 'You eat the %item%', 'It heals some health', 68),
-(948, 0, -1, 'You eat the %item%', 'It heals some health', 69),
-(949, 0, -1, 'You eat the %item%', 'It heals some health', 70),
-(677, 40, -1, 'You eat the %item%', 'It heals some health', 71),
-(950, 0, -1, 'You eat the %item%', 'It heals some health', 72),
-(951, 0, -1, 'You eat the %item%', 'It heals some health', 73),
-(944, 0, -1, 'You eat the %item%', 'It heals some health', 74),
-(132, 3, -1, 'You eat the %item%', 'It heals some health', 75),
-(945, 0, -1, 'You eat the %item%', 'It heals some health', 76),
-(946, 0, -1, 'You eat the %item%', 'It heals some health', 77),
-(947, 0, -1, 'You eat the %item%', 'It heals some health', 78),
-(936, 0, -1, 'You eat the %item%', 'It heals some health', 79),
+(956, 0, -1, 'You eat the %item%', 'It heals some health', 62),
+(957, 0, -1, 'You eat the %item%', 'It heals some health', 63),
+(1061, 4, -1, 'You eat the %item%', 'It heals some health', 52),
+(1086, 0, -1, 'You eat the %item%', 'It heals some health', 57),
+(1102, 19, -1, 'You eat the %item%', 'It heals some health', 2),
+(1103, 3, -1, 'You eat the %item%', 'It heals some health', 3),
+(1191, 22, -1, 'You eat the %item%', 'It heals some health', 108),
+(1193, 21, -1, 'You eat the %item%', 'It heals some health', 110),
 (1245, 2, -1, 'You eat the %item%', 'It heals some health', 80),
-(924, 19, -1, 'You eat the %item%', 'It heals some health', 81),
-(923, 19, -1, 'You eat the %item%', 'It heals some health', 82),
-(914, 0, -1, 'You eat the %item%', 'It heals some health', 83),
-(912, 0, -1, 'You eat the %item%', 'It heals some health', 84),
-(913, 0, -1, 'You eat the %item%', 'It heals some health', 85),
-(911, 0, -1, 'You eat the %item%', 'It heals some health', 86),
-(910, 0, -1, 'You eat the %item%', 'It heals some health', 87),
-(909, 0, -1, 'You eat the %item%', 'It heals some health', 88),
 (1269, 8, -1, 'You eat the %item%', 'It heals some health', 89),
-(908, 0, -1, 'You eat the %item%', 'It heals some health', 90),
-(907, 0, -1, 'You eat the %item%', 'It heals some health', 91),
-(906, 0, -1, 'You eat the %item%', 'It heals some health', 92),
-(905, 0, -1, 'You eat the %item%', 'It heals some health', 93),
-(904, 0, -1, 'You eat the %item%', 'It heals some health', 94),
-(903, 0, -1, 'You eat the %item%', 'It heals some health', 95),
-(179, 5, -1, 'You eat the %item%', 'It heals some health', 96),
-(902, 0, -1, 'You eat the %item%', 'It heals some health', 97),
-(901, 0, -1, 'You eat the %item%', 'It heals some health', 98),
-(900, 0, -1, 'You eat the %item%', 'It heals some health', 99),
-(897, 2, -1, 'You eat the %item%', 'It heals some health', 100),
-(422, 14, -1, 'You eat the %item%', 'It heals some health', 101),
-(896, 5, -1, 'You eat the %item%', 'They\'re a bit chewy', 102),
-(751, 10, -1, 'You eat the %item%', 'It heals some health', 103),
-(750, 10, 751, 'You eat the %item%', 'It heals some health', 104),
-(749, 2, -1, 'You eat the %item%', 'It heals some health', 105),
-(765, 0, -1, 'You eat the %item%', 'It heals some health', 106),
-(210, 2, -1, 'You eat the %item%', 'It heals some health', 107),
-(1191, 21, -1, 'You eat the %item%', 'It heals some health', 108),
-(718, 0, -1, 'You eat the %item%', 'It heals some health', 109),
-(1193, 23, -1, 'You eat the %item%', 'It heals some health', 110),
-(228, 1, -1, 'You eat the %item%', 'It heals some health', 111),
-(709, 19, -1, 'You eat the %item%', 'It heals some health', 112),
-(249, 2, -1, 'You eat the %item%', 'It heals some health', 113);
+(1301, 0, -1, 'You eat the %item%', 'It heals some health', 22),
+(1302, 0, -1, 'You eat the %item%', 'It heals some health', 20);
 
 -- --------------------------------------------------------
 
@@ -4003,36 +4024,36 @@ CREATE TABLE IF NOT EXISTS `def_fish` (
 --
 
 INSERT INTO `def_fish` (`object_id`, `net_id`, `bait_id`, `fish_id`, `level`, `experience`, `id`) VALUES
-(192, 378, 381, 358, 20, 50, 1),
-(192, 378, 381, 356, 30, 70, 2),
-(192, 377, 380, 354, 5, 20, 3),
-(192, 377, 380, 361, 10, 30, 4),
-(193, 376, -1, 349, 1, 10, 5),
-(193, 376, -1, 351, 15, 40, 6),
-(193, 377, 380, 354, 5, 20, 7),
-(193, 377, 380, 361, 10, 30, 8),
-(194, 379, -1, 369, 50, 100, 9),
-(194, 379, -1, 366, 35, 80, 10),
-(194, 375, -1, 372, 40, 90, 11),
-(261, 548, -1, 552, 16, 20, 12),
-(261, 548, -1, 550, 23, 45, 13),
-(261, 548, -1, 554, 46, 100, 14),
+(192, 378, 381, 358, 20, 200, 1),
+(192, 378, 381, 356, 30, 280, 2),
+(192, 377, 380, 354, 5, 80, 3),
+(192, 377, 380, 361, 10, 120, 4),
+(193, 376, -1, 349, 1, 40, 5),
+(193, 376, -1, 351, 15, 160, 6),
+(193, 377, 380, 354, 5, 80, 7),
+(193, 377, 380, 361, 10, 120, 8),
+(194, 379, -1, 369, 50, 400, 9),
+(194, 379, -1, 366, 35, 320, 10),
+(194, 375, -1, 372, 40, 360, 11),
+(261, 548, -1, 552, 16, 80, 12),
+(261, 548, -1, 550, 23, 180, 13),
+(261, 548, -1, 554, 46, 400, 14),
 (261, 548, -1, 17, 16, 1, 15),
 (261, 548, -1, 16, 16, 1, 16),
 (261, 548, -1, 622, 16, 1, 17),
-(261, 379, -1, 545, 76, 110, 18),
-(1193, 548, -1, 1192, 85, 115, 19),
-(1193, 379, -1, 545, 76, 110, 20),
-(376, 375, -1, 372, 40, 90, 21),
-(376, 379, -1, 369, 50, 100, 22),
-(376, 379, -1, 366, 35, 80, 23),
-(557, 379, -1, 369, 50, 100, 24),
-(557, 379, -1, 366, 35, 80, 25),
-(557, 375, -1, 372, 40, 90, 26),
-(1219, 379, -1, 369, 50, 100, 27),
-(271, 589, 380, 591, 53, 30, 28),
-(1190, 379, -1, 369, 80, 100, 29),
-(493, 376, -1, 349, 1, 10, 30);
+(261, 379, -1, 549, 76, 40, 18),
+(1193, -1, -1, -1, -1, 0, 19),
+(1193, -1, -1, -1, -1, 0, 20),
+(376, 375, -1, 372, 40, 360, 21),
+(376, 379, -1, 369, 50, 400, 22),
+(376, 379, -1, 366, 35, 320, 23),
+(557, 379, -1, 369, 50, 400, 24),
+(557, 379, -1, 366, 35, 320, 25),
+(557, 375, -1, 372, 40, 360, 26),
+(1219, 379, -1, 369, 50, 400, 27),
+(271, 589, 380, 591, 53, 360, 28),
+(1190, -1, -1, -1, -1, 0, 29),
+(493, 376, -1, 349, 1, 40, 30);
 
 -- --------------------------------------------------------
 
@@ -4062,15 +4083,15 @@ INSERT INTO `def_fishing` (`object_id`, `net_id`, `bait_id`, `id`) VALUES
 (194, 375, -1, 6),
 (261, 548, -1, 7),
 (261, 379, -1, 8),
-(1193, 548, -1, 9),
-(1193, 379, -1, 10),
+(1193, -1, -1, 9),
+(1193, -1, -1, 10),
 (376, 375, -1, 11),
 (376, 379, -1, 12),
 (557, 379, -1, 13),
 (557, 375, -1, 14),
-(1219, 379, -1, 16),
+(1219, -1, -1, 16),
 (271, 589, 380, 17),
-(1190, 379, -1, 18),
+(1190, -1, -1, 18),
 (493, 376, -1, 19);
 
 -- --------------------------------------------------------
@@ -4094,14 +4115,14 @@ CREATE TABLE IF NOT EXISTS `def_gem` (
 --
 
 INSERT INTO `def_gem` (`uncut_id`, `cut_id`, `level`, `experience`, `id`) VALUES
-(160, 164, 20, 50, 1),
-(159, 163, 27, 67, 2),
-(158, 162, 34, 85, 3),
-(157, 161, 43, 108, 4),
-(542, 523, 55, 130, 5),
-(889, 892, 20, 10, 6),
-(890, 893, 20, 15, 7),
-(891, 894, 20, 20, 8);
+(160, 164, 20, 200, 1),
+(159, 163, 27, 270, 2),
+(158, 162, 34, 340, 3),
+(157, 161, 43, 430, 4),
+(542, 523, 55, 510, 5),
+(889, 892, 16, 100, 6),
+(890, 893, 13, 80, 7),
+(891, 894, 1, 60, 8);
 
 -- --------------------------------------------------------
 
@@ -4117,23 +4138,24 @@ CREATE TABLE IF NOT EXISTS `def_herb` (
   `experience` int(5) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_herb`
 --
 
 INSERT INTO `def_herb` (`herb_id`, `potion_id`, `level`, `experience`, `id`) VALUES
-(444, 454, 1, 13, 1),
-(445, 455, 5, 19, 2),
-(446, 456, 12, 25, 3),
-(447, 457, 22, 31, 4),
-(448, 458, 30, 38, 5),
-(449, 459, 45, 50, 6),
-(450, 460, 50, 57, 7),
-(451, 461, 55, 63, 8),
-(452, 462, 66, 70, 9),
-(453, 463, 72, 81, 10);
+(444, 454, 3, 10, 1),
+(445, 455, 5, 15, 2),
+(446, 456, 11, 20, 3),
+(447, 457, 20, 25, 4),
+(448, 458, 25, 30, 5),
+(449, 459, 40, 35, 6),
+(450, 460, 48, 40, 7),
+(451, 461, 54, 45, 8),
+(452, 462, 65, 50, 9),
+(453, 463, 70, 55, 10),
+(933, 934, 76, 60, 11);
 
 -- --------------------------------------------------------
 
@@ -4150,26 +4172,27 @@ CREATE TABLE IF NOT EXISTS `def_herb_second` (
   `experience` int(5) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_herb_second`
 --
 
 INSERT INTO `def_herb_second` (`secondary_id`, `unfinished_id`, `potion_id`, `level`, `experience`, `id`) VALUES
-(270, 454, 474, 1, 13, 1),
-(473, 455, 566, 5, 19, 2),
-(220, 456, 222, 12, 25, 3),
-(219, 457, 477, 22, 31, 4),
-(471, 458, 480, 30, 38, 5),
-(469, 458, 483, 38, 54, 6),
-(270, 459, 486, 45, 50, 7),
-(473, 459, 569, 48, 58, 8),
-(469, 460, 489, 50, 57, 9),
-(220, 461, 492, 55, 63, 10),
-(472, 461, 572, 60, 70, 11),
-(471, 462, 495, 66, 75, 12),
-(501, 463, 498, 72, 81, 13);
+(270, 454, 474, 3, 100, 1),
+(473, 455, 566, 5, 150, 2),
+(220, 456, 222, 12, 200, 3),
+(219, 457, 477, 22, 250, 4),
+(471, 458, 480, 30, 300, 5),
+(469, 458, 483, 38, 350, 6),
+(270, 459, 486, 45, 400, 7),
+(473, 459, 569, 48, 425, 8),
+(469, 460, 489, 50, 450, 9),
+(220, 461, 492, 55, 500, 10),
+(472, 461, 572, 60, 550, 11),
+(471, 462, 495, 66, 600, 12),
+(501, 463, 498, 72, 650, 13),
+(936, 935, 963, 78, 700, 14);
 
 -- --------------------------------------------------------
 
@@ -5534,12 +5557,12 @@ CREATE TABLE IF NOT EXISTS `def_log_cut` (
 --
 
 INSERT INTO `def_log_cut` (`log`, `shaft_amount`, `shaft_level`, `shortbow_id`, `shortbow_level`, `shortbow_experience`, `longbow_id`, `longbow_level`, `longbow_experience`, `id`) VALUES
-(14, 10, 1, 277, 5, 5, 276, 10, 10, 1),
-(632, 15, 15, 659, 20, 17, 658, 25, 25, 2),
-(633, 20, 30, 661, 35, 33, 660, 40, 42, 3),
-(634, 30, 45, 663, 50, 50, 662, 55, 58, 4),
-(635, 40, 60, 665, 65, 67, 664, 70, 75, 5),
-(636, 50, 75, 667, 80, 83, 666, 85, 92, 6);
+(14, 10, 1, 277, 5, 20, 276, 40, 10, 1),
+(632, 15, 15, 659, 20, 70, 658, 100, 25, 2),
+(633, 20, 30, 661, 35, 133, 660, 166, 42, 3),
+(634, 30, 45, 663, 50, 200, 662, 233, 58, 4),
+(635, 40, 60, 665, 65, 266, 664, 300, 75, 5),
+(636, 50, 75, 667, 80, 333, 666, 366, 92, 6);
 
 -- --------------------------------------------------------
 
@@ -5563,33 +5586,33 @@ CREATE TABLE IF NOT EXISTS `def_mining` (
 --
 
 INSERT INTO `def_mining` (`rock_id`, `ore_id`, `experience`, `level`, `respawn_time`, `id`) VALUES
-(100, 150, 18, 1, 3, 1),
-(101, 150, 18, 1, 3, 2),
-(102, 151, 35, 15, 5, 3),
-(103, 151, 35, 15, 5, 4),
-(104, 202, 18, 1, 3, 5),
-(105, 202, 18, 1, 3, 6),
-(106, 153, 80, 55, 60, 7),
-(107, 153, 80, 55, 60, 8),
-(108, 154, 95, 70, 120, 9),
-(109, 154, 95, 70, 120, 10),
-(110, 155, 50, 30, 30, 11),
-(111, 155, 50, 30, 30, 12),
-(112, 152, 65, 40, 30, 13),
-(113, 152, 65, 40, 30, 14),
-(114, 149, 5, 1, 2, 15),
-(115, 149, 5, 1, 2, 16),
-(195, 383, 40, 20, 30, 17),
-(196, 383, 40, 20, 30, 18),
-(210, 409, 125, 85, 600, 19),
-(211, 409, 125, 85, 600, 20),
-(588, 889, 20, 40, 40, 21),
-(1194, 890, 20, 40, 40, 22),
-(1195, 891, 20, 40, 40, 23),
-(1196, 159, 20, 40, 40, 24),
-(176, 266, 15, 10, 30, 26),
+(100, 150, 70, 1, 3, 1),
+(101, 150, 70, 1, 3, 2),
+(102, 151, 140, 15, 5, 3),
+(103, 151, 140, 15, 5, 4),
+(104, 202, 70, 1, 3, 5),
+(105, 202, 70, 1, 3, 6),
+(106, 153, 320, 55, 110, 7),
+(107, 153, 320, 55, 110, 8),
+(108, 154, 380, 70, 200, 9),
+(109, 154, 380, 70, 200, 10),
+(110, 155, 200, 30, 25, 11),
+(111, 155, 200, 30, 25, 12),
+(112, 152, 260, 40, 60, 13),
+(113, 152, 260, 40, 60, 14),
+(114, 149, 20, 1, 1, 15),
+(115, 149, 20, 1, 1, 16),
+(195, 383, 160, 20, 60, 17),
+(196, 383, 160, 20, 60, 18),
+(210, 409, 500, 85, 810, 19),
+(211, 409, 500, 85, 810, 20),
+(588, 889, 200, 40, 120, 21),
+(1194, 890, 200, 40, 120, 22),
+(1195, 891, 200, 40, 120, 23),
+(1196, 159, 200, 40, 120, 24),
+(176, 266, 70, 10, 2, 26),
 (1203, 1290, 5, 1, 3, 27),
-(98, 202, 18, 1, 1, 28);
+(98, 202, 70, 1, 3, 28);
 
 -- --------------------------------------------------------
 
@@ -7720,10 +7743,14 @@ INSERT INTO `def_picklock_door` (`door_id`, `level`, `experience`, `picklock_req
 (0, 39, 35, 1),
 (0, 39, 35, 1),
 (0, 39, 35, 1),
-(97, 61, 43, 0),
-(93, 10, 13, 0),
-(95, 31, 25, 0),
-(94, 10, 13, 0);
+(97, 61, 200, 0),
+(93, 7, 15, 0),
+(95, 31, 100, 0),
+(94, 16, 60, 0),
+(100, 32, 100, 1),
+(99, 39, 140, 1),
+(96, 46, 150, 0),
+(162, 82, 200, 1);
 
 -- --------------------------------------------------------
 
@@ -7746,29 +7773,29 @@ CREATE TABLE IF NOT EXISTS `def_pickpocket` (
 --
 
 INSERT INTO `def_pickpocket` (`id`, `npc_id`, `level`, `experience`, `caught_message`) VALUES
-(1, 318, 1, 8, 'Oi what do you think you\'re doing'),
-(2, 11, 1, 8, 'Oi what do you think you\'re doing'),
-(3, 72, 1, 8, 'Oi what do you think you\'re doing'),
-(4, 63, 10, 14, 'What do you think you\'re doing'),
-(5, 86, 25, 26, 'Hey what do you think you\'re doing'),
-(6, 159, 25, 26, 'Hey what do you think you\'re doing'),
-(7, 320, 25, 26, 'Hey what do you think you\'re doing'),
-(8, 342, 32, 36, 'Hey what do you think you\'re doing'),
-(9, 65, 40, 46, 'Err what do you think you\'re doing'),
-(10, 100, 40, 46, 'Err what do you think you\'re doing'),
-(11, 321, 40, 46, 'Err what do you think you\'re doing'),
-(12, 322, 55, 85, 'Err what do you think you\'re doing'),
-(13, 574, 65, 138, 'Oi you nasty little thief'),
-(14, 685, 65, 138, 'Oi you nasty little thief'),
-(15, 323, 70, 152, 'Get your hands off my valuables'),
-(16, 593, 75, 198, 'Get your hands off my valuables human'),
-(17, 585, 75, 198, 'Get your hands off my valuables human'),
-(18, 581, 75, 198, 'Get your hands off my valuables human'),
-(19, 582, 75, 198, 'Get your hands off my valuables human'),
-(20, 583, 75, 198, 'Get your hands off my valuables human'),
-(21, 580, 75, 198, 'Get your hands off my valuables human'),
-(22, 324, 80, 274, 'Get your hands off my valuables'),
-(23, 592, 75, 198, 'Get your hands off my valuables human');
+(1, 318, 1, 32, 'Oi what do you think you\'re doing'),
+(2, 11, 1, 32, 'Oi what do you think you\'re doing'),
+(3, 72, 1, 32, 'Oi what do you think you\'re doing'),
+(4, 63, 10, 58, 'What do you think you\'re doing'),
+(5, 86, 25, 104, 'Hey what do you think you\'re doing'),
+(6, 159, 25, 104, 'Hey what do you think you\'re doing'),
+(7, 320, 25, 104, 'Hey what do you think you\'re doing'),
+(8, 342, 32, 142, 'Hey what do you think you\'re doing'),
+(9, 65, 40, 186, 'Err what do you think you\'re doing'),
+(10, 100, 40, 186, 'Err what do you think you\'re doing'),
+(11, 321, 40, 186, 'Err what do you think you\'re doing'),
+(12, 322, 55, 338, 'Err what do you think you\'re doing'),
+(13, 574, 65, 550, 'Oi you nasty little thief'),
+(14, 685, 65, 550, 'Oi you nasty little thief'),
+(15, 323, 70, 608, 'Get your hands off my valuables'),
+(16, 593, 75, 792, 'Get your hands off my valuables human'),
+(17, 585, 75, 792, 'Get your hands off my valuables human'),
+(18, 581, 75, 792, 'Get your hands off my valuables human'),
+(19, 582, 75, 792, 'Get your hands off my valuables human'),
+(20, 583, 75, 792, 'Get your hands off my valuables human'),
+(21, 580, 75, 792, 'Get your hands off my valuables human'),
+(22, 324, 80, 1096, 'Get your hands off my valuables'),
+(23, 592, 75, 792, 'Get your hands off my valuables human');
 
 -- --------------------------------------------------------
 
@@ -7805,15 +7832,15 @@ INSERT INTO `def_pickpocket_loot` (`npc_id`, `item_id`, `item_amount`) VALUES
 (100, 10, 30),
 (321, 10, 30),
 (322, 10, 50),
-(574, 10, 65),
+(574, 10, 60),
 (574, 138, 1),
-(685, 10, 65),
+(685, 10, 60),
 (685, 138, 1),
 (323, 10, 80),
 (323, 41, 1),
-(592, 10, 100),
-(592, 10, 150),
 (592, 10, 200),
+(592, 10, 300),
+(592, 10, 400),
 (592, 690, 1),
 (592, 34, 1),
 (592, 895, 1),
@@ -7827,47 +7854,50 @@ INSERT INTO `def_pickpocket_loot` (`npc_id`, `item_id`, `item_amount`) VALUES
 (324, 38, 2),
 (324, 619, 1),
 (324, 142, 1),
-(593, 10, 100),
-(593, 10, 150),
 (593, 10, 200),
+(593, 10, 300),
+(593, 10, 400),
+(593, 690, 1),
 (593, 34, 1),
 (593, 152, 1),
 (593, 895, 1),
 (593, 897, 1),
-(585, 10, 100),
-(585, 10, 150),
 (585, 10, 200),
+(585, 10, 300),
+(585, 10, 400),
+(585, 690, 1),
 (585, 34, 1),
 (585, 152, 1),
 (585, 895, 1),
 (585, 897, 1),
-(581, 10, 75),
-(581, 10, 100),
-(581, 10, 150),
+(581, 10, 200),
+(581, 10, 300),
+(581, 10, 400),
+(581, 690, 1),
 (581, 34, 1),
 (581, 152, 1),
 (581, 895, 1),
 (581, 897, 1),
-(582, 10, 100),
-(582, 10, 150),
 (582, 10, 200),
+(582, 10, 300),
+(582, 10, 400),
+(582, 690, 1),
 (582, 34, 1),
 (582, 152, 1),
 (582, 895, 1),
 (582, 897, 1),
-(583, 10, 75),
-(583, 10, 75),
-(583, 10, 75),
+(583, 10, 200),
+(583, 10, 300),
+(583, 10, 400),
+(583, 690, 1),
 (583, 34, 1),
 (583, 152, 1),
 (583, 895, 1),
 (583, 897, 1),
-(583, 10, 100),
-(583, 10, 150),
-(583, 10, 200),
 (580, 10, 75),
 (580, 10, 50),
 (580, 10, 25),
+(580, 690, 1),
 (580, 34, 1),
 (580, 152, 1),
 (580, 895, 1),
@@ -8782,15 +8812,15 @@ CREATE TABLE IF NOT EXISTS `def_smelting` (
 --
 
 INSERT INTO `def_smelting` (`ore`, `bar`, `alternate_ore`, `alternate_amount`, `level`, `experience`, `id`) VALUES
-(150, 169, 202, 1, 1, 6, 1),
-(202, 169, 150, 1, 1, 6, 2),
-(9999, 170, NULL, NULL, 15, 12, 3),
-(383, 384, NULL, NULL, 20, 13, 4),
-(151, 171, 155, 2, 30, 17, 5),
-(152, 172, NULL, NULL, 40, 22, 6),
-(153, 173, 155, 4, 50, 30, 7),
-(154, 174, 155, 6, 70, 37, 8),
-(409, 408, 155, 8, 85, 50, 9);
+(150, 169, 202, 1, 1, 26, 1),
+(202, 169, 150, 1, 1, 26, 2),
+(151, 170, NULL, NULL, 15, 50, 3),
+(383, 384, NULL, NULL, 20, 55, 4),
+(151, 171, 155, 2, 30, 70, 5),
+(152, 172, NULL, NULL, 40, 90, 6),
+(153, 173, 155, 4, 50, 120, 7),
+(154, 174, 155, 6, 70, 150, 8),
+(409, 408, 155, 8, 85, 200, 9);
 
 -- --------------------------------------------------------
 
@@ -8836,7 +8866,7 @@ INSERT INTO `def_smithing` (`level`, `bars`, `item_id`, `amount`, `id`) VALUES
 (4, 1, 1062, 7, 21),
 (15, 1, 28, 1, 22),
 (22, 1, 1075, 2, 23),
-(19, 1, 1, 1, 24),
+(17, 1, 1, 1, 24),
 (21, 2, 71, 1, 25),
 (20, 2, 83, 1, 26),
 (29, 3, 77, 1, 27),
@@ -8848,7 +8878,7 @@ INSERT INTO `def_smithing` (`level`, `bars`, `item_id`, `amount`, `id`) VALUES
 (22, 2, 6, 1, 33),
 (23, 2, 3, 1, 34),
 (27, 3, 2, 1, 35),
-(25, 3, 7, 1, 36),
+(26, 3, 7, 1, 36),
 (33, 5, 8, 1, 37),
 (31, 3, 9, 1, 38),
 (31, 3, 215, 1, 39),
@@ -8929,8 +8959,8 @@ INSERT INTO `def_smithing` (`level`, `bars`, `item_id`, `amount`, `id`) VALUES
 (95, 3, 93, 1, 114),
 (87, 1, 98, 1, 115),
 (88, 1, 399, 1, 116),
-(92, 2, 112, 1, 117),
-(93, 2, 403, 1, 118),
+(93, 2, 112, 1, 117),
+(94, 2, 403, 1, 118),
 (97, 3, 404, 1, 119),
 (96, 3, 400, 1, 120),
 (99, 5, 401, 1, 121),
@@ -9113,13 +9143,15 @@ CREATE TABLE IF NOT EXISTS `def_stall_loot` (
 INSERT INTO `def_stall_loot` (`stall_id`, `item_id`, `item_amount`) VALUES
 (322, 330, 1),
 (323, 200, 1),
+(324, 146, 1),
 (324, 541, 1),
 (325, 383, 1),
 (326, 707, 1),
 (327, 160, 1),
 (327, 159, 1),
 (327, 158, 1),
-(327, 157, 1);
+(327, 157, 1),
+(999, 1061, 1);
 
 -- --------------------------------------------------------
 
@@ -9141,8 +9173,8 @@ CREATE TABLE IF NOT EXISTS `def_stall_thieving` (
 --
 
 INSERT INTO `def_stall_thieving` (`stall_id`, `level`, `experience`, `owner`, `respawn`) VALUES
-(322, 5, 16, 325, 5000),
-(323, 20, 24, 71, 11000),
+(322, 5, 64, 325, 5000),
+(323, 20, 96, 326, 11000),
 (324, 35, 36, 327, 18000),
 (325, 50, 54, 328, 31000),
 (326, 65, 81, 329, 45000),
@@ -9298,28 +9330,29 @@ CREATE TABLE IF NOT EXISTS `def_unidentified_herb` (
   `experience` int(5) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_unidentified_herb`
 --
 
 INSERT INTO `def_unidentified_herb` (`unidentified_id`, `identified_id`, `level`, `experience`, `id`) VALUES
-(165, 444, 1, 2, 1),
-(435, 445, 5, 4, 2),
-(436, 446, 10, 5, 3),
-(437, 447, 20, 6, 4),
-(438, 448, 25, 8, 5),
-(439, 449, 40, 9, 6),
-(440, 450, 48, 10, 7),
-(441, 451, 54, 12, 8),
-(442, 452, 65, 13, 9),
-(443, 453, 70, 14, 10),
-(815, 816, 3, 16, 12),
-(817, 818, 3, 16, 13),
-(819, 820, 3, 16, 14),
-(821, 822, 3, 16, 15),
-(823, 824, 3, 16, 16);
+(165, 444, 1, 10, 1),
+(435, 445, 5, 15, 2),
+(436, 446, 10, 20, 3),
+(437, 447, 20, 25, 4),
+(438, 448, 25, 30, 5),
+(439, 449, 40, 35, 6),
+(440, 450, 48, 40, 7),
+(441, 451, 54, 45, 8),
+(442, 452, 65, 50, 9),
+(443, 453, 70, 55, 10),
+(815, 816, 3, 0, 12),
+(817, 818, 3, 0, 13),
+(819, 820, 3, 0, 14),
+(821, 822, 3, 0, 15),
+(823, 824, 3, 0, 16),
+(933, 934, 76, 60, 17);
 
 -- --------------------------------------------------------
 
@@ -9712,14 +9745,14 @@ CREATE TABLE IF NOT EXISTS `def_woodcut` (
 --
 
 INSERT INTO `def_woodcut` (`tree_id`, `experience`, `level`, `fell`, `log_id`, `respawn_time`) VALUES
-(0, 25, 1, 100, 14, 30),
-(1, 25, 1, 100, 14, 30),
-(70, 25, 1, 100, 14, 30),
-(306, 38, 15, 10, 632, 60),
-(307, 63, 30, 10, 633, 60),
-(308, 100, 45, 15, 634, 120),
-(309, 175, 60, 20, 635, 120),
-(310, 250, 75, 20, 636, 180);
+(0, 100, 1, 100, 14, 30),
+(1, 100, 1, 100, 14, 30),
+(70, 100, 1, 100, 14, 30),
+(306, 150, 15, 10, 632, 60),
+(307, 250, 30, 10, 633, 60),
+(308, 400, 45, 15, 634, 120),
+(309, 700, 60, 20, 635, 120),
+(310, 1000, 75, 20, 636, 180);
 
 -- --------------------------------------------------------
 
@@ -13100,7 +13133,7 @@ CREATE TABLE IF NOT EXISTS `spawn_object` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   KEY `object` (`object`)
-) ENGINE=MyISAM AUTO_INCREMENT=31388 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=31366 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_object`
@@ -39935,6 +39968,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (296, 0, 213, 2918, 0, 31319),
 (296, 0, 232, 2907, 2, 31316),
 (296, 0, 203, 2907, 2, 31321),
+(200, 0, 218, 441, 2, 31336),
 (296, 0, 213, 2889, 0, 31313),
 (143, 0, 218, 2893, 2, 28332),
 (143, 0, 210, 2893, 2, 28333),
