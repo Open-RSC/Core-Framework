@@ -241,7 +241,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
 		} 
         else // Send a server anouncement
-		if ((cmd.equals("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce")) && (owner.isSuperMod() || owner.isDev()))
+		if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce")) && (owner.isSuperMod() || owner.isDev()))
 		{
             boolean alert   = false;
             int argsIndex   = 0;
@@ -252,26 +252,32 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [boolean] [message]");	
 				return;
 			}
-			try
-			{
-				alert = Boolean.parseBoolean(args[argsIndex++]);
-			}
-			catch(Exception e){}
+                
+            if(args[argsIndex].equalsIgnoreCase("true") || args[argsIndex].equalsIgnoreCase("yes"))
+            {
+                alert   = true;
+                argsIndex++;
+            }
+            
+            if(args[argsIndex].equalsIgnoreCase("false") || args[argsIndex].equalsIgnoreCase("no"))
+            {
+                alert   = false;
+                argsIndex++;
+            }
             
             for (; argsIndex < args.length; argsIndex++)
                 message += args[argsIndex] + " ";
             
+            String announcementPrefix = "@whi@ANNOUNCEMENT " + owner.getStaffName();
+            
             for(Player p : World.getPlayers())
             {
                 if(alert)
-                {
-                    p.sendAlert("@whi@ANNOUNCEMENT from " + owner.getStaffName() + "%@whi@" + message, true);
-                }
+                    p.sendGraciousAlert(announcementPrefix + "% %@whi@" + message);
                 else
-                {
-                    p.sendMessage("@whi@ANNOUNCEMENT " + owner.getStaffName() + "@whi@" + message);
-                }
+                    p.sendMessage(announcementPrefix + ": @whi@ " + message);
             }
+            Logger.log(new GenericLog(owner.getUsername() + " send a global announcement as " + (alert ? "an alert" : "chat message") + ". Message: " + message, DataConversions.getTimeStamp()));
 		}
 		else
         if (cmd.equalsIgnoreCase("iplimit") && owner.isAdmin())
