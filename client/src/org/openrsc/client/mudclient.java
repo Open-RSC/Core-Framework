@@ -40,6 +40,7 @@ import org.openrsc.client.util.Pair;
 import com.runescape.AudioReader;
 import com.runescape.client.cache.CacheUtil;
 import org.openrsc.client.loader.various.AppletUtils;
+import org.openrsc.group.Group;
 
 public final class mudclient<Delegate_T extends ImplementationDelegate> extends GameWindowMiddleMan<Delegate_T> {
 
@@ -240,7 +241,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 					}
 				} else
-					displayMessage("@gre@Open RSC:@whi@ This command is only available in a bank window", 3, 0);
+					displayMessage("@gre@Open RSC:@whi@ This command is only available in a bank window", 3, -1);
 				return true;
 			} catch (Exception e) {
 			}
@@ -254,7 +255,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		} else if (cmd.equalsIgnoreCase("loadconf") || cmd.equalsIgnoreCase("resetconfig")
 				|| cmd.equalsIgnoreCase("resetconf")) {
 			loadConf();
-			displayMessage("@gre@Open RSC:@whi@ Configuration file has been refreshed", 3, 0);
+			displayMessage("@gre@Open RSC:@whi@ Configuration file has been refreshed", 3, -1);
 		}
 		return false;
 	}
@@ -699,7 +700,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (mouseButtonClick != 0) {
 				sendChatString("skiptutorial");
 				showSkipTutorialIslandBox = 0;
-				displayMessage("Skipped tutorial, welcome to Lumbridge", 4, 0);
+				displayMessage("Skipped tutorial, welcome to Lumbridge", 4, -1);
 			}
 		}
 		drawText("OK", gameWidth / 2 - 18, gameHeight / 2 + 49, 1, j);
@@ -2064,7 +2065,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		 * }
 		 */
 		if (lastWalkTimeout > 0) {
-			displayMessage("@cya@You can't logout for 10 seconds after combat", 3, 0);
+			displayMessage("@cya@You can't logout for 10 seconds after combat", 3, -1);
 			return;
 		}
 		super.streamClass.createPacket(76);
@@ -2305,15 +2306,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	public final void handleServerMessage(String s) {
 		if (s.startsWith("@bor@"))
-			displayMessage("@whi@" + s, 4, 0);
+			displayMessage("@whi@" + s, 4, -1);
 		else if (s.startsWith("@que@"))
-			displayMessage(s, 5, 0);
+			displayMessage(s, 5, -1);
 		else if (s.startsWith("@say@"))
-			displayMessage(s, 7, 0);
+			displayMessage(s, 7, -1);
 		else if (s.startsWith("@pri@"))
-			displayMessage("@cya@" + s, 6, 0);
+			displayMessage("@cya@" + s, 6, -1);
 		else
-			displayMessage(s, 5, 0);
+			displayMessage(s, 5, -1);
 	}
 
 	public final void checkMouseOverMenus() {
@@ -2413,7 +2414,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			displayMessage(
                     EntityHandler.getItemDef(actionType).getDescription()
 					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
-					3, 0);
+					3, -1);
 		if (currentMenuID == 300) {
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(255);
@@ -2453,7 +2454,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (currentMenuID == 3300)
 			displayMessage(
 					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
-					3, 0);
+					3, -1);
 		if (currentMenuID == 400) {
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(33);
@@ -2491,7 +2492,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (currentMenuID == 3400)
 			displayMessage(
 					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
-					3, 0);
+					3, -1);
 		if (currentMenuID == 600) {
 			super.streamClass.createPacket(31);
 			super.streamClass.add2ByteInt(actionVariable);
@@ -2556,9 +2557,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (currentMenuID == 3600) {
 			if (ourPlayer.isDev())
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription() + " ("
-						+ EntityHandler.getItemDef(actionType).id + ")", 3, 0);
+						+ EntityHandler.getItemDef(actionType).id + ")", 3, -1);
 			else
-				displayMessage(EntityHandler.getItemDef(actionType).getDescription(), 3, 0);
+				displayMessage(EntityHandler.getItemDef(actionType).getDescription(), 3, -1);
 		}
 		if (currentMenuID == 700) {
 			int l1 = (actionX - 64) / 128;
@@ -2607,7 +2608,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (currentMenuID == 3700)
 			displayMessage(EntityHandler.getNpcDef(actionType).getDescription()
-					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, 0);
+					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
 		if (currentMenuID == 800) {
 			int i3 = (actionX - 64) / 128;
 			int i5 = (actionY - 64) / 128;
@@ -4669,7 +4670,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	public final void cantLogout() {
 		logoutTimeout = 0;
-		displayMessage("@cya@Sorry, you can't logout at the moment", 3, 0);
+		displayMessage("@cya@Sorry, you can't logout at the moment", 3, -1);
 	}
 
 	public final void drawFriendsWindow(boolean flag) {
@@ -5042,12 +5043,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (k1 != -1) {
 					int k2 = playerStatCurrent[6];
 					if (EntityHandler.getSpellDef(k1).getReqLevel() > k2) {
-						displayMessage("Your magic ability is not high enough for this spell", 3, 0);
+						displayMessage("Your magic ability is not high enough for this spell", 3, -1);
 					} else {
 						int k3 = 0;
 						for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(k1).getRunesRequired()) {
 							if (!hasRequiredRunes(e.getKey(), e.getValue())) {
-								displayMessage("You don't have all the reagents you need for this spell", 3, 0);
+								displayMessage("You don't have all the reagents you need for this spell", 3, -1);
 								k3 = -1;
 								break;
 							}
@@ -5065,9 +5066,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (l1 != -1) {
 					int l2 = playerStatBase[5];
 					if (EntityHandler.getPrayerDef(l1).getReqLevel() > l2)
-						displayMessage("Your prayer ability is not high enough for this prayer", 3, 0);
+						displayMessage("Your prayer ability is not high enough for this prayer", 3, -1);
 					else if (playerStatCurrent[5] == 0)
-						displayMessage("You have run out of prayer points. Return to a church to recharge", 3, 0);
+						displayMessage("You have run out of prayer points. Return to a church to recharge", 3, -1);
 					else if (prayerOn[l1]) {
 						super.streamClass.createPacket(23);
 						super.streamClass.addByte(l1);
@@ -5926,7 +5927,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					&& mouseButtonClick == 1) {
 				super.blockGlobalMessages = !super.blockGlobalMessages;
 				displayMessage("@gre@Open RSC:@whi@ Global Chat currently: "
-						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, 0);
+						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, -1);
 				super.streamClass.createPacket(16);
 				super.streamClass.addByte((super.blockGlobalMessages ? 4 : 9));
 				super.streamClass.formatPacket();
@@ -6069,8 +6070,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (playerAliveTimeout > 0) {
 				playerAliveTimeout--;
 				if (playerAliveTimeout == 0) {
-					displayMessage("You have been granted another life. Be more careful this time!", 3, 0);
-					displayMessage("You retain your skills. Your items land where you died", 3, 0);
+					displayMessage("You have been granted another life. Be more careful this time!", 3, -1);
+					displayMessage("You retain your skills. Your items land where you died", 3, -1);
 				}
 			}
 		}
@@ -6683,7 +6684,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayGlobalChat(String mobName, int rank, String message) {
-		String header = Mob.getNameRankColour(rank) + Mob.getNameRankSprite(rank) + mobName + ":@whi@ ";
+		String header = Group.getStaffPrefix(rank) + mobName + ":@whi@ ";
 		message = header + message;
 		if (messagesTab != 0 && messagesTab != 5) {
 			anInt954 = 200;
@@ -6701,8 +6702,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayRegularChat(String mobName, int rank, String message) {
-		String nameColour = Mob.getNameRankColour(rank);
-		String nameSprite = Mob.getNameRankSprite(rank);
+		String nameColour = Group.getNameColour(rank);
+		String nameSprite = Group.getNameSprite(rank);
 		String header = "";
 		header += nameColour + nameSprite + mobName + ":@yel@ ";
 		message = header + message;
@@ -6788,7 +6789,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayPrivateMessage(long mobUsernameHash, String message, int rank, boolean sent) {
-		String user = Mob.getNameRankSprite(rank)
+		String user = Group.getNameSprite(rank)
 				+ DataConversions.hashToUsername(mobUsernameHash) + "@cya@";
 		message = "@cya@" + (sent ? "You tell " + user + ": " : user + " tells you: ") + message;
 		if (messagesTab != 0) {
@@ -6821,8 +6822,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				message = header + message.substring(5);
 			}
 		}
-		String nameColour = Mob.getNameRankColour(mobRank);
-        message = Mob.getNameRankSprite(mobRank) + message;
+		String nameColour = Group.getNameColour(mobRank);
+        message = Group.getNameSprite(mobRank) + message;
 
 		switch (type) {
 		case 5:
@@ -7029,7 +7030,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							int k2 = inventoryItems[k];
 							if (!EntityHandler.getItemDef(k2).tradable) {
 								if (!qItem)
-									displayMessage("This object cannot be traded with other players", 3, 0);
+									displayMessage("This object cannot be traded with other players", 3, -1);
 								qItem = true;
 							}
 							if (!qItem)
@@ -8138,8 +8139,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					mob.level = data[mobUpdateOffset++] & 0xff;
 					mob.skull = data[mobUpdateOffset++] & 0xff;
 					mob.groupID = data[mobUpdateOffset++] & 0xff;
-                    mob.isInvisible = (data[mobUpdateOffset++] & 0xff) == 1 ? true : false;
-                    mob.isInvulnerable = (data[mobUpdateOffset++] & 0xff) == 1 ? true : false;
+                    mob.isInvisible = (data[mobUpdateOffset++] & 0xff) == 1;
+                    mob.isInvulnerable = (data[mobUpdateOffset++] & 0xff) == 1;
 					if (mob == ourPlayer) {
 						if (init || ourPlayer.groupID != old && ourPlayer.isStaff()) {
 							init = false;
@@ -8372,7 +8373,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			} else if (command == 27) {
 				hgopu.update(command, length, data);
 			} else if (command == 49) {
-				displayMessage("Please tell Kenix/Marwolf (command 49): " + DataOperations.readInt(data, 1), 3, 0);
+				displayMessage("Please tell Kenix/Marwolf (command 49): " + DataOperations.readInt(data, 1), 3, -1);
 			} else if (command == 114) {
 				int invOffset = 1;
 				inventoryCount = data[invOffset++] & 0xff;
@@ -8563,7 +8564,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (mobArray[j5] != null) {
 					duelOpponentName = mobArray[j5].name;
 				}
-				displayMessage("@red@Switching amulets will be disabled as soon as the duel commences", 3, 0);
+				displayMessage("@red@Switching amulets will be disabled as soon as the duel commences", 3, -1);
 				showDuelWindow = true;
 				duelMyItemCount = 0;
 				duelOpponentItemCount = 0;
@@ -9202,7 +9203,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								int k2 = inventoryItems[k];
 								if (!EntityHandler.getItemDef(k2).tradable) {
 									if (!qItem) {
-										displayMessage("This object cannot be added to a duel offer", 3, 0);
+										displayMessage("This object cannot be added to a duel offer", 3, -1);
 									}
 									qItem = true;
 								}

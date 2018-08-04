@@ -1945,13 +1945,13 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		if (DataConversions.getTimeStamp() < subscriptionExpires) {
 			isSub = true;
             if (groupID == Group.USER)
-                updateGroupID(Group.SUBSCRIBER);
+                setGroupID(Group.SUBSCRIBER);
 			return true;
 		} else {
 			if (isSub) {
 				isSub = false;
 				if (groupID == Group.SUBSCRIBER)
-					updateGroupID(Group.USER);
+					setGroupID(Group.USER);
 				sendAlert("Your subscription period has expired.");
 			}
 			return false;
@@ -2007,8 +2007,12 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
         return invisible;
     }
     
+    public boolean isOwner() {
+        return groupID == Group.OWNER;
+    }
+    
 	public boolean isAdmin() {
-		return groupID == Group.ADMIN;
+		return groupID == Group.ADMIN || isOwner();
 	}
     
 	public boolean isSuperMod() {
@@ -2016,7 +2020,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
     
 	public boolean isMod() {
-		return groupID == Group.MOD || isAdmin() || isSuperMod();
+		return groupID == Group.MOD || isSuperMod();
 	}
 	
 	public boolean isDev() {
