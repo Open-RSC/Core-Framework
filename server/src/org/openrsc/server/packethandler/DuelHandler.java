@@ -37,7 +37,7 @@ public class DuelHandler implements PacketHandler {
 			Logger.log(new ExploitLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "DuelHandler (2)", DataConversions.getTimeStamp()));
 			return;
 		}
-		if (busy(player) || player.getLocation().inWilderness()) {
+		if (busy(player)) {
 			unsetOptions(player);
 			unsetOptions(affectedPlayer);
 			return;
