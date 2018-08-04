@@ -326,7 +326,7 @@ public class CommandHandler implements PacketHandler
                     skullMessage = "added";
                 }
                 p.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + " by an admin");
-                owner.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + " to " + p.getUsername());
+                owner.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + ": " + p.getUsername());
                 Logger.log(new GenericLog(owner.getUsername() + skullMessage + " skull to " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
