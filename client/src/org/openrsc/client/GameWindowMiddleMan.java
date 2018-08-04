@@ -150,7 +150,7 @@ public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDeleg
         long l = System.currentTimeMillis();
         if (streamClass.containsData())
             lastPing = l;
-        if (l - lastPing > 5000) {
+        if (l - lastPing > 60000) {
             lastPing = l;
             streamClass.createPacket(5);
             streamClass.formatPacket();
