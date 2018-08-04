@@ -57,7 +57,9 @@ public class Main extends Application {
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
-    private static String URL = "http://localhost";
+    private static String Secure = "https://";
+    private static String Domain = "localhost";
+    private static String Tomcat = "http://"+Domain+":8080";
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";
@@ -65,22 +67,16 @@ class Browser extends Region {
  
     private HBox toolBar;
     private static String[] imageFiles = new String[]{
-        "2930.png",
-        "2937.png",
-        "2931.png",
-        "2932.png"
+        "2930.png"
+        //"2937.png",
+        //"2931.png",
+        //"2932.png"
     };
     private static String[] captions = new String[]{
-        "News",
-        "Board",
-        "Game Chat",
-        "World Map"
+        "News"
     };
     private static String[] urls = new String[]{
-        URL + "/launchernews.php",
-        URL + "/board/index.php",
-        URL + "/launcherchat.php",
-        URL + "/worldmap.php"
+        Secure+Domain
     };
     final ImageView selectedImage = new ImageView();
     final Hyperlink[] hpls = new Hyperlink[captions.length];
@@ -132,7 +128,7 @@ class Browser extends Region {
             }           
         });
         
-        webEngine.load(URL + "/launchernews.php");
+        webEngine.load(Secure+Domain);
         getChildren().add(toolBar);
         getChildren().add(browser);
     }
@@ -212,7 +208,7 @@ class Browser extends Region {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CLIENT_FILENAME);
             }
 
-            String s = URL + "/downloads";
+            String s = Tomcat + "/downloads";
             URL url1 = new URL((new StringBuilder()).append(s).append("/hashes.txt").toString());
             Properties properties = new Properties();
             InputStream inputstream = url1.openStream();
@@ -290,7 +286,7 @@ class Browser extends Region {
                 clientVer[0] = getMD5Checksum(System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME);
             }
 
-            String s = URL + "/downloads";
+            String s = Tomcat + "/downloads";
             URL url1 = new URL((new StringBuilder()).append(s).append("/hashes.txt").toString());
             Properties properties = new Properties();
             InputStream inputstream = url1.openStream();
