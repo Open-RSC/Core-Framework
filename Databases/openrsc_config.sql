@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 04, 2018 at 09:07 PM
+-- Generation Time: Aug 04, 2018 at 10:29 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -444,7 +444,7 @@ CREATE TABLE IF NOT EXISTS `def_advert` (
   `advert` varchar(255) NOT NULL,
   `id` int(6) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_advert`
@@ -686,15 +686,6 @@ CREATE TABLE IF NOT EXISTS `def_chest` (
 --
 
 INSERT INTO `def_chest` (`chest_id`, `level`, `experience`, `lockpick_required`, `respawn`, `teleport_x`, `teleport_y`) VALUES
-(333, 72, 2000, 0, 500000, -1, -1),
-(334, 13, 30, 0, 10000, -1, -1),
-(335, 28, 100, 0, 25000, -1, -1),
-(336, 43, 500, 0, 100000, -1, -1),
-(337, 50, 12, 0, 120000, -1, -1),
-(338, 72, 2000, 0, 500000, 537, 605),
-(340, 59, 1000, 0, 250000, 612, 569),
-(379, 47, 600, 1, 150000, -1, -1),
-(1197, 75, 23, 0, 150000, 537, 605),
 (333, 72, 2000, 0, 500000, -1, -1),
 (334, 13, 30, 0, 10000, -1, -1),
 (335, 28, 100, 0, 25000, -1, -1),
@@ -3997,9 +3988,7 @@ INSERT INTO `def_edible_heals` (`food_id`, `heals`, `replacement`, `eat_message`
 (1191, 22, -1, 'You eat the %item%', 'It heals some health', 108),
 (1193, 21, -1, 'You eat the %item%', 'It heals some health', 110),
 (1245, 2, -1, 'You eat the %item%', 'It heals some health', 80),
-(1269, 8, -1, 'You eat the %item%', 'It heals some health', 89),
-(1301, 0, -1, 'You eat the %item%', 'It heals some health', 22),
-(1302, 0, -1, 'You eat the %item%', 'It heals some health', 20);
+(1269, 8, -1, 'You eat the %item%', 'It heals some health', 89);
 
 -- --------------------------------------------------------
 
@@ -9175,10 +9164,11 @@ CREATE TABLE IF NOT EXISTS `def_stall_thieving` (
 INSERT INTO `def_stall_thieving` (`stall_id`, `level`, `experience`, `owner`, `respawn`) VALUES
 (322, 5, 64, 325, 5000),
 (323, 20, 96, 326, 11000),
-(324, 35, 36, 327, 18000),
-(325, 50, 54, 328, 31000),
-(326, 65, 81, 329, 45000),
-(327, 75, 16, 330, 180000);
+(324, 35, 144, 327, 18000),
+(325, 50, 216, 328, 31000),
+(326, 65, 324, 329, 45000),
+(327, 75, 640, 330, 180000),
+(999, 15, 64, 688, 4000);
 
 -- --------------------------------------------------------
 
@@ -9375,7 +9365,7 @@ CREATE TABLE IF NOT EXISTS `def_wieldable` (
   `female_only` tinyint(1) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=364 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=348 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_wieldable`
@@ -39968,7 +39958,6 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (296, 0, 213, 2918, 0, 31319),
 (296, 0, 232, 2907, 2, 31316),
 (296, 0, 203, 2907, 2, 31321),
-(200, 0, 218, 441, 2, 31336),
 (296, 0, 213, 2889, 0, 31313),
 (143, 0, 218, 2893, 2, 28332),
 (143, 0, 210, 2893, 2, 28333),
@@ -40948,9 +40937,9 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (22, 0, 663, 531, 0, 30292),
 (209, 0, 235, 429, 6, 30309),
 (70, 0, 225, 423, 0, 30333),
-(70, 0, 224, 426, 0, 30332);
+(70, 0, 224, 426, 0, 30332),
+(70, 0, 242, 429, 0, 30315);
 INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
-(70, 0, 242, 429, 0, 30315),
 (209, 0, 249, 426, 6, 30316),
 (38, 0, 249, 423, 0, 30324),
 (144, 0, 210, 3257, 0, 30334),
