@@ -240,6 +240,39 @@ public class CommandHandler implements PacketHandler
 			else
                 owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
 		} 
+        else // Send a server anouncement
+		if ((cmd.equals("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce")) && (owner.isSuperMod()))
+		{
+            boolean alert   = false;
+            int argsIndex   = 0;
+            String message  = "";
+            
+			if(args.length < 1)
+			{
+                owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [boolean] [message]");	
+				return;
+			}
+			try
+			{
+				alert = Boolean.parseBoolean(args[argsIndex++]);
+			}
+			catch(Exception e){}
+            
+            for (; argsIndex < args.length; argsIndex++)
+                message += args[argsIndex] + " ";
+            
+            for(Player p : World.getPlayers())
+            {
+                if(alert)
+                {
+                    p.sendAlert("@whi@ANNOUNCEMENT from " + owner.getStaffName() + "%@whi@" + message, true);
+                }
+                else
+                {
+                    p.sendMessage("@whi@ANNOUNCEMENT " + owner.getStaffName() + "@whi@" + message);
+                }
+            }
+		}
 		else
         if (cmd.equalsIgnoreCase("iplimit") && owner.isAdmin())
         {
