@@ -5980,12 +5980,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void processGame() {
-		if (!pinging && System.currentTimeMillis() - lastPing > 5000) {
+		/*if (!pinging && System.currentTimeMillis() - lastPing > 5000) {
 			lastPing = System.currentTimeMillis();
 			super.streamClass.createPacket(5);
 			super.streamClass.formatPacket();
 			pinging = true;
-		}
+		}*/
 		if (systemUpdate >= 1)
 			systemUpdate--;
 		if (wildernessUpdate >= 1)
