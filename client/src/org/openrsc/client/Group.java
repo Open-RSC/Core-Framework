@@ -1,4 +1,4 @@
-package org.openrsc.server.model;
+package org.openrsc.group;
 
 import java.util.HashMap;
 
