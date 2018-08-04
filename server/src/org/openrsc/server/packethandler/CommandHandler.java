@@ -241,7 +241,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
 		} 
         else // Send a server anouncement
-		if ((cmd.equals("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce")) && (owner.isSuperMod()))
+		if ((cmd.equals("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce")) && (owner.isSuperMod() || owner.isDev()))
 		{
             boolean alert   = false;
             int argsIndex   = 0;
