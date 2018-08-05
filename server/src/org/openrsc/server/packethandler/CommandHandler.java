@@ -2642,7 +2642,7 @@ public class CommandHandler implements PacketHandler
                 return;
             }
 			
-			World.getDelayedEventHandler().add(new DayEvent(3, 50, 10, 10000, new Point(126, 643), 60*30*1000, null, "Oh no! Chickens are invading Lumbridge!"));
+			World.getDelayedEventHandler().add(new DayEvent(3, 50, 10, 10000, new Point(126, 643), 60*60*1000, null, "Oh no! Chickens are invading Lumbridge!"));
             owner.sendMessage(Config.PREFIX + "Chicken event started.");
 		}
         /*
