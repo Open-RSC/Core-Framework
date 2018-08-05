@@ -1600,20 +1600,21 @@ public class CommandHandler implements PacketHandler
 				return;
 			}
             
-			int npcID, npcAmt = 0, item_id = 0, item_amount = 0;
+			int npcID, npcAmt = 0, item_id = 0, item_amount = 0, duration = 0;
             ItemDef itemDef;
             NPCDef npcDef;
 			try {
 				npcID = Integer.parseInt(args[0]);
 				npcAmt = Integer.parseInt(args[1]);
 				item_id = Integer.parseInt(args[2]);
-				item_amount = args.length > 2 ? Integer.parseInt(args[3]) : 1;
+				item_amount = args.length >= 4 ? Integer.parseInt(args[3]) : 1;
+                duration = args.length >= 5 ? Integer.parseInt(args[4]) : 120;
                 itemDef = EntityHandler.getItemDef(item_id);
                 npcDef = EntityHandler.getNpcDef(npcID);
 			}
             catch (NumberFormatException e)
             {
-				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] [item_amount]");
+				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] [item_amount] [duration]");
 				return;
 			}
             
@@ -1629,7 +1630,7 @@ public class CommandHandler implements PacketHandler
 				return;
             }
             
-            NPCDef.spawnEventNpcs(npcID, npcAmt, item_id, item_amount, owner.getLocation(), 120000);
+            NPCDef.spawnEventNpcs(npcID, npcAmt, item_id, item_amount, owner.getLocation(), duration*1000);
             owner.sendMessage(Config.PREFIX + "Spawned " + npcAmt + " " + npcDef.getName());
             owner.sendMessage(Config.PREFIX + "Loot is " + item_amount + " " + itemDef.getName());
 		}
@@ -1816,9 +1817,17 @@ public class CommandHandler implements PacketHandler
             }
             try
 			{
-                int statIndex   = Integer.parseInt(args[0]);
 				byte stat = -1;
-				if ((stat = (byte)statArray.indexOf(statIndex)) != -1)
+                try
+                {
+                    int statIndex   = Integer.parseInt(args[0]);
+                    stat            = (byte)statIndex;
+                }
+                catch(NumberFormatException e)
+                {
+                    stat            = (byte)statArray.indexOf(args[0]);
+                }
+				if (stat != -1)
                 {
 					int level = Integer.parseInt(args[1]);
 					if(level < 100 && level >= 1) {
