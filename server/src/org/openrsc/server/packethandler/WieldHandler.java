@@ -105,6 +105,7 @@ public class WieldHandler implements PacketHandler {
 								}
 								wieldItem(player, item);
 								break;
+                            case 407:
                             case 401: // rune platebody
                                 Quest dragonSlayer = player.getQuest(Config.Quests.DRAGON_SLAYER);
                                 if(dragonSlayer == null || !dragonSlayer.finished())
