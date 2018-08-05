@@ -56,7 +56,7 @@ public class PickupItem implements PacketHandler {
 						}
 						
                         // TODO: getLocation should override equals and form a Point out of x/y and then compare the two points
-						if (owner.getLocation().getX() == x  && owner.getLocation().getY() == y)
+						if (owner.getLocation().getX() != x  && owner.getLocation().getY() != y)
 							return;
 						
 						if (item != null) {
