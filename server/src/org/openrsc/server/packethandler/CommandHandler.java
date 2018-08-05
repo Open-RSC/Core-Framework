@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.rscdaemon.scripting.Skill;
-import com.runescape.entity.attribute.DropItemAttr;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -21,6 +20,7 @@ import org.openrsc.server.entityhandling.defs.GameObjectDef;
 import org.openrsc.server.entityhandling.defs.ItemDef;
 import org.openrsc.server.entityhandling.defs.NPCDef;
 import org.openrsc.server.event.ChangePasswordEvent;
+import org.openrsc.server.event.DayEvent;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
 import org.openrsc.server.event.SingleEvent;
@@ -1600,18 +1600,15 @@ public class CommandHandler implements PacketHandler
 				return;
 			}
             
-			int npcID, npcAmt = 0, random = 0, id = 0, amount = 0;
-			InvItem item;
+			int npcID, npcAmt = 0, item_id = 0, item_amount = 0;
             ItemDef itemDef;
             NPCDef npcDef;
 			try {
 				npcID = Integer.parseInt(args[0]);
 				npcAmt = Integer.parseInt(args[1]);
-				id = Integer.parseInt(args[2]);
-				amount = args.length > 2 ? Integer.parseInt(args[3]) : 1;
-				item = new InvItem(id, amount);
-				random = DataConversions.random(0, npcAmt);
-                itemDef = EntityHandler.getItemDef(id);
+				item_id = Integer.parseInt(args[2]);
+				item_amount = args.length > 2 ? Integer.parseInt(args[3]) : 1;
+                itemDef = EntityHandler.getItemDef(item_id);
                 npcDef = EntityHandler.getNpcDef(npcID);
 			}
             catch (NumberFormatException e)
@@ -1632,97 +1629,9 @@ public class CommandHandler implements PacketHandler
 				return;
             }
             
-			int x = 0;
-			int y = 0;
-			int baseX = owner.getX();
-			int baseY = owner.getY();
-			int nextX = 0;
-			int nextY = 0;
-			int dX = 0;
-			int dY = 0;
-			int minX = 0;
-			int minY = 0;
-			int maxX = 0;
-			int maxY = 0;
-			int scanned = -1;
-			while (scanned < npcAmt) {
-				scanned++;
-				if (dX < 0) {
-					x -= 1;
-					if (x == minX) {
-						dX = 0;
-						dY = nextY;
-						if (dY < 0)
-							minY -= 1;
-						else
-							maxY += 1;
-						nextX = 1;
-					}
-				} else if (dX > 0) {
-					x += 1;
-					if (x == maxX) {
-						dX = 0;
-						dY = nextY;
-						if (dY < 0)
-							minY -=1;
-						else
-							maxY += 1;
-						nextX = -1;
-					}
-				} else {
-					if (dY < 0) {
-						y -= 1;
-						if (y == minY) {
-							dY = 0;
-							dX = nextX;
-							if (dX < 0)
-								minX -= 1;
-							else
-								maxX += 1;
-							nextY = 1;
-						}
-					} else if (dY > 0) {
-						y += 1;
-						if (y == maxY) {
-							dY = 0;
-							dX = nextX;
-							if (dX < 0)
-								minX -= 1;
-							else
-								maxX += 1;
-							nextY = -1;
-						}
-					} else {
-						minY -= 1;
-						dY = -1;
-						nextX = 1;
-					}
-				}
-				if (!((baseX + x) < 0 || (baseY + y) < 0 || ((baseX + x) >= World.MAX_WIDTH) || ((baseY + y) >= World.MAX_HEIGHT))) {
-					if ((World.mapValues[baseX + x][baseY + y] & 64) == 0) {
-						final Npc n = new Npc(npcID, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
-						
-						if (scanned == random) {
-							DropItemAttr attr = new DropItemAttr(n, item);
-							n.addAttr(attr);
-						}
-						
-						n.setRespawn(false);
-						World.registerEntity(n);
-						World.getDelayedEventHandler().add(new SingleEvent(null, 120000 /* 2 minutes */) {
-							public void action() {
-								Mob opponent = n.getOpponent();
-								if (opponent != null)
-									opponent.resetCombat(CombatState.ERROR);
-								n.resetCombat(CombatState.ERROR);
-								n.remove();
-							}
-						});
-					}
-				}
-			}
+            NPCDef.spawnEventNpcs(npcID, npcAmt, item_id, item_amount, owner.getLocation(), 120000);
             owner.sendMessage(Config.PREFIX + "Spawned " + npcAmt + " " + npcDef.getName());
-            owner.sendMessage(Config.PREFIX + "Loot is " + amount + " " + itemDef.getName());
+            owner.sendMessage(Config.PREFIX + "Loot is " + item_amount + " " + itemDef.getName());
 		}
         else // spawns multiple of a specific NPC type
         if (cmd.equalsIgnoreCase("massnpc") && owner.isAdmin())
@@ -2717,6 +2626,24 @@ public class CommandHandler implements PacketHandler
             }
             
             originatingEvent.confirmPassword(args[0]);
+		}
+        else // Change your password
+        if (cmd.equalsIgnoreCase("chickenevent") && owner.isAdmin()) 
+		{
+            // Check if a owner already has a password change event.
+            ArrayList events = World.getDelayedEventHandler().getEvents();
+            Iterator<DelayedEvent> iterator = events.iterator();
+            while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+                
+                if(!(event instanceof DayEvent)) continue;
+                
+                owner.sendMessage(Config.PREFIX + "Chickens event is already running.");
+                return;
+            }
+			
+			World.getDelayedEventHandler().add(new DayEvent(3, 50, 10, 10000, new Point(126, 643), 60*30*1000, null, "Oh no! Chickens are invading Lumbridge!"));
+            owner.sendMessage(Config.PREFIX + "Chicken event started.");
 		}
         /*
          * Removed event commands

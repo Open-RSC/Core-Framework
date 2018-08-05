@@ -21,12 +21,17 @@ public final class DropItemAttr extends Attribute<Mob> {
 	
 	public void onDeath(Player player) {
 		obj.delAttr(this);
-		World.registerEntity(new Item(item.getID(), obj.getX(), obj.getY(), item.getAmount(), player));
+        
+        if(item.getDef().isStackable())
+            World.registerEntity(new Item(item.getID(), obj.getX(), obj.getY(), item.getAmount(), player));
+        else
+            for(int i = 0; i < item.getAmount(); i++)
+                World.registerEntity(new Item(item.getID(), obj.getX(), obj.getY(), 1, player));
 		
-		 for (Player informee : World.getPlayers())
-				informee.sendNotification(Config.PREFIX + player.getUsername() + " has killed the special NPC and won: " + item.getDef().getName() + (item.getAmount() > 1 ? " x" + item.getAmount()  : ""));
+		for (Player informee : World.getPlayers())
+			informee.sendNotification(Config.PREFIX + player.getUsername() + " has killed the special NPC and won: " + item.getDef().getName() + (item.getAmount() > 1 ? " x" + item.getAmount()  : ""));
 
-		 player.sendAlert("You have killed the special NPC! Remember to loot your winnings.");
+		player.sendAlert("You have killed the special NPC! Remember to loot your winnings.");
 	}
 
 }
