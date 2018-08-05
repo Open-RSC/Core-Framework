@@ -3156,7 +3156,8 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			// Experimental 'npc stuck in combat' fix 8.2.2013
 			try
 			{
-				this.getFightEvent().getOpponent().resetCombat(CombatState.WON);
+                if(this.getFightEvent()!= null)
+                    this.getFightEvent().getOpponent().resetCombat(CombatState.WON);
 			}
 			catch(Exception e)
 			{
