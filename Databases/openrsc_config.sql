@@ -8802,7 +8802,7 @@ CREATE TABLE IF NOT EXISTS `def_smelting` (
 INSERT INTO `def_smelting` (`ore`, `bar`, `alternate_ore`, `alternate_amount`, `level`, `experience`, `id`) VALUES
 (150, 169, 202, 1, 1, 26, 1),
 (202, 169, 150, 1, 1, 26, 2),
-(151, 170, NULL, NULL, 15, 50, 3),
+(9999, 170, NULL, NULL, 15, 50, 3),
 (383, 384, NULL, NULL, 20, 55, 4),
 (151, 171, 155, 2, 30, 70, 5),
 (152, 172, NULL, NULL, 40, 90, 6),
