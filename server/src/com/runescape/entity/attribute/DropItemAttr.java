@@ -29,9 +29,9 @@ public final class DropItemAttr extends Attribute<Mob> {
                 World.registerEntity(new Item(item.getID(), obj.getX(), obj.getY(), 1, player));
 		
 		for (Player informee : World.getPlayers())
-			informee.sendNotification(Config.PREFIX + player.getUsername() + " has killed the special NPC and won: " + item.getDef().getName() + (item.getAmount() > 1 ? " x" + item.getAmount()  : ""));
+			informee.sendMessage(Config.PREFIX + player.getUsername() + " has killed the special NPC and won: " + item.getDef().getName() + (item.getAmount() > 1 ? " x" + item.getAmount()  : ""));
 
-		player.sendAlert("You have killed the special NPC! Remember to loot your winnings.");
+		player.sendAlert("You have killed the special NPC! % Remember to loot your winnings of " + item.getAmount() + " " + item.getDef().getName());
 	}
 
 }
