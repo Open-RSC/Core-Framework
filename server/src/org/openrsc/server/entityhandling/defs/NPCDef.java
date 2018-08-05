@@ -1,7 +1,16 @@
 package org.openrsc.server.entityhandling.defs;
 
+import com.runescape.entity.attribute.DropItemAttr;
 import org.openrsc.server.entityhandling.defs.extras.ItemDropDef;
 import java.util.ArrayList;
+import org.openrsc.server.event.SingleEvent;
+import org.openrsc.server.model.InvItem;
+import org.openrsc.server.model.Mob;
+import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Point;
+import org.openrsc.server.model.World;
+import org.openrsc.server.states.CombatState;
+import org.openrsc.server.util.DataConversions;
 
 public class NPCDef extends EntityDef {
 
@@ -130,4 +139,99 @@ public class NPCDef extends EntityDef {
 	public boolean isArmoured() {
 		return armoured;
 	}
+    
+    public static void spawnEventNpcs(int npcID, int npcAmt, int item_id, int item_amount, Point location, int npc_timeout)
+    {
+        InvItem item = new InvItem(item_id, item_amount);
+        int random = DataConversions.random(0, npcAmt);
+        int x = 0;
+        int y = 0;
+        int baseX = location.getX();
+        int baseY = location.getY();
+        int nextX = 0;
+        int nextY = 0;
+        int dX = 0;
+        int dY = 0;
+        int minX = 0;
+        int minY = 0;
+        int maxX = 0;
+        int maxY = 0;
+        int scanned = -1;
+        while (scanned < npcAmt) {
+            scanned++;
+            if (dX < 0) {
+                x -= 1;
+                if (x == minX) {
+                    dX = 0;
+                    dY = nextY;
+                    if (dY < 0)
+                        minY -= 1;
+                    else
+                        maxY += 1;
+                    nextX = 1;
+                }
+            } else if (dX > 0) {
+                x += 1;
+                if (x == maxX) {
+                    dX = 0;
+                    dY = nextY;
+                    if (dY < 0)
+                        minY -=1;
+                    else
+                        maxY += 1;
+                    nextX = -1;
+                }
+            } else {
+                if (dY < 0) {
+                    y -= 1;
+                    if (y == minY) {
+                        dY = 0;
+                        dX = nextX;
+                        if (dX < 0)
+                            minX -= 1;
+                        else
+                            maxX += 1;
+                        nextY = 1;
+                    }
+                } else if (dY > 0) {
+                    y += 1;
+                    if (y == maxY) {
+                        dY = 0;
+                        dX = nextX;
+                        if (dX < 0)
+                            minX -= 1;
+                        else
+                            maxX += 1;
+                        nextY = -1;
+                    }
+                } else {
+                    minY -= 1;
+                    dY = -1;
+                    nextX = 1;
+                }
+            }
+            if (!((baseX + x) < 0 || (baseY + y) < 0 || ((baseX + x) >= World.MAX_WIDTH) || ((baseY + y) >= World.MAX_HEIGHT))) {
+                if ((World.mapValues[baseX + x][baseY + y] & 64) == 0) {
+                    final Npc n = new Npc(npcID, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
+
+                    if (scanned == random) {
+                        DropItemAttr attr = new DropItemAttr(n, item);
+                        n.addAttr(attr);
+                    }
+
+                    n.setRespawn(false);
+                    World.registerEntity(n);
+                    World.getDelayedEventHandler().add(new SingleEvent(null, npc_timeout /* 2 minutes */) {
+                        public void action() {
+                            Mob opponent = n.getOpponent();
+                            if (opponent != null)
+                                opponent.resetCombat(CombatState.ERROR);
+                            n.resetCombat(CombatState.ERROR);
+                            n.remove();
+                        }
+                    });
+                }
+            }
+        }
+    }
 }

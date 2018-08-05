@@ -10,7 +10,7 @@ import org.openrsc.server.model.Player;
  */
 
 public class ChangePasswordEvent extends TimedEvent {
-    private String newPassword;
+    private final String newPassword;
     
 	public ChangePasswordEvent(Player owner, String newPassword) {
 		super(owner, 30*1000);

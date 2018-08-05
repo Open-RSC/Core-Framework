@@ -8,8 +8,8 @@ import org.openrsc.server.model.Player;
 
 
 public abstract class TimedEvent extends DelayedEvent{
-    private int lifeTime;
-    private long startedOn;
+    private final int lifeTime;
+    private final long startedOn;
     
     TimedEvent(Player owner, int lifeTime) {
         super(owner, 1000);
@@ -23,6 +23,7 @@ public abstract class TimedEvent extends DelayedEvent{
         this.startedOn = System.currentTimeMillis();
     }
     
+    @Override
 	public void run() {
         if(System.currentTimeMillis() <= startedOn + lifeTime)
             return;
