@@ -3920,7 +3920,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			incCurStat(stat, advanced);
 			incMaxStat(stat, advanced);
 			sendStat(stat);
-			sendMessage("@gre@You just advanced " + advanced + " " + Formulae.STAT_ARRAY[stat] + " level" + (advanced > 1 ? "s" : null) + "!");
+			sendMessage("@gre@You just advanced " + advanced + " " + Formulae.STAT_ARRAY[stat] + " level" + (advanced > 1 ? "s" : "") + "!");
 			sendSound("advance", false);
 			World.getDelayedEventHandler().add(new MiniEvent(this) {
 				public void action() {
