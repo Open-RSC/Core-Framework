@@ -130,7 +130,7 @@ public final class ClientUpdater {
 				}
 			}
 
-			if (curTime - p.getLastPing() > 30000 && !p.destroying()) {
+			if (curTime - p.getLastPing() > 120000 && !p.destroying()) {
 				p.destroy(false);
 			} else if (p.warnedToMove() && !p.isSuperMod()) {
 					if (curTime - p.getLastMoved() >= 60 * 30 * 1000 && p.loggedIn())
