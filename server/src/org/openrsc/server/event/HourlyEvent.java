@@ -17,12 +17,12 @@ import org.openrsc.server.model.World;
  *
  * @author Kenix
  */
-public class DayEvent extends TimedEvent {
+public class HourlyEvent extends TimedEvent {
     private final int npcID, npcAmt, item_id, item_amount, npc_timeout;
     private final Point location;
     private final String message;
     
-    public DayEvent(int npcID, int npcAmt, int item_id, int item_amount, Point location, int npc_timeout, Player owner, String message) {
+    public HourlyEvent(int npcID, int npcAmt, int item_id, int item_amount, Point location, int npc_timeout, Player owner, String message) {
         super(owner, 60*1000, 60*60*24*1000);
         this.npcID          = npcID;
         this.npcAmt         = npcAmt;
