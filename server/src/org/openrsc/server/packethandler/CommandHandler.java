@@ -20,7 +20,7 @@ import org.openrsc.server.entityhandling.defs.GameObjectDef;
 import org.openrsc.server.entityhandling.defs.ItemDef;
 import org.openrsc.server.entityhandling.defs.NPCDef;
 import org.openrsc.server.event.ChangePasswordEvent;
-import org.openrsc.server.event.DayEvent;
+import org.openrsc.server.event.HourlyEvent;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.ShutdownEvent;
 import org.openrsc.server.event.SingleEvent;
@@ -2636,13 +2636,13 @@ public class CommandHandler implements PacketHandler
             while (iterator.hasNext()) {
 				DelayedEvent event = iterator.next();
                 
-                if(!(event instanceof DayEvent)) continue;
+                if(!(event instanceof HourlyEvent)) continue;
                 
                 owner.sendMessage(Config.PREFIX + "Chickens event is already running.");
                 return;
             }
 			
-			World.getDelayedEventHandler().add(new DayEvent(3, 50, 10, 10000, new Point(126, 643), 60*60*1000, null, "Oh no! Chickens are invading Lumbridge!"));
+			World.getDelayedEventHandler().add(new HourlyEvent(3, 50, 10, 10000, new Point(126, 643), 60*60*1000, null, "Oh no! Chickens are invading Lumbridge!"));
             owner.sendMessage(Config.PREFIX + "Chicken event started.");
 		}
         /*
