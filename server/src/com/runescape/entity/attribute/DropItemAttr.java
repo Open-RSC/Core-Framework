@@ -21,6 +21,7 @@ public final class DropItemAttr extends Attribute<Mob> {
 	
 	public void onDeath(Player player) {
 		obj.delAttr(this);
+        String npcName  = ((Npc)obj).getDef().getName();
         
         if(item.getDef().isStackable())
             World.registerEntity(new Item(item.getID(), obj.getX(), obj.getY(), item.getAmount(), player));
@@ -29,9 +30,9 @@ public final class DropItemAttr extends Attribute<Mob> {
                 World.registerEntity(new Item(item.getID(), obj.getX(), obj.getY(), 1, player));
 		
 		for (Player informee : World.getPlayers())
-			informee.sendMessage(Config.PREFIX + player.getUsername() + " has killed the special NPC and won: " + item.getDef().getName() + (item.getAmount() > 1 ? " x" + item.getAmount()  : ""));
+			informee.sendMessage(Config.PREFIX + player.getUsername() + " has killed the special " + npcName + " and won: " + item.getDef().getName() + (item.getAmount() > 1 ? " x" + item.getAmount()  : ""));
 
-		player.sendAlert("You have killed the special NPC! % Remember to loot your winnings of " + item.getAmount() + " " + item.getDef().getName());
+		player.sendAlert("You have killed the special " + npcName + "! % Remember to loot your winnings of " + item.getAmount() + " " + item.getDef().getName());
 	}
 
 }
