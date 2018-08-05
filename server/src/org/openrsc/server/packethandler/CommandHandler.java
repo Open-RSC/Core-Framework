@@ -2119,7 +2119,7 @@ public class CommandHandler implements PacketHandler
         if (cmd.equalsIgnoreCase("refreshsmelting") && owner.isAdmin())
         {
 			try {
-				EntityHandler.setSmithingDefinitions(World.getWorldLoader().loadSmithingDefinitions());
+				EntityHandler.setSmeltingDefinitions(World.getWorldLoader().loadSmeltingDefinitions());
                 owner.sendMessage(Config.PREFIX + "Smelting definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed smelting definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
