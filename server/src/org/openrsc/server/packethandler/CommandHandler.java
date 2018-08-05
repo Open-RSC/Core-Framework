@@ -103,24 +103,31 @@ public class CommandHandler implements PacketHandler
                 owner.sendMessage(Config.PREFIX + "Invalid name");
 		}
         else // Show online players
-		if (cmd.equalsIgnoreCase("online") && owner.isSuperMod()) 
+		if (cmd.equalsIgnoreCase("online")) 
 		{
-			StringBuilder sb = new StringBuilder();
-			synchronized (World.getPlayers()) 
-			{
-				EntityList<Player> players = World.getPlayers();
-				sb.append("@gre@There are currently ").append(players.size()).append(" player(s) online.\n\n");
-				for (Player p : players) 
-				{
-					Point loc = p.getLocation();
-					if (owner.isSub())
-						sb.append("@whi@").append(p.getUsername()).append(loc.inWilderness() ? " @red@".concat("Wilderness").concat("\n") : "\n");
-					else
-					if (owner.isSuperMod())
-						sb.append("@whi@").append(p.getStaffName()).append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
-				}
-			}
-			owner.getActionSender().sendScrollableAlert(sb.toString());
+            if(owner.isSuperMod())
+            {
+                StringBuilder sb = new StringBuilder();
+                synchronized (World.getPlayers()) 
+                {
+                    EntityList<Player> players = World.getPlayers();
+                    sb.append("@gre@There are currently ").append(players.size()).append(" player(s) online.\n\n");
+                    for (Player p : players) 
+                    {
+                        Point loc = p.getLocation();
+                        if (owner.isSub())
+                            sb.append("@whi@").append(p.getUsername()).append(loc.inWilderness() ? " @red@".concat("Wilderness").concat("\n") : "\n");
+                        else
+                        if (owner.isSuperMod())
+                            sb.append("@whi@").append(p.getStaffName()).append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat(loc.getDescription().concat("\n")) : "\n");	
+                    }
+                }
+                owner.getActionSender().sendScrollableAlert(sb.toString());
+            }
+            else
+            {
+                owner.sendMessage(Config.PREFIX + "There are currently " + World.getPlayers().size() + " player(s) online.");
+            }
 		}
         else // toggle invulnerability
 		if ((cmd.equalsIgnoreCase("invulnerable")) && (owner.isSuperMod() || owner.isDev())) 
