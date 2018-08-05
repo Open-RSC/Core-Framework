@@ -3955,11 +3955,11 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		}
         
 		if (getLocation().onTutorialIsland()) {
-			if (exp[stat] + xp > 200) {
+			if (exp[stat] + xp > 800) {
 				if (stat != 3) {
-					exp[stat] = 200;
+					exp[stat] = 800;
 				} else {
-					exp[stat] = 1200;
+					exp[stat] = 4800;
 				}
 			}
 		}
