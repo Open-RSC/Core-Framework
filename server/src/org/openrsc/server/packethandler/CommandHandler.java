@@ -47,7 +47,7 @@ import org.openrsc.server.util.Formulae;
 
 public class CommandHandler implements PacketHandler 
 {
-    private static String badSyntaxPrefix = Config.PREFIX + "Invalid Syntax - Usage: ::";
+    private static String badSyntaxPrefix = Config.PREFIX + "Invalid Syntax: ::";
     Pattern ipRegex = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
     
 	public void handlePacket(Packet p, IoSession session) throws Exception 
@@ -1295,7 +1295,7 @@ public class CommandHandler implements PacketHandler
         else // Kill a player
         if (cmd.equalsIgnoreCase("kill") && owner.isAdmin())
         {
-			if (args.length == 1)
+			if (args.length < 1)
             {
 				owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
                 return;
