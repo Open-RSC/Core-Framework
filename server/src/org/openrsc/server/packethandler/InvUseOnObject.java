@@ -13,6 +13,8 @@ import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.openrsc.server.entityhandling.defs.extras.*;
 import org.openrsc.server.event.*;
 import org.openrsc.server.model.*;
@@ -1170,11 +1172,30 @@ public class InvUseOnObject implements PacketHandler {
 												for (int i = 0; i < reqOre.getAmount(); i++)
 													owner.getInventory().remove(new InvItem(reqOre.getId()));
 											}
-											owner.getInventory().add(bar);
-											owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
-											owner.increaseXP(13, def.getExp());
-											owner.sendStat(13);
-											owner.sendInventory();
+											if(bar.getID() == 170)
+                                            {
+                                                int randomNumber = ThreadLocalRandom.current().nextInt(0,2);
+                                                switch(randomNumber) {
+                                                    case 0:
+                                                        owner.getInventory().add(bar);
+                                                        owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
+                                                        owner.increaseXP(13, def.getExp());
+                                                        owner.sendStat(13);
+                                                        owner.sendInventory();
+                                                        break;
+                                                    case 1:
+                                                        owner.sendMessage("The ore is too impure and you fail to refine it");
+                                                        owner.sendInventory();
+                                                        break;
+                                                }
+                                            }
+                                            else {
+                                                owner.getInventory().add(bar);
+                                                owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
+                                                owner.increaseXP(13, def.getExp());
+                                                owner.sendStat(13);
+                                                owner.sendInventory();
+                                            }
 										}
 										owner.setBusy(false);
 			      					}
