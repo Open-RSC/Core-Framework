@@ -1808,7 +1808,7 @@ public class InvUseOnObject implements PacketHandler {
 																	owner.sendMessage("@gre@You have gained 2 quest points!");
 																	owner.finishQuest(Config.Quests.PIRATES_TREASURE);
 																	owner.getInventory().add(new InvItem(10, 450));
-																	owner.getInventory().add(new InvItem(286, 1));
+																	owner.getInventory().add(new InvItem(283, 1));
 																	owner.getInventory().add(new InvItem(163, 1));
 																	owner.sendInventory();
 																	owner.setBusy(false);
