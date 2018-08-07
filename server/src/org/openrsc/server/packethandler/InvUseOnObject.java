@@ -1030,7 +1030,50 @@ public class InvUseOnObject implements PacketHandler {
 		      				break;
 		      			case 118:
 		      			case 813: // Furnace
-		      				if (item.getID() == 172) { // Gold Bar (Crafting)
+
+                            if(item.getID() == 171 && owner.getInventory().contains(1057) && owner.isQuestFinished(Config.Quests.DWARF_CANNON)) { //Cannon ball smithing
+                                if (owner.getCurStat(13) < 35) {
+                                    owner.sendMessage("You need a smithing level of 35 to smelt this.");
+                                    return;
+                                }
+                                owner.setBusy(true);
+                                showBubble();
+                                World.getDelayedEventHandler().add(new SingleEvent(owner, 0) {
+                                    public void action() {
+                                        InvItem ball = new InvItem(1041);
+                                        if (owner.getInventory().remove(item) > -1)
+                                            owner.sendInventory();
+                                        owner.sendMessage("You heat the steel bar into a liquid state");
+                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 2000) {
+                                            public void action() {
+                                                owner.sendMessage("and pour it into your cannon ball mould");
+                                                World.getDelayedEventHandler().add(new SingleEvent(owner, 2000) {
+                                                    public void action() {
+                                                        owner.sendMessage("you then leave it to cool for a short while");
+                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 2000) {
+                                                            public void action() {
+                                                                {
+                                                                    owner.getInventory().add(ball);
+                                                                    owner.sendMessage("It's very heavy");
+                                                                    owner.increaseXP(13, 25);
+                                                                    owner.sendStat(13);
+                                                                    owner.sendInventory();
+                                                                }
+                                                                owner.setBusy(false);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            else if(item.getID() == 171 && owner.getInventory().contains(1057) && !owner.isQuestFinished(Config.Quests.DWARF_CANNON))
+                            {
+                                owner.sendMessage("You need to have finished Dwarf Cannon in order to make cannon balls");
+                            }
+                            else if (item.getID() == 172) { // Gold Bar (Crafting)
       							World.getDelayedEventHandler().add(new MiniEvent(owner) {
       		      		      		public void action() {
 				      					owner.sendMessage("What would you like to make?");
