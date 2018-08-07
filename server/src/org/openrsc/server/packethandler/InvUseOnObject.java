@@ -1,6 +1,5 @@
 package org.openrsc.server.packethandler;
 import org.openrsc.server.Config;
-import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.logging.model.eventLog;
@@ -13,7 +12,6 @@ import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.openrsc.server.entityhandling.defs.extras.*;
 import org.openrsc.server.event.*;
@@ -1217,19 +1215,16 @@ public class InvUseOnObject implements PacketHandler {
 											}
 											if(bar.getID() == 170)
                                             {
-                                                int randomNumber = ThreadLocalRandom.current().nextInt(0,2);
-                                                switch(randomNumber) {
-                                                    case 0:
-                                                        owner.getInventory().add(bar);
-                                                        owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
-                                                        owner.increaseXP(13, def.getExp());
-                                                        owner.sendStat(13);
-                                                        owner.sendInventory();
-                                                        break;
-                                                    case 1:
-                                                        owner.sendMessage("The ore is too impure and you fail to refine it");
-                                                        owner.sendInventory();
-                                                        break;
+                                                boolean ironOreSuccess = DataConversions.getRandom().nextBoolean();
+                                                if(ironOreSuccess) {
+                                                    owner.getInventory().add(bar);
+                                                    owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
+                                                    owner.increaseXP(13, def.getExp());
+                                                    owner.sendStat(13);
+                                                    owner.sendInventory();                                                
+                                                } else {
+                                                    owner.sendMessage("The ore is too impure and you fail to refine it");
+                                                    owner.sendInventory();
                                                 }
                                             }
                                             else {
