@@ -9027,7 +9027,7 @@ INSERT INTO `def_spell` (`name`, `description`, `level`, `type`, `rune_count`, `
 ('Iban blast', 'A strength 25 missile attack!', 50, 2, 2, 38, 1, 31, 5, NULL, NULL, 480, 31),
 ('Ardougne teleport', 'Teleports you to Ardougne', 51, 0, 2, 32, 2, 42, 2, NULL, NULL, 488, 32),
 ('Earth blast', 'A strength 11 missile attack', 53, 2, 3, 34, 4, 33, 3, 38, 1, 504, 33),
-('High level alchemy', 'Convert an item into more gold', 55, 3, 2, 40, 1, 31, 5, NULL, NULL, 130, 34),
+('High level alchemy', 'Convert an item into more gold', 55, 3, 2, 40, 1, 31, 5, NULL, NULL, 520, 34),
 ('Charge Water Orb', 'Needs to be cast on a water obelisk', 56, 5, 3, 611, 1, 32, 30, 46, 3, 528, 35),
 ('Enchant lvl-4 amulet', 'For use on diamond amulets', 57, 3, 2, 34, 10, 46, 1, NULL, NULL, 536, 36),
 ('Watchtower teleport', 'Teleports you to the watchtower', 58, 0, 2, 34, 2, 42, 2, NULL, NULL, 552, 37),
