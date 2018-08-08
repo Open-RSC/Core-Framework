@@ -50,7 +50,7 @@ public class Group {
             case MOD:
             case USER:
             default:
-                return "@yel@";
+                return "@whi@";
         }
     }
 
