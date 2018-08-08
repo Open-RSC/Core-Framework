@@ -9338,7 +9338,7 @@ CREATE TABLE IF NOT EXISTS `def_unidentified_herb` (
 --
 
 INSERT INTO `def_unidentified_herb` (`unidentified_id`, `identified_id`, `level`, `experience`, `id`) VALUES
-(165, 444, 1, 10, 1),
+(165, 444, 3, 10, 1),
 (435, 445, 5, 15, 2),
 (436, 446, 10, 20, 3),
 (437, 447, 20, 25, 4),
