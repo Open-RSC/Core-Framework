@@ -122,7 +122,7 @@ public final class Server
 		}
 
 		/// Invoke the auto-restart script
-		if (autoRestart)
+		/*if (autoRestart) //disabling as this is not functional at this time
 		{
 			try
 			{
@@ -133,7 +133,7 @@ public final class Server
 			{
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	public static void main(String[] args) throws Exception {
