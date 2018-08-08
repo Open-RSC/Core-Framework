@@ -8197,7 +8197,8 @@ INSERT INTO `def_shops` (`shop_id`, `general`, `sell_modifier`, `buy_modifier`, 
 (67, 0, 60, 100, 264, 266, 535, 538, 60000, 'Craving a cold one?', 'You bet!', 'Not today.', 68),
 (66, 0, 50, 100, 0, 0, 0, 0, 120, '', '', '', 64),
 (68, 0, 60, 100, 261, 263, 535, 538, 60000, 'Welcome to the ancient guild store, would you like to buy some supplies?', 'Yes please', 'No thank you', 69),
-(187, 0, 60, 100, 242, 246, 442, 445, 60000, 'Can I help you at all?', 'Yes please. What are you selling?', 'No thanks.', 70);
+(187, 0, 60, 100, 242, 246, 442, 445, 60000, 'Can I help you at all?', 'Yes please. What are you selling?', 'No thanks.', 70),
+(69, 1, 60,	100, 439,	441, 502, 507, 60000, 'Hello would you like to trade',	'Yes ok',	'No thank you',	71);
 
 -- --------------------------------------------------------
 
@@ -8777,7 +8778,16 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (68, '685', 1, 683),
 (187, '401', 1, 684),
 (187, '407', 1, 685),
-(56, '1276', 1, 686);
+(56, '1276', 1, 686),
+(69, '21', 10, 687),
+(69, '156', 2, 688),
+(69, '341', 2, 689),
+(69, '338', 2, 690),
+(69, '166', 2, 691),
+(69, '167', 2, 692),
+(69, '168', 5, 693),
+(69, '237', 2, 694),
+(69, '135', 2, 695);
 
 -- --------------------------------------------------------
 
