@@ -4,9 +4,8 @@
 
 The game client registers new players upon their first login attempt.
 
-PHPBB forum username and password: "Marwolf", "malware"
 
-Admin role is group_id = 1, players are group_id = 4.
+Admin role is group_id = 1, players are group_id = 10
 
 It is suggested that you clone the Docker-Home repository and use the setup script to install the various docker containers needed for automatic installation of this.
 
