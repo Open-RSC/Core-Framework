@@ -198,6 +198,7 @@ public class Npc extends Mob {
 		remove();
 		if (totalDamageTable.get(player) != null) {
 			Player winner = player;
+			Player[] owners = null;
 			
 			for (Player p : totalDamageTable.keySet()) {
 				if (p != null) {
@@ -206,7 +207,27 @@ public class Npc extends Mob {
 				}
 			}
 			
-			dropItems(winner);
+			owners = new Player[] { winner };
+			
+			int total = 0;
+			for (ItemDropDef drop : def.getDrops()) {				
+				total += drop.getWeight();
+			}
+			int hit = DataConversions.random(0, total);
+			total = 0;
+			
+			for(ItemDropDef drop : def.getDrops()) {
+				if(drop != null && drop.id != -1) {
+				if (drop.weight == 0) {
+					World.registerEntity(new Item(drop.getID(), getX(), getY(), drop.getAmount(), owners));
+					continue;
+				}
+				if (hit >= total && hit < (total + drop.getWeight()))
+					World.registerEntity(new Item(drop.getID(), getX(), getY(), (EntityHandler.getItemDef(drop.getID()).isStackable() && winner.isSub() ? drop.getAmount() *2 : drop.getAmount()), owners));
+
+				total += drop.getWeight();
+				}
+			}
 			
 			DropItemAttr attr = attr(DropItemAttr.class);
 			if (attr != null) {
@@ -380,51 +401,6 @@ public class Npc extends Mob {
 			totalDamageTable.clear();
 		} else
 			Logger.log(new ErrorLog(player.getUsernameHash(), player.getAccount(), player.getIP(), "NPC Loot Drop Error: Killing player not found", DataConversions.getTimeStamp()));
-	}
-
-	private void dropItems(Player winner) {
-		Player[] owners = null;
-		owners = new Player[] { winner };
-		
-		int total = 0;
-		for (ItemDropDef drop : def.getDrops()) {				
-			total += drop.getWeight();
-		}
-		int hit = DataConversions.random(0, total);
-		total = 0;
-		
-		for(ItemDropDef drop : def.getDrops()) {
-			if(isObtainable(drop, winner)) {
-				if (drop.weight == 0) {
-					World.registerEntity(new Item(drop.getID(), getX(), getY(), drop.getAmount(), owners));
-					continue;
-				}
-				if (hit >= total && hit < (total + drop.getWeight()))
-					World.registerEntity(new Item(drop.getID(), getX(), getY(), (EntityHandler.getItemDef(drop.getID()).isStackable() && winner.isSub() ? drop.getAmount() *2 : drop.getAmount()), owners));
-	
-				total += drop.getWeight();
-			}
-		}
-	}
-	
-
-	private boolean isObtainable(ItemDropDef drop, Player winner) {
-		boolean isObtainable = false;
-		if(drop == null) {
-			return false;
-		}
-		switch (drop.id) {
-			case -1:
-				isObtainable = false;
-				break;
-			case 271: //Rat's tail
-				isObtainable = winner.isQuestStarted(Config.Quests.WITCHS_POTION);
-				break;
-			default:
-				isObtainable = true;
-				break;
-		}
-		return isObtainable;
 	}
 
 	public int getCombatStyle() {
