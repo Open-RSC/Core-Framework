@@ -4414,7 +4414,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Staff of Fire', 'A Magical staff', '', 91, 1500, 0, 0, 1, 16711680, 1, 0, 1, 197),
 ('Magic Staff', 'A Magical staff', '', 91, 200, 0, 0, 1, 16777215, 1, 0, 1, 198),
 ('Wizardshat', 'A silly pointed hat', '', 86, 5, 0, 0, 1, 4210752, 0, 0, 1, 199),
-('Silk', 'It\'s a sheet of silk', '', 92, 0, 0, 0, 0, 16724172, 0, 0, 1, 200),
+('Silk', 'It\'s a sheet of silk', '', 92, 30, 0, 0, 0, 16724172, 0, 0, 1, 200),
 ('Flier', 'Get your axes from Bob\'s axes', '', 29, 1, 0, 0, 0, 0, 0, 0, 1, 201),
 ('Tin Ore', 'this needs refining', '', 70, 3, 0, 0, 0, 13810105, 0, 0, 1, 202),
 ('Mithril Axe', 'A powerful axe', '', 12, 520, 0, 0, 1, 10072780, 1, 0, 1, 203),
@@ -9338,7 +9338,7 @@ CREATE TABLE IF NOT EXISTS `def_unidentified_herb` (
 --
 
 INSERT INTO `def_unidentified_herb` (`unidentified_id`, `identified_id`, `level`, `experience`, `id`) VALUES
-(165, 444, 1, 10, 1),
+(165, 444, 3, 10, 1),
 (435, 445, 5, 15, 2),
 (436, 446, 10, 20, 3),
 (437, 447, 20, 25, 4),
