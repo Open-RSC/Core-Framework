@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public final class ConnectionFactory {
 
-    private static final String ConnectionFormatString = "jdbc:mysql://%s/%s?autoReconnect=true&useSSL=false";
+    private static final String ConnectionFormatString = "jdbc:mysql://%s/%s?autoReconnect=true&useSSL=false&serverTimezone=UTC";
 
     private static final String OpenRscDbConnectionString =
             String.format(ConnectionFormatString, Config.DB_HOST, Config.DB_NAME);
