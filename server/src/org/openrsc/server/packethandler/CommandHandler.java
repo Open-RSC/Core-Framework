@@ -1160,7 +1160,7 @@ public class CommandHandler implements PacketHandler
 			}
 		}
         else // Spawn or remove an object
-		if (cmd.equalsIgnoreCase("object") && (owner.isAdmin() || owner.isDev()))
+		if ((cmd.equalsIgnoreCase("object") || cmd.equalsIgnoreCase("ob")) && (owner.isAdmin() || owner.isDev()))
 		{
             if(args.length == 0)
             {
@@ -1169,7 +1169,7 @@ public class CommandHandler implements PacketHandler
                 return;
             }
             
-            if(args[0].equalsIgnoreCase("create"))
+            if(args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("c"))
             {
                 if(args.length <= 1)
                 {
@@ -1214,7 +1214,7 @@ public class CommandHandler implements PacketHandler
                 }
             }
             else
-            if(args[0].equalsIgnoreCase("delete"))
+            if(args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("d"))
             {
                GameObject o = World.getZone(owner.getX(), owner.getY()).getObjectAt(owner.getX(), owner.getY());
                if(o == null)
