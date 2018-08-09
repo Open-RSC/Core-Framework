@@ -56,19 +56,19 @@ public class PickupItem implements PacketHandler {
 						}
 						
                         // TODO: getLocation should override equals and form a Point out of x/y and then compare the two points
-						if (owner.getLocation().getX() != x  && owner.getLocation().getY() != y)
+						if (owner.getLocation().getX() != x || owner.getLocation().getY() != y)
 							return;
 						
 						if (item != null) {
 							if (!(owner.isRemoved() || owner.isBusy() || owner.isRanging() || !owner.nextTo(item) || owner.getStatus() != Action.TAKING_GITEM)) {
 								owner.resetAllExceptDMing();
-								//if (player.getInventory().full() && !item.getDef().isStackable() || item.getDef().isNotable())
-                                                                if (player.getInventory().full())
+								final InvItem invItem = new InvItem(item.getID(), item.getAmount());
+								if ((player.getInventory().full() && (!item.getDef().isStackable() || item.getDef().isNotable())) || !owner.getInventory().canHold(invItem))
+                                //                                if (player.getInventory().full())
 								{
 									owner.sendMessage("You do not have enough room in your inventory");
 									return;
 								}
-								final InvItem invItem = new InvItem(item.getID(), item.getAmount());
 								if (owner.getInventory().canHold(invItem)) {
 									switch(item.getID()) {
 									case 59:
