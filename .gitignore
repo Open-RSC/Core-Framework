@@ -101,3 +101,5 @@ data
 server/objects\.dat
 server/npcs\.dat
 server/items\.dat
+
+Tools/RSC Map Generator/map\.png
