@@ -58,7 +58,6 @@
               <pathelement location="${lib}/jmf.jar" />
               <pathelement location="${lib}/js.jar" />
               <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-              <pathelement location="${lib}/pircbot.jar" />
               <pathelement location="${lib}/xstream.jar" />
               <pathelement path="${jar}/" />
             </classpath>

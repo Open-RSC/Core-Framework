@@ -52,6 +52,7 @@ import org.openrsc.server.util.StatefulEntityCollection;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.util.IPTrackerPredicate;
+import static org.openrsc.server.Config.SERVER_NAME;
 
 @SuppressWarnings("serial")
 public final class Player extends Mob implements Watcher, Comparable<Player>
@@ -4451,7 +4452,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	{
 		for(String message : strings)
 		{
-			sendMessage("@gre@Open RSC Security: @whi@" + message);
+			sendMessage("@gre@"+Config.SERVER_NAME+" Security: @whi@" + message);
 		}
 	}
 

@@ -4,7 +4,6 @@
       <root url="jar://$PROJECT_DIR$/lib/netty-3.2.5.Final.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/mina.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/js.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/pircbot.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/xstream.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jmf.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-lang-2.6.jar!/" />
