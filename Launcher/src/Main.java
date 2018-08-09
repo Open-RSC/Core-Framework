@@ -58,7 +58,7 @@ public class Main extends Application {
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
-    private String Dev_GAME_NAME = "Dev Open RSC";
+    private String Dev_GAME_NAME = "Dev Test World";
     private static String Secure = "http://";
     private static String Domain = "localhost";
     private static String Dev_Domain = "localhost";
@@ -90,7 +90,7 @@ class Browser extends Region {
     final WebView browser = new WebView();
     final WebEngine webEngine = browser.getEngine();
     final Button playNow = new Button("Play " + GAME_NAME);
-    final Button Dev_playNow = new Button("Play " + Dev_GAME_NAME);
+    final Button Dev_playNow = new Button(Dev_GAME_NAME);
     private boolean playNowButton;
     private boolean Dev_playNowButton;
     
@@ -114,8 +114,8 @@ class Browser extends Region {
         toolBar.getStyleClass().add("browser-toolbar");
         toolBar.getChildren().addAll(hpls);
         toolBar.getChildren().add(createSpacer()); //if enabled puts the launch game button on the right side of the window
-        toolBar.getChildren().add(playNow);
         toolBar.getChildren().add(Dev_playNow);
+        toolBar.getChildren().add(playNow);
         playNow.setOnAction(new EventHandler() {
             @Override
             public void handle(Event t) {
