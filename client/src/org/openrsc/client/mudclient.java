@@ -39,6 +39,7 @@ import org.openrsc.client.util.Pair;
 
 import com.runescape.AudioReader;
 import com.runescape.client.cache.CacheUtil;
+import static org.openrsc.client.Config.SERVER_NAME;
 import org.openrsc.client.loader.various.AppletUtils;
 import org.openrsc.group.Group;
 
@@ -118,7 +119,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			props.setProperty(key, value);
 
 			OutputStream propOut = new FileOutputStream(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
-			props.store(propOut, "RuneScape Configuration");
+			props.store(propOut, "Client Configuration");
 			props.clear();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -130,6 +131,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	private static mudclient<?> instance;
 
 	public static final void main(String[] args) throws Exception {
+                
                 //Download updated caches
                 //if (!AppletUtils.CACHEFILE.exists())
                 //org.openrsc.client.loader.WebClientLoader.downloadCache();
@@ -241,7 +243,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 					}
 				} else
-					displayMessage("@gre@Open RSC:@whi@ This command is only available in a bank window", 3, -1);
+					displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ This command is only available in a bank window", 3, -1);
 				return true;
 			} catch (Exception e) {
 			}
@@ -255,7 +257,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		} else if (cmd.equalsIgnoreCase("loadconf") || cmd.equalsIgnoreCase("resetconfig")
 				|| cmd.equalsIgnoreCase("resetconf")) {
 			loadConf();
-			displayMessage("@gre@Open RSC:@whi@ Configuration file has been refreshed", 3, -1);
+			displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ Configuration file has been refreshed", 3, -1);
 		}
 		return false;
 	}
@@ -617,7 +619,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		int j = 30;
 		gameGraphics.drawBox((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0);
 		gameGraphics.drawBoxEdge((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0xffffff);
-		drawText("@gre@Open RSC Command List", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@"+Config.SERVER_NAME+" Command List", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
 		drawText("To use a command enter two colons before the command, such as ::COMMAND", gameWidth / 2, j, 1,
 				0xffffff);
@@ -643,9 +645,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		j += 15;
 		drawText("@gre@EVENT: @whi@Join the running event", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@SITE: @whi@Quickly load Open RSC's website", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@SITE: @whi@Quickly load "+Config.SERVER_NAME+"'s website", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@VOTE: @whi@Vote for Open RSC on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@VOTE: @whi@Vote for "+Config.SERVER_NAME+" on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
 		j += 30;
 		if (super.mouseY > j - 12 && super.mouseY <= j && super.mouseX > gameWidth / 2 - 100
 				&& super.mouseX < gameWidth + 100) // WAS 106, 406
@@ -1160,7 +1162,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			int i = 35;
-			g.drawString("Sorry, an error has occured whilst loading Open RSC:", 30, i);
+			g.drawString("Sorry, an error has occured whilst loading "+Config.SERVER_NAME+":", 30, i);
 			i += 50;
 			g.setColor(Color.white);
 			g.drawString("To fix this try the following (in order):", 30, i);
@@ -1188,7 +1190,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g2.drawString("Error - out of memory!", 50, 50);
 			g2.drawString("Close ALL unnecessary programs", 50, 100);
 			g2.drawString("and windows before loading the game", 50, 150);
-			g2.drawString("Open RSC needs about 100mb of spare RAM", 50, 200);
+			g2.drawString(Config.SERVER_NAME+" needs about 100mb of spare RAM", 50, 200);
 			// changeThreadSleepModifier(1);
 			return;
 		}
@@ -1991,7 +1993,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (userArray[x] == ' ')
 				userArray[x + 1] = Character.toUpperCase(userArray[x + 1]);
 		currentUser = new String(userArray);
-		drawText("Welcome to RuneScape " + currentUser, gameWidth / 2, j, 4, 0xffff00);
+		drawText("Welcome to "+Config.SERVER_NAME+" " + currentUser, gameWidth / 2, j, 4, 0xffff00);
 		j += 30;
 		String s;
 		if (lastLoggedInDays == 0)
@@ -3620,10 +3622,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j8 = i6 / 60;
 			i6 %= 60;
 			if (i6 < 10)
-				drawText("Open RSC shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
+				drawText(Config.SERVER_NAME+" shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
 						0xffff00);
 			else
-				drawText("Open RSC shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
+				drawText(Config.SERVER_NAME+" shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
 						0xffff00);
 		}
 
@@ -4358,11 +4360,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			return;
 		loadModels();
 		if (lastLoadedNull) {
-			System.out.println("models in DATA_DIR doesn't exist... Open RSC will now close.");
+			System.out.println("models in DATA_DIR do not exist... "+Config.SERVER_NAME+" will now close.");
 			//System.out.println("Please post a topic in the \"Support\" forum section.\n");
 			System.exit(-1);
 		}
-		//loadSounds(); //Disabling as Java 9+ does not include the sun/audio/AudioPlayer
+		//loadSounds(); //Disabling sounds as Java 9+ does not include the sun/audio/AudioPlayer
 		if (lastLoadedNull)
 			return;
 		updateLoadingProgress(100, "Starting game...");
@@ -5926,7 +5928,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
 					&& mouseButtonClick == 1) {
 				super.blockGlobalMessages = !super.blockGlobalMessages;
-				displayMessage("@gre@Open RSC:@whi@ Global Chat currently: "
+				displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ Global Chat currently: "
 						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, -1);
 				super.streamClass.createPacket(16);
 				super.streamClass.addByte((super.blockGlobalMessages ? 4 : 9));
@@ -9889,7 +9891,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void makeLoginMenus() {
 		menuWelcome = new Menu(gameGraphics, 50);
 		int i = 48;
-		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to Open RSC", 4, true);
+		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to "+Config.SERVER_NAME, 4, true);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 40 + i, "A RuneScape Classic Private Server", 4, true);
 		menuWelcome.drawBox(windowWidth / 2, windowHeight / 2 + 75 + i, 200, 35);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 75 + i, "Click here to login", 5, false);
@@ -11399,7 +11401,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int deaths;
 	public int prayerMenuIndex = 0;
 	public int LCYV_mudclient_SHKE_7 = 0;
-	public boolean autoScreenshots = true;
+	public boolean autoScreenshots = false;
 	public boolean fog = false;
 	public boolean global = true;
 	// public static long PING_RECIEVED, PING_SENT;

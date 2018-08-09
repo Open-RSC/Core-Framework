@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-        <!-- The amount to multiply the generated runes by -->
-	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry>
 
-        <!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown -->
-	<entry key="SHUTDOWN_TIME_MILLIS">60000</entry>
+	<!-- Server Configuration: -->
+	<entry key="SERVER_NAME">Open RSC</entry>
+        <entry key="PREFIX">@gre@OpenRSC:@whi@ </entry>
+        <entry key="LOGGING">true</entry>
+        <entry key="MAX_PLAYERS">1000</entry>
+        <entry key="COMMAND_PREFIX">::</entry>
 
-        <!-- Avatar Save Path -->
-	<entry key="AVATAR_DIR">avatars/</entry>
-
-        <!-- Server connection -->
+	<!-- Server connection: -->
 	<entry key="SERVER_VERSION">7</entry>
 	<entry key="SERVER_IP">0.0.0.0</entry>
 	<entry key="SERVER_PORT">53595</entry>
 	<entry key="WEB_PORT">53594</entry>
 	<entry key="MAX_LOGINS_PER_IP">5</entry>
 
-        <!-- Database connection -->
+	<!-- Database connection: -->
 	<entry key="DB_HOST">localhost</entry>
 	<entry key="DB_NAME">openrsc</entry>
 	<entry key="DB_LOGIN">root</entry>
 	<entry key="DB_PASS">root</entry>
-
-        <!-- Database names -->
 	<entry key="CONFIG_DB_NAME">openrsc_config</entry>
 	<entry key="LOG_DB_NAME">openrsc_logs</entry>
 	<entry key="TOOLS_DB_NAME">openrsc_tools</entry>
 
-        <!-- Skill xp rates -->
+  <!-- XP rates: -->
 	<entry key="COMBAT_XP_RATE">1</entry>
 	<entry key="SKILL_XP_RATE">1</entry>
-
-        <!-- Miscellaneous -->
 	<entry key="WILD_XP_BONUS">1</entry>
 	<entry key="SKULLED_XP_BONUS">1</entry>
+
+	<!-- Miscellaneous: -->
 	<entry key="ALLOW_WEAKENS">true</entry>
 	<entry key="ALLOW_GODSPELLS">true</entry>
+	<!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown: -->
+	<entry key="SHUTDOWN_TIME_MILLIS">60000</entry>
+	<entry key="AVATAR_DIR">avatars/</entry>
 
-	<!-- Sleeping related -->
+	<!-- Sleeping related: -->
 	<entry key="DISABLE_FATIGUE">false</entry>
 	<entry key="DISABLE_SLEEP_WORDS">true</entry>
 	<entry key="BAN_FAILED_SLEEP">false</entry>
 
-	<!-- Custom features -->
+	<!-- Custom feature: -->
 	<entry key="DISABLE_RUNECRAFTING">true</entry>
+	<!-- The amount to multiply the generated runes by: -->
+	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry>
+
 </properties>
