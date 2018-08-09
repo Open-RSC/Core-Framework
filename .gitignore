@@ -97,3 +97,7 @@ fabric.properties
 .idea/httpRequests
 
 data
+
+server/objects\.dat
+server/npcs\.dat
+server/items\.dat
