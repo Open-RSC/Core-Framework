@@ -1100,7 +1100,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else // Restart server
-		if ((cmd.equalsIgnoreCase("restart") || cmd.equalsIgnoreCase("update")) && (owner.isAdmin() || owner.isDev()))
+		if (cmd.equalsIgnoreCase("shutdown") && (owner.isAdmin() || owner.isDev()))
 		{
 			String message = "";
 			if (args.length > 0) {
