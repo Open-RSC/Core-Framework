@@ -1028,9 +1028,12 @@ public class InvUseOnObject implements PacketHandler {
 		      				break;
 		      			case 118:
 		      			case 813: // Furnace
-
-                            if(item.getID() == 171 && owner.getInventory().contains(1057) && owner.isQuestFinished(Config.Quests.DWARF_CANNON)) { //Cannon ball smithing
-                                if (owner.getCurStat(13) < 35) {
+                            if(item.getID() == 171 && owner.getInventory().contains(1057)) { //Cannon ball smithing
+                                if(!owner.isQuestFinished(Config.Quests.DWARF_CANNON)) {
+                                    owner.sendMessage("You need to have finished Dwarf Cannon in order to make cannon balls");
+                                    return;
+                                }
+                                else if (owner.getCurStat(13) < 35) {
                                     owner.sendMessage("You need a smithing level of 35 to smelt this.");
                                     return;
                                 }
@@ -1066,10 +1069,6 @@ public class InvUseOnObject implements PacketHandler {
                                         });
                                     }
                                 });
-                            }
-                            else if(item.getID() == 171 && owner.getInventory().contains(1057) && !owner.isQuestFinished(Config.Quests.DWARF_CANNON))
-                            {
-                                owner.sendMessage("You need to have finished Dwarf Cannon in order to make cannon balls");
                             }
                             else if (item.getID() == 172) { // Gold Bar (Crafting)
       							World.getDelayedEventHandler().add(new MiniEvent(owner) {

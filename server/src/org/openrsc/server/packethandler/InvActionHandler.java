@@ -1009,9 +1009,10 @@ public class InvActionHandler implements PacketHandler {
 	private void clean(Player player, final InvItem item) {
 		ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
 		if (herb != null) {
-			if (player.getMaxStat(15) < herb.getLevelRequired())
-				player.sendMessage("Your herblaw ability is not high enough to clean this herb");
-			else {
+			if (player.getMaxStat(15) < herb.getLevelRequired()) {
+				player.sendMessage("You cannot identify this herb");
+				player.sendMessage("you need a higher herblaw level");
+			} else {
 				player.setBusy(true);
 				World.getDelayedEventHandler().add(new MiniEvent(player) {
 					public void action() {

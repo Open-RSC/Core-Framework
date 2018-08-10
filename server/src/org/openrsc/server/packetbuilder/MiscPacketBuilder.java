@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import org.openrsc.server.Config;
+import static org.openrsc.server.Config.SERVER_NAME;
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Player;
@@ -251,7 +252,7 @@ public final class MiscPacketBuilder {
 			/* 132 */ sendAppearanceScreen();
 			/*     */ }
 
-		/* 134 */ sendMessage("Welcome to RuneScape!");
+		/* 134 */ sendMessage("Welcome to "+Config.SERVER_NAME+"!");
 		/* 135 */ sendLoginBox();
 		sendPendingAuctions();
 		/*     */

@@ -43,6 +43,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import static org.openrsc.client.Config.SERVER_NAME;
 import org.openrsc.client.loader.various.AppletUtils;
 import org.openrsc.group.Group;
 
@@ -122,7 +123,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			props.setProperty(key, value);
 
 			OutputStream propOut = new FileOutputStream(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
-			props.store(propOut, "RuneScape Configuration");
+			props.store(propOut, "Client Configuration");
 			props.clear();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -134,6 +135,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	private static mudclient<?> instance;
 
 	public static final void main(String[] args) throws Exception {
+                
                 //Download updated caches
                 //if (!AppletUtils.CACHEFILE.exists())
                 //org.openrsc.client.loader.WebClientLoader.downloadCache();
@@ -245,7 +247,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 					}
 				} else
-					displayMessage("@gre@Open RSC:@whi@ This command is only available in a bank window", 3, -1);
+					displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ This command is only available in a bank window", 3, -1);
 				return true;
 			} catch (Exception e) {
 			}
@@ -259,7 +261,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		} else if (cmd.equalsIgnoreCase("loadconf") || cmd.equalsIgnoreCase("resetconfig")
 				|| cmd.equalsIgnoreCase("resetconf")) {
 			loadConf();
-			displayMessage("@gre@Open RSC:@whi@ Configuration file has been refreshed", 3, -1);
+			displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ Configuration file has been refreshed", 3, -1);
 		}
 		return false;
 	}
@@ -621,7 +623,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		int j = 30;
 		gameGraphics.drawBox((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0);
 		gameGraphics.drawBoxEdge((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0xffffff);
-		drawText("@gre@Open RSC Command List", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@"+Config.SERVER_NAME+" Command List", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
 		drawText("To use a command enter two colons before the command, such as ::COMMAND", gameWidth / 2, j, 1,
 				0xffffff);
@@ -647,9 +649,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		j += 15;
 		drawText("@gre@EVENT: @whi@Join the running event", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@SITE: @whi@Quickly load Open RSC's website", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@SITE: @whi@Quickly load "+Config.SERVER_NAME+"'s website", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@VOTE: @whi@Vote for Open RSC on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@VOTE: @whi@Vote for "+Config.SERVER_NAME+" on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
 		j += 30;
 		if (super.mouseY > j - 12 && super.mouseY <= j && super.mouseX > gameWidth / 2 - 100
 				&& super.mouseX < gameWidth + 100) // WAS 106, 406
@@ -1163,7 +1165,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			int i = 35;
-			g.drawString("Sorry, an error has occured whilst loading Open RSC:", 30, i);
+			g.drawString("Sorry, an error has occured whilst loading "+Config.SERVER_NAME+":", 30, i);
 			i += 50;
 			g.setColor(Color.white);
 			g.drawString("To fix this try the following (in order):", 30, i);
@@ -1191,7 +1193,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g2.drawString("Error - out of memory!", 50, 50);
 			g2.drawString("Close ALL unnecessary programs", 50, 100);
 			g2.drawString("and windows before loading the game", 50, 150);
-			g2.drawString("Open RSC needs about 100mb of spare RAM", 50, 200);
+			g2.drawString(Config.SERVER_NAME+" needs about 100mb of spare RAM", 50, 200);
 			// changeThreadSleepModifier(1);
 			return;
 		}
@@ -1994,7 +1996,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (userArray[x] == ' ')
 				userArray[x + 1] = Character.toUpperCase(userArray[x + 1]);
 		currentUser = new String(userArray);
-		drawText("Welcome to RuneScape " + currentUser, gameWidth / 2, j, 4, 0xffff00);
+		drawText("Welcome to "+Config.SERVER_NAME+" " + currentUser, gameWidth / 2, j, 4, 0xffff00);
 		j += 30;
 		String s;
 		if (lastLoggedInDays == 0)
@@ -3623,10 +3625,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j8 = i6 / 60;
 			i6 %= 60;
 			if (i6 < 10)
-				drawText("Open RSC shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
+				drawText(Config.SERVER_NAME+" shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
 						0xffff00);
 			else
-				drawText("Open RSC shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
+				drawText(Config.SERVER_NAME+" shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
 						0xffff00);
 		}
 
@@ -4361,7 +4363,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			return;
 		loadModels();
 		if (lastLoadedNull) {
-			System.out.println("models in DATA_DIR doesn't exist... Open RSC will now close.");
+			System.out.println("models in DATA_DIR do not exist... "+Config.SERVER_NAME+" will now close.");
 			//System.out.println("Please post a topic in the \"Support\" forum section.\n");
 			System.exit(-1);
 		}
@@ -5231,252 +5233,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 	}
 
-	public final static int TOKEN_ID = 1355;
-
-	public final void drawTokenShopBox() {
-		if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-			int i = super.mouseX - (gameWidth - 411) / 2;
-			int j = super.mouseY - (gameHeight - 247) / 2;
-			if (i >= 0 && j >= 12 && i < gameWidth / 2 + 206 && j < gameHeight / 2 + 124) {
-				int k = 0;
-				for (int i1 = 0; i1 < 5; i1++) {
-					for (int i2 = 0; i2 < 8; i2++) {
-						int l2 = 7 + i2 * 49;
-						int l3 = 28 + i1 * 34;
-						if (i > l2 && i < l2 + 49 && j > l3 && j < l3 + 34 && shopItems[k] != -1) {
-							selectedShopItemIndex = k;
-							selectedShopItemType = shopItems[k];
-						}
-						k++;
-					}
-				}
-			} else {
-				super.streamClass.createPacket(67);
-				super.streamClass.formatPacket();
-				showShop = false;
-				showTokenShop = false;
-				return;
-			}
-		}
-		int byte0 = gameWidth / 2 - 204;
-		int byte1 = gameHeight / 2 - 123;
-		gameGraphics.drawBox(byte0, byte1, 408, 12, 192);
-		int l = 0x989898;
-		drawBoxAlpha(byte0, byte1 + 12, 408, 17, l, 160);
-		drawBoxAlpha(byte0, byte1 + 29, 8, 170, l, 160);
-		drawBoxAlpha(byte0 + 399, byte1 + 29, 9, 170, l, 160);
-		drawBoxAlpha(byte0, byte1 + 199, 408, 47, l, 160);
-		drawString("Buying and selling items", byte0 + 1, byte1 + 10, 1, 0xffffff);
-		int j1 = 0xffffff;
-		if (super.mouseX > byte0 + 320 && super.mouseY >= byte1 && super.mouseX < byte0 + 408
-				&& super.mouseY < byte1 + 12)
-			j1 = 0xff0000;
-		gameGraphics.drawBoxTextRight("Close window", byte0 + 406, byte1 + 10, 1, j1);
-		drawString("Shops stock in green", byte0 + 2, byte1 + 24, 1, 65280);
-		drawString("Number you own in blue", byte0 + 135, byte1 + 24, 1, 65535);
-		drawString("Your tokens: " + insertCommas("" + inventoryCount(TOKEN_ID)), byte0 + 280, byte1 + 24, 1, 0xffff00);
-		int k2 = 0xd0d0d0;
-		int k3 = 0;
-		for (int k4 = 0; k4 < 5; k4++) {
-			for (int l4 = 0; l4 < 8; l4++) {
-				int j5 = byte0 + 7 + l4 * 49;
-				int i6 = byte1 + 28 + k4 * 34;
-				if (selectedShopItemIndex == k3)
-					drawBoxAlpha(j5, i6, 49, 34, 0xff0000, 160);
-				else
-					drawBoxAlpha(j5, i6, 49, 34, k2, 160);
-				gameGraphics.drawBoxEdge(j5, i6, 50, 35, 0);
-				if (shopItems[k3] != -1) {
-					gameGraphics.spriteClip4(j5, i6, 48, 32,
-							SPRITE_ITEM_START + EntityHandler.getItemDef(shopItems[k3]).getSprite(),
-							EntityHandler.getItemDef(shopItems[k3]).getPictureMask(), 0, 0, false);
-					drawString(String.valueOf(shopItemCount[k3]), j5 + 1, i6 + 10, 1, 65280);
-					gameGraphics.drawBoxTextRight(String.valueOf(inventoryCount(shopItems[k3])), j5 + 47, i6 + 10, 1,
-							65535);
-				}
-				k3++;
-			}
-
-		}
-
-		drawLineX(byte0 + 5, byte1 + 222, 398, 0);
-		if (selectedShopItemIndex == -1) {
-			drawText("Select an object to buy or sell", byte0 + 204, byte1 + 214, 3, 0xffff00);
-			return;
-		}
-		int i5 = shopItems[selectedShopItemIndex];
-		if (i5 != -1) {
-			if (shopItemCount[selectedShopItemIndex] > 0) {
-				int j6 = (shopItemBuyPriceModifier * EntityHandler.getItemDef(i5).getBaseTokenPrice()) / 100;
-				drawString(EntityHandler.getItemDef(i5).getName() + ": buy for " + j6 + " token" + (j6 > 1 ? "s" : "")
-						+ " each", byte0 + 2, byte1 + 214, 1, 0xffff00);
-
-				gameGraphics.drawBoxTextRight("Buy:", byte0 + 313, byte1 + 214, 3, 0xffffff);
-
-				int le = 0xffffff;
-				if (super.mouseX > byte0 + 314 && super.mouseY >= byte1 + 204 && super.mouseX < byte0 + 330
-						&& super.mouseY <= byte1 + 215) {
-					le = 0xff0000;
-					if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-						mouseButtonClick = 0;
-						super.streamClass.createPacket(65);
-						super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-						super.streamClass.addLong(1);
-						super.streamClass.formatPacket();
-					}
-				}
-				gameGraphics.drawBoxTextRight("1", byte0 + 327, byte1 + 214, 3, le);
-
-				if (shopItemCount[selectedShopItemIndex] >= 5) {
-					int lp = 0xffffff;
-					if (super.mouseX > byte0 + 329 && super.mouseY >= byte1 + 204 && super.mouseX < byte0 + 345
-							&& super.mouseY <= byte1 + 215) {
-						lp = 0xff0000;
-						if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-							mouseButtonClick = 0;
-							super.streamClass.createPacket(65);
-							super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-							super.streamClass.addLong(5);
-							super.streamClass.formatPacket();
-						}
-					}
-					gameGraphics.drawBoxTextRight("5", byte0 + 342, byte1 + 214, 3, lp);
-				}
-
-				if (shopItemCount[selectedShopItemIndex] >= 10) {
-					int lz = 0xffffff;
-					if (super.mouseX > byte0 + 351 && super.mouseY >= byte1 + 204 && super.mouseX < byte0 + 367
-							&& super.mouseY <= byte1 + 215) {
-						lz = 0xff0000;
-						if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-							mouseButtonClick = 0;
-							super.streamClass.createPacket(65);
-							super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-							super.streamClass.addLong(10);
-							super.streamClass.formatPacket();
-						}
-					}
-					gameGraphics.drawBoxTextRight("10", byte0 + 364, byte1 + 214, 3, lz);
-				}
-
-				if (shopItemCount[selectedShopItemIndex] >= 50) {
-					int lh = 0xffffff;
-					if (super.mouseX > byte0 + 371 && super.mouseY >= byte1 + 204 && super.mouseX < byte0 + 387
-							&& super.mouseY <= byte1 + 215) {
-						lh = 0xff0000;
-						if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-							mouseButtonClick = 0;
-							super.streamClass.createPacket(65);
-							super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-							super.streamClass.addLong(50);
-							super.streamClass.formatPacket();
-						}
-					}
-					gameGraphics.drawBoxTextRight("50", byte0 + 384, byte1 + 214, 3, lh);
-				}
-
-				int l1 = 0xffffff;
-				if (super.mouseX > byte0 + 386 && super.mouseY >= byte1 + 204 && super.mouseX < byte0 + 402
-						&& super.mouseY <= byte1 + 215) {
-					l1 = 0xff0000;
-					if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-						super.inputText = "";
-						super.enteredText = "";
-						mouseButtonClick = 0;
-						inputBoxType = 11;
-					}
-				}
-				gameGraphics.drawBoxTextRight("X", byte0 + 399, byte1 + 214, 3, l1);
-			} else
-				drawText("This item is not currently available to buy", byte0 + 204, byte1 + 214, 3, 0xffff00);
-			if (inventoryCount(i5) > 0) {
-				int k6 = (shopItemSellPriceModifier * EntityHandler.getItemDef(i5).getBaseTokenPrice()) / 100;
-				drawString(EntityHandler.getItemDef(i5).getName() + ": sell for " + k6 + " token" + (k6 > 1 ? "s" : "")
-						+ " each", byte0 + 2, byte1 + 239, 1, 0xffff00);
-
-				gameGraphics.drawBoxTextRight("Sell:", byte0 + 314, byte1 + 239, 3, 0xffffff);
-
-				int le = 0xffffff;
-				if (super.mouseX > byte0 + 314 && super.mouseY >= byte1 + 229 && super.mouseX < byte0 + 330
-						&& super.mouseY <= byte1 + 240) {
-					le = 0xff0000;
-					if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-						mouseButtonClick = 0;
-						super.streamClass.createPacket(66);
-						super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-						super.streamClass.addLong(1);
-						super.streamClass.formatPacket();
-					}
-				}
-				gameGraphics.drawBoxTextRight("1", byte0 + 327, byte1 + 239, 3, le);
-
-				if (inventoryCount(i5) >= 5) {
-					int lp = 0xffffff;
-					if (super.mouseX > byte0 + 329 && super.mouseY >= byte1 + 229 && super.mouseX < byte0 + 345
-							&& super.mouseY <= byte1 + 240) {
-						lp = 0xff0000;
-						if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-							mouseButtonClick = 0;
-							super.streamClass.createPacket(66);
-							super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-							super.streamClass.addLong(5);
-							super.streamClass.formatPacket();
-						}
-					}
-					gameGraphics.drawBoxTextRight("5", byte0 + 342, byte1 + 239, 3, lp);
-				}
-
-				if (inventoryCount(i5) >= 10) {
-					int lz = 0xffffff;
-					if (super.mouseX > byte0 + 351 && super.mouseY >= byte1 + 229 && super.mouseX < byte0 + 367
-							&& super.mouseY <= byte1 + 240) {
-						lz = 0xff0000;
-						if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-							mouseButtonClick = 0;
-							super.streamClass.createPacket(66);
-							super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-							super.streamClass.addLong(10);
-							super.streamClass.formatPacket();
-						}
-					}
-					gameGraphics.drawBoxTextRight("10", byte0 + 364, byte1 + 239, 3, lz);
-				}
-
-				if (inventoryCount(i5) >= 50) {
-					int lh = 0xffffff;
-					if (super.mouseX > byte0 + 371 && super.mouseY >= byte1 + 229 && super.mouseX < byte0 + 387
-							&& super.mouseY <= byte1 + 240) {
-						lh = 0xff0000;
-						if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-							mouseButtonClick = 0;
-							super.streamClass.createPacket(66);
-							super.streamClass.add2ByteInt(shopItems[selectedShopItemIndex]);
-							super.streamClass.addLong(50);
-							super.streamClass.formatPacket();
-						}
-					}
-					gameGraphics.drawBoxTextRight("50", byte0 + 384, byte1 + 239, 3, lh);
-				}
-
-				int l1 = 0xffffff;
-				if (super.mouseX > byte0 + 386 && super.mouseY >= byte1 + 229 && super.mouseX < byte0 + 402
-						&& super.mouseY <= byte1 + 240) {
-					l1 = 0xff0000;
-					if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
-						super.inputText = "";
-						super.enteredText = "";
-						mouseButtonClick = 0;
-						inputBoxType = 12;
-					}
-				}
-				gameGraphics.drawBoxTextRight("X", byte0 + 399, byte1 + 239, 3, l1);
-
-				return;
-			}
-			drawText("You do not have any of this item to sell", byte0 + 204, byte1 + 239, 3, 0xffff00);
-		}
-	}
-
 	public final void drawShopBox() {
 		if (mouseButtonClick != 0 && !(inputBoxType == 11) && !(inputBoxType == 12)) {
 			int i = super.mouseX - (gameWidth - 411) / 2;
@@ -5929,7 +5685,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
 					&& mouseButtonClick == 1) {
 				super.blockGlobalMessages = !super.blockGlobalMessages;
-				displayMessage("@gre@Open RSC:@whi@ Global Chat currently: "
+				displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ Global Chat currently: "
 						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, -1);
 				super.streamClass.createPacket(16);
 				super.streamClass.addByte((super.blockGlobalMessages ? 4 : 9));
@@ -9912,7 +9668,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void makeLoginMenus() {
 		menuWelcome = new Menu(gameGraphics, 50);
 		int i = 48;
-		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to Open RSC", 4, true);
+		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to "+Config.SERVER_NAME, 4, true);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 40 + i, "A RuneScape Classic Private Server", 4, true);
 		menuWelcome.drawBox(windowWidth / 2, windowHeight / 2 + 75 + i, 200, 35);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 75 + i, "Click here to login", 5, false);
@@ -9997,11 +9753,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (inputBoxType != 0)
 				drawInputBox();
 		} else if (showShop && lastWalkTimeout == 0) {
-			if (showTokenShop) {
-				drawTokenShopBox();
-			} else {
-				drawShopBox();
-			}
+			drawShopBox();
 			if (inputBoxType != 0)
 				drawInputBox();
 		} else if (showTradeConfirmWindow)
@@ -11425,7 +11177,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int deaths;
 	public int prayerMenuIndex = 0;
 	public int LCYV_mudclient_SHKE_7 = 0;
-	public boolean autoScreenshots = true;
+	public boolean autoScreenshots = false;
 	public boolean fog = false;
 	public boolean global = true;
 	// public static long PING_RECIEVED, PING_SENT;

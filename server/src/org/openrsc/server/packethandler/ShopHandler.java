@@ -33,7 +33,7 @@ implements PacketHandler
 				return;
 			}
 
-			final int CURRENCY_ID = shop.getID() == 102 ? 1355 : 10;
+			final int CURRENCY_ID = 10;
 
 			int id;
 			ItemDef def;
@@ -70,15 +70,11 @@ implements PacketHandler
 					amount = shop.countId(id);
 				}
 
-				value = shop.getID() != 102 ? (shop.getBuyModifier() * def.getBasePrice() / 100) : (shop.getBuyModifier() * def.getBaseTokenPrice() / 100);
+				value = (shop.getBuyModifier() * def.getBasePrice() / 100);
 
 				if (player.getInventory().countId(CURRENCY_ID) < value * amount)
 				{
-					if (CURRENCY_ID == 1355)
-						player.sendMessage("You don't have enough tokens to buy that!");
-					else
-						player.sendMessage("You don't have enough money to buy that!");
-
+					player.sendMessage("You don't have enough money to buy that!");
 					return;
 				}
 
@@ -125,11 +121,6 @@ implements PacketHandler
 
 				break;
 			case 66: // sell item
-				if(shop.getID() == 102 || shop.getID() == 103)
-				{
-					player.sendMessage("This shop does not offer refunds for purchased items");
-					return;
-				}
 
 				id = p.readShort();
 				def = EntityHandler.getItemDef(id);

@@ -16,13 +16,7 @@ public class Config {
 	public static String AVATAR_DIR;
 
 	public static void initConfig(File file) throws IOException {
-		SERVER_NAME    = "Open RSC";
-		PREFIX         = "@gre@OpenRSC:@whi@ "; // Prefix that is sent before every custom (non-RSC) message (such as commands).
 		START_TIME     = System.currentTimeMillis();
-		LOGGING        = true; // Should in-game events be logged to the logs database?
-		MAX_PLAYERS    = 1000;
-		COMMAND_PREFIX = "::";
-
 		Properties props = new Properties();
 		props.loadFromXML(new FileInputStream(file));
 
@@ -33,6 +27,7 @@ public class Config {
 		BAN_FAILED_SLEEP = Boolean.parseBoolean(props.getProperty("BAN_FAILED_SLEEP"));
 		ALLOW_WEAKENS = Boolean.parseBoolean(props.getProperty("ALLOW_WEAKENS"));
 		ALLOW_GODSPELLS	= Boolean.parseBoolean(props.getProperty("ALLOW_GODSPELLS"));
+                LOGGING = Boolean.parseBoolean(props.getProperty("LOGGING"));
 
 		// Integers
 		SERVER_VERSION = Integer.parseInt(props.getProperty("SERVER_VERSION"));
@@ -41,6 +36,7 @@ public class Config {
 		RUNECRAFTING_AMOUNT_MULTIPLIER = Integer.parseInt(props.getProperty("RUNECRAFTING_AMOUNT_MULTIPLIER"));
 		MAX_LOGINS_PER_IP = Integer.parseInt(props.getProperty("MAX_LOGINS_PER_IP"));
 		SHUTDOWN_TIME_MILLIS = Integer.parseInt(props.getProperty("SHUTDOWN_TIME_MILLIS"));
+                MAX_PLAYERS = Integer.parseInt(props.getProperty("MAX_PLAYERS"));
 
 		// Floats
 		COMBAT_XP_RATE = Float.parseFloat(props.getProperty("COMBAT_XP_RATE"));
@@ -51,6 +47,9 @@ public class Config {
 		SKULLED_XP_BONUS = Float.parseFloat(props.getProperty("SKULLED_XP_BONUS"));
 
 		// Strings
+                COMMAND_PREFIX = props.getProperty("COMMAND_PREFIX");
+                SERVER_NAME = props.getProperty("SERVER_NAME");
+		PREFIX = props.getProperty("PREFIX");
 		SERVER_IP = props.getProperty("SERVER_IP");
 		DB_HOST = props.getProperty("DB_HOST");
 		DB_NAME = props.getProperty("DB_NAME");
@@ -66,7 +65,7 @@ public class Config {
 		props.clear();
 	}
 
-	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME, IRC_SERVER, IRC_CHANNEL, IRC_USERNAME, IRC_PASSWORD, IRC_GREET_1, IRC_GREET_2, IRC_GREET_3;
+	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME;
 	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_LOGINS_PER_IP;
 	public static float COMBAT_XP_RATE, COMBAT_XP_SUB, SKILL_XP_RATE, SKILL_XP_SUB, WILD_XP_BONUS, SKULLED_XP_BONUS;
 	public static long START_TIME;
@@ -123,7 +122,7 @@ public class Config {
 		public static final int DIGSITE = 47;
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
-        
+
         // Miniquests
         public static final int JOIN_BLACKARM_GANG = 50;
         public static final int JOIN_PHOENIX_GANG = 51;

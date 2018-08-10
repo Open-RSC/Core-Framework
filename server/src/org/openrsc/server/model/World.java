@@ -39,6 +39,7 @@ import com.rscdaemon.scripting.ScriptManager;
 import com.rscdaemon.util.IPTracker;
 import com.rscdaemon.util.IPTrackerPredicate;
 import com.rscdaemon.util.impl.ThreadSafeIPTracker;
+import static org.openrsc.server.Config.SERVER_NAME;
 
 public final class World
 	implements
@@ -923,7 +924,7 @@ public final class World
 
         for (Player informee : World.getPlayers()) {
             informee.sendNotification("@gre@Lottery:@whi@ Each entry is @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@. Type @gre@::LOTTERY@whi@ to purchase a ticket!");
-            informee.sendNotification("@gre@Lottery:@whi@ Open RSC Lottery is now running!");
+            informee.sendNotification("@gre@Lottery:@whi@ "+Config.SERVER_NAME+" Lottery is now running!");
         }               
 	}
 

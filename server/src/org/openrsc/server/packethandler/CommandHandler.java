@@ -854,7 +854,7 @@ public class CommandHandler implements PacketHandler
 			{
                 try
                 {
-                    Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+                    Player p = World.getPlayer(DataConversions.usernameToHash(args[3]));
                     if(p != null)
                     {
                         if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
@@ -1100,7 +1100,7 @@ public class CommandHandler implements PacketHandler
 			}
 		} 
 		else // Restart server
-		if ((cmd.equalsIgnoreCase("restart") || cmd.equalsIgnoreCase("update")) && (owner.isAdmin() || owner.isDev()))
+		if (cmd.equalsIgnoreCase("shutdown") && (owner.isAdmin() || owner.isDev()))
 		{
 			String message = "";
 			if (args.length > 0) {
