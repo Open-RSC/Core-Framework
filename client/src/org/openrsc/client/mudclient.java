@@ -6178,7 +6178,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	public final void loadSounds() {
 		try{
-			File folder = new File(AppletUtils.CACHE + System.getProperty("file.separator") + "data");
+			File folder = new File(AppletUtils.CACHE + System.getProperty("file.separator"));
 			File[] listOfFiles = folder.listFiles();
 			for (int i = 0; i < listOfFiles.length; i++) {
 			  if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
