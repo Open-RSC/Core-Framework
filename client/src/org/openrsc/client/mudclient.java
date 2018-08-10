@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -37,8 +38,11 @@ import org.openrsc.client.model.Sprite;
 import org.openrsc.client.util.DataConversions;
 import org.openrsc.client.util.Pair;
 
-import com.runescape.AudioReader;
-import com.runescape.client.cache.CacheUtil;
+
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import org.openrsc.client.loader.various.AppletUtils;
 import org.openrsc.group.Group;
 
@@ -666,7 +670,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	public int showSkipTutorialIslandBox = 0;
 	String reported = "";
-	private AudioReader audioReader;
 	private boolean showRoofs = false;
 
 	public boolean mouseWithinCoords(int x, int y, int width, int height) {
@@ -4362,7 +4365,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			//System.out.println("Please post a topic in the \"Support\" forum section.\n");
 			System.exit(-1);
 		}
-		//loadSounds(); //Disabling as Java 9+ does not include the sun/audio/AudioPlayer
+		loadSounds(); //Disabling as Java 9+ does not include the sun/audio/AudioPlayer
 		if (lastLoadedNull)
 			return;
 		updateLoadingProgress(100, "Starting game...");
@@ -6418,8 +6421,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void loadSounds() {
-		sounds = CacheUtil.loadArchive(AppletUtils.CACHE + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "sounds");
-		audioReader = new AudioReader();
+		try{
+			File folder = new File(AppletUtils.CACHE + System.getProperty("file.separator") + "data");
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+			  if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
+			    Media mp3 = new Media(listOfFiles[i].toURI().toString());      
+	            soundCache.put(listOfFiles[i].getName().toLowerCase(), new MediaPlayer(mp3));
+			  }
+			}
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 	}
 
 	public final void drawCombatStyleWindow() {
@@ -8985,14 +8999,23 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void playSound(final String s, final boolean mp3) {
-		if (audioReader == null) {
-			return;
-		}
 		if (configSoundEffects) {
 			return;
 		}
-		audioReader.loadData(sounds, CacheUtil.fileOffset(s + ".pcm", sounds),
-				CacheUtil.fileLength(s + ".pcm", sounds));
+		MediaPlayer sound = soundCache.get(s + ".mp3");
+		if (sound == null) {
+			return;
+		}
+		try {
+			if(lastSound != null) {
+				lastSound.stop();
+			}
+			sound.play();
+			lastSound = sound;
+        }
+		catch (Exception ex) {
+            ex.printStackTrace();
+        }
 	}
 
 	public final boolean sendWalkCommand(Pair<Integer, Integer> sect, int x1, int y1, int x2, int y2,
@@ -11346,6 +11369,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int playerAliveTimeout;
 	public final int characterSkinColours[] = { 0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020 };
 	public byte sounds[];
+	public HashMap<String, MediaPlayer> soundCache = new HashMap<String, MediaPlayer>();
+	public MediaPlayer lastSound;
+	final JFXPanel fxPanel = new JFXPanel();
 	public boolean aBooleanArray970[];
 	public int objectCount;
 	public int tradeMyItemCount;
