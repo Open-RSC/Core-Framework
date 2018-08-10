@@ -854,7 +854,7 @@ public class CommandHandler implements PacketHandler
 			{
                 try
                 {
-                    Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+                    Player p = World.getPlayer(DataConversions.usernameToHash(args[3]));
                     if(p != null)
                     {
                         if (World.withinWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1])))
