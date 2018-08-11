@@ -1707,36 +1707,42 @@ public class WallObjectAction implements PacketHandler {
 									return;
 								}
 								if(owner.getY() <= 600) {
-									if(owner.getCurStat(12) < 40) {
+									if (owner.getCurStat(12) < 40) {
 										owner.setBusy(true);
 										Npc master = World.getNpc(231, 341, 349, 599, 612);
-										if(master != null) {
-											for(Player informee : master.getViewArea().getPlayersInView()) {
+										if (master != null) {
+											for (Player informee : master.getViewArea().getPlayersInView()) {
 												informee.informOfNpcMessage(new ChatMessage(master, "Hello only the top crafters are allowed in here", owner));
 											}
 										}
 										World.getDelayedEventHandler().add(new ShortEvent(owner) {
-												public void action() {
-													owner.setBusy(false);
-													owner.sendMessage("You need a crafting level of 40 to enter");
-												}
-											});
-									}
-									else if(!owner.getInventory().wielding(191)) {
+											public void action() {
+												owner.setBusy(false);
+												owner.sendMessage("You need a crafting level of 40 to enter");
+											}
+										});
+									} else if (!owner.getInventory().wielding(191)) {
 										Npc master = World.getNpc(231, 341, 349, 599, 612);
-										if(master != null) {
-											owner.informOfNpcMessage(new ChatMessage(master, "Where is your apron?", owner));
+										if (master != null) {
+										    for (Player informee : master.getViewArea().getPlayersInView()) {
+                                                informee.informOfNpcMessage(new ChatMessage(master, "Where's your brown apron?", owner));
+                                                World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
+                                                    public void action() {
+                                                        for (Player informee : master.getViewArea().getPlayersInView()) {
+                                                            informee.informOfNpcMessage(new ChatMessage(master, "You can't come in here unless you're wearing a brown apron", owner));
+                                                                }
+                                                             }
+                                                        });
+                                                    }
+                                            }
+										} else {
+											doDoor();
+											owner.teleport(347, 601, false);
 										}
-									}
-									else {
+									} else {
 										doDoor();
-										owner.teleport(347, 601, false);
+										owner.teleport(347, 600, false);
 									}
-								}
-								else {
-									doDoor();
-									owner.teleport(347, 600, false);
-								}
 								break;
 							case 43: // Cooking Guild Door
 								if(object.getX() != 179 || object.getY() != 488) {
