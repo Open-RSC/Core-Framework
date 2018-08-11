@@ -143,7 +143,7 @@ INSERT INTO `conf_npc` (`npc_id`, `class_name`, `id`) VALUES
 (348, 'org.openrsc.server.npchandler.Certer', 101),
 (267, 'org.openrsc.server.npchandler.Certer', 102),
 (347, 'org.openrsc.server.npchandler.Certer', 103),
-(231, 'org.openrsc.server.npchandler.Certer', 104),
+(231, 'org.openrsc.server.npchandler.Master_Crafter', 104),
 (330, 'org.openrsc.server.npchandler.Certer', 105),
 (253, 'org.openrsc.server.npchandler.Heroes_Quest.Achetties', 300),
 (450, 'org.openrsc.server.npchandler.Plague_City.Alrena', 274),
