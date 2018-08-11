@@ -6472,8 +6472,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayRegularChat(String mobName, int rank, String message) {
-		String nameColour = Group.getNameColour(rank);
 		String nameSprite = Group.getNameSprite(rank);
+		if (rank == Group.USER)
+			rank = -1;
+		String nameColour = Group.getNameColour(rank);
 		String header = "";
 		header += nameColour + nameSprite + mobName + ":@yel@ ";
 		message = header + message;
