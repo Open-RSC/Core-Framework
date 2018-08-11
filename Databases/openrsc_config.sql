@@ -5481,7 +5481,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Adamantite Pickaxe', 'Requires level 31 mining to use', '', 72, 3200, 0, 0, 0, 11717785, 0, 0, 1, 1261),
 ('Rune Pickaxe', 'Requires level 41 mining to use', '', 72, 32000, 0, 0, 0, 65535, 0, 0, 1, 1262),
 ('Sleeping Bag', 'Not as comfy as a bed but better than nothing', 'sleep', 422, 30, 0, 0, 0, 0, 0, 0, 1, 1263),
-('Blue Wizards Hat', 'An ancient wizards hat.', '', 86, 2, 0, 0, 1, 255, 0, 0, 0, 1264),
+('Wizardshat', 'An ancient wizards hat.', '', 86, 2, 0, 0, 1, 255, 0, 0, 0, 1264),
 ('Gilded Totem Pole', 'A well crafted totem pole - given to you as a gift from Gujuo', 'Inspect', 403, 20, 0, 0, 0, 65280, 0, 0, 0, 1265),
 ('Blessed Golden Bowl', 'A specially made bowl constructed out of pure gold - it looks magical somehow', '', 404, 1000, 0, 0, 0, 0, 0, 0, 0, 1266),
 ('Blessed Golden Bowl with Pure Water', 'A golden bowl filled with pure water - it looks magical somehow', '', 405, 1000, 0, 0, 0, 8454143, 0, 0, 0, 1267),
@@ -8354,12 +8354,12 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (18, '95', 4, 172),
 (18, '430', 3, 173),
 (18, '96', 2, 174),
-(19, '31', 1000, 175),
-(19, '32', 1000, 176),
-(19, '33', 1000, 177),
-(19, '34', 1000, 178),
-(19, '35', 1000, 179),
-(19, '41', 200, 180),
+(19, '31', 30, 175),
+(19, '32', 30, 176),
+(19, '33', 30, 177),
+(19, '34', 30, 178),
+(19, '35', 30, 179),
+(19, '36', 30, 180),
 (5, '166', 2, 629),
 (20, '92', 1, 617),
 (20, '91', 1, 616),
@@ -8788,7 +8788,9 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (69, '167', 2, 692),
 (69, '168', 5, 693),
 (69, '237', 2, 694),
-(69, '135', 2, 695);
+(69, '135', 2, 695),
+(19, '199', 1, 696),
+(19, '185', 1, 697);
 
 -- --------------------------------------------------------
 
