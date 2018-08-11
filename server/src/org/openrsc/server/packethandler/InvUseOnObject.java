@@ -969,7 +969,25 @@ public class InvUseOnObject implements PacketHandler {
 		      				break;
 		      			case 97: // Fire
 		      			case 11:
-		      			case 119:
+		      			case 119: //Cook's range
+		      			    if(!owner.isQuestFinished(Config.Quests.COOKS_ASSISTANT) && object.isOn(131,660)) {
+                                owner.setBusy(true);
+                                Npc chef = World.getNpc(7, 131, 137, 659, 665);
+                                if (chef != null) {
+                                    for (Player informee : chef.getViewArea().getPlayersInView()) {
+                                        informee.informOfNpcMessage(new ChatMessage(chef, "Hey! Who said you could use that?", owner));
+                                    }
+                                }
+                                World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                                    public void action() {
+                                        owner.setBusy(false);
+                                    }
+                                });
+                            } else {
+                                owner.setCancelBatch(false);
+                                cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+                            }
+                        break;
 		      			case 274:
 		      			case 435:
 		      			case 491: // Range
