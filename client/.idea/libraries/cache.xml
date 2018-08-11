@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="cache">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/cache.zip!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

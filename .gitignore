@@ -105,3 +105,10 @@ server/items\.dat
 Tools/RSC Map Generator/map\.png
 
 */.gradle/*
+Tools/Sprite Editor/unpack/
+Tools/Sprite Editor/nbproject/
+client/\.idea/
+Launcher/\.idea/
+server/\.idea/
+
+*.properties
