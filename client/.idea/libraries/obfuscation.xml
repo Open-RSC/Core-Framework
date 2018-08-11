@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="obfuscation">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/obfuscation/allatori-annotations.jar!/" />
+      <root url="jar://$PROJECT_DIR$/obfuscation/allatori.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
