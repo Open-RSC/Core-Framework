@@ -77,7 +77,6 @@ public class Inventory {
 		} else if(item.getAmount() > 1)
 			item.setAmount(1);
 		if(this.full()) {
-			player.sendMessage("Your Inventory is full, the " + item.getDef().getName() + " drops to the ground!");
 			World.registerEntity(new Item(item.getID(), player.getX(), player.getY(), item.getAmount(), player));
 			return -1;
 		} else
