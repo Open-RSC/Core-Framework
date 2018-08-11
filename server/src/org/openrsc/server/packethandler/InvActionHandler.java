@@ -48,7 +48,7 @@ public class InvActionHandler implements PacketHandler {
 					eat(player, item);
 				else if (item.getDef().getCommand().equalsIgnoreCase("bury"))
 					bury(player, item);
-				else if (item.getDef().getCommand().equalsIgnoreCase("clean"))
+				else if (item.getDef().getCommand().equalsIgnoreCase("clean") || item.getDef().getCommand().equalsIgnoreCase("identify"))
 					clean(player, item);
 				else if (item.getDef().getCommand().equalsIgnoreCase("drink"))
 					drink(player, item);
@@ -1020,7 +1020,7 @@ public class InvActionHandler implements PacketHandler {
 						InvItem newItem = new InvItem(herb.getNewId());
 						owner.getInventory().remove(item);
 						owner.getInventory().add(newItem);
-						owner.sendMessage("You clean the mud off the " + newItem.getDef().getName());
+						owner.sendMessage("This herb is " + newItem.getDef().getName());
 						owner.increaseXP(15, herb.getExp());
 						owner.sendStat(15);
 						owner.sendInventory();
