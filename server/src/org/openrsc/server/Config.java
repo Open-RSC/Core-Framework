@@ -1,10 +1,19 @@
 package org.openrsc.server;
 
+/*import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.Configuration;*/
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+/*import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;*/
 
+
+//public class Config extends Configuration {
 public class Config {
 	public static String STAFF_TELEPORT_LOCATION_DATABASE = "`openrsc`.`teleport_locations`";
 	public static String AUCTIONS_TABLE = "`openrsc`.`rscd_auctions`";
