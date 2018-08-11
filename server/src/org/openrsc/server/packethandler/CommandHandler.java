@@ -889,7 +889,7 @@ public class CommandHandler implements PacketHandler
             
             if(p != null)
             {
-                String confirmMessage = owner.getUsername() + " has been sent the change appearance screen";
+                String confirmMessage = p.getUsername() + " has been sent the change appearance screen";
                 p.setChangingAppearance(true);
                 p.getActionSender().sendAppearanceScreen();
                 owner.sendMessage(Config.PREFIX + confirmMessage);
