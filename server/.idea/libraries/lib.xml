@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/netty-3.2.5.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mina.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/js.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xstream.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jmf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xpp3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/bsh-2.0b4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/apache-commons.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/hex-string.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
