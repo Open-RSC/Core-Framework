@@ -3121,6 +3121,12 @@ public class ObjectAction implements PacketHandler {
                                                         case 611:
                                                                 owner.teleport(394, 851, false);
                                                         break;
+
+                                                        case 942:
+                                                            owner.setAccessingBank(true);
+                                                            owner.showBank();
+                                                            break;
+
                                                                 
                                                         case 1079:
                                                                 if (owner.getSkillTotal() < 1300) {
