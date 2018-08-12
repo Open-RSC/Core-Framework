@@ -6183,7 +6183,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int i = 0; i < listOfFiles.length; i++) {
 			  if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
 			    Media mp3 = new Media(listOfFiles[i].toURI().toString());      
-	            soundCache.put(listOfFiles[i].getName().toLowerCase(), new MediaPlayer(mp3));
+	            soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
 			  }
 			}
             
@@ -8760,16 +8760,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (configSoundEffects) {
 			return;
 		}
-		MediaPlayer sound = soundCache.get(s + ".mp3");
+		Media sound = soundCache.get(s + ".mp3");
 		if (sound == null) {
 			return;
 		}
 		try {
+			MediaPlayer mp = new MediaPlayer(sound);
 			if(lastSound != null) {
 				lastSound.stop();
 			}
-			sound.play();
-			lastSound = sound;
+			mp.play();
+			lastSound = mp;
         }
 		catch (Exception ex) {
             ex.printStackTrace();
@@ -11123,7 +11124,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int playerAliveTimeout;
 	public final int characterSkinColours[] = { 0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020 };
 	public byte sounds[];
-	public HashMap<String, MediaPlayer> soundCache = new HashMap<String, MediaPlayer>();
+	public HashMap<String, Media> soundCache = new HashMap<String, Media>();
 	public MediaPlayer lastSound;
 	final JFXPanel fxPanel = new JFXPanel();
 	public boolean aBooleanArray970[];
