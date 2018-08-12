@@ -6633,6 +6633,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			break;
 		case 6:
 			message = "@cya@" + message;
+			break;
 		default:
 			message = "@whi@" + message;
 		}
