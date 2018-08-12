@@ -8766,11 +8766,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		try {
 			MediaPlayer mp = new MediaPlayer(sound);
-			if(lastSound != null) {
-				lastSound.stop();
-			}
-			mp.play();
-			lastSound = mp;
+			mp.setOnReady(() -> {
+				mp.play();
+				mp.setOnEndOfMedia(() -> {
+					mp.dispose();
+	            });
+		    });
         }
 		catch (Exception ex) {
             ex.printStackTrace();
@@ -11125,7 +11126,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final int characterSkinColours[] = { 0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020 };
 	public byte sounds[];
 	public HashMap<String, Media> soundCache = new HashMap<String, Media>();
-	public MediaPlayer lastSound;
 	final JFXPanel fxPanel = new JFXPanel();
 	public boolean aBooleanArray970[];
 	public int objectCount;
