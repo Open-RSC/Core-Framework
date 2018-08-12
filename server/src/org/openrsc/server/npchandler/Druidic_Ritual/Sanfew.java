@@ -31,6 +31,8 @@ public class Sanfew implements NpcHandler {
 							itemsNotFetched(npc,owner);
 						}
 						break;
+					case 2: questFinished(npc,owner);
+						break;
 				}
 			}
 		} else { //Quest not started
