@@ -8,12 +8,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -347,7 +342,7 @@ public class Edmond implements NpcHandler
 				owner.finishQuest(Config.Quests.PLAGUE_CITY);
 				owner.sendMessage("@gre@Well done you have completed the Plague City quest!");
 				owner.sendMessage("@gre@You have been awarded 1 quest points!");
-				owner.incQuestExp(14, 175 + 75 * owner.getMaxStat(14));
+				owner.incQuestExp(Skills.MINING, 175 + 75 * owner.getMaxStat(14));
 				owner.sendStat(14);
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"What can I give you as a reward I wonder?", "Here take this magic scroll", "I have little use for it, but it may help you"}) 
 				{

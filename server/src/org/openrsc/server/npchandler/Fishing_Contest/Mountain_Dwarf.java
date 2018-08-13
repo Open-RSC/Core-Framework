@@ -10,12 +10,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -330,7 +325,7 @@ public class Mountain_Dwarf implements NpcHandler {
 											World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Okay we will let you in now"}) {
 												public void finished() {
 													owner.finishQuest(Config.Quests.FISHING_CONTEST);
-													owner.incQuestExp(10, 3225);
+													owner.incQuestExp(Skills.FISHING, 3225);
 													owner.sendStat(10);
 													owner.sendMessage("@gre@You have completed the Fishing Contest quest!");
 													owner.sendMessage("@gre@You have been awarded 1 quest point!");

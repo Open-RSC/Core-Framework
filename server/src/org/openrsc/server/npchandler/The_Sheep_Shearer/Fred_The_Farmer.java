@@ -8,14 +8,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Fred_The_Farmer implements NpcHandler {
@@ -208,7 +202,7 @@ public class Fred_The_Farmer implements NpcHandler {
 								owner.sendMessage("Well done you have completed the sheep shearer quest");
 								owner.getInventory().add(new InvItem(10, 60));
 								owner.sendInventory();
-								owner.incQuestExp(12, 580);
+								owner.incQuestExp(Skills.CRAFTING, 580);
 								owner.sendStat(12);
 								owner.finishQuest(Config.Quests.SHEEP_SHEARER);
 								owner.sendMessage("@gre@You have gained 1 quest point!");

@@ -889,28 +889,6 @@ public class Formulae {
 
 		return -1;
 	}
-
-	public enum Stats {
-		ATTACK,
-		DEFENSE,
-		STRENGTH,
-		HITS,
-		RANGED,
-		PRAYER,
-		MAGIC,
-		COOKING,
-		WOODCUT,
-		FLETCHING,
-		FISHING,
-		FIREMAKING,
-		CRAFTING,
-		SMITHING,
-		MINING,
-		HERBLAW,
-		AGILITY,
-		THIEVING,
-		RUNECRAFTING
-	}
 	
 	public final static String[] statArray = {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic", "cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw", "agility", "thieving", "runecrafting"};
 }
