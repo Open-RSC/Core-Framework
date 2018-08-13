@@ -1789,8 +1789,10 @@ public class WallObjectAction implements PacketHandler {
 									if (owner.getX() == 374) {
 										final Npc armour =  World.getNpc(206, 373, 375, 3330, 3334);
 										if (armour != null) {
-											owner.sendMessage("Suddenly the suit of armour comes to life!");
-											armour.setAggressive(owner);
+											//owner.sendMessage("Suddenly the suit of armour comes to life!");
+											//armour.setAggressive(owner);
+                                            doDoor();
+                                            owner.teleport(373, 3332, false);
 										} else {
 											doDoor();
 											owner.teleport(373, 3332, false);

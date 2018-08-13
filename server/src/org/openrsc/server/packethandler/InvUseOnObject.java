@@ -11,6 +11,7 @@ import org.openrsc.server.util.Formulae;
 import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import org.openrsc.server.entityhandling.defs.extras.*;
@@ -2129,7 +2130,27 @@ public class InvUseOnObject implements PacketHandler {
 								});
 							}
 		      			break;
-		      			
+                        case 236:
+                            if(owner.getQuestCompletionStage(Config.Quests.DRUIDIC_RITUAL) == 1) {
+                                if (item.getID() == 133) {
+                                    owner.getInventory().remove(new InvItem(item.getID(), 1));
+                                    owner.sendMessage("You dip the " + item.getDef().getName() + " in the cauldron");
+                                    owner.getInventory().add(new InvItem(508, 1));
+                                    owner.sendInventory();
+                                } else {
+                                    int[] items = {502, 503, 504};
+                                    int[] receive = {505, 506, 507};
+                                    int index = Arrays.binarySearch(items, item.getID());
+                                    if (index >= 0) {
+                                        owner.getInventory().remove(new InvItem(item.getID(), 1));
+                                        owner.sendInventory();
+                                        owner.sendMessage("You dip the " + item.getDef().getName() + " in the cauldron");
+                                        owner.getInventory().add(new InvItem(receive[index], 1));
+                                        owner.sendInventory();
+                                    }
+                                }
+                            }
+                            break;
 		      			case 287:
 		      				if (item.getID() == 606) { // Excalibur
 								Quest merlinsQuest = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
