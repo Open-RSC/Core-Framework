@@ -5,11 +5,14 @@ services:
         image: mariadb:10.3.8
         container_name: mysql
         restart: always
+        env_file:
+            - ".env"
         environment:
-            - MYSQL_DATABASE=test
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_USER=dev
-            - MYSQL_PASSWORD=dev
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         ports:
             - "3306:3306"
         volumes:
