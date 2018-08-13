@@ -12,17 +12,7 @@ import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.event.WalkToPointEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.AgilityHandler;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Item;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Point;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
 import org.openrsc.server.states.Action;
@@ -2724,7 +2714,7 @@ public class WallObjectAction implements PacketHandler {
 										if(Formulae.thievingFormula(owner.getMaxStat(17), lockedDoor.getLevel())) {
 											owner.sendMessage("You sucessfully unlocked the " + object.getDoorDef().name);
 											owner.sendSound("opendoor", false);
-											owner.increaseXP(17, lockedDoor.getExperience());
+											owner.increaseXP(Skills.THIEVING, lockedDoor.getExperience());
 											owner.sendStat(17);
 											int newX = 0;
 											int newY = 0;

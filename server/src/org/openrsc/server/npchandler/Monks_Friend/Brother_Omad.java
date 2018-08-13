@@ -10,12 +10,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -349,7 +344,7 @@ public class Brother_Omad implements NpcHandler {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"good, good, good", "now we can party"}) {
 					public void finished() {
 						owner.finishQuest(Config.Quests.MONKS_FRIEND);
-						owner.incQuestExp(8, 2000);
+						owner.incQuestExp(Skills.WOODCUT, 2000);
 						owner.sendStat(8);
 						owner.getInventory().add(42, 8);
 						owner.sendInventory();

@@ -7,14 +7,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Player;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Cook implements NpcHandler {
@@ -105,7 +99,7 @@ public class Cook implements NpcHandler {
 																	owner.finishQuest(Config.Quests.COOKS_ASSISTANT);
 																	owner.sendMessage("Well done. You have completed the cook's assistant quest");
 																	owner.sendMessage("@gre@You just advanced 1 quest point!");
-																	owner.incQuestExp(7, 180);
+																	owner.incQuestExp(Skills.COOKING, 180);
 																	owner.sendStat(7);
 																	owner.setBusy(false);
 																	npc.unblock();

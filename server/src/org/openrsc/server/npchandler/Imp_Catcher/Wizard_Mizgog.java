@@ -7,14 +7,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Wizard_Mizgog implements NpcHandler {
@@ -179,7 +173,7 @@ public class Wizard_Mizgog implements NpcHandler {
 																	owner.finishQuest(Config.Quests.IMP_CATCHER);
 																	owner.sendMessage("Well done. You have completed the Imp catcher quest");
 																	owner.sendMessage("@gre@You have gained 1 quest point");
-																	owner.incQuestExp(6, 1000);
+																	owner.incQuestExp(Skills.MAGIC, 1000);
 																	owner.setBusy(false);
 																	npc.unblock();
 																	Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Imp Catcher</span> quest!"));

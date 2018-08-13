@@ -17,14 +17,7 @@ import org.openrsc.server.event.MiniEvent;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Path;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.states.Action;
 import org.openrsc.server.util.DataConversions;
@@ -1021,7 +1014,7 @@ public class InvActionHandler implements PacketHandler {
 						owner.getInventory().remove(item);
 						owner.getInventory().add(newItem);
 						owner.sendMessage("This herb is " + newItem.getDef().getName());
-						owner.increaseXP(15, herb.getExp());
+						owner.increaseXP(Skills.HERBLAW, herb.getExp());
 						owner.sendStat(15);
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -1041,16 +1034,16 @@ public class InvActionHandler implements PacketHandler {
 				owner.getInventory().remove(item);
 				switch(item.getID()) {
 					case 20: // Bones
-						owner.increaseXP(5, 15);
+						owner.increaseXP(Skills.PRAYER, 15);
 						break;						
 					case 604: // Bat Bones
-						owner.increaseXP(5, 18);
+						owner.increaseXP(Skills.PRAYER, 18);
 						break;
 					case 413: // Big Bones
-						owner.increaseXP(5, 50);
+						owner.increaseXP(Skills.PRAYER, 50);
 						break;
 					case 814: // Dragon Bones
-						owner.increaseXP(5, 240);
+						owner.increaseXP(Skills.PRAYER, 240);
 						break;
 				}
 				owner.sendStat(5);

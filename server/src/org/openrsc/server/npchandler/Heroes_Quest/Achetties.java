@@ -9,12 +9,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -217,29 +212,29 @@ public class Achetties implements NpcHandler
 											owner.sendMessage("@gre@You have completed the Heroes guild quest!");
 											owner.sendMessage("@gre@You have been awarded 1 quest point!");
 											owner.finishQuest(Config.Quests.HEROS_QUEST);
-											owner.incQuestExp(0, 3075 * 5); //attack exp
+											owner.incQuestExp(Skills.ATTACK, 3075 * 5); //attack exp
 											owner.sendStat(0);
-											owner.incQuestExp(1, 3075 * 5); //defence exp
+											owner.incQuestExp(Skills.DEFENSE, 3075 * 5); //defence exp
 											owner.sendStat(1);
-											owner.incQuestExp(2, 3075 * 5); //strength exp
+											owner.incQuestExp(Skills.STRENGTH, 3075 * 5); //strength exp
 											owner.sendStat(2);
-											owner.incQuestExp(3, 3075 * 5); //health exp
+											owner.incQuestExp(Skills.HITS, 3075 * 5); //health exp
 											owner.sendStat(3);
-											owner.incQuestExp(4, 2075 * 5); //ranged exp
+											owner.incQuestExp(Skills.RANGED, 2075 * 5); //ranged exp
 											owner.sendStat(4);
-											owner.incQuestExp(7, 2825 * 5); //cooking exp
+											owner.incQuestExp(Skills.COOKING, 2825 * 5); //cooking exp
 											owner.sendStat(7);
-											owner.incQuestExp(8, 1575 * 5); //woodcutting exp
+											owner.incQuestExp(Skills.WOODCUT, 1575 * 5); //woodcutting exp
 											owner.sendStat(8);
-											owner.incQuestExp(10, 2725 * 5); //fishing exp
+											owner.incQuestExp(Skills.FISHING, 2725 * 5); //fishing exp
 											owner.sendStat(10);
-											owner.incQuestExp(11, 1575 * 5); //Firemaking exp
+											owner.incQuestExp(Skills.FIREMAKING, 1575 * 5); //Firemaking exp
 											owner.sendStat(11);
-											owner.incQuestExp(13, 2258 * 5); //smithing exp
+											owner.incQuestExp(Skills.SMITHING, 2258 * 5); //smithing exp
 											owner.sendStat(13);
-											owner.incQuestExp(14, 2575 * 5); //mining exp
+											owner.incQuestExp(Skills.MINING, 2575 * 5); //mining exp
 											owner.sendStat(14);
-											owner.incQuestExp(15, 1325 * 5); //Herblaw exp
+											owner.incQuestExp(Skills.HERBLAW, 1325 * 5); //Herblaw exp
 											owner.sendStat(15);
 											owner.setBusy(false);
 											npc.unblock();
