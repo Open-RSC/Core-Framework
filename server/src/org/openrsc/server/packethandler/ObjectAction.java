@@ -131,7 +131,7 @@ public class ObjectAction implements PacketHandler {
                                                         handleBalanceOnEvent();
                                                 else if (command.equals("climb"))
                                                         handleClimbEvent();
-                                                else if (command.equals("swing"))
+                                                else if (command.equals("swing") || command.equals("swing on"))
                                                         handleSwingEvent();
                                                 else if (command.equals("enter"))
                                                         handleEnterEvent();
@@ -4095,6 +4095,7 @@ public class ObjectAction implements PacketHandler {
                                                                         if (agilityFormulae(1)) {
                                                                                 owner.teleport(207, 3225, false);
                                                                                 owner.sendMessage("you hold on tight and manage to make it across");
+										owner.increaseXP(16, 40);
                                                                         } else {
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
                                                                                 owner.setLastDamage(damage);
@@ -4124,12 +4125,13 @@ public class ObjectAction implements PacketHandler {
                                                                 }
                                                         break;
                                                                 
-                                                        case 628:
+                                                        case 628: // Yanille Rope Swing
                                                                 if (owner.getX() == 596 && owner.getY() == 3585) {
                                                                         owner.sendMessage("You reach out and grab the rope swing");
                                                                         if (agilityFormulae(1)) {
                                                                                 owner.teleport(596, 3581, false);
                                                                                 owner.sendMessage("you hold on tight and manage to make it across");
+										owner.increaseXP(16, 110);
                                                                         } else {
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
                                                                                 owner.setLastDamage(damage);
@@ -4160,21 +4162,38 @@ public class ObjectAction implements PacketHandler {
                                                                         }
                                                                 }
                                                         break;
-                                                        
+
+							case 695: // Brimhaven Moss Giant Swing
+								if (owner.getX() < 513 && owner.getX() > 515) {
+									owner.sendMessage("You reach out and swing across the vines"); // XXX
+									owner.teleport(508, 669, false);
+									owner.increaseXP(16, 23);
+								}
+								break;
+							case 694: // Brimhaven Moss Giant Swing
+								if (owner.getX() < 509 && owner.getX() > 507) {
+									owner.sendMessage("You reach out and swing across the vines"); // XXX
+									owner.teleport(512, 669, false);
+									owner.increaseXP(16, 23);
+								}
+								break;
+
                                                         default:
                                                                 owner.sendMessage("Nothing interesting happens");
                                                 }
+						owner.sendStat(16);
                                         }
                                         
                                         private void handleBalanceOnEvent() {
                                                 switch (object.getID()) {
-                                                        case 614: // Yannile Dungeon Ledge
+                                                        case 614: // Yanille Dungeon Ledge
                                                                 if (owner.getX() == 601) {
                                                                         if (owner.getY() == 3557) {
                                                                                 owner.sendMessage("You balance on the slippery ledge");
                                                                                 if(agilityFormulae(1)) {
                                                                                         owner.teleport(601, 3563, false);
                                                                                         owner.sendMessage("and walk across.");
+											owner.increaseXP(16, 90);
                                                                                 } else {
                                                                                         owner.teleport(597, 3535, false);
                                                                                         int damage = (int)(owner.getCurStat(3) * 0.9);
@@ -4206,6 +4225,7 @@ public class ObjectAction implements PacketHandler {
                                                                         if (agilityFormulae(1)) {
                                                                                 owner.teleport(598, 458, false);
                                                                                 owner.sendMessage("and walk across");
+										owner.increaseXP(16, 34);
                                                                         } else {
                                                                                 owner.teleport(597, 461, false);
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
@@ -4214,6 +4234,39 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.sendStat(3);
                                                                                 owner.sendMessage("You slip and fall");
                                                                                 owner.sendMessage("You manage to make it out before you drown");
+                                                                                owner.informOfModifiedHits(owner);
+                                                                        }
+                                                                break;
+
+                                                                case 692: // Karamja Log Bridge
+                                                                        owner.sendMessage("You attempt to walk over the slippery log..");
+									if (owner.getX() == 367 && (owner.getY() <= 782 && owner.getY() >= 780)) // Move to proper position
+										owner.teleport(367, 781, false);
+									else if (owner.getX() == 369 && (owner.getY() <= 782 && owner.getY() >= 780))
+										owner.teleport(369, 781, false);
+									else if (owner.getY() == 781 && owner.getX() == 370)
+										owner.teleport(369, 781, false);
+									else if (owner.getY() == 781 && owner.getX() == 366)
+										owner.teleport(367, 781, false);
+                                                                        if (agilityFormulae(1)) {
+                                                                               	owner.sendMessage("...and make it without any problems!");
+                                                                                if (owner.getX() == 367) {
+											owner.teleport(368, 781, false);
+											owner.teleport(369, 781, false);
+	                                                                                owner.increaseXP(16, 34);
+										} else if (owner.getX() == 369) {
+											owner.teleport(368, 781, false);
+											owner.teleport(367, 781, false);
+	                                                                                owner.increaseXP(16, 34);
+										}
+                                                                        } else {
+                                                                                owner.teleport(366, 789, false);
+                                                                                int damage = (int)(owner.getCurStat(3) * 0.9);
+                                                                                owner.setLastDamage(damage);
+                                                                                owner.setCurStat(3, owner.getCurStat(3) - damage);
+                                                                                owner.sendStat(3);
+                                                                                owner.sendMessage("You fall into the stream!");
+                                                                                owner.sendMessage("You lose some health");
                                                                                 owner.informOfModifiedHits(owner);
                                                                         }
                                                                 break;
@@ -4238,6 +4291,7 @@ public class ObjectAction implements PacketHandler {
                                                                 default:
                                                                         owner.sendMessage("Nothing interesting happens");
                                                 }
+						owner.sendStat(16);
                                         }
                                         
                                         private void handleClimbEvent() {
@@ -4268,7 +4322,7 @@ public class ObjectAction implements PacketHandler {
                                                         case 448:
                                                                 owner.sendMessage("You climb up the pile of mud");
                                                                 owner.teleport(618, 580);
-                                                        break;
+                                                        	break;
                                                         
                                                         case 636:
                                                                 if (owner.getX() == 582 && (owner.getY() == 3573 || owner.getY() == 3574)) {
@@ -4281,19 +4335,42 @@ public class ObjectAction implements PacketHandler {
                                                                         owner.sendMessage("You look through the dirt pile");
                                                                         owner.sendMessage("and it reveals a secret passage!");
                                                                 }
-                                                        break;
+                                                        	break;
                                                         
                                                         case 693:
                                                                 if (owner.getX() == 339 && owner.getY() == 555) {
                                                                         owner.teleport(338, 555, false);
                                                                         owner.sendMessage("You grab hold of the handholds");
                                                                         owner.sendMessage("and climb over to the other side");
+									owner.increaseXP(16, 50);
                                                                 }
-                                                        break;
+                                                        	break;
+
+							case 633: // Yanille Rubble Pile
+								if(owner.getX() > 579 && owner.getX() < 582 && owner.getY() > 3523 && owner.getY() < 3528) {
+									owner.teleport(582, 3573, false);
+									owner.sendMessage("You climb up the pile of rubble");
+									owner.increaseXP(16, 54);
+								}
+								break;
+
+							case 1029: // Yanille north climbing rocks
+								if (owner.getX() == 624) {
+									if (owner.getY() == 743) {
+										owner.teleport(624, 742, false);
+									}
+									if (owner.getY() == 742) {
+										owner.teleport(624, 741, false);
+										owner.sendMessage("You climb the rocks and scale the wall"); // XXX
+										owner.increaseXP(16, 40);
+									}
+								}
+								break;
                                                                 
                                                         default:
                                                                 owner.sendMessage("Nothing interesting happens.");
                                                 }
+						owner.sendStat(16);
                                         }
                                         
                                         private void handleEnterEvent() {
@@ -4319,10 +4396,11 @@ public class ObjectAction implements PacketHandler {
                                                                 }
                                                         break;
                                                         
-                                                        case 656:
+                                                        case 656: // Yanille pipe
                                                                 owner.teleport(608, 3568, false);
                                                                 owner.sendMessage("You squeeze into the pipe");
                                                                 owner.sendMessage("and shuffle down into it");
+								owner.increaseXP(16, 30);
                                                         break;
                                                         
                                                         case 657:
@@ -4351,6 +4429,7 @@ public class ObjectAction implements PacketHandler {
                                                         default:
                                                                 owner.sendMessage("Nothing interesting happens.");
                                                 }
+						owner.sendStat(16);
                                         }
                                         
                                         private void handleInspect() {
