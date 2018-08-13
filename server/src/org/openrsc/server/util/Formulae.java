@@ -769,17 +769,20 @@ public class Formulae {
 	public static int getMiningPickSwings(int axeId) {
 		int swings = 1;
 		switch (axeId) {
-			case 1259:
+			case 1258:
 				swings = 2;
 				break;
+			case 1259:
+				swings = 3;
+				break;
 			case 1260:
-				swings = 4;
+				swings = 5;
 				break;
 			case 1261:
-				swings = 6;
+				swings = 8;
 				break;
 			case 1262:
-				swings = 8;
+				swings = 12;
 		}
 		return swings;
 	}
