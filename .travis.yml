@@ -19,6 +19,7 @@ before_install:
   - docker-compose -v
   - docker -v
   - sudo service mysql stop
+  - sudo apt update && sudo apt install openjfx -y
 
 script:
   - sudo make start
