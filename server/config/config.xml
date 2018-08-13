@@ -45,6 +45,8 @@
 
 	<!-- Custom feature: -->
 	<entry key="DISABLE_RUNECRAFTING">true</entry>
+    <!-- Enables auto-woodcutting/auto-cooking -->
+	<entry key="DISABLE_SKILL_LOOPS">0</entry>
 	<!-- The amount to multiply the generated runes by: -->
 	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry>
 

@@ -170,11 +170,11 @@ public class ObjectAction implements PacketHandler {
                                                 else if (command.equals("pick") || command.equals("pick banana") || command.equals("pick pineapple"))
                                                         handlePick();
                                                 else if (command.equals("mine"))
-                                                        handleMining(click);
+                                                        handleMining();
                                                 else if(command.equals("prospect"))
                                                         handleProspect();
                                                 else if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon") || command.equals("cage"))
-                                                         handleFishing(click);
+                                                         handleFishing();
                                                 else if (command.equals("chop"))
                                                         handleWoodcutting(click);
                                                 /*
@@ -2299,7 +2299,6 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.getInventory().add(new InvItem(item, 1));
                                                                                 owner.sendInventory();
                                                                                 owner.sendSound("potato", false);
-                                                                                pickLoop(item, message);
                                                                         } else
                                                                                 owner.setBusy(false);
                                                                 }
@@ -3598,9 +3597,10 @@ public class ObjectAction implements PacketHandler {
                                                 }
                                         }       
                                         
-                                        private void handleMining(final int click)
+                                        private void handleMining()
                                         {
                                                 owner.setCancelBatch(false);
+                                                int pickaxeSwings = Formulae.getMiningPickSwings(Formulae.getPickAxe(owner));
                                                 switch(Formulae.getPickAxe(owner)) {
                                                         case -1:
                                                                 player.sendMessage("You need a pickaxe in order to mine this rock.");
@@ -3609,22 +3609,22 @@ public class ObjectAction implements PacketHandler {
                                                                 player.sendMessage("You are not high enough level to use the pickaxe in your inventory.");
                                                                 break;
                                                         case 156:
-                                                                mineLoop(click, 1);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1258:
-                                                                mineLoop(click, 2);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1259:
-                                                                mineLoop(click, 4);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1260:
-                                                                mineLoop(click, 6);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1261:
-                                                                mineLoop(click, 9);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1262:
-                                                                mineLoop(click, 12);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         default:
                                                                 break;
@@ -3639,7 +3639,7 @@ public class ObjectAction implements PacketHandler {
                                                 //      mineLoop(click, (int)Math.ceil(owner.getMaxStat(14) / 10));
                                         }
                                         
-                                        private void mineLoop(final int click, final int loop) 
+                                        private void mineLoop(final int loop)
                                         {
                                                 if (owner.getCancelBatch())
                                                         return;
@@ -3701,7 +3701,7 @@ public class ObjectAction implements PacketHandler {
                                                                                         owner.sendMessage("You only succeed in scratching the rock.");
                                                                                         owner.setBusy(false);           
                                                                                         if (loop > 1)
-                                                                                                mineLoop(click, loop - 1);
+                                                                                                mineLoop(loop - 1);
                                                                                 }
                                                                         }
                                                                 });
@@ -3867,99 +3867,110 @@ public class ObjectAction implements PacketHandler {
                                                         });
                                                 }*/
                                         }
-                                        
-                                        private void handleWoodcutting(final int click)
-                                        {
-                                                owner.setCancelBatch(false);
-                                                
-                                                if (owner.isSub())
-                                                        woodcutLoop(click, (int)Math.ceil((owner.getMaxStat(8) / 10) * 2));
-                                                else
-                                                        woodcutLoop(click, (int)Math.ceil(owner.getMaxStat(8) / 10));
-                                        }
-                                        
-                                        private void woodcutLoop(final int click, final int loop) 
-                                        {
-                                                final WoodcutDef def = EntityHandler.getWoodcutDef(object.getID());
-                                                
-                                                if (owner.getCancelBatch())
-                                                        return;
-                                                
-                                                if (owner.isFatigued())
-                                                {
-                                                        owner.cancelBatch = true;
-                                                        owner.sendMessage("You are too tired to chop this tree.");
-                                                        return;
-                                                }
-                                                
-                                                if (owner.getMaxStat(8) < def.getLevel())
-                                                {
-                                                        owner.cancelBatch = true;
-                                                        owner.sendMessage("Your woodcutting level is not high enough to chop this tree.");
-                                                        return;
-                                                }
-                                                
-                                                if (def != null)
-                                                {
-                                                        final int axe = Formulae.getWoodcuttingAxe(owner);
 
-                                                        if (axe == -1)
-                                                        {
-                                                                owner.cancelBatch = true;
-                                                                owner.sendMessage("You need an axe in order to chop this tree.");
-                                                                return;
-                                                        }
-                                                        
-                                                        if(axe == -2) {
-                                                                owner.cancelBatch = true;
-                                                                owner.sendMessage("You need an axe which you have the proper woodcutting level to use to chop this tree.");
-                                                                return;
-                                                        }
-                                                        
-                                                        owner.setStatus(Action.CHOPPING_TREE);
-                                                        owner.setBusy(true);
-                                                        owner.sendMessage("You swing your " + EntityHandler.getItemDef(axe).getName().toLowerCase() + " at the tree...");
-                                                        
-                                                        for (Player p : owner.getViewArea().getPlayersInView())
-                                                        {
-                                                                p.watchItemBubble(owner.getIndex(), axe);
-                                                        }
-                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) 
-                                                        {
-                                                                public void action() 
-                                                                {
-                                                                        if (Formulae.getLog(def.getLevel(), owner.getCurStat(8), axe)) 
-                                                                        {
-                                                                                InvItem log = new InvItem(def.getLogID());
-                                                                                owner.getInventory().add(log);
-                                                                                owner.sendMessage("You get some wood");
-                                                                                owner.sendInventory();
-                                                                                owner.increaseXP(8, def.getExperience());
-                                                                                owner.sendStat(8);
-                                                                                owner.setBusy(false);
-                                                                                if (DataConversions.random(1, 100) <= def.getFell()) 
-                                                                                {
-                                                                                        World.unregisterEntity(object);
-                                                                                        GameObject stump = new GameObject(object.getLocation(), 4, object.getDirection(), object.getType());
-                                                                                        World.registerEntity(stump);
-                                                                                        World.delayedRemoveObject(stump, def.getRespawnTime() * 1000);
-                                                                                        World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
-                                                                                }
-                                                                        } 
-                                                                        else
-                                                                        {       
-                                                                                owner.sendMessage("You slip and fail to hit the tree");
-                                                                                owner.setBusy(false);
-                                                                                owner.setStatus(Action.IDLE);
-                                                                                if (loop > -1)
-                                                                                        woodcutLoop(click, loop - 1);
-                                                                        }
-                                                                }
-                                                        });
-                                                }
+                                    private void handleWoodcutting(final int click)
+                                    {
+                                        owner.setCancelBatch(false);
+                                        woodcutLoop(click, (int)Math.ceil((owner.getMaxStat(8) / 10)));
+                                    }
+
+                                    private void woodcutLoop(final int click, final int loop)
+                                    {
+                                        final WoodcutDef def = EntityHandler.getWoodcutDef(object.getID());
+
+                                        if (owner.getCancelBatch())
+                                            return;
+
+                                        if (owner.isFatigued())
+                                        {
+                                            owner.cancelBatch = true;
+                                            owner.sendMessage("You are too tired to chop this tree.");
+                                            return;
                                         }
+
+                                        if (owner.getMaxStat(8) < def.getLevel())
+                                        {
+                                            owner.cancelBatch = true;
+                                            owner.sendMessage("Your woodcutting level is not high enough to chop this tree.");
+                                            return;
+                                        }
+
+                                        if (def != null && !object.isRemoved())
+                                        {
+                                            final int axe = Formulae.getWoodcuttingAxe(owner);
+
+                                            if (axe == -1)
+                                            {
+                                                owner.cancelBatch = true;
+                                                owner.sendMessage("You need an axe in order to chop this tree.");
+                                                return;
+                                            }
+
+                                            if(axe == -2) {
+                                                owner.cancelBatch = true;
+                                                owner.sendMessage("You need an axe which you have the proper woodcutting level to use to chop this tree.");
+                                                return;
+                                            }
+
+                                            owner.setStatus(Action.CHOPPING_TREE);
+                                            owner.setBusy(true);
+                                            owner.sendMessage("You swing your " + EntityHandler.getItemDef(axe).getName().toLowerCase() + " at the tree...");
+
+                                            for (Player p : owner.getViewArea().getPlayersInView())
+                                            {
+                                                p.watchItemBubble(owner.getIndex(), axe);
+                                            }
+                                            World.getDelayedEventHandler().add(new SingleEvent(owner, 1500)
+                                            {
+                                                public void action()
+                                                {
+                                                    if (Formulae.getLog(def.getLevel(), owner.getCurStat(8), axe))
+                                                    {
+                                                        InvItem log = new InvItem(def.getLogID());
+                                                        owner.getInventory().add(log);
+                                                        owner.sendMessage("You get some wood");
+                                                        owner.sendInventory();
+                                                        owner.increaseXP(8, def.getExperience());
+                                                        owner.sendStat(8);
+                                                        owner.setBusy(false);
+                                                        if (DataConversions.random(1, 100) <= def.getFell())
+                                                        {
+                                                            World.unregisterEntity(object);
+                                                            GameObject stump = new GameObject(object.getLocation(), 4, object.getDirection(), object.getType());
+                                                            World.registerEntity(stump);
+                                                            World.delayedRemoveObject(stump, def.getRespawnTime() * 1000);
+                                                            World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
+                                                            return;
+                                                        }
+                                                        if(Config.DISABLE_SKILL_LOOPS == 2) {
+                                                            if (!owner.getInventory().full()) {
+                                                                World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                    public void action() {
+                                                                        woodcutLoop(click, loop);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        owner.sendMessage("You slip and fail to hit the tree");
+                                                        owner.setBusy(false);
+                                                        owner.setStatus(Action.IDLE);
+                                                        if(Config.DISABLE_SKILL_LOOPS == 1 || Config.DISABLE_SKILL_LOOPS == 2 ) {
+                                                            World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                public void action() {
+                                                                    woodcutLoop(click, loop);
+                                                                }
+                                                            });
+                                                         }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
                                         
-                                        private void fishLoop(final int click, final int loop) 
+                                        private void fishLoop()
                                         {
                                                 if (owner.getCancelBatch())
                                                         return;
@@ -4045,11 +4056,29 @@ public class ObjectAction implements PacketHandler {
                                                                                                         owner.sendInventory();
                                                                                                         owner.increaseXP(10, def.getExp());
                                                                                                         owner.sendStat(10);
-                                                                                                } else
-                                                                                                        owner.sendMessage("You fail to catch anything.");
-                                                                                                owner.setBusy(false);
-                                                                                                if (loop > 1)
-                                                                                                        fishLoop(click, loop - 1);      
+                                                                                                        owner.setBusy(false);
+                                                                                                    if (Config.DISABLE_SKILL_LOOPS == 2) {
+                                                                                                        if (!owner.getInventory().full()) {
+                                                                                                            World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                                                                public void action() {
+                                                                                                                    fishLoop();
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+                                                                                                    }
+                                                                                                } else {
+                                                                                                    owner.sendMessage("You fail to catch anything.");
+                                                                                                    owner.setBusy(false);
+                                                                                                    if (Config.DISABLE_SKILL_LOOPS == 1 ||Config.DISABLE_SKILL_LOOPS == 2  ) {
+                                                                                                        if (!owner.getInventory().full()) {
+                                                                                                            World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                                                                public void action() {
+                                                                                                                    fishLoop();
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
                                                                                         }
                                                                                 });
                                                                         } else
@@ -4060,14 +4089,10 @@ public class ObjectAction implements PacketHandler {
                                                 }                                               
                                         }
                                         
-                                        private void handleFishing(final int click) 
+                                        private void handleFishing()
                                         {
                                                 owner.setCancelBatch(false);
-                                                
-                                                if (owner.isSub())
-                                                        fishLoop(click, (int)Math.ceil((owner.getMaxStat(10) / 10) * 2));
-                                                else
-                                                        fishLoop(click, (int)Math.ceil(owner.getMaxStat(10) / 10));
+                                                fishLoop();
                                         }
                                         
                                         private void handleSwingEvent() {
