@@ -46,6 +46,7 @@ public class Config {
 		MAX_LOGINS_PER_IP = Integer.parseInt(props.getProperty("MAX_LOGINS_PER_IP"));
 		SHUTDOWN_TIME_MILLIS = Integer.parseInt(props.getProperty("SHUTDOWN_TIME_MILLIS"));
                 MAX_PLAYERS = Integer.parseInt(props.getProperty("MAX_PLAYERS"));
+        DISABLE_SKILL_LOOPS = Integer.parseInt(props.getProperty("DISABLE_SKILL_LOOPS"));
 
 		// Floats
 		COMBAT_XP_RATE = Float.parseFloat(props.getProperty("COMBAT_XP_RATE"));
@@ -75,7 +76,7 @@ public class Config {
 	}
 
 	public static String SERVER_IP, COMMAND_PREFIX, SERVER_NAME, PREFIX, DB_HOST, DB_NAME, DB_LOGIN, DB_PASS, CONFIG_DB_NAME, LOG_DB_NAME, TOOLS_DB_NAME;
-	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_LOGINS_PER_IP;
+	public static int WEB_PORT, SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, MAX_LOGINS_PER_IP,DISABLE_SKILL_LOOPS;
 	public static float COMBAT_XP_RATE, COMBAT_XP_SUB, SKILL_XP_RATE, SKILL_XP_SUB, WILD_XP_BONUS, SKULLED_XP_BONUS;
 	public static long START_TIME;
 	public static boolean LOGGING, PK_MODE, BAN_FAILED_SLEEP, ALLOW_WEAKENS, ALLOW_GODSPELLS, DISABLE_SLEEP_WORDS, DISABLE_FATIGUE, DISABLE_RUNECRAFTING;

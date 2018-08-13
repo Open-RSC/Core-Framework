@@ -1034,7 +1034,7 @@ public class InvUseOnObject implements PacketHandler {
                                     });
                                 } else {
                                     owner.setCancelBatch(false);
-                                    cooking();
+                                    cookLoop();
                                 }
                             }
                         break;
@@ -1091,7 +1091,7 @@ public class InvUseOnObject implements PacketHandler {
 								});								
 		      				} else {
 		      					owner.setCancelBatch(false);
-		      						cooking();
+		      						cookLoop();
 		      				}
 		      				break;
 		      			case 118:
@@ -2177,7 +2177,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		}
 			}
 			
-			private void cooking() {
+			private void cookLoop() {
 				if (owner.getCancelBatch())
 					return;
   				final ItemCookingDef cookingDef = item.getCookingDef();
@@ -2211,6 +2211,13 @@ public class InvUseOnObject implements PacketHandler {
                             owner.sendInventory();
                         }
                         owner.setBusy(false);
+                        if(Config.DISABLE_SKILL_LOOPS == 2) {
+                            World.getDelayedEventHandler().add(new SingleEvent(owner,2500) {
+                                public void action() {
+                                    cookLoop();
+                                }
+                            });
+                        }
                     }
   				});
 			}
