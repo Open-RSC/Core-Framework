@@ -1034,7 +1034,7 @@ public class InvUseOnObject implements PacketHandler {
                                     });
                                 } else {
                                     owner.setCancelBatch(false);
-                                    cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+                                    cooking();
                                 }
                             }
                         break;
@@ -1091,7 +1091,7 @@ public class InvUseOnObject implements PacketHandler {
 								});								
 		      				} else {
 		      					owner.setCancelBatch(false);
-		      						cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+		      						cooking();
 		      				}
 		      				break;
 		      			case 118:
@@ -2177,9 +2177,9 @@ public class InvUseOnObject implements PacketHandler {
 		      		}
 			}
 			
-			private void cookLoop(final int loop) {
+			private void cooking() {
 				if (owner.getCancelBatch())
-					return;				
+					return;
   				final ItemCookingDef cookingDef = item.getCookingDef();
   				if (cookingDef == null) {
   					owner.sendMessage("Nothing interesting happens");
@@ -2197,24 +2197,22 @@ public class InvUseOnObject implements PacketHandler {
   				owner.sendMessage("You cook the " + item.getDef().getName() + " on the " + object.getGameObjectDef().getName());
   				World.getDelayedEventHandler().add(new ShortEvent(owner) {
   					public void action() {
-					InvItem cookedFood = new InvItem(cookingDef.getCookedId());
-					if (owner.getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
-							owner.getInventory().add(cookedFood);
-							owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
-							owner.increaseXP(7, cookingDef.getExp());
-							owner.sendStat(7);
-						} else {
-							owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
-							owner.sendMessage("You accidently burn the " + item.getDef().getName());
-						}
-						owner.sendInventory();
-					}
-					owner.setBusy(false);
-					if (loop > 1)
-						cookLoop(loop - 1);						
-  					}
-  				});				
+                        InvItem cookedFood = new InvItem(cookingDef.getCookedId());
+                        if (owner.getInventory().remove(item) > -1) {
+                            if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
+                                owner.getInventory().add(cookedFood);
+                                owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
+                                owner.increaseXP(7, cookingDef.getExp());
+                                owner.sendStat(7);
+                            } else {
+                                owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
+                                owner.sendMessage("You accidently burn the " + item.getDef().getName());
+                            }
+                            owner.sendInventory();
+                        }
+                        owner.setBusy(false);
+                    }
+  				});
 			}
 			
 			private void handleSmithing(int barID, int toMake) {

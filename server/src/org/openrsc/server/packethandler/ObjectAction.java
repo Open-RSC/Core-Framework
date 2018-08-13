@@ -170,13 +170,13 @@ public class ObjectAction implements PacketHandler {
                                                 else if (command.equals("pick") || command.equals("pick banana") || command.equals("pick pineapple"))
                                                         handlePick();
                                                 else if (command.equals("mine"))
-                                                        handleMining(click);
+                                                        handleMining();
                                                 else if(command.equals("prospect"))
                                                         handleProspect();
                                                 else if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon") || command.equals("cage"))
                                                          handleFishing(click);
                                                 else if (command.equals("chop"))
-                                                        handleWoodcutting(click);
+                                                        handleWoodcutting();
                                                 /*
                                                  * Added by Pyru.
                                                  * Dramen Tree, I also changed
@@ -3598,9 +3598,10 @@ public class ObjectAction implements PacketHandler {
                                                 }
                                         }       
                                         
-                                        private void handleMining(final int click)
+                                        private void handleMining()
                                         {
                                                 owner.setCancelBatch(false);
+                                                int pickaxeSwings = Formulae.getMiningPickSwings(Formulae.getPickAxe(owner));
                                                 switch(Formulae.getPickAxe(owner)) {
                                                         case -1:
                                                                 player.sendMessage("You need a pickaxe in order to mine this rock.");
@@ -3609,22 +3610,22 @@ public class ObjectAction implements PacketHandler {
                                                                 player.sendMessage("You are not high enough level to use the pickaxe in your inventory.");
                                                                 break;
                                                         case 156:
-                                                                mineLoop(click, 1);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1258:
-                                                                mineLoop(click, 2);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1259:
-                                                                mineLoop(click, 4);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1260:
-                                                                mineLoop(click, 6);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1261:
-                                                                mineLoop(click, 9);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         case 1262:
-                                                                mineLoop(click, 12);
+                                                                mineLoop(pickaxeSwings);
                                                                 break;
                                                         default:
                                                                 break;
@@ -3639,7 +3640,7 @@ public class ObjectAction implements PacketHandler {
                                                 //      mineLoop(click, (int)Math.ceil(owner.getMaxStat(14) / 10));
                                         }
                                         
-                                        private void mineLoop(final int click, final int loop) 
+                                        private void mineLoop(final int loop)
                                         {
                                                 if (owner.getCancelBatch())
                                                         return;
@@ -3701,7 +3702,7 @@ public class ObjectAction implements PacketHandler {
                                                                                         owner.sendMessage("You only succeed in scratching the rock.");
                                                                                         owner.setBusy(false);           
                                                                                         if (loop > 1)
-                                                                                                mineLoop(click, loop - 1);
+                                                                                                mineLoop(loop - 1);
                                                                                 }
                                                                         }
                                                                 });
@@ -3868,17 +3869,13 @@ public class ObjectAction implements PacketHandler {
                                                 }*/
                                         }
                                         
-                                        private void handleWoodcutting(final int click)
+                                        private void handleWoodcutting()
                                         {
                                                 owner.setCancelBatch(false);
-                                                
-                                                if (owner.isSub())
-                                                        woodcutLoop(click, (int)Math.ceil((owner.getMaxStat(8) / 10) * 2));
-                                                else
-                                                        woodcutLoop(click, (int)Math.ceil(owner.getMaxStat(8) / 10));
+                                                woodcutLoop();
                                         }
                                         
-                                        private void woodcutLoop(final int click, final int loop) 
+                                        private void woodcutLoop()
                                         {
                                                 final WoodcutDef def = EntityHandler.getWoodcutDef(object.getID());
                                                 
@@ -3951,8 +3948,6 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.sendMessage("You slip and fail to hit the tree");
                                                                                 owner.setBusy(false);
                                                                                 owner.setStatus(Action.IDLE);
-                                                                                if (loop > -1)
-                                                                                        woodcutLoop(click, loop - 1);
                                                                         }
                                                                 }
                                                         });
