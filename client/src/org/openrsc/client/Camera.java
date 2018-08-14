@@ -149,11 +149,11 @@ public class Camera {
         aBoolean389 = true;
     }
 
-    public int method272() {
+    public int getCurrentVisibleModelCount() {
         return currentVisibleModelCount;
     }
 
-    public int[] method273() {
+    public int[] getVisibleModelIntArray() {
         return visibleModelIntArray;
     }
 

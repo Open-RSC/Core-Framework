@@ -3922,139 +3922,143 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		return (x >= 48 && x <= 148 && y >= 371 && y <= 425);
 	}
 
-	public final void drawInventoryRightClickMenu() {
+	// Sets up right click menu for any objects within
+	// the camera's viewport.
+	public final void drawCameraScopeRightClickMenu() {
 		int i = 2203 - (sectionY + wildY + areaY);
 		if (sectionX + wildX + areaX >= 2640)
-			i = -50;
+			i = -50; // Not in wilderness
+
 		int j = -1;
 		for (int k = 0; k < objectCount; k++)
-			aBooleanArray827[k] = false;
+			preparedVisibleObjects[k] = false;
 
 		for (int l = 0; l < doorCount; l++)
-			aBooleanArray970[l] = false;
+			preparedVisibleDoors[l] = false;
 
-		int i1 = gameCamera.method272();
+		int visibleModelCount = gameCamera.getCurrentVisibleModelCount();
 		Model models[] = gameCamera.getVisibleModels();
-		int ai[] = gameCamera.method273();
-		for (int j1 = 0; j1 < i1; j1++) {
+		int modelInts[] = gameCamera.getVisibleModelIntArray();
+		for (int j1 = 0; j1 < visibleModelCount; j1++) { // Loop through all visible models
 			if (menuLength > 200)
 				break;
-			int k1 = ai[j1];
+			int modelID = modelInts[j1];
 			Model model = models[j1];
-			if (model.anIntArray258[k1] <= 65535
-					|| model.anIntArray258[k1] >= 0x30d40 && model.anIntArray258[k1] <= 0x493e0)
+			if (model.anIntArray258[modelID] <= 65535 // Players, ground items, NPCs
+					|| model.anIntArray258[modelID] >= 0x30d40 && model.anIntArray258[modelID] <= 0x493e0)
 				if (model == gameCamera.aModel_423) {
-					int i2 = model.anIntArray258[k1] % 10000;
-					int l2 = model.anIntArray258[k1] / 10000;
-					if (l2 == 1) {
+					int targetID = model.anIntArray258[modelID] % 10000;
+					int targetType = model.anIntArray258[modelID] / 10000;
+					if (targetType == 1) { // Players
 						String s = "";
-						int k3 = 0;
-						if (ourPlayer.level > 0 && playerArray[i2].level > 0)
-							k3 = ourPlayer.level - playerArray[i2].level;
-						if (k3 < 0)
+						int levelDifference = 0;
+						Mob targetObj = playerArray[targetID];
+						if (ourPlayer.level > 0 && targetObj.level > 0)
+							levelDifference = ourPlayer.level - targetObj.level;
+						if (levelDifference < 0)
 							s = "@or1@";
-						if (k3 < -3)
+						if (levelDifference < -3)
 							s = "@or2@";
-						if (k3 < -6)
+						if (levelDifference < -6)
 							s = "@or3@";
-						if (k3 < -9)
+						if (levelDifference < -9)
 							s = "@red@";
-						if (k3 > 0)
+						if (levelDifference > 0)
 							s = "@gr1@";
-						if (k3 > 3)
+						if (levelDifference > 3)
 							s = "@gr2@";
-						if (k3 > 6)
+						if (levelDifference > 6)
 							s = "@gr3@";
-						if (k3 > 9)
+						if (levelDifference > 9)
 							s = "@gre@";
-						if (playerArray[i2].isInvulnerable/*playerArray[i2].isStaff()*/) {
+						if (targetObj.isInvulnerable/*targetObj.isStaff()*/) {
 							s = "@bla@";
 						}
-                        s = " " + s + "(level-" + playerArray[i2].level + ")";
-						/*if (System.currentTimeMillis() - playerArray[i2].lastMoved >= 60 * 5 * 1000) {
-							long afkTime = System.currentTimeMillis() - playerArray[i2].lastMoved;
+						s = " " + s + "(level-" + targetObj.level + ")";
+						/*if (System.currentTimeMillis() - targetObj.lastMoved >= 60 * 5 * 1000) {
+							long afkTime = System.currentTimeMillis() - targetObj.lastMoved;
 							long seconds = (afkTime / 1000) % 60;
 							long minutes = (afkTime / (1000 * 60)) % 60;
 							s += "@whi@ AFK: " + (minutes < 10 ? "0" + minutes : minutes) + ":"
 									+ (seconds < 10 ? "0" + seconds : seconds);
 						}*/
-						if (playerArray[i2].level > 0) {
+						if (targetObj.level > 0) {
 							if (selectedSpell >= 0) {
 								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 1
 										|| EntityHandler.getSpellDef(selectedSpell).getSpellType() == 2) {
 									menuText1[menuLength] = "Cast " + EntityHandler.getSpellDef(selectedSpell).getName()
 											+ " on";
-									menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
+									menuText2[menuLength] = "@whi@" + targetObj.name + s;
 									menuID[menuLength] = 800;
-									menuActionX[menuLength] = playerArray[i2].currentX;
-									menuActionY[menuLength] = playerArray[i2].currentY;
-									menuActionType[menuLength] = playerArray[i2].serverIndex;
+									menuActionX[menuLength] = targetObj.currentX;
+									menuActionY[menuLength] = targetObj.currentY;
+									menuActionType[menuLength] = targetObj.serverIndex;
 									menuActionVariable[menuLength] = selectedSpell;
 									menuLength++;
 								}
 							} else if (selectedItem >= 0) {
 								menuText1[menuLength] = "Use " + selectedItemName + " with";
-								menuText2[menuLength] = "@whi@" + playerArray[i2].name + s;
+								menuText2[menuLength] = "@whi@" + targetObj.name + s;
 								menuID[menuLength] = 810;
-								menuActionX[menuLength] = playerArray[i2].currentX;
-								menuActionY[menuLength] = playerArray[i2].currentY;
-								menuActionType[menuLength] = playerArray[i2].serverIndex;
+								menuActionX[menuLength] = targetObj.currentX;
+								menuActionY[menuLength] = targetObj.currentY;
+								menuActionType[menuLength] = targetObj.serverIndex;
 								menuActionVariable[menuLength] = selectedItem;
 								menuLength++;
 							} else {
-								if (i > 0 && (playerArray[i2].currentY - 64) / 128 + wildY + areaY < 2203) {
+								if (i > 0 && (targetObj.currentY - 64) / 128 + wildY + areaY < 2203) {
 									menuText1[menuLength] = "Attack";
-                                    menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
-									if (k3 >= 0 && k3 < 5)
+                                    menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+									if (levelDifference >= 0 && levelDifference < 5)
 										menuID[menuLength] = 805;
 									else
 										menuID[menuLength] = 2805;
-									menuActionX[menuLength] = playerArray[i2].currentX;
-									menuActionY[menuLength] = playerArray[i2].currentY;
-									menuActionType[menuLength] = playerArray[i2].serverIndex;
+									menuActionX[menuLength] = targetObj.currentX;
+									menuActionY[menuLength] = targetObj.currentY;
+									menuActionType[menuLength] = targetObj.serverIndex;
 									menuLength++;
 								} else {
 									menuText1[menuLength] = "Duel with";
-                                    menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
-									menuActionX[menuLength] = playerArray[i2].currentX;
-									menuActionY[menuLength] = playerArray[i2].currentY;
+                                    menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+									menuActionX[menuLength] = targetObj.currentX;
+									menuActionY[menuLength] = targetObj.currentY;
 									menuID[menuLength] = 2806;
-									menuActionType[menuLength] = playerArray[i2].serverIndex;
+									menuActionType[menuLength] = targetObj.serverIndex;
 									menuLength++;
 								}
 								menuText1[menuLength] = "Trade with";
-                                menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
+                                menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 								menuID[menuLength] = 2810;
-								menuActionType[menuLength] = playerArray[i2].serverIndex;
+								menuActionType[menuLength] = targetObj.serverIndex;
 								menuLength++;
 
 								if ((sectionX + areaX) > 192 && (sectionX + areaX) < 240 && (sectionY + areaY) > 2881
 										&& (sectionY + areaY) < 2927) { // DMARENA
 									menuText1[menuLength] = "Death Match with";
-                                    menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
+                                    menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 									menuID[menuLength] = 2815;
-									menuActionType[menuLength] = playerArray[i2].serverIndex;
+									menuActionType[menuLength] = targetObj.serverIndex;
 									menuLength++;
 								}
 
 								menuText1[menuLength] = "Follow";
-                                menuText2[menuLength] = playerArray[i2].getStaffName() + "@whi@" + s;
+                                menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 								menuID[menuLength] = 2820;
-								menuActionType[menuLength] = playerArray[i2].serverIndex;
+								menuActionType[menuLength] = targetObj.serverIndex;
 								menuLength++;
 							}
 						}
-					} else if (l2 == 2) {
-						ItemDef itemDef = EntityHandler.getItemDef(groundItemType[i2]);
+					} else if (targetType == 2) { // Ground items
+						ItemDef itemDef = EntityHandler.getItemDef(groundItemType[targetID]);
 						if (selectedSpell >= 0) {
 							if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
 								menuText1[menuLength] = "Cast " + EntityHandler.getSpellDef(selectedSpell).getName()
 										+ " on";
 								menuText2[menuLength] = "@lre@" + itemDef.getName();
 								menuID[menuLength] = 200;
-								menuActionX[menuLength] = groundItemX[i2];
-								menuActionY[menuLength] = groundItemY[i2];
-								menuActionType[menuLength] = groundItemType[i2];
+								menuActionX[menuLength] = groundItemX[targetID];
+								menuActionY[menuLength] = groundItemY[targetID];
+								menuActionType[menuLength] = groundItemType[targetID];
 								menuActionVariable[menuLength] = selectedSpell;
 								menuLength++;
 							}
@@ -4062,29 +4066,29 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							menuText1[menuLength] = "Use " + selectedItemName + " with";
 							menuText2[menuLength] = "@lre@" + itemDef.getName();
 							menuID[menuLength] = 210;
-							menuActionX[menuLength] = groundItemX[i2];
-							menuActionY[menuLength] = groundItemY[i2];
-							menuActionType[menuLength] = groundItemType[i2];
+							menuActionX[menuLength] = groundItemX[targetID];
+							menuActionY[menuLength] = groundItemY[targetID];
+							menuActionType[menuLength] = groundItemType[targetID];
 							menuActionVariable[menuLength] = selectedItem;
 							menuLength++;
 						} else {
 							menuText1[menuLength] = "Take";
 							menuText2[menuLength] = "@lre@" + itemDef.getName();
 							menuID[menuLength] = 220;
-							menuActionX[menuLength] = groundItemX[i2];
-							menuActionY[menuLength] = groundItemY[i2];
-							menuActionType[menuLength] = groundItemType[i2];
+							menuActionX[menuLength] = groundItemX[targetID];
+							menuActionY[menuLength] = groundItemY[targetID];
+							menuActionType[menuLength] = groundItemType[targetID];
 							menuLength++;
 							menuText1[menuLength] = "Examine";
 							menuText2[menuLength] = "@lre@" + itemDef.getName();
 							menuID[menuLength] = 3200;
-							menuActionType[menuLength] = groundItemType[i2];
+							menuActionType[menuLength] = groundItemType[targetID];
 							menuLength++;
 						}
-					} else if (l2 == 3) {
+					} else if (targetType == 3) { // NPCs
 						String s1 = "";
 						int l3 = -1;
-						NPCDef npcDef = EntityHandler.getNpcDef(npcArray[i2].type);
+						NPCDef npcDef = EntityHandler.getNpcDef(npcArray[targetID].type);
 						if (npcDef.isAttackable()) {
 							int j4 = (npcDef.getAtt() + npcDef.getDef() + npcDef.getStr() + npcDef.getHits()) / 4;
 							int k4 = (playerStatBase[0] + playerStatBase[1] + playerStatBase[2] + playerStatBase[3]
@@ -4115,9 +4119,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 										+ " on";
 								menuText2[menuLength] = "@yel@" + npcDef.getName();
 								menuID[menuLength] = 700;
-								menuActionX[menuLength] = npcArray[i2].currentX;
-								menuActionY[menuLength] = npcArray[i2].currentY;
-								menuActionType[menuLength] = npcArray[i2].serverIndex;
+								menuActionX[menuLength] = npcArray[targetID].currentX;
+								menuActionY[menuLength] = npcArray[targetID].currentY;
+								menuActionType[menuLength] = npcArray[targetID].serverIndex;
 								menuActionVariable[menuLength] = selectedSpell;
 								menuLength++;
 							}
@@ -4125,9 +4129,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							menuText1[menuLength] = "Use " + selectedItemName + " with";
 							menuText2[menuLength] = "@yel@" + npcDef.getName();
 							menuID[menuLength] = 710;
-							menuActionX[menuLength] = npcArray[i2].currentX;
-							menuActionY[menuLength] = npcArray[i2].currentY;
-							menuActionType[menuLength] = npcArray[i2].serverIndex;
+							menuActionX[menuLength] = npcArray[targetID].currentX;
+							menuActionY[menuLength] = npcArray[targetID].currentY;
+							menuActionType[menuLength] = npcArray[targetID].serverIndex;
 							menuActionVariable[menuLength] = selectedItem;
 							menuLength++;
 						} else {
@@ -4138,147 +4142,147 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuID[menuLength] = 715;
 								else
 									menuID[menuLength] = 2715;
-								menuActionX[menuLength] = npcArray[i2].currentX;
-								menuActionY[menuLength] = npcArray[i2].currentY;
-								menuActionType[menuLength] = npcArray[i2].serverIndex;
+								menuActionX[menuLength] = npcArray[targetID].currentX;
+								menuActionY[menuLength] = npcArray[targetID].currentY;
+								menuActionType[menuLength] = npcArray[targetID].serverIndex;
 								menuLength++;
 							}
 							menuText1[menuLength] = "Talk-to";
 							menuText2[menuLength] = "@yel@" + npcDef.getName();
 							menuID[menuLength] = 720;
-							menuActionX[menuLength] = npcArray[i2].currentX;
-							menuActionY[menuLength] = npcArray[i2].currentY;
-							menuActionType[menuLength] = npcArray[i2].serverIndex;
+							menuActionX[menuLength] = npcArray[targetID].currentX;
+							menuActionY[menuLength] = npcArray[targetID].currentY;
+							menuActionType[menuLength] = npcArray[targetID].serverIndex;
 							menuLength++;
 							if (!npcDef.getCommand().equals("")) {
 								menuText1[menuLength] = npcDef.getCommand();
 								menuText2[menuLength] = "@yel@" + npcDef.getName();
 								menuID[menuLength] = 725;
-								menuActionX[menuLength] = npcArray[i2].currentX;
-								menuActionY[menuLength] = npcArray[i2].currentY;
-								menuActionType[menuLength] = npcArray[i2].serverIndex;
+								menuActionX[menuLength] = npcArray[targetID].currentX;
+								menuActionY[menuLength] = npcArray[targetID].currentY;
+								menuActionType[menuLength] = npcArray[targetID].serverIndex;
 								menuLength++;
 							}
 							menuText1[menuLength] = "Examine";
 							menuText2[menuLength] = "@yel@" + npcDef.getName();
 							menuID[menuLength] = 3700;
-							menuActionType[menuLength] = npcArray[i2].type;
+							menuActionType[menuLength] = npcArray[targetID].type;
 							menuLength++;
 						}
 					}
-				} else if (model != null && model.anInt257 >= 10000) {
-					int j2 = model.anInt257 - 10000;
-					int i3 = doorType[j2];
-					if (!aBooleanArray970[j2]) {
+				} else if (model != null && model.anInt257 >= 10000) { // Doors
+					int doorID = model.anInt257 - 10000;
+					int dType = doorType[doorID];
+					if (!preparedVisibleDoors[doorID]) { // If door not prepared...
 						if (selectedSpell >= 0) {
 							if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 4) {
 								menuText1[menuLength] = "Cast " + EntityHandler.getSpellDef(selectedSpell).getName()
 										+ " on";
-								menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(i3).getName();
+								menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(dType).getName();
 								menuID[menuLength] = 300;
-								menuActionX[menuLength] = doorX[j2];
-								menuActionY[menuLength] = doorY[j2];
-								menuActionType[menuLength] = doorDirection[j2];
+								menuActionX[menuLength] = doorX[doorID];
+								menuActionY[menuLength] = doorY[doorID];
+								menuActionType[menuLength] = doorDirection[doorID];
 								menuActionVariable[menuLength] = selectedSpell;
 								menuLength++;
 							}
 						} else if (selectedItem >= 0) {
 							menuText1[menuLength] = "Use " + selectedItemName + " with";
-							menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(i3).getName();
+							menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(dType).getName();
 							menuID[menuLength] = 310;
-							menuActionX[menuLength] = doorX[j2];
-							menuActionY[menuLength] = doorY[j2];
-							menuActionType[menuLength] = doorDirection[j2];
+							menuActionX[menuLength] = doorX[doorID];
+							menuActionY[menuLength] = doorY[doorID];
+							menuActionType[menuLength] = doorDirection[doorID];
 							menuActionVariable[menuLength] = selectedItem;
 							menuLength++;
 						} else {
-							if (!EntityHandler.getDoorDef(i3).getCommand1().equalsIgnoreCase("WalkTo")) {
-								menuText1[menuLength] = EntityHandler.getDoorDef(i3).getCommand1();
-								menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(i3).getName();
+							if (!EntityHandler.getDoorDef(dType).getCommand1().equalsIgnoreCase("WalkTo")) {
+								menuText1[menuLength] = EntityHandler.getDoorDef(dType).getCommand1();
+								menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(dType).getName();
 								menuID[menuLength] = 320;
-								menuActionX[menuLength] = doorX[j2];
-								menuActionY[menuLength] = doorY[j2];
-								menuActionType[menuLength] = doorDirection[j2];
+								menuActionX[menuLength] = doorX[doorID];
+								menuActionY[menuLength] = doorY[doorID];
+								menuActionType[menuLength] = doorDirection[doorID];
 								menuLength++;
 							}
-							if (!EntityHandler.getDoorDef(i3).getCommand2().equalsIgnoreCase("Examine")) {
-								menuText1[menuLength] = EntityHandler.getDoorDef(i3).getCommand2();
-								menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(i3).getName();
+							if (!EntityHandler.getDoorDef(dType).getCommand2().equalsIgnoreCase("Examine")) {
+								menuText1[menuLength] = EntityHandler.getDoorDef(dType).getCommand2();
+								menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(dType).getName();
 								menuID[menuLength] = 2300;
-								menuActionX[menuLength] = doorX[j2];
-								menuActionY[menuLength] = doorY[j2];
-								menuActionType[menuLength] = doorDirection[j2];
+								menuActionX[menuLength] = doorX[doorID];
+								menuActionY[menuLength] = doorY[doorID];
+								menuActionType[menuLength] = doorDirection[doorID];
 								menuLength++;
 							}
 							menuText1[menuLength] = "Examine";
-							menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(i3).getName();
+							menuText2[menuLength] = "@cya@" + EntityHandler.getDoorDef(dType).getName();
 							menuID[menuLength] = 3300;
-							menuActionType[menuLength] = i3;
+							menuActionType[menuLength] = dType;
 							menuLength++;
 						}
-						aBooleanArray970[j2] = true;
+						preparedVisibleDoors[doorID] = true;
 					}
-				} else if (model != null && model.anInt257 >= 0) {
-					int k2 = model.anInt257;
-					int j3 = objectType[k2];
-					if (!aBooleanArray827[k2]) {
+				} else if (model != null && model.anInt257 >= 0) { // Objects
+					int oID = model.anInt257;
+					int oType = objectType[oID];
+					if (!preparedVisibleObjects[oID]) {
 						if (selectedSpell >= 0) {
 							if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 5) {
 								menuText1[menuLength] = "Cast " + EntityHandler.getSpellDef(selectedSpell).getName()
 										+ " on";
-								menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(j3).getName();
+								menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 								menuID[menuLength] = 400;
-								menuActionX[menuLength] = objectX[k2];
-								menuActionY[menuLength] = objectY[k2];
-								menuActionType[menuLength] = objectID[k2];
-								menuActionVariable[menuLength] = objectType[k2];
+								menuActionX[menuLength] = objectX[oID];
+								menuActionY[menuLength] = objectY[oID];
+								menuActionType[menuLength] = objectID[oID];
+								menuActionVariable[menuLength] = oType;
 								menuActionVariable2[menuLength] = selectedSpell;
 								menuLength++;
 							}
 						} else if (selectedItem >= 0) {
 							menuText1[menuLength] = "Use " + selectedItemName + " with";
-							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(j3).getName();
+							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 							menuID[menuLength] = 410;
-							menuActionX[menuLength] = objectX[k2];
-							menuActionY[menuLength] = objectY[k2];
-							menuActionType[menuLength] = objectID[k2];
-							menuActionVariable[menuLength] = objectType[k2];
+							menuActionX[menuLength] = objectX[oID];
+							menuActionY[menuLength] = objectY[oID];
+							menuActionType[menuLength] = objectID[oID];
+							menuActionVariable[menuLength] = objectType[oID];
 							menuActionVariable2[menuLength] = selectedItem;
 							menuLength++;
 						} else {
-							if (!EntityHandler.getObjectDef(j3).getCommand1().equalsIgnoreCase("WalkTo")) {
-								menuText1[menuLength] = EntityHandler.getObjectDef(j3).getCommand1();
-								menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(j3).getName();
+							if (!EntityHandler.getObjectDef(oType).getCommand1().equalsIgnoreCase("WalkTo")) {
+								menuText1[menuLength] = EntityHandler.getObjectDef(oType).getCommand1();
+								menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 								menuID[menuLength] = 420;
-								menuActionX[menuLength] = objectX[k2];
-								menuActionY[menuLength] = objectY[k2];
-								menuActionType[menuLength] = objectID[k2];
-								menuActionVariable[menuLength] = objectType[k2];
+								menuActionX[menuLength] = objectX[oID];
+								menuActionY[menuLength] = objectY[oID];
+								menuActionType[menuLength] = objectID[oID];
+								menuActionVariable[menuLength] = objectType[oID];
 								menuLength++;
 							}
-							if (!EntityHandler.getObjectDef(j3).getCommand2().equalsIgnoreCase("Examine")) {
-								menuText1[menuLength] = EntityHandler.getObjectDef(j3).getCommand2();
-								menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(j3).getName();
+							if (!EntityHandler.getObjectDef(oType).getCommand2().equalsIgnoreCase("Examine")) {
+								menuText1[menuLength] = EntityHandler.getObjectDef(oType).getCommand2();
+								menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 								menuID[menuLength] = 2400;
-								menuActionX[menuLength] = objectX[k2];
-								menuActionY[menuLength] = objectY[k2];
-								menuActionType[menuLength] = objectID[k2];
-								menuActionVariable[menuLength] = objectType[k2];
+								menuActionX[menuLength] = objectX[oID];
+								menuActionY[menuLength] = objectY[oID];
+								menuActionType[menuLength] = objectID[oID];
+								menuActionVariable[menuLength] = objectType[oID];
 								menuLength++;
 							}
 							menuText1[menuLength] = "Examine";
-							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(j3).getName();
+							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 							menuID[menuLength] = 3400;
-							menuActionType[menuLength] = j3;
+							menuActionType[menuLength] = oType;
 							menuLength++;
 						}
-						aBooleanArray827[k2] = true;
+						preparedVisibleObjects[oID] = true;
 					}
 				} else {
-					if (k1 >= 0)
-						k1 = model.anIntArray258[k1] - 0x30d40;
-					if (k1 >= 0)
-						j = k1;
+					if (modelID >= 0)
+						modelID = model.anIntArray258[modelID] - 0x30d40;
+					if (modelID >= 0)
+						j = modelID;
 				}
 		}
 		if (selectedSpell >= 0 && EntityHandler.getSpellDef(selectedSpell).getSpellType() <= 1) {
@@ -9824,7 +9828,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (noMenusShown)
 				menuLength = 0;
 			if (mouseOverMenu == 0 && noMenusShown)
-				drawInventoryRightClickMenu();
+				drawCameraScopeRightClickMenu();
 			if (mouseOverMenu == 1)
 				drawInventoryMenu(noMenusShown);
 			if (mouseOverMenu == 2)
@@ -10763,7 +10767,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		selectedBankItem = -1;
 		selectedBankItemType = -2;
 		menuText2 = new String[250];
-		aBooleanArray827 = new boolean[1500];
+		preparedVisibleObjects = new boolean[1500];
 		playerStatBase = new int[19];
 		menuActionType = new int[250];
 		menuActionVariable = new int[250];
@@ -10831,7 +10835,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		selectedShopItemType = -2;
 		messagesArray = new String[5];
 		showTradeWindow = false;
-		aBooleanArray970 = new boolean[500];
+		preparedVisibleDoors = new boolean[500];
 		tradeMyItems = new int[14];
 		tradeMyItemsCount = new long[14];
 		cameraSizeInt = 9;
@@ -11015,7 +11019,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public String menuText2[];
 	int infoPage;
 	public boolean aBoolean948;
-	public boolean aBooleanArray827[];
+	public boolean preparedVisibleObjects[];
 	public int playerStatBase[];
 	public int actionPictureType;
 	int actionPictureX;
@@ -11151,7 +11155,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public byte sounds[];
 	public HashMap<String, Media> soundCache = new HashMap<String, Media>();
 	final JFXPanel fxPanel = new JFXPanel();
-	public boolean aBooleanArray970[];
+	public boolean preparedVisibleDoors[];
 	public int objectCount;
 	public int tradeMyItemCount;
 	public int tradeMyItems[];
