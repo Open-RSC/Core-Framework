@@ -1,11 +1,8 @@
 package org.openrsc.server.event;
 
+import org.openrsc.server.model.*;
 import org.openrsc.server.util.Formulae;
 import org.openrsc.server.util.DataConversions;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.World;
 
 public class WoodcutEvent extends ShortEvent {
 	private int axe;
@@ -34,7 +31,7 @@ public class WoodcutEvent extends ShortEvent {
 				owner.getInventory().add(log);
 				owner.sendMessage("You get some wood.");
 				owner.sendInventory();
-				owner.increaseXP(8, exp);
+				owner.increaseXP(Skills.WOODCUT, exp);
 				owner.sendStat(8);
 				if (DataConversions.random(1, 100) <= fell) {
 					World.registerEntity(new GameObject(tree.getLocation(), 4, tree.getDirection(), tree.getType()));
