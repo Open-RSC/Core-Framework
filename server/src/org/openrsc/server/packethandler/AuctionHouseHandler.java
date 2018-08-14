@@ -12,7 +12,6 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.model.auctions.Auction;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
-import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.util.DataConversions;
 
 public class AuctionHouseHandler implements PacketHandler {
@@ -38,7 +37,7 @@ public class AuctionHouseHandler implements PacketHandler {
 			long itemAmount = p.readLong();
 			price = p.readLong();
 			if (!EntityHandler.getItemDef(itemID).isTradable() || itemID == 10) {
-				player.sendMessage(Config.PREFIX + "This item cannot be sold in the auction house.");
+				player.sendMessage(Config.getPrefix() + "This item cannot be sold in the auction house.");
 				return;
 			}
 			if (itemAmount < 1 || price < 1 || itemID < 0) {

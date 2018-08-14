@@ -55,13 +55,13 @@ public final class GameEngine
 			{
 				continue;
 			}
-			if(World.getPlayerCount() < Config.MAX_PLAYERS)
+			if(World.getPlayerCount() < Config.getMaxPlayers())
 			{		
 				if(World.getPlayerByOwner(load.getAccount()) == null)
 				{
                     if(
-                        Config.MAX_LOGINS_PER_IP <= 0 ||
-                        (Config.MAX_LOGINS_PER_IP > 0 && World.getPlayersByIp(load.getIP()).size() < Config.MAX_LOGINS_PER_IP)
+                        Config.getMaxLoginsPerIp() <= 0 ||
+                        (Config.getMaxLoginsPerIp() > 0 && World.getPlayersByIp(load.getIP()).size() < Config.getMaxLoginsPerIp())
                     )
                     {
                         load.getSession().write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.LOGIN_SUCCESS.ordinal()).toPacket());

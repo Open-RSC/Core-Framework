@@ -13,6 +13,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
@@ -26,7 +27,7 @@ public class King_Lathas implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest q = owner.getQuest(Quests.BIOHAZARD);
 		
 		if(q != null) 
 		{
@@ -36,7 +37,7 @@ public class King_Lathas implements NpcHandler
 				owner.setBusy(false);
 				npc.unblock();
 			}	
-			else if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() == 10)
+			else if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() == 10)
 			{
 				switch(q.getStage())
 				{
@@ -149,7 +150,7 @@ public class King_Lathas implements NpcHandler
 																																								{
 																																									public void finished()
 																																									{
-																																										owner.finishQuest(Config.Quests.BIOHAZARD);
+																																										owner.finishQuest(Quests.BIOHAZARD);
 																																										owner.sendMessage("King Lathas gives you a magic amulet");
 																																										owner.sendMessage("@gre@You have gained 3 quest points!");
 																																										owner.sendMessage("You have completed the Biohazard quest!");

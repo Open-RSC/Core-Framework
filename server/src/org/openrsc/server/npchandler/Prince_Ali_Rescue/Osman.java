@@ -16,13 +16,14 @@ import org.openrsc.server.npchandler.NpcHandler;
 
 import java.util.ArrayList;
 import org.openrsc.server.Config;
+import org.openrsc.server.model.Quests;
 
 public class Osman implements NpcHandler {
 
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+		Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -105,7 +106,7 @@ public class Osman implements NpcHandler {
 					owner.giveLeelaKey();
 					World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Pick up the key from Leela", "I will let you get 80 coins from the chancellor for getting this key"}) {
 						public void finished() {
-							owner.incQuestCompletionStage(Config.Quests.PRINCE_ALI_RESCUE);
+							owner.incQuestCompletionStage(Quests.PRINCE_ALI_RESCUE);
 							owner.setBusy(false);
 							npc.unblock();
 						}
@@ -122,7 +123,7 @@ public class Osman implements NpcHandler {
 					boolean b2 = owner.getInventory().countId(194) > 0;
 					boolean b3 = owner.getInventory().countId(240) > 0;
 					boolean b4 = owner.getInventory().countId(237) > 0;
-					if(owner.leelaHasKey() && owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE).getStage() > 1) {
+					if(owner.leelaHasKey() && owner.getQuest(Quests.PRINCE_ALI_RESCUE).getStage() > 1) {
 						strings.add("To collect the key from Leela");
 					} else {
 						strings.add("A print of the key in soft clay and a bronze bar");
@@ -349,7 +350,7 @@ public class Osman implements NpcHandler {
 	private void betterGo(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"May good luck travel with you", "Don't forget to find Leela. It can't be done without her help"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.PRINCE_ALI_RESCUE);
+				owner.incQuestCompletionStage(Quests.PRINCE_ALI_RESCUE);
 				owner.setBusy(false);
 				npc.unblock();
 			}

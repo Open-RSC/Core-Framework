@@ -8,12 +8,13 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Weapon_Master implements NpcHandler {
 	@Override
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
-		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+		Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
 		if(phoenix != null) {
 			if(phoenix.finished()) {
 				final String[] messages0 = {"Hello"};

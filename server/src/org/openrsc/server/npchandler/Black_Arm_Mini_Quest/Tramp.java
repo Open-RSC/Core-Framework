@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -152,8 +153,8 @@ public class Tramp implements NpcHandler {
 										warning(npc, owner);
 										break;
 									case 1:
-                                        Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
-                                        Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
+                                        Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
+                                        Quest blackarm = owner.getQuest(Quests.JOIN_BLACKARM_GANG);
 										if(blackarm != null) {
 											if(blackarm.finished()) {
 												letMeJoin(npc, owner, true, false);
@@ -241,7 +242,7 @@ public class Tramp implements NpcHandler {
 			World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, reply) {
 				public void finished() {
 					if(!owner.isBlackarm()) {
-						owner.addQuest(Config.Quests.JOIN_BLACKARM_GANG, 0);
+						owner.addQuest(Quests.JOIN_BLACKARM_GANG, 0);
 					}
 					owner.setBusy(false);
 					npc.unblock();

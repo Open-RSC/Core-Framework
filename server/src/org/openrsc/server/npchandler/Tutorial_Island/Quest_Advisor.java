@@ -9,6 +9,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -19,7 +20,7 @@ public class Quest_Advisor implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -88,7 +89,7 @@ public class Quest_Advisor implements NpcHandler {
 	private void thanks(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"good questing traveller", "Now proceed through the next door"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+				owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -98,7 +99,7 @@ public class Quest_Advisor implements NpcHandler {
 	private void anyQuests(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"You will have to wait until you get off tutorial island", "To start any quests", "Good questing traveller"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+				owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

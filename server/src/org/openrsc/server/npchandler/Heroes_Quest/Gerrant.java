@@ -8,6 +8,7 @@ import org.openrsc.server.Config;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -19,7 +20,7 @@ public class Gerrant implements NpcHandler {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.HEROS_QUEST);
+		Quest q = owner.getQuest(Quests.HEROS_QUEST);
 		
 		if(q != null) 
 		{

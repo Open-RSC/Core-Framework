@@ -44,6 +44,7 @@ import com.rscdaemon.scripting.ScriptCache;
 import com.rscdaemon.scripting.ScriptError;
 import com.rscdaemon.scripting.ScriptVariable;
 import com.rscdaemon.scripting.listener.UseObjectListener;
+import org.openrsc.server.model.Quests;
 public class ObjectAction implements PacketHandler {
 	
 	private final ScriptCache<UseObjectListener> scriptCache = new ScriptCache<>();
@@ -220,8 +221,6 @@ public class ObjectAction implements PacketHandler {
 							handleFire();
 						else if (command.equals("walk through")) // Runecrafting
 							handleWalkThrough(object.getX(), object.getY());
-						else if (command.equals("craft-rune")) // Runecrafting
-							handleCraft();
 						else if (command.equals("go-up")) // Custom.
 							handleGoUp(object.getX(), object.getY());
 						else if (command.equals("talk through")) // Jail Gate - Tree Gnome Village
@@ -269,233 +268,6 @@ public class ObjectAction implements PacketHandler {
 					});							
 				}
 				
-				private void craftRunes(final int item, int xp, double fatigue, int level, int talisman, int multiple) {
-					owner.setBusy(true);
-					if (owner.getInventory().contains(new InvItem(1290, 1))) {
-						if (owner.getMaxStat(18) >= level) {
-							if (owner.getInventory().contains(new InvItem(talisman, 1))) {
-								int total = 0;
-								int amountTotal = 0;
-								int exp = 0;
-								int amount = 1;
-								while (owner.getInventory().contains(new InvItem(1290, 1))) {
-									if (multiple != -1) {
-										for (int i = 0; i + multiple <= owner.getMaxStat(18); i += multiple)
-											amount++;
-									}
-									
-									if (owner.isSub())
-										amount *= Config.RUNECRAFTING_AMOUNT_MULTIPLIER * 2;
-									else
-										amount *= Config.RUNECRAFTING_AMOUNT_MULTIPLIER;
-									
-									owner.getInventory().remove(new InvItem(1290, 1));
-									owner.getInventory().add(new InvItem(item, amount));
-									owner.sendInventory();
-									exp += xp;
-									total++;
-									amountTotal += amount;
-									amount = 1;
-								}
-								for (Player p1 : owner.getViewArea().getPlayersInView())
-								{
-									p1.watchItemBubble(owner.getIndex(), item);
-								}
-								if (World.getZone(owner.getX(), owner.getY()).getObjectAt(owner.getX(), owner.getY()) == null) {
-									GameObject godSpellObject = null;
-									godSpellObject = new GameObject(owner.getLocation(), 1147, 0, 0);
-									World.registerEntity(godSpellObject);
-									World.delayedRemoveObject(godSpellObject, 500);
-								}
-								owner.teleport(owner.getX(), owner.getY(), true);
-								owner.sendMessage("You craft " + (total > 1 ? total : "the") + " " + EntityHandler.getItemDef(1290).getName() + " into " + amountTotal + " " + EntityHandler.getItemDef(item).getName() + (amountTotal > 1 ? "s" : ""));
-								owner.increaseXP(18, (exp * 2));
-								owner.sendStat(18);							
-							} else
-								owner.sendMessage("You need a " + EntityHandler.getItemDef(talisman).getName() + " to craft on this altar");
-						} else
-							owner.sendMessage("You need level " + level + " Runecrafting to craft on this altar");
-					} else
-						owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-					owner.setBusy(false);
-				}
-				
-				private void handleCraft() {
-					switch (object.getID()) {
-						case 1197: // Air Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-                                                        if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(33, 5, 1, 1, 1292, 11);
-                                                        }
-                                                        else
-                                                        {
-                                                            owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1198: // Mind Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(35, 5, 1, 2, 1303, 14);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1199: // Fire Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(31, 7, 1, 14, 1294, 35);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1200: // Earth Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(34, 6, 1, 9, 1295, 26);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1201: // Water Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(32, 6, 1, 5, 1923, 19);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1202: // Body Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(36, 7, 1, 20, 1291, 46);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1203: // Cosmic Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(46, 8, 2, 27, 1298, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1204: // Nature Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(40, 9, 2, 44, 1296, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1211: // Law Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(42, 9, 2, 54, 1297, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1212: // Death Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-                                                        if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(38, 10, 3, 65, 1300, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1213: // Blood Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(619, 10, 3, 77, 1301, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;
-						case 1214: // Soul Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(825, 11, 4, 90, 1302, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;	
-						case 1215: // Chaos Alter
-							if (Config.DISABLE_RUNECRAFTING) {
-                                                                player.sendMessage("Runecrafting is disabled on this server.");
-                                                                break;
-							}
-							if (owner.getInventory().contains(new InvItem(1290, 1))) {
-                                                                craftRunes(41, 8, 2, 35, 1299, -1);
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.sendMessage("You do not have any " + EntityHandler.getItemDef(1290).getName());
-                                                        }
-						break;	
-						default:	
-						break;
-					}
-				}
-					
 				private void handleTalkTo(final int objectX, final int objectY) 
 				{
 					switch (object.getID()) 
@@ -503,7 +275,7 @@ public class ObjectAction implements PacketHandler {
 						case 390:
 						case 391:
 						case 661:
-							Quest q = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+							Quest q = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 							if(q != null && q.finished())
 							{
 								owner.sendMessage("The tree whispers in your mind... Where would you like to be teleported to?");
@@ -554,7 +326,7 @@ public class ObjectAction implements PacketHandler {
 						switch (object.getID()) 
 						{
 							case 392:
-								Quest Tree_Gnome_Village = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+								Quest Tree_Gnome_Village = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 								switch (Tree_Gnome_Village.getStage())
 								{
 									case 4:
@@ -640,7 +412,7 @@ public class ObjectAction implements PacketHandler {
 						switch(object.getID()) {
 						case 292:
 						case 293:
-							Quest q22 = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+							Quest q22 = owner.getQuest(Quests.MERLINS_CRYSTAL);
 							if (q22 != null) {
 								if (q22.finished()) {
 									owner.sendMessage("You sneak aboard the ship.");
@@ -671,7 +443,7 @@ public class ObjectAction implements PacketHandler {
 							 * Ballista Tree Gnome Village Quest
 							 */
 							case 388:
-								Quest Tree_Gnome_Village = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+								Quest Tree_Gnome_Village = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 								switch (Tree_Gnome_Village.getStage())
 								{
 									case 4:
@@ -790,7 +562,7 @@ public class ObjectAction implements PacketHandler {
 																				break;
 																				
 																				case 4:
-																					owner.incQuestCompletionStage(Config.Quests.TREE_GNOME_VILLAGE);
+																					owner.incQuestCompletionStage(Quests.TREE_GNOME_VILLAGE);
 																					owner.sendMessage("You fire the ballista");
 																					owner.sendMessage("The huge spear flies through the air");
 																					owner.sendMessage("And screams down directly into the Khazard stronghold");
@@ -944,19 +716,19 @@ public class ObjectAction implements PacketHandler {
 						switch (object.getID()) {
 							case 147:
 								owner.setBusy(true);
-								if(owner.getQuestCompletionStage(Config.Quests.WITCHS_POTION) == 1) {
+								if(owner.getQuestCompletionStage(Quests.WITCHS_POTION) == 1) {
 									owner.sendMessage("You drink from the cauldron");
 									World.getDelayedEventHandler().add(new SingleEvent(owner, 1000) {
 										public void action() {
 											owner.sendMessage("You feel yourself imbued with power");
 											World.getDelayedEventHandler().add(new SingleEvent(owner, 1000) {
 												public void action() {
-													owner.incQuestCompletionStage(Config.Quests.WITCHS_POTION);
+													owner.incQuestCompletionStage(Quests.WITCHS_POTION);
 													owner.sendMessage("Well done you have completed the witches potion");
 													owner.sendMessage("@gre@You haved gained 1 quest point!");
 													owner.incQuestExp(6, 1000);
 													owner.sendStat(6);
-													owner.finishQuest(Config.Quests.WITCHS_POTION);
+													owner.finishQuest(Quests.WITCHS_POTION);
 													owner.setBusy(false);
 													Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Witches Potion</span> quest!"));
 												}
@@ -1048,7 +820,7 @@ public class ObjectAction implements PacketHandler {
 								 */
 								if (object.getX() == 632 && object.getY() == 590)
 								{
-									if (owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).finished())
+									if (owner.getQuest(Quests.PLAGUE_CITY) != null && owner.getQuest(Quests.PLAGUE_CITY).finished())
 									{
 										owner.sendMessage("It's filled with concrete.");
 										return;
@@ -1088,7 +860,7 @@ public class ObjectAction implements PacketHandler {
 							 *  the Fishing Contest Quest
 							 */
 								
-							Quest Fishing_Contest = owner.getQuest(Config.Quests.FISHING_CONTEST);
+							Quest Fishing_Contest = owner.getQuest(Quests.FISHING_CONTEST);
 							if (Fishing_Contest == null || Fishing_Contest != null && !Fishing_Contest.finished())
 							{
 								
@@ -1152,7 +924,7 @@ public class ObjectAction implements PacketHandler {
 								{
 											if(owner.canPullDMExitLever())//dmvictoryevent != null
 											{
-												super.owner.sendMessage(Config.PREFIX + "As you pull the lever, you teleport back to the DM Arena");
+												super.owner.sendMessage(Config.getPrefix() + "As you pull the lever, you teleport back to the DM Arena");
 												owner.teleport(Point.location(218, 2901), true);
 												owner.dmVictoryEvent.cage.setActive(false);
 												owner.dmVictoryEvent.stop();
@@ -1160,7 +932,7 @@ public class ObjectAction implements PacketHandler {
 											}
 											else // If the lever is pulled in the middle of a DM
 											{
-												owner.sendMessage(Config.PREFIX + "You cannot pull the lever until you've defeated your opponent");
+												owner.sendMessage(Config.getPrefix() + "You cannot pull the lever until you've defeated your opponent");
 											}
 											return;
 								}
@@ -1168,10 +940,10 @@ public class ObjectAction implements PacketHandler {
 								if (object.getX() == 180 && object.getY() == 129)
 								{
 									if (owner.getLocation().inWilderness() && System.currentTimeMillis() - owner.getLastMoved() < 15000 || System.currentTimeMillis() - owner.getCombatTimer() < 15000)
-										owner.sendMessage(Config.PREFIX + "You must stand still for 15 seconds, and be out of combat to use this lever.");
+										owner.sendMessage(Config.getPrefix() + "You must stand still for 15 seconds, and be out of combat to use this lever.");
 									else
 									if (owner.inCombat())
-										owner.sendMessage(Config.PREFIX + "You cannot use this lever while being in combat.");
+										owner.sendMessage(Config.getPrefix() + "You cannot use this lever while being in combat.");
 									else
 										owner.teleport(621, 596, true);
 								}
@@ -1283,18 +1055,18 @@ public class ObjectAction implements PacketHandler {
 					}
 					
 					private void handleWarp() {
-						if(World.getWildernessIPTracker().ipCount(player.getIP()) > Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS)
-							owner.sendMessage(Config.PREFIX + "You have reached the IP limit for characters allowed in the wildereness.");
+						if(World.getWildernessIPTracker().ipCount(player.getIP()) > Config.getAllowedConcurrentIpsInWilderness())
+							owner.sendMessage(Config.getPrefix() + "You have reached the IP limit for characters allowed in the wildereness.");
 						else if(!World.getWorldLoader().canPortal(owner))
-							owner.sendMessage(Config.PREFIX + "You must wait 15 seconds to use this portal after dying or logging out.");
+							owner.sendMessage(Config.getPrefix() + "You must wait 15 seconds to use this portal after dying or logging out.");
 						else if (owner.getLocation().inWilderness() && System.currentTimeMillis() - owner.getLastMoved() < 15000 && !owner.isSuperMod())
-							owner.sendMessage(Config.PREFIX + "You must stand still for 15 seconds before using a wilderness portal");
+							owner.sendMessage(Config.getPrefix() + "You must stand still for 15 seconds before using a wilderness portal");
 						else if (System.currentTimeMillis() - owner.getCombatTimer() < 15000 && owner.getLocation().inWilderness() && !owner.isSuperMod())
-							owner.sendMessage(Config.PREFIX + "You must be out of combat for 15 seconds before using a wilderness portal");
+							owner.sendMessage(Config.getPrefix() + "You must be out of combat for 15 seconds before using a wilderness portal");
 						else if (!owner.getLocation().isInDMArena() && owner.canWarp() && !owner.isSuperMod())
-							owner.sendMessage(Config.PREFIX + "You cannot warp at this time");
+							owner.sendMessage(Config.getPrefix() + "You cannot warp at this time");
 						else {										
-							owner.sendMessage(Config.PREFIX + "Where would you like to teleport?");
+							owner.sendMessage(Config.getPrefix() + "Where would you like to teleport?");
 							String[] options = new String[]
 							{
 								"Edgeville",
@@ -1355,7 +1127,7 @@ public class ObjectAction implements PacketHandler {
 										{
 											if (System.currentTimeMillis() - owner.getCombatTimer() < 30000 || System.currentTimeMillis() - owner.getLastLogin() < 30000)
 											{
-												owner.sendMessage(Config.PREFIX + "You must wait 30 seconds to teleport to this location.");
+												owner.sendMessage(Config.getPrefix() + "You must wait 30 seconds to teleport to this location.");
 												return;
 											}
 										}
@@ -1477,7 +1249,7 @@ public class ObjectAction implements PacketHandler {
 						 * Crate
 						 */
 						case 505:
-							if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() == 4)
+							if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() == 4)
 							{
 								if(owner.getInventory().countId(804) > 0)
 								{
@@ -1492,14 +1264,14 @@ public class ObjectAction implements PacketHandler {
 										{
 
 											owner.sendMessage("and find Elena's distillator");
-											owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
+											owner.incQuestCompletionStage(Quests.BIOHAZARD);
 											owner.getInventory().add(804, 1);
 											owner.sendInventory();
 										}
 									});
 								}
 							}
-							else if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 5)
+							else if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() >= 5)
 							{
 								if(owner.getInventory().countId(804) > 0)
 								{
@@ -1530,7 +1302,7 @@ public class ObjectAction implements PacketHandler {
 						//Scarface Pete's Chest
 						//action: Search
 						case 265:
-							if(owner.getQuest(Config.Quests.HEROS_QUEST) != null && owner.getQuest(Config.Quests.HEROS_QUEST).getStage() == 4  && owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG).finished())
+							if(owner.getQuest(Quests.HEROS_QUEST) != null && owner.getQuest(Quests.HEROS_QUEST).getStage() == 4  && owner.getQuest(Quests.JOIN_BLACKARM_GANG).finished())
 							{
 								if(owner.getInventory().countId(585) >= 1)
 								{
@@ -1570,7 +1342,7 @@ public class ObjectAction implements PacketHandler {
 						//Bird feed Cupboard
 						//action: Search
 						case 500:
-							if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() == 2)
+							if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() == 2)
 							{
 								if(owner.getInventory().countId(800) > 0)
 								{
@@ -1592,7 +1364,7 @@ public class ObjectAction implements PacketHandler {
 						//Nurse house Cupboard
 						//action: Search
 						case 510:
-							if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 4)
+							if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() >= 4)
 							{
 								if(owner.getInventory().countId(802) > 0)
 								{
@@ -1613,7 +1385,7 @@ public class ObjectAction implements PacketHandler {
 						
 						 //Plaguehouse Barrel
 						case 456:
-							if(owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 12)
+							if(owner.getQuest(Quests.PLAGUE_CITY) != null && owner.getQuest(Quests.PLAGUE_CITY).getStage() >= 12)
 							{
 								if(owner.getInventory().countId(780) > 0)
 								{
@@ -1633,7 +1405,7 @@ public class ObjectAction implements PacketHandler {
 						break;
 						//Gasmask Cupboard
 							case 452:
-								if(owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 2)
+								if(owner.getQuest(Quests.PLAGUE_CITY) != null && owner.getQuest(Quests.PLAGUE_CITY).getStage() >= 2)
 								{
 									if(owner.getInventory().countId(766) > 0)
 									{
@@ -1654,7 +1426,7 @@ public class ObjectAction implements PacketHandler {
 								}
 							break;
 							case 409: // Tree Gnome Village chest
-								Quest Tree_Gnome_Village = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+								Quest Tree_Gnome_Village = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 								switch (Tree_Gnome_Village.getStage())
 								{
 									case 5:
@@ -1706,7 +1478,7 @@ public class ObjectAction implements PacketHandler {
 								Npc goblin2 = World.getNpc(4, 613, 621, 3313, 3324);
 								if (goblin2 != null)
 									goblin2.setAggressive(owner);
-								Quest dwarfCannon = owner.getQuest(Config.Quests.DWARF_CANNON);
+								Quest dwarfCannon = owner.getQuest(Quests.DWARF_CANNON);
 								if(dwarfCannon != null) {
 									if(dwarfCannon.getStage() == 2) {
 										World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
@@ -1733,7 +1505,7 @@ public class ObjectAction implements PacketHandler {
 																									public void action() {
 																										owner.sendMessage("the dwarf child runs off into the caverns");
 																										lollk.remove();
-																										owner.incQuestCompletionStage(Config.Quests.DWARF_CANNON);
+																										owner.incQuestCompletionStage(Quests.DWARF_CANNON);
 																										owner.setBusy(false);
 																									}
 																								});
@@ -1771,7 +1543,7 @@ public class ObjectAction implements PacketHandler {
 							break;
 								
 							case 237: //Leprechaun Tree
-								Quest lostCity = owner.getQuest(Config.Quests.LOST_CITY);
+								Quest lostCity = owner.getQuest(Quests.LOST_CITY);
 								if (lostCity != null) {
 									if (lostCity.getStage() == 2) {
 										Npc leprechaun = World.getNpc(211, 165, 663, 172, 666);
@@ -1790,7 +1562,7 @@ public class ObjectAction implements PacketHandler {
 							
 							case 332: //
 								if (owner.getInventory().countId(54) == 0) {
-									Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+									Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 									if (q != null) {
 										if (!q.finished()) {
 											owner.sendMessage("You find a half of a shield in the chest");
@@ -1806,7 +1578,7 @@ public class ObjectAction implements PacketHandler {
 								
 							case 85: //Phoenix Gang Shield of Arrav cupboard
 								if (owner.getInventory().countId(53) == 0) {
-									Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+									Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 									if (q != null) {
 										if (!q.finished()) {
 											owner.sendMessage("You find a half of a shield in the cupboard");
@@ -1821,7 +1593,7 @@ public class ObjectAction implements PacketHandler {
 								break;
 							case 67: //Varrock Library Bookshelf
 								if(owner.getInventory().countId(30) == 0){
-									Quest q13 = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+									Quest q13 = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 									if (q13 != null) {
 										if (q13.getStage() == 0) {
 											World.getDelayedEventHandler().add(new DelayedQuestChat(owner, owner, new String[] {"Aha the shield of Arrav", "That was what I was looking for"}, true) {
@@ -1860,7 +1632,7 @@ public class ObjectAction implements PacketHandler {
 												}
 											});
 										} else {
-											Quest q = owner.getQuest(Config.Quests.THE_KNIGHTS_SWORD);
+											Quest q = owner.getQuest(Quests.THE_KNIGHTS_SWORD);
 											if(q != null) {
 												if(q.getStage() == 2) {
 													World.getDelayedEventHandler().add(new DelayedGenericMessage(owner, new String[] {"You search the cupboard", "You find a small portrait, which you take"}, 2000) {
@@ -1895,7 +1667,7 @@ public class ObjectAction implements PacketHandler {
 								
 							case 555: // search rock for Volencia Moss
 								owner.sendMessage("A small herb plant is growing in the scorched soil");
-								Quest qA = owner.getQuest(Config.Quests.JUNGLE_POTION);
+								Quest qA = owner.getQuest(Quests.JUNGLE_POTION);
 								if (qA != null) {
 									if (qA.getStage() == 3 && owner.getInventory().countId(822) == 0)
 										World.registerEntity(new Item(821, 412, 794, 1, owner));
@@ -1904,7 +1676,7 @@ public class ObjectAction implements PacketHandler {
 							
 							case 554: // Scorched earth Sito Foil
 								owner.sendMessage("A small herb plant is growing in the scorched soil");
-								Quest qB = owner.getQuest(Config.Quests.JUNGLE_POTION);
+								Quest qB = owner.getQuest(Quests.JUNGLE_POTION);
 								if (qB != null) {
 									if (qB.getStage() == 2 && owner.getInventory().countId(820) == 0)
 										World.registerEntity(new Item(819, 447, 778, 1, owner));
@@ -1913,7 +1685,7 @@ public class ObjectAction implements PacketHandler {
 						
 							case 553: // Palm tree for Ardrigal
 								owner.sendMessage("You find an herb plant growing at the base of the palm");
-								Quest qC = owner.getQuest(Config.Quests.JUNGLE_POTION);
+								Quest qC = owner.getQuest(Quests.JUNGLE_POTION);
 								if (qC != null) {
 									if (qC.getStage() == 1 && owner.getInventory().countId(818) == 0)
 										World.registerEntity(new Item(817, 398, 762, 1, owner));
@@ -1922,7 +1694,7 @@ public class ObjectAction implements PacketHandler {
 							
 							case 564:	//Jungle Vine for Snake Weed
 								owner.sendMessage("Small amounts of an herb are growing near this vine");
-								Quest qD = owner.getQuest(Config.Quests.JUNGLE_POTION);
+								Quest qD = owner.getQuest(Quests.JUNGLE_POTION);
 								if(qD != null) {
 									if (qD.getStage() == 0 && owner.getInventory().countId(816) == 0)
 										World.registerEntity(new Item(815, 471, 794, 1, owner));
@@ -1935,9 +1707,9 @@ public class ObjectAction implements PacketHandler {
 							
 							case 230: //Chest in Dwarven mine for map piece
 								if (owner.getInventory().countId(418) == 0) {
-									Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+									Quest q = owner.getQuest(Quests.DRAGON_SLAYER);
 									if (q != null) {
-										if (owner.getQuestCompletionStage(Config.Quests.DRAGON_SLAYER) > 0 && !q.finished()) {
+										if (owner.getQuestCompletionStage(Quests.DRAGON_SLAYER) > 0 && !q.finished()) {
 											owner.sendMessage("You find a piece of map in the chest");
 											owner.getInventory().add(new InvItem(418, 1));
 											owner.sendInventory();
@@ -1966,7 +1738,7 @@ public class ObjectAction implements PacketHandler {
 							break;
 							
 							case 40: // Lumbridge Coffin [QUEST]
-								Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
+								Quest q = owner.getQuest(Quests.THE_RESTLESS_GHOST);
 								if (q == null)
 									owner.sendMessage("You search the coffin and find some human remains");
 								else if (q.finished())
@@ -2066,7 +1838,7 @@ public class ObjectAction implements PacketHandler {
 							break;
 							
 							case 77:
-								if (owner.getQuestCompletionStage(Config.Quests.DEMON_SLAYER) < 1)
+								if (owner.getQuestCompletionStage(Quests.DEMON_SLAYER) < 1)
 									owner.sendMessage("I can see a key but can't quite reach it...");
 								else {
 									owner.setBusy(true);
@@ -2177,7 +1949,7 @@ public class ObjectAction implements PacketHandler {
 								// 280, 3473 unpatched, empty.
 								// 281, 3473 Ladder up, unpatched.
 								
-								Quest Dragon_Slayer = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+								Quest Dragon_Slayer = owner.getQuest(Quests.DRAGON_SLAYER);
 								
 								if (Dragon_Slayer != null)
 								{
@@ -2478,7 +2250,7 @@ public class ObjectAction implements PacketHandler {
 						//West Ardougne wall gateway
 						//action: Open
 						case 450:
-							if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).finished())
+							if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).finished())
 							{
 								if (owner.getX() == 622) 
 								{
@@ -2667,7 +2439,7 @@ public class ObjectAction implements PacketHandler {
 							//Grip's drinks cupboard
 							//action: Open
 							case 263:
-								if(owner.getQuest(Config.Quests.HEROS_QUEST) == null || owner.getQuest(Config.Quests.HEROS_QUEST) != null && owner.getQuest(Config.Quests.HEROS_QUEST).finished() || owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG) != null && owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished())
+								if(owner.getQuest(Quests.HEROS_QUEST) == null || owner.getQuest(Quests.HEROS_QUEST) != null && owner.getQuest(Quests.HEROS_QUEST).finished() || owner.getQuest(Quests.JOIN_PHOENIX_GANG) != null && owner.getQuest(Quests.JOIN_PHOENIX_GANG).finished())
 								{
 									owner.sendMessage("You shouldn't be in here");
 									return;
@@ -2677,7 +2449,7 @@ public class ObjectAction implements PacketHandler {
 									owner.setBusy(true);
 									Npc grip = World.getNpc(259, 459, 469, 672, 680);
 									Npc guard = World.getNpc(258, 459, 469, 672, 680);
-									if(owner.getQuest(Config.Quests.HEROS_QUEST).getStage() == 4 )
+									if(owner.getQuest(Quests.HEROS_QUEST).getStage() == 4 )
 									{	
 										guard.blockedBy(owner);
 										if(guard != null) 
@@ -2844,7 +2616,7 @@ public class ObjectAction implements PacketHandler {
 							break;
 							
 							case 180: // Al-Kharid Gate
-							Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+							Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 							if (q != null && q.finished())
 							{
 								doGate();
@@ -2937,7 +2709,7 @@ public class ObjectAction implements PacketHandler {
 									owner.setBusy(true);
 									Npc guard = World.getNpc(503, 94, 95, 520, 522);
 									guard.blockedBy(owner);
-									if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 7)
+									if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() >= 7)
 									{
 										if(guard != null) 
 										{
@@ -3000,13 +2772,13 @@ public class ObjectAction implements PacketHandler {
 							break;
 							
 							case 563: // King Lathas Training Grounds Gate
-								if (owner.getQuest(Config.Quests.BIOHAZARD) == null || !owner.getQuest(Config.Quests.BIOHAZARD).finished())
+								if (owner.getQuest(Quests.BIOHAZARD) == null || !owner.getQuest(Quests.BIOHAZARD).finished())
 								{
 									owner.sendMessage("In order to access this area the Biohazard quest must be completed.");
 									return;
 								}
 								else
-								if (owner.getQuest(Config.Quests.BIOHAZARD).finished())
+								if (owner.getQuest(Quests.BIOHAZARD).finished())
 								{
 									doGate();
 									if (owner.getY() < 552)
@@ -3090,7 +2862,7 @@ public class ObjectAction implements PacketHandler {
 								{
 									
 									doGate();
-									owner.sendMessage(Config.PREFIX + "@ora@Beware @whi@P2P items can be used beyond this gate.");
+									owner.sendMessage(Config.getPrefix() + "@ora@Beware @whi@P2P items can be used beyond this gate.");
 									owner.teleport(owner.getX(), owner.getY() < 144 ? owner.getY()+1 : owner.getY()-1);
 								}							
 								else // Lesser Cage..
@@ -3165,7 +2937,7 @@ public class ObjectAction implements PacketHandler {
 					private void handleListen() {
 						switch (object.getID()) {
 							case 148:
-								if (owner.getQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS) == 1) {
+								if (owner.getQuestCompletionStage(Quests.BLACK_KNIGHTS_FORTRESS) == 1) {
 									final Npc blackKnight = World.getNpc(108, 276, 282, 1377, 1382);
 									final Npc witch = World.getNpc(107, 276, 282, 1377, 1382);
 									final Npc greldo = World.getNpc(109, 276, 282, 1377, 1382);
@@ -3181,7 +2953,7 @@ public class ObjectAction implements PacketHandler {
 														World.getDelayedEventHandler().add(new DelayedQuestChat(greldo, owner, new String[] {"Yeth Mithreth"}) {
 															public void finished() {
 																owner.setBusy(false);
-																owner.incQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS);
+																owner.incQuestCompletionStage(Quests.BLACK_KNIGHTS_FORTRESS);
 															}
 														});
 													}
@@ -3259,7 +3031,7 @@ public class ObjectAction implements PacketHandler {
 					}
 
 					private void handleSleepObject(String message) {
-					    if (Config.DISABLE_FATIGUE) {
+					    if (Config.isDisableFatigue()) {
 					        owner.sendMessage("Fatigue is disabled on this server.");
 					        return;
                         }
@@ -3379,7 +3151,7 @@ public class ObjectAction implements PacketHandler {
 							
 							case 244: //Entrana Ladder
 								Npc Monk = World.getNpc(213, owner.getX() - 5, owner.getX() + 5, owner.getY() - 5, owner.getY() + 5);
-								if (Monk != null && owner.getInventory().containsViolentEquipment() && owner.getQuest(Config.Quests.LOST_CITY).getStage() >= 3) 
+								if (Monk != null && owner.getInventory().containsViolentEquipment() && owner.getQuest(Quests.LOST_CITY).getStage() >= 3) 
 								{
 									for (Player informee : Monk.getViewArea().getPlayersInView())
 									{
@@ -3482,9 +3254,9 @@ public class ObjectAction implements PacketHandler {
 							case 5:
 								if (object.getX() == 459 && object.getY() == 1393)
 								{
-									if (owner.getQuest(Config.Quests.MERLINS_CRYSTAL) != null)
+									if (owner.getQuest(Quests.MERLINS_CRYSTAL) != null)
 									{
-										if(owner.getQuest(Config.Quests.MERLINS_CRYSTAL).getStage() == 7 || owner.getQuest(Config.Quests.MERLINS_CRYSTAL).finished())
+										if(owner.getQuest(Quests.MERLINS_CRYSTAL).getStage() == 7 || owner.getQuest(Quests.MERLINS_CRYSTAL).finished())
 										{
 											owner.teleport(461, 3280);
 											owner.sendMessage("You climb up the ladder");
@@ -3509,7 +3281,7 @@ public class ObjectAction implements PacketHandler {
 							break;
 							
 							case 981:
-								Quest dwarfCannon = owner.getQuest(Config.Quests.DWARF_CANNON);
+								Quest dwarfCannon = owner.getQuest(Quests.DWARF_CANNON);
 								if (dwarfCannon != null) {
 									if (dwarfCannon.getStage() == 1) {
 										owner.sendMessage("You go up the " + object.getGameObjectDef().getName());
@@ -3699,13 +3471,13 @@ public class ObjectAction implements PacketHandler {
 									InvItem ore = new InvItem(def.getOreId());
 									if (owner.getLocation().onTutorialIsland())
 									{
-										Quest tutorialIsland = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+										Quest tutorialIsland = owner.getQuest(Quests.TUTORIAL_ISLAND);
 										if (tutorialIsland != null)
 										{
 											if (tutorialIsland.getStage() == 12)
 											{
 												owner.sendMessage("This rock contains " + ore.getDef().getName() + ".");
-												player.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+												player.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 											}
 											else
 											{
@@ -3730,7 +3502,7 @@ public class ObjectAction implements PacketHandler {
 						final int DRAMEN_BRANCH_ID = 510;
 						if(object.getID() == 245)
 						{
-							Quest quest = owner.getQuest(Config.Quests.LOST_CITY);
+							Quest quest = owner.getQuest(Quests.LOST_CITY);
 							if(quest.finished()) 
 							{
 								final int axe = Formulae.getWoodcuttingAxe(owner);
@@ -3953,7 +3725,7 @@ public class ObjectAction implements PacketHandler {
 						 */
 						if (object.getX() == 570 && object.getY() == 489)
 						{
-							Quest Fishing_Contest = owner.getQuest(Config.Quests.FISHING_CONTEST);
+							Quest Fishing_Contest = owner.getQuest(Quests.FISHING_CONTEST);
 							switch(Fishing_Contest.getStage())
 							{
 								case 3:
@@ -4219,7 +3991,7 @@ public class ObjectAction implements PacketHandler {
 					private void handleClimbEvent() {
 						switch (object.getID()) {
 							case 393: // Tree Gnome Village Wall
-								Quest Tree_Gnome_Village = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+								Quest Tree_Gnome_Village = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 								switch (Tree_Gnome_Village.getStage())
 								{
 									case 5:
@@ -4275,7 +4047,7 @@ public class ObjectAction implements PacketHandler {
 					private void handleEnterEvent() {
 						switch (object.getID()) {
 							case 449: // Plague City Sewer.
-								if (!owner.getQuest(Config.Quests.PLAGUE_CITY).finished() && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 6)
+								if (!owner.getQuest(Quests.PLAGUE_CITY).finished() && owner.getQuest(Quests.PLAGUE_CITY).getStage() >= 6)
 								{
 									if (owner.getInventory().wielding(766)) // Check for gas mask, Plague City
 									{

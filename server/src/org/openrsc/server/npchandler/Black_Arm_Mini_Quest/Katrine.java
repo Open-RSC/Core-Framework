@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -29,9 +30,9 @@ public class Katrine implements NpcHandler
 		owner.setBusy(true);
 		
 		
-		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
-		Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
-		Quest heroesQuest = owner.getQuest(Config.Quests.HEROS_QUEST);
+		Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
+		Quest blackarm = owner.getQuest(Quests.JOIN_BLACKARM_GANG);
+		Quest heroesQuest = owner.getQuest(Quests.HEROS_QUEST);
 		
 		if (heroesQuest == null) 
 		{
@@ -296,7 +297,7 @@ public class Katrine implements NpcHandler
 								owner.getInventory().remove(585, 1);
 								owner.getInventory().add(586, 1);
 								owner.sendInventory();	
-								owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+								owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -313,7 +314,7 @@ public class Katrine implements NpcHandler
 		{
 			public void finished() 
 			{
-				owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+				owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -446,7 +447,7 @@ public class Katrine implements NpcHandler
 								owner.getInventory().remove(new InvItem(59,1));
 								owner.getInventory().remove(new InvItem(59,1));
 								owner.sendInventory();
-								owner.finishQuest(Config.Quests.JOIN_BLACKARM_GANG);
+								owner.finishQuest(Quests.JOIN_BLACKARM_GANG);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -719,7 +720,7 @@ public class Katrine implements NpcHandler
 	private void noProblem(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Great!", "You'll find the Phoenix gang's weapon stash just next to a temple", "due east of here."}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.JOIN_BLACKARM_GANG);
+				owner.incQuestCompletionStage(Quests.JOIN_BLACKARM_GANG);
 				owner.setBusy(false);
 				npc.unblock();
 			}

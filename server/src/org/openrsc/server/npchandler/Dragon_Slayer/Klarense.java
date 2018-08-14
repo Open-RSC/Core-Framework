@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Klarense implements NpcHandler {
@@ -19,7 +20,7 @@ public class Klarense implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+		Quest q = owner.getQuest(Quests.DRAGON_SLAYER);
 		if(q != null) {
 			if(q.finished()) {
 				afterShipSold(npc, owner);
@@ -181,7 +182,7 @@ public class Klarense implements NpcHandler {
 			owner.sendInventory();
 			World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Ok she's all yours"}) {
 				public void finished() {
-					owner.incQuestCompletionStage(Config.Quests.DRAGON_SLAYER); // 0x2
+					owner.incQuestCompletionStage(Quests.DRAGON_SLAYER); // 0x2
 					owner.setBusy(false);
 					npc.unblock();
 				}

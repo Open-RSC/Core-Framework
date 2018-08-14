@@ -37,7 +37,7 @@ public class TeleportLocationMutation
 				{
 					if(player.isAdmin() || player.isSuperMod() || player.isDev())
 					{
-						player.sendMessage(Config.PREFIX + "A new teleport location has been created: \"" + alias + "\"");
+						player.sendMessage(Config.getPrefix() + "A new teleport location has been created: \"" + alias + "\"");
 					}
 				}
 			}

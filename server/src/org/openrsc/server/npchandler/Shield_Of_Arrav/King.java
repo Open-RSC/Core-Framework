@@ -12,6 +12,7 @@ import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
@@ -19,7 +20,7 @@ public class King implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+		Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 		if(q != null) {
 			if(q.finished()) {
 				noQuest(npc, owner);
@@ -57,8 +58,8 @@ public class King implements NpcHandler {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"Your majesty", "I have come to claim the reward", "for the return of the shield of Arrav"}, true) {
 			public void finished() {
 				owner.sendMessage("You show the certificate to the king");
-				Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
-				Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+				Quest blackarm = owner.getQuest(Quests.JOIN_BLACKARM_GANG);
+				Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
 				if(blackarm != null || phoenix != null) {
 					World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"My goodness", "This is the claim for a reward put out by my father", "I never thought I'd see anyone claim this reward", "I see you are claiming half the reward", "So that would come to 600 gold coins"}) {
 						public void finished() {
@@ -67,8 +68,8 @@ public class King implements NpcHandler {
 							owner.sendMessage("The king gives you 600 coins");
 							owner.getInventory().add(new InvItem(10, 600));
 							owner.sendInventory();
-							owner.finishQuest(Config.Quests.SHIELD_OF_ARRAV);
-							Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+							owner.finishQuest(Quests.SHIELD_OF_ARRAV);
+							Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 							owner.sendMessage("You have completed the Shield of Arrav quest");
 							owner.sendMessage("@gre@You have gained " + q.getQuestPoints() + " quest points!");
 							owner.setBusy(false);

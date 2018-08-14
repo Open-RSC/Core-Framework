@@ -9,6 +9,7 @@ import org.openrsc.server.model.Mob;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.states.CombatState;
 import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
@@ -99,7 +100,7 @@ public class VampireFightEvent extends DelayedEvent implements IFightEvent {
 				attacker.resetCombat(CombatState.WON);
 				opponent.resetCombat(CombatState.LOST);
 			} else {
-				Quest q = owner.getQuest(Config.Quests.VAMPIRE_SLAYER);
+				Quest q = owner.getQuest(Quests.VAMPIRE_SLAYER);
 				if(!owner.getInventory().wielding(217) || owner.getInventory().countId(168) == 0 || q == null) {
 					owner.sendMessage("The vampire seems to regenerate");
 					opponent.setHits(opponent.getHits() + 20);
@@ -116,7 +117,7 @@ public class VampireFightEvent extends DelayedEvent implements IFightEvent {
 						owner.incQuestExp(0, 4000);
 						owner.sendStat(0);
 						owner.sendMessage("@gre@You have gained 3 quest points!");
-						owner.finishQuest(Config.Quests.VAMPIRE_SLAYER);
+						owner.finishQuest(Quests.VAMPIRE_SLAYER);
 						Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Vampire Slayer</span> quest!"));
 					}
 				}

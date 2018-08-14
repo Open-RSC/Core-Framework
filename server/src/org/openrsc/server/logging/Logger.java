@@ -103,7 +103,7 @@ public class Logger extends Thread {
 				threadInterrupted(this.getClass().getName(), interruptedException);
 			}
 			
-			if (Config.LOGGING)
+			if (Config.isLogging())
 			{
 				try(Statement statement = connection.createStatement())
 				{

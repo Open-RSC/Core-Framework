@@ -13,6 +13,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -23,7 +24,7 @@ public class Montai implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+		Quest q = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -120,7 +121,7 @@ public class Montai implements NpcHandler {
 	private void questStage2Accepted(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Please be as quick as you can", "I don't know how much longer we can hold out"}) {
 			public void finished() {
-			owner.incQuestCompletionStage(Config.Quests.TREE_GNOME_VILLAGE);
+			owner.incQuestCompletionStage(Quests.TREE_GNOME_VILLAGE);
 			owner.setBusy(false);
 			npc.unblock();
 			}
@@ -164,7 +165,7 @@ public class Montai implements NpcHandler {
 									owner.getInventory().remove(14, 1);
 									owner.getInventory().remove(14, 1);
 									owner.sendInventory();
-									owner.incQuestCompletionStage(Config.Quests.TREE_GNOME_VILLAGE);
+									owner.incQuestCompletionStage(Quests.TREE_GNOME_VILLAGE);
 									World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"That's excellent now we can make more defensive battlements", "give me a moment to organise the troops", "and then come speak to me", "I'll inform you of our next phase of attack"}) {
 										public void finished() {
 											owner.setBusy(false);
@@ -235,7 +236,7 @@ public class Montai implements NpcHandler {
 	private void questStage4Accepted(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Thank you, You're braver than most", "I don't know how long I will be able to hold out", "Once you have the coordinates", "Come back and fire the ballista", "Right into those monsters", "If you can retrieve the orb and bring safety back to my people", "None of the blood spilled on this field will be in vain"}) {
 			public void finished() {
-			owner.incQuestCompletionStage(Config.Quests.TREE_GNOME_VILLAGE);
+			owner.incQuestCompletionStage(Quests.TREE_GNOME_VILLAGE);
 			owner.setBusy(false);
 			npc.unblock();
 			}

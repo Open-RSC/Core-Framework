@@ -16,7 +16,7 @@ public class Arhein implements NpcHandler {
     public void handleNpc(final Npc npc, final Player owner) throws Exception {
         npc.blockedBy(owner);
         owner.setBusy(true);
-        Quest q = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+        Quest q = owner.getQuest(Quests.MERLINS_CRYSTAL);
         if (q != null) {
             if (q.finished()) {
                 noQuestStarted(npc, owner);

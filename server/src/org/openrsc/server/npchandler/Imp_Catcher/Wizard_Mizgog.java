@@ -15,6 +15,7 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Wizard_Mizgog implements NpcHandler {
@@ -58,7 +59,7 @@ public class Wizard_Mizgog implements NpcHandler {
 																				final String[] messages3 = {"I'll try"};
 																				World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, messages3) {
 																					public void finished() {
-																						owner.addQuest(Config.Quests.IMP_CATCHER, 1);
+																						owner.addQuest(Quests.IMP_CATCHER, 1);
 																						owner.setBusy(false);
 																						npc.unblock();
 																					}
@@ -176,7 +177,7 @@ public class Wizard_Mizgog implements NpcHandler {
 															owner.sendInventory();
 															World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 																public void action() {
-																	owner.finishQuest(Config.Quests.IMP_CATCHER);
+																	owner.finishQuest(Quests.IMP_CATCHER);
 																	owner.sendMessage("Well done. You have completed the Imp catcher quest");
 																	owner.sendMessage("@gre@You have gained 1 quest point");
 																	owner.incQuestExp(6, 1000);
@@ -229,7 +230,7 @@ public class Wizard_Mizgog implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.IMP_CATCHER);
+		Quest q = owner.getQuest(Quests.IMP_CATCHER);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);

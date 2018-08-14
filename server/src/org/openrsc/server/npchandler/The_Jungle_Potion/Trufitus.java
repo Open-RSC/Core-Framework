@@ -11,13 +11,14 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Trufitus implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.JUNGLE_POTION);
+		Quest q = owner.getQuest(Quests.JUNGLE_POTION);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -299,7 +300,7 @@ public class Trufitus implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"That is excellent then Bwana!", "The first herb I need you to gather is called", "'Snake Weed'", "It grows near vines in an area to the south west", "where the ground turns soft and water kisses your feet."}) {
 					public void finished() {
-						owner.addQuest(Config.Quests.JUNGLE_POTION, 1);
+						owner.addQuest(Quests.JUNGLE_POTION, 1);
 						owner.setBusy(false);
 						npc.unblock();
 					}
@@ -373,7 +374,7 @@ public class Trufitus implements NpcHandler {
 						final String[] messages4 = {"Many thanks for the 'Snake Weed'"};
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages4) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.JUNGLE_POTION);
+								owner.incQuestCompletionStage(Quests.JUNGLE_POTION);
 								owner.getInventory().remove(new InvItem(816, 1));
 								owner.sendInventory();
 								owner.setBusy(false);
@@ -458,7 +459,7 @@ public class Trufitus implements NpcHandler {
 				World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 					public void action() {
 						owner.sendMessage("You give the Ardrigal to Trufitus");
-						owner.incQuestCompletionStage(Config.Quests.JUNGLE_POTION);
+						owner.incQuestCompletionStage(Quests.JUNGLE_POTION);
 						owner.getInventory().remove(new InvItem(818, 1));
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -533,7 +534,7 @@ public class Trufitus implements NpcHandler {
 				World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 					public void action() {
 						owner.sendMessage("You give the Sito Foil to Trufitus");
-						owner.incQuestCompletionStage(Config.Quests.JUNGLE_POTION);
+						owner.incQuestCompletionStage(Quests.JUNGLE_POTION);
 						owner.getInventory().remove(new InvItem(820, 1));
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -597,7 +598,7 @@ public class Trufitus implements NpcHandler {
 				World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 					public void action() {
 						owner.sendMessage("You give the Volencia Moss to Trufitus");
-						owner.incQuestCompletionStage(Config.Quests.JUNGLE_POTION);
+						owner.incQuestCompletionStage(Quests.JUNGLE_POTION);
 						owner.getInventory().remove(new InvItem(822, 1));
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -685,7 +686,7 @@ public class Trufitus implements NpcHandler {
 				owner.sendMessage("Trufitus shows you some techniques in Herblaw");
 				owner.sendMessage("You gain experience in Herblaw!");
 				owner.incQuestExp(15, 3000);
-				owner.finishQuest(Config.Quests.JUNGLE_POTION);
+				owner.finishQuest(Quests.JUNGLE_POTION);
 				owner.sendMessage("@gre@You have gained 1 quest point!");
 				owner.setBusy(false);
 				npc.unblock();

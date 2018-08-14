@@ -13,13 +13,14 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Ned_On_Ship implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+		Quest q = owner.getQuest(Quests.DRAGON_SLAYER);
 		if(q != null) {
 			if(q.finished()) {
 				howDidYou(npc, owner);

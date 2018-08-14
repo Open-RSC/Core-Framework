@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -20,7 +21,7 @@ public class Lady_of_the_lake implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+		Quest q = owner.getQuest(Quests.MERLINS_CRYSTAL);
 		if(q != null) {
 			if(q.finished()) {
 				noQuestStarted(npc, owner);
@@ -100,7 +101,7 @@ public class Lady_of_the_lake implements NpcHandler {
 	private void quest(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Yes I do have the sword", "But if you want it", "Meet me at port sarim at the jewellery shop"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.MERLINS_CRYSTAL);
+				owner.incQuestCompletionStage(Quests.MERLINS_CRYSTAL);
 				owner.setBusy(false);
 				npc.unblock();	
 			}

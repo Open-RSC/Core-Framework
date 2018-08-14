@@ -59,10 +59,10 @@ public final class Server
 			config.setDisconnectOnUnbind(true);
 			((SocketSessionConfig)config.getSessionConfig()).setReuseAddress(true);
 			((SocketSessionConfig)config.getSessionConfig()).setTcpNoDelay(true);
-			acceptor.bind(new InetSocketAddress(Config.SERVER_IP, Config.SERVER_PORT), new RSCConnectionHandler(engine.messageQueue), config);
+			acceptor.bind(new InetSocketAddress(Config.getServerIp(), Config.getServerPort()), new RSCConnectionHandler(engine.messageQueue), config);
 		}
 		catch (Exception e) {
-			System.out.println("Unable to bind to: " + Config.SERVER_IP + " (" + Config.SERVER_PORT + ")");
+			System.out.println("Unable to bind to: " + Config.getServerIp() + " (" + Config.getServerPort() + ")");
 			System.exit(-1);
 		}
 		try {
@@ -70,9 +70,9 @@ public final class Server
 			IoAcceptorConfig config = new SocketAcceptorConfig();
 			config.setDisconnectOnUnbind(true);
 			((SocketSessionConfig)config.getSessionConfig()).setReuseAddress(true);
-			this.webAcceptor.bind(new InetSocketAddress(Config.SERVER_IP, Config.WEB_PORT), new WebConnectionHandler(engine.webMessageQueue), config);
+			this.webAcceptor.bind(new InetSocketAddress(Config.getServerIp(), Config.getWebPort()), new WebConnectionHandler(engine.webMessageQueue), config);
 		} catch (Exception e) {
-			System.out.println("Unable to bind to: " + Config.SERVER_IP + " (" + Config.WEB_PORT + ")");
+			System.out.println("Unable to bind to: " + Config.getServerIp() + " (" + Config.getWebPort() + ")");
 			System.exit(-1);
 		}
 
@@ -86,7 +86,7 @@ public final class Server
 	 */
 	public void shutdown(boolean autoRestart)
 	{
-		System.out.println(Config.SERVER_NAME + " is shutting down...");
+		System.out.println(Config.getServerName() + " is shutting down...");
 		/// Remove all players
 		engine.emptyWorld();
 		World.getWorldLoader().saveAuctionHouse();
@@ -152,7 +152,7 @@ public final class Server
 			ex.printStackTrace();
 		}
 
-		System.out.println(Config.SERVER_NAME + " is starting up...");
+		System.out.println(Config.getServerName() + " is starting up...");
 		Class.forName("org.openrsc.server.ServerBootstrap");
 		try
 		{
@@ -163,7 +163,7 @@ public final class Server
 			t.printStackTrace();
 			System.exit(-1);
 		}
-		System.out.println(Config.SERVER_NAME + " is now online!");
+		System.out.println(Config.getServerName() + " is now online!");
 	}
 
 }
