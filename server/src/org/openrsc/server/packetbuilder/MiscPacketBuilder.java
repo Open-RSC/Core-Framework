@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,7 +12,6 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import org.openrsc.server.Config;
-import static org.openrsc.server.Config.SERVER_NAME;
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Player;
@@ -207,9 +207,27 @@ public final class MiscPacketBuilder {
 		/* 96 */ s.addByte(newID);
 		/* 97 */ this.player.getSession().write(s.toPacket());
 		/*     */ }
+    
+    public void sendConfiguration(HashMap<String, String> config)
+    {
+        RSCPacketBuilder s = new RSCPacketBuilder();
+        s.setID(226);
+        
+        s.addInt(config.size());
+        
+        for(Map.Entry<String, String> entry : config.entrySet()) {
+            s.addInt(entry.getKey().length());
+            s.addBytes(entry.getKey().getBytes());
+            s.addInt(entry.getValue().length());
+            s.addBytes(entry.getValue().getBytes());
+        }
+        
+        this.player.getSession().write(s.toPacket());
+    }
 
 	/*     */
 	/*     */ public void sendLoginInformation() {
+                  sendConfiguration(Config.getAllConfigs());
 		/* 101 */ sendServerInfo();
 		/* 102 */ sendWorldInfo();
 		/* 103 */ sendKills();
@@ -252,7 +270,7 @@ public final class MiscPacketBuilder {
 			/* 132 */ sendAppearanceScreen();
 			/*     */ }
 
-		/* 134 */ sendMessage("Welcome to "+Config.SERVER_NAME+"!");
+		/* 134 */ sendMessage("Welcome to "+ Config.getServerName() +"!");
 		/* 135 */ sendLoginBox();
 		sendPendingAuctions();
 		/*     */
@@ -744,7 +762,7 @@ public final class MiscPacketBuilder {
 		/* 560 */ s.setID(110);
 		/* 564 */ s.addShort(0);
 		/* 565 */ s.addByte((byte) 0);
-		/* 566 */ s.addLong(Config.START_TIME);
+		/* 566 */ s.addLong(Config.getStartTime());
 		/* 567 */ s.addBytes("USA".getBytes());
 		/* 568 */ this.player.getSession().write(s.toPacket());
 		/*     */ }

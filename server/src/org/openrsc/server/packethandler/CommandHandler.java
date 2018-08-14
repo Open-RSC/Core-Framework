@@ -47,7 +47,7 @@ import org.openrsc.server.util.Formulae;
 
 public class CommandHandler implements PacketHandler 
 {
-    private static String badSyntaxPrefix = Config.PREFIX + "Invalid Syntax: ::";
+    private static String badSyntaxPrefix = Config.getPrefix() + "Invalid Syntax: ::";
     Pattern ipRegex = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
     
 	public void handlePacket(Packet p, IoSession session) throws Exception 
@@ -57,7 +57,7 @@ public class CommandHandler implements PacketHandler
 		{
 			if (System.currentTimeMillis() - player.getLastCommand() < 1000 && !player.isAdmin())
 			{
-				player.sendMessage(Config.PREFIX + "There's a second delay between using commands");
+				player.sendMessage(Config.getPrefix() + "There's a second delay between using commands");
 			}
 			else 
 			{
@@ -98,9 +98,9 @@ public class CommandHandler implements PacketHandler
                         owner;
             
             if(p != null)
-                owner.sendMessage(Config.PREFIX + "is at X: " + owner.getLocation().getX() + ", Y: " + owner.getLocation().getY());
+                owner.sendMessage(Config.getPrefix() + "is at X: " + owner.getLocation().getX() + ", Y: " + owner.getLocation().getY());
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		}
         else // Show online players
 		if (cmd.equalsIgnoreCase("online")) 
@@ -126,7 +126,7 @@ public class CommandHandler implements PacketHandler
             }
             else
             {
-                owner.sendMessage(Config.PREFIX + "There are currently " + World.getPlayers().size() + " player(s) online.");
+                owner.sendMessage(Config.getPrefix() + "There are currently " + World.getPlayers().size() + " player(s) online.");
             }
 		}
         else // toggle invulnerability
@@ -140,13 +140,13 @@ public class CommandHandler implements PacketHandler
             {
                 p.toggleInvulnerable();
                 String invulnerableText = p.isInvulnerable() ? "invulnerable" : "vulnerable";
-                owner.sendMessage(Config.PREFIX + p.getUsername() + " has been turned " + invulnerableText);
-                p.sendMessage(Config.PREFIX + "An admin has made you " + invulnerableText);
+                owner.sendMessage(Config.getPrefix() + p.getUsername() + " has been turned " + invulnerableText);
+                p.sendMessage(Config.getPrefix() + "An admin has made you " + invulnerableText);
                 Logger.log(new GenericLog(owner.getUsername() + " has made " + p.getUsername() + " " + invulnerableText, DataConversions.getTimeStamp()));
             }
             else
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
             }
 		}
         else // toggle invisibility
@@ -160,13 +160,13 @@ public class CommandHandler implements PacketHandler
             {
                 p.toggleInvisible();
                 String invisibleText = p.isInvisible() ? "invisible" : "visible";
-                owner.sendMessage(Config.PREFIX + p.getUsername() + " is now " + invisibleText);
-                p.sendMessage(Config.PREFIX + "An admin has made you " + invisibleText);
+                owner.sendMessage(Config.getPrefix() + p.getUsername() + " is now " + invisibleText);
+                p.sendMessage(Config.getPrefix() + "An admin has made you " + invisibleText);
                 Logger.log(new GenericLog(owner.getUsername() + " has made " + p.getUsername() + " " + invisibleText, DataConversions.getTimeStamp()));
             }
             else
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
             }
 		} 
         else // leave CTF event
@@ -181,16 +181,16 @@ public class CommandHandler implements PacketHandler
 			if (owner.getPrivacySetting(4)) 
 			{
 				if (!World.global && !owner.isSuperMod())
-					owner.sendMessage(Config.PREFIX + "Global Chat is currently disabled");
+					owner.sendMessage(Config.getPrefix() + "Global Chat is currently disabled");
 				else 
 				if (World.muted && !owner.isSuperMod())
-					owner.sendMessage(Config.PREFIX + "The world is muted");				
+					owner.sendMessage(Config.getPrefix() + "The world is muted");
 				else 
 				if (owner.getMuted() > 0)
-					owner.sendMessage(Config.PREFIX + "You are muted");		
+					owner.sendMessage(Config.getPrefix() + "You are muted");
 				else
 				if (System.currentTimeMillis() - owner.getLastGlobal() < 10000 && !owner.isSuperMod())
-					owner.sendMessage(Config.PREFIX + "There's a 10 second delay using Global Chat");
+					owner.sendMessage(Config.getPrefix() + "There's a 10 second delay using Global Chat");
 				else 
 				{	
 					owner.setLastGlobal(System.currentTimeMillis());
@@ -224,7 +224,7 @@ public class CommandHandler implements PacketHandler
 				}
 			} 
 			else
-				owner.sendMessage(Config.PREFIX + "You cannot use Global Chat as you have it disabled");
+				owner.sendMessage(Config.getPrefix() + "You cannot use Global Chat as you have it disabled");
 		} 
         else // Send an alert to a player
         if (cmd.equalsIgnoreCase("alert") && owner.isSuperMod()) 
@@ -238,11 +238,11 @@ public class CommandHandler implements PacketHandler
                     for (int i = 1; i < args.length; i++)
                     message += args[i] + " ";
                     p.sendAlert((owner.getStaffName()) + ":@whi@ " + message);
-                    owner.sendMessage(Config.PREFIX + "Alerted " + p.getUsername());
+                    owner.sendMessage(Config.getPrefix() + "Alerted " + p.getUsername());
                     Logger.log(new GenericLog(owner.getUsername() + " alerted " + p.getUsername() +": " + message, DataConversions.getTimeStamp()));
                 }
                 else
-                    owner.sendMessage(Config.PREFIX + "Invalid name");
+                    owner.sendMessage(Config.getPrefix() + "Invalid name");
             } 
 			else
                 owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");	
@@ -296,12 +296,12 @@ public class CommandHandler implements PacketHandler
             }
             try
             {
-                Config.MAX_LOGINS_PER_IP = Integer.parseInt(args[0]);
+                Config.setMaxLoginsPerIp(Integer.parseInt(args[0]));
                 for(Player p : World.getPlayers())
                 {
-                    p.sendNotification(Config.PREFIX + "Max logins per IP has been set to: " + Config.MAX_LOGINS_PER_IP );
+                    p.sendNotification(Config.getPrefix() + "Max logins per IP has been set to: " + Config.getMaxLoginsPerIp());
                 }
-                Logger.log(new GenericLog(owner.getUsername() + " has set MAX_LOGINS_PER_IP to " + Config.MAX_LOGINS_PER_IP, DataConversions.getTimeStamp()));
+                Logger.log(new GenericLog(owner.getUsername() + " has set MAX_LOGINS_PER_IP to " + Config.getMaxLoginsPerIp(), DataConversions.getTimeStamp()));
             }
             catch(NumberFormatException e)
             {
@@ -332,13 +332,13 @@ public class CommandHandler implements PacketHandler
                     p.addSkull(1200000);
                     skullMessage = "added";
                 }
-                p.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + " by an admin");
-                owner.sendMessage(Config.PREFIX + "Skull has been " + skullMessage + ": " + p.getUsername());
+                p.sendMessage(Config.getPrefix() + "Skull has been " + skullMessage + " by an admin");
+                owner.sendMessage(Config.getPrefix() + "Skull has been " + skullMessage + ": " + p.getUsername());
                 Logger.log(new GenericLog(owner.getUsername() + skullMessage + " skull to " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");	
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
             }
 		} 
 		else // Heal a player
@@ -352,12 +352,12 @@ public class CommandHandler implements PacketHandler
             {
                 p.setCurStat(3, p.getMaxStat(3));
                 p.sendStat(3);
-                p.sendMessage(Config.PREFIX + "You have been healed by an admin");
-                owner.sendMessage(Config.PREFIX + "Healed: " + p.getUsername());
+                p.sendMessage(Config.getPrefix() + "You have been healed by an admin");
+                owner.sendMessage(Config.getPrefix() + "Healed: " + p.getUsername());
                 Logger.log(new GenericLog(owner.getUsername() + " healed " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		}
 		else // Set a player's HP
 		if ((cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits")) && owner.isAdmin()) 
@@ -388,12 +388,12 @@ public class CommandHandler implements PacketHandler
                     if (p.getHits() <= 0)
                         p.killedBy(owner, false);
                     
-                    p.sendMessage(Config.PREFIX + "Your hits have been set to " + newHits + " by an admin");
-                    owner.sendMessage(Config.PREFIX + "Set " + p.getUsername() + "'s hits to " + newHits);
+                    p.sendMessage(Config.getPrefix() + "Your hits have been set to " + newHits + " by an admin");
+                    owner.sendMessage(Config.getPrefix() + "Set " + p.getUsername() + "'s hits to " + newHits);
                     Logger.log(new GenericLog(owner.getUsername() + " set " + p.getUsername() + "'s hits to " + newHits, DataConversions.getTimeStamp()));
                 }
                 else
-                    owner.sendMessage(Config.PREFIX + "Invalid name");
+                    owner.sendMessage(Config.getPrefix() + "Invalid name");
             }
             catch (NumberFormatException e)
             {
@@ -409,7 +409,7 @@ public class CommandHandler implements PacketHandler
 			{
 				for (Player p : World.getPlayers()) 
 				{
-					p.sendNotification(Config.PREFIX + "Global Chat has been " + (World.global ? "enabled" : "disabled") + " by " + owner.getStaffName());
+					p.sendNotification(Config.getPrefix() + "Global Chat has been " + (World.global ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
 			}
             Logger.log(new GenericLog(owner.getUsername() + " set global chat to " + (World.global ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
@@ -422,7 +422,7 @@ public class CommandHandler implements PacketHandler
 			{
 				for (Player p : World.getPlayers()) 
 				{
-					p.sendNotification(Config.PREFIX + "Dueling has been " + (World.dueling ? "enabled" : "disabled") + " by " + owner.getStaffName());
+					p.sendNotification(Config.getPrefix() + "Dueling has been " + (World.dueling ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
             }
             Logger.log(new GenericLog(owner.getUsername() + " set dueling to " + (World.dueling ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
@@ -435,7 +435,7 @@ public class CommandHandler implements PacketHandler
 			{
 				for (Player p : World.getPlayers()) 
 				{
-					p.sendNotification(Config.PREFIX + "World Mute has been " + (World.muted ? "enabled" : "disabled") + " by " + owner.getStaffName());
+					p.sendNotification(Config.getPrefix() + "World Mute has been " + (World.muted ? "enabled" : "disabled") + " by " + owner.getStaffName());
 				}
 			}
             Logger.log(new GenericLog(owner.getUsername() + " set global chat to " + (World.muted ? "enabled" : "disabled"), DataConversions.getTimeStamp()));
@@ -467,12 +467,12 @@ public class CommandHandler implements PacketHandler
                     owner.sendMessage(badSyntaxPrefix + cmd.toUpperCase() + " [player] [amount]");
                     return;
                 }
-                owner.sendMessage(Config.PREFIX + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
+                owner.sendMessage(Config.getPrefix() + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "%");
                 Logger.log(new GenericLog(owner.getUsername() + " set " + p.getUsername() + "'s fatigue to " + ((p.getFatigue() / 25) * 100 / 750) + "%", DataConversions.getTimeStamp()));
             } 
             else
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");	
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
             }
         }
         else // Show a player's IP address
@@ -486,11 +486,11 @@ public class CommandHandler implements PacketHandler
             {
 				long requestee = owner.getUsernameHash();
 				//p.requestLocalhost(requestee);
-                owner.sendMessage(Config.PREFIX + p.getUsername() + " IP address: " + p.getIP());
+                owner.sendMessage(Config.getPrefix() + p.getUsername() + " IP address: " + p.getIP());
 				Logger.log(new GenericLog(owner.getUsername() + " requested " + p.getUsername() + "'s IP", DataConversions.getTimeStamp()));
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		} 
 		else // Show info about a player
 		if (cmd.equalsIgnoreCase("info") && owner.isSuperMod()) 
@@ -502,7 +502,7 @@ public class CommandHandler implements PacketHandler
             if(p != null)
 				owner.sendAlert(p.getStaffName() + "@whi@ (" + p.getStatus() + ") at " + owner.getLocation().toString() + " (" + owner.getLocation().getDescription() + ") % % @gre@Group ID:@whi@ " + p.getGroupID() + " % % @gre@Logged in:@whi@ " + (DataConversions.getTimeStamp() - owner.getLastLogin()) + " seconds % % @gre@Last moved:@whi@ " + (int)((System.currentTimeMillis() - owner.getLastMoved()) / 1000) + " % % @gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " % %@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false"), true);
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		}
 		else // Show player's inventory
 		if (cmd.equalsIgnoreCase("inventory") && owner.isAdmin()) 
@@ -522,7 +522,7 @@ public class CommandHandler implements PacketHandler
                 owner.sendAlert("@blu@Inventory of " + p.getStaffName() + "%@whi@" + StringUtils.join(itemStrings, ", "), true);
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		} 
 		else // Show player's bank
 		if (cmd.equalsIgnoreCase("bank") && owner.isAdmin()) 
@@ -551,7 +551,7 @@ public class CommandHandler implements PacketHandler
                 }
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		} 
 		else // check or set a player's group
 		if ((cmd.equalsIgnoreCase("group") || cmd.equalsIgnoreCase("rank")) && owner.isStaff()) 
@@ -566,12 +566,12 @@ public class CommandHandler implements PacketHandler
             Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
             if(p == null)
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
                 return;
             }
             if(args.length == 1)
             {
-                owner.sendMessage(Config.PREFIX + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ")");
+                owner.sendMessage(Config.getPrefix() + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ")");
             }
             else
             {
@@ -604,19 +604,19 @@ public class CommandHandler implements PacketHandler
                 
                 if(Group.GROUP_NAMES.get(new_group) == null)
                 {
-                    owner.sendMessage(Config.PREFIX + "Invalid group_id or group_name");
+                    owner.sendMessage(Config.getPrefix() + "Invalid group_id or group_name");
                     return;
                 }
 
                 if(owner.getGroupID() >= new_group || owner.getGroupID() >= p.getGroupID())
                 {
-                    owner.sendMessage(Config.PREFIX  + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
+                    owner.sendMessage(Config.getPrefix() + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
                     return;
                 }
 
                 p.setGroupID(new_group);
-                p.sendMessage(Config.PREFIX + owner.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
-                owner.sendMessage(Config.PREFIX + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
+                p.sendMessage(Config.getPrefix() + owner.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
+                owner.sendMessage(Config.getPrefix() + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(new_group) + groupName + " (" + new_group + ")");
                 return;
             }
 		} 
@@ -648,11 +648,11 @@ public class CommandHandler implements PacketHandler
 			if (p != null) 
 			{
 				if (p.isDueling() && !owner.isAdmin())
-					owner.sendMessage(Config.PREFIX + "You cannot kick players who are dueling");	
+					owner.sendMessage(Config.getPrefix() + "You cannot kick players who are dueling");
 				else 
 				{				
 					World.unregisterEntity(p);
-					owner.sendMessage(Config.PREFIX + p.getUsername() + " has been kicked");
+					owner.sendMessage(Config.getPrefix() + p.getUsername() + " has been kicked");
 					Logger.log(new GenericLog(owner.getUsername() + " kicked " + p.getUsername(), DataConversions.getTimeStamp()));
 				}
 			}
@@ -676,7 +676,7 @@ public class CommandHandler implements PacketHandler
 			{
 				ServerBootstrap.getDatabaseService().submit(new Player.BanTransaction(DataConversions.usernameToHash(args[0]), true));
 				Logger.log(new GenericLog(owner.getUsername() + " banned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
-				owner.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been banned");
+				owner.sendMessage(Config.getPrefix() + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been banned");
 			} 
 		}
 		else // Unban a player
@@ -690,7 +690,7 @@ public class CommandHandler implements PacketHandler
 			
 			ServerBootstrap.getDatabaseService().submit(new Player.BanTransaction(DataConversions.usernameToHash(args[0]), false));			
 			Logger.log(new GenericLog(owner.getUsername() + " unbanned " + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])), DataConversions.getTimeStamp()));
-			owner.sendMessage(Config.PREFIX + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");				
+			owner.sendMessage(Config.getPrefix() + DataConversions.hashToUsername(DataConversions.usernameToHash(args[0])) + " has been unbanned");
 		}
 		else // Mute a player
 		if (cmd.equalsIgnoreCase("mute") && (owner.isSuperMod() || owner.isDev())) 
@@ -708,7 +708,7 @@ public class CommandHandler implements PacketHandler
 				p.mute(0);										
 				Logger.log(new GenericLog(owner.getUsername() + " muted " + p.getUsername(), DataConversions.getTimeStamp()));
 				ServerBootstrap.getDatabaseService().submit(new Player.MuteTransaction(DataConversions.usernameToHash(args[0]), true));
-				owner.sendMessage(Config.PREFIX + p.getUsername() + " has been muted");	
+				owner.sendMessage(Config.getPrefix() + p.getUsername() + " has been muted");
 			}
 		} 
 		else // Unmute a player
@@ -727,7 +727,7 @@ public class CommandHandler implements PacketHandler
 				p.unmute();										
 				Logger.log(new GenericLog(owner.getUsername() + " unmuted " + p.getUsername(), DataConversions.getTimeStamp()));
 				ServerBootstrap.getDatabaseService().submit(new Player.MuteTransaction(DataConversions.usernameToHash(args[0]), false));
-				owner.sendMessage(Config.PREFIX + p.getUsername() + " has been unmuted");	
+				owner.sendMessage(Config.getPrefix() + p.getUsername() + " has been unmuted");
 			}		
 		}
 		else // spawn/remove an NPC
@@ -802,7 +802,7 @@ public class CommandHandler implements PacketHandler
 				} 
 				else
 				{
-					owner.sendMessage(Config.PREFIX + "Invalid ID");
+					owner.sendMessage(Config.getPrefix() + "Invalid ID");
 				}
 			}
 		} 
@@ -812,22 +812,22 @@ public class CommandHandler implements PacketHandler
 			if (args.length == 0) 
 			{
 				owner.teleport = !owner.teleport;
-				owner.sendMessage(Config.PREFIX + "Single click teleport " + (owner.teleport ? "enabled" : "disabled"));
+				owner.sendMessage(Config.getPrefix() + "Single click teleport " + (owner.teleport ? "enabled" : "disabled"));
 			} 
 			else 
 			if (args.length == 1) 
 			{
 				if(!EntityHandler.getTeleportManager().containsTeleport(args[0]))
 				{
-					owner.sendMessage(Config.PREFIX + "Teleport location \"" + args[0] + "\" does not exist");
-					owner.sendMessage(Config.PREFIX + "hint: you can add it via the website");
+					owner.sendMessage(Config.getPrefix() + "Teleport location \"" + args[0] + "\" does not exist");
+					owner.sendMessage(Config.getPrefix() + "hint: you can add it via the website");
 				}
 				else
 				{
                     owner.resetLevers();
                     owner.setReturnPoint();
 					owner.teleport(EntityHandler.getTeleportManager().getTeleport(args[0]), false);
-                    owner.sendMessage(Config.PREFIX + "You have teleported to " + owner.getLocation());
+                    owner.sendMessage(Config.getPrefix() + "You have teleported to " + owner.getLocation());
                     Logger.log(new GenericLog(owner.getUsername() + " has teleported to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
 				}
 			} 
@@ -840,7 +840,7 @@ public class CommandHandler implements PacketHandler
                         owner.resetLevers();
                         owner.setReturnPoint();
                         owner.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
-                        owner.sendMessage(Config.PREFIX + "You have teleported to " + owner.getLocation());
+                        owner.sendMessage(Config.getPrefix() + "You have teleported to " + owner.getLocation());
                         Logger.log(new GenericLog(owner.getUsername() + " has teleported to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
                     }
 				}
@@ -863,14 +863,14 @@ public class CommandHandler implements PacketHandler
                             p.setReturnPoint();
                             p.teleport(Integer.parseInt(args[0]), Integer.parseInt(args[1]), false);
                             String teleportText = owner.getUsername() + " has teleported " + p.getUsername() + " to (" + owner.getX() + ", " + owner.getY() + ")";
-                            p.sendMessage(Config.PREFIX + "You have been teleported by " + owner.getUsername());
-                            owner.sendMessage(Config.PREFIX + teleportText);
+                            p.sendMessage(Config.getPrefix() + "You have been teleported by " + owner.getUsername());
+                            owner.sendMessage(Config.getPrefix() + teleportText);
                             Logger.log(new GenericLog(teleportText, DataConversions.getTimeStamp()));
                         }
                     }
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + "Invalid name");
+                        owner.sendMessage(Config.getPrefix() + "Invalid name");
                     }
 				}
                 catch(NumberFormatException e)
@@ -889,14 +889,14 @@ public class CommandHandler implements PacketHandler
             
             if(p != null)
             {
-                String confirmMessage = owner.getUsername() + " has been sent the change appearance screen";
+                String confirmMessage = p.getUsername() + " has been sent the change appearance screen";
                 p.setChangingAppearance(true);
                 p.getActionSender().sendAppearanceScreen();
-                owner.sendMessage(Config.PREFIX + confirmMessage);
+                owner.sendMessage(Config.getPrefix() + confirmMessage);
                 Logger.log(new GenericLog(confirmMessage + " by " + owner.getUsername(), DataConversions.getTimeStamp()));	
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		}
         else // Summon a player
 		if (cmd.equalsIgnoreCase("summon") && (owner.isSuperMod() || owner.isDev())) 
@@ -914,34 +914,34 @@ public class CommandHandler implements PacketHandler
                 if(!p.isStaff())
                 {
                     if (p.wasSummoned())
-                        owner.sendMessage(Config.PREFIX + "You cannot summon a player who is already summoned");
+                        owner.sendMessage(Config.getPrefix() + "You cannot summon a player who is already summoned");
                     else
                     if (p.getLocation().inCtf())
-                        owner.sendMessage(Config.PREFIX + "You cannot summon players who are in CTF");
+                        owner.sendMessage(Config.getPrefix() + "You cannot summon players who are in CTF");
                     else
                     if (p.isDueling() && !owner.isAdmin())
-                        owner.sendMessage(Config.PREFIX + "You cannot summon players who are dueling");
+                        owner.sendMessage(Config.getPrefix() + "You cannot summon players who are dueling");
                     else 
                     if (owner.getLocation().inWilderness() && !owner.isAdmin())
-                        owner.sendMessage(Config.PREFIX + "You cannot summon players into the wilderness");
+                        owner.sendMessage(Config.getPrefix() + "You cannot summon players into the wilderness");
                     else 
                     {
                         String summonMessage = owner.getUsername() + " summoned " + p.getUsername() + " to " + "(" + p.getX() + ", " + p.getY() + ")";
                         p.setReturnPoint();
                         p.teleport(owner.getX(), owner.getY(), false);
-                        p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
-                        owner.sendMessage(Config.PREFIX + summonMessage);
+                        p.sendMessage(Config.getPrefix() + "You have been summoned by " + owner.getStaffName());
+                        owner.sendMessage(Config.getPrefix() + summonMessage);
                         Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));					
                     }
                 }
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "Staff members can not be summoned");
+                    owner.sendMessage(Config.getPrefix() + "Staff members can not be summoned");
                 }
 			} 
 			else
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.getPrefix() + "Invalid name");
 			}
 		} 
 		else // Return a player to where they were before summoning
@@ -960,13 +960,13 @@ public class CommandHandler implements PacketHandler
                         String returnMessage = owner.getUsername() + " returned " + p.getUsername() + " to " + " (" + p.getX() + ", " + p.getY() + ")";
                         p.setSummoned(false);
                         p.teleport(p.getReturnX(), p.getReturnY(), false);
-                        p.sendMessage(Config.PREFIX + "You have been returned to your original location by " + owner.getStaffName());
-                        owner.sendMessage(Config.PREFIX + returnMessage);
+                        p.sendMessage(Config.getPrefix() + "You have been returned to your original location by " + owner.getStaffName());
+                        owner.sendMessage(Config.getPrefix() + returnMessage);
                         Logger.log(new GenericLog(returnMessage, DataConversions.getTimeStamp()));
                     } 
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has not been summoned");
+                        owner.sendMessage(Config.getPrefix() + p.getUsername() + " has not been summoned");
                     }
                 }
                 else
@@ -979,22 +979,22 @@ public class CommandHandler implements PacketHandler
                             owner.setSummoned(false);
                             owner.teleport(p.getReturnX(), p.getReturnY(), false);
                             Logger.log(new GenericLog(owner.getUsername() + " has returned to (" + owner.getX() + ", " + owner.getY() + ")", DataConversions.getTimeStamp()));
-                            owner.sendMessage(Config.PREFIX + "You have been returned to your original location");
+                            owner.sendMessage(Config.getPrefix() + "You have been returned to your original location");
                         }
                         else
                         {
-                            owner.sendMessage(Config.PREFIX + "You have no return point set.");
+                            owner.sendMessage(Config.getPrefix() + "You have no return point set.");
                         }
                     }
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + "Other staff members can not be returned");
+                        owner.sendMessage(Config.getPrefix() + "Other staff members can not be returned");
                     }
                 }
 			} 
 			else
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.getPrefix() + "Invalid name");
 			}
 		} 
 		else // Jail a player
@@ -1015,25 +1015,25 @@ public class CommandHandler implements PacketHandler
                     if(!p.getLocation().isInJail())
                     {
                         p.teleport(793, 24, false);
-                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has been jailed");
+                        owner.sendMessage(Config.getPrefix() + p.getUsername() + " has been jailed");
                         p.sendAlert("You have been jailed.");
                         Logger.log(new GenericLog(owner.getUsername() + " has jailed " + p.getUsername(), DataConversions.getTimeStamp()));
                     }
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + p.getUsername() + " is already in jail");
+                        owner.sendMessage(Config.getPrefix() + p.getUsername() + " is already in jail");
                         return;
                     }
                 } 
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "Staff members can not be jailed");
+                    owner.sendMessage(Config.getPrefix() + "Staff members can not be jailed");
                     return;
                 }
             }
 			else
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.getPrefix() + "Invalid name");
                 return;
 			}
 		} 
@@ -1056,23 +1056,23 @@ public class CommandHandler implements PacketHandler
                     {
                         p.teleport(120, 648, false);
                         p.sendAlert("You have been released from jail.");
-                        owner.sendMessage(Config.PREFIX + p.getUsername() + " has been released from jail.");
+                        owner.sendMessage(Config.getPrefix() + p.getUsername() + " has been released from jail.");
                         Logger.log(new GenericLog(owner.getUsername() + " has released " + p.getUsername() + " from jail", DataConversions.getTimeStamp()));
                     }
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + p.getUsername() + " is not in jail");
+                        owner.sendMessage(Config.getPrefix() + p.getUsername() + " is not in jail");
                     }
                 } 
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "Staff members can not be released");
+                    owner.sendMessage(Config.getPrefix() + "Staff members can not be released");
                     return;
                 }
             }
 			else
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.getPrefix() + "Invalid name");
                 return;
 			}
 		} 
@@ -1091,12 +1091,12 @@ public class CommandHandler implements PacketHandler
             {
                 owner.setReturnPoint();
                 owner.teleport(p.getX(), p.getY(), false);
-                owner.sendMessage(Config.PREFIX + "You have teleported to " + owner.getLocation());
+                owner.sendMessage(Config.getPrefix() + "You have teleported to " + owner.getLocation());
                 Logger.log(new GenericLog(owner.getUsername() + " went to " + p.getUsername() + " (" + p.getX() + ", " + p.getY() + ")", DataConversions.getTimeStamp()));
             }
  			else
 			{
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.getPrefix() + "Invalid name");
 			}
 		} 
 		else // Restart server
@@ -1144,12 +1144,12 @@ public class CommandHandler implements PacketHandler
                             }
                         }
                         owner.sendInventory();
-                        owner.sendMessage(Config.PREFIX + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).name);
+                        owner.sendMessage(Config.getPrefix() + "You have spawned " + amount + " " + EntityHandler.getItemDef(id).name);
                         Logger.log(new GenericLog(owner.getUsername() + " spawned " + amount + " " + EntityHandler.getItemDef(id).name, DataConversions.getTimeStamp()));
                     } 
                     else
                     {
-                        owner.sendMessage(Config.PREFIX + "Invalid ID");
+                        owner.sendMessage(Config.getPrefix() + "Invalid ID");
                     }
                 }
                 catch (NumberFormatException e)
@@ -1184,12 +1184,12 @@ public class CommandHandler implements PacketHandler
                     
                     if(objectDef == null)
                     {
-						owner.sendMessage(Config.PREFIX + "Invalid ID");
+						owner.sendMessage(Config.getPrefix() + "Invalid ID");
                         return;
                     }
                     
                     World.registerEntity(new GameObject(owner.getLocation(), object_id, direction, 0));
-                    owner.sendMessage(Config.PREFIX + "Created " + objectDef.getName());
+                    owner.sendMessage(Config.getPrefix() + "Created " + objectDef.getName());
                     
                     if(owner.isAdmin() && args.length >= 4)
                     {
@@ -1198,7 +1198,7 @@ public class CommandHandler implements PacketHandler
                         {
 							try {
 								World.getWorldLoader().writeQuery("INSERT INTO `spawn_object` (`object`, `x`, `y`, `direction`) VALUES ('" + object_id + "', '" + owner.getX() + "', '" + owner.getY() + "', '" + direction + "')");
-                                owner.sendMessage(Config.PREFIX + "Object '" + objectDef.getName() + "(" + owner.getLocation() + ")' added to database");
+                                owner.sendMessage(Config.getPrefix() + "Object '" + objectDef.getName() + "(" + owner.getLocation() + ")' added to database");
                                 Logger.log(new GenericLog(owner.getUsername() + " added object to database. name: " + objectDef.getName() + ", id: " + object_id + ", direction: " + direction + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
@@ -1219,13 +1219,13 @@ public class CommandHandler implements PacketHandler
                GameObject o = World.getZone(owner.getX(), owner.getY()).getObjectAt(owner.getX(), owner.getY());
                if(o == null)
                {
-                   owner.sendMessage(Config.PREFIX + "There is no object at your current location.");
+                   owner.sendMessage(Config.getPrefix() + "There is no object at your current location.");
                    return;
                }
                else
                {
                    World.unregisterEntity(o);
-                   owner.sendMessage(Config.PREFIX + "Removed " + o.getGameObjectDef().getName());
+                   owner.sendMessage(Config.getPrefix() + "Removed " + o.getGameObjectDef().getName());
                }
                
                 if(owner.isAdmin() && args.length >= 2)
@@ -1236,7 +1236,7 @@ public class CommandHandler implements PacketHandler
                     {
                         try {
                             World.getWorldLoader().writeQuery("DELETE FROM `spawn_object` WHERE `x` = '" + owner.getX() + "' AND `y` = '" + owner.getY() + "'");
-                            owner.sendMessage(Config.PREFIX + "Object '" + o.getGameObjectDef().getName() + " (" + owner.getLocation() + ")' removed from database");
+                            owner.sendMessage(Config.getPrefix() + "Object '" + o.getGameObjectDef().getName() + " (" + owner.getLocation() + ")' removed from database");
                             Logger.log(new GenericLog(owner.getUsername() + " remvoed object from database. name: " + o.getGameObjectDef().getName() + ", id: " + o.getID() + ", location: " + owner.getLocation(), DataConversions.getTimeStamp()));
                         } catch (SQLException e) {
                             // TODO Auto-generated catch block
@@ -1272,12 +1272,12 @@ public class CommandHandler implements PacketHandler
                 }
                 p.getInventory().getItems().clear();
                 p.sendInventory();
-                p.sendMessage(Config.PREFIX + "Your inventory has been wiped by an admin");
-                owner.sendMessage(Config.PREFIX + "Wiped inventory of " + p.getUsername());
+                p.sendMessage(Config.getPrefix() + "Your inventory has been wiped by an admin");
+                owner.sendMessage(Config.getPrefix() + "Wiped inventory of " + p.getUsername());
                 Logger.log(new GenericLog(owner.getUsername() + " wiped the inventory of " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
 		}
         else // Wipe player's bank
         if (cmd.equalsIgnoreCase("wipebank") && owner.isAdmin())
@@ -1292,12 +1292,12 @@ public class CommandHandler implements PacketHandler
             if(p != null)
             {
                 p.getBank().getItems().clear();
-                p.sendMessage(Config.PREFIX + "Your bank has been wiped by an admin");
-                owner.sendMessage(Config.PREFIX + "Wiped bank of " + p.getUsername());
+                p.sendMessage(Config.getPrefix() + "Your bank has been wiped by an admin");
+                owner.sendMessage(Config.getPrefix() + "Wiped bank of " + p.getUsername());
                 Logger.log(new GenericLog(owner.getUsername() + " wiped the bank of " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
         }
         else // Kill a player
         if (cmd.equalsIgnoreCase("kill") && owner.isAdmin())
@@ -1311,7 +1311,7 @@ public class CommandHandler implements PacketHandler
             Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
             if (p == null)
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
                 return;
             }
             
@@ -1326,13 +1326,13 @@ public class CommandHandler implements PacketHandler
             if (p.getHits() <= 0)
             {
                 p.killedBy(owner, false);
-                p.sendMessage(Config.PREFIX + "You have been killed by an admin");
-                owner.sendMessage(Config.PREFIX + "Killed " + p.getUsername());
+                p.sendMessage(Config.getPrefix() + "You have been killed by an admin");
+                owner.sendMessage(Config.getPrefix() + "Killed " + p.getUsername());
                 Logger.log(new GenericLog(owner.getUsername() + " killed [command] " + p.getUsername(), DataConversions.getTimeStamp()));
             }
             else
             {
-                owner.sendMessage(Config.PREFIX + "Could not kill " + p.getUsername());
+                owner.sendMessage(Config.getPrefix() + "Could not kill " + p.getUsername());
                 Logger.log(new ErrorLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), owner.getUsername() + " unable to kill [command] " + p.getUsername(), DataConversions.getTimeStamp()));
             }
         }
@@ -1360,8 +1360,8 @@ public class CommandHandler implements PacketHandler
                     if (p.getHits() <= 0)
                         p.killedBy(owner, false);
                     
-                    p.sendMessage(Config.PREFIX + "You have been taken " + damage + " damage from an admin");
-                    owner.sendMessage(Config.PREFIX + "Damaged " + p.getUsername() + " " + damage + " hits");
+                    p.sendMessage(Config.getPrefix() + "You have been taken " + damage + " damage from an admin");
+                    owner.sendMessage(Config.getPrefix() + "Damaged " + p.getUsername() + " " + damage + " hits");
                     Logger.log(new GenericLog(owner.getUsername() + " damaged [" + damage + "] " + p.getUsername(), DataConversions.getTimeStamp()));
                 }
             }
@@ -1397,8 +1397,8 @@ public class CommandHandler implements PacketHandler
                     }
                     p.setCombatLevel(Formulae.getCombatlevel(p.getMaxStats()));
                     p.sendStats();
-                    p.sendMessage(Config.PREFIX + "All of your stats have been set to level " + level + " by an admin");
-                    owner.sendMessage(Config.PREFIX + "All of " + p.getUsername() + "'s stats have been set to level " + level);
+                    p.sendMessage(Config.getPrefix() + "All of your stats have been set to level " + level + " by an admin");
+                    owner.sendMessage(Config.getPrefix() + "All of " + p.getUsername() + "'s stats have been set to level " + level);
                     Logger.log(new GenericLog(owner.getUsername() + " has set all of " + p.getUsername() + "'s stats to " + level, DataConversions.getTimeStamp()));
                 }
                 catch(NumberFormatException e)
@@ -1409,7 +1409,7 @@ public class CommandHandler implements PacketHandler
             }
             else
             {
-                owner.sendMessage(Config.PREFIX + "Invalid name");
+                owner.sendMessage(Config.getPrefix() + "Invalid name");
                 return;
             }
 		}
@@ -1430,11 +1430,11 @@ public class CommandHandler implements PacketHandler
                         
 						p.resetLevers();
 						p.teleport(owner.getX(), owner.getY(), true);
-                        p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
+                        p.sendMessage(Config.getPrefix() + "You have been summoned by " + owner.getStaffName());
 					}
 				}
                 String summonMessage = owner.getUsername() + " summoned all players to " + "(" + owner.getX() + ", " + owner.getY() + ")";
-                owner.sendMessage(Config.PREFIX + summonMessage);
+                owner.sendMessage(Config.getPrefix() + summonMessage);
                 Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));
 			} else if (args.length == 2) {
 				int width = -1;
@@ -1466,12 +1466,12 @@ public class CommandHandler implements PacketHandler
                             
                             p.resetLevers();
                             p.teleport(owner.getX() + x, owner.getY() + y, false);
-                            p.sendMessage(Config.PREFIX + "You have been summoned by " + owner.getStaffName());
+                            p.sendMessage(Config.getPrefix() + "You have been summoned by " + owner.getStaffName());
                         }
                     }
                 }
                 String summonMessage = owner.getUsername() + " summoned all players to " + "(" + owner.getX() + ", " + owner.getY() + ")";
-                owner.sendMessage(Config.PREFIX + summonMessage);
+                owner.sendMessage(Config.getPrefix() + summonMessage);
                 Logger.log(new GenericLog(summonMessage, DataConversions.getTimeStamp()));
             }
 		}
@@ -1493,7 +1493,7 @@ public class CommandHandler implements PacketHandler
                     p.teleport(p.getReturnX(), p.getReturnY(), false);
 				}
 			}
-            owner.sendMessage(Config.PREFIX + "All players who have been summoned were returned");
+            owner.sendMessage(Config.getPrefix() + "All players who have been summoned were returned");
 		}
         else // spawn items around you
         if(cmd.equalsIgnoreCase("massitem") && owner.isAdmin())
@@ -1582,13 +1582,13 @@ public class CommandHandler implements PacketHandler
                                 World.registerEntity(new Item(id, baseX + x, baseY + y, amount, (Player[])null));
                         }
                     }
-                    owner.sendMessage(Config.PREFIX + "Spawned " + amount + " " + itemDef.getName());
+                    owner.sendMessage(Config.getPrefix() + "Spawned " + amount + " " + itemDef.getName());
                     Logger.log(new GenericLog(owner.getUsername() + " spawned (mass) " + amount + " " + itemDef.getName(), DataConversions.getTimeStamp()));
                     return;
                 }
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "Invalid ID");
+                    owner.sendMessage(Config.getPrefix() + "Invalid ID");
                     return;
                 }
             }
@@ -1627,19 +1627,19 @@ public class CommandHandler implements PacketHandler
             
             if(itemDef == null)
             {
-				owner.sendMessage(Config.PREFIX + "Invalid item_id");
+				owner.sendMessage(Config.getPrefix() + "Invalid item_id");
 				return;
             }
             
             if(npcDef == null)
             {
-				owner.sendMessage(Config.PREFIX + "Invalid npc_id");
+				owner.sendMessage(Config.getPrefix() + "Invalid npc_id");
 				return;
             }
             
             NPCDef.spawnEventNpcs(npcID, npcAmt, item_id, item_amount, owner.getLocation(), duration*1000);
-            owner.sendMessage(Config.PREFIX + "Spawned " + npcAmt + " " + npcDef.getName());
-            owner.sendMessage(Config.PREFIX + "Loot is " + item_amount + " " + itemDef.getName());
+            owner.sendMessage(Config.getPrefix() + "Spawned " + npcAmt + " " + npcDef.getName());
+            owner.sendMessage(Config.getPrefix() + "Loot is " + item_amount + " " + itemDef.getName());
 		}
         else // spawns multiple of a specific NPC type
         if (cmd.equalsIgnoreCase("massnpc") && owner.isAdmin())
@@ -1659,7 +1659,7 @@ public class CommandHandler implements PacketHandler
                 
                 if(npcDef == null)
                 {
-                    owner.sendMessage(Config.PREFIX + "Invalid ID");
+                    owner.sendMessage(Config.getPrefix() + "Invalid ID");
                     return;
                 }
                 
@@ -1748,7 +1748,7 @@ public class CommandHandler implements PacketHandler
                     }
                 }
                 
-                owner.sendMessage(Config.PREFIX + "Spawned " + amount + " " + npcDef.getName());
+                owner.sendMessage(Config.getPrefix() + "Spawned " + amount + " " + npcDef.getName());
             }
             catch(NumberFormatException e)
             {
@@ -1773,7 +1773,7 @@ public class CommandHandler implements PacketHandler
 			Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
 			if (p == null)
             {
-				owner.sendMessage(Config.PREFIX + "Invalid name");
+				owner.sendMessage(Config.getPrefix() + "Invalid name");
 				return;
 			}
 			p.addMessageToChatQueue(msg);
@@ -1805,7 +1805,7 @@ public class CommandHandler implements PacketHandler
                 }
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "NPC could not be found");
+                    owner.sendMessage(Config.getPrefix() + "NPC could not be found");
                 }
             }
             catch (NumberFormatException e)
@@ -1855,19 +1855,19 @@ public class CommandHandler implements PacketHandler
 							playerToEdit.setCombatLevel(Formulae.getCombatlevel(playerToEdit.getMaxStats()));
 							playerToEdit.sendStats();
 							if (playerToEdit == owner)
-								owner.sendMessage(Config.PREFIX + "You set your " + statArray.get(stat) + " to " + level);
+								owner.sendMessage(Config.getPrefix() + "You set your " + statArray.get(stat) + " to " + level);
 							else {
-                                playerToEdit.sendMessage(Config.PREFIX + "Your " + statArray.get(stat) + " has been set to " + level + " by an admin");
-								owner.sendMessage(Config.PREFIX + "Successfully edited " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " to " + level);
-								playerToEdit.sendMessage(Config.PREFIX + owner.getUsername() + " has set your " + statArray.get(stat) + " to " + level);
+                                playerToEdit.sendMessage(Config.getPrefix() + "Your " + statArray.get(stat) + " has been set to " + level + " by an admin");
+								owner.sendMessage(Config.getPrefix() + "Successfully edited " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " to " + level);
+								playerToEdit.sendMessage(Config.getPrefix() + owner.getUsername() + " has set your " + statArray.get(stat) + " to " + level);
                                 Logger.log(new GenericLog(owner.getUsername() + " has set " + playerToEdit.getUsername() + "'s " + statArray.get(stat) + " stat to " + level, DataConversions.getTimeStamp()));
 							}
 						} else
-							owner.sendMessage(Config.PREFIX + "Invalid name");
+							owner.sendMessage(Config.getPrefix() + "Invalid name");
 					} else
-						owner.sendMessage(Config.PREFIX + "Invalid level");
+						owner.sendMessage(Config.getPrefix() + "Invalid level");
 				} else
-					owner.sendMessage(Config.PREFIX + "Invalid stat");
+					owner.sendMessage(Config.getPrefix() + "Invalid stat");
 			}
             catch (NumberFormatException e)
             {
@@ -1910,7 +1910,7 @@ public class CommandHandler implements PacketHandler
                 }
                 else
                 {
-                    owner.sendMessage(Config.PREFIX + "Unable to find the specified NPC");
+                    owner.sendMessage(Config.getPrefix() + "Unable to find the specified NPC");
                     return;
                 }
             }
@@ -1925,7 +1925,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setChestDefinitions(World.getWorldLoader().loadChestDefinitions());
-                owner.sendMessage(Config.PREFIX + "Chest definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Chest definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed chest definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1937,7 +1937,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setStallThievingDefinitions(World.getWorldLoader().loadStallThievingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Thieving stall definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Thieving stall definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed thieving stall definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1949,7 +1949,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setPicklockDoorDefinitions(World.getWorldLoader().loadPicklockDoorDefinitions());
-                owner.sendMessage(Config.PREFIX + "Lockpick door definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Lockpick door definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed thieving lockpick door definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1961,7 +1961,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setPickPocketDefinitions(World.getWorldLoader().loadPickPocketDefinitions());
-                owner.sendMessage(Config.PREFIX + "Pickpocket definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Pickpocket definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed thieving pickpocket definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1973,7 +1973,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setWoodcutDefinitions(World.getWorldLoader().loadWoodcuttingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Woodcut definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Woodcut definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed woodcut definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1985,7 +1985,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setFishingDefinitions(World.getWorldLoader().loadFishingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Fishing definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Fishing definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed fishing definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1997,7 +1997,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				World.getWorldLoader().loadNpcHandlers();
-                owner.sendMessage(Config.PREFIX + "NPC handlers refreshed");
+                owner.sendMessage(Config.getPrefix() + "NPC handlers refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed NPC handlers", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2010,7 +2010,7 @@ public class CommandHandler implements PacketHandler
 			try {
 				EntityHandler.setAgilityCourseDefinitions(World.getWorldLoader().loadAgilityCourseDefinitions());
 				EntityHandler.setAgilityDefinitions(World.getWorldLoader().loadAgilityDefinitons());
-                owner.sendMessage(Config.PREFIX + "Agility definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Agility definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed agility and agility course definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2022,7 +2022,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setItemHealingDefinitions(World.getWorldLoader().loadItemEdibleHeals());
-                owner.sendMessage(Config.PREFIX + "Edible definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Edible definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed edible definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2036,7 +2036,7 @@ public class CommandHandler implements PacketHandler
 				n.unconditionalRemove();
 			try {
 				World.getWorldLoader().loadNpcLocations();
-                owner.sendMessage(Config.PREFIX + "NPCs refreshed");
+                owner.sendMessage(Config.getPrefix() + "NPCs refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed NPCs", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2048,7 +2048,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setCerterDefinitions(World.getWorldLoader().loadCerterDefinitions());
-                owner.sendMessage(Config.PREFIX + "Certer definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Certer definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed certer definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2060,7 +2060,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setHerbDefinitions(World.getWorldLoader().loadHerbDefinitions());
-                owner.sendMessage(Config.PREFIX + "Herb definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Herb definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed herb definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2072,7 +2072,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setUnidentifiedHerbDefinitions(World.getWorldLoader().loadUnidentifiedHerbDefinitions());
-                owner.sendMessage(Config.PREFIX + "Unidentified herb definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Unidentified herb definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed unidentified herb definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2084,7 +2084,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setHerbSecondaryDefinitions(World.getWorldLoader().loadHerbSecondaryDefinitions());
-                owner.sendMessage(Config.PREFIX + "Secondary herb definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Secondary herb definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed secondary herb definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2096,7 +2096,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setItemWieldableDefinitions(World.getWorldLoader().loadItemWieldableDefinitions());
-                owner.sendMessage(Config.PREFIX + "Item wieldable definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Item wieldable definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed item wieldable definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2108,7 +2108,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setSmithingDefinitions(World.getWorldLoader().loadSmithingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Smithing definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Smithing definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed smithing definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2120,7 +2120,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setSmeltingDefinitions(World.getWorldLoader().loadSmeltingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Smelting definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Smelting definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed smelting definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2132,7 +2132,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setLogCutDefinitions(World.getWorldLoader().loadLogCutDefinitions());
-                owner.sendMessage(Config.PREFIX + "Log cut definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Log cut definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed log cut definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2144,7 +2144,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setGemDefinitions(World.getWorldLoader().loadGemDefinitions());
-                owner.sendMessage(Config.PREFIX + "Gem definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Gem definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed gem definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2156,7 +2156,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setDartTipDefinitions(World.getWorldLoader().loadDartTipDefinitions());
-                owner.sendMessage(Config.PREFIX + "Dart tip definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Dart tip definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed dart tip definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2168,7 +2168,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setCraftingDefinitions(World.getWorldLoader().loadCraftingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Crafting definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Crafting definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed crafting definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2180,7 +2180,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setArrowHeadDefinitions(World.getWorldLoader().loadArrowHeadDefinitions());
-                owner.sendMessage(Config.PREFIX + "Arrow head definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Arrow head definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed arrow head definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2192,7 +2192,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setMiningDefinitions(World.getWorldLoader().loadMiningDefinitions());
-                owner.sendMessage(Config.PREFIX + "Mining definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Mining definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed mining definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2204,7 +2204,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setSpellAggressiveDefinitions(World.getWorldLoader().loadSpellAggressiveLvl());
-                owner.sendMessage(Config.PREFIX + "Spell aggressive definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Spell aggressive definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed spell aggressive definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2216,7 +2216,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setTelePointDefinitions(World.getWorldLoader().loadObjectTelePoints());
-                owner.sendMessage(Config.PREFIX + "Telepoint definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Telepoint definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed telepoint definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2228,7 +2228,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setCookingDefinitions(World.getWorldLoader().loadCookingDefinitions());
-                owner.sendMessage(Config.PREFIX + "Cooking definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Cooking definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed cooking definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2240,7 +2240,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setSpellDefinitions(World.getWorldLoader().loadSpellDefinitions());
-                owner.sendMessage(Config.PREFIX + "Spell definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Spell definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed spell definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2252,7 +2252,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setItemDefinitions(World.getWorldLoader().loadItemDefinitions());
-                owner.sendMessage(Config.PREFIX + "Item definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Item definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed item definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2264,7 +2264,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setGameObjectDefinitions(World.getWorldLoader().loadGameObjectDefinitions());
-                owner.sendMessage(Config.PREFIX + "Object definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Object definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed object definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2276,7 +2276,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setTileDefinitions(World.getWorldLoader().loadTileDefinitions());
-                owner.sendMessage(Config.PREFIX + "Tile definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Tile definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed tile definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2288,7 +2288,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setPrayerDefinitions(World.getWorldLoader().loadPrayerDefinitions());
-                owner.sendMessage(Config.PREFIX + "Prayer definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Prayer definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed prayer definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2300,7 +2300,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setDoorDefinitions(World.getWorldLoader().loadDoorDefinitions());
-                owner.sendMessage(Config.PREFIX + "Door definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "Door definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed door definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2312,7 +2312,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				EntityHandler.setNpcDefinitions(World.getWorldLoader().loadNpcDefinitions());
-                owner.sendMessage(Config.PREFIX + "NPC definitions refreshed");
+                owner.sendMessage(Config.getPrefix() + "NPC definitions refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed NPC definitions", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2324,7 +2324,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				World.getWorldLoader().loadShopDefinitions();
-                owner.sendMessage(Config.PREFIX + "Shops refreshed");
+                owner.sendMessage(Config.getPrefix() + "Shops refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed shops", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2336,7 +2336,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				World.getWorldLoader().loadChatFilter();
-                owner.sendMessage(Config.PREFIX + "Chat filter refreshed");
+                owner.sendMessage(Config.getPrefix() + "Chat filter refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed chat filter", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2348,7 +2348,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				World.getWorldLoader().loadPacketHandlers();
-                owner.sendMessage(Config.PREFIX + "Packet handlers refreshed");
+                owner.sendMessage(Config.getPrefix() + "Packet handlers refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed packet handlers", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2360,7 +2360,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				World.getWorldLoader().loadWebHandlers();
-                owner.sendMessage(Config.PREFIX + "Web packet handlers refreshed");
+                owner.sendMessage(Config.getPrefix() + "Web packet handlers refreshed");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed web packet handlers", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2371,14 +2371,14 @@ public class CommandHandler implements PacketHandler
         if (cmd.equalsIgnoreCase("refreshteleport") && owner.isAdmin())
         {
             World.getWorldLoader().loadStaffCommands();
-            owner.sendMessage(Config.PREFIX + "Staff teleport locations refreshed");
+            owner.sendMessage(Config.getPrefix() + "Staff teleport locations refreshed");
             Logger.log(new GenericLog(owner.getUsername() + " refreshed staff teleport locations", DataConversions.getTimeStamp()));
 		}
         else // refresh landscape
         if (cmd.equalsIgnoreCase("refreshlandscape") && owner.isAdmin())
         {
             World.getWorldLoader().loadLandscape();
-            owner.sendMessage(Config.PREFIX + "Landscape refreshed. NOTE this does not refresh clients currently connected");
+            owner.sendMessage(Config.getPrefix() + "Landscape refreshed. NOTE this does not refresh clients currently connected");
             Logger.log(new GenericLog(owner.getUsername() + " refreshed landscape", DataConversions.getTimeStamp()));
 		}
         else // refresh game objects
@@ -2386,7 +2386,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
                 World.getWorldLoader().loadGameObjectLocations();
-                owner.sendMessage(Config.PREFIX + "Game objects refresh");
+                owner.sendMessage(Config.getPrefix() + "Game objects refresh");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed game objects", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2398,7 +2398,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
                 World.getWorldLoader().loadItemLocations();
-                owner.sendMessage(Config.PREFIX + "Item spawns refresh");
+                owner.sendMessage(Config.getPrefix() + "Item spawns refresh");
                 Logger.log(new GenericLog(owner.getUsername() + " refreshed item spawns", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2410,7 +2410,7 @@ public class CommandHandler implements PacketHandler
         {
 			try {
 				World.load();
-                owner.sendMessage(Config.PREFIX + "World reloaded");
+                owner.sendMessage(Config.getPrefix() + "World reloaded");
                 Logger.log(new GenericLog(owner.getUsername() + " reloaded the world", DataConversions.getTimeStamp()));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -2425,7 +2425,7 @@ public class CommandHandler implements PacketHandler
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
 					if (p != null) {
-						p.sendMessage(Config.PREFIX + "Combat safe mode has been " + stateText);
+						p.sendMessage(Config.getPrefix() + "Combat safe mode has been " + stateText);
 					}
 				}
 			}
@@ -2439,7 +2439,7 @@ public class CommandHandler implements PacketHandler
 			synchronized (World.getPlayers()) {
 				for (Player p : World.getPlayers()) {
 					if (p != null) {
-						p.sendMessage(Config.PREFIX + "PVP has been " + stateText);
+						p.sendMessage(Config.getPrefix() + "PVP has been " + stateText);
 					}
 				}
 			}
@@ -2458,7 +2458,7 @@ public class CommandHandler implements PacketHandler
             
             if(!ipMatcher.find())
             {
-                owner.sendMessage(Config.PREFIX + "Input was not correctly formatted as an IP address");
+                owner.sendMessage(Config.getPrefix() + "Input was not correctly formatted as an IP address");
                 return;
             }
             
@@ -2477,7 +2477,7 @@ public class CommandHandler implements PacketHandler
                 }
             ).start();
 
-            owner.sendMessage(Config.PREFIX + args[0] + " was IP banned");
+            owner.sendMessage(Config.getPrefix() + args[0] + " was IP banned");
             Logger.log(new GenericLog(owner.getUsername() + " IP banned " + args[0], DataConversions.getTimeStamp()));
 		}
         else // unipban
@@ -2493,7 +2493,7 @@ public class CommandHandler implements PacketHandler
             
             if(!ipMatcher.find())
             {
-                owner.sendMessage(Config.PREFIX + "Input was not correctly formatted as an IP address");
+                owner.sendMessage(Config.getPrefix() + "Input was not correctly formatted as an IP address");
                 return;
             }
             
@@ -2511,13 +2511,13 @@ public class CommandHandler implements PacketHandler
                     }
                 }
             ).start();	
-            owner.sendMessage(Config.PREFIX + args[0] + " has been removed from the IP ban list");
+            owner.sendMessage(Config.getPrefix() + args[0] + " has been removed from the IP ban list");
             Logger.log(new GenericLog(owner.getUsername() + " removed " + args[0] + " from the IP ban list", DataConversions.getTimeStamp()));
 		}
         else // check server time
         if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime"))
         {
-			owner.sendMessage(Config.PREFIX + Config.SERVER_NAME + "'s time/date is:@gre@ " + new java.util.Date().toString());
+			owner.sendMessage(Config.getPrefix() + Config.getServerName() + "'s time/date is:@gre@ " + new java.util.Date().toString());
 		}
         else // skip tutorial island
         if (cmd.equalsIgnoreCase("skiptutorial"))
@@ -2548,7 +2548,7 @@ public class CommandHandler implements PacketHandler
 	        if (World.lotteryRunning())
 	            World.buyTicket(owner);
 	        else
-	            owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
+	            owner.sendMessage(Config.getPrefix() + " There's no lottery running right now");
 		}
         else // Check the current lottry pot
         if (cmd.equalsIgnoreCase("lotterypot"))
@@ -2582,7 +2582,7 @@ public class CommandHandler implements PacketHandler
             if (World.lotteryRunning())
                 World.stopLottery();
             else
-                owner.sendMessage(Config.PREFIX + " There's no lottery running right now");
+                owner.sendMessage(Config.getPrefix() + " There's no lottery running right now");
         }
         else // Change your password
         if (cmd.equalsIgnoreCase("changepassword")) 
@@ -2602,14 +2602,14 @@ public class CommandHandler implements PacketHandler
                 if(!(event instanceof ChangePasswordEvent)) continue;
                 
                 if(event.belongsTo(owner)) {
-                    owner.sendMessage(Config.PREFIX + "You have already initiated a password change.");
-                    owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] to finish.");
+                    owner.sendMessage(Config.getPrefix() + "You have already initiated a password change.");
+                    owner.sendMessage(Config.getPrefix() + "Type ::confirmpassword [new_password] to finish.");
                 }
             }
 			
 			World.getDelayedEventHandler().add(new ChangePasswordEvent(owner, args[0]));
-            owner.sendMessage(Config.PREFIX + "Password change initiated.");
-            owner.sendMessage(Config.PREFIX + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
+            owner.sendMessage(Config.getPrefix() + "Password change initiated.");
+            owner.sendMessage(Config.getPrefix() + "Type ::confirmpassword [new_password] within 30 seconds to finish.");
 		}
         else // Confirm password change
 		if (cmd.equalsIgnoreCase("confirmpassword")) 
@@ -2636,8 +2636,8 @@ public class CommandHandler implements PacketHandler
             }
             
             if(originatingEvent == null){
-                owner.sendMessage(Config.PREFIX + "You have not initiated a password change.");
-                owner.sendMessage(Config.PREFIX + "Type ::changepassword [new_password] to change your password.");
+                owner.sendMessage(Config.getPrefix() + "You have not initiated a password change.");
+                owner.sendMessage(Config.getPrefix() + "Type ::changepassword [new_password] to change your password.");
                 return;
             }
             
@@ -2646,7 +2646,6 @@ public class CommandHandler implements PacketHandler
         else // Change your password
         if (cmd.equalsIgnoreCase("chickenevent") && owner.isAdmin()) 
 		{
-            // Check if a owner already has a password change event.
             ArrayList events = World.getDelayedEventHandler().getEvents();
             Iterator<DelayedEvent> iterator = events.iterator();
             while (iterator.hasNext()) {
@@ -2654,13 +2653,19 @@ public class CommandHandler implements PacketHandler
                 
                 if(!(event instanceof HourlyEvent)) continue;
                 
-                owner.sendMessage(Config.PREFIX + "Chickens event is already running.");
+                owner.sendMessage(Config.getPrefix() + "Chickens event is already running.");
                 return;
             }
 			
 			World.getDelayedEventHandler().add(new HourlyEvent(3, 50, 10, 10000, new Point(126, 643), 60*60*1000, null, "Oh no! Chickens are invading Lumbridge!"));
-            owner.sendMessage(Config.PREFIX + "Chicken event started.");
+            owner.sendMessage(Config.getPrefix() + "Chicken event started.");
 		}
+        else
+        if(cmd.equalsIgnoreCase("reloadconfig") && owner.isAdmin())
+        {
+            Config.sendConfiguration();
+            owner.sendMessage(Config.getPrefix() + "Configuration reloaded");
+        }
         /*
          * Removed event commands
          * When reimplemented, save the place that user was at to go back to.

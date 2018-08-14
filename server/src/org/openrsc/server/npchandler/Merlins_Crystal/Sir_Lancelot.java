@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -20,7 +21,7 @@ public class Sir_Lancelot implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+		Quest q = owner.getQuest(Quests.MERLINS_CRYSTAL);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -189,7 +190,7 @@ public class Sir_Lancelot implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"She has her own castle south from here", "I think its called Keep Le Faye", "if shes anywhere it would be there", "go check it out" }) {
 							public void finished() {
-							owner.incQuestCompletionStage(Config.Quests.MERLINS_CRYSTAL);
+							owner.incQuestCompletionStage(Quests.MERLINS_CRYSTAL);
 							owner.setBusy(false);
 							npc.unblock();
 							}
@@ -207,7 +208,7 @@ public class Sir_Lancelot implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Try getting on the boat another way"}) {
 							public void finished() {
-							owner.incQuestCompletionStage(Config.Quests.MERLINS_CRYSTAL);
+							owner.incQuestCompletionStage(Quests.MERLINS_CRYSTAL);
 							owner.setBusy(false);
 							npc.unblock();
 							}

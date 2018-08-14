@@ -101,7 +101,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 447:  //Soil for Plague City
 		      				if(item.getID() == 50) {
 			      				owner.setBusy(true);
-			      				Quest plagueCity1 = owner.getQuest(Config.Quests.PLAGUE_CITY);
+			      				Quest plagueCity1 = owner.getQuest(Quests.PLAGUE_CITY);
 			      				if(plagueCity1 != null) {
 			      					if(plagueCity1.getStage() == 2) {
 					      				owner.sendMessage("you pour the water onto the soil");
@@ -116,7 +116,7 @@ public class InvUseOnObject implements PacketHandler {
 					      							World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 					      								public void action() {
 					      									owner.sendMessage("the soil is soft enough to dig into");
-					      									owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
+					      									owner.incQuestCompletionStage(Quests.PLAGUE_CITY);
 					      									owner.setBusy(false);
 					      								}
 					      							});
@@ -136,9 +136,9 @@ public class InvUseOnObject implements PacketHandler {
 			      				}
 		      				} else if(item.getID() == 211) {
 			      				owner.setBusy(true);
-			      				Quest plagueCity1 = owner.getQuest(Config.Quests.PLAGUE_CITY);
+			      				Quest plagueCity1 = owner.getQuest(Quests.PLAGUE_CITY);
 			      				if(plagueCity1 != null) {
-			      					if(owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() >= 3) {
+			      					if(owner.getQuest(Quests.PLAGUE_CITY).getStage() >= 3) {
 			      						World.getDelayedEventHandler().add(new DelayedGenericMessage(owner, new String[] {"you dig deep into the soft soil", "Suddenly it crumbles away", "you fall through", "and land in the sewer", "Edmond follows you down the hole"}, 2500) {
 			      							public void finished() {
 			      								if (plagueCity1.getStage() >= 4)
@@ -150,7 +150,7 @@ public class InvUseOnObject implements PacketHandler {
 			      								{
 			      									owner.teleport(621, 3415);
 				      								owner.setBusy(false);
-			      									owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
+			      									owner.incQuestCompletionStage(Quests.PLAGUE_CITY);
 			      								}
 			      							}
 			      						});
@@ -170,14 +170,14 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 502:
 		      				if (item.getID() == 801)
 		      				{
-		      					Quest Biohazard_Quest = owner.getQuest(Config.Quests.BIOHAZARD);
+		      					Quest Biohazard_Quest = owner.getQuest(Quests.BIOHAZARD);
 		      					if (Biohazard_Quest.getStage() == 3)
 		      					{
 									World.getDelayedEventHandler().add(new DelayedGenericMessage(player, new String[] { "You place the rotten apples in the pot", "They quickly dissolve in to the stew", "That wasn't very nice" }, 2000)
 									{
 										public void finished() 
 										{
-				      						owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
+				      						owner.incQuestCompletionStage(Quests.BIOHAZARD);
 				      						owner.getInventory().remove(801, 1);
 				      						owner.sendInventory();
 				      						owner.setBusy(false);
@@ -195,7 +195,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 494:		      				
 		      				if (item.getID() == 800)
 		      				{
-		      					Quest Biohazard_Quest = owner.getQuest(Config.Quests.BIOHAZARD);
+		      					Quest Biohazard_Quest = owner.getQuest(Quests.BIOHAZARD);
 		      					if (Biohazard_Quest.getStage() == 2 && player.getSeedsUsed() < 1)
 		      					{
 		      						owner.setBusy(true);
@@ -230,12 +230,12 @@ public class InvUseOnObject implements PacketHandler {
 		      			break;
 		      				
 		      			case 449: // Plague City, use rope on the sewer.
-		      				if (item.getID() == 237 && owner.getQuest(Config.Quests.PLAGUE_CITY) != null && owner.getQuest(Config.Quests.PLAGUE_CITY).getStage() == 4)
+		      				if (item.getID() == 237 && owner.getQuest(Quests.PLAGUE_CITY) != null && owner.getQuest(Quests.PLAGUE_CITY).getStage() == 4)
 		      				{
 		      					owner.sendMessage("You tie one end of the rope to the sewer pipe's grill and hold the other end in your hand.");
 		      					owner.getInventory().remove(237, 1);
 		      					owner.sendInventory();
-		      					owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
+		      					owner.incQuestCompletionStage(Quests.PLAGUE_CITY);
 		      				}
 		      				else
 		      				{
@@ -252,11 +252,11 @@ public class InvUseOnObject implements PacketHandler {
 		      				{
 			      				if(item.getID() == 218)
 		      					{
-			      					Quest Fishing_Contest = owner.getQuest(Config.Quests.FISHING_CONTEST);
+			      					Quest Fishing_Contest = owner.getQuest(Quests.FISHING_CONTEST);
 			      					switch(Fishing_Contest.getStage()) 
 			      					{
 			      						case 1:
-			      							owner.incQuestCompletionStage(Config.Quests.FISHING_CONTEST);
+			      							owner.incQuestCompletionStage(Quests.FISHING_CONTEST);
 			      							owner.sendMessage("You place the garlic inside the pipe");
 			      							owner.getInventory().remove(218, 1);
 			      							owner.sendInventory();
@@ -302,7 +302,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			break;
 		      			
 		      			case 504:
-		      				Quest Biohazard_Quest = owner.getQuest(Config.Quests.BIOHAZARD);
+		      				Quest Biohazard_Quest = owner.getQuest(Quests.BIOHAZARD);
 		      				if (item.getID() == 803 && Biohazard_Quest.getStage() >= 4)
 		      				{
 		      					World.registerEntity(new GameObject(object.getLocation(), 504, object.getDirection(), object.getType()));
@@ -376,7 +376,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				owner.sendMessage("You dig through the compost heap.");
 		      				World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 		      					public void action() {
-		      						Quest q = owner.getQuest(Config.Quests.ERNEST_THE_CHICKEN);
+		      						Quest q = owner.getQuest(Quests.ERNEST_THE_CHICKEN);
 		      						if(q != null) 
 		      						{
 		      							if(q.getStage() > 0 && !q.finished() && !owner.getInventory().contains(212)) 
@@ -402,7 +402,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				
 						case 77: //Drainpipe containing Silverlight Key 3
 							if (item.getID() == 50) {
-								if (owner.getQuestCompletionStage(Config.Quests.DEMON_SLAYER) == 2) {
+								if (owner.getQuestCompletionStage(Quests.DEMON_SLAYER) == 2) {
 									if (!owner.getInventory().contains(new InvItem(51, 1))) {
 										owner.setBusy(true);
 										owner.getInventory().remove(new InvItem(50, 1));
@@ -430,7 +430,7 @@ public class InvUseOnObject implements PacketHandler {
 							break;
 						case 40: //Lumbridge Coffin [QUEST]
 							if (item.getID() == 412) {
-								Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
+								Quest q = owner.getQuest(Quests.THE_RESTLESS_GHOST);
 								if (q != null) {
 									if (q.getStage() == 2 && !q.finished()) {
 										World.getDelayedEventHandler().add(new SingleEvent(owner, 1000) {
@@ -454,9 +454,9 @@ public class InvUseOnObject implements PacketHandler {
 																		owner.sendMessage("Thank you");
 																		World.getDelayedEventHandler().add(new SingleEvent(owner, 1000) {
 																			public void action() {
-																				owner.finishQuest(Config.Quests.THE_RESTLESS_GHOST);
+																				owner.finishQuest(Quests.THE_RESTLESS_GHOST);
 																				owner.sendMessage("You have completed the restless ghost quest");
-																				owner.incQuestExp(5, 562);
+																				owner.incQuestExp(Skills.PRAYER, 562);
 																				owner.sendStat(5);
 																				owner.sendMessage("You have gained @gre@1@whi@ quest point!");
 																				Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Restless Ghost</span> quest!"));
@@ -477,335 +477,6 @@ public class InvUseOnObject implements PacketHandler {
 							} else
 								owner.sendMessage("Nothing interesting happens");
 							break;
-						case 1210: // Runecrafting
-							switch(item.getID()) {
-								case 1340: // Body talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 332 && object.getY() == 507) {
-										if (owner.getMaxStat(18) >= 20) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(153, 3593, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 20 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1341: // Air talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);			
-									if (object.getX() == 299 && object.getY() == 586) {
-										if (owner.getMaxStat(18) >= 1) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(154, 3738, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});
-										} else {
-											player.sendMessage("You need level 1 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}	
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}								
-								break;
-								case 1342: // Water talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);							
-									if (object.getX() == 175 && object.getY() == 682) {
-										if (owner.getMaxStat(18) >= 5) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(59, 3738, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 5 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}									
-								break;
-								case 1343: // Fire talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 51 && object.getY() == 646) {
-										if (owner.getMaxStat(18) >= 14) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(201, 3738, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 14 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}									
-								break;
-								case 1344: // Earth talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 85 && object.getY() == 468) {
-										if (owner.getMaxStat(18) >= 9) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(251, 3736, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 9 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1345: // Nature talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);									
-									if (object.getX() == 480 && object.getY() == 671) {
-										if (owner.getMaxStat(18) >= 44) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(9, 3737, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 44 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1346: // Law talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);					
-									if (object.getX() == 402 && object.getY() == 539) {
-										if (owner.getMaxStat(18) >= 54) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(59, 3687, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 54 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1347: // Cosmic talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);									
-									if (object.getX() == 149 && object.getY() == 3538) {
-										if (owner.getMaxStat(18) >= 27) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(106, 3594, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 27 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1348: // Chaos talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 209 && object.getY() == 394) {
-										if (owner.getMaxStat(18) >= 35) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(109, 3740, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 35 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1349: // Death talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 164 && object.getY() == 119) {
-										if (owner.getMaxStat(18) >= 65) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(7, 3691, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});
-										} else {
-											player.sendMessage("You need level 65 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1350: // Blood talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 254 && object.getY() == 124) {
-										if (owner.getMaxStat(18) >= 77) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(10, 3643, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});
-										} else {
-											player.sendMessage("You need level 77 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-								case 1351: // Soul talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);					
-                                                                        if (object.getX() == 496 && object.getY() == 533) {
-                                                                                if (owner.getMaxStat(18) >= 90) {
-                                                                                        player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-                                                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-                                                                                                public void action() {
-                                                                                                        owner.teleport(298, 3739, false);
-                                                                                                        owner.sendMessage("You feel a powerful force take hold of you.");
-                                                                                                        owner.setBusy(false);
-                                                                                                }
-                                                                                        });	
-                                                                                } else {
-                                                                                        player.sendMessage("You need level 90 Runecrafting to craft on this alter");
-                                                                                        owner.setBusy(false);
-                                                                                }
-                                                                        } else {
-                                                                                player.sendMessage("Nothing interesting happens");
-                                                                                owner.setBusy(false);
-                                                                        }
-								break;
-								case 1352: // Mind talisman
-									if (Config.DISABLE_RUNECRAFTING) {
-										player.sendMessage("Runecrafting is disabled on this server.");
-										break;
-									}
-									owner.setBusy(true);
-									if (object.getX() == 234 && object.getY() == 474) {
-										if (owner.getMaxStat(18) >= 2) {
-											player.sendMessage("You hold the " + item.getDef().getName() + " towards the mysterious ruins.");
-											World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
-												public void action() {
-													owner.teleport(11, 3593, false);
-													owner.sendMessage("You feel a powerful force take hold of you.");
-													owner.setBusy(false);
-												}
-											});	
-										} else {
-											player.sendMessage("You need level 2 Runecrafting to craft on this alter");
-											owner.setBusy(false);
-										}
-									} else {
-										player.sendMessage("Nothing interesting happens");
-										owner.setBusy(false);
-									}
-								break;
-							}
-						break;
 						case 52: // Grain On Hopper (Draynor)
 							if (item.getID() == 29) { // Wheat
 									if (!owner.isGrainInDraynorHopper()) {
@@ -831,7 +502,7 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendMessage("Nothing interesting happens");
 								break;
 						case 154: // Cabbage down the hole in Black Knight's Fortress [QUEST]
-							if (item.getID() == 18 && owner.getQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS) == 2) {
+							if (item.getID() == 18 && owner.getQuestCompletionStage(Quests.BLACK_KNIGHTS_FORTRESS) == 2) {
 								owner.getInventory().remove(new InvItem(18, 1));
 								owner.sendInventory();
 								owner.sendMessage("You drop a cabbage down the hold.");
@@ -848,7 +519,7 @@ public class InvUseOnObject implements PacketHandler {
 															public void action() {
 																for (Player informee : owner.getViewArea().getPlayersInView())
 																	informee.informOfChatMessage(new ChatMessage(owner, "Right I think that's successfully sabotaged the secret weapon.", owner));
-																owner.incQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS);																
+																owner.incQuestCompletionStage(Quests.BLACK_KNIGHTS_FORTRESS);																
 															}
 														});
 													}
@@ -971,7 +642,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			case 97: // Fire
 		      			case 11:
 		      			case 119: //Cook's range
-		      			    if(!owner.isQuestFinished(Config.Quests.COOKS_ASSISTANT) && object.isOn(131,660)) {
+		      			    if(!owner.isQuestFinished(Quests.COOKS_ASSISTANT) && object.isOn(131,660)) {
                                 owner.setBusy(true);
                                 Npc chef = World.getNpc(7, 131, 137, 659, 665);
                                 if (chef != null) {
@@ -1035,7 +706,7 @@ public class InvUseOnObject implements PacketHandler {
                                     });
                                 } else {
                                     owner.setCancelBatch(false);
-                                    cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+                                    cookLoop();
                                 }
                             }
                         break;
@@ -1092,13 +763,13 @@ public class InvUseOnObject implements PacketHandler {
 								});								
 		      				} else {
 		      					owner.setCancelBatch(false);
-		      						cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+		      						cookLoop();
 		      				}
 		      				break;
 		      			case 118:
 		      			case 813: // Furnace
                             if(item.getID() == 171 && owner.getInventory().contains(1057)) { //Cannon ball smithing
-                                if(!owner.isQuestFinished(Config.Quests.DWARF_CANNON)) {
+                                if(!owner.isQuestFinished(Quests.DWARF_CANNON)) {
                                     owner.sendMessage("You need to have finished Dwarf Cannon in order to make cannon balls");
                                     return;
                                 }
@@ -1125,7 +796,7 @@ public class InvUseOnObject implements PacketHandler {
                                                                 {
                                                                     owner.getInventory().add(ball);
                                                                     owner.sendMessage("It's very heavy");
-                                                                    owner.increaseXP(13, 25);
+                                                                    owner.increaseXP(Skills.SMITHING, 25);
                                                                     owner.sendStat(13);
                                                                     owner.sendInventory();
                                                                 }
@@ -1179,7 +850,7 @@ public class InvUseOnObject implements PacketHandler {
 		      												InvItem result = new InvItem(def.getItemID(), 1);
 		      												owner.sendMessage("You make a " + result.getDef().getName());
 		      												owner.getInventory().add(result);
-		      												owner.increaseXP(12, def.getExp());
+		      												owner.increaseXP(Skills.CRAFTING, def.getExp());
 		      												owner.sendStat(12);
 		      												owner.sendInventory();
 		      											}
@@ -1219,7 +890,7 @@ public class InvUseOnObject implements PacketHandler {
 		      										InvItem result = new InvItem(results[option]);
 		      										owner.sendMessage("You make a " + result.getDef().getName());
 		      										owner.getInventory().add(result);
-		      										owner.increaseXP(12, 200);
+		      										owner.increaseXP(Skills.CRAFTING, 200);
 		      										owner.sendStat(12);
 		      										owner.sendInventory();
 		      									}
@@ -1242,7 +913,7 @@ public class InvUseOnObject implements PacketHandler {
 				      						owner.sendMessage("It mixes to make some molten glass");
 				      						owner.getInventory().add(new InvItem(623, 1));
 				      						owner.getInventory().add(new InvItem(21, 1));
-				      						owner.increaseXP(12, 80);
+				      						owner.increaseXP(Skills.CRAFTING, 80);
 				      						owner.sendStat(12);
 				      						owner.sendInventory();
 				      					}
@@ -1287,7 +958,7 @@ public class InvUseOnObject implements PacketHandler {
                                                 if(ironOreSuccess) {
                                                     owner.getInventory().add(bar);
                                                     owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
-                                                    owner.increaseXP(13, def.getExp());
+                                                    owner.increaseXP(Skills.SMITHING, def.getExp());
                                                     owner.sendStat(13);
                                                     owner.sendInventory();                                                
                                                 } else {
@@ -1298,7 +969,7 @@ public class InvUseOnObject implements PacketHandler {
                                             else {
                                                 owner.getInventory().add(bar);
                                                 owner.sendMessage("You retrieve a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
-                                                owner.increaseXP(13, def.getExp());
+                                                owner.increaseXP(Skills.SMITHING, def.getExp());
                                                 owner.sendStat(13);
                                                 owner.sendInventory();
                                             }
@@ -1309,7 +980,7 @@ public class InvUseOnObject implements PacketHandler {
 		      				}
 		      				break;
 						case 177: // Doric's Anvil
-							if (owner.getQuestCompletionStage(Config.Quests.DORICS_QUEST) != 1) {
+							if (owner.getQuestCompletionStage(Quests.DORICS_QUEST) != 1) {
 								Npc doric = World.getNpc(144, 323, 327, 487, 492);
 								if (doric != null && !doric.isBusy()) {
 									if (doric.getX() != owner.getX() || doric.getY() != owner.getY()) {
@@ -1570,7 +1241,7 @@ public class InvUseOnObject implements PacketHandler {
 	      										}
 	      										owner.sendMessage("You hammer the metal into some nails");
 	      										owner.getInventory().add(new InvItem(419, 2));
-	      										owner.increaseXP(13, Formulae.getSmithingExp(171, 1));
+	      										owner.increaseXP(Skills.SMITHING, Formulae.getSmithingExp(171, 1));
 	      										owner.sendStat(13);
 	      										owner.sendInventory();
 	      										break;
@@ -1788,7 +1459,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		      				public void action() {
 				      						if (owner.getInventory().remove(item) > -1) {
 				      							owner.getInventory().add(new InvItem(207, 1));
-				      							owner.increaseXP(12, 10);
+				      							owner.increaseXP(Skills.CRAFTING, 10);
 				      							owner.sendStat(12);
 				      							owner.sendInventory();
 				      						}
@@ -1806,7 +1477,7 @@ public class InvUseOnObject implements PacketHandler {
 		      		      					public void action() {
 				      						if (owner.getInventory().remove(item) > -1) {
 				      							owner.getInventory().add(new InvItem(676, 1));
-				      							owner.increaseXP(12, 60);
+				      							owner.increaseXP(Skills.CRAFTING, 60);
 				      							owner.sendStat(12);
 				      							owner.sendInventory();
 				      						}
@@ -1876,7 +1547,7 @@ public class InvUseOnObject implements PacketHandler {
 		      			
 						case 187:
 							if(item.getID() == 382) {
-								Quest q = owner.getQuest(Config.Quests.PIRATES_TREASURE);
+								Quest q = owner.getQuest(Quests.PIRATES_TREASURE);
 								if (q != null) {
 									if (q.getStage() == 1) {
 										owner.setBusy(true);
@@ -1895,7 +1566,7 @@ public class InvUseOnObject implements PacketHandler {
 																	public void action() {
 																		owner.setBusy(false);
 																		owner.sendMessage("It says dig just behind the south bench in the park");
-																		owner.incQuestCompletionStage(Config.Quests.PIRATES_TREASURE);
+																		owner.incQuestCompletionStage(Quests.PIRATES_TREASURE);
 																	}
 																});
 															}
@@ -1913,7 +1584,7 @@ public class InvUseOnObject implements PacketHandler {
 							break;
 						case 188: //Flower for the Pirate's Treasure [QUEST]
 							if (item.getID() == 211) {
-								Quest q = owner.getQuest(Config.Quests.PIRATES_TREASURE);
+								Quest q = owner.getQuest(Quests.PIRATES_TREASURE);
 								if (q != null) {
 									if (q.getStage() == 2 && !q.finished()) {
 										final Npc wyson = World.getNpc(116, 285, 296, 545, 551);
@@ -1933,7 +1604,7 @@ public class InvUseOnObject implements PacketHandler {
 																public void action() {
 																	owner.sendMessage("Well done you have completed the Pirate's Treasure quest");
 																	owner.sendMessage("@gre@You have gained 2 quest points!");
-																	owner.finishQuest(Config.Quests.PIRATES_TREASURE);
+																	owner.finishQuest(Quests.PIRATES_TREASURE);
 																	owner.getInventory().add(new InvItem(10, 450));
 																	owner.getInventory().add(new InvItem(283, 1));
 																	owner.getInventory().add(new InvItem(163, 1));
@@ -2039,7 +1710,7 @@ public class InvUseOnObject implements PacketHandler {
   										showBubble();
   										owner.sendMessage("You make a " + result.getDef().getName());
   										owner.getInventory().add(result);
-  										owner.increaseXP(12, exp);
+  										owner.increaseXP(Skills.CRAFTING, exp);
   										owner.sendStat(12);
   										owner.sendInventory();
   									}
@@ -2087,7 +1758,7 @@ public class InvUseOnObject implements PacketHandler {
       				      				else {
 	      		      						owner.sendMessage("You take out the " + result.getDef().getName());
 	      		      						owner.getInventory().add(result);
-	      		      						owner.increaseXP(12, exp);
+	      		      						owner.increaseXP(Skills.CRAFTING, exp);
 	      		      						owner.sendStat(12);
       				      				}
       				      				owner.sendInventory();
@@ -2123,7 +1794,7 @@ public class InvUseOnObject implements PacketHandler {
 										synchronized (World.getPlayers()) {
 											for (Player p : World.getPlayers()) {
 												if (p.getLocation().isInSeersPartyHall())
-													p.sendNotification(Config.PREFIX + owner.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef().getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.number_format("" + item.getAmount()) + ")" : ""));
+													p.sendNotification(Config.getPrefix() + owner.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef().getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.number_format("" + item.getAmount()) + ")" : ""));
 											}
 										}									
 									}
@@ -2131,7 +1802,7 @@ public class InvUseOnObject implements PacketHandler {
 							}
 		      			break;
                         case 236:
-                            if(owner.getQuestCompletionStage(Config.Quests.DRUIDIC_RITUAL) == 1) {
+                            if(owner.getQuestCompletionStage(Quests.DRUIDIC_RITUAL) == 1) {
                                 if (item.getID() == 133) {
                                     owner.getInventory().remove(new InvItem(item.getID(), 1));
                                     owner.sendMessage("You dip the " + item.getDef().getName() + " in the cauldron");
@@ -2153,7 +1824,7 @@ public class InvUseOnObject implements PacketHandler {
                             break;
 		      			case 287:
 		      				if (item.getID() == 606) { // Excalibur
-								Quest merlinsQuest = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+								Quest merlinsQuest = owner.getQuest(Quests.MERLINS_CRYSTAL);
 								if (merlinsQuest != null) {
 									if (merlinsQuest.getStage() == 7 && !merlinsQuest.finished()) {
 										owner.sendMessage("You shatter the crystal with Excalibur");
@@ -2198,45 +1869,50 @@ public class InvUseOnObject implements PacketHandler {
 		      		}
 			}
 			
-			private void cookLoop(final int loop) {
-				if (owner.getCancelBatch())
-					return;				
-  				final ItemCookingDef cookingDef = item.getCookingDef();
-  				if (cookingDef == null) {
-  					owner.sendMessage("Nothing interesting happens");
-  					return;
-  				}
-  				if (owner.getInventory().countId(item.getID()) < 1)
-  					return;
-  				if (owner.getCurStat(7) < cookingDef.getReqLevel()) {
-  					owner.sendMessage("You need a cooking level of " + cookingDef.getReqLevel() + " to cook this");
-  					return;
-  				}
-  				owner.setBusy(true);
-  				showBubble();
-  				owner.sendSound("cooking", false);
-  				owner.sendMessage("You cook the " + item.getDef().getName() + " on the " + object.getGameObjectDef().getName());
-  				World.getDelayedEventHandler().add(new ShortEvent(owner) {
-  					public void action() {
-					InvItem cookedFood = new InvItem(cookingDef.getCookedId());
-					if (owner.getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
-							owner.getInventory().add(cookedFood);
-							owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
-							owner.increaseXP(7, cookingDef.getExp());
-							owner.sendStat(7);
-						} else {
-							owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
-							owner.sendMessage("You accidently burn the " + item.getDef().getName());
-						}
-						owner.sendInventory();
-					}
-					owner.setBusy(false);
-					if (loop > 1)
-						cookLoop(loop - 1);						
-  					}
-  				});				
-			}
+			private void cookLoop() {
+                if (owner.getCancelBatch())
+                    return;
+                final ItemCookingDef cookingDef = item.getCookingDef();
+                if (cookingDef == null) {
+                    owner.sendMessage("Nothing interesting happens");
+                    return;
+                }
+                if (owner.getInventory().countId(item.getID()) < 1)
+                    return;
+                if (owner.getCurStat(7) < cookingDef.getReqLevel()) {
+                    owner.sendMessage("You need a cooking level of " + cookingDef.getReqLevel() + " to cook this");
+                    return;
+                }
+                owner.setBusy(true);
+                showBubble();
+                owner.sendSound("cooking", false);
+                owner.sendMessage("You cook the " + item.getDef().getName() + " on the " + object.getGameObjectDef().getName());
+                World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                    public void action() {
+                        InvItem cookedFood = new InvItem(cookingDef.getCookedId());
+                        if (owner.getInventory().remove(item) > -1) {
+                            if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
+                                owner.getInventory().add(cookedFood);
+                                owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
+                                owner.increaseXP(7, cookingDef.getExp());
+                                owner.sendStat(7);
+                            } else {
+                                owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
+                                owner.sendMessage("You accidently burn the " + item.getDef().getName());
+                            }
+                            owner.sendInventory();
+                        }
+                        owner.setBusy(false);
+                        if (Config.getSkillLoopMode() == 2) {
+                            World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                public void action() {
+                                    cookLoop();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
 			
 			private void handleSmithing(int barID, int toMake) {
 				ItemSmithingDef def = EntityHandler.getSmithingDef((Formulae.getBarType(barID) * 21) + toMake);
@@ -2271,7 +1947,7 @@ public class InvUseOnObject implements PacketHandler {
 					for(int x = 0;x < def.getAmount();x++)
 						owner.getInventory().add(new InvItem(def.getItemID(), 1));
 				}
-				owner.increaseXP(13, Formulae.getSmithingExp(barID, def.getRequiredBars()));
+				owner.increaseXP(Skills.SMITHING, Formulae.getSmithingExp(barID, def.getRequiredBars()));
 				owner.sendStat(13);
 				owner.sendInventory();
 			}
@@ -2553,7 +2229,7 @@ public class InvUseOnObject implements PacketHandler {
 					case 45: //Prince Ali Rescue Door
 						if(item.getID() == 242) {
 							if(owner.getX() == 198) {
-								Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+								Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 								if(q != null) {
 									switch(q.getStage()) {
 										case 0:

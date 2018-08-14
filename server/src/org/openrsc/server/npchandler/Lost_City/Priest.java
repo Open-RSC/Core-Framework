@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -22,7 +23,7 @@ public class Priest implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 	npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.LOST_CITY);
+		Quest q = owner.getQuest(Quests.LOST_CITY);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -149,8 +150,8 @@ public class Priest implements NpcHandler {
 							public void finished() {
 								owner.setBusy(false);
 								npc.unblock();
-								owner.addQuest(Config.Quests.LOST_CITY, 2);
-								owner.incQuestCompletionStage(Config.Quests.LOST_CITY);
+								owner.addQuest(Quests.LOST_CITY, 2);
+								owner.incQuestCompletionStage(Quests.LOST_CITY);
 							}
 						});
 					}
@@ -168,8 +169,8 @@ public class Priest implements NpcHandler {
 							public void finished() {
 								owner.setBusy(false);
 								npc.unblock();
-								owner.addQuest(Config.Quests.LOST_CITY, 2);
-								owner.incQuestCompletionStage(Config.Quests.LOST_CITY);
+								owner.addQuest(Quests.LOST_CITY, 2);
+								owner.incQuestCompletionStage(Quests.LOST_CITY);
 							}
 						});
 					}

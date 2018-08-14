@@ -13,6 +13,7 @@ import org.openrsc.server.model.Quest;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -22,7 +23,7 @@ public class Captain_Rovin implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest demonSlayer = owner.getQuest(Config.Quests.DEMON_SLAYER);
+		Quest demonSlayer = owner.getQuest(Quests.DEMON_SLAYER);
 		
 		if(demonSlayer != null) 
 		{

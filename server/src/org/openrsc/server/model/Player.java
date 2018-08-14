@@ -52,13 +52,12 @@ import org.openrsc.server.util.StatefulEntityCollection;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.util.IPTrackerPredicate;
-import static org.openrsc.server.Config.SERVER_NAME;
 
 @SuppressWarnings("serial")
 public final class Player extends Mob implements Watcher, Comparable<Player>
 {
 	private static final FatigueApplicator fatigueApplicator =
-			Config.DISABLE_FATIGUE ?
+			Config.isDisableFatigue() ?
 					new NoOpFatigueApplicator() :
 					new DefaultFatigueApplicator();
 
@@ -279,7 +278,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 							public boolean proceedIf()
 							{
 								return World.getWildernessIPTracker().ipCount(getIP())
-										< Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS;
+										< Config.getAllowedConcurrentIpsInWilderness();
 							}
 						}
 					))
@@ -299,7 +298,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	
 	public void onWildernessEntryBlocked()
 	{
-		sendMessage(Config.WILDERNESS_ENTRY_BLOCKED_MESSAGE);
+		sendMessage(Config.getWildernessEntryBlockedMessage());
 	}
 
 	/** Wilderness IP Tracker Modification */
@@ -687,7 +686,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			ladyPatches++;
 		if (ladyPatches > 2 && holeID == 226) {
 			sendMessage("The hole has been completely patched");
-			Quest q = getQuest(Config.Quests.DRAGON_SLAYER);
+			Quest q = getQuest(Quests.DRAGON_SLAYER);
 			if (q != null) {
 				if (q.getStage() == 3)
 					this.teleport(258, 3494, false);
@@ -696,7 +695,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			}
 		} else if(ladyPatches > 2 && holeID == 232) {
 			sendMessage("The hole has been completely patched");
-			Quest q = getQuest(Config.Quests.DRAGON_SLAYER);
+			Quest q = getQuest(Quests.DRAGON_SLAYER);
 			if (q != null) {
 				if (q.getStage() == 3)
 					this.teleport(258, 3494, false);
@@ -2318,7 +2317,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			if (this.sleepEvent != null)
 				this.sleepEvent.stop();
 
-			if (Config.BAN_FAILED_SLEEP) {
+			if (Config.isBanFailedSleep()) {
 					// Bans if 10 sleep words are incorrect
 					if (this.sleepCount >= 10) {
 						synchronized (World.getPlayers()) {
@@ -2337,7 +2336,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 
 			this.sleepEvent = new DelayedEvent(this, (this.fatigueEvent == null) ? DataConversions.random(100, 500) : DataConversions.random((isSub()) ? 100 : 500, (isSub()) ? 100 : 500)) {
 				public void run() {
-					if (Config.DISABLE_SLEEP_WORDS) {
+					if (Config.isDisableSleepWords()) {
 						Player.this.sendSuccess();
 						Player.this.setFatigue(0);
 						Player.this.sendFatigue();
@@ -2876,7 +2875,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						sendInventory();
 						if (!recievedMessage) 
 						{
-							sendMessage(Config.PREFIX + "P2P items are not wieldable during F2P wilderness.");
+							sendMessage(Config.getPrefix() + "P2P items are not wieldable during F2P wilderness.");
 							recievedMessage = true;
 						}
 					}
@@ -2902,7 +2901,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 								+ 2;
 						if (min > newStat || (min > max && (i == 0 || i == 1 || i == 4))) {
 							setCurStat(i, max);
-							sendMessage(Config.PREFIX + "Your super / P2P potion effect has been reset as the wilderness state is not P2P.");
+							sendMessage(Config.getPrefix() + "Your super / P2P potion effect has been reset as the wilderness state is not P2P.");
 							getActionSender().sendStat(i);
 						}
 					}
@@ -3331,10 +3330,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getMaxStat(3)));
 						switch (p.getCombatStyle()) {
 							case 0:
-								p.increaseXP(0, exp);
-								p.increaseXP(1, exp);
-								p.increaseXP(2, exp);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.ATTACK, exp);
+								p.increaseXP(Skills.DEFENSE, exp);
+								p.increaseXP(Skills.STRENGTH, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(0);
 								p.sendStat(1);
 								p.sendStat(2);
@@ -3342,23 +3341,23 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 							break;
 							
 							case 1:
-								p.increaseXP(2, exp * 3);
+								p.increaseXP(Skills.STRENGTH, exp * 3);
 								p.sendStat(2);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 2:
-								p.increaseXP(0, exp * 3);
+								p.increaseXP(Skills.ATTACK, exp * 3);
 								p.sendStat(0);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 3:
-								p.increaseXP(1, exp * 3);
+								p.increaseXP(Skills.DEFENSE, exp * 3);
 								p.sendStat(1);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);
 							break;
 						}
@@ -3371,7 +3370,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getMaxStat(3)));
-						p.increaseXP(4, exp * 4);
+						p.increaseXP(Skills.RANGED, exp * 4);
 						p.sendStat(4);
 					}
 				}
@@ -3971,19 +3970,19 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			if (getLocation().inWilderness())
 			{
 				if (isSkulled())
-					xp *= (Config.SKULLED_XP_BONUS + Config.SKILL_XP_SUB);
+					xp *= (Config.getSkulledXpBonus() + Config.getSkillXpSub());
 				else
-					xp *= (Config.WILD_XP_BONUS + Config.SKILL_XP_SUB);
+					xp *= (Config.getWildXpBonus() + Config.getSkillXpSub());
 			}
 			else
 			{
-				xp *= Config.SKILL_XP_SUB;
+				xp *= Config.getSkillXpSub();
 			}
 		} 
 		else 
 		if (!isSub() && stat > 6) // Non combat, non subbed
 		{
-			xp *= Config.SKILL_XP_RATE;
+			xp *= Config.getSkillXpRate();
 		}
 		else
 		if (isSub() && stat <= 6) // Combat, subbed.
@@ -3991,19 +3990,19 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 			if (getLocation().inWilderness()) // Combat, in wilderness
 			{
 				if (isSkulled())
-					xp *= (Config.COMBAT_XP_SUB + Config.SKULLED_XP_BONUS);
+					xp *= (Config.getCombatXpSub() + Config.getSkulledXpBonus());
 				else
-					xp *= (Config.COMBAT_XP_SUB + Config.WILD_XP_BONUS);
+					xp *= (Config.getCombatXpSub() + Config.getWildXpBonus());
 				
 			}
 			else
 			{
-				xp *= Config.COMBAT_XP_SUB;
+				xp *= Config.getCombatXpSub();
 			}
 		}
         else // combat, nonsubbed
 		{
-            xp *= Config.COMBAT_XP_RATE;
+            xp *= Config.getCombatXpRate();
 		}
 						
         exp[stat] += xp;
@@ -4381,6 +4380,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		actionSender.sendTradeAccept();
 	}
     
+    public void sendConfiguration(HashMap<String, String> config) {
+        actionSender.sendConfiguration(config);
+    }
+    
 	public String getStaffName() {
         return Group.getStaffPrefix(this.getGroupID()) + getUsername();
 	}
@@ -4452,7 +4455,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	{
 		for(String message : strings)
 		{
-			sendMessage("@gre@"+Config.SERVER_NAME+" Security: @whi@" + message);
+			sendMessage("@gre@"+ Config.getServerName() +" Security: @whi@" + message);
 		}
 	}
 

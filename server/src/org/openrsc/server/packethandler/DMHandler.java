@@ -101,7 +101,7 @@ public class DMHandler implements PacketHandler {
 						started = System.currentTimeMillis();
 						for (Player informee : World.getPlayers()) {
 							if (informee.getLocation().isInDMArena())
-								informee.sendNotification(Config.PREFIX + player.getUsername() + " (" + player.getCombatLevel() + ") and " + affectedPlayer.getUsername() + " (" + affectedPlayer.getCombatLevel() + ") have entered the DM arena!");
+								informee.sendNotification(Config.getPrefix() + player.getUsername() + " (" + player.getCombatLevel() + ") and " + affectedPlayer.getUsername() + " (" + affectedPlayer.getCombatLevel() + ") have entered the DM arena!");
 						}
 						
 						int x1 = Formulae.rand(cage.getDimensions().x, cage.getDimensions().x + cage.getDimensions().width);
@@ -289,7 +289,7 @@ public class DMHandler implements PacketHandler {
 								int combDiff = Math.abs(player.getCombatLevel() - affectedPlayer.getCombatLevel());
 								if (combDiff >= 0 && combDiff <= 57) {
 									player.setWishToDM(affectedPlayer);
-									player.sendMessage(Config.PREFIX + "Sending Death Match request");
+									player.sendMessage(Config.getPrefix() + "Sending Death Match request");
 									affectedPlayer.sendMessage(DataConversions.ucwords(player.getUsername()).replaceAll("_", " ") + " " + Formulae.getLvlDiffColour(affectedPlayer.getCombatLevel() - player.getCombatLevel()) + "(level-" + player.getCombatLevel() + ")@whi@ wishes to Death Match you");
 									if (!player.isDMing() && affectedPlayer.getWishToDM() != null && affectedPlayer.getWishToDM().equals(player) && !affectedPlayer.isDMing()) {
 										player.setDMing(true);
@@ -306,9 +306,9 @@ public class DMHandler implements PacketHandler {
 										affectedPlayer.sendDMWindowOpen();
 									}
 								} else
-									player.sendMessage(Config.PREFIX + "You can only Death Match players within 57 combat levels of yours");
+									player.sendMessage(Config.getPrefix() + "You can only Death Match players within 57 combat levels of yours");
 							} else
-								player.sendMessage(Config.PREFIX + "Sending Death Match request");
+								player.sendMessage(Config.getPrefix() + "Sending Death Match request");
 						} else
 							player.sendMessage("There is an obstacle in the way");
 					} else
@@ -363,7 +363,7 @@ public class DMHandler implements PacketHandler {
 						unsetOptions(affectedPlayer);
 						return;
 					}
-					affectedPlayer.sendMessage(Config.PREFIX + "Other player left the Death Match screen");
+					affectedPlayer.sendMessage(Config.getPrefix() + "Other player left the Death Match screen");
 					
 					unsetOptions(player);
 					unsetOptions(affectedPlayer);

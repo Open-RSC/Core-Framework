@@ -7,14 +7,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Player;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Cook implements NpcHandler {
@@ -22,7 +16,7 @@ public class Cook implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.COOKS_ASSISTANT);
+		Quest q = owner.getQuest(Quests.COOKS_ASSISTANT);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				final String[] messages7 = {"Hello friend, how is the adventuring going?"};
@@ -102,10 +96,10 @@ public class Cook implements NpcHandler {
 															owner.sendInventory();
 															World.getDelayedEventHandler().add(new SingleEvent(owner,1000) {
 																public void action() {
-																	owner.finishQuest(Config.Quests.COOKS_ASSISTANT);
+																	owner.finishQuest(Quests.COOKS_ASSISTANT);
 																	owner.sendMessage("Well done. You have completed the cook's assistant quest");
 																	owner.sendMessage("@gre@You just advanced 1 quest point!");
-																	owner.incQuestExp(7, 180);
+																	owner.incQuestExp(Skills.COOKING, 180);
 																	owner.sendStat(7);
 																	owner.setBusy(false);
 																	npc.unblock();
@@ -301,7 +295,7 @@ public class Cook implements NpcHandler {
 										final String[] messages5 = {"Oh thank you, thank you", "I need milk, eggs, and flour", "I'd be very grateful if you can get them to me"};
 										World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages5) {
 											public void finished() {
-												owner.addQuest(Config.Quests.COOKS_ASSISTANT, 1);
+												owner.addQuest(Quests.COOKS_ASSISTANT, 1);
 												owner.setBusy(false);
 												npc.unblock();
 											}

@@ -68,7 +68,7 @@ public class PlayerLogin
 	{
 		p.skip(1);
 		int clientVersion = p.readShort();
-		if(clientVersion != Config.SERVER_VERSION)
+		if(clientVersion != Config.getServerVersion())
 		{
 			session.write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.CLIENT_NOT_UP_TO_DATE.ordinal()).toPacket());
 			session.close();

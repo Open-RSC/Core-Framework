@@ -8,6 +8,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -20,12 +21,12 @@ public class Nurse_Sarah implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
-		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
+		Quest q = owner.getQuest(Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Quests.PLAGUE_CITY);
 		
 		if(q != null) 
 		{	
-			if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() == 4)
+			if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() == 4)
 			{
 				switch(q.getStage())
 				{

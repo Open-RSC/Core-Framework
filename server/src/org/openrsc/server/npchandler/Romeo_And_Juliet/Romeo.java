@@ -14,6 +14,7 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -21,7 +22,7 @@ public class Romeo implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.ROMEO_AND_JULIET);
+		Quest q = owner.getQuest(Quests.ROMEO_AND_JULIET);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				questFinished(npc, owner);
@@ -128,7 +129,7 @@ public class Romeo implements NpcHandler {
 						owner.sendMessage("You pass Juliet's message to Romeo");
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Tragic news. Her father is opposing our marriage", "If her father sees me, he will kill me", "I dare not go near his lands", "She says Father Lawrence can help us", "Please find him for me. Tell him of our plight"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
+								owner.incQuestCompletionStage(Quests.ROMEO_AND_JULIET);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -172,7 +173,7 @@ public class Romeo implements NpcHandler {
 																		}
 																		switch(option) {
 																			case 0:
-																				owner.addQuest(Config.Quests.ROMEO_AND_JULIET, 5);
+																				owner.addQuest(Quests.ROMEO_AND_JULIET, 5);
 																				owner.setBusy(false);
 																				npc.unblock();
 																				break;
@@ -211,7 +212,7 @@ public class Romeo implements NpcHandler {
 																}
 																switch(option) {
 																	case 0:
-																		owner.addQuest(Config.Quests.ROMEO_AND_JULIET, 5);
+																		owner.addQuest(Quests.ROMEO_AND_JULIET, 5);
 																		owner.setBusy(false);
 																		npc.unblock();
 																		break;
@@ -240,7 +241,7 @@ public class Romeo implements NpcHandler {
 															public void finished() {
 																World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"err, yes. Ok. That's.....nice."}) {
 																	public void finished() {
-																		owner.addQuest(Config.Quests.ROMEO_AND_JULIET, 5);
+																		owner.addQuest(Quests.ROMEO_AND_JULIET, 5);
 																		owner.setBusy(false);
 																		npc.unblock();
 																	}
@@ -270,7 +271,7 @@ public class Romeo implements NpcHandler {
 							public void finished() {
 								World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Ah right", "So she is dead then. Ah that's a shame", "Thanks for your help anyway"}) {
 									public void finished() {
-										owner.finishQuest(Config.Quests.ROMEO_AND_JULIET);
+										owner.finishQuest(Quests.ROMEO_AND_JULIET);
 										owner.sendMessage("You have completed the quest of Romeo and Juliet");
 										owner.sendMessage("@gre@You have gained 5 quest points");
 										owner.setBusy(false);

@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -19,7 +20,7 @@ public class Curator implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+		Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 		if(q != null) {
 			if(q.finished()) {
 				noQuest(npc, owner);
@@ -53,7 +54,7 @@ public class Curator implements NpcHandler {
 											public void finished() {
 												World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Oh ok"}) {
 													public void finished() {
-														owner.incQuestCompletionStage(Config.Quests.SHIELD_OF_ARRAV);
+														owner.incQuestCompletionStage(Quests.SHIELD_OF_ARRAV);
 														owner.sendMessage("You hand over the shield parts");
 														owner.getInventory().remove(new InvItem(53, 1));
 														owner.getInventory().remove(new InvItem(54, 1));

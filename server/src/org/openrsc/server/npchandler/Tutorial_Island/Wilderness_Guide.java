@@ -9,6 +9,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -19,7 +20,7 @@ public class Wilderness_Guide implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -140,7 +141,7 @@ public class Wilderness_Guide implements NpcHandler {
 	private void whereWild(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Once you get into the main playing area head north", "then you will eventually reach the wilderness", "The deeper you venture into the wilderness", "The greater the level range of players who can attack you", "So if you go in really deep", "players much stronger than you can attack you", "Now proceed through the next door"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+				owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -154,7 +155,7 @@ public class Wilderness_Guide implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Once you get into the main playing area head north", "then you will eventually reach the wilderness", "The deeper you venture into the wilderness", "the greater the level range of players who can attack you", "So if you go in really deep", "players much stronger than you can attack you", "Now proceed through the next door"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+								owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 								owner.setBusy(false);
 								npc.unblock();
 							}

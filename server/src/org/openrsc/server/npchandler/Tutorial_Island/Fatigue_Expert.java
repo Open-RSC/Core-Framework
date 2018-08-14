@@ -7,6 +7,7 @@ import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -17,7 +18,7 @@ public class Fatigue_Expert implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -57,7 +58,7 @@ public class Fatigue_Expert implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Yes when you use your skills you will slowly get fatigued", "If you look on your stats menu you will see a fatigue stat", "When your fatigue reaches 100 percent then you will be very tired", "You won't be able to concentrate enough to gain experience in your skills", "To reduce your fatigue you will need to go to sleep", "Click on the bed to go to sleep", "Then follow the instructions to wake up", "When you have done that talk to me again"}) {
 					public void finished() {
-						owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+						owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 						owner.setBusy(false);
 						npc.unblock();
 					}
@@ -78,7 +79,7 @@ public class Fatigue_Expert implements NpcHandler {
 								owner.sendInventory();
 								World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"This saves you the trouble of finding a bed", "but you will need to sleep longer to restore your fatigue fully", "You can now go through the next door"}) {
 									public void finished() {
-										owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+										owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 										owner.setBusy(false);
 										npc.unblock();
 									}

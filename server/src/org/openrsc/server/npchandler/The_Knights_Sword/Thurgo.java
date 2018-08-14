@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -17,7 +18,7 @@ public class Thurgo implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.THE_KNIGHTS_SWORD);
+		Quest q = owner.getQuest(Quests.THE_KNIGHTS_SWORD);
 		if(q != null) {
 			if(q.finished()) {
 				madeSword(npc, owner);
@@ -143,7 +144,7 @@ public class Thurgo implements NpcHandler {
 							public void finished() {
 								World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"Ok i'll go and find them"}) {
 									public void finished() {
-										owner.incQuestCompletionStage(Config.Quests.THE_KNIGHTS_SWORD);
+										owner.incQuestCompletionStage(Quests.THE_KNIGHTS_SWORD);
 										owner.setBusy(false);
 										npc.unblock();
 									}
@@ -183,7 +184,7 @@ public class Thurgo implements NpcHandler {
 									public void finished() {
 										World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"I'll see if I can find one", "I'll go and ask his squire"}) {
 											public void finished() {
-												owner.incQuestCompletionStage(Config.Quests.THE_KNIGHTS_SWORD);
+												owner.incQuestCompletionStage(Quests.THE_KNIGHTS_SWORD);
 												owner.setBusy(false);
 												npc.unblock();
 											}

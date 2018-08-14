@@ -11,6 +11,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -21,7 +22,7 @@ public class Warlord implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+		Quest q = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);

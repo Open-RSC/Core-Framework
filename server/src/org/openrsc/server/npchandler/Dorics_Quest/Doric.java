@@ -7,14 +7,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.InvItem;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Doric implements NpcHandler {
@@ -22,7 +16,7 @@ public class Doric implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.DORICS_QUEST);
+		Quest q = owner.getQuest(Quests.DORICS_QUEST);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -73,7 +67,7 @@ public class Doric implements NpcHandler {
 																				final String[] messages21 = {"Certainly, I will get them for you. Goodbye"};
 																				World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, messages21) {
 																					public void finished() {
-																						owner.addQuest(Config.Quests.DORICS_QUEST, 1);
+																						owner.addQuest(Quests.DORICS_QUEST, 1);
 																						owner.setBusy(false);
 																						npc.unblock();
 																					}
@@ -186,10 +180,10 @@ public class Doric implements NpcHandler {
 																		public void action() {
 																			owner.sendMessage("@gre@Well done you have completed Dorics quest");
 																			owner.sendMessage("@gre@You have gained 1 quest point!");		
-																			owner.incQuestExp(14, 1200);
+																			owner.incQuestExp(Skills.MINING, 1200);
 																			owner.sendStat(14);
-																			owner.finishQuest(Config.Quests.DORICS_QUEST);
-																			owner.incQuestCompletionStage(Config.Quests.DORICS_QUEST);
+																			owner.finishQuest(Quests.DORICS_QUEST);
+																			owner.incQuestCompletionStage(Quests.DORICS_QUEST);
 																			owner.setBusy(false);
 																			npc.unblock();
 																			Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed <span class=\"recent_quest\">Doric's</span> quest!"));

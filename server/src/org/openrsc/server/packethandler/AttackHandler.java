@@ -14,6 +14,7 @@ import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.model.ChatMessage;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
@@ -81,7 +82,7 @@ public class AttackHandler implements PacketHandler {
                                             {
                                                 if (player.getLocation().isInDMArena() && player.getDMSetting(2)) 
                                                 {
-                                                    player.sendMessage(Config.PREFIX + "Ranged cannot be used during this Death Match");
+                                                    player.sendMessage(Config.getPrefix() + "Ranged cannot be used during this Death Match");
                                                     return;
                                                 }
 
@@ -102,17 +103,17 @@ public class AttackHandler implements PacketHandler {
                                                 });
                                             }
                                         } else {
-                                            player.sendMessage(Config.PREFIX + affectedPlayer.getUsername() + " is currently invulnerable!");
+                                            player.sendMessage(Config.getPrefix() + affectedPlayer.getUsername() + " is currently invulnerable!");
                                             player.resetFollowing();
                                             player.resetPath();
                                         }
                                     } else {
-                                        player.sendMessage(Config.PREFIX + "You aren't in a Death Match with " + affectedPlayer.getUsername());
+                                        player.sendMessage(Config.getPrefix() + "You aren't in a Death Match with " + affectedPlayer.getUsername());
                                         player.resetFollowing();
                                         player.resetPath();	
                                     }
                                 } else {
-                                    player.sendMessage(Config.PREFIX + "PVP is currently disabled.");
+                                    player.sendMessage(Config.getPrefix() + "PVP is currently disabled.");
                                     player.resetFollowing();
                                     player.resetPath();
                                 }
@@ -122,8 +123,8 @@ public class AttackHandler implements PacketHandler {
 							if (npc != null) {
 								switch (npc.getID()) {
 								case 37:
-									if (player.getQuest(Config.Quests.JOIN_PHOENIX_GANG) != null) {
-										if (player.getQuest(Config.Quests.JOIN_PHOENIX_GANG).finished()) {
+									if (player.getQuest(Quests.JOIN_PHOENIX_GANG) != null) {
+										if (player.getQuest(Quests.JOIN_PHOENIX_GANG).finished()) {
 											player.setBusy(true);
 											World.getDelayedEventHandler().add(new DelayedQuestChat(player, player, new String[] {"Nope, I'm not going to attack a fellow gang member."}) {
 												public void finished() {
@@ -135,7 +136,7 @@ public class AttackHandler implements PacketHandler {
 									break;
 
 								case 35:
-									if (player.getQuestCompletionStage(Config.Quests.DEMON_SLAYER) == 3) {
+									if (player.getQuestCompletionStage(Quests.DEMON_SLAYER) == 3) {
 										if (player.getInventory().wielding(52)) {
 											player.setFollowing(npc);
 											player.setStatus(Action.ATTACKING_MOB);
@@ -187,9 +188,9 @@ public class AttackHandler implements PacketHandler {
 												{
 													// If they've completed the quest,
 													// don't allow them to attack the NPC.
-													if (player.getQuest(Config.Quests.VAMPIRE_SLAYER).finished())
+													if (player.getQuest(Quests.VAMPIRE_SLAYER).finished())
 													{
-														owner.sendMessage(Config.PREFIX + "You have already completed this quest.");
+														owner.sendMessage(Config.getPrefix() + "You have already completed this quest.");
 														return;
 													}
 
@@ -204,7 +205,7 @@ public class AttackHandler implements PacketHandler {
 									break;
 
 								case 259:
-									if (player.getQuest(Config.Quests.JOIN_BLACKARM_GANG) != null && player.getQuest(Config.Quests.JOIN_BLACKARM_GANG).finished())
+									if (player.getQuest(Quests.JOIN_BLACKARM_GANG) != null && player.getQuest(Quests.JOIN_BLACKARM_GANG).finished())
 									{
 										player.sendMessage("I don't think that's a smart idea");
 										player.resetPath();

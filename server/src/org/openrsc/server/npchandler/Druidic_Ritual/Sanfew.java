@@ -12,7 +12,7 @@ public class Sanfew implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(Config.Quests.DRUIDIC_RITUAL);
+		final Quest q = owner.getQuest(Quests.DRUIDIC_RITUAL);
 		if (q != null) {
 			if (q.finished()) { // Quest finished
 				questFinished(npc,owner);
@@ -56,7 +56,7 @@ public class Sanfew implements NpcHandler {
 								final String[] messages1 = {"Thank you, that has brought us much closer to reclaiming our stone circle", "Now go and talk to kaqemeex", "He will show you what you need to know about herblaw"};
 								World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages1, true) {
 									public void finished() {
-										owner.incQuestCompletionStage(Config.Quests.DRUIDIC_RITUAL);
+										owner.incQuestCompletionStage(Quests.DRUIDIC_RITUAL);
 										owner.setBusy(false);
 										npc.unblock();
 									}
@@ -260,7 +260,7 @@ public class Sanfew implements NpcHandler {
 	private void whereCauldron(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"It is in the mysterious underground halls", "which are somewhere in the woods to the south of here"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.DRUIDIC_RITUAL);
+				owner.incQuestCompletionStage(Quests.DRUIDIC_RITUAL);
 				owner.setBusy(false);
 				npc.unblock();
 			}

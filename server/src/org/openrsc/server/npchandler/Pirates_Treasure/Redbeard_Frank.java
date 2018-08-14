@@ -12,6 +12,7 @@ import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Redbeard_Frank implements NpcHandler {
@@ -81,7 +82,7 @@ public class Redbeard_Frank implements NpcHandler {
 													owner.sendMessage("Frank hands you a key");
 													owner.getInventory().add(new InvItem(382, 1));
 													owner.sendInventory();
-													owner.incQuestCompletionStage(Config.Quests.PIRATES_TREASURE);
+													owner.incQuestCompletionStage(Quests.PIRATES_TREASURE);
 													final String[] messages2 = {"This is Hector's key", "I believe it opens his chest", "In his old room in the blue moon inn in Varrock", "With any luck his treasure will be in there"};
 													World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages2) {
 														public void finished() {
@@ -174,7 +175,7 @@ public class Redbeard_Frank implements NpcHandler {
 												final String[] messages3 = {"Well for example if you can get me a bottle of rum", "Not just any rum mind", "I'd like some rum brewed on Karamja island", "There's no rum like KAramja rum"};
 												World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages3) {
 													public void finished() {
-														owner.addQuest(Config.Quests.PIRATES_TREASURE, 2);
+														owner.addQuest(Quests.PIRATES_TREASURE, 2);
 														owner.setBusy(false);
 														npc.unblock();
 													}
@@ -212,7 +213,7 @@ public class Redbeard_Frank implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(Config.Quests.PIRATES_TREASURE);
+		final Quest q = owner.getQuest(Quests.PIRATES_TREASURE);
 		final String[] messages0 = {"Arrrh Matey"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages0, true) {
 			public void finished() {
