@@ -4291,6 +4291,31 @@ public class ObjectAction implements PacketHandler {
 									owner.informOfModifiedHits(owner);
 								}
 								break;
+
+							case 701:
+								// Calculate the rock we are hopping to
+								int x = -1;
+								int y = -1;
+								if (object.getX() == 346 && object.getY() == 807) {
+									x = 346;
+									y = 807;
+								} else if (object.getX() == 347 && object.getY() == 806) {
+									x = 347;
+									y = 806;
+								}
+								if (x >= 0 && y >= 0) {
+									owner.sendMessage("You carefully step to the rock...");
+									if (agilityFormulae(1)) {
+										owner.teleport(x, y, false);
+										owner.sendMessage("...and successfully balance upon it");
+										owner.increaseXP(16, 10);
+									} else {
+										owner.sendMessage("...but fall off of the rock and wash down stream");
+										owner.teleport(342, 804, false);
+										owner.increaseXP(16, 4);
+									}
+								}
+								break;	
 									
 							default:
 								owner.sendMessage("Nothing interesting happens");
