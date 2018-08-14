@@ -11,6 +11,7 @@ import org.openrsc.server.util.Formulae;
 import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import org.openrsc.server.entityhandling.defs.extras.*;
@@ -640,7 +641,75 @@ public class InvUseOnObject implements PacketHandler {
 		      				break;
 		      			case 97: // Fire
 		      			case 11:
-		      			case 119:
+		      			case 119: //Cook's range
+		      			    if(!owner.isQuestFinished(Quests.COOKS_ASSISTANT) && object.isOn(131,660)) {
+                                owner.setBusy(true);
+                                Npc chef = World.getNpc(7, 131, 137, 659, 665);
+                                if (chef != null) {
+                                    for (Player informee : chef.getViewArea().getPlayersInView()) {
+                                        informee.informOfNpcMessage(new ChatMessage(chef, "Hey! Who said you could use that?", owner));
+                                    }
+                                }
+                                World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                                    public void action() {
+                                        owner.setBusy(false);
+                                    }
+                                });
+                            } else {
+                                if (item.getID() == 591) // Lava Eel
+                                {
+                                    owner.setBusy(true);
+                                    showBubble();
+                                    owner.sendSound("cooking", false);
+                                    owner.sendMessage("You cook the lava eel on the " + object.getGameObjectDef().getName());
+                                    World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                                        public void action() {
+                                            if (owner.getInventory().remove(item) > -1) {
+                                                owner.sendMessage("The lava eel is now nicely cooked");
+                                                owner.getInventory().add(new InvItem(590, 1));
+                                                owner.sendInventory();
+                                            }
+                                            owner.setBusy(false);
+                                        }
+                                    });
+                                }
+                                else
+                                if (item.getID() == 622) { // Seaweed (Glass)
+                                    owner.setBusy(true);
+                                    showBubble();
+                                    owner.sendSound("cooking", false);
+                                    owner.sendMessage("You put the seaweed on the  " + object.getGameObjectDef().getName());
+                                    World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                                        public void action() {
+                                            if (owner.getInventory().remove(item) > -1) {
+                                                owner.sendMessage("The seaweed burns to ashes");
+                                                owner.getInventory().add(new InvItem(624, 1));
+                                                owner.sendInventory();
+                                            }
+                                            owner.setBusy(false);
+                                        }
+                                    });
+                                } else if (item.getID() == 132) { // Cooked Meat
+                                    owner.setBusy(true);
+                                    showBubble();
+                                    owner.sendSound("cooking", false);
+                                    owner.sendMessage("You cook the Cooked Meat on the " + object.getGameObjectDef().getName());
+                                    World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                                        public void action() {
+                                            if (owner.getInventory().remove(item) > -1) {
+                                                owner.sendMessage("You burn the meat");
+                                                owner.getInventory().add(new InvItem(134, 1));
+                                                owner.sendInventory();
+                                            }
+                                            owner.setBusy(false);
+                                        }
+                                    });
+                                } else {
+                                    owner.setCancelBatch(false);
+                                    cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+                                }
+                            }
+                        break;
 		      			case 274:
 		      			case 435:
 		      			case 491: // Range
@@ -1732,7 +1801,27 @@ public class InvUseOnObject implements PacketHandler {
 								});
 							}
 		      			break;
-		      			
+                        case 236:
+                            if(owner.getQuestCompletionStage(Quests.DRUIDIC_RITUAL) == 1) {
+                                if (item.getID() == 133) {
+                                    owner.getInventory().remove(new InvItem(item.getID(), 1));
+                                    owner.sendMessage("You dip the " + item.getDef().getName() + " in the cauldron");
+                                    owner.getInventory().add(new InvItem(508, 1));
+                                    owner.sendInventory();
+                                } else {
+                                    int[] items = {502, 503, 504};
+                                    int[] receive = {505, 506, 507};
+                                    int index = Arrays.binarySearch(items, item.getID());
+                                    if (index >= 0) {
+                                        owner.getInventory().remove(new InvItem(item.getID(), 1));
+                                        owner.sendInventory();
+                                        owner.sendMessage("You dip the " + item.getDef().getName() + " in the cauldron");
+                                        owner.getInventory().add(new InvItem(receive[index], 1));
+                                        owner.sendInventory();
+                                    }
+                                }
+                            }
+                            break;
 		      			case 287:
 		      				if (item.getID() == 606) { // Excalibur
 								Quest merlinsQuest = owner.getQuest(Quests.MERLINS_CRYSTAL);
