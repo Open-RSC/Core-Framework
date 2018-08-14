@@ -132,7 +132,7 @@ public class WorldLoader {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet rs = statement
-						.executeQuery("SELECT * FROM " + Config.STAFF_TELEPORT_LOCATION_DATABASE)) {
+						.executeQuery("SELECT * FROM " + Config.getStaffTeleportLocationDatabase())) {
 					while (rs.next()) {
 						int x = rs.getInt("x"), y = rs.getInt("y");
 						if (!World.withinWorld(x, y)) {
@@ -151,9 +151,9 @@ public class WorldLoader {
 	public void saveAuctionHouse() {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				statement.executeUpdate("TRUNCATE " + Config.AUCTIONS_TABLE);
+				statement.executeUpdate("TRUNCATE " + Config.getAuctionsTable());
 				for (Auction auction : World.getWorld().getAuctionHouse().getAllAuctions())
-					statement.addBatch("INSERT INTO " + Config.AUCTIONS_TABLE
+					statement.addBatch("INSERT INTO " + Config.getAuctionsTable()
 							+ "(`owner`, `sold`, `itemID`, `itemAmount`, `itemPrice`, `canceled`, `created`) VALUES ('"
 							+ DataConversions.usernameToHash(auction.getOwner()) + "', '" + (auction.isSold() ? 1 : 0)
 							+ "', '" + auction.getID() + "', '" + auction.getAmount() + "', '" + auction.getPrice()
@@ -169,7 +169,7 @@ public class WorldLoader {
 	public void deleteAuction(Auction a) {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				int ret = statement.executeUpdate("DELETE FROM " + Config.AUCTIONS_TABLE + " WHERE `owner`='"
+				int ret = statement.executeUpdate("DELETE FROM " + Config.getAuctionsTable() + " WHERE `owner`='"
 						+ DataConversions.usernameToHash(a.getOwner()) + "' AND `sold`='" + (a.isSold() ? 1 : 0)
 						+ "' AND `itemID`='" + a.getID() + "' AND `itemAmount`='" + a.getAmount()
 						+ "' AND `itemPrice`='" + a.getPrice() + "' AND `canceled`='" + (a.isCanceled() ? 1 : 0)
@@ -185,7 +185,7 @@ public class WorldLoader {
 	public void addAuction(Auction auction) {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				int ret = statement.executeUpdate("INSERT INTO " + Config.AUCTIONS_TABLE
+				int ret = statement.executeUpdate("INSERT INTO " + Config.getAuctionsTable()
 						+ "(`owner`, `sold`, `itemID`, `itemAmount`, `itemPrice`, `canceled`, `created`) VALUES ('"
 						+ DataConversions.usernameToHash(auction.getOwner()) + "', '" + (auction.isSold() ? 1 : 0)
 						+ "', '" + auction.getID() + "', '" + auction.getAmount() + "', '" + auction.getPrice() + "', '"
@@ -248,7 +248,7 @@ public class WorldLoader {
 	public void loadAuctionHouse() {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				try (ResultSet rs = statement.executeQuery("SELECT * FROM " + Config.AUCTIONS_TABLE)) {
+				try (ResultSet rs = statement.executeQuery("SELECT * FROM " + Config.getAuctionsTable())) {
 					while (rs.next()) {
 						long owner = rs.getLong("owner");
 						int itemID = rs.getInt("itemID");

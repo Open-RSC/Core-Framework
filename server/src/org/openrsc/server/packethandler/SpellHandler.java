@@ -17,16 +17,7 @@ import org.openrsc.server.event.WalkToPointEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.logging.model.PickUpLog;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Item;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Point;
-import org.openrsc.server.model.Projectile;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.TrajectoryHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
 import org.openrsc.server.states.Action;
@@ -100,11 +91,11 @@ public class SpellHandler implements PacketHandler {
 						 * 
 						 */
 												
-						if (player.getLocation().varrockWilderness() || affectedPlayer.getLocation().varrockWilderness() || Config.PK_MODE)
+						if (player.getLocation().varrockWilderness() || affectedPlayer.getLocation().varrockWilderness() || Config.isPkMode())
 						{
 							if (affectedPlayer.inCombat() && player.getInCBWith() != affectedPlayer || player.inCombat() && !affectedPlayer.inCombat() && player.getInCBWith() != affectedPlayer)
 							{
-								player.sendMessage(Config.PREFIX + "This player cannot be maged whilst in combat with another player.");
+								player.sendMessage(Config.getPrefix() + "This player cannot be maged whilst in combat with another player.");
 								player.resetPath();
 								player.resetFollowing();
 								return;
@@ -113,7 +104,7 @@ public class SpellHandler implements PacketHandler {
 						
                         if ( affectedPlayer.isInvulnerable() /*affectedPlayer.isSuperMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
                         {
-                        	player.sendMessage(Config.PREFIX + affectedPlayer.getUsername() + " is currently invulnerable!");
+                        	player.sendMessage(Config.getPrefix() + affectedPlayer.getUsername() + " is currently invulnerable!");
                         	player.resetFollowing();
                         	player.resetPath();
                         	return;
@@ -121,7 +112,7 @@ public class SpellHandler implements PacketHandler {
                         
 						if (player.getLocation().isInDMArena() && affectedPlayer != player.getInDMWith()) 
 						{
-							player.sendMessage(Config.PREFIX + "You aren't in a Death Match with " + affectedPlayer.getUsername());
+							player.sendMessage(Config.getPrefix() + "You aren't in a Death Match with " + affectedPlayer.getUsername());
 							player.resetFollowing();
 							player.resetPath();															
 							return;															
@@ -129,7 +120,7 @@ public class SpellHandler implements PacketHandler {
                         
 						if (!affectedPlayer.getLocation().isInWarZone() || !World.pvpEnabled) 
 						{
-                            player.sendMessage(Config.PREFIX + "PVP is currently disabled.");
+                            player.sendMessage(Config.getPrefix() + "PVP is currently disabled.");
 							player.resetFollowing();
 							player.resetPath();															
 							return;															
@@ -137,7 +128,7 @@ public class SpellHandler implements PacketHandler {
 						
 						if (player.isDMing() && player.getDMSetting(1)) 
 						{
-							player.sendMessage(Config.PREFIX + "Magic cannot be used in this Death Match");
+							player.sendMessage(Config.getPrefix() + "Magic cannot be used in this Death Match");
 							player.resetFollowing();
 							player.resetPath();															
 							return;															
@@ -158,9 +149,9 @@ public class SpellHandler implements PacketHandler {
                         	return;
                         }
                         
-                        if (!Config.ALLOW_GODSPELLS && spellID == 25 && player.getLocation().inWilderness())
+                        if (!Config.isAllowGodspells() && spellID == 25 && player.getLocation().inWilderness())
                         {
-                        	player.sendMessage(Config.PREFIX + "Iban blast is currently disabled.");
+                        	player.sendMessage(Config.getPrefix() + "Iban blast is currently disabled.");
                         	player.resetPath();
                         	player.resetFollowing();
                         	return;
@@ -168,17 +159,17 @@ public class SpellHandler implements PacketHandler {
                         
                         if (spellID == 25 && !player.isWearing(1000))
                         {
-                        	player.sendMessage(Config.PREFIX + "You must be wielding the staff of iban in order to cast this spell");
+                        	player.sendMessage(Config.getPrefix() + "You must be wielding the staff of iban in order to cast this spell");
                         	player.resetPath();
                         	player.resetFollowing();
                         	return;
                         }
                         
-                        if (!Config.ALLOW_WEAKENS)
+                        if (!Config.isAllowWeakens())
                         {
                         	if (isWeaken(spellID))
                         	{
-                        		player.sendMessage(Config.PREFIX + "Weakens are currently disabled");
+                        		player.sendMessage(Config.getPrefix() + "Weakens are currently disabled");
                         		player.resetPath();
                         		player.resetFollowing();
                         		return;
@@ -209,9 +200,9 @@ public class SpellHandler implements PacketHandler {
 	                            return;
 	                        }
 	                        
-	                        if (!Config.ALLOW_GODSPELLS && player.getLocation().inWilderness())
+	                        if (!Config.isAllowGodspells() && player.getLocation().inWilderness())
 	                        {
-	                        	player.sendMessage(Config.PREFIX + "God spells are currently disabled");
+	                        	player.sendMessage(Config.getPrefix() + "God spells are currently disabled");
 	                        	player.resetFollowing();
 	                        	player.resetPath();
 	                        	return;
@@ -306,7 +297,7 @@ public class SpellHandler implements PacketHandler {
 						return;
 					}
 					if (player.getLocation().isInDMArena()) {
-						player.sendMessage(Config.PREFIX + "You cannot do that during a Death Match");
+						player.sendMessage(Config.getPrefix() + "You cannot do that during a Death Match");
 						return;
 					}					
 					short x = p.readShort();
@@ -320,7 +311,7 @@ public class SpellHandler implements PacketHandler {
 						return;
 					}
 					if (player.getLocation().isInDMArena()) {
-						player.sendMessage(Config.PREFIX + "You cannot do that during a Death Match");
+						player.sendMessage(Config.getPrefix() + "You cannot do that during a Death Match");
 						return;
 					}					
 					if (spell.getSpellType() == 6)
@@ -343,7 +334,7 @@ public class SpellHandler implements PacketHandler {
 						SpellDef spell = EntityHandler.getSpellDef(spellID);
 						for(int id : spell.requiredRunes.keySet()) {
 							if(EntityHandler.getItemDef(id).isP2P() && owner.getLocation().inWilderness() && affectedPlayer.getLocation().inWilderness() && !World.isP2PWilderness()) {
-									owner.sendMessage(Config.PREFIX + "The wilderness state must be P2P in order to cast this on your opponent.");
+									owner.sendMessage(Config.getPrefix() + "The wilderness state must be P2P in order to cast this on your opponent.");
 									return;
 								}
 							}
@@ -783,7 +774,7 @@ public class SpellHandler implements PacketHandler {
 		      		}
 		      		player.sendMessage("You make a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
   					player.getInventory().add(bar);
-  					player.increaseXP(13, smeltingDef.getExp());
+  					player.increaseXP(Skills.SMITHING, smeltingDef.getExp());
   					player.sendStat(13);
   					player.sendInventory();
   				}
@@ -1066,21 +1057,21 @@ public class SpellHandler implements PacketHandler {
 	private void finalizeSpell(Player player, SpellDef spell, boolean message, String string) {
 		if (player.getLocation().onTutorialIsland())
 		{
-			Quest tutorialIsland = player.getQuest(Config.Quests.TUTORIAL_ISLAND);
+			Quest tutorialIsland = player.getQuest(Quests.TUTORIAL_ISLAND);
 			if (tutorialIsland != null)
 			{
 				if (tutorialIsland.getStage() == 19)
 				{
 					player.sendMessage("You have successfully cast a spell on the chicken.");
 					player.sendMessage("Speak to the magic instructor for further instructions.");
-					player.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+					player.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				}
 			}
 		}
 		player.sendSound("spellok", false);
 		if (message)
 			player.sendMessage(string);
-		player.increaseXP(6, spell.getExp());
+		player.increaseXP(Skills.MAGIC, spell.getExp());
 		player.setCastTimer();
 	}
 	

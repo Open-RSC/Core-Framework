@@ -1,7 +1,6 @@
 package org.openrsc.server.packethandler;
 
 import org.openrsc.server.Config;
-import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
@@ -30,12 +29,12 @@ public class PrayerHandler implements PacketHandler {
 				return;
 			}
 			if (player.isDMing() && player.getDMSetting(0)) {
-				player.sendMessage(Config.PREFIX + "Prayer cannot be used in this Death Match");
+				player.sendMessage(Config.getPrefix() + "Prayer cannot be used in this Death Match");
 				player.sendPrayers();
 				return;
 			}
 			if (prayerID == 8 && player.getLocation().isInDMArena()) {
-				player.sendMessage(Config.PREFIX + "Protect Item cannot be used in Death Match's");
+				player.sendMessage(Config.getPrefix() + "Protect Item cannot be used in Death Match's");
 				player.sendPrayers();
 				return;
 			}

@@ -11,13 +11,14 @@ import org.openrsc.server.model.Player;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 
 public class Juliet implements NpcHandler {
 
 	public void handleNpc(Npc npc, Player owner) throws Exception {
 		owner.setBusy(true);
 		npc.blockedBy(owner);
-		Quest q = owner.getQuest(Config.Quests.ROMEO_AND_JULIET);
+		Quest q = owner.getQuest(Quests.ROMEO_AND_JULIET);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -86,7 +87,7 @@ public class Juliet implements NpcHandler {
 						owner.sendInventory();
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Wonderful. I just hope Romeo can remember to get me from the Crypt", "Many thanks kind friend", "Please go to Romeo, make sure he understands", "He can be a bit dense sometimes"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
+								owner.incQuestCompletionStage(Quests.ROMEO_AND_JULIET);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -163,7 +164,7 @@ public class Juliet implements NpcHandler {
 												owner.sendMessage("Juliet gives you a message");
 												owner.getInventory().add(new InvItem(56, 1));
 												owner.sendInventory();
-												owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
+												owner.incQuestCompletionStage(Quests.ROMEO_AND_JULIET);
 												owner.setBusy(false);
 												npc.unblock();
 											}
@@ -219,8 +220,8 @@ public class Juliet implements NpcHandler {
 																				owner.sendMessage("Juliet hands you a message");
 																				owner.getInventory().add(new InvItem(56, 1));
 																				owner.sendInventory();
-																				owner.addQuest(Config.Quests.ROMEO_AND_JULIET, 5);
-																				owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
+																				owner.addQuest(Quests.ROMEO_AND_JULIET, 5);
+																				owner.incQuestCompletionStage(Quests.ROMEO_AND_JULIET);
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}
@@ -258,8 +259,8 @@ public class Juliet implements NpcHandler {
 																owner.sendMessage("Juliet hands you a message");
 																owner.getInventory().add(new InvItem(56, 1));
 																owner.sendInventory();
-																owner.addQuest(Config.Quests.ROMEO_AND_JULIET, 5);
-																owner.incQuestCompletionStage(Config.Quests.ROMEO_AND_JULIET);
+																owner.addQuest(Quests.ROMEO_AND_JULIET, 5);
+																owner.incQuestCompletionStage(Quests.ROMEO_AND_JULIET);
 																owner.setBusy(false);
 																npc.unblock();
 															}

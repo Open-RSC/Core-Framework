@@ -10,12 +10,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -26,7 +21,7 @@ public class Brother_Omad implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.MONKS_FRIEND);
+		Quest q = owner.getQuest(Quests.MONKS_FRIEND);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -143,8 +138,8 @@ public class Brother_Omad implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"They hide in a secret cave in the forest", "..it's hidden under a ring of stones", "Please bring back the blanket"}) {
 							public void finished() {
-								owner.addQuest(Config.Quests.MONKS_FRIEND, 1);		
-								owner.incQuestCompletionStage(Config.Quests.MONKS_FRIEND);
+								owner.addQuest(Quests.MONKS_FRIEND, 1);		
+								owner.incQuestCompletionStage(Quests.MONKS_FRIEND);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -191,7 +186,7 @@ public class Brother_Omad implements NpcHandler {
 									owner.sendInventory();
 									World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Really, that's excellent, well done", "that should cheer up Androe's son", "and maybe I will be able to get some rest", "..yawn.. I'm off to bed, farewell brave traveller"}) {
 										public void finished() {
-											owner.incQuestCompletionStage(Config.Quests.MONKS_FRIEND);
+											owner.incQuestCompletionStage(Quests.MONKS_FRIEND);
 											owner.sendMessage("You have completed part 1 of the monk's friend quest!");
 											owner.setBusy(false);
 											npc.unblock();
@@ -297,7 +292,7 @@ public class Brother_Omad implements NpcHandler {
 	private void questPart2Accepted(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Oh, he won't be far", "probably out in the forest"}) {
 			public void finished() {
-			owner.incQuestCompletionStage(Config.Quests.MONKS_FRIEND);
+			owner.incQuestCompletionStage(Quests.MONKS_FRIEND);
 			owner.setBusy(false);
 			npc.unblock();
 			}
@@ -348,8 +343,8 @@ public class Brother_Omad implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"good, good, good", "now we can party"}) {
 					public void finished() {
-						owner.finishQuest(Config.Quests.MONKS_FRIEND);
-						owner.incQuestExp(8, 2000);
+						owner.finishQuest(Quests.MONKS_FRIEND);
+						owner.incQuestExp(Skills.WOODCUT, 2000);
 						owner.sendStat(8);
 						owner.getInventory().add(42, 8);
 						owner.sendInventory();

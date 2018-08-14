@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Random;
@@ -43,7 +44,6 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import static org.openrsc.client.Config.SERVER_NAME;
 import org.openrsc.client.loader.various.AppletUtils;
 import org.openrsc.group.Group;
 
@@ -247,7 +247,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 					}
 				} else
-					displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ This command is only available in a bank window", 3, -1);
+					displayMessage("@gre@"+ Config.getServerName() +":@whi@ This command is only available in a bank window", 3, -1);
 				return true;
 			} catch (Exception e) {
 			}
@@ -261,7 +261,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		} else if (cmd.equalsIgnoreCase("loadconf") || cmd.equalsIgnoreCase("resetconfig")
 				|| cmd.equalsIgnoreCase("resetconf")) {
 			loadConf();
-			displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ Configuration file has been refreshed", 3, -1);
+			displayMessage("@gre@"+ Config.getServerName() +":@whi@ Configuration file has been refreshed", 3, -1);
 		}
 		return false;
 	}
@@ -623,7 +623,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		int j = 30;
 		gameGraphics.drawBox((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0);
 		gameGraphics.drawBoxEdge((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0xffffff);
-		drawText("@gre@"+Config.SERVER_NAME+" Command List", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@"+ Config.getServerName() +" Command List", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
 		drawText("To use a command enter two colons before the command, such as ::COMMAND", gameWidth / 2, j, 1,
 				0xffffff);
@@ -649,9 +649,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		j += 15;
 		drawText("@gre@EVENT: @whi@Join the running event", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@SITE: @whi@Quickly load "+Config.SERVER_NAME+"'s website", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@SITE: @whi@Quickly load "+ Config.getServerName() +"'s website", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@VOTE: @whi@Vote for "+Config.SERVER_NAME+" on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@VOTE: @whi@Vote for "+ Config.getServerName() +" on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
 		j += 30;
 		if (super.mouseY > j - 12 && super.mouseY <= j && super.mouseX > gameWidth / 2 - 100
 				&& super.mouseX < gameWidth + 100) // WAS 106, 406
@@ -1165,7 +1165,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			int i = 35;
-			g.drawString("Sorry, an error has occured whilst loading "+Config.SERVER_NAME+":", 30, i);
+			g.drawString("Sorry, an error has occured whilst loading "+ Config.getServerName() +":", 30, i);
 			i += 50;
 			g.setColor(Color.white);
 			g.drawString("To fix this try the following (in order):", 30, i);
@@ -1193,7 +1193,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g2.drawString("Error - out of memory!", 50, 50);
 			g2.drawString("Close ALL unnecessary programs", 50, 100);
 			g2.drawString("and windows before loading the game", 50, 150);
-			g2.drawString(Config.SERVER_NAME+" needs about 100mb of spare RAM", 50, 200);
+			g2.drawString(Config.getServerName() +" needs about 100mb of spare RAM", 50, 200);
 			// changeThreadSleepModifier(1);
 			return;
 		}
@@ -1996,7 +1996,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (userArray[x] == ' ')
 				userArray[x + 1] = Character.toUpperCase(userArray[x + 1]);
 		currentUser = new String(userArray);
-		drawText("Welcome to "+Config.SERVER_NAME+" " + currentUser, gameWidth / 2, j, 4, 0xffff00);
+		drawText("Welcome to "+ Config.getServerName() +" " + currentUser, gameWidth / 2, j, 4, 0xffff00);
 		j += 30;
 		String s;
 		if (lastLoggedInDays == 0)
@@ -3625,10 +3625,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j8 = i6 / 60;
 			i6 %= 60;
 			if (i6 < 10)
-				drawText(Config.SERVER_NAME+" shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
+				drawText(Config.getServerName() +" shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
 						0xffff00);
 			else
-				drawText(Config.SERVER_NAME+" shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
+				drawText(Config.getServerName() +" shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
 						0xffff00);
 		}
 
@@ -4363,7 +4363,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			return;
 		loadModels();
 		if (lastLoadedNull) {
-			System.out.println("models in DATA_DIR do not exist... "+Config.SERVER_NAME+" will now close.");
+			System.out.println("models in DATA_DIR do not exist... "+ Config.getServerName() +" will now close.");
 			//System.out.println("Please post a topic in the \"Support\" forum section.\n");
 			System.exit(-1);
 		}
@@ -5685,7 +5685,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
 					&& mouseButtonClick == 1) {
 				super.blockGlobalMessages = !super.blockGlobalMessages;
-				displayMessage("@gre@"+Config.SERVER_NAME+":@whi@ Global Chat currently: "
+				displayMessage("@gre@"+ Config.getServerName() +":@whi@ Global Chat currently: "
 						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, -1);
 				super.streamClass.createPacket(16);
 				super.streamClass.addByte((super.blockGlobalMessages ? 4 : 9));
@@ -6034,14 +6034,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				return;
 			}
 
-			if (s.startsWith("::")) {
+			if (s.startsWith(Config.getCommandPrefix())) {
 				s = s.substring(2);
 				if (!handleCommand(s) && !sleeping && !ignoreNext) {
 					sendChatString(s);
-					if (messages.size() == 0 || !messages.get(messages.size() - 1).equalsIgnoreCase("::" + s)) {
-						messages.add("::" + s);
+					if (messages.size() == 0 || !messages.get(messages.size() - 1).equalsIgnoreCase(Config.getCommandPrefix() + s)) {
+						messages.add(Config.getCommandPrefix() + s);
 						currentChat = messages.size();
-					} else if (messages.get(messages.size() - 1).equalsIgnoreCase("::" + s))
+					} else if (messages.get(messages.size() - 1).equalsIgnoreCase(Config.getCommandPrefix() + s))
 						currentChat = messages.size();
 				}
 			} else if (!sleeping && !ignoreNext) {
@@ -8185,6 +8185,29 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				}
 			} else if (command == 224) {
 				addNewServerNotification(new String(data, 1, length - 1));
+			} else if (command == 226) { // Server configuration variables
+                int i       = 1;
+				int number  = DataOperations.getUnsigned4Bytes(data, i);
+                
+                if(number >= 1) {
+                    i           += 4;
+                    HashMap<String, String> newConfig = new HashMap();
+
+                    for(int j = 0; j < number; j++)
+                    {
+                        int keyLen      = DataOperations.getUnsigned4Bytes(data, i);
+                        i               += 4;
+                        String confKey  = new String(data, i, keyLen);
+                        i               += keyLen;
+                        int valueLen    = DataOperations.getUnsigned4Bytes(data, i);
+                        i               += 4;
+                        String value    = new String(data, i, valueLen);
+                        i               += valueLen;
+                        newConfig.put(confKey, value);
+                    }
+                    
+                    Config.updateConfiguration(newConfig);
+                }
 			} else if (command == 221) {
 				addDMMessage(new String(data, 1, length - 1));
 			} else if (command == 127) {
@@ -9673,16 +9696,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void makeLoginMenus() {
 		menuWelcome = new Menu(gameGraphics, 50);
 		int i = 48;
-		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to "+Config.SERVER_NAME, 4, true);
+		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to Open RSC", 4, true); // Purposely hard-coded as client doesn't recieve server_name until after login
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 40 + i, "A RuneScape Classic Private Server", 4, true);
 		menuWelcome.drawBox(windowWidth / 2, windowHeight / 2 + 75 + i, 200, 35);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 75 + i, "Click here to login", 5, false);
 		loginButtonExistingUser = menuWelcome.makeButton(windowWidth / 2, windowHeight / 2 + 73 + i, 200, 35);
 		menuNewUser = new Menu(gameGraphics, 50);
 		i = windowHeight / 2 + 63;
-		menuNewUser.drawText(windowWidth / 2, i + 8, "To create an account please go back to the", 4, true);
+		menuNewUser.drawText(windowWidth / 2, i + 8, "To create an account, log in with what ever desired", 4, true);
 		i += 20;
-		menuNewUser.drawText(windowWidth / 2, i + 8, "openrsc.com front page, and choose 'register'", 4, true);
+		menuNewUser.drawText(windowWidth / 2, i + 8, "credentials that you would like.", 4, true);
 		i += 30;
 		menuNewUser.drawBox(windowWidth / 2, i + 17, 150, 34);
 		menuNewUser.drawText(windowWidth / 2, i + 17, "Ok", 5, false);

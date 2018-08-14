@@ -243,7 +243,7 @@ public class InvUseOnNpc implements PacketHandler {
 							
 						case 123:	//Lady Keli - tie her up.  Kinky.
 							if (item.getID() == 237) {
-								Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+								Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 								if(q != null) {
 									switch(q.getStage()) {
 										case 0:
@@ -254,7 +254,7 @@ public class InvUseOnNpc implements PacketHandler {
 										case 3:
 												owner.sendMessage("You overpower Keli, tie her up, and put her in a cupboard");
 												affectedNpc.remove();
-												owner.incQuestCompletionStage(Config.Quests.PRINCE_ALI_RESCUE);
+												owner.incQuestCompletionStage(Quests.PRINCE_ALI_RESCUE);
 												break;
 										case 4:
 												owner.sendMessage("You overpower Keli, tie her up, and put her in a cupboard");

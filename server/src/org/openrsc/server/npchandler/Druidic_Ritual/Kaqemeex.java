@@ -1,6 +1,5 @@
 package org.openrsc.server.npchandler.Druidic_Ritual;
 
-import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
@@ -13,7 +12,7 @@ public class Kaqemeex implements NpcHandler {
     public void handleNpc(final Npc npc, final Player owner) throws Exception {
         npc.blockedBy(owner);
         owner.setBusy(true);
-        final Quest q = owner.getQuest(Config.Quests.DRUIDIC_RITUAL);
+        final Quest q = owner.getQuest(Quests.DRUIDIC_RITUAL);
         if (q != null) {
             if (q.finished()) { // Quest finished
                 finishedQuest(npc, owner);
@@ -296,8 +295,8 @@ public class Kaqemeex implements NpcHandler {
         final String[] messages1 = {"I've heard you were very helpful to Sanfew","I will teach you the herblaw you need to know now"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages1) {
 			public void finished() {
-                owner.incQuestExp(15, 1000);
-                owner.finishQuest(Config.Quests.DRUIDIC_RITUAL);
+                owner.incQuestExp(Skills.HERBLAW, 1000);
+                owner.finishQuest(Quests.DRUIDIC_RITUAL);
 			    owner.sendMessage("Well done you have completed the druidic ritual quest");
                 owner.sendMessage("@gre@You have gained 4 quest points");
 				owner.setBusy(false);
@@ -325,7 +324,7 @@ public class Kaqemeex implements NpcHandler {
 	private void tryHelp(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Ok go and speak to our Elder druid, Sanfew", "He lives in our village to the south of here", "He knows better what we need than I"}) {
 			public void finished() {
-                owner.addQuest(Config.Quests.DRUIDIC_RITUAL,4);
+                owner.addQuest(Quests.DRUIDIC_RITUAL,4);
                 owner.setBusy(false);
                 npc.unblock();
 			}

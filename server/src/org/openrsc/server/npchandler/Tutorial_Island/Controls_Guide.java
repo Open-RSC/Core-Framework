@@ -6,6 +6,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -16,7 +17,7 @@ public class Controls_Guide implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -51,7 +52,7 @@ public class Controls_Guide implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Now carry on to speak to the combat instructor"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+								owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 								owner.setBusy(false);
 								npc.unblock();
 							}

@@ -15,6 +15,7 @@ import org.openrsc.server.model.Quest;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -23,7 +24,7 @@ public class Sir_Amik_Varze implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest blackKnightsFortress = owner.getQuest(Config.Quests.BLACK_KNIGHTS_FORTRESS);
+		Quest blackKnightsFortress = owner.getQuest(Quests.BLACK_KNIGHTS_FORTRESS);
 		
 		if(blackKnightsFortress != null) 
 		{
@@ -199,8 +200,8 @@ public class Sir_Amik_Varze implements NpcHandler {
 								{
 									public void finished()
 									{
-										owner.addQuest(Config.Quests.BLACK_KNIGHTS_FORTRESS, 3);
-										owner.incQuestCompletionStage(Config.Quests.BLACK_KNIGHTS_FORTRESS);
+										owner.addQuest(Quests.BLACK_KNIGHTS_FORTRESS, 3);
+										owner.incQuestCompletionStage(Quests.BLACK_KNIGHTS_FORTRESS);
 										owner.setBusy(false);
 										npc.unblock();
 									}
@@ -260,7 +261,7 @@ public class Sir_Amik_Varze implements NpcHandler {
 												{
 													public void action()
 													{
-														owner.finishQuest(Config.Quests.BLACK_KNIGHTS_FORTRESS);
+														owner.finishQuest(Quests.BLACK_KNIGHTS_FORTRESS);
 														owner.sendMessage("You have completed the Black knights fortress quest!");
 														owner.sendMessage("@gre@You have been awarded 3 quest points!");
 														owner.setBusy(false);

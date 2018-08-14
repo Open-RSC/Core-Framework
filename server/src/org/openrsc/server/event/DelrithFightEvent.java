@@ -14,6 +14,7 @@ import org.openrsc.server.model.Mob;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Path;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 
 public class DelrithFightEvent extends DelayedEvent implements IFightEvent{
@@ -115,8 +116,8 @@ public class DelrithFightEvent extends DelayedEvent implements IFightEvent{
 													owner.sendMessage("Delrith is sucked back into the dark dimension from which he came");
 													owner.sendMessage("You have completed the demonslayer quest");
 													owner.sendMessage("@gre@You have gained 3 quest points!");
-													owner.finishQuest(Config.Quests.DEMON_SLAYER);
-													owner.incQuestCompletionStage(Config.Quests.DEMON_SLAYER);
+													owner.finishQuest(Quests.DEMON_SLAYER);
+													owner.incQuestCompletionStage(Quests.DEMON_SLAYER);
 													Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Demon Slayer</span> quest!"));
 												}
 											});

@@ -8,6 +8,7 @@ import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -21,7 +22,7 @@ public class CandleMaker implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+		Quest q = owner.getQuest(Quests.MERLINS_CRYSTAL);
 		
 		if(q != null) 
 		{
@@ -33,7 +34,7 @@ public class CandleMaker implements NpcHandler
 			} 
 			else 
 			{
-				if(owner.getQuest(Config.Quests.MERLINS_CRYSTAL) != null && owner.getQuest(Config.Quests.MERLINS_CRYSTAL).getStage() == 4)
+				if(owner.getQuest(Quests.MERLINS_CRYSTAL) != null && owner.getQuest(Quests.MERLINS_CRYSTAL).getStage() == 4)
 				{
 					World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Hi welcome to my candle shop", "What can I do for you?"}, true) 
 					{

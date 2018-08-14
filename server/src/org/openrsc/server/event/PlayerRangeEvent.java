@@ -38,11 +38,11 @@ public class PlayerRangeEvent extends DelayedEvent {
 						 * Implementation
 						 */
 						
-						if (owner.getLocation().varrockWilderness() || target.getLocation().varrockWilderness() || Config.PK_MODE)
+						if (owner.getLocation().varrockWilderness() || target.getLocation().varrockWilderness() || Config.isPkMode())
 						{
 							if (target.inCombat())
 							{
-								owner.sendMessage(Config.PREFIX + "This player cannot be ranged whilst in combat with another player.");
+								owner.sendMessage(Config.getPrefix() + "This player cannot be ranged whilst in combat with another player.");
 								owner.resetRange();
 								owner.resetFollowing();
 								return;
@@ -51,7 +51,7 @@ public class PlayerRangeEvent extends DelayedEvent {
                         
 						if (!target.getLocation().isInWarZone() || !World.pvpEnabled) 
 						{
-                            owner.sendMessage(Config.PREFIX + "PVP is currently disabled.");
+                            owner.sendMessage(Config.getPrefix() + "PVP is currently disabled.");
 							owner.resetFollowing();
 							owner.resetPath();															
 							return;															
@@ -59,7 +59,7 @@ public class PlayerRangeEvent extends DelayedEvent {
                         
                         if ( target.isInvulnerable() /*affectedPlayer.isSuperMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
                         {
-                        	owner.sendMessage(Config.PREFIX + target.getUsername() + " is currently invulnerable!");
+                        	owner.sendMessage(Config.getPrefix() + target.getUsername() + " is currently invulnerable!");
                         	owner.resetFollowing();
                         	owner.resetPath();
                         	return;

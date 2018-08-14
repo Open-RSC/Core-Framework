@@ -11,13 +11,14 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Guildmaster implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+		Quest q = owner.getQuest(Quests.DRAGON_SLAYER);
 		
 		
 		if(q != null) {
@@ -61,7 +62,7 @@ public class Guildmaster implements NpcHandler {
 		final String[] messages6 = {"I have a friend called Oziach who lives by the cliffs", "He has a supply of rune plate mail", "He may sell you one if you're lucky", "He can be a little strange sometimes though"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages6) {
 			public void finished() {
-				owner.addQuest(Config.Quests.DRAGON_SLAYER, 2);
+				owner.addQuest(Quests.DRAGON_SLAYER, 2);
 				owner.setBusy(false);
 				npc.unblock();
 			}
