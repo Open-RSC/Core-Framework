@@ -8,7 +8,7 @@ public class Config
 {
     public static int PORT = 53595;
     //public static String IP = "game.openrsc.com";
-    //public static String IP = "45.77.154.187"; // dev
+    //public static String IP = "dev1.openrsc.com";
     public static String IP = "127.0.0.1";
     public static InetSocketAddress ADDR = new InetSocketAddress(IP, PORT);
     
