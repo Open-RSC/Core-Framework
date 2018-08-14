@@ -21,11 +21,6 @@ public class Config
     
     public final static void updateConfiguration(HashMap<String, String> newConfig) {
         configMap.putAll(newConfig);
-        
-        System.out.println("Server Configuration Updated: ");
-        for(Map.Entry<String, String> entry : configMap.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
-        }
     }
     
 	public static String getServerName() {

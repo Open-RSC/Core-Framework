@@ -1288,33 +1288,33 @@ public class InvUseOnItem implements PacketHandler {
 	
 	private boolean attachFeathers(Player player, final InvItem feathers, final InvItem item) {
 		long amount = 10;
-		
-      	if (feathers.getAmount() < amount)
-      		amount = feathers.getAmount();
-      	if (item.getAmount() < amount)
-      		amount = item.getAmount();
-      	InvItem newItem;
-      	int exp;
-      	ItemDartTipDef tipDef = null;
-      	if (item.getID() == 280) {
-      		newItem = new InvItem(637, amount);
-      		exp = (int)amount;
-      	} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
-      		newItem = new InvItem(tipDef.getDartID(), amount);
-      		exp = (int)(tipDef.getExp() * (double)amount);
-      	} else
+		if (feathers.getAmount() < amount)
+      			amount = feathers.getAmount();
+ 	     	if (item.getAmount() < amount)
+      			amount = item.getAmount();
+	      	InvItem newItem;
+	      	ItemDartTipDef tipDef = null;
+      		if (item.getID() == 280) {
+      			newItem = new InvItem(637, 1);
+      		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
+      			newItem = new InvItem(tipDef.getDartID(), 1);
+      		} else
 			return false;
-      	final long amt = amount;
-      	final int xp = exp;
-      	final InvItem newItm = newItem;
+
+	      	final long amt = amount;
+	      	final InvItem newItm = newItem;
 		World.getDelayedEventHandler().add(new MiniEvent(player) {
 			public void action() {
-				if (owner.getInventory().remove(feathers.getID(), amt) > -1 && owner.getInventory().remove(item.getID(), amt) > -1) {
-					owner.sendMessage("You attach the feathers to the " + item.getDef().getName());
-					owner.getInventory().add(newItm);
-					owner.increaseXP(9, xp);
-					owner.sendStat(9);
-					owner.sendInventory();
+				owner.sendMessage("You attach the feathers to the " + item.getDef().getName());
+				long a = amt;
+				while (a > 0) {
+					if (owner.getInventory().remove(feathers.getID(), 1) > -1 && owner.getInventory().remove(item.getID(), 1) > -1) {
+						owner.getInventory().add(newItm);
+						owner.increaseXP(9, 4);
+						owner.sendStat(9);
+						owner.sendInventory();
+					}
+					a--;
 				}
 			}
 		});
@@ -1362,12 +1362,18 @@ public class InvUseOnItem implements PacketHandler {
 		final long amt = amount;
 		World.getDelayedEventHandler().add(new MiniEvent(player) {
 			public void action() {
-				if (owner.getInventory().remove(headlessArrows.getID(), amt) > -1 && owner.getInventory().remove(arrowHeads.getID(), amt) > -1) {
+				long a = amt;
+				if (a > 0)
 					owner.sendMessage("You attach the heads to the arrows");
-					owner.getInventory().add(new InvItem(headDef.getArrowID(), amt));
-					owner.increaseXP(9, (int)(headDef.getExp() * (double)amt));
-					owner.sendStat(9);
-					owner.sendInventory();
+				
+				while (a > 0) {
+					if (owner.getInventory().remove(headlessArrows.getID(), 1) > -1 && owner.getInventory().remove(arrowHeads.getID(), 1) > -1) {
+						owner.getInventory().add(new InvItem(headDef.getArrowID(), 1));
+						owner.increaseXP(9, (int)(headDef.getExp()));
+						owner.sendStat(9);
+						owner.sendInventory();
+					}
+					a--;
 				}
 			}
 		});

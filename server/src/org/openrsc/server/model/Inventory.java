@@ -74,10 +74,12 @@ public class Inventory {
 					return index;
 				}
 			}
+			// No item found, add it as a new item.
+                        list.add(new InvItem(item.getID(), item.getAmount()));
+                        return list.size() - 2;
 		} else if(item.getAmount() > 1)
 			item.setAmount(1);
 		if(this.full()) {
-			player.sendMessage("Your Inventory is full, the " + item.getDef().getName() + " drops to the ground!");
 			World.registerEntity(new Item(item.getID(), player.getX(), player.getY(), item.getAmount(), player));
 			return -1;
 		} else
