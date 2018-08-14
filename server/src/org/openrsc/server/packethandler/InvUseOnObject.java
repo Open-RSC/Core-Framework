@@ -706,7 +706,7 @@ public class InvUseOnObject implements PacketHandler {
                                     });
                                 } else {
                                     owner.setCancelBatch(false);
-                                    cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+                                    cookLoop();
                                 }
                             }
                         break;
@@ -763,7 +763,7 @@ public class InvUseOnObject implements PacketHandler {
 								});								
 		      				} else {
 		      					owner.setCancelBatch(false);
-		      						cookLoop((int)Math.ceil(owner.getMaxStat(7) / 10));
+		      						cookLoop();
 		      				}
 		      				break;
 		      			case 118:
@@ -1869,45 +1869,50 @@ public class InvUseOnObject implements PacketHandler {
 		      		}
 			}
 			
-			private void cookLoop(final int loop) {
-				if (owner.getCancelBatch())
-					return;				
-  				final ItemCookingDef cookingDef = item.getCookingDef();
-  				if (cookingDef == null) {
-  					owner.sendMessage("Nothing interesting happens");
-  					return;
-  				}
-  				if (owner.getInventory().countId(item.getID()) < 1)
-  					return;
-  				if (owner.getCurStat(7) < cookingDef.getReqLevel()) {
-  					owner.sendMessage("You need a cooking level of " + cookingDef.getReqLevel() + " to cook this");
-  					return;
-  				}
-  				owner.setBusy(true);
-  				showBubble();
-  				owner.sendSound("cooking", false);
-  				owner.sendMessage("You cook the " + item.getDef().getName() + " on the " + object.getGameObjectDef().getName());
-  				World.getDelayedEventHandler().add(new ShortEvent(owner) {
-  					public void action() {
-					InvItem cookedFood = new InvItem(cookingDef.getCookedId());
-					if (owner.getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
-							owner.getInventory().add(cookedFood);
-							owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
-							owner.increaseXP(Skills.COOKING, cookingDef.getExp());
-							owner.sendStat(7);
-						} else {
-							owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
-							owner.sendMessage("You accidently burn the " + item.getDef().getName());
-						}
-						owner.sendInventory();
-					}
-					owner.setBusy(false);
-					if (loop > 1)
-						cookLoop(loop - 1);						
-  					}
-  				});				
-			}
+			private void cookLoop() {
+                if (owner.getCancelBatch())
+                    return;
+                final ItemCookingDef cookingDef = item.getCookingDef();
+                if (cookingDef == null) {
+                    owner.sendMessage("Nothing interesting happens");
+                    return;
+                }
+                if (owner.getInventory().countId(item.getID()) < 1)
+                    return;
+                if (owner.getCurStat(7) < cookingDef.getReqLevel()) {
+                    owner.sendMessage("You need a cooking level of " + cookingDef.getReqLevel() + " to cook this");
+                    return;
+                }
+                owner.setBusy(true);
+                showBubble();
+                owner.sendSound("cooking", false);
+                owner.sendMessage("You cook the " + item.getDef().getName() + " on the " + object.getGameObjectDef().getName());
+                World.getDelayedEventHandler().add(new ShortEvent(owner) {
+                    public void action() {
+                        InvItem cookedFood = new InvItem(cookingDef.getCookedId());
+                        if (owner.getInventory().remove(item) > -1) {
+                            if (!Formulae.burnFood(item.getID(), owner.getCurStat(7))) {
+                                owner.getInventory().add(cookedFood);
+                                owner.sendMessage("The " + item.getDef().getName() + " is now nicely cooked");
+                                owner.increaseXP(7, cookingDef.getExp());
+                                owner.sendStat(7);
+                            } else {
+                                owner.getInventory().add(new InvItem(cookingDef.getBurnedId()));
+                                owner.sendMessage("You accidently burn the " + item.getDef().getName());
+                            }
+                            owner.sendInventory();
+                        }
+                        owner.setBusy(false);
+                        if (Config.getSkillLoopMode() == 2) {
+                            World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                public void action() {
+                                    cookLoop();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
 			
 			private void handleSmithing(int barID, int toMake) {
 				ItemSmithingDef def = EntityHandler.getSmithingDef((Formulae.getBarType(barID) * 21) + toMake);
