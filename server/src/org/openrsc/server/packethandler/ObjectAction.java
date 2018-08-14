@@ -3467,13 +3467,21 @@ public class ObjectAction implements PacketHandler {
                                                                                         }
                                                                                         owner.sendInventory();
                                                                                         owner.setBusy(false);
+                                                                                        return;
                                                                                 } 
-                                                                                else 
-                                                                                {
-                                                                                        owner.sendMessage("You only succeed in scratching the rock.");
-                                                                                        owner.setBusy(false);           
+                                                                                else {
+                                                                                    owner.sendMessage("You only succeed in scratching the rock.");
+                                                                                    owner.setBusy(false);
+                                                                                    if (Config.getSkillLoopMode() == 1 || Config.getSkillLoopMode() == 2) {
+                                                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                                            public void action() {
+                                                                                                mineLoop(click, loop);
+                                                                                            }
+                                                                                        });
+                                                                                    } else {
                                                                                         if (loop > 1)
-                                                                                                mineLoop(click, loop - 1);
+                                                                                            mineLoop(click, loop - 1);
+                                                                                    }
                                                                                 }
                                                                         }
                                                                 });
@@ -3716,6 +3724,16 @@ public class ObjectAction implements PacketHandler {
                                                                                         World.registerEntity(stump);
                                                                                         World.delayedRemoveObject(stump, def.getRespawnTime() * 1000);
                                                                                         World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
+                                                                                        return;
+                                                                                }
+                                                                                if(Config.getSkillLoopMode() == 2) {
+                                                                                    if (!owner.getInventory().full()) {
+                                                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                                            public void action() {
+                                                                                                woodcutLoop(click, loop);
+                                                                                            }
+                                                                                        });
+                                                                                    }
                                                                                 }
                                                                         } 
                                                                         else
@@ -3723,8 +3741,13 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.sendMessage("You slip and fail to hit the tree");
                                                                                 owner.setBusy(false);
                                                                                 owner.setStatus(Action.IDLE);
-                                                                                if (loop > -1)
-                                                                                        woodcutLoop(click, loop - 1);
+                                                                                if(Config.getSkillLoopMode() == 1 || Config.getSkillLoopMode() == 2) {
+                                                                                    World.getDelayedEventHandler().add(new SingleEvent(owner,2500) {
+                                                                                        public void action() {
+                                                                                            woodcutLoop(click, loop);
+                                                                                        }
+                                                                                    });
+                                                                            }
                                                                         }
                                                                 }
                                                         });
@@ -3800,28 +3823,44 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.sendMessage("You attempt to catch some fish");
                                                                                 World.getDelayedEventHandler().add(new ShortEvent(owner) {
                                                                                         public void action() {
-                                                                                                ObjectFishDef def = Formulae.getFish(object.getID(), owner.getCurStat(10), click);
-                                                                                                if (def != null) {
-                                                                                                        if (baitId >= 0) {
-                                                                                                                int idx = owner.getInventory().getLastIndexById(baitId);
-                                                                                                                InvItem bait = owner.getInventory().get(idx);
-                                                                                                                long newCount = bait.getAmount() - 1;
-                                                                                                                if (newCount <= 0)
-                                                                                                                        owner.getInventory().remove(idx);
-                                                                                                                else
-                                                                                                                        bait.setAmount(newCount);
-                                                                                                        }
-                                                                                                        InvItem fish = new InvItem(def.getId());
-                                                                                                        owner.getInventory().add(fish);
-                                                                                                        owner.sendMessage("You catch a " + fish.getDef().getName() + ".");
-                                                                                                        owner.sendInventory();
-                                                                                                        owner.increaseXP(10, def.getExp());
-                                                                                                        owner.sendStat(10);
-                                                                                                } else
-                                                                                                        owner.sendMessage("You fail to catch anything.");
+                                                                                            ObjectFishDef def = Formulae.getFish(object.getID(), owner.getCurStat(10), click);
+                                                                                            if (def != null) {
+                                                                                                if (baitId >= 0) {
+                                                                                                    int idx = owner.getInventory().getLastIndexById(baitId);
+                                                                                                    InvItem bait = owner.getInventory().get(idx);
+                                                                                                    long newCount = bait.getAmount() - 1;
+                                                                                                    if (newCount <= 0)
+                                                                                                        owner.getInventory().remove(idx);
+                                                                                                    else
+                                                                                                        bait.setAmount(newCount);
+                                                                                                }
+                                                                                                InvItem fish = new InvItem(def.getId());
+                                                                                                owner.getInventory().add(fish);
+                                                                                                owner.sendMessage("You catch a " + fish.getDef().getName() + ".");
+                                                                                                owner.sendInventory();
+                                                                                                owner.increaseXP(10, def.getExp());
+                                                                                                owner.sendStat(10);
                                                                                                 owner.setBusy(false);
-                                                                                                if (loop > 1)
-                                                                                                        fishLoop(click, loop - 1);      
+                                                                                                if(Config.getSkillLoopMode() == 2) {
+                                                                                                    if (!owner.getInventory().full()) {
+                                                                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+                                                                                                            public void action() {
+                                                                                                                fishLoop(click, loop);
+                                                                                                            }
+                                                                                                        });
+                                                                                                    }
+                                                                                                }
+                                                                                            } else {
+                                                                                                owner.sendMessage("You fail to catch anything.");
+                                                                                                owner.setBusy(false);
+                                                                                                if(Config.getSkillLoopMode() == 1 || Config.getSkillLoopMode() == 2) {
+                                                                                                    World.getDelayedEventHandler().add(new SingleEvent(owner,2500) {
+                                                                                                        public void action() {
+                                                                                                            fishLoop(click, loop - 1);
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                            }
                                                                                         }
                                                                                 });
                                                                         } else
