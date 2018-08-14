@@ -8,13 +8,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Quests;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -154,7 +148,7 @@ public class King_Lathas implements NpcHandler
 																																										owner.sendMessage("King Lathas gives you a magic amulet");
 																																										owner.sendMessage("@gre@You have gained 3 quest points!");
 																																										owner.sendMessage("You have completed the Biohazard quest!");
-																																										owner.incQuestExp(17, owner.getMaxStat(17) * 50 + 500);
+																																										owner.incQuestExp(Skills.THIEVING, owner.getMaxStat(17) * 50 + 500);
 																																										owner.sendStat(17);
 																																										owner.getInventory().add(826, 1);
 																																										owner.sendInventory();

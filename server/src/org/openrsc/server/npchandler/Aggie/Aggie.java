@@ -3,7 +3,6 @@
 */
 package org.openrsc.server.npchandler.Aggie;
 
-import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.ChatMessage;
