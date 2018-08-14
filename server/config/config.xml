@@ -4,10 +4,10 @@
 
 	<!-- Server Configuration: -->
 	<entry key="SERVER_NAME">Open RSC</entry>
-  <entry key="PREFIX">@gre@OpenRSC:@whi@ </entry>
-  <entry key="LOGGING">true</entry>
-  <entry key="MAX_PLAYERS">1000</entry>
-  <entry key="COMMAND_PREFIX">::</entry>
+	<entry key="PREFIX">@gre@OpenRSC:@whi@ </entry>
+	<entry key="LOGGING">true</entry>
+	<entry key="MAX_PLAYERS">100</entry>
+	<entry key="COMMAND_PREFIX">::</entry>
 
 	<!-- Server connection: -->
 	<entry key="SERVER_VERSION">7</entry>
@@ -47,7 +47,7 @@
 	<entry key="DISABLE_RUNECRAFTING">true</entry>
 	<!-- The amount to multiply the generated runes by: -->
 	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry>
-    <!-- Changes the behaviour of skilling (vanilla (0),semi-batch (1) or full-batch (2)) -->
-    <entry key="SKILL_LOOP_MODE">0</entry>
+	<!-- Changes the behaviour of skilling (vanilla 0, batch till success 1, batch to full inventory 2) -->
+	<entry key="SKILL_LOOP_MODE">2</entry>
 
 </properties>

@@ -9696,16 +9696,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void makeLoginMenus() {
 		menuWelcome = new Menu(gameGraphics, 50);
 		int i = 48;
-		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to "+ Config.getServerName(), 4, true);
+		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to Open RSC", 4, true); // Purposely hard-coded as client doesn't recieve server_name until after login
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 40 + i, "A RuneScape Classic Private Server", 4, true);
 		menuWelcome.drawBox(windowWidth / 2, windowHeight / 2 + 75 + i, 200, 35);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 75 + i, "Click here to login", 5, false);
 		loginButtonExistingUser = menuWelcome.makeButton(windowWidth / 2, windowHeight / 2 + 73 + i, 200, 35);
 		menuNewUser = new Menu(gameGraphics, 50);
 		i = windowHeight / 2 + 63;
-		menuNewUser.drawText(windowWidth / 2, i + 8, "To create an account please go back to the", 4, true);
+		menuNewUser.drawText(windowWidth / 2, i + 8, "To create an account, log in with what ever desired", 4, true);
 		i += 20;
-		menuNewUser.drawText(windowWidth / 2, i + 8, "openrsc.com front page, and choose 'register'", 4, true);
+		menuNewUser.drawText(windowWidth / 2, i + 8, "credentials that you would like.", 4, true);
 		i += 30;
 		menuNewUser.drawBox(windowWidth / 2, i + 17, 150, 34);
 		menuNewUser.drawText(windowWidth / 2, i + 17, "Ok", 5, false);
