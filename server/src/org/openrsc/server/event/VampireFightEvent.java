@@ -5,11 +5,7 @@ import org.openrsc.server.Config;
 
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Mob;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Quests;
+import org.openrsc.server.model.*;
 import org.openrsc.server.states.CombatState;
 import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
@@ -114,7 +110,7 @@ public class VampireFightEvent extends DelayedEvent implements IFightEvent {
 						owner.getInventory().remove(217);
 						owner.getInventory().remove(168);
 						owner.sendInventory();
-						owner.incQuestExp(0, 4000);
+						owner.incQuestExp(Skills.ATTACK, 4000);
 						owner.sendStat(0);
 						owner.sendMessage("@gre@You have gained 3 quest points!");
 						owner.finishQuest(Quests.VAMPIRE_SLAYER);
