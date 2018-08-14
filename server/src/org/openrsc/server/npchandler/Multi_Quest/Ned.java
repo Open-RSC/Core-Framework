@@ -12,14 +12,15 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Ned implements NpcHandler {
 
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest dragonslayer = owner.getQuest(Config.Quests.DRAGON_SLAYER);
-		Quest ali = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+		Quest dragonslayer = owner.getQuest(Quests.DRAGON_SLAYER);
+		Quest ali = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 		if(dragonslayer != null) {
 			if(ali != null) {
 				if(dragonslayer.getStage() == 2 && owner.ladyFixed()) {
@@ -184,7 +185,7 @@ public class Ned implements NpcHandler {
 												final String[] messages42 = {"I'll go right over there and check her out then", "see you over there"};
 												World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages42) {
 													public void finished() {
-														owner.incQuestCompletionStage(Config.Quests.DRAGON_SLAYER);
+														owner.incQuestCompletionStage(Quests.DRAGON_SLAYER);
 														owner.setBusy(false);
 														npc.unblock();
 													}

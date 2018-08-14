@@ -12,6 +12,7 @@ import org.openrsc.server.model.Quest;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 public class Straven implements NpcHandler {
@@ -25,10 +26,10 @@ public class Straven implements NpcHandler {
 		owner.setBusy(true);
 		
 		
-		Quest heroesQuest = owner.getQuest(Config.Quests.HEROS_QUEST);
-		Quest shield = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
-		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
-		Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
+		Quest heroesQuest = owner.getQuest(Quests.HEROS_QUEST);
+		Quest shield = owner.getQuest(Quests.SHIELD_OF_ARRAV);
+		Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
+		Quest blackarm = owner.getQuest(Quests.JOIN_BLACKARM_GANG);
 		
 		
 		if (heroesQuest == null) 
@@ -227,7 +228,7 @@ public class Straven implements NpcHandler {
 							owner.getInventory().remove(585, 1);
 							owner.getInventory().add(586, 1);
 							owner.sendInventory();	
-							owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+							owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 							owner.setBusy(false);
 							npc.unblock();
 							}
@@ -243,7 +244,7 @@ public class Straven implements NpcHandler {
 	private void accepted(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"good luck"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+				owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -404,7 +405,7 @@ public class Straven implements NpcHandler {
 																	public void action() {
 																		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"It will grant you access to our weapons cache.", "Be careful not to lose it"}) {
 																			public void finished() {
-																				owner.finishQuest(Config.Quests.JOIN_PHOENIX_GANG);
+																				owner.finishQuest(Quests.JOIN_PHOENIX_GANG);
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}
@@ -580,7 +581,7 @@ public class Straven implements NpcHandler {
 							public void finished() {
 								World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"I'll get on it"}) {
 									public void finished() {
-										owner.addQuest(Config.Quests.JOIN_PHOENIX_GANG, 0);
+										owner.addQuest(Quests.JOIN_PHOENIX_GANG, 0);
 										owner.setBusy(false);
 										npc.unblock();
 									}

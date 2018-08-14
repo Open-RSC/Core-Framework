@@ -25,16 +25,16 @@ public class ChangePasswordEvent extends TimedEvent {
             ServerBootstrap.getDatabaseService().submit(new ChangePassword(owner, newPassword));
             stop();
             
-            owner.sendMessage(Config.PREFIX + " Password changed.");
+            owner.sendMessage(Config.getPrefix() + " Password changed.");
         }
         else{
-            owner.sendMessage(Config.PREFIX + " Confirmation password is different from original.");
-            owner.sendMessage(Config.PREFIX + " Please try again.");
+            owner.sendMessage(Config.getPrefix() + " Confirmation password is different from original.");
+            owner.sendMessage(Config.getPrefix() + " Please try again.");
         }
     }
     
     public void onComplete() {
-	    owner.sendMessage(Config.PREFIX + " Password not changed.");
-	    owner.sendMessage(Config.PREFIX + " Type ::changepassword [new_password] to try again.");
+	    owner.sendMessage(Config.getPrefix() + " Password not changed.");
+	    owner.sendMessage(Config.getPrefix() + " Type ::changepassword [new_password] to try again.");
     }
 }

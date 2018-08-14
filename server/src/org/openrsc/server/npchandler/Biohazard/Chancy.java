@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -24,11 +25,11 @@ public class Chancy implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
+		Quest q = owner.getQuest(Quests.BIOHAZARD);
 		
 		if(q != null) 
 		{	
-			if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() == 7)
+			if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() == 7)
 			{
 				questStage7(npc, owner);
 			}

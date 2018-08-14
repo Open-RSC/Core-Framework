@@ -1,7 +1,6 @@
 package org.openrsc.server.packethandler;
 
 import org.openrsc.server.Config;
-import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.util.ChatFilter;
 import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.logging.Logger;
@@ -17,7 +16,7 @@ public class ChatHandler implements PacketHandler {
 		if (sender != null) {
 			if (sender.getLocation().onTutorialIsland())
 			{
-				sender.sendMessage(Config.PREFIX + "Chat is disabled on tutorial island.");
+				sender.sendMessage(Config.getPrefix() + "Chat is disabled on tutorial island.");
 				return;
 			}
 			if (!World.muted || sender.isSuperMod()) {
@@ -30,9 +29,9 @@ public class ChatHandler implements PacketHandler {
 					message = ChatFilter.censor(message);
 					sender.addMessageToChatQueue(message);
 				} else
-					sender.sendMessage(Config.PREFIX + "You are muted");
+					sender.sendMessage(Config.getPrefix() + "You are muted");
 			} else
-				sender.sendMessage(Config.PREFIX + "The world is muted");
+				sender.sendMessage(Config.getPrefix() + "The world is muted");
 		}
 	}
 }

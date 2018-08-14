@@ -11,6 +11,7 @@ import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
@@ -107,7 +108,7 @@ public class WieldHandler implements PacketHandler {
 								break;
                             case 407:
                             case 401: // rune platebody
-                                Quest dragonSlayer = player.getQuest(Config.Quests.DRAGON_SLAYER);
+                                Quest dragonSlayer = player.getQuest(Quests.DRAGON_SLAYER);
                                 if(dragonSlayer == null || !dragonSlayer.finished())
                                 {
                                     player.sendMessage("you have not earned the right to wear this yet");
@@ -117,7 +118,7 @@ public class WieldHandler implements PacketHandler {
 								wieldItem(player, item);
                                 break;
                             case 593: // dragon sword
-                                Quest lostCity = player.getQuest(Config.Quests.LOST_CITY);
+                                Quest lostCity = player.getQuest(Quests.LOST_CITY);
                                 if(lostCity == null || !lostCity.finished())
                                 {
                                     player.sendMessage("you have not earned the right to wear this yet");
@@ -127,7 +128,7 @@ public class WieldHandler implements PacketHandler {
 								wieldItem(player, item);
                                 break;
                             case 594: // dragon axe
-                                Quest herosQuest = player.getQuest(Config.Quests.HEROS_QUEST);
+                                Quest herosQuest = player.getQuest(Quests.HEROS_QUEST);
                                 if(herosQuest == null || !herosQuest.finished())
                                 {
                                     player.sendMessage("you have not earned the right to wear this yet");
@@ -137,7 +138,7 @@ public class WieldHandler implements PacketHandler {
 								wieldItem(player, item);
                                 break;
                             case 1278: // dragon square shield
-                                Quest legendsQuest = player.getQuest(Config.Quests.LEGENDS_QUEST);
+                                Quest legendsQuest = player.getQuest(Quests.LEGENDS_QUEST);
                                 if(legendsQuest == null || !legendsQuest.finished())
                                 {
                                     player.sendMessage("you have not earned the right to wear this yet");
@@ -175,14 +176,14 @@ public class WieldHandler implements PacketHandler {
 				case 315:
 				case 316:
 				case 317:
-					player.sendMessage(Config.PREFIX + "Switching amulets during dueling has been disabled");
+					player.sendMessage(Config.getPrefix() + "Switching amulets during dueling has been disabled");
 				return;
 			}
 		}
 				
 		if (player.getLocation().inWilderness() && item.getDef().isP2P() && !World.isP2PWilderness()) 
 		{
-			player.sendMessage(Config.PREFIX + item.getDef().name + " is only weildable while the wilderness is P2P");
+			player.sendMessage(Config.getPrefix() + item.getDef().name + " is only weildable while the wilderness is P2P");
 			return;
 		}
 		

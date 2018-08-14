@@ -13,6 +13,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Urhney implements NpcHandler {
 
@@ -22,7 +23,7 @@ public class Urhney implements NpcHandler {
 		final String[] messages44 = {"Go away, I'm meditating"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages44, true) {
 			public void finished() {
-				final Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
+				final Quest q = owner.getQuest(Quests.THE_RESTLESS_GHOST);
 				if(q != null) {
 					if(q.finished()) { //Quest Finished
 						questNotStarted(npc, owner);
@@ -282,7 +283,7 @@ public class Urhney implements NpcHandler {
 						final String[] messages54 = {"Thank you, I'll give it a try"};
 						World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, messages54) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.THE_RESTLESS_GHOST);
+								owner.incQuestCompletionStage(Quests.THE_RESTLESS_GHOST);
 								owner.setBusy(false);
 								npc.unblock();
 							}

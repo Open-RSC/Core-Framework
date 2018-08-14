@@ -12,13 +12,14 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 public class Magic_Instructor implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		if(q != null) {
 			if(q.finished())
 			{
@@ -82,7 +83,7 @@ public class Magic_Instructor implements NpcHandler {
 	private void teachMe(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Teacher, yes I am one of them", "Ok move your mouse over the book icon on the menu bar", "this is your magic menu", "You will see at level 1 magic you can only cast wind strike", "move your mouse over the wind strike text", "if you look at the bottom of the magic window", "You will see more information about the spell", "Runes required for the spell have two numbers over them", "The first number is how many runes you have", "The second is how many runes the spell requires", "Speak to me again when you have checked this"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+				owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -92,7 +93,7 @@ public class Magic_Instructor implements NpcHandler {
 	private void talkingMe(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Yes that is the one of which I speak", "Ok move your mouse over the book icon on the menu bar", "this is your magic menu", "You will see at level 1 magic you can only cast wind strike", "move your mouse over the wind strike text", "if you look at the bottom of the magic window", "You will see more information about the spell", "Runes required for the spell have two numbers over them", "The first number is how many runes you have", "The second is how many runes the spell requires", "Speak to me again when you have checked this"}) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+				owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -148,7 +149,7 @@ public class Magic_Instructor implements NpcHandler {
 	private void mageChatD(final Npc npc, final Player owner, final boolean incStage) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Well done", "As you get a higher magic level", "You will be able to cast all sorts of interesting spells", "Now go through the next door"}, true) {
 			public void finished() {
-				owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+				owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 				owner.setBusy(false);
 				npc.unblock();
 			}

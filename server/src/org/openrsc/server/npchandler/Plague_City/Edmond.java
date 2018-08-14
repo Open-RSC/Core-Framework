@@ -13,6 +13,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
@@ -26,7 +27,7 @@ public class Edmond implements NpcHandler
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.PLAGUE_CITY);
+		Quest q = owner.getQuest(Quests.PLAGUE_CITY);
 		if(q != null) 
 		{
 			if(q.finished()) 
@@ -289,7 +290,7 @@ public class Edmond implements NpcHandler
 										public void action()
 										{
 											owner.sendMessage("You hear a clunk as you both fly backwards");
-											owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
+											owner.incQuestCompletionStage(Quests.PLAGUE_CITY);
 											World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"that's done the job", "remember always wear the gasmask", "otherwise you'll die over there for certain", "and please bring my elena back safe and sound"}) 
 											{
 												public void finished() 
@@ -344,7 +345,7 @@ public class Edmond implements NpcHandler
 		{
 			public void finished() 
 			{
-				owner.finishQuest(Config.Quests.PLAGUE_CITY);
+				owner.finishQuest(Quests.PLAGUE_CITY);
 				owner.sendMessage("@gre@Well done you have completed the Plague City quest!");
 				owner.sendMessage("@gre@You have been awarded 1 quest points!");
 				owner.incQuestExp(14, 175 + 75 * owner.getMaxStat(14));
@@ -503,8 +504,8 @@ public class Edmond implements NpcHandler
 								{
 									public void finished()
 									{
-										owner.addQuest(Config.Quests.PLAGUE_CITY, 1);	
-										owner.incQuestCompletionStage(Config.Quests.PLAGUE_CITY);
+										owner.addQuest(Quests.PLAGUE_CITY, 1);	
+										owner.incQuestCompletionStage(Quests.PLAGUE_CITY);
 										owner.setBusy(false);
 										npc.unblock();
 									}	

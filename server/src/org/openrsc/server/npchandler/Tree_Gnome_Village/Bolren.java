@@ -15,6 +15,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
@@ -26,7 +27,7 @@ public class Bolren implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TREE_GNOME_VILLAGE);
+		Quest q = owner.getQuest(Quests.TREE_GNOME_VILLAGE);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -147,8 +148,8 @@ public class Bolren implements NpcHandler {
 	private void questAccepted(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Thank you", "The battlefield is to the north of the maze", "Command Montai will inform you of their current situation", "that's if he's still alive", "My assistant shall guide you out", "Try your best to return the orb", "Good luck friend"}) {
 			public void finished() {
-			owner.addQuest(Config.Quests.TREE_GNOME_VILLAGE, 2);
-			owner.incQuestCompletionStage(Config.Quests.TREE_GNOME_VILLAGE);
+			owner.addQuest(Quests.TREE_GNOME_VILLAGE, 2);
+			owner.incQuestCompletionStage(Quests.TREE_GNOME_VILLAGE);
 			owner.teleport(624, 675, false);
 			owner.sendMessage("A gnome guides you out of the maze");
 			owner.setBusy(false);
@@ -261,7 +262,7 @@ public class Bolren implements NpcHandler {
 			public void finished() {
 				owner.getInventory().remove(740, 1);
 				owner.sendInventory();
-				owner.incQuestCompletionStage(Config.Quests.TREE_GNOME_VILLAGE);
+				owner.incQuestCompletionStage(Quests.TREE_GNOME_VILLAGE);
 				owner.teleport(624, 675, false);
 				owner.sendMessage("A gnome guides you out of the maze");
 				owner.setBusy(false);
@@ -310,7 +311,7 @@ public class Bolren implements NpcHandler {
 																						public void finished() {
 																							World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"The tree has many other powers", "Some of which I cannot reveal", "However as a friend of the gnome people", "You can now use the tree's magic to teleport", "To other trees grown from related seeds"}) {
 																								public void finished() {
-																								owner.finishQuest(Config.Quests.TREE_GNOME_VILLAGE);
+																								owner.finishQuest(Quests.TREE_GNOME_VILLAGE);
 																								owner.getInventory().remove(741, 1);
 																								owner.getInventory().add(744, 1);
 																								owner.incQuestExp(0, 11450);

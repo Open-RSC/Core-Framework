@@ -13,6 +13,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -23,7 +24,7 @@ public class Grandpa_Jack implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.FISHING_CONTEST);
+		Quest q = owner.getQuest(Quests.FISHING_CONTEST);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);

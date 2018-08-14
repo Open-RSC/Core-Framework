@@ -9,6 +9,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -19,7 +20,7 @@ public class Boatman implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -79,7 +80,7 @@ public class Boatman implements NpcHandler {
 	private void readyGo(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Let's go then"}) {
 			public void finished() {
-				owner.finishQuest(Config.Quests.TUTORIAL_ISLAND);
+				owner.finishQuest(Quests.TUTORIAL_ISLAND);
 				owner.sendMessage("You have successfully completed the tutorial.");
 				owner.teleport(120, 648, false);
 				owner.setBusy(false);

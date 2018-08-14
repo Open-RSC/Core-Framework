@@ -12,12 +12,13 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Priest implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
+		final Quest q = owner.getQuest(Quests.THE_RESTLESS_GHOST);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				notActive(npc, owner, true);
@@ -263,7 +264,7 @@ public class Priest implements NpcHandler {
 																	public void finished() {
 																		owner.setBusy(false);
 																		npc.unblock();
-																		owner.addQuest(Config.Quests.THE_RESTLESS_GHOST, 1);
+																		owner.addQuest(Quests.THE_RESTLESS_GHOST, 1);
 																	}
 																});
 															}

@@ -27,7 +27,7 @@ public class Captcha
 		{
 			try(Statement statement = connection.createStatement())
 			{
-				ResultSet result = statement.executeQuery("SELECT * FROM `"+Config.TOOLS_DB_NAME+"`.`captcha`;");
+				ResultSet result = statement.executeQuery("SELECT * FROM `"+ Config.getToolsDbName() +"`.`captcha`;");
 				captchas = new Vector<Pair<String, BufferedImage>>();
 				while (result.next())
 				{

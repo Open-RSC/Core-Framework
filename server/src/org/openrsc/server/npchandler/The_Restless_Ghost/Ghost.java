@@ -12,12 +12,13 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Ghost implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Quest q = owner.getQuest(Config.Quests.THE_RESTLESS_GHOST);
+		final Quest q = owner.getQuest(Quests.THE_RESTLESS_GHOST);
 		if(q != null) {
 			if(q.finished()) { //Quest Finished
 				 owner.sendMessage("The ghost does not appear interested in talking");
@@ -451,7 +452,7 @@ public class Ghost implements NpcHandler {
 														final String[] messages18 = {"Ooh thank you. That would be such a great relief", "It is so dull being a ghost"};
 														World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages18) {
 															public void finished() {
-																owner.incQuestCompletionStage(Config.Quests.THE_RESTLESS_GHOST);
+																owner.incQuestCompletionStage(Quests.THE_RESTLESS_GHOST);
 																owner.setBusy(false);
 																npc.unblock();
 															}
