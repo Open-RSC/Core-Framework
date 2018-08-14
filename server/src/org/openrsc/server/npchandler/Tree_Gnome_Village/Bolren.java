@@ -10,13 +10,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Quests;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -314,7 +308,7 @@ public class Bolren implements NpcHandler {
 																								owner.finishQuest(Quests.TREE_GNOME_VILLAGE);
 																								owner.getInventory().remove(741, 1);
 																								owner.getInventory().add(744, 1);
-																								owner.incQuestExp(0, 11450);
+																								owner.incQuestExp(Skills.ATTACK, 11450);
 																								owner.sendStat(0);
 																								owner.sendInventory();
 																								owner.sendMessage("@gre@You have completed the Tree Gnome village quest!");

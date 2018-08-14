@@ -512,7 +512,7 @@ public class AgilityHandler {
 
 					private void finish(boolean success) {
 						if (success) {
-							owner.increaseXP(16, def.getExperience());
+							owner.increaseXP(Skills.AGILITY, def.getExperience());
 							course.completedObstacle(owner, objectID);
 							owner.sendStat(16);
 						}

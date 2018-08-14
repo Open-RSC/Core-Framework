@@ -7,15 +7,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Doric implements NpcHandler {
@@ -187,7 +180,7 @@ public class Doric implements NpcHandler {
 																		public void action() {
 																			owner.sendMessage("@gre@Well done you have completed Dorics quest");
 																			owner.sendMessage("@gre@You have gained 1 quest point!");		
-																			owner.incQuestExp(14, 1200);
+																			owner.incQuestExp(Skills.MINING, 1200);
 																			owner.sendStat(14);
 																			owner.finishQuest(Quests.DORICS_QUEST);
 																			owner.incQuestCompletionStage(Quests.DORICS_QUEST);
