@@ -5,21 +5,15 @@ package org.openrsc.server.npchandler.Aggie;
 
 import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.MiniEvent;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Aggie implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+		Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 		if(q != null) {
 			if(q.finished()) {
 				questNotStarted(npc, owner);
