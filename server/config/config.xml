@@ -48,6 +48,6 @@
 	<!-- The amount to multiply the generated runes by: -->
 	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry>
 	<!-- Changes the behaviour of skilling (vanilla 0, batch till success 1, batch to full inventory 2) -->
-	<entry key="SKILL_LOOP_MODE">2</entry>
+	<entry key="SKILL_LOOP_MODE">0</entry>
 
 </properties>
