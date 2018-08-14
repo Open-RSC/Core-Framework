@@ -4179,7 +4179,7 @@ public class ObjectAction implements PacketHandler {
                                                                 }
                                                         
                                                         case 693: // Falador Handholds
-                                                                if (owner.getX() == 339 && (owner.getY() == 554 || owner.getY() == 555 || owner.getY() == 556)) {
+                                                                if ((owner.getX() == 339 || owner.getX() == 340) && (owner.getY() == 554 || owner.getY() == 555 || owner.getY() == 556)) {
                                                                         owner.teleport(338, 555, false);
                                                                         owner.sendMessage("You grab hold of the handholds");
                                                                         owner.sendMessage("and climb over to the other side");
