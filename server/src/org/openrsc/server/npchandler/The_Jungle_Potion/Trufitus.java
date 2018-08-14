@@ -5,14 +5,7 @@ package org.openrsc.server.npchandler.The_Jungle_Potion;
 import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Quests;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Trufitus implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
@@ -685,7 +678,7 @@ public class Trufitus implements NpcHandler {
 				owner.sendMessage("You give the Rogues Purse to Trufitus");
 				owner.sendMessage("Trufitus shows you some techniques in Herblaw");
 				owner.sendMessage("You gain experience in Herblaw!");
-				owner.incQuestExp(15, 3000);
+				owner.incQuestExp(Skills.HERBLAW, 3000);
 				owner.finishQuest(Quests.JUNGLE_POTION);
 				owner.sendMessage("@gre@You have gained 1 quest point!");
 				owner.setBusy(false);

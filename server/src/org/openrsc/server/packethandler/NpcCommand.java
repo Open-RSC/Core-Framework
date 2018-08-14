@@ -1,15 +1,12 @@
 package org.openrsc.server.packethandler;
 
+import org.openrsc.server.model.*;
 import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.entityhandling.defs.extras.PickPocketDef;
-import org.openrsc.server.model.Player;
 import org.openrsc.server.event.ShortEvent;
 import org.openrsc.server.event.WalkToMobEvent;
 import org.openrsc.server.net.Packet;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.World;
 import org.openrsc.server.util.Formulae;
 import org.openrsc.server.states.Action;
 import org.apache.mina.common.IoSession;
@@ -69,7 +66,7 @@ public class NpcCommand implements PacketHandler {
 												owner.sendMessage("You successfully stole from the " + affectedNpc.getDef().name);
 												owner.getInventory().add(pickpocket.getLoot());
 												owner.sendInventory();
-												owner.increaseXP(17, pickpocket.getExperience());
+												owner.increaseXP(Skills.THIEVING, pickpocket.getExperience());
 												owner.sendStat(17);
 												owner.setStatus(Action.IDLE);
 											} else {
