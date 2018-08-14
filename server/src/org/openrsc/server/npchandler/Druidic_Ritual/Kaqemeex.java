@@ -295,7 +295,7 @@ public class Kaqemeex implements NpcHandler {
         final String[] messages1 = {"I've heard you were very helpful to Sanfew","I will teach you the herblaw you need to know now"};
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages1) {
 			public void finished() {
-                owner.incQuestExp(15, 1000);
+                owner.incQuestExp(Skills.HERBLAW, 1000);
                 owner.finishQuest(Quests.DRUIDIC_RITUAL);
 			    owner.sendMessage("Well done you have completed the druidic ritual quest");
                 owner.sendMessage("@gre@You have gained 4 quest points");

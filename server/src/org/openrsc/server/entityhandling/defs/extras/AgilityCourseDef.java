@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Skills;
 
 public class AgilityCourseDef {
 
@@ -25,7 +26,7 @@ public class AgilityCourseDef {
 				return;
 			}
 		}
-		player.increaseXP(16, experience);
+		player.increaseXP(Skills.AGILITY, experience);
 		for(ArrayList<Player> toRemove : completedObstacles.values()) {
 			toRemove.remove(player);
 		}

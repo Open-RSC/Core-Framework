@@ -22,18 +22,7 @@ import org.openrsc.server.event.WalkToObjectEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ErrorLog;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.AgilityHandler;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Item;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Path;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Point;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
 import org.openrsc.server.states.Action;
@@ -44,7 +33,7 @@ import com.rscdaemon.scripting.ScriptCache;
 import com.rscdaemon.scripting.ScriptError;
 import com.rscdaemon.scripting.ScriptVariable;
 import com.rscdaemon.scripting.listener.UseObjectListener;
-import org.openrsc.server.model.Quests;
+
 public class ObjectAction implements PacketHandler {
         
         private final ScriptCache<UseObjectListener> scriptCache = new ScriptCache<>();
@@ -726,7 +715,7 @@ public class ObjectAction implements PacketHandler {
                                                                                                         owner.incQuestCompletionStage(Quests.WITCHS_POTION);
                                                                                                         owner.sendMessage("Well done you have completed the witches potion");
                                                                                                         owner.sendMessage("@gre@You haved gained 1 quest point!");
-                                                                                                        owner.incQuestExp(6, 1000);
+                                                                                                        owner.incQuestExp(Skills.MAGIC, 1000);
                                                                                                         owner.sendStat(6);
                                                                                                         owner.finishQuest(Quests.WITCHS_POTION);
                                                                                                         owner.setBusy(false);
@@ -1200,10 +1189,10 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.sendMessage("There is nothing more you can learn from hitting a dummy");
                                                                                 owner.setBusy(false);
                                                                                 /*if (owner.getCurStat(0) < 8) {
-                                                                                        owner.increaseXP(0, 5, 1); // Should be 5 XP in Attack
+                                                                                        owner.increaseXP(Skills.ATTACK, 5, 1); // Should be 5 XP in Attack
                                                                                         owner.sendStat(0);
                                                                                         owner.setBusy(false);
-                                                                                        owner.increaseXP(3, 1, 1); // Should be 0 XP in Hits
+                                                                                        owner.increaseXP(Skills.HITS, 1, 1); // Should be 0 XP in Hits
                                                                                         owner.sendStat(3);
                                                                                 } else {
                                                                                         owner.sendMessage("There is nothing more you can learn from hitting a dummy");
@@ -3074,7 +3063,7 @@ public class ObjectAction implements PacketHandler {
                                                                                                         public void finished() {
                                                                                                                 World.registerEntity(new GameObject(object.getLocation(), 338, object.getDirection(), object.getType()));
                                                                                                                 World.delayedSpawnObject(object.getLoc(), chest.getRespawnTime());
-                                                                                                                owner.increaseXP(17, chest.getExperience());
+                                                                                                                owner.increaseXP(Skills.THIEVING, chest.getExperience());
                                                                                                                 owner.sendStat(17);
                                                                                                                 for (InvItem item : chest.getLoot())
                                                                                                                         owner.getInventory().add(item);
@@ -3126,7 +3115,7 @@ public class ObjectAction implements PacketHandler {
                                                                                                 owner.sendMessage("You successfully thieved from the " + object.getGameObjectDef().name);
                                                                                                 owner.getInventory().add(stall.getLoot());
                                                                                                 owner.sendInventory();
-                                                                                                owner.increaseXP(17, stall.getExperience());
+                                                                                                owner.increaseXP(Skills.THIEVING, stall.getExperience());
                                                                                                 owner.sendStat(17);
                                                                                         }
                                                                                 } else if (guardian.getID() == stall.getOwner()) {
@@ -3460,7 +3449,7 @@ public class ObjectAction implements PacketHandler {
                                                                                                 final InvItem ore = new InvItem(def.getOreId());
                                                                                                 owner.getInventory().add(ore);
                                                                                                 owner.sendMessage("You manage to obtain some " + ore.getDef().getName() + ".");
-                                                                                                owner.increaseXP(14, def.getExp());
+                                                                                                owner.increaseXP(Skills.MINING, def.getExp());
                                                                                                 owner.sendStat(14);
                                                                                                 World.registerEntity(new GameObject(object.getLocation(), 98, object.getDirection(), object.getType()));
                                                                                                 World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
@@ -3706,7 +3695,7 @@ public class ObjectAction implements PacketHandler {
                                                                                 owner.getInventory().add(log);
                                                                                 owner.sendMessage("You get some wood");
                                                                                 owner.sendInventory();
-                                                                                owner.increaseXP(8, def.getExperience());
+                                                                                owner.increaseXP(Skills.WOODCUT, def.getExperience());
                                                                                 owner.sendStat(8);
                                                                                 owner.setBusy(false);
                                                                                 if (DataConversions.random(1, 100) <= def.getFell()) 
@@ -3815,7 +3804,7 @@ public class ObjectAction implements PacketHandler {
                                                                                                         owner.getInventory().add(fish);
                                                                                                         owner.sendMessage("You catch a " + fish.getDef().getName() + ".");
                                                                                                         owner.sendInventory();
-                                                                                                        owner.increaseXP(10, def.getExp());
+                                                                                                        owner.increaseXP(Skills.FISHING, def.getExp());
                                                                                                         owner.sendStat(10);
                                                                                                 } else
                                                                                                         owner.sendMessage("You fail to catch anything.");
@@ -3867,7 +3856,7 @@ public class ObjectAction implements PacketHandler {
                                                                         if (agilityFormulae(1)) {
                                                                                 owner.teleport(207, 3225, false);
                                                                                 owner.sendMessage("you hold on tight and manage to make it across");
-										owner.increaseXP(16, 40);
+										owner.increaseXP(Skills.AGILITY, 40);
                                                                         } else {
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
                                                                                 owner.setLastDamage(damage);
@@ -3903,7 +3892,7 @@ public class ObjectAction implements PacketHandler {
                                                                         if (agilityFormulae(1)) {
                                                                                 owner.teleport(596, 3581, false);
                                                                                 owner.sendMessage("you hold on tight and manage to make it across");
-										owner.increaseXP(16, 110);
+										owner.increaseXP(Skills.AGILITY, 110);
                                                                         } else {
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
                                                                                 owner.setLastDamage(damage);
@@ -3939,14 +3928,14 @@ public class ObjectAction implements PacketHandler {
 								if (owner.getX() < 513 && owner.getX() > 515) {
 									owner.sendMessage("You reach out and swing across the vines"); // XXX
 									owner.teleport(508, 669, false);
-									owner.increaseXP(16, 23);
+									owner.increaseXP(Skills.AGILITY, 23);
 								}
 								break;
 							case 694: // Brimhaven Moss Giant Swing
 								if (owner.getX() < 509 && owner.getX() > 507) {
 									owner.sendMessage("You reach out and swing across the vines"); // XXX
 									owner.teleport(512, 669, false);
-									owner.increaseXP(16, 23);
+									owner.increaseXP(Skills.AGILITY, 23);
 								}
 								break;
 
@@ -3965,7 +3954,7 @@ public class ObjectAction implements PacketHandler {
                                                                                 if(agilityFormulae(1)) {
                                                                                         owner.teleport(601, 3563, false);
                                                                                         owner.sendMessage("and walk across.");
-											owner.increaseXP(16, 90);
+											owner.increaseXP(Skills.AGILITY, 90);
                                                                                 } else {
                                                                                         owner.teleport(597, 3535, false);
                                                                                         int damage = (int)(owner.getCurStat(3) * 0.9);
@@ -3997,7 +3986,7 @@ public class ObjectAction implements PacketHandler {
                                                                         if (agilityFormulae(1)) {
                                                                                 owner.teleport(598, 458, false);
                                                                                 owner.sendMessage("and walk across");
-										owner.increaseXP(16, 34);
+										owner.increaseXP(Skills.AGILITY, 34);
                                                                         } else {
                                                                                 owner.teleport(597, 461, false);
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
@@ -4025,11 +4014,11 @@ public class ObjectAction implements PacketHandler {
                                                                                 if (owner.getX() == 367) {
 											owner.teleport(368, 781, false);
 											owner.teleport(369, 781, false);
-	                                                                                owner.increaseXP(16, 34);
+	                                                                                owner.increaseXP(Skills.AGILITY, 34);
 										} else if (owner.getX() == 369) {
 											owner.teleport(368, 781, false);
 											owner.teleport(367, 781, false);
-	                                                                                owner.increaseXP(16, 34);
+	                                                                                owner.increaseXP(Skills.AGILITY, 34);
 										}
                                                                         } else {
                                                                                 owner.teleport(366, 789, false);
@@ -4114,7 +4103,7 @@ public class ObjectAction implements PacketHandler {
                                                                         owner.teleport(338, 555, false);
                                                                         owner.sendMessage("You grab hold of the handholds");
                                                                         owner.sendMessage("and climb over to the other side");
-									owner.increaseXP(16, 50);
+									owner.increaseXP(Skills.AGILITY, 50);
                                                                 }
                                                         	break;
 
@@ -4122,7 +4111,7 @@ public class ObjectAction implements PacketHandler {
 								if(owner.getX() > 579 && owner.getX() < 582 && owner.getY() > 3523 && owner.getY() < 3528) {
 									owner.teleport(582, 3573, false);
 									owner.sendMessage("You climb up the pile of rubble");
-									owner.increaseXP(16, 54);
+									owner.increaseXP(Skills.AGILITY, 54);
 								}
 								break;
 
@@ -4134,7 +4123,7 @@ public class ObjectAction implements PacketHandler {
 									if (owner.getY() == 742) {
 										owner.teleport(624, 741, false);
 										owner.sendMessage("You climb the rocks and scale the wall"); // XXX
-										owner.increaseXP(16, 40);
+										owner.increaseXP(Skills.AGILITY, 40);
 									}
 								}
 								break;
@@ -4172,7 +4161,7 @@ public class ObjectAction implements PacketHandler {
                                                                 owner.teleport(608, 3568, false);
                                                                 owner.sendMessage("You squeeze into the pipe");
                                                                 owner.sendMessage("and shuffle down into it");
-								owner.increaseXP(16, 30);
+								owner.increaseXP(Skills.AGILITY, 30);
                                                         break;
                                                         
                                                         case 657:

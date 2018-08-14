@@ -3330,10 +3330,10 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getMaxStat(3)));
 						switch (p.getCombatStyle()) {
 							case 0:
-								p.increaseXP(0, exp);
-								p.increaseXP(1, exp);
-								p.increaseXP(2, exp);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.ATTACK, exp);
+								p.increaseXP(Skills.DEFENSE, exp);
+								p.increaseXP(Skills.STRENGTH, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(0);
 								p.sendStat(1);
 								p.sendStat(2);
@@ -3341,23 +3341,23 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 							break;
 							
 							case 1:
-								p.increaseXP(2, exp * 3);
+								p.increaseXP(Skills.STRENGTH, exp * 3);
 								p.sendStat(2);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 2:
-								p.increaseXP(0, exp * 3);
+								p.increaseXP(Skills.ATTACK, exp * 3);
 								p.sendStat(0);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 3:
-								p.increaseXP(1, exp * 3);
+								p.increaseXP(Skills.DEFENSE, exp * 3);
 								p.sendStat(1);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);
 							break;
 						}
@@ -3370,7 +3370,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getMaxStat(3)));
-						p.increaseXP(4, exp * 4);
+						p.increaseXP(Skills.RANGED, exp * 4);
 						p.sendStat(4);
 					}
 				}

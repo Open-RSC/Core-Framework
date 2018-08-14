@@ -17,17 +17,7 @@ import org.openrsc.server.event.WalkToPointEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.logging.model.PickUpLog;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Item;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Point;
-import org.openrsc.server.model.Projectile;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Quests;
-import org.openrsc.server.model.TrajectoryHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.net.RSCPacket;
 import org.openrsc.server.states.Action;
@@ -784,7 +774,7 @@ public class SpellHandler implements PacketHandler {
 		      		}
 		      		player.sendMessage("You make a bar of " + bar.getDef().getName().toLowerCase().replace(" bar", ""));
   					player.getInventory().add(bar);
-  					player.increaseXP(13, smeltingDef.getExp());
+  					player.increaseXP(Skills.SMITHING, smeltingDef.getExp());
   					player.sendStat(13);
   					player.sendInventory();
   				}
@@ -1081,7 +1071,7 @@ public class SpellHandler implements PacketHandler {
 		player.sendSound("spellok", false);
 		if (message)
 			player.sendMessage(string);
-		player.increaseXP(6, spell.getExp());
+		player.increaseXP(Skills.MAGIC, spell.getExp());
 		player.setCastTimer();
 	}
 	
