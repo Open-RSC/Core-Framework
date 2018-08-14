@@ -41,6 +41,7 @@ public class Config {
 		setMaxLoginsPerIp(Integer.parseInt(props.getProperty("MAX_LOGINS_PER_IP")), false);
 		setShutdownTimeMillis(Integer.parseInt(props.getProperty("SHUTDOWN_TIME_MILLIS")), false);
         setMaxPlayers(Integer.parseInt(props.getProperty("MAX_PLAYERS")), false);
+        setSkillLoopMode(Integer.parseInt(props.getProperty("SKILL_LOOP_MODE")),false);
 
 		// Floats
 		setCombatXpRate(Float.parseFloat(props.getProperty("COMBAT_XP_RATE")), false);
@@ -346,6 +347,23 @@ public class Config {
         if(sendConfiguration)
             sendConfiguration(key, value);
 	}
+
+    public static int getSkillLoopMode() {
+        return Integer.parseInt(configMap.get("SKILL_LOOP_MODE"));
+    }
+
+    public static void setSkillLoopMode(int skillLoopMode) {
+        setSkillLoopMode(skillLoopMode, true);
+    }
+
+    public static void setSkillLoopMode(int skillLoopMode, boolean sendConfiguration) {
+        String key      = "SKILL_LOOP_MODE";
+        String value    = Integer.toString(skillLoopMode);
+        configMap.put(key, value);
+
+        if(sendConfiguration)
+            sendConfiguration(key, value);
+    }
 
 	public static float getCombatXpRate() {
 		return Float.parseFloat(configMap.get("COMBAT_XP_RATE"));
