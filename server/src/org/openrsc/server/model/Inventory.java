@@ -151,7 +151,7 @@ public class Inventory {
 	public boolean full() {
 		return list.size() >= MAX_SIZE;
 	}
-	
+
 	public boolean contains(int i) {
 		return contains(new InvItem(i, 1));
 	}
@@ -187,12 +187,12 @@ public class Inventory {
 		return list.get(index);
 	}
 
-	public final boolean isEmpty() {
-		return list.size() == 0;
-	}
-	
 	public int size() {
 		return list.size();
+	}
+
+	public int getEmptySlots() {
+		return MAX_SIZE - list.size();
 	}
 	
 	public int getFreedSlots(List<InvItem> items) {
