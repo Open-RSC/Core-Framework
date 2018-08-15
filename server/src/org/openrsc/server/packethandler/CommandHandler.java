@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.rscdaemon.scripting.Skill;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -47,6 +50,9 @@ import org.openrsc.server.util.Formulae;
 
 public class CommandHandler implements PacketHandler 
 {
+    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    Date date = new Date();
+    
     private static String badSyntaxPrefix = Config.getPrefix() + "Invalid Syntax: ::";
     Pattern ipRegex = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
     
@@ -2760,7 +2766,7 @@ public class CommandHandler implements PacketHandler
 		else
 		if (cmd.equals("state"))
 		{
-			System.out.println(World.wildernessP2P);
+			System.out.println(dateFormat.format(date)+": "+World.wildernessP2P);
 		}
 		else if(cmd.equalsIgnoreCase("godspells") && owner.isAdmin())
 		{

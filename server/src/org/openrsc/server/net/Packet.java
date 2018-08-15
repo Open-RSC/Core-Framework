@@ -1,7 +1,14 @@
 package org.openrsc.server.net;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class Packet {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+        
 	protected int pLength;
 	protected byte[] pData;
 	protected int caret = 0;
@@ -48,7 +55,7 @@ public class Packet {
 		} catch(Exception e) {
 			//Player player = (Player)session.getAttachment();
 			//Util.banIP(player.getIP(), "Error reading packet (byte)");
-			System.out.println("Error reading packet (byte)");
+			System.out.println(dateFormat.format(date)+": Error reading packet (byte)");
 		}
 		caret += length;
 		return data;
@@ -72,7 +79,7 @@ public class Packet {
 		} catch(Exception e) {
 			//Player player = (Player)session.getAttachment();
 			//Util.banIP(player.getIP(), "Error reading packet (short)");
-			System.out.println("Error reading packet (short)");
+			System.out.println(dateFormat.format(date)+": Error reading packet (short)");
 			return 0;
 		}
 	}
@@ -83,7 +90,7 @@ public class Packet {
 		} catch(Exception e) {
 			//Player player = (Player)session.getAttachment();
 			//Util.banIP(player.getIP(), "Error reading packet (int)");
-			System.out.println("Error reading packet (int)");
+			System.out.println(dateFormat.format(date)+": Error reading packet (int)");
 			return 0;
 		}
 	}
@@ -94,7 +101,7 @@ public class Packet {
 		} catch(Exception e) {
 			//Player player = (Player)session.getAttachment();
 			//Util.banIP(player.getIP(), "Error reading packet (long)");
-			System.out.println("Error reading packet (long)");
+			System.out.println(dateFormat.format(date)+": Error reading packet (long)");
 			return 0;
 		}
 	}
@@ -118,7 +125,7 @@ public class Packet {
 	}
 	
 	public String printData() {
-		//System.out.println("printdata");
+		//System.out.println(dateFormat.format(date)+": printdata");
 		if (pLength == 0)
 			return "";
 		String data = "";

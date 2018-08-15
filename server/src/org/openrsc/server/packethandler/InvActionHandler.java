@@ -124,7 +124,7 @@ public class InvActionHandler implements PacketHandler {
 											public void handleReply(final int option, final String reply) {
 												if (owner.isBusy() || owner.getInventory().get(item) == null)
 													return;
-												if (owner.getLocation().inWilderness()) {
+												if (owner.getLocation().wildernessLevel() > 29) {
 													owner.sendMessage("A magical force stops you from teleporting");
 													return;
 												}

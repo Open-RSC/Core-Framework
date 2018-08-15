@@ -52,11 +52,17 @@ import org.openrsc.server.util.StatefulEntityCollection;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.util.IPTrackerPredicate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 public final class Player extends Mob implements Watcher, Comparable<Player>
 {
-	private static final FatigueApplicator fatigueApplicator =
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+        
+        private static final FatigueApplicator fatigueApplicator =
 			Config.isDisableFatigue() ?
 					new NoOpFatigueApplicator() :
 					new DefaultFatigueApplicator();
@@ -69,7 +75,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		if(!scriptableQuests.containsKey(id))
 		{
 			scriptableQuests.put(id, ServerBootstrap.getQuest(id));
-			System.out.println("SCRIPTABLE_QUEST: " + ServerBootstrap.getQuest(id));
+			System.out.println(dateFormat.format(date)+": SCRIPTABLE_QUEST: " + ServerBootstrap.getQuest(id));
 		}
 		return scriptableQuests.get(id);
 	}
@@ -642,11 +648,11 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 
 	public boolean willDoorAOpen() {
-		return leverA && leverB && leverC == false && leverD == false && leverE == false && leverF == false;
+		return leverB && !leverF;
 	}
 	
 	public boolean willDoorBOpen() {
-		return leverA && leverB && leverC == false && leverE == false && leverF == false;
+		return leverA && leverB && !leverF;
 	}
 	
 	public boolean willDoorCOpen() {
@@ -654,27 +660,27 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	}
 	
 	public boolean willDoorDOpen() {
-		return leverA == false && leverB == false && leverC == false && leverD && leverE == false && leverF == false;
+		return leverD && !leverF;
 	}
 	
 	public boolean willDoorEOpen() {
-		return leverA == false && leverB == false && leverC == false && leverD && leverE == false && leverF == false;
+		return leverD && !leverB && !leverF;
 	}
 	
 	public boolean willDoorFOpen() {
-		return leverA == false && leverB == false && (leverE || leverC) && leverD && leverF;
+		return leverF && leverD && !leverB;
 	}
 	
 	public boolean willDoorGOpen() {
-		return leverA == false && leverB == false && (leverE || leverC) && leverD && leverF;
+		return !leverA && leverE && leverF;
 	}
 	
 	public boolean willDoorHOpen() {
-		return leverA == false && leverB == false && leverE == false && leverD && leverF;
+		return leverD && leverF && !leverE;
 	}
 	
 	public boolean willDoorIOpen() {
-		return leverA == false && leverB == false && leverC && leverD && leverE == false && leverF;
+		return leverC && leverD && leverF && !leverA && !leverB && !leverE;
 	}
 	
 	public boolean ladyFixed() {
@@ -3793,7 +3799,9 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 				||
 				// Or if the distance is greater than 45 (the hypotenuse of a 32, 32 right triangle)
 				(Formulae.distance2D(getLocation(), new Point(x, y)) > 45);
-		resetLevers();
+		if(farAway) {
+			resetLevers();
+		}
 		Mob opponent = super.getOpponent();
 		if (inCombat())
 			resetCombat(CombatState.ERROR);
