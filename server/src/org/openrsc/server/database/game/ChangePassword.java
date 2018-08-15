@@ -34,6 +34,9 @@ package org.openrsc.server.database.game;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.openrsc.server.database.DefaultTransaction;
 import org.openrsc.server.database.Transaction;
@@ -55,7 +58,9 @@ public class ChangePassword
 	extends
 		DefaultTransaction
 {
-	
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	Date date = new Date();
+    
 	public final class DefaultChangePasswordListener
 		implements
 			TransactionListener
@@ -63,13 +68,13 @@ public class ChangePassword
 		@Override
 		public void onSuccess()
 		{
-			System.out.println("Password Changed: " + DataConversions.hashToUsername(usernameHash));
+			System.out.println(dateFormat.format(date)+": Password Changed: " + DataConversions.hashToUsername(usernameHash));
 		}
 
 		@Override
 		public void onFailure(int code)
 		{
-			System.out.println("Failed to save: " + DataConversions.hashToUsername(usernameHash));
+			System.out.println(dateFormat.format(date)+": Failed to save: " + DataConversions.hashToUsername(usernameHash));
 		}
 	}
 	
