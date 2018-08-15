@@ -2432,7 +2432,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 410) { // InvUseOnObject (GAMEOBJECT)
+		if (currentMenuID >= 410 && currentMenuID <= 412) { // InvUseOnObject (GAMEOBJECT)
 			walkToObject(actionX, actionY, actionType, actionVariable); // ACTION
 																		// TYPE
 																		// =
@@ -2441,6 +2441,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionX + areaX); // X
 			super.streamClass.add2ByteInt(actionY + areaY); // Y
 			super.streamClass.add2ByteInt((int) actionVariable2); // ITEM
+			super.streamClass.add2ByteInt((int)(currentMenuID % 410));
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
@@ -4137,12 +4138,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								menuLength++;
 							}
 						} else if (selectedItem >= 0) { // Use item on object
-							if (Config.getSkillLoopMode() == 2)
+							if (Config.getSkillLoopMode() == 2) {
 								menuText1[menuLength] = "Use one " + selectedItemName + " with";
-							else
+								menuID[menuLength] = 412;
+							} else {
 								menuText1[menuLength] = "Use " + selectedItemName + " with";
+								menuID[menuLength] = 410;
+							}
 							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
-							menuID[menuLength] = 410;
 							menuActionX[menuLength] = objectX[oID];
 							menuActionY[menuLength] = objectY[oID];
 							menuActionType[menuLength] = objectID[oID];
@@ -4157,7 +4160,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 										177, // Doric's anvil
 										50 // anvil
 								).contains(EntityHandler.getObjectDef(oType).getID())) {
-									menuText1[menuLength] = "Use all " + selectedItemName + "s with";
+									menuText1[menuLength] = "Use multiple " + selectedItemName + "s with";
 									menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 									menuID[menuLength] = 410;
 									menuActionX[menuLength] = objectX[oID];
