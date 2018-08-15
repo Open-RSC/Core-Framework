@@ -913,7 +913,7 @@ public class SpellHandler implements PacketHandler {
 		
 		
 		if (id != 48) {
-			if (player.getLocation().wildernessLevel() > 0) {
+			if (player.getLocation().wildernessLevel() > 20) {
 				player.sendMessage("A magical force stops you from teleporting.");
 				return;
 			}
