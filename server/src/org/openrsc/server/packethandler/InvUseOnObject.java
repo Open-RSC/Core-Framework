@@ -987,7 +987,10 @@ public class InvUseOnObject implements PacketHandler {
 										owner.sendInventory();
 									}
 								}
-								if (Config.getSkillLoopMode() == 0 || batch == 0 || owner.getCancelBatch() || owner.getInventory().full() || !owner.getInventory().contains(item.getID())) {
+								if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+										owner.getCancelBatch() || owner.getInventory().full() ||
+										!owner.getInventory().contains(item.getID()) ||
+										owner.getLocation().distanceToObject(object) > 1) {
 									owner.setBusy(false);
 									this.stop();
 								}
@@ -1927,8 +1930,8 @@ public class InvUseOnObject implements PacketHandler {
 							owner.sendInventory();
 						}
 						owner.setBusy(false);
-						if (Config.getSkillLoopMode() == 2) {
-							World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+						if (Config.getSkillLoopMode() == 2 && batch == 2 && !owner.getCancelBatch() && owner.getInventory().contains(item.getID()) && owner.getLocation().distanceToObject(object) < 2) {
+							World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 								public void action() {
 									cookLoop();
 								}
