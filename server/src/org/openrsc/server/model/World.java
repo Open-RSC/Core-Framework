@@ -38,11 +38,17 @@ import com.rscdaemon.scripting.ScriptManager;
 import com.rscdaemon.util.IPTracker;
 import com.rscdaemon.util.IPTrackerPredicate;
 import com.rscdaemon.util.impl.ThreadSafeIPTracker;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public final class World
 	implements
 		Instance
 {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+    
 	private final static World instance = new World();
 	
 	public final static World getWorld()
@@ -261,18 +267,18 @@ public final class World
 		worldLoader.loadWorld();
 		scriptManager.loadListeners("com.rscdaemon.scripting.listener");
 		scriptManager.loadScripts("com.rscdaemon.scripts");
-		//minuteChecks(); Disabling autorestart, weaken/godspell day changes
+		minuteChecks(); //autorestart, weaken/godspell day changes
 	}
 		
 	private static void minuteChecks() 
 	{
-		World.getDelayedEventHandler().add(new SingleEvent(null, 60000) 
+		World.getDelayedEventHandler().add(new SingleEvent(null, 60000) //default 60000 for 1 minute
 		{
 			public void action() 
 			{
-				if ((System.currentTimeMillis() - Config.getStartTime()) > 54000000)
+				if ((System.currentTimeMillis() - Config.getStartTime()) > 21600000) //54000000 = 15 hours, 43200000 = 12 hours, 21600000 = 6 hours
 				{
-					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "Auto Restart"));
+					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "performing automatic world restart, try logging back in again in ~20 seconds!"));
 					global = false;
 				} 
 				else 
@@ -522,14 +528,16 @@ public final class World
                         return;
                     }
                 } catch(Exception e) {
-                    System.out.println("Exception caught with null owner");
+                    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                    Date date = new Date();
+                    System.out.println(dateFormat.format(date)+": Exception caught with null owner");
                     return;
                 }
             }
 			if (!players.contains(player)) {
 				player.setInitialized();
 				players.add(player);
-				//System.out.println("Added:   " + player.getUsername());
+				//System.out.println(dateFormat.format(date)+": Added:   " + player.getUsername());
 				player.load();
 			} else {
 				player.getSession().close();
@@ -641,8 +649,10 @@ public final class World
 	
 	private static void registerNpc(Npc n) {
 		NPCLoc npc = n.getLoc();
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                Date date = new Date();
 		if (npc.startX < npc.minX || npc.startX > npc.maxX || npc.startY < npc.minY || npc.startY > npc.maxY || (World.mapValues[npc.startX][npc.startY] & 64) != 0)
-			System.out.println("Broken NPC: " + npc.id + " " + npc.startX + " " + npc.startY);
+			System.out.println(dateFormat.format(date)+": Broken NPC: " + npc.id + " " + npc.startX + " " + npc.startY);
 		npcs.add(n);
 	}
 	

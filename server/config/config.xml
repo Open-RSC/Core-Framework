@@ -25,7 +25,7 @@
 	<entry key="LOG_DB_NAME">openrsc_logs</entry>
 	<entry key="TOOLS_DB_NAME">openrsc_tools</entry>
 
-  <!-- XP rates: -->
+	<!-- XP rates: -->
 	<entry key="COMBAT_XP_RATE">1</entry>
 	<entry key="SKILL_XP_RATE">1</entry>
 	<entry key="WILD_XP_BONUS">1</entry>
@@ -35,7 +35,7 @@
 	<entry key="ALLOW_WEAKENS">true</entry>
 	<entry key="ALLOW_GODSPELLS">true</entry>
 	<!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown: -->
-	<entry key="SHUTDOWN_TIME_MILLIS">60000</entry>
+	<entry key="SHUTDOWN_TIME_MILLIS">60000</entry> <!-- default is 60 seconds -->
 	<entry key="AVATAR_DIR">avatars/</entry>
 
 	<!-- Sleeping related: -->

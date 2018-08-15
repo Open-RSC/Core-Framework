@@ -1,5 +1,8 @@
 package org.openrsc.server.packethandler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.mina.common.IoSession;
 import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedQuestChat;
@@ -300,7 +303,9 @@ public class AttackHandler implements PacketHandler {
 				}
 			}
 		} catch(Exception ex) {
-			System.out.println("Error with AttackHandler... " + ex);
+                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                        Date date = new Date();
+			System.out.println(dateFormat.format(date)+": Error with AttackHandler... " + ex);
 		}
 	}
 }
