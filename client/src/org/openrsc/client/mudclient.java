@@ -4161,7 +4161,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 										177, // Doric's anvil
 										50 // anvil
 								).contains(EntityHandler.getObjectDef(oType).getID())) {
-									menuText1[menuLength] = "Use multiple " + selectedItemName + "s with";
+									menuText1[menuLength] = "Use all " + selectedItemName + " with";
 									menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 									menuID[menuLength] = 410;
 									menuActionX[menuLength] = objectX[oID];
