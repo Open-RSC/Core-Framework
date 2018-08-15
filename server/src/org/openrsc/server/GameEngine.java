@@ -1,5 +1,8 @@
 package org.openrsc.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -87,6 +90,9 @@ public final class GameEngine
 			}
 		}
 	}
+        
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 	
 	/// Handle all messages received since the last tick
 	private void processIncomingPackets()
@@ -178,7 +184,7 @@ public final class GameEngine
 				}
 				catch(Exception e)
 				{
-					System.out.println("THIS IS A FATAL ERROR:");
+					System.out.println(dateFormat.format(date)+": " + "THIS IS A FATAL ERROR:");
 					e.printStackTrace();
 				}
 			}

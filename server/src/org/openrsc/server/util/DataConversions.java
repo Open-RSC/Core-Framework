@@ -16,8 +16,13 @@ import com.bombaydigital.vault.HexString;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public final class DataConversions {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 	private static MessageDigest md5, sha1, sha512;
     private static Random random = new Random();
 	private static SecureRandom secureRandom = new SecureRandom();
@@ -45,7 +50,9 @@ public final class DataConversions {
 			}
 			return s;
 		} catch(Exception ex) {
-			System.out.println("Exception with ucwords(): " + s);
+                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                        Date date = new Date();
+			System.out.println(dateFormat.format(date)+": Exception with ucwords(): " + s);
 			ex.printStackTrace();
 			return s;
 		}
@@ -321,7 +328,9 @@ public final class DataConversions {
 			
 			return l;
 		} catch(Exception ex) {
-			System.out.println("Error encoding username " + s);
+                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                        Date date = new Date();
+			System.out.println(dateFormat.format(date)+": Error encoding username " + s);
 		}
 		return -1;
 	}

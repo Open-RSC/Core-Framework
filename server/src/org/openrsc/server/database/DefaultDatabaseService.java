@@ -31,6 +31,9 @@
  
 package org.openrsc.server.database;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -60,6 +63,10 @@ public final class DefaultDatabaseService
 	implements
 		DatabaseService
 {
+    
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+        
 	/// A specialized pair that overrides Object#equals to compare only 
 	/// the transaction field, ignoring the listener field
 	private final static class Pair
@@ -130,7 +137,7 @@ public final class DefaultDatabaseService
 						if(code == Transaction.DATABASE_UNAVAILABLE && 
 								t.retryOnFatalError())
 						{
-							System.out.println("Transaction " + t + " has " +
+							System.out.println(dateFormat.format(date)+": Transaction " + t + " has " +
 									"failed and has been requeued " +
 									"{cause = \"Database Offline\"}");
 							transactions.offerLast(p);
@@ -144,7 +151,7 @@ public final class DefaultDatabaseService
 						code = Transaction.UNHANDLED_EXCEPTION;
 						e.printStackTrace();
 					}
-					//System.out.println("Transaction " + t + " completed with " + 
+					//System.out.println(dateFormat.format(date)+": Transaction " + t + " completed with " + 
 					//		"exit code [" + code + "]");
 					///logger.debug("Transaction " + t + " completed with " + 
 					///		"exit code [" + code + "]");
@@ -166,7 +173,7 @@ public final class DefaultDatabaseService
 				catch(Throwable fatal)
 				{
 					//logger.fatal("A would-be fatal exception occurred", fatal);
-					System.out.println("A would-be fatal exception occurred" + fatal.getMessage());
+					System.out.println(dateFormat.format(date)+": A would-be fatal exception occurred" + fatal.getMessage());
 					fatal.printStackTrace();
 				}
 			}
