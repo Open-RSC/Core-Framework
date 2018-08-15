@@ -1137,7 +1137,6 @@ INSERT INTO `def_door` (`name`, `description`, `command1`, `command2`, `model_va
 ('Door', 'This door is locked', 'Open', 'Examine', 192, 0, 0, 1, 1, 1, 218),
 ('web', 'A spider\'s web', 'WalkTo', 'Examine', 192, 26, 26, 1, 1, 0, 219),
 ('web', 'A spider\'s web', 'WalkTo', 'Examine', 192, 26, 26, 1, 1, 0, 220),
-('Anti-Nigger Forcefield', 'A magical barrier that screams white power', 'WalkTo', 'Examine', 192, 17, 17, 1, 1, 0, 221),
 ('Door', 'The door is locked', 'Open', 'Examine', 192, 0, 0, 1, 1, 1, 222),
 ('Door', 'The door is locked', 'Open', 'Examine', 192, 0, 0, 1, 1, 1, 223),
 ('Door', 'The door is locked', 'Open', 'Examine', 192, 0, 0, 1, 1, 1, 224),
