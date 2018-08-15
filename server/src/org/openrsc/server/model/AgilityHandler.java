@@ -79,10 +79,16 @@ public class AgilityHandler {
 							});
 
 							break;
-						case 679:
-							owner.sendMessage(def.getAttemptMessage());
-							moveSuccess(false);
-							finish(true);
+						case 679: // Barbarian handholds (out only)
+							if ((owner.getX() == 496 || owner.getX() == 495) && (owner.getY() == 556 || owner.getY() == 557)) {
+								owner.sendMessage(def.getAttemptMessage());
+								owner.increaseXP(16, 28);
+								moveSuccess(false);
+								finish(true);
+							} else {
+								owner.sendMessage("I can't reach that");
+								finish(true);
+							}
 							break;
 						case 671:
 						case 672:

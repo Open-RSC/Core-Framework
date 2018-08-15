@@ -117,7 +117,7 @@ public class ObjectAction implements PacketHandler {
                                                 if (telePoint != null)
                                                         owner.teleport(telePoint.getX(), telePoint.getY(), false);
                                                 else if (AgilityHandler.doEvent(owner, object.getID())){}
-                                                else if (command.equals("balance on"))
+                                                else if (command.equals("balance on") || command.equals("balance"))
                                                         handleBalanceOnEvent();
                                                 else if (command.equals("climb"))
                                                         handleClimbEvent();
@@ -125,6 +125,8 @@ public class ObjectAction implements PacketHandler {
                                                         handleSwingEvent();
                                                 else if (command.equals("enter"))
                                                         handleEnterEvent();
+                                                else if (command.equals("jump"))
+                                                        handleJumpEvent();
                                                 else if (command.equals("climb-up"))
                                                         handleClimbUpEvent();
                                                 else if (command.equals("go up"))
@@ -3827,7 +3829,7 @@ public class ObjectAction implements PacketHandler {
                                                                                                 owner.getInventory().add(fish);
                                                                                                 owner.sendMessage("You catch a " + fish.getDef().getName() + ".");
                                                                                                 owner.sendInventory();
-                                                                                                owner.increaseXP(10, def.getExp());
+                                                                                                owner.increaseXP(Skills.FISHING, def.getExp());
                                                                                                 owner.sendStat(10);
                                                                                                 owner.setBusy(false);
                                                                                                 if(Config.getSkillLoopMode() == 2) {
@@ -3963,25 +3965,27 @@ public class ObjectAction implements PacketHandler {
                                                                 }
                                                         break;
 
-							case 695: // Brimhaven Moss Giant Swing
-								if (owner.getX() < 513 && owner.getX() > 515) {
-									owner.sendMessage("You reach out and swing across the vines"); // XXX
-									owner.teleport(508, 669, false);
-									owner.increaseXP(Skills.AGILITY, 23);
-								}
-								break;
-							case 694: // Brimhaven Moss Giant Swing
-								if (owner.getX() < 509 && owner.getX() > 507) {
-									owner.sendMessage("You reach out and swing across the vines"); // XXX
-									owner.teleport(512, 669, false);
-									owner.increaseXP(Skills.AGILITY, 23);
-								}
-								break;
+                                                        case 695: // Brimhaven Moss Giant Swing
+                                                                if (owner.getX() > 510 && owner.getX() < 513) {
+                                                                        owner.sendMessage("You skillfully swing across the stream");
+                                                                        owner.addMessageToChatQueue("Aaaaahahah");
+                                                                        owner.teleport(508, 669, false);
+                                                                        owner.increaseXP(Skills.AGILITY, 23);
+                                                                }
+                                                                break;
+                                                        case 694: // Brimhaven Moss Giant Swing
+                                                                if (owner.getX() < 511 && owner.getX() > 507) {
+                                                                        owner.sendMessage("You skillfully swing across the stream");
+                                                                        owner.addMessageToChatQueue("Aaaaahahah");
+                                                                        owner.teleport(512, 669, false);
+                                                                        owner.increaseXP(Skills.AGILITY, 23);
+                                                                }
+                                                                break;
 
                                                         default:
                                                                 owner.sendMessage("Nothing interesting happens");
                                                 }
-						owner.sendStat(16);
+                                                owner.sendStat(16);
                                         }
                                         
                                         private void handleBalanceOnEvent() {
@@ -4020,45 +4024,45 @@ public class ObjectAction implements PacketHandler {
                                                                 }
                                                                 break;
 
-                                                                case 680:
-                                                                        owner.sendMessage("You stand on the slippery log");
-                                                                        if (agilityFormulae(1)) {
-                                                                                owner.teleport(598, 458, false);
-                                                                                owner.sendMessage("and walk across");
-										owner.increaseXP(Skills.AGILITY, 34);
-                                                                        } else {
-                                                                                owner.teleport(597, 461, false);
-                                                                                int damage = (int)(owner.getCurStat(3) * 0.9);
-                                                                                owner.setLastDamage(damage);
-                                                                                owner.setCurStat(3, owner.getCurStat(3) - damage);
-                                                                                owner.sendStat(3);
-                                                                                owner.sendMessage("You slip and fall");
-                                                                                owner.sendMessage("You manage to make it out before you drown");
-                                                                                owner.informOfModifiedHits(owner);
-                                                                        }
+                                                        case 680:
+                                                                owner.sendMessage("You stand on the slippery log");
+                                                                if (agilityFormulae(1)) {
+                                                                        owner.teleport(598, 458, false);
+                                                                        owner.sendMessage("and walk across");
+                                                                                owner.increaseXP(Skills.AGILITY, 34);
+                                                                } else {
+                                                                        owner.teleport(597, 461, false);
+                                                                        int damage = (int)(owner.getCurStat(3) * 0.9);
+                                                                        owner.setLastDamage(damage);
+                                                                        owner.setCurStat(3, owner.getCurStat(3) - damage);
+                                                                        owner.sendStat(3);
+                                                                        owner.sendMessage("You slip and fall");
+                                                                        owner.sendMessage("You manage to make it out before you drown");
+                                                                        owner.informOfModifiedHits(owner);
+                                                                }
                                                                 break;
 
-                                                                case 692: // Karamja Log Bridge
-                                                                        owner.sendMessage("You attempt to walk over the slippery log..");
-									if (owner.getX() == 367 && (owner.getY() <= 782 && owner.getY() >= 780)) // Move to proper position
-										owner.teleport(367, 781, false);
-									else if (owner.getX() == 369 && (owner.getY() <= 782 && owner.getY() >= 780))
-										owner.teleport(369, 781, false);
-									else if (owner.getY() == 781 && owner.getX() == 370)
-										owner.teleport(369, 781, false);
-									else if (owner.getY() == 781 && owner.getX() == 366)
-										owner.teleport(367, 781, false);
-                                                                        if (agilityFormulae(1)) {
-                                                                               	owner.sendMessage("...and make it without any problems!");
-                                                                                if (owner.getX() == 367) {
-											owner.teleport(368, 781, false);
-											owner.teleport(369, 781, false);
-	                                                                                owner.increaseXP(Skills.AGILITY, 34);
-										} else if (owner.getX() == 369) {
-											owner.teleport(368, 781, false);
-											owner.teleport(367, 781, false);
-	                                                                                owner.increaseXP(Skills.AGILITY, 34);
-										}
+                                                        case 692: // Karamja Log Bridge
+                                                                owner.sendMessage("You attempt to walk over the slippery log..");
+                                                                        if (owner.getX() == 367 && (owner.getY() <= 782 && owner.getY() >= 780)) // Move to proper position
+                                                                                owner.teleport(367, 781, false);
+                                                                        else if (owner.getX() == 369 && (owner.getY() <= 782 && owner.getY() >= 780))
+                                                                                owner.teleport(369, 781, false);
+                                                                        else if (owner.getY() == 781 && owner.getX() == 370)
+                                                                                owner.teleport(369, 781, false);
+                                                                        else if (owner.getY() == 781 && owner.getX() == 366)
+                                                                                owner.teleport(367, 781, false);
+                                                                if (agilityFormulae(1)) {
+                                                                        owner.sendMessage("...and make it without any problems!");
+                                                                        if (owner.getX() == 367) {
+                                                                                        owner.teleport(368, 781, false);
+                                                                                        owner.teleport(369, 781, false);
+                                                                                owner.increaseXP(Skills.AGILITY, 34);
+                                                                                } else if (owner.getX() == 369) {
+                                                                                        owner.teleport(368, 781, false);
+                                                                                        owner.teleport(367, 781, false);
+                                                                                owner.increaseXP(Skills.AGILITY, 34);
+                                                                                }
                                                                         } else {
                                                                                 owner.teleport(366, 789, false);
                                                                                 int damage = (int)(owner.getCurStat(3) * 0.9);
@@ -4071,27 +4075,52 @@ public class ObjectAction implements PacketHandler {
                                                                         }
                                                                 break;
                                                                         
-                                                                case 681: //Log near Sir Galahad's house, west of river
-                                                                        owner.sendMessage("You stand on the slippery log");
-                                                                        if (agilityFormulae(1)) {
-                                                                                owner.teleport(592, 458, false);
-                                                                                owner.sendMessage("and walk across");
-                                                                        } else {
-                                                                                owner.teleport(597, 461, false);
-                                                                                int damage = (int)(owner.getCurStat(3) * 0.9);
-                                                                                owner.setLastDamage(damage);
-                                                                                owner.setCurStat(3, owner.getCurStat(3) - damage);
-                                                                                owner.sendStat(3);
-                                                                                owner.sendMessage("You slip and fall");
-                                                                                owner.sendMessage("You manage to make it out before you drown");
-                                                                                owner.informOfModifiedHits(owner);
-                                                                        }
+                                                        case 681: //Log near Sir Galahad's house, west of river
+                                                                owner.sendMessage("You stand on the slippery log");
+                                                                if (agilityFormulae(1)) {
+                                                                        owner.teleport(592, 458, false);
+                                                                        owner.sendMessage("and walk across");
+                                                                } else {
+                                                                        owner.teleport(597, 461, false);
+                                                                        int damage = (int)(owner.getCurStat(3) * 0.9);
+                                                                        owner.setLastDamage(damage);
+                                                                        owner.setCurStat(3, owner.getCurStat(3) - damage);
+                                                                        owner.sendStat(3);
+                                                                        owner.sendMessage("You slip and fall");
+                                                                        owner.sendMessage("You manage to make it out before you drown");
+                                                                        owner.informOfModifiedHits(owner);
+                                                                }
                                                                 break;
+
+                                                        case 701:
+                                                                // Calculate the rock we are hopping to
+                                                                int x = -1;
+                                                                int y = -1;
+                                                                if (object.getX() == 346 && object.getY() == 807) {
+                                                                        x = 346;
+                                                                        y = 807;
+                                                                } else if (object.getX() == 347 && object.getY() == 806) {
+                                                                        x = 347;
+                                                                        y = 806;
+                                                                }
+                                                                if (x >= 0 && y >= 0) {
+                                                                        owner.sendMessage("You carefully step to the rock...");
+                                                                        if (agilityFormulae(1)) {
+                                                                                owner.teleport(x, y, false);
+                                                                                owner.sendMessage("...and successfully balance upon it");
+                                                                                owner.increaseXP(Skills.AGILITY, 10);
+                                                                        } else {
+                                                                                owner.sendMessage("...but fall off of the rock and wash down stream");
+                                                                                owner.teleport(342, 804, false);
+                                                                                owner.increaseXP(Skills.AGILITY, 4);
+                                                                        }
+                                                                }
+                                                                break;  
                                                                         
-                                                                default:
-                                                                        owner.sendMessage("Nothing interesting happens");
+                                                        default:
+                                                                owner.sendMessage("Nothing interesting happens");
                                                 }
-						owner.sendStat(16);
+                                                owner.sendStat(16);
                                         }
                                         
                                         private void handleClimbEvent() {
@@ -4122,7 +4151,7 @@ public class ObjectAction implements PacketHandler {
                                                         case 448:
                                                                 owner.sendMessage("You climb up the pile of mud");
                                                                 owner.teleport(618, 580);
-                                                        	break;
+                                                                break;
                                                         
                                                         case 636:
                                                                 if (owner.getX() == 582 && (owner.getY() == 3573 || owner.getY() == 3574)) {
@@ -4135,42 +4164,54 @@ public class ObjectAction implements PacketHandler {
                                                                         owner.sendMessage("You look through the dirt pile");
                                                                         owner.sendMessage("and it reveals a secret passage!");
                                                                 }
-                                                        	break;
+                                                                break;
+
+                                                        case 710: // Karamja Rocks
+                                                                if (owner.getX() == 450 || owner.getX() == 449) {
+                                                                        owner.teleport(452, 828, false);
+                                                                        owner.sendMessage("You climb up the rocks");
+                                                                        owner.increaseXP(Skills.AGILITY, 10);
+                                                                }
+                                                                else if (owner.getX() == 452 ) {
+                                                                        owner.teleport(449, 828, false);
+                                                                        owner.sendMessage("You climb down the rocks");
+                                                                        owner.increaseXP(Skills.AGILITY, 10);
+                                                                }
                                                         
-                                                        case 693:
-                                                                if (owner.getX() == 339 && owner.getY() == 555) {
+                                                        case 693: // Falador Handholds
+                                                                if ((owner.getX() == 339 || owner.getX() == 340) && (owner.getY() == 554 || owner.getY() == 555 || owner.getY() == 556)) {
                                                                         owner.teleport(338, 555, false);
                                                                         owner.sendMessage("You grab hold of the handholds");
                                                                         owner.sendMessage("and climb over to the other side");
 									owner.increaseXP(Skills.AGILITY, 50);
                                                                 }
-                                                        	break;
+                                                                break;
 
-							case 633: // Yanille Rubble Pile
-								if(owner.getX() > 579 && owner.getX() < 582 && owner.getY() > 3523 && owner.getY() < 3528) {
-									owner.teleport(582, 3573, false);
-									owner.sendMessage("You climb up the pile of rubble");
-									owner.increaseXP(Skills.AGILITY, 54);
-								}
-								break;
+                                                        case 633: // Yanille Rubble Pile
+                                                                if(owner.getX() > 579 && owner.getX() < 582 && owner.getY() > 3523 && owner.getY() < 3528) {
+                                                                        owner.teleport(582, 3573, false);
+                                                                        owner.sendMessage("You climb up the pile of rubble");
+                                                                        owner.increaseXP(Skills.AGILITY, 54);
+                                                                }
+                                                                break;
 
-							case 1029: // Yanille north climbing rocks
-								if (owner.getX() == 624) {
-									if (owner.getY() == 743) {
-										owner.teleport(624, 742, false);
-									}
-									if (owner.getY() == 742) {
-										owner.teleport(624, 741, false);
-										owner.sendMessage("You climb the rocks and scale the wall"); // XXX
-										owner.increaseXP(Skills.AGILITY, 40);
-									}
-								}
-								break;
+                                                        case 1029: // Yanille north climbing rocks
+                                                                if (owner.getX() == 624) {
+                                                                        if (owner.getY() == 743) {
+                                                                                owner.teleport(624, 742, false);
+                                                                        }
+                                                                        if (owner.getY() == 742) {
+                                                                                owner.teleport(624, 741, false);
+                                                                                owner.sendMessage("You climb the rocks and scale the wall"); // XXX
+                                                                                owner.increaseXP(Skills.AGILITY, 40);
+                                                                        }
+                                                                }
+                                                                break;
                                                                 
                                                         default:
                                                                 owner.sendMessage("Nothing interesting happens.");
                                                 }
-						owner.sendStat(16);
+                                                owner.sendStat(16);
                                         }
                                         
                                         private void handleEnterEvent() {
@@ -4200,7 +4241,7 @@ public class ObjectAction implements PacketHandler {
                                                                 owner.teleport(608, 3568, false);
                                                                 owner.sendMessage("You squeeze into the pipe");
                                                                 owner.sendMessage("and shuffle down into it");
-								owner.increaseXP(Skills.AGILITY, 30);
+                                                                owner.increaseXP(Skills.AGILITY, 30);
                                                         break;
                                                         
                                                         case 657:
@@ -4229,7 +4270,34 @@ public class ObjectAction implements PacketHandler {
                                                         default:
                                                                 owner.sendMessage("Nothing interesting happens.");
                                                 }
-						owner.sendStat(16);
+                                                owner.sendStat(16);
+                                        }
+
+                                        private void handleJumpEvent() {
+                                                switch (object.getID()) {
+                                                        case 691: // Karamja Fence
+                                                                if (owner.getX() == 458 && owner.getY() == 828) {
+                                                                        owner.sendMessage("You prepare to negotiate the bridge fence...");
+                                                                        owner.teleport(457, 828, false);
+                                                                        owner.sendMessage("You run and jump...");
+                                                                        owner.teleport(458, 828, false);
+                                                                        owner.teleport(459, 828, false); // Successful jump
+                                                                        owner.sendMessage("...and land perfectly on the other side!");
+                                                                        //owner.teleport(452, 836, false); // Failed Jump TODO
+                                                                }
+                                                                else if (owner.getX() == 459 && owner.getY() == 828) {
+                                                                        owner.sendMessage("You prepare to negotiate the bridge fence...");
+                                                                        owner.teleport(460, 828, false);
+                                                                        owner.sendMessage("You run and jump...");
+                                                                        owner.teleport(459, 828, false);
+                                                                        owner.teleport(458, 828, false); // Successful jump
+                                                                        owner.sendMessage("...and land perfectly on the other side!");
+                                                                        //owner.teleport(452, 836, false); // Failed Jump TODO
+                                                                }
+                                                                break;
+
+                                                }
+                                                owner.sendStat(16);
                                         }
                                         
                                         private void handleInspect() {
