@@ -942,13 +942,15 @@ public class InvUseOnObject implements PacketHandler {
 							return;
 						}
 
-						owner.setBusy(true);
-						showBubble();
-						owner.sendMessage("You smelt the " + item.getDef().getName().toLowerCase().replace(" ore", "") + " in the furnace");
 						final ItemSmeltingDef def = smeltingDef;
-						System.out.println(batch);
 						BatchedEvent smeltEvent = new BatchedEvent(owner, 1500) {
+							public void doAction() {
+								action();
+							}
 							public void run() {
+								owner.setBusy(true);
+								showBubble();
+								owner.sendMessage("You smelt the " + item.getDef().getName().toLowerCase().replace(" ore", "") + " in the furnace");
 								InvItem bar = new InvItem(def.getBarId());
 								if (owner.getInventory().remove(item) > -1) {
 									for (ReqOreDef reqOre : def.getReqOres()) {
@@ -977,8 +979,9 @@ public class InvUseOnObject implements PacketHandler {
 										owner.sendInventory();
 									}
 								}
-								if (batch == 0 || owner.getInventory().full()) {
+								if (Config.getSkillLoopMode() == 0 || batch == 0 || owner.getInventory().full() || !owner.getInventory().contains(item.getID())) {
 									owner.setBusy(false);
+									this.stop();
 								}
 							}
 							public int calculateActionAttempts() {

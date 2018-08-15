@@ -24,4 +24,6 @@ public abstract class BatchedEvent extends DelayedEvent {
 
 	protected abstract int calculateActionAttempts();
 
+	protected abstract void doAction();
+
 }
