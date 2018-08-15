@@ -18,10 +18,16 @@ import org.openrsc.server.networking.WebConnectionHandler;
 
 import com.rscdaemon.concurrent.ConfigurableThreadFactory;
 import com.rscdaemon.concurrent.ConfigurableThreadFactory.ConfigurationBuilder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.openrsc.server.util.Formulae;
 
 public final class Server
-{
+{       
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+    
 	private static GameEngine engine = new GameEngine();
 	
 	private static Server instance;
@@ -62,7 +68,7 @@ public final class Server
 			acceptor.bind(new InetSocketAddress(Config.getServerIp(), Config.getServerPort()), new RSCConnectionHandler(engine.messageQueue), config);
 		}
 		catch (Exception e) {
-			System.out.println("Unable to bind to: " + Config.getServerIp() + " (" + Config.getServerPort() + ")");
+			System.out.println(dateFormat.format(date)+": Unable to bind to: " + Config.getServerIp() + " (" + Config.getServerPort() + ")");
 			System.exit(-1);
 		}
 		try {
@@ -72,7 +78,7 @@ public final class Server
 			((SocketSessionConfig)config.getSessionConfig()).setReuseAddress(true);
 			this.webAcceptor.bind(new InetSocketAddress(Config.getServerIp(), Config.getWebPort()), new WebConnectionHandler(engine.webMessageQueue), config);
 		} catch (Exception e) {
-			System.out.println("Unable to bind to: " + Config.getServerIp() + " (" + Config.getWebPort() + ")");
+			System.out.println(dateFormat.format(date)+": Unable to bind to: " + Config.getServerIp() + " (" + Config.getWebPort() + ")");
 			System.exit(-1);
 		}
 
@@ -86,7 +92,7 @@ public final class Server
 	 */
 	public void shutdown(boolean autoRestart)
 	{
-		System.out.println(Config.getServerName() + " is shutting down...");
+		System.out.println(dateFormat.format(date)+": " + Config.getServerName() + " is shutting down...");
 		/// Remove all players
 		engine.emptyWorld();
 		World.getWorldLoader().saveAuctionHouse();
@@ -112,9 +118,9 @@ public final class Server
 		/// Disconnect from MySQL (waits to finish all pending queries, then shuts down)
 		try
 		{
-			System.out.println("Waiting for database service to close...");
+			System.out.println(dateFormat.format(date)+": Waiting for database service to close...");
 			ServerBootstrap.getDatabaseService().close();
-			System.out.println("Database service has shut down...");
+			System.out.println(dateFormat.format(date)+": Database service has shut down...");
 		}
 		catch (Exception e1)
 		{
@@ -126,7 +132,7 @@ public final class Server
 		{
 			try
 			{
-				System.out.println("Launching automatic game server restart script...");
+				System.out.println(dateFormat.format(date)+": Launching automatic game server restart script...");
 				Runtime.getRuntime().exec("./run_server.sh");
 			}
 			catch (Exception e)
@@ -151,8 +157,9 @@ public final class Server
 			System.err.println("An error has been encountered while loading configuration: ");
 			ex.printStackTrace();
 		}
-
-		System.out.println(Config.getServerName() + " is starting up...");
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                Date date = new Date();
+		System.out.println(dateFormat.format(date)+": " + Config.getServerName() + " is starting up...");
 		Class.forName("org.openrsc.server.ServerBootstrap");
 		try
 		{
@@ -163,7 +170,7 @@ public final class Server
 			t.printStackTrace();
 			System.exit(-1);
 		}
-		System.out.println(Config.getServerName() + " is now online!");
+		System.out.println(dateFormat.format(date)+": " + Config.getServerName() + " is now online!");
 	}
 
 }

@@ -60,7 +60,10 @@ import com.rscdaemon.scripting.quest.Quest;
 import org.openrsc.server.Config;
 
 import java.net.InetSocketAddress;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 import org.apache.commons.lang.StringEscapeUtils;
 
 
@@ -207,6 +210,8 @@ public final class Login
 		{
 			if(rs.next())
 			{
+                            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                            Date date = new Date();
 
 				Player player = new Player(session);
 				session.setAttachment(player);
@@ -325,12 +330,12 @@ public final class Login
 									invItem.setWield(true);
 									player.updateWornItems(invItem.getWieldableDef().getWieldPos(), invItem.getWieldableDef().getSprite());								
 								} else {
-									System.out.println("Player: " + player.getUsername() + " is wielding an unwieldable item ID: " + invItemRS.getInt("id"));
+									System.out.println(dateFormat.format(date)+": Player: " + player.getUsername() + " is wielding an unwieldable item ID: " + invItemRS.getInt("id"));
 								}
 							}
 							inv.add(invItem);
 						} else {
-							System.out.println(player.getUsername() + " has an invalid inventory item amount! (0)");
+							System.out.println(dateFormat.format(date)+": "+player.getUsername() + " has an invalid inventory item amount! (0)");
 						}
 					}
 					player.setInventory(inv);
