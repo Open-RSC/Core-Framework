@@ -139,7 +139,7 @@ public class Inventory {
 		return -1;
 	}
 	
-	public long countId(int id) {
+	public long countId(long id) {
 		long temp = 0;
 		for (InvItem i : list) {
 			if (i.getID() == id)
