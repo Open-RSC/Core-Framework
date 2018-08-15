@@ -16,7 +16,7 @@ public class Config {
 	private static final String WILDERNESS_ENTRY_BLOCKED_MESSAGE = "You may only enter the wilderness on " + Config.getAllowedConcurrentIpsInWilderness() + " character(s) at a time.";
 
         private static final HashMap<String, String> configMap = new HashMap();
-        private static final String[] safeConfigNames = {"DISABLE_FATIGUE", "DISABLE_SLEEP_WORDS", "BAN_FAILED_SLEEP", "ALLOW_WEAKENS", "ALLOW_GODSPELLS", "MAX_LOGINS_PER_IP", "SHUTDOWN_TIME_MILLIS", "MAX_PLAYERS", "COMBAT_XP_RATE", "COMBAT_XP_SUB", "SKILL_XP_RATE", "SKILL_XP_SUB", "WILD_XP_BONUS", "SKULLED_XP_BONUS", "COMMAND_PREFIX", "SERVER_NAME", "PREFIX"};
+        private static final String[] safeConfigNames = {"DISABLE_FATIGUE", "DISABLE_SLEEP_WORDS", "BAN_FAILED_SLEEP", "ALLOW_WEAKENS", "ALLOW_GODSPELLS", "MAX_LOGINS_PER_IP", "SHUTDOWN_TIME_MILLIS", "MAX_PLAYERS", "COMBAT_XP_RATE", "COMBAT_XP_SUB", "SKILL_XP_RATE", "SKILL_XP_SUB", "WILD_XP_BONUS", "SKULLED_XP_BONUS", "COMMAND_PREFIX", "SERVER_NAME", "PREFIX", "SKILL_LOOP_MODE"};
 
 	public static void initConfig(File file) throws IOException {
 		setStartTime(System.currentTimeMillis());
