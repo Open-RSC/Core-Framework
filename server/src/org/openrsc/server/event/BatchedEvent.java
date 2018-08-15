@@ -4,7 +4,7 @@ import org.openrsc.server.model.Player;
 
 public abstract class BatchedEvent extends DelayedEvent {
 
-	private int maximumAttempts = calculateActionAttempts();
+	private long maximumAttempts = calculateActionAttempts();
 	
 	private int attempts = 0;
 	
@@ -22,7 +22,7 @@ public abstract class BatchedEvent extends DelayedEvent {
 		run();
 	}
 
-	protected abstract int calculateActionAttempts();
+	protected abstract long calculateActionAttempts();
 
 	protected abstract void doAction();
 
