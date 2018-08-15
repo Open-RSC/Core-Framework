@@ -8,7 +8,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -71,6 +74,9 @@ import org.openrsc.server.util.ChatFilter;
 import org.openrsc.server.util.DataConversions;
 
 public class WorldLoader {
+    
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 
 	public void writeQuery(String query) throws SQLException {
 		try (Connection connection = ConnectionFactory.getConfigDbConnection()) {
@@ -175,7 +181,7 @@ public class WorldLoader {
 						+ "' AND `itemPrice`='" + a.getPrice() + "' AND `canceled`='" + (a.isCanceled() ? 1 : 0)
 						+ "' AND `created`='" + a.getCreatedTimestamp() + "' LIMIT 1;");
 				if (ret == 0)
-					System.out.println("Tried to delete non-existant auction");
+					System.out.println(dateFormat.format(date)+": Tried to delete non-existant auction");
 			}
 		} catch (SQLException e) {
 			System.err.println("Unable to save auction house.  " + e.getMessage());
@@ -191,7 +197,7 @@ public class WorldLoader {
 						+ "', '" + auction.getID() + "', '" + auction.getAmount() + "', '" + auction.getPrice() + "', '"
 						+ (auction.isCanceled() ? 1 : 0) + "', '" + auction.getCreatedTimestamp() + "');");
 				if (ret == 0)
-					System.out.println("Unable to add auction, shouldn't happen.");
+					System.out.println(dateFormat.format(date)+": Unable to add auction, shouldn't happen.");
 			}
 		} catch (SQLException e) {
 			System.err.println("Unable to add auction: " + e.getMessage());
@@ -531,7 +537,7 @@ public class WorldLoader {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println(dateFormat.format(date)+": "+e);
 		}
 	}
 
@@ -939,7 +945,7 @@ public class WorldLoader {
 		}
         
         /*for (Map.Entry<Integer, ItemDef> entry : items.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue().getName());
+            System.out.println(dateFormat.format(date)+": "+entry.getKey() + ": " + entry.getValue().getName());
         }*/
         
 		return items;
@@ -1091,7 +1097,7 @@ public class WorldLoader {
 
 					} catch (Exception ex) {
 						ex.printStackTrace();
-						System.out.println("FUCKED Object @ ID: " + result.getInt("object") + " at ("
+						System.out.println(dateFormat.format(date)+": Invalid object located @ ID: " + result.getInt("object") + " at ("
 								+ result.getInt("x") + ", " + result.getInt("y") + ") Direction: "
 								+ result.getInt("direction") + " of type: " + result.getInt("type"));
 						throw (ExceptionInInitializerError) new ExceptionInInitializerError().initCause(ex);
@@ -1133,7 +1139,7 @@ public class WorldLoader {
 		try {
 			tileArchive = new ZipFile(new File("config" + System.getProperty("file.separator") + "landscape"));
 		} catch (Exception ex) {
-			System.out.println("Could not find file: config" + System.getProperty("file.separator") + "landscape");
+			System.out.println(dateFormat.format(date)+": Could not find file: config" + System.getProperty("file.separator") + "landscape");
 			System.exit(-1);
 		}
 		for (int lvl = 0; lvl < 4; lvl++) {
@@ -1163,7 +1169,7 @@ public class WorldLoader {
 			ByteBuffer data = DataConversions.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
 			s = Sector.unpack(data);
 		} catch (Exception e) {
-			System.out.println("Failed to load landscape - Server is terminating...");
+			System.out.println(dateFormat.format(date)+": Failed to load landscape - Server is terminating...");
 			throw (ExceptionInInitializerError) new ExceptionInInitializerError().initCause(e);
 		}
 		for (int y = 0; y < Sector.HEIGHT; y++) {

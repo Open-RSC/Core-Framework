@@ -1,5 +1,9 @@
 package org.openrsc.server.event;
+
 /*
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.openrsc.server.Server;
 import org.openrsc.server.entityhandling.defs.GameObjectDef;
 import org.openrsc.server.StaticDataStorage;
@@ -21,6 +25,8 @@ import org.apache.mina.core.session.IoSession;
 import java.util.*;
 */
 public class Thieving {/*
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 	private Player player;
 	private GameObject object;
 	private static Random random = new Random();
@@ -177,7 +183,7 @@ public class Thieving {/*
 					player.setThieving(false);
 					player.setBusy(false);
 					player.getActionSender().sendMessagePointer(5);
-					System.out.println("Player " + player.getUsername() + " found a chest not added, ID: " + object.getID() + ", Coords: " + object.getLocation());
+					System.out.println(dateFormat.format(date)+": Player " + player.getUsername() + " found a chest not added, ID: " + object.getID() + ", Coords: " + object.getLocation());
 				}
 			}
 		} catch(Exception e) {
@@ -271,7 +277,7 @@ public class Thieving {/*
 					}
 				} else {
 					player.getActionSender().sendMessagePointer(11);
-					System.out.println("Player " + player.getUsername() + " found a stall not added, ID: " + object.getID() + ", Coords: " + object.getLocation());
+					System.out.println(dateFormat.format(date)+": Player " + player.getUsername() + " found a stall not added, ID: " + object.getID() + ", Coords: " + object.getLocation());
 					player.setThieving(false);
 				}
 			} else {
@@ -323,7 +329,7 @@ public class Thieving {/*
 					}
 				} else {
 					player.getActionSender().sendMessagePointer(14);
-					System.out.println("Player " + player.getUsername() + " found a door(lockpick) not added, ID: " + object.getID() + ", Coords: " + object.getLocation());
+					System.out.println(dateFormat.format(date)+": Player " + player.getUsername() + " found a door(lockpick) not added, ID: " + object.getID() + ", Coords: " + object.getLocation());
 					player.setThieving(false);
 					player.setBusy(false);
 				}

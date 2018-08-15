@@ -1,5 +1,8 @@
 package org.openrsc.server.packethandler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.net.Packet;
@@ -36,7 +39,9 @@ public class CaptchaHandler implements PacketHandler {
 			}
 		} catch(Exception ex) {
 			if (player != null) {
-				System.out.println(player.getUsername() + " (" + player.getIP() + ") sent a null sleep string.");
+                                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                                Date date = new Date();
+				System.out.println(dateFormat.format(date)+": "+player.getUsername() + " (" + player.getIP() + ") sent a null sleep string.");
 			}
 			ex.printStackTrace();
 		}

@@ -52,11 +52,17 @@ import org.openrsc.server.util.StatefulEntityCollection;
 
 import com.rscdaemon.scripting.Script;
 import com.rscdaemon.util.IPTrackerPredicate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 public final class Player extends Mob implements Watcher, Comparable<Player>
 {
-	private static final FatigueApplicator fatigueApplicator =
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+        
+        private static final FatigueApplicator fatigueApplicator =
 			Config.isDisableFatigue() ?
 					new NoOpFatigueApplicator() :
 					new DefaultFatigueApplicator();
@@ -69,7 +75,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		if(!scriptableQuests.containsKey(id))
 		{
 			scriptableQuests.put(id, ServerBootstrap.getQuest(id));
-			System.out.println("SCRIPTABLE_QUEST: " + ServerBootstrap.getQuest(id));
+			System.out.println(dateFormat.format(date)+": SCRIPTABLE_QUEST: " + ServerBootstrap.getQuest(id));
 		}
 		return scriptableQuests.get(id);
 	}
