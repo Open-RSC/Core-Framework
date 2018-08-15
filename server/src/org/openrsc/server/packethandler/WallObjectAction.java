@@ -26,6 +26,9 @@ import com.rscdaemon.scripting.listener.UseWallObjectListener;
 
 public class WallObjectAction implements PacketHandler {
 
+	private static final String DOOR_SWINGS_OPEN_MSG = "The door swings open";
+	private static final String DOOR_LOCKED_MSG = "The door is locked";
+	private static final String GO_THROUGH_DOOR_MSG = "You go through the door";
 	private final ScriptCache<UseWallObjectListener> scriptCache = new ScriptCache<>();
 	
 	public void handlePacket(Packet p, IoSession session) throws Exception {
@@ -161,7 +164,7 @@ public class WallObjectAction implements PacketHandler {
 								break;
 							case 20:
 							case 23:
-								owner.sendMessage("The door is locked");
+								owner.sendMessage(DOOR_LOCKED_MSG);
 								break;
 							case 51:
 						        if (owner.getY() == 536) 
@@ -340,13 +343,13 @@ public class WallObjectAction implements PacketHandler {
 								{
 						         doDoor();
 						         owner.teleport(633, 573, false);
-								 owner.sendMessage("You go through the door");
+								 owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
 									if(owner.getQuest(Quests.BIOHAZARD) == null)
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 									else
 									{
@@ -366,7 +369,7 @@ public class WallObjectAction implements PacketHandler {
 												{
 													public void action()
 													{
-														owner.sendMessage("You go through the door");
+														owner.sendMessage(GO_THROUGH_DOOR_MSG);
 														owner.teleport(633, 572, false);; //change coords
 														owner.setBusy(false);
 														mourner.unblock();
@@ -399,7 +402,7 @@ public class WallObjectAction implements PacketHandler {
 										else
 										{
 											//if player isnt on correct stage do this
-											owner.sendMessage("The door is locked");
+											owner.sendMessage(DOOR_LOCKED_MSG);
 											World.getDelayedEventHandler().add(new SingleEvent(owner, 2000)
 											{
 												public void action()
@@ -425,13 +428,13 @@ public class WallObjectAction implements PacketHandler {
 								{
 									doDoor();
 									owner.teleport(633, 1512, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        } 
 								else
 								{
 									doDoor();
 									owner.teleport(633, 1513, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 								}
 							break;
 							
@@ -442,13 +445,13 @@ public class WallObjectAction implements PacketHandler {
 								{
 						         doDoor();
 						         owner.teleport(439, 694, false);
-								 owner.sendMessage("You go through the door");
+								 owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
 									if(owner.getQuest(Quests.HEROS_QUEST) == null || owner.getQuest(Quests.HEROS_QUEST) != null && owner.getQuest(Quests.HEROS_QUEST).finished() || owner.getQuest(Quests.JOIN_PHOENIX_GANG) != null &&  owner.getQuest(Quests.JOIN_PHOENIX_GANG).finished())
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 										return;
 									}
 									else
@@ -521,7 +524,7 @@ public class WallObjectAction implements PacketHandler {
 										{
 											doDoor();
 											owner.teleport(439, 693, false);
-											owner.sendMessage("You go through the door");
+											owner.sendMessage(GO_THROUGH_DOOR_MSG);
 											owner.setBusy(false);
 										}
 									}
@@ -535,7 +538,7 @@ public class WallObjectAction implements PacketHandler {
 								{
 						            doDoor();
 									owner.teleport(448, 682, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
@@ -543,11 +546,11 @@ public class WallObjectAction implements PacketHandler {
 									{
 										doDoor();
 										owner.teleport(448, 681, false);
-										owner.sendMessage("You go through the door");
+										owner.sendMessage(GO_THROUGH_DOOR_MSG);
 									}
 									else
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								}
 							break;
@@ -559,13 +562,13 @@ public class WallObjectAction implements PacketHandler {
 								{
 						         doDoor();
 						         owner.teleport(463, 681, false);
-								 owner.sendMessage("You go through the door");
+								 owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
 									if(owner.getQuest(Quests.HEROS_QUEST) == null || owner.getQuest(Quests.HEROS_QUEST) != null &&  owner.getQuest(Quests.HEROS_QUEST).finished() || owner.getQuest(Quests.JOIN_PHOENIX_GANG) != null &&  owner.getQuest(Quests.JOIN_PHOENIX_GANG).finished())
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 										return;
 									}
 									else
@@ -603,7 +606,7 @@ public class WallObjectAction implements PacketHandler {
 																				owner.setBusy(false);
 																				garv.unblock();
 																				owner.teleport(463, 680, false);
-																				owner.sendMessage("You go through the door");
+																				owner.sendMessage(GO_THROUGH_DOOR_MSG);
 																			}
 																		});
 																	}
@@ -653,7 +656,7 @@ public class WallObjectAction implements PacketHandler {
 								{
 									doDoor();
 									owner.teleport(83, 534, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
@@ -665,7 +668,7 @@ public class WallObjectAction implements PacketHandler {
 										doDoor();
 										owner.teleport(82, 534, false);
 										owner.sendMessage("Guidor's wife allows you to go in");
-										owner.sendMessage("You go through the door");	
+										owner.sendMessage(GO_THROUGH_DOOR_MSG);	
 										owner.setBusy(false);
 										wife.unblock();
 									}
@@ -717,7 +720,7 @@ public class WallObjectAction implements PacketHandler {
 										}
 										else
 										{
-											owner.sendMessage("The door is locked");
+											owner.sendMessage(DOOR_LOCKED_MSG);
 										}
 									}
 									else if (LC != null)
@@ -911,12 +914,12 @@ public class WallObjectAction implements PacketHandler {
 									if(dwarfCannon.getStage() == 4) {
 										doDoor();
 										owner.teleport(owner.getX() > 604 ? 604 : 605, 468);
-										owner.sendMessage("You go through the door");
+										owner.sendMessage(GO_THROUGH_DOOR_MSG);
 									} else {
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								} else {
-									owner.sendMessage("The door is locked");
+									owner.sendMessage(DOOR_LOCKED_MSG);
 								}
 								break;
 							case 197: //Dwarf Cannon Door to the engineer [QUID46]
@@ -925,12 +928,12 @@ public class WallObjectAction implements PacketHandler {
 									if(dwarfCannon2.finished() || dwarfCannon2.getStage() > 4) {
 										doDoor();
 										owner.teleport(owner.getX() > 277 ? 277 : 278, owner.getY());
-										owner.sendMessage("You go through the door");
+										owner.sendMessage(GO_THROUGH_DOOR_MSG);
 									} else {
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								} else {
-									owner.sendMessage("The door is locked");
+									owner.sendMessage(DOOR_LOCKED_MSG);
 								}
 								break;
 								
@@ -948,7 +951,7 @@ public class WallObjectAction implements PacketHandler {
 											});
 										} else {
 											doDoor();
-											owner.sendMessage("You go through the door");
+											owner.sendMessage(GO_THROUGH_DOOR_MSG);
 											owner.teleport( owner.getX() < 126 ? 126 : 125, 686);
 										}
 									} else {
@@ -968,19 +971,19 @@ public class WallObjectAction implements PacketHandler {
 
 											} else {
 												doDoor();
-												owner.sendMessage("You go through the door");
+												owner.sendMessage(GO_THROUGH_DOOR_MSG);
 												owner.teleport( owner.getX() < 126 ? 126 : 125, 686);
 											}
 										} else {
 											doDoor();
-											owner.sendMessage("You go through the door");
+											owner.sendMessage(GO_THROUGH_DOOR_MSG);
 											owner.teleport( owner.getX() < 126 ? 126 : 125, 686);
 										}
 									}
 								} else {
 									// this should work as expected?
 									doDoor();
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 									owner.teleport( owner.getX() < 126 ? 126 : 125, 686);
 								}
 								break;
@@ -1006,24 +1009,24 @@ public class WallObjectAction implements PacketHandler {
 											if (owner.getX() == 276)
 											{
 												doDoor();
-												owner.sendMessage("You go through the door");
+												owner.sendMessage(GO_THROUGH_DOOR_MSG);
 												owner.teleport( owner.getX() < 276 ? 276 : 277, 632);
 											} else 
 											if (owner.getX() == 277) {
 												doDoor();
-												owner.sendMessage("You go through the door");
+												owner.sendMessage(GO_THROUGH_DOOR_MSG);
 												owner.teleport( owner.getX() < 277 ? 277 : 276, 632);
 											}
 									} else 
 										if (owner.getX() == 276)
 										{
 											doDoor();
-											owner.sendMessage("You go through the door");
+											owner.sendMessage(GO_THROUGH_DOOR_MSG);
 											owner.teleport( owner.getX() < 276 ? 276 : 277, 632);
 										} else 
 										if (owner.getX() == 277) {
 											doDoor();
-											owner.sendMessage("You go through the door");
+											owner.sendMessage(GO_THROUGH_DOOR_MSG);
 											owner.teleport( owner.getX() < 277 ? 277 : 276, 632);
 										}
 								break;
@@ -1040,7 +1043,7 @@ public class WallObjectAction implements PacketHandler {
 												public void action() {
 													doDoor();
 													owner.teleport(owner.getX(), owner.getY() + (owner.getY() < 3370 ? 1 : -1));
-													owner.sendMessage("You go through the door");
+													owner.sendMessage(GO_THROUGH_DOOR_MSG);
 													owner.setBusy(false);
 												}
 											});
@@ -1065,7 +1068,7 @@ public class WallObjectAction implements PacketHandler {
 												public void action() {
 													doDoor();
 													owner.teleport(owner.getX(), owner.getY() + (owner.getY() < 3370 ? 1 : -1));
-													owner.sendMessage("You go through the door");
+													owner.sendMessage(GO_THROUGH_DOOR_MSG);
 													owner.setBusy(false);
 												}
 											});
@@ -1085,7 +1088,7 @@ public class WallObjectAction implements PacketHandler {
 											public void action() {
 												doDoor();
 												owner.teleport(owner.getX(), owner.getY() + (owner.getY() > 532 ? -1 : 1));
-												owner.sendMessage("You go through the door");
+												owner.sendMessage(GO_THROUGH_DOOR_MSG);
 												owner.setBusy(false);
 											}
 										});
@@ -1100,9 +1103,9 @@ public class WallObjectAction implements PacketHandler {
 								if(owner.getX() == 199) {
 									doDoor();
 									owner.teleport(owner.getX() - 1, owner.getY(), false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 								} else {
-									owner.sendMessage("The door is locked");
+									owner.sendMessage(DOOR_LOCKED_MSG);
 								}
 								break;
 							case 47: //Wydin's Grocery Back Room Door [QUEST]
@@ -1505,7 +1508,7 @@ public class WallObjectAction implements PacketHandler {
 								{
 									if(owner.getQuest(Quests.PLAGUE_CITY) != null && owner.getQuest(Quests.PLAGUE_CITY).getStage() >= 7)
 									{
-										owner.sendMessage("You go through the door");
+										owner.sendMessage(GO_THROUGH_DOOR_MSG);
 										doDoor();
 										owner.teleport(645, 568, false);
 									}
@@ -1536,7 +1539,7 @@ public class WallObjectAction implements PacketHandler {
 																	owner.getInventory().remove(768, 1);
 																	owner.sendInventory();
 																	owner.incQuestCompletionStage(Quests.PLAGUE_CITY);
-																	owner.sendMessage("You go through the door");
+																	owner.sendMessage(GO_THROUGH_DOOR_MSG);
 																	doDoor();
 																	owner.teleport(645, 568, false);
 																	owner.setBusy(false);
@@ -1573,7 +1576,7 @@ public class WallObjectAction implements PacketHandler {
 									}
 									else
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								}
 							break;
@@ -1591,10 +1594,10 @@ public class WallObjectAction implements PacketHandler {
 										}
 										
 									} else {
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								} else {
-									owner.sendMessage("The door is locked");
+									owner.sendMessage(DOOR_LOCKED_MSG);
 								}
 								break;
 							case 112: // Fishing Guild Door
@@ -1833,7 +1836,7 @@ public class WallObjectAction implements PacketHandler {
 							{
 								doDoor();
 								owner.teleport(372, 441, false);
-								owner.sendMessage("You go through the door");
+								owner.sendMessage(GO_THROUGH_DOOR_MSG);
 							} 
 							else 
 							{
@@ -1841,7 +1844,7 @@ public class WallObjectAction implements PacketHandler {
 								{
 									doDoor();
 									owner.teleport(372, 440, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 								} 
 								else 
 								{
@@ -1963,13 +1966,13 @@ public class WallObjectAction implements PacketHandler {
 								{
 						            doDoor();
 									owner.teleport(463, 676, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
 									doDoor();
 									owner.teleport(463, 675, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 								}
 							break;
 							
@@ -1980,7 +1983,7 @@ public class WallObjectAction implements PacketHandler {
 								{
 						            doDoor();
 									owner.teleport(472, 674, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
@@ -1992,7 +1995,7 @@ public class WallObjectAction implements PacketHandler {
 									}
 									else
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								}
 							break;
@@ -2004,7 +2007,7 @@ public class WallObjectAction implements PacketHandler {
 								{
 						            doDoor();
 									owner.teleport(459, 674, false);
-									owner.sendMessage("You go through the door");
+									owner.sendMessage(GO_THROUGH_DOOR_MSG);
 						        }
 								else
 								{
@@ -2016,7 +2019,7 @@ public class WallObjectAction implements PacketHandler {
 									}
 									else
 									{
-										owner.sendMessage("The door is locked");
+										owner.sendMessage(DOOR_LOCKED_MSG);
 									}
 								}
 							break;
@@ -2086,102 +2089,31 @@ public class WallObjectAction implements PacketHandler {
 								}
 								break;
 							case 25: //Oil Can Maze 'Door G'
-								if(owner.willDoorGOpen()) {
-									doDoor();
-									if(owner.getX() == 225) {
-										owner.teleport(224, 3376, false);
-									} else {
-										owner.teleport(225, 3376, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorG();
 								break;
 							case 26: //Oil Can Maze 'Door F'
-								if(owner.willDoorFOpen()) {
-									doDoor();
-									if(owner.getX() == 228) {
-										owner.teleport(227, 3376, false);
-									} else {
-										owner.teleport(228, 3376, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorF();
 								break;
 							case 27: //Oil Can Maze 'Door B'
-								if(owner.willDoorBOpen()) {
-									doDoor();
-									if(owner.getX() == 224) {
-										owner.teleport(225, 3379, false);
-									} else {
-										owner.teleport(224, 3379, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorB(object);
 								break;
 							case 28: //Oil Can Maze 'Door D'
-								if(owner.willDoorDOpen()) {
-									doDoor();
-									if(owner.getX() == 227) {
-										owner.teleport(228, 3379, false);
-									} else {
-										owner.teleport(227, 3379, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorD();
 								break;
 							case 29: //Oil Can Maze 'Door I'
-								if(owner.willDoorIOpen()) {
-									doDoor();
-									if(owner.getX() == 227) {
-										owner.teleport(228, 3382, false);
-									} else {
-										owner.teleport(227, 3382, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorI();
 								break;
-							//case 30: //Oil Can Maze 'Door G' See below
-								
-							case 33: //Oil Can Maze 'Door C'
-								if(owner.willDoorCOpen()) {
-									doDoor();
-									if(owner.getY() == 3381) {
-										owner.teleport(226, 3380, false);
-									} else {
-										owner.teleport(226, 3381, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+							case 30: // Locked Doors / Oil Can Maze 'Door H'
+								checkDoorH();
 								break;
 							case 31: //Oil Can Maze 'Door E'
-								if(owner.willDoorEOpen()) {
-									doDoor();
-									if(owner.getY() == 3378) {
-										owner.teleport(229, 3377, false);
-									} else {
-										owner.teleport(229, 3378, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorE();
 								break;
 							case 32: //Oil Can Maze 'Door A'
-								if(owner.willDoorAOpen()) {
-									doDoor();
-									if(owner.getY() == 3381) {
-										owner.teleport(223, 3380, false);
-									} else {
-										owner.teleport(223, 3381, false);
-									}
-								} else {
-									owner.sendMessage("The door is locked");
-								}
+								checkDoorA();
+								break;
+							case 33: //Oil Can Maze 'Door C'
+								checkDoorC();
 								break;
 							case 36: // Draynor mansion front door
 								if(object.getX() != 210 || object.getY() != 553) {
@@ -2583,7 +2515,7 @@ public class WallObjectAction implements PacketHandler {
 							case 103: //Melzar's maze orange key doors
 							case 104: // Melzar's maze yellow key doors
 							case 106: //Melzar's maze blue key doors
-								owner.sendMessage("The door is locked");
+								owner.sendMessage(DOOR_LOCKED_MSG);
 							break;
 							
 							case 105: // Exit Melzar maze (zombie room)
@@ -2591,7 +2523,7 @@ public class WallObjectAction implements PacketHandler {
 							doDoor();
 							owner.teleport(346, owner.getY(), false);
 							} else {
-							owner.sendMessage("The door is locked");			
+							owner.sendMessage(DOOR_LOCKED_MSG);			
 							}							
 							break;
 							
@@ -2600,12 +2532,12 @@ public class WallObjectAction implements PacketHandler {
 							doDoor();
 							owner.teleport(348, owner.getY(),false);
 							}else {
-							owner.sendMessage("The door is locked");
+							owner.sendMessage(DOOR_LOCKED_MSG);
 							}
 							break;
 							
 							case 108: // Magenta key ( Melzar the mad room )
-							owner.sendMessage("The door is locked");
+							owner.sendMessage(DOOR_LOCKED_MSG);
 							break;
 							
 							case 110: //Exit melzar maze ( Lesser room)
@@ -2613,38 +2545,24 @@ public class WallObjectAction implements PacketHandler {
 							doDoor();
 							owner.teleport(349, owner.getY(), false);
 							}else {
-							owner.sendMessage("The door is locked");
+							owner.sendMessage(DOOR_LOCKED_MSG);
 							}
 							break;
 							
 							case 128: //Black door (lessers)
-							owner.sendMessage("The door is locked");
+							owner.sendMessage(DOOR_LOCKED_MSG);
 							break;
 							
 							case 129:// final escape Melzar maze (  base level )
 							if(owner.getX() < 340){
 							doDoor();
 							owner.teleport(340, owner.getY(), false);
-							owner.sendMessage("You go through the door");
+							owner.sendMessage(GO_THROUGH_DOOR_MSG);
 							} else {
-							owner.sendMessage("The door is locked");
+							owner.sendMessage(DOOR_LOCKED_MSG);
 							}
 							break;
 								
-								
-								
-							case 30: // Locked Doors / Oil Can Maze 'Door H'
-								if(owner.getY() < 3000 || !owner.willDoorHOpen()) {
-									owner.sendMessage("The door is locked shut");
-								} else {
-									doDoor();
-									if(owner.getY() == 3377) {
-										owner.teleport(226, 3378, false);
-									} else {
-										owner.teleport(226, 3377, false);
-									}
-								}
-								break;
 								
 							case 151 : // Search wall for Rogues purse
 								owner.sendMessage("Small amounts of herb fungus are growing at the base of this cavern wall");
@@ -2678,7 +2596,7 @@ public class WallObjectAction implements PacketHandler {
 								break;
 							case 116:
 								doDoor();
-								owner.sendMessage("You go through the door");
+								owner.sendMessage(GO_THROUGH_DOOR_MSG);
 								if(owner.getY() == 2437) {
 									owner.teleport(202, 2438, false);
 								} else {
@@ -2689,6 +2607,141 @@ public class WallObjectAction implements PacketHandler {
 								owner.sendMessage("Nothing interesting happens.");
 								break;
 						}
+					}
+				}
+
+				private void checkDoorH() {
+					if(owner.willDoorHOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getY() == 3377) {
+							owner.teleport(226, 3378, false);
+						} else {
+							owner.teleport(226, 3377, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorA() {
+					if(owner.willDoorAOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getY() == 3381) {
+							owner.teleport(223, 3380, false);
+						} else {
+							owner.teleport(223, 3381, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorE() {
+					if(owner.willDoorEOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getY() == 3378) {
+							owner.teleport(229, 3377, false);
+						} else {
+							owner.teleport(229, 3378, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorC() {
+					if(owner.willDoorCOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getY() == 3381) {
+							owner.teleport(226, 3380, false);
+						} else {
+							owner.teleport(226, 3381, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorI() {
+					if(owner.willDoorIOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getX() == 227) {
+							owner.teleport(228, 3382, false);
+						} else {
+							owner.teleport(227, 3382, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorD() {
+					if(owner.willDoorDOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getX() == 227) {
+							owner.teleport(228, 3379, false);
+						} else {
+							owner.teleport(227, 3379, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorB(final GameObject object) {
+					if(owner.willDoorBOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getX() == 224) {
+							owner.teleport(225, 3379, false);
+						} else {
+							owner.teleport(224, 3379, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorF() {
+					if(owner.willDoorFOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getX() == 228) {
+							owner.teleport(227, 3376, false);
+						} else {
+							owner.teleport(228, 3376, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
+					}
+				}
+
+				private void checkDoorG() {
+					if(owner.willDoorGOpen()) {
+						owner.sendMessage(DOOR_SWINGS_OPEN_MSG);
+						owner.sendMessage(GO_THROUGH_DOOR_MSG);
+						doDoor();
+						if(owner.getX() == 225) {
+							owner.teleport(224, 3376, false);
+						} else {
+							owner.teleport(225, 3376, false);
+						}
+					} else {
+						owner.sendMessage(DOOR_LOCKED_MSG);
 					}
 				}
 				
