@@ -811,7 +811,9 @@ public class InvUseOnObject implements PacketHandler {
 							}
 						});
 					}
-					else if (item.getID() == 172) { // Gold Bar (Crafting)
+					else if (item.getID() == 172) {
+
+						// Gold Bar (Crafting)
 						World.getDelayedEventHandler().add(new MiniEvent(owner) {
 							public void action() {
 								owner.sendMessage("What would you like to make?");
@@ -862,8 +864,10 @@ public class InvUseOnObject implements PacketHandler {
 								});
 								owner.sendMenu(options);
 							}
-						});//You open the
-					} else if (item.getID() == 384) { // Silver Bar (Crafting)
+						});
+					} else if (item.getID() == 384) {
+
+						// Silver Bar (Crafting)
 						World.getDelayedEventHandler().add(new MiniEvent(owner) {
 							public void action() {
 								owner.sendMessage("What would you like to make?");
@@ -900,7 +904,9 @@ public class InvUseOnObject implements PacketHandler {
 								owner.sendMenu(options);
 							}
 						});
-					} else if (item.getID() == 625) { // Sand (Glass)
+					} else if (item.getID() == 625) {
+
+						// Sand (Glass)
 						if (player.getInventory().countId(624) < 1) {
 							owner.sendMessage("You need some soda ash to mix the sand with");
 							return;
@@ -922,6 +928,8 @@ public class InvUseOnObject implements PacketHandler {
 							}
 						});
 					} else {
+
+						// Smelting Ore
 						ItemSmeltingDef smeltingDef = item.getSmeltingDef();
 						if (smeltingDef == null) {
 							owner.sendMessage("Nothing interesting happens");
@@ -979,7 +987,7 @@ public class InvUseOnObject implements PacketHandler {
 										owner.sendInventory();
 									}
 								}
-								if (Config.getSkillLoopMode() == 0 || batch == 0 || owner.getInventory().full() || !owner.getInventory().contains(item.getID())) {
+								if (Config.getSkillLoopMode() == 0 || batch == 0 || owner.getCancelBatch() || owner.getInventory().full() || !owner.getInventory().contains(item.getID())) {
 									owner.setBusy(false);
 									this.stop();
 								}
@@ -994,6 +1002,7 @@ public class InvUseOnObject implements PacketHandler {
 						World.getDelayedEventHandler().add(smeltEvent);
 					}
 					break;
+
 				case 177: // Doric's Anvil
 					if (owner.getQuestCompletionStage(Quests.DORICS_QUEST) != 1) {
 						Npc doric = World.getNpc(144, 323, 327, 487, 492);
