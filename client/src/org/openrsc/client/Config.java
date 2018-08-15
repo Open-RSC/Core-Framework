@@ -30,4 +30,8 @@ public class Config
 	public static String getCommandPrefix() {
 		return configMap.get("COMMAND_PREFIX");
 	}
+
+	public static int getSkillLoopMode() {
+		return Integer.parseInt(configMap.get("SKILL_LOOP_MODE"));
+	}
 }
