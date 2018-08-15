@@ -34,6 +34,10 @@ public class GameObjectDef extends EntityDef {
         return command2.toLowerCase();
     }
 
+		public int getID() {
+				return id;
+		}
+
     public int getType() {
         return type;
     }
