@@ -1018,7 +1018,6 @@ public class InvUseOnObject implements PacketHandler {
 								action();
 							}
 							public void run() {
-
 								owner.setBusy(true);
 								showBubble();
 								owner.sendMessage("You put the seaweed and the soda ash in the furnace.");
@@ -1347,7 +1346,7 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendMenu(options);
 									break;//unlock the door
 								case 2:
-									options = new String[]{"Make 10 Arrow Heads", "Make 50 Arrow Heads (5 bars)", "Forge Dart Tips"};
+									options = new String[]{"Make 10 Arrow Heads", "Forge Dart Tips"};
 									owner.setMenuHandler(new MenuHandler(options) {
 										public void handleReply(int option, String reply) {
 											if (owner.isBusy())
@@ -1358,9 +1357,6 @@ public class InvUseOnObject implements PacketHandler {
 												break;
 											case 1:
 												handleSmithing(item.getID(), 19);
-												break;
-											case 2:
-												handleSmithing(item.getID(), 20);
 												break;
 											default:
 												return;
@@ -1567,7 +1563,7 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendMenu(options);
 									break;//unlock the door
 								case 2:
-									options = new String[]{"Make 10 Arrow Heads", "Make 50 Arrow Heads (5 bars)", "Forge Dart Tips"};
+									options = new String[]{"Make 10 Arrow Heads", "Forge Dart Tips"};
 									owner.setMenuHandler(new MenuHandler(options) {
 										public void handleReply(int option, String reply) {
 											if (owner.isBusy())
@@ -1578,9 +1574,6 @@ public class InvUseOnObject implements PacketHandler {
 												break;
 											case 1:
 												handleSmithing(item.getID(), 19);
-												break;
-											case 2:
-												handleSmithing(item.getID(), 20);
 												break;
 											default:
 												return;
