@@ -2352,6 +2352,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		int actionType = menuActionType[index];
 		int actionVariable = menuActionVariable[index];
 		long actionVariable2 = menuActionVariable2[index];
+		int actionVariable3 = menuActionVariable3[index];
 		int currentMenuID = menuID[index];
 		if (currentMenuID == 200) {
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
@@ -2441,7 +2442,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionX + areaX); // X
 			super.streamClass.add2ByteInt(actionY + areaY); // Y
 			super.streamClass.add2ByteInt((int) actionVariable2); // ITEM
-			super.streamClass.add2ByteInt((int)(currentMenuID % 410));
+			super.streamClass.add2ByteInt(menuActionVariable3[index]); // Batch 0/1/2
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
@@ -4140,17 +4141,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						} else if (selectedItem >= 0) { // Use item on object
 							if (Config.getSkillLoopMode() == 2) {
 								menuText1[menuLength] = "Use one " + selectedItemName + " with";
-								menuID[menuLength] = 412;
 							} else {
 								menuText1[menuLength] = "Use " + selectedItemName + " with";
-								menuID[menuLength] = 410;
 							}
+							menuID[menuLength] = 410;
 							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 							menuActionX[menuLength] = objectX[oID];
 							menuActionY[menuLength] = objectY[oID];
 							menuActionType[menuLength] = objectID[oID];
 							menuActionVariable[menuLength] = objectType[oID];
 							menuActionVariable2[menuLength] = selectedItem;
+							menuActionVariable3[menuLength] = 0;
 							menuLength++;
 							if (Config.getSkillLoopMode() == 2)
 								if (Arrays.asList(11, 491, // Range
@@ -4168,6 +4169,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuActionType[menuLength] = objectID[oID];
 									menuActionVariable[menuLength] = objectType[oID];
 									menuActionVariable2[menuLength] = selectedItem;
+									menuActionVariable3[menuLength] = 2;
 									menuLength++;
 								}
 						} else {
@@ -10578,6 +10580,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		menuActionType = new int[250];
 		menuActionVariable = new int[250];
 		menuActionVariable2 = new long[250];
+		menuActionVariable3 = new int[250];
 		shopItems = new int[256];
 		shopItemCount = new long[256];
 		anIntArray858 = new int[50];
@@ -10833,6 +10836,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int menuActionType[];
 	public int menuActionVariable[];
 	public long menuActionVariable2[];
+	public int menuActionVariable3[];
 	public int shopItems[];
 	public long shopItemCount[];
 	public int npcAnimationArray[][] = { { 11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4 },
