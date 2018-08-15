@@ -122,18 +122,18 @@ public final class Server
 		}
 
 		/// Invoke the auto-restart script
-		/*if (autoRestart) //disabling as this is not functional at this time
+		if (autoRestart)
 		{
 			try
 			{
-				System.out.println("Running Auto Restart...");
-				Runtime.getRuntime().exec("run.sh");
+				System.out.println("Launching automatic game server restart script...");
+				Runtime.getRuntime().exec("./run_server.sh");
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-		}*/
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
