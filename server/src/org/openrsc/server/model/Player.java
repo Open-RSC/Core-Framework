@@ -3322,7 +3322,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		
 		resetPath();
 		resetCombat(CombatState.LOST);
-		
+		resetMenuHandler();
 		sendWorldInfo();
 		sendEquipmentStats();
 		sendInventory();
