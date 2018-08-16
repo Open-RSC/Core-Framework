@@ -2346,6 +2346,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			mouseOverMenu = 0;
 	}
 
+	// Sends information to the server about interactions
+	// with screen menus (right-click primarily).
 	public final void menuClick(int index) {
 		int actionX = menuActionX[index];
 		int actionY = menuActionY[index];
@@ -2354,7 +2356,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		long actionVariable2 = menuActionVariable2[index];
 		int actionVariable3 = menuActionVariable3[index];
 		int currentMenuID = menuID[index];
-		if (currentMenuID == 200) {
+
+		// Ground Item
+		if (currentMenuID == 200) { // Cast on Ground Item
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(37);
 			super.streamClass.add2ByteInt(actionVariable);
@@ -2364,7 +2368,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 210) {
+		if (currentMenuID == 210) { // Use Item on Ground Item
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(60);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2374,7 +2378,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 220) {
+		if (currentMenuID == 220) { // Take Ground Item
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(11);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2383,10 +2387,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3200)
+		if (currentMenuID == 3200) // Examine Ground Item
 			displayMessage(EntityHandler.getItemDef(actionType).getDescription()
 					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
-		if (currentMenuID == 300) {
+
+		// Door
+		if (currentMenuID == 300) { // Cast on Door
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(255);
 			super.streamClass.add2ByteInt(actionVariable);
@@ -2396,7 +2402,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 310) { // InvUseOnObject (DOOR)
+		if (currentMenuID == 310) { // Use Item on Door (InvUseOnObject)
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(63);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2406,7 +2412,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 320) {
+		if (currentMenuID == 320) { // Door Action 1
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(27);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2414,7 +2420,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.addByte(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2300) {
+		if (currentMenuID == 2300) { // Door Action 2
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(28);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2422,10 +2428,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.addByte(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3300)
+		if (currentMenuID == 3300) // Examine Door
 			displayMessage(EntityHandler.getDoorDef(actionType).getDescription()
 					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
-		if (currentMenuID == 400) {
+
+		// Object
+		if (currentMenuID == 400) { // Cast Spell on Object
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(33);
 			super.streamClass.add2ByteInt((int) actionVariable2);
@@ -2433,7 +2441,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID >= 410 && currentMenuID <= 412) { // InvUseOnObject (GAMEOBJECT)
+		if (currentMenuID >= 410 && currentMenuID <= 412) { // Use Item on Object (InvUseOnObject)
 			walkToObject(actionX, actionY, actionType, actionVariable); // ACTION
 																		// TYPE
 																		// =
@@ -2442,64 +2450,66 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionX + areaX); // X
 			super.streamClass.add2ByteInt(actionY + areaY); // Y
 			super.streamClass.add2ByteInt((int) actionVariable2); // ITEM
-			super.streamClass.add2ByteInt(menuActionVariable3[index]); // Batch 0/1/2
+			super.streamClass.add2ByteInt(menuActionVariable3[index]); // Batch (0/1/2)
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 420) {
+		if (currentMenuID == 420) { // Object Action 1
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(29);
 			super.streamClass.add2ByteInt(actionX + areaX);
 			super.streamClass.add2ByteInt(actionY + areaY);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2400) {
+		if (currentMenuID == 2400) { // Object Action 2
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(30);
 			super.streamClass.add2ByteInt(actionX + areaX);
 			super.streamClass.add2ByteInt(actionY + areaY);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3400)
+		if (currentMenuID == 3400) // Examine Object
 			displayMessage(EntityHandler.getObjectDef(actionType).getDescription()
 					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
-		if (currentMenuID == 600) {
+
+		// Inventory Item
+		if (currentMenuID == 600) { // Cast on Inventory Item
 			super.streamClass.createPacket(31);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 787)
+		if (currentMenuID == 787) // Auction Code..
 			super.cancelAuction(actionVariable);
-		if (currentMenuID == 610) {
+		if (currentMenuID == 610) { // Use Item with Inventory Item
 			super.streamClass.createPacket(61);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 620) {
+		if (currentMenuID == 620) { // Remove Inventory Item
 			super.streamClass.createPacket(21);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 630) {
+		if (currentMenuID == 630) { // Wear Inventory Item
 			super.streamClass.createPacket(20);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 640) {
+		if (currentMenuID == 640) { // Inventory Item Action 1 
 			super.streamClass.createPacket(55);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 650) {
+		if (currentMenuID == 650) { // Use Inventory Item
 			selectedItem = actionType;
 			mouseOverMenu = 0;
 			selectedItemName = EntityHandler.getItemDef(inventoryItems[selectedItem]).getName();
 		}
-		if (currentMenuID == 660) {
+		if (currentMenuID == 660) { // Drop Inventory Item
 			super.streamClass.createPacket(10);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.addLong(-1);
@@ -2507,7 +2517,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			selectedItem = -1;
 			mouseOverMenu = 0;
 		}
-		if (currentMenuID == 661) {
+		if (currentMenuID == 661) { // Drop All Inventory Item
 			super.streamClass.createPacket(10);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.addLong(0);
@@ -2515,7 +2525,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			selectedItem = -1;
 			mouseOverMenu = 0;
 		}
-		if (currentMenuID == 662) {
+		if (currentMenuID == 662) { // Drop X Inventory Item
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 13;
@@ -2523,13 +2533,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			selectedItem = -1;
 			mouseOverMenu = 0;
 		}
-		if (currentMenuID == 3600)
+		if (currentMenuID == 3600) // Examine Inventory Item
 			if (ourPlayer.isDev())
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription() + " ("
 						+ EntityHandler.getItemDef(actionType).id + ")", 3, -1);
 			else
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription(), 3, -1);
-		if (currentMenuID == 700) {
+
+		// NPC
+		if (currentMenuID == 700) { // Cast on NPC
 			int l1 = (actionX - 64) / 128;
 			int l3 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, l1, l3, true);
@@ -2539,7 +2551,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 710) {
+		if (currentMenuID == 710) { // Use Item on NPC
 			int i2 = (actionX - 64) / 128;
 			int i4 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, i2, i4, true);
@@ -2549,7 +2561,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 720) {
+		if (currentMenuID == 720) { // Talk-to NPC
 			int j2 = (actionX - 64) / 128;
 			int j4 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, j2, j4, true);
@@ -2557,7 +2569,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 725) {
+		if (currentMenuID == 725) { // NPC Action 1
 			int k2 = (actionX - 64) / 128;
 			int k4 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, k2, k4, true);
@@ -2565,7 +2577,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 715 || currentMenuID == 2715) {
+		if (currentMenuID == 715 || currentMenuID == 2715) { // Attack NPC
 			int l2 = (actionX - 64) / 128;
 			int l4 = (actionY - 64) / 128;
 			int l6 = method112(sectionX, sectionY, l2, l4, true);
@@ -2574,10 +2586,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(l6);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3700)
+		if (currentMenuID == 3700) // Examine NPC
 			displayMessage(EntityHandler.getNpcDef(actionType).getDescription()
 					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
-		if (currentMenuID == 800) {
+
+		// Player
+		if (currentMenuID == 800) { // Cast on Player
 			int i3 = (actionX - 64) / 128;
 			int i5 = (actionY - 64) / 128;
 			byte i7 = (byte) rand.nextInt(200);
@@ -2589,7 +2603,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 810) {
+		if (currentMenuID == 810) { // Use Item with Player
 			int j3 = (actionX - 64) / 128;
 			int j5 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, j3, j5, true);
@@ -2599,7 +2613,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 805 || currentMenuID == 2805) {
+		if (currentMenuID == 805 || currentMenuID == 2805) { // Attack Player
 			int k3 = (actionX - 64) / 128;
 			int k5 = (actionY - 64) / 128;
 			int k6 = method112(sectionX, sectionY, k3, k5, true);
@@ -2608,39 +2622,39 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(k6);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2940) { // public message
+		if (currentMenuID == 2940) { // Public Message
 			privateMessageTarget = menuLongVariable[index];
 			inputBoxType = 2;
 			super.inputMessage = "";
 			super.enteredMessage = "";
 		}
-		if (currentMenuID == 2941) { // invite player
+		if (currentMenuID == 2941) { // Invite Player
 			streamClass.createPacket(84);
 			streamClass.addByte(2);
 			streamClass.addByte(0);
 			streamClass.addLong(menuLongVariable[index]);
 			streamClass.formatPacket();
 		}
-		if (currentMenuID == 2942) { // kick player
+		if (currentMenuID == 2942) { // Kick Player
 			streamClass.createPacket(84);
 			streamClass.addByte(2);
 			streamClass.addByte(1);
 			streamClass.addLong(menuLongVariable[index]);
 			streamClass.formatPacket();
 		}
-		if (currentMenuID == 2943) {
+		if (currentMenuID == 2943) { // ????
 			streamClass.createPacket(84);
 			streamClass.addByte(1);
 			streamClass.formatPacket();
 		}
-		if (currentMenuID == 2806) {
+		if (currentMenuID == 2806) { // Duel With Player
 			super.streamClass.createPacket(54);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2930)
+		if (currentMenuID == 2930) // Abuse Box
 			showAbuseBox = 1;
-		if (currentMenuID == 2810) {
+		if (currentMenuID == 2810) { // Trade With Player
 			super.streamClass.createPacket(43);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
@@ -2650,21 +2664,21 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2820) {
+		if (currentMenuID == 2820) { // Follow Player
 			super.streamClass.createPacket(68);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 4444)
+		if (currentMenuID == 4444) // Add Friend
 			for (int a = 0; a < playerCount; a++)
 				if (playerArray[a].serverIndex == actionType)
 					addToFriendsList(playerArray[a].name);
-		if (currentMenuID == 2821) {
+		if (currentMenuID == 2821) { // ????
 			super.streamClass.createPacket(69);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 900) {
+		if (currentMenuID == 900) { // Cast Spell on Ground
 			method112(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(34);
 			super.streamClass.add2ByteInt(actionType);
@@ -2673,12 +2687,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 920) {
+		if (currentMenuID == 920) { // "Walk Here"
 			method112(sectionX, sectionY, actionX, actionY, false);
 			if (actionPictureType == -24)
 				actionPictureType = 24;
 		}
-		if (currentMenuID == 921)
+		if (currentMenuID == 921) // "Teleport Here"
 			sendChatString("teleport " + (actionX + areaX) + " " + (actionY + areaY));
 		if (currentMenuID == 1000) {
 			super.streamClass.createPacket(34);
@@ -2686,80 +2700,87 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 878) {
+
+		if (currentMenuID == 878) { // ????
 			super.streamClass.createPacket(25);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(inventoryCount(actionVariable));
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 879) {
+		if (currentMenuID == 879) { // ????
 			super.streamClass.createPacket(25);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(actionVariable2);// Strange?
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 784) {
+
+		// Bank
+		if (currentMenuID == 784) { // Withdraw X
 			super.streamClass.createPacket(24);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(actionVariable2);
 			super.streamClass.add4ByteInt(bankSelection == 1 ? 1 : 0);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 786) {
+		if (currentMenuID == 786) { // Withdraw-All
 			super.streamClass.createPacket(24);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(actionVariable2);
 			super.streamClass.add4ByteInt(bankSelection == 1 ? 1 : 0);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 888) {
+		if (currentMenuID == 888) { // Deposit X
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 5;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 785 || currentMenuID == 806) {
+		if (currentMenuID == 785 || currentMenuID == 806) { // Withdraw-All
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 4;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 783)
+
+		// Trade
+		if (currentMenuID == 783) // Remove Trade Items
 			removeTradeItems(actionVariable, actionVariable2, actionType);
-		if (currentMenuID == 782)
+		if (currentMenuID == 782) // Add Trade Items
 			addTradeItems(actionVariable, actionVariable2, actionType, false);
-		if (currentMenuID == 881) {
+		if (currentMenuID == 881) { // Trade Remove X 
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 7;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 882) {
+
+		// Dual
+		if (currentMenuID == 882) { // Stake 1
 			if (duelMyItemCount == 8)
 				return;
 			addDuelItems(actionVariable, actionVariable2, actionType, false);
 		}
 		if (currentMenuID == 883)
 			removeDuelItems(actionVariable, actionVariable2, actionType);
-		if (currentMenuID == 889) {
+		if (currentMenuID == 889) { // Remove X
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 9;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 890) {
+		if (currentMenuID == 890) { // Stake X
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 8;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 789) {
+		if (currentMenuID == 789) { // Offer X (Trade)
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 6;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 4000) {
+		if (currentMenuID == 4000) { // Cancel
 			selectedItem = -1;
 			selectedSpell = -1;
 		}
@@ -3964,7 +3985,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						} else if (selectedItem >= 0) {
 							menuText1[menuLength] = "Use " + selectedItemName + " with";
 							menuText2[menuLength] = "@lre@" + itemDef.getName();
-							menuID[menuLength] = 210;
+							menuID[menuLength] = 210; 
 							menuActionX[menuLength] = groundItemX[targetID];
 							menuActionY[menuLength] = groundItemY[targetID];
 							menuActionType[menuLength] = groundItemType[targetID];
