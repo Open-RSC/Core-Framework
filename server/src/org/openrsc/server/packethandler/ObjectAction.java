@@ -3418,65 +3418,67 @@ public class ObjectAction implements PacketHandler {
                                                 
                                                 if (def != null && !object.isRemoved())
                                                 {
-                                                        if (owner.getCurStat(14) < def.getReqLevel())
-                                                        {
-                                                                player.sendMessage("You need a mining level of " + def.getReqLevel() + " to mine this rock.");
-                                                                return;
-                                                        }
-                                                        else
-                                                        {
-                                                                owner.setBusy(true);
-                                                                owner.sendSound("mine", false);                                                         
-                                                                owner.sendMessage("You swing your pick at the rock...");
-                                                                final int pickaxe = Formulae.getPickAxe(owner);
-                                                                for (Player p : owner.getViewArea().getPlayersInView())
-                                                                {
-                                                                        p.watchItemBubble(owner.getIndex(), pickaxe);
-                                                                }
-                                                                
-                                                                World.getDelayedEventHandler().add(new SingleEvent(owner, 2000) 
-                                                                {
-                                                                        public void action() 
-                                                                        {                                               
-                                                                                if (Formulae.getOre(def, owner.getCurStat(14), pickaxe)) 
-                                                                                {
-                                                                                        if (DataConversions.random(0, owner.isWearing(597) ? 100 : 200) == 0) 
-                                                                                        {
-                                                                                                InvItem gem = new InvItem(Formulae.getGem(), 1);
-                                                                                                owner.getInventory().add(gem);
-                                                                                                owner.sendMessage("You found a gem!");
-                                                                                        } 
-                                                                                        else 
-                                                                                        {
-                                                                                                final InvItem ore = new InvItem(def.getOreId());
-                                                                                                owner.getInventory().add(ore);
-                                                                                                owner.sendMessage("You manage to obtain some " + ore.getDef().getName() + ".");
-                                                                                                owner.increaseXP(Skills.MINING, def.getExp());
-                                                                                                owner.sendStat(14);
-                                                                                                World.registerEntity(new GameObject(object.getLocation(), 98, object.getDirection(), object.getType()));
-                                                                                                World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
-                                                                                        }
-                                                                                        owner.sendInventory();
-                                                                                        owner.setBusy(false);
-                                                                                        return;
-                                                                                } 
-                                                                                else {
-                                                                                    owner.sendMessage("You only succeed in scratching the rock.");
-                                                                                    owner.setBusy(false);
-                                                                                    if (Config.getSkillLoopMode() == 1 || Config.getSkillLoopMode() == 2) {
-                                                                                        World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
-                                                                                            public void action() {
-                                                                                                mineLoop(click, loop);
-                                                                                            }
-                                                                                        });
-                                                                                    } else {
-                                                                                        if (loop > 1)
-                                                                                            mineLoop(click, loop - 1);
-                                                                                    }
-                                                                                }
-                                                                        }
-                                                                });
-                                                        }
+		                                                owner.setBusy(true);
+		                                                owner.sendSound("mine", false);                                                         
+		                                                owner.sendMessage("You swing your pick at the rock...");
+		                                                final int pickaxe = Formulae.getPickAxe(owner);
+		                                                for (Player p : owner.getViewArea().getPlayersInView())
+		                                                {
+		                                                        p.watchItemBubble(owner.getIndex(), pickaxe);
+		                                                }
+		                                                
+		                                                World.getDelayedEventHandler().add(new SingleEvent(owner, 2000) 
+		                                                {
+		                                                        public void action() 
+		                                                        {                                               
+		                                                                if (Formulae.getOre(def, owner.getCurStat(Skills.MINING), pickaxe)) 
+		                                                                {
+		                                                                        if (DataConversions.random(0, owner.isWearing(597) ? 100 : 200) == 0) 
+		                                                                        {
+		                                                                                InvItem gem = new InvItem(Formulae.getGem(), 1);
+		                                                                                owner.getInventory().add(gem);
+		                                                                                owner.sendMessage("You found a gem!");
+		                                                                                owner.sendInventory();
+				                                                                        owner.setBusy(false);
+				                                                                        return;
+		                                                                        } 
+		                                                                        else if(owner.getCurStat(Skills.MINING) < def.getReqLevel()) {
+		                                                                        		doMiningFailedLogic(click, loop);
+		                                                                        }
+		                                                                        else 
+		                                                                        {
+		                                                                                final InvItem ore = new InvItem(def.getOreId());
+		                                                                                owner.getInventory().add(ore);
+		                                                                                owner.sendMessage("You manage to obtain some " + ore.getDef().getName() + ".");
+		                                                                                owner.increaseXP(Skills.MINING, def.getExp());
+		                                                                                owner.sendStat(14);
+		                                                                                World.registerEntity(new GameObject(object.getLocation(), 98, object.getDirection(), object.getType()));
+		                                                                                World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);
+		                                                                                owner.sendInventory();
+				                                                                        owner.setBusy(false);
+				                                                                        return;
+		                                                                        }
+		                                                                } 
+		                                                                else {
+		                                                                    doMiningFailedLogic(click, loop);
+		                                                                }
+		                                                        }
+
+																private void doMiningFailedLogic(final int click, final int loop) {
+																		owner.sendMessage("You only succeed in scratching the rock.");
+																		owner.setBusy(false);
+																		if (Config.getSkillLoopMode() == 1 || Config.getSkillLoopMode() == 2) {
+																			    World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+																				        public void action() {
+																				            mineLoop(click, loop);
+																				        }
+																			    });
+																		} else {
+																			    if (loop > 1)
+																			        mineLoop(click, loop - 1);
+																		}
+																}
+		                                                });
                                                 }
                                                 else
                                                 {
