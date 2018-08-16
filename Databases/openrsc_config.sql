@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `conf_npc` (
   `class_name` varchar(255) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=314 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=313 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `conf_npc`
@@ -9026,7 +9026,7 @@ CREATE TABLE IF NOT EXISTS `def_spell` (
   `experience` int(4) DEFAULT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_spell`
@@ -9070,7 +9070,6 @@ INSERT INTO `def_spell` (`name`, `description`, `level`, `type`, `rune_count`, `
 ('Saradomin strike', 'Summons the power of Saradomin', 60, 2, 3, 33, 4, 619, 2, 31, 2, 560, 40),
 ('Flames of Zamorak', 'Summons the power of Zamorak', 60, 2, 3, 33, 1, 619, 2, 31, 4, 560, 41),
 ('Charge earth Orb', 'Needs to be cast on an earth obelisk', 60, 5, 3, 34, 30, 611, 1, 46, 3, 560, 42),
---('Lost City teleport', 'Teleports you to the Lost City', 61, 0, 2, 42, 2, 31, 2, NULL, NULL, 488, 43),
 ('Wind wave', 'A strength 13 missile attack', 62, 2, 2, 33, 5, 619, 1, NULL, NULL, 576, 44),
 ('Charge Fire Orb', 'Needs to be cast on a fire obelisk', 63, 5, 3, 611, 1, 46, 3, 31, 30, 584, 45),
 ('Water wave', 'A strength 14 missile attack', 65, 2, 3, 32, 7, 33, 5, 619, 1, 600, 46),
@@ -10421,7 +10420,7 @@ CREATE TABLE IF NOT EXISTS `spawn_npc` (
   PRIMARY KEY (`id`),
   KEY `npc` (`npc`),
   KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2952 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3000 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_npc`
@@ -13162,7 +13161,8 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 (584, 207, 3207, 203, 3206, 210, 3218, 1, 2955),
 (584, 208, 3207, 203, 3206, 210, 3218, 1, 2956),
 (584, 208, 3210, 203, 3206, 210, 3216, 1, 2957),
-(584, 210, 3211, 203, 3206, 210, 3215, 1, 2958);
+(584, 210, 3211, 203, 3206, 210, 3215, 1, 2958),
+(529, 628, 765, 627, 765, 629, 766, 1, 2959);
 
 -- --------------------------------------------------------
 
