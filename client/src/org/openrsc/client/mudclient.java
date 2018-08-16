@@ -17,6 +17,7 @@ import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -38,7 +39,6 @@ import org.openrsc.client.gfx.uis.various.GameUIs;
 import org.openrsc.client.model.Sprite;
 import org.openrsc.client.util.DataConversions;
 import org.openrsc.client.util.Pair;
-
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
@@ -70,13 +70,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			System.err.println("Unable to load configuration, setting to defaults!");
 			e.printStackTrace();
 		} finally {
-			if (fis != null) {
+			if (fis != null)
 				try {
 					fis.close();
 				} catch (IOException ioe) {
 					// ignore it, there's nothing that can be done.
 				}
-			}
 		}
 	}
 
@@ -87,13 +86,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 		}
 		Insets insets = delegate.getContainerImpl().getInsets();
-		if (width - insets.left > 0 && height - insets.top - 11 > 0) {
+		if (width - insets.left > 0 && height - insets.top - 11 > 0)
 			synchronized (sync_on_me) {
 				resizeToW = width;
 				resizeToH = height;
 				shouldResize = true;
 			}
-		}
 	}
 
 	public final void onMouseMove(int x, int y) {
@@ -122,7 +120,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			props.load(new FileInputStream(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
 			props.setProperty(key, value);
 
-			OutputStream propOut = new FileOutputStream(new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
+			OutputStream propOut = new FileOutputStream(
+					new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf"));
 			props.store(propOut, "Client Configuration");
 			props.clear();
 		} catch (Exception ex) {
@@ -135,20 +134,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	private static mudclient<?> instance;
 
 	public static final void main(String[] args) throws Exception {
-                
-                //Download updated caches
-                //if (!AppletUtils.CACHEFILE.exists())
-                //org.openrsc.client.loader.WebClientLoader.downloadCache();
+
+		// Download updated caches
+		// if (!AppletUtils.CACHEFILE.exists())
+		// org.openrsc.client.loader.WebClientLoader.downloadCache();
 
 		int width = Config.DEFAULT_WINDOW_WIDTH;
 		int height = Config.DEFAULT_WINDOW_HEIGHT;
 		File CF = new File(AppletUtils.CACHE + System.getProperty("file.separator") + "openrsc.conf");
 		try {
-			if (!CF.exists())
-            {
+			if (!CF.exists()) {
 				CF.createNewFile();
-                setProp("ROOFS", "ON");
-            }
+				setProp("ROOFS", "ON");
+			}
 		} catch (Exception ex) {
 		}
 		try {
@@ -188,15 +186,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (x > 1)
 			x += x;
 		else if (x < -1)
-			x -= (-x);
+			x -= -x;
 
-		for (GraphicalOverlay overlay : GameUIs.overlays) {
-			for (GraphicalComponent gc : overlay.getComponents()) {
-				if (gc.getFrameScroll() != null && overlay.onComponent(mouseX, mouseY, gc)) {
+		for (GraphicalOverlay overlay : GameUIs.overlays)
+			for (GraphicalComponent gc : overlay.getComponents())
+				if (gc.getFrameScroll() != null && overlay.onComponent(mouseX, mouseY, gc))
 					gc.getFrameScroll().scrolling(x < 1 ? 1 : 0);
-				}
-			}
-		}
 		if (mouseOverMenu == 5)
 			friendsMenu.scroll(friendsMenuHandle, x);
 		else if (mouseOverMenu == 4)
@@ -228,9 +223,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public boolean handleCommand(String s) {
 		int firstSpace = s.indexOf(" ");
 		String cmd = s;
-		if (firstSpace != -1) {
+		if (firstSpace != -1)
 			cmd = s.substring(0, firstSpace).trim();
-		}
 		if (cmd.equals("reload")) {
 			GameUIs.reload();
 			return true;
@@ -238,16 +232,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (cmd.equalsIgnoreCase("depositall") || cmd.equalsIgnoreCase("da")) {
 			try {
 				if (showBank) {
-					for (int j = 0; j < anInt882; j++) {
+					for (int j = 0; j < anInt882; j++)
 						if (j < inventoryCount) {
 							super.streamClass.createPacket(25);
 							super.streamClass.add2ByteInt(inventoryItems[j]);
 							super.streamClass.addLong(inventoryItemsCount[j]);
 							super.streamClass.formatPacket();
 						}
-					}
 				} else
-					displayMessage("@gre@"+ Config.getServerName() +":@whi@ This command is only available in a bank window", 3, -1);
+					displayMessage(
+							"@gre@" + Config.getServerName() + ":@whi@ This command is only available in a bank window",
+							3, -1);
 				return true;
 			} catch (Exception e) {
 			}
@@ -261,7 +256,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		} else if (cmd.equalsIgnoreCase("loadconf") || cmd.equalsIgnoreCase("resetconfig")
 				|| cmd.equalsIgnoreCase("resetconf")) {
 			loadConf();
-			displayMessage("@gre@"+ Config.getServerName() +":@whi@ Configuration file has been refreshed", 3, -1);
+			displayMessage("@gre@" + Config.getServerName() + ":@whi@ Configuration file has been refreshed", 3, -1);
 		}
 		return false;
 	}
@@ -291,20 +286,20 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			i2 = 1;
 			flag = true;
 		}
-		int j2 = i2 * 3 + walkModel[(mob.stepCount / EntityHandler.getNpcDef(mob.type).getWalkModel()) % 4];
+		int j2 = i2 * 3 + walkModel[mob.stepCount / EntityHandler.getNpcDef(mob.type).getWalkModel() % 4];
 		if (mob.currentSprite == 8) {
 			i2 = 5;
 			l1 = 2;
 			flag = false;
-			i -= (EntityHandler.getNpcDef(mob.type).getCombatSprite() * k1) / 100;
+			i -= EntityHandler.getNpcDef(mob.type).getCombatSprite() * k1 / 100;
 			j2 = i2 * 3
-					+ npcCombatModelArray1[(loginTimer / (EntityHandler.getNpcDef(mob.type).getCombatModel() - 1)) % 8];
+					+ npcCombatModelArray1[loginTimer / (EntityHandler.getNpcDef(mob.type).getCombatModel() - 1) % 8];
 		} else if (mob.currentSprite == 9) {
 			i2 = 5;
 			l1 = 2;
 			flag = true;
-			i += (EntityHandler.getNpcDef(mob.type).getCombatSprite() * k1) / 100;
-			j2 = i2 * 3 + npcCombatModelArray2[(loginTimer / EntityHandler.getNpcDef(mob.type).getCombatModel()) % 8];
+			i += EntityHandler.getNpcDef(mob.type).getCombatSprite() * k1 / 100;
+			j2 = i2 * 3 + npcCombatModelArray2[loginTimer / EntityHandler.getNpcDef(mob.type).getCombatModel() % 8];
 		}
 		for (int k2 = 0; k2 < 12; k2++) {
 			int l2 = npcAnimationArray[l1][k2];
@@ -317,10 +312,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					k4 += 15;
 				if (i2 != 5 || EntityHandler.getAnimationDef(k3).hasA()) {
 					int l4 = k4 + EntityHandler.getAnimationDef(k3).getNumber();
-					i4 = (i4 * k) / ((Raster) (gameGraphics)).sprites[l4].getSomething1();
-					j4 = (j4 * l) / ((Raster) (gameGraphics)).sprites[l4].getSomething2();
-					int i5 = (k * ((Raster) (gameGraphics)).sprites[l4].getSomething1())
-							/ ((Raster) (gameGraphics)).sprites[EntityHandler.getAnimationDef(k3).getNumber()]
+					i4 = i4 * k / ((Raster) gameGraphics).sprites[l4].getSomething1();
+					j4 = j4 * l / ((Raster) gameGraphics).sprites[l4].getSomething2();
+					int i5 = k * ((Raster) gameGraphics).sprites[l4].getSomething1()
+							/ ((Raster) gameGraphics).sprites[EntityHandler.getAnimationDef(k3).getNumber()]
 									.getSomething1();
 					i4 -= (i5 - k) / 2;
 					int colour = EntityHandler.getAnimationDef(k3).getCharColour();
@@ -344,7 +339,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			mobMessagesWidth[mobMessageCount] = Raster.textWidth(mob.lastMessage, 1) / 2;
 			if (mobMessagesWidth[mobMessageCount] > 150)
 				mobMessagesWidth[mobMessageCount] = 150;
-			mobMessagesHeight[mobMessageCount] = (Raster.textWidth(mob.lastMessage, 1) / 300)
+			mobMessagesHeight[mobMessageCount] = Raster.textWidth(mob.lastMessage, 1) / 300
 					* gameGraphics.messageFontHeight(1);
 			mobMessagesX[mobMessageCount] = i + k / 2;
 			mobMessagesY[mobMessageCount] = j;
@@ -354,10 +349,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (mob.combatTimer > 0) {
 				int i3 = i;
 				if (mob.currentSprite == 8)
-					i3 -= (20 * k1) / 100;
+					i3 -= 20 * k1 / 100;
 				else if (mob.currentSprite == 9)
-					i3 += (20 * k1) / 100;
-				int l3 = (mob.hitPointsCurrent * 30) / mob.hitPointsBase;
+					i3 += 20 * k1 / 100;
+				int l3 = mob.hitPointsCurrent * 30 / mob.hitPointsBase;
 				anIntArray786[anInt718] = i3 + k / 2;
 				anIntArray787[anInt718] = j;
 				anIntArray788[anInt718++] = l3;
@@ -365,11 +360,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (mob.combatTimer > 150) {
 				int j3 = i;
 				if (mob.currentSprite == 8)
-					j3 -= (10 * k1) / 100;
+					j3 -= 10 * k1 / 100;
 				else if (mob.currentSprite == 9)
-					j3 += (10 * k1) / 100;
-				gameGraphics.drawPicture((j3 + k / 2) - 12, (j + l / 2) - 12, SPRITE_MEDIA_START + 12);
-				drawText(String.valueOf(mob.anInt164), (j3 + k / 2) - 1, j + l / 2 + 5, 3, 0xffffff);
+					j3 += 10 * k1 / 100;
+				gameGraphics.drawPicture(j3 + k / 2 - 12, j + l / 2 - 12, SPRITE_MEDIA_START + 12);
+				drawText(String.valueOf(mob.anInt164), j3 + k / 2 - 1, j + l / 2 + 5, 3, 0xffffff);
 			}
 		}
 	}
@@ -378,7 +373,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		characterDesignMenu.updateActions(super.mouseX, super.mouseY, super.lastMouseDownButton, super.mouseDownButton);
 		if (characterDesignMenu.hasActivated(characterDesignHeadButton1))
 			do
-				characterHeadType = ((characterHeadType - 1) + EntityHandler.animationCount())
+				characterHeadType = (characterHeadType - 1 + EntityHandler.animationCount())
 						% EntityHandler.animationCount();
 			while ((EntityHandler.getAnimationDef(characterHeadType).getGenderModel() & 3) != 1
 					|| (EntityHandler.getAnimationDef(characterHeadType).getGenderModel()
@@ -390,8 +385,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					|| (EntityHandler.getAnimationDef(characterHeadType).getGenderModel()
 							& 4 * characterHeadGender) == 0);
 		if (characterDesignMenu.hasActivated(characterDesignHairColourButton1))
-			characterHairColour = ((characterHairColour - 1) + characterHairColours.length)
-					% characterHairColours.length;
+			characterHairColour = (characterHairColour - 1 + characterHairColours.length) % characterHairColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignHairColourButton2))
 			characterHairColour = (characterHairColour + 1) % characterHairColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignGenderButton1)
@@ -409,17 +403,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				;
 		}
 		if (characterDesignMenu.hasActivated(characterDesignTopColourButton1))
-			characterTopColour = ((characterTopColour - 1) + characterTopBottomColours.length)
+			characterTopColour = (characterTopColour - 1 + characterTopBottomColours.length)
 					% characterTopBottomColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignTopColourButton2))
 			characterTopColour = (characterTopColour + 1) % characterTopBottomColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignSkinColourButton1))
-			characterSkinColour = ((characterSkinColour - 1) + characterSkinColours.length)
-					% characterSkinColours.length;
+			characterSkinColour = (characterSkinColour - 1 + characterSkinColours.length) % characterSkinColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignSkinColourButton2))
 			characterSkinColour = (characterSkinColour + 1) % characterSkinColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignBottomColourButton1))
-			characterBottomColour = ((characterBottomColour - 1) + characterTopBottomColours.length)
+			characterBottomColour = (characterBottomColour - 1 + characterTopBottomColours.length)
 					% characterTopBottomColours.length;
 		if (characterDesignMenu.hasActivated(characterDesignBottomColourButton2))
 			characterBottomColour = (characterBottomColour + 1) % characterTopBottomColours.length;
@@ -475,16 +468,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			}
 		} else if (loginScreenNumber == 2) {
 			menuLogin.updateActions(super.mouseX, super.mouseY, super.lastMouseDownButton, super.mouseDownButton);
-			if (menuLogin.selectingItem(loginLocationSelect)) {
+			if (menuLogin.selectingItem(loginLocationSelect))
 				return;
-			}
-			if (menuLogin.hasActivated(loginCancelButton) && menuLogin.mouseClicksConsecutive == -4) {
+			if (menuLogin.hasActivated(loginCancelButton) && menuLogin.mouseClicksConsecutive == -4)
 				loginScreenNumber = 0;
-			}
 			if (menuLogin.hasActivated(loginUsernameTextBox))
 				menuLogin.setFocus(loginPasswordTextBox);
 			if (menuLogin.hasActivated(loginPasswordTextBox)
-					|| (menuLogin.hasActivated(loginOkButton) && menuLogin.mouseClicksConsecutive == -4)) {
+					|| menuLogin.hasActivated(loginOkButton) && menuLogin.mouseClicksConsecutive == -4) {
 				currentUser = menuLogin.getText(loginUsernameTextBox);
 				currentPass = menuLogin.getText(loginPasswordTextBox);
 				login(currentUser, currentPass, false);
@@ -497,21 +488,21 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.f1Toggle = false;
 		gameGraphics.method211();
 		if (loginScreenNumber == 0 || loginScreenNumber == 1 || loginScreenNumber == 2) {
-			int sceneFrame = (loginTimer * 2) % 3072;
+			int sceneFrame = loginTimer * 2 % 3072;
 			if (sceneFrame < 1024) {
-				gameGraphics.drawPicture((windowWidth / 2) - 256, (windowHeight / 2) - 157, SPRITE_TEXTURE_START);
+				gameGraphics.drawPicture(windowWidth / 2 - 256, windowHeight / 2 - 157, SPRITE_TEXTURE_START);
 				if (sceneFrame > 768)
-					gameGraphics.method232((windowWidth / 2) - 256, (windowHeight / 2) - 157, SPRITE_TEXTURE_START + 1,
+					gameGraphics.method232(windowWidth / 2 - 256, windowHeight / 2 - 157, SPRITE_TEXTURE_START + 1,
 							sceneFrame - 768);
 			} else if (sceneFrame < 2048) {
-				gameGraphics.drawPicture((windowWidth / 2) - 256, (windowHeight / 2) - 157, SPRITE_TEXTURE_START + 1);
+				gameGraphics.drawPicture(windowWidth / 2 - 256, windowHeight / 2 - 157, SPRITE_TEXTURE_START + 1);
 				if (sceneFrame > 1792)
-					gameGraphics.method232((windowWidth / 2) - 256, (windowHeight / 2) - 157, SPRITE_MEDIA_START + 10,
+					gameGraphics.method232(windowWidth / 2 - 256, windowHeight / 2 - 157, SPRITE_MEDIA_START + 10,
 							sceneFrame - 1792);
 			} else {
-				gameGraphics.drawPicture((windowWidth / 2) - 256, (windowHeight / 2) - 157, SPRITE_MEDIA_START + 10);
+				gameGraphics.drawPicture(windowWidth / 2 - 256, windowHeight / 2 - 157, SPRITE_MEDIA_START + 10);
 				if (sceneFrame > 2816)
-					gameGraphics.method232((windowWidth / 2) - 256, (windowHeight / 2) - 157, SPRITE_TEXTURE_START,
+					gameGraphics.method232(windowWidth / 2 - 256, windowHeight / 2 - 157, SPRITE_TEXTURE_START,
 							sceneFrame - 2816);
 			}
 		}
@@ -543,16 +534,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.fadePixels();
 		gameGraphics.fadePixels();
 
-		gameGraphics.drawBox((windowWidth / 2) - 256, (windowHeight / 2) - 167, 512, 6, 0);
+		gameGraphics.drawBox(windowWidth / 2 - 256, windowHeight / 2 - 167, 512, 6, 0);
 		for (int i_ = 6; i_ >= 1; i_--)
-			gameGraphics.method221(0, i_, (windowWidth / 2) - 256, ((windowHeight / 2) - 167) + i_, 512, 8);
+			gameGraphics.method221(0, i_, windowWidth / 2 - 256, windowHeight / 2 - 167 + i_, 512, 8);
 
-		gameGraphics.drawBox((windowWidth / 2) - 256, (windowHeight / 2) + 27, 512, 20, 0);
+		gameGraphics.drawBox(windowWidth / 2 - 256, windowHeight / 2 + 27, 512, 20, 0);
 		for (int i_ = 6; i_ >= 1; i_--)
-			gameGraphics.method221(0, i_, (windowWidth / 2) - 256, ((windowHeight / 2) + 27) - i_, 512, 8);
+			gameGraphics.method221(0, i_, windowWidth / 2 - 256, windowHeight / 2 + 27 - i_, 512, 8);
 
-		gameGraphics.drawPicture((windowWidth / 2) - 241, (windowHeight / 2) - 152, SPRITE_MEDIA_START + 10);
-		gameGraphics.storeSpriteVert(SPRITE_TEXTURE_START, (windowWidth / 2) - 256, (windowHeight / 2) - 167, 512, 200);
+		gameGraphics.drawPicture(windowWidth / 2 - 241, windowHeight / 2 - 152, SPRITE_MEDIA_START + 10);
+		gameGraphics.storeSpriteVert(SPRITE_TEXTURE_START, windowWidth / 2 - 256, windowHeight / 2 - 167, 512, 200);
 
 		cameraX = '\u2400';
 		cameraY = '\u2400';
@@ -567,17 +558,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameCamera.finishCamera();
 		gameGraphics.fadePixels();
 
-		gameGraphics.drawBox((windowWidth / 2) - 256, (windowHeight / 2) - 167, 512, 6, 0);
+		gameGraphics.drawBox(windowWidth / 2 - 256, windowHeight / 2 - 167, 512, 6, 0);
 		for (int i_ = 6; i_ >= 1; i_--)
-			gameGraphics.method221(0, i_, (windowWidth / 2) - 256, ((windowHeight / 2) - 167) + i_, 512, 8);
+			gameGraphics.method221(0, i_, windowWidth / 2 - 256, windowHeight / 2 - 167 + i_, 512, 8);
 
-		gameGraphics.drawBox((windowWidth / 2) - 256, (windowHeight / 2) + 27, 512, 20, 0);
+		gameGraphics.drawBox(windowWidth / 2 - 256, windowHeight / 2 + 27, 512, 20, 0);
 		for (int i_ = 6; i_ >= 1; i_--)
-			gameGraphics.method221(0, i_, (windowWidth / 2) - 256, ((windowHeight / 2) + 27) - i_, 512, 8);
+			gameGraphics.method221(0, i_, windowWidth / 2 - 256, windowHeight / 2 + 27 - i_, 512, 8);
 
-		gameGraphics.drawPicture((windowWidth / 2) - 241, (windowHeight / 2) - 152, SPRITE_MEDIA_START + 10);
-		gameGraphics.storeSpriteVert(SPRITE_TEXTURE_START + 1, (windowWidth / 2) - 256, (windowHeight / 2) - 167, 512,
-				200);
+		gameGraphics.drawPicture(windowWidth / 2 - 241, windowHeight / 2 - 152, SPRITE_MEDIA_START + 10);
+		gameGraphics.storeSpriteVert(SPRITE_TEXTURE_START + 1, windowWidth / 2 - 256, windowHeight / 2 - 167, 512, 200);
 		for (int j1 = 0; j1 < 64; j1++) {
 			gameCamera.removeModel(engineHandle.aModelArrayArray598[0][j1]);
 			gameCamera.removeModel(engineHandle.aModelArrayArray580[1][j1]);
@@ -598,32 +588,30 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameCamera.finishCamera();
 		gameGraphics.fadePixels();
 
-		gameGraphics.drawBox((windowWidth / 2) - 256, (windowHeight / 2) - 167, 512, 6, 0);
+		gameGraphics.drawBox(windowWidth / 2 - 256, windowHeight / 2 - 167, 512, 6, 0);
 		for (int i_ = 6; i_ >= 1; i_--)
-			gameGraphics.method221(0, i_, (windowWidth / 2) - 256, ((windowHeight / 2) - 167) + i_, 512, 8);
+			gameGraphics.method221(0, i_, windowWidth / 2 - 256, windowHeight / 2 - 167 + i_, 512, 8);
 
-		gameGraphics.drawBox((windowWidth / 2) - 256, (windowHeight / 2) + 27, 512, 20, 0);
+		gameGraphics.drawBox(windowWidth / 2 - 256, windowHeight / 2 + 27, 512, 20, 0);
 		for (int i_ = 6; i_ >= 1; i_--)
-			gameGraphics.method221(0, i_, (windowWidth / 2) - 256, ((windowHeight / 2) + 27) - i_, 512, 8);
+			gameGraphics.method221(0, i_, windowWidth / 2 - 256, windowHeight / 2 + 27 - i_, 512, 8);
 
-		gameGraphics.drawPicture((windowWidth / 2) - 241, (windowHeight / 2) - 152, SPRITE_MEDIA_START + 10);
-		gameGraphics.storeSpriteVert(SPRITE_MEDIA_START + 10, (windowWidth / 2) - 256, (windowHeight / 2) - 167, 512,
-				200);
+		gameGraphics.drawPicture(windowWidth / 2 - 241, windowHeight / 2 - 152, SPRITE_MEDIA_START + 10);
+		gameGraphics.storeSpriteVert(SPRITE_MEDIA_START + 10, windowWidth / 2 - 256, windowHeight / 2 - 167, 512, 200);
 	}
 
 	public boolean mouseWithinCenteredCoords(int x, int y, int width, int height) {
 		int halfWidth = width / 2, halfHeight = height / 2;
-		return mouseX > (x - halfWidth) && mouseX < (x + halfWidth) && mouseY > (y - halfHeight)
-				&& mouseY < (y + halfHeight);
+		return mouseX > x - halfWidth && mouseX < x + halfWidth && mouseY > y - halfHeight && mouseY < y + halfHeight;
 	}
 
 	public final void drawCommandsWindow() {
 		int i = 320;
 		int s = 490;
 		int j = 30;
-		gameGraphics.drawBox((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0);
-		gameGraphics.drawBoxEdge((gameWidth / 2) - (s / 2), (gameHeight / 2) - (i / 2), s, i, 0xffffff);
-		drawText("@gre@"+ Config.getServerName() +" Command List", gameWidth / 2, j, 1, 0xffffff);
+		gameGraphics.drawBox(gameWidth / 2 - s / 2, gameHeight / 2 - i / 2, s, i, 0);
+		gameGraphics.drawBoxEdge(gameWidth / 2 - s / 2, gameHeight / 2 - i / 2, s, i, 0xffffff);
+		drawText("@gre@" + Config.getServerName() + " Command List", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
 		drawText("To use a command enter two colons before the command, such as ::COMMAND", gameWidth / 2, j, 1,
 				0xffffff);
@@ -649,9 +637,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		j += 15;
 		drawText("@gre@EVENT: @whi@Join the running event", gameWidth / 2, j, 1, 0xffffff);
 		j += 15;
-		drawText("@gre@SITE: @whi@Quickly load "+ Config.getServerName() +"'s website", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@SITE: @whi@Quickly load " + Config.getServerName() + "'s website", gameWidth / 2, j, 1,
+				0xffffff);
 		j += 15;
-		drawText("@gre@VOTE: @whi@Vote for "+ Config.getServerName() +" on the RuneScape Top 100", gameWidth / 2, j, 1, 0xffffff);
+		drawText("@gre@VOTE: @whi@Vote for " + Config.getServerName() + " on the RuneScape Top 100", gameWidth / 2, j,
+				1, 0xffffff);
 		j += 30;
 		if (super.mouseY > j - 12 && super.mouseY <= j && super.mouseX > gameWidth / 2 - 100
 				&& super.mouseX < gameWidth + 100) // WAS 106, 406
@@ -661,8 +651,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (mouseButtonClick == 1) {
 			if (l == 0xff0000)
 				showCommandsWindow = 0;
-			if ((super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200)
-					|| (super.mouseY < gameHeight / 2 - i / 2 || super.mouseY > gameHeight / 2 + i / 2))
+			if (super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200
+					|| super.mouseY < gameHeight / 2 - i / 2 || super.mouseY > gameHeight / 2 + i / 2)
 				showCommandsWindow = 0;
 		}
 		mouseButtonClick = 0;
@@ -675,8 +665,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	private boolean showRoofs = false;
 
 	public boolean mouseWithinCoords(int x, int y, int width, int height) {
-		return mouseX >= (x - (width / 2)) && mouseX <= (x + (width / 2)) && mouseY >= (y - (height / 2))
-				&& mouseY <= (y + (height / 2));
+		return mouseX >= x - width / 2 && mouseX <= x + width / 2 && mouseY >= y - height / 2
+				&& mouseY <= y + height / 2;
 	}
 
 	public void handleAbuseClick(int type) {
@@ -689,11 +679,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawSkipTutorialIsland() {
-		int[] x_pos = { windowWidth / 2, ((windowWidth / 2) - 200) };
-		int x2 = ((windowWidth / 2) + 180) - ((windowWidth / 2) - 180);
-		gameGraphics.drawBox(x_pos[1], (windowHeight / 2) - 22, x2 + 40, 78, 0x0);
-		gameGraphics.drawBoxEdge(x_pos[1], (windowHeight / 2) - 22, x2 + 40, 78, 0xffffff);
-		int x = windowWidth / 2, y = (windowHeight / 2) - 3;
+		int[] x_pos = { windowWidth / 2, windowWidth / 2 - 200 };
+		int x2 = windowWidth / 2 + 180 - (windowWidth / 2 - 180);
+		gameGraphics.drawBox(x_pos[1], windowHeight / 2 - 22, x2 + 40, 78, 0x0);
+		gameGraphics.drawBoxEdge(x_pos[1], windowHeight / 2 - 22, x2 + 40, 78, 0xffffff);
+		int x = windowWidth / 2, y = windowHeight / 2 - 3;
 		gameGraphics.drawCenteredString("Are you sure you wish to skip the tutorial", x, y, 1, 0xffff00);
 		y += 16;
 		gameGraphics.drawCenteredString("and teleport to Lumbridge?", x, y, 1, 0xffff00);
@@ -714,19 +704,18 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (super.mouseX > gameWidth / 2 + 6 && super.mouseX < gameWidth / 2 + 46 && super.mouseY > gameHeight / 2 + 37
 				&& super.mouseY < gameHeight / 2 + 50) {
 			k = 0xffff00;
-			if (mouseButtonClick != 0) {
+			if (mouseButtonClick != 0)
 				showSkipTutorialIslandBox = 0;
-			}
 		}
 		drawText("Cancel", gameWidth / 2 + 27, gameHeight / 2 + 49, 1, k);
 	}
 
 	public final void drawAbuseName() {
-		int[] x_pos = { windowWidth / 2, ((windowWidth / 2) - 200) };
-		int x2 = ((windowWidth / 2) + 180) - ((windowWidth / 2) - 180);
-		gameGraphics.drawBox(x_pos[1], (windowHeight / 2) - 22, x2 + 40, 70, 0x0);
-		gameGraphics.drawBoxEdge(x_pos[1], (windowHeight / 2) - 22, x2 + 40, 70, 0xffffff);
-		int x = windowWidth / 2, y = (windowHeight / 2) - 3;
+		int[] x_pos = { windowWidth / 2, windowWidth / 2 - 200 };
+		int x2 = windowWidth / 2 + 180 - (windowWidth / 2 - 180);
+		gameGraphics.drawBox(x_pos[1], windowHeight / 2 - 22, x2 + 40, 70, 0x0);
+		gameGraphics.drawBoxEdge(x_pos[1], windowHeight / 2 - 22, x2 + 40, 70, 0xffffff);
+		int x = windowWidth / 2, y = windowHeight / 2 - 3;
 		gameGraphics.drawCenteredString("Enter the name of the player you wish to report:", x, y, 1, 0xffff00);
 		y += 20;
 		if (reported != null) {
@@ -765,14 +754,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawSelectAbuse() {
-		int[] x_pos = { ((windowWidth / 2) - 150), (windowWidth / 2), ((windowWidth / 2) + 150) };
-		int[] y_pos = { (windowHeight / 2), ((windowHeight / 2) + 21) };
-		int y = (y_pos[0] - 117);
+		int[] x_pos = { windowWidth / 2 - 150, windowWidth / 2, windowWidth / 2 + 150 };
+		int[] y_pos = { windowHeight / 2, windowHeight / 2 + 21 };
+		int y = y_pos[0] - 117;
 
 		String[] types = { "Honour", "Respect", "Security" };
 
-		gameGraphics.drawBox((x_pos[1] - 225), (y_pos[0] - 132), 450, 275, 0x0);
-		gameGraphics.drawBoxEdge((x_pos[1] - 225), (y_pos[0] - 132), 450, 275, 0xffffff);
+		gameGraphics.drawBox(x_pos[1] - 225, y_pos[0] - 132, 450, 275, 0x0);
+		gameGraphics.drawBoxEdge(x_pos[1] - 225, y_pos[0] - 132, 450, 275, 0xffffff);
 		gameGraphics.drawCenteredString("This form is for reporting players who are breaking our rules", x_pos[1], y, 1,
 				0xffffff);
 		y += 15;
@@ -884,14 +873,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.drawCenteredString(type_arr2[10], x_pos[0], y_pos[1] + 80, 0, txt_col);
 		txt_col = 0xffffff;
 
-		if (mouseWithinCoords(x_pos[1], (y_pos[0] + 133), 115, 13)) {
+		if (mouseWithinCoords(x_pos[1], y_pos[0] + 133, 115, 13)) {
 			txt_col = 0xffff00;
 			if (mouseButtonClick != 0) {
 				mouseButtonClick = 0;
 				showAbuseBox = 0;
 			}
 		}
-		gameGraphics.drawCenteredString("Click here to cancel", x_pos[1], (y_pos[0] + 134), 1, txt_col);
+		gameGraphics.drawCenteredString("Click here to cancel", x_pos[1], y_pos[0] + 134, 1, txt_col);
 	}
 
 	public final void autoRotateCamera() {
@@ -944,19 +933,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			i2 = 1;
 			flag = true;
 		}
-		int j2 = i2 * 3 + walkModel[(mob.stepCount / 6) % 4];
+		int j2 = i2 * 3 + walkModel[mob.stepCount / 6 % 4];
 		if (mob.currentSprite == 8) {
 			i2 = 5;
 			l1 = 2;
 			flag = false;
-			windowX -= (5 * k1) / 100;
-			j2 = i2 * 3 + npcCombatModelArray1[(loginTimer / 5) % 8];
+			windowX -= 5 * k1 / 100;
+			j2 = i2 * 3 + npcCombatModelArray1[loginTimer / 5 % 8];
 		} else if (mob.currentSprite == 9) {
 			i2 = 5;
 			l1 = 2;
 			flag = true;
-			windowX += (5 * k1) / 100;
-			j2 = i2 * 3 + npcCombatModelArray2[(loginTimer / 6) % 8];
+			windowX += 5 * k1 / 100;
+			j2 = i2 * 3 + npcCombatModelArray2[loginTimer / 6 % 8];
 		}
 		for (int k2 = 0; k2 < 12; k2++) {
 			int l2 = npcAnimationArray[l1][k2];
@@ -996,14 +985,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (i2 != 5 || EntityHandler.getAnimationDef(animationIndex).hasA()) {
 					int k5 = j5 + EntityHandler.getAnimationDef(animationIndex).getNumber();
 					try {
-						k4 = (k4 * width) / ((Raster) (gameGraphics)).sprites[k5].getSomething1();
-						i5 = (i5 * height) / ((Raster) (gameGraphics)).sprites[k5].getSomething2();
+						k4 = k4 * width / ((Raster) gameGraphics).sprites[k5].getSomething1();
+						i5 = i5 * height / ((Raster) gameGraphics).sprites[k5].getSomething2();
 					} catch (Throwable t) {
 						System.out.println("Sprite: " + k5 + " + is fucked");
 					}
-					int l5 = (width * ((Raster) (gameGraphics)).sprites[k5].getSomething1())
-							/ ((Raster) (gameGraphics)).sprites[EntityHandler.getAnimationDef(animationIndex)
-									.getNumber()].getSomething1();
+					int l5 = width * ((Raster) gameGraphics).sprites[k5].getSomething1()
+							/ ((Raster) gameGraphics).sprites[EntityHandler.getAnimationDef(animationIndex).getNumber()]
+									.getSomething1();
 					k4 -= (l5 - width) / 2;
 					int colour = EntityHandler.getAnimationDef(animationIndex).getCharColour();
 					if (mob.animationCount[l2] == 246 || mob.animationCount[l2] == 245) // Flashing
@@ -1019,16 +1008,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						colour = characterTopBottomColours[mob.colourTopType];
 					else if (colour == 3)
 						colour = characterTopBottomColours[mob.colourBottomType];
-                    
-                    int opacity = 256;
-                    if(mob.isInvisible)
-                        opacity = 128;
-                    
-                    int colourTransform = 0xFFFFFFFF;
-                    if(mob.isInvulnerable)
-                        colourTransform = 0x20202020;
-                    
-					gameGraphics.spriteClip4(windowX + k4, windowY + i5, l5, height, k5, colour, skinColour, j1, flag, opacity, colourTransform);
+
+					int opacity = 256;
+					if (mob.isInvisible)
+						opacity = 128;
+
+					int colourTransform = 0xFFFFFFFF;
+					if (mob.isInvulnerable)
+						colourTransform = 0x20202020;
+
+					gameGraphics.spriteClip4(windowX + k4, windowY + i5, l5, height, k5, colour, skinColour, j1, flag,
+							opacity, colourTransform);
 				}
 			}
 		}
@@ -1037,7 +1027,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			mobMessagesWidth[mobMessageCount] = Raster.textWidth(mob.lastMessage, 1) / 2;
 			if (mobMessagesWidth[mobMessageCount] > 150)
 				mobMessagesWidth[mobMessageCount] = 150;
-			mobMessagesHeight[mobMessageCount] = (Raster.textWidth(mob.lastMessage, 1) / 300)
+			mobMessagesHeight[mobMessageCount] = Raster.textWidth(mob.lastMessage, 1) / 300
 					* gameGraphics.messageFontHeight(1);
 			mobMessagesX[mobMessageCount] = windowX + width / 2;
 			mobMessagesY[mobMessageCount] = windowY;
@@ -1053,10 +1043,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (mob.combatTimer > 0) {
 				int i3 = windowX;
 				if (mob.currentSprite == 8)
-					i3 -= (20 * k1) / 100;
+					i3 -= 20 * k1 / 100;
 				else if (mob.currentSprite == 9)
-					i3 += (20 * k1) / 100;
-				int i4 = (mob.hitPointsCurrent * 30) / mob.hitPointsBase;
+					i3 += 20 * k1 / 100;
+				int i4 = mob.hitPointsCurrent * 30 / mob.hitPointsBase;
 				anIntArray786[anInt718] = i3 + width / 2;
 				anIntArray787[anInt718] = windowY;
 				anIntArray788[anInt718++] = i4;
@@ -1064,31 +1054,30 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (mob.combatTimer > 150) {
 				int j3 = windowX;
 				if (mob.currentSprite == 8)
-					j3 -= (10 * k1) / 100;
+					j3 -= 10 * k1 / 100;
 				else if (mob.currentSprite == 9)
-					j3 += (10 * k1) / 100;
-				gameGraphics.drawPicture((j3 + width / 2) - 12, (windowY + height / 2) - 12, SPRITE_MEDIA_START + 11);
-				drawText(String.valueOf(mob.anInt164), (j3 + width / 2) - 1, windowY + height / 2 + 5, 3, 0xffffff);
+					j3 += 10 * k1 / 100;
+				gameGraphics.drawPicture(j3 + width / 2 - 12, windowY + height / 2 - 12, SPRITE_MEDIA_START + 11);
+				drawText(String.valueOf(mob.anInt164), j3 + width / 2 - 1, windowY + height / 2 + 5, 3, 0xffffff);
 			}
 		}
 		/*
 		 * if (System.currentTimeMillis() - mob.lastMoved >= 60 * 5 * 1000) {
 		 * if(idleCount < 500) { int x = windowX; if (mob.combatTimer > 0) { if
-		 * (mob.currentSprite == 8) x -= (10 * k1) / 100; else if
-		 * (mob.currentSprite == 9) x += (10 * k1) / 100; idleY[idleCount] =
-		 * windowY - 10; } else idleY[idleCount] = windowY; idleX[idleCount] =
-		 * (x + width / 2); idleTime[idleCount++] = (System.currentTimeMillis()
-		 * - mob.lastMoved); } }
+		 * (mob.currentSprite == 8) x -= (10 * k1) / 100; else if (mob.currentSprite ==
+		 * 9) x += (10 * k1) / 100; idleY[idleCount] = windowY - 10; } else
+		 * idleY[idleCount] = windowY; idleX[idleCount] = (x + width / 2);
+		 * idleTime[idleCount++] = (System.currentTimeMillis() - mob.lastMoved); } }
 		 */
 		if (mob.skull == 1 && mob.anInt163 == 0) {
 			int k3 = j1 + windowX + width / 2;
 			if (mob.currentSprite == 8)
-				k3 -= (20 * k1) / 100;
+				k3 -= 20 * k1 / 100;
 			else if (mob.currentSprite == 9)
-				k3 += (20 * k1) / 100;
-			int j4 = (16 * k1) / 100;
-			int l4 = (16 * k1) / 100;
-			gameGraphics.spriteClip1(k3 - j4 / 2, windowY - l4 / 2 - (10 * k1) / 100, j4, l4, SPRITE_MEDIA_START + 13);
+				k3 += 20 * k1 / 100;
+			int j4 = 16 * k1 / 100;
+			int l4 = 16 * k1 / 100;
+			gameGraphics.spriteClip1(k3 - j4 / 2, windowY - l4 / 2 - 10 * k1 / 100, j4, l4, SPRITE_MEDIA_START + 13);
 		}
 	}
 
@@ -1165,7 +1154,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			int i = 35;
-			g.drawString("Sorry, an error has occured whilst loading "+ Config.getServerName() +":", 30, i);
+			g.drawString("Sorry, an error has occured whilst loading " + Config.getServerName() + ":", 30, i);
 			i += 50;
 			g.setColor(Color.white);
 			g.drawString("To fix this try the following (in order):", 30, i);
@@ -1193,7 +1182,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			g2.drawString("Error - out of memory!", 50, 50);
 			g2.drawString("Close ALL unnecessary programs", 50, 100);
 			g2.drawString("and windows before loading the game", 50, 150);
-			g2.drawString(Config.getServerName() +" needs about 100mb of spare RAM", 50, 200);
+			g2.drawString(Config.getServerName() + " needs about 100mb of spare RAM", 50, 200);
 			// changeThreadSleepModifier(1);
 			return;
 		}
@@ -1253,12 +1242,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				y--;
 				j1++;
 			}
-			sendWalkCommand(new Pair<Integer, Integer>(sectionX, sectionY), x, y, (x + i1) - 1, (y + j1) - 1, false,
-					true);
+			sendWalkCommand(new Pair<Integer, Integer>(sectionX, sectionY), x, y, x + i1 - 1, y + j1 - 1, false, true);
 			return;
 		} else {
-			sendWalkCommand(new Pair<Integer, Integer>(sectionX, sectionY), x, y, (x + i1) - 1, (y + j1) - 1, true,
-					true);
+			sendWalkCommand(new Pair<Integer, Integer>(sectionX, sectionY), x, y, x + i1 - 1, y + j1 - 1, true, true);
 			return;
 		}
 	}
@@ -1285,7 +1272,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				int k = tradeWindowX + 2;
 				int i1 = tradeWindowY + 11 + (ix + 1) * 15;
 				if (super.mouseX <= k - 2 || super.mouseY <= i1 - 12 || super.mouseY >= i1 + 4
-						|| super.mouseX >= (k - 3) + menuWidth)
+						|| super.mouseX >= k - 3 + menuWidth)
 					continue;
 				menuClick(ix);
 			}
@@ -1301,7 +1288,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				int selectedY = super.mouseY - (gameHeight / 2 - c1 / 2 + 20);
 				if (selectedX >= 0 && selectedY >= 12 && selectedX < 408 && selectedY < 280) {
 					int i1 = mouseOverBankPageText * 48;
-					for (int l1 = 0; l1 < 6; l1++) {
+					for (int l1 = 0; l1 < 6; l1++)
 						for (int j2 = 0; j2 < 8; j2++) {
 							int l6 = 7 + j2 * 49;
 							int j7 = 28 + l1 * 34;
@@ -1310,23 +1297,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								selectedBankItemType = bankItems[i1];
 								if (selectedBankItem == i1) {
 									if (!EntityHandler.getItemDef(selectedBankItemType).isStackable()) {
-										if (bankSelection == 1) {
+										if (bankSelection == 1)
 											bankSelection = 0;
-										} else {
+										else
 											bankSelection = 1;
-										}
-									} else {
+									} else
 										bankSelection = 0;
-									}
-								} else {
+								} else
 									bankSelection = 0;
-								}
 								selectedBankItem = i1;
 
 							}
 							i1++;
 						}
-					}
 					tradeWindowX = super.mouseX;
 					tradeWindowY = super.mouseY;
 
@@ -1361,7 +1344,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							menuID[menuLength] = 786; // 878
 							menuActionVariable[menuLength] = bankItems[selectedBankItem];
 							menuActionVariable2[menuLength] = bankItemsCount[selectedBankItem]
-									- (inventoryCount(bankItems[selectedBankItem])) - 1;
+									- inventoryCount(bankItems[selectedBankItem]) - 1;
 							menuLength++;
 						}
 						if (inventoryCount(bankItems[selectedBankItem]) > 0) {
@@ -1395,7 +1378,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int k = super.mouseY - (gameHeight / 2 - c1 / 2 + 20); // WAS 170
 			if (i >= 0 && k >= 12 && i < 408 && k < 280) {
 				int i1 = mouseOverBankPageText * 48;
-				for (int l1 = 0; l1 < 6; l1++) {
+				for (int l1 = 0; l1 < 6; l1++)
 					for (int j2 = 0; j2 < 8; j2++) {
 						int l6 = 7 + j2 * 49;
 						int j7 = 28 + l1 * 34;
@@ -1405,23 +1388,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 							if (selectedBankItem == i1) {
 								if (!EntityHandler.getItemDef(selectedBankItemType).isStackable()) {
-									if (bankSelection == 1) {
+									if (bankSelection == 1)
 										bankSelection = 0;
-									} else {
+									else
 										bankSelection = 1;
-									}
-								} else {
+								} else
 									bankSelection = 0;
-								}
-							} else {
+							} else
 								bankSelection = 0;
-							}
 							selectedBankItem = i1;
 
 						}
 						i1++;
 					}
-				}
 
 				i = gameWidth / 2 - c / 2; // WAS 256
 				k = gameHeight / 2 - c1 / 2 + 20; // WAS 170
@@ -1590,19 +1569,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		drawString("Number held in blue", j + 289, l + 24, 1, 65535);
 		int i7 = 0xd0d0d0;
 		int k7 = mouseOverBankPageText * 48;
-		for (int i8 = 0; i8 < 6; i8++) {
+		for (int i8 = 0; i8 < 6; i8++)
 			for (int j8 = 0; j8 < 8; j8++) {
 				int l8 = j + 7 + j8 * 49;
 				int i9 = l + 28 + i8 * 34;
 				if (selectedBankItem == k7) {
-					if (this.bankSelection == 1 && !EntityHandler.getItemDef(bankItems[k7]).isNote()) {
+					if (this.bankSelection == 1 && !EntityHandler.getItemDef(bankItems[k7]).isNote())
 						drawBoxAlpha(l8, i9, 49, 34, 85954, 160);
-					} else
+					else
 						drawBoxAlpha(l8, i9, 49, 34, 0xff0000, 160);
 				} else
 					drawBoxAlpha(l8, i9, 49, 34, i7, 160);
 				gameGraphics.drawBoxEdge(l8, i9, 50, 35, 0);
-				if (k7 < bankItemCount && bankItems[k7] != -1) {
+				if (k7 < bankItemCount && bankItems[k7] != -1)
 					if (EntityHandler.getItemDef(bankItems[k7]).isNote()) {
 						gameGraphics.spriteClip4(l8 - 2, i9 + 0, 52, 33, 2029, 0, 0, 0, false);
 						gameGraphics.spriteClip4(l8 + 10, i9 + 6, 30, 18,
@@ -1617,11 +1596,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						gameGraphics.drawBoxTextRight(formatItemAmount(inventoryCount(bankItems[k7])), l8 + 47, i9 + 29,
 								1, 65535);
 					}
-				}
 				k7++;
 			}
-
-		}
 
 		drawLineX(j + 5, l + 256, 398, 0);
 		int k8;
@@ -1680,10 +1656,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				drawString("All", j + 370, l + 248, 1, i5);
 			}
 			if (inventoryCount(k8) > 0) {
-				drawString(
-						"Deposit " + EntityHandler.getItemDef(k8).getName()
-								+ (inventoryCount(k8) >= 100000
-										? " (" + insertCommas(String.valueOf(inventoryCount(k8))) + ")" : ""),
+				drawString("Deposit " + EntityHandler.getItemDef(k8).getName()
+						+ (inventoryCount(k8) >= 100000 ? " (" + insertCommas(String.valueOf(inventoryCount(k8))) + ")"
+								: ""),
 						j + 2, l + 273, 1, 0xffffff);
 				int j5 = 0xffffff;
 				if (super.mouseX >= j + 220 && super.mouseY >= l + 263 && super.mouseX < j + 250
@@ -1738,19 +1713,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawInventoryMenu(boolean flag) {
-		int i = ((Raster) (gameGraphics)).clipWidth - 248;
+		int i = ((Raster) gameGraphics).clipWidth - 248;
 		gameGraphics.drawPicture(i, 3, SPRITE_MEDIA_START + 1);
 		for (int j = 0; j < anInt882; j++) {
-			int k = i + (j % 5) * 49;
-			int i1 = 36 + (j / 5) * 34;
+			int k = i + j % 5 * 49;
+			int i1 = 36 + j / 5 * 34;
 			if (j < inventoryCount && wearing[j] == 1)
 				drawBoxAlpha(k, i1, 49, 34, 0xff0000, 128);
 			else
 				drawBoxAlpha(k, i1, 49, 34, Raster.convertRGBToLong(181, 181, 181), 128);
 			if (j < inventoryCount) {
 				ItemDef item = EntityHandler.getItemDef(inventoryItems[j]);
-				//System.out.println(inventoryItems[j]);
-				if (item != null) {
+				// System.out.println(inventoryItems[j]);
+				if (item != null)
 					if (item.isNote()) {
 						gameGraphics.spriteClip4(k + 3, i1 + 2, 44, 30, 2029, 0, 0, 0, false);
 						gameGraphics.spriteClip4(k + 8, i1 + 5, 34, 22, SPRITE_ITEM_START + item.getSprite(),
@@ -1762,7 +1737,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								item.getPictureMask(), 0, 0, false);
 						drawString(formatItemAmount(inventoryItemsCount[j]), k + 1, i1 + 10, 1,
 								formatItemColor(inventoryItemsCount[j]));
-					} else {
+					} else
 						// gameGraphics.spriteClip4(k+2, i1, 44, 26, 2604, 0, 0,
 						// 0, false);
 						// gameGraphics.spriteClip4(k+5, i1+2, 42, 26,
@@ -1772,24 +1747,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						// formatItemColor(inventoryItemsCount[j]));
 						gameGraphics.spriteClip4(k, i1, 48, 32, SPRITE_ITEM_START + item.getSprite(),
 								item.getPictureMask(), 0, 0, false);
-					}
-				}
 
 			}
 		}
 
 		for (int l = 1; l <= 4; l++)
-			drawLineY(i + l * 49, 36, (anInt882 / 5) * 34, 0);
+			drawLineY(i + l * 49, 36, anInt882 / 5 * 34, 0);
 
 		for (int j1 = 1; j1 <= anInt882 / 5 - 1; j1++)
 			drawLineX(i, 36 + j1 * 34, 245, 0);
 
 		if (!flag)
 			return;
-		i = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 248);
+		i = super.mouseX - (((Raster) gameGraphics).clipWidth - 248);
 		int k1 = super.mouseY - 36;
-		if (i >= 0 && k1 >= 0 && i < 248 && k1 < (anInt882 / 5) * 34) {
-			int currentInventorySlot = i / 49 + (k1 / 34) * 5;
+		if (i >= 0 && k1 >= 0 && i < 248 && k1 < anInt882 / 5 * 34) {
+			int currentInventorySlot = i / 49 + k1 / 34 * 5;
 			if (currentInventorySlot < inventoryCount) {
 				int i2 = inventoryItems[currentInventorySlot];
 				ItemDef itemDef = EntityHandler.getItemDef(i2);
@@ -1833,10 +1806,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						menuActionType[menuLength] = currentInventorySlot;
 						menuLength++;
 					}
-					if (itemDef.getName().equals("Coins")) {
+					if (itemDef.getName().equals("Coins"))
 						gameGraphics.drawCenteredString("(" + insertCommas(String.valueOf(inventoryCount(10))) + ")",
 								mouseX, mouseY - 16, 1, 0xFFFFFF);
-					}
 					menuText1[menuLength] = "Use";
 					menuText2[menuLength] = "@lre@" + itemDef.getName();
 					menuID[menuLength] = 650;
@@ -1848,7 +1820,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					menuActionType[menuLength] = currentInventorySlot;
 					menuLength++;
 
-					if (inventoryCount(i2) > 1) {
+					if (inventoryCount(i2) > 1)
 						if (!itemDef.isStackable()) {
 							menuText1[menuLength] = "Drop All";
 							menuText2[menuLength] = "@lre@" + itemDef.getName();
@@ -1862,7 +1834,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							menuActionType[menuLength] = currentInventorySlot;
 							menuLength++;
 						}
-					}
 					menuText1[menuLength] = "Examine";
 					menuText2[menuLength] = "@lre@" + itemDef.getName();
 					menuID[menuLength] = 3600;
@@ -1926,13 +1897,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				characterTopBottomColours[characterTopColour], characterSkinColours[characterSkinColour], 0, false);
 		gameGraphics.spriteClip4(i - 32, j, 64, 102, EntityHandler.getAnimationDef(characterHeadType).getNumber() + 6,
 				characterHairColours[characterHairColour], characterSkinColours[characterSkinColour], 0, false);
-		gameGraphics.spriteClip3((i - 32) + 55, j, 64, 102,
+		gameGraphics.spriteClip3(i - 32 + 55, j, 64, 102,
 				EntityHandler.getAnimationDef(character2Colour).getNumber() + 12,
 				characterTopBottomColours[characterBottomColour]);
-		gameGraphics.spriteClip4((i - 32) + 55, j, 64, 102,
+		gameGraphics.spriteClip4(i - 32 + 55, j, 64, 102,
 				EntityHandler.getAnimationDef(characterBodyGender).getNumber() + 12,
 				characterTopBottomColours[characterTopColour], characterSkinColours[characterSkinColour], 0, false);
-		gameGraphics.spriteClip4((i - 32) + 55, j, 64, 102,
+		gameGraphics.spriteClip4(i - 32 + 55, j, 64, 102,
 				EntityHandler.getAnimationDef(characterHeadType).getNumber() + 12,
 				characterHairColours[characterHairColour], characterSkinColours[characterSkinColour], 0, false);
 		gameGraphics.drawPicture(0, windowHeight, SPRITE_MEDIA_START + 22);
@@ -1982,7 +1953,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		else
 			i -= 15;
 
-		if (!recoveriesSet || (recoveriesSet && recoveriesDays < 7 && recoveriesDays > -1))
+		if (!recoveriesSet || recoveriesSet && recoveriesDays < 7 && recoveriesDays > -1)
 			i += 60;
 
 		i += 20;
@@ -1996,7 +1967,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (userArray[x] == ' ')
 				userArray[x + 1] = Character.toUpperCase(userArray[x + 1]);
 		currentUser = new String(userArray);
-		drawText("Welcome to "+ Config.getServerName() +" " + currentUser, gameWidth / 2, j, 4, 0xffff00);
+		drawText("Welcome to " + Config.getServerName() + " " + currentUser, gameWidth / 2, j, 4, 0xffff00);
 		j += 30;
 		String s;
 		if (lastLoggedInDays == 0)
@@ -2054,8 +2025,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (mouseButtonClick == 1) {
 			if (l == 0xff0000)
 				showWelcomeBox = false;
-			if ((super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200)
-					|| (super.mouseY < gameHeight / 2 - i / 2 || super.mouseY > gameHeight / 2 + i / 2))
+			if (super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200
+					|| super.mouseY < gameHeight / 2 - i / 2 || super.mouseY > gameHeight / 2 + i / 2)
 				showWelcomeBox = false;
 		}
 		mouseButtonClick = 0;
@@ -2066,8 +2037,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			return;
 		/*
 		 * if (lastWalkTimeout > 450) {
-		 * displayMessage("@cya@You can't logout during combat!", 3, 0); return;
-		 * }
+		 * displayMessage("@cya@You can't logout during combat!", 3, 0); return; }
 		 */
 		if (lastWalkTimeout > 0) {
 			displayMessage("@cya@You can't logout for 10 seconds after combat", 3, -1);
@@ -2099,7 +2069,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawPlayerInfoMenu(boolean flag) {
-		int x = ((Raster) (gameGraphics)).clipWidth - 199;
+		int x = ((Raster) gameGraphics).clipWidth - 199;
 		int y = 36;
 		gameGraphics.drawPicture(x - 49, 3, SPRITE_MEDIA_START + 3);
 		char c = '\304';
@@ -2124,9 +2094,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawQuestMenu();
 		if (!flag)
 			return;
-		x = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 199);
+		x = super.mouseX - (((Raster) gameGraphics).clipWidth - 199);
 		y = super.mouseY - 36;
-		if (x >= 0 && y >= 0 && x < c && y < c1) {
+		if (x >= 0 && y >= 0 && x < c && y < c1)
 			if (y <= 24 && mouseButtonClick == 1) {
 				if (x < 98) {
 					infoPage = 0;
@@ -2137,7 +2107,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					return;
 				}
 			}
-		}
 		mouseButtonClick = 0;
 	}
 
@@ -2160,7 +2129,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			y += 13;
 		}
 		y -= 1;
-		drawString("Fatigue: @yel@" + (fatigue * 100 / 750) + "%", x + 5, y, 1, 0xffffff);
+		drawString("Fatigue: @yel@" + fatigue * 100 / 750 + "%", x + 5, y, 1, 0xffffff);
 		y = retain;
 
 		for (int currentStat = 9; currentStat < 18; currentStat++) {
@@ -2170,24 +2139,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				k1 = currentStat;
 			}
 			drawString(skillArray[currentStat] + ":@yel@" + playerStatCurrent[currentStat] + "/"
-					+ playerStatBase[currentStat], (x + c / 2) - 5, y, 1, color);
+					+ playerStatBase[currentStat], x + c / 2 - 5, y, 1, color);
 			y += 13;
 		}
 		// Runecrafting
 		// if (playerStatBase[18] > 1) {
-		/*color = 0xffffff;
-		if (super.mouseX >= x + 90 && super.mouseY >= y - 10 && super.mouseY < y + 2 && super.mouseX < x + 196) {
-			color = 0xff0000;
-			k1 = 18;
-		}
-		drawString(skillArray[18] + ":@yel@" + playerStatCurrent[18] + "/" + playerStatBase[18], (x + c / 2) - 5, y, 1,
-				color);
-		y += 13;*/
+		/*
+		 * color = 0xffffff; if (super.mouseX >= x + 90 && super.mouseY >= y - 10 &&
+		 * super.mouseY < y + 2 && super.mouseX < x + 196) { color = 0xff0000; k1 = 18;
+		 * } drawString(skillArray[18] + ":@yel@" + playerStatCurrent[18] + "/" +
+		 * playerStatBase[18], (x + c / 2) - 5, y, 1, color); y += 13;
+		 */
 		// }
 		// Runecrafting
 
 		color = 0xffffff;
-		drawString("Quest Points:@yel@" + questPoints, (x + c / 2) - 5, y, 1, color);
+		drawString("Quest Points:@yel@" + questPoints, x + c / 2 - 5, y, 1, color);
 
 		// Runecrafting
 		// if (playerStatBase[18] > 1)
@@ -2196,7 +2163,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		y += 34;
 		// Runecrafting
 
-		//y -= 12;
+		// y -= 12;
 		drawString("Equipment Status", x + 5, y, 3, 0xffff00);
 		y += 12;
 		for (int j2 = 0; j2 < 3; j2++) {
@@ -2220,9 +2187,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (playerStatExperience[k1] >= experienceArray[i3])
 					k2 = experienceArray[i3 + 1];
 
-			drawString("Total xp: " + insertCommas("" + (playerStatExperience[k1] / 4)), x + 5, y, 1, 0xffffff);
+			drawString("Total xp: " + insertCommas("" + playerStatExperience[k1] / 4), x + 5, y, 1, 0xffffff);
 			y += 12;
-			drawString("Next level at: " + insertCommas("" + (k2 / 4)), x + 5, y, 1, 0xffffff);
+			drawString("Next level at: " + insertCommas("" + k2 / 4), x + 5, y, 1, 0xffffff);
 			// y += 12;
 			// drawString("Required XP: " + insertCommas("" + (k2 -
 			// playerStatExperience[k1])), x + 5, y, 1, 0xffffff);
@@ -2247,14 +2214,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void drawQuestMenu() {
 		questMenu.resetListTextCount(questMenuHandle);
 		int ctr = 0;
-        questMenu.drawMenuListText(questMenuHandle, ctr, "@whi@Quest-list (green=completed)");
-        ctr++;
+		questMenu.drawMenuListText(questMenuHandle, ctr, "@whi@Quest-list (green=completed)");
+		ctr++;
 		for (String s : quests) {
 			questMenu.drawMenuListText(questMenuHandle, ctr, s);
 			ctr++;
 		}
 		questMenu.drawMenu();
-		int i = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 199);
+		int i = super.mouseX - (((Raster) gameGraphics).clipWidth - 199);
 		int j = super.mouseY - 61;
 		if (i >= 0 && j >= 0 && i < 196 && j < 260)
 			questMenu.updateActions(super.mouseX, super.mouseY, super.lastMouseDownButton, super.mouseDownButton);
@@ -2323,70 +2290,75 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void checkMouseOverMenus() {
-		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 && super.mouseY < 35)
+		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 && super.mouseY < 35)
 			mouseOverMenu = 1;
-		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 33 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 33 && super.mouseY < 35) {
+		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 33 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 33 && super.mouseY < 35) {
 			mouseOverMenu = 2;
 			anInt985 = (int) (Math.random() * 13D) - 6;
 			anInt986 = (int) (Math.random() * 23D) - 11;
 		}
-		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 66 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 66 && super.mouseY < 35)
+		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 66 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 66 && super.mouseY < 35)
 			mouseOverMenu = 3;
-		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 99 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 99 && super.mouseY < 35)
+		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 99 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 99 && super.mouseY < 35)
 			mouseOverMenu = 4;
-		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 132 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 132 && super.mouseY < 35)
+		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 132 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 132 && super.mouseY < 35)
 			mouseOverMenu = 5;
-		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 165 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 165 && super.mouseY < 35)
+		if (mouseOverMenu == 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 165 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 165 && super.mouseY < 35)
 			mouseOverMenu = 6;
-		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 && super.mouseY < 26)
+		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 && super.mouseY < 26)
 			mouseOverMenu = 1;
-		if (mouseOverMenu != 0 && mouseOverMenu != 2 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 33
-				&& super.mouseY >= 3 && super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 33
+		if (mouseOverMenu != 0 && mouseOverMenu != 2 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 33
+				&& super.mouseY >= 3 && super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 33
 				&& super.mouseY < 26) {
 			mouseOverMenu = 2;
 			anInt985 = (int) (Math.random() * 13D) - 6;
 			anInt986 = (int) (Math.random() * 23D) - 11;
 		}
-		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 66 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 66 && super.mouseY < 26)
+		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 66 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 66 && super.mouseY < 26)
 			mouseOverMenu = 3;
-		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 99 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 99 && super.mouseY < 26)
+		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 99 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 99 && super.mouseY < 26)
 			mouseOverMenu = 4;
-		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 132 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 132 && super.mouseY < 26)
+		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 132 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 132 && super.mouseY < 26)
 			mouseOverMenu = 5;
-		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) (gameGraphics)).clipWidth - 35 - 165 && super.mouseY >= 3
-				&& super.mouseX < ((Raster) (gameGraphics)).clipWidth - 3 - 165 && super.mouseY < 26)
+		if (mouseOverMenu != 0 && super.mouseX >= ((Raster) gameGraphics).clipWidth - 35 - 165 && super.mouseY >= 3
+				&& super.mouseX < ((Raster) gameGraphics).clipWidth - 3 - 165 && super.mouseY < 26)
 			mouseOverMenu = 6;
-		if (mouseOverMenu == 1 && (super.mouseX < ((Raster) (gameGraphics)).clipWidth - 248
-				|| super.mouseY > 36 + (anInt882 / 5) * 34))
+		if (mouseOverMenu == 1
+				&& (super.mouseX < ((Raster) gameGraphics).clipWidth - 248 || super.mouseY > 36 + anInt882 / 5 * 34))
 			mouseOverMenu = 0;
-		if (mouseOverMenu == 3 && (super.mouseX < ((Raster) (gameGraphics)).clipWidth - 199 || super.mouseY > 316))
+		if (mouseOverMenu == 3 && (super.mouseX < ((Raster) gameGraphics).clipWidth - 199 || super.mouseY > 316))
 			mouseOverMenu = 0;
 		if ((mouseOverMenu == 2 || mouseOverMenu == 4 || mouseOverMenu == 5)
-				&& (super.mouseX < ((Raster) (gameGraphics)).clipWidth - 199 || super.mouseY > 240))
+				&& (super.mouseX < ((Raster) gameGraphics).clipWidth - 199 || super.mouseY > 240))
 			mouseOverMenu = 0;
-		if (mouseOverMenu == 6 && (super.mouseX < ((Raster) (gameGraphics)).clipWidth - 199
+		if (mouseOverMenu == 6 && (super.mouseX < ((Raster) gameGraphics).clipWidth - 199
 				|| super.mouseY > (onTutorialIsland ? 331 : 326)))
 			mouseOverMenu = 0;
 	}
 
+	// Sends information to the server about interactions
+	// with screen menus (right-click primarily).
 	public final void menuClick(int index) {
 		int actionX = menuActionX[index];
 		int actionY = menuActionY[index];
 		int actionType = menuActionType[index];
 		int actionVariable = menuActionVariable[index];
 		long actionVariable2 = menuActionVariable2[index];
+		int actionVariable3 = menuActionVariable3[index];
 		int currentMenuID = menuID[index];
-		if (currentMenuID == 200) {
+
+		// Ground Item
+		if (currentMenuID == 200) { // Cast on Ground Item
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(37);
 			super.streamClass.add2ByteInt(actionVariable);
@@ -2396,7 +2368,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 210) {
+		if (currentMenuID == 210) { // Use Item on Ground Item
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(60);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2406,7 +2378,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 220) {
+		if (currentMenuID == 220) { // Take Ground Item
 			walkToGroundItem(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(11);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2415,12 +2387,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3200)
-			displayMessage(
-                    EntityHandler.getItemDef(actionType).getDescription()
-					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
-					3, -1);
-		if (currentMenuID == 300) {
+		if (currentMenuID == 3200) // Examine Ground Item
+			displayMessage(EntityHandler.getItemDef(actionType).getDescription()
+					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
+
+		// Door
+		if (currentMenuID == 300) { // Cast on Door
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(255);
 			super.streamClass.add2ByteInt(actionVariable);
@@ -2430,7 +2402,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 310) { // InvUseOnObject (DOOR)
+		if (currentMenuID == 310) { // Use Item on Door (InvUseOnObject)
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(63);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2440,7 +2412,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 320) {
+		if (currentMenuID == 320) { // Door Action 1
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(27);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2448,7 +2420,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.addByte(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2300) {
+		if (currentMenuID == 2300) { // Door Action 2
 			walkToAction(actionX, actionY, actionType, "hi");
 			super.streamClass.createPacket(28);
 			super.streamClass.add2ByteInt(actionX + areaX);
@@ -2456,11 +2428,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.addByte(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3300)
-			displayMessage(
-					EntityHandler.getDoorDef(actionType).getDescription() + (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
-					3, -1);
-		if (currentMenuID == 400) {
+		if (currentMenuID == 3300) // Examine Door
+			displayMessage(EntityHandler.getDoorDef(actionType).getDescription()
+					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
+
+		// Object
+		if (currentMenuID == 400) { // Cast Spell on Object
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(33);
 			super.streamClass.add2ByteInt((int) actionVariable2);
@@ -2468,7 +2441,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 410) { // InvUseOnObject (GAMEOBJECT)
+		if (currentMenuID >= 410 && currentMenuID <= 412) { // Use Item on Object (InvUseOnObject)
 			walkToObject(actionX, actionY, actionType, actionVariable); // ACTION
 																		// TYPE
 																		// =
@@ -2477,65 +2450,66 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionX + areaX); // X
 			super.streamClass.add2ByteInt(actionY + areaY); // Y
 			super.streamClass.add2ByteInt((int) actionVariable2); // ITEM
+			super.streamClass.add2ByteInt(menuActionVariable3[index]); // Batch (0/1/2)
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 420) {
+		if (currentMenuID == 420) { // Object Action 1
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(29);
 			super.streamClass.add2ByteInt(actionX + areaX);
 			super.streamClass.add2ByteInt(actionY + areaY);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2400) {
+		if (currentMenuID == 2400) { // Object Action 2
 			walkToObject(actionX, actionY, actionType, actionVariable);
 			super.streamClass.createPacket(30);
 			super.streamClass.add2ByteInt(actionX + areaX);
 			super.streamClass.add2ByteInt(actionY + areaY);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3400)
-			displayMessage(
-					EntityHandler.getObjectDef(actionType).getDescription() + (ourPlayer.isDev() ? " (" + actionType + ")" : ""),
-					3, -1);
-		if (currentMenuID == 600) {
+		if (currentMenuID == 3400) // Examine Object
+			displayMessage(EntityHandler.getObjectDef(actionType).getDescription()
+					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
+
+		// Inventory Item
+		if (currentMenuID == 600) { // Cast on Inventory Item
 			super.streamClass.createPacket(31);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 787) { /* groupID cancel auction house entry */
+		if (currentMenuID == 787) // Auction Code..
 			super.cancelAuction(actionVariable);
-		}
-		if (currentMenuID == 610) {
+		if (currentMenuID == 610) { // Use Item with Inventory Item
 			super.streamClass.createPacket(61);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 620) {
+		if (currentMenuID == 620) { // Remove Inventory Item
 			super.streamClass.createPacket(21);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 630) {
+		if (currentMenuID == 630) { // Wear Inventory Item
 			super.streamClass.createPacket(20);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 640) {
+		if (currentMenuID == 640) { // Inventory Item Action 1 
 			super.streamClass.createPacket(55);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 650) {
+		if (currentMenuID == 650) { // Use Inventory Item
 			selectedItem = actionType;
 			mouseOverMenu = 0;
 			selectedItemName = EntityHandler.getItemDef(inventoryItems[selectedItem]).getName();
 		}
-		if (currentMenuID == 660) {
+		if (currentMenuID == 660) { // Drop Inventory Item
 			super.streamClass.createPacket(10);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.addLong(-1);
@@ -2543,7 +2517,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			selectedItem = -1;
 			mouseOverMenu = 0;
 		}
-		if (currentMenuID == 661) {
+		if (currentMenuID == 661) { // Drop All Inventory Item
 			super.streamClass.createPacket(10);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.addLong(0);
@@ -2551,7 +2525,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			selectedItem = -1;
 			mouseOverMenu = 0;
 		}
-		if (currentMenuID == 662) {
+		if (currentMenuID == 662) { // Drop X Inventory Item
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 13;
@@ -2559,14 +2533,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			selectedItem = -1;
 			mouseOverMenu = 0;
 		}
-		if (currentMenuID == 3600) {
+		if (currentMenuID == 3600) // Examine Inventory Item
 			if (ourPlayer.isDev())
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription() + " ("
 						+ EntityHandler.getItemDef(actionType).id + ")", 3, -1);
 			else
 				displayMessage(EntityHandler.getItemDef(actionType).getDescription(), 3, -1);
-		}
-		if (currentMenuID == 700) {
+
+		// NPC
+		if (currentMenuID == 700) { // Cast on NPC
 			int l1 = (actionX - 64) / 128;
 			int l3 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, l1, l3, true);
@@ -2576,7 +2551,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 710) {
+		if (currentMenuID == 710) { // Use Item on NPC
 			int i2 = (actionX - 64) / 128;
 			int i4 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, i2, i4, true);
@@ -2586,7 +2561,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 720) {
+		if (currentMenuID == 720) { // Talk-to NPC
 			int j2 = (actionX - 64) / 128;
 			int j4 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, j2, j4, true);
@@ -2594,7 +2569,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 725) {
+		if (currentMenuID == 725) { // NPC Action 1
 			int k2 = (actionX - 64) / 128;
 			int k4 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, k2, k4, true);
@@ -2602,7 +2577,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 715 || currentMenuID == 2715) {
+		if (currentMenuID == 715 || currentMenuID == 2715) { // Attack NPC
 			int l2 = (actionX - 64) / 128;
 			int l4 = (actionY - 64) / 128;
 			int l6 = method112(sectionX, sectionY, l2, l4, true);
@@ -2611,10 +2586,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(l6);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 3700)
+		if (currentMenuID == 3700) // Examine NPC
 			displayMessage(EntityHandler.getNpcDef(actionType).getDescription()
 					+ (ourPlayer.isDev() ? " (" + actionType + ")" : ""), 3, -1);
-		if (currentMenuID == 800) {
+
+		// Player
+		if (currentMenuID == 800) { // Cast on Player
 			int i3 = (actionX - 64) / 128;
 			int i5 = (actionY - 64) / 128;
 			byte i7 = (byte) rand.nextInt(200);
@@ -2626,7 +2603,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 810) {
+		if (currentMenuID == 810) { // Use Item with Player
 			int j3 = (actionX - 64) / 128;
 			int j5 = (actionY - 64) / 128;
 			method112(sectionX, sectionY, j3, j5, true);
@@ -2636,7 +2613,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedItem = -1;
 		}
-		if (currentMenuID == 805 || currentMenuID == 2805) {
+		if (currentMenuID == 805 || currentMenuID == 2805) { // Attack Player
 			int k3 = (actionX - 64) / 128;
 			int k5 = (actionY - 64) / 128;
 			int k6 = method112(sectionX, sectionY, k3, k5, true);
@@ -2645,40 +2622,39 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(k6);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2940) { // public message
+		if (currentMenuID == 2940) { // Public Message
 			privateMessageTarget = menuLongVariable[index];
 			inputBoxType = 2;
 			super.inputMessage = "";
 			super.enteredMessage = "";
 		}
-		if (currentMenuID == 2941) { // invite player
+		if (currentMenuID == 2941) { // Invite Player
 			streamClass.createPacket(84);
 			streamClass.addByte(2);
 			streamClass.addByte(0);
 			streamClass.addLong(menuLongVariable[index]);
 			streamClass.formatPacket();
 		}
-		if (currentMenuID == 2942) { // kick player
+		if (currentMenuID == 2942) { // Kick Player
 			streamClass.createPacket(84);
 			streamClass.addByte(2);
 			streamClass.addByte(1);
 			streamClass.addLong(menuLongVariable[index]);
 			streamClass.formatPacket();
 		}
-		if (currentMenuID == 2943) {
+		if (currentMenuID == 2943) { // ????
 			streamClass.createPacket(84);
 			streamClass.addByte(1);
 			streamClass.formatPacket();
 		}
-		if (currentMenuID == 2806) {
+		if (currentMenuID == 2806) { // Duel With Player
 			super.streamClass.createPacket(54);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2930) {
+		if (currentMenuID == 2930) // Abuse Box
 			showAbuseBox = 1;
-		}
-		if (currentMenuID == 2810) {
+		if (currentMenuID == 2810) { // Trade With Player
 			super.streamClass.createPacket(43);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
@@ -2688,22 +2664,21 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 2820) {
+		if (currentMenuID == 2820) { // Follow Player
 			super.streamClass.createPacket(68);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 4444) {
+		if (currentMenuID == 4444) // Add Friend
 			for (int a = 0; a < playerCount; a++)
 				if (playerArray[a].serverIndex == actionType)
 					addToFriendsList(playerArray[a].name);
-		}
-		if (currentMenuID == 2821) {
+		if (currentMenuID == 2821) { // ????
 			super.streamClass.createPacket(69);
 			super.streamClass.add2ByteInt(actionType);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 900) {
+		if (currentMenuID == 900) { // Cast Spell on Ground
 			method112(sectionX, sectionY, actionX, actionY, true);
 			super.streamClass.createPacket(34);
 			super.streamClass.add2ByteInt(actionType);
@@ -2712,12 +2687,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 920) {
+		if (currentMenuID == 920) { // "Walk Here"
 			method112(sectionX, sectionY, actionX, actionY, false);
 			if (actionPictureType == -24)
 				actionPictureType = 24;
 		}
-		if (currentMenuID == 921)
+		if (currentMenuID == 921) // "Teleport Here"
 			sendChatString("teleport " + (actionX + areaX) + " " + (actionY + areaY));
 		if (currentMenuID == 1000) {
 			super.streamClass.createPacket(34);
@@ -2725,80 +2700,87 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			super.streamClass.formatPacket();
 			selectedSpell = -1;
 		}
-		if (currentMenuID == 878) {
+
+		if (currentMenuID == 878) { // ????
 			super.streamClass.createPacket(25);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(inventoryCount(actionVariable));
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 879) {
+		if (currentMenuID == 879) { // ????
 			super.streamClass.createPacket(25);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(actionVariable2);// Strange?
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 784) {
+
+		// Bank
+		if (currentMenuID == 784) { // Withdraw X
 			super.streamClass.createPacket(24);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(actionVariable2);
 			super.streamClass.add4ByteInt(bankSelection == 1 ? 1 : 0);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 786) {
+		if (currentMenuID == 786) { // Withdraw-All
 			super.streamClass.createPacket(24);
 			super.streamClass.add2ByteInt(actionVariable);
 			super.streamClass.addLong(actionVariable2);
 			super.streamClass.add4ByteInt(bankSelection == 1 ? 1 : 0);
 			super.streamClass.formatPacket();
 		}
-		if (currentMenuID == 888) {
+		if (currentMenuID == 888) { // Deposit X
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 5;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 785 || currentMenuID == 806) {
+		if (currentMenuID == 785 || currentMenuID == 806) { // Withdraw-All
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 4;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 783)
+
+		// Trade
+		if (currentMenuID == 783) // Remove Trade Items
 			removeTradeItems(actionVariable, actionVariable2, actionType);
-		if (currentMenuID == 782)
+		if (currentMenuID == 782) // Add Trade Items
 			addTradeItems(actionVariable, actionVariable2, actionType, false);
-		if (currentMenuID == 881) {
+		if (currentMenuID == 881) { // Trade Remove X 
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 7;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 882) {
+
+		// Dual
+		if (currentMenuID == 882) { // Stake 1
 			if (duelMyItemCount == 8)
 				return;
 			addDuelItems(actionVariable, actionVariable2, actionType, false);
 		}
 		if (currentMenuID == 883)
 			removeDuelItems(actionVariable, actionVariable2, actionType);
-		if (currentMenuID == 889) {
+		if (currentMenuID == 889) { // Remove X
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 9;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 890) {
+		if (currentMenuID == 890) { // Stake X
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 8;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 789) {
+		if (currentMenuID == 789) { // Offer X (Trade)
 			super.inputText = "";
 			super.enteredText = "";
 			inputBoxType = 6;
 			inputID = actionVariable;
 		}
-		if (currentMenuID == 4000) {
+		if (currentMenuID == 4000) { // Cancel
 			selectedItem = -1;
 			selectedSpell = -1;
 		}
@@ -2808,10 +2790,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		lastTradeDuelUpdate = System.currentTimeMillis();
 		int currentDuelItemCount = 0;
 		int removedCount = 0;
-		if (actionType == 1234) {
+		if (actionType == 1234)
 			if (EntityHandler.getItemDef(actionVariable).isStackable()
-					|| EntityHandler.getItemDef(actionVariable).isNote()) {
-				for (int c = 0; c < duelMyItemCount; c++) {
+					|| EntityHandler.getItemDef(actionVariable).isNote())
+				for (int c = 0; c < duelMyItemCount; c++)
 					if (duelMyItems[c] == actionVariable) {
 						duelMyItemsCount[c] = 0;
 						duelMyItemCount--;
@@ -2820,28 +2802,18 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							duelMyItemsCount[l2] = duelMyItemsCount[l2 + 1];
 						}
 					}
-				}
-			}
-		}
 		if (EntityHandler.getItemDef(actionVariable).isStackable()
 				|| EntityHandler.getItemDef(actionVariable).isNote()) {
-			for (int c = 0; c < duelMyItemCount; c++) {
-				if (duelMyItems[c] == actionVariable) {
-					if (actionVariable2 > duelMyItemsCount[c]) {
+			for (int c = 0; c < duelMyItemCount; c++)
+				if (duelMyItems[c] == actionVariable)
+					if (actionVariable2 > duelMyItemsCount[c])
 						actionVariable2 = duelMyItemsCount[c];
-					}
-				}
-			}
-		} else {
-			for (int c = 0; c < duelMyItemCount; c++) {
-				if (duelMyItems[c] == actionVariable) {
+		} else
+			for (int c = 0; c < duelMyItemCount; c++)
+				if (duelMyItems[c] == actionVariable)
 					currentDuelItemCount++;
-				}
-			}
-		}
-		if (EntityHandler.getItemDef(actionVariable).isStackable()
-				|| EntityHandler.getItemDef(actionVariable).isNote()) {
-			for (int c = 0; c < duelMyItemCount; c++) {
+		if (EntityHandler.getItemDef(actionVariable).isStackable() || EntityHandler.getItemDef(actionVariable).isNote())
+			for (int c = 0; c < duelMyItemCount; c++)
 				if (EntityHandler.getItemDef(actionVariable).isStackable() && duelMyItemsCount[c] > 0
 						&& duelMyItems[c] == actionVariable
 						|| EntityHandler.getItemDef(actionVariable).isNote() && duelMyItemsCount[c] > 0
@@ -2859,18 +2831,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					}
 					continue;
 				}
-			}
-		}
 		if (!EntityHandler.getItemDef(actionVariable).isStackable()
 				&& !EntityHandler.getItemDef(actionVariable).isNote()) {
-			if (actionVariable2 > 12) {
+			if (actionVariable2 > 12)
 				actionVariable2 = 12;
-			}
-			if (actionType == 1234) {
+			if (actionType == 1234)
 				actionVariable2 = currentDuelItemCount;
-			}
-			for (int c = 0; c < actionVariable2; c++) {
-				for (int duelCount = 0; duelCount < duelMyItemCount; duelCount++) {
+			for (int c = 0; c < actionVariable2; c++)
+				for (int duelCount = 0; duelCount < duelMyItemCount; duelCount++)
 					if (duelMyItems[duelCount] == actionVariable && removedCount != actionVariable2) {
 						duelMyItemCount--;
 						removedCount++;
@@ -2879,8 +2847,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							duelMyItemsCount[l22] = duelMyItemsCount[l22 + 1];
 						}
 					}
-				}
-			}
 		}
 		super.streamClass.createPacket(53);
 		super.streamClass.addByte(duelMyItemCount);
@@ -2899,9 +2865,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		lastTradeDuelUpdate = System.currentTimeMillis();
 		long currentTradeItemCount = 0;
 		long removedCount = 0;
-		if (actionType == 1234) {
-			if (EntityHandler.getItemDef(actionVariable).isStackable()) {
-				for (int c = 0; c < tradeMyItemCount; c++) {
+		if (actionType == 1234)
+			if (EntityHandler.getItemDef(actionVariable).isStackable())
+				for (int c = 0; c < tradeMyItemCount; c++)
 					if (tradeMyItems[c] == actionVariable) {
 						tradeMyItemsCount[c] = 0;
 						tradeMyItemCount--;
@@ -2910,27 +2876,18 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							tradeMyItemsCount[l2] = tradeMyItemsCount[l2 + 1];
 						}
 					}
-				}
-			}
-		}
 		if (EntityHandler.getItemDef(actionVariable).isStackable()) {
-			for (int c = 0; c < tradeMyItemCount; c++) {
-				if (tradeMyItems[c] == actionVariable) {
-					if (actionVariable2 > tradeMyItemsCount[c]) {
+			for (int c = 0; c < tradeMyItemCount; c++)
+				if (tradeMyItems[c] == actionVariable)
+					if (actionVariable2 > tradeMyItemsCount[c])
 						actionVariable2 = tradeMyItemsCount[c];
-					}
-				}
-			}
-		} else {
-			for (int c = 0; c < tradeMyItemCount; c++) {
-				if (tradeMyItems[c] == actionVariable) {
+		} else
+			for (int c = 0; c < tradeMyItemCount; c++)
+				if (tradeMyItems[c] == actionVariable)
 					currentTradeItemCount++;
-				}
-			}
-		}
 		if (actionType == 1234) {
-			if (EntityHandler.getItemDef(actionVariable).isStackable()) {
-				for (int c = 0; c < tradeMyItemCount; c++) {
+			if (EntityHandler.getItemDef(actionVariable).isStackable())
+				for (int c = 0; c < tradeMyItemCount; c++)
 					if (tradeMyItems[c] == actionVariable) {
 						tradeMyItemCount--;
 						for (int l2 = c; l2 < tradeMyItemCount; l2++) {
@@ -2938,13 +2895,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							tradeMyItemsCount[l2] = tradeMyItemsCount[l2 + 1];
 						}
 					}
-				}
-			}
-		} else if (!(actionType == 1234)) {
+		} else if (!(actionType == 1234))
 			currentTradeItemCount = actionVariable2;
-		}
-		if (EntityHandler.getItemDef(actionVariable).isStackable()) {
-			for (int c = 0; c < tradeMyItemCount; c++) {
+		if (EntityHandler.getItemDef(actionVariable).isStackable())
+			for (int c = 0; c < tradeMyItemCount; c++)
 				if (EntityHandler.getItemDef(actionVariable).isStackable() && tradeMyItemsCount[c] > 0
 						&& tradeMyItems[c] == actionVariable) {
 					tradeMyItemsCount[c] = tradeMyItemsCount[c] - actionVariable2;
@@ -2958,15 +2912,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					}
 					continue;
 				}
-			}
-		}
 		if (!EntityHandler.getItemDef(actionVariable).isStackable()) {
 			if (actionVariable2 > 12)
 				actionVariable2 = 12;
 			if (actionType == 1234)
 				actionVariable2 = currentTradeItemCount;
-			for (int c = 0; c < actionVariable2; c++) {
-				for (int tradeCount = 0; tradeCount < tradeMyItemCount; tradeCount++) {
+			for (int c = 0; c < actionVariable2; c++)
+				for (int tradeCount = 0; tradeCount < tradeMyItemCount; tradeCount++)
 					if (tradeMyItems[tradeCount] == actionVariable && removedCount != actionVariable2) {
 						tradeMyItemCount--;
 						removedCount++;
@@ -2975,8 +2927,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							tradeMyItemsCount[l22] = tradeMyItemsCount[l22 + 1];
 						}
 					}
-				}
-			}
 		}
 		super.streamClass.createPacket(42);
 		super.streamClass.addByte(tradeMyItemCount);
@@ -2992,33 +2942,26 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public void addTradeItems(int actionVariable, long actionVariable2, int actionType, boolean offerx) {
-		if (tradeMyItemCount > 11 || (actionVariable2 == 0 && !(actionType == 1234)))
+		if (tradeMyItemCount > 11 || actionVariable2 == 0 && !(actionType == 1234))
 			return;
 		long getCurrentStack = inventoryCount(actionVariable);
 		long getTradeCount = 0;
-		for (int c = 0; c < tradeMyItemCount; c++) {
+		for (int c = 0; c < tradeMyItemCount; c++)
 			if (EntityHandler.getItemDef(actionVariable).isStackable()) {
 				if (tradeMyItems[c] == actionVariable) {
 					getTradeCount = tradeMyItemsCount[c];
 					getCurrentStack = inventoryCount(actionVariable) - tradeMyItemsCount[c];
 				}
-			} else {
-				if (tradeMyItems[c] == actionVariable) {
-					getTradeCount++;
-				}
-			}
-		}
-		if (getTradeCount + actionVariable2 < 0 && !EntityHandler.getItemDef(actionVariable).isStackable()) {
+			} else if (tradeMyItems[c] == actionVariable)
+				getTradeCount++;
+		if (getTradeCount + actionVariable2 < 0 && !EntityHandler.getItemDef(actionVariable).isStackable())
 			actionVariable2 = getCurrentStack;
-		}
 
-		if (getTradeCount + actionVariable2 > inventoryCount(actionVariable)) {
+		if (getTradeCount + actionVariable2 > inventoryCount(actionVariable))
 			actionVariable2 = inventoryCount(actionVariable) - getTradeCount;
-		}
 
-		if (actionType == 1234 && EntityHandler.getItemDef(actionVariable).isStackable()) {
+		if (actionType == 1234 && EntityHandler.getItemDef(actionVariable).isStackable())
 			actionVariable2 = getCurrentStack;
-		}
 
 		if (getTradeCount + actionVariable2 < 0) {
 			actionVariable2 = getCurrentStack;
@@ -3028,25 +2971,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (getCurrentStack == 0)
 			return;
 		boolean done = false;
-		for (int c = 0; c < tradeMyItemCount; c++) {
+		for (int c = 0; c < tradeMyItemCount; c++)
 			if (tradeMyItems[c] == actionVariable && EntityHandler.getItemDef(actionVariable).isStackable()) {
 				tradeMyItemsCount[c] += actionVariable2;
 				done = true;
 				break;
 			}
-		}
 		int count = 0;
-		if (inventoryCount(actionVariable) < actionVariable2) {
+		if (inventoryCount(actionVariable) < actionVariable2)
 			if (inventoryCount(actionVariable) - count < 1)
 				return;
-			else if (!((inventoryCount(actionVariable) - count) < 1))
+			else if (!(inventoryCount(actionVariable) - count < 1))
 				actionVariable2 = inventoryCount(actionVariable);
-		}
 		if (!EntityHandler.getItemDef(actionVariable).isStackable()) {
-			for (int c = 0; c < tradeMyItemCount; c++) {
+			for (int c = 0; c < tradeMyItemCount; c++)
 				if (tradeMyItems[c] == actionVariable)
 					count++;
-			}
 			int freeSlots = 12 - tradeMyItemCount;
 			if (actionVariable2 > freeSlots)
 				actionVariable2 = freeSlots;
@@ -3056,7 +2996,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				tradeMyItemCount++;
 			}
 		}
-		if (!done && !((inventoryCount(actionVariable) - count) < 1)) {
+		if (!done && !(inventoryCount(actionVariable) - count < 1)) {
 			tradeMyItems[tradeMyItemCount] = actionVariable;
 			tradeMyItemsCount[tradeMyItemCount] = actionVariable2;
 			tradeMyItemCount++;
@@ -3075,62 +3015,52 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public void addDuelItems(int actionVariable, long actionVariable2, int actionType, boolean offerx) {
-		if (duelMyItemCount > 7 || (actionVariable2 == 0 && !(actionType == 1234)))
+		if (duelMyItemCount > 7 || actionVariable2 == 0 && !(actionType == 1234))
 			return;
 		long getCurrentStack = inventoryCount(actionVariable);
 		long currentDuelItemCount = 0;
-		for (int c = 0; c < duelMyItemCount; c++) {
+		for (int c = 0; c < duelMyItemCount; c++)
 			if (EntityHandler.getItemDef(actionVariable).isStackable()) {
 				if (duelMyItems[c] == actionVariable) {
 					currentDuelItemCount = duelMyItemsCount[c];
 					getCurrentStack = inventoryCount(actionVariable) - duelMyItemsCount[c];
 				}
-			} else {
-				if (duelMyItems[c] == actionVariable) {
-					currentDuelItemCount++;
-				}
-			}
-		}
-		if (currentDuelItemCount + actionVariable2 < 0 && !EntityHandler.getItemDef(actionVariable).isStackable()) {
+			} else if (duelMyItems[c] == actionVariable)
+				currentDuelItemCount++;
+		if (currentDuelItemCount + actionVariable2 < 0 && !EntityHandler.getItemDef(actionVariable).isStackable())
 			actionVariable2 = getCurrentStack;
-		}
 
-		if (currentDuelItemCount + actionVariable2 > inventoryCount(actionVariable)) {
+		if (currentDuelItemCount + actionVariable2 > inventoryCount(actionVariable))
 			actionVariable2 = inventoryCount(actionVariable) - currentDuelItemCount;
-		}
 
 		if (currentDuelItemCount + actionVariable2 < 0 && EntityHandler.getItemDef(actionVariable).isStackable()) {
 			actionVariable2 = getCurrentStack;
 			actionType = 1234;
 		}
 
-		if (actionType == 1234 && EntityHandler.getItemDef(actionVariable).isStackable()) {
+		if (actionType == 1234 && EntityHandler.getItemDef(actionVariable).isStackable())
 			actionVariable2 = getCurrentStack;
-		}
 
 		if (getCurrentStack == 0)
 			return;
 		boolean done = false;
-		for (int c = 0; c < duelMyItemCount; c++) {
+		for (int c = 0; c < duelMyItemCount; c++)
 			if (duelMyItems[c] == actionVariable && EntityHandler.getItemDef(actionVariable).isStackable()) {
 				duelMyItemsCount[c] += actionVariable2;
 				done = true;
 				break;
 			}
-		}
 		int count = 0;
-		if (inventoryCount(actionVariable) < actionVariable2) {
+		if (inventoryCount(actionVariable) < actionVariable2)
 			if (inventoryCount(actionVariable) - count < 1)
 				return;
-			else if (!((inventoryCount(actionVariable) - count) < 1))
+			else if (!(inventoryCount(actionVariable) - count < 1))
 				actionVariable2 = inventoryCount(actionVariable);
-		}
 		if (!EntityHandler.getItemDef(actionVariable).isStackable()
 				&& !EntityHandler.getItemDef(actionVariable).isNote()) {
-			for (int c = 0; c < duelMyItemCount; c++) {
+			for (int c = 0; c < duelMyItemCount; c++)
 				if (duelMyItems[c] == actionVariable)
 					count++;
-			}
 			int freeSlots = 8 - duelMyItemCount;
 			if (actionVariable2 > freeSlots)
 				actionVariable2 = freeSlots;
@@ -3140,7 +3070,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				duelMyItemCount++;
 			}
 		}
-		if (!done && !((inventoryCount(actionVariable) - count) < 1)) {
+		if (!done && !(inventoryCount(actionVariable) - count < 1)) {
 			duelMyItems[duelMyItemCount] = actionVariable;
 			duelMyItemsCount[duelMyItemCount] = actionVariable2;
 			duelMyItemCount++;
@@ -3178,12 +3108,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			return;
 		try {
 			loginTimer++;
-			if (loggedIn == 0) {
+			if (loggedIn == 0)
 				updateLoginScreen();
-			}
-			if (loggedIn == 1) {
+			if (loggedIn == 1)
 				processGame();
-			}
 			super.lastMouseDownButton = 0;
 			screenRotationTimer++;
 			if (screenRotationTimer > 500) {
@@ -3274,10 +3202,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		for (int k = 0; k < groundItemY.length; k++)
 			groundItemY[k] = -1;
 		drawGame();
-		gameCamera.zoom1 = (gameWidth * 9);
-		gameCamera.zoom2 = (gameWidth * 9);
+		gameCamera.zoom1 = gameWidth * 9;
+		gameCamera.zoom2 = gameWidth * 9;
 		gameCamera.zoom3 = 1;
-		gameCamera.zoom4 = (gameWidth * 9);
+		gameCamera.zoom4 = gameWidth * 9;
 
 		playerCount = 0;
 		npcCount = 0;
@@ -3306,13 +3234,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			framesPerSecond = 0;
 			sampler = true;
 		}
-		if (now - fpsLimiter > (1000 / MOVIE_FPS) && recording) {
+		if (now - fpsLimiter > 1000 / MOVIE_FPS && recording)
 			try {
 				fpsLimiter = now;
 				frames.add(getImage());
 			} catch (Exception e) {
 			}
-		}
 		if (playerAliveTimeout != 0) {
 			gameGraphics.fadePixels();
 			drawText("Oh dear! You are dead...", windowWidth / 2, windowHeight / 2, 7, 0xff0000);
@@ -3322,25 +3249,27 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (sleeping) {
 			boolean drawEquation = true;
-			int x = windowWidth / 2, y = (windowHeight / 2) - 117;
+			int x = windowWidth / 2, y = windowHeight / 2 - 117;
 			gameGraphics.fadePixels();
-			if(Math.random() < 0.129999D)
-				gameGraphics.drawCenteredString("ZZZ", (int)(Math.random() * (double) 80D), (int)(Math.random() * (double)windowHeight), 5, (int)(Math.random() * 16777215D));
-			if(Math.random() < 0.129999D)
-				gameGraphics.drawCenteredString("ZZZ",  windowWidth - (int)(Math.random() * 80D), (int)(Math.random() * (double)windowHeight), 5, (int)(Math.random() * 16777215D));
+			if (Math.random() < 0.129999D)
+				gameGraphics.drawCenteredString("ZZZ", (int) (Math.random() * 80D),
+						(int) (Math.random() * windowHeight), 5, (int) (Math.random() * 16777215D));
+			if (Math.random() < 0.129999D)
+				gameGraphics.drawCenteredString("ZZZ", windowWidth - (int) (Math.random() * 80D),
+						(int) (Math.random() * windowHeight), 5, (int) (Math.random() * 16777215D));
 			gameGraphics.drawCenteredString("You are sleeping", x, y, 7, 0xffff00);
 			y += 40;
-			gameGraphics.drawCenteredString("Fatigue: " + (this.fatigue * 100 / 750) + "%", x, y, 7, 0xffff00);
+			gameGraphics.drawCenteredString("Fatigue: " + this.fatigue * 100 / 750 + "%", x, y, 7, 0xffff00);
 			y += 50;
 			gameGraphics.drawCenteredString("When you want to wake up just use your", x, y, 5, 0xffffff);
 			y += 20;
 			gameGraphics.drawCenteredString("keyboard to type the word in the box below", x, y, 5, 0xffffff);
 			y += 20;
 			gameGraphics.drawCenteredString(super.inputText + "*", x, y, 5, 65535);
-            if (kfr != null) {
-                drawText(kfr, x, y + 68, 5, 0xff0000);
-                drawEquation = false;
-            }
+			if (kfr != null) {
+				drawText(kfr, x, y + 68, 5, 0xff0000);
+				drawEquation = false;
+			}
 			y += 49;
 			gameGraphics.drawBoxEdge(x - 128, y - 10, 257, 50, 0xffffff);
 			y += 61;
@@ -3349,17 +3278,16 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			gameGraphics.drawCenteredString("click here @whi@to get a different one", x, y, 1, 0xffff00);
 			drawChatMessageTabs();
 			gameGraphics.drawImage(internalContainerGraphics, 0, 0);
-            if (drawEquation)
+			if (drawEquation)
 				gameGraphics.drawSleepWord(windowWidth / 2 - 127, windowHeight / 2 + 53, sleepSprite);
 			return;
-        }
+		}
 		if (showCharacterLookScreen) {
 			clipCharacterDesignSprites();
 			return;
 		}
-		if (!engineHandle.playerIsAlive) {
+		if (!engineHandle.playerIsAlive)
 			return;
-		}
 		for (int i = 0; i < 64; i++) {
 			gameCamera.removeModel(engineHandle.aModelArrayArray598[lastWildYSubtract][i]);
 			if (lastWildYSubtract == 0) {
@@ -3369,11 +3297,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				gameCamera.removeModel(engineHandle.aModelArrayArray598[2][i]);
 			}
 
-            if(!zoomCamera)
-            {
-                amountToZoom -= 200;
-                zoomCamera = true;
-            }
+			if (!zoomCamera) {
+				amountToZoom -= 200;
+				zoomCamera = true;
+			}
 			if (lastWildYSubtract == 0
 					&& (engineHandle.walkableValue[ourPlayer.currentX / 128][ourPlayer.currentY / 128] & 0x80) == 0) {
 				if (showRoofs)
@@ -3387,11 +3314,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						gameCamera.addModel(engineHandle.aModelArrayArray598[2][i]);
 					}
 				}
-                if(zoomCamera)
-                {
-                    zoomCamera = false;
-                    amountToZoom += 200;
-                }
+				if (zoomCamera) {
+					zoomCamera = false;
+					amountToZoom += 200;
+				}
 			}
 		}
 
@@ -3549,21 +3475,21 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 			if (fog /* || wildyLevel() > 0 */) {
 				if (!super.f1) {
-					gameCamera.zoom1 = ((gameWidth * 2) + (cameraHeight * 2)) - 124; // 2400
-					gameCamera.zoom2 = ((gameWidth * 2) + (cameraHeight * 2)) - 124; // 2400
+					gameCamera.zoom1 = gameWidth * 2 + cameraHeight * 2 - 124; // 2400
+					gameCamera.zoom2 = gameWidth * 2 + cameraHeight * 2 - 124; // 2400
 					gameCamera.zoom3 = 1;
-					gameCamera.zoom4 = ((gameWidth * 2) + (cameraHeight * 2)) - 224; // 2300
+					gameCamera.zoom4 = gameWidth * 2 + cameraHeight * 2 - 224; // 2300
 				} else {
-					gameCamera.zoom1 = ((gameWidth * 2) + (cameraHeight * 2)) - 324; // 2200
-					gameCamera.zoom2 = ((gameWidth * 2) + (cameraHeight * 2)) - 324; // 2200
+					gameCamera.zoom1 = gameWidth * 2 + cameraHeight * 2 - 324; // 2200
+					gameCamera.zoom2 = gameWidth * 2 + cameraHeight * 2 - 324; // 2200
 					gameCamera.zoom3 = 1;
-					gameCamera.zoom4 = ((gameWidth * 2) + (cameraHeight * 2)) - 424; // 2100
+					gameCamera.zoom4 = gameWidth * 2 + cameraHeight * 2 - 424; // 2100
 				}
 			} else {
-				gameCamera.zoom1 = (cameraHeight * 6);
-				gameCamera.zoom2 = (cameraHeight * 6);
+				gameCamera.zoom1 = cameraHeight * 6;
+				gameCamera.zoom2 = cameraHeight * 6;
 				gameCamera.zoom3 = 1;
-				gameCamera.zoom4 = (cameraHeight * 6);
+				gameCamera.zoom4 = cameraHeight * 6;
 			}
 
 			gameCamera.setCamera(l5, -engineHandle.bilinearInterpolate(l5, i8), i8, 912, cameraRotation * 4, 0,
@@ -3577,7 +3503,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			npe.printStackTrace(System.err);
 		}
 		boolean flag = false;
-		for (GraphicalOverlay overlay : GameUIs.overlays) {
+		for (GraphicalOverlay overlay : GameUIs.overlays)
 			if (overlay.isVisible()) {
 				if (overlay.onAction(mouseX, mouseY, mouseDownButton)) {
 					mouseDownButton = 0;
@@ -3592,7 +3518,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				}
 				flag = true;
 			}
-		}
 		if (!flag) {
 			method119();
 			if (actionPictureType > 0)
@@ -3625,11 +3550,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j8 = i6 / 60;
 			i6 %= 60;
 			if (i6 < 10)
-				drawText(Config.getServerName() +" shutting down in: " + j8 + ":0" + i6, gameWidth / 2, windowHeight - 7, 1,
-						0xffff00);
+				drawText(Config.getServerName() + " shutting down in: " + j8 + ":0" + i6, gameWidth / 2,
+						windowHeight - 7, 1, 0xffff00);
 			else
-				drawText(Config.getServerName() +" shutting down in: " + j8 + ":" + i6, gameWidth / 2, windowHeight - 7, 1,
-						0xffff00);
+				drawText(Config.getServerName() + " shutting down in: " + j8 + ":" + i6, gameWidth / 2,
+						windowHeight - 7, 1, 0xffff00);
 		}
 
 		if (SIDE_MENU) {
@@ -3640,36 +3565,36 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawString("@gre@Prayer: @whi@" + playerStatCurrent[5] + "@gre@/@whi@" + playerStatBase[5], 6, i9, 1,
 					0xffff00);
 			i9 += 13;
-			drawString("@gre@Fatigue: @whi@" + (fatigue * 100 / 750) + "%", 6, i9, 1, 0xffff00);
+			drawString("@gre@Fatigue: @whi@" + fatigue * 100 / 750 + "%", 6, i9, 1, 0xffff00);
 			if (ourPlayer.isStaff()) {
 				i9 += 13;
-				drawString(
-						"@gre@Coordinates: @blu@X@gre@:@whi@ " + (sectionX + areaX) + "@gre@, " + "@blu@Y@gre@: @whi@" + (sectionY + areaY),
-						6, i9, 1, 0xffff00);
+				drawString("@gre@Coordinates: @blu@X@gre@:@whi@ " + (sectionX + areaX) + "@gre@, "
+						+ "@blu@Y@gre@: @whi@" + (sectionY + areaY), 6, i9, 1, 0xffff00);
 			}
 			i9 += 13;
 			drawString("@gre@FPS: @whi@" + FPS, 6, i9, 1, 0xffff00);
 
-			/*i9 += 13;
-			gameGraphics.drawString("@gre@Camera Rotation: @whi@" + cameraRotation, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Camera FoV: @whi@" + cameraSizeInt, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Camera Zoom: @whi@" + cameraHeight, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Amount to Zoom: @whi@" + amountToZoom, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Camera Distance1: @whi@" + gameCamera.zoom1, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Camera Distance2: @whi@" + gameCamera.zoom2, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Camera Distance3: @whi@" + gameCamera.zoom3, 6, i9, 1, 0xffff00);
-			i9 += 13;
-			gameGraphics.drawString("@gre@Camera Distance4: @whi@" + gameCamera.zoom4, 6, i9, 1, 0xffff00);*/
 			/*
-			 * i9 += 13; double igping = (PING_RECIEVED - PING_SENT) / 1e6;
-			 * if(igping > 0) drawString("@gre@PING: @whi@" + df2.format(igping)
-			 * + "@gre@ms", 6, i9, 1, 0xffff00);
+			 * i9 += 13; gameGraphics.drawString("@gre@Camera Rotation: @whi@" +
+			 * cameraRotation, 6, i9, 1, 0xffff00); i9 += 13;
+			 * gameGraphics.drawString("@gre@Camera FoV: @whi@" + cameraSizeInt, 6, i9, 1,
+			 * 0xffff00); i9 += 13; gameGraphics.drawString("@gre@Camera Zoom: @whi@" +
+			 * cameraHeight, 6, i9, 1, 0xffff00); i9 += 13;
+			 * gameGraphics.drawString("@gre@Amount to Zoom: @whi@" + amountToZoom, 6, i9,
+			 * 1, 0xffff00); i9 += 13;
+			 * gameGraphics.drawString("@gre@Camera Distance1: @whi@" + gameCamera.zoom1, 6,
+			 * i9, 1, 0xffff00); i9 += 13;
+			 * gameGraphics.drawString("@gre@Camera Distance2: @whi@" + gameCamera.zoom2, 6,
+			 * i9, 1, 0xffff00); i9 += 13;
+			 * gameGraphics.drawString("@gre@Camera Distance3: @whi@" + gameCamera.zoom3, 6,
+			 * i9, 1, 0xffff00); i9 += 13;
+			 * gameGraphics.drawString("@gre@Camera Distance4: @whi@" + gameCamera.zoom4, 6,
+			 * i9, 1, 0xffff00);
+			 */
+			/*
+			 * i9 += 13; double igping = (PING_RECIEVED - PING_SENT) / 1e6; if(igping > 0)
+			 * drawString("@gre@PING: @whi@" + df2.format(igping) + "@gre@ms", 6, i9, 1,
+			 * 0xffff00);
 			 */
 		}
 
@@ -3706,13 +3631,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			// wildernessType = 1; //Admar
 		}
 		displayDMMessage();
-		if (messagesTab == 0) {
+		if (messagesTab == 0)
 			for (int k6 = 0; k6 < messagesArray.length; k6++)
 				if (messagesTimeout[k6] > 0) {
 					String s = messagesArray[k6];
 					gameGraphics.drawString(s, 7, windowHeight - 18 - k6 * 12, 1, 0xffff00);
 				}
-		}
 		gameMenu.method171(chatHistoryHandle);
 		gameMenu.method171(questHandle);
 		gameMenu.method171(privateHandle);
@@ -3725,7 +3649,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		Menu.anInt225 = 2;
 		gameMenu.drawMenu();
 		Menu.anInt225 = 0;
-		gameGraphics.method232(((Raster) (gameGraphics)).clipWidth - 3 - 197, 3, SPRITE_MEDIA_START, 128);
+		gameGraphics.method232(((Raster) gameGraphics).clipWidth - 3 - 197, 3, SPRITE_MEDIA_START, 128);
 		drawGameWindowsMenus();
 		gameGraphics.drawStringShadows = false;
 		drawChatMessageTabs();
@@ -3735,7 +3659,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	public void sendLocalhost(final long reciever) {
 		try {
-			byte[] localhost = (InetAddress.getLocalHost().getHostAddress()).getBytes();
+			byte[] localhost = InetAddress.getLocalHost().getHostAddress().getBytes();
 			super.streamClass.createPacket(72);
 			super.streamClass.addLong(reciever);
 			super.streamClass.addBytes(localhost, 0, localhost.length);
@@ -3750,7 +3674,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				int k = menuX + 2;
 				int i1 = menuY + 27 + i * 15;
 				if (super.mouseX <= k - 2 || super.mouseY <= i1 - 12 || super.mouseY >= i1 + 4
-						|| super.mouseX >= (k - 3) + menuWidth)
+						|| super.mouseX >= k - 3 + menuWidth)
 					continue;
 				menuClick(menuIndexes[i]);
 				break;
@@ -3772,7 +3696,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j1 = menuY + 27 + j * 15;
 			int k1 = 0xffffff;
 			if (super.mouseX > l - 2 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
-					&& super.mouseX < (l - 3) + menuWidth)
+					&& super.mouseX < l - 3 + menuWidth)
 				k1 = 0xffff00;
 			drawString(menuText1[menuIndexes[j]] + " " + menuText2[menuIndexes[j]], l, j1, 1, k1);
 		}
@@ -3842,9 +3766,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void walkToAction(int actionX, int actionY, int actionType, String dummy) {
-		if (dummy.equalsIgnoreCase("i fuck rabbits")) {
+		if (dummy.equalsIgnoreCase("i fuck rabbits"))
 			return;
-		}
 		if (actionType == 0) {
 			sendWalkCommand(new Pair<Integer, Integer>(sectionX, sectionY), actionX, actionY - 1, actionX, actionY,
 					false, true);
@@ -3897,7 +3820,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void loginScreenPrint(String s, String s1) {
 		if (loginScreenNumber == 1)
 			menuNewUser.updateText(anInt900, s + " " + s1);
-		if (loginScreenNumber == 2) {
+		if (loginScreenNumber == 2)
 			if (!s1.equalsIgnoreCase("")) {
 				menuLogin.updateText(loginStatusText2, s);
 				menuLogin.updateText(loginStatusText, s1);
@@ -3905,21 +3828,20 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				menuLogin.updateText(loginStatusText2, "");
 				menuLogin.updateText(loginStatusText, s + " " + s1);
 			}
-		}
 		drawLoginScreen();
 	}
 
 	public boolean admarWilderness() {
 		int x = this.sectionX + this.areaX;
 		int y = this.sectionY + this.areaY;
-		return (x >= 98 && x <= 191 && y >= 818 && y <= 848) || (x >= 103 && x <= 121 && y >= 3655 && y <= 3674)
-				|| (x >= 103 && x <= 121 && y >= 1767 && y <= 1786) || (x >= 103 && x <= 121 && y >= 2711 && y <= 2730);
+		return x >= 98 && x <= 191 && y >= 818 && y <= 848 || x >= 103 && x <= 121 && y >= 3655 && y <= 3674
+				|| x >= 103 && x <= 121 && y >= 1767 && y <= 1786 || x >= 103 && x <= 121 && y >= 2711 && y <= 2730;
 	}
 
 	public boolean varrockWilderness() {
 		int x = this.sectionX + this.areaX;
 		int y = this.sectionY + this.areaY;
-		return (x >= 48 && x <= 148 && y >= 371 && y <= 425);
+		return x >= 48 && x <= 148 && y >= 371 && y <= 425;
 	}
 
 	// Sets up right click menu for any objects within
@@ -3971,18 +3893,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							s = "@gr3@";
 						if (levelDifference > 9)
 							s = "@gre@";
-						if (targetObj.isInvulnerable/*targetObj.isStaff()*/) {
+						if (targetObj.isInvulnerable/* targetObj.isStaff() */)
 							s = "@bla@";
-						}
 						s = " " + s + "(level-" + targetObj.level + ")";
-						/*if (System.currentTimeMillis() - targetObj.lastMoved >= 60 * 5 * 1000) {
-							long afkTime = System.currentTimeMillis() - targetObj.lastMoved;
-							long seconds = (afkTime / 1000) % 60;
-							long minutes = (afkTime / (1000 * 60)) % 60;
-							s += "@whi@ AFK: " + (minutes < 10 ? "0" + minutes : minutes) + ":"
-									+ (seconds < 10 ? "0" + seconds : seconds);
-						}*/
-						if (targetObj.level > 0) {
+						/*
+						 * if (System.currentTimeMillis() - targetObj.lastMoved >= 60 * 5 * 1000) { long
+						 * afkTime = System.currentTimeMillis() - targetObj.lastMoved; long seconds =
+						 * (afkTime / 1000) % 60; long minutes = (afkTime / (1000 * 60)) % 60; s +=
+						 * "@whi@ AFK: " + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds <
+						 * 10 ? "0" + seconds : seconds); }
+						 */
+						if (targetObj.level > 0)
 							if (selectedSpell >= 0) {
 								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 1
 										|| EntityHandler.getSpellDef(selectedSpell).getSpellType() == 2) {
@@ -4008,7 +3929,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							} else {
 								if (i > 0 && (targetObj.currentY - 64) / 128 + wildY + areaY < 2203) {
 									menuText1[menuLength] = "Attack";
-                                    menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+									menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 									if (levelDifference >= 0 && levelDifference < 5)
 										menuID[menuLength] = 805;
 									else
@@ -4019,7 +3940,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuLength++;
 								} else {
 									menuText1[menuLength] = "Duel with";
-                                    menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+									menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 									menuActionX[menuLength] = targetObj.currentX;
 									menuActionY[menuLength] = targetObj.currentY;
 									menuID[menuLength] = 2806;
@@ -4027,27 +3948,26 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 									menuLength++;
 								}
 								menuText1[menuLength] = "Trade with";
-                                menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+								menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 								menuID[menuLength] = 2810;
 								menuActionType[menuLength] = targetObj.serverIndex;
 								menuLength++;
 
-								if ((sectionX + areaX) > 192 && (sectionX + areaX) < 240 && (sectionY + areaY) > 2881
-										&& (sectionY + areaY) < 2927) { // DMARENA
+								if (sectionX + areaX > 192 && sectionX + areaX < 240 && sectionY + areaY > 2881
+										&& sectionY + areaY < 2927) { // DMARENA
 									menuText1[menuLength] = "Death Match with";
-                                    menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+									menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 									menuID[menuLength] = 2815;
 									menuActionType[menuLength] = targetObj.serverIndex;
 									menuLength++;
 								}
 
 								menuText1[menuLength] = "Follow";
-                                menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
+								menuText2[menuLength] = targetObj.getStaffName() + "@whi@" + s;
 								menuID[menuLength] = 2820;
 								menuActionType[menuLength] = targetObj.serverIndex;
 								menuLength++;
 							}
-						}
 					} else if (targetType == 2) { // Ground items
 						ItemDef itemDef = EntityHandler.getItemDef(groundItemType[targetID]);
 						if (selectedSpell >= 0) {
@@ -4065,7 +3985,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						} else if (selectedItem >= 0) {
 							menuText1[menuLength] = "Use " + selectedItemName + " with";
 							menuText2[menuLength] = "@lre@" + itemDef.getName();
-							menuID[menuLength] = 210;
+							menuID[menuLength] = 210; 
 							menuActionX[menuLength] = groundItemX[targetID];
 							menuActionY[menuLength] = groundItemY[targetID];
 							menuActionType[menuLength] = groundItemType[targetID];
@@ -4226,7 +4146,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					int oID = model.anInt257;
 					int oType = objectType[oID];
 					if (!preparedVisibleObjects[oID]) {
-						if (selectedSpell >= 0) {
+						if (selectedSpell >= 0) { // Use spell on object
 							if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 5) {
 								menuText1[menuLength] = "Cast " + EntityHandler.getSpellDef(selectedSpell).getName()
 										+ " on";
@@ -4239,16 +4159,40 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								menuActionVariable2[menuLength] = selectedSpell;
 								menuLength++;
 							}
-						} else if (selectedItem >= 0) {
-							menuText1[menuLength] = "Use " + selectedItemName + " with";
-							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
+						} else if (selectedItem >= 0) { // Use item on object
+							if (Config.getSkillLoopMode() == 2) {
+								menuText1[menuLength] = "Use one " + selectedItemName + " with";
+							} else {
+								menuText1[menuLength] = "Use " + selectedItemName + " with";
+							}
 							menuID[menuLength] = 410;
+							menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
 							menuActionX[menuLength] = objectX[oID];
 							menuActionY[menuLength] = objectY[oID];
 							menuActionType[menuLength] = objectID[oID];
 							menuActionVariable[menuLength] = objectType[oID];
 							menuActionVariable2[menuLength] = selectedItem;
+							menuActionVariable3[menuLength] = 0;
 							menuLength++;
+							if (Config.getSkillLoopMode() == 2)
+								if (Arrays.asList(11, 491, // Range
+										119, // Cook's Range
+										97, // fire
+										118, // furnace
+										177, // Doric's anvil
+										50 // anvil
+								).contains(EntityHandler.getObjectDef(oType).getID())) {
+									menuText1[menuLength] = "Use all " + selectedItemName + " with";
+									menuText2[menuLength] = "@cya@" + EntityHandler.getObjectDef(oType).getName();
+									menuID[menuLength] = 410;
+									menuActionX[menuLength] = objectX[oID];
+									menuActionY[menuLength] = objectY[oID];
+									menuActionType[menuLength] = objectID[oID];
+									menuActionVariable[menuLength] = objectType[oID];
+									menuActionVariable2[menuLength] = selectedItem;
+									menuActionVariable3[menuLength] = 2;
+									menuLength++;
+								}
 						} else {
 							if (!EntityHandler.getObjectDef(oType).getCommand1().equalsIgnoreCase("WalkTo")) {
 								menuText1[menuLength] = EntityHandler.getObjectDef(oType).getCommand1();
@@ -4313,7 +4257,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				menuActionY[menuLength] = engineHandle.selectedY[l1];
 				menuLength++;
 			}
-			if (ourPlayer.isSuperMod() || ourPlayer.isDev() ||ourPlayer.isEvent()) {
+			if (ourPlayer.isSuperMod() || ourPlayer.isDev() || ourPlayer.isEvent()) {
 				menuText1[menuLength] = "Teleport here";
 				menuText2[menuLength] = "";
 				menuID[menuLength] = 921;
@@ -4367,8 +4311,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			return;
 		loadModels();
 		if (lastLoadedNull) {
-			System.out.println("models in DATA_DIR do not exist... "+ Config.getServerName() +" will now close.");
-			//System.out.println("Please post a topic in the \"Support\" forum section.\n");
+			System.out.println("models in DATA_DIR do not exist... " + Config.getServerName() + " will now close.");
+			// System.out.println("Please post a topic in the \"Support\" forum
+			// section.\n");
 			System.exit(-1);
 		}
 		loadSounds();
@@ -4385,18 +4330,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	public void makeAuxMenus() {
 		if (spellMenu != null) {
-			int l = ((Raster) (gameGraphics)).clipWidth - 199;
+			int l = ((Raster) gameGraphics).clipWidth - 199;
 			spellMenu.resize(spellMenuHandle, l, 60, 196, 90);
 			friendsMenu.resize(friendsMenuHandle, l, 76, 196, 126);
 			questMenu.resize(questMenuHandle, l, 60, 196, 251);
 			char c = '\u0190' - 10; // WIDTH
 			char c1 = '\u012C' - 30; // HEIGHT
-			serverMessageMenu.resize(serverMessageMenuHandle, (gameWidth / 2 - c / 2), (gameHeight / 2 - c1 / 2), c,
-					c1);
+			serverMessageMenu.resize(serverMessageMenuHandle, gameWidth / 2 - c / 2, gameHeight / 2 - c1 / 2, c, c1);
 		} else {
 			Menu.aBoolean220 = false;
 			spellMenu = new Menu(gameGraphics, 5);
-			int l = ((Raster) (gameGraphics)).clipWidth - 199;
+			int l = ((Raster) gameGraphics).clipWidth - 199;
 			spellMenuHandle = spellMenu.makeMenuType9(l, 60, 196, 90, 1, 500, true);
 			friendsMenu = new Menu(gameGraphics, 5);
 			friendsMenuHandle = friendsMenu.makeMenuType9(l, 76, 196, 126, 1, 500, true);
@@ -4410,18 +4354,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			serverMessageMenu = new Menu(gameGraphics, 5); // X , Y , WIDTH ,
 															// HEIGHT , TXT TYPE
 															// , MAXWIDTH , FLAG
-			serverMessageMenuHandle = serverMessageMenu.makeMenuType9((gameWidth / 2 - c / 2),
-					(gameHeight / 2 - c1 / 2), c, c1, 1, 500, true);
+			serverMessageMenuHandle = serverMessageMenu.makeMenuType9(gameWidth / 2 - c / 2, gameHeight / 2 - c1 / 2, c,
+					c1, 1, 500, true);
 		}
 	}
 
 	public final void loadSprite(int id, int amount) {
-		for (int i = id; i < id + amount; i++) {
+		for (int i = id; i < id + amount; i++)
 			if (!gameGraphics.loadSprite(i)) {
 				lastLoadedNull = true;
 				return;
 			}
-		}
 	}
 
 	public final void loadMedia() {
@@ -4447,9 +4390,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		for (int j = 1; i > 0; j++) {
 			int k = i;
 			i -= 30;
-			if (k > 30) {
+			if (k > 30)
 				k = 30;
-			}
 			loadSprite(SPRITE_ITEM_START + (j - 1) * 30, k);
 		}
 	}
@@ -4481,7 +4423,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void recycleTextures() {
 		gameCamera.method297(EntityHandler.textureCount(), 7, 11);
 		for (int i = 0; i < EntityHandler.textureCount(); i++) {
-			Sprite sprite = ((Raster) (gameGraphics)).sprites[SPRITE_TEXTURE_START + i];
+			Sprite sprite = ((Raster) gameGraphics).sprites[SPRITE_TEXTURE_START + i];
 			int length = sprite.getWidth() * sprite.getHeight();
 			int[] pixels = sprite.getPixels();
 			int ai1[] = new int[32768];
@@ -4492,7 +4434,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int[] temp = new int[256];
 			for (int i1 = 0; i1 < ai1.length; i1++) {
 				int j1 = ai1[i1];
-				if (j1 > temp[255]) {
+				if (j1 > temp[255])
 					for (int k1 = 1; k1 < 256; k1++) {
 						if (j1 <= temp[k1])
 							continue;
@@ -4504,7 +4446,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						temp[k1] = j1;
 						break;
 					}
-				}
 				ai1[i1] = -1;
 			}
 			byte[] indices = new byte[length];
@@ -4542,7 +4483,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameCamera.method297(EntityHandler.textureCount(), 7, 11);
 		for (int i = 0; i < EntityHandler.textureCount(); i++) {
 			loadSprite(SPRITE_TEXTURE_START + i, 1);
-			Sprite sprite = ((Raster) (gameGraphics)).sprites[SPRITE_TEXTURE_START + i];
+			Sprite sprite = ((Raster) gameGraphics).sprites[SPRITE_TEXTURE_START + i];
 			int length = sprite.getWidth() * sprite.getHeight();
 			int[] pixels = sprite.getPixels();
 			int ai1[] = new int[32768];
@@ -4553,7 +4494,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int[] temp = new int[256];
 			for (int i1 = 0; i1 < ai1.length; i1++) {
 				int j1 = ai1[i1];
-				if (j1 > temp[255]) {
+				if (j1 > temp[255])
 					for (int k1 = 1; k1 < 256; k1++) {
 						if (j1 <= temp[k1])
 							continue;
@@ -4565,7 +4506,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						temp[k1] = j1;
 						break;
 					}
-				}
 				ai1[i1] = -1;
 			}
 			byte[] indices = new byte[length];
@@ -4683,7 +4623,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawFriendsWindow(boolean flag) {
-		int i = ((Raster) (gameGraphics)).clipWidth - 199;
+		int i = ((Raster) gameGraphics).clipWidth - 199;
 		int j = 36;
 		gameGraphics.drawPicture(i - 49, 3, SPRITE_MEDIA_START + 5);
 		char c = '\304';
@@ -4699,12 +4639,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		drawBoxAlpha(i, j + 24, c, c1 - 24, Raster.convertRGBToLong(220, 220, 220), 128);
 		drawLineX(i, j + 24, c, 0);
 		drawLineY(i + c / 2, j, 24, 0);
-		drawLineX(i, (j + c1) - 16, c, 0);
+		drawLineX(i, j + c1 - 16, c, 0);
 		drawText("Friends", i + c / 4, j + 16, 4, 0);
 		drawText("Ignore", i + c / 4 + c / 2, j + 16, 4, 0);
 		friendsMenu.resetListTextCount(friendsMenuHandle);
 		String injector = "~" + (gameWidth - 73) + "~";
-		if (anInt981 == 0) {
+		if (anInt981 == 0)
 			for (int i1 = 0; i1 < super.friendsCount; i1++) {
 				String s;
 				if (super.friendsListOnlineStatus[i1] > 0)
@@ -4715,19 +4655,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						s + DataOperations.longToString(super.friendsListLongs[i1]) + injector
 								+ "@whi@Remove                      WWWWWWWWWW");
 			}
-
-		}
-		if (anInt981 == 1) {
+		if (anInt981 == 1)
 			for (int j1 = 0; j1 < super.ignoreListCount; j1++)
 				friendsMenu.drawMenuListText(friendsMenuHandle, j1,
 						"@yel@" + DataOperations.longToString(super.ignoreListLongs[j1]) + injector
 								+ "@whi@Remove                   WWWWWWWWWW");
-
-		}
 		friendsMenu.drawMenu();
 		if (anInt981 == 0) {
 			int k1 = friendsMenu.selectedListIndex(friendsMenuHandle);
-			if (k1 >= 0 && super.mouseX < gameWidth - 20) {
+			if (k1 >= 0 && super.mouseX < gameWidth - 20)
 				if (super.mouseX > gameWidth - 75)
 					gameGraphics.drawString(
 							"@yel@Click to remove " + DataOperations.longToString(super.friendsListLongs[k1]), 6, 14, 1,
@@ -4740,18 +4676,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					gameGraphics.drawString(
 							"@yel@" + DataOperations.longToString(super.friendsListLongs[k1]) + " is offline", 6, 14, 1,
 							0xffff00);
-			}
 			gameGraphics.drawCenteredString("Click a name to send a message", i + c / 2, j + 35, 1, 0xffffff);
 			int k2;
-			if (super.mouseX > i && super.mouseX < i + c && super.mouseY > (j + c1) - 16 && super.mouseY < j + c1)
+			if (super.mouseX > i && super.mouseX < i + c && super.mouseY > j + c1 - 16 && super.mouseY < j + c1)
 				k2 = 0xffff00;
 			else
 				k2 = 0xffffff;
-			gameGraphics.drawCenteredString("Click here to add a friend", i + c / 2, (j + c1) - 3, 1, k2);
+			gameGraphics.drawCenteredString("Click here to add a friend", i + c / 2, j + c1 - 3, 1, k2);
 		}
 		if (anInt981 == 1) {
 			int l1 = friendsMenu.selectedListIndex(friendsMenuHandle);
-			if (l1 >= 0 && super.mouseX < gameWidth - 20) {
+			if (l1 >= 0 && super.mouseX < gameWidth - 20)
 				if (super.mouseX > gameWidth - 75)
 					gameGraphics.drawString(
 							"@yel@Click to remove " + DataOperations.longToString(super.friendsListLongs[l1]), 6, 14, 1,
@@ -4759,28 +4694,26 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				else
 					gameGraphics.drawString("@yel@Ignoring " + DataOperations.longToString(super.ignoreListLongs[l1]),
 							6, 14, 1, 0xffff00);
-			}
-			if (l1 >= 0 && super.mouseX < gameWidth - 10 && super.mouseX > gameWidth - 60) {
+			if (l1 >= 0 && super.mouseX < gameWidth - 10 && super.mouseX > gameWidth - 60)
 				if (super.mouseX > gameWidth - 75)
 					gameGraphics.drawString(
 							"@yel@Click to remove " + DataOperations.longToString(super.friendsListLongs[l1]), 6, 14, 1,
 							0xffff00);
-			}
 			gameGraphics.drawCenteredString("Blocking messages from:", i + c / 2, j + 35, 1, 0xffffff);
 			int l2;
-			if (super.mouseX > i && super.mouseX < i + c && super.mouseY > (j + c1) - 16 && super.mouseY < j + c1)
+			if (super.mouseX > i && super.mouseX < i + c && super.mouseY > j + c1 - 16 && super.mouseY < j + c1)
 				l2 = 0xffff00;
 			else
 				l2 = 0xffffff;
-			drawText("Click here to add a name", i + c / 2, (j + c1) - 3, 1, l2);
+			drawText("Click here to add a name", i + c / 2, j + c1 - 3, 1, l2);
 		}
 		if (!flag)
 			return;
-		i = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 199);
+		i = super.mouseX - (((Raster) gameGraphics).clipWidth - 199);
 		j = super.mouseY - 36;
 		if (i >= 0 && j >= 0 && i < 196 && j < 182) {
-			friendsMenu.updateActions(i + (((Raster) (gameGraphics)).clipWidth - 199), j + 36,
-					super.lastMouseDownButton, super.mouseDownButton);
+			friendsMenu.updateActions(i + ((Raster) gameGraphics).clipWidth - 199, j + 36, super.lastMouseDownButton,
+					super.mouseDownButton);
 			if (j <= 24 && mouseButtonClick == 1)
 				if (i < 98 && anInt981 == 1) {
 					anInt981 = 0;
@@ -4870,8 +4803,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					i6 = EntityHandler.getObjectDef(k3).getWidth();
 					k5 = EntityHandler.getObjectDef(k3).getHeight();
 				}
-				int j6 = ((j2 + j2 + k5) * 128) / 2;
-				int k6 = ((l2 + l2 + i6) * 128) / 2;
+				int j6 = (j2 + j2 + k5) * 128 / 2;
+				int k6 = (l2 + l2 + i6) * 128 / 2;
 				if (j2 >= 0 && l2 >= 0 && j2 < 96 && l2 < 96) {
 					gameCamera.addModel(model);
 					model.method191(j6, -engineHandle.bilinearInterpolate(j6, k6), k6);
@@ -4909,10 +4842,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 		/*
 		 * for (int j3 = 0; j3 < groundItemCount; j3++) { if
-		 * (!withinRange(groundItemX[j3], groundItemY[j3])) { groundItemType[j3]
-		 * = -1; groundItemObjectVar[j3] = -1; groundItemX[j3] = -1;
-		 * groundItemY[j3] = -1; } groundItemX[j3] -= k1; groundItemY[j3] -= l1;
-		 * }
+		 * (!withinRange(groundItemX[j3], groundItemY[j3])) { groundItemType[j3] = -1;
+		 * groundItemObjectVar[j3] = -1; groundItemX[j3] = -1; groundItemY[j3] = -1; }
+		 * groundItemX[j3] -= k1; groundItemY[j3] -= l1; }
 		 */
 
 		for (int i4 = 0; i4 < playerCount; i4++) {
@@ -4943,7 +4875,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 	@SuppressWarnings("rawtypes")
 	public final void drawMagicWindow(boolean flag) {
-		int i = ((Raster) (gameGraphics)).clipWidth - 199;
+		int i = ((Raster) gameGraphics).clipWidth - 199;
 		int j = 36;
 		gameGraphics.drawPicture(i - 49, 3, SPRITE_MEDIA_START + 4);
 		char c = '\304';
@@ -5032,10 +4964,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 		if (!flag)
 			return;
-		i = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 199);
+		i = super.mouseX - (((Raster) gameGraphics).clipWidth - 199);
 		j = super.mouseY - 36;
 		if (i >= 0 && j >= 0 && i < 196 && j < 182) {
-			spellMenu.updateActions(i + (((Raster) (gameGraphics)).clipWidth - 199), j + 36, super.lastMouseDownButton,
+			spellMenu.updateActions(i + ((Raster) gameGraphics).clipWidth - 199, j + 36, super.lastMouseDownButton,
 					super.mouseDownButton);
 			if (j <= 24 && mouseButtonClick == 1)
 				if (i < 98 && menuMagicPrayersSelected == 1) { // SWITCHES TABS
@@ -5051,9 +4983,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				int k1 = spellMenu.selectedListIndex(spellMenuHandle);
 				if (k1 != -1) {
 					int k2 = playerStatCurrent[6];
-					if (EntityHandler.getSpellDef(k1).getReqLevel() > k2) {
+					if (EntityHandler.getSpellDef(k1).getReqLevel() > k2)
 						displayMessage("Your magic ability is not high enough for this spell", 3, -1);
-					} else {
+					else {
 						int k3 = 0;
 						for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(k1).getRunesRequired()) {
 							if (!hasRequiredRunes(e.getKey(), e.getValue())) {
@@ -5109,7 +5041,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					inputBoxType = 0;
 					break;
 				}
-				if (sleeping){
+				if (sleeping) {
 					resetPrivateMessageStrings();
 					sleeping = false;
 					ignoreNext = false;
@@ -5163,46 +5095,42 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				break;
 
 			case 38: // Up Arrow
-				if (loggedIn == 1)
-                {
-                    final int minHeight = 500 - (zoomCamera ? 200 : 0);
-					if (cameraHeight > minHeight) {
+				if (loggedIn == 1) {
+					final int minHeight = 500 - (zoomCamera ? 200 : 0);
+					if (cameraHeight > minHeight)
 						if (cameraHeight - 25 < minHeight)
 							cameraHeight = minHeight;
 						else
 							cameraHeight -= 25;
-					}
-                }
+				}
 				break;
 			case 40: // Down Arrow
-				if (loggedIn == 1)
-                {
-                    final int maxHeight = 1250 - (zoomCamera ? 200 : 0);
-					if (cameraHeight < maxHeight) {
+				if (loggedIn == 1) {
+					final int maxHeight = 1250 - (zoomCamera ? 200 : 0);
+					if (cameraHeight < maxHeight)
 						if (cameraHeight + 25 > maxHeight)
 							cameraHeight = maxHeight;
 						else
 							cameraHeight += 25;
-					}
-                }
+				}
 				break;
 
 			case 33: // Page Up
-                currentChat--;
-                if (currentChat < 0) {
-                    currentChat = 0;
-                    return;
-                }
-                gameMenu.updateText(chatHandle, messages.get(currentChat));
+				currentChat--;
+				if (currentChat < 0) {
+					currentChat = 0;
+					return;
+				}
+				gameMenu.updateText(chatHandle, messages.get(currentChat));
 				break;
 
 			case 34: // Page Down
-                currentChat++;
-                if (currentChat >= messages.size()) {
-                    currentChat = messages.size();
-                    gameMenu.updateText(chatHandle, "");
-                } else
-                    gameMenu.updateText(chatHandle, messages.get(currentChat));
+				currentChat++;
+				if (currentChat >= messages.size()) {
+					currentChat = messages.size();
+					gameMenu.updateText(chatHandle, "");
+				} else
+					gameMenu.updateText(chatHandle, messages.get(currentChat));
 				break;
 
 			case 113: // F2
@@ -5230,9 +5158,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						for (GraphicalComponent gc : o.getComponents())
 							if (gc.onKey(keyChar, key))
 								return;
-				if (inputBoxType == 0 && showAbuseBox == 0 && showCommandsWindow == 0 && !drawIntegerInputBox) {
+				if (inputBoxType == 0 && showAbuseBox == 0 && showCommandsWindow == 0 && !drawIntegerInputBox)
 					gameMenu.keyDown(key, keyChar);
-				}
 			}
 		}
 	}
@@ -5243,7 +5170,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int j = super.mouseY - (gameHeight - 247) / 2;
 			if (i >= 0 && j >= 12 && i < gameWidth / 2 + 206 && j < gameHeight / 2 + 124) {
 				int k = 0;
-				for (int i1 = 0; i1 < 5; i1++) {
+				for (int i1 = 0; i1 < 5; i1++)
 					for (int i2 = 0; i2 < 8; i2++) {
 						int l2 = 7 + i2 * 49;
 						int l3 = 28 + i1 * 34;
@@ -5253,7 +5180,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 						k++;
 					}
-				}
 			} else {
 				super.streamClass.createPacket(67);
 				super.streamClass.formatPacket();
@@ -5281,7 +5207,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		drawString("Your money: " + insertCommas("" + inventoryCount(10)) + "gp", byte0 + 280, byte1 + 24, 1, 0xffff00);
 		int k2 = 0xd0d0d0;
 		int k3 = 0;
-		for (int k4 = 0; k4 < 5; k4++) {
+		for (int k4 = 0; k4 < 5; k4++)
 			for (int l4 = 0; l4 < 8; l4++) {
 				int j5 = byte0 + 7 + l4 * 49;
 				int i6 = byte1 + 28 + k4 * 34;
@@ -5290,8 +5216,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				else
 					drawBoxAlpha(j5, i6, 49, 34, k2, 160);
 				gameGraphics.drawBoxEdge(j5, i6, 50, 35, 0);
-				if (shopItems[k3] != -1) {
-
+				if (shopItems[k3] != -1)
 					if (EntityHandler.getItemDef(shopItems[k3]).isNote()) {
 						gameGraphics.spriteClip4(j5 - 3, i6 - 4, 52, 34, 2029, 0, 0, 0, false);
 						gameGraphics.spriteClip4(j5 + 9, i6 + 5, 32, 20,
@@ -5311,11 +5236,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						gameGraphics.drawBoxTextRight(String.valueOf(inventoryCount(shopItems[k3])), j5 + 47, i6 + 10,
 								1, 65535);
 					}
-				}
 				k3++;
 			}
-
-		}
 
 		drawLineX(byte0 + 5, byte1 + 222, 398, 0);
 		if (selectedShopItemIndex == -1) {
@@ -5325,7 +5247,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		int i5 = shopItems[selectedShopItemIndex];
 		if (i5 != -1) {
 			if (shopItemCount[selectedShopItemIndex] > 0) {
-				int j6 = (shopItemBuyPriceModifier * EntityHandler.getItemDef(i5).getBasePrice()) / 100;
+				int j6 = shopItemBuyPriceModifier * EntityHandler.getItemDef(i5).getBasePrice() / 100;
 				drawString(EntityHandler.getItemDef(i5).getName() + ": buy for " + j6 + "gp each", byte0 + 2,
 						byte1 + 214, 1, 0xffff00);
 
@@ -5408,7 +5330,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			} else
 				drawText("This item is not currently available to buy", byte0 + 204, byte1 + 214, 3, 0xffff00);
 			if (inventoryCount(i5) > 0) {
-				int k6 = (shopItemSellPriceModifier * EntityHandler.getItemDef(i5).getBasePrice()) / 100;
+				int k6 = shopItemSellPriceModifier * EntityHandler.getItemDef(i5).getBasePrice() / 100;
 				drawString(EntityHandler.getItemDef(i5).getName() + ": sell for " + k6 + "gp each", byte0 + 2,
 						byte1 + 239, 1, 0xffff00);
 
@@ -5512,13 +5434,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawOptionsMenu(boolean flag) {
-		if ((sectionX + areaX) > 192 && (sectionX + areaX) < 238 && (sectionY + areaY) > 722
-				&& (sectionY + areaY) < 767)
+		if (sectionX + areaX > 192 && sectionX + areaX < 238 && sectionY + areaY > 722 && sectionY + areaY < 767)
 			onTutorialIsland = true;
 		else
 			onTutorialIsland = false;
 
-		int i = ((Raster) (gameGraphics)).clipWidth - 199;
+		int i = ((Raster) gameGraphics).clipWidth - 199;
 		int j = 36;
 		gameGraphics.drawPicture(i - 49, 3, SPRITE_MEDIA_START + 6);
 		char c = '\304';
@@ -5612,10 +5533,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		if (super.mouseX > k && super.mouseX < k + c && super.mouseY > i1 - 12 && super.mouseY < i1 + 4)
 			k1 = 0xffff00;
 		gameGraphics.drawString("Click here to logout", i + 3, i1, 1, k1);
-		i = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 199);
+		i = super.mouseX - (((Raster) gameGraphics).clipWidth - 199);
 		j = super.mouseY - 36;
 		if (i >= 0 && j >= 0 && i < 196 && j < (onTutorialIsland ? 285 : 265)) {
-			int l1 = ((Raster) (gameGraphics)).clipWidth - 199;
+			int l1 = ((Raster) gameGraphics).clipWidth - 199;
 			byte byte0 = 36;
 			char c1 = '\304';
 			int l = l1 + 3;
@@ -5689,10 +5610,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
 					&& mouseButtonClick == 1) {
 				super.blockGlobalMessages = !super.blockGlobalMessages;
-				displayMessage("@gre@"+ Config.getServerName() +":@whi@ Global Chat currently: "
+				displayMessage("@gre@" + Config.getServerName() + ":@whi@ Global Chat currently: "
 						+ (blockGlobalMessages ? "@gre@Enabled" : "@red@Disabled") + " ", 3, -1);
 				super.streamClass.createPacket(16);
-				super.streamClass.addByte((super.blockGlobalMessages ? 4 : 9));
+				super.streamClass.addByte(super.blockGlobalMessages ? 4 : 9);
 				super.streamClass.formatPacket();
 			}
 			j1 += 15;
@@ -5700,7 +5621,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					&& mouseButtonClick == 1) {
 				super.blockChatMessages = !super.blockChatMessages;
 				super.streamClass.createPacket(16);
-				super.streamClass.addByte((super.blockChatMessages ? 0 : 5));
+				super.streamClass.addByte(super.blockChatMessages ? 0 : 5);
 				super.streamClass.formatPacket();
 			}
 			j1 += 15;
@@ -5708,7 +5629,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					&& mouseButtonClick == 1) {
 				super.blockPrivateMessages = !super.blockPrivateMessages;
 				super.streamClass.createPacket(16);
-				super.streamClass.addByte((super.blockPrivateMessages ? 1 : 6));
+				super.streamClass.addByte(super.blockPrivateMessages ? 1 : 6);
 				super.streamClass.formatPacket();
 			}
 			j1 += 15;
@@ -5716,7 +5637,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					&& mouseButtonClick == 1) {
 				super.blockTradeRequests = !super.blockTradeRequests;
 				super.streamClass.createPacket(16);
-				super.streamClass.addByte((super.blockTradeRequests ? 2 : 7));
+				super.streamClass.addByte(super.blockTradeRequests ? 2 : 7);
 				super.streamClass.formatPacket();
 			}
 			j1 += 15;
@@ -5724,15 +5645,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					&& mouseButtonClick == 1) {
 				super.blockDuelRequests = !super.blockDuelRequests;
 				super.streamClass.createPacket(16);
-				super.streamClass.addByte((super.blockDuelRequests ? 3 : 8));
+				super.streamClass.addByte(super.blockDuelRequests ? 3 : 8);
 				super.streamClass.formatPacket();
 			}
 			if (onTutorialIsland) {
 				j1 += 10;
 				if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
-						&& mouseButtonClick == 1) {
+						&& mouseButtonClick == 1)
 					showSkipTutorialIslandBox = 1;
-				}
 			}
 			j1 += onTutorialIsland ? 35 : 30;
 			if (super.mouseX > l && super.mouseX < l + c1 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
@@ -5743,12 +5663,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void processGame() {
-		/*if (!pinging && System.currentTimeMillis() - lastPing > 5000) {
-			lastPing = System.currentTimeMillis();
-			super.streamClass.createPacket(5);
-			super.streamClass.formatPacket();
-			pinging = true;
-		}*/
+		/*
+		 * if (!pinging && System.currentTimeMillis() - lastPing > 5000) { lastPing =
+		 * System.currentTimeMillis(); super.streamClass.createPacket(5);
+		 * super.streamClass.formatPacket(); pinging = true; }
+		 */
 		if (systemUpdate >= 1)
 			systemUpdate--;
 		if (wildernessUpdate >= 1)
@@ -5775,7 +5694,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (l2 < k)
 					j4 = k - l2;
 				else
-					j4 = (10 + k) - l2;
+					j4 = 10 + k - l2;
 				int j5 = 4;
 				if (j4 > 2)
 					j5 = (j4 - 1) * 4;
@@ -5849,7 +5768,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				if (k4 < j1)
 					k5 = j1 - k4;
 				else
-					k5 = (10 + j1) - k4;
+					k5 = 10 + j1 - k4;
 				int l5 = 4;
 				if (k5 > 2)
 					l5 = (k5 - 1) * 4;
@@ -5963,15 +5882,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						byte0 = -1;
 						j3 = -j3;
 					}
-					cameraRotation += ((cameraRotationBaseAddition * j3 + 255) / 256) * byte0;
+					cameraRotation += (cameraRotationBaseAddition * j3 + 255) / 256 * byte0;
 					cameraRotation &= 0xff;
 				} else
 					cameraRotationBaseAddition = 0;
 			}
 		}
-		if (anInt658 > 20) {
+		if (anInt658 > 20)
 			anInt658 = 0;
-		}
 		if (sleeping) {
 			ignoreNext = true;
 			if (super.enteredText.length() > 0) {
@@ -5982,9 +5900,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				super.enteredText = "";
 				kfr = "Please wait...";
 			}
-			int x = (windowWidth / 2) - (190 / 2), y = (windowHeight / 2) + 120;
+			int x = windowWidth / 2 - 190 / 2, y = windowHeight / 2 + 120;
 
-			if (mouseX >= x && mouseX <= x + 190 && mouseY >= y && mouseY <= y + 30) {
+			if (mouseX >= x && mouseX <= x + 190 && mouseY >= y && mouseY <= y + 30)
 				if (super.lastMouseDownButton != 0) {
 					super.streamClass.createPacket(70);
 					super.streamClass.addString("");
@@ -5994,9 +5912,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					super.lastMouseDownButton = 0;
 					kfr = "Please wait...";
 				}
-			}
 			return;
-        }
+		}
 		if (super.mouseY > windowHeight - 4) {
 			if (super.mouseX > windowWidth / 2 - 241 && super.mouseX < windowWidth / 2 - 160
 					&& super.lastMouseDownButton == 1)
@@ -6042,7 +5959,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				s = s.substring(2);
 				if (!handleCommand(s) && !sleeping && !ignoreNext) {
 					sendChatString(s);
-					if (messages.size() == 0 || !messages.get(messages.size() - 1).equalsIgnoreCase(Config.getCommandPrefix() + s)) {
+					if (messages.size() == 0
+							|| !messages.get(messages.size() - 1).equalsIgnoreCase(Config.getCommandPrefix() + s)) {
 						messages.add(Config.getCommandPrefix() + s);
 						currentChat = messages.size();
 					} else if (messages.get(messages.size() - 1).equalsIgnoreCase(Config.getCommandPrefix() + s))
@@ -6131,20 +6049,18 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		else if (super.rightArrowKeyDown)
 			cameraRotation = cameraRotation - 2 & 0xff;
 
-        /*if (zoomCamera && cameraHeight > 550)
-            cameraHeight -= 4;
-        else if (!zoomCamera && cameraHeight < 750)
-            cameraHeight += 4;*/
-        if(amountToZoom > 0)
-        {
-            cameraHeight += 4;
-            amountToZoom -= 4;
-        }
-        if(amountToZoom < 0)
-        {
-            cameraHeight -= 4;
-            amountToZoom += 4;
-        }
+		/*
+		 * if (zoomCamera && cameraHeight > 550) cameraHeight -= 4; else if (!zoomCamera
+		 * && cameraHeight < 750) cameraHeight += 4;
+		 */
+		if (amountToZoom > 0) {
+			cameraHeight += 4;
+			amountToZoom -= 4;
+		}
+		if (amountToZoom < 0) {
+			cameraHeight -= 4;
+			amountToZoom += 4;
+		}
 
 		if (actionPictureType > 0)
 			actionPictureType--;
@@ -6181,26 +6097,25 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void loadSounds() {
-		try{
+		try {
 			File folder = new File(AppletUtils.CACHE + System.getProperty("file.separator"));
 			File[] listOfFiles = folder.listFiles();
-			for (int i = 0; i < listOfFiles.length; i++) {
-			  if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
-			    Media mp3 = new Media(listOfFiles[i].toURI().toString());      
-	            soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
-			  }
-			}
-            
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+			for (int i = 0; i < listOfFiles.length; i++)
+				if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
+					Media mp3 = new Media(listOfFiles[i].toURI().toString());
+					soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
+				}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public final void drawCombatStyleWindow() {
 		byte byte0 = 7;
 		byte byte1 = 15;
 		char c = '\257';
-		if (mouseButtonClick != 0) {
+		if (mouseButtonClick != 0)
 			for (int i = 0; i < 5; i++) {
 				if (i <= 0 || super.mouseX <= byte0 || super.mouseX >= byte0 + c || super.mouseY <= byte1 + i * 20
 						|| super.mouseY >= byte1 + i * 20 + 20)
@@ -6212,8 +6127,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				super.streamClass.formatPacket();
 				break;
 			}
-
-		}
 		for (int j = 0; j < 5; j++) {
 			if (j == combatStyle + 1)
 				drawBoxAlpha(byte0, byte1 + j * 20, c, 20, Raster.convertRGBToLong(255, 0, 0), 128);
@@ -6276,8 +6189,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawText("Weapons cannot be used", byte0 + 234, byte1 + 216, 1, 0xff0000);
 		drawText("If you are sure click 'Accept' to begin the duel", byte0 + 234, byte1 + 230, 1, 0xffffff);
 		if (!duelWeAccept) {
-			gameGraphics.drawPicture((byte0 + 118) - 35, byte1 + 238, SPRITE_MEDIA_START + 25);
-			gameGraphics.drawPicture((byte0 + 352) - 35, byte1 + 238, SPRITE_MEDIA_START + 26);
+			gameGraphics.drawPicture(byte0 + 118 - 35, byte1 + 238, SPRITE_MEDIA_START + 25);
+			gameGraphics.drawPicture(byte0 + 352 - 35, byte1 + 238, SPRITE_MEDIA_START + 26);
 		} else
 			drawText("Waiting for other player...", byte0 + 234, byte1 + 250, 1, 0xffff00);
 		if (mouseButtonClick == 1) {
@@ -6287,13 +6200,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				super.streamClass.createPacket(51);
 				super.streamClass.formatPacket();
 			}
-			if (super.mouseX >= (byte0 + 118) - 35 && super.mouseX <= byte0 + 118 + 70 && super.mouseY >= byte1 + 238
+			if (super.mouseX >= byte0 + 118 - 35 && super.mouseX <= byte0 + 118 + 70 && super.mouseY >= byte1 + 238
 					&& super.mouseY <= byte1 + 238 + 21) {
 				duelWeAccept = true;
 				super.streamClass.createPacket(50);
 				super.streamClass.formatPacket();
 			}
-			if (super.mouseX >= (byte0 + 352) - 35 && super.mouseX <= byte0 + 353 + 70 && super.mouseY >= byte1 + 238
+			if (super.mouseX >= byte0 + 352 - 35 && super.mouseX <= byte0 + 353 + 70 && super.mouseY >= byte1 + 238
 					&& super.mouseY <= byte1 + 238 + 21) {
 				showDuelConfirmWindow = false;
 				super.streamClass.createPacket(51);
@@ -6331,8 +6244,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawText("Potions cannot be used", byte0 + 234, byte1 + 66, 1, 0xff0000);
 		drawText("If you are sure click 'Accept' to begin the Death Match", byte0 + 235, byte1 + 80, 1, 0xffffff);
 		if (!DMWeAccept) {
-			gameGraphics.drawPicture((byte0 + 118) - 35, byte1 + 88, SPRITE_MEDIA_START + 25);
-			gameGraphics.drawPicture((byte0 + 352) - 35, byte1 + 88, SPRITE_MEDIA_START + 26);
+			gameGraphics.drawPicture(byte0 + 118 - 35, byte1 + 88, SPRITE_MEDIA_START + 25);
+			gameGraphics.drawPicture(byte0 + 352 - 35, byte1 + 88, SPRITE_MEDIA_START + 26);
 		} else
 			drawText("Waiting for other player...", byte0 + 234, byte1 + 100, 1, 0xffff00);
 		if (mouseButtonClick == 1) {
@@ -6346,13 +6259,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				super.streamClass.createPacket(80);
 				super.streamClass.formatPacket();
 			}
-			if (super.mouseX >= (byte0 + 118) - 35 && super.mouseX <= byte0 + 118 + 70 && super.mouseY >= byte1 + 88
+			if (super.mouseX >= byte0 + 118 - 35 && super.mouseX <= byte0 + 118 + 70 && super.mouseY >= byte1 + 88
 					&& super.mouseY <= byte1 + 109) {
 				DMWeAccept = true;
 				super.streamClass.createPacket(81);
 				super.streamClass.formatPacket();
 			}
-			if (super.mouseX >= (byte0 + 352) - 35 && super.mouseX <= byte0 + 353 + 70 && super.mouseY >= byte1 + 88
+			if (super.mouseX >= byte0 + 352 - 35 && super.mouseX <= byte0 + 353 + 70 && super.mouseY >= byte1 + 88
 					&& super.mouseY <= byte1 + 109) {
 				showDMConfirmWindow = false;
 				showDMWindow = false;
@@ -6412,13 +6325,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		characterDesignMenu.drawText(i - byte0, j + 8, "Type", 1, true);
 		characterDesignMenu.method158(i - byte0 - 40, j, SPRITE_UTIL_START + 7);
 		characterDesignHeadButton1 = characterDesignMenu.makeButton(i - byte0 - 40, j, 20, 20);
-		characterDesignMenu.method158((i - byte0) + 40, j, SPRITE_UTIL_START + 6);
-		characterDesignHeadButton2 = characterDesignMenu.makeButton((i - byte0) + 40, j, 20, 20);
+		characterDesignMenu.method158(i - byte0 + 40, j, SPRITE_UTIL_START + 6);
+		characterDesignHeadButton2 = characterDesignMenu.makeButton(i - byte0 + 40, j, 20, 20);
 		characterDesignMenu.method157(i + byte0, j, 53, 41);
 		characterDesignMenu.drawText(i + byte0, j - 8, "Hair", 1, true);
 		characterDesignMenu.drawText(i + byte0, j + 8, "Colour", 1, true);
-		characterDesignMenu.method158((i + byte0) - 40, j, SPRITE_UTIL_START + 7);
-		characterDesignHairColourButton1 = characterDesignMenu.makeButton((i + byte0) - 40, j, 20, 20);
+		characterDesignMenu.method158(i + byte0 - 40, j, SPRITE_UTIL_START + 7);
+		characterDesignHairColourButton1 = characterDesignMenu.makeButton(i + byte0 - 40, j, 20, 20);
 		characterDesignMenu.method158(i + byte0 + 40, j, SPRITE_UTIL_START + 6);
 		characterDesignHairColourButton2 = characterDesignMenu.makeButton(i + byte0 + 40, j, 20, 20);
 		j += 50;
@@ -6426,13 +6339,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		characterDesignMenu.drawText(i - byte0, j, "Gender", 1, true);
 		characterDesignMenu.method158(i - byte0 - 40, j, SPRITE_UTIL_START + 7);
 		characterDesignGenderButton1 = characterDesignMenu.makeButton(i - byte0 - 40, j, 20, 20);
-		characterDesignMenu.method158((i - byte0) + 40, j, SPRITE_UTIL_START + 6);
-		characterDesignGenderButton2 = characterDesignMenu.makeButton((i - byte0) + 40, j, 20, 20);
+		characterDesignMenu.method158(i - byte0 + 40, j, SPRITE_UTIL_START + 6);
+		characterDesignGenderButton2 = characterDesignMenu.makeButton(i - byte0 + 40, j, 20, 20);
 		characterDesignMenu.method157(i + byte0, j, 53, 41);
 		characterDesignMenu.drawText(i + byte0, j - 8, "Top", 1, true);
 		characterDesignMenu.drawText(i + byte0, j + 8, "Colour", 1, true);
-		characterDesignMenu.method158((i + byte0) - 40, j, SPRITE_UTIL_START + 7);
-		characterDesignTopColourButton1 = characterDesignMenu.makeButton((i + byte0) - 40, j, 20, 20);
+		characterDesignMenu.method158(i + byte0 - 40, j, SPRITE_UTIL_START + 7);
+		characterDesignTopColourButton1 = characterDesignMenu.makeButton(i + byte0 - 40, j, 20, 20);
 		characterDesignMenu.method158(i + byte0 + 40, j, SPRITE_UTIL_START + 6);
 		characterDesignTopColourButton2 = characterDesignMenu.makeButton(i + byte0 + 40, j, 20, 20);
 		j += 50;
@@ -6441,13 +6354,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		characterDesignMenu.drawText(i - byte0, j + 8, "Colour", 1, true);
 		characterDesignMenu.method158(i - byte0 - 40, j, SPRITE_UTIL_START + 7);
 		characterDesignSkinColourButton1 = characterDesignMenu.makeButton(i - byte0 - 40, j, 20, 20);
-		characterDesignMenu.method158((i - byte0) + 40, j, SPRITE_UTIL_START + 6);
-		characterDesignSkinColourButton2 = characterDesignMenu.makeButton((i - byte0) + 40, j, 20, 20);
+		characterDesignMenu.method158(i - byte0 + 40, j, SPRITE_UTIL_START + 6);
+		characterDesignSkinColourButton2 = characterDesignMenu.makeButton(i - byte0 + 40, j, 20, 20);
 		characterDesignMenu.method157(i + byte0, j, 53, 41);
 		characterDesignMenu.drawText(i + byte0, j - 8, "Bottom", 1, true);
 		characterDesignMenu.drawText(i + byte0, j + 8, "Colour", 1, true);
-		characterDesignMenu.method158((i + byte0) - 40, j, SPRITE_UTIL_START + 7);
-		characterDesignBottomColourButton1 = characterDesignMenu.makeButton((i + byte0) - 40, j, 20, 20);
+		characterDesignMenu.method158(i + byte0 - 40, j, SPRITE_UTIL_START + 7);
+		characterDesignBottomColourButton1 = characterDesignMenu.makeButton(i + byte0 - 40, j, 20, 20);
 		characterDesignMenu.method158(i + byte0 + 40, j, SPRITE_UTIL_START + 6);
 		characterDesignBottomColourButton2 = characterDesignMenu.makeButton(i + byte0 + 40, j, 20, 20);
 		j += 82;
@@ -6460,9 +6373,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void displayGlobalChat(String mobName, int rank, String message) {
 		String header = Group.getStaffPrefix(rank) + mobName + ":@whi@ ";
 		message = header + message;
-		if (messagesTab != 0 && messagesTab != 5) {
+		if (messagesTab != 0 && messagesTab != 5)
 			anInt954 = 200;
-		}
 		for (int idx = 4; idx > 0; idx--) {
 			messagesArray[idx] = messagesArray[idx - 1];
 			messagesTimeout[idx] = messagesTimeout[idx - 1];
@@ -6499,37 +6411,33 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayNpcMessage(String npcMessage) {
-		if (messagesTab != 2 && messagesTab != 0) {
+		if (messagesTab != 2 && messagesTab != 0)
 			anInt954 = 200;
-		}
 		for (int k = 4; k > 0; k--) {
 			messagesArray[k] = messagesArray[k - 1];
 			messagesTimeout[k] = messagesTimeout[k - 1];
 		}
 		messagesArray[0] = npcMessage;
 		messagesTimeout[0] = 300;
-		if (gameMenu.topIndex[questHandle] == gameMenu.menuListTextCount[questHandle] - 4) {
+		if (gameMenu.topIndex[questHandle] == gameMenu.menuListTextCount[questHandle] - 4)
 			gameMenu.addString(questHandle, npcMessage, true);
-		} else {
+		else
 			gameMenu.addString(questHandle, npcMessage, false);
-		}
 	}
 
 	public final void displayQuestMessage(String questMessage) {
-		if (messagesTab != 2 && messagesTab != 0) {
+		if (messagesTab != 2 && messagesTab != 0)
 			anInt954 = 200;
-		}
 		for (int k = 4; k > 0; k--) {
 			messagesArray[k] = messagesArray[k - 1];
 			messagesTimeout[k] = messagesTimeout[k - 1];
 		}
 		messagesArray[0] = questMessage;
 		messagesTimeout[0] = 300;
-		if (gameMenu.topIndex[questHandle] == gameMenu.menuListTextCount[questHandle] - 4) {
+		if (gameMenu.topIndex[questHandle] == gameMenu.menuListTextCount[questHandle] - 4)
 			gameMenu.addString(questHandle, questMessage, true);
-		} else {
+		else
 			gameMenu.addString(questHandle, questMessage, false);
-		}
 	}
 
 	public final void displayGenericMessage(String message, int chatTab) {
@@ -6565,8 +6473,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void displayPrivateMessage(long mobUsernameHash, String message, int rank, boolean sent) {
-		String user = Group.getNameSprite(rank)
-				+ DataConversions.hashToUsername(mobUsernameHash) + "@cya@";
+		String user = Group.getNameSprite(rank) + DataConversions.hashToUsername(mobUsernameHash) + "@cya@";
 		message = "@cya@" + (sent ? "You tell " + user + ": " : user + " tells you: ") + message;
 		if (messagesTab != 0) {
 			if (messagesTab != 3)
@@ -6599,7 +6506,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			}
 		}
 		String nameColour = Group.getNameColour(mobRank);
-        message = Group.getNameSprite(mobRank) + message;
+		message = Group.getNameSprite(mobRank) + message;
 
 		switch (type) {
 		case 5:
@@ -6609,9 +6516,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			String saySubStr = "";
 			int sayCounter = 0;
 			for (int i = 0; i < message.length(); i++) {
-				if (message.charAt(i) != ':') {
+				if (message.charAt(i) != ':')
 					saySubStr += message.charAt(i);
-				} else {
+				else {
 					saySubStr += message.charAt(i);
 					break;
 				}
@@ -6772,10 +6679,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		showTokenShop = false;
 		showBank = false;
 
-		for (GraphicalOverlay overlay : GameUIs.overlays) {
+		for (GraphicalOverlay overlay : GameUIs.overlays)
 			if (overlay.isVisible())
 				overlay.setVisible(false);
-		}
 		super.friendsCount = 0;
 	}
 
@@ -6800,7 +6706,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (itemIncrement > 0) {
 				if (i >= 0 && j >= 0 && i < 468 && j < 262) {
 					if (i > 216 && j > 30 && i < 462 && j < 235) {
-						int k = (i - 217) / 49 + ((j - 31) / 34) * 5;
+						int k = (i - 217) / 49 + (j - 31) / 34 * 5;
 						if (k >= 0 && k < inventoryCount) {
 							boolean flag = false;
 							int l1 = 0;
@@ -6814,16 +6720,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								if (mouseButtonClick != 2 && !tester && mouseButtonClick != 4) {
 									for (int k3 = 0; k3 < tradeMyItemCount; k3++)
 										if (tradeMyItems[k3] == k2)
-											if (EntityHandler.getItemDef(k2).isStackable()) {
+											if (EntityHandler.getItemDef(k2).isStackable())
 												for (int i4 = 0; i4 < itemIncrement; i4++) {
 													if (tradeMyItemsCount[k3] < inventoryItemsCount[k])
 														tradeMyItemsCount[k3]++;
 													flag = true;
 												}
-
-											} else
+											else
 												l1++;
-								} else if (mouseButtonClick == 2) {
+								} else if (mouseButtonClick == 2)
 									if (tester) {
 										tradeWindowX = -100;
 										tradeWindowY = -100;
@@ -6884,21 +6789,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 										menuLength++;
 										tester = true;
 									}
-								}
 							if (!qItem) {
 								if (inventoryCount(k2) <= l1)
 									flag = true;
-								if (mouseButtonClick != 2 && !tester && mouseButtonClick != 4) {
+								if (mouseButtonClick != 2 && !tester && mouseButtonClick != 4)
 									if (!flag && tradeMyItemCount < 12) {
 										tradeMyItems[tradeMyItemCount] = k2;
 										tradeMyItemsCount[tradeMyItemCount] = 1;
 										tradeMyItemCount++;
 										flag = true;
 									}
-								}
 							}
 							if (!qItem)
-								if (flag) {
+								if (flag)
 									if (mouseButtonClick != 2 && !tester && mouseButtonClick != 4) {
 										lastTradeDuelUpdate = System.currentTimeMillis();
 										super.streamClass.createPacket(42);
@@ -6911,15 +6814,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 										tradeOtherAccepted = false;
 										tradeWeAccepted = false;
 									}
-								}
 						}
 					}
 					if (!qItem)
 						if (i > 8 && j > 30 && i < 205 && j < 133) {
-							int l = (i - 9) / 49 + ((j - 31) / 34) * 4;
+							int l = (i - 9) / 49 + (j - 31) / 34 * 4;
 							if (l >= 0 && l < tradeMyItemCount) {
 								int j1 = tradeMyItems[l];
-								if (mouseButtonClick != 2 && !tester) {
+								if (mouseButtonClick != 2 && !tester)
 									for (int i2 = 0; i2 < itemIncrement; i2++) {
 										if (EntityHandler.getItemDef(j1).isStackable() && tradeMyItemsCount[l] > 1) {
 											tradeMyItemsCount[l]--;
@@ -6934,7 +6836,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 										break;
 									}
-								}
 								if (mouseButtonClick == 2) {
 									if (tester) {
 										tradeWindowX = -100;
@@ -7029,7 +6930,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						int k = tradeWindowX + 2;
 						int i1 = tradeWindowY + 11 + (ix + 1) * 15;
 						if (super.mouseX <= k - 2 || super.mouseY <= i1 - 12 || super.mouseY >= i1 + 4
-								|| super.mouseX >= (k - 3) + menuWidth)
+								|| super.mouseX >= k - 3 + menuWidth)
 							continue;
 						menuClick(ix);
 					}
@@ -7093,16 +6994,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawText("other player", byte0 + 217 + 35, byte1 + 256, 1, 0xffffff);
 		}
 		for (int itemIndex = 0; itemIndex < inventoryCount; itemIndex++) {
-			int x = 217 + byte0 + (itemIndex % 5) * 49;
-			int y = 31 + byte1 + (itemIndex / 5) * 34;
+			int x = 217 + byte0 + itemIndex % 5 * 49;
+			int y = 31 + byte1 + itemIndex / 5 * 34;
 			/*
 			 * gameGraphics.spriteClip4(x, y, 48, 32, SPRITE_ITEM_START +
 			 * EntityHandler.getItemDef(inventoryItems[itemIndex]).getSprite(),
-			 * EntityHandler.getItemDef(inventoryItems[itemIndex]).
-			 * getPictureMask(), 0, 0, false); if
-			 * (EntityHandler.getItemDef(inventoryItems[itemIndex]).isStackable(
-			 * )) drawString(formatItemAmount(inventoryItemsCount[itemIndex]), x
-			 * + 1, y + 10, 1, formatItemColor(inventoryItemsCount[itemIndex]));
+			 * EntityHandler.getItemDef(inventoryItems[itemIndex]). getPictureMask(), 0, 0,
+			 * false); if (EntityHandler.getItemDef(inventoryItems[itemIndex]).isStackable(
+			 * )) drawString(formatItemAmount(inventoryItemsCount[itemIndex]), x + 1, y +
+			 * 10, 1, formatItemColor(inventoryItemsCount[itemIndex]));
 			 */
 			ItemDef item = EntityHandler.getItemDef(inventoryItems[itemIndex]);
 			if (item.isNote()) {
@@ -7123,8 +7023,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 
 		for (int itemIndex = 0; itemIndex < tradeMyItemCount; itemIndex++) {
-			int x = 9 + byte0 + (itemIndex % 4) * 49;
-			int y = 31 + byte1 + (itemIndex / 4) * 34;
+			int x = 9 + byte0 + itemIndex % 4 * 49;
+			int y = 31 + byte1 + itemIndex / 4 * 34;
 			ItemDef item = EntityHandler.getItemDef(tradeMyItems[itemIndex]);
 			if (item.isNote()) {
 				gameGraphics.spriteClip4(x - 3, y - 3, 50, 32, 2029, 0, 0, 0, false);
@@ -7142,24 +7042,23 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			/*
 			 * gameGraphics .spriteClip4(x, y, 48, 32, SPRITE_ITEM_START +
 			 * EntityHandler.getItemDef(tradeMyItems[itemIndex]) .getSprite(),
-			 * EntityHandler.getItemDef(
-			 * tradeMyItems[itemIndex]).getPictureMask(), 0, 0, false); if
-			 * (EntityHandler.getItemDef(tradeMyItems[itemIndex]).isStackable())
-			 * drawString(formatItemAmount(tradeMyItemsCount[itemIndex]), x + 1,
-			 * y + 10, 1, formatItemColor(tradeMyItemsCount[itemIndex]));
+			 * EntityHandler.getItemDef( tradeMyItems[itemIndex]).getPictureMask(), 0, 0,
+			 * false); if (EntityHandler.getItemDef(tradeMyItems[itemIndex]).isStackable())
+			 * drawString(formatItemAmount(tradeMyItemsCount[itemIndex]), x + 1, y + 10, 1,
+			 * formatItemColor(tradeMyItemsCount[itemIndex]));
 			 */
 			if (super.mouseX > x && super.mouseX < x + 48 && super.mouseY > y && super.mouseY < y + 32)
-				drawString(
-						EntityHandler.getItemDef(tradeMyItems[itemIndex]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(tradeMyItems[itemIndex]).getDescription()
-								+ (tradeMyItemsCount[itemIndex] > 100000
-										? " (" + insertCommas(String.valueOf(tradeMyItemsCount[itemIndex])) + ")" : ""),
+				drawString(EntityHandler.getItemDef(tradeMyItems[itemIndex]).getName() + ": @whi@"
+						+ EntityHandler.getItemDef(tradeMyItems[itemIndex]).getDescription()
+						+ (tradeMyItemsCount[itemIndex] > 100000
+								? " (" + insertCommas(String.valueOf(tradeMyItemsCount[itemIndex])) + ")"
+								: ""),
 						byte0 + 8, byte1 + 273, 1, 0xffff00);
 		}
 
 		for (int itemIndex = 0; itemIndex < tradeOtherItemCount; itemIndex++) {
-			int x = 9 + byte0 + (itemIndex % 4) * 49;
-			int y = 156 + byte1 + (itemIndex / 4) * 34;
+			int x = 9 + byte0 + itemIndex % 4 * 49;
+			int y = 156 + byte1 + itemIndex / 4 * 34;
 			ItemDef item = EntityHandler.getItemDef(tradeOtherItems[itemIndex]);
 			if (item.isNote()) {
 				gameGraphics.spriteClip4(x - 3, y - 3, 50, 32, 2029, 0, 0, 0, false);
@@ -7176,19 +7075,18 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			}
 			/*
 			 * gameGraphics.spriteClip4(x, y, 48, 32, SPRITE_ITEM_START +
-			 * EntityHandler.getItemDef(tradeOtherItems[itemIndex])
-			 * .getSprite(), EntityHandler.getItemDef(
-			 * tradeOtherItems[itemIndex]).getPictureMask(), 0, 0, false); if
-			 * (EntityHandler.getItemDef(tradeOtherItems[itemIndex]).isStackable
-			 * ()) drawString(formatItemAmount(tradeOtherItemsCount[itemIndex]),
-			 * x + 1, y + 10, 1,
-			 * formatItemColor(tradeOtherItemsCount[itemIndex]));
+			 * EntityHandler.getItemDef(tradeOtherItems[itemIndex]) .getSprite(),
+			 * EntityHandler.getItemDef( tradeOtherItems[itemIndex]).getPictureMask(), 0, 0,
+			 * false); if (EntityHandler.getItemDef(tradeOtherItems[itemIndex]).isStackable
+			 * ()) drawString(formatItemAmount(tradeOtherItemsCount[itemIndex]), x + 1, y +
+			 * 10, 1, formatItemColor(tradeOtherItemsCount[itemIndex]));
 			 */
 			if (super.mouseX > x && super.mouseX < x + 48 && super.mouseY > y && super.mouseY < y + 32)
 				drawString(EntityHandler.getItemDef(tradeOtherItems[itemIndex]).getName() + ": @whi@"
 						+ EntityHandler.getItemDef(tradeOtherItems[itemIndex]).getDescription()
 						+ (tradeOtherItemsCount[itemIndex] > 100000
-								? " (" + insertCommas(String.valueOf(tradeOtherItemsCount[itemIndex])) + ")" : ""),
+								? " (" + insertCommas(String.valueOf(tradeOtherItemsCount[itemIndex])) + ")"
+								: ""),
 						byte0 + 8, byte1 + 273, 1, 0xffff00);
 		}
 	}
@@ -7227,29 +7125,23 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public Mob getLastPlayer(int serverIndex) {
-		for (int i1 = 0; i1 < lastPlayerCount; i1++) {
-			if (lastPlayerArray[i1].serverIndex == serverIndex) {
+		for (int i1 = 0; i1 < lastPlayerCount; i1++)
+			if (lastPlayerArray[i1].serverIndex == serverIndex)
 				return lastPlayerArray[i1];
-			}
-		}
 		return null;
 	}
 
 	public Mob getPlayer(int serverIndex) {
-		for (int i1 = 0; i1 < playerCount; i1++) {
-			if (playerArray[i1].serverIndex == serverIndex) {
+		for (int i1 = 0; i1 < playerCount; i1++)
+			if (playerArray[i1].serverIndex == serverIndex)
 				return playerArray[i1];
-			}
-		}
 		return null;
 	}
 
 	public Mob getLastNpc(int serverIndex) {
-		for (int i1 = 0; i1 < lastNpcCount; i1++) {
-			if (lastNpcArray[i1].serverIndex == serverIndex) {
+		for (int i1 = 0; i1 < lastNpcCount; i1++)
+			if (lastNpcArray[i1].serverIndex == serverIndex)
 				return lastNpcArray[i1];
-			}
-		}
 		return null;
 	}
 
@@ -7303,9 +7195,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						} else {
 							int nextSpriteOffset = DataOperations.getIntFromByteArray(data, newNpcOffset, 4);
 							newNpcOffset += 4;
-							if ((nextSpriteOffset & 0xc) == 12) {
+							if ((nextSpriteOffset & 0xc) == 12)
 								continue;
-							}
 							newNPC.nextSprite = nextSpriteOffset;
 
 						}
@@ -7368,13 +7259,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						String s4 = DataConversions.byteToString(data, i10, byte9);
 						mob_2.lastMessageTimeout = 150;
 						mob_2.lastMessage = s4;
-						if (k32 == ourPlayer.serverIndex) {
+						if (k32 == ourPlayer.serverIndex)
 							displayNpcMessage(
 									"@yel@" + EntityHandler.getNpcDef(mob_2.type).getName() + ": " + mob_2.lastMessage);
-						}
-						// displayMessage("@yel@" +
-						// EntityHandler.getNpcDef(mob_2.type).getName() + ": "
-						// + mob_2.lastMessage, 5, 0);
 					}
 					i10 += byte9;
 				} else if (j28 == 2) {
@@ -7447,8 +7334,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						j37 = EntityHandler.getObjectDef(k8).getWidth();
 						i34 = EntityHandler.getObjectDef(k8).getHeight();
 					}
-					int j40 = ((i15 + i15 + i34) * 128) / 2;
-					int i42 = ((l19 + l19 + j37) * 128) / 2;
+					int j40 = (i15 + i15 + i34) * 128 / 2;
+					int i42 = (l19 + l19 + j37) * 128 / 2;
 					int k43 = EntityHandler.getObjectDef(k8).modelID;
 					Model model_1 = gameDataModels[k43].method203();
 					gameCamera.addModel(model_1);
@@ -7507,7 +7394,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				} else { // Removing
 					i8 &= 0x7fff;
 					int l23 = 0;
-					for (int k26 = 0; k26 < groundItemCount; k26++) {
+					for (int k26 = 0; k26 < groundItemCount; k26++)
 						if (groundItemX[k26] != k14 || groundItemY[k26] != j19 || groundItemType[k26] != i8) { // Keep
 																												// how
 																												// it
@@ -7519,10 +7406,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 								groundItemObjectVar[l23] = groundItemObjectVar[k26];
 							}
 							l23++;
-						} else { // Remove
+						} else
 							i8 = -123;
-						}
-					}
 					groundItemCount = l23;
 				}
 			}
@@ -7542,18 +7427,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 
 		public void run() {
-			if (!hasWorldInfo) {
+			if (!hasWorldInfo)
 				return;
-			}
 			lastPlayerCount = playerCount;
 			for (int k = 0; k < lastPlayerCount; k++)
 				lastPlayerArray[k] = playerArray[k];
 			int currentOffset = 8;
-			if ((sectionX + areaX) != DataOperations.getIntFromByteArray(data, currentOffset, 11))
+			if (sectionX + areaX != DataOperations.getIntFromByteArray(data, currentOffset, 11))
 				ourPlayer.lastMoved = System.currentTimeMillis();
 			sectionX = DataOperations.getIntFromByteArray(data, currentOffset, 11);
 			currentOffset += 11;
-			if ((sectionY + areaY) != DataOperations.getIntFromByteArray(data, currentOffset, 13))
+			if (sectionY + areaY != DataOperations.getIntFromByteArray(data, currentOffset, 13))
 				ourPlayer.lastMoved = System.currentTimeMillis();
 			sectionY = DataOperations.getIntFromByteArray(data, currentOffset, 13);
 			currentOffset += 13;
@@ -7604,9 +7488,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					} else {
 						int needsNextSprite = DataOperations.getIntFromByteArray(data, currentOffset, 4);
 						currentOffset += 4;
-						if ((needsNextSprite & 0xc) == 12) {
+						if ((needsNextSprite & 0xc) == 12)
 							continue;
-						}
 						lastMob.nextSprite = needsNextSprite;
 					}
 				}
@@ -7672,13 +7555,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobArrayIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length) {
+				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobArrayIndex];
-				if (mob == null) {
+				if (mob == null)
 					return;
-				}
 				int i30 = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
 				if (mob != null) {
@@ -7705,13 +7586,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobArrayIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length) {
+				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobArrayIndex];
-				if (mob == null) {
+				if (mob == null)
 					return;
-				}
 				byte mobUpdateType = data[mobUpdateOffset++];
 				byte messageLength = data[mobUpdateOffset++];
 				if (mob != null) {
@@ -7746,13 +7625,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobArrayIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length) {
+				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobArrayIndex];
-				if (mob == null) {
+				if (mob == null)
 					return;
-				}
 				int damage = DataOperations.getUnsignedByte(data[mobUpdateOffset++]);
 				int hits = DataOperations.getUnsignedByte(data[mobUpdateOffset++]);
 				int hitsBase = DataOperations.getUnsignedByte(data[mobUpdateOffset++]);
@@ -7787,13 +7664,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobArrayIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length) {
+				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobArrayIndex];
-				if (mob == null) {
+				if (mob == null)
 					return;
-				}
 				byte mobUpdateType = data[mobUpdateOffset++];
 				int k30 = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
@@ -7806,13 +7681,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						mob.attackingMobIndex = -1;
 						mob.anInt176 = attackingInt40;
 					}
-				} else {
-					if (mob != null) {
-						mob.attackingCameraInt = k30;
-						mob.attackingMobIndex = k34;
-						mob.attackingNpcIndex = -1;
-						mob.anInt176 = attackingInt40;
-					}
+				} else if (mob != null) {
+					mob.attackingCameraInt = k30;
+					mob.attackingMobIndex = k34;
+					mob.attackingNpcIndex = -1;
+					mob.anInt176 = attackingInt40;
 				}
 			}
 		}
@@ -7834,9 +7707,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobIndex < 0 || mobIndex > mobArray.length) {
+				if (mobIndex < 0 || mobIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobIndex];
 				if (mob != null) {
 					mob.nameLong = DataOperations.getUnsigned8Bytes(data, mobUpdateOffset);
@@ -7863,23 +7735,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobIndex < 0 || mobIndex > mobArray.length) {
+				if (mobIndex < 0 || mobIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobIndex];
-				if (mob == null) {
+				if (mob == null)
 					return;
-				}
 				mob.wornItemsID = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
 				if (mob != null) {
 					int i31 = DataOperations.getUnsignedByte(data[mobUpdateOffset++]);
-					for (int i35 = 0; i35 < i31; i35++) {
+					for (int i35 = 0; i35 < i31; i35++)
 						mob.animationCount[i35] = DataOperations.getUnsignedByte(data[mobUpdateOffset++]);
-					}
-					for (int l37 = i31; l37 < 12; l37++) {
+					for (int l37 = i31; l37 < 12; l37++)
 						mob.animationCount[l37] = 0;
-					}
 				}
 			}
 		}
@@ -7903,9 +7771,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			for (int currentMob = 0; currentMob < mobCount; currentMob++) {
 				int mobArrayIndex = DataOperations.getUnsigned2Bytes(data, mobUpdateOffset);
 				mobUpdateOffset += 2;
-				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length) {
+				if (mobArrayIndex < 0 || mobArrayIndex > mobArray.length)
 					return;
-				}
 				Mob mob = mobArray[mobArrayIndex];
 				if (mob != null) {
 					int old = mob.groupID;
@@ -7916,17 +7783,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					mob.level = data[mobUpdateOffset++] & 0xff;
 					mob.skull = data[mobUpdateOffset++] & 0xff;
 					mob.groupID = data[mobUpdateOffset++] & 0xff;
-                    mob.isInvisible = (data[mobUpdateOffset++] & 0xff) == 1;
-                    mob.isInvulnerable = (data[mobUpdateOffset++] & 0xff) == 1;
-					if (mob == ourPlayer) {
+					mob.isInvisible = (data[mobUpdateOffset++] & 0xff) == 1;
+					mob.isInvulnerable = (data[mobUpdateOffset++] & 0xff) == 1;
+					if (mob == ourPlayer)
 						if (init || ourPlayer.groupID != old && ourPlayer.isStaff()) {
 							init = false;
 							delegate.onLogin();
 						}
-					}
-				} else {
+				} else
 					return;
-				}
 			}
 		}
 	}
@@ -7993,7 +7858,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		try {
 
 			if (command == 121) {
-				AuctionHouse auctionHouse = ((AuctionHouse) GameUIs.overlays.get(0));
+				AuctionHouse auctionHouse = (AuctionHouse) GameUIs.overlays.get(0);
 				auctionHouse.resetScrollIndex();
 				int offset = 1;
 				int auctionSize = DataOperations.getUnsigned2Bytes(data, offset);
@@ -8017,7 +7882,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				return;
 			}
 			if (command == 123) {
-				AuctionHouse auctionHouse = ((AuctionHouse) GameUIs.overlays.get(0));
+				AuctionHouse auctionHouse = (AuctionHouse) GameUIs.overlays.get(0);
 				int offset = 1;
 				int auctionSize = DataOperations.getUnsigned2Bytes(data, offset);
 				offset += 2;
@@ -8040,19 +7905,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			}
 			if (command == 130) {
 				/* remove specific auction */
-				AuctionHouse auctionHouse = ((AuctionHouse) GameUIs.overlays.get(0));
+				AuctionHouse auctionHouse = (AuctionHouse) GameUIs.overlays.get(0);
 				int auctionIndex = DataOperations.getUnsigned2Bytes(data, 1);
 				long amount = DataOperations.getUnsigned8Bytes(data, 3);
 				Auction auction = null;
-				for (Auction a : auctionHouse.getAuctions()) {
+				for (Auction a : auctionHouse.getAuctions())
 					if (a.getIndex() == auctionIndex) {
 						auction = a;
 						break;
 					}
-				}
-				if (auction == null) {
+				if (auction == null)
 					return;
-				}
 				if (amount == auction.getAmount()) {
 					auctionHouse.getAuctions().remove(auction);
 					auctionHouse.setAuctionSize(auctionHouse.getAuctionSize() - 1);
@@ -8067,7 +7930,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			}
 			if (command == 132) {
 				/* add specific auction */
-				AuctionHouse auctionHouse = ((AuctionHouse) GameUIs.overlays.get(0));
+				AuctionHouse auctionHouse = (AuctionHouse) GameUIs.overlays.get(0);
 				int offset = 1;
 				int itemID = DataOperations.getUnsigned2Bytes(data, offset);
 				offset += 2;
@@ -8086,7 +7949,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				return;
 			}
 			if (command == 122) {
-				AuctionHouse auctionHouse = ((AuctionHouse) GameUIs.overlays.get(0));
+				AuctionHouse auctionHouse = (AuctionHouse) GameUIs.overlays.get(0);
 				if (auctionHouse.isVisible())
 					auctionHouse.setVisible(false);
 				return;
@@ -8105,78 +7968,76 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (command == 117) {
 				pinging = false;
 				ping = System.currentTimeMillis() - lastPing;
-			} else if (command == 62) {
+			} else if (command == 62)
 				hpwiu.update(length, data);
-			} else if (command == 61) {
+			else if (command == 61)
 				hpuu.update(length, data);
-			} else if (command == 58) {
+			else if (command == 58)
 				handlePlayerAppearanceUpdates.update(length, data);
-			} else if (command == 57) {
+			else if (command == 57)
 				KY69_mudclient_HNPU_A99X_0.update(length, data);
-			} else if (command == 56) {
+			else if (command == 56)
 				hphu.update(length, data);
-			} else if (command == 55) {
+			else if (command == 55)
 				hpcmu.update(length, data);
-			} else if (command == 54) {
+			else if (command == 54)
 				hpbu.update(length, data);
-			} else if (command == 222) {
+			else if (command == 222) {
 				int old = ourPlayer.groupID;
 				ourPlayer.groupID = DataOperations.getUnsignedByte(data[1]);
-				if (old != ourPlayer.groupID && ourPlayer.isStaff()) {
+				if (old != ourPlayer.groupID && ourPlayer.isStaff())
 					delegate.onLogin();
-				}
-			} else if (command == 3) {
+			} else if (command == 3)
 				sendLocalhost(DataOperations.getUnsigned8Bytes(data, 1));
-			} else if (command == 12) {
+			else if (command == 12)
 				resetLoginVars();
-			} else if (command == 124) {
+			else if (command == 124) {
 				/* ? */
 			} else if (command == 110) {
 				int i = 1;
 				wildernessUpdate = DataOperations.getUnsigned2Bytes(data, i) * 32;
 				i += 2;
-				wildernessSwitchType = (byte) DataOperations.getUnsignedByte((byte) data[i]);
+				wildernessSwitchType = (byte) DataOperations.getUnsignedByte(data[i]);
 				i += 1;
 				serverStartTime = DataOperations.getUnsigned8Bytes(data, i);
 				i += 8;
 				new String(data, i, length - i);
-			} else if (command == 145) {
+			} else if (command == 145)
 				hppu.update(command, length, data);
-			} else if (command == 109) {
+			else if (command == 109)
 				hipu.update(command, length, data);
-			} else if(command == 181) {
+			else if (command == 181) {
 				takeScreenshot(false);
 				return;
-			} else if (command == 27) {
+			} else if (command == 27)
 				hgopu.update(command, length, data);
-			} else if (command == 49) {
+			else if (command == 49)
 				displayMessage("Please tell Kenix/Marwolf (command 49): " + DataOperations.readInt(data, 1), 3, -1);
-			} else if (command == 114) {
+			else if (command == 114) {
 				int invOffset = 1;
 				inventoryCount = data[invOffset++] & 0xff;
 				for (int invItem = 0; invItem < inventoryCount; invItem++) {
 					int j15 = DataOperations.getUnsigned2Bytes(data, invOffset);
 					invOffset += 2;
-					inventoryItems[invItem] = (j15 & 0x7fff);
+					inventoryItems[invItem] = j15 & 0x7fff;
 
 					wearing[invItem] = j15 / 32768;
 					if (EntityHandler.getItemDef(j15 & 0x7fff).isStackable()
 							|| EntityHandler.getItemDef(j15 & 0x7fff).isNote()) {
 						inventoryItemsCount[invItem] = DataOperations.getUnsigned8Bytes(data, invOffset);
 						invOffset += 8;
-					} else {
+					} else
 						inventoryItemsCount[invItem] = 1;
-					}
 				}
-			} else if (command == 129) {
+			} else if (command == 129)
 				combatStyle = DataOperations.getUnsignedByte(data[1]);
-			} else if (command == 95) {
+			else if (command == 95)
 				hwop.update(command, length, data);
-			} else if (command == 77) {
+			else if (command == 77)
 				hnpu.update(command, length, data);
-			} else if (command == 190) {
+			else if (command == 190)
 				hnu.update(data);
-			} else if (command == 223) {
+			else if (command == 223) {
 				showQuestionMenu = true;
 				int newQuestionMenuCount = DataOperations.getUnsignedByte(data[1]);
 				questionMenuCount = newQuestionMenuCount;
@@ -8187,39 +8048,37 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					questionMenuAnswer[l16] = new String(data, newQuestionMenuOffset, newQuestionMenuQuestionLength);
 					newQuestionMenuOffset += newQuestionMenuQuestionLength;
 				}
-			} else if (command == 224) {
+			} else if (command == 224)
 				addNewServerNotification(new String(data, 1, length - 1));
-			} else if (command == 226) { // Server configuration variables
-                int i       = 1;
-				int number  = DataOperations.getUnsigned4Bytes(data, i);
-                
-                if(number >= 1) {
-                    i           += 4;
-                    HashMap<String, String> newConfig = new HashMap();
+			else if (command == 226) { // Server configuration variables
+				int i = 1;
+				int number = DataOperations.getUnsigned4Bytes(data, i);
 
-                    for(int j = 0; j < number; j++)
-                    {
-                        int keyLen      = DataOperations.getUnsigned4Bytes(data, i);
-                        i               += 4;
-                        String confKey  = new String(data, i, keyLen);
-                        i               += keyLen;
-                        int valueLen    = DataOperations.getUnsigned4Bytes(data, i);
-                        i               += 4;
-                        String value    = new String(data, i, valueLen);
-                        i               += valueLen;
-                        newConfig.put(confKey, value);
-                    }
-                    
-                    Config.updateConfiguration(newConfig);
-                }
-			} else if (command == 221) {
-				addDMMessage(new String(data, 1, length - 1));
-			} else if (command == 127) {
-				showQuestionMenu = false;
-			} else if (command == 131) {
-				for (int i = 0; i < 3; ++i) {
-					tierChangeFlags[i] = true;
+				if (number >= 1) {
+					i += 4;
+					HashMap<String, String> newConfig = new HashMap();
+
+					for (int j = 0; j < number; j++) {
+						int keyLen = DataOperations.getUnsigned4Bytes(data, i);
+						i += 4;
+						String confKey = new String(data, i, keyLen);
+						i += keyLen;
+						int valueLen = DataOperations.getUnsigned4Bytes(data, i);
+						i += 4;
+						String value = new String(data, i, valueLen);
+						i += valueLen;
+						newConfig.put(confKey, value);
+					}
+
+					Config.updateConfiguration(newConfig);
 				}
+			} else if (command == 221)
+				addDMMessage(new String(data, 1, length - 1));
+			else if (command == 127)
+				showQuestionMenu = false;
+			else if (command == 131) {
+				for (int i = 0; i < 3; ++i)
+					tierChangeFlags[i] = true;
 				notInWilderness = true;
 				hasWorldInfo = true;
 				serverIndex = DataOperations.getUnsigned2Bytes(data, 1);
@@ -8230,12 +8089,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				wildY -= wildYSubtract * wildYMultiplier;
 			} else if (command == 180) {
 				int l2 = 1;
-				for (int k10 = 0; k10 < 19; k10++) {
+				for (int k10 = 0; k10 < 19; k10++)
 					playerStatCurrent[k10] = DataOperations.getUnsignedByte(data[l2++]);
-				}
-				for (int i17 = 0; i17 < 19; i17++) {
+				for (int i17 = 0; i17 < 19; i17++)
 					playerStatBase[i17] = DataOperations.getUnsignedByte(data[l2++]);
-				}
 				for (int k21 = 0; k21 < 19; k21++) {
 					playerStatExperience[k21] = DataOperations.readInt(data, l2);
 					l2 += 4;
@@ -8247,11 +8104,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					equipmentStatus[x] = DataOperations.getSigned2Bytes(data, i3);
 					i3 += 2;
 				}
-			} else if (command == 165) {
+			} else if (command == 165)
 				playerAliveTimeout = 250;
-			} else if (command == 207) {
+			else if (command == 207)
 				showCharacterLookScreen = true;
-			} else if (command == 4) {
+			else if (command == 4) {
 				int currentMob = DataOperations.getUnsigned2Bytes(data, 1);
 				if (mobArray[currentMob] != null)
 					tradeOtherPlayerName = mobArray[currentMob].name;
@@ -8274,9 +8131,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				}
 				tradeOtherAccepted = false;
 				tradeWeAccepted = false;
-			} else if (command == 92) {
+			} else if (command == 92)
 				tradeOtherAccepted = data[1] == 1;
-			} else if (command == 253) { // Show Shop
+			else if (command == 253) { // Show Shop
 				showShop = true;
 				int readIndex = 1;
 				int j11 = data[readIndex++] & 0xff;
@@ -8315,10 +8172,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						}
 					}
 
-				} else if (byte4 == 2) // special hack for token shop
-				{
+				} else if (byte4 == 2)
 					showTokenShop = true;
-				}
 				if (selectedShopItemIndex >= 0 && selectedShopItemIndex < 40
 						&& shopItems[selectedShopItemIndex] != selectedShopItemType) {
 					selectedShopItemIndex = -1;
@@ -8327,9 +8182,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			} else if (command == 220) {
 				showShop = false;
 				showTokenShop = false;
-			} else if (command == 18) {
+			} else if (command == 18)
 				tradeWeAccepted = data[1] == 1;
-			} else if (command == 209) {
+			else if (command == 209)
 				for (int currentPrayer = 0; currentPrayer < length - 1; currentPrayer++) {
 					boolean prayerOff = data[currentPrayer + 1] == 1;
 					if (!prayerOn[currentPrayer] && prayerOff)
@@ -8338,7 +8193,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						playSound("prayeroff", false);
 					prayerOn[currentPrayer] = prayerOff;
 				}
-			} else if (command == 93) {
+			else if (command == 93) {
 				showBank = true;
 				int l4 = 1;
 				newBankItemCount = data[l4++] & 0xff;
@@ -8350,20 +8205,18 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					l4 += 8;
 				}
 				updateBankItems();
-			} else if (command == 171) {
+			} else if (command == 171)
 				showBank = false;
-			} else if (command == 211) {
+			else if (command == 211) {
 				int idx = data[1] & 0xFF;
 				int oldExp = playerStatExperience[idx];
 				playerStatExperience[idx] = DataOperations.readInt(data, 2);
-				if (playerStatExperience[idx] > oldExp) {
-					expGained += (playerStatExperience[idx] - oldExp);
-				}
+				if (playerStatExperience[idx] > oldExp)
+					expGained += playerStatExperience[idx] - oldExp;
 			} else if (command == 229) {
 				int j5 = DataOperations.getUnsigned2Bytes(data, 1);
-				if (mobArray[j5] != null) {
+				if (mobArray[j5] != null)
 					duelOpponentName = mobArray[j5].name;
-				}
 				displayMessage("@red@Switching amulets will be disabled as soon as the duel commences", 3, -1);
 				showDuelWindow = true;
 				duelMyItemCount = 0;
@@ -8491,14 +8344,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				playerStatExperience[idx] = DataOperations.readInt(data, pointer);
 				pointer += 4;
 
-				if (playerStatExperience[idx] > oldExp) {
-					expGained += (playerStatExperience[idx] - oldExp);
-				}
-			} else if (command == 65) {
+				if (playerStatExperience[idx] > oldExp)
+					expGained += playerStatExperience[idx] - oldExp;
+			} else if (command == 65)
 				duelOpponentAccepted = data[1] == 1;
-			} else if (command == 197) {
+			else if (command == 197)
 				duelMyAccepted = data[1] == 1;
-			} else if (command == 147) {
+			else if (command == 147) {
 				showDuelConfirmWindow = true;
 				duelWeAccept = false;
 				showDuelWindow = false;
@@ -8525,11 +8377,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				duelUseMagic = data[i7++] & 0xff;
 				duelUsePrayer = data[i7++] & 0xff;
 				duelUseWeapons = data[i7++] & 0xff;
-			} else if (command == 103) {
+			} else if (command == 103)
 				DMOpponentAccepted = data[1] == 1;
-			} else if (command == 104) {
+			else if (command == 104)
 				DMMyAccepted = data[1] == 1;
-			} else if (command == 105) {
+			else if (command == 105) {
 				showDMConfirmWindow = true;
 				DMWeAccept = false;
 				showDMWindow = false;
@@ -8653,13 +8505,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				serverMessageMenu.clearList(serverMessageMenuHandle);
 				String rawStr = new String(data, 1, length - 1);
 				String[] lines = rawStr.split("\n");
-				for (String s : lines) {
+				for (String s : lines)
 					serverMessageMenu.addString(serverMessageMenuHandle, s, true);
-				}
 				showScrollableServerMessageBox = true;
-			} else if (command == 126) {
+			} else if (command == 126)
 				fatigue = DataOperations.readInt(data, 1);
-			} else if (command == 202)
+			else if (command == 202)
 				playersOnline = DataOperations.getUnsigned2Bytes(data, 1);
 			else if (command == 203)
 				ownerID = DataOperations.getUnsigned4Bytes(data, 1);
@@ -8673,7 +8524,8 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					BufferedImage newImage = ImageIO.read(new ByteArrayInputStream(newData));
 					sleepy = newImage;
 					sleepSprite = Sprite.fromImage(sleepy);
-				} catch(Exception ex) {}
+				} catch (Exception ex) {
+				}
 				sleeping = true;
 				kfr = null;
 			} else if (command == 39) {
@@ -8693,10 +8545,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				wildernessUpdate = DataOperations.getUnsigned2Bytes(data, 2) * 32;
 			} else if (command == 152) {
 				byte settings = (byte) DataOperations.getUnsignedByte(data[1]);
-				cameraRotate = ((settings & 1) == 0) ? false : true;
-				configMouseButtons = ((settings & 2) == 0) ? true : false;
-				configSoundEffects = ((settings & 4) == 0) ? true : false;
-				hideCeilings = ((settings & 8) == 0) ? true : false;
+				cameraRotate = (settings & 1) == 0 ? false : true;
+				configMouseButtons = (settings & 2) == 0 ? true : false;
+				configSoundEffects = (settings & 4) == 0 ? true : false;
+				hideCeilings = (settings & 8) == 0 ? true : false;
 				fightmode = (settings & 32) == 0 ? 2 : 1;
 				if ((settings & 64) != 0)
 					fightmode = 0;
@@ -8738,25 +8590,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 						// npcs.get(index).setMessage(message);
 
 						// if it's to me
-						if ((val & 0x10) != 0) {
+						if ((val & 0x10) != 0)
 							// put in quest history
 							displayQuestMessage(
 									"@yel@" + EntityHandler.getNpcDef(this.npcRecordArray[index].type).getName() + ": "
 											+ message);
-						}
 					}
-				}
-				// if player is speaking
-				else {
-					if (this.mobArray[index] != null) {
-						// message above head
-						this.mobArray[index].lastMessage = message;
-						this.mobArray[index].lastMessageTimeout = 150;
-						// if it's to me
-						if ((val & 0x10) != 0) {
-							displayQuestMessage("@whi@" + this.mobArray[index].name + ": " + message);
-						}
-					}
+				} else if (this.mobArray[index] != null) {
+					// message above head
+					this.mobArray[index].lastMessage = message;
+					this.mobArray[index].lastMessageTimeout = 150;
+					// if it's to me
+					if ((val & 0x10) != 0)
+						displayQuestMessage("@whi@" + this.mobArray[index].name + ": " + message);
 				}
 			}
 		} catch (RuntimeException runtimeexception) {
@@ -8785,25 +8631,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void playSound(final String s, final boolean mp3) {
-		if (configSoundEffects) {
+		if (configSoundEffects)
 			return;
-		}
 		Media sound = soundCache.get(s + ".mp3");
-		if (sound == null) {
+		if (sound == null)
 			return;
-		}
 		try {
 			MediaPlayer mp = new MediaPlayer(sound);
 			mp.setOnReady(() -> {
 				mp.play();
 				mp.setOnEndOfMedia(() -> {
 					mp.dispose();
-	            });
-		    });
-        }
-		catch (Exception ex) {
-            ex.printStackTrace();
-        }
+				});
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public final boolean sendWalkCommand(Pair<Integer, Integer> sect, int x1, int y1, int x2, int y2,
@@ -8904,11 +8747,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		drawText("There is NO WAY to reverse a trade if you change your mind.", byte0 + 234, byte1 + 215, 1, 0xffffff);
 		drawText("Remember that not all players are trustworthy", byte0 + 234, byte1 + 230, 1, 0xffffff);
 		if (!tradeConfirmAccepted) {
-			gameGraphics.drawPicture((byte0 + 118) - 35, byte1 + 238, SPRITE_MEDIA_START + 25);
-			gameGraphics.drawPicture((byte0 + 352) - 35, byte1 + 238, SPRITE_MEDIA_START + 26);
-		} else {
+			gameGraphics.drawPicture(byte0 + 118 - 35, byte1 + 238, SPRITE_MEDIA_START + 25);
+			gameGraphics.drawPicture(byte0 + 352 - 35, byte1 + 238, SPRITE_MEDIA_START + 26);
+		} else
 			drawText("Waiting for other player...", byte0 + 234, byte1 + 250, 1, 0xffff00);
-		}
 		if (mouseButtonClick == 1) {
 			if (super.mouseX < byte0 || super.mouseY < byte1 || super.mouseX > byte0 + 468
 					|| super.mouseY > byte1 + 262) {
@@ -8916,13 +8758,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				super.streamClass.createPacket(41);
 				super.streamClass.formatPacket();
 			}
-			if (super.mouseX >= (byte0 + 118) - 35 && super.mouseX <= byte0 + 118 + 70 && super.mouseY >= byte1 + 238
+			if (super.mouseX >= byte0 + 118 - 35 && super.mouseX <= byte0 + 118 + 70 && super.mouseY >= byte1 + 238
 					&& super.mouseY <= byte1 + 238 + 21) {
 				tradeConfirmAccepted = true;
 				super.streamClass.createPacket(40);
 				super.streamClass.formatPacket();
 			}
-			if (super.mouseX >= (byte0 + 352) - 35 && super.mouseX <= byte0 + 353 + 70 && super.mouseY >= byte1 + 238
+			if (super.mouseX >= byte0 + 352 - 35 && super.mouseX <= byte0 + 353 + 70 && super.mouseY >= byte1 + 238
 					&& super.mouseY <= byte1 + 238 + 21) {
 				showTradeConfirmWindow = false;
 				super.streamClass.createPacket(41);
@@ -8935,9 +8777,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void walkToGroundItem(int walkSectionX, int walkSectionY, int x, int y, boolean coordsEqual) {
 		try {
 			if (sendWalkCommandIgnoreCoordsEqual(new Pair<Integer, Integer>(walkSectionX, walkSectionY), x, y, x, y,
-					false, coordsEqual)) {
+					false, coordsEqual))
 				return;
-			} else {
+			else {
 				sendWalkCommand(new Pair<Integer, Integer>(walkSectionX, walkSectionY), x, y, x, y, true, coordsEqual);
 				return;
 			}
@@ -9007,28 +8849,27 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					int j = super.mouseY - (gameHeight / 2 - 139);
 					if (i >= 0 && j >= 0 && i < 468 && j < 262) {
 						if (i > 216 && j > 30 && i < 462 && j < 235) {
-							int k = (i - 217) / 49 + ((j - 31) / 34) * 5;
+							int k = (i - 217) / 49 + (j - 31) / 34 * 5;
 							if (k >= 0 && k < inventoryCount) {
 								boolean flag1 = false;
 								int l1 = 0;
 								int k2 = inventoryItems[k];
 								if (!EntityHandler.getItemDef(k2).tradable) {
-									if (!qItem) {
+									if (!qItem)
 										displayMessage("This object cannot be added to a duel offer", 3, -1);
-									}
 									qItem = true;
 								}
 								if (!qItem)
 									if (mouseButtonClick != 2 && !tester && mouseButtonClick != 4) {
 										for (int k3 = 0; k3 < duelMyItemCount; k3++)
 											if (duelMyItems[k3] == k2)
-												if (EntityHandler.getItemDef(k2).isStackable()) {
+												if (EntityHandler.getItemDef(k2).isStackable())
 													for (int i4 = 0; i4 < itemIncrement; i4++) {
 														if (duelMyItemsCount[k3] < inventoryItemsCount[k])
 															duelMyItemsCount[k3]++;
 														flag1 = true;
 													}
-												} else
+												else
 													l1++;
 										if (!qItem)
 											if (inventoryCount(k2) <= l1)
@@ -9056,7 +8897,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 											duelOpponentAccepted = false;
 											duelMyAccepted = false;
 										}
-									} else if (mouseButtonClick == 2) {
+									} else if (mouseButtonClick == 2)
 										if (tester) {
 											tradeWindowX = -100;
 											tradeWindowY = -100;
@@ -9121,12 +8962,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 											menuLength++;
 											tester = true;
 										}
-									}
 							}
 						}
 						if (!qItem)
 							if (i > 8 && j > 30 && i < 205 && j < 129) {
-								int l = (i - 9) / 49 + ((j - 31) / 34) * 4;
+								int l = (i - 9) / 49 + (j - 31) / 34 * 4;
 								if (l >= 0 && l < duelMyItemCount) {
 									int j1 = duelMyItems[l];
 									if (mouseButtonClick != 2 && !tester) {
@@ -9157,7 +8997,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 											duelMyAccepted = false;
 										}
 									}
-									if (mouseButtonClick == 2) {
+									if (mouseButtonClick == 2)
 										if (tester) {
 											tradeWindowX = -100;
 											tradeWindowY = -100;
@@ -9168,9 +9008,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 											tradeWindowX = super.mouseX;
 											tradeWindowY = super.mouseY;
 											/**
-											 * We must clear the current entrys
-											 * or we will be spammed :( < Mr sad
-											 * face
+											 * We must clear the current entrys or we will be spammed :( < Mr sad face
 											 */
 											for (int jx = 0; jx < menuLength; jx++) {
 												menuText1[jx] = null;
@@ -9227,7 +9065,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 											menuLength++;
 											tester = true;
 										}
-									}
 								}
 							}
 						boolean flag = false;
@@ -9278,7 +9115,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							int k = tradeWindowX + 2;
 							int i1 = tradeWindowY + 11 + (ix + 1) * 15;
 							if (super.mouseX <= k - 2 || super.mouseY <= i1 - 12 || super.mouseY >= i1 + 4
-									|| super.mouseX >= (k - 3) + menuWidth)
+									|| super.mouseX >= k - 3 + menuWidth)
 								continue;
 							menuClick(ix);
 						}
@@ -9365,10 +9202,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			drawText("other player", byte0 + 217 + 35, byte1 + 256, 1, 0xffffff);
 		}
 		for (int l4 = 0; l4 < inventoryCount; l4++) {
-			int i5 = 217 + byte0 + (l4 % 5) * 49;
-			int k5 = 31 + byte1 + (l4 / 5) * 34;
+			int i5 = 217 + byte0 + l4 % 5 * 49;
+			int k5 = 31 + byte1 + l4 / 5 * 34;
 			ItemDef item = EntityHandler.getItemDef(inventoryItems[l4]);
-			if (item != null) {
+			if (item != null)
 				if (item.isNote()) {
 					gameGraphics.spriteClip4(i5 - 3, k5 - 3, 50, 32, 2029, 0, 0, 0, false);
 					gameGraphics.spriteClip4(i5 + 10, k5 + 6, 30, 18, SPRITE_ITEM_START + item.getSprite(),
@@ -9381,11 +9218,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 					drawString(formatItemAmount(inventoryItemsCount[l4]), i5 + 1, k5 + 10, 1,
 							formatItemColor(inventoryItemsCount[l4]));
-				} else {
+				} else
 					gameGraphics.spriteClip4(i5, k5, 48, 32, SPRITE_ITEM_START + item.getSprite(),
 							item.getPictureMask(), 0, 0, false);
-				}
-			}
 
 			// gameGraphics.spriteClip4(i5, k5, 48, 32, SPRITE_ITEM_START +
 			// EntityHandler.getItemDef(inventoryItems[l4]).getSprite(),
@@ -9397,10 +9232,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		}
 
 		for (int j5 = 0; j5 < duelMyItemCount; j5++) {
-			int l5 = 9 + byte0 + (j5 % 4) * 49;
-			int j6 = 31 + byte1 + (j5 / 4) * 34;
+			int l5 = 9 + byte0 + j5 % 4 * 49;
+			int j6 = 31 + byte1 + j5 / 4 * 34;
 			ItemDef item = EntityHandler.getItemDef(duelMyItems[j5]);
-			if (item != null) {
+			if (item != null)
 				if (item.isNote()) {
 					gameGraphics.spriteClip4(l5 - 3, j6 - 3, 50, 32, 2029, 0, 0, 0, false);
 					gameGraphics.spriteClip4(l5 + 10, j6 + 6, 30, 18, SPRITE_ITEM_START + item.getSprite(),
@@ -9412,11 +9247,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 							item.getPictureMask(), 0, 0, false);
 					drawString(formatItemAmount(duelMyItemsCount[j5]), l5 + 1, j6 + 10, 1,
 							formatItemColor(duelMyItemsCount[j5]));
-				} else {
+				} else
 					gameGraphics.spriteClip4(l5, j6, 48, 32, SPRITE_ITEM_START + item.getSprite(),
 							item.getPictureMask(), 0, 0, false);
-				}
-			}
 			// gameGraphics.spriteClip4(l5, j6, 48, 32, SPRITE_ITEM_START +
 			// EntityHandler.getItemDef(duelMyItems[j5]).getSprite(),
 			// EntityHandler.getItemDef(duelMyItems[j5]).getPictureMask(), 0, 0,
@@ -9425,19 +9258,19 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			// drawString(formatItemAmount(duelMyItemsCount[j5]), l5 + 1, j6 +
 			// 10, 1, formatItemColor(duelMyItemsCount[j5]));
 			if (super.mouseX > l5 && super.mouseX < l5 + 48 && super.mouseY > j6 && super.mouseY < j6 + 32)
-				drawString(
-						EntityHandler.getItemDef(duelMyItems[j5]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(duelMyItems[j5]).getDescription()
-								+ (duelMyItemsCount[j5] >= 100000
-										? " (" + insertCommas(String.valueOf(duelMyItemsCount[j5])) + ")" : ""),
+				drawString(EntityHandler.getItemDef(duelMyItems[j5]).getName() + ": @whi@"
+						+ EntityHandler.getItemDef(duelMyItems[j5]).getDescription()
+						+ (duelMyItemsCount[j5] >= 100000
+								? " (" + insertCommas(String.valueOf(duelMyItemsCount[j5])) + ")"
+								: ""),
 						byte0 + 8, byte1 + 273, 1, 0xffff00);
 		}
 
 		for (int i6 = 0; i6 < duelOpponentItemCount; i6++) {
-			int i5 = 9 + byte0 + (i6 % 4) * 49;
-			int k5 = 124 + byte1 + (i6 / 4) * 34;
+			int i5 = 9 + byte0 + i6 % 4 * 49;
+			int k5 = 124 + byte1 + i6 / 4 * 34;
 			ItemDef item = EntityHandler.getItemDef(duelOpponentItems[i6]);
-			if (item != null) {
+			if (item != null)
 				if (item.isNote()) {
 					gameGraphics.spriteClip4(i5 - 3, k5 - 3, 50, 32, 2029, 0, 0, 0, false);
 					gameGraphics.spriteClip4(i5 + 10, k5 + 6, 30, 18, SPRITE_ITEM_START + item.getSprite(),
@@ -9450,11 +9283,9 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 
 					drawString(formatItemAmount(duelOpponentItemsCount[i6]), i5 + 1, k5 + 10, 1,
 							formatItemColor(duelOpponentItemsCount[i6]));
-				} else {
+				} else
 					gameGraphics.spriteClip4(i5, k5, 48, 32, SPRITE_ITEM_START + item.getSprite(),
 							item.getPictureMask(), 0, 0, false);
-				}
-			}
 			// gameGraphics.spriteClip4(k6, l6, 48, 32, SPRITE_ITEM_START +
 			// EntityHandler.getItemDef(duelOpponentItems[i6]).getSprite(),
 			// EntityHandler.getItemDef(duelOpponentItems[i6]).getPictureMask(),
@@ -9464,11 +9295,11 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			// drawString(formatItemAmount(duelOpponentItemsCount[i6]), k6 + 1,
 			// l6 + 10, 1, formatItemColor(duelOpponentItemsCount[i6]));
 			if (super.mouseX > i5 && super.mouseX < i5 + 48 && super.mouseY > k5 && super.mouseY < k5 + 32)
-				drawString(
-						EntityHandler.getItemDef(duelOpponentItems[i6]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(duelOpponentItems[i6]).getDescription()
-								+ (duelOpponentItemsCount[i6] >= 100000
-										? " (" + insertCommas(String.valueOf(duelOpponentItemsCount[i6])) + ")" : ""),
+				drawString(EntityHandler.getItemDef(duelOpponentItems[i6]).getName() + ": @whi@"
+						+ EntityHandler.getItemDef(duelOpponentItems[i6]).getDescription()
+						+ (duelOpponentItemsCount[i6] >= 100000
+								? " (" + insertCommas(String.valueOf(duelOpponentItemsCount[i6])) + ")"
+								: ""),
 						byte0 + 8, byte1 + 273, 1, 0xffff00);
 		}
 
@@ -9589,11 +9420,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		// !notification.contains("Shin"))
 		// return;
 		/*
-		 * for(int index = 9; index > 0; index--) {
-		 * if(notificationsTimeout[index] > 0) break; notifications[index] =
-		 * notifications[index - 1]; notificationsTimeout[index] =
-		 * notificationsTimeout[index - 1]; } notifications[0] = notification;
-		 * notificationsTimeout[0] = 500;
+		 * for(int index = 9; index > 0; index--) { if(notificationsTimeout[index] > 0)
+		 * break; notifications[index] = notifications[index - 1];
+		 * notificationsTimeout[index] = notificationsTimeout[index - 1]; }
+		 * notifications[0] = notification; notificationsTimeout[0] = 500;
 		 */
 		notificationEvents.add(new NotificationEvent(notification, 500));
 	}
@@ -9604,11 +9434,10 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			if (e == null)
 				break;
 			if (e.timeout > 0) {
-				gameGraphics.drawBoxAlpha(0, 30 + ((i - 1) * 20), gameWidth, 19, 7, 60);
-				gameGraphics.drawCenteredString(e.msg, gameWidth / 2, 24 + (i * 20), 1, 0xffffff);
-				if (--e.timeout == 0) {
+				gameGraphics.drawBoxAlpha(0, 30 + (i - 1) * 20, gameWidth, 19, 7, 60);
+				gameGraphics.drawCenteredString(e.msg, gameWidth / 2, 24 + i * 20, 1, 0xffffff);
+				if (--e.timeout == 0)
 					notificationEvents.remove(i);
-				}
 			}
 		}
 	}
@@ -9643,23 +9472,23 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			c1 = '\u01C2'; // HEIGHT
 			c1 = '\u012C';
 		}
-		gameGraphics.drawBox((gameWidth / 2 - c / 2), (gameHeight / 2 - c1 / 2), c, c1, 0); // added
-																							// times
-																							// 2
-		gameGraphics.drawBoxEdge((gameWidth / 2 - c / 2), (gameHeight / 2 - c1 / 2), c, c1, 0xffffff); //
-		gameGraphics.drawBoxTextColour(serverMessage, (gameWidth / 2), (gameHeight / 2 - c1 / 2) + 20, 1, 0xffffff,
-				c - 40); // was -40
+		gameGraphics.drawBox(gameWidth / 2 - c / 2, gameHeight / 2 - c1 / 2, c, c1, 0); // added
+																						// times
+																						// 2
+		gameGraphics.drawBoxEdge(gameWidth / 2 - c / 2, gameHeight / 2 - c1 / 2, c, c1, 0xffffff); //
+		gameGraphics.drawBoxTextColour(serverMessage, gameWidth / 2, gameHeight / 2 - c1 / 2 + 20, 1, 0xffffff, c - 40); // was
+																															// -40
 		int j = 0xffffff;
-		if (super.mouseY > (gameHeight / 2 + c1 / 2 - 15) && super.mouseY <= (gameHeight / 2 + c1 / 2 - 4)
+		if (super.mouseY > gameHeight / 2 + c1 / 2 - 15 && super.mouseY <= gameHeight / 2 + c1 / 2 - 4
 				&& super.mouseX > gameWidth / 2 - 75 && super.mouseX < gameWidth / 2 + 75) // SRCH4:
 																							// CHG11
 			j = 0xff0000;
-		drawText("Click here to close window", gameWidth / 2, (gameHeight / 2 + c1 / 2 - 7), 1, j);
+		drawText("Click here to close window", gameWidth / 2, gameHeight / 2 + c1 / 2 - 7, 1, j);
 		if (mouseButtonClick == 1) {
 			if (j == 0xff0000)
 				showServerMessageBox = false;
-			if ((super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200)
-					|| (super.mouseY < gameHeight / 2 - 150 || super.mouseY > gameHeight / 2 + 150))
+			if (super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200
+					|| super.mouseY < gameHeight / 2 - 150 || super.mouseY > gameHeight / 2 + 150)
 				showServerMessageBox = false;
 		}
 		mouseButtonClick = 0;
@@ -9671,24 +9500,24 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		char c = '\u0190'; // WIDTH
 		char c1 = '\u012C'; // HEIGHT
 
-		gameGraphics.drawBox((gameWidth / 2 - c / 2), (gameHeight / 2 - c1 / 2), c, c1, 0); // added
-																							// times
-																							// 2
-		gameGraphics.drawBoxEdge((gameWidth / 2 - c / 2), (gameHeight / 2 - c1 / 2), c, c1, 0xffffff); //
+		gameGraphics.drawBox(gameWidth / 2 - c / 2, gameHeight / 2 - c1 / 2, c, c1, 0); // added
+																						// times
+																						// 2
+		gameGraphics.drawBoxEdge(gameWidth / 2 - c / 2, gameHeight / 2 - c1 / 2, c, c1, 0xffffff); //
 
 		serverMessageMenu.drawMenu();
 
 		int j = 0xffffff;
-		if (super.mouseY > (gameHeight / 2 + c1 / 2 - 15) && super.mouseY <= (gameHeight / 2 + c1 / 2 - 4)
+		if (super.mouseY > gameHeight / 2 + c1 / 2 - 15 && super.mouseY <= gameHeight / 2 + c1 / 2 - 4
 				&& super.mouseX > gameWidth / 2 - 75 && super.mouseX < gameWidth / 2 + 75) // SRCH4:
 																							// CHG11
 			j = 0xff0000;
-		drawText("Click here to close window", gameWidth / 2, (gameHeight / 2 + c1 / 2 - 7), 1, j);
+		drawText("Click here to close window", gameWidth / 2, gameHeight / 2 + c1 / 2 - 7, 1, j);
 		if (mouseButtonClick == 1) {
 			if (j == 0xff0000)
 				showScrollableServerMessageBox = false;
-			if ((super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200)
-					|| (super.mouseY < gameHeight / 2 - 150 || super.mouseY > gameHeight / 2 + 150))
+			if (super.mouseX < gameWidth / 2 - 200 || super.mouseX > gameWidth / 2 + 200
+					|| super.mouseY < gameHeight / 2 - 150 || super.mouseY > gameHeight / 2 + 150)
 				showScrollableServerMessageBox = false;
 		}
 		mouseButtonClick = 0;
@@ -9700,7 +9529,15 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public final void makeLoginMenus() {
 		menuWelcome = new Menu(gameGraphics, 50);
 		int i = 48;
-		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to Open RSC", 4, true); // Purposely hard-coded as client doesn't recieve server_name until after login
+		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 25 + i, "Welcome to Open RSC", 4, true); // Purposely
+																											// hard-coded
+																											// as client
+																											// doesn't
+																											// recieve
+																											// server_name
+																											// until
+																											// after
+																											// login
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 40 + i, "A RuneScape Classic Private Server", 4, true);
 		menuWelcome.drawBox(windowWidth / 2, windowHeight / 2 + 75 + i, 200, 35);
 		menuWelcome.drawText(windowWidth / 2, windowHeight / 2 + 75 + i, "Click here to login", 5, false);
@@ -9742,7 +9579,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final void drawGameWindowsMenus() {
-		for (GraphicalOverlay overlay : GameUIs.overlays) {
+		for (GraphicalOverlay overlay : GameUIs.overlays)
 			if (overlay.isVisible()) {
 				overlay.onRender();
 				// if(rightClickOptions)
@@ -9758,7 +9595,6 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					return;
 				}
 			}
-		}
 		if (!showTradeWindow && (inputBoxType == 6 || inputBoxType == 7))
 			inputBoxType = 0;
 		if (!showBank && (inputBoxType == 4 || inputBoxType == 5))
@@ -9821,7 +9657,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		else {
 			if (showQuestionMenu)
 				drawQuestionMenu();
-			if (((ourPlayer.currentSprite == 8 || ourPlayer.currentSprite == 9) || fightmode == 0) && fightmode != 2)
+			if ((ourPlayer.currentSprite == 8 || ourPlayer.currentSprite == 9 || fightmode == 0) && fightmode != 2)
 				drawCombatStyleWindow();
 			checkMouseOverMenus();
 			boolean noMenusShown = !showQuestionMenu && !showRightClickMenu;
@@ -9883,7 +9719,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				}
 
 			}
-			menuHeight = (int) ((menuLength + 1) * 15);
+			menuHeight = (menuLength + 1) * 15;
 			menuWidth = Raster.textWidth("Choose option", 1) + 5;
 //			drawString("Choose option", menuX + 2, menuY + 12, 1, 65535);
 
@@ -9914,7 +9750,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 				int j1 = tradeWindowY + 11 + (j + 1) * 15;
 				int k1 = 0xffffff;
 				if (super.mouseX > l - 2 && super.mouseY > j1 - 12 && super.mouseY < j1 + 4
-						&& super.mouseX < (l - 3) + menuWidth)
+						&& super.mouseX < l - 3 + menuWidth)
 					k1 = 0xffff00;
 				drawString(menuText1[menuIndexes[j]] + " " + menuText2[menuIndexes[j]], l, j1, 1, k1);
 			}
@@ -10444,18 +10280,14 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	}
 
 	public final boolean hasRequiredRunes(int i, int j) {
-		if (i == 31 && (isWielding(197) || isWielding(615) || isWielding(682))) {
+		if (i == 31 && (isWielding(197) || isWielding(615) || isWielding(682)))
 			return true;
-		}
-		if (i == 32 && (isWielding(102) || isWielding(616) || isWielding(683))) {
+		if (i == 32 && (isWielding(102) || isWielding(616) || isWielding(683)))
 			return true;
-		}
-		if (i == 33 && (isWielding(101) || isWielding(617) || isWielding(684))) {
+		if (i == 33 && (isWielding(101) || isWielding(617) || isWielding(684)))
 			return true;
-		}
-		if (i == 34 && (isWielding(103) || isWielding(618) || isWielding(685))) {
+		if (i == 34 && (isWielding(103) || isWielding(618) || isWielding(685)))
 			return true;
-		}
 		return inventoryCount(i) >= j;
 	}
 
@@ -10508,13 +10340,13 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int l1 = anIntArray859[k];
 			int k2 = anIntArray705[k];
 			int j3 = anIntArray706[k];
-			int l3 = (39 * k2) / 100;
-			int j4 = (27 * k2) / 100;
+			int l3 = 39 * k2 / 100;
+			int j4 = 27 * k2 / 100;
 			int k4 = l1 - j4;
 			gameGraphics.spriteClip2(i1 - l3 / 2, k4, l3, j4, SPRITE_MEDIA_START + 9, 85);
-			int l4 = (36 * k2) / 100;
-			int i5 = (24 * k2) / 100;
-			gameGraphics.spriteClip4(i1 - l4 / 2, (k4 + j4 / 2) - i5 / 2, l4, i5,
+			int l4 = 36 * k2 / 100;
+			int i5 = 24 * k2 / 100;
+			gameGraphics.spriteClip4(i1 - l4 / 2, k4 + j4 / 2 - i5 / 2, l4, i5,
 					EntityHandler.getItemDef(j3).getSprite() + SPRITE_ITEM_START,
 					EntityHandler.getItemDef(j3).getPictureMask(), 0, 0, false);
 		}
@@ -10524,21 +10356,20 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 			int l2 = anIntArray787[j1];
 			int k3 = anIntArray788[j1];
 			drawBoxAlpha(i2 - 15, l2 - 3, k3, 5, 65280, 192);
-			drawBoxAlpha((i2 - 15) + k3, l2 - 3, 30 - k3, 5, 0xff0000, 192);
+			drawBoxAlpha(i2 - 15 + k3, l2 - 3, 30 - k3, 5, 0xff0000, 192);
 		}
 		/*
-		 * for (int index = 0; index < idleCount; index++) { int x =
-		 * idleX[index]; int y = idleY[index]; long afkTime = idleTime[index];
-		 * long seconds = (afkTime / 1000) % 60; long minutes = (afkTime / (1000
-		 * * 60)) % 60; gameGraphics.drawString("AFK", x - 12, y - 13, 1,
-		 * 0xFFFFFF); gameGraphics.drawString((minutes < 10 ? "0" + minutes :
-		 * minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds), x - 15, y,
-		 * 1, 0xFFFFFF); }
+		 * for (int index = 0; index < idleCount; index++) { int x = idleX[index]; int y
+		 * = idleY[index]; long afkTime = idleTime[index]; long seconds = (afkTime /
+		 * 1000) % 60; long minutes = (afkTime / (1000 * 60)) % 60;
+		 * gameGraphics.drawString("AFK", x - 12, y - 13, 1, 0xFFFFFF);
+		 * gameGraphics.drawString((minutes < 10 ? "0" + minutes : minutes) + ":" +
+		 * (seconds < 10 ? "0" + seconds : seconds), x - 15, y, 1, 0xFFFFFF); }
 		 */
 	}
 
 	public final void drawMapMenu(boolean flag) {
-		int i = ((Raster) (gameGraphics)).clipWidth - 199;
+		int i = ((Raster) gameGraphics).clipWidth - 199;
 		char c = '\234';
 		char c2 = '\230';
 		gameGraphics.drawPicture(i - 49, 3, SPRITE_MEDIA_START + 2);
@@ -10547,47 +10378,47 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.setDimensions(i, 36, i + c, 36 + c2);
 		int k = 192 + anInt986;
 		int i1 = cameraRotation + anInt985 & 0xff;
-		int k1 = ((ourPlayer.currentX - 6040) * 3 * k) / 2048;
-		int i3 = ((ourPlayer.currentY - 6040) * 3 * k) / 2048;
+		int k1 = (ourPlayer.currentX - 6040) * 3 * k / 2048;
+		int i3 = (ourPlayer.currentY - 6040) * 3 * k / 2048;
 		int k4 = Camera.anIntArray384[1024 - i1 * 4 & 0x3ff];
 		int i5 = Camera.anIntArray384[(1024 - i1 * 4 & 0x3ff) + 1024];
 		int k5 = i3 * k4 + k1 * i5 >> 18;
 		i3 = i3 * i5 - k1 * k4 >> 18;
 		k1 = k5;
-		gameGraphics.method242((i + c / 2) - k1, 36 + c2 / 2 + i3, SPRITE_MEDIA_START - 1, i1 + 64 & 0xff, k);
+		gameGraphics.method242(i + c / 2 - k1, 36 + c2 / 2 + i3, SPRITE_MEDIA_START - 1, i1 + 64 & 0xff, k);
 		for (int i7 = 0; i7 < objectCount; i7++) {
-			int l1 = (((objectX[i7] * 128 + 64) - ourPlayer.currentX) * 3 * k) / 2048;
-			int j3 = (((objectY[i7] * 128 + 64) - ourPlayer.currentY) * 3 * k) / 2048;
+			int l1 = (objectX[i7] * 128 + 64 - ourPlayer.currentX) * 3 * k / 2048;
+			int j3 = (objectY[i7] * 128 + 64 - ourPlayer.currentY) * 3 * k / 2048;
 			int l5 = j3 * k4 + l1 * i5 >> 18;
 			j3 = j3 * i5 - l1 * k4 >> 18;
 			l1 = l5;
-			setPixelsAndAroundColour(i + c / 2 + l1, (36 + c2 / 2) - j3, 65535);
+			setPixelsAndAroundColour(i + c / 2 + l1, 36 + c2 / 2 - j3, 65535);
 		}
 
 		for (int j7 = 0; j7 < groundItemCount; j7++) {
-			int i2 = (((groundItemX[j7] * 128 + 64) - ourPlayer.currentX) * 3 * k) / 2048;
-			int k3 = (((groundItemY[j7] * 128 + 64) - ourPlayer.currentY) * 3 * k) / 2048;
+			int i2 = (groundItemX[j7] * 128 + 64 - ourPlayer.currentX) * 3 * k / 2048;
+			int k3 = (groundItemY[j7] * 128 + 64 - ourPlayer.currentY) * 3 * k / 2048;
 			int i6 = k3 * k4 + i2 * i5 >> 18;
 			k3 = k3 * i5 - i2 * k4 >> 18;
 			i2 = i6;
-			setPixelsAndAroundColour(i + c / 2 + i2, (36 + c2 / 2) - k3, 0xff0000);
+			setPixelsAndAroundColour(i + c / 2 + i2, 36 + c2 / 2 - k3, 0xff0000);
 		}
 
 		for (int k7 = 0; k7 < npcCount; k7++) {
 			Mob mob = npcArray[k7];
-			int j2 = ((mob.currentX - ourPlayer.currentX) * 3 * k) / 2048;
-			int l3 = ((mob.currentY - ourPlayer.currentY) * 3 * k) / 2048;
+			int j2 = (mob.currentX - ourPlayer.currentX) * 3 * k / 2048;
+			int l3 = (mob.currentY - ourPlayer.currentY) * 3 * k / 2048;
 			int j6 = l3 * k4 + j2 * i5 >> 18;
 			l3 = l3 * i5 - j2 * k4 >> 18;
 			j2 = j6;
-			setPixelsAndAroundColour(i + c / 2 + j2, (36 + c2 / 2) - l3, 0xffff00);
+			setPixelsAndAroundColour(i + c / 2 + j2, 36 + c2 / 2 - l3, 0xffff00);
 		}
 
 		for (int l7 = 0; l7 < playerCount; l7++) {
 			Mob mob_1 = playerArray[l7];
 			if (mob_1.level > 0) {
-				int k2 = ((mob_1.currentX - ourPlayer.currentX) * 3 * k) / 2048;
-				int i4 = ((mob_1.currentY - ourPlayer.currentY) * 3 * k) / 2048;
+				int k2 = (mob_1.currentX - ourPlayer.currentX) * 3 * k / 2048;
+				int i4 = (mob_1.currentY - ourPlayer.currentY) * 3 * k / 2048;
 				int k6 = i4 * k4 + k2 * i5 >> 18;
 				i4 = i4 * i5 - k2 * k4 >> 18;
 				k2 = k6;
@@ -10598,7 +10429,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 					color = 65280; // Green
 					break;
 				}
-				setPixelsAndAroundColour(i + c / 2 + k2, (36 + c2 / 2) - i4, color);
+				setPixelsAndAroundColour(i + c / 2 + k2, 36 + c2 / 2 - i4, color);
 			}
 		}
 
@@ -10607,17 +10438,17 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		gameGraphics.setDimensions(0, 0, windowWidth, windowHeight + 12);
 		if (!flag)
 			return;
-		i = super.mouseX - (((Raster) (gameGraphics)).clipWidth - 199);
+		i = super.mouseX - (((Raster) gameGraphics).clipWidth - 199);
 		int i8 = super.mouseY - 36;
 		if (i >= 40 && i8 >= 0 && i < 196 && i8 < 152) {
 			char c1 = '\234';
 			char c3 = '\230';
 			int l = 192 + anInt986;
 			int j1 = cameraRotation + anInt985 & 0xff;
-			int j = ((Raster) (gameGraphics)).clipWidth - 199;
+			int j = ((Raster) gameGraphics).clipWidth - 199;
 			j += 40;
-			int l2 = ((super.mouseX - (j + c1 / 2)) * 16384) / (3 * l);
-			int j4 = ((super.mouseY - (36 + c3 / 2)) * 16384) / (3 * l);
+			int l2 = (super.mouseX - (j + c1 / 2)) * 16384 / (3 * l);
+			int j4 = (super.mouseY - (36 + c3 / 2)) * 16384 / (3 * l);
 			int l4 = Camera.anIntArray384[1024 - j1 * 4 & 0x3ff];
 			int j5 = Camera.anIntArray384[(1024 - j1 * 4 & 0x3ff) + 1024];
 			int l6 = j4 * l4 + l2 * j5 >> 15;
@@ -10650,14 +10481,12 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		try {
 			File file = getEmptyFile();
 			ImageIO.write(getImage(), "png", file);
-			if (verbose) {
+			if (verbose)
 				handleServerMessage("Screenshot saved as " + file.getName() + ".");
-			}
 			return true;
 		} catch (IOException e) {
-			if (verbose) {
+			if (verbose)
 				handleServerMessage("Error saving screenshot.");
-			}
 			return false;
 		}
 	}
@@ -10772,6 +10601,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		menuActionType = new int[250];
 		menuActionVariable = new int[250];
 		menuActionVariable2 = new long[250];
+		menuActionVariable3 = new int[250];
 		shopItems = new int[256];
 		shopItemCount = new long[256];
 		anIntArray858 = new int[50];
@@ -10805,7 +10635,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 		tradeOtherItemsCount = new long[14];
 		menuIndexes = new int[250];
 		zoomCamera = false;
-        amountToZoom = 0;
+		amountToZoom = 0;
 		playerStatExperience = new int[19];
 		cameraAutoAngleDebug = false;
 		npcRecordArray = new Mob[40000];
@@ -11027,6 +10857,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int menuActionType[];
 	public int menuActionVariable[];
 	public long menuActionVariable2[];
+	public int menuActionVariable3[];
 	public int shopItems[];
 	public long shopItemCount[];
 	public int npcAnimationArray[][] = { { 11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4 },
@@ -11099,7 +10930,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public long tradeOtherItemsCount[];
 	public int menuIndexes[];
 	public boolean zoomCamera;
-    public int amountToZoom;
+	public int amountToZoom;
 	public int playerStatExperience[];
 	public boolean cameraAutoAngleDebug;
 	public Mob npcRecordArray[];
@@ -11173,22 +11004,22 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public int anInt986;
 	public BufferedImage sleepy;
 	public Sprite sleepSprite;
-	public String[] quests = { "@red@Black knight's fortress",
-			"@red@Cook's assistant", "@red@Demon slayer", "@red@Doric's quest", "@red@The restless ghost",
-			"@red@Goblin diplomacy", "@red@Ernest the chicken", "@red@Imp catcher", "@red@Pirate's treasure",
-			"@red@Prince Ali rescue", "@red@Romeo & Juliet", "@red@Sheep shearer", "@red@Shield of Arrav",
-			"@red@The knight's sword", "@red@Vampire slayer", "@red@Witch's potion", "@red@Dragon slayer",
-			"@red@Witch's house (members)", "@red@Lost city (members)", "@red@Hero's quest (members)",
-			"@red@Druidic ritual (members)", "@red@Merlin's crystal (members)", "@red@Scorpion catcher (members)",
-			"@red@Family crest (members)", "@red@Tribal totem (members)", "@red@Fishing contest (members)",
-			"@red@Monk's friend (members)", "@red@Temple of Ikov (members)", "@red@Clock tower (members)",
-			"@red@The Holy Grail (members)", "@red@Fight Arena (members)", "@red@Tree Gnome Village (members)",
-			"@red@The Hazeel Cult (members)", "@red@Sheep Herder (members)", "@red@Plague City (members)",
-			"@red@Sea Slug (members)", "@red@Waterfall quest (members)", "@red@Biohazard (members)",
-			"@red@Jungle potion (members)", "@red@Grand tree (members)", "@red@Shilo village (members)",
-			"@red@Underground pass (members)", "@red@Observatory quest (members)", "@red@Tourist trap (members)",
-			"@red@Watchtower (members)", "@red@Dwarf Cannon (members)", "@red@Murder Mystery (members)",
-			"@red@Digsite (members)", "@red@Gertrude's Cat (members)", "@red@Legend's Quest (members)" };
+	public String[] quests = { "@red@Black knight's fortress", "@red@Cook's assistant", "@red@Demon slayer",
+			"@red@Doric's quest", "@red@The restless ghost", "@red@Goblin diplomacy", "@red@Ernest the chicken",
+			"@red@Imp catcher", "@red@Pirate's treasure", "@red@Prince Ali rescue", "@red@Romeo & Juliet",
+			"@red@Sheep shearer", "@red@Shield of Arrav", "@red@The knight's sword", "@red@Vampire slayer",
+			"@red@Witch's potion", "@red@Dragon slayer", "@red@Witch's house (members)", "@red@Lost city (members)",
+			"@red@Hero's quest (members)", "@red@Druidic ritual (members)", "@red@Merlin's crystal (members)",
+			"@red@Scorpion catcher (members)", "@red@Family crest (members)", "@red@Tribal totem (members)",
+			"@red@Fishing contest (members)", "@red@Monk's friend (members)", "@red@Temple of Ikov (members)",
+			"@red@Clock tower (members)", "@red@The Holy Grail (members)", "@red@Fight Arena (members)",
+			"@red@Tree Gnome Village (members)", "@red@The Hazeel Cult (members)", "@red@Sheep Herder (members)",
+			"@red@Plague City (members)", "@red@Sea Slug (members)", "@red@Waterfall quest (members)",
+			"@red@Biohazard (members)", "@red@Jungle potion (members)", "@red@Grand tree (members)",
+			"@red@Shilo village (members)", "@red@Underground pass (members)", "@red@Observatory quest (members)",
+			"@red@Tourist trap (members)", "@red@Watchtower (members)", "@red@Dwarf Cannon (members)",
+			"@red@Murder Mystery (members)", "@red@Digsite (members)", "@red@Gertrude's Cat (members)",
+			"@red@Legend's Quest (members)" };
 	public long then;
 	public boolean sampler;
 	public int FPS = 0;
@@ -11200,7 +11031,7 @@ public final class mudclient<Delegate_T extends ImplementationDelegate> extends 
 	public ArrayList<String> messages = new ArrayList<String>();
 	public int currentChat = 0;
 	public long serverStartTime = 0;
-	//public int fatigueSleeping = 0;
+	// public int fatigueSleeping = 0;
 	public int fatigue;
 	public int playersOnline;
 	public int ownerID;
