@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `conf_npc` (
   `class_name` varchar(255) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=314 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=313 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `conf_npc`
@@ -4334,7 +4334,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Bronze Plate Mail Body', 'Provides excellent protection', '', 8, 160, 0, 0, 1, 16737817, 1, 0, 1, 117),
 ('Steel Plate Mail Body', 'Provides excellent protection', '', 8, 2000, 0, 0, 1, 15658734, 1, 0, 1, 118),
 ('Mithril Plate Mail Body', 'Provides excellent protection', '', 8, 5200, 0, 0, 1, 10072780, 1, 0, 1, 119),
-('Adamantite Plate Mail Body', 'Provides excellent protection', '', 8, 12800, 0, 0, 1, 11717785, 1, 0, 1, 120),
+('Adamantite Plate Mail Body', 'Provides excellent protection', '', 8, 16640, 0, 0, 1, 11717785, 1, 0, 1, 120),
 ('Steel Plate Mail Legs', 'These look pretty heavy', '', 9, 1000, 0, 0, 1, 15658734, 1, 0, 1, 121),
 ('Mithril Plate Mail Legs', 'These look pretty heavy', '', 9, 2600, 0, 0, 1, 10072780, 1, 0, 1, 122),
 ('Adamantite Plate Mail Legs', 'These look pretty heavy', '', 9, 6400, 0, 0, 1, 11717785, 1, 0, 1, 123),
@@ -4443,8 +4443,8 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Mithril Plated Skirt', 'Designer Leg protection', '', 88, 2600, 0, 0, 1, 2245205, 1, 0, 1, 226),
 ('Adamantite Plated Skirt', 'Designer leg protection', '', 88, 6400, 0, 0, 1, 4347170, 1, 0, 1, 227),
 ('Cabbage', 'Yuck I don\'t like cabbage', 'Eat', 18, 1, 0, 0, 0, 0, 0, 0, 1, 228),
-('Cape', 'A thick Blue Cape', '', 59, 32, 0, 0, 1, 4210926, 0, 0, 1, 229),
-('Large Black Helmet', 'A full face helmet', '', 6, 1056, 0, 0, 1, 4210752, 1, 0, 1, 230),
+('Cape', 'A thick Blue Cape', '', 59, 41, 0, 0, 1, 4210926, 0, 0, 1, 229),
+('Large Black Helmet', 'A full face helmet', '', 6, 1372, 0, 0, 1, 4210752, 1, 0, 1, 230),
 ('Red Bead', 'A small round red bead', '', 102, 4, 0, 0, 0, 16711680, 0, 0, 1, 231),
 ('Yellow Bead', 'A small round yellow bead', '', 102, 4, 0, 0, 0, 16776960, 0, 0, 1, 232),
 ('Black Bead', 'A small round black bead', '', 102, 4, 0, 0, 0, 4210752, 0, 0, 1, 233),
@@ -4462,7 +4462,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Wig', 'A wig made from wool', '', 106, 2, 0, 0, 0, 0, 0, 0, 0, 245),
 ('Half Full Wine Jug', 'It\'s half full of wine', 'Drink', 65, 1, 0, 0, 0, 12851224, 0, 0, 1, 246),
 ('Keyprint', 'An imprint of a key in a lump of clay', '', 107, 2, 0, 0, 0, 0, 0, 0, 0, 247),
-('Black Plate Mail Legs', 'These look pretty heavy', '', 9, 1920, 0, 0, 1, 4210752, 1, 0, 1, 248),
+('Black Plate Mail Legs', 'These look pretty heavy', '', 9, 2496, 0, 0, 1, 4210752, 1, 0, 1, 248),
 ('Banana', 'Mmm this looks tasty', 'Eat', 108, 2, 0, 0, 0, 0, 0, 0, 1, 249),
 ('Pastry Dough', 'Some uncooked dough', '', 63, 1, 0, 0, 0, 0, 0, 0, 1, 250),
 ('Pie Dish', 'For making pies in', '', 110, 3, 0, 0, 0, 15634261, 0, 0, 1, 251),
@@ -8241,7 +8241,7 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (0, '400', 1, 4),
 (0, '75', 1, 5),
 (0, '397', 1, 6),
-(1, '514', 2, 7),
+(1, '229', 2, 7),
 (1, '230', 1, 8),
 (1, '248', 1, 9),
 (1, '120', 1, 10),
@@ -8327,8 +8327,7 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (12, '11', 30, 120),
 (12, '237', 1, 121),
 (12, '1263', 10, 122),
-(13, '13', 1, 123),
-(14, '13', 1, 124),
+(13, '166', 1, 123),
 (14, '166', 2, 125),
 (14, '465', 10, 126),
 (14, '468', 3, 127),
@@ -8343,9 +8342,9 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (14, '138', 10, 136),
 (14, '169', 10, 137),
 (14, '211', 10, 138),
-(14, '167', 10, 139),
-(14, '168', 10, 140),
-(14, '464', 200, 141),
+(14, '599', 10, 139),
+(14, '774', 10, 140),
+(14, '167', 10, 141),
 (15, '11', 200, 142),
 (15, '190', 150, 146),
 (15, '189', 4, 147),
@@ -8582,10 +8581,9 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (38, '193', 3, 403),
 (38, '318', 3, 404),
 (38, '142', 1, 405),
-(39, '464', 400, 406),
-(39, '465', 400, 407),
+(39, '465', 50, 407),
 (39, '468', 3, 408),
-(39, '270', 500, 409),
+(39, '270', 50, 409),
 (40, '464', 400, 410),
 (40, '465', 400, 411),
 (40, '468', 3, 412),
@@ -8765,14 +8763,6 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (5, '1263', 10, 632),
 (36, '123', 1, 633),
 (37, '227', 1, 634),
-(5, '1006', 1, 646),
-(5, '221', 10, 647),
-(5, '388', 1, 648),
-(5, '389', 1, 649),
-(5, '188', 1, 650),
-(5, '11', 100, 651),
-(5, '60', 1, 652),
-(5, '190', 100, 653),
 (54, '38', 1000, 654),
 (67, '193', 3, 666),
 (67, '142', 3, 667),
@@ -8805,7 +8795,33 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (69, '237', 2, 694),
 (69, '135', 2, 695),
 (19, '199', 1, 696),
-(19, '185', 1, 697);
+(19, '185', 1, 697),
+(13, 465, 10, 698),
+(13, 468, 3, 699),
+(13, 135, 3, 700),
+(13, 87, 3, 701),
+(13, 156, 2, 702),
+(13, 12, 5, 703),
+(13, 15, 12, 704),
+(13, 16, 10, 705),
+(13, 17, 10, 706),
+(13, 132, 2, 707),
+(13, 138, 10, 708),
+(13, 169, 10, 709),
+(13, 211, 10, 710),
+(13, 599, 10, 711),
+(13, 774, 10, 712),
+(13, 167, 10, 713),
+(13, 168, 10, 714),
+(13, 982, 50, 715),
+(13, 983, 50, 716),
+(13, 464, 50, 717),
+(13, 1172, 50, 718),
+(14, 168, 10, 719),
+(14, 982, 50, 720),
+(14, 983, 50, 721),
+(14, 464, 50, 722),
+(14, 1172, 50, 723);
 
 -- --------------------------------------------------------
 
@@ -9010,7 +9026,7 @@ CREATE TABLE IF NOT EXISTS `def_spell` (
   `experience` int(4) DEFAULT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_spell`
@@ -9054,7 +9070,6 @@ INSERT INTO `def_spell` (`name`, `description`, `level`, `type`, `rune_count`, `
 ('Saradomin strike', 'Summons the power of Saradomin', 60, 2, 3, 33, 4, 619, 2, 31, 2, 560, 40),
 ('Flames of Zamorak', 'Summons the power of Zamorak', 60, 2, 3, 33, 1, 619, 2, 31, 4, 560, 41),
 ('Charge earth Orb', 'Needs to be cast on an earth obelisk', 60, 5, 3, 34, 30, 611, 1, 46, 3, 560, 42),
-('Lost City teleport', 'Teleports you to the Lost City', 61, 0, 2, 42, 2, 31, 2, NULL, NULL, 488, 43),
 ('Wind wave', 'A strength 13 missile attack', 62, 2, 2, 33, 5, 619, 1, NULL, NULL, 576, 44),
 ('Charge Fire Orb', 'Needs to be cast on a fire obelisk', 63, 5, 3, 611, 1, 46, 3, 31, 30, 584, 45),
 ('Water wave', 'A strength 14 missile attack', 65, 2, 3, 32, 7, 33, 5, 619, 1, 600, 46),
@@ -10405,7 +10420,7 @@ CREATE TABLE IF NOT EXISTS `spawn_npc` (
   PRIMARY KEY (`id`),
   KEY `npc` (`npc`),
   KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2952 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3000 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_npc`
@@ -13146,7 +13161,8 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 (584, 207, 3207, 203, 3206, 210, 3218, 1, 2955),
 (584, 208, 3207, 203, 3206, 210, 3218, 1, 2956),
 (584, 208, 3210, 203, 3206, 210, 3216, 1, 2957),
-(584, 210, 3211, 203, 3206, 210, 3215, 1, 2958);
+(584, 210, 3211, 203, 3206, 210, 3215, 1, 2958),
+(529, 628, 765, 627, 765, 629, 766, 1, 2959);
 
 -- --------------------------------------------------------
 
@@ -13470,11 +13486,6 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (107, 0, 511, 3376, 4, 300),
 (107, 0, 511, 3372, 4, 301),
 (107, 0, 511, 3377, 2, 302),
-(107, 0, 269, 3399, 0, 303),
-(107, 0, 270, 3399, 0, 304),
-(108, 0, 272, 3399, 0, 305),
-(108, 0, 273, 3399, 0, 306),
-(108, 0, 275, 3394, 0, 307),
 (1048, 0, 164, 2851, 6, 30836),
 (26, 0, 124, 652, 0, 25779),
 (34, 0, 227, 444, 0, 26626),
@@ -29314,7 +29325,6 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (51, 0, 277, 3398, 6, 16181),
 (0, 0, 797, 70, 0, 28567),
 (111, 0, 275, 3396, 0, 16183),
-(110, 0, 275, 3395, 0, 16184),
 (5, 0, 274, 3398, 6, 16185),
 (111, 0, 273, 3396, 0, 16186),
 (110, 0, 273, 3394, 0, 16187),

@@ -609,39 +609,57 @@ public class InvUseOnObject implements PacketHandler {
 				case 48: // Sink
 				case 26: // Fountain
 				case 1130: // Fountain
-					if (item.getID() == 341) 
-					{
-						owner.sendSound("filljug", false);
-						showBubble();
-						owner.sendMessage("You fill the bowl from the " + object.getGameObjectDef().getName());
-						owner.getInventory().remove(new InvItem(341, 1));
-						owner.getInventory().add(new InvItem(342, 1));
-						owner.sendInventory();
-						break;
-					}
-					if (!itemId(new int[]{21, 140, 465}) && !itemId(Formulae.potionsUnfinished) && !itemId(Formulae.potions1Dose) && !itemId(Formulae.potions2Dose) && !itemId(Formulae.potions3Dose)) {
-						owner.sendMessage("Nothing interesting happens");
-						return;
-					}
-					if (owner.getInventory().remove(item) > -1) {
-						showBubble();
-						owner.sendSound("filljug", false);
-						switch(item.getID()) {
-						case 21:
-							owner.getInventory().add(new InvItem(50));
-							break;
-						case 140:
-							owner.getInventory().add(new InvItem(141));
-							break;
-						default:
-							owner.getInventory().add(new InvItem(464));
-							break;
+					BatchedEvent fillEvent = new BatchedEvent(owner, 1500) {
+						public void doAction() {
+							action();
 						}
-						owner.sendInventory();
-					}
+						public void run() {
+							if (item.getID() == 341) {	
+								owner.sendSound("filljug", false);
+								showBubble();
+								owner.sendMessage("You fill the bowl from the " + object.getGameObjectDef().getName());
+								owner.getInventory().remove(new InvItem(341, 1));
+								owner.getInventory().add(new InvItem(342, 1));
+								owner.sendInventory();
+							}
+							else if (!itemId(new int[]{21, 140, 465}) && !itemId(Formulae.potionsUnfinished) && !itemId(Formulae.potions1Dose) && !itemId(Formulae.potions2Dose) && !itemId(Formulae.potions3Dose)) {
+								owner.sendMessage("Nothing interesting happens");
+							}
+							else if (owner.getInventory().remove(item) > -1) {
+								showBubble();
+								owner.sendSound("filljug", false);
+								switch(item.getID()) {
+									case 21:
+										owner.getInventory().add(new InvItem(50));
+										break;
+									case 140:
+										owner.getInventory().add(new InvItem(141));
+										break;
+									default:
+										owner.getInventory().add(new InvItem(464));
+										break;
+								}
+								owner.sendInventory();
+							}
+							if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+								owner.getCancelBatch() ||
+								!owner.getInventory().contains(item.getID()) ||
+								owner.getLocation().distanceToObject(object) > 1) {
+								owner.setBusy(false);
+								this.stop();
+							}
+						}
+						public long calculateActionAttempts() {
+							if (batch > 0) {
+								return owner.getInventory().getEmptySlots();
+							}
+							return 1;
+						}
+					};
+					World.getDelayedEventHandler().add(fillEvent);
 					break;
 				case 97: // Fire
-				case 11:
+				case 11: // Range
 				case 119: //Cook's range
 					if(!owner.isQuestFinished(Quests.COOKS_ASSISTANT) && object.isOn(131,660)) {
 						owner.setBusy(true);
@@ -659,56 +677,90 @@ public class InvUseOnObject implements PacketHandler {
 					} else {
 						if (item.getID() == 591) // Lava Eel
 						{
-							owner.setBusy(true);
-							showBubble();
-							owner.sendSound("cooking", false);
-							owner.sendMessage("You cook the lava eel on the " + object.getGameObjectDef().getName());
-							World.getDelayedEventHandler().add(new ShortEvent(owner) {
-								public void action() {
+							BatchedEvent lavaEelEvent = new BatchedEvent(owner, 1500) {
+								public void doAction() {
+									action();
+								}
+								public void run() {
+									owner.setBusy(true);
+									showBubble();
+									owner.sendSound("cooking", false);
+									owner.sendMessage("You cook the lava eel on the " + object.getGameObjectDef().getName());
 									if (owner.getInventory().remove(item) > -1) {
 										owner.sendMessage("The lava eel is now nicely cooked");
 										owner.getInventory().add(new InvItem(590, 1));
 										owner.sendInventory();
 									}
+									if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+										owner.getCancelBatch() ||
+										!owner.getInventory().contains(item.getID()) ||
+										owner.getLocation().distanceToObject(object) > 1) {
+										owner.setBusy(false);
+										this.stop();
+									}
+								}
+								public long calculateActionAttempts() {
+									if (batch > 0) {
+										return owner.getInventory().getEmptySlots();
+									}
+									return 1;
+								}
+							};
+							World.getDelayedEventHandler().add(lavaEelEvent);
+						}
+						else if (item.getID() == 622) { // Seaweed (Soda Ash)
+							BatchedEvent sodaashEvent = new BatchedEvent(owner, 1500) {
+								public void doAction() {
+									action();
+								}
+								public void run() {
+									owner.setBusy(true);
+									showBubble();
+									owner.sendSound("cooking", false);
+									owner.sendMessage("You put the seaweed on the  " + object.getGameObjectDef().getName());
+									if (owner.getInventory().remove(item) > -1) {
+										owner.sendMessage("The seaweed burns to ashes");
+										owner.getInventory().add(new InvItem(624, 1));
+										owner.sendInventory();
+									}
+									if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+										owner.getCancelBatch() || 
+										!owner.getInventory().contains(item.getID()) ||
+										owner.getLocation().distanceToObject(object) > 1) {
+										owner.setBusy(false);
+										this.stop();
+									}
+								}
+								public long calculateActionAttempts() {
+									if (batch > 0) {
+										return owner.getInventory().getEmptySlots();
+									}
+									return 1;
+								}
+							};
+							World.getDelayedEventHandler().add(sodaashEvent);
+
+						} else if (item.getID() == 132) { // Cooked Meat
+							owner.setBusy(true);
+							showBubble();
+							owner.sendSound("cooking", false);
+							owner.sendMessage("You cook the Cooked Meat on the " + object.getGameObjectDef().getName());
+							World.getDelayedEventHandler().add(new ShortEvent(owner) {
+								public void action() {
+									if (owner.getInventory().remove(item) > -1) {
+										owner.sendMessage("You burn the meat");
+										owner.getInventory().add(new InvItem(134, 1));
+										owner.sendInventory();
+									}
 									owner.setBusy(false);
+									if (Config.getSkillLoopMode() == 2 && batch == 2)
+										owner.sendMessage("You can only cook these one at a time!");
 								}
 							});
+						} else {
+							owner.setCancelBatch(false);
+							cookLoop();
 						}
-						else
-							if (item.getID() == 622) { // Seaweed (Glass)
-								owner.setBusy(true);
-								showBubble();
-								owner.sendSound("cooking", false);
-								owner.sendMessage("You put the seaweed on the  " + object.getGameObjectDef().getName());
-								World.getDelayedEventHandler().add(new ShortEvent(owner) {
-									public void action() {
-										if (owner.getInventory().remove(item) > -1) {
-											owner.sendMessage("The seaweed burns to ashes");
-											owner.getInventory().add(new InvItem(624, 1));
-											owner.sendInventory();
-										}
-										owner.setBusy(false);
-									}
-								});
-							} else if (item.getID() == 132) { // Cooked Meat
-								owner.setBusy(true);
-								showBubble();
-								owner.sendSound("cooking", false);
-								owner.sendMessage("You cook the Cooked Meat on the " + object.getGameObjectDef().getName());
-								World.getDelayedEventHandler().add(new ShortEvent(owner) {
-									public void action() {
-										if (owner.getInventory().remove(item) > -1) {
-											owner.sendMessage("You burn the meat");
-											owner.getInventory().add(new InvItem(134, 1));
-											owner.sendInventory();
-										}
-										owner.setBusy(false);
-									}
-								});
-							} else {
-								owner.setCancelBatch(false);
-								cookLoop();
-							}
 					}
 					break;
 				case 274:
@@ -716,37 +768,70 @@ public class InvUseOnObject implements PacketHandler {
 				case 491: // Range
 					if (item.getID() == 591) // Lava Eel
 					{
-						owner.setBusy(true);
-						showBubble();
-						owner.sendSound("cooking", false);
-						owner.sendMessage("You cook the lava eel on the " + object.getGameObjectDef().getName());
-						World.getDelayedEventHandler().add(new ShortEvent(owner) {
-							public void action() {
+						BatchedEvent lavaEelEvent = new BatchedEvent(owner, 1500) {
+							public void doAction() {
+								action();
+							}
+							public void run() {
+								owner.setBusy(true);
+								showBubble();
+								owner.sendSound("cooking", false);
+								owner.sendMessage("You cook the lava eel on the " + object.getGameObjectDef().getName());
 								if (owner.getInventory().remove(item) > -1) {
 									owner.sendMessage("The lava eel is now nicely cooked");
 									owner.getInventory().add(new InvItem(590, 1));
 									owner.sendInventory();
 								}
-								owner.setBusy(false);
+								if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+									owner.getCancelBatch() || owner.getInventory().full() ||
+									!owner.getInventory().contains(item.getID()) ||
+									owner.getLocation().distanceToObject(object) > 1) {
+									owner.setBusy(false);
+									this.stop();
+								}
 							}
-						});
+							public long calculateActionAttempts() {
+								if (batch > 0) {
+									return owner.getInventory().getEmptySlots();
+								}
+								return 1;
+							}
+						};
+						World.getDelayedEventHandler().add(lavaEelEvent);
 					}
 					else
-						if (item.getID() == 622) { // Seaweed (Glass)
-							owner.setBusy(true);
-							showBubble();
-							owner.sendSound("cooking", false);
-							owner.sendMessage("You put the seaweed on the  " + object.getGameObjectDef().getName());
-							World.getDelayedEventHandler().add(new ShortEvent(owner) {
-								public void action() {
+						if (item.getID() == 622) { // Seaweed (Soda Ash)
+							BatchedEvent sodaashEvent = new BatchedEvent(owner, 1500) {
+								public void doAction() {
+									action();
+								}
+								public void run() {
+									owner.setBusy(true);
+									showBubble();
+									owner.sendSound("cooking", false);
+									owner.sendMessage("You put the seaweed on the  " + object.getGameObjectDef().getName());
 									if (owner.getInventory().remove(item) > -1) {
 										owner.sendMessage("The seaweed burns to ashes");
 										owner.getInventory().add(new InvItem(624, 1));
 										owner.sendInventory();
 									}
-									owner.setBusy(false);
+									if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+										owner.getCancelBatch() || owner.getInventory().full() ||
+										!owner.getInventory().contains(item.getID()) ||
+										owner.getLocation().distanceToObject(object) > 1) {
+										owner.setBusy(false);
+										this.stop();
+									}
 								}
-							});
+								public long calculateActionAttempts() {
+									if (batch > 0) {
+										return owner.getInventory().getEmptySlots();
+									}
+									return 1;
+								}
+							};
+							World.getDelayedEventHandler().add(sodaashEvent);
+						
 						} else if (item.getID() == 132) { // Cooked Meat
 							owner.setBusy(true);
 							showBubble();
@@ -868,28 +953,31 @@ public class InvUseOnObject implements PacketHandler {
 					} else if (item.getID() == 384) {
 
 						// Silver Bar (Crafting)
-						World.getDelayedEventHandler().add(new MiniEvent(owner) {
-							public void action() {
-								owner.sendMessage("What would you like to make?");
-								String[] options = new String[]{"Holy Symbol of Saradomin", "UnHoly Symbol of Zamorak"};
-								owner.setMenuHandler(new MenuHandler(options) {
-									public void handleReply(int option, String reply) {
-										if (owner.isBusy() || option < 0 || option > 1)
-											return;
-										int[] moulds = {386, 1026};
-										int[] results = {44, 1027};
-										if (owner.getInventory().countId(moulds[option]) < 1) {
-											owner.sendMessage("You need a " + EntityHandler.getItemDef(moulds[option]).getName() + " to make a " + reply);
-											return;
-										}
-										if (option == 0 && owner.getCurStat(12) < 16) {
-											owner.sendMessage("You need a crafting level of 16 to make this");
-											return;
-										}
-										else if(option == 1 && owner.getCurStat(12) < 17) {
-											owner.sendMessage("You need a crafting level of 17 to make this");
-											return;
-										}
+						owner.sendMessage("What would you like to make?");
+						String[] symbols = new String[]{"Holy Symbol of Saradomin", "UnHoly Symbol of Zamorak"};
+						owner.setMenuHandler(new MenuHandler(symbols) {
+							public void handleReply(int option, String reply) {
+								if (owner.isBusy() || option < 0 || option > 1)
+									return;
+								int[] moulds = {386, 1026};
+								int[] results = {44, 1027};
+								if (owner.getInventory().countId(moulds[option]) < 1) {
+									owner.sendMessage("You need a " + EntityHandler.getItemDef(moulds[option]).getName() + " to make a " + reply);
+									return;
+								}
+								if (option == 0 && owner.getCurStat(12) < 16) {
+									owner.sendMessage("You need a crafting level of 16 to make this");
+									return;
+								}
+								else if(option == 1 && owner.getCurStat(12) < 17) {
+									owner.sendMessage("You need a crafting level of 17 to make this");
+									return;
+								}
+								BatchedEvent smeltEvent = new BatchedEvent(owner, 1500) {
+									public void doAction() {
+										action();
+									}
+									public void run() {
 										if (owner.getInventory().remove(item) > -1) {
 											showBubble();
 											InvItem result = new InvItem(results[option]);
@@ -899,11 +987,25 @@ public class InvUseOnObject implements PacketHandler {
 											owner.sendStat(12);
 											owner.sendInventory();
 										}
+										if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+											owner.getCancelBatch() || owner.getInventory().full() ||
+											!owner.getInventory().contains(item.getID()) ||
+											owner.getLocation().distanceToObject(object) > 1) {
+											owner.setBusy(false);
+											this.stop();
+										}
 									}
-								});
-								owner.sendMenu(options);
+									public long calculateActionAttempts() {
+										if (batch > 0) {
+											return owner.getInventory().countId(item.getID());
+										}
+										return 1;
+									}
+								};
+								World.getDelayedEventHandler().add(smeltEvent);
 							}
 						});
+						owner.sendMenu(symbols);
 					} else if (item.getID() == 625) {
 
 						// Sand (Glass)
@@ -911,11 +1013,14 @@ public class InvUseOnObject implements PacketHandler {
 							owner.sendMessage("You need some soda ash to mix the sand with");
 							return;
 						}
-						owner.setBusy(true);
-						showBubble();
-						owner.sendMessage("You put the seaweed and the soda ash in the furnace.");
-						World.getDelayedEventHandler().add(new ShortEvent(owner) {
-							public void action() {
+						BatchedEvent smeltEvent = new BatchedEvent(owner, 1500) {
+							public void doAction() {
+								action();
+							}
+							public void run() {
+								owner.setBusy(true);
+								showBubble();
+								owner.sendMessage("You put the seaweed and the soda ash in the furnace.");
 								if (player.getInventory().remove(624, 1) > -1 && player.getInventory().remove(item) > -1) {
 									owner.sendMessage("It mixes to make some molten glass");
 									owner.getInventory().add(new InvItem(623, 1));
@@ -924,9 +1029,23 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendStat(12);
 									owner.sendInventory();
 								}
-								owner.setBusy(false);
+								if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+										owner.getCancelBatch() || owner.getInventory().full() ||
+										!owner.getInventory().contains(item.getID()) ||
+										owner.getLocation().distanceToObject(object) > 1) {
+									owner.setBusy(false);
+									this.stop();
+								}
 							}
-						});
+							public long calculateActionAttempts() {
+								if (batch > 0) {
+									return owner.getInventory().countId(item.getID());
+								}
+								return 1;
+							}
+						};
+						World.getDelayedEventHandler().add(smeltEvent);
+
 					} else {
 
 						// Smelting Ore
@@ -987,14 +1106,17 @@ public class InvUseOnObject implements PacketHandler {
 										owner.sendInventory();
 									}
 								}
-								if (Config.getSkillLoopMode() == 0 || batch == 0 || owner.getCancelBatch() || owner.getInventory().full() || !owner.getInventory().contains(item.getID())) {
+								if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+										owner.getCancelBatch() || owner.getInventory().full() ||
+										!owner.getInventory().contains(item.getID()) ||
+										owner.getLocation().distanceToObject(object) > 1) {
 									owner.setBusy(false);
 									this.stop();
 								}
 							}
-							public int calculateActionAttempts() {
+							public long calculateActionAttempts() {
 								if (batch > 0) {
-									return owner.getInventory().getEmptySlots();
+									return owner.getInventory().countId(item.getID());
 								}
 								return 1;
 							}
@@ -1224,7 +1346,7 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendMenu(options);
 									break;//unlock the door
 								case 2:
-									options = new String[]{"Make 10 Arrow Heads", "Make 50 Arrow Heads (5 bars)", "Forge Dart Tips"};
+									options = new String[]{"Make 10 Arrow Heads", "Forge Dart Tips"};
 									owner.setMenuHandler(new MenuHandler(options) {
 										public void handleReply(int option, String reply) {
 											if (owner.isBusy())
@@ -1235,9 +1357,6 @@ public class InvUseOnObject implements PacketHandler {
 												break;
 											case 1:
 												handleSmithing(item.getID(), 19);
-												break;
-											case 2:
-												handleSmithing(item.getID(), 20);
 												break;
 											default:
 												return;
@@ -1444,7 +1563,7 @@ public class InvUseOnObject implements PacketHandler {
 									owner.sendMenu(options);
 									break;//unlock the door
 								case 2:
-									options = new String[]{"Make 10 Arrow Heads", "Make 50 Arrow Heads (5 bars)", "Forge Dart Tips"};
+									options = new String[]{"Make 10 Arrow Heads", "Forge Dart Tips"};
 									owner.setMenuHandler(new MenuHandler(options) {
 										public void handleReply(int option, String reply) {
 											if (owner.isBusy())
@@ -1455,9 +1574,6 @@ public class InvUseOnObject implements PacketHandler {
 												break;
 											case 1:
 												handleSmithing(item.getID(), 19);
-												break;
-											case 2:
-												handleSmithing(item.getID(), 20);
 												break;
 											default:
 												return;
@@ -1927,8 +2043,8 @@ public class InvUseOnObject implements PacketHandler {
 							owner.sendInventory();
 						}
 						owner.setBusy(false);
-						if (Config.getSkillLoopMode() == 2) {
-							World.getDelayedEventHandler().add(new SingleEvent(owner, 2500) {
+						if (Config.getSkillLoopMode() == 2 && batch == 2 && !owner.getCancelBatch() && owner.getInventory().contains(item.getID()) && owner.getLocation().distanceToObject(object) < 2) {
+							World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 								public void action() {
 									cookLoop();
 								}
@@ -1948,32 +2064,54 @@ public class InvUseOnObject implements PacketHandler {
 					owner.sendMessage("You need at smithing level of " + def.getRequiredLevel() + " to make this");
 					return;
 				}
-				if (owner.getInventory().countId(barID) < def.getRequiredBars()) {
-					owner.sendMessage("You don't have enough bars to make this");
-					return;
-				}
-				owner.sendSound("anvil", false);
-				for (int x = 0;x < def.getRequiredBars();x++)
-					owner.getInventory().remove(new InvItem(barID, 1));
-				if (item.getID() != 1276 && item.getID() != 1277) {
-					//					Bubble bubble = new Bubble(owner.getIndex(), item.getID());
-					for(Player p : owner.getViewArea().getPlayersInView())
-					{
-						p.watchItemBubble(owner.getIndex(), item.getID());
-						//							p.informOfBubble(bubble);
+				BatchedEvent smithEvent = new BatchedEvent(owner, 1500) {
+					public void doAction() {
+						action();
 					}
-				}
-				if (EntityHandler.getItemDef(def.getItemID()).isStackable()) {
-					owner.sendMessage("You hammer the metal into some " + EntityHandler.getItemDef(def.getItemID()).getName());
-					owner.getInventory().add(new InvItem(def.getItemID(), def.getAmount()));
-				} else {
-					owner.sendMessage("You hammer the metal into a " + EntityHandler.getItemDef(def.getItemID()).getName());
-					for(int x = 0;x < def.getAmount();x++)
-						owner.getInventory().add(new InvItem(def.getItemID(), 1));
-				}
-				owner.increaseXP(Skills.SMITHING, Formulae.getSmithingExp(barID, def.getRequiredBars()));
-				owner.sendStat(13);
-				owner.sendInventory();
+					public void run() {
+						if (owner.getInventory().countId(barID) < def.getRequiredBars()) {
+							owner.sendMessage("You don't have enough bars to make this");
+							return;
+						}
+						owner.sendSound("anvil", false);
+						for (int x = 0;x < def.getRequiredBars();x++)
+							owner.getInventory().remove(new InvItem(barID, 1));
+						if (item.getID() != 1276 && item.getID() != 1277) {
+							//					Bubble bubble = new Bubble(owner.getIndex(), item.getID());
+							for(Player p : owner.getViewArea().getPlayersInView())
+							{
+								p.watchItemBubble(owner.getIndex(), item.getID());
+								//							p.informOfBubble(bubble);
+							}
+						}
+						if (EntityHandler.getItemDef(def.getItemID()).isStackable()) {
+							owner.sendMessage("You hammer the metal into some " + EntityHandler.getItemDef(def.getItemID()).getName());
+							owner.getInventory().add(new InvItem(def.getItemID(), def.getAmount()));
+						} else {
+							owner.sendMessage("You hammer the metal into a " + EntityHandler.getItemDef(def.getItemID()).getName());
+							for(int x = 0;x < def.getAmount();x++)
+								owner.getInventory().add(new InvItem(def.getItemID(), 1));
+						}
+						owner.increaseXP(Skills.SMITHING, Formulae.getSmithingExp(barID, def.getRequiredBars()));
+						owner.sendStat(13);
+						owner.sendInventory();
+
+						if (Config.getSkillLoopMode() == 0 || batch == 0 ||
+								owner.getCancelBatch() || owner.getInventory().full() ||
+								!owner.getInventory().contains(item.getID()) ||
+								owner.getLocation().distanceToObject(object) > 2) {
+							owner.setBusy(false);
+							this.stop();
+						}
+					}
+					public long calculateActionAttempts() {
+						if (batch > 0) {
+							return owner.getInventory().getEmptySlots();
+						}
+						return 1;
+					}
+				};
+				World.getDelayedEventHandler().add(smithEvent);
 			}
 
 			private boolean itemId(int[] ids) {
