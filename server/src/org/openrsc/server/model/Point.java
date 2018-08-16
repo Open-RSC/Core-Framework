@@ -1,5 +1,6 @@
 package org.openrsc.server.model;
 
+import org.openrsc.server.model.GameObject;
 import org.openrsc.server.util.Formulae;
 
 public class Point {
@@ -134,6 +135,9 @@ public class Point {
 		return inBounds(192, 722, 238, 767);
 	}	
 	
+	public int distanceToObject(GameObject object) {
+		return (int) (Math.sqrt(Math.pow(object.getLoc().getX() - this.x, 2)) + Math.pow(object.getLoc().getY() - this.y, 2));
+	}
 	
 	public int distanceTo(int x, int y) {
 		return (int) (Math.sqrt(Math.pow(x - this.x, 2)) + Math.pow(y - this.y, 2));
