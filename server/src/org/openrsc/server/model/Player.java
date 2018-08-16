@@ -2571,8 +2571,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 	
 	public boolean canLogout()
 	{
-		if(deathmatchEvent != null || isBusy() || inCombat() || System.currentTimeMillis() - getCombatTimer() < 10000 || ((getLocation().wildernessLevel() > 1 && System.currentTimeMillis() - lastWalk < 7000))) return false;
-		
+		if(deathmatchEvent != null || isBusy() || inCombat() || System.currentTimeMillis() - getCombatTimer() < 10000) return false;
 		return true;
 	}
 	
@@ -3322,7 +3321,7 @@ public final class Player extends Mob implements Watcher, Comparable<Player>
 		
 		resetPath();
 		resetCombat(CombatState.LOST);
-		
+		resetMenuHandler();
 		sendWorldInfo();
 		sendEquipmentStats();
 		sendInventory();
