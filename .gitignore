@@ -105,3 +105,6 @@ server/items\.dat
 Tools/RSC Map Generator/map\.png
 
 */.gradle/*
+
+Tools/Sprite Editor/unpack/*.spr
+Tools/Sprite Editor/unpack/*.png
