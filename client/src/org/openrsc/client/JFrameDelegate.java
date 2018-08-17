@@ -49,7 +49,7 @@ public class JFrameDelegate
 	}
 	
 	/// The game to pass events to
-	private final openrsc<?> instance;
+	private final loading<?> instance;
 	
 	private final int defaultWidth, defaultHeight;
 	/**
@@ -64,7 +64,7 @@ public class JFrameDelegate
 	 */
 	public JFrameDelegate(int width, int height)
 	{
-		super("RuneScape");
+		super("Open RSC");
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setResizable(false);
 		super.setBackground(Color.BLACK); // hack;

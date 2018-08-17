@@ -7,7 +7,7 @@ import java.net.Socket;
 
 public class StreamClass extends PacketConstruction implements Runnable {
 
-	public StreamClass(Socket socket, openrsc<?> gameWindow) throws IOException {
+	public StreamClass(Socket socket, loading<?> gameWindow) throws IOException {
 		closingStream = false;
 		closedStream = true;
 		streamSocket = socket;
