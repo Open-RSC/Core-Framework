@@ -135,6 +135,13 @@
           <jvmarg value="-Xmx1024m" />
           <jvmarg value="-XX:SurvivorRatio=2" />
           <jvmarg value="-XX:NewRatio=8" />
+          <jvmarg value="-XX:+UseParNewGC" />
+          <jvmarg value="-XX:+UseConcMarkSweepGC" />
+          <jvmarg value="-Dcom.sun.management.jmxremote" />
+          <jvmarg value="-Dcom.sun.management.jmxremote.port=9990" />
+          <jvmarg value="-Dcom.sun.management.jmxremote.local.only=false" />
+          <jvmarg value="-Dcom.sun.management.jmxremote.authenticate=false" />
+          <jvmarg value="-Dcom.sun.management.jmxremote.ssl=false" />
             <classpath>
               <pathelement location="${lib}/mina.jar" />
               <pathelement location="${lib}/xpp3.jar" />
