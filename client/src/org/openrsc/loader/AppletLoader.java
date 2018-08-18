@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import org.openrsc.client.Config;
 import org.openrsc.client.ImplementationDelegate;
 import org.openrsc.client.loader.various.AppletUtils;
-import org.openrsc.client.openrsc;
+import org.openrsc.client.loading;
 import org.openrsc.client.mudclient;
 import org.openrsc.loader.util.unzip;
 
@@ -54,7 +54,7 @@ public class AppletLoader
 
 	public String cache;
 
-	private openrsc<AppletLoader> instance;
+	private loading<AppletLoader> instance;
 
 	private boolean canStart = true;
 	public AppletLoader() {
