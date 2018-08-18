@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Kills all java processes - needed for server auto restart process.
-pkill -f 'java -jar'
+pkill -f 'ant'
 echo ""
 echo "Launching the game server in a new screen."
 echo ""
