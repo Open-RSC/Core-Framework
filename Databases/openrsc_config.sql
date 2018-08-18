@@ -1182,7 +1182,7 @@ CREATE TABLE IF NOT EXISTS `def_drop` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `rsc` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18583 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=18587 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_drop`
@@ -1257,7 +1257,7 @@ INSERT INTO `def_drop` (`npc`, `drop_id`, `drop_amount`, `drop_weight`, `id`, `r
 (11, 440, 1, 6, 12474, NULL),
 (11, 441, 1, 1, 12473, NULL),
 (11, 442, 1, 2, 12472, NULL),
-(11, 10, 15, 12, 12470, NULL),
+(11, 10, 15, 12, 18583, NULL),
 (11, 10, 5, 23, 12469, NULL),
 (11, 380, 1, 18, 12468, NULL),
 (190, 126, 1, 2, 13909, NULL),
@@ -1530,8 +1530,8 @@ INSERT INTO `def_drop` (`npc`, `drop_id`, `drop_amount`, `drop_weight`, `id`, `r
 (61, 160, 1, 10, 14410, NULL),
 (61, 159, 1, 6, 14409, NULL),
 (62, 20, 1, 0, 7094, NULL),
-(62, 10, 9, 9, 7093, NULL),
-(62, 10, 5, 68, 7092, NULL),
+(62, 10, 9, 9, 18584, NULL),
+(62, 10, 5, 68, 18585, NULL),
 (62, 32, 4, 17, 7091, NULL),
 (62, 34, 3, 8, 7089, NULL),
 (62, 36, 2, 10, 7087, NULL),
