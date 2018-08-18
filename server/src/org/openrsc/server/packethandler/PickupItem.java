@@ -1,6 +1,5 @@
 package org.openrsc.server.packethandler;
 import org.apache.mina.common.IoSession;
-import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.DelayedGenericMessage;
 import org.openrsc.server.event.DelayedQuestChat;
@@ -8,9 +7,12 @@ import org.openrsc.server.event.FightEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.PickUpLog;
 import org.openrsc.server.model.ChatMessage;
+import org.openrsc.server.model.GameObject;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Item;
 import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Path;
+import org.openrsc.server.model.PathHandler;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Point;
 import org.openrsc.server.model.Quest;
@@ -57,9 +59,19 @@ public class PickupItem implements PacketHandler {
 						}
 						
                         // TODO: getLocation should override equals and form a Point out of x/y and then compare the two points
-						if (owner.getLocation().getX() != x || owner.getLocation().getY() != y)
+                        GameObject o = World.getZone(x, y).getObjectAt(x, y);
+						if (
+                            (
+                                (owner.getLocation().getX() != x || owner.getLocation().getY() != y) &&
+                                (o == null)
+                             ) || 
+                            (
+                                (o != null) && 
+                                (!owner.withinOneSquare(item))
+                            )
+                        )
 							return;
-						
+                        
 						if (item != null) {
 							if (!(owner.isRemoved() || owner.isBusy() || owner.isRanging() || !owner.nextTo(item) || owner.getStatus() != Action.TAKING_GITEM)) {
 								owner.resetAllExceptDMing();
