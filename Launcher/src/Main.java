@@ -34,13 +34,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
- 
+
 public class Main extends Application {
- 
+
     private Scene scene;
     private String GAME_NAME = "Open RSC";
     private String Dev_GAME_NAME = "Dev Open RSC";
- 
+
     @Override
     public void start(Stage stage) {
         stage.setTitle(GAME_NAME + " Game Launcher");
@@ -49,12 +49,12 @@ public class Main extends Application {
         scene.getStylesheets().add("BrowserToolbar.css");
         stage.show();
     }
- 
+
     public static void main(String[] args) {
         launch(args);
     }
 }
- 
+
 class Browser extends Region {
 
     private String GAME_NAME = "Open RSC";
@@ -62,13 +62,13 @@ class Browser extends Region {
     private static String Secure = "http://";
     private static String Domain = "localhost";
     private static String Dev_Domain = "localhost";
-    private static String Tomcat = "http://"+Domain+":8080";
-    private static String Dev_Tomcat = "http://"+Dev_Domain+":8080";
+    private static String Tomcat = "http://"+Domain;
+    private static String Dev_Tomcat = "http://"+Dev_Domain;
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";
     private static String CACHE_FOLDER = "OpenRSC";
- 
+
     private HBox toolBar;
     private static String[] imageFiles = new String[]{
         "2930.png",
@@ -93,12 +93,12 @@ class Browser extends Region {
     final Button Dev_playNow = new Button(Dev_GAME_NAME);
     private boolean playNowButton;
     private boolean Dev_playNowButton;
-    
+
     public Browser() {
         this.playNowButton = true;
         this.Dev_playNowButton = true;
         getStyleClass().add("browser");
- 
+
         for (int i = 0; i < captions.length; i++) {
             Hyperlink hpl = hpls[i] = new Hyperlink(captions[i]);
             Image image = images[i] =
@@ -124,12 +124,12 @@ class Browser extends Region {
                         updateCache();
                         launchGame();
                         exit();
-                } catch (IOException ex) {      
+                } catch (IOException ex) {
                         Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
                         Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }           
+            }
         });
         Dev_playNow.setOnAction(new EventHandler() {
             @Override
@@ -139,38 +139,38 @@ class Browser extends Region {
                         Dev_updateCache();
                         launchGame();
                         exit();
-                } catch (IOException ex) {      
+                } catch (IOException ex) {
                         Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
                         Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }           
+            }
         });
-        
+
         webEngine.load(Secure+Domain);
         getChildren().add(toolBar);
         getChildren().add(browser);
     }
- 
+
     private Node createSpacer() {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         return spacer;
     }
- 
+
     @Override
     protected void layoutChildren() {
         double w = getWidth();
         double h = getHeight();
         double tbHeight = browser.prefHeight(w);
         layoutInArea(browser,0,40,w,720,0,HPos.CENTER, VPos.CENTER);
-        layoutInArea(toolBar,0,0,w,tbHeight,0,HPos.CENTER,VPos.CENTER);	
+        layoutInArea(toolBar,0,0,w,tbHeight,0,HPos.CENTER,VPos.CENTER);
 	}
-	 
+
     public void exit() {
             System.exit(0);
         }
-	
+
     private static String serverVer[] = new String[15];
     private static String clientVer[] = new String[15];
     public static byte[] createChecksum(String s) throws Exception {
@@ -183,7 +183,7 @@ class Browser extends Region {
                 if(i >= 0) {
                     messagedigest.update(abyte0, 0, i);
                 }
-        } 
+        }
         while(i != -1);
         fileinputstream.close();
         return messagedigest.digest();
@@ -197,7 +197,7 @@ class Browser extends Region {
 
         return s1;
     }
-    
+
     public static void updateClient() throws IOException {
         try {
             for(int i = 0; i < 1; i++) {
@@ -279,7 +279,7 @@ class Browser extends Region {
             System.out.println(exception);
         }
     }
-    
+
     public static void Dev_updateClient() throws IOException {
         try {
             for(int i = 0; i < 1; i++) {
@@ -361,7 +361,7 @@ class Browser extends Region {
             System.out.println(exception);
         }
     }
-    
+
     public static void updateCache() throws IOException {
         try {
             for(int i = 0; i < 1; i++) {
@@ -439,7 +439,7 @@ class Browser extends Region {
             System.out.println(exception);
         }
     }
-    
+
     public static void Dev_updateCache() throws IOException {
         try {
             for(int i = 0; i < 1; i++) {
@@ -517,7 +517,7 @@ class Browser extends Region {
             System.out.println(exception);
         }
     }
-    
+
     public static void unzip_client() throws Exception {
 	String fName = System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CLIENT_FILENAME;
 	byte[] buf = new byte[1024];
@@ -539,7 +539,7 @@ class Browser extends Region {
 	zinstream.close();
 	System.out.println("Game client extract finished.");
     }
-    
+
     public static void unzip_cache() throws Exception {
 	String fName = System.getProperty("user.home") + File.separator + CACHE_FOLDER + File.separator + CACHE_FILENAME;
 	byte[] buf = new byte[1024];
@@ -561,7 +561,7 @@ class Browser extends Region {
 	zinstream.close();
 	System.out.println("Game cache update extract finished.");
     }
-    
+
     /**
     * This method launches your executable jar after it has verified the MD5 hash is up to date.
     */
