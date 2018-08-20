@@ -283,7 +283,7 @@ public final class World
 				} 
 				else 
 				{
-					if (!World.isWildernessChanging())
+					/*if (!World.isWildernessChanging())
 					{
 						Calendar c = Calendar.getInstance();
 						int day_of_week = c.get(Calendar.DAY_OF_WEEK);
@@ -346,7 +346,7 @@ public final class World
 								
 						}
 						
-					}
+					}*/
 					minuteChecks();
 				}
 			}

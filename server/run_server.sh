@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Kills all java processes - needed for server auto restart process.
-pkill -f 'java -jar'
-
 # Backs up all databases
 cd ../../
 ./Linux_Backup_Databases.sh
 cd Game/server
+
+# Kills all java processes - needed for server auto restart process.
+pkill -f 'java -jar'
 
 echo ""
 echo "Launching the game server in a new screen."
