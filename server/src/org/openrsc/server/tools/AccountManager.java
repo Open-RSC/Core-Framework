@@ -8,15 +8,18 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.openrsc.server.Config;
 import org.openrsc.server.database.ConnectionFactory;
-
-import static org.openrsc.server.Config.DB_NAME;
-import static org.openrsc.server.Config.SERVER_IP;
 
 // fuck java.util.logging...
 public class AccountManager
 {
+    
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 
 	private final static PrintStream OUT;
 
@@ -58,7 +61,7 @@ public class AccountManager
 			SQLException
 	{
 		OUT.println("Removing banned accounts...");
-		AccountManager mgr = new AccountManager(Config.SERVER_IP, Config.DB_NAME, Config.DB_LOGIN, Config.DB_PASS);
+		AccountManager mgr = new AccountManager(Config.getServerIp(), Config.getDbName(), Config.getDbLogin(), Config.getDbPass());
 		mgr.deleteBannedPlayers();
 	}
 	
@@ -92,7 +95,9 @@ public class AccountManager
 			
 			return l;
 		} catch(Exception ex) {
-			System.out.println("Error encoding username " + s);
+                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                        Date date = new Date();
+			System.out.println(dateFormat.format(date)+": Error encoding username " + s);
 		}
 		return -1;
 	}
@@ -188,15 +193,15 @@ public class AccountManager
 					{
 						try(Statement statement2 = connection.createStatement())
 						{
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `bans` WHERE `username` = '" + rs.getString("username") + "' LIMIT 1") + "rows from bans");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `messages` WHERE `sender_id` = '" + accountID + "' OR `owner` = '" + accountID + "'") + "rows from messages");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `online` WHERE `user_id` = '" + accountID + "'") + "rows from online");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `posts` WHERE `poster_id` = '" + accountID + "'") + "rows from posts");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `recovery_questions` WHERE `account` = '" + accountID + "'") + "rows from recovery_questions");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `screenshots` WHERE `account` = '" + accountID + "'") + "rows from screenshots");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `topics` WHERE `poster` = '" + accountID + "'") + "rows from topics");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `users` WHERE `id` = '" + accountID + "' LIMIT 1") + "rows from users");
-							System.out.println("Removed " + statement2.executeUpdate("DELETE FROM `rscd_bank` WHERE `owner` = '" + accountID + "'") + "rows from rscd_bank");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `bans` WHERE `username` = '" + rs.getString("username") + "' LIMIT 1") + "rows from bans");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `messages` WHERE `sender_id` = '" + accountID + "' OR `owner` = '" + accountID + "'") + "rows from messages");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `online` WHERE `user_id` = '" + accountID + "'") + "rows from online");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `posts` WHERE `poster_id` = '" + accountID + "'") + "rows from posts");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `recovery_questions` WHERE `account` = '" + accountID + "'") + "rows from recovery_questions");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `screenshots` WHERE `account` = '" + accountID + "'") + "rows from screenshots");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `topics` WHERE `poster` = '" + accountID + "'") + "rows from topics");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `users` WHERE `id` = '" + accountID + "' LIMIT 1") + "rows from users");
+							System.out.println(dateFormat.format(date)+": Removed " + statement2.executeUpdate("DELETE FROM `rscd_bank` WHERE `owner` = '" + accountID + "'") + "rows from rscd_bank");
 						
 							try(ResultSet rs2 = statement2.executeQuery("SELECT * FROM `rscd_players` WHERE `owner` = '" + accountID + "'"))
 							{

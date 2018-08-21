@@ -9,6 +9,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -23,9 +24,9 @@ public class Alfonse implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.HEROS_QUEST);
-		Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
-		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+		Quest q = owner.getQuest(Quests.HEROS_QUEST);
+		Quest blackarm = owner.getQuest(Quests.JOIN_BLACKARM_GANG);
+		Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
 		
 		if (q == null)
 		{
@@ -99,7 +100,7 @@ public class Alfonse implements NpcHandler
 						{
 							public void finished() 
 							{
-								owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+								owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 								owner.sendMessage("Alfonse winks");
 								owner.setBusy(false);
 								npc.unblock();

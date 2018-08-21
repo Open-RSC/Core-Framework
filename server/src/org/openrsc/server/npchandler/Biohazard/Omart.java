@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -24,8 +25,8 @@ public class Omart implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
-		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
+		Quest q = owner.getQuest(Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Quests.PLAGUE_CITY);
 		
 		if(q != null) 
 		{
@@ -37,7 +38,7 @@ public class Omart implements NpcHandler
 			}
 			else 
 			{
-				if(owner.getQuest(Config.Quests.BIOHAZARD) != null && owner.getQuest(Config.Quests.BIOHAZARD).getStage() >= 2 && owner.getQuest(Config.Quests.BIOHAZARD).getStage() <= 6)
+				if(owner.getQuest(Quests.BIOHAZARD) != null && owner.getQuest(Quests.BIOHAZARD).getStage() >= 2 && owner.getQuest(Quests.BIOHAZARD).getStage() <= 6)
 				{
 					switch(q.getStage())
 					{

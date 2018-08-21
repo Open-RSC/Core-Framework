@@ -1,7 +1,6 @@
 package org.openrsc.server.npchandler;
 
 import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Bank;
 import org.openrsc.server.model.ChatMessage;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.MenuHandler;
@@ -13,8 +12,6 @@ import org.openrsc.server.Config;
 import org.openrsc.server.entityhandling.EntityHandler;
 import org.openrsc.server.entityhandling.defs.ItemDef;
 import org.openrsc.server.event.ShortEvent;
-import org.openrsc.server.logging.Logger;
-import org.openrsc.server.logging.model.ExploitLog;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.util.DataConversions;
 
@@ -144,7 +141,7 @@ public class Auctioneer implements NpcHandler {
 										}
 									}
 									if(!flag) {
-										player.sendMessage(Config.PREFIX + "You currently have no items to collect.");
+										player.sendMessage(Config.getPrefix() + "You currently have no items to collect.");
 										return;
 									}
 									owner.setBusy(false);

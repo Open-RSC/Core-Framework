@@ -69,7 +69,7 @@ import org.openrsc.server.util.Formulae;
 /*  71 */         p.sendAlert("Thanks for voting for openrsc!% %We have credited @gre@" + minutes + " subscription minutes@whi@ to your account.");
 /*  72 */         synchronized (World.getPlayers()) {
 /*  73 */           for (Player p1 : World.getPlayers())
-/*  74 */             p1.sendNotification(Config.PREFIX + p.getStaffName() + "@whi@ just got @gre@" + minutes + " minutes free subscription@whi@ by using @gre@::VOTE");
+/*  74 */             p1.sendNotification(Config.getPrefix() + p.getStaffName() + "@whi@ just got @gre@" + minutes + " minutes free subscription@whi@ by using @gre@::VOTE");
 /*     */         }
 /*  76 */         if ((p.getSubscriptionExpires() == 0L) || (p.getSubscriptionExpires() < DataConversions.getTimeStamp()))
 /*  77 */           p.setSubscriptionExpires(DataConversions.getTimeStamp() + 60 * minutes);

@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -24,8 +25,8 @@ public class Elena implements NpcHandler
 		npc.blockedBy(owner);
 		owner.setBusy(true);
 		
-		Quest q = owner.getQuest(Config.Quests.BIOHAZARD);
-		Quest plagueCity = owner.getQuest(Config.Quests.PLAGUE_CITY);
+		Quest q = owner.getQuest(Quests.BIOHAZARD);
+		Quest plagueCity = owner.getQuest(Quests.PLAGUE_CITY);
 		
 		if(q == null)
 		{
@@ -188,8 +189,8 @@ public class Elena implements NpcHandler
 						{
 							public void finished()
 							{
-								owner.addQuest(Config.Quests.BIOHAZARD, 3);
-								owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
+								owner.addQuest(Quests.BIOHAZARD, 3);
+								owner.incQuestCompletionStage(Quests.BIOHAZARD);
 								owner.setBusy(false);
 								npc.unblock();	
 							}
@@ -278,7 +279,7 @@ public class Elena implements NpcHandler
 																		{
 																			public void finished()
 																			{
-																				owner.incQuestCompletionStage(Config.Quests.BIOHAZARD); //quest stage 6
+																				owner.incQuestCompletionStage(Quests.BIOHAZARD); //quest stage 6
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}
@@ -419,7 +420,7 @@ public class Elena implements NpcHandler
 																		{
 																			public void finished()
 																			{
-																				owner.incQuestCompletionStage(Config.Quests.BIOHAZARD); //quest stage 10
+																				owner.incQuestCompletionStage(Quests.BIOHAZARD); //quest stage 10
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}

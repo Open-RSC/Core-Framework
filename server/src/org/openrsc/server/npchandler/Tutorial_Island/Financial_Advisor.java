@@ -6,6 +6,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 
@@ -16,7 +17,7 @@ public class Financial_Advisor implements NpcHandler {
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.TUTORIAL_ISLAND);
+		Quest q = owner.getQuest(Quests.TUTORIAL_ISLAND);
 		
 		if(q != null)
 		{
@@ -51,7 +52,7 @@ public class Financial_Advisor implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"There are many different ways to make money in runescape", "for example certain monsters will drop a bit of loot", "To start with killing men and goblins might be a good idea", "Some higher level monsters will drop quite a lot of treasure", "Several of runescape's skills are good money making skills", "two of these skills are mining and fishing", "there are instructors on the island who will help you with this", "using skills and combat to make money is a good plan", "because using a skill also slowly increases your level in that skill", "A high level in a skill opens up many more opportunities", "Some other ways of making money include taking quests and tasks", "You can find these by talking to certain game controlled characters", "Our quest advisors will tell you about this", "Sometimes you will find items lying around", "Selling these to the shops makes some money too", "Now continue through the next door"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+								owner.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 								owner.setBusy(false);
 								npc.unblock();
 							}

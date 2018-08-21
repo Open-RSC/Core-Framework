@@ -813,7 +813,7 @@ public final class AvatarGenerator
 		        	img.setRGB(i % AVATAR_WIDTH, i / AVATAR_WIDTH, pixels[i] | 0xFF000000);
 	        	}
 	        }
-	        ImageIO.write(img, "png", new File(Config.AVATAR_DIR + user + ".png"));
+	        ImageIO.write(img, "png", new File(Config.getAvatarDir() + user + ".png"));
 	        return 0;
 		}
 		

@@ -15,13 +15,14 @@ import org.openrsc.server.npchandler.NpcHandler;
 
 import java.util.ArrayList;
 import org.openrsc.server.Config;
+import org.openrsc.server.model.Quests;
 
 public class Leela implements NpcHandler {
 
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+		Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);

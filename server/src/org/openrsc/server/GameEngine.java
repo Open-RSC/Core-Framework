@@ -1,5 +1,8 @@
 package org.openrsc.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -55,13 +58,13 @@ public final class GameEngine
 			{
 				continue;
 			}
-			if(World.getPlayerCount() < Config.MAX_PLAYERS)
+			if(World.getPlayerCount() < Config.getMaxPlayers())
 			{		
 				if(World.getPlayerByOwner(load.getAccount()) == null)
 				{
                     if(
-                        Config.MAX_LOGINS_PER_IP <= 0 ||
-                        (Config.MAX_LOGINS_PER_IP > 0 && World.getPlayersByIp(load.getIP()).size() < Config.MAX_LOGINS_PER_IP)
+                        Config.getMaxLoginsPerIp() <= 0 ||
+                        (Config.getMaxLoginsPerIp() > 0 && World.getPlayersByIp(load.getIP()).size() < Config.getMaxLoginsPerIp())
                     )
                     {
                         load.getSession().write(new RSCPacketBuilder().setBare(true).addByte((byte)LoginResponse.LOGIN_SUCCESS.ordinal()).toPacket());
@@ -87,6 +90,9 @@ public final class GameEngine
 			}
 		}
 	}
+        
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 	
 	/// Handle all messages received since the last tick
 	private void processIncomingPackets()
@@ -178,7 +184,7 @@ public final class GameEngine
 				}
 				catch(Exception e)
 				{
-					System.out.println("THIS IS A FATAL ERROR:");
+					System.out.println(dateFormat.format(date)+": " + "THIS IS A FATAL ERROR:");
 					e.printStackTrace();
 				}
 			}

@@ -12,6 +12,7 @@ import org.openrsc.server.model.Quest;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 public class Man implements NpcHandler 
@@ -27,10 +28,10 @@ public class Man implements NpcHandler
 		owner.setBusy(true);
 		
 		
-		Quest heroesQuest = owner.getQuest(Config.Quests.HEROS_QUEST);
-		Quest shield = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
-		Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
-		Quest blackarm = owner.getQuest(Config.Quests.JOIN_BLACKARM_GANG);
+		Quest heroesQuest = owner.getQuest(Quests.HEROS_QUEST);
+		Quest shield = owner.getQuest(Quests.SHIELD_OF_ARRAV);
+		Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
+		Quest blackarm = owner.getQuest(Quests.JOIN_BLACKARM_GANG);
 		
 		
 		if (heroesQuest == null) 
@@ -331,7 +332,7 @@ public class Man implements NpcHandler
 								owner.getInventory().remove(585, 1);
 								owner.getInventory().add(586, 1);
 								owner.sendInventory();	
-								owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+								owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -349,7 +350,7 @@ public class Man implements NpcHandler
 		{
 			public void finished() 
 			{
-				owner.incQuestCompletionStage(Config.Quests.HEROS_QUEST);
+				owner.incQuestCompletionStage(Quests.HEROS_QUEST);
 				owner.setBusy(false);
 				npc.unblock();
 			}
@@ -593,7 +594,7 @@ public class Man implements NpcHandler
 																		{
 																			public void finished() 
 																			{
-																				owner.finishQuest(Config.Quests.JOIN_PHOENIX_GANG);
+																				owner.finishQuest(Quests.JOIN_PHOENIX_GANG);
 																				owner.setBusy(false);
 																				npc.unblock();
 																			}
@@ -825,7 +826,7 @@ public class Man implements NpcHandler
 								{
 									public void finished() 
 									{
-										owner.addQuest(Config.Quests.JOIN_PHOENIX_GANG, 0);
+										owner.addQuest(Quests.JOIN_PHOENIX_GANG, 0);
 										owner.setBusy(false);
 										npc.unblock();
 									}

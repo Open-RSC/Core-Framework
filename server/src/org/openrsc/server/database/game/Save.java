@@ -51,6 +51,9 @@ import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
 
 import com.rscdaemon.scripting.quest.Quest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Save
 	extends
@@ -68,16 +71,19 @@ public class Save
 		implements
 			TransactionListener
 	{
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                Date date = new Date();
+            
 		@Override
 		public void onSuccess()
 		{
-			//System.out.println("Saved: " + DataConversions.hashToUsername(usernameHash));
+			//System.out.println(dateFormat.format(date)+": Saved: " + DataConversions.hashToUsername(usernameHash));
 		}
 
 		@Override
 		public void onFailure(int code)
 		{
-			System.out.println("Failed to save: " + DataConversions.hashToUsername(usernameHash));
+			System.out.println(dateFormat.format(date)+": Failed to save: " + DataConversions.hashToUsername(usernameHash));
 		}
 	}
 	

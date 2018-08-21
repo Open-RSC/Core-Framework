@@ -21,17 +21,21 @@ public class AgilityHandler {
 			player.setBusy(true);
 			player.setStatus(Action.AGILITY);
 			final AgilityCourseDef course = EntityHandler.getAgilityCourseDef(def.getCourseID());
+			// Fix for Low Wall duplicating
+			// ship (163) and rock (164) ids.
+			if (objectID == 163 || objectID == 164) {
+				int playerX = player.getX();
+				if(playerX < 494 || playerX > 497) {
+					player.setBusy(false);
+					player.setStatus(Action.IDLE);
+					return false;
+				}
+			}
+
 			if (player.getMaxStat(16) < def.getLevel()) {
 				switch (objectID) {
 				default:
 
-					// Agility boat fix, test.
-					if (objectID == 163 && player.getY() == 713) {
-						player.sendMessage("You must talk to the owner about this.");
-						player.setBusy(false);
-						player.setStatus(Action.IDLE);
-						return true;
-					}
 
 					player.sendMessage("Your agility level is not high enough to navigate this obstacle");
 					player.setBusy(false);
@@ -75,10 +79,16 @@ public class AgilityHandler {
 							});
 
 							break;
-						case 679:
-							owner.sendMessage(def.getAttemptMessage());
-							moveSuccess(false);
-							finish(true);
+						case 679: // Barbarian handholds (out only)
+							if ((owner.getX() == 496 || owner.getX() == 495) && (owner.getY() == 556 || owner.getY() == 557)) {
+								owner.sendMessage(def.getAttemptMessage());
+								owner.increaseXP(16, 28);
+								moveSuccess(false);
+								finish(true);
+							} else {
+								owner.sendMessage("I can't reach that");
+								finish(true);
+							}
 							break;
 						case 671:
 						case 672:
@@ -86,7 +96,7 @@ public class AgilityHandler {
 							moveSuccess(false);
 							finish(true);
 							break;
-						case 163:
+						case 163: // Barbarian Low Wall
 							World.getDelayedEventHandler().add(new SingleEvent(owner, 500) {
 								public void action() {
 									owner.sendMessage(def.getAttemptMessage());
@@ -95,7 +105,7 @@ public class AgilityHandler {
 								}
 							});
 							break;
-						case 164:
+						case 164: // Barbarian Low Wall
 							World.getDelayedEventHandler().add(new SingleEvent(owner, 500) {
 								public void action() {
 									owner.sendMessage(def.getAttemptMessage());
@@ -104,7 +114,7 @@ public class AgilityHandler {
 								}
 							});
 							break;
-						case 678:
+						case 678: // Barbarian Ledge Balance
 							owner.sendMessage(def.getAttemptMessage());
 							owner.setPath(new Path(owner.getX(), owner.getY(), 499, 1506), true);
 							World.getDelayedEventHandler()
@@ -125,7 +135,7 @@ public class AgilityHandler {
 								}
 							});
 							break;
-						case 677:
+						case 677: // Barbarian Net
 							owner.sendMessage(def.getAttemptMessage());
 							World.getDelayedEventHandler().add(new SingleEvent(owner, 1500) {
 								public void action() {
@@ -508,7 +518,7 @@ public class AgilityHandler {
 
 					private void finish(boolean success) {
 						if (success) {
-							owner.increaseXP(16, def.getExperience());
+							owner.increaseXP(Skills.AGILITY, def.getExperience());
 							course.completedObstacle(owner, objectID);
 							owner.sendStat(16);
 						}

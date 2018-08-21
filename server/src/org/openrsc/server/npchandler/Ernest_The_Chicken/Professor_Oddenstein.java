@@ -16,13 +16,14 @@ import org.openrsc.server.model.Quest;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Professor_Oddenstein implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.ERNEST_THE_CHICKEN);
+		Quest q = owner.getQuest(Quests.ERNEST_THE_CHICKEN);
 		if(q != null) {
 			if(q.finished()) {
 				finishedQuest(npc, owner);
@@ -82,7 +83,7 @@ public class Professor_Oddenstein implements NpcHandler {
 																						owner.sendInventory();
 																						owner.sendMessage("Well done. You have completed the Ernest the Chicken quest");
 																						owner.sendMessage("@gre@You have gained 4 quest points!");
-																						owner.finishQuest(Config.Quests.ERNEST_THE_CHICKEN);
+																						owner.finishQuest(Quests.ERNEST_THE_CHICKEN);
 																						owner.setBusy(false);
 																						npc.unblock();
 																						Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Ernest The Chicken</span> quest!"));
@@ -304,7 +305,7 @@ public class Professor_Oddenstein implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"That would be a help", "They'll be somewhere in the manor house or its grounds", "The gremlins never go further than the entrance gate", "I'm missing the pressure gauge and a rubber tube", "They've also taken my oil can", "Which I'm going to need to get this thing started again"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.ERNEST_THE_CHICKEN);
+								owner.incQuestCompletionStage(Quests.ERNEST_THE_CHICKEN);
 								owner.setBusy(false);
 								npc.unblock();
 							}

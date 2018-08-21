@@ -13,12 +13,13 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Witch implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.WITCHS_POTION);
+		Quest q = owner.getQuest(Quests.WITCHS_POTION);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -96,7 +97,7 @@ public class Witch implements NpcHandler {
 																	final String[] messages3 = {"Ok drink from the cauldron"};
 																	World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages3) {
 																		public void finished() {
-																			owner.incQuestCompletionStage(Config.Quests.WITCHS_POTION);
+																			owner.incQuestCompletionStage(Quests.WITCHS_POTION);
 																			owner.setBusy(false);
 																			npc.unblock();
 																		}
@@ -144,7 +145,7 @@ public class Witch implements NpcHandler {
 							public void finished() {
 								owner.setBusy(false);
 								npc.unblock();
-								owner.addQuest(Config.Quests.WITCHS_POTION, 1);
+								owner.addQuest(Quests.WITCHS_POTION, 1);
 							}
 						});
 					}

@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -20,7 +21,7 @@ public class King_Arthur implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+		Quest q = owner.getQuest(Quests.MERLINS_CRYSTAL);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -232,8 +233,8 @@ public class King_Arthur implements NpcHandler {
 	private void questAccepted(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Excellent!", "You should start with asking our members", "about what happened to merlin", "that should lead towards a solution to get him out"}) {
 			public void finished() {
-				owner.addQuest(Config.Quests.MERLINS_CRYSTAL, 6);
-				owner.incQuestCompletionStage(Config.Quests.MERLINS_CRYSTAL);
+				owner.addQuest(Quests.MERLINS_CRYSTAL, 6);
+				owner.incQuestCompletionStage(Quests.MERLINS_CRYSTAL);
 				owner.setBusy(false);
 				npc.unblock();
 			}

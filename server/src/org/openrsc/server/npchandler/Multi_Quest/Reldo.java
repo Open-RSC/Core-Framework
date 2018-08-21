@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -18,8 +19,8 @@ public class Reldo implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest arrav = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
-		Quest knight = owner.getQuest(Config.Quests.THE_KNIGHTS_SWORD);
+		Quest arrav = owner.getQuest(Quests.SHIELD_OF_ARRAV);
+		Quest knight = owner.getQuest(Quests.THE_KNIGHTS_SWORD);
 		if(knight != null) {
 			if(arrav != null) {
 				if(knight.getStage() == 0) {
@@ -197,10 +198,10 @@ public class Reldo implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"Thanks, I'll try that"}) {
 							public void finished() {
-								Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+								Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 								if(q != null)
 									if(q.getStage() == 1)
-										owner.incQuestCompletionStage(Config.Quests.SHIELD_OF_ARRAV);
+										owner.incQuestCompletionStage(Quests.SHIELD_OF_ARRAV);
 								owner.setBusy(false);
 								npc.unblock();
 							}
@@ -218,7 +219,7 @@ public class Reldo implements NpcHandler {
 					public void finished() {
 						World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"A few of them survived", "But with the bulk of their population destroyed", "Their numbers have dwindled even further", "Last I knew there were a couple living in Asgarnia", "Near the cliffs on the Asgarnian southern peninsula", "They tend to keep to themselves", "They don't tend to tell people that they're the descendants of the Imcando", "Which is why people think that the tribe has died out totally", "you may have more luck talking to them if you bring them some red berry pie", "They really like red berry pie"}) {
 							public void finished() {
-								owner.incQuestCompletionStage(Config.Quests.THE_KNIGHTS_SWORD);
+								owner.incQuestCompletionStage(Quests.THE_KNIGHTS_SWORD);
 								owner.setBusy(false);
 							}
 						});
@@ -233,7 +234,7 @@ public class Reldo implements NpcHandler {
 			public void finished() {
 				World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, new String[] {"Thank you"}) {
 					public void finished() {
-						owner.addQuest(Config.Quests.SHIELD_OF_ARRAV, 3);
+						owner.addQuest(Quests.SHIELD_OF_ARRAV, 3);
 						owner.setBusy(false);
 						npc.unblock();
 					}

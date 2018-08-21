@@ -49,8 +49,9 @@ public class Group {
             case SUBSCRIBER:
             case MOD:
             case USER:
+		return "@whi@";
             default:
-                return "@whi@";
+                return "@yel@";
         }
     }
 

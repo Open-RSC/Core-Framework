@@ -3,6 +3,9 @@ package org.openrsc.server.logging;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.openrsc.server.Config;
 import org.openrsc.server.database.ConnectionFactory;
@@ -103,7 +106,7 @@ public class Logger extends Thread {
 				threadInterrupted(this.getClass().getName(), interruptedException);
 			}
 			
-			if (Config.LOGGING)
+			if (Config.isLogging())
 			{
 				try(Statement statement = connection.createStatement())
 				{
@@ -629,7 +632,9 @@ public class Logger extends Thread {
 	}
 
 	private static void outOfMemoryError(String logType) {
-		System.out.println("This system has run out of usable memory for Logger to operate with: " + logType);
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                Date date = new Date();
+                System.out.println(dateFormat.format(date)+": This system has run out of usable memory for Logger to operate with: " + logType);
 		System.exit(-1);
 	}
 }

@@ -28,7 +28,7 @@ public class WebConnectionHandler
 
 	public void messageReceived(IoSession session, Object message)
 	{
-		if (((InetSocketAddress)session.getRemoteAddress()).getAddress().getHostAddress().toString().equals(Config.SERVER_IP))
+		if (((InetSocketAddress)session.getRemoteAddress()).getAddress().getHostAddress().toString().equals(Config.getServerIp()))
 		{
 			messageQueue.add(new Pair<IoSession, WebPacket>(session, (WebPacket)message));
 		}

@@ -78,7 +78,7 @@ public class DuelHandler implements PacketHandler {
 							player.sendMessage("I'm not near enough");
 					}
 				} else
-					player.sendMessage(Config.PREFIX + "Dueling is currently disabled");
+					player.sendMessage(Config.getPrefix() + "Dueling is currently disabled");
 				break;
 			case 49: // Duel accepted
 				if(System.currentTimeMillis() - player.getLastTradeDuelUpdate() > 50) {

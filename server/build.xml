@@ -32,11 +32,16 @@
             <pathelement path="${java.class.path}/"/>
           </classpath>
         </javac>
-        <jar basedir="${build}" destfile="${jar}" />
+        <jar basedir="${build}" destfile="${jar}">
+          <manifest>
+            <attribute name="Main-Class" value="org.openrsc.server.Server"/>
+          </manifest>
+          <zipgroupfileset dir="lib" includes="*.jar"/>
+        </jar>
     </target>
 
-    <target name="runserver">
-        <java classname="org.openrsc.server.Server" fork="true">
+    <target name="items">
+        <java classname="org.openrsc.server.tools.ItemExporter" fork="true">
           <arg value="config/config.xml" />
           <jvmarg value="-Xmn512m" />
           <jvmarg value="-Xms1024m" />
@@ -58,7 +63,102 @@
               <pathelement location="${lib}/jmf.jar" />
               <pathelement location="${lib}/js.jar" />
               <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-              <pathelement location="${lib}/pircbot.jar" />
+              <pathelement location="${lib}/xstream.jar" />
+              <pathelement path="${jar}/" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="objects">
+        <java classname="org.openrsc.server.tools.ObjectExporter" fork="true">
+          <arg value="config/config.xml" />
+          <jvmarg value="-Xmn512m" />
+          <jvmarg value="-Xms1024m" />
+          <jvmarg value="-Xmx1024m" />
+          <jvmarg value="-XX:SurvivorRatio=2" />
+          <jvmarg value="-XX:NewRatio=8" />
+            <classpath>
+              <pathelement location="${lib}/mina.jar" />
+              <pathelement location="${lib}/xpp3.jar" />
+              <pathelement location="${lib}/slf4j.jar"/>
+              <pathelement location="${lib}/xstream.jar"/>
+              <pathelement location="${lib}/mysql-connector.jar" />
+              <pathelement location="${lib}/hex-string.jar" />
+              <pathelement location="${lib}/bsh-2.0b4.jar" />
+              <pathelement location="${lib}/apache-commons.jar" />
+              <pathelement location="${lib}/commons-lang-2.6.jar" />
+              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
+              <pathelement location="${lib}/junit.jar" />
+              <pathelement location="${lib}/jmf.jar" />
+              <pathelement location="${lib}/js.jar" />
+              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
+              <pathelement location="${lib}/xstream.jar" />
+              <pathelement path="${jar}/" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="npcs">
+        <java classname="org.openrsc.server.tools.NPCExporter" fork="true">
+          <arg value="config/config.xml" />
+          <jvmarg value="-Xmn512m" />
+          <jvmarg value="-Xms1024m" />
+          <jvmarg value="-Xmx1024m" />
+          <jvmarg value="-XX:SurvivorRatio=2" />
+          <jvmarg value="-XX:NewRatio=8" />
+            <classpath>
+              <pathelement location="${lib}/mina.jar" />
+              <pathelement location="${lib}/xpp3.jar" />
+              <pathelement location="${lib}/slf4j.jar"/>
+              <pathelement location="${lib}/xstream.jar"/>
+              <pathelement location="${lib}/mysql-connector.jar" />
+              <pathelement location="${lib}/hex-string.jar" />
+              <pathelement location="${lib}/bsh-2.0b4.jar" />
+              <pathelement location="${lib}/apache-commons.jar" />
+              <pathelement location="${lib}/commons-lang-2.6.jar" />
+              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
+              <pathelement location="${lib}/junit.jar" />
+              <pathelement location="${lib}/jmf.jar" />
+              <pathelement location="${lib}/js.jar" />
+              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
+              <pathelement location="${lib}/xstream.jar" />
+              <pathelement path="${jar}/" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="runserver">
+        <java classname="org.openrsc.server.Server" fork="true">
+          <arg value="config/config.xml" />
+          <jvmarg value="-Xmn512m" />
+          <jvmarg value="-Xms1024m" />
+          <jvmarg value="-Xmx1024m" />
+          <jvmarg value="-XX:SurvivorRatio=2" />
+          <jvmarg value="-XX:NewRatio=8" />
+          <jvmarg value="-XX:+UseParNewGC" />
+          <jvmarg value="-XX:+UseConcMarkSweepGC" />
+          <!--<jvmarg value="-Dcom.sun.management.jmxremote=true" />
+              <jvmarg value="-Dcom.sun.management.jmxremote.ssl=false" />
+              <jvmarg value="-Dcom.sun.management.jmxremote.authenticate=false" />
+              <jvmarg value="-Dcom.sun.management.jmxremote.port=9990" />
+              <jvmarg value="-Djava.rmi.server.hostname=localhost" />
+              <jvmarg value="-Dcom.sun.management.jmxremote.rmi.port=9990" />
+              <jvmarg value="-Dcom.sun.management.jmxremote.local.only=false" />-->
+            <classpath>
+              <pathelement location="${lib}/mina.jar" />
+              <pathelement location="${lib}/xpp3.jar" />
+              <pathelement location="${lib}/slf4j.jar"/>
+              <pathelement location="${lib}/xstream.jar"/>
+              <pathelement location="${lib}/mysql-connector.jar" />
+              <pathelement location="${lib}/hex-string.jar" />
+              <pathelement location="${lib}/bsh-2.0b4.jar" />
+              <pathelement location="${lib}/apache-commons.jar" />
+              <pathelement location="${lib}/commons-lang-2.6.jar" />
+              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
+              <pathelement location="${lib}/junit.jar" />
+              <pathelement location="${lib}/jmf.jar" />
+              <pathelement location="${lib}/js.jar" />
+              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
               <pathelement location="${lib}/xstream.jar" />
               <pathelement path="${jar}/" />
             </classpath>

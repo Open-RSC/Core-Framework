@@ -9,7 +9,6 @@ import java.util.TreeMap;
 import org.openrsc.server.ClientUpdater;
 import org.openrsc.server.Config;
 import org.openrsc.server.DelayedEventHandler;
-import org.openrsc.server.Server;
 import org.openrsc.server.ServerBootstrap;
 import org.openrsc.server.database.game.Save;
 import org.openrsc.server.entityhandling.locs.GameObjectLoc;
@@ -39,11 +38,17 @@ import com.rscdaemon.scripting.ScriptManager;
 import com.rscdaemon.util.IPTracker;
 import com.rscdaemon.util.IPTrackerPredicate;
 import com.rscdaemon.util.impl.ThreadSafeIPTracker;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public final class World
 	implements
 		Instance
 {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+    
 	private final static World instance = new World();
 	
 	public final static World getWorld()
@@ -262,23 +267,23 @@ public final class World
 		worldLoader.loadWorld();
 		scriptManager.loadListeners("com.rscdaemon.scripting.listener");
 		scriptManager.loadScripts("com.rscdaemon.scripts");
-		//minuteChecks(); Disabling autorestart, weaken/godspell day changes
+		minuteChecks(); //autorestart, weaken/godspell day changes
 	}
 		
 	private static void minuteChecks() 
 	{
-		World.getDelayedEventHandler().add(new SingleEvent(null, 60000) 
+		World.getDelayedEventHandler().add(new SingleEvent(null, 1000) //default 60000 for 1 minute check for events
 		{
 			public void action() 
 			{
-				if ((System.currentTimeMillis() - Config.START_TIME) > 54000000) 
+				if ((System.currentTimeMillis() - Config.getStartTime()) > Config.getAutoRestartTimeMillis())
 				{
-					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "Auto Restart"));
+					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "performing automatic world restart, log back in after 5 seconds"));
 					global = false;
 				} 
 				else 
 				{
-					if (!World.isWildernessChanging())
+					/*if (!World.isWildernessChanging())
 					{
 						Calendar c = Calendar.getInstance();
 						int day_of_week = c.get(Calendar.DAY_OF_WEEK);
@@ -286,37 +291,37 @@ public final class World
 						switch (day_of_week)
 						{
 							case 1:
-								Config.ALLOW_WEAKENS = true;
+								Config.setAllowWeakens(true);
 								
 								if (World.isP2PWilderness())
 									toggleWilderness();
 							break;
 							
 							case 2:
-								Config.ALLOW_GODSPELLS = true;
-								Config.ALLOW_WEAKENS = false;
+								Config.setAllowGodspells(true);
+								Config.setAllowWeakens(false);
 								
 								if (!World.isP2PWilderness())
 									toggleWilderness();
 							break;
 							
 							case 3:
-								Config.ALLOW_WEAKENS = true;
+								Config.setAllowWeakens(true);
 								
 								if (World.isP2PWilderness())
 									toggleWilderness();
 							break;
 							
 							case 4:
-								Config.ALLOW_WEAKENS = false;
+								Config.setAllowWeakens(false);
 								
 								if (World.isP2PWilderness())
 									toggleWilderness();
 							break;
 							
 							case 5:
-								Config.ALLOW_GODSPELLS = false;
-								Config.ALLOW_WEAKENS = false;
+								Config.setAllowGodspells(false);
+								Config.setAllowWeakens(false);
 
 								
 								if (!World.isP2PWilderness())
@@ -324,14 +329,14 @@ public final class World
 							break;
 							
 							case 6:
-								Config.ALLOW_WEAKENS = false;
+								Config.setAllowWeakens(false);
 								
 								if (World.isP2PWilderness())
 									toggleWilderness();
 							break;
 							
 							case 7:
-								Config.ALLOW_WEAKENS = true;
+								Config.setAllowWeakens(true);
 								
 								if (World.isP2PWilderness())
 									toggleWilderness();
@@ -341,7 +346,7 @@ public final class World
 								
 						}
 						
-					}
+					}*/
 					minuteChecks();
 				}
 			}
@@ -361,7 +366,7 @@ public final class World
 					setWildernessCountdown(0);
 					wildernessP2P = !wildernessP2P;
 					for (Player p : getPlayers()) {
-						p.sendMessage(Config.PREFIX + "The wilderness state has been changed to: @gre@" + (wildernessP2P ? "P2P" : "F2P"));
+						p.sendMessage(Config.getPrefix() + "The wilderness state has been changed to: @gre@" + (wildernessP2P ? "P2P" : "F2P"));
 						if (!wildernessP2P) {
 							if (p.getLocation().inWilderness()) {
 								for (InvItem currentItem : p.getInventory().getItems()) {
@@ -505,7 +510,7 @@ public final class World
 						public boolean proceedIf()
 						{
 							return wildernessIPTracker.ipCount(player.getIP())
-									< Config.ALLOWED_CONCURRENT_IPS_IN_WILDERNESS;
+									< Config.getAllowedConcurrentIpsInWilderness();
 						}
 					}
 				))
@@ -523,14 +528,16 @@ public final class World
                         return;
                     }
                 } catch(Exception e) {
-                    System.out.println("Exception caught with null owner");
+                    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                    Date date = new Date();
+                    System.out.println(dateFormat.format(date)+": Exception caught with null owner");
                     return;
                 }
             }
 			if (!players.contains(player)) {
 				player.setInitialized();
 				players.add(player);
-				//System.out.println("Added:   " + player.getUsername());
+				//System.out.println(dateFormat.format(date)+": Added:   " + player.getUsername());
 				player.load();
 			} else {
 				player.getSession().close();
@@ -642,8 +649,10 @@ public final class World
 	
 	private static void registerNpc(Npc n) {
 		NPCLoc npc = n.getLoc();
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                Date date = new Date();
 		if (npc.startX < npc.minX || npc.startX > npc.maxX || npc.startY < npc.minY || npc.startY > npc.maxY || (World.mapValues[npc.startX][npc.startY] & 64) != 0)
-			System.out.println("Broken NPC: " + npc.id + " " + npc.startX + " " + npc.startY);
+			System.out.println(dateFormat.format(date)+": Broken NPC: " + npc.id + " " + npc.startX + " " + npc.startY);
 		npcs.add(n);
 	}
 	
@@ -910,9 +919,9 @@ public final class World
 
 	public static void getLotteryPot(Player player) {
         if (lotteryRunning)
-            player.sendMessage(Config.PREFIX + "@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@!");
+            player.sendMessage(Config.getPrefix() + "@whi@ The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@!");
         else
-            player.sendMessage(Config.PREFIX + "@whi@ There's currently no lottery running");
+            player.sendMessage(Config.getPrefix() + "@whi@ There's currently no lottery running");
 	}
 
 	public static void startLottery(int price) {
@@ -923,7 +932,7 @@ public final class World
 
         for (Player informee : World.getPlayers()) {
             informee.sendNotification("@gre@Lottery:@whi@ Each entry is @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@. Type @gre@::LOTTERY@whi@ to purchase a ticket!");
-            informee.sendNotification("@gre@Lottery:@whi@ Open RSC Lottery is now running!");
+            informee.sendNotification("@gre@Lottery:@whi@ "+ Config.getServerName() +" Lottery is now running!");
         }               
 	}
 
@@ -964,22 +973,22 @@ public final class World
 
 	public static void buyTicket(Player player) {
         if (player.getBank().countId(10) < lotteryPrice && player.getInventory().countId(10) < lotteryPrice) {
-            player.sendMessage(Config.PREFIX + "It seems that you don't have enough to buy a lottery ticket...");
-            player.sendMessage(Config.PREFIX + "Please ensure that you have @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@ in your inventory or bank and try again");
+            player.sendMessage(Config.getPrefix() + "It seems that you don't have enough to buy a lottery ticket...");
+            player.sendMessage(Config.getPrefix() + "Please ensure that you have @gre@" + DataConversions.insertCommas("" + lotteryPrice) + " GP@whi@ in your inventory or bank and try again");
         } else if (player.getLocation().inWilderness())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst in the wilderness");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery whilst in the wilderness");
         else if (player.isDueling())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are dueling");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery whilst you are dueling");
         else if (player.isTrading())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you are trading");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery whilst you are trading");
         else if (player.isBusy())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're set as busy");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery whilst you're set as busy");
         else if (player.accessingBank())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're banking");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery whilst you're banking");
         else if (player.isSuperMod())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery on a staff character");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery on a staff character");
         else if (player.accessingShop())
-            player.sendMessage(Config.PREFIX + "You cannot enter the lottery whilst you're in a shop");
+            player.sendMessage(Config.getPrefix() + "You cannot enter the lottery whilst you're in a shop");
         else {
             if (player.getInventory().countId(10) >= lotteryPrice) {
                 if (player.getInventory().remove(new InvItem(10, lotteryPrice)) == -1)
@@ -997,7 +1006,7 @@ public final class World
                 lotteryNotify++;
             else {
                 for (Player informee : World.getPlayers())
-                    informee.sendNotification(Config.PREFIX + " The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@! Type @gre@::LOTTERY@whi@ to enter.");                                       
+                    informee.sendNotification(Config.getPrefix() + " The lottery pot is now at @gre@" + DataConversions.insertCommas("" + lotteryPot) + " GP@whi@! Type @gre@::LOTTERY@whi@ to enter.");
                 lotteryNotify = 0;
             }                               
         }               
