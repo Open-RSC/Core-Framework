@@ -1,5 +1,6 @@
 package org.openrsc.server.packethandler;
 
+import org.openrsc.server.model.*;
 import org.openrsc.server.packethandler.PacketHandler;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.entityhandling.EntityHandler;
@@ -13,10 +14,7 @@ import org.openrsc.server.entityhandling.defs.extras.ItemGemDef;
 import org.openrsc.server.entityhandling.defs.extras.ItemHerbDef;
 import org.openrsc.server.entityhandling.defs.extras.ItemHerbSecond;
 import org.openrsc.server.entityhandling.defs.extras.ItemLogCutDef;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.World;
+
 public class InvUseOnItem implements PacketHandler {
 	private final int UNSTRUNG_SHORTBOW = 277;
 	private final int UNSTRUNG_LONGBOW = 276;
@@ -1083,7 +1081,7 @@ public class InvUseOnItem implements PacketHandler {
 						if (owner.getInventory().remove(glass) > -1) {
 							owner.sendMessage("You make a " + result.getDef().getName());
 							owner.getInventory().add(result);
-							owner.increaseXP(12, exp);
+							owner.increaseXP(Skills.CRAFTING, exp);
 							owner.sendStat(12);
 							owner.sendInventory();
 						}
@@ -1181,7 +1179,7 @@ public class InvUseOnItem implements PacketHandler {
 		if (player.getInventory().remove(second) > -1 && player.getInventory().remove(unfinished) > -1) {
 			player.sendMessage("You mix the " + second.getDef().getName() + " with the " + unfinished.getDef().getName());
 			player.getInventory().add(new InvItem(def.getPotionID(), 1));
-			player.increaseXP(15, def.getExp());
+			player.increaseXP(Skills.HERBLAW, def.getExp());
 			player.sendStat(15);
 			player.sendInventory();
 		}
@@ -1231,7 +1229,7 @@ public class InvUseOnItem implements PacketHandler {
 						if (owner.getInventory().remove(leather) > -1) {
 							owner.sendMessage("You make some " + result.getDef().getName());
 							owner.getInventory().add(result);
-							owner.increaseXP(12, exp);
+							owner.increaseXP(Skills.CRAFTING, exp);
 							owner.sendStat(12);
 							owner.sendInventory();
 						}
@@ -1288,33 +1286,33 @@ public class InvUseOnItem implements PacketHandler {
 	
 	private boolean attachFeathers(Player player, final InvItem feathers, final InvItem item) {
 		long amount = 10;
-		
-      	if (feathers.getAmount() < amount)
-      		amount = feathers.getAmount();
-      	if (item.getAmount() < amount)
-      		amount = item.getAmount();
-      	InvItem newItem;
-      	int exp;
-      	ItemDartTipDef tipDef = null;
-      	if (item.getID() == 280) {
-      		newItem = new InvItem(637, amount);
-      		exp = (int)amount;
-      	} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
-      		newItem = new InvItem(tipDef.getDartID(), amount);
-      		exp = (int)(tipDef.getExp() * (double)amount);
-      	} else
+		if (feathers.getAmount() < amount)
+      			amount = feathers.getAmount();
+ 	     	if (item.getAmount() < amount)
+      			amount = item.getAmount();
+	      	InvItem newItem;
+	      	ItemDartTipDef tipDef = null;
+      		if (item.getID() == 280) {
+      			newItem = new InvItem(637, 1);
+      		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
+      			newItem = new InvItem(tipDef.getDartID(), 1);
+      		} else
 			return false;
-      	final long amt = amount;
-      	final int xp = exp;
-      	final InvItem newItm = newItem;
+
+	      	final long amt = amount;
+	      	final InvItem newItm = newItem;
 		World.getDelayedEventHandler().add(new MiniEvent(player) {
 			public void action() {
-				if (owner.getInventory().remove(feathers.getID(), amt) > -1 && owner.getInventory().remove(item.getID(), amt) > -1) {
-					owner.sendMessage("You attach the feathers to the " + item.getDef().getName());
-					owner.getInventory().add(newItm);
-					owner.increaseXP(9, xp);
-					owner.sendStat(9);
-					owner.sendInventory();
+				owner.sendMessage("You attach the feathers to the " + item.getDef().getName());
+				long a = amt;
+				while (a > 0) {
+					if (owner.getInventory().remove(feathers.getID(), 1) > -1 && owner.getInventory().remove(item.getID(), 1) > -1) {
+						owner.getInventory().add(newItm);
+						owner.increaseXP(Skills.FLETCHING, 4);
+						owner.sendStat(9);
+						owner.sendInventory();
+					}
+					a--;
 				}
 			}
 		});
@@ -1336,7 +1334,7 @@ public class InvUseOnItem implements PacketHandler {
 					owner.sendMessage("You cut the " + cutGem.getDef().getName());
 					owner.sendSound("chisel", false);
 					owner.getInventory().add(cutGem);
-					owner.increaseXP(12, gemDef.getExp());
+					owner.increaseXP(Skills.CRAFTING, gemDef.getExp());
 					owner.sendStat(12);
 					owner.sendInventory();
 				}
@@ -1362,12 +1360,18 @@ public class InvUseOnItem implements PacketHandler {
 		final long amt = amount;
 		World.getDelayedEventHandler().add(new MiniEvent(player) {
 			public void action() {
-				if (owner.getInventory().remove(headlessArrows.getID(), amt) > -1 && owner.getInventory().remove(arrowHeads.getID(), amt) > -1) {
+				long a = amt;
+				if (a > 0)
 					owner.sendMessage("You attach the heads to the arrows");
-					owner.getInventory().add(new InvItem(headDef.getArrowID(), amt));
-					owner.increaseXP(9, (int)(headDef.getExp() * (double)amt));
-					owner.sendStat(9);
-					owner.sendInventory();
+				
+				while (a > 0) {
+					if (owner.getInventory().remove(headlessArrows.getID(), 1) > -1 && owner.getInventory().remove(arrowHeads.getID(), 1) > -1) {
+						owner.getInventory().add(new InvItem(headDef.getArrowID(), 1));
+						owner.increaseXP(Skills.FLETCHING, (int)(headDef.getExp()));
+						owner.sendStat(9);
+						owner.sendInventory();
+					}
+					a--;
 				}
 			}
 		});
@@ -1386,7 +1390,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(189, 1));
-								owner.increaseXP(9, 20);
+								owner.increaseXP(Skills.FLETCHING, 20);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1403,7 +1407,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(188, 1));
-								owner.increaseXP(9, 40);
+								owner.increaseXP(Skills.FLETCHING, 40);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1420,7 +1424,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(649, 1));
-								owner.increaseXP(9, 66);
+								owner.increaseXP(Skills.FLETCHING, 66);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1437,7 +1441,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(648, 1));
-								owner.increaseXP(9, 100);
+								owner.increaseXP(Skills.FLETCHING, 100);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1454,7 +1458,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(651, 1));
-								owner.increaseXP(9, 133);
+								owner.increaseXP(Skills.FLETCHING, 133);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1471,7 +1475,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(650, 1));
-								owner.increaseXP(9, 166);
+								owner.increaseXP(Skills.FLETCHING, 166);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1488,7 +1492,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(653, 1));
-								owner.increaseXP(9, 200);
+								owner.increaseXP(Skills.FLETCHING, 200);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1505,7 +1509,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(652, 1));
-								owner.increaseXP(9, 233);
+								owner.increaseXP(Skills.FLETCHING, 233);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1522,7 +1526,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(655, 1));
-								owner.increaseXP(9, 266);
+								owner.increaseXP(Skills.FLETCHING, 266);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1539,7 +1543,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(654, 1));
-								owner.increaseXP(9, 300);
+								owner.increaseXP(Skills.FLETCHING, 300);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1556,7 +1560,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(657, 1));
-								owner.increaseXP(9, 333);
+								owner.increaseXP(Skills.FLETCHING, 333);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1573,7 +1577,7 @@ public class InvUseOnItem implements PacketHandler {
 							if (owner.getInventory().remove(bowString) > -1 && owner.getInventory().remove(bow) > -1) {
 								owner.sendMessage("You add the bow string to the bow");
 								owner.getInventory().add(new InvItem(656, 1));
-								owner.increaseXP(9, 366);
+								owner.increaseXP(Skills.FLETCHING, 366);
 								owner.sendStat(9);
 								owner.sendInventory();
 							}
@@ -1625,7 +1629,7 @@ public class InvUseOnItem implements PacketHandler {
 						if (owner.getInventory().remove(log) > -1) {
 							owner.sendMessage("You make a " + result.getDef().getName());
 							owner.getInventory().add(result);
-							owner.increaseXP(9, exp);
+							owner.increaseXP(Skills.FLETCHING, exp);
 							owner.sendStat(9);
 							owner.sendInventory();
 						}
@@ -1651,7 +1655,7 @@ public class InvUseOnItem implements PacketHandler {
 				if (owner.getInventory().remove(vial) > -1 && owner.getInventory().remove(herb) > -1) {
 					owner.sendMessage("You add the " + herb.getDef().getName() + " to the water");
 					owner.getInventory().add(new InvItem(herbDef.getPotionId(), 1));
-					owner.increaseXP(15, herbDef.getExp());
+					owner.increaseXP(Skills.HERBLAW, herbDef.getExp());
 					owner.sendStat(15);
 					owner.sendInventory();
 				}

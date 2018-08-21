@@ -14,13 +14,14 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Hassan implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.PRINCE_ALI_RESCUE);
+		Quest q = owner.getQuest(Quests.PRINCE_ALI_RESCUE);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -57,7 +58,7 @@ public class Hassan implements NpcHandler {
 				if(alreadyPaid) {
 					World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"80 was put aside for the key. that leaves 620"}) {
 						public void finished() {
-							owner.finishQuest(Config.Quests.PRINCE_ALI_RESCUE);
+							owner.finishQuest(Quests.PRINCE_ALI_RESCUE);
 							owner.sendMessage("The chancellor pays you 620 coins");
 							owner.getInventory().add(new InvItem(10, 620));
 							owner.sendMessage("You have completed the quest of the Prince of Al Kharid");
@@ -69,7 +70,7 @@ public class Hassan implements NpcHandler {
 						}
 					});
 				} else {
-					owner.finishQuest(Config.Quests.PRINCE_ALI_RESCUE);
+					owner.finishQuest(Quests.PRINCE_ALI_RESCUE);
 					owner.sendMessage("The chancellor pays you 700 coins");
 					owner.getInventory().add(new InvItem(10, 700));
 					owner.sendMessage("You have completed the quest of the Prince of Al Kharid");
@@ -157,7 +158,7 @@ public class Hassan implements NpcHandler {
 											public void finished() {
 												owner.setBusy(false);
 												npc.unblock();
-												owner.addQuest(Config.Quests.PRINCE_ALI_RESCUE, 3);
+												owner.addQuest(Quests.PRINCE_ALI_RESCUE, 3);
 											}
 										});
 										break;

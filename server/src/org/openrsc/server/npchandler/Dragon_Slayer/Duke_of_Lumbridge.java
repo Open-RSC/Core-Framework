@@ -10,6 +10,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 
@@ -20,7 +21,7 @@ public class Duke_of_Lumbridge implements NpcHandler
 	{
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+		Quest q = owner.getQuest(Quests.DRAGON_SLAYER);
 		if(q != null) 
 		{
 			if(q.finished()) 
@@ -70,16 +71,16 @@ public class Duke_of_Lumbridge implements NpcHandler
 									{
 										if (owner.getInventory().countId(1304) > 0)
 										{
-											if (owner.getQuest(Config.Quests.DRAGON_SLAYER) != null)
+											if (owner.getQuest(Quests.DRAGON_SLAYER) != null)
 											{
-												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
-												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
+												owner.getQuest(Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Quests.DRAGON_SLAYER);
 											}
 											else
 											{
-												owner.addQuest(Config.Quests.DRAGON_SLAYER, 2);
-												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
-												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
+												owner.addQuest(Quests.DRAGON_SLAYER, 2);
+												owner.getQuest(Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Quests.DRAGON_SLAYER);
 											}
 											World.getDelayedEventHandler().add(new SingleEvent(owner, 2000)
 											{
@@ -118,16 +119,16 @@ public class Duke_of_Lumbridge implements NpcHandler
 									{
 										if (owner.getInventory().countId(10) >= 500000)
 										{
-											if (owner.getQuest(Config.Quests.DRAGON_SLAYER) != null)
+											if (owner.getQuest(Quests.DRAGON_SLAYER) != null)
 											{
-												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
-												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
+												owner.getQuest(Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Quests.DRAGON_SLAYER);
 											}
 											else
 											{
-												owner.addQuest(Config.Quests.DRAGON_SLAYER, 2);
-												owner.getQuest(Config.Quests.DRAGON_SLAYER).setStage(3);
-												owner.finishQuest(Config.Quests.DRAGON_SLAYER);
+												owner.addQuest(Quests.DRAGON_SLAYER, 2);
+												owner.getQuest(Quests.DRAGON_SLAYER).setStage(3);
+												owner.finishQuest(Quests.DRAGON_SLAYER);
 											}
 											World.getDelayedEventHandler().add(new SingleEvent(owner, 2000)
 											{

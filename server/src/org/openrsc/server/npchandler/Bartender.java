@@ -11,6 +11,7 @@ import org.openrsc.server.model.World;
 import org.openrsc.server.event.ShortEvent;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.event.DelayedQuestChat;
+import org.openrsc.server.model.Quests;
 
 public class Bartender implements NpcHandler {
 
@@ -48,7 +49,7 @@ public class Bartender implements NpcHandler {
 	public void handleNpc(final Npc npc, Player player) throws Exception {
 		switch(npc.getID()) {
 			case 150:
-				Quest q = player.getQuest(Config.Quests.GOBLIN_DIPLOMACY);
+				Quest q = player.getQuest(Quests.GOBLIN_DIPLOMACY);
 				if(q == null) {
 					final String[] options1 = {"Could I buy a beer please?", "Not very busy in here today is it?"};
 					player.setBusy(false);
@@ -70,7 +71,7 @@ public class Bartender implements NpcHandler {
 											final String[] messages3 = {"Well if I have time I'll see if I can go knock some sense into them"};
 											World.getDelayedEventHandler().add(new DelayedQuestChat(owner, npc, messages3) {
 												public void finished() {
-													owner.addQuest(Config.Quests.GOBLIN_DIPLOMACY, 5);
+													owner.addQuest(Quests.GOBLIN_DIPLOMACY, 5);
 													owner.setBusy(false);
 													npc.unblock();
 												}

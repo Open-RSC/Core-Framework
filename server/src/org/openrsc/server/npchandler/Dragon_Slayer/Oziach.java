@@ -12,6 +12,7 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.Shop;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
@@ -20,7 +21,7 @@ public class Oziach implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.DRAGON_SLAYER);
+		Quest q = owner.getQuest(Quests.DRAGON_SLAYER);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -259,7 +260,7 @@ public class Oziach implements NpcHandler {
 								switch(option) {
 									case 0:
 									case 1:
-										owner.incQuestCompletionStage(Config.Quests.DRAGON_SLAYER);
+										owner.incQuestCompletionStage(Quests.DRAGON_SLAYER);
 										needAnything(npc, owner);
 										break;
 									case 2:

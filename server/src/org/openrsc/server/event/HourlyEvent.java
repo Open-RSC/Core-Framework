@@ -44,7 +44,7 @@ public class HourlyEvent extends TimedEvent {
         {
             NPCDef.spawnEventNpcs(npcID, npcAmt, item_id, item_amount, location, npc_timeout);
             for(Player p : World.getPlayers())
-                p.sendMessage(Config.PREFIX + message);
+                p.sendMessage(Config.getPrefix() + message);
         }
     }
     

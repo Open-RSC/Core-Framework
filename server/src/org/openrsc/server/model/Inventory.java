@@ -74,10 +74,12 @@ public class Inventory {
 					return index;
 				}
 			}
+			// No item found, add it as a new item.
+                        list.add(new InvItem(item.getID(), item.getAmount()));
+                        return list.size() - 2;
 		} else if(item.getAmount() > 1)
 			item.setAmount(1);
 		if(this.full()) {
-			player.sendMessage("Your Inventory is full, the " + item.getDef().getName() + " drops to the ground!");
 			World.registerEntity(new Item(item.getID(), player.getX(), player.getY(), item.getAmount(), player));
 			return -1;
 		} else
@@ -137,7 +139,7 @@ public class Inventory {
 		return -1;
 	}
 	
-	public long countId(int id) {
+	public long countId(long id) {
 		long temp = 0;
 		for (InvItem i : list) {
 			if (i.getID() == id)
@@ -149,7 +151,7 @@ public class Inventory {
 	public boolean full() {
 		return list.size() >= MAX_SIZE;
 	}
-	
+
 	public boolean contains(int i) {
 		return contains(new InvItem(i, 1));
 	}
@@ -188,9 +190,13 @@ public class Inventory {
 	public final boolean isEmpty() {
 		return list.size() == 0;
 	}
-	
+
 	public int size() {
 		return list.size();
+	}
+
+	public int getEmptySlots() {
+		return MAX_SIZE - list.size();
 	}
 	
 	public int getFreedSlots(List<InvItem> items) {

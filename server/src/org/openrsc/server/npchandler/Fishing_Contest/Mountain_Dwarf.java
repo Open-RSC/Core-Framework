@@ -10,12 +10,7 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 
@@ -26,7 +21,7 @@ public class Mountain_Dwarf implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.FISHING_CONTEST);
+		Quest q = owner.getQuest(Quests.FISHING_CONTEST);
 		if(q != null) {
 			if(q.finished()) {
 				finished(npc, owner);
@@ -250,8 +245,8 @@ public class Mountain_Dwarf implements NpcHandler {
 			owner.sendMessage("The dwarf gives you a competition pass");
 			owner.getInventory().add(719, 1);
 			owner.sendInventory();
-			owner.addQuest(Config.Quests.FISHING_CONTEST, 1);
-			owner.incQuestCompletionStage(Config.Quests.FISHING_CONTEST);
+			owner.addQuest(Quests.FISHING_CONTEST, 1);
+			owner.incQuestCompletionStage(Quests.FISHING_CONTEST);
 			owner.setBusy(false);
 			npc.unblock();
 			}
@@ -329,8 +324,8 @@ public class Mountain_Dwarf implements NpcHandler {
 											owner.sendMessage("You give the trophy to the dwarf");
 											World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Okay we will let you in now"}) {
 												public void finished() {
-													owner.finishQuest(Config.Quests.FISHING_CONTEST);
-													owner.incQuestExp(10, 3225);
+													owner.finishQuest(Quests.FISHING_CONTEST);
+													owner.incQuestExp(Skills.FISHING, 3225);
 													owner.sendStat(10);
 													owner.sendMessage("@gre@You have completed the Fishing Contest quest!");
 													owner.sendMessage("@gre@You have been awarded 1 quest point!");

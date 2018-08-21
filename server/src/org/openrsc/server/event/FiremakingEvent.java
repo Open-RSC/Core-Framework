@@ -1,10 +1,7 @@
 package org.openrsc.server.event;
 
+import org.openrsc.server.model.*;
 import org.openrsc.server.util.Formulae;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Item;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.World;
 
 public class FiremakingEvent extends ShortEvent {
 	private Item item;
@@ -29,7 +26,7 @@ public class FiremakingEvent extends ShortEvent {
 						}
 					}
 				});
-				owner.increaseXP(11, 25 + (owner.getMaxStat(11) * 7));
+				owner.increaseXP(Skills.FIREMAKING, 100 + (owner.getMaxStat(11) * 7));
 				owner.sendStat(11);
 			} else
 				owner.sendMessage("You fail to light a fire");

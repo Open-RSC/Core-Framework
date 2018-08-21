@@ -37,7 +37,7 @@ public class Subscription_Vendor implements NpcHandler {
 			{
 				Connection connection = dummy.getConnection();
 				RESET_CARDS = connection.prepareStatement("UPDATE `users` SET `sub_due` = '0', `sub_given` = UNIX_TIMESTAMP() WHERE `id` = ?");
-				LOG = connection.prepareStatement("INSERT INTO `"+Config.LOG_DB_NAME+"`.`game_collect` (`user`, `account`, `time`, `amount`, `ip`) VALUES (?, ?, ?, ?, ?);");
+				LOG = connection.prepareStatement("INSERT INTO `"+ Config.getLogDbName() +"`.`game_collect` (`user`, `account`, `time`, `amount`, `ip`) VALUES (?, ?, ?, ?, ?);");
 			}
 			catch(SQLException e)
 			{

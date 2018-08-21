@@ -1,10 +1,7 @@
 package org.openrsc.server.event;
 
 import org.openrsc.server.entityhandling.defs.extras.ObjectMiningDef;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.util.DataConversions;
 import org.openrsc.server.util.Formulae;
 
@@ -50,7 +47,7 @@ public class MiningEvent extends DelayedEvent {
 					} else {
 						owner.getInventory().add(ore);
 						owner.sendMessage("You manage to obtain some " + ore.getDef().getName() + ".");
-						owner.increaseXP(14, def.getExp());
+						owner.increaseXP(Skills.MINING, def.getExp());
 						owner.sendStat(14);
 						World.registerEntity(new GameObject(object.getLocation(), 98, object.getDirection(), object.getType()));
 						World.delayedSpawnObject(object.getLoc(), def.getRespawnTime() * 1000);

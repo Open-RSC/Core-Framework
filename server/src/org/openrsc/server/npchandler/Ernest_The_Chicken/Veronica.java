@@ -12,13 +12,14 @@ import org.openrsc.server.model.Quest;
 import org.openrsc.server.model.World;
 import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.model.Player;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 
 public class Veronica implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.ERNEST_THE_CHICKEN);
+		Quest q = owner.getQuest(Quests.ERNEST_THE_CHICKEN);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -133,7 +134,7 @@ public class Veronica implements NpcHandler {
 														final String[] messages8 = {"Thank you, thank you", "I'm very grateful"};
 														World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, messages8) {
 															public void finished() {
-																owner.addQuest(Config.Quests.ERNEST_THE_CHICKEN, 4);
+																owner.addQuest(Quests.ERNEST_THE_CHICKEN, 4);
 																owner.setBusy(false);
 																npc.unblock();
 															}

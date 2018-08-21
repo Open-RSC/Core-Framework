@@ -1,6 +1,5 @@
 package org.openrsc.server.packethandler;
 import org.apache.mina.common.IoSession;
-import org.openrsc.server.Config;
 import org.openrsc.server.event.DelayedEvent;
 import org.openrsc.server.event.DelayedGenericMessage;
 import org.openrsc.server.event.DelayedQuestChat;
@@ -8,12 +7,16 @@ import org.openrsc.server.event.FightEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.PickUpLog;
 import org.openrsc.server.model.ChatMessage;
+import org.openrsc.server.model.GameObject;
 import org.openrsc.server.model.InvItem;
 import org.openrsc.server.model.Item;
 import org.openrsc.server.model.Npc;
+import org.openrsc.server.model.Path;
+import org.openrsc.server.model.PathHandler;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Point;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.states.Action;
@@ -56,9 +59,19 @@ public class PickupItem implements PacketHandler {
 						}
 						
                         // TODO: getLocation should override equals and form a Point out of x/y and then compare the two points
-						if (owner.getLocation().getX() != x || owner.getLocation().getY() != y)
+                        GameObject o = World.getZone(x, y).getObjectAt(x, y);
+						if (
+                            (
+                                (owner.getLocation().getX() != x || owner.getLocation().getY() != y) &&
+                                (o == null)
+                             ) || 
+                            (
+                                (o != null) && 
+                                (!owner.withinOneSquare(item))
+                            )
+                        )
 							return;
-						
+                        
 						if (item != null) {
 							if (!(owner.isRemoved() || owner.isBusy() || owner.isRanging() || !owner.nextTo(item) || owner.getStatus() != Action.TAKING_GITEM)) {
 								owner.resetAllExceptDMing();
@@ -75,7 +88,7 @@ public class PickupItem implements PacketHandler {
 										final Npc weaponsmaster = World.getNpc(37, 102, 1476, 107, 1480);
 										if(weaponsmaster != null && owner.getLocation().inBounds(102, 1476, 107, 1480)) {
 											owner.setBusy(true);
-											Quest phoenix = owner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+											Quest phoenix = owner.getQuest(Quests.JOIN_PHOENIX_GANG);
 											if(phoenix != null) {
 												if(!phoenix.finished()) {
 													World.getDelayedEventHandler().add(new DelayedQuestChat(weaponsmaster, owner, new String[] {"Hey thief!"}, true) {
@@ -156,7 +169,7 @@ public class PickupItem implements PacketHandler {
 									break;
 									
 									case 412: // Skull [QUEST]
-										if (owner.getQuestCompletionStage(Config.Quests.THE_RESTLESS_GHOST) == 2 || owner.getQuestCompletionStage(Config.Quests.THE_RESTLESS_GHOST) == 3 && !owner.getInventory().contains(412)) {
+										if (owner.getQuestCompletionStage(Quests.THE_RESTLESS_GHOST) == 2 || owner.getQuestCompletionStage(Quests.THE_RESTLESS_GHOST) == 3 && !owner.getInventory().contains(412)) {
 											if (!owner.hasKilledSkeleton()) {
 												Npc skeleton = new Npc(40, owner.getX(), owner.getY(), owner.getX() - 3, owner.getX() + 3, owner.getY() - 3, owner.getY() + 3);
 												owner.sendMessage("Out of nowhere a skeleton appears!");

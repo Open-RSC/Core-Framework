@@ -63,11 +63,11 @@ public class TradeHandler implements PacketHandler {
 													} else
 													player.sendMessage("Sending trade request");
 												} else
-													player.sendMessage(Config.PREFIX + "You cannot trade whilst in jail");
+													player.sendMessage(Config.getPrefix() + "You cannot trade whilst in jail");
 											} else
-												player.sendMessage(Config.PREFIX + "You cannot trade someone who's in a DM");												
+												player.sendMessage(Config.getPrefix() + "You cannot trade someone who's in a DM");
 										} else
-											player.sendMessage(Config.PREFIX + "You cannot trade whilst in a DM");
+											player.sendMessage(Config.getPrefix() + "You cannot trade whilst in a DM");
 									} else
 										player.sendMessage("There is an obstacle in the way");
 								} else

@@ -17,14 +17,7 @@ import org.openrsc.server.event.MiniEvent;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.ExploitLog;
-import org.openrsc.server.model.GameObject;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Path;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.states.Action;
 import org.openrsc.server.util.DataConversions;
@@ -48,7 +41,7 @@ public class InvActionHandler implements PacketHandler {
 					eat(player, item);
 				else if (item.getDef().getCommand().equalsIgnoreCase("bury"))
 					bury(player, item);
-				else if (item.getDef().getCommand().equalsIgnoreCase("clean"))
+				else if (item.getDef().getCommand().equalsIgnoreCase("clean") || item.getDef().getCommand().equalsIgnoreCase("identify"))
 					clean(player, item);
 				else if (item.getDef().getCommand().equalsIgnoreCase("drink"))
 					drink(player, item);
@@ -94,10 +87,10 @@ public class InvActionHandler implements PacketHandler {
 							player.setStatus(Action.READING_BOOK);
 							World.getDelayedEventHandler().add(new DelayedGenericMessage(player, new String[] {"The shield of Arrav", "By a.R.Wright", "Arrav is probably the best known hero of the 4th age.", "One surviving artifact from the 4th age is a fabulous shield.", "This shield is believed to have once belonged to Arrav", "And is now indeed known as the shield of Arrav", "For 15 years it was the prize piece in the royal museum of Varrock.", "However in the year 143 of the 5th age", "A gang of thieves called the phoenix gang broke into the museum", "And stole the shield", "King Roald the VII put a 1200 gold reward on the return of the shield", "The thieves who stole the shield", "Have now become the most powerful crime gang in Varrock", "The reward for the return of the shield still stands."}, 2500) {
 								public void finished() {
-									Quest q = owner.getQuest(Config.Quests.SHIELD_OF_ARRAV);
+									Quest q = owner.getQuest(Quests.SHIELD_OF_ARRAV);
 									if (q != null)
 										if (q.getStage() == 0)
-											owner.incQuestCompletionStage(Config.Quests.SHIELD_OF_ARRAV);
+											owner.incQuestCompletionStage(Quests.SHIELD_OF_ARRAV);
 									owner.setBusy(false);
 									owner.setStatus(Action.IDLE);
 								}
@@ -131,7 +124,7 @@ public class InvActionHandler implements PacketHandler {
 											public void handleReply(final int option, final String reply) {
 												if (owner.isBusy() || owner.getInventory().get(item) == null)
 													return;
-												if (owner.getLocation().inWilderness()) {
+												if (owner.getLocation().wildernessLevel() > 29) {
 													owner.sendMessage("A magical force stops you from teleporting");
 													return;
 												}
@@ -228,7 +221,7 @@ public class InvActionHandler implements PacketHandler {
 						case 1263: //Sleeping Bag
 							if (item.getID() == 1263 && !player.inCombat())
 							{
-							    if (Config.DISABLE_FATIGUE) {
+							    if (Config.isDisableFatigue()) {
 							        player.sendMessage("Fatigue is disabled on this server.");
 							        break;
 							    }
@@ -245,111 +238,6 @@ public class InvActionHandler implements PacketHandler {
 							}
 							break;
 							
-						case 1291: // Body talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 332, 507));
-							showBubble(player, item);
-						break;
-						case 1292: // Air talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 299, 586));
-							showBubble(player, item);
-						break;
-						case 1293: // Water talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 175, 682));
-							showBubble(player, item);
-						break;
-						case 1294: // Fire talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 51, 646));
-							showBubble(player, item);
-						break;
-						case 1295: // Earth talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 85, 468));
-							showBubble(player, item);
-						break;
-						case 1296: // Nature talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 480, 671));
-							showBubble(player, item);
-						break;
-						case 1297: // Law talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 402, 539));
-							showBubble(player, item);
-						break;
-						case 1298: // Cosmic talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 149, 3538));
-							showBubble(player, item);
-						break;
-						case 1299: // Chaos talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 209, 394));
-							showBubble(player, item);
-						break;
-						case 1300: // Death talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 164, 119));
-							showBubble(player, item);
-						break;
-						case 1301: // Blood talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 254, 124));
-							showBubble(player, item);
-						break;
-						case 1302: // Soul talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 496, 533));
-							showBubble(player, item);
-						break;
-						case 1303: // Mind talisman
-							if (Config.DISABLE_RUNECRAFTING) {
-								player.sendMessage("Runecrafting is disabled on this server.");
-								break;
-							}
-							player.sendMessage(locateAltar(player.getX(), player.getY(), 234, 474));
-							showBubble(player, item);
-						break;
-						
 						default:
 							player.sendMessage("Nothing interesting happens");
 						return;
@@ -561,7 +449,7 @@ public class InvActionHandler implements PacketHandler {
 			{
 				Connection connection = dummy.getConnection();
 				SUBSCRIBE_PS = connection.prepareStatement("UPDATE `users` SET `group_id` = CASE WHEN `group_id` = '4' THEN '5' ELSE `group_id` END, `sub_expires` = CASE WHEN `sub_expires` >= UNIX_TIMESTAMP() THEN `sub_expires` + 2592000 ELSE UNIX_TIMESTAMP() + 2592000 END, `character_limit` = `character_limit` + 1 WHERE `id` = ?");
-				LOG_PS = connection.prepareStatement("INSERT INTO `"+Config.LOG_DB_NAME+"`.`game_redeem` (`user`, `account`, `time`, `ip`) VALUES (?, ?, ?, ?);");
+				LOG_PS = connection.prepareStatement("INSERT INTO `"+ Config.getLogDbName() +"`.`game_redeem` (`user`, `account`, `time`, `ip`) VALUES (?, ?, ?, ?);");
 			}
 			catch(SQLException e)
 			{
@@ -637,7 +525,7 @@ public class InvActionHandler implements PacketHandler {
 										player.setSubscriptionExpires(2592000 + player.getSubscriptionExpires());
 									else
 										player.setSubscriptionExpires(DataConversions.getTimeStamp() + 2592000);
-									player.sendAlert("Thank you for subscribing to " + Config.SERVER_NAME + "!  Without subscribers we simply wouldn't be able to keep " + Config.SERVER_NAME + " up and running.  You have " + player.getDaysSubscriptionLeft() + " days remaining.");
+									player.sendAlert("Thank you for subscribing to " + Config.getServerName() + "!  Without subscribers we simply wouldn't be able to keep " + Config.getServerName() + " up and running.  You have " + player.getDaysSubscriptionLeft() + " days remaining.");
 									ServerBootstrap.getDatabaseService().submit(new SubscriptionTransaction(player.getUsernameHash(), player.getAccount(), DataConversions.getTimeStamp(), player.getIP()));
 								}
 								break;
@@ -659,7 +547,7 @@ public class InvActionHandler implements PacketHandler {
 		switch (item.getID())
 		{
 			case 799:
-				Quest Biohazard_Quest = player.getQuest(Config.Quests.BIOHAZARD);
+				Quest Biohazard_Quest = player.getQuest(Quests.BIOHAZARD);
 				if (Biohazard_Quest.getStage() == 2)
 				{
 					if (player.getSeedsUsed() > 0 && player.getLocation().inBounds(620, 583, 622, 589))
@@ -669,7 +557,7 @@ public class InvActionHandler implements PacketHandler {
 						{
 							public void finished() 
 							{
-								owner.incQuestCompletionStage(Config.Quests.BIOHAZARD);
+								owner.incQuestCompletionStage(Quests.BIOHAZARD);
 								owner.setBusy(false);
 							}
 						});
@@ -693,7 +581,7 @@ public class InvActionHandler implements PacketHandler {
 		if (player.canDrink()) {
 				if (player.getLocation().wildernessLevel() > 0 && !World.isP2PWilderness() && item.getDef().isP2P())
 				{
-					player.sendMessage(Config.PREFIX + "You can only use this potion when the wilderness state is P2P");
+					player.sendMessage(Config.getPrefix() + "You can only use this potion when the wilderness state is P2P");
 					return;
 				}
 				player.setLastDrink();
@@ -1009,9 +897,10 @@ public class InvActionHandler implements PacketHandler {
 	private void clean(Player player, final InvItem item) {
 		ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
 		if (herb != null) {
-			if (player.getMaxStat(15) < herb.getLevelRequired())
-				player.sendMessage("Your herblaw ability is not high enough to clean this herb");
-			else {
+			if (player.getMaxStat(15) < herb.getLevelRequired()) {
+				player.sendMessage("You cannot identify this herb");
+				player.sendMessage("you need a higher herblaw level");
+			} else {
 				player.setBusy(true);
 				World.getDelayedEventHandler().add(new MiniEvent(player) {
 					public void action() {
@@ -1019,8 +908,8 @@ public class InvActionHandler implements PacketHandler {
 						InvItem newItem = new InvItem(herb.getNewId());
 						owner.getInventory().remove(item);
 						owner.getInventory().add(newItem);
-						owner.sendMessage("You clean the mud off the " + newItem.getDef().getName());
-						owner.increaseXP(15, herb.getExp());
+						owner.sendMessage("This herb is " + newItem.getDef().getName());
+						owner.increaseXP(Skills.HERBLAW, herb.getExp());
 						owner.sendStat(15);
 						owner.sendInventory();
 						owner.setBusy(false);
@@ -1040,16 +929,16 @@ public class InvActionHandler implements PacketHandler {
 				owner.getInventory().remove(item);
 				switch(item.getID()) {
 					case 20: // Bones
-						owner.increaseXP(5, 15);
+						owner.increaseXP(Skills.PRAYER, 15);
 						break;						
 					case 604: // Bat Bones
-						owner.increaseXP(5, 18);
+						owner.increaseXP(Skills.PRAYER, 18);
 						break;
 					case 413: // Big Bones
-						owner.increaseXP(5, 50);
+						owner.increaseXP(Skills.PRAYER, 50);
 						break;
 					case 814: // Dragon Bones
-						owner.increaseXP(5, 240);
+						owner.increaseXP(Skills.PRAYER, 240);
 						break;
 				}
 				owner.sendStat(5);
@@ -1065,7 +954,7 @@ public class InvActionHandler implements PacketHandler {
 		{
 			if (player.getLocation().inWilderness() && !World.isP2PWilderness() && item.getDef().isP2P())
 			{
-				player.sendMessage(Config.PREFIX + "This item is only edible when the wilderness state is P2P.");
+				player.sendMessage(Config.getPrefix() + "This item is only edible when the wilderness state is P2P.");
 				return;
 			}
 			
@@ -1158,7 +1047,7 @@ public class InvActionHandler implements PacketHandler {
 	
 	private void usePrayerPotion(Player player, final InvItem item, final int newItem, final int left) {
 		if (player.getDMSetting(3)) {
-			player.sendMessage(Config.PREFIX + "Potions have been disabled in this Death Match");
+			player.sendMessage(Config.getPrefix() + "Potions have been disabled in this Death Match");
 			return;
 		}		
 		player.setStatus(Action.DRINKING);
@@ -1188,7 +1077,7 @@ public class InvActionHandler implements PacketHandler {
 	
 	private void useStatRestorePotion(Player player, final InvItem item, final int newItem, final int left) {
 		if (player.getDMSetting(3)) {
-			player.sendMessage(Config.PREFIX + "Potions have been disabled in this Death Match");
+			player.sendMessage(Config.getPrefix() + "Potions have been disabled in this Death Match");
 			return;
 		}		
 		player.setStatus(Action.DRINKING);
@@ -1222,7 +1111,7 @@ public class InvActionHandler implements PacketHandler {
 	
 	private void useFishingPotion(Player player, final InvItem item, final int newItem, final int left) {
 		if (player.getDMSetting(3)) {
-			player.sendMessage(Config.PREFIX + "Potions have been disabled in this Death Match");
+			player.sendMessage(Config.getPrefix() + "Potions have been disabled in this Death Match");
 			return;
 		}		
 		player.setStatus(Action.DRINKING);
@@ -1248,7 +1137,7 @@ public class InvActionHandler implements PacketHandler {
 	
 	private void useZamorakPotion(Player player, final InvItem item, final int newItem, final int left) {
 		if (player.getLocation().isInDMArena())
-			player.sendMessage(Config.PREFIX + "You cannot drink Zamorak potions in the DM arena");
+			player.sendMessage(Config.getPrefix() + "You cannot drink Zamorak potions in the DM arena");
 		else {
 			player.setStatus(Action.DRINKING);
 			if (!player.getLocation().inWilderness())
@@ -1312,7 +1201,7 @@ public class InvActionHandler implements PacketHandler {
 	
 	private void useCurePotion(Player player, final InvItem item, final int newItem, final int left) {
 		if (player.getDMSetting(3)) {
-			player.sendMessage(Config.PREFIX + "Potions have been disabled in this Death Match");
+			player.sendMessage(Config.getPrefix() + "Potions have been disabled in this Death Match");
 			return;
 		}		
 		player.setStatus(Action.DRINKING);

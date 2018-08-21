@@ -218,14 +218,14 @@ public class Npc extends Mob {
 				case 19: // Tutorial Island Rat
 				if (player.getLocation().onTutorialIsland())
 				{
-					Quest tutorialIsland = player.getQuest(Config.Quests.TUTORIAL_ISLAND);
+					Quest tutorialIsland = player.getQuest(Quests.TUTORIAL_ISLAND);
 					if (tutorialIsland != null)
 					{
 						if (tutorialIsland.getStage() == 3)
 						{
 							player.sendMessage("You have successfully killed the rat.");
 							player.sendMessage("Speak to the combat instructor for furhter instructions");
-							player.incQuestCompletionStage(Config.Quests.TUTORIAL_ISLAND);
+							player.incQuestCompletionStage(Quests.TUTORIAL_ISLAND);
 						}
 					}
 				}
@@ -233,15 +233,15 @@ public class Npc extends Mob {
 				
 				// make sure the player is on the right stage...
 				case 216:
-					if(player.getQuest(Config.Quests.LOST_CITY) != null && player.getQuest(Config.Quests.LOST_CITY).getStage() == 3)
+					if(player.getQuest(Quests.LOST_CITY) != null && player.getQuest(Quests.LOST_CITY).getStage() == 3)
 					{
-						player.incQuestCompletionStage(Config.Quests.LOST_CITY);
+						player.incQuestCompletionStage(Quests.LOST_CITY);
 						player.sendMessage("You can now cut your branch.");
 					}
 				break;
 				
 				case 25:
-					Quest phoenix = winner.getQuest(Config.Quests.JOIN_PHOENIX_GANG);
+					Quest phoenix = winner.getQuest(Quests.JOIN_PHOENIX_GANG);
 					if(winner.getInventory().countId(49) == 0) {
 						if(phoenix != null) {
 							if(!phoenix.finished()) {
@@ -288,7 +288,7 @@ public class Npc extends Mob {
 				break;
 				
 				case 192:
-					Quest dragonslayer = winner.getQuest(Config.Quests.DRAGON_SLAYER);
+					Quest dragonslayer = winner.getQuest(Quests.DRAGON_SLAYER);
 					if (dragonslayer != null)
 						if (!dragonslayer.finished())
 							if (dragonslayer.getStage() > 0)
@@ -297,10 +297,10 @@ public class Npc extends Mob {
 				break;
 				
 				case 196: // Elvarg
-					Quest q = player.getQuest(Config.Quests.DRAGON_SLAYER);
+					Quest q = player.getQuest(Quests.DRAGON_SLAYER);
 					if (q != null) {
 						if (q.getStage() == 3 && !q.finished()) {
-							player.finishQuest(Config.Quests.DRAGON_SLAYER);
+							player.finishQuest(Quests.DRAGON_SLAYER);
 							player.sendQuestPointUpdate();
 							player.sendMessage("You have completed the Dragon Slayer!");
 							player.sendMessage("You have now earned the right to wear Rune Platemail armor.");
@@ -329,10 +329,10 @@ public class Npc extends Mob {
 						exp = (int)(partialExp * ((float)meleeDamageTable.get(p) / (float)getDef().getHits()));
 						switch (p.getCombatStyle()) {
 							case 0:
-								p.increaseXP(0, exp);
-								p.increaseXP(1, exp);
-								p.increaseXP(2, exp);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.ATTACK, exp);
+								p.increaseXP(Skills.DEFENSE, exp);
+								p.increaseXP(Skills.STRENGTH, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(0);
 								p.sendStat(1);
 								p.sendStat(2);
@@ -340,23 +340,23 @@ public class Npc extends Mob {
 							break;
 							
 							case 1:
-								p.increaseXP(2, exp * 3);
+								p.increaseXP(Skills.STRENGTH, exp * 3);
 								p.sendStat(2);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 2:
-								p.increaseXP(0, exp * 3);
+								p.increaseXP(Skills.ATTACK, exp * 3);
 								p.sendStat(0);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);							
 							break;
 							
 							case 3:
-								p.increaseXP(1, exp * 3);
+								p.increaseXP(Skills.DEFENSE, exp * 3);
 								p.sendStat(1);
-								p.increaseXP(3, exp);
+								p.increaseXP(Skills.HITS, exp);
 								p.sendStat(3);
 							break;
 						}
@@ -369,7 +369,7 @@ public class Npc extends Mob {
 						int exp;
 						float partialExp = Formulae.combatExperience(this);
 						exp = (int)(partialExp * ((float)rangeDamageTable.get(p) / (float)getDef().getHits()));
-						p.increaseXP(4, exp * 4);
+						p.increaseXP(Skills.RANGED, exp * 4);
 						p.sendStat(4);
 					}
 				}
@@ -418,7 +418,7 @@ public class Npc extends Mob {
 				isObtainable = false;
 				break;
 			case 271: //Rat's tail
-				isObtainable = winner.isQuestStarted(Config.Quests.WITCHS_POTION);
+				isObtainable = winner.isQuestStarted(Quests.WITCHS_POTION);
 				break;
 			default:
 				isObtainable = true;

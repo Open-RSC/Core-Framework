@@ -32,9 +32,9 @@ public class ShutdownEvent
 		{
 			if (messages != null && messages.length >= 1 && messages[0].length() > 0)
 			{
-				p.sendGraciousAlert(Config.SERVER_NAME + " will be shutting down in " + (Config.SHUTDOWN_TIME_MILLIS / 1000) + " seconds: " + messages[0]);
+				p.sendGraciousAlert(Config.getServerName() + " will be shutting down in " + (Config.getShutdownTimeMillis() / 1000) + " seconds: " + messages[0]);
 			}
-			p.startShutdown(Config.SHUTDOWN_TIME_MILLIS / 1000);
+			p.startShutdown(Config.getShutdownTimeMillis() / 1000);
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class ShutdownEvent
 	 */
 	public ShutdownEvent(boolean autoRestart, String... messages)
 	{
-		this(Config.SHUTDOWN_TIME_MILLIS, autoRestart, messages);
+		this(Config.getShutdownTimeMillis(), autoRestart, messages);
 	}
 
 	/**

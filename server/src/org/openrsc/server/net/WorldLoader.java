@@ -8,7 +8,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -71,6 +74,9 @@ import org.openrsc.server.util.ChatFilter;
 import org.openrsc.server.util.DataConversions;
 
 public class WorldLoader {
+    
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
 
 	public void writeQuery(String query) throws SQLException {
 		try (Connection connection = ConnectionFactory.getConfigDbConnection()) {
@@ -132,7 +138,7 @@ public class WorldLoader {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet rs = statement
-						.executeQuery("SELECT * FROM " + Config.STAFF_TELEPORT_LOCATION_DATABASE)) {
+						.executeQuery("SELECT * FROM " + Config.getStaffTeleportLocationDatabase())) {
 					while (rs.next()) {
 						int x = rs.getInt("x"), y = rs.getInt("y");
 						if (!World.withinWorld(x, y)) {
@@ -151,9 +157,9 @@ public class WorldLoader {
 	public void saveAuctionHouse() {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				statement.executeUpdate("TRUNCATE " + Config.AUCTIONS_TABLE);
+				statement.executeUpdate("TRUNCATE " + Config.getAuctionsTable());
 				for (Auction auction : World.getWorld().getAuctionHouse().getAllAuctions())
-					statement.addBatch("INSERT INTO " + Config.AUCTIONS_TABLE
+					statement.addBatch("INSERT INTO " + Config.getAuctionsTable()
 							+ "(`owner`, `sold`, `itemID`, `itemAmount`, `itemPrice`, `canceled`, `created`) VALUES ('"
 							+ DataConversions.usernameToHash(auction.getOwner()) + "', '" + (auction.isSold() ? 1 : 0)
 							+ "', '" + auction.getID() + "', '" + auction.getAmount() + "', '" + auction.getPrice()
@@ -169,13 +175,13 @@ public class WorldLoader {
 	public void deleteAuction(Auction a) {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				int ret = statement.executeUpdate("DELETE FROM " + Config.AUCTIONS_TABLE + " WHERE `owner`='"
+				int ret = statement.executeUpdate("DELETE FROM " + Config.getAuctionsTable() + " WHERE `owner`='"
 						+ DataConversions.usernameToHash(a.getOwner()) + "' AND `sold`='" + (a.isSold() ? 1 : 0)
 						+ "' AND `itemID`='" + a.getID() + "' AND `itemAmount`='" + a.getAmount()
 						+ "' AND `itemPrice`='" + a.getPrice() + "' AND `canceled`='" + (a.isCanceled() ? 1 : 0)
 						+ "' AND `created`='" + a.getCreatedTimestamp() + "' LIMIT 1;");
 				if (ret == 0)
-					System.out.println("Tried to delete non-existant auction");
+					System.out.println(dateFormat.format(date)+": Tried to delete non-existant auction");
 			}
 		} catch (SQLException e) {
 			System.err.println("Unable to save auction house.  " + e.getMessage());
@@ -185,13 +191,13 @@ public class WorldLoader {
 	public void addAuction(Auction auction) {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				int ret = statement.executeUpdate("INSERT INTO " + Config.AUCTIONS_TABLE
+				int ret = statement.executeUpdate("INSERT INTO " + Config.getAuctionsTable()
 						+ "(`owner`, `sold`, `itemID`, `itemAmount`, `itemPrice`, `canceled`, `created`) VALUES ('"
 						+ DataConversions.usernameToHash(auction.getOwner()) + "', '" + (auction.isSold() ? 1 : 0)
 						+ "', '" + auction.getID() + "', '" + auction.getAmount() + "', '" + auction.getPrice() + "', '"
 						+ (auction.isCanceled() ? 1 : 0) + "', '" + auction.getCreatedTimestamp() + "');");
 				if (ret == 0)
-					System.out.println("Unable to add auction, shouldn't happen.");
+					System.out.println(dateFormat.format(date)+": Unable to add auction, shouldn't happen.");
 			}
 		} catch (SQLException e) {
 			System.err.println("Unable to add auction: " + e.getMessage());
@@ -248,7 +254,7 @@ public class WorldLoader {
 	public void loadAuctionHouse() {
 		try (Connection connection = ConnectionFactory.getDbConnection()) {
 			try (Statement statement = connection.createStatement()) {
-				try (ResultSet rs = statement.executeQuery("SELECT * FROM " + Config.AUCTIONS_TABLE)) {
+				try (ResultSet rs = statement.executeQuery("SELECT * FROM " + Config.getAuctionsTable())) {
 					while (rs.next()) {
 						long owner = rs.getLong("owner");
 						int itemID = rs.getInt("itemID");
@@ -531,7 +537,7 @@ public class WorldLoader {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println(dateFormat.format(date)+": "+e);
 		}
 	}
 
@@ -939,7 +945,7 @@ public class WorldLoader {
 		}
         
         /*for (Map.Entry<Integer, ItemDef> entry : items.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue().getName());
+            System.out.println(dateFormat.format(date)+": "+entry.getKey() + ": " + entry.getValue().getName());
         }*/
         
 		return items;
@@ -1091,7 +1097,7 @@ public class WorldLoader {
 
 					} catch (Exception ex) {
 						ex.printStackTrace();
-						System.out.println("FUCKED Object @ ID: " + result.getInt("object") + " at ("
+						System.out.println(dateFormat.format(date)+": Invalid object located @ ID: " + result.getInt("object") + " at ("
 								+ result.getInt("x") + ", " + result.getInt("y") + ") Direction: "
 								+ result.getInt("direction") + " of type: " + result.getInt("type"));
 						throw (ExceptionInInitializerError) new ExceptionInInitializerError().initCause(ex);
@@ -1133,7 +1139,7 @@ public class WorldLoader {
 		try {
 			tileArchive = new ZipFile(new File("config" + System.getProperty("file.separator") + "landscape"));
 		} catch (Exception ex) {
-			System.out.println("Could not find file: config" + System.getProperty("file.separator") + "landscape");
+			System.out.println(dateFormat.format(date)+": Could not find file: config" + System.getProperty("file.separator") + "landscape");
 			System.exit(-1);
 		}
 		for (int lvl = 0; lvl < 4; lvl++) {
@@ -1163,7 +1169,7 @@ public class WorldLoader {
 			ByteBuffer data = DataConversions.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
 			s = Sector.unpack(data);
 		} catch (Exception e) {
-			System.out.println("Failed to load landscape - Server is terminating...");
+			System.out.println(dateFormat.format(date)+": Failed to load landscape - Server is terminating...");
 			throw (ExceptionInInitializerError) new ExceptionInInitializerError().initCause(e);
 		}
 		for (int y = 0; y < Sector.HEIGHT; y++) {

@@ -11,6 +11,7 @@ import org.openrsc.server.model.Item;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.net.Packet;
 import org.openrsc.server.npchandler.NpcHandler;
@@ -50,13 +51,13 @@ public class DropHandler implements PacketHandler {
 			
 			if (player.getLocation().isInDMArena()) 
 			{
-				player.sendMessage(Config.PREFIX + "You cannot drop items in the DM arena");
+				player.sendMessage(Config.getPrefix() + "You cannot drop items in the DM arena");
 				return;
 			}
 			
 			if (player.getX() == 1 && player.getY() == 3456)
 			{
-				player.sendMessage(Config.PREFIX + "You cannot drop items here");
+				player.sendMessage(Config.getPrefix() + "You cannot drop items here");
 				return;
 			}
 			
@@ -140,7 +141,7 @@ public class DropHandler implements PacketHandler {
 					
 							if(owner.getX() == 448 && owner.getY() == 435)
 							{
-								Quest q22 = owner.getQuest(Config.Quests.MERLINS_CRYSTAL);
+								Quest q22 = owner.getQuest(Quests.MERLINS_CRYSTAL);
 								if (q22 != null) {
 									if (q22.getStage() == 4) {
 									if(item.getID() == 604 && owner.getInventory().countId(602) > 0)

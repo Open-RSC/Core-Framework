@@ -10,20 +10,14 @@ import org.openrsc.server.event.DelayedQuestChat;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class Squire implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.THE_KNIGHTS_SWORD);
+		Quest q = owner.getQuest(Quests.THE_KNIGHTS_SWORD);
 		if(q != null) {
 			if(q.finished()) {
 				questFinished(npc, owner);
@@ -104,9 +98,9 @@ public class Squire implements NpcHandler {
 						owner.sendMessage("You give the sword to the squire");
 						owner.getInventory().remove(new InvItem(265, 1));
 						owner.sendInventory();
-						owner.finishQuest(Config.Quests.THE_KNIGHTS_SWORD);
+						owner.finishQuest(Quests.THE_KNIGHTS_SWORD);
 						owner.sendMessage("Well done you have completed the knight's sword quest");
-						owner.incQuestExp(13, 4850);
+						owner.incQuestExp(Skills.SMITHING, 4850);
 						owner.sendStat(13);
 						owner.sendMessage("@gre@You have gained 1 quest point!");
 						owner.setBusy(false);
@@ -254,7 +248,7 @@ public class Squire implements NpcHandler {
 	private void Ok(final Npc npc, final Player owner) {
 		World.getDelayedEventHandler().add(new DelayedQuestChat(npc, owner, new String[] {"Thank you very much", "As I say, the best place to start should be with reldo"}) {
 			public void finished() {
-				owner.addQuest(Config.Quests.THE_KNIGHTS_SWORD, 1);
+				owner.addQuest(Quests.THE_KNIGHTS_SWORD, 1);
 				owner.setBusy(false);
 				npc.unblock();
 			}

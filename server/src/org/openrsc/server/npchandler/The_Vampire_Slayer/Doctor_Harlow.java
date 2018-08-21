@@ -11,13 +11,14 @@ import org.openrsc.server.model.MenuHandler;
 import org.openrsc.server.model.Npc;
 import org.openrsc.server.model.Player;
 import org.openrsc.server.model.Quest;
+import org.openrsc.server.model.Quests;
 import org.openrsc.server.model.World;
 import org.openrsc.server.npchandler.NpcHandler;
 public class Doctor_Harlow implements NpcHandler {
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		Quest q = owner.getQuest(Config.Quests.VAMPIRE_SLAYER);
+		Quest q = owner.getQuest(Quests.VAMPIRE_SLAYER);
 		if(q != null && owner.getInventory().countId(217) == 0) {
 			if(q.finished()) {
 				questNotStarted(npc, owner);
