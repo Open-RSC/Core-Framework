@@ -25,8 +25,8 @@ sudo chmod -R 777 .
 sudo sed -i 's/DB_LOGIN">root/DB_LOGIN">openrsc/g' server/config/config.xml
 sudo sed -i 's/DB_PASS">root/DB_PASS">'$pass'/g' server/config/config.xml
 sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java
-sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' Launcher/src/Main.java
-sudo sed -i 's/Domain = "localhost";/Domain = "'$domain'";/g' Launcher/src/Main.java
+sudo sed -i 's/String Domain = "localhost";/String Domain = "'$domain'";/g' Launcher/src/Main.java
+sudo sed -i 's/String Dev_Domain = "localhost";/String Dev_Domain = "'$domain'";/g' Launcher/src/Main.java
 
 sudo mkdir /var/www/html/downloads
 
