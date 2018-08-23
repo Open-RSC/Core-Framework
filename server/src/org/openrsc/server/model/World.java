@@ -272,18 +272,18 @@ public final class World
 		
 	private static void minuteChecks() 
 	{
-		World.getDelayedEventHandler().add(new SingleEvent(null, 60000) //default 60000 for 1 minute
+		World.getDelayedEventHandler().add(new SingleEvent(null, 1000) //default 60000 for 1 minute check for events
 		{
 			public void action() 
 			{
-				if ((System.currentTimeMillis() - Config.getStartTime()) > 21600000) //54000000 = 15 hours, 43200000 = 12 hours, 21600000 = 6 hours
+				if ((System.currentTimeMillis() - Config.getStartTime()) > Config.getAutoRestartTimeMillis())
 				{
-					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "performing automatic world restart, try logging back in again in ~20 seconds!"));
+					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "performing automatic world restart, log back in after 5 seconds"));
 					global = false;
 				} 
 				else 
 				{
-					if (!World.isWildernessChanging())
+					/*if (!World.isWildernessChanging())
 					{
 						Calendar c = Calendar.getInstance();
 						int day_of_week = c.get(Calendar.DAY_OF_WEEK);
@@ -346,7 +346,7 @@ public final class World
 								
 						}
 						
-					}
+					}*/
 					minuteChecks();
 				}
 			}

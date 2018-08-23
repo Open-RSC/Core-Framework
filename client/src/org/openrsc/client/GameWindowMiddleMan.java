@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import org.openrsc.client.util.DataConversions;
 
-public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDelegate> extends openrsc<Delegate_T> {
+public abstract class GameWindowMiddleMan<Delegate_T extends ImplementationDelegate> extends loading<Delegate_T> {
 
 	public final void sendGeneralPurposeMessage(long target, String message) {
 		streamClass.createPacket(86);

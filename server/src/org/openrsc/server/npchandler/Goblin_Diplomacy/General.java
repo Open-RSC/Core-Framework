@@ -7,15 +7,8 @@ import org.openrsc.server.Config;
 import org.openrsc.server.event.SingleEvent;
 import org.openrsc.server.logging.Logger;
 import org.openrsc.server.logging.model.eventLog;
-import org.openrsc.server.model.Npc;
-import org.openrsc.server.model.ChatMessage;
-import org.openrsc.server.model.MenuHandler;
-import org.openrsc.server.model.World;
+import org.openrsc.server.model.*;
 import org.openrsc.server.event.DelayedQuestChat;
-import org.openrsc.server.model.InvItem;
-import org.openrsc.server.model.Player;
-import org.openrsc.server.model.Quest;
-import org.openrsc.server.model.Quests;
 import org.openrsc.server.npchandler.NpcHandler;
 import org.openrsc.server.util.DataConversions;
 public class General implements NpcHandler { //QID 6
@@ -23,13 +16,13 @@ public class General implements NpcHandler { //QID 6
 	public void handleNpc(final Npc npc, final Player owner) throws Exception {
 		npc.blockedBy(owner);
 		owner.setBusy(true);
-		final Npc wartface = World.getNpc(151, 321, 326, 445, 449);
-		final Npc bentnoze = World.getNpc(152, 321, 326, 445, 449);
+		final Npc wartface = World.getNpc(151, 317, 325, 441, 447);
+		final Npc bentnoze = World.getNpc(152, 317, 325, 441, 447);
 		if(wartface != null && bentnoze != null) {
 			Quest q = owner.getQuest(Quests.GOBLIN_DIPLOMACY);
 			if(q != null) {
 				if(q.finished()) {
-					questFinished(owner);
+					questFinished(wartface, bentnoze, owner);
 				} else {
 					intro(wartface, bentnoze, owner, q.getStage());
 				}
@@ -38,13 +31,23 @@ public class General implements NpcHandler { //QID 6
 			}
 		} else {
 			owner.setBusy(false);
-			owner.sendMessage("@red@Error with 'Goblin Diplomacy' quest, please contact Zilent");
 		}
 	}
 	
-	private final void questFinished(final Player owner) {
-		owner.sendMessage("You have already completed this quest");
-		owner.setBusy(false);
+	private final void questFinished(final Npc wartface, final Npc bentnoze, final Player owner) {
+		final String[] messages1 = {"Now you've solved our argument we gotta think of something else to do"};
+		World.getDelayedEventHandler().add(new DelayedQuestChat(wartface, owner, messages1, true) {
+			public void finished() {
+				wartface.unblock();
+				bentnoze.blockedBy(owner);
+				final String[] messages4 = {"Yep, we're bored now"};
+				World.getDelayedEventHandler().add(new DelayedQuestChat(bentnoze, owner, messages4) {
+					public void finished() {
+						owner.setBusy(false);
+					}
+				});
+			}
+		});
 	}
 	
 	private void intro(final Npc wartface, final Npc bentnoze, final Player owner, final int stage) {
@@ -217,6 +220,7 @@ public class General implements NpcHandler { //QID 6
 																owner.sendMessage("Well done you have completed the goblin diplomacy quest");
 																owner.sendMessage("@gre@You have gained 5 quest points!");
 																owner.sendMessage("general wartface gives you a gold bar as thanks");
+																owner.incQuestExp(Skills.CRAFTING,(owner.getMaxStat(Skills.CRAFTING) * 60) + 500);
 																owner.getInventory().add(new InvItem(172, 1));
 																owner.sendInventory();
 																owner.finishQuest(Quests.GOBLIN_DIPLOMACY);

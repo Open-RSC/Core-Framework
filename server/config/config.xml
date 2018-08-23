@@ -14,7 +14,6 @@
 	<entry key="SERVER_IP">0.0.0.0</entry>
 	<entry key="SERVER_PORT">53595</entry>
 	<entry key="WEB_PORT">53594</entry>
-	<entry key="MAX_LOGINS_PER_IP">5</entry>
 
 	<!-- Database connection: -->
 	<entry key="DB_HOST">localhost</entry>
@@ -32,10 +31,11 @@
 	<entry key="SKULLED_XP_BONUS">1</entry>
 
 	<!-- Miscellaneous: -->
+        <entry key="MAX_LOGINS_PER_IP">5</entry>
 	<entry key="ALLOW_WEAKENS">true</entry>
 	<entry key="ALLOW_GODSPELLS">true</entry>
-	<!-- The number of milliseconds of heads-up notice that the clients receive before a shutdown: -->
-	<entry key="SHUTDOWN_TIME_MILLIS">60000</entry> <!-- default is 60 seconds -->
+	<entry key="SHUTDOWN_TIME_MILLIS">60000</entry> <!-- Heads-up notice time before a restart. 60000 = 60 seconds -->
+        <entry key="AUTO_RESTART_TIME_MILLIS">21600000</entry> <!-- 54000000 = 15 hours, 43200000 = 12 hours, 21600000 = 6 hours -->
 	<entry key="AVATAR_DIR">avatars/</entry>
 
 	<!-- Sleeping related: -->
@@ -45,9 +45,7 @@
 
 	<!-- Custom feature: -->
 	<entry key="DISABLE_RUNECRAFTING">true</entry>
-	<!-- The amount to multiply the generated runes by: -->
-	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry>
-	<!-- Changes the behaviour of skilling (vanilla 0, batch till success 1, batch to full inventory 2) -->
-	<entry key="SKILL_LOOP_MODE">0</entry>
+	<entry key="RUNECRAFTING_AMOUNT_MULTIPLIER">1</entry> <!-- The amount to multiply the generated runes -->
+	<entry key="SKILL_LOOP_MODE">0</entry> <!-- Skill batching mode (vanilla 0, batch till success 1, batch to full inventory 2) -->
 
 </properties>
