@@ -18,13 +18,13 @@
         </javac>
         <jar basedir="${build}" destfile="${jar}">
           <manifest>
-            <attribute name="Main-Class" value="org.openrsc.client.mudclient"/>
+            <attribute name="Main-Class" value="org.openrsc.client.OpenRSC"/>
           </manifest>
         </jar>
     </target>
 
     <target name="runclient">
-        <java classname="org.openrsc.client.mudclient" fork="true">
+        <java classname="org.openrsc.client.OpenRSC" fork="true">
             <classpath>
               <pathelement path="${jar}/" />
             </classpath>
