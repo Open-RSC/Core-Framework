@@ -7,7 +7,7 @@ exec 0</dev/tty
 #
 # Install with this command (from your Linux machine):
 #
-# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Simple_Installer.sh | bash
+# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Simple_Cloner.sh | bash
 
 rm install.log
 touch install.log && chmod 777 install.log | tee -a install.log &>/dev/null
@@ -28,12 +28,6 @@ echo "Installing PHP 7.2 and PHPMyAdmin. Please wait."
 sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
 sudo phpenmod mbstring | tee -a install.log &>/dev/null
 sudo systemctl restart nginx | tee -a install.log &>/dev/null
-
-# GitHub repository clone
-clear
-echo "Clonining the game from the GitHub repository."
-git clone git://github.com/Open-RSC/Game.git | tee -a install.log &>/dev/null
-sudo chmod -R 777 . | tee -a install.log &>/dev/null
 
 # Database configuration
 clear
