@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 import org.openrsc.client.util.DataConversions;
 
-public abstract class openrsc<Delegate_T extends ImplementationDelegate>
+public abstract class loading<Delegate_T extends ImplementationDelegate>
 	implements
 		Runnable
 {
@@ -88,7 +88,7 @@ public abstract class openrsc<Delegate_T extends ImplementationDelegate>
 	 * @param container the <code>ImplementationDelegate</code> to use
 	 * 
 	 */
-	public openrsc(Delegate_T container)
+	public loading(Delegate_T container)
 	{
 		this.delegate = container;
 		Image img = null;

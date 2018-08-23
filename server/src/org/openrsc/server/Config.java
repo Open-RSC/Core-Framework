@@ -32,7 +32,7 @@ public class Config {
 		setBanFailedSleep(Boolean.parseBoolean(props.getProperty("BAN_FAILED_SLEEP")), false);
 		setAllowWeakens(Boolean.parseBoolean(props.getProperty("ALLOW_WEAKENS")), false);
 		setAllowGodspells(Boolean.parseBoolean(props.getProperty("ALLOW_GODSPELLS")), false);
-        setLogging(Boolean.parseBoolean(props.getProperty("LOGGING")));
+		setLogging(Boolean.parseBoolean(props.getProperty("LOGGING")));
 
 		// Integers
 		setServerVersion(Integer.parseInt(props.getProperty("SERVER_VERSION")));
@@ -40,8 +40,9 @@ public class Config {
 		setWebPort(Integer.parseInt(props.getProperty("WEB_PORT")));
 		setMaxLoginsPerIp(Integer.parseInt(props.getProperty("MAX_LOGINS_PER_IP")), false);
 		setShutdownTimeMillis(Integer.parseInt(props.getProperty("SHUTDOWN_TIME_MILLIS")), false);
-        setMaxPlayers(Integer.parseInt(props.getProperty("MAX_PLAYERS")), false);
-        setSkillLoopMode(Integer.parseInt(props.getProperty("SKILL_LOOP_MODE")),false);
+                setAutoRestartTimeMillis(Integer.parseInt(props.getProperty("AUTO_RESTART_TIME_MILLIS")), false);
+		setMaxPlayers(Integer.parseInt(props.getProperty("MAX_PLAYERS")), false);
+		setSkillLoopMode(Integer.parseInt(props.getProperty("SKILL_LOOP_MODE")),false);
 
 		// Floats
 		setCombatXpRate(Float.parseFloat(props.getProperty("COMBAT_XP_RATE")), false);
@@ -52,8 +53,8 @@ public class Config {
 		setSkulledXpBonus(Float.parseFloat(props.getProperty("SKULLED_XP_BONUS")), false);
 
 		// Strings
-        setCommandPrefix(props.getProperty("COMMAND_PREFIX"), false);
-        setServerName(props.getProperty("SERVER_NAME"), false);
+		setCommandPrefix(props.getProperty("COMMAND_PREFIX"), false);
+		setServerName(props.getProperty("SERVER_NAME"), false);
 		setPrefix(props.getProperty("PREFIX"), false);
 		setServerIp(props.getProperty("SERVER_IP"));
 		setDbHost(props.getProperty("DB_HOST"));
@@ -143,12 +144,29 @@ public class Config {
 	}
     
 	public static void setShutdownTimeMillis(int shutdownTimeMillis) {
-        setShutdownTimeMillis(shutdownTimeMillis, true);
-    }
+            setShutdownTimeMillis(shutdownTimeMillis, true);
+	}
 
 	public static void setShutdownTimeMillis(int shutdownTimeMillis, boolean sendConfiguration) {
         String key      = "SHUTDOWN_TIME_MILLIS";
         String value    = Integer.toString(shutdownTimeMillis);
+        configMap.put(key, value);
+        
+        if(sendConfiguration)
+            sendConfiguration(key, value);
+	}
+        
+        public static int getAutoRestartTimeMillis() {
+		return Integer.parseInt(configMap.get("AUTO_RESTART_TIME_MILLIS"));
+	}
+    
+	public static void setAutoRestartTimeMillis(int restartTimeMillis) {
+            setAutoRestartTimeMillis(restartTimeMillis, true);
+	}
+
+	public static void setAutoRestartTimeMillis(int restartTimeMillis, boolean sendConfiguration) {
+        String key      = "AUTO_RESTART_TIME_MILLIS";
+        String value    = Integer.toString(restartTimeMillis);
         configMap.put(key, value);
         
         if(sendConfiguration)

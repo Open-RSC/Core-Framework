@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.9
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Aug 10, 2018 at 05:56 PM
--- Server version: 5.7.12
--- PHP Version: 5.6.35
+-- Host: mysql
+-- Generation Time: Aug 21, 2018 at 12:03 AM
+-- Server version: 10.1.35-MariaDB
+-- PHP Version: 7.2.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,7 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `openrsc_config`
 --
-DROP DATABASE IF EXISTS openrsc_config;
 CREATE DATABASE IF NOT EXISTS `openrsc_config` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `openrsc_config`;
 
@@ -37,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `conf_npc` (
   `class_name` varchar(255) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=313 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=314 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `conf_npc`
@@ -907,7 +906,7 @@ CREATE TABLE IF NOT EXISTS `def_door` (
   `model_var3` int(10) NOT NULL,
   `door_type` tinyint(1) NOT NULL,
   `unknown` tinyint(1) NOT NULL,
-  `blocks_ranged` tinyint(1) NOT NULL DEFAULT 0,
+  `blocks_ranged` tinyint(1) NOT NULL DEFAULT '0',
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=251 DEFAULT CHARSET=latin1;
@@ -1182,7 +1181,7 @@ CREATE TABLE IF NOT EXISTS `def_drop` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `rsc` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18583 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=18587 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_drop`
@@ -1297,7 +1296,7 @@ INSERT INTO `def_drop` (`npc`, `drop_id`, `drop_amount`, `drop_weight`, `id`, `r
 (11, 440, 1, 6, 12474, NULL),
 (11, 441, 1, 1, 12473, NULL),
 (11, 442, 1, 2, 12472, NULL),
-(11, 10, 15, 12, 12470, NULL),
+(11, 10, 15, 12, 18583, NULL),
 (11, 10, 5, 23, 12469, NULL),
 (11, 380, 1, 18, 12468, NULL),
 (190, 126, 1, 2, 13909, NULL),
@@ -1332,7 +1331,6 @@ INSERT INTO `def_drop` (`npc`, `drop_id`, `drop_amount`, `drop_weight`, `id`, `r
 (21, 35, 6, 3, 10488, NULL),
 (21, 13, 1, 1, 10504, NULL),
 (21, 237, 1, 94, 10505, NULL),
-(21, -1, -1, 95, 10505, NULL),
 (21, 10, 15, 11, 12470, NULL),
 (21, 10, 5, 28, 18377, NULL),
 (21, 10, 25, 4, 18378, NULL),
@@ -1545,8 +1543,8 @@ INSERT INTO `def_drop` (`npc`, `drop_id`, `drop_amount`, `drop_weight`, `id`, `r
 (61, 160, 1, 10, 14410, NULL),
 (61, 159, 1, 6, 14409, NULL),
 (62, 20, 1, 0, 7094, NULL),
-(62, 10, 9, 9, 7093, NULL),
-(62, 10, 5, 68, 7092, NULL),
+(62, 10, 9, 9, 18584, NULL),
+(62, 10, 5, 68, 18585, NULL),
 (62, 32, 4, 17, 7091, NULL),
 (62, 34, 3, 8, 7089, NULL),
 (62, 36, 2, 10, 7087, NULL),
@@ -3904,7 +3902,7 @@ DROP TABLE IF EXISTS `def_edible_heals`;
 CREATE TABLE IF NOT EXISTS `def_edible_heals` (
   `food_id` int(5) NOT NULL,
   `heals` int(5) NOT NULL,
-  `replacement` int(4) NOT NULL DEFAULT -1,
+  `replacement` int(4) NOT NULL DEFAULT '-1',
   `eat_message` varchar(100) NOT NULL DEFAULT 'You eat the %item%',
   `heal_message` varchar(100) NOT NULL DEFAULT 'It heals some health',
   `id` int(5) NOT NULL AUTO_INCREMENT,
@@ -4235,9 +4233,9 @@ CREATE TABLE IF NOT EXISTS `def_item` (
   `stackable` tinyint(1) NOT NULL,
   `wieldable` tinyint(1) NOT NULL,
   `picture_mask` int(10) NOT NULL,
-  `violent` tinyint(1) NOT NULL DEFAULT 0,
+  `violent` tinyint(1) NOT NULL DEFAULT '0',
   `p2p` tinyint(1) NOT NULL,
-  `tradable` tinyint(1) NOT NULL DEFAULT 0,
+  `tradable` tinyint(1) NOT NULL DEFAULT '0',
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3001 DEFAULT CHARSET=latin1;
@@ -4412,7 +4410,7 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Ruby', 'this looks valuable', '', 74, 1000, 0, 0, 0, 16724736, 0, 0, 1, 162),
 ('Emerald', 'this looks valuable', '', 74, 500, 0, 0, 0, 3394611, 0, 0, 1, 163),
 ('Sapphire', 'this looks valuable', '', 74, 250, 0, 0, 0, 19711, 0, 0, 1, 164),
-('Herb', 'I need a closer look to identify this', 'Identify', 435, 1, 0, 0, 0, 0, 0, 1, 1, 165), -- Guam
+('Herb', 'I need a closer look to identify this', 'Identify', 435, 1, 0, 0, 0, 0, 0, 1, 1, 165),
 ('Tinderbox', 'useful for lighting a fire', '', 76, 1, 0, 0, 0, 0, 0, 0, 1, 166),
 ('Chisel', 'good for detailed crafting', '', 77, 1, 0, 0, 0, 0, 0, 0, 1, 167),
 ('Hammer', 'good for hitting things!', '', 78, 1, 0, 0, 0, 0, 0, 0, 1, 168),
@@ -4802,9 +4800,9 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Raw Mackerel', 'I should try cooking this', '', 166, 17, 0, 0, 0, 13421728, 0, 0, 1, 552),
 ('Mackerel', 'Some nicely cooked fish', 'Eat', 166, 17, 0, 0, 0, 13421680, 0, 0, 1, 553),
 ('Raw Bass', 'I should try cooking this', '', 167, 120, 0, 0, 0, 16752800, 0, 0, 1, 554),
-('Bass', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 16740464, 0, 1, 1, 555),
-('Ice Gloves', 'These will keep my hands cold!', '', 17, 6, 0, 0, 1, 11202303, 0, 1, 0, 556);
+('Bass', 'Wow this is a big fish', 'Eat', 167, 0, 0, 0, 0, 16740464, 0, 1, 1, 555);
 INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`) VALUES
+('Ice Gloves', 'These will keep my hands cold!', '', 17, 6, 0, 0, 1, 11202303, 0, 1, 0, 556),
 ('Firebird Feather', 'A red hot feather', '', 176, 2, 0, 0, 0, 16711680, 0, 0, 0, 557),
 ('Firebird Feather', 'This is cool enough to hold now', '', 176, 2, 0, 0, 0, 16768256, 0, 0, 0, 558),
 ('Poisoned Iron Dagger', 'Short but pointy', '', 80, 35, 0, 0, 1, 15654365, 1, 1, 1, 559),
@@ -5341,9 +5339,9 @@ INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`
 ('Mithril Spear', 'A mithril tipped spear', '', 283, 119, 0, 0, 1, 10072780, 1, 0, 1, 1090),
 ('Adamantite Spear', 'An adamantite tipped spear', '', 283, 293, 0, 0, 1, 11717785, 1, 0, 1, 1091),
 ('Rune Spear', 'A rune tipped spear', '', 283, 1000, 0, 0, 1, 56797, 1, 0, 1, 1092),
-('Cat', 'it\'s fluffs', 'Stroke', 338, 2, 0, 0, 0, 11184810, 0, 0, 0, 1093),
-('Seasoned Sardine', 'They don\'t smell any better', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 1, 1094);
+('Cat', 'it\'s fluffs', 'Stroke', 338, 2, 0, 0, 0, 11184810, 0, 0, 0, 1093);
 INSERT INTO `def_item` (`name`, `description`, `command`, `sprite`, `base_price`, `base_token_price`, `stackable`, `wieldable`, `picture_mask`, `violent`, `p2p`, `tradable`, `id`) VALUES
+('Seasoned Sardine', 'They don\'t smell any better', '', 165, 10, 0, 0, 0, 10551200, 0, 0, 1, 1094),
 ('Kittens', 'purrr', '', 372, 2, 0, 0, 0, 11184810, 0, 0, 0, 1095),
 ('Kitten', 'purrr', 'stroke', 371, 2, 0, 0, 0, 11184810, 0, 0, 0, 1096),
 ('Wrought Iron Key', 'This key clears unlocks a very sturdy gate of some sort.', '', 25, 1, 0, 0, 0, 14540253, 0, 0, 0, 1097),
@@ -5670,7 +5668,7 @@ CREATE TABLE IF NOT EXISTS `def_npc` (
   `hits` int(5) NOT NULL,
   `attackable` tinyint(1) NOT NULL,
   `aggressive` tinyint(1) NOT NULL,
-  `follows` tinyint(1) NOT NULL DEFAULT 1,
+  `follows` tinyint(1) NOT NULL DEFAULT '1',
   `respawn` int(5) NOT NULL,
   `retreat` tinyint(1) NOT NULL,
   `retreat_hits` int(5) NOT NULL,
@@ -5698,7 +5696,7 @@ CREATE TABLE IF NOT EXISTS `def_npc` (
   `combat_sprite` int(5) NOT NULL,
   `undead` tinyint(1) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
-  `dragon` tinyint(1) NOT NULL DEFAULT 0,
+  `dragon` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=824 DEFAULT CHARSET=latin1;
 
@@ -6522,7 +6520,7 @@ CREATE TABLE IF NOT EXISTS `def_object` (
   `height` int(2) NOT NULL,
   `ground_item_var` int(3) NOT NULL,
   `object_model` varchar(255) NOT NULL,
-  `blocks_ranged` tinyint(1) NOT NULL DEFAULT 0,
+  `blocks_ranged` tinyint(1) NOT NULL DEFAULT '0',
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1227 DEFAULT CHARSET=latin1;
@@ -8261,7 +8259,7 @@ CREATE TABLE IF NOT EXISTS `def_shop_items` (
   `item_amount` int(4) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=696 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=743 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_shop_items`
@@ -8823,32 +8821,32 @@ INSERT INTO `def_shop_items` (`shop_id`, `item_id`, `item_amount`, `id`) VALUES
 (69, '135', 2, 695),
 (19, '199', 1, 696),
 (19, '185', 1, 697),
-(13, 465, 10, 698),
-(13, 468, 3, 699),
-(13, 135, 3, 700),
-(13, 87, 3, 701),
-(13, 156, 2, 702),
-(13, 12, 5, 703),
-(13, 15, 12, 704),
-(13, 16, 10, 705),
-(13, 17, 10, 706),
-(13, 132, 2, 707),
-(13, 138, 10, 708),
-(13, 169, 10, 709),
-(13, 211, 10, 710),
-(13, 599, 10, 711),
-(13, 774, 10, 712),
-(13, 167, 10, 713),
-(13, 168, 10, 714),
-(13, 982, 50, 715),
-(13, 983, 50, 716),
-(13, 464, 50, 717),
-(13, 1172, 50, 718),
-(14, 168, 10, 719),
-(14, 982, 50, 720),
-(14, 983, 50, 721),
-(14, 464, 50, 722),
-(14, 1172, 50, 723);
+(13, '465', 10, 698),
+(13, '468', 3, 699),
+(13, '135', 3, 700),
+(13, '87', 3, 701),
+(13, '156', 2, 702),
+(13, '12', 5, 703),
+(13, '15', 12, 704),
+(13, '16', 10, 705),
+(13, '17', 10, 706),
+(13, '132', 2, 707),
+(13, '138', 10, 708),
+(13, '169', 10, 709),
+(13, '211', 10, 710),
+(13, '599', 10, 711),
+(13, '774', 10, 712),
+(13, '167', 10, 713),
+(13, '168', 10, 714),
+(13, '982', 50, 715),
+(13, '983', 50, 716),
+(13, '464', 50, 717),
+(13, '1172', 50, 718),
+(14, '168', 10, 719),
+(14, '982', 50, 720),
+(14, '983', 50, 721),
+(14, '464', 50, 722),
+(14, '1172', 50, 723);
 
 -- --------------------------------------------------------
 
@@ -9053,7 +9051,7 @@ CREATE TABLE IF NOT EXISTS `def_spell` (
   `experience` int(4) DEFAULT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_spell`
@@ -9391,7 +9389,7 @@ CREATE TABLE IF NOT EXISTS `def_unidentified_herb` (
   `experience` int(5) NOT NULL,
   `id` int(5) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `def_unidentified_herb`
@@ -9414,7 +9412,7 @@ INSERT INTO `def_unidentified_herb` (`unidentified_id`, `identified_id`, `level`
 (821, 822, 3, 0, 15),
 (823, 824, 3, 0, 16),
 (933, 934, 76, 60, 17),
-(1305, 444, 3, 10 ,18),
+(1305, 444, 3, 10, 18),
 (1306, 445, 5, 15, 19),
 (1307, 446, 10, 20, 20),
 (1308, 447, 20, 25, 21),
@@ -10442,12 +10440,12 @@ CREATE TABLE IF NOT EXISTS `spawn_npc` (
   `min_y` int(4) NOT NULL,
   `max_x` int(4) NOT NULL,
   `max_y` int(4) NOT NULL,
-  `direction` int(1) NOT NULL DEFAULT 1,
+  `direction` int(1) NOT NULL DEFAULT '1',
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   KEY `npc` (`npc`),
   KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3000 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4106 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_npc`
@@ -11597,12 +11595,12 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 (521, 543, 745, 528, 738, 547, 767, 1, 1175),
 (521, 533, 761, 528, 738, 547, 767, 1, 1176),
 (521, 534, 750, 528, 738, 547, 767, 1, 1177),
-(521, 544, 756, 528, 738, 547, 767, 1, 1178);
-INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`, `max_y`, `direction`, `id`) VALUES
+(521, 544, 756, 528, 738, 547, 767, 1, 1178),
 (521, 534, 752, 528, 738, 547, 767, 1, 1179),
 (521, 534, 761, 528, 738, 547, 767, 1, 1180),
 (521, 539, 764, 528, 738, 547, 767, 1, 1181),
-(521, 539, 759, 528, 738, 547, 767, 1, 1182),
+(521, 539, 759, 528, 738, 547, 767, 1, 1182);
+INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`, `max_y`, `direction`, `id`) VALUES
 (521, 537, 755, 528, 738, 547, 767, 1, 1183),
 (521, 529, 755, 528, 738, 547, 767, 1, 1184),
 (425, 577, 3419, 574, 3406, 590, 3423, 1, 1185),
@@ -12724,12 +12722,12 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 (40, 637, 3304, 634, 3301, 648, 3308, 1, 2301),
 (41, 639, 3305, 634, 3301, 648, 3308, 1, 2302),
 (40, 639, 3302, 634, 3301, 648, 3308, 1, 2303),
-(41, 641, 3302, 634, 3301, 648, 3308, 1, 2304);
-INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`, `max_y`, `direction`, `id`) VALUES
+(41, 641, 3302, 634, 3301, 648, 3308, 1, 2304),
 (40, 641, 3305, 634, 3301, 648, 3308, 1, 2305),
 (40, 641, 3307, 634, 3301, 648, 3308, 1, 2306),
 (43, 669, 3294, 663, 3290, 670, 3296, 1, 2307),
-(43, 667, 3293, 663, 3290, 670, 3296, 1, 2308),
+(43, 667, 3293, 663, 3290, 670, 3296, 1, 2308);
+INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`, `max_y`, `direction`, `id`) VALUES
 (43, 666, 3294, 663, 3290, 670, 3296, 1, 2309),
 (43, 664, 3293, 663, 3290, 670, 3296, 1, 2310),
 (43, 663, 3292, 663, 3290, 670, 3296, 1, 2311),
@@ -13196,14 +13194,14 @@ INSERT INTO `spawn_npc` (`npc`, `start_x`, `start_y`, `min_x`, `min_y`, `max_x`,
 DROP TABLE IF EXISTS `spawn_object`;
 CREATE TABLE IF NOT EXISTS `spawn_object` (
   `object` int(4) NOT NULL,
-  `type` tinyint(1) NOT NULL DEFAULT 0,
+  `type` tinyint(1) NOT NULL DEFAULT '0',
   `x` int(4) NOT NULL,
   `y` int(4) NOT NULL,
   `direction` tinyint(1) NOT NULL,
   `id` int(6) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   KEY `object` (`object`)
-) ENGINE=MyISAM AUTO_INCREMENT=31401 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=31422 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `spawn_object`
@@ -15145,8 +15143,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (1, 1, 663, 632, 0, 1964),
 (1, 0, 521, 536, 3, 1965),
 (70, 0, 308, 336, 0, 1966),
-(32, 0, 51, 679, 2, 1967);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(32, 0, 51, 679, 2, 1967),
 (4, 0, 64, 541, 7, 1968),
 (70, 0, 191, 383, 0, 1969),
 (1, 0, 225, 460, 0, 1970),
@@ -15164,7 +15161,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (23, 0, 596, 703, 6, 1982),
 (34, 0, 754, 508, 3, 1983),
 (72, 0, 173, 598, 3, 1984),
-(70, 0, 225, 325, 0, 1985),
+(70, 0, 225, 325, 0, 1985);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (205, 0, 187, 185, 0, 1986),
 (1, 1, 474, 447, 0, 1987),
 (877, 0, 724, 627, 0, 1988),
@@ -17064,8 +17062,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (4, 0, 240, 161, 0, 3890),
 (38, 0, 92, 420, 0, 3891),
 (58, 0, 567, 607, 2, 3892),
-(38, 0, 113, 342, 0, 3893);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(38, 0, 113, 342, 0, 3893),
 (37, 0, 500, 567, 0, 3894),
 (284, 0, 454, 457, 6, 3895),
 (70, 0, 53, 150, 0, 3896),
@@ -17083,7 +17080,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (4, 0, 274, 364, 0, 3908),
 (193, 1, 600, 472, 3, 3909),
 (597, 0, 672, 512, 6, 3910),
-(37, 0, 310, 669, 0, 3911),
+(37, 0, 310, 669, 0, 3911);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (70, 0, 78, 102, 0, 3912),
 (503, 0, 608, 696, 0, 3913),
 (153, 0, 547, 436, 0, 3914),
@@ -18989,8 +18987,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (284, 0, 652, 684, 0, 5817),
 (1, 0, 182, 448, 0, 5818),
 (1, 0, 128, 637, 0, 5819),
-(70, 0, 262, 429, 0, 5820);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(70, 0, 262, 429, 0, 5820),
 (37, 0, 477, 490, 0, 5821),
 (110, 0, 116, 703, 0, 5822),
 (33, 0, 426, 674, 0, 5823),
@@ -19008,7 +19005,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (313, 0, 480, 487, 0, 5835),
 (70, 0, 133, 316, 0, 5836),
 (1, 0, 281, 585, 0, 5837),
-(14, 0, 79, 532, 4, 5838),
+(14, 0, 79, 532, 4, 5838);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (284, 0, 454, 447, 2, 5839),
 (284, 0, 482, 421, 6, 5840),
 (23, 0, 632, 565, 0, 5841),
@@ -20911,8 +20909,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (313, 0, 676, 522, 3, 7742),
 (284, 0, 628, 717, 0, 7743),
 (38, 0, 65, 242, 0, 7744),
-(3, 0, 592, 702, 4, 7745);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(3, 0, 592, 702, 4, 7745),
 (1, 1, 215, 3525, 0, 7746),
 (22, 0, 89, 520, 6, 7747),
 (38, 0, 111, 417, 0, 7748),
@@ -20930,7 +20927,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (1, 0, 84, 551, 7, 7760),
 (0, 0, 507, 392, 0, 7761),
 (4, 0, 176, 263, 0, 7762),
-(37, 0, 104, 446, 0, 7763),
+(37, 0, 104, 446, 0, 7763);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (70, 0, 209, 372, 0, 7764),
 (4, 0, 74, 210, 0, 7765),
 (70, 0, 226, 344, 0, 7766),
@@ -22095,7 +22093,6 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (1, 1, 645, 569, 0, 30093),
 (70, 0, 194, 260, 0, 8930),
 (284, 0, 648, 676, 0, 8931),
-(19, 0, 438, 3372, 2, 28467),
 (72, 0, 197, 611, 3, 8933),
 (284, 0, 624, 702, 2, 8934),
 (0, 0, 509, 584, 0, 8935),
@@ -22834,8 +22831,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (4, 0, 131, 147, 0, 9669),
 (70, 0, 248, 201, 0, 9670),
 (4, 0, 60, 321, 0, 9671),
-(70, 0, 107, 180, 0, 9672);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(70, 0, 107, 180, 0, 9672),
 (284, 0, 627, 696, 0, 9673),
 (284, 0, 638, 684, 0, 9674),
 (284, 0, 667, 707, 0, 9675),
@@ -22854,7 +22850,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (34, 0, 299, 532, 4, 9688),
 (0, 0, 526, 502, 0, 9689),
 (70, 0, 157, 123, 0, 9690),
-(34, 0, 751, 535, 3, 9691),
+(34, 0, 751, 535, 3, 9691);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (4, 0, 308, 162, 0, 9692),
 (962, 0, 654, 775, 3, 9693),
 (4, 0, 221, 399, 0, 9694),
@@ -24698,8 +24695,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (284, 0, 643, 686, 0, 11534),
 (938, 0, 686, 643, 0, 11535),
 (37, 0, 177, 651, 0, 11536),
-(70, 0, 57, 398, 0, 11537);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(70, 0, 57, 398, 0, 11537),
 (88, 0, 107, 212, 2, 11538),
 (4, 0, 162, 524, 0, 11539),
 (1, 1, 101, 530, 0, 11540),
@@ -24717,7 +24713,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (284, 0, 650, 719, 0, 11552),
 (70, 0, 145, 369, 0, 11553),
 (395, 0, 487, 677, 1, 11554),
-(12, 0, 165, 325, 0, 11555),
+(12, 0, 165, 325, 0, 11555);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (45, 0, 466, 649, 2, 11556),
 (59, 0, 558, 542, 0, 11557),
 (7, 0, 171, 497, 0, 11558),
@@ -26545,8 +26542,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (70, 0, 153, 379, 0, 13388),
 (0, 0, 726, 542, 3, 13389),
 (307, 0, 545, 462, 0, 13390),
-(284, 0, 626, 684, 2, 13391);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(284, 0, 626, 684, 2, 13391),
 (213, 0, 179, 324, 0, 13392),
 (306, 0, 684, 550, 1, 13393),
 (394, 0, 500, 682, 3, 13394),
@@ -26564,7 +26560,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (306, 0, 694, 542, 1, 13406),
 (72, 0, 206, 618, 3, 13407),
 (50, 0, 560, 703, 0, 13408),
-(70, 0, 114, 242, 0, 13409),
+(70, 0, 114, 242, 0, 13409);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (284, 0, 652, 711, 0, 13410),
 (70, 0, 331, 175, 0, 13411),
 (21, 0, 62, 445, 0, 13412),
@@ -28390,8 +28387,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (394, 0, 482, 699, 2, 15236),
 (38, 0, 100, 315, 0, 15237),
 (70, 0, 177, 178, 0, 15238),
-(34, 0, 505, 547, 0, 15239);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(34, 0, 505, 547, 0, 15239),
 (70, 0, 207, 300, 0, 15240),
 (20, 0, 610, 610, 0, 15241),
 (70, 0, 104, 303, 0, 15242),
@@ -28409,7 +28405,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (209, 0, 73, 432, 6, 15254),
 (284, 0, 632, 684, 2, 15255),
 (8, 0, 443, 489, 0, 15256),
-(1018, 0, 239, 132, 2, 15257),
+(1018, 0, 239, 132, 2, 15257);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (34, 0, 738, 539, 3, 15258),
 (0, 0, 674, 552, 1, 15259),
 (530, 0, 491, 563, 2, 15260),
@@ -30218,8 +30215,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (2, 1, 425, 771, 1, 17065),
 (2, 1, 442, 773, 0, 17066),
 (2, 1, 442, 769, 0, 17067),
-(21, 0, 407, 741, 5, 17068);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(21, 0, 407, 741, 5, 17068),
 (8, 0, 406, 740, 2, 17069),
 (21, 0, 405, 738, 4, 17070),
 (21, 0, 404, 741, 0, 17071),
@@ -30238,7 +30234,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (8, 0, 401, 744, 7, 17084),
 (21, 0, 400, 750, 4, 17085),
 (21, 0, 400, 746, 4, 17086),
-(21, 0, 400, 744, 6, 17087),
+(21, 0, 400, 744, 6, 17087);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (55, 0, 407, 758, 7, 17088),
 (22, 0, 407, 756, 5, 17089),
 (22, 0, 407, 754, 5, 17090),
@@ -32017,8 +32014,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (33, 0, 392, 844, 6, 18863),
 (29, 0, 399, 852, 4, 18864),
 (401, 0, 394, 854, 0, 18865),
-(712, 0, 394, 851, 0, 18866);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(712, 0, 394, 851, 0, 18866),
 (164, 0, 393, 855, 0, 18867),
 (403, 0, 393, 853, 0, 18868),
 (404, 0, 393, 850, 0, 18869),
@@ -32036,7 +32032,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (402, 0, 392, 861, 2, 18881),
 (401, 0, 392, 860, 0, 18882),
 (164, 0, 392, 857, 5, 18883),
-(164, 0, 392, 856, 0, 18884),
+(164, 0, 392, 856, 0, 18884);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (1091, 0, 399, 870, 0, 18885),
 (397, 0, 399, 865, 0, 18886),
 (1086, 0, 398, 870, 1, 18887),
@@ -33818,8 +33815,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (121, 0, 693, 1459, 0, 20664),
 (6, 0, 691, 1459, 2, 20665),
 (421, 0, 688, 1459, 0, 20666),
-(121, 0, 694, 1469, 0, 20667);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(121, 0, 694, 1469, 0, 20667),
 (6, 0, 692, 1469, 2, 20668),
 (421, 0, 689, 1469, 0, 20669),
 (6, 0, 714, 1444, 0, 20670),
@@ -33837,7 +33833,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (6, 0, 731, 1466, 0, 20682),
 (421, 0, 714, 1428, 2, 20683),
 (6, 0, 714, 1425, 0, 20684),
-(22, 0, 727, 3334, 2, 20685),
+(22, 0, 727, 3334, 2, 20685);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (668, 0, 735, 3335, 2, 20686),
 (668, 0, 735, 3333, 2, 20687),
 (55, 0, 735, 3332, 2, 20688),
@@ -35621,8 +35618,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (1048, 0, 17, 500, 6, 22471),
 (1048, 0, 17, 499, 6, 22472),
 (1048, 0, 17, 498, 6, 22473),
-(1048, 0, 17, 497, 6, 22474);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(1048, 0, 17, 497, 6, 22474),
 (1048, 0, 17, 496, 6, 22475),
 (1048, 0, 16, 503, 4, 22476),
 (1075, 0, 16, 502, 2, 22477),
@@ -35640,7 +35636,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (1048, 0, 21, 510, 0, 22489),
 (1067, 0, 21, 508, 4, 22490),
 (1065, 0, 21, 507, 0, 22491),
-(1067, 0, 21, 505, 2, 22492),
+(1067, 0, 21, 505, 2, 22492);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (1048, 0, 21, 504, 4, 22493),
 (1048, 0, 20, 510, 0, 22494),
 (1059, 0, 20, 508, 3, 22495),
@@ -37389,8 +37386,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (407, 0, 733, 651, 3, 24245),
 (407, 0, 731, 654, 6, 24246),
 (881, 0, 730, 650, 3, 24247),
-(407, 0, 735, 658, 6, 24248);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(407, 0, 735, 658, 6, 24248),
 (729, 0, 733, 661, 2, 24249),
 (877, 0, 734, 633, 0, 24250),
 (877, 0, 732, 638, 0, 24251),
@@ -37407,7 +37403,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (713, 0, 799, 3414, 2, 24262),
 (734, 0, 799, 3411, 2, 24263),
 (831, 0, 799, 3410, 2, 24264),
-(714, 0, 798, 3414, 2, 24265),
+(714, 0, 798, 3414, 2, 24265);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (715, 0, 798, 3413, 0, 24266),
 (714, 0, 798, 3412, 0, 24267),
 (714, 0, 798, 3411, 0, 24268),
@@ -39175,8 +39172,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (5, 0, 119, 3658, 0, 26671),
 (38, 0, 792, 179, 4, 28893),
 (38, 0, 209, 3677, 0, 27629),
-(0, 0, 480, 510, 0, 29053);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(0, 0, 480, 510, 0, 29053),
 (0, 0, 480, 504, 0, 29054),
 (0, 0, 475, 506, 0, 29055),
 (0, 0, 479, 497, 0, 29056),
@@ -39194,7 +39190,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (70, 0, 123, 3195, 0, 26537),
 (70, 0, 212, 419, 0, 26609),
 (205, 0, 117, 3203, 0, 26540),
-(70, 0, 110, 3194, 0, 26541),
+(70, 0, 110, 3194, 0, 26541);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (277, 0, 207, 3680, 0, 27725),
 (277, 0, 217, 3677, 0, 27733),
 (57, 0, 250, 3681, 2, 27625),
@@ -39654,7 +39651,6 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (46, 0, 203, 3646, 0, 27313),
 (1153, 0, 469, 3401, 0, 28771),
 (34, 0, 217, 437, 1, 31369),
-(26, 0, 131, 508, 0, 30618),
 (83, 0, 207, 3658, 0, 27360),
 (207, 0, 108, 2724, 1, 27367),
 (207, 0, 116, 2724, 1, 27368),
@@ -39692,7 +39688,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (2, 1, 108, 3659, 1, 27477),
 (2, 1, 108, 3670, 1, 27478),
 (2, 1, 117, 3670, 1, 27479),
-(200, 0, 131, 200, 0, 31348),
+(57, 0, 168, 143, 2, 31417),
 (2, 1, 118, 2717, 0, 27488),
 (2, 1, 112, 2717, 0, 27489),
 (2, 1, 112, 2725, 0, 27490),
@@ -40119,8 +40115,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (38, 0, 787, 85, 2, 28643),
 (38, 0, 805, 86, 2, 28644),
 (1, 0, 242, 440, 1, 31370),
-(282, 0, 149, 555, 0, 31327),
-(282, 0, 149, 555, 0, 31326),
+(57, 0, 331, 143, 2, 31420),
+(57, 0, 310, 143, 2, 31419),
 (34, 0, 141, 674, 0, 29195),
 (70, 0, 227, 433, 1, 31383),
 (70, 0, 802, 158, 3, 28884),
@@ -40536,7 +40532,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (2, 1, 617, 2507, 0, 29598),
 (2, 1, 615, 2508, 1, 29599),
 (2, 1, 619, 2508, 1, 29600),
-(210, 0, 257, 158, 2, 29603),
+(210, 0, 258, 157, 0, 31415),
 (70, 0, 338, 472, 0, 29620),
 (70, 0, 337, 471, 0, 29619),
 (0, 0, 326, 479, 0, 29621),
@@ -40983,8 +40979,7 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (22, 0, 257, 3474, 0, 30715),
 (55, 0, 261, 3472, 0, 30716),
 (421, 0, 639, 1635, 0, 30582),
-(421, 0, 636, 1643, 2, 30583);
-INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
+(421, 0, 636, 1643, 2, 30583),
 (427, 0, 636, 1634, 2, 30584),
 (20, 0, 640, 720, 0, 30604),
 (421, 0, 640, 1647, 0, 30586),
@@ -41007,7 +41002,8 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (1042, 0, 393, 3718, 0, 30867),
 (1048, 0, 394, 3723, 5, 30868),
 (1042, 0, 396, 3711, 0, 30876),
-(1042, 0, 397, 3711, 0, 30877),
+(1042, 0, 397, 3711, 0, 30877);
+INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUES
 (1042, 0, 398, 3711, 0, 30878),
 (1042, 0, 399, 3712, 0, 30879),
 (1042, 0, 400, 3713, 0, 30880),
@@ -41102,7 +41098,10 @@ INSERT INTO `spawn_object` (`object`, `type`, `x`, `y`, `direction`, `id`) VALUE
 (730, 0, 443, 3376, 0, 31362),
 (730, 0, 437, 3375, 0, 31364),
 (29, 1, 228, 3382, 1, 31401),
-(3, 0, 344, 601, 0, 31400);
+(3, 0, 344, 601, 0, 31400),
+(30, 0, 130, 507, 4, 31413),
+(30, 0, 128, 507, 4, 31412),
+(57, 0, 67, 143, 2, 31421);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
