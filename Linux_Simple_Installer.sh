@@ -58,6 +58,14 @@ sudo sed -i 's/String Domain = "localhost";/String Domain = "'$domain'";/g' Laun
 sudo sed -i 's/:8080";/:80";/g' Launcher/src/Main.java  | tee -a install.log &>/dev/null
 sudo sed -i 's/toolBar.getChildren().add(Dev/\/\/toolBar.getChildren().add(Dev/g' Launcher/src/Main.java  | tee -a install.log &>/dev/null
 
+sudo sed -i 's/2930.png",/2930.png"/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
+sudo sed -i 's/"2937/\/\/"2930.png",/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
+sudo sed -i 's/"News",/"News"/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
+sudo sed -i 's/"Dev Server News"/\/\/"Dev Server News"/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
+sudo sed -i 's/Secure+Domain,/Secure+Domain/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
+sudo sed -i 's/Secure+Dev_Domain/\/\/Secure+Dev_Domain/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
+
+
 # Website
 clear
 sudo mkdir /var/www/html/downloads | tee -a install.log &>/dev/null
@@ -94,6 +102,7 @@ md5sum /var/www/html/downloads/cache.zip | grep ^[a-zA-Z0-9]* | awk '{print "cac
 # Completion
 myip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 clear
+cd Game
 echo "The installation script has completed."
 echo ""
 echo "You should now be able to download the game launcher at: http://${myip}/downloads/Open_RSC_Launcher.jar"
