@@ -173,7 +173,7 @@ public class Wizard_Mizgog implements NpcHandler {
 																	owner.finishQuest(Quests.IMP_CATCHER);
 																	owner.sendMessage("Well done. You have completed the Imp catcher quest");
 																	owner.sendMessage("@gre@You have gained 1 quest point");
-																	owner.incQuestExp(Skills.MAGIC, 1000);
+																	owner.incQuestExp(Skills.MAGIC, owner.getCurStat(Skills.MAGIC) * 100 + 375 );
 																	owner.setBusy(false);
 																	npc.unblock();
 																	Logger.log(new eventLog(owner.getUsernameHash(), owner.getAccount(), owner.getIP(), DataConversions.getTimeStamp(), "<strong>" + owner.getUsername() + "</strong>" + " has completed the <span class=\"recent_quest\">Imp Catcher</span> quest!"));
