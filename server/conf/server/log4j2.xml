@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<Configuration status="WARN" target="SYSTEM_ERR">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{dd MMM yyyy HH:mm:ss}] [%t] [%logger{36}] %level: %msg%n" />
+        </Console>
+         <File name="WK" fileName="logs/gameserver.log">
+        	<PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    	 </File>
+    </Appenders>
+    <Loggers>
+        <Root level="ALL">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="WK" level="error"/>
+        </Root>
+    </Loggers>
+</Configuration>
