@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<comment>Stores aliases for the XStream engine</comment>
+
+	<entry key="Point">com.openrsc.server.model.Point</entry>
+	<entry key="TelePoint">com.openrsc.server.model.TelePoint</entry>
+
+	<entry key="Shop">com.openrsc.server.model.Shop</entry>
+	<entry key="InvItem">com.openrsc.server.model.container.Item</entry>
+
+	<entry key="CerterDef">com.openrsc.server.external.CerterDef</entry>
+	<entry key="CertDef">com.openrsc.server.external.CertDef</entry>
+
+	<entry key="GameObjectLoc">com.openrsc.server.external.GameObjectLoc</entry>
+	<entry key="ItemLoc">com.openrsc.server.external.ItemLoc</entry>
+	<entry key="NPCLoc">com.openrsc.server.external.NPCLoc</entry>
+
+	<entry key="TileDef">com.openrsc.server.external.TileDef</entry>
+	<entry key="GameObjectDef">com.openrsc.server.external.GameObjectDef</entry>
+	<entry key="DoorDef">com.openrsc.server.external.DoorDef</entry>
+	<entry key="ItemDef">com.openrsc.server.external.ItemDefinition</entry>
+	<entry key="PrayerDef">com.openrsc.server.external.PrayerDef</entry>
+	<entry key="SpellDef">com.openrsc.server.external.SpellDef</entry>
+	<entry key="NPCDef">com.openrsc.server.external.NPCDef</entry>
+
+	<entry key="ItemCraftingDef">com.openrsc.server.external.ItemCraftingDef</entry>
+	<entry key="ItemHerbSecond">com.openrsc.server.external.ItemHerbSecond</entry>
+	<entry key="ItemDartTipDef">com.openrsc.server.external.ItemDartTipDef</entry>
+	<entry key="ItemGemDef">com.openrsc.server.external.ItemGemDef</entry>
+	<entry key="ItemLogCutDef">com.openrsc.server.external.ItemLogCutDef</entry>
+	<entry key="ItemBowStringDef">com.openrsc.server.external.ItemBowStringDef</entry>
+	<entry key="ItemArrowHeadDef">com.openrsc.server.external.ItemArrowHeadDef</entry>
+	<entry key="FiremakingDef">com.openrsc.server.external.FiremakingDef</entry>
+	<entry key="ReqOreDef">com.openrsc.server.external.ReqOreDef</entry>
+	<entry key="ItemUnIdentHerbDef">com.openrsc.server.external.ItemUnIdentHerbDef</entry>
+	<entry key="ItemHerbDef">com.openrsc.server.external.ItemHerbDef</entry>
+	<entry key="ItemCookingDef">com.openrsc.server.external.ItemCookingDef</entry>
+	<entry key="ItemSmeltingDef">com.openrsc.server.external.ItemSmeltingDef</entry>
+	<entry key="ItemSmithingDef">com.openrsc.server.external.ItemSmithingDef</entry>
+	<entry key="ObjectMiningDef">com.openrsc.server.external.ObjectMiningDef</entry>
+	<entry key="ObjectWoodcuttingDef">com.openrsc.server.external.ObjectWoodcuttingDef</entry>
+	<entry key="ObjectFishingDef">com.openrsc.server.external.ObjectFishingDef</entry>
+	<entry key="ObjectFishDef">com.openrsc.server.external.ObjectFishDef</entry>
+	<entry key="ItemDropDef">com.openrsc.server.external.ItemDropDef</entry>
+</properties>

@@ -1,167 +1,87 @@
-<project default="compile" basedir=".">
+<project default="compile_core" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="lib" location="lib" />
+	<property name="jar" location="core.jar" />
 
-    <property name="src" location="src" />
-    <property name="build" location="build" />
-    <property name="lib" location="lib" />
-    <property name="jar" location="Open_RSC_Server.jar" />
-    <property name="javac.source" value="1.8"/>
-    <property name="javac.target" value="1.8"/>
+	<target name="compile_plugins">
+		<delete file="plugins.jar" />
+		<delete dir="buildplugins" />
+		<mkdir dir="buildplugins"/>
+		<javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false">
+		  <classpath>
+			<pathelement location="core.jar" />
+			<pathelement path="${java.class.path}/"/>
+			<pathelement location="${lib}/log4j-api-2.8.jar" />
+			<pathelement location="${lib}/log4j-core-2.8.jar" />
+			<pathelement location="${lib}/disruptor-3.3.5.jar" />
+		  </classpath>
+		</javac>
+		<jar basedir="buildplugins" destfile="plugins.jar" />
+		<delete dir="buildplugins" />
+	</target>
 
-    <target name="compile">
-        <delete file="${jar}" />
-        <delete dir="${build}" />
-        <mkdir dir="${build}"/>
-        <javac srcdir="${src}" destdir="${build}" debug="on" target="1.8" source="1.8" includeantruntime="false">
-          <classpath>
-            <pathelement location="${lib}/mina.jar" />
-            <pathelement location="${lib}/xpp3.jar" />
-            <pathelement location="${lib}/slf4j.jar"/>
-            <pathelement location="${lib}/xstream.jar"/>
-            <pathelement location="${lib}/mysql-connector.jar" />
-            <pathelement location="${lib}/hex-string.jar" />
-            <pathelement location="${lib}/bsh-2.0b4.jar" />
-            <pathelement location="${lib}/apache-commons.jar" />
-            <pathelement location="${lib}/commons-lang-2.6.jar" />
-            <pathelement location="${lib}/commons-logging-1.1.1.jar" />
-            <pathelement location="${lib}/junit.jar" />
-            <pathelement location="${lib}/jmf.jar" />
-            <pathelement location="${lib}/js.jar" />
-            <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-            <pathelement location="${lib}/pircbot.jar" />
-            <pathelement location="${lib}/xstream.jar" />
-            <pathelement path="${java.class.path}/"/>
-          </classpath>
-        </javac>
-        <jar basedir="${build}" destfile="${jar}">
-          <manifest>
-            <attribute name="Main-Class" value="org.openrsc.server.Server"/>
-          </manifest>
-          <zipgroupfileset dir="lib" includes="*.jar"/>
-        </jar>
-    </target>
+	<target name="compile_core">
+		<delete file="${jar}" />
+		<delete dir="${build}" />
+		<mkdir dir="${build}"/>
+		<javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false">
+		  <classpath>
+			<pathelement location="${lib}/netty-all-4.1.8.Final.jar" />
+			<pathelement location="${lib}/log4j-api-2.8.jar" />
+			<pathelement location="${lib}/log4j-core-2.8.jar" />
+			<pathelement location="${lib}/xpp3_min-1.1.4c.jar" />
+			<pathelement location="${lib}/xpp3-1.1.4c.jar" />
+			<pathelement location="${lib}/xstream-1.4.9.jar"/>
+			<pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar" />
+			<pathelement location="${lib}/disruptor-3.3.5.jar" />
+			<pathelement location="${lib}/*" />
+			<pathelement path="${java.class.path}/"/>
+		  </classpath>
+		</javac>
+		<jar basedir="${build}" destfile="${jar}" />
+		<delete dir="${build}" />
+	</target>
 
-    <target name="items">
-        <java classname="org.openrsc.server.tools.ItemExporter" fork="true">
-          <arg value="config/config.xml" />
-          <jvmarg value="-Xmn512m" />
-          <jvmarg value="-Xms1024m" />
-          <jvmarg value="-Xmx1024m" />
-          <jvmarg value="-XX:SurvivorRatio=2" />
-          <jvmarg value="-XX:NewRatio=8" />
-            <classpath>
-              <pathelement location="${lib}/mina.jar" />
-              <pathelement location="${lib}/xpp3.jar" />
-              <pathelement location="${lib}/slf4j.jar"/>
-              <pathelement location="${lib}/xstream.jar"/>
-              <pathelement location="${lib}/mysql-connector.jar" />
-              <pathelement location="${lib}/hex-string.jar" />
-              <pathelement location="${lib}/bsh-2.0b4.jar" />
-              <pathelement location="${lib}/apache-commons.jar" />
-              <pathelement location="${lib}/commons-lang-2.6.jar" />
-              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
-              <pathelement location="${lib}/junit.jar" />
-              <pathelement location="${lib}/jmf.jar" />
-              <pathelement location="${lib}/js.jar" />
-              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-              <pathelement location="${lib}/xstream.jar" />
-              <pathelement path="${jar}/" />
-            </classpath>
-        </java>
-    </target>
+	<target name="runserverfree">
+		<java classname="com.openrsc.server.Server" fork="true">
+			<arg value="free.conf" />
+			<!--<jvmarg value="-Xms512M" />
+			<jvmarg value="-Xmx8140M" />-->
+			<jvmarg line="-XX:+AggressiveOpts -XX:+UseParallelGC -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+			<classpath>
+				<pathelement location="${lib}/netty-all-4.1.8.Final.jar" />
+				<pathelement location="${lib}/disruptor-3.3.0.jar" />
+				<pathelement location="${lib}/log4j-api-2.8.jar" />
+				<pathelement location="${lib}/log4j-core-2.8.jar" />
+				<pathelement location="${lib}/xpp3_min-1.1.4c.jar" />
+				<pathelement location="${lib}/xpp3-1.1.4c.jar" />
+				<pathelement location="${lib}/xstream-1.4.9.jar"/>
+				<pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar" />
+				<pathelement location="${lib}/disruptor-3.3.5.jar" />
+				<pathelement location="${lib}/*" />
+				<pathelement path="${jar}/" />
+			</classpath>
+		</java>
+	</target>
 
-    <target name="objects">
-        <java classname="org.openrsc.server.tools.ObjectExporter" fork="true">
-          <arg value="config/config.xml" />
-          <jvmarg value="-Xmn512m" />
-          <jvmarg value="-Xms1024m" />
-          <jvmarg value="-Xmx1024m" />
-          <jvmarg value="-XX:SurvivorRatio=2" />
-          <jvmarg value="-XX:NewRatio=8" />
-            <classpath>
-              <pathelement location="${lib}/mina.jar" />
-              <pathelement location="${lib}/xpp3.jar" />
-              <pathelement location="${lib}/slf4j.jar"/>
-              <pathelement location="${lib}/xstream.jar"/>
-              <pathelement location="${lib}/mysql-connector.jar" />
-              <pathelement location="${lib}/hex-string.jar" />
-              <pathelement location="${lib}/bsh-2.0b4.jar" />
-              <pathelement location="${lib}/apache-commons.jar" />
-              <pathelement location="${lib}/commons-lang-2.6.jar" />
-              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
-              <pathelement location="${lib}/junit.jar" />
-              <pathelement location="${lib}/jmf.jar" />
-              <pathelement location="${lib}/js.jar" />
-              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-              <pathelement location="${lib}/xstream.jar" />
-              <pathelement path="${jar}/" />
-            </classpath>
-        </java>
-    </target>
-
-    <target name="npcs">
-        <java classname="org.openrsc.server.tools.NPCExporter" fork="true">
-          <arg value="config/config.xml" />
-          <jvmarg value="-Xmn512m" />
-          <jvmarg value="-Xms1024m" />
-          <jvmarg value="-Xmx1024m" />
-          <jvmarg value="-XX:SurvivorRatio=2" />
-          <jvmarg value="-XX:NewRatio=8" />
-            <classpath>
-              <pathelement location="${lib}/mina.jar" />
-              <pathelement location="${lib}/xpp3.jar" />
-              <pathelement location="${lib}/slf4j.jar"/>
-              <pathelement location="${lib}/xstream.jar"/>
-              <pathelement location="${lib}/mysql-connector.jar" />
-              <pathelement location="${lib}/hex-string.jar" />
-              <pathelement location="${lib}/bsh-2.0b4.jar" />
-              <pathelement location="${lib}/apache-commons.jar" />
-              <pathelement location="${lib}/commons-lang-2.6.jar" />
-              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
-              <pathelement location="${lib}/junit.jar" />
-              <pathelement location="${lib}/jmf.jar" />
-              <pathelement location="${lib}/js.jar" />
-              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-              <pathelement location="${lib}/xstream.jar" />
-              <pathelement path="${jar}/" />
-            </classpath>
-        </java>
-    </target>
-
-    <target name="runserver">
-        <java classname="org.openrsc.server.Server" fork="true">
-          <arg value="config/config.xml" />
-          <jvmarg value="-Xmn512m" />
-          <jvmarg value="-Xms1024m" />
-          <jvmarg value="-Xmx1024m" />
-          <jvmarg value="-XX:SurvivorRatio=2" />
-          <jvmarg value="-XX:NewRatio=8" />
-          <jvmarg value="-XX:+UseParNewGC" />
-          <jvmarg value="-XX:+UseConcMarkSweepGC" />
-          <!--<jvmarg value="-Dcom.sun.management.jmxremote=true" />
-              <jvmarg value="-Dcom.sun.management.jmxremote.ssl=false" />
-              <jvmarg value="-Dcom.sun.management.jmxremote.authenticate=false" />
-              <jvmarg value="-Dcom.sun.management.jmxremote.port=9990" />
-              <jvmarg value="-Djava.rmi.server.hostname=localhost" />
-              <jvmarg value="-Dcom.sun.management.jmxremote.rmi.port=9990" />
-              <jvmarg value="-Dcom.sun.management.jmxremote.local.only=false" />-->
-            <classpath>
-              <pathelement location="${lib}/mina.jar" />
-              <pathelement location="${lib}/xpp3.jar" />
-              <pathelement location="${lib}/slf4j.jar"/>
-              <pathelement location="${lib}/xstream.jar"/>
-              <pathelement location="${lib}/mysql-connector.jar" />
-              <pathelement location="${lib}/hex-string.jar" />
-              <pathelement location="${lib}/bsh-2.0b4.jar" />
-              <pathelement location="${lib}/apache-commons.jar" />
-              <pathelement location="${lib}/commons-lang-2.6.jar" />
-              <pathelement location="${lib}/commons-logging-1.1.1.jar" />
-              <pathelement location="${lib}/junit.jar" />
-              <pathelement location="${lib}/jmf.jar" />
-              <pathelement location="${lib}/js.jar" />
-              <pathelement location="${lib}/netty-3.2.5.Final.jar" />
-              <pathelement location="${lib}/xstream.jar" />
-              <pathelement path="${jar}/" />
-            </classpath>
-        </java>
-    </target>
+	<target name="runservermembers">
+		<java classname="com.openrsc.server.Server" fork="true">
+			<arg value="members.conf" />
+			<jvmarg line="-XX:+AggressiveOpts -XX:+UseParallelGC -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+			<classpath>
+				<pathelement location="${lib}/netty-all-4.1.8.Final.jar" />
+				<pathelement location="${lib}/disruptor-3.3.0.jar" />
+				<pathelement location="${lib}/log4j-api-2.8.jar" />
+				<pathelement location="${lib}/log4j-core-2.8.jar" />
+				<pathelement location="${lib}/xpp3_min-1.1.4c.jar" />
+				<pathelement location="${lib}/xpp3-1.1.4c.jar" />
+				<pathelement location="${lib}/xstream-1.4.9.jar"/>
+				<pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar" />
+				<pathelement location="${lib}/disruptor-3.3.5.jar" />
+				<pathelement location="${lib}/*" />
+				<pathelement path="${jar}/" />
+			</classpath>
+		</java>
+	</target>
 </project>

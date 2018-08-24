@@ -50,7 +50,7 @@ public class SpritePacker
             JDialog dialog = new JDialog();  
 
               fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-              fileChooser.setFileFilter(new FileNameExtensionFilter("Wolf Kingdom (.wk)", "wk"));
+              fileChooser.setFileFilter(new FileNameExtensionFilter("Open RSC (.wk)", "wk"));
               int result = fileChooser.showOpenDialog(dialog);
               if (result == JFileChooser.APPROVE_OPTION) {
                   new SpritePacker(fileChooser.getSelectedFile());
