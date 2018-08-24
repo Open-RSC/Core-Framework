@@ -2071,6 +2071,8 @@ public class InvUseOnObject implements PacketHandler {
 					public void run() {
 						if (owner.getInventory().countId(barID) < def.getRequiredBars()) {
 							owner.sendMessage("You don't have enough bars to make this");
+							owner.setBusy(false);
+							this.stop();
 							return;
 						}
 						owner.sendSound("anvil", false);
