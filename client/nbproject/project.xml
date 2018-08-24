@@ -3,9 +3,9 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>Open RSC Client</name>
+            <name>OpenRSC Client</name>
             <source-roots>
-                <root id="src.src.dir"/>
+                <root id="src.dir"/>
             </source-roots>
             <test-roots/>
         </data>

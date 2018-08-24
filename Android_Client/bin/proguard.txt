@@ -1,0 +1,13 @@
+# view AndroidManifest.xml #generated:41
+-keep class com.openrsc.android.updater.ApplicationUpdater { <init>(...); }
+
+# view AndroidManifest.xml #generated:53
+-keep class com.openrsc.android.updater.CacheUpdater { <init>(...); }
+
+# view res/layout/applicationupdater.xml #generated:23
+# view res/layout/updater.xml #generated:32
+-keep class com.openrsc.android.updater.TextProgressBar { <init>(...); }
+
+# view AndroidManifest.xml #generated:59
+-keep class com.openrsc.client.android.GameActivity { <init>(...); }
+
