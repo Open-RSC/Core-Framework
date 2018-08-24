@@ -217,7 +217,7 @@ public final class World
 	private static byte wildernessSwitchType = (byte)0;
 
 	private static boolean changingWildernessState;
-	public static boolean wildernessP2P = false;
+	public static boolean wildernessP2P = true;
 
 	
 	public static boolean joinEvent(Player player) {
@@ -356,17 +356,17 @@ public final class World
 	public static void toggleWilderness() {
 		if (!World.isWildernessChanging()) {
 			for (Player p : getPlayers()) {
-				p.sendGraciousAlert("The wilderness state will change to " + (wildernessP2P ? "F2P" : "P2P") + " in 30 seconds!" + (wildernessP2P ? " After the time is up you will no longer be able to eat P2P food, drink P2P potions, use P2P armour/weapons or cast P2P spells." : ""));
+				//p.sendGraciousAlert("The wilderness state will change to " + (wildernessP2P ? "F2P" : "P2P") + " in 30 seconds!" + (wildernessP2P ? " After the time is up you will no longer be able to eat P2P food, drink P2P potions, use P2P armour/weapons or cast P2P spells." : ""));
 				p.startWildernessUpdate(30, (byte)(wildernessP2P ? 0 : 1));
 				setWildernessSwitchType((byte)(wildernessP2P ? 0 : 1));
-				setWildernessCountdown(System.currentTimeMillis() + 30000);
+				setWildernessCountdown(System.currentTimeMillis() + 1000); //was 30000
 			}
-			World.getDelayedEventHandler().add(new SingleEvent(null, 30000) {
+			World.getDelayedEventHandler().add(new SingleEvent(null, 1000) {
 				public void action() {
 					setWildernessCountdown(0);
 					wildernessP2P = !wildernessP2P;
 					for (Player p : getPlayers()) {
-						p.sendMessage(Config.getPrefix() + "The wilderness state has been changed to: @gre@" + (wildernessP2P ? "P2P" : "F2P"));
+						//p.sendMessage(Config.getPrefix() + "The wilderness state has been changed to: @gre@" + (wildernessP2P ? "P2P" : "F2P"));
 						if (!wildernessP2P) {
 							if (p.getLocation().inWilderness()) {
 								for (InvItem currentItem : p.getInventory().getItems()) {
