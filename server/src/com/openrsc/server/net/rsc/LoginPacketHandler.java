@@ -210,14 +210,14 @@ public class LoginPacketHandler {
 				return;
 			}
 			int ownerID = set.getInt("id");
-			String newSalt = setSalt(16);
+			String newSalt = DataConversions.generateSalt();
 			/* Create the game character */
 			try {
 				statement = DatabaseConnection.getDatabase().prepareStatement(
 						"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` (`username`, `owner`, `pass`, `salt`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?, ?)");
 				statement.setString(1, user);
 				statement.setInt(2, ownerID);
-				statement.setString(3, DataConversions.hmac("SHA512", newSalt + pass, Constants.GameServer.HMAC_PRIVATE_KEY));
+				statement.setString(3, DataConversions.hashPassword(pass, newSalt));
 				statement.setString(4, newSalt);
 				statement.setLong(5, System.currentTimeMillis() / 1000);
 				statement.setString(6, IP);
@@ -266,17 +266,6 @@ public class LoginPacketHandler {
 			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
 		}
 
-		return sb.toString();
-	}
-	// Generate a random salt with a prefered size (16).
-	static String setSalt(int size) throws NoSuchAlgorithmException {
-		SecureRandom random = new SecureRandom();
-		String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < size; i++) {
-			sb.append(chars.charAt(random.nextInt(chars.length())));
-		}
-		
 		return sb.toString();
 	}
 }
