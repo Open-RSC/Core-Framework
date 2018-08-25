@@ -12033,7 +12033,7 @@ public final class mudclient implements Runnable {
 					while (this.autoLoginTimeout > 0) {
 						try {
 							this.setUsername(user);
-                            this.password = DataOperations.addCharacters(pass, 20);
+                            this.password = DataOperations.addCharacters(pass, 20); // TODO: This strips special chars to udnerscore. We may want to in the future allow special chars.
 							//this.password = pass;
 							//MiscFunctions.netbase_a(20, (byte) -5, pass);
 							if (this.getUsername().trim().length() == 0) {
