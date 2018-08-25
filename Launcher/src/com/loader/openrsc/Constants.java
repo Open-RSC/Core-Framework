@@ -15,7 +15,7 @@ public class Constants
     public static final String SUPPORT_URL = "http://www.wolfkingdom.net/viewforum.php?id=8";
     public static final String REGISTER_URL = "http://www.wolfkingdom.net/register.php";
     
-    public static final String CONF_DIR = System.getProperty("user.home") + File.separator + "WK";
+    public static final String CONF_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	
 	public static final String CACHE_URL = "http://www.wolfkingdom.net/client/";
 	public static final String CLIENT_URL = "http://www.wolfkingdom.net/client/client.jar";
