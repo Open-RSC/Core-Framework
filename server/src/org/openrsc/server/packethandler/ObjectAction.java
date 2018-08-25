@@ -2015,12 +2015,16 @@ public class ObjectAction implements PacketHandler {
                                                         break;
                                                         
                                                         default:
-                                                                owner.sendMessage("You recharge at the altar.");
-                                                                owner.sendSound("recharge", false);
                                                                 int maxPray = object.getID() == 200 ? owner.getMaxStat(5) + 2 : owner.getMaxStat(5);
+								if(owner.getCurStat(5) == maxPray) {
+									owner.sendMessage("You already have full prayer points");
+								} else {
+								    	owner.sendMessage("You recharge at the altar.");
+                                                                	owner.sendSound("recharge", false);	
                                                                 if (owner.getCurStat(5) < maxPray)
                                                                         owner.setCurStat(5, maxPray);
-                                                                owner.sendStat(5);
+                                                               		 owner.sendStat(5);
+								}
                                                         break;
                                                 }
                                         }
