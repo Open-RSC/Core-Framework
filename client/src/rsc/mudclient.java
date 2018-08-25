@@ -1391,7 +1391,7 @@ public final class mudclient implements Runnable {
 					var2 = -125;
 				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to Open RSC", 4, true);
 				String var3 = null;
-				var3 = "You need to create an account on wolfkingdom.net to use this server";
+				var3 = "You need to create an account on openrsc.com to use this server";
 				if (null != var3) {
 					this.panelLoginWelcome.addCenteredText(256, 205 + var2, var3, 4, true);
 				}

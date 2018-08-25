@@ -417,7 +417,7 @@ public class ActionSender {
 		}
 		s.writeByte(world);
 		if (world > 0)
-			s.writeString("WK");
+			s.writeString("OpenRSC");
 		player.write(s.toPacket());
 	}
 

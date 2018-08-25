@@ -797,7 +797,7 @@ public class RSCApplet extends Applet implements MouseListener, MouseMotionListe
 
 	@Override
 	public String getCacheLocation() {
-		return "../WK/";
+		return "../OpenRSC/";
 	}
 
 	@Override
