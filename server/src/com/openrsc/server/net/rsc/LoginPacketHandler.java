@@ -115,13 +115,13 @@ public class LoginPacketHandler {
 			break;
 
 		case 78:
-			LOGGER.info("Android registration attempt from: " + IP);
+			LOGGER.info("Registration attempt from: " + IP);
 
 			String user = getString(p.getBuffer()).trim();
 			String pass = getString(p.getBuffer()).trim();
 			
 			user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
-			pass = pass.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", "");
+			//pass = pass.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", "");
 			
 			String email = getString(p.getBuffer()).trim();
 
@@ -147,7 +147,7 @@ public class LoginPacketHandler {
 					+ "' AND registered>'" + ((System.currentTimeMillis() / 1000) - 3600) + "'");
 			if (set.next()) {
 				set.close();
-				LOGGER.info(IP + " - Android registration failed: Registered recently.");
+				LOGGER.info(IP + " - Registration failed: Registered recently.");
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
 				channel.close();
 				return;
@@ -156,7 +156,7 @@ public class LoginPacketHandler {
 			set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM users WHERE `username`='" + user + "'");
 			if (set.next()) {
 				set.close();
-				LOGGER.info(IP + " - Android registration failed: Forum Username already in use.");
+				LOGGER.info(IP + " - Registration failed: Forum Username already in use.");
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
 				channel.close();
 				return;
@@ -165,7 +165,7 @@ public class LoginPacketHandler {
 			set = DatabaseConnection.getDatabase().executeQuery("SELECT 1 FROM users WHERE email='" + email + "'");
 			if (set.next()) {
 				set.close();
-				LOGGER.info(IP + " - Android registration failed: E-mail address already in use.");
+				LOGGER.info(IP + " - Registration failed: E-mail address already in use.");
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 3).toPacket());
 				channel.close();
 				return;
@@ -233,7 +233,7 @@ public class LoginPacketHandler {
 				
 				if (!set.next()) {
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
-					LOGGER.info(IP + " - Android registration failed: Player id not found.");
+					LOGGER.info(IP + " - Registration failed: Player id not found.");
 					return;
 				}
 				
@@ -247,7 +247,7 @@ public class LoginPacketHandler {
 				statement.setInt(1, playerID);
 				statement.executeUpdate();
 
-				LOGGER.info(IP + " - Android registration successful");
+				LOGGER.info(IP + " - Registration successful");
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 			} catch (Exception e) {
 				LOGGER.catching(e);
@@ -259,7 +259,7 @@ public class LoginPacketHandler {
 	}
 	// Convert to SHA512 + Salt(8) via forum login.
 	static String sha1(String input) throws NoSuchAlgorithmException {
-		MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+		MessageDigest mDigest = MessageDigest.getInstance("SHA512");
 		byte[] result = mDigest.digest(input.getBytes());
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < result.length; i++) {
