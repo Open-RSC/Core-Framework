@@ -96,7 +96,7 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-data
+#data
 
 server/objects\.dat
 server/npcs\.dat
