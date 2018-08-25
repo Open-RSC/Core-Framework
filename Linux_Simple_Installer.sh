@@ -19,7 +19,11 @@ sudo add-apt-repository ppa:webupd8team/java -y | tee -a install.log &>/dev/null
 sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y | tee -a install.log &>/dev/null
 sudo apt-get update | tee -a install.log &>/dev/null
 sudo apt remove mysql-server mysql-server-5.7 mysql-client apache2 -y | tee -a install.log &>/dev/null
-sudo apt-get install nano htop screen ant git oracle-java8-installer mariadb-server mariadb-client nginx -y | tee -a install.log &>/dev/null
+sudo apt-get install nano htop screen git mariadb-server mariadb-client nginx -y | tee -a install.log &>/dev/null
+echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections | tee -a install.log &>/dev/null
+sudo apt-get install -y oracle-java8-installer | tee -a install.log &>/dev/null
+sudo apt-get install oracle-java8-set-default | tee -a install.log &>/dev/null
+sudo apt-get install ant -y | tee -a install.log &>/dev/null
 sudo apt-get autoremove -y | tee -a install.log &>/dev/null
 
 # PHPMyAdmin installation
