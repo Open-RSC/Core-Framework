@@ -153,7 +153,7 @@ public class Archer implements NpcHandler {
 							public void finished() {
 								owner.setBusy(false);
 								npc.unblock();
-								owner.addQuest(Quests.LOST_CITY, 2);
+								owner.addQuest(Quests.LOST_CITY, 3);
 								owner.incQuestCompletionStage(Quests.LOST_CITY);
 							}
 						});
