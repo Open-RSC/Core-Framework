@@ -12033,8 +12033,9 @@ public final class mudclient implements Runnable {
 					while (this.autoLoginTimeout > 0) {
 						try {
 							this.setUsername(user);
-							this.password = pass;
-							MiscFunctions.netbase_a(20, (byte) -5, pass);
+                            this.password = DataOperations.addCharacters(pass, 20);
+							//this.password = pass;
+							//MiscFunctions.netbase_a(20, (byte) -5, pass);
 							if (this.getUsername().trim().length() == 0) {
 								this.showLoginScreenStatus("You must enter both a username",
 										"and a password - Please try again");

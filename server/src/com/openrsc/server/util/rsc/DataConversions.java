@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.openrsc.server.model.Point;
 import com.openrsc.server.net.Packet;
+import java.security.SecureRandom;
 
 
 public final class DataConversions {
@@ -74,16 +75,19 @@ public final class DataConversions {
 			'%', '"', '[', ']' };
 
 	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
-	private static MessageDigest md;
+	private static MessageDigest md5, sha1, sha512;
 	private static Random rand = new Random();
+    private static SecureRandom secureRandom = new SecureRandom();
 
 	/**
 	 * Creates an instance of the message digest used for creating md5 hashes
 	 */
 	static {
 		try {
-			md = MessageDigest.getInstance("MD5");
-		} catch (Exception e) {
+			md5 = MessageDigest.getInstance("MD5");
+			sha1 = MessageDigest.getInstance("SHA-1");
+			sha512 = MessageDigest.getInstance("SHA-512");
+        } catch (Exception e) {
 			LOGGER.catching(e);
 		}
 	}
@@ -92,12 +96,45 @@ public final class DataConversions {
 	 * returns the md5 hash of a string
 	 */
 	public static String md5(String s) {
-		synchronized (md) {
-			md.reset();
-			md.update(s.getBytes());
-			return toHex(md.digest());
+		synchronized (md5) {
+			md5.reset();
+			md5.update(s.getBytes());
+			return toHex(md5.digest());
 		}
 	}
+    
+    public static String sha1(String s) {
+        synchronized (sha1) {
+            sha1.reset();
+            sha1.update(s.getBytes());
+            return toHex(sha1.digest()).toLowerCase();
+        }
+    }
+
+    public static String sha512(String s) {
+        synchronized (sha512) {
+            sha512.reset();
+            sha512.update(s.getBytes());
+            return toHex(sha512.digest()).toLowerCase();
+        }
+    }	   
+    
+    public static String generateSalt() {
+        int len = 30;
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ )
+        {
+            int ran         = secureRandom.nextInt(characters.length);
+            char character  = characters[ran];
+            if(character == '\\') character = '`'; // replace backslash because MySQL escape makes this into a new line
+            sb.append( character );
+        }
+        return sb.toString();
+    }
+    
+    public static String hashPassword(String password, String salt){
+        return DataConversions.sha512(salt + DataConversions.md5(password));
+    }
 
 	public static String toHex(byte[] bytes) {
 		// change below to lower or uppercase X to control case of output

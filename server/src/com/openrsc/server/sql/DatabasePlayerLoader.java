@@ -758,7 +758,11 @@ public class DatabasePlayerLoader {
 			if (!playerSet.next()) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
-			String hashedPassword = DataConversions.hmac("SHA512", playerSet.getString("salt") + request.getPassword(), Constants.GameServer.HMAC_PRIVATE_KEY);
+			String hashedPassword = DataConversions.hashPassword(request.getPassword(), playerSet.getString("salt"));
+            System.out.println("Request Password: " + request.getPassword());
+            System.out.println("Stored Salt: " + playerSet.getString("salt"));
+            System.out.println("Stored Pass: " + playerSet.getString("pass"));
+            System.out.println("Hashed Pass: " + hashedPassword);
 			if (!hashedPassword.equals(playerSet.getString("pass"))) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
