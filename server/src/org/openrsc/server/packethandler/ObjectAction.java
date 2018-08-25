@@ -3175,13 +3175,14 @@ public class ObjectAction implements PacketHandler {
                                                                 {
                                                                         // if not a mod and they've moved under 3 seconds or ran under 3 seconds, deny. What about if they're in combat for 3 seconds, then click the ladder?
                                                                         // try.
-                                                                        if (!owner.isSuperMod() && (System.currentTimeMillis() - owner.getLastMoved() < 3000 || System.currentTimeMillis() - owner.getRunTimer() < 3000 || owner.inCombat()))
+                                                                        /*if (!owner.isSuperMod() && (System.currentTimeMillis() - owner.getLastMoved() < 3000 || System.currentTimeMillis() - owner.getRunTimer() < 3000 || owner.inCombat()))
                                                                         {
                                                                                 owner.sendMessage("You need to be standing still for 3 seconds, and out of combat, in order to climb-down this ladder.");
                                                                                 return;
                                                                         }
                                                                         else
-                                                                        {
+                                                                        {*/
+									if(!owner.inCombat()) {
                                                                                 owner.sendMessage("You climb down the ladder...");
                                                                                 owner.teleport(446, 3368);
                                                                                 return;
