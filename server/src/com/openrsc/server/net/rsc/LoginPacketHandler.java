@@ -257,9 +257,9 @@ public class LoginPacketHandler {
 			break;
 		}
 	}
-	// Convert to SHA512 + Salt(8) via forum login.
+	// Use SHA1 algorithm for forum passwords.
 	static String sha1(String input) throws NoSuchAlgorithmException {
-		MessageDigest mDigest = MessageDigest.getInstance("SHA512");
+		MessageDigest mDigest = MessageDigest.getInstance("SHA1");
 		byte[] result = mDigest.digest(input.getBytes());
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < result.length; i++) {
