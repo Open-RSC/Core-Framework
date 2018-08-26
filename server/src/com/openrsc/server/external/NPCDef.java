@@ -63,7 +63,7 @@ public class NPCDef extends EntityDef {
     public int strength;
     
     /**
-     * combat level because why the fuck not, 
+     * combat level because why not, 
      * calculation of strength, def, attack and hits - 
      * is wrong compared to npcs combat level on a few monsters due to RSC set stats on mobs.
      */

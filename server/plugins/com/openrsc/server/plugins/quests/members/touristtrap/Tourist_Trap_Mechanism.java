@@ -560,81 +560,81 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		case CartDriver.WAGON:
 			message(p, "The cart driver smirks a little.",
 					"He starts checking the steering on the cart.");
-			int go = showMenu(p,n,
+			int menu = showMenu(p,n,
 					"'One good turn deserves another'",
 					"Can you get me the heck out of here please?");
-			if(go == 0) {
+			if(menu == 0) {
 				message(p, "The cart driver smiles a bit and then turns to you.");
 				npcTalk(p,n, "Are you trying to get me fired?");
-				int fired = showMenu(p,n,
+				int menu2 = showMenu(p,n,
 						"No",
 						"Yes",
 						"Fired...no, shot perhaps!");
-				if(fired == 0) {
+				if(menu2 == 0) {
 					npcTalk(p,n, "It certainly sounds like it, now leave me alone.",
 							"If you bug me again, I'm gonna call the guards.");
 					p.message("The cart driver goes back to his work.");
-				} else if(fired == 1) {
+				} else if(menu2 == 1) {
 					npcTalk(p,n, "And why would you want to do a crazy thing like that for?",
 							"I ought to teach you a lesson!",
 							"Guards! Guards!");
 					// CONTINUE
-				} else if(fired == 2) {
+				} else if(menu2 == 2) {
 					npcTalk(p,n, "Ha ha ha! You're funny!");
 					message(p, "The cart driver checks that the guards aren't watching him.");
 					npcTalk(p,n, "What're you in fer?");
-					int fer = showMenu(p,n,
+					int menu3 = showMenu(p,n,
 							"Oh, I'm not supposed to be here at all actually.",
 							"I'm in for murder, so you'd better get me out of here!",
 							"In for a penny in for a pound.");
-					if(fer == 0) {
+					if(menu3 == 0) {
 						npcTalk(p,n, "Hmmm, interesting...let me guess.",
 								"You're completely innocent...",
 								"like all the other inmates in here.",
 								"Ha ha ha!");
 						p.message("The Cart driver goes back to his work.");
-					} else if(fer == 1) {
+					} else if(menu3 == 1) {
 						npcTalk(p,n, "Hmm, well, I wonder what the guards are gonna say about that!",
 								"Guards! Guards!");
 						// CONTINUE
-					} else if(fer == 2) {
+					} else if(menu3 == 2) {
 						message(p, "The cart driver laughs at your pun...");
 						npcTalk(p,n, "Ha ha ha, oh Stoppit!");
 						message(p, "The cart driver seems much happier now.");
 						npcTalk(p,n, "What can I do for you anyway?");
-						int fuckoff = showMenu(p,n,
+						int menu4 = showMenu(p,n,
 								"Can you smuggle me out on your cart?",
 								"Can you smuggle my friend Ana out on your cart?",
 								"Well, you see, it's like this...");
-						if(fuckoff == 0) {
+						if(menu4 == 0) {
 							message(p, "The cart driver points at a nearby guard.");
 							npcTalk(p,n, "Ask that man over there if it's OK and I'll consider it!",
 									"Ha ha ha!");
 							p.message("The cart driver goes back to his work, laughing to himself.");
-						} else if(fuckoff == 1) {
+						} else if(menu4 == 1) {
 							npcTalk(p,n, "As long as your friend is a barrel full of rocks.",
 									"I don't think it would be a problem at all!",
 									"Ha ha ha!");
 							p.message("The cart driver goes back to his work, laughing to himself.");
-						} else if(fuckoff == 2) {
+						} else if(menu4 == 2) {
 							npcTalk(p,n, "yeah!");
-							int likeThis = showMenu(p,n,
+							int menu5 = showMenu(p,n,
 									"Prison riot in ten minutes, get your cart out of here!",
 									"There's ten gold in it for you if you leave now - no questions asked.");
-							if(likeThis == 0) {
+							if(menu5 == 0) {
 								p.message("The cart driver seems visibly shaken...");
 								npcTalk(p,n, "Oh, right..yes...yess, Ok...");
 								message(p, "The cart driver quickly starts preparing the cart.");
-								int lala = showMenu(p,n,
+								int menu6 = showMenu(p,n,
 										"Good luck!",
 										"You can't leave me here, I'll get killed!");
-								if(lala == 0) {
+								if(menu6 == 0) {
 									npcTalk(p, n, "Ok great!");
 									if(p.getCache().hasKey("ana_in_cart")) {
 										p.getCache().remove("ana_in_cart");
 										p.getCache().store("rescue", true);
 									}
-								} else if(lala == 1) {
+								} else if(menu6 == 1) {
 									npcTalk(p,n, "Oh, right...ok, you'd better jump in the cart then!",
 											"Quickly!");
 									if(p.getCache().hasKey("ana_in_cart")) {
@@ -642,14 +642,14 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 										p.getCache().store("rescue", true);
 									}
 								}
-							} else if(likeThis == 1){
+							} else if(menu5 == 1){
 								npcTalk(p,n, "If you're going to bribe me, at least make it worth my while.",
 										"Now, let's say 100 Gold pieces should we?",
 										"Ha ha ha!");
-								int ten = showMenu(p,n,
+								int menu6 = showMenu(p,n,
 										"A hundred it is!",
 										"Forget it!");
-								if(ten == 0) {
+								if(menu6 == 0) {
 									if(hasItem(p, 10, 100)) {
 										npcTalk(p, n, "Great!", "Ok, get in the back of the cart then!");
 										removeItem(p, 10, 100);
@@ -661,7 +661,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 										playerTalk(p, n, "I'll go get the money! wait for me.");
 										npcTalk(p, n, "OK great!");
 									}
-								} else if(ten == 1) {
+								} else if(menu6 == 1) {
 									npcTalk(p,n, "Ok, fair enough!",
 											"But don't bother me anymore.");
 									p.message("The cart driver goes back to work.");
@@ -670,7 +670,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 						}
 					}
 				}
-			} else if(go == 1) {
+			} else if(menu == 1) {
 				getOutWithAnaInCart(p, n, CartDriver.HECKOUT);
 			}
 			break;
