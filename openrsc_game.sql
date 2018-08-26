@@ -39476,7 +39476,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `group_id` int(10) DEFAULT '0',
   `owner` int(5) UNSIGNED NOT NULL,
   `pass` varchar(512) NOT NULL,
-  `salt` varchar(16) NOT NULL DEFAULT '',
+  `salt` varchar(250) NOT NULL DEFAULT '',
   `sub_expires` int(5) UNSIGNED DEFAULT '0',
   `platinum_expires` int(5) UNSIGNED DEFAULT '0',
   `combat` int(10) DEFAULT '3',
