@@ -112,3 +112,5 @@ Tools/Sprite Editor/unpack/*.png
 /PC_Client/nbproject/private/
 /Client/nbproject/private/
 Android_Client/\.settings/
+
+server/avatars/
