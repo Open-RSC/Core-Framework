@@ -141,7 +141,7 @@ public class SpriteHandler implements ImageProducer, ImageObserver
 	}
 	
 	/**
-	 * Requests top down left right resend. Whatever the fuck that means.
+	 * Requests top down left right resend. Whatever that means.
 	 * @param imageconsumer the image consumer to do nothing with?
 	 */
 	public void requestTopDownLeftRightResend(ImageConsumer imageconsumer) 

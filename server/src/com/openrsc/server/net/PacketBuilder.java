@@ -252,18 +252,18 @@ public class PacketBuilder {
 	public void writeRSCString(String string) {
 		byte[] data = DataConversions.stringToBytes(string);
 		
-		byte[] thefuckingpacket = new byte[256];
+		byte[] packet = new byte[256];
 		int value = data.length;
 		int pointer = 0;
 		if (value >= 0 && value < 128) {
-			thefuckingpacket[pointer++] = (byte) value;
+			packet[pointer++] = (byte) value;
 		} else if (value >= 0 && value < '\u8000') {
-			thefuckingpacket[pointer++] = (byte) (value >> 8);
-			thefuckingpacket[pointer++] = (byte) value;
+			packet[pointer++] = (byte) (value >> 8);
+			packet[pointer++] = (byte) value;
 		}
 		
-		DataConversions.encryption.encryptString(data.length, thefuckingpacket, pointer, data, 0);
-		payload.writeBytes(thefuckingpacket);
+		DataConversions.encryption.encryptString(data.length, packet, pointer, data, 0);
+		payload.writeBytes(packet);
 		
 	}
 	/*public void writeRSCString(String string) {

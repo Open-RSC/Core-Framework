@@ -756,12 +756,12 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						"But not many women though...",
 						"Saw one come in last week....",
 						"But I don't know if it's the woman you're looking for?");
-				int lastShitMenu = showMenu(p,n,
+				int menu = showMenu(p,n,
 						"What is this place?",
 						"What are you guarding?");
-				if(lastShitMenu == 0) {
+				if(menu == 0) {
 					mercenaryDialogue(p, n, Mercenary.PLACE_SECOND);
-				} else if(lastShitMenu == 1) {
+				} else if(menu == 1) {
 					mercenaryDialogue(p, n, Mercenary.GUARDING_SECOND);
 				}
 				break;
@@ -795,24 +795,24 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							"Hey ugly!");
 					if(menu == 0) {
 						npcTalk(p,n, "Be off Effendi, you are not wanted around here.");
-						int be = showMenu(p,n,
+						int menu2 = showMenu(p,n,
 								"That's rude, I ought to teach you some manners.",
 								"I 'll offer you something in return for your time.");
-						if(be == 0) {
+						if(menu2 == 0) {
 							npcTalk(p,n, "Oh yes! How might you do that?",
 									"You seem little more than a gutter dweller.",
 									"How could you teach me manners?");
-							int manners = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"With my right fist and a good deal of force.",
 									"Err, sorry, I thought I was talking to someone else.");
-							if(manners == 0) {
+							if(menu3 == 0) {
 								npcTalk(p,n, "Oh yes, ready your weapon then!",
 										"I'm sure you won't mind if my men join in?",
 										"Har, har, har!",
 										" Guards, kill this gutter dwelling slime.");
 								message(p, "An angry guard approaches you and whips out his sword.");
 								captainWantToThrowPlayer(p, n);
-							} else if(manners == 1) {
+							} else if(menu3 == 1) {
 								npcTalk(p,n, "Well, Effendi, you do need to be carefull of what you say to people.",
 										"Or they may take it the wrong way.",
 										"Thankfully, I'm very understanding.",
@@ -822,25 +822,25 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								captainWantToThrowPlayer(p, n);
 							}
 
-						} else if(be == 1) {
+						} else if(menu2 == 1) {
 							npcTalk(p,n, "Hmmm, oh yes, what might that be?");
-							int menus = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"I have some gold.",
 									"There must be something that I can do for you?");
-							if(menus == 0) {
+							if(menu3 == 0) {
 								npcTalk(p,n, "Ha, ha, ha! You come to a mining camp and offer us gold!",
 										"Thanks effendi, but we have all the gold that we'll ever need.",
 										"Now be off with you,",
 										"before we reduce you to a bloody mess on the sand.");
-								int option = showMenu(p,n,
+								int menu4 = showMenu(p,n,
 										"There must be something that I can do for you?",
 										"You don't scare me!");
-								if(option == 0) {
+								if(menu4 == 0) {
 									mercenaryCaptainDialogue(p, n, MercenaryCaptain.MUSTBESOMETHINGICANDO);
-								} else if(option == 1) {
+								} else if(menu4 == 1) {
 									mercenaryCaptainDialogue(p, n, MercenaryCaptain.DONTSCAREME);
 								}
-							} else if(menus == 1) {
+							} else if(menu3 == 1) {
 								mercenaryCaptainDialogue(p, n, MercenaryCaptain.MUSTBESOMETHINGICANDO);
 							}
 						}
@@ -849,23 +849,23 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								"Explain your business quickly...",
 								"or my guards will slay you where you stand.");
 						p.message("Some guards close in around you.");
-						int thirdMenu = showMenu(p,n,
+						int menu2 = showMenu(p,n,
 								"I'm lost, can you help me?",
 								"What are you guarding?");
-						if(thirdMenu == 0) {
+						if(menu2 == 0) {
 							message(p, "The captain smiles broadly and with a sickening voice says.");
 							npcTalk(p,n, "We are not a charity effendi,",
 									"Be off with you before I have your head removed from your body.");
-							int lostMenu = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"What are you guarding?",
 									"You don't scare me!");
-							if(lostMenu == 0) {
+							if(menu3 == 0) {
 								mercenaryCaptainDialogue(p, n, MercenaryCaptain.GUARDING);
-							} else if(lostMenu == 1) {
+							} else if(menu3 == 1) {
 								mercenaryCaptainDialogue(p, n, MercenaryCaptain.DONTSCAREME);
 							}
 
-						} else if(thirdMenu == 1) {
+						} else if(menu2 == 1) {
 							mercenaryCaptainDialogue(p, n, MercenaryCaptain.GUARDING);
 						}
 					} else if(menu == 2) {
@@ -1029,13 +1029,13 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						npcTalk(p,n, "Can't you see I'm busy?");
 						if(!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023) && p.getQuestStage(this) != -1) {
 							p.message("A guard notices you and starts running after you.");
-							Npc shitN = getNearestNpc(p, MERCENARY, 10);
-							if(shitN == null) {
-								shitN = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+							Npc merc = getNearestNpc(p, MERCENARY, 10);
+							if(merc == null) {
+								merc = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 								sleep(1000);
 							}
-							npcTalk(p,shitN, "Hey, you're no slave!");
-							shitN.startCombat(p);
+							npcTalk(p,merc, "Hey, you're no slave!");
+							merc.startCombat(p);
 							message(p, "The Guards search you!");
 							if(hasItem(p, CELL_DOOR_KEY)) {
 								removeItem(p, CELL_DOOR_KEY, 1);
@@ -1205,24 +1205,24 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						return;
 					}
 					npcTalk(p,n, "Yeah, what do you want?");
-					int mama = showMenu(p,n,
+					int menu1 = showMenu(p,n,
 							"Er nothing really.",
 							"I'd like to mine in a different area.");
-					if(mama == 0) {
+					if(menu1 == 0) {
 						npcTalk(p,n, "Ok...so move along and get on with your work.");
-					} else if(mama == 1) {
+					} else if(menu1 == 1) {
 						npcTalk(p,n, "Oh, so you want to work in another area of the mine heh?");
 						message(p, "The guard seems quite pleased with his rhetorical question.");
 						npcTalk(p,n, "Well, I can understand that, a change is as good as a rest they say.");
-						int fuck = showMenu(p,n,
+						int menu2 = showMenu(p,n,
 								"Huh, fat chance of a rest for me.",
 								"Yes sir, you're quite right sir.");
-						if(fuck == 0) {
+						if(menu2 == 0) {
 							npcTalk(p,n, "You miserable whelp!",
 									"Get back to work!");
 							p.damage(2);
 							p.message("The guard cuffs you around head.");
-						} else if(fuck == 1) {
+						} else if(menu2 == 1) {
 							npcTalk(p,n, "Of course I'm right...",
 									"And what goes around comes around as they say.",
 									"And it's been absolutely ages since I've had anything different to eat.",
@@ -1230,26 +1230,26 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 									"And those Tenti's have the best pineapple in this entire area.");
 							p.message("The guard winks at you.");
 							npcTalk(p,n, "I'm sure you get my meaning...");
-							int pus = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"How am I going to get some pineapples around here?",
 									"Yes sir, we understand each other perfectly.",
 									"What are the 'Tenti's'?");
-							if(pus == 0) {
+							if(menu3 == 0) {
 								mercenaryInsideDialogue(p, n, MercenaryInside.PINEAPPLES);
-							} else if(pus == 1) {
+							} else if(menu3 == 1) {
 								mercenaryInsideDialogue(p, n, MercenaryInside.UNDERSTAND);
-							} else if(pus == 2) {
+							} else if(menu3 == 2) {
 								npcTalk(p,n, "Well, you really don't come from around here do you?",
 										"The tenti's are what we call the nomadic people west of here.",
 										"They live in tents, so we call them the tenti's",
 										"They have great pineapples!",
 										"I'm sure you get my meaning...");
-								int pus2 = showMenu(p,n,
+								int menu4 = showMenu(p,n,
 										"How am I going to get some pineapples around here?",
 										"Yes sir, we understand each other perfectly.");
-								if(pus2 == 0) {
+								if(menu4 == 0) {
 									mercenaryInsideDialogue(p, n, MercenaryInside.PINEAPPLES);
-								} else if(pus2 == 1) {
+								} else if(menu4 == 1) {
 									mercenaryInsideDialogue(p, n, MercenaryInside.UNDERSTAND);
 								}
 							}
@@ -1862,21 +1862,21 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				if(!succeedRate(p)) {
 					npcTalk(p,n, "Where's the fire?",
 							"I don't see any fire?");
-					int fireMenu = showMenu(p,n,
+					int menu1 = showMenu(p,n,
 							"It's down in the lower mines, sound the alarm!",
 							"Oh yes,  you're right, they must have put it out!");
-					if(fireMenu == 0) {
+					if(menu1 == 0) {
 						npcTalk(p,n, "You go and sound the alarm, I can't see anything wrong with the mine.",
 								"Have you seen the fire yourself?");
-						int fuck = showMenu(p,n,
+						int menu2 = showMenu(p,n,
 								"Yes actually!",
 								"Er, no, one of the slaves told me.");
-						if(fuck == 0) {
+						if(menu2 == 0) {
 							npcTalk(p,n, "Well, why didn't you raise the alarm?");
-							int fuckoff = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"I don't know where the alarm is.",
 									"I was so concerned for your safety that I rushed to save you.");
-							if(fuckoff == 0) {
+							if(menu3 == 0) {
 								npcTalk(p,n, "That's the most ridiculous thing I've heard.",
 										"Who are you? Where do you come from?",
 										"It doesn't matter...");
@@ -1893,30 +1893,30 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								p.damage(7);
 								npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
 								p.teleport(89, 801);
-							} else if(fuckoff == 1) {
+							} else if(menu3 == 1) {
 								npcTalk(p,n, "Well, that's very good of you.",
 										"But as you can see, I am very fine and well thanks!",
 										"Now, please leave so that I can get back to my work.");
 								p.message("The Captain goes back to his desk.");
 							}
-						} else if(fuck == 1) {
+						} else if(menu2 == 1) {
 							npcTalk(p,n, "Well...you can't believe them, they're all a bunch of convicts.",
 									"Anyway, it doesn't look as if there is a fire down there.",
 									"So I'm going to get on with my work.",
 									"Please remove yourself from my office.");
 							p.message("The Captain goes back to his desk and starts studying.");
 						}
-					} else if(fireMenu == 1) {
+					} else if(menu1 == 1) {
 						npcTalk(p,n, "Good, now perhaps you can leave me in peace?",
 								"After all I do have some work to do.");
-						int er = showMenu(p,n,
+						int menu2 = showMenu(p,n,
 								"Er, yes Ok then.",
 								"Well, er...erm, I err....");
-						if(er == 0) {
+						if(menu2 == 0) {
 							npcTalk(p,n, "Good!",
 									"Please remove yourself from my office.");
 							p.message("The Captain goes back to his desk and starts studying.");
-						} else if(er == 1) {
+						} else if(menu2 == 1) {
 							captainSiadDialogue(p, n, Siad.ERM, null);
 						}
 					}
@@ -1999,13 +1999,13 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 			if(!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023) && p.getQuestStage(this) != -1) {
 				p.message("A guard notices you and starts running after you.");
-				Npc shitN = getNearestNpc(p, MERCENARY, 10);
-				if(shitN == null) {
-					shitN = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+				Npc merc = getNearestNpc(p, MERCENARY, 10);
+				if(merc == null) {
+					merc = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 					sleep(1000);
 				}
-				npcTalk(p,shitN, "Hey, you're no slave!");
-				shitN.startCombat(p);
+				npcTalk(p,merc, "Hey, you're no slave!");
+				merc.startCombat(p);
 				message(p, "The Guards search you!");
 				if(hasItem(p, CELL_DOOR_KEY)) {
 					removeItem(p, CELL_DOOR_KEY, 1);
@@ -2027,33 +2027,33 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						"Not exactly Al Kharid Inn style is it?",
 						"Well, I guess I'd better get back to work.",
 						"Don't want to get into trouble with the guards again.");
-				int ooo = showMenu(p,n,
+				int menu2 = showMenu(p,n,
 						"Do you get into trouble with guards often?",
 						"I want to try and get you out of here.");
-				if(ooo == 0) {
+				if(menu2 == 0) {
 					npcTalk(p,n, "No, not really, because I'm usually working very hard.",
 							"Come to think of it, I'd better get back to work.");
-					int often = showMenu(p,n,
+					int menu3 = showMenu(p,n,
 							"Do you enjoy it down here?",
 							"Ok, see ya!");
-					if(often == 0) {
+					if(menu3 == 0) {
 						npcTalk(p,n, "Of course not!",
 								"I just don't have much choice about it a the moment.");
-						int enjoy = showMenu(p,n,
+						int menu4 = showMenu(p,n,
 								"I want to try and get you out of here.",
 								"Do you have any ideas about how we can get out of here?");
-						if(enjoy == 0) {
+						if(menu4 == 0) {
 
-						} else if(enjoy == 1) {
+						} else if(menu4 == 1) {
 							npcTalk(p,n, "Hmmm, not really, I would have tried them already if I did.",
 									"The guards seem to live in the compound.",
 									"How did you get in there anyway?");
-							int mmm = showMenu(p,n,
+							int menu4 = showMenu(p,n,
 									"I managed to sneak past the guards.",
 									"Huh, these guards are rubbish, it was easy to sneak past them!");
-							if(mmm == 0) {
+							if(menu5 == 0) {
 
-							} else if(mmm == 1) {
+							} else if(menu5 == 1) {
 								Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 								if(guard != null) {
 									npcTalk(p,n, "I heard that! So you managed to sneak in did you!");
@@ -2068,25 +2068,25 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								}
 							}
 						}
-					} else if(often == 1) {
+					} else if(menu3 == 1) {
 						npcTalk(p,n, "Goodbye and good luck!");
 					}
-				} else if(ooo == 1) {
+				} else if(menu2 == 1) {
 
 				}
 			} else if(menu == 1) {
 				npcTalk(p,n, "My name? Oh, how sweet, my name is Ana,",
 						"I come from Al Kharid, thought the desert might be interesting.",
 						"What a surprise I got!");
-				int opt = showMenu(p,n,
+				int menu2 = showMenu(p,n,
 						"What kind of suprise did you get?",
 						"Do you want to go back to Al Kharid?");
-				if(opt == 0) {
+				if(menu2 == 0) {
 					npcTalk(p,n, "Well, I was just touring the desert looking for the nomad tribe to west.",
 							"And I was set upon by these armoured men.",
 							"I think that the guards think I am an escaped prisoner.",
 							"They didn't understand that I was exploring the desert as an adventurer.");
-				} else if(opt == 1) {
+				} else if(menu2 == 1) {
 					npcTalk(p,n, "Sure, I miss my Mum, her name is Irena and she is probably waiting for me.",
 							"how do you propose we get out of here though?",
 							"I'm sure you've noticed the many square jawed guards around here.",
@@ -2105,16 +2105,16 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				npcTalk(p,n, "That doesn't sound very likely. How did you get in here anway?",
 						"Did you deliberately hand yourself over to the guards?",
 						"Ha, ha ha ha! Sorry, just kidding.");
-				int last = showMenu(p,n,
+				int menu2 = showMenu(p,n,
 						"I managed to sneak past the guards.",
 						"Huh, these guards are rubbish, it was easy to sneak past them!");
-				if(last == 0) {
+				if(menu2 == 0) {
 					npcTalk(p,n, "Hmm, impressive, but can you so easily sneak out again?",
 							"How did you manage to get through the gate?");
-					int gosh = showMenu(p,n,
+					int menu3 = showMenu(p,n,
 							"I have a key",
 							"It's a trade secret!");
-					if(gosh == 0) {
+					if(menu3 == 0) {
 						Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 						if(guard != null) {
 							npcTalk(p,guard, "I heard that! So you used a key did you?! ",
@@ -2130,12 +2130,12 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							npcTalk(p,guard, "Into the cell you go! I hope this teaches you a lesson.");
 							p.teleport(75, 3625);
 						}
-					} else if(gosh == 1) {
+					} else if(menu3 == 1) {
 						npcTalk(p,n, "Oh, right, well, I guess you know what you're doing.",
 								"Anyway, I have to get back to work.",
 								"The guards will come along soon and give us some trouble else.");
 					}
-				} else if(last == 1) {
+				} else if(menu2 == 1) {
 					Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 					if(guard != null) {
 						npcTalk(p,guard, "I heard that! So you managed to sneak in did you!",
@@ -2157,60 +2157,60 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						"Not even the dead get a decent funeral.",
 						"Bodies are just thrown down dissused mine holes.",
 						"It's very disrespectful...");
-				int gah = showMenu(p,n,
+				int menu2 = showMenu(p,n,
 						"Ok, I'll check around for another way to try and get out.",
 						"How does the rock get out?");
-				if(gah == 0) {
+				if(menu2 == 0) {
 					npcTalk(p,n, "Good luck!");
-				} else if(gah == 1) {
+				} else if(menu2 == 1) {
 					npcTalk(p,n, "Well, in this section we mine it, ",
 							"Then someone else scoops it into a barrel. ",
 							"The barrels are loaded onto a mine cart.",
 							"Then they're desposited near the surface lift.",
 							"I have no idea where they go from there.",
 							"But that's not going to help us, is it?");
-					int kaka = showMenu(p,n,
+					int menu3 = showMenu(p,n,
 							"Maybe? I'll come back to you when I have a plan.",
 							"Where would I get one of those barrels from?");
-					if(kaka == 0) {
+					if(menu3 == 0) {
 						npcTalk(p,n, "Ok, well, I'm not going anywhere!");
 						p.message("Ana nods at a nearby guard!");
 						npcTalk(p,n, "Unless he feels generous enough to let me go!");
 						p.message("The guard ignores the comment.");
 						npcTalk(p,n, "Oh well, I'd better get back to work, you take care!");
-					} else if(kaka == 1) {
+					} else if(menu3 == 1) {
 						npcTalk(p,n, "Well, you would get one from around by the lift area.",
 								"But why would you want one of those?");
-						int tjatja = showMenu(p,n,
+						int menu4 = showMenu(p,n,
 								"Er no reason! Just wondering.",
 								"You could hide in one of those barrels and I could try to sneak you out!");
-						if(tjatja == 0) {
+						if(menu4 == 0) {
 							npcTalk(p,n, "Hmmm, just don't get any funny ideas...",
 									"I am not going to get into one of those barrels!",
 									"Ok, have you got that?");
-							int barrel = showMenu(p,n,
+							int menu5 = showMenu(p,n,
 									"Ok, yep, I've got that.",
 									"Well, we'll see, it might be the only way.");
-							if(barrel == 0) {
+							if(menu5 == 0) {
 								npcTalk(p,n, "Good, just make sure you keep it in mind.",
 										"Anyway, I have to get back to work.",
 										"The guards will come along soon and give us some trouble else.");
-							} else if(barrel == 1) {
+							} else if(menu5 == 1) {
 								npcTalk(p,n, "No, there has to be a better way!",
 										"Anyway, I have to get back to work.",
 										"The guards will come along soon and give us some trouble else.");
 							}
-						} else if(tjatja == 1) {
+						} else if(menu4 == 1) {
 							npcTalk(p,n, "There is no way that you are getting me into a barrel.",
 									"No WAY! DO you understand?");
-							int fuck = showMenu(p,n,
+							int menu5 = showMenu(p,n,
 									"Ok, yep, I've got that.",
 									"Well, we'll see, it might be the only way.");
-							if(fuck == 0) {
+							if(menu5 == 0) {
 								npcTalk(p,n, "Good, just make sure you keep it in mind.",
 										"Anyway, I have to get back to work.",
 										"The guards will come along soon and give us some trouble else.");
-							} else if(fuck == 1) {
+							} else if(menu5 == 1) {
 								npcTalk(p,n, "No, there has to be a better way!",
 										"Anyway, I have to get back to work.",
 										"The guards will come along soon and give us some trouble else.");

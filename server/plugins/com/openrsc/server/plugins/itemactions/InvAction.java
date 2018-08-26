@@ -314,7 +314,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			} else {
 				p.message("the pigeons don't want to leave");
 			}
-		}//JANGERBERRIES EAT SHIT
+		}//JANGERBERRIES
 		if(item.getID() == 936) {
 			message(p, "You eat the Jangerberries");
 			removeItem(p, 936, 1);

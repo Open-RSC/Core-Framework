@@ -79,8 +79,6 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 
 	/**
 	 * TODO: Do this quest on RSC.
-	 * 
-	 * FUCK ME
 	 */
 
 	// NOTE: Lady dissapear when you tie her up, when you rescue prince he gets
@@ -687,7 +685,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			} else if (choice6 == 1) {
 				keliDialogue(p, n, Keli.TRAINED);
 			} else if (choice6 == 2) {
-				keliDialogue(p, n, Keli.KATRINE);// holy fuck this is long
+				keliDialogue(p, n, Keli.KATRINE);// this is long
 			}
 			break;
 		case Keli.KILLPEOPLE:

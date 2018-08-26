@@ -124,7 +124,7 @@ public class WorldLoader {
 					world.getTile(bx, by).projectileAllowed = true;
 			}
 		}
-		/** end of shit **/
+		/** end **/
 		return true;
 
 	}
