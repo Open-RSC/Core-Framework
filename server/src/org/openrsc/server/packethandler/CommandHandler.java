@@ -2437,20 +2437,6 @@ public class CommandHandler implements PacketHandler
 			}
             Logger.log(new GenericLog(owner.getUsername() + " set safecombat to " + stateText, DataConversions.getTimeStamp()));
         }
-        else // enable or disable pvp
-        if (cmd.equalsIgnoreCase("pvpenabled") && (owner.isEvent() || owner.isSuperMod()))
-        {
-            World.pvpEnabled    = !World.pvpEnabled;
-            String stateText    = World.pvpEnabled ? "enabled" : "disabled";
-			synchronized (World.getPlayers()) {
-				for (Player p : World.getPlayers()) {
-					if (p != null) {
-						p.sendMessage(Config.getPrefix() + "PVP has been " + stateText);
-					}
-				}
-			}
-            Logger.log(new GenericLog(owner.getUsername() + " set PVP to " + stateText, DataConversions.getTimeStamp()));
-        }
         else // ipban
         if(cmd.equalsIgnoreCase("ipban") && owner.isAdmin())
         {
