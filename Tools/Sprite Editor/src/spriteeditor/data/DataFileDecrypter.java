@@ -181,7 +181,7 @@ public class DataFileDecrypter
     }
 
 	/**
-	 * Does some shit
+	 * ???
 	 */
     private static void method131(DataFileVariables dataFileVariables) 
     {
@@ -239,7 +239,7 @@ public class DataFileDecrypter
                 dataFileVariables.aBoolean477 = false;
             
             if(dataFileVariables.aBoolean477) // I'm guessing a randomised block is a very bad thing.
-                System.out.println("PANIC! RANDOMISED BLOCK! OSHIT!!");
+                System.out.println("PANIC! RANDOMISED BLOCK!");
             
             dataFileVariables.anInt482 = 0;
             byte0 = method132(dataFileVariables);
