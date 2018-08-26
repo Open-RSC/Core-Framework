@@ -420,7 +420,7 @@ public final class World {
 	private boolean isProjectileClipAllowed(GameObject o) {
 		for (String s : objectsProjectileClipAllowed) {
 			if (o.getType() == 0) {
-				// Fucking hell theres like million of the objects that need to
+				// there are many of the objects that need to
 				// have clip enabled.
 				if (!o.getGameObjectDef().getName().equalsIgnoreCase("tree")) {
 					if (o.getGameObjectDef().getHeight() == 1 && o.getGameObjectDef().getWidth() == 1 && !o.getGameObjectDef().getName().toLowerCase().equalsIgnoreCase("chest"))
@@ -457,7 +457,7 @@ public final class World {
 		NPCLoc npc = n.getLoc();
 		if (npc.startX < npc.minX || npc.startX > npc.maxX || npc.startY < npc.minY || npc.startY > npc.maxY
 				|| (getTile(npc.startX, npc.startY).overlay & 64) != 0) {
-			LOGGER.error("Fucked Npc: <id>" + npc.id + "</id><startX>" + npc.startX + "</startX><startY>"
+			LOGGER.error("Broken Npc: <id>" + npc.id + "</id><startX>" + npc.startX + "</startX><startY>"
 					+ npc.startY + "</startY>");
 		}
 		npcs.add(n);

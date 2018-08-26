@@ -109,7 +109,7 @@ public class AttackHandler implements PacketHandler {
 			final Mob target = affectedMob;
 			player.resetPath();
 			player.resetAll();
-			/* To skip the fucking walk packet resetAll() */
+			/* To skip the walk packet resetAll() */
 			Server.getServer().getEventHandler().add(new MiniEvent(player) {
 				@Override
 				public void action() {
