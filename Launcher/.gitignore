@@ -1,1 +1,3 @@
-/bin/
+.class
+.DS_Store
+build/

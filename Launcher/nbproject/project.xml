@@ -3,9 +3,9 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>OpenRSC Launcher</name>
+            <name>Open RSC Launcher</name>
             <source-roots>
-                <root id="src.dir"/>
+                <root id="src.dir" name="src"/>
             </source-roots>
             <test-roots/>
         </data>

@@ -16,12 +16,13 @@ ps:
 	docker-compose -f docker-compose-travis.yml ps
 
 compile:
-	ant -f server/build.xml compile
-	ant -f client/build.xml compile
+	ant -f Server/build.xml compile_core
+	ant -f Server/build.xml compile_plugins
+	ant -f Client/build.xml compile
 	ant -f Launcher/build.xml jar
 
 import-game:
-	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Databases/openrsc_config.sql
-	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Databases/openrsc_logs.sql
-	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Databases/openrsc.sql
-	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Databases/openrsc_tools.sql
+	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < openrsc_game.sql
+
+run-game:
+	ant -f ant -f Server/build.xml runservermembers
