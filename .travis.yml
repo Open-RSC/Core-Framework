@@ -25,3 +25,4 @@ script:
   - sudo make compile
   - sudo make ps
   - sudo make import-game
+  - sudo make run-game
