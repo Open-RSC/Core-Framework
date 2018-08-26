@@ -52,7 +52,7 @@ public class DatabaseConnection {
 	public boolean createConnection(String database) {
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://" 
-					+ Constants.GameServer.MYSQL_HOST + "/" + database + "?useSSL=false&rewriteBatchedStatements=true",
+					+ Constants.GameServer.MYSQL_HOST + "/" + database + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
 					Constants.GameServer.MYSQL_USER,
 					Constants.GameServer.MYSQL_PASS);
 			statement = connection.createStatement();
