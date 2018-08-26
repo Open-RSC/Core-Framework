@@ -136,21 +136,21 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 
 				break;
 			case 1:
-				int opt = showMenu(p,n,
+				int menu = showMenu(p,n,
 						"What should I be doing to help again?",
 						"How did Lord Sinclair die?",
 						"I know who did it!");
-				if(opt == 0) {
+				if(menu == 0) {
 					npcTalk(p,n, "Look around and investigate who might be responsible",
 							"the sarge said every murder leaves clues to who done it",
 							"but frankly we're out of our depth here");
-				} else if(opt == 1) {
+				} else if(menu == 1) {
 					npcTalk(p,n, "well its all very mysterious.",
 							"Mary the maid found the body in the study next to his bedroom",
 							"on the east wing of the ground floor, the door was found locked,",
 							"from the inside, and he seemed to have been stabbed",
 							"but there was an odd smell in the room. Frankly, I'm stumped");
-				} else if(opt == 2) {
+				} else if(menu == 2) {
 					if(p.getCache().hasKey("thread")) {
 						playerTalk(p,n, "I have proof that it wasn't any of the servants");
 						p.message("you show the guard the thread you found on the window");
@@ -290,8 +290,8 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 					}
 					else {
 						npcTalk(p, n, "Really? That was quick work! Who?");
-						int twat = showMenu(p, n, "it was an intruder!", "the butler did it!", "It was one of the servants", "It was one of his family");
-						if(twat == 0) {
+						int menu2 = showMenu(p, n, "it was an intruder!", "the butler did it!", "It was one of the servants", "It was one of his family");
+						if(menu2 == 0) {
 							npcTalk(p,n, "Thats what we were thinking too.",
 									"That someone broke in, to steal something",
 									"was discovered by Lord Sinclair, stabbed him and ran.",
@@ -299,58 +299,58 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 									"Find out something has been stolen, and the case is closed",
 									"But the murdered man was a friend of the king",
 									"and its more than my jobs worth not to investigate fully");
-						} else if(twat == 1) {
+						} else if(menu2 == 1) {
 							npcTalk(p,n, "I hope you have proof to that effect.",
 									"we have to arrest someone for this and it seems to me that",
 									"only the actual murderer would gain by falsely accusing someone");
 							sleep(1500);
 							npcTalk(p,n, "although having said that",
 									"the butler is kind of shifty looking...");
-						} else if(twat == 2) {
+						} else if(menu2 == 2) {
 							npcTalk(p,n, "Oh really? Which one?");
-							int idiot = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"It was one of the women",
 									"It was one of the men");
-							if(idiot == 0) {
+							if(menu3 == 0) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int bitches = showMenu(p,
+								int menu4 = showMenu(p,
 										"it was so obviously Louisa The Cook",
 										"It must have been Mary The Maid");
-								if(bitches >= 0) {
+								if(menu4 >= 0) {
 									whoYouSuspect(p, n);
 								}
-							} else if(idiot == 1) {
+							} else if(menu3 == 1) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int fags = showMenu(p,
+								int menu4 = showMenu(p,
 										"it can only be Donovan the Handyman",
 										"Pierre the Dog Handler. No question.",
 										"Hobbes the Butler. the butler *always* did it",
 										"you must know it was Stanford The Gardener");
-								if(fags >= 0) {
+								if(menu4 >= 0) {
 									whoYouSuspect(p, n);
 								}
 							}
-						} else if(twat == 3) {
+						} else if(menu2 == 3) {
 							npcTalk(p,n, "Oh really? Which one?");
-							int family = showMenu(p,n,
+							int menu3 = showMenu(p,n,
 									"It was one of the women",
 									"It was one of the men");
-							if(family == 0) {
+							if(menu3 == 0) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int bitches_again = showMenu(p,n,
+								int menu4 = showMenu(p,n,
 										"I know it was Anna",
 										"I am so sure it was Carol",
 										"Ill bet you anything it was Elizabeth");
-								if(bitches_again >= 0) {
+								if(menu4 >= 0) {
 									whoYouSuspect(p, n);
 								}
-							} else if(family == 1) {
+							} else if(menu3 == 1) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int fags_again = showMenu(p,n,
+								int menu4 = showMenu(p,n,
 										"I'm certain it was Bob",
 										"It was David. No doubt about it.",
 										"If it wasn't Frank I'll eat my shoes");
-								if(fags_again >= 0) {
+								if(menu4 >= 0) {
 									whoYouSuspect(p, n);
 								}
 							}
