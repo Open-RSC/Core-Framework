@@ -207,7 +207,6 @@ public final class World
 
 	private static WorldLoader worldLoader;
 	public static boolean eventRunning = false;
-    public static boolean pvpEnabled = true;
 	public static boolean safeCombat = false;
 	public static boolean muted = false;
 	public static Point eventPoint = null;
