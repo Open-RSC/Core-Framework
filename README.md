@@ -19,13 +19,3 @@ Docker version (Linux and Windows):
 Direct install version (Linux only):
 
     curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Simple_Cloner.sh | bash
-
-If hosting externally on a VPS, it is possible to monitor the game server via JMX sampling with VisualVM.
-
- * ssh -l USERNAME VPS_DOMAIN -L 9990:localhost:9990
-
- * Open Visual VM and under "Local", right click and select "Add JMX Connection"
-
- * In "Connection", specify "localhost:9990" and click "OK"
-
- * Right click where it reads "localhost:9990 (pid xxxx)" and select "Sample"
