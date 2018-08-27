@@ -459,7 +459,8 @@ public class ActionSender {
 	public static void sendServerConfigs(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
-		s.writeString(Constants.GameServer.SERVER_NAME);
+		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
+		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		player.write(s.toPacket());
 	}
 
