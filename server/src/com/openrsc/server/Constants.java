@@ -24,7 +24,7 @@ public final class Constants {
 		/**
 		 * whether or not this is a members world
 		 */
-		public static boolean MEMBER_WORLD = false;
+		public static boolean MEMBER_WORLD = true;
 		/**
 		 * this worlds 'number'
 		 */
@@ -36,7 +36,7 @@ public final class Constants {
 		/**
 		 * the maximum allowed players to connect
 		 */
-		public static int MAX_PLAYERS = 800;
+		public static int MAX_PLAYERS = 100;
 		/**
 		 * the port the server is hosted on
 		 */
@@ -44,7 +44,7 @@ public final class Constants {
 		/**
 		 * where the server is hosted (i.e. USA, Holland, etc.)
 		 */
-		public static String SERVER_LOCATION = "United Kingdom";
+		public static String SERVER_LOCATION = "USA";
 		/**
 		 * the mysql database host
 		 */
@@ -52,7 +52,7 @@ public final class Constants {
 		/**
 		 * the mysql database name
 		 */
-		public static String MYSQL_DB = "wolf_kingdom";
+		public static String MYSQL_DB = "openrsc_game";
 		/**
 		 * the mysql username
 		 */
@@ -60,7 +60,7 @@ public final class Constants {
 		/**
 		 * the mysql password
 		 */
-		public static String MYSQL_PASS = "malware";
+		public static String MYSQL_PASS = "root";
 		/**
 		 *  mysql prefix
 		 */
@@ -72,19 +72,19 @@ public final class Constants {
 		/**
 		 * the combat experience rate
 		 */
-		public static double COMBAT_EXP_RATE = 5.0;
+		public static double COMBAT_EXP_RATE = 1.0;
 		/**
 		 * the skilling experience rate
 		 */
-		public static double SKILLING_EXP_RATE = 8.0;
+		public static double SKILLING_EXP_RATE = 1.0;
 		/**
 		 * standard subscriber rate for members
 		 */
-		public static double SUBSCRIBER_EXP_RATE = 8.0;
+		public static double SUBSCRIBER_EXP_RATE = 1.0;
 		/**
 		 * premium/ultimate subscriber rate for members
 		 */
-		public static double PREMIUM_EXP_RATE = 8.0;
+		public static double PREMIUM_EXP_RATE = 1.0;
 		/**
 		 * Wilderness extra boost multiplier
 		 */
@@ -92,7 +92,7 @@ public final class Constants {
 		/**
 		 * Skull extra boost multiplier
 		 */
-		public static double SKULL_BOOST = 0.5;
+		public static double SKULL_BOOST = 1.0;
 		/**
 		 * A message players will receive upon login
 		 */

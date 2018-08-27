@@ -78,7 +78,7 @@ public final class mudclient implements Runnable {
 	static byte[][] s_kb = new byte[250][];
 	static int[] s_wb;
 
-	public Thread clientBaseThread = null; 
+	public Thread clientBaseThread = null;
 	private final int m_S = 1000;
 	public int threadState = 0;
 	private boolean hasGameCrashed = false;
@@ -86,7 +86,7 @@ public final class mudclient implements Runnable {
 	int m_Q = 10;
 	long[] m_F = new long[10];
 	private int m_b = 0;
-	
+
 	public String chatMessageInput = "";
 	public String chatMessageInputCommit = "";
 	public boolean controlPressed = false;
@@ -105,7 +105,7 @@ public final class mudclient implements Runnable {
 	private static ArrayList<String> messages = new ArrayList<String>();
 	private static int currentChat = 0;
 	private PrintWriter printWriter;
-	
+
 	public int selectedSkill = -1;
 	private int totalAchievements = 0;
 	private int sleepModifier = 20;
@@ -133,7 +133,7 @@ public final class mudclient implements Runnable {
 				this.m_F[i] = 0L;
 			}
 
-			
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.PE(" + "dummy" + ')');
 		}
@@ -141,7 +141,7 @@ public final class mudclient implements Runnable {
 
 	private final void setFPS(int var1, byte var2) {
 		try {
-			
+
 			this.sleepModifier = 1000 / var1;
 			if (var2 <= 104) {
 				this.screenOffsetX = 113;
@@ -154,7 +154,7 @@ public final class mudclient implements Runnable {
 
 	private final void errorGameCrash(String desc) {
 		try {
-			
+
 			if (!this.hasGameCrashed) {
 				this.hasGameCrashed = true;
 				System.out.println("error_game_crash");
@@ -168,7 +168,7 @@ public final class mudclient implements Runnable {
 	private final void closeProgram() {
 		try {
 			new Throwable().printStackTrace();
-			
+
 			this.threadState = -2;
 			System.out.println("Closing program");
 			this.closeConnection();
@@ -185,7 +185,7 @@ public final class mudclient implements Runnable {
 
 	private final boolean loadLogo() {
 		try {
-			
+
 			byte[] jagexArchive = unpackData("jagex.jag", "Jagex library", 0);
 			if (jagexArchive == null) {
 				System.out.println("jagarch is null");
@@ -245,7 +245,7 @@ public final class mudclient implements Runnable {
 	@Override
 	public final void run() {
 		try {
-			
+
 
 			try {
 				if (this.gameState == 1) {
@@ -291,7 +291,7 @@ public final class mudclient implements Runnable {
 				// @Override
 				// public void windowClosing(WindowEvent e) {
 				// threadState = -1;
-				// 
+				//
 				// GenUtil.sleepShadow(5000L);
 				// if (threadState == -1) {
 				// System.out.println("5 seconds expired, forcing kill");
@@ -426,7 +426,7 @@ public final class mudclient implements Runnable {
 
 	public void startThread(int andStart, Runnable proc) {
 		try {
-			
+
 			Thread var3 = new Thread(proc);
 			if (andStart == 1) {
 				var3.setDaemon(true);
@@ -442,7 +442,7 @@ public final class mudclient implements Runnable {
 	public static int rscRunningVersion;
 	/**
 	 * Newest RSC cache: SAME VALUES.
-	 * 
+	 *
 	 * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
 	 * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
 	 * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
@@ -759,7 +759,7 @@ public final class mudclient implements Runnable {
 		private int selectedSpell = -1;
 		private String serverMessage = "";
 		private boolean serverMessageBoxTop = false;
-		public boolean serverTypeMembers = !Config.MEMBERS_FEATURES;
+		public boolean serverTypeMembers = Config.MEMBERS_FEATURES;
 		private boolean developerMenu = false;
 		private int devMenuNpcID;
 		private boolean modMenu = false;
@@ -874,7 +874,7 @@ public final class mudclient implements Runnable {
 
 		public final void addFriend(String player) {
 			try {
-				
+
 				if (200 <= SocialLists.friendListCount) {
 					this.showMessage(false, (String) null, "Friend list is full", MessageType.GAME, 0, (String) null,
 							(String) null);
@@ -931,7 +931,7 @@ public final class mudclient implements Runnable {
 
 		public final void addIgnore(String player) {
 			try {
-				
+
 				if (SocialLists.ignoreListCount >= 100) {
 					this.showMessage(false, (String) null, "Ignore list full", MessageType.GAME, 0, (String) null,
 							(String) null);
@@ -988,7 +988,7 @@ public final class mudclient implements Runnable {
 
 		public final void addMouseClick(int button, int x, int y) {
 			try {
-				
+
 				this.mouseClickX[this.mouseClickCount] = x;
 				this.mouseClickY[this.mouseClickCount] = y;
 				this.mouseClickCount = this.mouseClickCount + 1 & 8191;
@@ -1024,7 +1024,7 @@ public final class mudclient implements Runnable {
 
 		private final void addPlayerToMenu(int index) {
 			try {
-				
+
 				RSCharacter player = this.players[index];
 				String name = player.displayName;
 				int var5 = 2203 - this.midRegionBaseZ - this.playerLocalZ - this.worldOffsetZ;
@@ -1088,7 +1088,7 @@ public final class mudclient implements Runnable {
 						this.menuCommon.addCharacterItem(player.serverIndex, levelDelta >= 0 && levelDelta < 5
 								? MenuItemAction.PLAYER_ATTACK_SIMILAR : MenuItemAction.PLAYER_ATTACK_DIVERGENT, "Attack",
 										"@whi@" + name + level);
-					} 
+					}
 					else {
 						this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_DUEL, "Duel with",
 								"@whi@" + name + level);
@@ -1122,7 +1122,7 @@ public final class mudclient implements Runnable {
 
 		private final void autoRotateCamera(byte var1) {
 			try {
-				
+
 				if ((this.cameraAngle & 1) != 1 || !this.cameraColliding((int) this.cameraAngle)) {
 					if ((1 & this.cameraAngle) == 0 && this.cameraColliding((int) this.cameraAngle)) {
 						if (!this.cameraColliding(1 + this.cameraAngle & 7)) {
@@ -1164,7 +1164,7 @@ public final class mudclient implements Runnable {
 
 		private final boolean cameraColliding(int angle) {
 			try {
-				
+
 				int tileX = this.localPlayer.currentX / 128;
 				int tileZ = this.localPlayer.currentZ / 128;
 				int tries = 2;
@@ -1234,7 +1234,7 @@ public final class mudclient implements Runnable {
 				}
 
 				this.logoutTimeout = 0;
-				
+
 				this.showMessage(false, (String) null, "Sorry, you can\'t logout at the moment", MessageType.GAME, 0,
 						(String) null, "@cya@");
 			} catch (RuntimeException var3) {
@@ -1244,7 +1244,7 @@ public final class mudclient implements Runnable {
 
 		private final void checkConnection() {
 			try {
-				
+
 				long var2 = GenUtil.currentTimeMillis();
 				if (this.getClientStream().hasFinishedPackets()) {
 					this.lastWrite = var2;
@@ -1273,7 +1273,7 @@ public final class mudclient implements Runnable {
 
 		private final void clearInputString80(byte var1) {
 			try {
-				
+
 				this.chatMessageInput = "";
 				this.chatMessageInputCommit = "";
 			} catch (RuntimeException var3) {
@@ -1283,7 +1283,7 @@ public final class mudclient implements Runnable {
 
 		final void closeConnection() {
 			try {
-				
+
 				this.closeConnection(true);
 				clientPort.stopSoundPlayer();
 			} catch (RuntimeException var3) {
@@ -1293,7 +1293,7 @@ public final class mudclient implements Runnable {
 
 		private final void closeConnection(boolean sendPacket) {
 			try {
-				
+
 				if (sendPacket && null != this.getClientStream()) {
 					try {
 						this.getClientStream().newPacket(31);
@@ -1314,7 +1314,7 @@ public final class mudclient implements Runnable {
 		private final void createAppearancePanel(int var1) {
 			try {
 				this.panelAppearance = new Panel(this.getSurface(), 100);
-				
+
 				this.panelAppearance.addCenteredText(256, 10, "Please design Your Character", 4, true);
 				short var2 = 140;
 				byte var3 = 34;
@@ -1384,7 +1384,7 @@ public final class mudclient implements Runnable {
 
 		private final void createLoginPanels(int var1) {
 			try {
-				
+
 				this.panelLoginWelcome = new Panel(this.getSurface(), 50);
 				byte var2 = 40;
 				if(Config.isAndroid())
@@ -1481,7 +1481,7 @@ public final class mudclient implements Runnable {
 				i += 62;
 				menuNewUser.addCenteredText(250, i - 19, "@whi@Password must be at least between 4 and 16 characters long", 1, false);
 				menuNewUser.addCenteredText(250, i - 19 + 11, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
-				
+
 				menuNewUser.addButtonBackground(250, i + 17, 420, 34);
 				menuNewUser.addCenteredText(250, i + 8, "Choose a Password (You will require this to login)", 4, false);
 				menuNewUserPassword = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 12, 40, 4, true, false);
@@ -1516,7 +1516,7 @@ public final class mudclient implements Runnable {
 
 		private final void createMessageTabPanel(int var1) {
 			try {
-				
+
 				this.panelMessageTabs = new Panel(this.getSurface(), 10);
 				this.panelMessageChat = this.panelMessageTabs.addScrollingList2(5, 269, 502, var1, 20, 1, true);
 				this.panelMessageEntry = this.panelMessageTabs.addLeftTextEntry(7, 324, 498, 14, 1, 80, false, true);
@@ -1536,7 +1536,7 @@ public final class mudclient implements Runnable {
 					this.npcsServer[serverIndex].serverIndex = serverIndex;
 				}
 
-				
+
 				RSCharacter character = this.npcsServer[serverIndex];
 				boolean var8 = false;
 
@@ -1580,7 +1580,7 @@ public final class mudclient implements Runnable {
 		private final void createPacket64(int v1, int v2, int v3, int v4) {
 			try {
 				this.getClientStream().newPacket(64);
-				
+
 				this.getClientStream().writeBuffer1.putByte(v1);
 				this.getClientStream().writeBuffer1.putByte(v2);
 				this.getClientStream().writeBuffer1.putByte(v3);
@@ -1598,7 +1598,7 @@ public final class mudclient implements Runnable {
 					this.playerServer[serverIndex].serverIndex = serverIndex;
 				}
 
-				
+
 				RSCharacter c = this.playerServer[serverIndex];
 				boolean var7 = false;
 
@@ -1639,7 +1639,7 @@ public final class mudclient implements Runnable {
 
 		private final void createTopMouseMenu(int var1) {
 			try {
-				
+
 				if (this.selectedSpell >= 0 || this.selectedItemInventoryIndex >= 0) {
 					this.menuCommon.addItem(MenuItemAction.CANCEL, "", "Cancel");
 				}
@@ -1839,7 +1839,7 @@ public final class mudclient implements Runnable {
 
 		final void draw() {
 			try {
-				
+
 				if (this.rendering) {
 					this.fetchContainerSize();
 					this.rendering = false;
@@ -1885,7 +1885,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawAppearancePanelCharacterSprites(int var1) {
 			try {
-				
+
 				this.getSurface().interlace = false;
 				this.getSurface().blackScreen(true);
 				this.panelAppearance.drawPanel();
@@ -1968,7 +1968,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawWrappedCenteredString(this.characterDialogString[i], x, y, 300, 1, 16776960,
 							false);
 				}
-				
+
 
 				for (int i = 0; this.characterBubbleCount > i; ++i) {
 					int centerX = this.characterBubbleX[i];
@@ -2002,7 +2002,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawChatMessageTabs(int var1) {
 			try {
-				
+
 
 				this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false,
 						0, 1);
@@ -2066,7 +2066,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogCombatStyle() {
 			try {
-				
+
 				byte sx = 7;
 				byte sy = 15;
 				short width;
@@ -2113,7 +2113,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogDuel() {
 			try {
-				
+
 				int clickedIndex = -1;
 				if (this.mouseButtonClick != 0 && this.menuDuel_Visible) {
 					clickedIndex = this.menuDuel.handleClick(this.mouseX, this.menuDuelX, this.menuDuelY, this.mouseY);
@@ -2555,7 +2555,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogDuelConfirm() {
 			try {
-				
+
 				byte xr = 22;
 				byte yr = 36;
 				this.getSurface().drawBox(xr, yr, 468, 16, 192);
@@ -2661,7 +2661,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogLogout() {
 			try {
-				
+
 				this.getSurface().drawBox((getGameWidth() - 260) / 2, (getGameHeight() - 60) / 2, 260, 60, 0);
 				this.getSurface().drawBoxBorder((getGameWidth() - 260) / 2, 260, (getGameHeight() - 60) / 2, 60, 16777215);
 				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Logging out...", 16777215, 0, 5, (getGameHeight() - 60) / 2 + 36);
@@ -2673,7 +2673,7 @@ public final class mudclient implements Runnable {
 		private final void drawDialogOptionsMenu(int var1) {
 			try {
 
-				
+
 				if (Config.isAndroid()) {
 					int startY = 25;
 					int startX = 5;
@@ -2752,7 +2752,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogServerMessage(byte var1) {
 			try {
-				
+
 				short var2 = 400;
 				if (var1 != -115) {
 					this.m_qd = 64;
@@ -2799,7 +2799,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogShop() {
 			try {
-				
+
 				if (this.mouseButtonClick != 0 && this.inputX_Action == InputXAction.ACT_0) {
 					this.mouseButtonClick = 0;
 					int mlx = this.mouseX - (getGameWidth() - 408) / 2;
@@ -2983,19 +2983,19 @@ public final class mudclient implements Runnable {
 								color2 = 16711680;
 							}
 							this.getSurface().drawString("5", 335 + xr, 214 + yr, color2, 3);
-						
+
 							color2 = 16777215;
 							if (mouseInRow && 348 + xr < this.mouseX && this.mouseX < xr + 365) {
 								color2 = 16711680;
 							}
 							this.getSurface().drawString("10", 350 + xr, 214 + yr, color2, 3);
-						
+
 							color2 = 16777215;
 							if (mouseInRow && this.mouseX > 368 + xr && 385 + xr > this.mouseX) {
 								color2 = 16711680;
 							}
 							this.getSurface().drawString("50", xr + 370, 214 + yr, color2, 3);
-						
+
 							color2 = 16777215;
 							if (mouseInRow && this.mouseX > xr + 388 && this.mouseX < 400 + xr) {
 								color2 = 16711680;
@@ -3083,7 +3083,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogTrade() {
 			try {
-				
+
 				int clickOp = -1;
 				if (this.mouseButtonClick != 0 && this.menuTrade_Visible) {
 					clickOp = this.menuTrade.handleClick(this.mouseX, this.menuTradeX, this.menuTradeY, this.mouseY);
@@ -3465,7 +3465,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogWelcome(int var1) {
 			try {
-				
+
 				int var2 = 65;
 				if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
 					var2 += 30;
@@ -3582,7 +3582,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawDialogWildWarn(int var1) {
 			try {
-				
+
 				this.getSurface().drawBox(86, 77, 340, 180, 0);
 				byte var2 = 97;
 				if (var1 <= 90) {
@@ -4011,7 +4011,7 @@ public final class mudclient implements Runnable {
 											"EXP Elixir: " + centerZ + ":" + centerX, 0x9139e7, 0, 1,
 											this.getGameHeight() - 7);
 								}
-							} 
+							}
 						}
 						if(Config.KILL_FEED) {
 							killQueue.clean();
@@ -4073,7 +4073,7 @@ public final class mudclient implements Runnable {
 										+ "@gre@,@whi@" + (playerLocalZ + midRegionBaseZ) + "@gre@)", 7, i, 0xffffff, 1);
 								i += 14;
 							}
-							this.getSurface().drawString("FPS: @gre@(@whi@" + FPS + "@gre@)", 7, i, 0xffffff, 1);	
+							this.getSurface().drawString("FPS: @gre@(@whi@" + FPS + "@gre@)", 7, i, 0xffffff, 1);
 							i += 14;
 							this.getSurface().drawString(
 									"Hits: " + this.playerStatCurrent[3] + "@gre@/@whi@" + this.playerStatBase[3], 7, i, 0xffffff, 1);
@@ -4084,7 +4084,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString(
 									"Fatigue: " + (double) (this.statFatigue * 1000 / 750) / 10.0 + "%", 7, i, 0xffffff, 1);
 						}
-						
+
 						if (Config.EXPERIENCE_COUNTER == 2) {
 							this.drawExperienceCounter(recentSkill);
 						}
@@ -4148,7 +4148,7 @@ public final class mudclient implements Runnable {
 							} else {
 								panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
 							}
-						} 
+						}
 
 						if (this.messageTabSelected == MessageTab.ALL) {
 							for (centerX = 0; centerX < messagesArray.length; ++centerX) {
@@ -4207,7 +4207,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawInputX() {
 			try {
-				
+
 				if (this.inputTextFinal.length() <= 0 && !this.inputX_OK) {
 					if (this.inputX_Action.requiresNumeric()) {
 						String str = "";
@@ -4461,7 +4461,7 @@ public final class mudclient implements Runnable {
 
 		public final void drawItemAt(int id, int x, int y, int width, int height, int var2) {
 			try {
-				
+
 
 				int sprite = EntityHandler.getItemDef(id).getSprite() + mudclient.spriteItem;
 				int mask = EntityHandler.getItemDef(id).getPictureMask();
@@ -4484,7 +4484,7 @@ public final class mudclient implements Runnable {
 			try {
 				this.getSurface().interlace = false;
 				this.welcomeScreenShown = false;
-				
+
 				this.getSurface().blackScreen(true);
 
 				if (this.loginScreenNumber == 0 || this.loginScreenNumber == 2 || this.loginScreenNumber == 3) {
@@ -4533,7 +4533,7 @@ public final class mudclient implements Runnable {
 
 		public final void drawMenu() {
 			try {
-				
+
 				if (this.mouseButtonClick == 0) {
 					int width = this.menuCommon.getWidth();
 					int height = this.menuCommon.getHeight();
@@ -4633,7 +4633,7 @@ public final class mudclient implements Runnable {
 		private final void drawMinimapEntity(int val, int x, byte var3, int y) {
 			try {
 				this.getSurface().setPixel(x, y, val);
-				
+
 				this.getSurface().setPixel(x - 1, y, val);
 				if (var3 <= -32) {
 					this.getSurface().setPixel(1 + x, y, val);
@@ -4648,7 +4648,7 @@ public final class mudclient implements Runnable {
 		public final void drawNPC(int npcIndex, int x, int y, int width1, int height, int topPixelSkew, int var3,
 				int overlayMovement) {
 			try {
-				
+
 				RSCharacter npc = this.npcs[npcIndex];
 				NPCDef def = EntityHandler.getNpcDef(npc.npcId);
 				int var11 = 7 & npc.direction.rsDir + (this.cameraRotation + 16) / 32;
@@ -4785,7 +4785,7 @@ public final class mudclient implements Runnable {
 		public final void drawPlayer(int index, int x, int y, int width, int height, int topPixelSkew, int var3,
 				int overlayMovement) {
 			try {
-				
+
 				if (var3 != 20) {
 					this.resetLoginScreenVariables((byte) -115);
 				}
@@ -4922,7 +4922,7 @@ public final class mudclient implements Runnable {
 						if (player.displayName != null)
 							this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
 					}
-					if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {	
+					if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 						if (player.clanTag != null)
 							this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
 					}
@@ -5010,7 +5010,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawPopupReport(boolean var1) {
 			try {
-				
+
 				if (this.inputTextFinal.length() > 0) {
 					this.reportAbuse_Name = this.inputTextFinal.trim();
 					this.reportAbuse_AbuseType = 0;
@@ -5098,7 +5098,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawPopupSocial() {
 			try {
-				
+
 				int x = 106;
 				int y = 145;
 
@@ -5197,7 +5197,7 @@ public final class mudclient implements Runnable {
 
 		public final void drawTeleportBubble(int id, int x, int y, int width, int height, int topPixelSkew, int var7) {
 			try {
-				
+
 				if (var7 != 2) {
 					this.welcomeScreenShown = true;
 				}
@@ -5224,7 +5224,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawTextBox(String line2, byte var2, String line1) {
 			try {
-				
+
 				if (var2 == -64) {
 					clientPort.drawTextBox(line2, var2, line1);
 				}
@@ -5236,7 +5236,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawTradeConfirmDialog(int var1) {
 			try {
-				
+
 				byte var2 = 22;
 				byte var3 = 36;
 				this.getSurface().drawBox(var2, var3, 468, 16, 192);
@@ -5320,34 +5320,34 @@ public final class mudclient implements Runnable {
 				throw GenUtil.makeThrowable(var7, "client.WD(" + var1 + ')');
 			}
 		}
-		
+
 		private int xpPerHourCount = 0; long timePassed = 0; double xpPerHour = 0;
 		private final void drawExperienceCounter(int skill) {
 			if (selectedSkill >= 0) {
 				skill = selectedSkill;
 			}
 			int textColor = Config.EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-				Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 : 
-					Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 : 
+				Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+					Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
 						Config.EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
 			int totalXp = 0;
 			if (Config.EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
 				for (int i = 0; i < 18; i++) {
 					totalXp += this.playerExperience[i];
 				}
-				
+
 				int stringWid = getSurface().stringWidth(3, "Total: " + totalXp);
-				int x = (getGameWidth()/2) - (stringWid/2) - 10; 
+				int x = (getGameWidth()/2) - (stringWid/2) - 10;
 				int width = stringWid + 6;
 				this.getSurface().drawBoxAlpha(x, 0, width, 20, 0x989898, 90);
 				//this.getSurface().drawBoxBorder(x, width, 0, 20, 0x000000);
-				
+
 				if (textColor == 0xFFFFFF) {
 					getSurface().drawShadowText("Total: " + totalXp, (getGameWidth()/2) - (stringWid/2) - 4, 15, textColor, 2, false);
 				} else {
 					getSurface().drawString("Total: " + totalXp, (getGameWidth()/2) - (stringWid/2) - 4, 15, textColor, 2);
 				}
-				
+
 				if (Config.isAndroid() && this.mouseButtonClick == 1 && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					if (doubleClick()) {
 						experienceConfigInterface.setVisible(true);
@@ -5358,13 +5358,13 @@ public final class mudclient implements Runnable {
 					experienceConfigInterface.setVisible(true);
 					setMouseClick(0);
 				}
-				
+
 				if (Config.EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					// Checks for non-positive gains
 					if (this.playerXpGainedTotal < 0) {
 						this.playerXpGainedTotal = 0;
 					}
-					
+
 					// Used to make sure it isn't changing so quickly
 					xpPerHourCount++;
 					if (xpPerHourCount % 100 == 0) {
@@ -5373,7 +5373,7 @@ public final class mudclient implements Runnable {
 					}
 					this.getSurface().drawBoxAlpha(x, 19, width, 31, 0x989898, 90);
 					//this.getSurface().drawBoxBorder(x, width, 19, 31, 0x000000);
-					
+
 					if (textColor == 0xFFFFFF) {
 						this.getSurface().drawShadowText("Gained: " + this.playerXpGainedTotal, x + 3, 31, textColor, 2, false);
 						this.getSurface().drawShadowText("Xp/hr:     " + (int) xpPerHour, x + 3, 46, textColor, 2, false);
@@ -5382,32 +5382,32 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString("Xp/hr:     " + (int) xpPerHour, x + 3, 46, textColor, 2);
 					}
 				}
-			} 
-			
+			}
+
 			else {
 				int stringWid = getSurface().stringWidth(3, skillNames[skill] + ": " + playerStatBase[skill] + ": " + playerExperience[skill]);
-				int x = (getGameWidth()/2) - (stringWid/2) - 10; 
+				int x = (getGameWidth()/2) - (stringWid/2) - 10;
 				int width = stringWid + 6;
 				this.getSurface().drawBoxAlpha(x, 0, width, 20, 0x989898, 90);
 				//this.getSurface().drawBoxBorder(x, width, 0, 20, 0x000000);
-				
+
 				int tilLvl = 0, baseTilLvl = 0, progressWidth = 0; double progress = 0;
 				if (playerStatBase[skill] != 99) {
 					tilLvl = this.experienceArray[playerStatBase[skill] - 1] - this.playerExperience[skill];
 					baseTilLvl = this.experienceArray[playerStatBase[skill]] - this.experienceArray[playerStatBase[skill] - 1];
 					progress = ((double) tilLvl) / ((double) baseTilLvl) / 0.9;
 					progressWidth = (int) (progress*width);
-					
+
 					this.getSurface().drawBox(x, 19, width - progressWidth, 2, 0x00FF00);
 					this.getSurface().drawBox(x + width - progressWidth, 19, progressWidth, 2, 0xFF0000);
 				}
-				
+
 				if (textColor == 0xFFFFFF) {
 					getSurface().drawShadowText(skillNames[skill] + ": " + playerStatBase[skill] + ": " + playerExperience[skill], (getGameWidth()/2) - (stringWid/2) - 4, 15, textColor, 2, false);
 				} else {
 					getSurface().drawString(skillNames[skill] + ": " + playerStatBase[skill] + ": " + playerExperience[skill], (getGameWidth()/2) - (stringWid/2) - 4, 15, textColor, 2);
 				}
-				
+
 				if (Config.isAndroid() && this.mouseButtonClick == 1 && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					if (doubleClick()) {
 						experienceConfigInterface.setVisible(true);
@@ -5418,13 +5418,13 @@ public final class mudclient implements Runnable {
 					experienceConfigInterface.setVisible(true);
 					setMouseClick(0);
 				}
-				
+
 				if (Config.EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					// Checks for non-positive gains
 					if (this.playerStatXpGained[skill] < 0) {
 						this.playerStatXpGained[skill] = 0;
 					}
-					
+
 					// Used to make sure it isn't changing too quickly
 					xpPerHourCount++;
 					if (xpPerHourCount % 100 == 0) {
@@ -5433,7 +5433,7 @@ public final class mudclient implements Runnable {
 					}
 					this.getSurface().drawBoxAlpha(x, 20, width, 61, 0x989898, 90);
 					//this.getSurface().drawBoxBorder(x, width, 19, 61, 0x000000);
-					
+
 					if (textColor == 0xFFFFFF) {
 						if (playerStatBase[skill] == 99) {
 							this.getSurface().drawShadowText("Gained: " + this.playerStatXpGained[skill], x + 3, 63, textColor, 2, false);
@@ -5458,14 +5458,14 @@ public final class mudclient implements Runnable {
 				}
 			}
 		}
-		
+
 		private final void drawExperienceConfig() {
 			experienceConfigInterface.onRender(this.getSurface());
 		}
 
 		private final void drawUi(int var1) {
 			try {
-				
+
 				boolean var2 = false;
 
 				try {
@@ -5620,11 +5620,11 @@ public final class mudclient implements Runnable {
 					if (this.showUiTab == 1) {
 						this.drawUiTab1(-15252, var3);
 					}
-					
+
 					if (Config.INV_COUNT) {
 						this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, 17, 0xFFFFFF, 1, true);
 					}
-					
+
 					if (this.showUiTab == 2) {
 						this.drawUiTabMinimap(var3, (byte) 125);
 					}
@@ -5681,10 +5681,10 @@ public final class mudclient implements Runnable {
 						&& this.panelMessageTabs.isClicked(this.panelMessagePrivate)
 						|| this.messageTabSelected == MessageTab.CLAN
 						&& this.panelMessageTabs.isClicked(this.panelMessageClan)) {
-					int control = 
+					int control =
 							(
 									(this.messageTabSelected == MessageTab.CHAT ? this.panelMessageChat
-											: 
+											:
 												this.messageTabSelected == MessageTab.QUEST ? this.panelMessageQuest
 														:
 															(this.messageTabSelected == MessageTab.CLAN ? this.panelMessageClan
@@ -6430,7 +6430,7 @@ public final class mudclient implements Runnable {
 								this.panelSocialTab = 1;
 								this.panelClan.resetList(this.controlClanPanel);
 							}
-						} 
+						}
 					}
 
 					if(var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 225 && (this.panelSocialTab == 0 || this.panelSocialTab == 2)) {
@@ -6852,17 +6852,17 @@ public final class mudclient implements Runnable {
 				throw GenUtil.makeThrowable(var18, "client.HD(" + var1 + ',' + var2 + ')');
 			}
 		}
-		
+
 		private final void drawUiTabOptions(int var1, boolean var2) {
 			try {
 				int var3 = this.getSurface().width2 - 199;
 				this.getSurface().drawSprite(mudclient.spriteMedia + 6, var3 - 49, 3);
 				byte var4 = 36 + 25;
 				short var5 = 196;
-				
+
 				int chosenColor = GenUtil.buildColor(220, 220, 220);
 				int unchosenColor = GenUtil.buildColor(160, 160, 160);
-	
+
 				if (Config.isAndroid()) {
 					if (this.settingTab == 0) {
 						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, chosenColor, 128);
@@ -6877,11 +6877,11 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
 						this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, chosenColor, 128);
 					}
-					
+
 					this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
 					this.getSurface().drawLineVert(var3 + var5/3, 0 + var4 - 25, 0, 24);
 					this.getSurface().drawLineVert(var3 + 2*(var5/3) + 1, 0 + var4 - 25, 0, 24);
-		
+
 					this.getSurface().drawColoredStringCentered(var5/4 + var3 - 16, "Social", 0, 0, 4, 16 + var4 - 25);
 					this.getSurface().drawColoredStringCentered(var3 + var5/4 + var5/3 - 16, "General", 0, 0, 4, 16 + var4 - 25);
 					this.getSurface().drawColoredStringCentered(var3 + var5/4 + 2* var5/3 - 15, "Android", 0, 0, 4, 16 + var4 - 25);
@@ -6894,17 +6894,17 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/2, 24, unchosenColor, 128);
 						this.getSurface().drawBoxAlpha(var5/2 + var3, var4 - 25, var5/2, 24, chosenColor, 128);
 					}
-					
+
 					this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
 					this.getSurface().drawLineVert(var3 + var5/2, 0 + var4 - 25, 0, 24);
 
 					this.getSurface().drawColoredStringCentered(var5/4 + var3, "Social", 0, 0, 4, 16 + var4 - 25);
 					this.getSurface().drawColoredStringCentered(var3 + var5/4 + var5/2, "General", 0, 0, 4, 16 + var4 - 25);
 				}
-				
+
 				this.getSurface().drawBoxAlpha(var3, 36 + 25, var5, 200, GenUtil.buildColor(181, 181, 181), 160);
 				this.getSurface().drawBoxAlpha(var3, 261, var5, 40, GenUtil.buildColor(201, 201, 201), 160);
-				
+
 				int var6 = 3 + var3;
 				int var7 = var4 + 15;
 				if (this.settingTab == 0) {
@@ -6917,14 +6917,14 @@ public final class mudclient implements Runnable {
 					} else {
 						this.getSurface().drawString("Block chat messages: @red@Off", 3 + var3, var7, 16777215, 1);
 					}
-	
+
 					var7 += 15;
 					if (this.settingsBlockPrivate == 0) {
 						this.getSurface().drawString("Block private messages: @red@Off", 3 + var3, var7, 16777215, 1);
 					} else {
 						this.getSurface().drawString("Block private messages: @gre@On", var3 + 3, var7, 16777215, 1);
 					}
-	
+
 					var7 += 15;
 					if (this.settingsBlockGlobal == 1) {
 						this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
@@ -6935,21 +6935,21 @@ public final class mudclient implements Runnable {
 					} else if(this.settingsBlockGlobal == 4) {
 						this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
 					}
-	
+
 					var7 += 15;
 					if (this.settingsBlockTrade != 0) {
 						this.getSurface().drawString("Block trade requests: @gre@On", var3 + 3, var7, 16777215, 1);
 					} else {
 						this.getSurface().drawString("Block trade requests: @red@Off", 3 + var3, var7, 16777215, 1);
 					}
-	
+
 					var7 += 15;
 					if (this.settingsBlockDuel != 0) {
 						this.getSurface().drawString("Block duel requests: @gre@On", var3 + 3, var7, 16777215, 1);
 					} else {
 						this.getSurface().drawString("Block duel requests: @red@Off", 3 + var3, var7, 16777215, 1);
 					}
-	
+
 					var7 += 20;
 					this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
 					var7 += 15;
@@ -6964,7 +6964,7 @@ public final class mudclient implements Runnable {
 					} else {
 						this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
 					}
-					
+
 					int var8;
 					if (this.insideTutorial) {
 						var7 += 20;
@@ -6980,7 +6980,7 @@ public final class mudclient implements Runnable {
 					} else {
 						var7 += 70;
 					}
-					
+
 					this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 					var8 = 16777215;
 					var7 += 15;
@@ -7001,7 +7001,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Camera angle mode - @red@Manual", 0, (String) null, (String) null);
 					}
-	
+
 					if (this.optionMouseButtonOne) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Mouse Buttons - @red@One", 0, (String) null, (String) null);
@@ -7009,7 +7009,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Mouse Buttons - @gre@Two", 0, (String) null, (String) null);
 					}
-	
+
 					if (this.optionSoundDisabled) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Sound Effects - @red@Off", 0, (String) null, (String) null);
@@ -7017,7 +7017,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Sound Effects - @gre@On", 0, (String) null, (String) null);
 					}
-	
+
 					if (!Config.BATCH_PROGRESS_BAR) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Batch Progress Bar - @red@Off", 0, (String) null, (String) null);
@@ -7025,7 +7025,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Batch Progress Bar - @gre@On", 0, (String) null, (String) null);
 					}
-	
+
 					if (!Config.EXPERIENCE_DROPS) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Experience Drops - @red@Off", 0, (String) null, (String) null);
@@ -7033,10 +7033,10 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Experience Drops - @gre@On", 0, (String) null, (String) null);
 					}
-	
+
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 							"@whi@Zoom View - " + (Config.ZOOM == 0 ? "@yel@Normal" : Config.ZOOM == 1 ? "@ora@Far" : Config.ZOOM == 2 ? "@red@Super" : "@gre@Near"), 0, (String) null, (String) null);
-	
+
 					if (!Config.SHOW_FOG) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Fog - @red@Off", 0, (String) null, (String) null);
@@ -7044,7 +7044,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Fog - @gre@On", 0, (String) null, (String) null);
 					}
-	
+
 					if (!Config.SHOW_ROOF) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Show Roof - @red@Off", 0, (String) null, (String) null);
@@ -7052,12 +7052,12 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Show Roof - @gre@On", 0, (String) null, (String) null);
 					}
-					
+
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL" 
-									: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL" 
+							"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
+									: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
 											: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 0, (String) null, (String) null);
-					
+
 					if (!Config.MESSAGE_TAB_SWITCH) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Auto Message Switch - @red@Off", 0, (String) null, (String) null);
@@ -7065,7 +7065,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Auto Message Switch - @gre@On", 0, (String) null, (String) null);
 					}
-					
+
 					if (!Config.SIDE_MENU_OVERLAY) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Side Menu - @red@Off", 0, (String) null, (String) null);
@@ -7073,7 +7073,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Side Menu - @gre@On", 0, (String) null, (String) null);
 					}
-					
+
 					if (!Config.KILL_FEED) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Kill Feed - @red@Off", 0, (String) null, (String) null);
@@ -7081,17 +7081,17 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Kill Feed - @gre@On", 0, (String) null, (String) null);
 					}
-					
+
 					//this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 0, (String) null, (String) null);
-					
+
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Fightmode Selector - " + (Config.FIGHT_MENU == 0 ? "@red@Never" 
+							"@whi@Fightmode Selector - " + (Config.FIGHT_MENU == 0 ? "@red@Never"
 									: Config.FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 0, (String) null, (String) null);
-					
+
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Experience Counter - " + (Config.EXPERIENCE_COUNTER == 0 ? "@red@Never" 
+							"@whi@Experience Counter - " + (Config.EXPERIENCE_COUNTER == 0 ? "@red@Never"
 									: Config.EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 0, (String) null, (String) null);
-					
+
 					if (!Config.INV_COUNT) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Inventory Count - @red@Off", 0, (String) null, (String) null);
@@ -7099,38 +7099,38 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Inventory Count - @gre@On", 0, (String) null, (String) null);
 					}
-					
-					var7 += 195;			
+
+					var7 += 195;
 					int onDeathColor = 16777215;
-					
+
 					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
 						onDeathColor = 16776960;
 					}
 					this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
-					
+
 					// var7 += 195;
 					// this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-					
+
 					int var8 = 16777215;
 					var7 += 15;
 					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
 						var8 = 16776960;
 					}
 					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
-					
+
 					this.panelSettings.drawPanel();
 				}
-				
+
 				if (this.settingTab == 2) {
 					this.panelSettings.clearList(this.controlSettingPanel);
 					int index = 0;
 					this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 							"@whi@Hold-time for Menu - @gre@" + Config.LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
-	
+
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 							"@whi@Menu Size - @lre@Font " + (Config.MENU_SIZE), 0, (String) null, (String) null);
-	
+
 					if (!Config.HOLD_AND_CHOOSE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Hold and Choose - @red@Off", 0, (String) null, (String) null);
@@ -7138,7 +7138,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Hold and Choose - @gre@On", 0, (String) null, (String) null);
 					}
-	
+
 					if (!Config.SWIPE_TO_SCROLL) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Swipe to Scroll - @red@Off", 0, (String) null, (String) null);
@@ -7146,7 +7146,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Swipe to Scroll - @gre@On", 0, (String) null, (String) null);
 					}
-	
+
 					if (!Config.SWIPE_TO_ROTATE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Swipe to Rotate - @red@Off", 0, (String) null, (String) null);
@@ -7154,7 +7154,7 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Swipe to Rotate - @gre@On", 0, (String) null, (String) null);
 					}
-					
+
 					var7 += 195;
 					this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 					int var8 = 16777215;
@@ -7163,21 +7163,21 @@ public final class mudclient implements Runnable {
 						var8 = 16776960;
 					}
 					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
-										
+
 					this.panelSettings.drawPanel();
 				}
-				
+
 				if (var2) {
 					var3 = 199 - this.getSurface().width2 + this.mouseX;
 					int var13 = this.mouseY - 36;
 					if (var3 >= 0 && var13 >= 0 && var3 < 196 && var13 < 295) {
 						this.panelSettings.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
-						
+
 						if (Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
 							if (var3 < 66 && (this.settingTab == 1 || this.settingTab == 2)) {
 								this.settingTab = 0;
 								this.panelSettings.resetList(this.controlSettingPanel);
-							} else if (var3 >= 66 && var3 <= 131 
+							} else if (var3 >= 66 && var3 <= 131
 									&& (this.settingTab == 0 || this.settingTab == 2)) {
 								this.settingTab = 1;
 								this.panelSettings.resetList(this.controlSettingPanel);
@@ -7197,7 +7197,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 						}
-						
+
 						int var9 = this.getSurface().width2 - 199;
 						var6 = var9 + 3;
 						byte var10 = 36;
@@ -7206,7 +7206,7 @@ public final class mudclient implements Runnable {
 						if (this.settingTab == 1) {
 							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
 							int settingIndex = checkPosition;
-							
+
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
 								this.optionCameraModeAuto = !this.optionCameraModeAuto;
 								this.getClientStream().newPacket(111);
@@ -7214,16 +7214,16 @@ public final class mudclient implements Runnable {
 								this.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
 								this.getClientStream().finishPacket();
 							}
-	
+
 							if (settingIndex == 1 && this.mouseButtonClick == 1) {
 								this.optionMouseButtonOne = !this.optionMouseButtonOne;
 								this.getClientStream().newPacket(111);
 								this.getClientStream().writeBuffer1.putByte(1);
 								this.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
 								this.getClientStream().finishPacket();
-								
+
 							}
-	
+
 							if (settingIndex == 2 && this.mouseButtonClick == 1) {
 								this.optionSoundDisabled = !this.optionSoundDisabled;
 								this.getClientStream().newPacket(111);
@@ -7231,17 +7231,17 @@ public final class mudclient implements Runnable {
 								this.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
 								this.getClientStream().finishPacket();
 							}
-							
+
 							if (settingIndex == 3 && this.mouseButtonClick == 1) {
 								Config.BATCH_PROGRESS_BAR = !Config.BATCH_PROGRESS_BAR;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 4 && this.mouseButtonClick == 1) {
 								Config.EXPERIENCE_DROPS = !Config.EXPERIENCE_DROPS;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 5 && this.mouseButtonClick == 1) {
 								this.cameraZoom = 750;
 								Config.ZOOM++;
@@ -7249,39 +7249,39 @@ public final class mudclient implements Runnable {
 									Config.ZOOM = 0;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 6 && this.mouseButtonClick == 1) {
 								Config.SHOW_FOG = !Config.SHOW_FOG;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 7 && this.mouseButtonClick == 1) {
 								Config.SHOW_ROOF = !Config.SHOW_ROOF;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 8 && this.mouseButtonClick == 1) {
 								Config.SHOW_GROUND_ITEMS++;
 								if (Config.SHOW_GROUND_ITEMS == 4)
 									Config.SHOW_GROUND_ITEMS = 0;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 9 && this.mouseButtonClick == 1) {
 								Config.MESSAGE_TAB_SWITCH = !Config.MESSAGE_TAB_SWITCH;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 10 && this.mouseButtonClick == 1) {
 								Config.SIDE_MENU_OVERLAY = !Config.SIDE_MENU_OVERLAY;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 11 && this.mouseButtonClick == 1) {
 								Config.KILL_FEED = !Config.KILL_FEED;
 								Config.saveConfiguration(false);
 							}
-							
+
 							/*if (settingIndex == 12 && this.mouseButtonClick == 1) {
 								this.combatStyle++;
 								if (this.combatStyle == 4) {
@@ -7291,42 +7291,42 @@ public final class mudclient implements Runnable {
 								this.getClientStream().writeBuffer1.putByte(this.combatStyle);
 								this.getClientStream().finishPacket();
 							}*/
-							
+
 							if (settingIndex == 12 && this.mouseButtonClick == 1) {
 								Config.FIGHT_MENU++;
 								if (Config.FIGHT_MENU == 3)
 									Config.FIGHT_MENU = 0;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 13 && this.mouseButtonClick == 1) {
 								Config.EXPERIENCE_COUNTER++;
 								if (Config.EXPERIENCE_COUNTER == 3)
 									Config.EXPERIENCE_COUNTER = 0;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 14 && this.mouseButtonClick == 1) {
 								Config.INV_COUNT = !Config.INV_COUNT;
 								Config.saveConfiguration(false);
 							}
-							
+
 							var7 += 182;
-							
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12 
+
+							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.showUiTab = 0;
 								lostOnDeathInterface.setVisible(true);
 							}
-							
+
 							var7 += 15;
-							
+
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.sendLogout(0);
 							}
 						}
-						
+
 						if (this.settingTab == 0) {
 							var7 += 0;
 							boolean var11 = false;
@@ -7335,14 +7335,14 @@ public final class mudclient implements Runnable {
 								this.settingsBlockChat = 1 - this.settingsBlockChat;
 								var11 = true;
 							}
-	
+
 							var7 += 15;
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
 								this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
 								var11 = true;
 							}
-	
+
 							var7 += 15;
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
@@ -7355,27 +7355,27 @@ public final class mudclient implements Runnable {
 								this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
 								this.getClientStream().finishPacket();
 							}
-	
+
 							var7 += 15;
 							if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 									&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
 								this.settingsBlockTrade = 1 - this.settingsBlockTrade;
 								var11 = true;
 							}
-	
+
 							var7 += 15;
 							if (this.mouseX > var6 && this.mouseX < var6 + var5
 									&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								var11 = true;
 								this.settingsBlockDuel = 1 - this.settingsBlockDuel;
 							}
-	
+
 							var7 += 15;
 							if (var11) {
 								this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
 										this.settingsBlockTrade, this.settingsBlockDuel);
 							}
-							
+
 							var7 += 20;
 							if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
 									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
@@ -7391,7 +7391,7 @@ public final class mudclient implements Runnable {
 								this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
 								this.getClientStream().finishPacket();
 							}
-							
+
 							if (this.insideTutorial) {
 								var7 += 35;
 								if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
@@ -7401,18 +7401,18 @@ public final class mudclient implements Runnable {
 								}
 								var7 -= 35;
 							}
-							
+
 							var7 += 85;
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.sendLogout(0);
 							}
 						}
-						
+
 						if(this.settingTab == 2) {
 							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
 							int settingIndex = checkPosition;
-							
+
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
 								Config.F_LONG_PRESS_CALC = Config.LONG_PRESS_TIMER / 50;
 								if (++Config.F_LONG_PRESS_CALC >= 13) {
@@ -7421,7 +7421,7 @@ public final class mudclient implements Runnable {
 								Config.LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 1 && this.mouseButtonClick == 1) {
 								Config.MENU_SIZE++;
 								if (Config.MENU_SIZE == 8)
@@ -7431,29 +7431,29 @@ public final class mudclient implements Runnable {
 									this.menuCommon.font = Config.MENU_SIZE;
 								}
 							}
-							
+
 							if (settingIndex == 2 && this.mouseButtonClick == 1) {
 								Config.HOLD_AND_CHOOSE = !Config.HOLD_AND_CHOOSE;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 3 && this.mouseButtonClick == 1) {
 								Config.SWIPE_TO_SCROLL = !Config.SWIPE_TO_SCROLL;
 								Config.saveConfiguration(false);
 							}
-							
+
 							if (settingIndex == 4 && this.mouseButtonClick == 1) {
 								Config.SWIPE_TO_ROTATE = !Config.SWIPE_TO_ROTATE;
 								Config.saveConfiguration(false);
 							}
-							
+
 							var7 += 195;
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.sendLogout(0);
 							}
 						}
-						
+
 						this.mouseButtonClick = 0;
 					}
 				}
@@ -7461,7 +7461,7 @@ public final class mudclient implements Runnable {
 				throw GenUtil.makeThrowable(var12, "client.BC(" + var1 + ',' + var2 + ')');
 			}
 		}
-	
+
 		private int flag = 0;
 		private Timer tiktok =  new Timer();
 		private boolean doubleClick() {
@@ -7495,7 +7495,7 @@ public final class mudclient implements Runnable {
 
 		private final void drawUiTabPlayerInfo(boolean var1, int var2) {
 			try {
-				
+
 				int var3 = this.surface.width2 - 199;
 				byte var4 = 36;
 				this.getSurface().drawSprite(mudclient.spriteMedia + 3, var3 - 49, 3);
@@ -7517,7 +7517,7 @@ public final class mudclient implements Runnable {
 				this.surface.drawColoredStringCentered(var5 / 4 + var3, "Stats", 0, 0, 4, var4 + 16);
 				this.surface.drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Quests", 0, 0, 4, var4 + 16);
 				int var15;
-				
+
 				if (this.uiTabPlayerInfoSubTab == 0) {
 					byte var9 = 72;
 					this.getSurface().drawString("Skills", var3 + 5, var9, 16776960, 3);
@@ -7536,13 +7536,13 @@ public final class mudclient implements Runnable {
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
-							} 
+							}
 							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
 								setSkillGuideChosen(this.skillNameLong[var10]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
 							}
-						} 
+						}
 
 						this.getSurface().drawString(this.getSkillNames()[var11] + ":@yel@" + this.playerStatCurrent[var11]
 								+ "/" + this.playerStatBase[var11], var3 + 5, var15, var12, 1);
@@ -7569,7 +7569,7 @@ public final class mudclient implements Runnable {
 								+ "/" + this.playerStatBase[9 + var11], var5 / 2 - 5 + var3, var15 - 13, var12, 1);
 						var15 += 13;
 					}
-					
+
 					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, var3 - 5 + var5 / 2, var15 - 13, 16777215, 1);
 					var15 += 12;
 					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue * 100 / 750 + "%", 5 + var3, var15 - 13,
@@ -7608,7 +7608,7 @@ public final class mudclient implements Runnable {
 						var15 += 12;
 						this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + var3, var15, 16777215, 1);
 						var15 += 12;
-						
+
 					} else {
 						this.getSurface().drawString(this.skillNameLong[var10] + " skill", 5 + var3, var15, 16776960, 1);
 						var15 += 12;
@@ -7619,7 +7619,7 @@ public final class mudclient implements Runnable {
 								var11 = this.experienceArray[var12 + 1];
 							}
 						}
-						
+
 						this.getSurface().drawString("Total xp: " + this.playerExperience[var10], 5 + var3, var15, 16777215,
 								1);
 						var15 += 12;
@@ -7642,7 +7642,7 @@ public final class mudclient implements Runnable {
 									0, (String) null, (String) null);
 						}
 					}
-				
+
 					int position = this.panelQuestInfo.getControlSelectedListIndex(this.controlQuestInfoPanel) - 1;
 					if (this.mouseButtonClick == 1 && position >= 0
 							&& this.getMouseX() > var3 && this.getMouseY() > var4 + 36
@@ -7674,7 +7674,7 @@ public final class mudclient implements Runnable {
 							if (var3 >= 98) {
 								if (var3 > 98) {
 									this.uiTabPlayerInfoSubTab = 1;
-								} 
+								}
 							} else {
 								this.uiTabPlayerInfoSubTab = 0;
 							}
@@ -7689,7 +7689,7 @@ public final class mudclient implements Runnable {
 
 		private final void duelRemoveItem(int itemIndex, int removeCount) {
 			try {
-				
+
 				int itemID = this.duelOfferItemID[itemIndex];
 				int count = removeCount >= 0 ? removeCount : this.mouseButtonItemCountIncrement;
 				if (EntityHandler.getItemDef(itemID).isStackable()) {
@@ -7738,7 +7738,7 @@ public final class mudclient implements Runnable {
 
 		private final void duelStakeItem(int andStakeCount, int andStakeInvIndex) {
 			try {
-				
+
 				boolean andStakeSuccess = false;
 				int hitStakeStacks = 0;
 				int andStakeInvID = this.inventoryItemID[andStakeInvIndex];
@@ -7827,7 +7827,7 @@ public final class mudclient implements Runnable {
 
 		private final void fetchContainerSize() {
 			try {
-				
+
 				// Container c;
 				// if (this.runningAsApplet) {
 				// if (null != ClientBase.containerApplet) {
@@ -7868,7 +7868,7 @@ public final class mudclient implements Runnable {
 
 			clientPort.resized();
 			int var3 = this.getSurface().width2 - 199;
-			byte var12 = 36; 
+			byte var12 = 36;
 			panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
 			panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
 			panelClan.reposition(controlClanPanel, var3, var12 + 72, 196, 128);
@@ -7887,7 +7887,7 @@ public final class mudclient implements Runnable {
 
 		public final int getInventoryCount(int id) {
 			try {
-				
+
 				int count = 0;
 
 				for (int index = 0; this.inventoryItemCount > index; ++index) {
@@ -7908,7 +7908,7 @@ public final class mudclient implements Runnable {
 
 		private final RSCharacter getServerNPC(int serverIndex) {
 			try {
-				
+
 
 				for (int var3 = 0; var3 < this.npcCount; ++var3) {
 					if (serverIndex == this.npcs[var3].serverIndex) {
@@ -7924,7 +7924,7 @@ public final class mudclient implements Runnable {
 
 		private final RSCharacter getServerPlayer(int serverIndex) {
 			try {
-				
+
 
 				for (int i = 0; this.playerCount > i; ++i) {
 					if (serverIndex == this.players[i].serverIndex) {
@@ -7942,7 +7942,7 @@ public final class mudclient implements Runnable {
 			try {
 				this.panelAppearance.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 						this.lastMouseButtonDown);
-				
+
 				if (this.panelAppearance.isClicked(this.controlButtonAppearanceHeadMinus)) {
 					do {
 						do {
@@ -8038,7 +8038,7 @@ public final class mudclient implements Runnable {
 
 		private final void handleGameInput() {
 			try {
-				
+
 				if (this.systemUpdate > 1) {
 					--this.systemUpdate;
 				}
@@ -8453,14 +8453,14 @@ public final class mudclient implements Runnable {
 							this.panelMessageTabs.setText(this.panelMessageEntry, "");
 							if (var11.startsWith("::")) {
 								if (var11.equalsIgnoreCase("::dev") && adminRights) {
-									developerMenu = !developerMenu;
+									developerMenu = true;
 								} else if (var11.equalsIgnoreCase("::mod") && adminRights) {
-									modMenu = !modMenu;
+									modMenu = true; 
 								} else if (var11.startsWith("::n ") && adminRights) {
 									devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
 								} else if (var11.equalsIgnoreCase("::overlay")) {
-									Config.SIDE_MENU_OVERLAY = !Config.SIDE_MENU_OVERLAY;
-								} 
+									Config.SIDE_MENU_OVERLAY = Config.SIDE_MENU_OVERLAY;
+								}
 								else {
 									this.sendCommandString(var11.substring(2));
 									String putQueue = var11.substring(2);
@@ -8688,7 +8688,7 @@ public final class mudclient implements Runnable {
 
 		public final void handleKeyPress(byte var1, int key) {
 			try {
-				
+
 				if (this.currentViewMode == GameMode.LOGIN) {
 					if (this.loginScreenNumber == 0 && this.panelLoginWelcome != null) {
 						this.panelLoginWelcome.keyPress(key);
@@ -8707,8 +8707,8 @@ public final class mudclient implements Runnable {
 							this.panelAppearance.keyPress(key);
 							return;
 						}
-						if (auctionHouse.isVisible() && (auctionHouse.auctionMenu.focusOn(auctionHouse.auctionSearchHandle) 
-								|| auctionHouse.myAuctions.focusOn(auctionHouse.textField_priceEach) 
+						if (auctionHouse.isVisible() && (auctionHouse.auctionMenu.focusOn(auctionHouse.auctionSearchHandle)
+								|| auctionHouse.myAuctions.focusOn(auctionHouse.textField_priceEach)
 								|| auctionHouse.auctionMenu.focusOn(auctionHouse.textField_buyAmount)
 								|| auctionHouse.myAuctions.focusOn(auctionHouse.textField_amount)
 								|| auctionHouse.myAuctions.focusOn(auctionHouse.textField_price))) {
@@ -8719,7 +8719,7 @@ public final class mudclient implements Runnable {
 							bank.keyDown(key);
 							return;
 						}
-						if (clan.getClanInterface().isVisible() && (clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanName_field) 
+						if (clan.getClanInterface().isVisible() && (clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanName_field)
 								|| clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanTag_field)
 								|| clan.getClanInterface().clanSetupPanel.focusOn(clan.getClanInterface().clanSearch_field))) {
 							clan.getClanInterface().keyDown(key);
@@ -8767,7 +8767,7 @@ public final class mudclient implements Runnable {
 					--this.m_Zb;
 				}
 
-				
+
 				if (this.loginScreenNumber != 0) {
 					if (loginScreenNumber == 1) {
 						menuNewUser.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
@@ -8970,7 +8970,7 @@ public final class mudclient implements Runnable {
 
 		private final void handleMenuItemClicked(boolean var1, int item) {
 			try {
-				
+
 				MenuItemAction var3 = this.menuCommon.getItemAction((int) item);
 				int indexOrX = this.menuCommon.getItemIndexOrX(item);
 				int idOrZ = this.menuCommon.getItemIdOrZ((int) item);
@@ -9472,7 +9472,7 @@ public final class mudclient implements Runnable {
 
 		private final void handlePacket1(int opcode, int length) {
 			try {//System.out.println("opcode1: " + opcode);
-				
+
 				if (opcode == 88) {
 					int id = packetsIncoming.getShort();
 
@@ -9557,7 +9557,7 @@ public final class mudclient implements Runnable {
 							ironmanInterface.setVisible(true);
 						} else if (iAction == 2) {
 							ironmanInterface.setVisible(false);
-						} 
+						}
 						break;
 					case 3:
 						int packetType = packetsIncoming.getByte() & 0xff;
@@ -9626,7 +9626,7 @@ public final class mudclient implements Runnable {
 						case 1:// leave clan
 							clan.putClan(false);
 							clan.update();
-							// UPDATE GUI? 
+							// UPDATE GUI?
 							break;
 						case 2:// SENT INVITATION
 							clan.getClanInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
@@ -10626,7 +10626,7 @@ public final class mudclient implements Runnable {
 														int slot = this.packetsIncoming.getUnsignedByte();
 														int item = this.packetsIncoming.getShort();
 														int itemCount = this.packetsIncoming.get32();
-														
+
 														/*if (itemCount == 0) {
 															--this.newBankItemCount;
 
@@ -10674,7 +10674,7 @@ public final class mudclient implements Runnable {
 															this.playerStatCurrent[skill] = this.packetsIncoming.getUnsignedByte();
 															this.playerStatBase[skill] = this.packetsIncoming.getUnsignedByte();
 															this.playerExperience[skill] = this.packetsIncoming.get32();
-															
+
 															int receivedXp = playerExperience[skill] - oldXp;
 															receivedXp = receivedXp < 0 ? 0 : receivedXp;
 															this.playerStatXpGained[skill] += receivedXp;
@@ -11207,7 +11207,7 @@ public final class mudclient implements Runnable {
 		private final void handleReportAbuseClick() {
 			try {
 				this.reportAbuse_AbuseType = 0;
-				
+
 				boolean var2 = true;
 				if (this.mouseX >= 36 && this.mouseX < 176) {
 					this.reportAbuse_AbuseType = 1;
@@ -11521,7 +11521,7 @@ public final class mudclient implements Runnable {
 						&& this.mouseX < this.getSurface().width2 - 3 && this.mouseY < 35) {
 					this.showUiTab = 1;
 				}
-				
+
 				if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= 3
 						&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < 35) {
 					this.showUiTab = 2;
@@ -11606,7 +11606,7 @@ public final class mudclient implements Runnable {
 
 		private final boolean hasRunes(int rune, int count) {
 			try {
-				
+
 				if (rune == 31) {// fire
 					if (this.isEquipped(197) || this.isEquipped(615) || this.isEquipped(682))
 						return true;
@@ -11628,7 +11628,7 @@ public final class mudclient implements Runnable {
 
 		private final boolean isEquipped(int id) {
 			try {
-				
+
 
 				for (int i = 0; this.inventoryItemCount > i; ++i) {
 					if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
@@ -11646,14 +11646,14 @@ public final class mudclient implements Runnable {
 				this.logoutTimeout = 0;
 				this.loginScreenNumber = 0;
 				this.currentViewMode = GameMode.LOGIN;
-				
+
 				this.systemUpdate = 0;
 				this.elixirTimer = 0;
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.FC(" + "dummy" + ')');
 			}
 		}
-		
+
 		private long getUID() {
 			File uID = new File(Config.F_CACHE_DIR + File.separator + "uid.dat");
 			try {
@@ -11678,7 +11678,7 @@ public final class mudclient implements Runnable {
 			}
 			return 0L;
 		}
-		
+
 		public String getMacAddress() {
 			try {
 				InetAddress a = InetAddress.getLocalHost();
@@ -11719,7 +11719,7 @@ public final class mudclient implements Runnable {
 				}
 				EntityHandler.getAnimationDef(animationIndex).number = animationNumber;
 				animationNumber += 27;
-				if (animationNumber == 1998) { 
+				if (animationNumber == 1998) {
 					animationNumber = 3300;
 				}
 			}
@@ -11800,7 +11800,7 @@ public final class mudclient implements Runnable {
 
 		private final boolean loadNextRegion(int wantZ, int wantX, boolean var3) {
 			try {
-				
+
 				if (this.deathScreenTimeout != 0) {
 					this.world.playerAlive = false;
 					return false;
@@ -12017,7 +12017,7 @@ public final class mudclient implements Runnable {
 
 		private final void login(int var1, String pass, String user, boolean reconnecting) {
 			try {
-				
+
 				this.m_Zb = 0;
 				if (this.m_Zb > 0) {
 					this.showLoginScreenStatus("Please wait...", "Connecting to server");
@@ -12067,7 +12067,7 @@ public final class mudclient implements Runnable {
 							this.getClientStream().writeBuffer1.putInt(Config.CLIENT_VERSION);
 							this.getClientStream().writeBuffer1.putString(getUsername());
 							this.getClientStream().writeBuffer1.putString(password);
-							
+
 							this.getClientStream().writeBuffer1.putLong(getUID());
 							this.getClientStream().writeBuffer1.putString(getMacAddress());
 							/*
@@ -12079,7 +12079,7 @@ public final class mudclient implements Runnable {
 							 * rsaBuffer.putInt(isaacSeed[3]);
 							 * rsaBuffer.encodeWithRSA(MiscFunctions.RSA_EXPONENT,
 							 * MiscFunctions.RSA_MODULUS);
-							 * 
+							 *
 							 * this.clientStream.writeBuffer1.writeBytes(rsaBuffer.
 							 * dataBuffer, 0, rsaBuffer.curPointerPosition);
 							 */
@@ -12088,10 +12088,10 @@ public final class mudclient implements Runnable {
 							 * this.clientStream.writeBuffer1.putShort(0); int
 							 * oldSize =
 							 * this.clientStream.writeBuffer1.curPointerPosition;
-							 * 
+							 *
 							 * this.clientStream.writeBuffer1.a(oldSize, isaacSeed,
 							 * this.clientStream.writeBuffer1.curPointerPosition);
-							 * 
+							 *
 							 * this.clientStream.writeBuffer1.put16_Offset(this.
 							 * clientStream.writeBuffer1.curPointerPosition -
 							 * oldSize);
@@ -12275,7 +12275,7 @@ public final class mudclient implements Runnable {
 
 		private final void lostConnection(int var1) {
 			try {
-				
+
 				this.systemUpdate = 0;
 				this.elixirTimer = 0;
 				if (var1 <= 59) {
@@ -12324,7 +12324,7 @@ public final class mudclient implements Runnable {
 		private final void putStringPair(String str1, String str2) {
 			try {
 				this.getClientStream().newPacket(218);
-				
+
 				this.getClientStream().writeBuffer1.putString(str1);
 				RSBufferUtils.putEncryptedString(this.getClientStream().writeBuffer1, str2);
 				this.getClientStream().finishPacket();
@@ -12337,7 +12337,7 @@ public final class mudclient implements Runnable {
 		private final void removeFriend(String var1, byte var2) {
 			try {
 
-				
+
 				String var3 = StringUtil.displayNameToKey(var1);
 				if (var3 != null) {
 					for (int var4 = 0; var4 < SocialLists.friendListCount; ++var4) {
@@ -12366,7 +12366,7 @@ public final class mudclient implements Runnable {
 
 		private final void removeIgnore(String name) {
 			try {
-				
+
 				String findKey = StringUtil.displayNameToKey(name);
 				if (findKey != null) {
 					for (int j = 0; j < SocialLists.ignoreListCount; ++j) {
@@ -12395,7 +12395,7 @@ public final class mudclient implements Runnable {
 
 		private final void renderLoginScreenViewports(int var1) {
 			try {
-				
+
 				byte var2 = 0;
 				byte var3 = 50;
 				byte var4 = 50;
@@ -12504,7 +12504,7 @@ public final class mudclient implements Runnable {
 				this.elixirTimer = 0;
 				this.loginScreenNumber = 0;
 				this.logoutTimeout = 0;
-				
+
 				this.currentViewMode = GameMode.GAME;
 				this.clearInputString80((byte) -49);
 
@@ -12596,7 +12596,7 @@ public final class mudclient implements Runnable {
 				}
 
 				this.currentViewMode = GameMode.LOGIN;
-				
+
 
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.UA(" + var1 + ')');
@@ -12619,7 +12619,7 @@ public final class mudclient implements Runnable {
 		public final void sendCommandString(String var1) {
 			try {
 				this.getClientStream().newPacket(38);
-				
+
 				this.getClientStream().writeBuffer1.putString(var1);
 				this.getClientStream().finishPacket();
 			} catch (RuntimeException var4) {
@@ -12629,7 +12629,7 @@ public final class mudclient implements Runnable {
 
 		private final void sendLogout(int var1) {
 			try {
-				
+
 				if (this.currentViewMode != GameMode.LOGIN) {
 					if (this.combatTimeout <= 450) {
 						if (var1 < this.combatTimeout) {
@@ -12653,7 +12653,7 @@ public final class mudclient implements Runnable {
 		private final boolean sendWalkToGroundItem(int startX, int startZ, int x1, int x2, int z1, int z2, boolean var4,
 				boolean var9) {
 			try {
-				
+
 				int var10 = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, var4);
 				if (var10 == -1) {
 					return false;
@@ -12693,7 +12693,7 @@ public final class mudclient implements Runnable {
 
 		private final void setEGTo77() {
 			try {
-				
+
 				this.m_eg = 77;
 
 			} catch (RuntimeException var3) {
@@ -12705,7 +12705,7 @@ public final class mudclient implements Runnable {
 			try {
 				this.inputX_Lines = lines;
 				this.inputX_Width = 400;
-				
+
 
 				for (int i = 0; lines.length > i; ++i) {
 					int width = this.getSurface().stringWidth(1, lines[i]) + 10;
@@ -12731,7 +12731,7 @@ public final class mudclient implements Runnable {
 		public final void showItemModX(String[] lines, InputXAction var3, boolean var4) {
 			try {
 				this.showItemModX(var3, lines, var4, "");
-				
+
 			} catch (RuntimeException var6) {
 				throw GenUtil.makeThrowable(var6,
 						"client.RA(" + (lines != null ? "{...}" : "null") + ',' + "dummy" + ',' + var3 + ',' + var4 + ')');
@@ -12740,7 +12740,7 @@ public final class mudclient implements Runnable {
 
 		private final void showLoginScreenStatus(String a, String b) {
 			try {
-				
+
 				if (this.loginScreenNumber == 2) {
 					if (b != null && b.length() >= 1) {
 						this.panelLogin.setText(this.controlLoginStatus1, a);
@@ -12769,7 +12769,7 @@ public final class mudclient implements Runnable {
 		public final void showMessage(boolean crownEnabled, String sender, String message, MessageType type, int crownID,
 				String formerName, String colorOverride) {
 			try {
-				
+
 				if ((type == MessageType.PRIVATE_RECIEVE || type == MessageType.CHAT || type == MessageType.TRADE
 						|| type == MessageType.GLOBAL_CHAT || type == MessageType.CLAN_CHAT) && formerName != null && !crownEnabled) {
 					String clanKey = StringUtil.displayNameToKey(formerName);
@@ -12841,7 +12841,7 @@ public final class mudclient implements Runnable {
 				MessageHistory.messageHistoryMessage[0] = message;
 				MessageHistory.messageHistoryColor[0] = color;
 				String msg = color + StringUtil.formatMessage(message, sender, true, type);
-				
+
 				if (type == MessageType.CHAT) {
 					if (this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
 							- 4 != this.panelMessageTabs.controlScrollAmount[this.panelMessageChat]) {
@@ -12900,7 +12900,7 @@ public final class mudclient implements Runnable {
 
 		private final void sortOnlineFriendsList() {
 			try {
-				
+
 				boolean loopModified = true;
 
 				while (loopModified) {
@@ -12999,15 +12999,15 @@ public final class mudclient implements Runnable {
 						doSkillInterface = new DoSkillInterface(this);
 						lostOnDeathInterface = new LostOnDeathInterface(this);
 						territorySignupInterface = new TerritorySignupInterface(this);
-						
+
 						mainComponent = new NComponent(this);
 						mainComponent.setSize(getGameWidth(), getGameHeight());
 
 						bankPinInterface = new BankPinInterface(this);
 						mainComponent.addComponent(bankPinInterface);
-						
+
 						ironmanInterface = new IronManInterface(this);
-						
+
 						fishingTrawlerInterface = new FishingTrawlerInterface(this);
 						mainComponent.addComponent(fishingTrawlerInterface);
 
@@ -13049,12 +13049,12 @@ public final class mudclient implements Runnable {
 										if (Config.EXPERIENCE_COUNTER == 1) {
 											drawExperienceCounter(xpdrop.skill);
 										}
-										
+
 										int textColor = Config.EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-											Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 : 
-												Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 : 
+											Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+												Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
 													Config.EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
-												
+
 										if (!xpdrop.levelUp) {
 											if (textColor == 0xFFFFFF) {
 												graphics().drawShadowText("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
@@ -13168,7 +13168,7 @@ public final class mudclient implements Runnable {
 
 		private final void tradeOffer(int count, int slot) {
 			try {
-				
+
 				boolean offerSuccess = false;
 				int offered = 0;
 				int id = this.inventoryItemID[slot];
@@ -13253,7 +13253,7 @@ public final class mudclient implements Runnable {
 
 		private final void tradeRemove(int var1, byte var2, int var3) {
 			try {
-				
+
 				int var4 = this.tradeItemID[var3];
 				int var5 = var1 < 0 ? this.mouseButtonItemCountIncrement : var1;
 				int var6;
@@ -13304,7 +13304,7 @@ public final class mudclient implements Runnable {
 
 		final void update() {
 			try {
-				
+
 				if (!this.errorLoadingCoadebase) {
 					if (!this.errorLoadingMemory) {
 						if (!this.errorLoadingData) {
@@ -13384,9 +13384,9 @@ public final class mudclient implements Runnable {
 
 //		private final void updateBankItems(int var1) {
 //			try {
-//				
+//
 //				this.bankItemCount = this.newBankItemCount;
-//				
+//
 //				int var2;
 //				for (var2 = 0; var2 < this.newBankItemCount; ++var2) {
 //					this.bankItemID[var2] = this.newBankItems[var2];
@@ -13400,7 +13400,7 @@ public final class mudclient implements Runnable {
 
 		private final void updateObjectAnimation(byte var1, int instanceNumber, String modelFileName) {
 			try {
-				
+
 				int tileX = this.gameObjectInstanceX[instanceNumber];
 				int tileZ = this.gameObjectInstanceZ[instanceNumber];
 				int pixX = tileX - this.localPlayer.currentX / 128;
@@ -13428,7 +13428,7 @@ public final class mudclient implements Runnable {
 
 		private final void walkToActionSource(int startX, int startZ, int destX, int destZ, boolean var5) {
 			try {
-				
+
 				this.walkToArea(startX, startZ, destX, destZ, destX, destZ, false, var5);
 			} catch (RuntimeException var8) {
 				throw GenUtil.makeThrowable(var8, "client.BE(" + destZ + ',' + destX + ',' + startZ + ',' + startX + ','
@@ -13439,7 +13439,7 @@ public final class mudclient implements Runnable {
 		private final boolean walkToArea(int startX, int startZ, int x1, int z1, int x2, int z2, boolean reachBorder,
 				boolean var2) {
 			try {
-				
+
 				int count = this.world.findPath(this.pathX, this.pathZ, startX, startZ, x1, x2, z1, z2, reachBorder);
 				if (count == -1) {
 					if (!var2) {
@@ -13485,7 +13485,7 @@ public final class mudclient implements Runnable {
 
 		private final void walkToGroundItem(int startX, int startZ, int destX, int destZ, boolean var5) {
 			try {
-				
+
 				if (!this.sendWalkToGroundItem(startX, startZ, destX, destX, destZ, destZ, false, var5)) {
 					this.walkToArea(startX, startZ, destX, destZ, destX, destZ, true, var5);
 				}
@@ -13497,7 +13497,7 @@ public final class mudclient implements Runnable {
 
 		private final void walkToObject(int destX, int destZ, int dir, int var1, int objectID) {
 			try {
-				
+
 				int worldWidth;
 				int worldHeight;
 				if (dir != 0 && dir != 4) {
@@ -13543,7 +13543,7 @@ public final class mudclient implements Runnable {
 
 		private final void walkToWall(int x, int z, int dir) {
 			try {
-				
+
 				if (dir == 0) {
 					this.walkToArea(this.playerLocalX, this.playerLocalZ, x, z - 1, x, z, false, true);
 				} else if (dir != 1) {
@@ -13579,7 +13579,7 @@ public final class mudclient implements Runnable {
 		public int[][] getAnimDirLayer_To_CharLayer() {
 			return animDirLayer_To_CharLayer;
 		}
-		
+
 		public int getPlayerStatCurrent(int skill) {
 			return playerStatCurrent[skill];
 		}
@@ -13681,7 +13681,7 @@ public final class mudclient implements Runnable {
 		public String[] getSkillNames() {
 			return skillNames;
 		}
-		
+
 		public String[] getSkillNamesLong() {
 			return skillNameLong;
 		}
@@ -13697,18 +13697,18 @@ public final class mudclient implements Runnable {
 		public int getGameState() {
 			return gameState;
 		}
-		
+
 		private String skillGuideChosen;
 		public ArrayList<String> skillGuideChosenTabs;
-		
+
 		private void drawSkillGuide() {
 			skillGuideInterface.onRender(this.getSurface());
-		}		
+		}
 
 		public String getSkillGuideChosen() {
 			return skillGuideChosen;
 		}
-		
+
 		public void setSkillGuideChosen(String skillGuideChosen) {
 			this.skillGuideChosen = skillGuideChosen;
 			skillGuideChosenTabs = new ArrayList<String>();
@@ -13779,7 +13779,7 @@ public final class mudclient implements Runnable {
 				skillGuideChosenTabs.add("Stalls");
 				skillGuideChosenTabs.add("Chests");
 				skillGuideChosenTabs.add("Doors");
-			} 
+			}
 		}
 
 		private String questGuideChosen;
@@ -13792,23 +13792,23 @@ public final class mudclient implements Runnable {
 		private String[] questGuideReward;
 		private String[][] questGuideRequirements = { {"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"} };
 		private String[][] questGuideRewards = { {"3 Quest Points", "2500 coins"}, {"1 Quest Point", "300 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "(Lvl + 1)*75 + 100 Mining experience", "Ability to use Doric's anvils", "180 coins", }, {"1 Quest Point", "1125 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*30 + 20 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "875 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "180 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "4825 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 1000 Defense experience", "Lvl*300 + 1000 Strength experience", "The ability to wear a Rune plate mail body"},  {"4 Quest Points", "Lvl*125 + 200 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "6625 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*75 + 6950 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*57 + 205 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Trees", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 Agility Experience", "875 Attack experience", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "15000 Magic experience", "Ability to use the Watchtower teleport spell", "5000 coins"}, {"3 Quest Points", "Lvl*38 + 162 Crafting experience", "2000 coins"}, {"1 Quest Points", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"2 Quest Points", "(Lvl+1)*300 Mining experience", "(Lvl+1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "7650 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"} };
-		
+
 		private void drawQuestGuide() {
 			questGuideInterface.onRender(this.getSurface());
-		}		
+		}
 
 		public String getQuestGuideChosen() {
 			return questGuideChosen;
 		}
-		
+
 		public void setQuestGuideChosen(String questGuideChosen) {
 			this.questGuideChosen = questGuideChosen;
 		}
-		
+
 		public int getQuestGuideProgress() {
 			return questGuideProgress;
 		}
-		
+
 		public void setQuestGuideProgress(int questGuideProgress) {
 			this.questGuideProgress = questGuideProgress;
 		}
@@ -13816,56 +13816,56 @@ public final class mudclient implements Runnable {
 		public String getQuestGuideStartWho() {
 			return questGuideStartWho;
 		}
-		
+
 		public void setQuestGuideStartWho(int chosen) {
 			this.questGuideStartWho = questGuideStartWhos[chosen];
 		}
-		
+
 		public String getQuestGuideStartWhere() {
 			return questGuideStartWhere;
 		}
-		
+
 		public void setQuestGuideStartWhere(int chosen) {
 			this.questGuideStartWhere = questGuideStartWheres[chosen];
 		}
-		
+
 		public String[] getQuestGuideRequirement() {
 			return questGuideRequirement;
 		}
-		
+
 		public void setQuestGuideRequirement(int chosen) {
 			this.questGuideRequirement = questGuideRequirements[chosen];
 		}
-		
+
 		public String[] getQuestGuideReward() {
 			return questGuideReward;
 		}
-		
+
 		public void setQuestGuideReward(int chosen) {
 			this.questGuideReward = questGuideRewards[chosen];
 		}
-		
+
 		private String skillToDo;
 		private void drawDoSkill() {
 			this.doSkillInterface.onRender();
-		}		
+		}
 
 		public String getSkillToDo() {
 			return skillToDo;
 		}
-		
+
 		public void setSkillToDo(String skillToDo) {
 			this.skillToDo = skillToDo;
 		}
-		
+
 		private void drawLostOnDeath() {
 			lostOnDeathInterface.onRender();
 		}
-		
+
 		private void drawTerritorySignup() {
 			territorySignupInterface.onRender();
 		}
-		
+
 		public void runScroll(int x) {
 			if (x > 1)
 				x += x;
@@ -13874,7 +13874,7 @@ public final class mudclient implements Runnable {
 			if (showUiTab == 3) { // Quest list.
 				if(uiTabPlayerInfoSubTab == 1) {
 					panelQuestInfo.scrollMethodList(controlQuestInfoPanel, x);
-				} 
+				}
 				/*else if(uiTabPlayerInfoSubTab == 2) {
 					panelPlayerTaskInfo.scrollMethodList(controlPlayerTaskInfoPanel, x);
 				}*/
