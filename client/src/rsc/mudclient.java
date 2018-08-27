@@ -5673,6 +5673,7 @@ public final class mudclient implements Runnable {
 			bank.onRender();
 		}
 
+		/* Game Screen Right Click Menu Definitions */
 		private final void drawUiTab0(int var1) {
 			try {
 				if (this.messageTabSelected == MessageTab.CHAT && this.panelMessageTabs.isClicked(this.panelMessageChat)
@@ -5753,7 +5754,7 @@ public final class mudclient implements Runnable {
 						int var9;
 						int id;
 						if (this.scene.m_T != var8) {
-							if (var8 != null && var8.key >= 10000) {
+							if (var8 != null && var8.key >= 10000) { // Wall Object Right Click Menu
 								var9 = var8.key - 10000;
 								id = this.wallObjectInstanceID[var9];
 								if (!this.wallObjectInstance_Arg1[var9]) {
@@ -5801,7 +5802,7 @@ public final class mudclient implements Runnable {
 
 									this.wallObjectInstance_Arg1[var9] = true;
 								}
-							} else if (null != var8 && var8.key >= 0) {
+							} else if (null != var8 && var8.key >= 0) { // Game Object Right Click Menu
 								var9 = var8.key;
 								id = this.gameObjectInstanceID[var9];
 								if (!this.gameObjectInstance_Arg1[var9]) {
@@ -5882,7 +5883,7 @@ public final class mudclient implements Runnable {
 							//continue;
 							id = var8.facePickIndex[var7] / 10000;
 							if (id != 1) {
-								if (id == 2) {
+								if (id == 2) { // Ground Item Right Click Menu
 									if (this.selectedSpell >= 0) {
 										if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
 											this.menuCommon.addTileItem_WithID(MenuItemAction.GROUND_ITEM_CAST_SPELL,
@@ -5916,7 +5917,7 @@ public final class mudclient implements Runnable {
 												"@lre@" + EntityHandler.getItemDef(this.groundItemID[var9]).getName(),
 												"Use " + this.m_ig + " with");
 									}
-								} else if (id == 3) {
+								} else if (id == 3) { // NPC Right Click Menu
 									String var11 = "";
 									int var12 = -1;
 									int var13 = this.npcs[var9].npcId;
@@ -6058,6 +6059,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		/* Inventory Right Click Menu Definitions */
 		private final void drawUiTab1(int var1, boolean var2) {
 			try {
 				if (var1 != -15252) {
@@ -9875,8 +9877,10 @@ public final class mudclient implements Runnable {
 				else if (opcode == 19) { // Server Configs
 					System.out.println("Got Configs!");
 					Properties props = new Properties();
-					String server_name = this.packetsIncoming.readString();
-					props.setProperty("SERVER_NAME", server_name);
+					String serverName = this.packetsIncoming.readString();
+					props.setProperty("SERVER_NAME", serverName);
+					int spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					Config.updateServerConfiguration(props);
 				}
 				else {

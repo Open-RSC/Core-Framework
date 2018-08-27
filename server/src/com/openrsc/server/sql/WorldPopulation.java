@@ -158,6 +158,11 @@ public final class WorldPopulation {
 			result = statement.executeQuery("SELECT `id`, `startX`, `startY`, `minX`, `maxX`, `minY`, `maxY` FROM `"
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "npclocs`");
 			while (result.next()) {
+				/* Configurable NPCs */
+				if ((result.getInt("id") == 794 || result.getInt("id") == 795)
+						&& !Constants.GameServer.SPAWN_AUCTION_NPCS) {
+					continue; // Auctioneers & Auction Clerks
+				}
 				NPCLoc n = new NPCLoc(result.getInt("id"),
 						result.getInt("startX"), result.getInt("startY"),
 						result.getInt("minX"), result.getInt("maxX"),
