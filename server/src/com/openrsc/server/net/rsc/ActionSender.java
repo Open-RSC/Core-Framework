@@ -459,7 +459,7 @@ public class ActionSender {
 	public static void sendServerConfigs(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
-		s.writeByte(1);
+		s.writeString(Constants.GameServer.SERVER_NAME);
 		player.write(s.toPacket());
 	}
 

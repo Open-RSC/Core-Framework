@@ -156,15 +156,16 @@ public class Config {
 
 	}
 
-	private final static HashMap<String, String> serverConfigMap = new HashMap();
+	public final static void updateServerConfiguration(Properties newConfig) {
+		prop.putAll(newConfig);
+	}
+
+	public static String getServerName() {
+		return prop.getProperty("SERVER_NAME");
+	}
     
-	public final static void updateServerConfiguration(HashMap<String, String> newConfig) {
-		serverConfigMap.putAll(newConfig);
-        
-		System.out.println("Server Configuration Updated: ");
-		for(Map.Entry<String, String> entry : serverConfigMap.entrySet()) {
-			System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
-		}
+	public static String getCommandPrefix() {
+		return prop.getProperty("COMMAND_PREFIX");
 	}
 
 	public static boolean isAndroid() {
