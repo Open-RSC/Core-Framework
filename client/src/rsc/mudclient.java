@@ -15,6 +15,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9873,6 +9874,10 @@ public final class mudclient implements Runnable {
 
 				else if (opcode == 19) { // Server Configs
 					System.out.println("Got Configs!");
+					Properties props = new Properties();
+					String server_name = this.packetsIncoming.readString();
+					props.setProperty("SERVER_NAME", server_name);
+					Config.updateServerConfiguration(props);
 				}
 				else {
 					 this.handlePacket2(opcode, length);

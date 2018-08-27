@@ -136,8 +136,8 @@ public final class Constants {
 		 * @throws IOException
 		 * Config file for server configurations.
 		 */
+		public static Properties props = new Properties();
 		public static void initConfig(String file) throws IOException {
-			Properties props = new Properties();
 			props.loadFromXML(new FileInputStream(file));
 
 			// Initialization confs
@@ -166,7 +166,6 @@ public final class Constants {
 			IS_DOUBLE_EXP = Boolean.parseBoolean(props.getProperty("double_exp"));
 
 			START_TIME = System.currentTimeMillis();
-			props.clear();
 		}
 	}
 
