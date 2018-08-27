@@ -158,6 +158,7 @@ public class Config {
 
 	public final static void updateServerConfiguration(Properties newConfig) {
 		prop.putAll(newConfig);
+		setConfigurationFromProperties(); // Ensure they are saved in declared fields.
 	}
 
 	public static String getServerName() {
