@@ -9870,6 +9870,10 @@ public final class mudclient implements Runnable {
 				 * GenUtil.seedRandomFile((RSBuffer) this.packetsIncoming, //
 				 * this.packetsIncoming.curPointerPosition - 28); // } }
 				 */
+
+				else if (opcode == 19) { // Server Configs
+					System.out.println("Got Configs!");
+				}
 				else {
 					 this.handlePacket2(opcode, length);
 				 }

@@ -7,8 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 public class Config {
 	private static Properties prop = new Properties();
@@ -126,7 +127,7 @@ public class Config {
 
 	public static void setConfigurationFromProperties() {
 		Field[] fields = Config.class.getDeclaredFields();
-		for (Entry<Object, Object> entry : prop.entrySet()) {
+		for (Map.Entry<Object, Object> entry : prop.entrySet()) {
 			for (Field f : fields) {
 				if (f.getName().startsWith("F_"))
 					continue;
@@ -153,6 +154,17 @@ public class Config {
 			}
 		}
 
+	}
+
+	private final static HashMap<String, String> serverConfigMap = new HashMap();
+    
+	public final static void updateServerConfiguration(HashMap<String, String> newConfig) {
+		serverConfigMap.putAll(newConfig);
+        
+		System.out.println("Server Configuration Updated: ");
+		for(Map.Entry<String, String> entry : serverConfigMap.entrySet()) {
+			System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+		}
 	}
 
 	public static boolean isAndroid() {
