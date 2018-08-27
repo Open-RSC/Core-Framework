@@ -14,6 +14,7 @@ import java.util.Properties;
 public class Config {
 	private static Properties prop = new Properties();
 
+	public static final String SERVER_NAME = "Open RSC";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
