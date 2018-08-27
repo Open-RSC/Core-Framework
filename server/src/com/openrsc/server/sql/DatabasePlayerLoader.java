@@ -759,10 +759,10 @@ public class DatabasePlayerLoader {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
 			String hashedPassword = DataConversions.hashPassword(request.getPassword(), playerSet.getString("salt"));
-            System.out.println("Request Password: " + request.getPassword());
-            System.out.println("Stored Salt: " + playerSet.getString("salt"));
-            System.out.println("Stored Pass: " + playerSet.getString("pass"));
-            System.out.println("Hashed Pass: " + hashedPassword);
+            //System.out.println("Request Password: " + request.getPassword());
+            //System.out.println("Stored Salt: " + playerSet.getString("salt"));
+            //System.out.println("Stored Pass: " + playerSet.getString("pass"));
+            //System.out.println("Hashed Pass: " + hashedPassword);
 			if (!hashedPassword.equals(playerSet.getString("pass"))) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
