@@ -2050,15 +2050,17 @@ public final class mudclient implements Runnable {
 					}
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 100, "Private history", color, 0, 0,
 							this.getGameHeight() + 6);
-					color = GenUtil.buildColor(200, 200, 255);
-					if (this.messageTabSelected == MessageTab.CLAN) {
-						color = GenUtil.buildColor(255, 200, 50);
+					if (Config.WANT_CLANS) {
+						color = GenUtil.buildColor(200, 200, 255);
+						if (this.messageTabSelected == MessageTab.CLAN) {
+							color = GenUtil.buildColor(255, 200, 50);
+						}
+						if (this.messageTabActivity_Clan % 30 > 15) {
+							color = GenUtil.buildColor(255, 50, 50);
+						}
+						this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0,
+								6 + this.getGameHeight());
 					}
-					if (this.messageTabActivity_Clan % 30 > 15) {
-						color = GenUtil.buildColor(255, 50, 50);
-					}
-					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0,
-							6 + this.getGameHeight());
 				}
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.QB(" + var1 + ')');
@@ -8421,7 +8423,7 @@ public final class mudclient implements Runnable {
 					}
 
 					if (!this.isSleeping) {
-						if (mouseY > (getGameHeight() - 4)) {
+						if (mouseY > (getGameHeight() - 4)) { // Chat Tab Selection
 							if (mouseX > 15 + ((getGameWidth() / 2) - 256) && mouseX < 96 + ((getGameWidth() / 2) - 256)
 									&& lastMouseButtonDown == 1)
 								this.messageTabSelected = MessageTab.ALL;
@@ -8440,10 +8442,12 @@ public final class mudclient implements Runnable {
 								this.messageTabSelected = MessageTab.PRIVATE;
 								this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
 							}
-							if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
-									&& lastMouseButtonDown == 1) {
-								this.messageTabSelected = MessageTab.CLAN;
-								this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
+							if (Config.WANT_CLANS) {
+								if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
+										&& lastMouseButtonDown == 1) {
+									this.messageTabSelected = MessageTab.CLAN;
+									this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
+								}
 							}
 
 							this.currentMouseButtonDown = 0;
