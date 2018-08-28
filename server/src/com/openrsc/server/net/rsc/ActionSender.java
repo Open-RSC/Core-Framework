@@ -472,6 +472,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // Batch Progression
 		s.writeByte((byte)(Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // Side Menu Toggle
 		s.writeByte((byte)(Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // Inventory Count Toggle
+		s.writeByte((byte)(Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // Zoom View Toggle
 		player.write(s.toPacket());
 	}
 

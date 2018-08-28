@@ -144,6 +144,7 @@ public final class Constants {
 		public static boolean BATCH_PROGRESSION = false;
 		public static boolean SIDE_MENU_TOGGLE = false;
 		public static boolean INVENTORY_COUNT_TOGGLE = false;
+		public static boolean ZOOM_VIEW_TOGGLE = false;
 
 		/**
 		 * 
@@ -193,6 +194,7 @@ public final class Constants {
 			BATCH_PROGRESSION = Boolean.parseBoolean(props.getProperty("batch_progression"));
 			SIDE_MENU_TOGGLE = Boolean.parseBoolean(props.getProperty("side_menu_toggle"));
 			INVENTORY_COUNT_TOGGLE = Boolean.parseBoolean(props.getProperty("inventory_count_toggle"));
+			ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(props.getProperty("zoom_view_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}
