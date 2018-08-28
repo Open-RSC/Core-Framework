@@ -1091,6 +1091,7 @@ public class ActionSender {
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
+		if (!Constants.GameServer.WANT_KILL_FEED) return;
 		PacketBuilder pb = new PacketBuilder(135);
 		pb.writeString(DataConversions.hashToUsername(killedHash));
 		pb.writeString(DataConversions.hashToUsername(killerHash));
