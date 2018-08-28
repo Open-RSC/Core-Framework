@@ -34,7 +34,7 @@ public class Config {
 	public static boolean MESSAGE_TAB_SWITCH = true;
 	public static boolean NAME_CLAN_TAG_OVERLAY = true;
 	public static boolean SIDE_MENU_OVERLAY = false;
-	public static boolean KILL_FEED = true;
+	public static boolean KILL_FEED = false;
 	public static int FIGHT_MENU = 1;
 	public static int ZOOM = 0;
 	public static boolean INV_COUNT = false;
@@ -62,6 +62,7 @@ public class Config {
 
 	public static boolean SHOW_FLOATING_NAMETAGS = false;
 	public static boolean WANT_CLANS = false;
+	public static boolean WANT_KILL_FEED = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

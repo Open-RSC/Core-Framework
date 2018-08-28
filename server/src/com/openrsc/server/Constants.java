@@ -137,6 +137,7 @@ public final class Constants {
 
 		public static boolean SHOW_FLOATING_NAMETAGS = false;
 		public static boolean WANT_CLANS = false;
+		public static boolean WANT_KILL_FEED = false;
 
 		/**
 		 * 
@@ -179,6 +180,7 @@ public final class Constants {
 
 			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
+			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
 
 			START_TIME = System.currentTimeMillis();
 		}
