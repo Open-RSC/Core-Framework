@@ -482,10 +482,28 @@ public final class Panel {
 		}
 	}
 
+	public final int getControlSelectedListInt(int controlID, int entryID) {
+		try {
+
+			return this.controlListEntryInt[controlID][entryID];
+		} catch (RuntimeException var4) {
+			throw GenUtil.makeThrowable(var4, "qa.C(" + controlID + ',' + "dummy" + ')');
+		}
+	}
+
 	public final String getControlText(int controlID) {
 		try {
 			
 			return null == this.controlText[controlID] ? "null" : this.controlText[controlID];
+		} catch (RuntimeException var4) {
+			throw GenUtil.makeThrowable(var4, "qa.BA(" + controlID + ',' + "dummy" + ')');
+		}
+	}
+
+	public final int getControlCount(int controlID) {
+		try {
+
+			return this.controlListCurrentSize[controlID];
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.BA(" + controlID + ',' + "dummy" + ')');
 		}
@@ -982,7 +1000,7 @@ public final class Panel {
 					color = 16711680;
 				}
 
-				this.graphics.drawColoredString(x + 2, lineY - (spaceHeightText), entriesString[line], font, color, entriesInt[line]);
+				this.graphics.drawColoredString(x + 2, lineY - (spaceHeightText), entriesString[line], font, color, 0);
 				lineY += this.graphics.fontHeight(font) + spaceHeight;
 				if (lineY >= height + y) {
 					break;

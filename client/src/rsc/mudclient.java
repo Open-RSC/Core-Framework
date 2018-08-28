@@ -7047,10 +7047,14 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
 				}
+
+				/* Settings Definitions */
 				if (this.settingTab == 1) {
 					this.panelSettings.clearList(this.controlSettingPanel);
 					int index = 0;
 					this.getSurface().drawString("Game options", 3 + var3, var7, 0, 1);
+
+					// Camera angle mode
 					if (this.optionCameraModeAuto) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Camera angle mode - @gre@Auto", 0, (String) null, (String) null);
@@ -7059,110 +7063,125 @@ public final class mudclient implements Runnable {
 								"@whi@Camera angle mode - @red@Manual", 0, (String) null, (String) null);
 					}
 
+					// Mouse Buttons
 					if (this.optionMouseButtonOne) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Mouse Buttons - @red@One", 0, (String) null, (String) null);
+								"@whi@Mouse Buttons - @red@One", 1, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Mouse Buttons - @gre@Two", 0, (String) null, (String) null);
+								"@whi@Mouse Buttons - @gre@Two", 1, (String) null, (String) null);
 					}
 
+					// Sound Effects
 					if (this.optionSoundDisabled) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Sound Effects - @red@Off", 0, (String) null, (String) null);
+								"@whi@Sound Effects - @red@Off", 2, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Sound Effects - @gre@On", 0, (String) null, (String) null);
+								"@whi@Sound Effects - @gre@On", 2, (String) null, (String) null);
 					}
 
+					// Batch Progress Bar
 					if (!Config.BATCH_PROGRESS_BAR) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Batch Progress Bar - @red@Off", 0, (String) null, (String) null);
+								"@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Batch Progress Bar - @gre@On", 0, (String) null, (String) null);
+								"@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
 					}
 
+					// Experience Drops
 					if (!Config.EXPERIENCE_DROPS) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Drops - @red@Off", 0, (String) null, (String) null);
+								"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Drops - @gre@On", 0, (String) null, (String) null);
+								"@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
 					}
 
+					// Zoom View
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Zoom View - " + (Config.ZOOM == 0 ? "@yel@Normal" : Config.ZOOM == 1 ? "@ora@Far" : Config.ZOOM == 2 ? "@red@Super" : "@gre@Near"), 0, (String) null, (String) null);
+							"@whi@Zoom View - " + (Config.ZOOM == 0 ? "@yel@Normal" : Config.ZOOM == 1 ? "@ora@Far" : Config.ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
 
+					// Fog
 					if (Config.FOG_TOGGLE) {
 						if (!Config.SHOW_FOG) {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Fog - @red@Off", 0, (String) null, (String) null);
+									"@whi@Fog - @red@Off", 6, (String) null, (String) null);
 						} else {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Fog - @gre@On", 0, (String) null, (String) null);
+									"@whi@Fog - @gre@On", 6, (String) null, (String) null);
 						}
 					}
 
+					// Show Roof
 					if (!Config.SHOW_ROOF) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Show Roof - @red@Off", 0, (String) null, (String) null);
+								"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Show Roof - @gre@On", 0, (String) null, (String) null);
+								"@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
 					}
 
+					// Ground Items
 					if (Config.GROUND_ITEM_TOGGLE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
 										: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-												: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 0, (String) null, (String) null);
+												: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
 					}
 
+					// Auto Message Switch
 					if (Config.AUTO_MESSAGE_SWITCH_TOGGLE) {
 						if (!Config.MESSAGE_TAB_SWITCH) {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Auto Message Switch - @red@Off", 0, (String) null, (String) null);
+									"@whi@Auto Message Switch - @red@Off", 9, (String) null, (String) null);
 						} else {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Auto Message Switch - @gre@On", 0, (String) null, (String) null);
+									"@whi@Auto Message Switch - @gre@On", 9, (String) null, (String) null);
 						}
 					}
 
+					// Side Menu
 					if (!Config.SIDE_MENU_OVERLAY) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Side Menu - @red@Off", 0, (String) null, (String) null);
+								"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Side Menu - @gre@On", 0, (String) null, (String) null);
+								"@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
 					}
 
+					// Kill Feed
 					if (Config.WANT_KILL_FEED) {
 						if (!Config.KILL_FEED) {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Kill Feed - @red@Off", 0, (String) null, (String) null);
+									"@whi@Kill Feed - @red@Off", 11, (String) null, (String) null);
 						} else {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Kill Feed - @gre@On", 0, (String) null, (String) null);
+									"@whi@Kill Feed - @gre@On", 11, (String) null, (String) null);
 						}
 					}
 
-					//this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 0, (String) null, (String) null);
+					// Combat Style
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
 
+					// Fightmode Selector
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 							"@whi@Fightmode Selector - " + (Config.FIGHT_MENU == 0 ? "@red@Never"
-									: Config.FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 0, (String) null, (String) null);
+									: Config.FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
 
+					// Experience Counter
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 							"@whi@Experience Counter - " + (Config.EXPERIENCE_COUNTER == 0 ? "@red@Never"
-									: Config.EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 0, (String) null, (String) null);
+									: Config.EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
 
+					// Inventory Count
 					if (!Config.INV_COUNT) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Inventory Count - @red@Off", 0, (String) null, (String) null);
+								"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Inventory Count - @gre@On", 0, (String) null, (String) null);
+								"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
 					}
 
 					var7 += 195;
@@ -7194,30 +7213,30 @@ public final class mudclient implements Runnable {
 							"@whi@Hold-time for Menu - @gre@" + Config.LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
 
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Menu Size - @lre@Font " + (Config.MENU_SIZE), 0, (String) null, (String) null);
+							"@whi@Menu Size - @lre@Font " + (Config.MENU_SIZE), 1, (String) null, (String) null);
 
 					if (!Config.HOLD_AND_CHOOSE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Hold and Choose - @red@Off", 0, (String) null, (String) null);
+								"@whi@Hold and Choose - @red@Off", 2, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Hold and Choose - @gre@On", 0, (String) null, (String) null);
+								"@whi@Hold and Choose - @gre@On", 2, (String) null, (String) null);
 					}
 
 					if (!Config.SWIPE_TO_SCROLL) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Scroll - @red@Off", 0, (String) null, (String) null);
+								"@whi@Swipe to Scroll - @red@Off", 3, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Scroll - @gre@On", 0, (String) null, (String) null);
+								"@whi@Swipe to Scroll - @gre@On", 3, (String) null, (String) null);
 					}
 
 					if (!Config.SWIPE_TO_ROTATE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Rotate - @red@Off", 0, (String) null, (String) null);
+								"@whi@Swipe to Rotate - @red@Off", 4, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Rotate - @gre@On", 0, (String) null, (String) null);
+								"@whi@Swipe to Rotate - @gre@On", 4, (String) null, (String) null);
 					}
 
 					var7 += 195;
@@ -7254,10 +7273,10 @@ public final class mudclient implements Runnable {
 						else if (!Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
 							if (var13 <= 24 && this.mouseButtonClick == 1) {
 								if (var3 < 98 && this.settingTab == 1) {
-									this.settingTab = 0;
+									this.settingTab = 0; // Social Settings Panel
 									this.panelSettings.resetList(this.controlSettingPanel);
 								} else if (var3 >= 98 && this.settingTab == 0) {
-									this.settingTab = 1;
+									this.settingTab = 1; // General Settings Panel
 									this.panelSettings.resetList(this.controlSettingPanel);
 								}
 							}
@@ -7270,7 +7289,8 @@ public final class mudclient implements Runnable {
 						var7 = 30 + var10 + 25;
 						if (this.settingTab == 1) {
 							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
-							int settingIndex = checkPosition;
+							if (checkPosition < 0) return;
+							int settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
 
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
 								this.optionCameraModeAuto = !this.optionCameraModeAuto;
@@ -7297,16 +7317,19 @@ public final class mudclient implements Runnable {
 								this.getClientStream().finishPacket();
 							}
 
+							// Batch Progress Bar
 							if (settingIndex == 3 && this.mouseButtonClick == 1) {
 								Config.BATCH_PROGRESS_BAR = !Config.BATCH_PROGRESS_BAR;
 								Config.saveConfiguration(false);
 							}
 
+							// Experience Drops
 							if (settingIndex == 4 && this.mouseButtonClick == 1) {
 								Config.EXPERIENCE_DROPS = !Config.EXPERIENCE_DROPS;
 								Config.saveConfiguration(false);
 							}
 
+							// Zoom View
 							if (settingIndex == 5 && this.mouseButtonClick == 1) {
 								this.cameraZoom = 750;
 								Config.ZOOM++;
@@ -7315,39 +7338,46 @@ public final class mudclient implements Runnable {
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 6 && this.mouseButtonClick == 1) {
+							// Fog
+							if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.FOG_TOGGLE) {
 								Config.SHOW_FOG = !Config.SHOW_FOG;
 								Config.saveConfiguration(false);
 							}
 
+							// Show Roof
 							if (settingIndex == 7 && this.mouseButtonClick == 1) {
 								Config.SHOW_ROOF = !Config.SHOW_ROOF;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 8 && this.mouseButtonClick == 1) {
+							// Show Ground Items
+							if (settingIndex == 8 && this.mouseButtonClick == 1 && Config.GROUND_ITEM_TOGGLE) {
 								Config.SHOW_GROUND_ITEMS++;
 								if (Config.SHOW_GROUND_ITEMS == 4)
 									Config.SHOW_GROUND_ITEMS = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 9 && this.mouseButtonClick == 1) {
+							// Auto Message Tab Switch
+							if (settingIndex == 9 && this.mouseButtonClick == 1 && Config.AUTO_MESSAGE_SWITCH_TOGGLE) {
 								Config.MESSAGE_TAB_SWITCH = !Config.MESSAGE_TAB_SWITCH;
 								Config.saveConfiguration(false);
 							}
 
+							// Side Menu
 							if (settingIndex == 10 && this.mouseButtonClick == 1) {
 								Config.SIDE_MENU_OVERLAY = !Config.SIDE_MENU_OVERLAY;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 11 && this.mouseButtonClick == 1) {
+							// Kill Feed
+							if (settingIndex == 11 && this.mouseButtonClick == 1 && Config.WANT_KILL_FEED) {
 								Config.KILL_FEED = !Config.KILL_FEED;
 								Config.saveConfiguration(false);
 							}
 
-							/*if (settingIndex == 12 && this.mouseButtonClick == 1) {
+							// Combat Style
+							if (settingIndex == 12 && this.mouseButtonClick == 1) {
 								this.combatStyle++;
 								if (this.combatStyle == 4) {
 									this.combatStyle = 0;
@@ -7355,29 +7385,33 @@ public final class mudclient implements Runnable {
 								this.getClientStream().newPacket(29);
 								this.getClientStream().writeBuffer1.putByte(this.combatStyle);
 								this.getClientStream().finishPacket();
-							}*/
+							}
 
-							if (settingIndex == 12 && this.mouseButtonClick == 1) {
+							// Fight Mode
+							if (settingIndex == 13 && this.mouseButtonClick == 1) {
 								Config.FIGHT_MENU++;
 								if (Config.FIGHT_MENU == 3)
 									Config.FIGHT_MENU = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 13 && this.mouseButtonClick == 1) {
+							// Experience Counter
+							if (settingIndex == 14 && this.mouseButtonClick == 1) {
 								Config.EXPERIENCE_COUNTER++;
 								if (Config.EXPERIENCE_COUNTER == 3)
 									Config.EXPERIENCE_COUNTER = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 14 && this.mouseButtonClick == 1) {
+							// Inventory Count
+							if (settingIndex == 15 && this.mouseButtonClick == 1) {
 								Config.INV_COUNT = !Config.INV_COUNT;
 								Config.saveConfiguration(false);
 							}
 
-							var7 += 182;
+							var7 += 15 * this.panelSettings.getControlCount(this.controlSettingPanel);
 
+							// Items On Death
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.showUiTab = 0;
