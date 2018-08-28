@@ -6220,23 +6220,20 @@ public final class mudclient implements Runnable {
 					this.panelClan.clearList(this.controlClanPanel);
 				}
 				else { // Clans Disabled
-					int j = 36;
-					char c = '\304';
-					char c1 = '\266';
 					int l;
 					int k = l = GenUtil.buildColor(160, 160, 160);
 					if (this.panelSocialTab == 0)
 						k = GenUtil.buildColor(220, 220, 220);
 					else
 						l = GenUtil.buildColor(220, 220, 220);
-					this.getSurface().drawBoxAlpha(var3, j, c / 2, 24, k, 128);
-					this.getSurface().drawBoxAlpha(var3 + c / 2, j, c / 2, 24, l, 128);
-					this.getSurface().drawBoxAlpha(var3, j + 24, c, c1 - 24, GenUtil.buildColor(220, 220, 220), 128);
-					this.getSurface().drawLineHoriz(var3, j + 24, c, 0);
-					this.getSurface().drawLineVert(var3 + c / 2, j, 24, 0);
-					this.getSurface().drawLineHoriz(var3, j + c1 - 16, c, 0);
-					this.getSurface().drawColoredStringCentered(var3 + c / 4, "Friends", 0, 0, 4, j + 16);
-					this.getSurface().drawColoredStringCentered(var3 + c / 4 + c / 2, "Ignore", 0, 0, 4, j + 16);
+					this.getSurface().drawBoxAlpha(var3, var4, var5 / 2, 24, k, 128);
+					this.getSurface().drawBoxAlpha(var3 + var5 / 2, var4, var5 / 2, 24, l, 128);
+					this.getSurface().drawBoxAlpha(var3, var4 + 24, var5, var6 - 24, GenUtil.buildColor(220, 220, 220), 128);
+					this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
+					this.getSurface().drawLineVert(var3 + var5 / 2, var4, 24, 0);
+					this.getSurface().drawLineHoriz(var3, var4 + var6 - 16, var5, 0);
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 4, "Friends", 0, 0, 4, var4 + 16);
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Ignore", 0, 0, 4, var4 + 16);
 					this.panelSocial.clearList(this.controlSocialPanel);
 				}
 
