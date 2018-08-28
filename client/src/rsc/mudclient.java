@@ -3960,7 +3960,9 @@ public final class mudclient implements Runnable {
 
 							centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 							centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
-							float zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
+							float zoomMultiplier = 0;
+							if (Config.S_ZOOM_VIEW_TOGGLE)
+								zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
 							this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 									this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
 						}
@@ -7102,8 +7104,10 @@ public final class mudclient implements Runnable {
 					}
 
 					// Zoom View
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
+					if (Config.S_ZOOM_VIEW_TOGGLE) {
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+								"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
+					}
 
 					// Fog
 					if (Config.S_FOG_TOGGLE) {
@@ -7343,7 +7347,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Zoom View
-							if (settingIndex == 5 && this.mouseButtonClick == 1) {
+							if (settingIndex == 5 && this.mouseButtonClick == 1 && Config.S_ZOOM_VIEW_TOGGLE) {
 								this.cameraZoom = 750;
 								Config.C_ZOOM++;
 								if (Config.C_ZOOM == 4)
@@ -10021,6 +10025,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
 					int inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
+					int zoomViewToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
