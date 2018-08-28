@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -20,6 +21,8 @@ TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
+		if (!Constants.GameServer.SPAWN_IRON_MAN_NPCS) return;
+
 		if(n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
 			if(p.getAttribute("ironman_delete", false)) {
 				if (p.getCache().hasKey("bank_pin")) {
@@ -145,6 +148,7 @@ TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 
 	@Override
 	public void onNpcCommand(Npc n, String command, Player p) {
+		if(!Constants.GameServer.SPAWN_IRON_MAN_NPCS) return;
 		if(n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour")) {
 			armourOption(p, n);
 		}
