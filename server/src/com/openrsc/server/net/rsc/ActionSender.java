@@ -474,6 +474,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // Inventory Count Toggle
 		s.writeByte((byte)(Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // Zoom View Toggle
 		s.writeByte((byte)(Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // Menu Combat Style Toggle
+		s.writeByte((byte)(Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // Fightmode Selector Toggle
 
 		player.write(s.toPacket());
 	}

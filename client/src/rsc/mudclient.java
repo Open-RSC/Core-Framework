@@ -7175,9 +7175,10 @@ public final class mudclient implements Runnable {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
 
 					// Fightmode Selector
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
-									: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
+					if (Config.S_FIGHTMODE_SELECTOR_TOGGLE)
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+								"@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
+										: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
 
 					// Experience Counter
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
@@ -7405,8 +7406,8 @@ public final class mudclient implements Runnable {
 								this.getClientStream().finishPacket();
 							}
 
-							// Fight Mode
-							if (settingIndex == 13 && this.mouseButtonClick == 1) {
+							// Fightmode Selector
+							if (settingIndex == 13 && this.mouseButtonClick == 1 && Config.S_FIGHTMODE_SELECTOR_TOGGLE) {
 								Config.C_FIGHT_MENU++;
 								if (Config.C_FIGHT_MENU == 3)
 									Config.C_FIGHT_MENU = 0;
@@ -10030,6 +10031,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
 					int menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
+					int fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
