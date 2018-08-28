@@ -77,7 +77,7 @@ yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads
 # Cache
 clear
 echo "Preparing the cache."
-yes | sudo cp -rf "client/Cache/" "/var/www/html/downloads/cache" | tee -a updater.log &>/dev/null
+yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/" | tee -a updater.log &>/dev/null
 sudo rm /var/www/html/downloads/cache/MD5CHECKSUM | tee -a updater.log &>/dev/null
 sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM | tee updater.log | &>/dev/null
 md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM | tee -a updater.log &>/dev/null
