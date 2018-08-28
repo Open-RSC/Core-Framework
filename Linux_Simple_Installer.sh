@@ -81,6 +81,7 @@ yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/" | tee -a 
 sudo rm /var/www/html/downloads/cache/MD5CHECKSUM | tee -a updater.log &>/dev/null
 sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM | tee updater.log | &>/dev/null
 md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM | tee -a updater.log &>/dev/null
+sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
 
 # Completion
 myip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
