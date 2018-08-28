@@ -2050,7 +2050,7 @@ public final class mudclient implements Runnable {
 					}
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 100, "Private history", color, 0, 0,
 							this.getGameHeight() + 6);
-					if (Config.WANT_CLANS) {
+					if (Config.S_WANT_CLANS) {
 						color = GenUtil.buildColor(200, 200, 255);
 						if (this.messageTabSelected == MessageTab.CLAN) {
 							color = GenUtil.buildColor(255, 200, 50);
@@ -3712,10 +3712,10 @@ public final class mudclient implements Runnable {
 							if (this.lastHeightOffset == 0
 									&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
 									                                                          / 128] & 0x80) == 0
-									                                                          && Config.SHOW_ROOF) {
+									                                                          && Config.C_SHOW_ROOF) {
 
 								this.scene.addModel(this.world.modelRoofGrid[this.lastHeightOffset][centerX]);
-								if (this.lastHeightOffset == 0 && Config.SHOW_ROOF) {
+								if (this.lastHeightOffset == 0 && Config.C_SHOW_ROOF) {
 									this.scene.addModel(this.world.modelWallGrid[1][centerX]);
 									this.scene.addModel(this.world.modelRoofGrid[1][centerX]);
 									this.scene.addModel(this.world.modelWallGrid[2][centerX]);
@@ -3863,13 +3863,13 @@ public final class mudclient implements Runnable {
 						}
 
 						int centerZ;
-						if (Config.SHOW_GROUND_ITEMS != 1) {
+						if (Config.C_SHOW_GROUND_ITEMS != 1) {
 
 							for (centerX = 0; centerX < this.groundItemCount; ++centerX) {
-								if(Config.SHOW_GROUND_ITEMS == 3
+								if(Config.C_SHOW_GROUND_ITEMS == 3
 										&& (this.groundItemID[centerX] == 20 || this.groundItemID[centerX] == 814 || this.groundItemID[centerX] == 413 || this.groundItemID[centerX] == 604))
 									continue;
-								else if(Config.SHOW_GROUND_ITEMS == 2 && (this.groundItemID[centerX] != 20 && this.groundItemID[centerX] != 814 && this.groundItemID[centerX] != 413 && this.groundItemID[centerX] != 604)) {
+								else if(Config.C_SHOW_GROUND_ITEMS == 2 && (this.groundItemID[centerX] != 20 && this.groundItemID[centerX] != 814 && this.groundItemID[centerX] != 413 && this.groundItemID[centerX] != 604)) {
 									continue;
 								}
 								centerZ = this.groundItemX[centerX] * this.tileSize + 64;
@@ -3939,7 +3939,7 @@ public final class mudclient implements Runnable {
 							if (this.optionCameraModeAuto && !this.fogOfWar) {
 								this.autoRotateCamera((byte) 94);
 							}
-							if (Config.SHOW_FOG) {
+							if (Config.C_SHOW_FOG) {
 								if (!this.interlace) {
 									this.scene.fogZFalloff = 1;
 									this.scene.fogLandscapeDistance = 2400;
@@ -3960,7 +3960,7 @@ public final class mudclient implements Runnable {
 
 							centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 							centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
-							float zoomMultiplier = Config.ZOOM == 0 ? 0 : Config.ZOOM == 1 ? +200 : Config.ZOOM == 2 ? +400 : -200;
+							float zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
 							this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 									this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
 						}
@@ -4016,7 +4016,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 						}
-						if(Config.KILL_FEED) {
+						if(Config.C_KILL_FEED) {
 							killQueue.clean();
 							int Offset = 0;
 							for(KillAnnouncer notify : killQueue.Kill) {
@@ -4069,7 +4069,7 @@ public final class mudclient implements Runnable {
 								this.showUiWildWarn = 1;
 							}
 						}
-						if (Config.SIDE_MENU_OVERLAY) {
+						if (Config.C_SIDE_MENU_OVERLAY) {
 							int i = 130;
 							if (adminRights) {
 								this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
@@ -4088,7 +4088,7 @@ public final class mudclient implements Runnable {
 									"Fatigue: " + (double) (this.statFatigue * 1000 / 750) / 10.0 + "%", 7, i, 0xffffff, 1);
 						}
 
-						if (Config.EXPERIENCE_COUNTER == 2) {
+						if (Config.C_EXPERIENCE_COUNTER == 2) {
 							this.drawExperienceCounter(recentSkill);
 						}
 
@@ -4546,7 +4546,7 @@ public final class mudclient implements Runnable {
 					// This should be one line thing!!!!
 					// IF android build and hold and choose = dont close when mouse
 					// exits, else close it.
-					if (Config.isAndroid() && Config.HOLD_AND_CHOOSE) {
+					if (Config.isAndroid() && Config.C_HOLD_AND_CHOOSE) {
 						renderAnyway = true;
 					}
 					if (renderAnyway) {
@@ -4921,12 +4921,12 @@ public final class mudclient implements Runnable {
 						this.characterDialogString[this.characterDialogCount++] = player.message;
 					}
 
-					if (Config.SHOW_FLOATING_NAMETAGS) {
-						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+					if (Config.S_SHOW_FLOATING_NAMETAGS) {
+						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.displayName != null)
 								this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
 						}
-						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.clanTag != null)
 								this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
 						}
@@ -5331,12 +5331,12 @@ public final class mudclient implements Runnable {
 			if (selectedSkill >= 0) {
 				skill = selectedSkill;
 			}
-			int textColor = Config.EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-				Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-					Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-						Config.EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+			int textColor = Config.C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
+				Config.C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+					Config.C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
+						Config.C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
 			int totalXp = 0;
-			if (Config.EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
+			if (Config.C_EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
 				for (int i = 0; i < 18; i++) {
 					totalXp += this.playerExperience[i];
 				}
@@ -5364,7 +5364,7 @@ public final class mudclient implements Runnable {
 					setMouseClick(0);
 				}
 
-				if (Config.EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
+				if (Config.C_EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					// Checks for non-positive gains
 					if (this.playerXpGainedTotal < 0) {
 						this.playerXpGainedTotal = 0;
@@ -5424,7 +5424,7 @@ public final class mudclient implements Runnable {
 					setMouseClick(0);
 				}
 
-				if (Config.EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
+				if (Config.C_EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					// Checks for non-positive gains
 					if (this.playerStatXpGained[skill] < 0) {
 						this.playerStatXpGained[skill] = 0;
@@ -5608,7 +5608,7 @@ public final class mudclient implements Runnable {
 					}
 
 					if (((this.localPlayer.direction == RSCharacterDirection.COMBAT_A
-							|| this.localPlayer.direction == RSCharacterDirection.COMBAT_B) || Config.FIGHT_MENU == 2) && Config.FIGHT_MENU != 0) {
+							|| this.localPlayer.direction == RSCharacterDirection.COMBAT_B) || Config.C_FIGHT_MENU == 2) && Config.C_FIGHT_MENU != 0) {
 						this.drawDialogCombatStyle();
 					}
 
@@ -5626,7 +5626,7 @@ public final class mudclient implements Runnable {
 						this.drawUiTab1(-15252, var3);
 					}
 
-					if (Config.INV_COUNT) {
+					if (Config.C_INV_COUNT) {
 						this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, 17, 0xFFFFFF, 1, true);
 					}
 
@@ -6188,7 +6188,7 @@ public final class mudclient implements Runnable {
 					this.cameraRotationX = -88;
 				}
 
-				if (Config.WANT_CLANS) {
+				if (Config.S_WANT_CLANS) {
 					int clanTab;
 					int colorB;
 					int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
@@ -6444,7 +6444,7 @@ public final class mudclient implements Runnable {
 						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (var15 <= 24 && this.mouseButtonClick == 1) {
-							if (Config.WANT_CLANS) {
+							if (Config.S_WANT_CLANS) {
 								if (var3 < 65 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
 									this.panelSocialTab = 0; // Show Friends Tab (Clicked)
 									this.panelSocial.resetList(this.controlSocialPanel);
@@ -6465,7 +6465,7 @@ public final class mudclient implements Runnable {
 						}
 					}
 					// HANDLE CLAN TAB
-					if (Config.WANT_CLANS) {
+					if (Config.S_WANT_CLANS) {
 						if(var3 >= 65 && var15 >= 0 && var3 < 132 && var15 < 26) {
 							this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 									this.currentMouseButtonDown, this.lastMouseButtonDown);
@@ -6521,7 +6521,7 @@ public final class mudclient implements Runnable {
 					}
 
 					// Clan Interactions
-					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1 && Config.WANT_CLANS) {
+					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1 && Config.S_WANT_CLANS) {
 						this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.mouseButtonClick >= 1 && this.panelSocialTab == 1) {
@@ -6957,6 +6957,8 @@ public final class mudclient implements Runnable {
 
 				int var6 = 3 + var3;
 				int var7 = var4 + 15;
+				
+				/* Social Settings Definitions */
 				if (this.settingTab == 0) {
 					this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
 					var7 += 15;
@@ -7000,20 +7002,20 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString("Block duel requests: @red@Off", 3 + var3, var7, 16777215, 1);
 					}
 
-					if(Config.WANT_CLANS) {
+					if(Config.S_WANT_CLANS) {
 						var7 += 20;
 						this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
 					}
-					if(Config.SHOW_FLOATING_NAMETAGS) {
+					if(Config.S_SHOW_FLOATING_NAMETAGS) {
 						var7 += 15;
-						if (!Config.NAME_CLAN_TAG_OVERLAY) {
+						if (!Config.C_NAME_CLAN_TAG_OVERLAY) {
 							this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
 						} else {
 							this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
 						}
 					}
 
-					if(Config.WANT_CLANS) {
+					if(Config.S_WANT_CLANS) {
 						var7 += 15;
 						if (!this.clanInviteBlockSetting) {
 							this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
@@ -7033,11 +7035,9 @@ public final class mudclient implements Runnable {
 							var8 = 16776960;
 						}
 						this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
-						var7 += 35;
-					} else {
-						var7 += 70;
 					}
 
+					var7 = 275;
 					this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 					var8 = 16777215;
 					var7 += 15;
@@ -7048,7 +7048,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
 				}
 
-				/* Settings Definitions */
+				/* Game Settings Definitions */
 				if (this.settingTab == 1) {
 					this.panelSettings.clearList(this.controlSettingPanel);
 					int index = 0;
@@ -7082,16 +7082,18 @@ public final class mudclient implements Runnable {
 					}
 
 					// Batch Progress Bar
-					if (!Config.BATCH_PROGRESS_BAR) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
+					if (Config.S_BATCH_PROGRESSION) {
+						if (!Config.C_BATCH_PROGRESS_BAR) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
+						}
 					}
 
 					// Experience Drops
-					if (!Config.EXPERIENCE_DROPS) {
+					if (!Config.C_EXPERIENCE_DROPS) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
 					} else {
@@ -7101,11 +7103,11 @@ public final class mudclient implements Runnable {
 
 					// Zoom View
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Zoom View - " + (Config.ZOOM == 0 ? "@yel@Normal" : Config.ZOOM == 1 ? "@ora@Far" : Config.ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
+							"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
 
 					// Fog
-					if (Config.FOG_TOGGLE) {
-						if (!Config.SHOW_FOG) {
+					if (Config.S_FOG_TOGGLE) {
+						if (!Config.C_SHOW_FOG) {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 									"@whi@Fog - @red@Off", 6, (String) null, (String) null);
 						} else {
@@ -7115,7 +7117,7 @@ public final class mudclient implements Runnable {
 					}
 
 					// Show Roof
-					if (!Config.SHOW_ROOF) {
+					if (!Config.C_SHOW_ROOF) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
 					} else {
@@ -7124,16 +7126,16 @@ public final class mudclient implements Runnable {
 					}
 
 					// Ground Items
-					if (Config.GROUND_ITEM_TOGGLE) {
+					if (Config.S_GROUND_ITEM_TOGGLE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
-										: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-												: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
+								"@whi@Ground Items - " + (Config.C_SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
+										: Config.C_SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
+												: Config.C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
 					}
 
 					// Auto Message Switch
-					if (Config.AUTO_MESSAGE_SWITCH_TOGGLE) {
-						if (!Config.MESSAGE_TAB_SWITCH) {
+					if (Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
+						if (!Config.C_MESSAGE_TAB_SWITCH) {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 									"@whi@Auto Message Switch - @red@Off", 9, (String) null, (String) null);
 						} else {
@@ -7143,7 +7145,7 @@ public final class mudclient implements Runnable {
 					}
 
 					// Side Menu
-					if (!Config.SIDE_MENU_OVERLAY) {
+					if (!Config.C_SIDE_MENU_OVERLAY) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
 					} else {
@@ -7152,8 +7154,8 @@ public final class mudclient implements Runnable {
 					}
 
 					// Kill Feed
-					if (Config.WANT_KILL_FEED) {
-						if (!Config.KILL_FEED) {
+					if (Config.S_WANT_KILL_FEED) {
+						if (!Config.C_KILL_FEED) {
 							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 									"@whi@Kill Feed - @red@Off", 11, (String) null, (String) null);
 						} else {
@@ -7167,16 +7169,16 @@ public final class mudclient implements Runnable {
 
 					// Fightmode Selector
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Fightmode Selector - " + (Config.FIGHT_MENU == 0 ? "@red@Never"
-									: Config.FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
+							"@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
+									: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
 
 					// Experience Counter
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Experience Counter - " + (Config.EXPERIENCE_COUNTER == 0 ? "@red@Never"
-									: Config.EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
+							"@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
+									: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
 
 					// Inventory Count
-					if (!Config.INV_COUNT) {
+					if (!Config.C_INV_COUNT) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
 					} else {
@@ -7184,7 +7186,7 @@ public final class mudclient implements Runnable {
 								"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
 					}
 
-					var7 += 195;
+					var7 = 275;
 					int onDeathColor = 16777215;
 
 					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
@@ -7210,12 +7212,12 @@ public final class mudclient implements Runnable {
 					int index = 0;
 					this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Hold-time for Menu - @gre@" + Config.LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
+							"@whi@Hold-time for Menu - @gre@" + Config.C_LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
 
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Menu Size - @lre@Font " + (Config.MENU_SIZE), 1, (String) null, (String) null);
+							"@whi@Menu Size - @lre@Font " + (Config.C_MENU_SIZE), 1, (String) null, (String) null);
 
-					if (!Config.HOLD_AND_CHOOSE) {
+					if (!Config.C_HOLD_AND_CHOOSE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Hold and Choose - @red@Off", 2, (String) null, (String) null);
 					} else {
@@ -7223,7 +7225,7 @@ public final class mudclient implements Runnable {
 								"@whi@Hold and Choose - @gre@On", 2, (String) null, (String) null);
 					}
 
-					if (!Config.SWIPE_TO_SCROLL) {
+					if (!Config.C_SWIPE_TO_SCROLL) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Swipe to Scroll - @red@Off", 3, (String) null, (String) null);
 					} else {
@@ -7231,7 +7233,7 @@ public final class mudclient implements Runnable {
 								"@whi@Swipe to Scroll - @gre@On", 3, (String) null, (String) null);
 					}
 
-					if (!Config.SWIPE_TO_ROTATE) {
+					if (!Config.C_SWIPE_TO_ROTATE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Swipe to Rotate - @red@Off", 4, (String) null, (String) null);
 					} else {
@@ -7287,10 +7289,15 @@ public final class mudclient implements Runnable {
 						byte var10 = 36;
 						var5 = 184;
 						var7 = 30 + var10 + 25;
+
+						// Handle clicks on settings menu
 						if (this.settingTab == 1) {
+							int settingIndex = -1;
 							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
-							if (checkPosition < 0) return;
-							int settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
+							if (checkPosition >= 0)
+								settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
+							else
+								settingIndex = checkPosition;
 
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
 								this.optionCameraModeAuto = !this.optionCameraModeAuto;
@@ -7318,61 +7325,63 @@ public final class mudclient implements Runnable {
 							}
 
 							// Batch Progress Bar
-							if (settingIndex == 3 && this.mouseButtonClick == 1) {
-								Config.BATCH_PROGRESS_BAR = !Config.BATCH_PROGRESS_BAR;
-								Config.saveConfiguration(false);
+							if (Config.S_BATCH_PROGRESSION) {
+								if (settingIndex == 3 && this.mouseButtonClick == 1) {
+									Config.C_BATCH_PROGRESS_BAR = !Config.C_BATCH_PROGRESS_BAR;
+									Config.saveConfiguration(false);
+								}
 							}
 
 							// Experience Drops
 							if (settingIndex == 4 && this.mouseButtonClick == 1) {
-								Config.EXPERIENCE_DROPS = !Config.EXPERIENCE_DROPS;
+								Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
 								Config.saveConfiguration(false);
 							}
 
 							// Zoom View
 							if (settingIndex == 5 && this.mouseButtonClick == 1) {
 								this.cameraZoom = 750;
-								Config.ZOOM++;
-								if (Config.ZOOM == 4)
-									Config.ZOOM = 0;
+								Config.C_ZOOM++;
+								if (Config.C_ZOOM == 4)
+									Config.C_ZOOM = 0;
 								Config.saveConfiguration(false);
 							}
 
 							// Fog
-							if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.FOG_TOGGLE) {
-								Config.SHOW_FOG = !Config.SHOW_FOG;
+							if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.S_FOG_TOGGLE) {
+								Config.C_SHOW_FOG = !Config.C_SHOW_FOG;
 								Config.saveConfiguration(false);
 							}
 
 							// Show Roof
 							if (settingIndex == 7 && this.mouseButtonClick == 1) {
-								Config.SHOW_ROOF = !Config.SHOW_ROOF;
+								Config.C_SHOW_ROOF = !Config.C_SHOW_ROOF;
 								Config.saveConfiguration(false);
 							}
 
 							// Show Ground Items
-							if (settingIndex == 8 && this.mouseButtonClick == 1 && Config.GROUND_ITEM_TOGGLE) {
-								Config.SHOW_GROUND_ITEMS++;
-								if (Config.SHOW_GROUND_ITEMS == 4)
-									Config.SHOW_GROUND_ITEMS = 0;
+							if (settingIndex == 8 && this.mouseButtonClick == 1 && Config.S_GROUND_ITEM_TOGGLE) {
+								Config.C_SHOW_GROUND_ITEMS++;
+								if (Config.C_SHOW_GROUND_ITEMS == 4)
+									Config.C_SHOW_GROUND_ITEMS = 0;
 								Config.saveConfiguration(false);
 							}
 
 							// Auto Message Tab Switch
-							if (settingIndex == 9 && this.mouseButtonClick == 1 && Config.AUTO_MESSAGE_SWITCH_TOGGLE) {
-								Config.MESSAGE_TAB_SWITCH = !Config.MESSAGE_TAB_SWITCH;
+							if (settingIndex == 9 && this.mouseButtonClick == 1 && Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
+								Config.C_MESSAGE_TAB_SWITCH = !Config.C_MESSAGE_TAB_SWITCH;
 								Config.saveConfiguration(false);
 							}
 
 							// Side Menu
 							if (settingIndex == 10 && this.mouseButtonClick == 1) {
-								Config.SIDE_MENU_OVERLAY = !Config.SIDE_MENU_OVERLAY;
+								Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
 								Config.saveConfiguration(false);
 							}
 
 							// Kill Feed
-							if (settingIndex == 11 && this.mouseButtonClick == 1 && Config.WANT_KILL_FEED) {
-								Config.KILL_FEED = !Config.KILL_FEED;
+							if (settingIndex == 11 && this.mouseButtonClick == 1 && Config.S_WANT_KILL_FEED) {
+								Config.C_KILL_FEED = !Config.C_KILL_FEED;
 								Config.saveConfiguration(false);
 							}
 
@@ -7389,27 +7398,27 @@ public final class mudclient implements Runnable {
 
 							// Fight Mode
 							if (settingIndex == 13 && this.mouseButtonClick == 1) {
-								Config.FIGHT_MENU++;
-								if (Config.FIGHT_MENU == 3)
-									Config.FIGHT_MENU = 0;
+								Config.C_FIGHT_MENU++;
+								if (Config.C_FIGHT_MENU == 3)
+									Config.C_FIGHT_MENU = 0;
 								Config.saveConfiguration(false);
 							}
 
 							// Experience Counter
 							if (settingIndex == 14 && this.mouseButtonClick == 1) {
-								Config.EXPERIENCE_COUNTER++;
-								if (Config.EXPERIENCE_COUNTER == 3)
-									Config.EXPERIENCE_COUNTER = 0;
+								Config.C_EXPERIENCE_COUNTER++;
+								if (Config.C_EXPERIENCE_COUNTER == 3)
+									Config.C_EXPERIENCE_COUNTER = 0;
 								Config.saveConfiguration(false);
 							}
 
 							// Inventory Count
 							if (settingIndex == 15 && this.mouseButtonClick == 1) {
-								Config.INV_COUNT = !Config.INV_COUNT;
+								Config.C_INV_COUNT = !Config.C_INV_COUNT;
 								Config.saveConfiguration(false);
 							}
 
-							var7 += 15 * this.panelSettings.getControlCount(this.controlSettingPanel);
+							var7 += 184;
 
 							// Items On Death
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
@@ -7426,6 +7435,7 @@ public final class mudclient implements Runnable {
 							}
 						}
 
+						// "Social" Panel in Settings
 						if (this.settingTab == 0) {
 							var7 += 0;
 							boolean var11 = false;
@@ -7476,12 +7486,16 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 20;
-							if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-								Config.NAME_CLAN_TAG_OVERLAY = !Config.NAME_CLAN_TAG_OVERLAY;
-								Config.saveConfiguration(false);
+
+							if (Config.S_WANT_CLANS) {
+								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+									Config.C_NAME_CLAN_TAG_OVERLAY = !Config.C_NAME_CLAN_TAG_OVERLAY;
+									Config.saveConfiguration(false);
+								}
+								var7 += 15;
 							}
-							var7 += 15;
+
 							if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
 									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 								this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
@@ -7501,7 +7515,7 @@ public final class mudclient implements Runnable {
 								var7 -= 35;
 							}
 
-							var7 += 85;
+							var7 = 290;
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.sendLogout(0);
@@ -7513,36 +7527,36 @@ public final class mudclient implements Runnable {
 							int settingIndex = checkPosition;
 
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
-								Config.F_LONG_PRESS_CALC = Config.LONG_PRESS_TIMER / 50;
+								Config.F_LONG_PRESS_CALC = Config.C_LONG_PRESS_TIMER / 50;
 								if (++Config.F_LONG_PRESS_CALC >= 13) {
 									Config.F_LONG_PRESS_CALC = 1;
 								}
-								Config.LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
+								Config.C_LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
 								Config.saveConfiguration(false);
 							}
 
 							if (settingIndex == 1 && this.mouseButtonClick == 1) {
-								Config.MENU_SIZE++;
-								if (Config.MENU_SIZE == 8)
-									Config.MENU_SIZE = 1;
+								Config.C_MENU_SIZE++;
+								if (Config.C_MENU_SIZE == 8)
+									Config.C_MENU_SIZE = 1;
 								Config.saveConfiguration(false);
 								if(Config.isAndroid()) {
-									this.menuCommon.font = Config.MENU_SIZE;
+									this.menuCommon.font = Config.C_MENU_SIZE;
 								}
 							}
 
 							if (settingIndex == 2 && this.mouseButtonClick == 1) {
-								Config.HOLD_AND_CHOOSE = !Config.HOLD_AND_CHOOSE;
+								Config.C_HOLD_AND_CHOOSE = !Config.C_HOLD_AND_CHOOSE;
 								Config.saveConfiguration(false);
 							}
 
 							if (settingIndex == 3 && this.mouseButtonClick == 1) {
-								Config.SWIPE_TO_SCROLL = !Config.SWIPE_TO_SCROLL;
+								Config.C_SWIPE_TO_SCROLL = !Config.C_SWIPE_TO_SCROLL;
 								Config.saveConfiguration(false);
 							}
 
 							if (settingIndex == 4 && this.mouseButtonClick == 1) {
-								Config.SWIPE_TO_ROTATE = !Config.SWIPE_TO_ROTATE;
+								Config.C_SWIPE_TO_ROTATE = !Config.C_SWIPE_TO_ROTATE;
 								Config.saveConfiguration(false);
 							}
 
@@ -8484,7 +8498,7 @@ public final class mudclient implements Runnable {
 								this.messageTabSelected = MessageTab.PRIVATE;
 								this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
 							}
-							if (Config.WANT_CLANS) {
+							if (Config.S_WANT_CLANS) {
 								if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
 										&& lastMouseButtonDown == 1) {
 									this.messageTabSelected = MessageTab.CLAN;
@@ -8560,7 +8574,7 @@ public final class mudclient implements Runnable {
 								} else if (var11.startsWith("::n ") && adminRights) {
 									devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
 								} else if (var11.equalsIgnoreCase("::overlay")) {
-									Config.SIDE_MENU_OVERLAY = Config.SIDE_MENU_OVERLAY;
+									Config.C_SIDE_MENU_OVERLAY = Config.C_SIDE_MENU_OVERLAY;
 								}
 								else {
 									this.sendCommandString(var11.substring(2));
@@ -9618,10 +9632,11 @@ public final class mudclient implements Runnable {
 					return;
 				}
 				else if (opcode == 134) {
+					if (!Config.S_BATCH_PROGRESSION) return;
 					int interfaceID = packetsIncoming.getByte();
 					switch (interfaceID) {
 					case 0: // Progress Bar Updates
-						if (!Config.BATCH_PROGRESS_BAR) {
+						if (!Config.C_BATCH_PROGRESS_BAR) {
 							batchProgressBar.hide();
 							return;
 						}
@@ -9785,7 +9800,7 @@ public final class mudclient implements Runnable {
 					return;
 				}*/
 				else if(opcode == 135) { // Kill Announcements
-					if (!Config.WANT_KILL_FEED) return;
+					if (!Config.S_WANT_KILL_FEED) return;
 					String killed = this.packetsIncoming.readString();
 					String killer = this.packetsIncoming.readString();
 					int killType = this.packetsIncoming.get32();
@@ -9979,23 +9994,25 @@ public final class mudclient implements Runnable {
 					String serverName = this.packetsIncoming.readString();
 					props.setProperty("SERVER_NAME", serverName);
 					int spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
+					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					int spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
+					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
 					int spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
+					props.setProperty("S_SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
 					int showFloatingNametags = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
+					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
 					int wantClans = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("WANT_CLANS", wantClans == 1 ? "true" : "false");
+					props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false");
 					int wantKillFeed = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
+					props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
 					int fogToggle = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
+					props.setProperty("S_FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
 					int groundItemToggle = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
+					props.setProperty("S_GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
 					int autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
+					props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
+					int batchProgression = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
@@ -10824,7 +10841,7 @@ public final class mudclient implements Runnable {
 																this.totalXpGainedStartTime = System.currentTimeMillis();
 															}
 
-															if(Config.EXPERIENCE_DROPS) {
+															if(Config.C_EXPERIENCE_DROPS) {
 																if (receivedXp > 0) {
 																	xpNotifications.add(new XPNotification(skill, receivedXp, false));
 																}
@@ -12944,7 +12961,7 @@ public final class mudclient implements Runnable {
 						this.messageTabActivity_Game = 200;
 					}
 
-					if (Config.MESSAGE_TAB_SWITCH) {
+					if (Config.C_MESSAGE_TAB_SWITCH) {
 						if (type == MessageType.GAME && this.messageTabSelected != MessageTab.ALL) {
 							this.messageTabSelected = MessageTab.ALL;
 						}
@@ -13148,8 +13165,10 @@ public final class mudclient implements Runnable {
 						fishingTrawlerInterface = new FishingTrawlerInterface(this);
 						mainComponent.addComponent(fishingTrawlerInterface);
 
-						batchProgressBar = new ProgressBarInterface(this);
-						mainComponent.addComponent(batchProgressBar.getComponent());
+						if (Config.S_BATCH_PROGRESSION) {
+							batchProgressBar = new ProgressBarInterface(this);
+							mainComponent.addComponent(batchProgressBar.getComponent());
+						}
 
 						onlineList = new OnlineListInterface(this);
 						mainComponent.addComponent(onlineList);
@@ -13160,13 +13179,13 @@ public final class mudclient implements Runnable {
 						experienceOverlay = new NCustomComponent(this) {
 							@Override
 							public void render() {
-								if (Config.EXPERIENCE_DROPS) {
+								if (Config.C_EXPERIENCE_DROPS) {
 									long new_time = System.currentTimeMillis();
 									time = new_time;
 									for (Iterator<XPNotification> iterator = xpNotifications.iterator(); iterator.hasNext();) {
 										XPNotification xpdrop = iterator.next();
 										if (!xpdrop.isActive) {
-											if (Config.EXPERIENCE_COUNTER > 0) {
+											if (Config.C_EXPERIENCE_COUNTER > 0) {
 												if(time > m_timer && xpdrop.y > 20) {
 													m_timer = time + 250;
 													xpdrop.isActive = true;
@@ -13183,14 +13202,14 @@ public final class mudclient implements Runnable {
 											}
 										}
 
-										if (Config.EXPERIENCE_COUNTER == 1) {
+										if (Config.C_EXPERIENCE_COUNTER == 1) {
 											drawExperienceCounter(xpdrop.skill);
 										}
 
-										int textColor = Config.EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-											Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-												Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-													Config.EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+										int textColor = Config.C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
+											Config.C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+												Config.C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
+													Config.C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
 
 										if (!xpdrop.levelUp) {
 											if (textColor == 0xFFFFFF) {
@@ -13210,11 +13229,11 @@ public final class mudclient implements Runnable {
 											}
 										}
 
-										double dropSpeed = Config.EXPERIENCE_DROP_SPEED == 0 ? 0.000000000001 :
-											Config.EXPERIENCE_DROP_SPEED == 1 ? 0.00005 : 1;
+										double dropSpeed = Config.C_EXPERIENCE_DROP_SPEED == 0 ? 0.000000000001 :
+											Config.C_EXPERIENCE_DROP_SPEED == 1 ? 0.00005 : 1;
 										xpdrop.y -= dropSpeed;
 
-										if (Config.EXPERIENCE_COUNTER > 0 && xpdrop.y <= 30) {
+										if (Config.C_EXPERIENCE_COUNTER > 0 && xpdrop.y <= 30) {
 											xpdrop.isActive = false;
 										}
 										else if (xpdrop.y <= 0) {
@@ -13222,7 +13241,7 @@ public final class mudclient implements Runnable {
 										}
 
 
-										if (Config.EXPERIENCE_COUNTER > 0 && (xpdrop.y <= 30 || xpdrop.y > getGameHeight() - 30)) {
+										if (Config.C_EXPERIENCE_COUNTER > 0 && (xpdrop.y <= 30 || xpdrop.y > getGameHeight() - 30)) {
 											iterator.remove();
 										}
 										else if (xpdrop.y <= 0 || xpdrop.y > getGameHeight()) {
@@ -13234,7 +13253,7 @@ public final class mudclient implements Runnable {
 						};
 						mainComponent.addComponent(experienceOverlay);
 
-						this.menuCommon = new Menu(this.getSurface(), Config.isAndroid() ? Config.MENU_SIZE : 1, "Choose option");
+						this.menuCommon = new Menu(this.getSurface(), Config.isAndroid() ? Config.C_MENU_SIZE : 1, "Choose option");
 
 						this.menuTrade = new Menu(this.getSurface(), 1);
 						this.menuDuel = new Menu(this.getSurface(), 1);
