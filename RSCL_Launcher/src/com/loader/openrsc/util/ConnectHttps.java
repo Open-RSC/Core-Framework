@@ -40,7 +40,7 @@ public class ConnectHttps
             }
         };
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        final URL url = new URL("https://localhost");
+        final URL url = new URL("http://localhost");
         final URLConnection con = url.openConnection();
         final Reader reader = new InputStreamReader(con.getInputStream());
         while (true) {

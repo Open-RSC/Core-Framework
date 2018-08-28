@@ -18,8 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 
-public class Main
-{
+public class Main {
   private static Main singleton;
   private JFrame frame;
   private JButton playButton;
