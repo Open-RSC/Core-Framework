@@ -129,8 +129,11 @@ public final class Constants {
 		 * -1 the absolute max. Level Requirement, Max Damage
 		 */
 		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 2}, {13, 3}, {17, 3}, {23, 4}, {29, 4}, {35, 5}, {41, 5}, {47, 6}, {53, 6}, {59, 7}, {62, 8}, {65, 9}, {70, 10}, {75, 11}};
+
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
+		public static boolean SPAWN_IRON_MAN_NPCS = false;
+
 		/**
 		 * 
 		 * @param file
@@ -165,7 +168,9 @@ public final class Constants {
 			WILDERNESS_BOOST = Double.parseDouble(props.getProperty("wilderness_boost"));
 			SKULL_BOOST = Double.parseDouble(props.getProperty("skull_boost"));
 			IS_DOUBLE_EXP = Boolean.parseBoolean(props.getProperty("double_exp"));
+
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
+			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
 
 			START_TIME = System.currentTimeMillis();
 		}

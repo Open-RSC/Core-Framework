@@ -159,11 +159,13 @@ public final class WorldPopulation {
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "npclocs`");
 			while (result.next()) {
 				/* Configurable NPCs */
-				if ((result.getInt("id") == 794 || result.getInt("id") == 795)
-						&& !Constants.GameServer.SPAWN_AUCTION_NPCS) {
+				int npcID = result.getInt("id");
+				if ((npcID == 794 || npcID == 795) && !Constants.GameServer.SPAWN_AUCTION_NPCS)
 					continue; // Auctioneers & Auction Clerks
-				}
-				NPCLoc n = new NPCLoc(result.getInt("id"),
+				else if ((npcID == 799 || npcID == 800 || npcID == 801)
+								&& !Constants.GameServer.SPAWN_IRON_MAN_NPCS)
+					continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
+				NPCLoc n = new NPCLoc(npcID,
 						result.getInt("startX"), result.getInt("startY"),
 						result.getInt("minX"), result.getInt("maxX"),
 						result.getInt("minY"), result.getInt("maxY"));
