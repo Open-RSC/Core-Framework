@@ -43,28 +43,14 @@ sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';
 
 # Database imports
 clear
-echo "Importing databases."
-sudo mysql -u"root" -p"$pass" < "Databases/openrsc.sql" | tee -a install.log &>/dev/null
-sudo mysql -u"root" -p"$pass" < "Databases/openrsc_config.sql" | tee -a install.log &>/dev/null
-sudo mysql -u"root" -p"$pass" < "Databases/openrsc_tools.sql" | tee -a install.log &>/dev/null
-sudo mysql -u"root" -p"$pass" < "Databases/openrsc_logs.sql" | tee -a install.log &>/dev/null
+echo "Importing database."
+sudo mysql -u"root" -p"$pass" < "openrsc_game.sql" | tee -a install.log &>/dev/null
 
 # Automated file edits
-clear
-sudo sed -i 's/DB_LOGIN">root/DB_LOGIN">openrsc/g' server/config/config.xml | tee -a install.log &>/dev/null
-sudo sed -i 's/DB_PASS">root/DB_PASS">'$pass'/g' server/config/config.xml | tee -a install.log &>/dev/null
-sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java | tee -a install.log &>/dev/null
-sudo sed -i 's/String Domain = "localhost";/String Domain = "'$domain'";/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-sudo sed -i 's/:8080";/:80";/g' Launcher/src/Main.java  | tee -a install.log &>/dev/null
-sudo sed -i 's/toolBar.getChildren().add(Dev/\/\/toolBar.getChildren().add(Dev/g' Launcher/src/Main.java  | tee -a install.log &>/dev/null
-
-sudo sed -i 's/2930.png",/2930.png"/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-sudo sed -i 's/"2937/\/\/"2930.png",/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-sudo sed -i 's/"News",/"News"/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-sudo sed -i 's/"Dev Server News"/\/\/"Dev Server News"/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-sudo sed -i 's/Secure+Domain,/Secure+Domain/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-sudo sed -i 's/Secure+Dev_Domain/\/\/Secure+Dev_Domain/g' Launcher/src/Main.java | tee -a install.log &>/dev/null
-
+#clear
+#sudo sed -i 's/DB_LOGIN">root/DB_LOGIN">openrsc/g' server/config/config.xml | tee -a install.log &>/dev/null
+#sudo sed -i 's/DB_PASS">root/DB_PASS">'$pass'/g' server/config/config.xml | tee -a install.log &>/dev/null
+#sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java | tee -a install.log &>/dev/null
 
 # Website
 clear
@@ -73,31 +59,28 @@ sudo mkdir /var/www/html/downloads | tee -a install.log &>/dev/null
 # Server
 clear
 echo "Compiling the game server. Any errors will be in install.log"
-sudo ant -f "server/build.xml" compile | tee -a install.log &>/dev/null
+sudo ant -f "server/build.xml" compile_core | tee -a install.log &>/dev/null
+sudo ant -f "server/build.xml" compile_plugins | tee -a install.log &>/dev/null
 
 # Client
 clear
 echo "Compiling and preparing the game client. Any errors will be in install.log"
 sudo ant -f "client/build.xml" compile | tee -a install.log &>/dev/null
-cd client
-sudo zip -r "client.zip" "Open_RSC_Client.jar" | tee -a ../install.log &>/dev/null
-cd ../
-yes | sudo cp -rf "client/client.zip" "/var/www/html/downloads" | tee -a install.log &>/dev/null
-sudo rm "client/client.zip" | tee -a install.log &>/dev/null
+yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads" | tee -a install.log &>/dev/null
 
 # Launcher
 clear
-echo "Compiling and preparing the game launcher. Any errors will be in install.log"
-sudo ant -f "Launcher/build.xml" jar | tee -a install.log &>/dev/null
-yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads" | tee -a install.log &>/dev/null
+echo "Compiling and preparing the game launcher. Any errors will be in updater.log"
+sudo ant -f "Launcher/nbbuild.xml" jar | tee -a install.log &>/dev/null
+yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/" | tee -a install.log &>/dev/null
 
 # Cache
 clear
 echo "Preparing the cache."
-yes | sudo cp -rf "client/cache.zip" "/var/www/html/downloads" | tee -a install.log &>/dev/null
-sudo rm /var/www/html/downloads/hashes.txt | tee -a install.log &>/dev/null
-md5sum /var/www/html/downloads/client.zip | grep ^[a-zA-Z0-9]* | awk '{print "client="$1}' | sudo tee -a /var/www/html/downloads/hashes.txt | tee -a install.log &>/dev/null
-md5sum /var/www/html/downloads/cache.zip | grep ^[a-zA-Z0-9]* | awk '{print "cache="$1}' | sudo tee -a /var/www/html/downloads/hashes.txt | tee -a install.log &>/dev/null
+yes | sudo cp -rf "client/Cache/" "/var/www/html/downloads/cache" | tee -a updater.log &>/dev/null
+sudo rm /var/www/html/downloads/cache/MD5CHECKSUM | tee -a updater.log &>/dev/null
+sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM | tee updater.log | &>/dev/null
+md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM | tee -a updater.log &>/dev/null
 
 # Completion
 myip="$(dig +short myip.opendns.com @resolver1.opendns.com)"

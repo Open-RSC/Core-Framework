@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>OpenRSC Server</name>
+            <name>Open RSC Server</name>
             <source-roots>
                 <root id="src.src.dir"/>
                 <root id="src.plugins.dir"/>
