@@ -147,6 +147,8 @@ public final class Constants {
 		public static boolean ZOOM_VIEW_TOGGLE = false;
 		public static boolean MENU_COMBAT_STYLE_TOGGLE = false;
 		public static boolean FIGHTMODE_SELECTOR_TOGGLE = false;
+		public static boolean EXPERIENCE_COUNTER_TOGGLE = false;
+		public static boolean EXPERIENCE_DROPS_TOGGLE = false;
 
 		/**
 		 * 
@@ -199,6 +201,8 @@ public final class Constants {
 			ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(props.getProperty("zoom_view_toggle"));
 			MENU_COMBAT_STYLE_TOGGLE = Boolean.parseBoolean(props.getProperty("menu_combat_style_toggle"));
 			FIGHTMODE_SELECTOR_TOGGLE = Boolean.parseBoolean(props.getProperty("fightmode_selector_toggle"));
+			EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_counter_toggle"));
+			EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_drops_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}
