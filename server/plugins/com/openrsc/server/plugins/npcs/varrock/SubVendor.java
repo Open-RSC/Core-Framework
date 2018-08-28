@@ -27,6 +27,7 @@ public class SubVendor implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
+		if(!Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS) return;
 		if(n.getID() == SUB_VENDOR_FEMALE || n.getID() == SUB_VENDOR_MALE) {
 			npcTalk(p, n, "Hello, I'm the subscription vendor",
 					"How can I help you?");
@@ -112,6 +113,7 @@ public class SubVendor implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
+		if(!Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS) return;
 		if(i.getID() == GOLD_TOKEN && i.getX() == 119 && i.getY() == 516) {
 			ActionSender.sendBox(p, 
 					"@yel@Subscription Token %"
@@ -134,6 +136,7 @@ public class SubVendor implements TalkToNpcExecutiveListener, TalkToNpcListener,
 	}
 
 	private void tokenExchangeTime(Player p, Npc n, Item i) {
+		if(!Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS) return;
 		long subTime = 0;
 		long now = System.currentTimeMillis() / 1000;
 		switch(i.getID()) {
@@ -190,6 +193,7 @@ public class SubVendor implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onInvAction(Item item, Player player) {
+		if(!Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS) return;
 		if(item.getID() == GOLD_TOKEN || item.getID() == PREMIUM_TOKEN) {
 			message(player, "You can exchange this token for subscription time");
 			player.message("by talking to the vendors in Varrock Centre");

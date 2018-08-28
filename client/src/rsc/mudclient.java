@@ -15,6 +15,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -4918,13 +4919,15 @@ public final class mudclient implements Runnable {
 						this.characterDialogString[this.characterDialogCount++] = player.message;
 					}
 
-					if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
-						if (player.displayName != null)
-							this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
-					}
-					if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
-						if (player.clanTag != null)
-							this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
+					if (Config.SHOW_FLOATING_NAMETAGS) {
+						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+							if (player.displayName != null)
+								this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
+						}
+						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+							if (player.clanTag != null)
+								this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
+						}
 					}
 
 
@@ -5672,6 +5675,7 @@ public final class mudclient implements Runnable {
 			bank.onRender();
 		}
 
+		/* Game Screen Right Click Menu Definitions */
 		private final void drawUiTab0(int var1) {
 			try {
 				if (this.messageTabSelected == MessageTab.CHAT && this.panelMessageTabs.isClicked(this.panelMessageChat)
@@ -5752,7 +5756,7 @@ public final class mudclient implements Runnable {
 						int var9;
 						int id;
 						if (this.scene.m_T != var8) {
-							if (var8 != null && var8.key >= 10000) {
+							if (var8 != null && var8.key >= 10000) { // Wall Object Right Click Menu
 								var9 = var8.key - 10000;
 								id = this.wallObjectInstanceID[var9];
 								if (!this.wallObjectInstance_Arg1[var9]) {
@@ -5800,7 +5804,7 @@ public final class mudclient implements Runnable {
 
 									this.wallObjectInstance_Arg1[var9] = true;
 								}
-							} else if (null != var8 && var8.key >= 0) {
+							} else if (null != var8 && var8.key >= 0) { // Game Object Right Click Menu
 								var9 = var8.key;
 								id = this.gameObjectInstanceID[var9];
 								if (!this.gameObjectInstance_Arg1[var9]) {
@@ -5881,7 +5885,7 @@ public final class mudclient implements Runnable {
 							//continue;
 							id = var8.facePickIndex[var7] / 10000;
 							if (id != 1) {
-								if (id == 2) {
+								if (id == 2) { // Ground Item Right Click Menu
 									if (this.selectedSpell >= 0) {
 										if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
 											this.menuCommon.addTileItem_WithID(MenuItemAction.GROUND_ITEM_CAST_SPELL,
@@ -5915,7 +5919,7 @@ public final class mudclient implements Runnable {
 												"@lre@" + EntityHandler.getItemDef(this.groundItemID[var9]).getName(),
 												"Use " + this.m_ig + " with");
 									}
-								} else if (id == 3) {
+								} else if (id == 3) { // NPC Right Click Menu
 									String var11 = "";
 									int var12 = -1;
 									int var13 = this.npcs[var9].npcId;
@@ -6057,6 +6061,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		/* Inventory Right Click Menu Definitions */
 		private final void drawUiTab1(int var1, boolean var2) {
 			try {
 				if (var1 != -15252) {
@@ -6167,6 +6172,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		/* Social Tab */
 		private final void drawUiTab5(boolean var1, boolean var2) {
 			try {
 				int var3 = this.getSurface().width2 - 199;
@@ -6179,40 +6185,66 @@ public final class mudclient implements Runnable {
 				if (var2) {
 					this.cameraRotationX = -88;
 				}
-				int clanTab;
-				int colorB;
-				int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
-				if (this.panelSocialTab == 1) {
-					clanTab = GenUtil.buildColor(220, 220, 220);
-					if(clan.inClan()) {
-						this.getSurface().drawBoxAlpha(var3, 24 + var4, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
-						this.getSurface().drawLineHoriz(var3, var4 + 72, var5, 0);
-						this.getSurface().drawBoxAlpha(var3, var4 + var6 - 16 + 34, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+
+				if (Config.WANT_CLANS) {
+					int clanTab;
+					int colorB;
+					int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
+					if (this.panelSocialTab == 1) {
+						clanTab = GenUtil.buildColor(220, 220, 220);
+						if(clan.inClan()) {
+							this.getSurface().drawBoxAlpha(var3, 24 + var4, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+							this.getSurface().drawLineHoriz(var3, var4 + 72, var5, 0);
+							this.getSurface().drawBoxAlpha(var3, var4 + var6 - 16 + 34, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+						} else {
+							this.getSurface().drawBoxAlpha(var3, var4 + var6 - 30, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+						}
+					} else if(this.panelSocialTab == 0){
+						colorA = GenUtil.buildColor(220, 220, 220);
 					} else {
-						this.getSurface().drawBoxAlpha(var3, var4 + var6 - 30, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+						colorB = GenUtil.buildColor(220, 220, 220);
 					}
-				} else if(this.panelSocialTab == 0){
-					colorA = GenUtil.buildColor(220, 220, 220);
-				} else {
-					colorB = GenUtil.buildColor(220, 220, 220);
+
+					this.getSurface().drawBoxAlpha(var3, var4, 65, 24, colorA, 128);
+					this.getSurface().drawBoxAlpha(var3 + var5 / 2 - 32, var4, 65, 24, clanTab, 128);
+					this.getSurface().drawBoxAlpha(var3 + var5 / 2 + 33, var4, 65, 24, colorB , 128);
+					this.getSurface().drawBoxAlpha(var3, (this.panelSocialTab == 1 && clan.inClan() ? 49 : 0) + 24 + var4, var5, (this.panelSocialTab == 1 ? 127 : var6 - 24), GenUtil.buildColor(220, 220, 220), 128);
+					this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
+					this.getSurface().drawLineVert(var5 / 2 + var3 - 33, 0 + var4, 0, 24);
+					this.getSurface().drawLineVert(var5 / 2 + var3 + 33, 0 + var4, 0, 24);
+					this.getSurface().drawLineHoriz(var3, var4 + var6 - 16 + (this.panelSocialTab == 1 ? clan.inClan() ? 34 : -15 : 0), var5, 0);
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 4 - 16, "Friends", 0, 0, 4, 16 + var4);
+					this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 - 33 - 16, "Clan", 0, 0, 4, var4 + 16);
+					this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 + 16, "Ignore", 0, 0, 4, var4 + 16);
+					this.panelSocial.clearList(this.controlSocialPanel);
+					this.panelClan.clearList(this.controlClanPanel);
+				}
+				else { // Clans Disabled
+					int j = 36;
+					char c = '\304';
+					char c1 = '\266';
+					int l;
+					int k = l = GenUtil.buildColor(160, 160, 160);
+					if (this.panelSocialTab == 0)
+						k = GenUtil.buildColor(220, 220, 220);
+					else
+						l = GenUtil.buildColor(220, 220, 220);
+					this.getSurface().drawBoxAlpha(var3, j, c / 2, 24, k, 128);
+					this.getSurface().drawBoxAlpha(var3 + c / 2, j, c / 2, 24, l, 128);
+					this.getSurface().drawBoxAlpha(var3, j + 24, c, c1 - 24, GenUtil.buildColor(220, 220, 220), 128);
+					this.getSurface().drawLineHoriz(var3, j + 24, c, 0);
+					this.getSurface().drawLineVert(var3 + c / 2, j, 24, 0);
+					this.getSurface().drawLineHoriz(var3, j + c1 - 16, c, 0);
+					this.getSurface().drawColoredStringCentered(var3 + c / 4, "Friends", 0, 0, 4, j + 16);
+					this.getSurface().drawColoredStringCentered(var3 + c / 4 + c / 2, "Ignore", 0, 0, 4, j + 16);
+					this.panelSocial.clearList(this.controlSocialPanel);
 				}
 
-				this.getSurface().drawBoxAlpha(var3, var4, 65, 24, colorA, 128);
-				this.getSurface().drawBoxAlpha(var3 + var5 / 2 - 32, var4, 65, 24, clanTab, 128);
-				this.getSurface().drawBoxAlpha(var3 + var5 / 2 + 33, var4, 65, 24, colorB , 128);
-				this.getSurface().drawBoxAlpha(var3, (this.panelSocialTab == 1 && clan.inClan() ? 49 : 0) + 24 + var4, var5, (this.panelSocialTab == 1 ? 127 : var6 - 24), GenUtil.buildColor(220, 220, 220), 128);
-				this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
-				this.getSurface().drawLineVert(var5 / 2 + var3 - 33, 0 + var4, 0, 24);
-				this.getSurface().drawLineVert(var5 / 2 + var3 + 33, 0 + var4, 0, 24);
-				this.getSurface().drawLineHoriz(var3, var4 + var6 - 16 + (this.panelSocialTab == 1 ? clan.inClan() ? 34 : -15 : 0), var5, 0);
-				this.getSurface().drawColoredStringCentered(var3 + var5 / 4 - 16, "Friends", 0, 0, 4, 16 + var4);
-				this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 - 33 - 16, "Clan", 0, 0, 4, var4 + 16);
-				this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 + 16, "Ignore", 0, 0, 4, var4 + 16);
-				this.panelSocial.clearList(this.controlSocialPanel);
-				this.panelClan.clearList(this.controlClanPanel);
 				int index;
 				String colorKey;
 				int var12;
+
+				// FRIEND TAB
 				if (this.panelSocialTab == 0) {
 					for (index = 0; index < SocialLists.friendListCount; ++index) {
 						if ((SocialLists.friendListArg[index] & 2) == 0) {
@@ -6240,6 +6272,7 @@ public final class mudclient implements Runnable {
 					this.panelSocial.drawPanel();
 				}
 
+				// IGNORE TAB
 				if (this.panelSocialTab == 2) {
 					for (index = 0; index < SocialLists.ignoreListCount; ++index) {
 						colorKey = SocialLists.ignoreListArg0[index];
@@ -6412,36 +6445,50 @@ public final class mudclient implements Runnable {
 						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (var15 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 < 65 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
-								this.panelSocialTab = 0;
-								this.panelSocial.resetList(this.controlSocialPanel);
-							} else if (var3 > 132 && var3 < 196 && (this.panelSocialTab == 1 || this.panelSocialTab == 0)) {
-								this.panelSocialTab = 2;
-								this.panelSocial.resetList(this.controlSocialPanel);
+							if (Config.WANT_CLANS) {
+								if (var3 < 65 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
+									this.panelSocialTab = 0; // Show Friends Tab (Clicked)
+									this.panelSocial.resetList(this.controlSocialPanel);
+								} else if (var3 > 132 && var3 < 196 && (this.panelSocialTab == 1 || this.panelSocialTab == 0)) {
+									this.panelSocialTab = 2; // Show Ignore Tab (Clicked)
+									this.panelSocial.resetList(this.controlSocialPanel);
+								}
+							}
+							else {
+                if (var3 < 98 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
+                  this.panelSocialTab = 0; // Show Friends Tab (Clicked)
+                  this.panelSocial.resetList(this.controlSocialPanel);
+                } else if (var3 > 98 && (this.panelSocialTab == 1 || this.panelSocialTab == 0)) {
+                  this.panelSocialTab = 2; // Show Ignore Tab (Clicked)
+                  this.panelSocial.resetList(this.controlSocialPanel);
+                }
 							}
 						}
 					}
 					// HANDLE CLAN TAB
-					if(var3 >= 65 && var15 >= 0 && var3 < 132 && var15 < 26) {
-						this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
-								this.currentMouseButtonDown, this.lastMouseButtonDown);
-						if (var15 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 > 65 && var3 < 132 && (this.panelSocialTab == 2 || this.panelSocialTab == 0)) {
-								this.panelSocialTab = 1;
-								this.panelClan.resetList(this.controlClanPanel);
+					if (Config.WANT_CLANS) {
+						if(var3 >= 65 && var15 >= 0 && var3 < 132 && var15 < 26) {
+							this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
+									this.currentMouseButtonDown, this.lastMouseButtonDown);
+							if (var15 <= 24 && this.mouseButtonClick == 1) {
+								if (var3 > 65 && var3 < 132 && (this.panelSocialTab == 2 || this.panelSocialTab == 0)) {
+									this.panelSocialTab = 1; // Show Clan Tab (Clicked)
+									this.panelClan.resetList(this.controlClanPanel);
+								}
 							}
 						}
 					}
 
+					// Interactions within the panels
 					if(var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 225 && (this.panelSocialTab == 0 || this.panelSocialTab == 2)) {
 						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.mouseButtonClick >= 1 && this.panelSocialTab == 0) {
 							index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
 							if (index >= 0 && this.mouseX < maxWidth) {
-								if (this.mouseX > minWidth) {
+								if (this.mouseX > minWidth) { // Remove Friend
 									this.removeFriend(SocialLists.friendList[index], (byte) 69);
-								} else if ((SocialLists.friendListArg[index] & 4) != 0) {
+								} else if ((SocialLists.friendListArg[index] & 4) != 0) { // Message Friend
 									this.panelSocialPopup_Mode = SocialPopupMode.MESSAGE_FRIEND;
 									this.chatMessageTarget = SocialLists.friendList[index];
 									this.chatMessageInputCommit = "";
@@ -6453,16 +6500,18 @@ public final class mudclient implements Runnable {
 						if (this.mouseButtonClick == 1 && this.panelSocialTab == 2) {
 							index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
 							if (index >= 0 && this.mouseX < maxWidth && this.mouseX > minWidth) {
-								this.removeIgnore(SocialLists.ignoreList[index]);
+								this.removeIgnore(SocialLists.ignoreList[index]); // Remove Ignore
 							}
 						}
 
+						// Add Friend
 						if (var15 > 166 && this.mouseButtonClick == 1 && this.panelSocialTab == 0) {
 							this.inputTextFinal = "";
 							this.inputTextCurrent = "";
 							this.panelSocialPopup_Mode = SocialPopupMode.ADD_FRIEND;
 						}
 
+						// Add Ignore
 						if (var15 > 166 && this.mouseButtonClick == 1 && this.panelSocialTab == 2) {
 							this.panelSocialPopup_Mode = SocialPopupMode.ADD_IGNORE;
 							this.inputTextCurrent = "";
@@ -6471,7 +6520,9 @@ public final class mudclient implements Runnable {
 
 						this.mouseButtonClick = 0;
 					}
-					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1) {
+
+					// Clan Interactions
+					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1 && Config.WANT_CLANS) {
 						this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.mouseButtonClick >= 1 && this.panelSocialTab == 1) {
@@ -6481,7 +6532,7 @@ public final class mudclient implements Runnable {
 									if (StringUtil.displayNameToKey(clan.username[index]).equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
 										return;
 									}
-									if(clan.isClanLeader() || clan.isAllowed(0)) {
+									if(clan.isClanLeader() || clan.isAllowed(0)) { // Kick From Clan
 										this.menuCommon.addItem_With2Strings("Kick user",
 												"@whi@" + clan.username[index], clan.username[index],
 												MenuItemAction.CLAN_MENU_KICK, clan.username[index]);
@@ -6950,19 +7001,26 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString("Block duel requests: @red@Off", 3 + var3, var7, 16777215, 1);
 					}
 
-					var7 += 20;
-					this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
-					var7 += 15;
-					if (!Config.NAME_CLAN_TAG_OVERLAY) {
-						this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
+					if(Config.WANT_CLANS) {
+						var7 += 20;
+						this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
 					}
-					var7 += 15;
-					if (!this.clanInviteBlockSetting) {
-						this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
+					if(Config.SHOW_FLOATING_NAMETAGS) {
+						var7 += 15;
+						if (!Config.NAME_CLAN_TAG_OVERLAY) {
+							this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
+						} else {
+							this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
+						}
+					}
+
+					if(Config.WANT_CLANS) {
+						var7 += 15;
+						if (!this.clanInviteBlockSetting) {
+							this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
+						} else {
+							this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
+						}
 					}
 
 					int var8;
@@ -9472,8 +9530,8 @@ public final class mudclient implements Runnable {
 
 		private final void handlePacket1(int opcode, int length) {
 			try {//System.out.println("opcode1: " + opcode);
-
-				if (opcode == 88) {
+				
+				if (opcode == 88) { // Create NPC
 					int id = packetsIncoming.getShort();
 
 					String name = packetsIncoming.readString();
@@ -9516,10 +9574,10 @@ public final class mudclient implements Runnable {
 					EntityHandler.npcs.set(id, newNpc);
 					return;
 				}
-				if (opcode == 134) {
+				else if (opcode == 134) {
 					int interfaceID = packetsIncoming.getByte();
 					switch (interfaceID) {
-					case 0:
+					case 0: // Progress Bar Updates
 						if (!Config.BATCH_PROGRESS_BAR) {
 							batchProgressBar.hide();
 							return;
@@ -9540,7 +9598,7 @@ public final class mudclient implements Runnable {
 							batchProgressBar.updateProgress(repeat);
 						}
 						break;
-					case 1:
+					case 1: // Bank Pin
 						int action = packetsIncoming.getByte();
 						if (action == 0) {
 							bankPinInterface.show();
@@ -9548,7 +9606,7 @@ public final class mudclient implements Runnable {
 							bankPinInterface.hide();
 						}
 						break;
-					case 2:
+					case 2: // Ironman Check
 						int iAction = packetsIncoming.getByte();
 						if (iAction == 0) {
 							ironmanInterface.setIronManMode(packetsIncoming.getByte());
@@ -9559,7 +9617,8 @@ public final class mudclient implements Runnable {
 							ironmanInterface.setVisible(false);
 						}
 						break;
-					case 3:
+
+					case 3: // Auction House
 						int packetType = packetsIncoming.getByte() & 0xff;
 						if (packetType == 0) { // start receiving items
 							auctionHouse.resetAuctionItems();
@@ -9583,7 +9642,7 @@ public final class mudclient implements Runnable {
 							auctionHouse.setVisible(true);
 						}
 						break;
-					case 5:
+					case 5: // Online List
 						onlineList.reset();
 						int onlinePlayerCount = packetsIncoming.getShort();
 						for (int i = 0; i < onlinePlayerCount; i++) {
@@ -9591,7 +9650,7 @@ public final class mudclient implements Runnable {
 						}
 						onlineList.setVisible(true);
 						break;
-					case 6:
+					case 6: // Fishing Trawler
 						action = packetsIncoming.getByte();
 						switch (action) {
 						case 0:
@@ -9606,7 +9665,7 @@ public final class mudclient implements Runnable {
 							break;
 						}
 						break;
-					case 7:
+					case 7: // Clans
 						actionType = packetsIncoming.getByte();
 						switch (actionType) {
 						case 0: // send clan
@@ -9657,7 +9716,7 @@ public final class mudclient implements Runnable {
 					}
 					return;
 				}
-				/*if(opcode == 50) {
+				/*if(opcode == 50) { // Achievements
 					int achievementStatus = this.packetsIncoming.getByte();
 					if (achievementStatus == 1) {
 						totalAchievements = this.packetsIncoming.getShort();
@@ -9682,7 +9741,7 @@ public final class mudclient implements Runnable {
 					}
 					return;
 				}*/
-				if(opcode == 135) {
+				else if(opcode == 135) { // Kill Announcements
 					String killed = this.packetsIncoming.readString();
 					String killer = this.packetsIncoming.readString();
 					int killType = this.packetsIncoming.get32();
@@ -9690,7 +9749,7 @@ public final class mudclient implements Runnable {
 					return;
 				}
 				// opcode = this.clientStream.decodeIncomingOpcode(opcode);
-				if (opcode == 131) {
+				else if (opcode == 131) { // Send Message
 					int crown = this.packetsIncoming.getUnsignedByte();
 					MessageType type = MessageType.lookup(this.packetsIncoming.getUnsignedByte());
 					int var5 = this.packetsIncoming.getUnsignedByte();
@@ -9711,14 +9770,17 @@ public final class mudclient implements Runnable {
 					}
 
 					this.showMessage(false, sender, message, type, crown, clan, color);
-				} else if (opcode == 4) {
-					this.closeConnection(true);
-				} else if (opcode == 183) {
-					this.cantLogout((byte) -65);
-				} else if (opcode == 165) {
 
+				} else if (opcode == 4) { // ???
+					this.closeConnection(true);
+
+				} else if (opcode == 183) { // ???
+					this.cantLogout((byte) -65);
+
+				} else if (opcode == 165) { // ???
 					this.closeConnection(false);
-				} else if (opcode == 149) {
+
+				} else if (opcode == 149) { // Log In/Out Message
 					String currentName = this.packetsIncoming.readString();
 					String formerName = this.packetsIncoming.readString();
 					int arg = this.packetsIncoming.getUnsignedByte();
@@ -9779,7 +9841,8 @@ public final class mudclient implements Runnable {
 					SocialLists.friendListArg[SocialLists.friendListCount] = arg;
 					++SocialLists.friendListCount;
 					this.sortOnlineFriendsList();
-				} else if (opcode == 237) {
+
+				} else if (opcode == 237) { // Ignore List Rename
 					String arg0 = this.packetsIncoming.readString();
 					String replace = this.packetsIncoming.readString();
 					if (replace.length() == 0) {
@@ -9819,7 +9882,8 @@ public final class mudclient implements Runnable {
 					SocialLists.ignoreListArg1[SocialLists.ignoreListCount] = arg1;
 					SocialLists.ignoreListOld[SocialLists.ignoreListCount] = find;
 					++SocialLists.ignoreListCount;
-				} else if (opcode == 109) {
+
+				} else if (opcode == 109) { // Ignore List ___ ?
 					SocialLists.ignoreListCount = this.packetsIncoming.getUnsignedByte();
 
 					for (int var4 = 0; var4 < SocialLists.ignoreListCount; ++var4) {
@@ -9828,12 +9892,13 @@ public final class mudclient implements Runnable {
 						SocialLists.ignoreListArg1[var4] = this.packetsIncoming.readString();
 						SocialLists.ignoreListOld[var4] = this.packetsIncoming.readString();
 					}
-				} else if (opcode == 158) {
+				} else if (opcode == 158) { // Chat Blocking Settings
 					this.settingsBlockChat = this.packetsIncoming.getUnsignedByte();
 					this.settingsBlockPrivate = this.packetsIncoming.getUnsignedByte();
 					this.settingsBlockTrade = this.packetsIncoming.getUnsignedByte();
 					this.settingsBlockDuel = this.packetsIncoming.getUnsignedByte();
-				} else if (opcode == 120) {
+
+				} else if (opcode == 120) { // Recieve Private Message
 					String sender = this.packetsIncoming.readString();
 					String formerName = this.packetsIncoming.readString();
 					int icon = this.packetsIncoming.getUnsignedByte();
@@ -9850,17 +9915,38 @@ public final class mudclient implements Runnable {
 					// this.m_Ag = (this.m_Ag + 1) % 100;
 					this.showMessage(icon == 2, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName,
 							(String) null);
-				} else if (opcode == 87) {
+
+				} else if (opcode == 87) { // Send Private Message
 					String var13 = this.packetsIncoming.readString();
 					String var14 = RSBufferUtils.getEncryptedString(this.packetsIncoming);
 					this.showMessage(false, var13, var14, MessageType.PRIVATE_SEND, 0, var13, (String) null);
-				} /*
-				 * else if (opcode == 189) {
+				}
+			  /*
+				 * else if (opcode == 189) { // ???
 				 * this.packetsIncoming.curPointerPosition += 28; // if
 				 * (this.packetsIncoming.isCRCValid()) { //
 				 * GenUtil.seedRandomFile((RSBuffer) this.packetsIncoming, //
 				 * this.packetsIncoming.curPointerPosition - 28); // } }
-				 */ else {
+				 */
+
+				else if (opcode == 19) { // Server Configs
+					System.out.println("Got Configs!");
+					Properties props = new Properties();
+					String serverName = this.packetsIncoming.readString();
+					props.setProperty("SERVER_NAME", serverName);
+					int spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
+					int spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
+					int spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
+					int showFloatingNametags = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
+					int wantClans = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("WANT_CLANS", wantClans == 1 ? "true" : "false");
+					Config.updateServerConfiguration(props);
+				}
+				else {
 					 this.handlePacket2(opcode, length);
 				 }
 			} catch (RuntimeException var11) {
@@ -9872,7 +9958,7 @@ public final class mudclient implements Runnable {
 			try {//System.out.println("opcode1: " + opcode);
 				label2111: {
 
-				if (opcode == 191) {
+				if (opcode == 191) { // Show Other Players
 					this.knownPlayerCount = this.playerCount;
 
 					for (int i = 0; this.knownPlayerCount > i; ++i) {
@@ -9962,8 +10048,8 @@ public final class mudclient implements Runnable {
 					return;
 				}
 
-				if (opcode != 99) {
-					if (opcode == 48) {
+				if (opcode != 99) { // Not ???
+					if (opcode == 48) { // Show Game Objects
 						while (length > this.packetsIncoming.packetEnd) {
 							if (this.packetsIncoming.getUnsignedByte() != 255) {
 								--this.packetsIncoming.packetEnd;
@@ -10056,8 +10142,8 @@ public final class mudclient implements Runnable {
 						return;
 					}
 
-					if (opcode != 111) {
-						if (opcode == 53) {
+					if (opcode != 111) { // Not ???
+						if (opcode == 53) { // Inventory items 
 							// this.inventoryItemCount =
 							// this.packetsIncoming.getUnsignedByte();
 							// for (int i = 0; i < this.inventoryItemCount; ++i)
@@ -10089,8 +10175,8 @@ public final class mudclient implements Runnable {
 							return;
 						}
 
-						if (opcode != 234) {
-							if (opcode == 91) {
+						if (opcode != 234) { // Not ???
+							if (opcode == 91) { // Show Walls
 								while (true) {
 									while (length > this.packetsIncoming.packetEnd) {
 										if (this.packetsIncoming.getUnsignedByte() == 255) {
@@ -10174,7 +10260,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 
-							if (opcode == 79) {
+							if (opcode == 79) { // Show NPCs
 								this.npcCacheCount = this.npcCount;
 								this.npcCount = 0;
 
@@ -10252,7 +10338,7 @@ public final class mudclient implements Runnable {
 								return;
 							}
 
-							if (opcode == 104) {
+							if (opcode == 104) { // ???
 								int var4 = this.packetsIncoming.getShort();
 
 								for (int var19 = 0; var4 > var19; ++var19) {
@@ -10288,7 +10374,7 @@ public final class mudclient implements Runnable {
 								return;
 							}
 
-							if (opcode == 245) {
+							if (opcode == 245) { // Show Options Menu
 								this.optionsMenuShow = true;
 								int count = this.packetsIncoming.getUnsignedByte();
 								this.optionsMenuCount = count;
@@ -10298,8 +10384,8 @@ public final class mudclient implements Runnable {
 								return;
 							}
 
-							if (opcode != 252) {
-								if (opcode == 25) {
+							if (opcode != 252) { // Not ???
+								if (opcode == 25) { // Load Area
 									this.loadingArea = true;
 									this.m_Zc = this.packetsIncoming.getShort();
 									this.worldOffsetX = this.packetsIncoming.getShort();
@@ -10310,7 +10396,7 @@ public final class mudclient implements Runnable {
 									return;
 								}
 
-								if (opcode == 156) {
+								if (opcode == 156) { // Load Stats and Experience
 									for (int var4 = 0; var4 < 18; ++var4) {
 										this.playerStatCurrent[var4] = this.packetsIncoming.getUnsignedByte();
 									}
@@ -10327,99 +10413,99 @@ public final class mudclient implements Runnable {
 									return;
 								}
 
-								if (opcode != 153) {
-									if (opcode == 83) {
+								if (opcode != 153) { // Not ???
+									if (opcode == 83) { // Set Death Screen Timeout
 										this.deathScreenTimeout = 250;
 										return;
 									}
 
-									if (opcode == 211) {
+									if (opcode == 211) { // Generate Object/Ground Items/Walls Counts
 										int packets = (length - 1) / 4;
 										for (int i = 0; packets > i; ++i) {
 											int x = this.playerLocalX + this.packetsIncoming.get16_V2() >> 3;
-									int z = this.playerLocalZ + this.packetsIncoming.get16_V2() >> 3;
+											int z = this.playerLocalZ + this.packetsIncoming.get16_V2() >> 3;
 
-									int count = 0;
-									for (int j = 0; j < this.groundItemCount; ++j) {
-										int var10 = (this.groundItemX[j] >> 3) - x;
-										int var11 = (this.groundItemZ[j] >> 3) - z;
-										if (var10 != 0 || var11 != 0) {
-											if (count != j) {
-												this.groundItemX[count] = this.groundItemX[j];
-												this.groundItemZ[count] = this.groundItemZ[j];
-												this.groundItemID[count] = this.groundItemID[j];
-												this.m_Le[count] = this.m_Le[j];
+											int count = 0;
+											for (int j = 0; j < this.groundItemCount; ++j) {
+												int var10 = (this.groundItemX[j] >> 3) - x;
+												int var11 = (this.groundItemZ[j] >> 3) - z;
+												if (var10 != 0 || var11 != 0) {
+													if (count != j) {
+														this.groundItemX[count] = this.groundItemX[j];
+														this.groundItemZ[count] = this.groundItemZ[j];
+														this.groundItemID[count] = this.groundItemID[j];
+														this.m_Le[count] = this.m_Le[j];
+													}
+
+													++count;
+												}
 											}
 
-											++count;
-										}
-									}
+											this.groundItemCount = count;
+											count = 0;
 
-									this.groundItemCount = count;
-									count = 0;
+											for (int j = 0; j < this.gameObjectInstanceCount; ++j) {
+												int var10 = (this.gameObjectInstanceX[j] >> 3) - x;
+												int var11 = (this.gameObjectInstanceZ[j] >> 3) - z;
+												if (var10 == 0 && var11 == 0) {
+													this.scene.removeModel(this.gameObjectInstanceModel[j]);
+													this.world.removeGameObject_CollisonFlags(
+														this.gameObjectInstanceID[j],
+														(int) this.gameObjectInstanceX[j],
+														(int) this.gameObjectInstanceZ[j]);
+												} else {
+													if (j != count) {
+														this.gameObjectInstanceModel[count] = this.gameObjectInstanceModel[j];
+														this.gameObjectInstanceModel[count].key = count;
+														this.gameObjectInstanceX[count] = this.gameObjectInstanceX[j];
+														this.gameObjectInstanceZ[count] = this.gameObjectInstanceZ[j];
+														this.gameObjectInstanceID[count] = this.gameObjectInstanceID[j];
+														this.gameObjectInstanceDir[count] = this.gameObjectInstanceDir[j];
+													}
 
-									for (int j = 0; j < this.gameObjectInstanceCount; ++j) {
-										int var10 = (this.gameObjectInstanceX[j] >> 3) - x;
-										int var11 = (this.gameObjectInstanceZ[j] >> 3) - z;
-										if (var10 == 0 && var11 == 0) {
-											this.scene.removeModel(this.gameObjectInstanceModel[j]);
-											this.world.removeGameObject_CollisonFlags(
-													this.gameObjectInstanceID[j],
-													(int) this.gameObjectInstanceX[j],
-													(int) this.gameObjectInstanceZ[j]);
-										} else {
-											if (j != count) {
-												this.gameObjectInstanceModel[count] = this.gameObjectInstanceModel[j];
-												this.gameObjectInstanceModel[count].key = count;
-												this.gameObjectInstanceX[count] = this.gameObjectInstanceX[j];
-												this.gameObjectInstanceZ[count] = this.gameObjectInstanceZ[j];
-												this.gameObjectInstanceID[count] = this.gameObjectInstanceID[j];
-												this.gameObjectInstanceDir[count] = this.gameObjectInstanceDir[j];
+													++count;
+												}
 											}
 
-											++count;
-										}
-									}
+											this.gameObjectInstanceCount = count;
+											count = 0;
 
-									this.gameObjectInstanceCount = count;
-									count = 0;
+											for (int var9 = 0; this.wallObjectInstanceCount > var9; ++var9) {
+												int var10 = (this.wallObjectInstanceX[var9] >> 3) - x;
+												int var11 = (this.wallObjectInstanceZ[var9] >> 3) - z;
+												if (var10 == 0 && var11 == 0) {
+													this.scene.removeModel(this.wallObjectInstanceModel[var9]);
+													this.world.removeWallObject_CollisionFlags(true,
+														this.wallObjectInstanceDir[var9],
+														this.wallObjectInstanceZ[var9],
+														this.wallObjectInstanceX[var9],
+														this.wallObjectInstanceID[var9]);
+												} else {
+													if (var9 != count) {
+														this.wallObjectInstanceModel[count] = this.wallObjectInstanceModel[var9];
+														this.wallObjectInstanceModel[count].key = count + 10000;
+														this.wallObjectInstanceX[count] = this.wallObjectInstanceX[var9];
+														this.wallObjectInstanceZ[count] = this.wallObjectInstanceZ[var9];
+														this.wallObjectInstanceDir[count] = this.wallObjectInstanceDir[var9];
+														this.wallObjectInstanceID[count] = this.wallObjectInstanceID[var9];
+													}
 
-									for (int var9 = 0; this.wallObjectInstanceCount > var9; ++var9) {
-										int var10 = (this.wallObjectInstanceX[var9] >> 3) - x;
-										int var11 = (this.wallObjectInstanceZ[var9] >> 3) - z;
-										if (var10 == 0 && var11 == 0) {
-											this.scene.removeModel(this.wallObjectInstanceModel[var9]);
-											this.world.removeWallObject_CollisionFlags(true,
-													this.wallObjectInstanceDir[var9],
-													this.wallObjectInstanceZ[var9],
-													this.wallObjectInstanceX[var9],
-													this.wallObjectInstanceID[var9]);
-										} else {
-											if (var9 != count) {
-												this.wallObjectInstanceModel[count] = this.wallObjectInstanceModel[var9];
-												this.wallObjectInstanceModel[count].key = count + 10000;
-												this.wallObjectInstanceX[count] = this.wallObjectInstanceX[var9];
-												this.wallObjectInstanceZ[count] = this.wallObjectInstanceZ[var9];
-												this.wallObjectInstanceDir[count] = this.wallObjectInstanceDir[var9];
-												this.wallObjectInstanceID[count] = this.wallObjectInstanceID[var9];
+													++count;
+												}
 											}
 
-											++count;
-										}
-									}
-
-									this.wallObjectInstanceCount = count;
+											this.wallObjectInstanceCount = count;
 										}
 
 										return;
 									}
 
-									if (opcode == 59) {
+									if (opcode == 59) { // Appearance Change Menu
 										this.showAppearanceChange = true;
 										return;
 									}
 
-									if (opcode == 92) {
+									if (opcode == 92) { // Trade Request
 										int serverIndex = this.packetsIncoming.getShort();
 										if (this.playerServer[serverIndex] != null) {
 											this.tradeRecipientName = this.playerServer[serverIndex].displayName;
@@ -10433,14 +10519,14 @@ public final class mudclient implements Runnable {
 										return;
 									}
 
-									if (opcode == 128) {
+									if (opcode == 128) { // Trade Confirm Menu
 										this.showDialogTradeConfirm = false;
 										this.showDialogTrade = false;
 										return;
 									}
 
-									if (opcode != 97) {
-										if (opcode == 162) {
+									if (opcode != 97) { // Not ???
+										if (opcode == 162) { // Trade Accept or Decline (Other)
 											int accepted = this.packetsIncoming.getUnsignedByte();
 											if (accepted != 1) {
 												this.tradeRecipientAccepted = false;
@@ -10451,13 +10537,13 @@ public final class mudclient implements Runnable {
 											return;
 										}
 
-										if (opcode != 101) {
-											if (opcode == 137) {
+										if (opcode != 101) { // Not ???
+											if (opcode == 137) { // Close Shop Dialog
 												this.showDialogShop = false;
 												return;
 											}
 
-											if (opcode == 15) {
+											if (opcode == 15) { // Trade Accept or Decline (Self)
 												byte accepted = this.packetsIncoming.getByte();
 												if (accepted != 1) {
 													this.tradeAccepted = false;
@@ -10468,7 +10554,7 @@ public final class mudclient implements Runnable {
 												return;
 											}
 
-											if (opcode == 240) {
+											if (opcode == 240) { // Server Settings
 												this.adminRights = this.packetsIncoming.getUnsignedByte() == 1;
 												this.optionCameraModeAuto = this.packetsIncoming.getUnsignedByte() == 1;
 												this.optionMouseButtonOne = this.packetsIncoming.getUnsignedByte() == 1;
@@ -10479,13 +10565,12 @@ public final class mudclient implements Runnable {
 												return;
 											}
 
-											if (opcode == 206) {
+											if (opcode == 206) { // Prayer Toggle
 												for (int i = 0; length - 1 > i; ++i) {
 													boolean enabled = this.packetsIncoming.getByte() == 1;
 													if (!this.prayerOn[i] && enabled) {
 														this.playSoundFile((String) "prayeron");
 													}
-
 													if (this.prayerOn[i] && !enabled) {
 														this.playSoundFile((String) "prayeroff");
 													}
@@ -10496,7 +10581,7 @@ public final class mudclient implements Runnable {
 												return;
 											}
 
-											if (opcode == 5) {
+											if (opcode == 5) { // Quest Stage Update
 												int updateQuestType = this.packetsIncoming.getByte();
 												if (updateQuestType == 0) {
 													int questCount = this.packetsIncoming.getByte();
@@ -10518,7 +10603,7 @@ public final class mudclient implements Runnable {
 												return;
 											}
 
-											if (opcode == 42) {
+											if (opcode == 42) { // Show Bank
 												this.setShowDialogBank(true);
 												this.newBankItemCount = this.packetsIncoming.getShort();
 												this.bankItemsMax = this.packetsIncoming.getShort();
@@ -10533,21 +10618,21 @@ public final class mudclient implements Runnable {
 												return;
 											}
 
-											if (opcode != 203) {
-												if (opcode == 33) {
+											if (opcode != 203) { // Not ???
+												if (opcode == 33) { // Update Experience
 													int skill = this.packetsIncoming.getUnsignedByte();
 													this.playerExperience[skill] = this.packetsIncoming.get32();
 													return;
 												}
 
-												if (opcode != 176) {
-													if (opcode == 225) {
+												if (opcode != 176) { // Not ???
+													if (opcode == 225) { // Show Duel Dialog
 														this.showDialogDuel = false;
 														this.showDialogDuelConfirm = false;
 														return;
 													}
 
-													if (opcode == 20) {
+													if (opcode == 20) { // Confirm Trade
 														this.showDialogTrade = false;
 														this.showDialogTradeConfirm = true;
 														this.tradeConfirmAccepted = false;
@@ -10576,7 +10661,7 @@ public final class mudclient implements Runnable {
 														return;
 													}
 
-													if (opcode == 6) {
+													if (opcode == 6) { // Show Duel Items
 														this.duelOffsetOpponentItemCount = this.packetsIncoming
 																.getUnsignedByte();
 
@@ -10592,7 +10677,7 @@ public final class mudclient implements Runnable {
 														return;
 													}
 
-													if (opcode == 30) {
+													if (opcode == 30) { // Toggle Duel Setting
 														if (this.packetsIncoming.getUnsignedByte() == 1) {
 															this.duelSettingsRetreat = true;
 														} else {
@@ -10622,7 +10707,7 @@ public final class mudclient implements Runnable {
 														return;
 													}
 
-													if (opcode == 249) {
+													if (opcode == 249) { // Update Bank
 														int slot = this.packetsIncoming.getUnsignedByte();
 														int item = this.packetsIncoming.getShort();
 														int itemCount = this.packetsIncoming.get32();
@@ -10633,7 +10718,7 @@ public final class mudclient implements Runnable {
 															for (int var7 = slot; this.newBankItemCount > var7; ++var7) {
 																this.newBankItems[var7] = this.newBankItems[1 + var7];
 																this.newBankItemsCount[var7] = this.newBankItemsCount[var7
-																                                                      + 1];
+																	                                                      + 1];
 															}
 														} else {
 															this.newBankItems[slot] = item;
@@ -10648,7 +10733,7 @@ public final class mudclient implements Runnable {
 														return;
 													}
 
-													if (opcode == 90) {
+													if (opcode == 90) { // Update Inventory
 														int slot = this.packetsIncoming.getUnsignedByte();
 														int itemID = this.packetsIncoming.getShort();
 														int stackSize = 1;
@@ -10665,8 +10750,8 @@ public final class mudclient implements Runnable {
 														return;
 													}
 
-													if (opcode != 123) {
-														if (opcode == 159) {
+													if (opcode != 123) { // Not ???
+														if (opcode == 159) { // Show Experience Notification
 															int skill = this.packetsIncoming.getUnsignedByte();
 															recentSkill = skill;
 															int oldXp = playerExperience[skill];
@@ -10697,8 +10782,8 @@ public final class mudclient implements Runnable {
 															return;
 														}
 
-														if (opcode != 253) {
-															if (opcode == 210) {
+														if (opcode != 253) { // Not ???
+															if (opcode == 210) { // Duel Accept / Decline
 																byte accepted = this.packetsIncoming.getByte();
 																if (accepted != 1) {
 																	this.duelOfferAccepted = false;
@@ -10709,7 +10794,7 @@ public final class mudclient implements Runnable {
 																return;
 															}
 
-															if (opcode == 172) {
+															if (opcode == 172) { // Show Duel Confirm Dialog
 																this.duelConfirmed = false;
 																this.showDialogDuelConfirm = true;
 																this.showDialogDuel = false;
@@ -10717,7 +10802,6 @@ public final class mudclient implements Runnable {
 																		.readString();
 																this.duelOpponentItemsCount = this.packetsIncoming
 																		.getUnsignedByte();
-
 																for (int var4 = 0; var4 < this.duelOpponentItemsCount; ++var4) {
 																	this.duelOpponentItems[var4] = this.packetsIncoming
 																			.getShort();
@@ -10746,14 +10830,14 @@ public final class mudclient implements Runnable {
 																return;
 															}
 
-															if (opcode == 204) {
+															if (opcode == 204) { // Play Sound
 																String filename = this.packetsIncoming.readString();
 																this.playSoundFile((String) filename);
 																return;
 															}
 
-															if (opcode != 36) {
-																if (opcode == 182) {
+															if (opcode != 36) { // Not ???
+																if (opcode == 182) { // Show Log In Dialog
 																	if (!this.welcomeScreenShown) {
 																		this.welcomeLastLoggedInIp = this.packetsIncoming
 																				.readString();
@@ -10773,8 +10857,8 @@ public final class mudclient implements Runnable {
 																	return;
 																}
 
-																if (opcode != 89) {
-																	if (opcode == 222) {
+																if (opcode != 89) { // Not ???
+																	if (opcode == 222) { // Show Server Message Dialog
 																		this.serverMessage = this.packetsIncoming
 																				.readString();
 																		this.showDialogServerMessage = true;
@@ -10782,8 +10866,8 @@ public final class mudclient implements Runnable {
 																		return;
 																	}
 
-																	if (opcode != 114) {
-																		if (opcode == 117) {
+																	if (opcode != 114) { // Not ???
+																		if (opcode == 117) { // Show Sleep Screen
 																			if (!this.isSleeping) {
 																				this.fatigueSleeping = this.statFatigue;
 																			}
@@ -10791,7 +10875,6 @@ public final class mudclient implements Runnable {
 																			this.inputTextCurrent = "";
 																			this.isSleeping = true;
 																			this.inputTextFinal = "";
-
 																			Sprite sprite = clientPort
 																					.getSpriteFromByteArray(
 																							new ByteArrayInputStream(
@@ -10805,29 +10888,30 @@ public final class mudclient implements Runnable {
 																			return;
 																		}
 
-																		if (opcode != 244) {
-																			if (opcode == 84) {
+																		if (opcode != 244) { // Not ???
+																			if (opcode == 84) { // Not Sleeping
 																				this.isSleeping = false;
 																				return;
 																			}
 
-																			if (opcode == 194) {
+																			if (opcode == 194) { // Wrong Sleep Word
 																				this.sleepingStatusText = "Incorrect - Please wait...";
 																				return;
 																			}
 
-																			if (opcode == 52) {
+																			if (opcode == 52) { // System Update Timer
 																				this.systemUpdate = this.packetsIncoming
 																						.getShort() * 32;
 																				return;
 																			}
-																			if (opcode == 54) {
+
+																			if (opcode == 54) { // Elixir Timer
 																				this.elixirTimer = this.packetsIncoming
 																						.getShort() * 32;
 																				return;
 																			}
 
-																			if (opcode != 213) {
+																			if (opcode != 213) { // Random Break Clause..
 																				break label2111;
 																			}
 
@@ -11108,6 +11192,7 @@ public final class mudclient implements Runnable {
 					this.insideTutorial = this.packetsIncoming.getUnsignedByte() != 0;
 					return;
 				}
+
 				while (true) {
 					while (true) {
 						while (length > this.packetsIncoming.packetEnd) {
@@ -11116,7 +11201,6 @@ public final class mudclient implements Runnable {
 								int groundItemID = this.packetsIncoming.getShort();
 								int var19 = this.playerLocalX + this.packetsIncoming.getByte();
 								int var6 = this.playerLocalZ + this.packetsIncoming.getByte();
-
 								if ((groundItemID & 32768) != 0) {
 									groundItemID &= 32767;
 									int var7 = 0;
@@ -11160,23 +11244,23 @@ public final class mudclient implements Runnable {
 							} else {
 								int var4 = 0;
 								int offsetX = this.playerLocalX + this.packetsIncoming.getByte() >> 3;
-									int offsetY = this.playerLocalZ + this.packetsIncoming.getByte() >> 3;
+								int offsetY = this.playerLocalZ + this.packetsIncoming.getByte() >> 3;
 
-									for (int index = 0; this.groundItemCount > index; ++index) {
-										int tileX = (this.groundItemX[index] >> 3) - offsetX;
-										int tileY = (this.groundItemZ[index] >> 3) - offsetY;
-										if (tileX != 0 || tileY != 0) {
-											if (var4 != index) {
-												this.groundItemX[var4] = this.groundItemX[index];
-												this.groundItemZ[var4] = this.groundItemZ[index];
-												this.groundItemID[var4] = this.groundItemID[index];
-												this.m_Le[var4] = this.m_Le[index];
-											}
-											++var4;
+								for (int index = 0; this.groundItemCount > index; ++index) {
+									int tileX = (this.groundItemX[index] >> 3) - offsetX;
+									int tileY = (this.groundItemZ[index] >> 3) - offsetY;
+									if (tileX != 0 || tileY != 0) {
+										if (var4 != index) {
+											this.groundItemX[var4] = this.groundItemX[index];
+											this.groundItemZ[var4] = this.groundItemZ[index];
+											this.groundItemID[var4] = this.groundItemID[index];
+											this.m_Le[var4] = this.m_Le[index];
 										}
+										++var4;
 									}
+								}
 
-									this.groundItemCount = var4;
+								this.groundItemCount = var4;
 
 							}
 						}
@@ -11185,7 +11269,7 @@ public final class mudclient implements Runnable {
 					}
 				}
 			}
-			} catch (
+		} catch (
 
 					RuntimeException var17)
 

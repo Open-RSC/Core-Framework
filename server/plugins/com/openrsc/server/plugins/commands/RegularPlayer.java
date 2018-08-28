@@ -57,7 +57,7 @@ public final class RegularPlayer implements CommandListener {
 					+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player"+(EDGE_DUNGEON == 1 ? "" : "s") + " %"
 					, false);
 		}
-		if (command.equalsIgnoreCase("c")) {
+		if (command.equalsIgnoreCase("c") && Constants.GameServer.WANT_CLANS) {
 			if (player.getClan() == null) {
 				return;
 			}
@@ -67,12 +67,12 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.getClan().messageChat(player, "@cya@" + player.getUsername() + ":@whi@ " + message);
 		}
-		if (command.equalsIgnoreCase("clanaccept")) {
+		if (command.equalsIgnoreCase("clanaccept") && Constants.GameServer.WANT_CLANS) {
 			if (player.getActiveClanInvite() != null) {
 				player.getActiveClanInvite().accept();
 			}
 		}
-		if (command.equalsIgnoreCase("claninvite")) {
+		if (command.equalsIgnoreCase("claninvite") && Constants.GameServer.WANT_CLANS) {
 			long invitePlayer = DataConversions.usernameToHash(args[0]);
 			Player invited = World.getWorld().getPlayer(invitePlayer);
 			if(!player.getClan().isAllowed(1, player)) {
@@ -85,7 +85,7 @@ public final class RegularPlayer implements CommandListener {
 				ActionSender.sendBox(player, "Player is not online or could not be found!", false);
 			}
 		}
-		if (command.equalsIgnoreCase("clankick")) {
+		if (command.equalsIgnoreCase("clankick") && Constants.GameServer.WANT_CLANS) {
 			if(player.getClan() != null) {
 				String playerToKick = args[0].replace("_", " ");
 				if(!player.getClan().isAllowed(0, player)) {

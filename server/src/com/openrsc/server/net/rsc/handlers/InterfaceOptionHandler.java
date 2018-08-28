@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -251,7 +251,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			}
 			break;
-		case 11:
+		case 11: // Clan Actions
+      if (!Constants.GameServer.WANT_CLANS) return;
 			int actionType = p.readByte();
 			switch (actionType) {
 			case 0: // CREATE CLAN

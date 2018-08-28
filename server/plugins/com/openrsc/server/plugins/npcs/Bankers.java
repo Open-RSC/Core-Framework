@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -146,7 +147,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 		if(inArray(n.getID(), BANKERS)) {
 			if(command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, p, false);
-			} else if(command.equalsIgnoreCase("Collect"))	{
+			} else if(command.equalsIgnoreCase("Collect") && Constants.GameServer.SPAWN_AUCTION_NPCS)	{
 				quickFeature(n, p, true);
 			}
 		}

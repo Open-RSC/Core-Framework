@@ -101,6 +101,9 @@ public class LoginPacketHandler {
 					// attachment.ISAAC.set(new ISAACContainer(incomingCipher,
 					// outgoingCipher));
 					attachment.player.set(loadedPlayer);
+					
+					/* Server Configs */
+					ActionSender.sendServerConfigs(loadedPlayer);
 
 					if (loadedPlayer.getLastLogin() == 0L) {
 						loadedPlayer.setInitialLocation(Point.location(216, 744));

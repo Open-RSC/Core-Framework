@@ -129,15 +129,23 @@ public final class Constants {
 		 * -1 the absolute max. Level Requirement, Max Damage
 		 */
 		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 2}, {13, 3}, {17, 3}, {23, 4}, {29, 4}, {35, 5}, {41, 5}, {47, 6}, {53, 6}, {59, 7}, {62, 8}, {65, 9}, {70, 10}, {75, 11}};
+
 		public static boolean IS_DOUBLE_EXP = false;
+		public static boolean SPAWN_AUCTION_NPCS = false;
+		public static boolean SPAWN_IRON_MAN_NPCS = false;
+		public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
+
+		public static boolean SHOW_FLOATING_NAMETAGS = false;
+		public static boolean WANT_CLANS = false;
+
 		/**
 		 * 
 		 * @param file
 		 * @throws IOException
 		 * Config file for server configurations.
 		 */
+		public static Properties props = new Properties();
 		public static void initConfig(String file) throws IOException {
-			Properties props = new Properties();
 			props.loadFromXML(new FileInputStream(file));
 
 			// Initialization confs
@@ -165,8 +173,14 @@ public final class Constants {
 			SKULL_BOOST = Double.parseDouble(props.getProperty("skull_boost"));
 			IS_DOUBLE_EXP = Boolean.parseBoolean(props.getProperty("double_exp"));
 
+			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
+			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
+			SPAWN_SUBSCRIPTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_subscription_npcs"));
+
+			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
+			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
+
 			START_TIME = System.currentTimeMillis();
-			props.clear();
 		}
 	}
 
