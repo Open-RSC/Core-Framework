@@ -68,6 +68,7 @@ public class Config {
 	public static boolean S_AUTO_MESSAGE_SWITCH_TOGGLE = false;
 	public static boolean S_BATCH_PROGRESSION = false;
 	public static boolean S_SIDE_MENU_TOGGLE = false;
+	public static boolean S_INVENTORY_COUNT_TOGGLE = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
