@@ -7094,12 +7094,14 @@ public final class mudclient implements Runnable {
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 							"@whi@Zoom View - " + (Config.ZOOM == 0 ? "@yel@Normal" : Config.ZOOM == 1 ? "@ora@Far" : Config.ZOOM == 2 ? "@red@Super" : "@gre@Near"), 0, (String) null, (String) null);
 
-					if (!Config.SHOW_FOG) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Fog - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Fog - @gre@On", 0, (String) null, (String) null);
+					if (Config.FOG_TOGGLE) {
+						if (!Config.SHOW_FOG) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Fog - @red@Off", 0, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Fog - @gre@On", 0, (String) null, (String) null);
+						}
 					}
 
 					if (!Config.SHOW_ROOF) {
@@ -9950,6 +9952,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("WANT_CLANS", wantClans == 1 ? "true" : "false");
 					int wantKillFeed = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
+					int fogToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
 					Config.updateServerConfiguration(props);
 				}
 				else {
