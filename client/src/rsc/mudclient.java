@@ -5626,7 +5626,7 @@ public final class mudclient implements Runnable {
 						this.drawUiTab1(-15252, var3);
 					}
 
-					if (Config.C_INV_COUNT) {
+					if (Config.S_INVENTORY_COUNT_TOGGLE && Config.C_INV_COUNT) {
 						this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, 17, 0xFFFFFF, 1, true);
 					}
 
@@ -7180,12 +7180,14 @@ public final class mudclient implements Runnable {
 									: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
 
 					// Inventory Count
-					if (!Config.C_INV_COUNT) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
+					if (Config.S_INVENTORY_COUNT_TOGGLE) {
+						if (!Config.C_INV_COUNT) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
+						}
 					}
 
 					var7 = 275;
@@ -7415,7 +7417,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Inventory Count
-							if (settingIndex == 15 && this.mouseButtonClick == 1) {
+							if (settingIndex == 15 && this.mouseButtonClick == 1 && Config.S_INVENTORY_COUNT_TOGGLE) {
 								Config.C_INV_COUNT = !Config.C_INV_COUNT;
 								Config.saveConfiguration(false);
 							}
@@ -10017,6 +10019,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
 					int sideMenuToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
+					int inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
