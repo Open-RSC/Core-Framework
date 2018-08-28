@@ -7119,12 +7119,14 @@ public final class mudclient implements Runnable {
 												: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 0, (String) null, (String) null);
 					}
 
-					if (!Config.MESSAGE_TAB_SWITCH) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Auto Message Switch - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Auto Message Switch - @gre@On", 0, (String) null, (String) null);
+					if (Config.AUTO_MESSAGE_SWITCH_TOGGLE) {
+						if (!Config.MESSAGE_TAB_SWITCH) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Auto Message Switch - @red@Off", 0, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Auto Message Switch - @gre@On", 0, (String) null, (String) null);
+						}
 					}
 
 					if (!Config.SIDE_MENU_OVERLAY) {
@@ -9956,6 +9958,11 @@ public final class mudclient implements Runnable {
 					props.setProperty("WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
 					int fogToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
+					int groundItemToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
+					int autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
+
 					Config.updateServerConfiguration(props);
 				}
 				else {
