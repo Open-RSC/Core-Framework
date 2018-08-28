@@ -7131,12 +7131,14 @@ public final class mudclient implements Runnable {
 								"@whi@Side Menu - @gre@On", 0, (String) null, (String) null);
 					}
 
-					if (!Config.KILL_FEED) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Kill Feed - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Kill Feed - @gre@On", 0, (String) null, (String) null);
+					if (Config.WANT_KILL_FEED) {
+						if (!Config.KILL_FEED) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Kill Feed - @red@Off", 0, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Kill Feed - @gre@On", 0, (String) null, (String) null);
+						}
 					}
 
 					//this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 0, (String) null, (String) null);
@@ -9743,6 +9745,7 @@ public final class mudclient implements Runnable {
 					return;
 				}*/
 				else if(opcode == 135) { // Kill Announcements
+					if (!Config.WANT_KILL_FEED) return;
 					String killed = this.packetsIncoming.readString();
 					String killer = this.packetsIncoming.readString();
 					int killType = this.packetsIncoming.get32();
@@ -9945,6 +9948,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
 					int wantClans = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("WANT_CLANS", wantClans == 1 ? "true" : "false");
+					int wantKillFeed = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
 					Config.updateServerConfiguration(props);
 				}
 				else {
