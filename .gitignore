@@ -114,3 +114,5 @@ Tools/Sprite Editor/unpack/*.png
 Android_Client/\.settings/
 
 server/avatars/
+/RSCL_Launcher/nbproject/private/
+/OLD_Launcher/nbproject/private/
