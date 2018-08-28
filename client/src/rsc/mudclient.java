@@ -4919,13 +4919,15 @@ public final class mudclient implements Runnable {
 						this.characterDialogString[this.characterDialogCount++] = player.message;
 					}
 
-					if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
-						if (player.displayName != null)
-							this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
-					}
-					if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
-						if (player.clanTag != null)
-							this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
+					if (Config.SHOW_FLOATING_NAMETAGS) {
+						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+							if (player.displayName != null)
+								this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
+						}
+						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+							if (player.clanTag != null)
+								this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
+						}
 					}
 
 
@@ -6955,11 +6957,13 @@ public final class mudclient implements Runnable {
 
 					var7 += 20;
 					this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
-					var7 += 15;
-					if (!Config.NAME_CLAN_TAG_OVERLAY) {
-						this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
+					if(Config.SHOW_FLOATING_NAMETAGS) {
+						var7 += 15;
+						if (!Config.NAME_CLAN_TAG_OVERLAY) {
+							this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
+						} else {
+							this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
+						}
 					}
 					var7 += 15;
 					if (!this.clanInviteBlockSetting) {
@@ -9885,6 +9889,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
 					int spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
+					int showFloatingNametags = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
 					Config.updateServerConfiguration(props);
 				}
 				else {

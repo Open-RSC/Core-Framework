@@ -463,6 +463,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
+		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
 		player.write(s.toPacket());
 	}
 

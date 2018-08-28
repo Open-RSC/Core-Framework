@@ -135,6 +135,8 @@ public final class Constants {
 		public static boolean SPAWN_IRON_MAN_NPCS = false;
 		public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
 
+		public static boolean SHOW_FLOATING_NAMETAGS = false;
+
 		/**
 		 * 
 		 * @param file
