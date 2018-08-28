@@ -42,7 +42,6 @@ import io.netty.channel.ChannelFutureListener;
  */
 public class ActionSender {
 	public enum Opcode {
-		SEND_INVENTORY_REMOVE_ITEM(123), // TODO: check what it does.
 		/**
 		 * int slot = this.packetsIncoming.getUnsignedByte();
 		 * --this.inventoryItemCount;
@@ -53,52 +52,69 @@ public class ActionSender {
 		 * this.inventoryItemEquipped[index] = this.inventoryItemEquipped[index
 		 * + 1]; }
 		 */
-		/* Game tab opcodes */
-		SEND_INVENTORY(53), SEND_EQUIPMENT_STATS(153),
-
-		/* Might actually be add inventory item!!! */
-		SEND_INVENTORY_UPDATEITEM(90),
-
-		SEND_EXPERIENCE(33), SEND_STAT(159), SEND_STATS(156), SEND_UPDATE_STAT(159), SEND_FATIGUE(114),
-
-		SEND_GAME_SETTINGS(240), SEND_PRIVACY_SETTINGS(158),
-
-		SEND_PRAYERS_ACTIVE(206),
-
-		/**
-		 * Interface opcodes
-		 */
-		/* Duel opcodes */
-		SEND_DUEL_WINDOW(176), SEND_DUEL_CONFIRMWINDOW(172), SEND_DUEL_OPPONENTS_ITEMS(6), SEND_DUEL_SETTINGS(
-				30), SEND_DUEL_ACCEPTED(210), SEND_DUEL_OTHER_ACCEPTED(253), SEND_DUEL_CANCEL_ACCEPTED(
-						128), SEND_DUEL_CLOSE(225),
-
-		/* Trade opcodes */
-		SEND_TRADE_WINDOW(92), SEND_TRADE_CLOSE(128), SEND_TRADE_ACCPETED(15), SEND_TRADE_OPEN_CONFIRM(
-				20), SEND_TRADE_OTHER_ACCEPTED(162), SEND_TRADE_OTHER_ITEMS(97),
-
-		/* Shop opcodes */
-		SEND_SHOP_OPEN(101), SEND_SHOP_CLOSE(137),
-
-		/* Bank opcodes */
-		SEND_BANK_OPEN(42), SEND_BANK_UPDATE(249), SEND_BANK_CLOSE(203),
-		/* Sleep screen opcodes */
-		SEND_SLEEPSCREEN(117), SEND_SLEEP_FATIGUE(244), SEND_STOPSLEEP(
-				84), SEND_SLEEPWORD_INCORRECT(194),
-		/* Miscellaneous opcodes */
-		SEND_PLAY_SOUND(204), SEND_WELCOME_INFO(182), SEND_BOX(222), SEND_BOX2(89),
-
-		SEND_SYSTEM_UPDATE(52), SEND_ELIXIR(54),
-
-		SEND_DEATH(83), SEND_OPTIONS_MENU_CLOSE(252), SEND_OPTIONS_MENU_OPEN(245),
-
-		SEND_WORLD_INFO(25), SEND_LOGOUT_REQUEST_CONFIRM(165), SEND_LOGOUT(4), SEND_CANT_LOGOUT(183),
-
-		SEND_SERVER_MESSAGE(131), SEND_BUBBLE(36), SEND_APPEARANCE_CHANGE(59),
-		/* Quest information */
+		SEND_LOGOUT(4),
 		SEND_QUESTS(5),
-		/* Tutorial */
-		SEND_ON_TUTORIAL(111);
+		SEND_DUEL_OPPONENTS_ITEMS(6),
+		SEND_TRADE_ACCPETED(15),
+		SEND_SERVER_CONFIGS(19),
+		SEND_TRADE_OPEN_CONFIRM(20),
+		SEND_WORLD_INFO(25),
+		SEND_DUEL_SETTINGS(30),
+		SEND_EXPERIENCE(33),
+		SEND_BUBBLE(36),
+		SEND_BANK_OPEN(42),
+		SEND_SYSTEM_UPDATE(52),
+		SEND_INVENTORY(53),
+		SEND_ELIXIR(54),
+		SEND_APPEARANCE_CHANGE(59),
+		SEND_DEATH(83),
+		SEND_STOPSLEEP(84),
+		SEND_PRIVATE_MESSAGE_SENT(87),
+		SEND_BOX2(89),
+		SEND_INVENTORY_UPDATEITEM(90),
+		SEND_TRADE_WINDOW(92),
+		SEND_TRADE_OTHER_ITEMS(97),
+		SEND_SHOP_OPEN(101),
+		SEND_IGNORE_LIST(109),
+		SEND_INPUT_BOX(110),
+		SEND_ON_TUTORIAL(111),
+		SEND_FATIGUE(114),
+		SEND_SLEEPSCREEN(117),
+		SEND_PRIVATE_MESSAGE(120),
+		SEND_INVENTORY_REMOVE_ITEM(123), // TODO: check what it does.
+		SEND_DUEL_CANCEL_ACCEPTED(128),
+		SEND_TRADE_CLOSE(128),
+		SEND_SERVER_MESSAGE(131),
+		SEND_PROGRESS(134),
+		SEND_PROGRESS_BAR(134),
+		SEND_REMOVE_PROGRESS_BAR(134),
+		SEND_SHOP_CLOSE(137),
+		SEND_FRIEND_UPDATE(149),
+		SEND_EQUIPMENT_STATS(153),
+		SEND_STATS(156),
+		SEND_PRIVACY_SETTINGS(158),
+		SEND_STAT(159),
+		SEND_UPDATE_STAT(159),
+		SEND_TRADE_OTHER_ACCEPTED(162),
+		SEND_LOGOUT_REQUEST_CONFIRM(165),
+		SEND_DUEL_CONFIRMWINDOW(172),
+		SEND_DUEL_WINDOW(176),
+		SEND_WELCOME_INFO(182),
+		SEND_CANT_LOGOUT(183),
+		SEND_SLEEPWORD_INCORRECT(194),
+		SEND_BANK_CLOSE(203),
+		SEND_PLAY_SOUND(204),
+		SEND_PRAYERS_ACTIVE(206),
+		SEND_DUEL_ACCEPTED(210),
+		SEND_BOX(222),
+		SEND_DUEL_CLOSE(225),
+		SEND_GAME_SETTINGS(240),
+		SEND_SLEEP_FATIGUE(244),
+		SEND_OPTIONS_MENU_OPEN(245),
+		SEND_BANK_UPDATE(249),
+		SEND_OPTIONS_MENU_CLOSE(252),
+		SEND_DUEL_OTHER_ACCEPTED(253);
+
 		private int opcode;
 
 		private Opcode(int i) {
@@ -403,7 +419,7 @@ public class ActionSender {
 	 */
 	public static void sendFriendUpdate(Player player, long usernameHash, int world) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(149);
+		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
 		String username = DataConversions.hashToUsername(usernameHash);
 		s.writeString(username);
 		// if(usernameChanged)
@@ -440,12 +456,24 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
+	public static void sendServerConfigs(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
+		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
+		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
+		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
+		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
+		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
+		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
+		player.write(s.toPacket());
+	}
+
 	/**
 	 * Sends the whole ignore list
 	 */
 	public static void sendIgnoreList(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(109);
+		s.setID(Opcode.SEND_IGNORE_LIST.opcode);
 		s.writeByte((byte) player.getSocial().getIgnoreList().size());
 		for (long usernameHash : player.getSocial().getIgnoreList()) {
 			String username = DataConversions.hashToUsername(usernameHash);
@@ -617,7 +645,7 @@ public class ActionSender {
 	 */
 	public static void sendPrivateMessageReceived(Player player, Player sender, String message) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(120);
+		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
 		s.writeString(sender.getUsername());
 		s.writeString(sender.getUsername());// former name?
 		s.writeByte(sender.getIcon());
@@ -628,7 +656,7 @@ public class ActionSender {
 
 	public static void sendPrivateMessageSent(Player player, long usernameHash, String message) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(87);
+		s.setID(Opcode.SEND_PRIVATE_MESSAGE_SENT.opcode);
 		s.writeString(DataConversions.hashToUsername(usernameHash));
 		s.writeRSCString(message);
 		player.write(s.toPacket());
@@ -886,7 +914,7 @@ public class ActionSender {
 
 	public static void sendRemoveProgressBar(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(134);
+		s.setID(Opcode.SEND_REMOVE_PROGRESS_BAR.opcode);
 		s.writeByte(0); // interface ID
 		s.writeByte((byte) 2);
 		player.write(s.toPacket());
@@ -894,7 +922,7 @@ public class ActionSender {
 
 	public static void sendProgressBar(Player player, int delay, int repeatFor) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(134);
+		s.setID(Opcode.SEND_PROGRESS_BAR.opcode);
 		s.writeByte(0); // interface ID
 		s.writeByte((byte) 1);
 		s.writeShort(delay);
@@ -904,7 +932,7 @@ public class ActionSender {
 
 	public static void sendProgress(Player player, int repeated) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(134);
+		s.setID(Opcode.SEND_PROGRESS.opcode);
 		s.writeByte(0); // interface ID
 		s.writeByte((byte) 3);
 		s.writeByte((byte) repeated);
@@ -927,7 +955,7 @@ public class ActionSender {
 
 	public static void sendInputBox(Player player, String s) {
 		com.openrsc.server.net.PacketBuilder pb = new com.openrsc.server.net.PacketBuilder();
-		pb.setID(110);
+		pb.setID(Opcode.SEND_INPUT_BOX.opcode);
 		pb.writeString(s);
 		player.write(pb.toPacket());
 	}

@@ -7,12 +7,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 public class Config {
 	private static Properties prop = new Properties();
 
+	public static final String SERVER_NAME = "Open RSC";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
@@ -46,12 +48,20 @@ public class Config {
 	public static boolean SWIPE_TO_SCROLL = true;
 	public static boolean SWIPE_TO_ROTATE = true;
 
-	// Experience Config Menu
+	/* Experience Config Menu */
 	public static int EXPERIENCE_COUNTER = 1;
 	public static int EXPERIENCE_COUNTER_MODE = 0;
 	public static int EXPERIENCE_COUNTER_COLOR = 0;
 	public static int EXPERIENCE_DROP_SPEED = 1;
 	public static boolean EXPERIENCE_CONFIG_SUBMENU = true;
+
+	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
+	public static boolean SPAWN_AUCTION_NPCS = false;
+	public static boolean SPAWN_IRON_MAN_NPCS = false;
+	public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
+
+	public static boolean SHOW_FLOATING_NAMETAGS = false;
+	public static boolean WANT_CLANS = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -127,11 +137,13 @@ public class Config {
 
 	public static void setConfigurationFromProperties() {
 		Field[] fields = Config.class.getDeclaredFields();
-		for (Entry<Object, Object> entry : prop.entrySet()) {
+		boolean found = false;
+		for (Map.Entry<Object, Object> entry : prop.entrySet()) {
 			for (Field f : fields) {
 				if (f.getName().startsWith("F_"))
 					continue;
 				if (f.getName().equals(entry.getKey())) {
+					found = true;
 					try {
 						Class<?> t = f.getType();
 						if (t == int.class) {
@@ -151,9 +163,25 @@ public class Config {
 						e.printStackTrace();
 					}
 				}
+				if (found == true) break;
 			}
 		}
 
+	}
+
+	public final static void updateServerConfiguration(Properties newConfig) {
+		for (Map.Entry<Object, Object> p : newConfig.entrySet()) {
+			prop.setProperty(String.valueOf(p.getKey()), String.valueOf(p.getValue()));
+		}
+		setConfigurationFromProperties();
+	}
+
+	public static String getServerName() {
+		return prop.getProperty("SERVER_NAME");
+	}
+    
+	public static String getCommandPrefix() {
+		return prop.getProperty("COMMAND_PREFIX");
 	}
 
 	public static boolean isAndroid() {

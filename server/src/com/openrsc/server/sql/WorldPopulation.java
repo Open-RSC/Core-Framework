@@ -39,6 +39,8 @@ public final class WorldPopulation {
 		ResultSet result = null;
 		try {
 			statement = connection.createStatement();
+
+			/* LOAD NPC DEFS */
 			ArrayList<NPCDef> npcDefinitions = new ArrayList<NPCDef>();
 			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `command2`, "
 					+ "`attack`, `strength`, `hits`, `defense`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
@@ -104,6 +106,7 @@ public final class WorldPopulation {
 				}
 			}
 
+			/* LOAD ITEM DEFS */
 			result = statement.executeQuery("SELECT `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
 					+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
 					+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `bankNoteID`, "
@@ -137,6 +140,7 @@ public final class WorldPopulation {
 			LOGGER.info("\t Loaded {}", box(itemDefinitions.size()) + " item definitions");
 			result.close();
 
+			/* LOAD OBJECTS */
 			result = statement.executeQuery("SELECT `x`, `y`, `id`, `direction`, `type` FROM `"
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "objects`");
 			int countOBJ = 0;
@@ -155,10 +159,20 @@ public final class WorldPopulation {
 			result.close();
 			LOGGER.info("\t Loaded {}", box(countOBJ) + " Objects.");
 
+			/* LOAD NPC LOCS */
 			result = statement.executeQuery("SELECT `id`, `startX`, `startY`, `minX`, `maxX`, `minY`, `maxY` FROM `"
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "npclocs`");
 			while (result.next()) {
-				NPCLoc n = new NPCLoc(result.getInt("id"),
+				/* Configurable NPCs */
+				int npcID = result.getInt("id");
+				if ((npcID == 794 || npcID == 795)
+					&& !Constants.GameServer.SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
+				else if ((npcID == 799 || npcID == 800 || npcID == 801)
+					&& !Constants.GameServer.SPAWN_IRON_MAN_NPCS)	continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
+				else if ((npcID == 796 || npcID == 797)
+					&& !Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS)	continue; // Subscription Vendors
+
+				NPCLoc n = new NPCLoc(npcID,
 						result.getInt("startX"), result.getInt("startY"),
 						result.getInt("minX"), result.getInt("maxX"),
 						result.getInt("minY"), result.getInt("maxY"));
@@ -182,10 +196,13 @@ public final class WorldPopulation {
 			result.close();
 			LOGGER.info("\t Loaded {}", box(World.getWorld().countNpcs()) + " NPC spawns");
 
+			/* LOAD GROUND ITEMS */
 			result = statement.executeQuery("SELECT `id`, `x`, `y`, `amount`, `respawn` FROM `"
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "grounditems`");
 			int countGI = 0;
 			while (result.next()) {
+				if ((result.getInt("id") == 2092 || result.getInt("id") == 2094)
+					&& !Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS) continue; // Subscription Coins
 				ItemLoc i = new ItemLoc(result.getInt("id"),
 						result.getInt("x"), result.getInt("y"),
 						result.getInt("amount"), result.getInt("respawn"));
