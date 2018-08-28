@@ -9883,6 +9883,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					int spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
+					int spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
 					Config.updateServerConfiguration(props);
 				}
 				else {
