@@ -4069,7 +4069,7 @@ public final class mudclient implements Runnable {
 								this.showUiWildWarn = 1;
 							}
 						}
-						if (Config.C_SIDE_MENU_OVERLAY) {
+						if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
 							int i = 130;
 							if (adminRights) {
 								this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
@@ -7145,12 +7145,14 @@ public final class mudclient implements Runnable {
 					}
 
 					// Side Menu
-					if (!Config.C_SIDE_MENU_OVERLAY) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
+					if (Config.S_SIDE_MENU_TOGGLE) {
+						if (!Config.C_SIDE_MENU_OVERLAY) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
+						}
 					}
 
 					// Kill Feed
@@ -7374,7 +7376,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Side Menu
-							if (settingIndex == 10 && this.mouseButtonClick == 1) {
+							if (settingIndex == 10 && this.mouseButtonClick == 1 && Config.S_SIDE_MENU_TOGGLE) {
 								Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
 								Config.saveConfiguration(false);
 							}
@@ -8573,7 +8575,7 @@ public final class mudclient implements Runnable {
 									modMenu = true; 
 								} else if (var11.startsWith("::n ") && adminRights) {
 									devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
-								} else if (var11.equalsIgnoreCase("::overlay")) {
+								} else if (var11.equalsIgnoreCase("::overlay") && Config.S_SIDE_MENU_TOGGLE) {
 									Config.C_SIDE_MENU_OVERLAY = Config.C_SIDE_MENU_OVERLAY;
 								}
 								else {
@@ -10013,6 +10015,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
 					int batchProgression = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
+					int sideMenuToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
