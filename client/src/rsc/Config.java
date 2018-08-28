@@ -61,6 +61,7 @@ public class Config {
 	public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
 
 	public static boolean SHOW_FLOATING_NAMETAGS = false;
+	public static boolean WANT_CLANS = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
