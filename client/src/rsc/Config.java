@@ -20,7 +20,8 @@ public class Config {
 
 
 	public static boolean F_ANDROID_BUILD = false;
-	public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
+	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
+        public static String F_CACHE_DIR = "Cache";
 
 	/* Configurable: */
 	public static boolean EXPERIENCE_DROPS = false;
