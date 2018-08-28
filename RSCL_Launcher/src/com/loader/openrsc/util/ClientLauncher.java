@@ -47,7 +47,7 @@ public class ClientLauncher
 	public static void startProcess() {
 		try {
 			loader = new URLClassLoader(new URL[] { new URL(Constants.CLIENT_URL) });
-			mainClass = Class.forName("com.openrsc.client.pc.RSCFrame", true, loader);
+			mainClass = Class.forName("rsc.RSCFrame", true, loader);
 			if (loader == null) {
 				Launcher.getPopup().setMessage("Client failed to launch!");
 				Launcher.getPopup().showFrame();
