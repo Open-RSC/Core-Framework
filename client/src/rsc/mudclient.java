@@ -7171,7 +7171,8 @@ public final class mudclient implements Runnable {
 					}
 
 					// Combat Style
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
+					if (Config.S_MENU_COMBAT_STYLE_TOGGLE)
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
 
 					// Fightmode Selector
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
@@ -7394,7 +7395,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Combat Style
-							if (settingIndex == 12 && this.mouseButtonClick == 1) {
+							if (settingIndex == 12 && this.mouseButtonClick == 1 && Config.S_MENU_COMBAT_STYLE_TOGGLE) {
 								this.combatStyle++;
 								if (this.combatStyle == 4) {
 									this.combatStyle = 0;
@@ -10027,6 +10028,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
 					int zoomViewToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
+					int menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}

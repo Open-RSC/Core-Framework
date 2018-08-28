@@ -145,6 +145,7 @@ public final class Constants {
 		public static boolean SIDE_MENU_TOGGLE = false;
 		public static boolean INVENTORY_COUNT_TOGGLE = false;
 		public static boolean ZOOM_VIEW_TOGGLE = false;
+		public static boolean MENU_COMBAT_STYLE_TOGGLE = false;
 
 		/**
 		 * 
@@ -195,6 +196,7 @@ public final class Constants {
 			SIDE_MENU_TOGGLE = Boolean.parseBoolean(props.getProperty("side_menu_toggle"));
 			INVENTORY_COUNT_TOGGLE = Boolean.parseBoolean(props.getProperty("inventory_count_toggle"));
 			ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(props.getProperty("zoom_view_toggle"));
+			MENU_COMBAT_STYLE_TOGGLE = Boolean.parseBoolean(props.getProperty("menu_combat_style_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}
