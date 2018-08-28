@@ -133,6 +133,7 @@ public final class Constants {
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
 		public static boolean SPAWN_IRON_MAN_NPCS = false;
+		public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
 
 		/**
 		 * 
@@ -171,6 +172,7 @@ public final class Constants {
 
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
+			SPAWN_SUBSCRIPTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_subscription_npcs"));
 
 			START_TIME = System.currentTimeMillis();
 		}

@@ -57,6 +57,7 @@ public class Config {
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static boolean SPAWN_AUCTION_NPCS = false;
 	public static boolean SPAWN_IRON_MAN_NPCS = false;
+	public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
