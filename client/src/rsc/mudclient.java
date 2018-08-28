@@ -7112,10 +7112,12 @@ public final class mudclient implements Runnable {
 								"@whi@Show Roof - @gre@On", 0, (String) null, (String) null);
 					}
 
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
-									: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-											: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 0, (String) null, (String) null);
+					if (Config.GROUND_ITEM_TOGGLE) {
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+								"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
+										: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
+												: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 0, (String) null, (String) null);
+					}
 
 					if (!Config.MESSAGE_TAB_SWITCH) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,

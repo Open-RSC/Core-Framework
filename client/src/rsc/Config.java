@@ -64,6 +64,7 @@ public class Config {
 	public static boolean WANT_CLANS = false;
 	public static boolean WANT_KILL_FEED = false;
 	public static boolean FOG_TOGGLE = false;
+	public static boolean GROUND_ITEM_TOGGLE = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
