@@ -140,6 +140,7 @@ public final class Constants {
 		public static boolean WANT_KILL_FEED = false;
 		public static boolean FOG_TOGGLE = false;
 		public static boolean GROUND_ITEM_TOGGLE = false;
+		public static boolean AUTO_MESSAGE_SWITCH_TOGGLE = false;
 
 		/**
 		 * 
@@ -185,6 +186,7 @@ public final class Constants {
 			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
 			FOG_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
 			GROUND_ITEM_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
+			AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(props.getProperty("auto_message_switch_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}
