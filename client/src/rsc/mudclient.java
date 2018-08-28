@@ -4090,7 +4090,7 @@ public final class mudclient implements Runnable {
 									"Fatigue: " + (double) (this.statFatigue * 1000 / 750) / 10.0 + "%", 7, i, 0xffffff, 1);
 						}
 
-						if (Config.C_EXPERIENCE_COUNTER == 2) {
+						if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
 							this.drawExperienceCounter(recentSkill);
 						}
 
@@ -5330,6 +5330,7 @@ public final class mudclient implements Runnable {
 
 		private int xpPerHourCount = 0; long timePassed = 0; double xpPerHour = 0;
 		private final void drawExperienceCounter(int skill) {
+			if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
 			if (selectedSkill >= 0) {
 				skill = selectedSkill;
 			}
@@ -5467,6 +5468,7 @@ public final class mudclient implements Runnable {
 		}
 
 		private final void drawExperienceConfig() {
+			if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
 			experienceConfigInterface.onRender(this.getSurface());
 		}
 
@@ -7095,12 +7097,14 @@ public final class mudclient implements Runnable {
 					}
 
 					// Experience Drops
-					if (!Config.C_EXPERIENCE_DROPS) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
+					if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
+						if (!Config.C_EXPERIENCE_DROPS) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
+						}
 					}
 
 					// Zoom View
@@ -7181,9 +7185,10 @@ public final class mudclient implements Runnable {
 										: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
 
 					// Experience Counter
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
-									: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
+					if (Config.S_EXPERIENCE_COUNTER_TOGGLE)
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+								"@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
+										: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
 
 					// Inventory Count
 					if (Config.S_INVENTORY_COUNT_TOGGLE) {
@@ -7343,7 +7348,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Experience Drops
-							if (settingIndex == 4 && this.mouseButtonClick == 1) {
+							if (settingIndex == 4 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_DROPS_TOGGLE) {
 								Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
 								Config.saveConfiguration(false);
 							}
@@ -7415,7 +7420,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Experience Counter
-							if (settingIndex == 14 && this.mouseButtonClick == 1) {
+							if (settingIndex == 14 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_COUNTER_TOGGLE) {
 								Config.C_EXPERIENCE_COUNTER++;
 								if (Config.C_EXPERIENCE_COUNTER == 3)
 									Config.C_EXPERIENCE_COUNTER = 0;
@@ -10033,6 +10038,11 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
 					int fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false");
+					int experienceCounterToggle = this.packetsIncoming.getUnsignedByte();
+          props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
+					int experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
+          props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
+
 
 					Config.updateServerConfiguration(props);
 				}
@@ -10842,6 +10852,7 @@ public final class mudclient implements Runnable {
 
 													if (opcode != 123) { // Not ???
 														if (opcode == 159) { // Show Experience Notification
+															if (!Config.S_EXPERIENCE_DROPS_TOGGLE) return;
 															int skill = this.packetsIncoming.getUnsignedByte();
 															recentSkill = skill;
 															int oldXp = playerExperience[skill];
@@ -13196,82 +13207,83 @@ public final class mudclient implements Runnable {
 						//achievementInterface = new AchievementGUI(this);
 						clan = new Clan(this);
 
-						experienceOverlay = new NCustomComponent(this) {
-							@Override
-							public void render() {
-								if (Config.C_EXPERIENCE_DROPS) {
-									long new_time = System.currentTimeMillis();
-									time = new_time;
-									for (Iterator<XPNotification> iterator = xpNotifications.iterator(); iterator.hasNext();) {
-										XPNotification xpdrop = iterator.next();
-										if (!xpdrop.isActive) {
-											if (Config.C_EXPERIENCE_COUNTER > 0) {
-												if(time > m_timer && xpdrop.y > 20) {
-													m_timer = time + 250;
-													xpdrop.isActive = true;
+						if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
+							experienceOverlay = new NCustomComponent(this) {
+								@Override
+								public void render() {
+									if (Config.C_EXPERIENCE_DROPS) {
+										long new_time = System.currentTimeMillis();
+										time = new_time;
+										for (Iterator<XPNotification> iterator = xpNotifications.iterator(); iterator.hasNext();) {
+											XPNotification xpdrop = iterator.next();
+											if (!xpdrop.isActive) {
+												if (Config.C_EXPERIENCE_COUNTER > 0) {
+													if(time > m_timer && xpdrop.y > 20) {
+														m_timer = time + 250;
+														xpdrop.isActive = true;
+													} else {
+														return;
+													}
 												} else {
-													return;
-												}
-											} else {
-												if(time > m_timer && xpdrop.y > 0) {
-													m_timer = time + 250;
-													xpdrop.isActive = true;
-												} else {
-													return;
+													if(time > m_timer && xpdrop.y > 0) {
+														m_timer = time + 250;
+														xpdrop.isActive = true;
+													} else {
+														return;
+													}
 												}
 											}
-										}
 
-										if (Config.C_EXPERIENCE_COUNTER == 1) {
-											drawExperienceCounter(xpdrop.skill);
-										}
-
-										int textColor = Config.C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-											Config.C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-												Config.C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-													Config.C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
-
-										if (!xpdrop.levelUp) {
-											if (textColor == 0xFFFFFF) {
-												graphics().drawShadowText("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
-														(int) xpdrop.y, textColor, 2, false);
-											} else {
-												graphics().drawString("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
-													(int) xpdrop.y, textColor, 2);
+											if (Config.C_EXPERIENCE_COUNTER == 1) {
+												drawExperienceCounter(xpdrop.skill);
 											}
-										} else {
-											if (textColor == 0xFFFFFF) {
-												graphics().drawShadowText("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
-													(int) xpdrop.y, textColor, 2, false);
-											} else {
-												graphics().drawString("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
+
+											int textColor = Config.C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
+												Config.C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+													Config.C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
+														Config.C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+	
+											if (!xpdrop.levelUp) {
+												if (textColor == 0xFFFFFF) {
+													graphics().drawShadowText("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
+															(int) xpdrop.y, textColor, 2, false);
+												} else {
+													graphics().drawString("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
 														(int) xpdrop.y, textColor, 2);
+												}
+											} else {
+												if (textColor == 0xFFFFFF) {
+													graphics().drawShadowText("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
+														(int) xpdrop.y, textColor, 2, false);
+												} else {
+													graphics().drawString("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
+															(int) xpdrop.y, textColor, 2);
+												}
 											}
-										}
 
-										double dropSpeed = Config.C_EXPERIENCE_DROP_SPEED == 0 ? 0.000000000001 :
-											Config.C_EXPERIENCE_DROP_SPEED == 1 ? 0.00005 : 1;
-										xpdrop.y -= dropSpeed;
+											double dropSpeed = Config.C_EXPERIENCE_DROP_SPEED == 0 ? 0.000000000001 :
+												Config.C_EXPERIENCE_DROP_SPEED == 1 ? 0.00005 : 1;
+											xpdrop.y -= dropSpeed;
 
-										if (Config.C_EXPERIENCE_COUNTER > 0 && xpdrop.y <= 30) {
-											xpdrop.isActive = false;
-										}
-										else if (xpdrop.y <= 0) {
-											xpdrop.isActive = false;
-										}
+											if (Config.C_EXPERIENCE_COUNTER > 0 && xpdrop.y <= 30) {
+												xpdrop.isActive = false;
+											}
+											else if (xpdrop.y <= 0) {
+												xpdrop.isActive = false;
+											}
 
-
-										if (Config.C_EXPERIENCE_COUNTER > 0 && (xpdrop.y <= 30 || xpdrop.y > getGameHeight() - 30)) {
-											iterator.remove();
-										}
-										else if (xpdrop.y <= 0 || xpdrop.y > getGameHeight()) {
-											iterator.remove();
+											if (Config.C_EXPERIENCE_COUNTER > 0 && (xpdrop.y <= 30 || xpdrop.y > getGameHeight() - 30)) {
+												iterator.remove();
+											}
+											else if (xpdrop.y <= 0 || xpdrop.y > getGameHeight()) {
+												iterator.remove();
+											}
 										}
 									}
 								}
-							}
-						};
-						mainComponent.addComponent(experienceOverlay);
+							};
+							mainComponent.addComponent(experienceOverlay);
+						}
 
 						this.menuCommon = new Menu(this.getSurface(), Config.isAndroid() ? Config.C_MENU_SIZE : 1, "Choose option");
 
