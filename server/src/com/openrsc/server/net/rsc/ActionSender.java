@@ -470,6 +470,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // Ground Item Toggle
 		s.writeByte((byte)(Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // Auto Message Switch Toggle
 		s.writeByte((byte)(Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // Batch Progression
+		s.writeByte((byte)(Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // Side Menu Toggle
 		player.write(s.toPacket());
 	}
 

@@ -142,6 +142,7 @@ public final class Constants {
 		public static boolean GROUND_ITEM_TOGGLE = false;
 		public static boolean AUTO_MESSAGE_SWITCH_TOGGLE = false;
 		public static boolean BATCH_PROGRESSION = false;
+		public static boolean SIDE_MENU_TOGGLE = false;
 
 		/**
 		 * 
@@ -189,6 +190,7 @@ public final class Constants {
 			GROUND_ITEM_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
 			AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(props.getProperty("auto_message_switch_toggle"));
 			BATCH_PROGRESSION = Boolean.parseBoolean(props.getProperty("batch_progression"));
+			SIDE_MENU_TOGGLE = Boolean.parseBoolean(props.getProperty("side_menu_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}
