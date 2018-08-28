@@ -138,6 +138,7 @@ public final class Constants {
 		public static boolean SHOW_FLOATING_NAMETAGS = false;
 		public static boolean WANT_CLANS = false;
 		public static boolean WANT_KILL_FEED = false;
+		public static boolean FOG_TOGGLE = false;
 
 		/**
 		 * 
@@ -181,6 +182,7 @@ public final class Constants {
 			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
+			FOG_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}

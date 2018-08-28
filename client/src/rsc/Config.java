@@ -63,6 +63,7 @@ public class Config {
 	public static boolean SHOW_FLOATING_NAMETAGS = false;
 	public static boolean WANT_CLANS = false;
 	public static boolean WANT_KILL_FEED = false;
+	public static boolean FOG_TOGGLE = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

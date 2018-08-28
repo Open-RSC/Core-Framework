@@ -466,6 +466,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
 		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
 		s.writeByte((byte)(Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
+		s.writeByte((byte)(Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // Fog Toggle
 		player.write(s.toPacket());
 	}
 
