@@ -464,6 +464,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
+		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
 		player.write(s.toPacket());
 	}
 

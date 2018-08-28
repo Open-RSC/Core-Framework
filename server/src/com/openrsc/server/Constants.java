@@ -136,6 +136,7 @@ public final class Constants {
 		public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
 
 		public static boolean SHOW_FLOATING_NAMETAGS = false;
+		public static boolean WANT_CLANS = false;
 
 		/**
 		 * 
@@ -175,6 +176,9 @@ public final class Constants {
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
 			SPAWN_SUBSCRIPTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_subscription_npcs"));
+
+			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
+			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 
 			START_TIME = System.currentTimeMillis();
 		}

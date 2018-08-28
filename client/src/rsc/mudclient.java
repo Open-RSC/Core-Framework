@@ -6172,6 +6172,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		/* Social Tab */
 		private final void drawUiTab5(boolean var1, boolean var2) {
 			try {
 				int var3 = this.getSurface().width2 - 199;
@@ -6184,40 +6185,66 @@ public final class mudclient implements Runnable {
 				if (var2) {
 					this.cameraRotationX = -88;
 				}
-				int clanTab;
-				int colorB;
-				int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
-				if (this.panelSocialTab == 1) {
-					clanTab = GenUtil.buildColor(220, 220, 220);
-					if(clan.inClan()) {
-						this.getSurface().drawBoxAlpha(var3, 24 + var4, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
-						this.getSurface().drawLineHoriz(var3, var4 + 72, var5, 0);
-						this.getSurface().drawBoxAlpha(var3, var4 + var6 - 16 + 34, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+
+				if (Config.WANT_CLANS) {
+					int clanTab;
+					int colorB;
+					int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
+					if (this.panelSocialTab == 1) {
+						clanTab = GenUtil.buildColor(220, 220, 220);
+						if(clan.inClan()) {
+							this.getSurface().drawBoxAlpha(var3, 24 + var4, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+							this.getSurface().drawLineHoriz(var3, var4 + 72, var5, 0);
+							this.getSurface().drawBoxAlpha(var3, var4 + var6 - 16 + 34, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+						} else {
+							this.getSurface().drawBoxAlpha(var3, var4 + var6 - 30, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+						}
+					} else if(this.panelSocialTab == 0){
+						colorA = GenUtil.buildColor(220, 220, 220);
 					} else {
-						this.getSurface().drawBoxAlpha(var3, var4 + var6 - 30, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
+						colorB = GenUtil.buildColor(220, 220, 220);
 					}
-				} else if(this.panelSocialTab == 0){
-					colorA = GenUtil.buildColor(220, 220, 220);
-				} else {
-					colorB = GenUtil.buildColor(220, 220, 220);
+
+					this.getSurface().drawBoxAlpha(var3, var4, 65, 24, colorA, 128);
+					this.getSurface().drawBoxAlpha(var3 + var5 / 2 - 32, var4, 65, 24, clanTab, 128);
+					this.getSurface().drawBoxAlpha(var3 + var5 / 2 + 33, var4, 65, 24, colorB , 128);
+					this.getSurface().drawBoxAlpha(var3, (this.panelSocialTab == 1 && clan.inClan() ? 49 : 0) + 24 + var4, var5, (this.panelSocialTab == 1 ? 127 : var6 - 24), GenUtil.buildColor(220, 220, 220), 128);
+					this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
+					this.getSurface().drawLineVert(var5 / 2 + var3 - 33, 0 + var4, 0, 24);
+					this.getSurface().drawLineVert(var5 / 2 + var3 + 33, 0 + var4, 0, 24);
+					this.getSurface().drawLineHoriz(var3, var4 + var6 - 16 + (this.panelSocialTab == 1 ? clan.inClan() ? 34 : -15 : 0), var5, 0);
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 4 - 16, "Friends", 0, 0, 4, 16 + var4);
+					this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 - 33 - 16, "Clan", 0, 0, 4, var4 + 16);
+					this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 + 16, "Ignore", 0, 0, 4, var4 + 16);
+					this.panelSocial.clearList(this.controlSocialPanel);
+					this.panelClan.clearList(this.controlClanPanel);
+				}
+				else { // Clans Disabled
+					int j = 36;
+					char c = '\304';
+					char c1 = '\266';
+					int l;
+					int k = l = GenUtil.buildColor(160, 160, 160);
+					if (this.panelSocialTab == 0)
+						k = GenUtil.buildColor(220, 220, 220);
+					else
+						l = GenUtil.buildColor(220, 220, 220);
+					this.getSurface().drawBoxAlpha(var3, j, c / 2, 24, k, 128);
+					this.getSurface().drawBoxAlpha(var3 + c / 2, j, c / 2, 24, l, 128);
+					this.getSurface().drawBoxAlpha(var3, j + 24, c, c1 - 24, GenUtil.buildColor(220, 220, 220), 128);
+					this.getSurface().drawLineHoriz(var3, j + 24, c, 0);
+					this.getSurface().drawLineVert(var3 + c / 2, j, 24, 0);
+					this.getSurface().drawLineHoriz(var3, j + c1 - 16, c, 0);
+					this.getSurface().drawColoredStringCentered(var3 + c / 4, "Friends", 0, 0, 4, j + 16);
+					this.getSurface().drawColoredStringCentered(var3 + c / 4 + c / 2, "Ignore", 0, 0, 4, j + 16);
+					this.panelSocial.clearList(this.controlSocialPanel);
 				}
 
-				this.getSurface().drawBoxAlpha(var3, var4, 65, 24, colorA, 128);
-				this.getSurface().drawBoxAlpha(var3 + var5 / 2 - 32, var4, 65, 24, clanTab, 128);
-				this.getSurface().drawBoxAlpha(var3 + var5 / 2 + 33, var4, 65, 24, colorB , 128);
-				this.getSurface().drawBoxAlpha(var3, (this.panelSocialTab == 1 && clan.inClan() ? 49 : 0) + 24 + var4, var5, (this.panelSocialTab == 1 ? 127 : var6 - 24), GenUtil.buildColor(220, 220, 220), 128);
-				this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
-				this.getSurface().drawLineVert(var5 / 2 + var3 - 33, 0 + var4, 0, 24);
-				this.getSurface().drawLineVert(var5 / 2 + var3 + 33, 0 + var4, 0, 24);
-				this.getSurface().drawLineHoriz(var3, var4 + var6 - 16 + (this.panelSocialTab == 1 ? clan.inClan() ? 34 : -15 : 0), var5, 0);
-				this.getSurface().drawColoredStringCentered(var3 + var5 / 4 - 16, "Friends", 0, 0, 4, 16 + var4);
-				this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 - 33 - 16, "Clan", 0, 0, 4, var4 + 16);
-				this.getSurface().drawColoredStringCentered(var5 / 4 + var3 + var5 / 2 + 16, "Ignore", 0, 0, 4, var4 + 16);
-				this.panelSocial.clearList(this.controlSocialPanel);
-				this.panelClan.clearList(this.controlClanPanel);
 				int index;
 				String colorKey;
 				int var12;
+
+				// FRIEND TAB
 				if (this.panelSocialTab == 0) {
 					for (index = 0; index < SocialLists.friendListCount; ++index) {
 						if ((SocialLists.friendListArg[index] & 2) == 0) {
@@ -6245,6 +6272,7 @@ public final class mudclient implements Runnable {
 					this.panelSocial.drawPanel();
 				}
 
+				// IGNORE TAB
 				if (this.panelSocialTab == 2) {
 					for (index = 0; index < SocialLists.ignoreListCount; ++index) {
 						colorKey = SocialLists.ignoreListArg0[index];
@@ -6417,36 +6445,50 @@ public final class mudclient implements Runnable {
 						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (var15 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 < 65 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
-								this.panelSocialTab = 0;
-								this.panelSocial.resetList(this.controlSocialPanel);
-							} else if (var3 > 132 && var3 < 196 && (this.panelSocialTab == 1 || this.panelSocialTab == 0)) {
-								this.panelSocialTab = 2;
-								this.panelSocial.resetList(this.controlSocialPanel);
+							if (Config.WANT_CLANS) {
+								if (var3 < 65 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
+									this.panelSocialTab = 0; // Show Friends Tab (Clicked)
+									this.panelSocial.resetList(this.controlSocialPanel);
+								} else if (var3 > 132 && var3 < 196 && (this.panelSocialTab == 1 || this.panelSocialTab == 0)) {
+									this.panelSocialTab = 2; // Show Ignore Tab (Clicked)
+									this.panelSocial.resetList(this.controlSocialPanel);
+								}
+							}
+							else {
+                if (var3 < 98 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
+                  this.panelSocialTab = 0; // Show Friends Tab (Clicked)
+                  this.panelSocial.resetList(this.controlSocialPanel);
+                } else if (var3 > 98 && (this.panelSocialTab == 1 || this.panelSocialTab == 0)) {
+                  this.panelSocialTab = 2; // Show Ignore Tab (Clicked)
+                  this.panelSocial.resetList(this.controlSocialPanel);
+                }
 							}
 						}
 					}
 					// HANDLE CLAN TAB
-					if(var3 >= 65 && var15 >= 0 && var3 < 132 && var15 < 26) {
-						this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
-								this.currentMouseButtonDown, this.lastMouseButtonDown);
-						if (var15 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 > 65 && var3 < 132 && (this.panelSocialTab == 2 || this.panelSocialTab == 0)) {
-								this.panelSocialTab = 1;
-								this.panelClan.resetList(this.controlClanPanel);
+					if (Config.WANT_CLANS) {
+						if(var3 >= 65 && var15 >= 0 && var3 < 132 && var15 < 26) {
+							this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
+									this.currentMouseButtonDown, this.lastMouseButtonDown);
+							if (var15 <= 24 && this.mouseButtonClick == 1) {
+								if (var3 > 65 && var3 < 132 && (this.panelSocialTab == 2 || this.panelSocialTab == 0)) {
+									this.panelSocialTab = 1; // Show Clan Tab (Clicked)
+									this.panelClan.resetList(this.controlClanPanel);
+								}
 							}
 						}
 					}
 
+					// Interactions within the panels
 					if(var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 225 && (this.panelSocialTab == 0 || this.panelSocialTab == 2)) {
 						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.mouseButtonClick >= 1 && this.panelSocialTab == 0) {
 							index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
 							if (index >= 0 && this.mouseX < maxWidth) {
-								if (this.mouseX > minWidth) {
+								if (this.mouseX > minWidth) { // Remove Friend
 									this.removeFriend(SocialLists.friendList[index], (byte) 69);
-								} else if ((SocialLists.friendListArg[index] & 4) != 0) {
+								} else if ((SocialLists.friendListArg[index] & 4) != 0) { // Message Friend
 									this.panelSocialPopup_Mode = SocialPopupMode.MESSAGE_FRIEND;
 									this.chatMessageTarget = SocialLists.friendList[index];
 									this.chatMessageInputCommit = "";
@@ -6458,16 +6500,18 @@ public final class mudclient implements Runnable {
 						if (this.mouseButtonClick == 1 && this.panelSocialTab == 2) {
 							index = this.panelSocial.getControlSelectedListIndex((int) this.controlSocialPanel);
 							if (index >= 0 && this.mouseX < maxWidth && this.mouseX > minWidth) {
-								this.removeIgnore(SocialLists.ignoreList[index]);
+								this.removeIgnore(SocialLists.ignoreList[index]); // Remove Ignore
 							}
 						}
 
+						// Add Friend
 						if (var15 > 166 && this.mouseButtonClick == 1 && this.panelSocialTab == 0) {
 							this.inputTextFinal = "";
 							this.inputTextCurrent = "";
 							this.panelSocialPopup_Mode = SocialPopupMode.ADD_FRIEND;
 						}
 
+						// Add Ignore
 						if (var15 > 166 && this.mouseButtonClick == 1 && this.panelSocialTab == 2) {
 							this.panelSocialPopup_Mode = SocialPopupMode.ADD_IGNORE;
 							this.inputTextCurrent = "";
@@ -6476,7 +6520,9 @@ public final class mudclient implements Runnable {
 
 						this.mouseButtonClick = 0;
 					}
-					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1) {
+
+					// Clan Interactions
+					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1 && Config.WANT_CLANS) {
 						this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.mouseButtonClick >= 1 && this.panelSocialTab == 1) {
@@ -6486,7 +6532,7 @@ public final class mudclient implements Runnable {
 									if (StringUtil.displayNameToKey(clan.username[index]).equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
 										return;
 									}
-									if(clan.isClanLeader() || clan.isAllowed(0)) {
+									if(clan.isClanLeader() || clan.isAllowed(0)) { // Kick From Clan
 										this.menuCommon.addItem_With2Strings("Kick user",
 												"@whi@" + clan.username[index], clan.username[index],
 												MenuItemAction.CLAN_MENU_KICK, clan.username[index]);
@@ -6955,8 +7001,10 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString("Block duel requests: @red@Off", 3 + var3, var7, 16777215, 1);
 					}
 
-					var7 += 20;
-					this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
+					if(Config.WANT_CLANS) {
+						var7 += 20;
+						this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
+					}
 					if(Config.SHOW_FLOATING_NAMETAGS) {
 						var7 += 15;
 						if (!Config.NAME_CLAN_TAG_OVERLAY) {
@@ -6965,11 +7013,14 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
 						}
 					}
-					var7 += 15;
-					if (!this.clanInviteBlockSetting) {
-						this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
+
+					if(Config.WANT_CLANS) {
+						var7 += 15;
+						if (!this.clanInviteBlockSetting) {
+							this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
+						} else {
+							this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
+						}
 					}
 
 					int var8;
@@ -9891,6 +9942,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
 					int showFloatingNametags = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
+					int wantClans = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("WANT_CLANS", wantClans == 1 ? "true" : "false");
 					Config.updateServerConfiguration(props);
 				}
 				else {
