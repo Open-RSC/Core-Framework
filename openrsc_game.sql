@@ -39491,7 +39491,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `block_duel` tinyint(1) UNSIGNED DEFAULT '0',
   `cameraauto` tinyint(1) UNSIGNED DEFAULT '0',
   `onemouse` tinyint(1) UNSIGNED DEFAULT '0',
-  `soundoff` tinyint(1) UNSIGNED DEFAULT '0',
+  `soundoff` tinyint(1) UNSIGNED DEFAULT '1',
   `haircolour` int(5) UNSIGNED DEFAULT '2',
   `topcolour` int(5) UNSIGNED DEFAULT '8',
   `trousercolour` int(5) UNSIGNED DEFAULT '14',

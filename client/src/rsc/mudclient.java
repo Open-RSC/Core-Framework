@@ -699,7 +699,7 @@ public final class mudclient implements Runnable {
 		private int objectAnimationNumberTorch = 0;
 		private boolean optionCameraModeAuto = true;
 		private boolean optionMouseButtonOne = false;
-		private boolean optionSoundDisabled = false;
+		private boolean optionSoundDisabled = true;
 		private boolean clanInviteBlockSetting = false;
 		private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
 		private Panel panelAppearance;
@@ -11929,7 +11929,7 @@ public final class mudclient implements Runnable {
 
 		private final void loadSounds() {
 			try {
-				soundData = unpackData("sounds.mem", "Sound effects", 90);
+				//soundData = unpackData("sounds.mem", "Sound effects", 90);
 				return;
 			} catch (Throwable throwable) {
 				System.out.println("Unable to init sounds:" + throwable);
@@ -13145,7 +13145,7 @@ public final class mudclient implements Runnable {
 									this.loadModels(true);
 									if (!this.errorLoadingData) {
 										if (!this.errorLoadingData) {
-											this.loadSounds();
+											//this.loadSounds();
 											if (!this.errorLoadingData) {
 												clientPort.showLoadingProgress(100, "Starting game...");
 												this.createMessageTabPanel(56);
