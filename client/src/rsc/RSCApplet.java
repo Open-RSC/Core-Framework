@@ -183,7 +183,7 @@ public class RSCApplet extends Applet implements MouseListener, MouseMotionListe
 				mudclient.interlace = !mudclient.interlace;
 			}
 			if (keyCode == 113) {
-				Config.SIDE_MENU_OVERLAY = !Config.SIDE_MENU_OVERLAY;
+				Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
 			}
 
 			// if ((char) keyChar != 78 && (char) keyChar != 77) {

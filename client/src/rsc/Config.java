@@ -26,46 +26,47 @@ public class Config {
         public static String F_CACHE_DIR = "Cache";
 
 	/* Configurable: */
-	public static boolean EXPERIENCE_DROPS = false;
-	public static boolean BATCH_PROGRESS_BAR = true;
-	public static boolean SHOW_ROOF = true;
-	public static boolean SHOW_FOG = false;
-	public static int SHOW_GROUND_ITEMS = 0;
-	public static boolean MESSAGE_TAB_SWITCH = true;
-	public static boolean NAME_CLAN_TAG_OVERLAY = true;
-	public static boolean SIDE_MENU_OVERLAY = false;
-	public static boolean KILL_FEED = false;
-	public static int FIGHT_MENU = 1;
-	public static int ZOOM = 0;
-	public static boolean INV_COUNT = false;
+	public static boolean C_EXPERIENCE_DROPS = false;
+	public static boolean C_BATCH_PROGRESS_BAR = true;
+	public static boolean C_SHOW_ROOF = true;
+	public static boolean C_SHOW_FOG = false;
+	public static int C_SHOW_GROUND_ITEMS = 0;
+	public static boolean C_MESSAGE_TAB_SWITCH = true;
+	public static boolean C_NAME_CLAN_TAG_OVERLAY = true;
+	public static boolean C_SIDE_MENU_OVERLAY = false;
+	public static boolean C_KILL_FEED = false;
+	public static int C_FIGHT_MENU = 1;
+	public static int C_ZOOM = 0;
+	public static boolean C_INV_COUNT = false;
 
 	/* Android: */
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static int F_LONG_PRESS_CALC;
-	public static boolean HOLD_AND_CHOOSE = true;
-	public static int LONG_PRESS_TIMER = 400;
-	public static int MENU_SIZE = 6;
-	public static boolean SWIPE_TO_SCROLL = true;
-	public static boolean SWIPE_TO_ROTATE = true;
+	public static boolean C_HOLD_AND_CHOOSE = true;
+	public static int C_LONG_PRESS_TIMER = 400;
+	public static int C_MENU_SIZE = 6;
+	public static boolean C_SWIPE_TO_SCROLL = true;
+	public static boolean C_SWIPE_TO_ROTATE = true;
 
 	/* Experience Config Menu */
-	public static int EXPERIENCE_COUNTER = 1;
-	public static int EXPERIENCE_COUNTER_MODE = 0;
-	public static int EXPERIENCE_COUNTER_COLOR = 0;
-	public static int EXPERIENCE_DROP_SPEED = 1;
-	public static boolean EXPERIENCE_CONFIG_SUBMENU = true;
+	public static int C_EXPERIENCE_COUNTER = 1;
+	public static int C_EXPERIENCE_COUNTER_MODE = 0;
+	public static int C_EXPERIENCE_COUNTER_COLOR = 0;
+	public static int C_EXPERIENCE_DROP_SPEED = 1;
+	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = true;
 
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
-	public static boolean SPAWN_AUCTION_NPCS = false;
-	public static boolean SPAWN_IRON_MAN_NPCS = false;
-	public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
+	public static boolean S_SPAWN_AUCTION_NPCS = false;
+	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
+	public static boolean S_SPAWN_SUBSCRIPTION_NPCS = false;
 
-	public static boolean SHOW_FLOATING_NAMETAGS = false;
-	public static boolean WANT_CLANS = false;
-	public static boolean WANT_KILL_FEED = false;
-	public static boolean FOG_TOGGLE = false;
-	public static boolean GROUND_ITEM_TOGGLE = false;
-	public static boolean AUTO_MESSAGE_SWITCH_TOGGLE = false;
+	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
+	public static boolean S_WANT_CLANS = false;
+	public static boolean S_WANT_KILL_FEED = false;
+	public static boolean S_FOG_TOGGLE = false;
+	public static boolean S_GROUND_ITEM_TOGGLE = false;
+	public static boolean S_AUTO_MESSAGE_SWITCH_TOGGLE = false;
+	public static boolean S_BATCH_PROGRESSION = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

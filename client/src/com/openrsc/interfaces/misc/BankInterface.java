@@ -31,7 +31,7 @@ public final class BankInterface {
 	
 	public int lastXAmount = 0;
 	public boolean saveXAmount = false;
-	private static int fontSize = Config.isAndroid() ? Config.MENU_SIZE : 1;
+	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
 
 	public Panel bank;
