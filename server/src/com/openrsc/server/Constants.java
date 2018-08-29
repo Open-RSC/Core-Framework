@@ -153,6 +153,7 @@ public final class Constants {
 		public static boolean SHOW_ROOF_TOGGLE = false;
 		public static boolean WANT_GLOBAL_CHAT = false;
 		public static boolean WANT_SKILL_MENUS = false;
+		public static boolean WANT_QUEST_MENUS = false;
 
 		/**
 		 * 
@@ -211,6 +212,7 @@ public final class Constants {
 			SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
 			WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
 			WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
+			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
 
 			START_TIME = System.currentTimeMillis();
 		}

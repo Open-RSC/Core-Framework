@@ -61,6 +61,7 @@ public class Config {
 	public static boolean S_SPAWN_SUBSCRIPTION_NPCS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
 	public static boolean S_WANT_SKILL_MENUS = false;
+	public static boolean S_WANT_QUEST_MENUS = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to

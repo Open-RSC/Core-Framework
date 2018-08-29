@@ -5564,9 +5564,9 @@ public final class mudclient implements Runnable {
 						clan.getClanInterface().onRender(getSurface());
 					} else if (this.showDialogShop && this.combatTimeout == 0) {
 						this.drawDialogShop();
-					} else if (skillGuideInterface.isVisible()) {
+					} else if (Config.S_WANT_SKILL_MENUS && skillGuideInterface.isVisible()) {
 						this.drawSkillGuide();
-					} else if (questGuideInterface.isVisible()) {
+					} else if (Config.S_WANT_QUEST_MENUS && questGuideInterface.isVisible()) {
 						this.drawQuestGuide();
 					} else if (experienceConfigInterface.isVisible()) {
 						this.drawExperienceConfig();
@@ -8053,7 +8053,7 @@ public final class mudclient implements Runnable {
 					}
 
 					int position = this.panelQuestInfo.getControlSelectedListIndex(this.controlQuestInfoPanel) - 1;
-					if (this.mouseButtonClick == 1 && position >= 0
+					if (Config.S_WANT_QUEST_MENUS && this.mouseButtonClick == 1 && position >= 0
 							&& this.getMouseX() > var3 && this.getMouseY() > var4 + 36
 							&& this.getMouseX() < var3 + this.getSurface().stringWidth(1, this.questNames[position])
 							&& this.getMouseY() < var6 + 44) {
@@ -10332,6 +10332,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
 					int wantSkillMenus = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
+					int wantQuestMenus = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
