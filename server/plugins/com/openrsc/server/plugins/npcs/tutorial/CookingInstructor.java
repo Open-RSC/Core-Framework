@@ -26,8 +26,12 @@ public class CookingInstructor implements TalkToNpcExecutiveListener, TalkToNpcL
 					"Eating food will heal you much more quickly",
 					"I'm here to show you some simple cooking",
 					"First you need something to cook");
-			addItem(p, 503, 1); // Add raw rat meat
-			p.message("the instructor gives you a piece of meat");
+			if (!p.getInventory().hasItemId(503)) {
+				addItem(p, 503, 1); // Add raw rat meat
+				p.message("the instructor gives you a piece of meat");
+			} else
+				npcTalk(p, n, "I see you have brought your own meat",
+						"good stuff");
 			npcTalk(p, n, "ok cook it on the range",
 					"To use an item you are holding",
 					"Open your inventory and click on the item you wish to use",
@@ -55,17 +59,18 @@ public class CookingInstructor implements TalkToNpcExecutiveListener, TalkToNpcL
 					"If you look at your hits you will see 2 numbers",
 					"The number on the right is your hits when you are at full health",
 					"The number on the left is your current hits",
-					"If the number on the left is lower eat some food to be healed",
-					"There are many other sorts of food you can cook",
+					"If the number on the left is lower eat some food to be healed");
+			p.getCache().set("tutorial", 34);
+		}
+		else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 34) {
+			npcTalk(p, n,	"There are many other sorts of food you can cook",
 					"As your cooking level increases you will be able to cook even more",
 					"Some of these dishes are more complicated to prepare",
 					"If you want to know more about cookery",
 					"You could consult the online manual",
 					"Now proceed through the next door");
 			p.getCache().set("tutorial", 35);
-		}
-		else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 35) {
-			npcTalk(p, n, "Proceed through the door, I have taught you enough");
+
 		}
 	}
 

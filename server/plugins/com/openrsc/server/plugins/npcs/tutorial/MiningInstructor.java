@@ -23,17 +23,33 @@ public class MiningInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 			npcTalk(p, n, "Please proceed through the next door");
 			return;
 		}
-		if(!hasItem(p, 156) && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 50) {
-			playerTalk(p, n, "There's tin ore in that rock");
-			npcTalk(p, n, "Yes, that's what's in there",
-					"Ok you need to get that tin out of the rock",
-					"First of all you need a pick",
-					"And here we have a pick");
-			message(p, "The instructor somehow produces a large pickaxe from inside his jacket",
-					"The instructor gives you the pickaxe");
-			addItem(p, 156, 1); // Add a bronze pickaxe to the players inventory
-			npcTalk(p, n, "Now hit those rocks");
-			return;
+		if(!hasItem(p, 156) && p.getCache().hasKey("tutorial")) {
+			if (p.getCache().getInt("tutorial") == 48) {
+				playerTalk(p, n, "Hello again");
+				npcTalk(p, n, "You haven't prospected that rock yet",
+						"Right click on it and select prospect");
+				return;
+			}
+			if (p.getCache().getInt("tutorial") == 49) {
+				playerTalk(p, n, "I have lost my pickaxe");
+				message(p, "The instructor somehow produces a large pickaxe from inside his jacket",
+						"The instructor gives you the pickaxe");
+				addItem(p, 156, 1); // Add a bronze pickaxe to the players inventory
+				return;
+			}
+			if (p.getCache().getInt("tutorial") == 50) {
+				playerTalk(p, n, "There's tin ore in that rock");
+				npcTalk(p, n, "Yes, that's what's in there",
+						"Ok you need to get that tin out of the rock",
+						"First of all you need a pick",
+						"And here we have a pick");
+				message(p, "The instructor somehow produces a large pickaxe from inside his jacket");
+				addItem(p, 156, 1); // Add a bronze pickaxe to the players inventory
+				message(p, "The instructor gives you the pickaxe");
+				npcTalk(p, n, "Now hit those rocks");
+				p.getCache().set("tutorial", 49);
+				return;
+			}
 		}
 		if(hasItem(p, 156) && !hasItem(p, 202)) {
 			npcTalk(p, n, "to mine a rock just left click on it",
@@ -60,6 +76,7 @@ public class MiningInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 				"If you want to quickly find out what is in a rock you can prospect it",
 				"right click on this rock here",
 				"And select prospect");
+		p.getCache().set("tutorial", 49);
 	}
 
 	@Override
