@@ -29,7 +29,7 @@ public class Config {
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = true;
 	public static boolean C_SHOW_ROOF = true;
-	public static boolean C_SHOW_FOG = false;
+	public static boolean C_SHOW_FOG = true;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = true;
 	public static boolean C_NAME_CLAN_TAG_OVERLAY = true;
@@ -75,6 +75,7 @@ public class Config {
 	public static boolean S_EXPERIENCE_COUNTER_TOGGLE = false;
 	public static boolean S_EXPERIENCE_DROPS_TOGGLE = false;
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
+	public static boolean S_SHOW_ROOF_TOGGLE = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

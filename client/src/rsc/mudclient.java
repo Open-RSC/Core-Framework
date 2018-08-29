@@ -7125,12 +7125,14 @@ public final class mudclient implements Runnable {
 					}
 
 					// Show Roof
-					if (!Config.C_SHOW_ROOF) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
+					if (Config.S_SHOW_ROOF_TOGGLE) {
+						if (!Config.C_SHOW_ROOF) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
+						}
 					}
 
 					// Ground Items
@@ -7370,7 +7372,7 @@ public final class mudclient implements Runnable {
 							}
 
 							// Show Roof
-							if (settingIndex == 7 && this.mouseButtonClick == 1) {
+							if (settingIndex == 7 && this.mouseButtonClick == 1 && Config.S_SHOW_ROOF_TOGGLE) {
 								Config.C_SHOW_ROOF = !Config.C_SHOW_ROOF;
 								Config.saveConfiguration(false);
 							}
@@ -10047,6 +10049,8 @@ public final class mudclient implements Runnable {
           props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
 					int itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
+					int showRoofToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
