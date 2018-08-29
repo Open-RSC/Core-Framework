@@ -12730,7 +12730,8 @@ public final class mudclient implements Runnable {
 					n.setVisible(false);
 
 				clan.putClan(false);
-				experienceOverlay.setVisible(true);
+				if (Config.S_EXPERIENCE_DROPS_TOGGLE)
+					experienceOverlay.setVisible(true);
 				this.getSurface().blackScreen(true);
 				// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 				// this.screenOffsetY);
