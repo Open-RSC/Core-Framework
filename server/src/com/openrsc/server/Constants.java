@@ -149,6 +149,7 @@ public final class Constants {
 		public static boolean FIGHTMODE_SELECTOR_TOGGLE = false;
 		public static boolean EXPERIENCE_COUNTER_TOGGLE = false;
 		public static boolean EXPERIENCE_DROPS_TOGGLE = false;
+		public static boolean ITEMS_ON_DEATH_MENU = false;
 
 		/**
 		 * 
@@ -203,6 +204,7 @@ public final class Constants {
 			FIGHTMODE_SELECTOR_TOGGLE = Boolean.parseBoolean(props.getProperty("fightmode_selector_toggle"));
 			EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_counter_toggle"));
 			EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_drops_toggle"));
+			ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
 
 			START_TIME = System.currentTimeMillis();
 		}

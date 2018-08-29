@@ -5563,7 +5563,7 @@ public final class mudclient implements Runnable {
 						this.drawExperienceConfig();
 					} else if (doSkillInterface.isVisible() && this.combatTimeout == 0) {
 						this.drawDoSkill();
-					} else if (lostOnDeathInterface.isVisible()) {
+					} else if (Config.S_ITEMS_ON_DEATH_MENU && lostOnDeathInterface.isVisible()) {
 						this.drawLostOnDeath();
 					} else if (territorySignupInterface.isVisible()) {
 						this.drawTerritorySignup();
@@ -7202,15 +7202,16 @@ public final class mudclient implements Runnable {
 					}
 
 					var7 = 275;
-					int onDeathColor = 16777215;
 
-					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-						onDeathColor = 16776960;
+					if (Config.S_ITEMS_ON_DEATH_MENU) {
+						int onDeathColor = 16777215;
+						if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+							onDeathColor = 16776960;
+						}
+						this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
 					}
-					this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
-
-					// var7 += 195;
-					// this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+					else
+						this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 
 					int var8 = 16777215;
 					var7 += 15;
@@ -7436,10 +7437,12 @@ public final class mudclient implements Runnable {
 							var7 += 184;
 
 							// Items On Death
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-								this.showUiTab = 0;
-								lostOnDeathInterface.setVisible(true);
+							if (Config.S_ITEMS_ON_DEATH_MENU) {
+								if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+										&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+									this.showUiTab = 0;
+									lostOnDeathInterface.setVisible(true);
+								}
 							}
 
 							var7 += 15;
@@ -10042,7 +10045,8 @@ public final class mudclient implements Runnable {
           props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
 					int experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
           props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
-
+					int itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
@@ -13182,7 +13186,8 @@ public final class mudclient implements Runnable {
 						questGuideInterface = new QuestGuideInterface(this);
 						experienceConfigInterface = new ExperienceConfigInterface(this);
 						doSkillInterface = new DoSkillInterface(this);
-						lostOnDeathInterface = new LostOnDeathInterface(this);
+						if (Config.S_ITEMS_ON_DEATH_MENU)
+							lostOnDeathInterface = new LostOnDeathInterface(this);
 						territorySignupInterface = new TerritorySignupInterface(this);
 
 						mainComponent = new NComponent(this);
@@ -14047,6 +14052,7 @@ public final class mudclient implements Runnable {
 		}
 
 		private void drawLostOnDeath() {
+			if (!Config.S_ITEMS_ON_DEATH_MENU) return;
 			lostOnDeathInterface.onRender();
 		}
 
