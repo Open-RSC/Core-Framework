@@ -6969,41 +6969,44 @@ public final class mudclient implements Runnable {
 					//this.getSurface().drawString("all people not on your friends list", var3 + 3, var7, 0, 1);
 					//var7 += 15;
 					if (this.settingsBlockChat != 0) {
-						this.getSurface().drawString("Block chat messages: @gre@On", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block chat messages: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 16777215, 1);
 					}
 
 					var7 += 15;
 					if (this.settingsBlockPrivate == 0) {
-						this.getSurface().drawString("Block private messages: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block private messages: @gre@On", var3 + 3, var7, 16777215, 1);
+						this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 16777215, 1);
 					}
 
 					var7 += 15;
-					if (this.settingsBlockGlobal == 1) {
-						this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
-					} else if(this.settingsBlockGlobal == 2) {
-						this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
-					} else if(this.settingsBlockGlobal == 3) {
-						this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
-					} else if(this.settingsBlockGlobal == 4) {
-						this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
+
+					if (Config.S_WANT_GLOBAL_CHAT) {
+						if (this.settingsBlockGlobal == 1) {
+							this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
+						} else if(this.settingsBlockGlobal == 2) {
+							this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
+						} else if(this.settingsBlockGlobal == 3) {
+							this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
+						} else if(this.settingsBlockGlobal == 4) {
+							this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
+						}
+						var7 += 15;
 					}
 
-					var7 += 15;
 					if (this.settingsBlockTrade != 0) {
-						this.getSurface().drawString("Block trade requests: @gre@On", var3 + 3, var7, 16777215, 1);
+						this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block trade requests: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 16777215, 1);
 					}
 
 					var7 += 15;
 					if (this.settingsBlockDuel != 0) {
-						this.getSurface().drawString("Block duel requests: @gre@On", var3 + 3, var7, 16777215, 1);
+						this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block duel requests: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 16777215, 1);
 					}
 
 					if(Config.S_WANT_CLANS) {
@@ -7013,9 +7016,9 @@ public final class mudclient implements Runnable {
 					if(Config.S_SHOW_FLOATING_NAMETAGS) {
 						var7 += 15;
 						if (!Config.C_NAME_CLAN_TAG_OVERLAY) {
-							this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
+							this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 16777215, 1);
 						} else {
-							this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
+							this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 16777215, 1);
 						}
 					}
 
@@ -7030,9 +7033,7 @@ public final class mudclient implements Runnable {
 
 					int var8;
 					if (this.insideTutorial) {
-						var7 += 20;
-						this.getSurface().drawString("Skip Tutorial Island", 3 + var3, var7, 0, 1);
-						var7 += 15;
+						var7 += 125;
 						var8 = 16777215;
 						if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 								&& this.mouseY < 4 + var7) {
@@ -7317,6 +7318,7 @@ public final class mudclient implements Runnable {
 							else
 								settingIndex = checkPosition;
 
+							// Camera Mode
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
 								this.optionCameraModeAuto = !this.optionCameraModeAuto;
 								this.getClientStream().newPacket(111);
@@ -7325,6 +7327,7 @@ public final class mudclient implements Runnable {
 								this.getClientStream().finishPacket();
 							}
 
+							// One or Two Mouse Button(s)
 							if (settingIndex == 1 && this.mouseButtonClick == 1) {
 								this.optionMouseButtonOne = !this.optionMouseButtonOne;
 								this.getClientStream().newPacket(111);
@@ -7334,6 +7337,7 @@ public final class mudclient implements Runnable {
 
 							}
 
+							// Sound On/Off
 							if (settingIndex == 2 && this.mouseButtonClick == 1) {
 								this.optionSoundDisabled = !this.optionSoundDisabled;
 								this.getClientStream().newPacket(111);
@@ -7459,6 +7463,8 @@ public final class mudclient implements Runnable {
 						if (this.settingTab == 0) {
 							var7 += 0;
 							boolean var11 = false;
+
+							// Block Chat
 							if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
 									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 								this.settingsBlockChat = 1 - this.settingsBlockChat;
@@ -7466,6 +7472,8 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 15;
+
+							// Block Private
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
 								this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
@@ -7473,19 +7481,26 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 15;
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
-								if(this.settingsBlockGlobal >= 4) {
-									this.settingsBlockGlobal = 0;
+
+							// Block Global
+							if (Config.S_WANT_GLOBAL_CHAT) {
+								if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+										&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+									if(this.settingsBlockGlobal >= 4) {
+										this.settingsBlockGlobal = 0;
+									}
+									this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
+									this.getClientStream().newPacket(111);
+									this.getClientStream().writeBuffer1.putByte(9);
+									this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
+									this.getClientStream().finishPacket();
 								}
-								this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(9);
-								this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
-								this.getClientStream().finishPacket();
+
+								var7 += 15;
 							}
 
-							var7 += 15;
+
+							// Block Trade
 							if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 									&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
 								this.settingsBlockTrade = 1 - this.settingsBlockTrade;
@@ -7493,6 +7508,8 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 15;
+
+							// Block Duel
 							if (this.mouseX > var6 && this.mouseX < var6 + var5
 									&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								var11 = true;
@@ -7508,34 +7525,40 @@ public final class mudclient implements Runnable {
 							var7 += 20;
 
 							if (Config.S_WANT_CLANS) {
+
+								// Floating Nametag
 								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
 										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 									Config.C_NAME_CLAN_TAG_OVERLAY = !Config.C_NAME_CLAN_TAG_OVERLAY;
 									Config.saveConfiguration(false);
 								}
+
 								var7 += 15;
+
+								// Clan Invite Blocking
+								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+									this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
+									this.getClientStream().newPacket(111);
+									this.getClientStream().writeBuffer1.putByte(11);
+									this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
+									this.getClientStream().finishPacket();
+								}
 							}
 
-							if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-								this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(11);
-								this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
-								this.getClientStream().finishPacket();
-							}
-
+							// Skip Tutorial Button
 							if (this.insideTutorial) {
-								var7 += 35;
+								var7 += 95;
 								if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
 										&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 									this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
 									this.showUiTab = 0;
 								}
-								var7 -= 35;
 							}
 
 							var7 = 290;
+
+							// Logout
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.sendLogout(0);
@@ -10051,6 +10074,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
 					int showRoofToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
+					int wantGlobalChat = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
