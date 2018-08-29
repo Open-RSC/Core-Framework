@@ -2723,8 +2723,8 @@ public final class mudclient implements Runnable {
 							k = 0xff0000;
 
 						this.getSurface().drawString(
-								(optionsMenuKeyboardInput ? "(" + (j + 1) + ")" : "") + optionsMenuText[j], startX + 10,
-								startY + j * spread, k, 6);
+								(optionsMenuKeyboardInput ? "(" + (j + 1) + ")" : "") + optionsMenuText[j],
+									startX + 10, startY + j * spread, k, 6);
 					}
 				} else {
 					int var2;
@@ -9117,7 +9117,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private boolean optionsMenuKeyboardInput = true;
+		private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
 
 		public final void handleKeyPress(byte var1, int key) {
 			try {
@@ -10357,6 +10357,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
 					int wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
+					int wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}

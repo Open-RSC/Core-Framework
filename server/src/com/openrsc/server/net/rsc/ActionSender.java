@@ -483,6 +483,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0));
 
 
 		player.write(s.toPacket());
