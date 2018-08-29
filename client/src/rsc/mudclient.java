@@ -717,6 +717,15 @@ public final class mudclient implements Runnable {
 		private Panel panelQuestInfo;
 		//private Panel panelPlayerTaskInfo;
 		private Panel panelSettings;
+		private boolean authenticSettings = !(
+						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+            || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+            || Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+            || Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+            || Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
+            || Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+            || Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+            || Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 		private Panel panelSocial;
 		private Panel panelClan;
 		private SocialPopupMode panelSocialPopup_Mode = SocialPopupMode.NONE;
@@ -5617,17 +5626,17 @@ public final class mudclient implements Runnable {
 					}
 
 					this.handleTabUIClick();
-					boolean var3 = !this.optionsMenuShow && !this.topMouseMenuVisible;
-					if (var3) {
+					boolean mustDrawMenu = !this.optionsMenuShow && !this.topMouseMenuVisible;
+					if (mustDrawMenu) {
 						this.menuCommon.recalculateSize(0);
 					}
 
-					if (this.showUiTab == 0 && var3) {
+					if (this.showUiTab == 0 && mustDrawMenu) {
 						this.drawUiTab0(var1 ^ 2);
 					}
 
 					if (this.showUiTab == 1) {
-						this.drawUiTab1(-15252, var3);
+						this.drawUiTab1(-15252, mustDrawMenu);
 					}
 
 					if (Config.S_INVENTORY_COUNT_TOGGLE && Config.C_INV_COUNT) {
@@ -5635,23 +5644,23 @@ public final class mudclient implements Runnable {
 					}
 
 					if (this.showUiTab == 2) {
-						this.drawUiTabMinimap(var3, (byte) 125);
+						this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
 					}
 
 					if (this.showUiTab == 3) {
-						this.drawUiTabPlayerInfo(var3, var1 ^ 0);
+						this.drawUiTabPlayerInfo(mustDrawMenu, var1 ^ 0);
 					}
 
 					if (this.showUiTab == 4) {
-						this.drawUiTabMagic(var3, (byte) -74);
+						this.drawUiTabMagic(mustDrawMenu, (byte) -74);
 					}
 
 					if (this.showUiTab == 5) {
-						this.drawUiTab5(var3, false);
+						this.drawUiTab5(mustDrawMenu, false);
 					}
 
 					if (this.showUiTab == 6) {
-						this.drawUiTabOptions(15, var3);
+						this.drawUiTabOptions(15, mustDrawMenu);
 					}
 
 					if (!this.topMouseMenuVisible && !this.optionsMenuShow) {
@@ -6907,7 +6916,8 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void drawUiTabOptions(int var1, boolean var2) {
+		/* Settings Menu */
+		private final void drawUiTabOptions(int var1, boolean mustTrackMouse) {
 			try {
 				int var3 = this.getSurface().width2 - 199;
 				this.getSurface().drawSprite(mudclient.spriteMedia + 6, var3 - 49, 3);
@@ -6917,387 +6927,80 @@ public final class mudclient implements Runnable {
 				int chosenColor = GenUtil.buildColor(220, 220, 220);
 				int unchosenColor = GenUtil.buildColor(160, 160, 160);
 
+				// Android Settings Tabs
 				if (Config.isAndroid()) {
-					if (this.settingTab == 0) {
-						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, chosenColor, 128);
-						this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
-						this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, unchosenColor, 128);
-					} else if (this.settingTab == 1) {
-						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, unchosenColor, 128);
-						this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, chosenColor, 128);
-						this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, unchosenColor, 128);
-					} else if (this.settingTab == 2) {
-						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, unchosenColor, 128);
-						this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
-						this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, chosenColor, 128);
-					}
+					this.drawAndroidSettingsBox(var3, var4, var5, unchosenColor, chosenColor);
 
-					this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
-					this.getSurface().drawLineVert(var3 + var5/3, 0 + var4 - 25, 0, 24);
-					this.getSurface().drawLineVert(var3 + 2*(var5/3) + 1, 0 + var4 - 25, 0, 24);
-
-					this.getSurface().drawColoredStringCentered(var5/4 + var3 - 16, "Social", 0, 0, 4, 16 + var4 - 25);
-					this.getSurface().drawColoredStringCentered(var3 + var5/4 + var5/3 - 16, "General", 0, 0, 4, 16 + var4 - 25);
-					this.getSurface().drawColoredStringCentered(var3 + var5/4 + 2* var5/3 - 15, "Android", 0, 0, 4, 16 + var4 - 25);
-
+				// Desktop Settings tabs
 				} else {
-					if (this.settingTab == 0) {
-						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/2, 24, chosenColor, 128);
-						this.getSurface().drawBoxAlpha(var5/2 + var3, var4 - 25, var5/2, 24, unchosenColor, 128);
-					} else if (this.settingTab == 1) {
-						this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/2, 24, unchosenColor, 128);
-						this.getSurface().drawBoxAlpha(var5/2 + var3, var4 - 25, var5/2, 24, chosenColor, 128);
+
+
+					// Authentic Settings GUI
+					if (this.authenticSettings) {
+						var4 = 36;
+						this.getSurface().drawBoxAlpha(var3, 36, var5, 65, GenUtil.buildColor(181, 181, 181), 160);
+						this.getSurface().drawBoxAlpha(var3, 101, var5, 65, GenUtil.buildColor(201, 201, 201), 160);
+						this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
+						this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
 					}
 
-					this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
-					this.getSurface().drawLineVert(var3 + var5/2, 0 + var4 - 25, 0, 24);
-
-					this.getSurface().drawColoredStringCentered(var5/4 + var3, "Social", 0, 0, 4, 16 + var4 - 25);
-					this.getSurface().drawColoredStringCentered(var3 + var5/4 + var5/2, "General", 0, 0, 4, 16 + var4 - 25);
+					// Custom Settings GUI
+					else {
+						this.drawCustomSettingsBox(var3, var4, var5, chosenColor, unchosenColor);
+					}
 				}
-
-				this.getSurface().drawBoxAlpha(var3, 36 + 25, var5, 200, GenUtil.buildColor(181, 181, 181), 160);
-				this.getSurface().drawBoxAlpha(var3, 261, var5, 40, GenUtil.buildColor(201, 201, 201), 160);
 
 				int var6 = 3 + var3;
 				int var7 = var4 + 15;
 				
-				/* Social Settings Definitions */
-				if (this.settingTab == 0) {
-					this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
-					var7 += 15;
-					//this.getSurface().drawString("all people not on your friends list", var3 + 3, var7, 0, 1);
-					//var7 += 15;
-					if (this.settingsBlockChat != 0) {
-						this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 16777215, 1);
+				if (this.authenticSettings) 
+					this.drawAuthenticSettingsOptions(var3, var4, var5, var6, var7, chosenColor, unchosenColor);
+				else {
+					/* Social Settings Definitions */
+					if (this.settingTab == 0) {
+						this.drawSocialSettingsOptions(var3, var5, var6, var7);
 					}
 
-					var7 += 15;
-					if (this.settingsBlockPrivate == 0) {
-						this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 16777215, 1);
+					/* Game Settings Definitions */
+					if (this.settingTab == 1) {
+						this.drawGeneralSettingsOptions(var3, var5, var6, var7);
 					}
 
-					var7 += 15;
-
-					if (Config.S_WANT_GLOBAL_CHAT) {
-						if (this.settingsBlockGlobal == 1) {
-							this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
-						} else if(this.settingsBlockGlobal == 2) {
-							this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
-						} else if(this.settingsBlockGlobal == 3) {
-							this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
-						} else if(this.settingsBlockGlobal == 4) {
-							this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
-						}
-						var7 += 15;
+					/* Android Settings Definitions */
+					if (this.settingTab == 2) {
+						this.drawAndroidSettingsOptions(var3, var5, var6, var7);
 					}
-
-					if (this.settingsBlockTrade != 0) {
-						this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 16777215, 1);
-					}
-
-					var7 += 15;
-					if (this.settingsBlockDuel != 0) {
-						this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
-					} else {
-						this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 16777215, 1);
-					}
-
-					if(Config.S_WANT_CLANS) {
-						var7 += 20;
-						this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
-					}
-					if(Config.S_SHOW_FLOATING_NAMETAGS) {
-						var7 += 15;
-						if (!Config.C_NAME_CLAN_TAG_OVERLAY) {
-							this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 16777215, 1);
-						} else {
-							this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 16777215, 1);
-						}
-					}
-
-					if(Config.S_WANT_CLANS) {
-						var7 += 15;
-						if (!this.clanInviteBlockSetting) {
-							this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
-						} else {
-							this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
-						}
-					}
-
-					int var8;
-					if (this.insideTutorial) {
-						var7 += 125;
-						var8 = 16777215;
-						if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-								&& this.mouseY < 4 + var7) {
-							var8 = 16776960;
-						}
-						this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
-					}
-
-					var7 = 275;
-					this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-					var8 = 16777215;
-					var7 += 15;
-					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-						var8 = 16776960;
-					}
-
-					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
 				}
 
-				/* Game Settings Definitions */
-				if (this.settingTab == 1) {
-					this.panelSettings.clearList(this.controlSettingPanel);
-					int index = 0;
-					this.getSurface().drawString("Game options", 3 + var3, var7, 0, 1);
+				/* Mouse Tracking For Option Buttons */
+				if (mustTrackMouse) {
+					var3 = 199 - this.getSurface().width2 + this.mouseX; // Relative X
+					int var13 = this.mouseY - 36; // Relative Y
+					if (var3 >= 0 && var13 >= 0 && var3 < 196 && var13 < 295) { // Within Panel
 
-					// Camera angle mode
-					if (this.optionCameraModeAuto) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Camera angle mode - @gre@Auto", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Camera angle mode - @red@Manual", 0, (String) null, (String) null);
-					}
-
-					// Mouse Buttons
-					if (this.optionMouseButtonOne) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Mouse Buttons - @red@One", 1, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Mouse Buttons - @gre@Two", 1, (String) null, (String) null);
-					}
-
-					// Sound Effects
-					if (this.optionSoundDisabled) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Sound Effects - @red@Off", 2, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Sound Effects - @gre@On", 2, (String) null, (String) null);
-					}
-
-					// Batch Progress Bar
-					if (Config.S_BATCH_PROGRESSION) {
-						if (!Config.C_BATCH_PROGRESS_BAR) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
-						}
-					}
-
-					// Experience Drops
-					if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
-						if (!Config.C_EXPERIENCE_DROPS) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
-						}
-					}
-
-					// Zoom View
-					if (Config.S_ZOOM_VIEW_TOGGLE) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
-					}
-
-					// Fog
-					if (Config.S_FOG_TOGGLE) {
-						if (!Config.C_SHOW_FOG) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Fog - @red@Off", 6, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Fog - @gre@On", 6, (String) null, (String) null);
-						}
-					}
-
-					// Show Roof
-					if (Config.S_SHOW_ROOF_TOGGLE) {
-						if (!Config.C_SHOW_ROOF) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
-						}
-					}
-
-					// Ground Items
-					if (Config.S_GROUND_ITEM_TOGGLE) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Ground Items - " + (Config.C_SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
-										: Config.C_SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-												: Config.C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
-					}
-
-					// Auto Message Switch
-					if (Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
-						if (!Config.C_MESSAGE_TAB_SWITCH) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Auto Message Switch - @red@Off", 9, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Auto Message Switch - @gre@On", 9, (String) null, (String) null);
-						}
-					}
-
-					// Side Menu
-					if (Config.S_SIDE_MENU_TOGGLE) {
-						if (!Config.C_SIDE_MENU_OVERLAY) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
-						}
-					}
-
-					// Kill Feed
-					if (Config.S_WANT_KILL_FEED) {
-						if (!Config.C_KILL_FEED) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Kill Feed - @red@Off", 11, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Kill Feed - @gre@On", 11, (String) null, (String) null);
-						}
-					}
-
-					// Combat Style
-					if (Config.S_MENU_COMBAT_STYLE_TOGGLE)
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
-
-					// Fightmode Selector
-					if (Config.S_FIGHTMODE_SELECTOR_TOGGLE)
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
-										: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
-
-					// Experience Counter
-					if (Config.S_EXPERIENCE_COUNTER_TOGGLE)
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
-										: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
-
-					// Inventory Count
-					if (Config.S_INVENTORY_COUNT_TOGGLE) {
-						if (!Config.C_INV_COUNT) {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
-						} else {
-							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-									"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
-						}
-					}
-
-					var7 = 275;
-
-					if (Config.S_ITEMS_ON_DEATH_MENU) {
-						int onDeathColor = 16777215;
-						if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-							onDeathColor = 16776960;
-						}
-						this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
-					}
-					else
-						this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-
-					int var8 = 16777215;
-					var7 += 15;
-					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-						var8 = 16776960;
-					}
-					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
-
-					this.panelSettings.drawPanel();
-				}
-
-				if (this.settingTab == 2) {
-					this.panelSettings.clearList(this.controlSettingPanel);
-					int index = 0;
-					this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Hold-time for Menu - @gre@" + Config.C_LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
-
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Menu Size - @lre@Font " + (Config.C_MENU_SIZE), 1, (String) null, (String) null);
-
-					if (!Config.C_HOLD_AND_CHOOSE) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Hold and Choose - @red@Off", 2, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Hold and Choose - @gre@On", 2, (String) null, (String) null);
-					}
-
-					if (!Config.C_SWIPE_TO_SCROLL) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Scroll - @red@Off", 3, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Scroll - @gre@On", 3, (String) null, (String) null);
-					}
-
-					if (!Config.C_SWIPE_TO_ROTATE) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Rotate - @red@Off", 4, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Rotate - @gre@On", 4, (String) null, (String) null);
-					}
-
-					var7 += 195;
-					this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-					int var8 = 16777215;
-					var7 +=15;
-					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-						var8 = 16776960;
-					}
-					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
-
-					this.panelSettings.drawPanel();
-				}
-
-				if (var2) {
-					var3 = 199 - this.getSurface().width2 + this.mouseX;
-					int var13 = this.mouseY - 36;
-					if (var3 >= 0 && var13 >= 0 && var3 < 196 && var13 < 295) {
-						this.panelSettings.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
-
-						if (Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 < 66 && (this.settingTab == 1 || this.settingTab == 2)) {
-								this.settingTab = 0;
-								this.panelSettings.resetList(this.controlSettingPanel);
-							} else if (var3 >= 66 && var3 <= 131
-									&& (this.settingTab == 0 || this.settingTab == 2)) {
-								this.settingTab = 1;
-								this.panelSettings.resetList(this.controlSettingPanel);
-							} else if (var3 > 131 && (this.settingTab == 0 || this.settingTab == 1)) {
-								this.settingTab = 2;
-								this.panelSettings.resetList(this.controlSettingPanel);
-							}
-						}
-						else if (!Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
-							if (var13 <= 24 && this.mouseButtonClick == 1) {
-								if (var3 < 98 && this.settingTab == 1) {
-									this.settingTab = 0; // Social Settings Panel
+						// Tab Switching
+						if (!this.authenticSettings) {
+							this.panelSettings.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
+							if (Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
+								if (var3 < 66 && (this.settingTab == 1 || this.settingTab == 2)) {
+									this.settingTab = 0; // Social Settings Tab
 									this.panelSettings.resetList(this.controlSettingPanel);
-								} else if (var3 >= 98 && this.settingTab == 0) {
-									this.settingTab = 1; // General Settings Panel
+								} else if (var3 >= 66 && var3 <= 131
+										&& (this.settingTab == 0 || this.settingTab == 2)) {
+									this.settingTab = 1; // General Settings Tab
+									this.panelSettings.resetList(this.controlSettingPanel);
+								} else if (var3 > 131 && (this.settingTab == 0 || this.settingTab == 1)) {
+									this.settingTab = 2; // Android Settings Tab
+									this.panelSettings.resetList(this.controlSettingPanel);
+								}
+							}
+							else if (!Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
+								if (var13 <= 24 && this.mouseButtonClick == 1) {
+									if (var3 < 98 && this.settingTab == 1) {
+										this.settingTab = 0; // Social Settings Tab
+									} else if (var3 >= 98 && this.settingTab == 0) {
+										this.settingTab = 1; // General Settings Tab
+									}
 									this.panelSettings.resetList(this.controlSettingPanel);
 								}
 							}
@@ -7307,315 +7010,865 @@ public final class mudclient implements Runnable {
 						var6 = var9 + 3;
 						byte var10 = 36;
 						var5 = 184;
-						var7 = 30 + var10 + 25;
 
-						// Handle clicks on settings menu
-						if (this.settingTab == 1) {
-							int settingIndex = -1;
-							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
-							if (checkPosition >= 0)
-								settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
-							else
-								settingIndex = checkPosition;
+						if (!this.authenticSettings) {
+							var7 = 30 + var10;
 
-							// Camera Mode
-							if (settingIndex == 0 && this.mouseButtonClick == 1) {
-								this.optionCameraModeAuto = !this.optionCameraModeAuto;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(0);
-								this.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
-								this.getClientStream().finishPacket();
+							/* General Tab Option Clicks */
+							if (this.settingTab == 1) {
+								this.handleGeneralSettingsClicks(var5, var6, var7);
 							}
 
-							// One or Two Mouse Button(s)
-							if (settingIndex == 1 && this.mouseButtonClick == 1) {
-								this.optionMouseButtonOne = !this.optionMouseButtonOne;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(1);
-								this.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
-								this.getClientStream().finishPacket();
-
+							/* Social Tab Option Clicks */
+							if (this.settingTab == 0) {
+								this.handleSocialSettingsClicks(var5, var6, var7);
 							}
 
-							// Sound On/Off
-							if (settingIndex == 2 && this.mouseButtonClick == 1) {
-								this.optionSoundDisabled = !this.optionSoundDisabled;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(2);
-								this.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
-								this.getClientStream().finishPacket();
-							}
-
-							// Batch Progress Bar
-							if (Config.S_BATCH_PROGRESSION) {
-								if (settingIndex == 3 && this.mouseButtonClick == 1) {
-									Config.C_BATCH_PROGRESS_BAR = !Config.C_BATCH_PROGRESS_BAR;
-									Config.saveConfiguration(false);
-								}
-							}
-
-							// Experience Drops
-							if (settingIndex == 4 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_DROPS_TOGGLE) {
-								Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
-								Config.saveConfiguration(false);
-							}
-
-							// Zoom View
-							if (settingIndex == 5 && this.mouseButtonClick == 1 && Config.S_ZOOM_VIEW_TOGGLE) {
-								this.cameraZoom = 750;
-								Config.C_ZOOM++;
-								if (Config.C_ZOOM == 4)
-									Config.C_ZOOM = 0;
-								Config.saveConfiguration(false);
-							}
-
-							// Fog
-							if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.S_FOG_TOGGLE) {
-								Config.C_SHOW_FOG = !Config.C_SHOW_FOG;
-								Config.saveConfiguration(false);
-							}
-
-							// Show Roof
-							if (settingIndex == 7 && this.mouseButtonClick == 1 && Config.S_SHOW_ROOF_TOGGLE) {
-								Config.C_SHOW_ROOF = !Config.C_SHOW_ROOF;
-								Config.saveConfiguration(false);
-							}
-
-							// Show Ground Items
-							if (settingIndex == 8 && this.mouseButtonClick == 1 && Config.S_GROUND_ITEM_TOGGLE) {
-								Config.C_SHOW_GROUND_ITEMS++;
-								if (Config.C_SHOW_GROUND_ITEMS == 4)
-									Config.C_SHOW_GROUND_ITEMS = 0;
-								Config.saveConfiguration(false);
-							}
-
-							// Auto Message Tab Switch
-							if (settingIndex == 9 && this.mouseButtonClick == 1 && Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
-								Config.C_MESSAGE_TAB_SWITCH = !Config.C_MESSAGE_TAB_SWITCH;
-								Config.saveConfiguration(false);
-							}
-
-							// Side Menu
-							if (settingIndex == 10 && this.mouseButtonClick == 1 && Config.S_SIDE_MENU_TOGGLE) {
-								Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
-								Config.saveConfiguration(false);
-							}
-
-							// Kill Feed
-							if (settingIndex == 11 && this.mouseButtonClick == 1 && Config.S_WANT_KILL_FEED) {
-								Config.C_KILL_FEED = !Config.C_KILL_FEED;
-								Config.saveConfiguration(false);
-							}
-
-							// Combat Style
-							if (settingIndex == 12 && this.mouseButtonClick == 1 && Config.S_MENU_COMBAT_STYLE_TOGGLE) {
-								this.combatStyle++;
-								if (this.combatStyle == 4) {
-									this.combatStyle = 0;
-								}
-								this.getClientStream().newPacket(29);
-								this.getClientStream().writeBuffer1.putByte(this.combatStyle);
-								this.getClientStream().finishPacket();
-							}
-
-							// Fightmode Selector
-							if (settingIndex == 13 && this.mouseButtonClick == 1 && Config.S_FIGHTMODE_SELECTOR_TOGGLE) {
-								Config.C_FIGHT_MENU++;
-								if (Config.C_FIGHT_MENU == 3)
-									Config.C_FIGHT_MENU = 0;
-								Config.saveConfiguration(false);
-							}
-
-							// Experience Counter
-							if (settingIndex == 14 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_COUNTER_TOGGLE) {
-								Config.C_EXPERIENCE_COUNTER++;
-								if (Config.C_EXPERIENCE_COUNTER == 3)
-									Config.C_EXPERIENCE_COUNTER = 0;
-								Config.saveConfiguration(false);
-							}
-
-							// Inventory Count
-							if (settingIndex == 15 && this.mouseButtonClick == 1 && Config.S_INVENTORY_COUNT_TOGGLE) {
-								Config.C_INV_COUNT = !Config.C_INV_COUNT;
-								Config.saveConfiguration(false);
-							}
-
-							var7 += 184;
-
-							// Items On Death
-							if (Config.S_ITEMS_ON_DEATH_MENU) {
-								if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-										&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-									this.showUiTab = 0;
-									lostOnDeathInterface.setVisible(true);
-								}
-							}
-
-							var7 += 15;
-
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-								this.sendLogout(0);
+							/* Android Tab Option Clicks */
+							if(this.settingTab == 2) {
+								this.handleAndroidSettingsClicks(var5, var6, var7);
 							}
 						}
-
-						// "Social" Panel in Settings
-						if (this.settingTab == 0) {
-							var7 += 0;
-							boolean var11 = false;
-
-							// Block Chat
-							if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
-									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-								this.settingsBlockChat = 1 - this.settingsBlockChat;
-								var11 = true;
-							}
-
-							var7 += 15;
-
-							// Block Private
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
-								this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
-								var11 = true;
-							}
-
-							var7 += 15;
-
-							// Block Global
-							if (Config.S_WANT_GLOBAL_CHAT) {
-								if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-										&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
-									if(this.settingsBlockGlobal >= 4) {
-										this.settingsBlockGlobal = 0;
-									}
-									this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
-									this.getClientStream().newPacket(111);
-									this.getClientStream().writeBuffer1.putByte(9);
-									this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
-									this.getClientStream().finishPacket();
-								}
-
-								var7 += 15;
-							}
-
-
-							// Block Trade
-							if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
-									&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
-								this.settingsBlockTrade = 1 - this.settingsBlockTrade;
-								var11 = true;
-							}
-
-							var7 += 15;
-
-							// Block Duel
-							if (this.mouseX > var6 && this.mouseX < var6 + var5
-									&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-								var11 = true;
-								this.settingsBlockDuel = 1 - this.settingsBlockDuel;
-							}
-
-							var7 += 15;
-							if (var11) {
-								this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
-										this.settingsBlockTrade, this.settingsBlockDuel);
-							}
-
-							var7 += 20;
-
-							if (Config.S_WANT_CLANS) {
-
-								// Floating Nametag
-								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-									Config.C_NAME_CLAN_TAG_OVERLAY = !Config.C_NAME_CLAN_TAG_OVERLAY;
-									Config.saveConfiguration(false);
-								}
-
-								var7 += 15;
-
-								// Clan Invite Blocking
-								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-									this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
-									this.getClientStream().newPacket(111);
-									this.getClientStream().writeBuffer1.putByte(11);
-									this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
-									this.getClientStream().finishPacket();
-								}
-							}
-
-							// Skip Tutorial Button
-							if (this.insideTutorial) {
-								var7 += 95;
-								if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
-										&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-									this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
-									this.showUiTab = 0;
-								}
-							}
-
-							var7 = 290;
-
-							// Logout
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-								this.sendLogout(0);
-							}
-						}
-
-						if(this.settingTab == 2) {
-							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
-							int settingIndex = checkPosition;
-
-							if (settingIndex == 0 && this.mouseButtonClick == 1) {
-								Config.F_LONG_PRESS_CALC = Config.C_LONG_PRESS_TIMER / 50;
-								if (++Config.F_LONG_PRESS_CALC >= 13) {
-									Config.F_LONG_PRESS_CALC = 1;
-								}
-								Config.C_LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
-								Config.saveConfiguration(false);
-							}
-
-							if (settingIndex == 1 && this.mouseButtonClick == 1) {
-								Config.C_MENU_SIZE++;
-								if (Config.C_MENU_SIZE == 8)
-									Config.C_MENU_SIZE = 1;
-								Config.saveConfiguration(false);
-								if(Config.isAndroid()) {
-									this.menuCommon.font = Config.C_MENU_SIZE;
-								}
-							}
-
-							if (settingIndex == 2 && this.mouseButtonClick == 1) {
-								Config.C_HOLD_AND_CHOOSE = !Config.C_HOLD_AND_CHOOSE;
-								Config.saveConfiguration(false);
-							}
-
-							if (settingIndex == 3 && this.mouseButtonClick == 1) {
-								Config.C_SWIPE_TO_SCROLL = !Config.C_SWIPE_TO_SCROLL;
-								Config.saveConfiguration(false);
-							}
-
-							if (settingIndex == 4 && this.mouseButtonClick == 1) {
-								Config.C_SWIPE_TO_ROTATE = !Config.C_SWIPE_TO_ROTATE;
-								Config.saveConfiguration(false);
-							}
-
-							var7 += 195;
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-								this.sendLogout(0);
-							}
+						else {
+							var7 = var10 + 15;
+							this.handleAuthenticSettingsClicks(var5, var6, var7);
 						}
 
 						this.mouseButtonClick = 0;
 					}
 				}
 			} catch (RuntimeException var12) {
-				throw GenUtil.makeThrowable(var12, "client.BC(" + var1 + ',' + var2 + ')');
+				throw GenUtil.makeThrowable(var12, "client.BC(" + var1 + ',' + mustTrackMouse + ')');
 			}
+		}
+
+		private final void drawAndroidSettingsBox(int var3, byte var4, short var5, int unchosenColor, int chosenColor) {
+			if (this.settingTab == 0) {
+				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, chosenColor, 128);
+				this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, unchosenColor, 128);
+			} else if (this.settingTab == 1) {
+				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, chosenColor, 128);
+				this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, unchosenColor, 128);
+			} else if (this.settingTab == 2) {
+				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, chosenColor, 128);
+			}
+
+			this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
+			this.getSurface().drawLineVert(var3 + var5/3, 0 + var4 - 25, 0, 24);
+			this.getSurface().drawLineVert(var3 + 2*(var5/3) + 1, 0 + var4 - 25, 0, 24);
+
+			this.getSurface().drawColoredStringCentered(var5/4 + var3 - 16, "Social", 0, 0, 4, 16 + var4 - 25);
+			this.getSurface().drawColoredStringCentered(var3 + var5/4 + var5/3 - 16, "General", 0, 0, 4, 16 + var4 - 25);
+			this.getSurface().drawColoredStringCentered(var3 + var5/4 + 2* var5/3 - 15, "Android", 0, 0, 4, 16 + var4 - 25);
+		}
+
+		private final void drawCustomSettingsBox(int var3, byte var4, short var5, int chosenColor, int unchosenColor) {
+			if (this.settingTab == 0) {
+				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/2, 24, chosenColor, 128);
+				this.getSurface().drawBoxAlpha(var5/2 + var3, var4 - 25, var5/2, 24, unchosenColor, 128);
+			} else if (this.settingTab == 1) {
+				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/2, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(var5/2 + var3, var4 - 25, var5/2, 24, chosenColor, 128);
+			}
+
+			this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
+			this.getSurface().drawLineVert(var3 + var5/2, 0 + var4 - 25, 0, 24);
+
+			this.getSurface().drawColoredStringCentered(var5/4 + var3, "Social", 0, 0, 4, 16 + var4 - 25);
+			this.getSurface().drawColoredStringCentered(var3 + var5/4 + var5/2, "General", 0, 0, 4, 16 + var4 - 25);
+
+			this.getSurface().drawBoxAlpha(var3, 36 + 25, var5, 200, GenUtil.buildColor(181, 181, 181), 160);
+			this.getSurface().drawBoxAlpha(var3, 261, var5, 40, GenUtil.buildColor(201, 201, 201), 160);
+		}
+
+		private final void drawSocialSettingsOptions(int var3, short var5, int var6, int var7) {
+			this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
+			var7 += 15;
+			if (this.settingsBlockChat != 0) {
+				this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 16777215, 1);
+			} else {
+				this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 16777215, 1);
+			}
+
+			var7 += 15;
+			if (this.settingsBlockPrivate == 0) {
+				this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 16777215, 1);
+			} else {
+				this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 16777215, 1);
+			}
+
+			var7 += 15;
+
+			if (Config.S_WANT_GLOBAL_CHAT) {
+				if (this.settingsBlockGlobal == 1) {
+					this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
+				} else if(this.settingsBlockGlobal == 2) {
+					this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
+				} else if(this.settingsBlockGlobal == 3) {
+					this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
+				} else if(this.settingsBlockGlobal == 4) {
+					this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
+				}
+				var7 += 15;
+			}
+
+			if (this.settingsBlockTrade != 0) {
+				this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
+			} else {
+				this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 16777215, 1);
+			}
+
+			var7 += 15;
+			if (this.settingsBlockDuel != 0) {
+				this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
+			} else {
+				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 16777215, 1);
+			}
+
+			if(Config.S_WANT_CLANS) {
+				var7 += 20;
+				this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
+			}
+			if(Config.S_SHOW_FLOATING_NAMETAGS) {
+				var7 += 15;
+				if (!Config.C_NAME_CLAN_TAG_OVERLAY) {
+					this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 16777215, 1);
+				} else {
+					this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 16777215, 1);
+				}
+			}
+
+			if(Config.S_WANT_CLANS) {
+				var7 += 15;
+				if (!this.clanInviteBlockSetting) {
+					this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
+				} else {
+					this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
+				}
+			}
+
+			int var8;
+			if (this.insideTutorial) {
+				var7 += 123;
+				var8 = 16777215;
+				if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
+						&& this.mouseY < 4 + var7) {
+					var8 = 16776960;
+				}
+				this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
+			}
+
+			var7 = 275;
+			this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+			var8 = 16777215;
+			var7 += 15;
+			if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+				var8 = 16776960;
+			}
+
+			this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+		}
+
+		private final void drawGeneralSettingsOptions(int var3, short var5, int  var6, int var7) {
+			this.panelSettings.clearList(this.controlSettingPanel);
+			int index = 0;
+			this.getSurface().drawString("Game options", 3 + var3, var7, 0, 1);
+
+			// Camera angle mode
+			if (this.optionCameraModeAuto) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Camera angle mode - @gre@Auto", 0, (String) null, (String) null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Camera angle mode - @red@Manual", 0, (String) null, (String) null);
+			}
+
+			// Mouse Buttons
+			if (this.optionMouseButtonOne) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Mouse Buttons - @red@One", 1, (String) null, (String) null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Mouse Buttons - @gre@Two", 1, (String) null, (String) null);
+			}
+
+			// Sound Effects
+			if (this.optionSoundDisabled) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Sound Effects - @red@Off", 2, (String) null, (String) null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Sound Effects - @gre@On", 2, (String) null, (String) null);
+			}
+
+			// Batch Progress Bar
+			if (Config.S_BATCH_PROGRESSION) {
+				if (!Config.C_BATCH_PROGRESS_BAR) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
+				}
+			}
+
+			// Experience Drops
+			if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
+				if (!Config.C_EXPERIENCE_DROPS) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
+				}
+			}
+
+			// Zoom View
+			if (Config.S_ZOOM_VIEW_TOGGLE) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
+			}
+
+			// Fog
+			if (Config.S_FOG_TOGGLE) {
+				if (!Config.C_SHOW_FOG) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Fog - @red@Off", 6, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Fog - @gre@On", 6, (String) null, (String) null);
+				}
+			}
+
+			// Show Roof
+			if (Config.S_SHOW_ROOF_TOGGLE) {
+				if (!Config.C_SHOW_ROOF) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
+				}
+			}
+
+			// Ground Items
+			if (Config.S_GROUND_ITEM_TOGGLE) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Ground Items - " + (Config.C_SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
+								: Config.C_SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
+										: Config.C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
+			}
+
+			// Auto Message Switch
+			if (Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
+				if (!Config.C_MESSAGE_TAB_SWITCH) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Auto Message Switch - @red@Off", 9, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Auto Message Switch - @gre@On", 9, (String) null, (String) null);
+				}
+			}
+
+			// Side Menu
+			if (Config.S_SIDE_MENU_TOGGLE) {
+				if (!Config.C_SIDE_MENU_OVERLAY) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
+				}
+			}
+
+			// Kill Feed
+			if (Config.S_WANT_KILL_FEED) {
+				if (!Config.C_KILL_FEED) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Kill Feed - @red@Off", 11, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Kill Feed - @gre@On", 11, (String) null, (String) null);
+				}
+			}
+
+			// Combat Style
+			if (Config.S_MENU_COMBAT_STYLE_TOGGLE)
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
+
+			// Fightmode Selector
+			if (Config.S_FIGHTMODE_SELECTOR_TOGGLE)
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
+								: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
+
+			// Experience Counter
+			if (Config.S_EXPERIENCE_COUNTER_TOGGLE)
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
+								: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
+
+			// Inventory Count
+			if (Config.S_INVENTORY_COUNT_TOGGLE) {
+				if (!Config.C_INV_COUNT) {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
+				} else {
+					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+							"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
+				}
+			}
+
+			var7 = 275;
+
+			if (Config.S_ITEMS_ON_DEATH_MENU) {
+				int onDeathColor = 16777215;
+				if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+					onDeathColor = 16776960;
+				}
+				this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
+			}
+			else
+				this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+
+			int var8 = 16777215;
+			var7 += 15;
+			if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+				var8 = 16776960;
+			}
+			this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+
+			this.panelSettings.drawPanel();
+
+		}
+
+		private final void drawAndroidSettingsOptions(int var3, short var5, int var6, int var7) {
+			this.panelSettings.clearList(this.controlSettingPanel);
+			int index = 0;
+			this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Hold-time for Menu - @gre@" + Config.C_LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
+
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Menu Size - @lre@Font " + (Config.C_MENU_SIZE), 1, (String) null, (String) null);
+
+			if (!Config.C_HOLD_AND_CHOOSE) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Hold and Choose - @red@Off", 2, (String) null, (String) null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Hold and Choose - @gre@On", 2, (String) null, (String) null);
+			}
+
+			if (!Config.C_SWIPE_TO_SCROLL) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Swipe to Scroll - @red@Off", 3, (String) null, (String) null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Swipe to Scroll - @gre@On", 3, (String) null, (String) null);
+			}
+
+			if (!Config.C_SWIPE_TO_ROTATE) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Swipe to Rotate - @red@Off", 4, (String) null, (String) null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+						"@whi@Swipe to Rotate - @gre@On", 4, (String) null, (String) null);
+			}
+
+			var7 += 195;
+			this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+			int var8 = 16777215;
+			var7 +=15;
+			if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+				var8 = 16776960;
+			}
+			this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+
+			this.panelSettings.drawPanel();
+		}
+
+		private final void handleGeneralSettingsClicks(short var5, int var6, int var7) {
+			int settingIndex = -1;
+			int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
+			if (checkPosition >= 0)
+				settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
+			else
+				settingIndex = checkPosition;
+
+			// Camera Mode
+			if (settingIndex == 0 && this.mouseButtonClick == 1) {
+				this.optionCameraModeAuto = !this.optionCameraModeAuto;
+				this.getClientStream().newPacket(111);
+				this.getClientStream().writeBuffer1.putByte(0);
+				this.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
+				this.getClientStream().finishPacket();
+			}
+
+			// One or Two Mouse Button(s)
+			if (settingIndex == 1 && this.mouseButtonClick == 1) {
+				this.optionMouseButtonOne = !this.optionMouseButtonOne;
+				this.getClientStream().newPacket(111);
+				this.getClientStream().writeBuffer1.putByte(1);
+				this.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
+				this.getClientStream().finishPacket();
+
+			}
+
+			// Sound On/Off
+			if (settingIndex == 2 && this.mouseButtonClick == 1) {
+				this.optionSoundDisabled = !this.optionSoundDisabled;
+				this.getClientStream().newPacket(111);
+				this.getClientStream().writeBuffer1.putByte(2);
+				this.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
+				this.getClientStream().finishPacket();
+			}
+
+			// Batch Progress Bar
+			if (Config.S_BATCH_PROGRESSION) {
+				if (settingIndex == 3 && this.mouseButtonClick == 1) {
+					Config.C_BATCH_PROGRESS_BAR = !Config.C_BATCH_PROGRESS_BAR;
+					Config.saveConfiguration(false);
+				}
+			}
+
+			// Experience Drops
+			if (settingIndex == 4 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_DROPS_TOGGLE) {
+				Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
+				Config.saveConfiguration(false);
+			}
+
+			// Zoom View
+			if (settingIndex == 5 && this.mouseButtonClick == 1 && Config.S_ZOOM_VIEW_TOGGLE) {
+				this.cameraZoom = 750;
+				Config.C_ZOOM++;
+				if (Config.C_ZOOM == 4)
+					Config.C_ZOOM = 0;
+				Config.saveConfiguration(false);
+			}
+
+			// Fog
+			if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.S_FOG_TOGGLE) {
+				Config.C_SHOW_FOG = !Config.C_SHOW_FOG;
+				Config.saveConfiguration(false);
+			}
+
+			// Show Roof
+			if (settingIndex == 7 && this.mouseButtonClick == 1 && Config.S_SHOW_ROOF_TOGGLE) {
+				Config.C_SHOW_ROOF = !Config.C_SHOW_ROOF;
+				Config.saveConfiguration(false);
+			}
+
+			// Show Ground Items
+			if (settingIndex == 8 && this.mouseButtonClick == 1 && Config.S_GROUND_ITEM_TOGGLE) {
+				Config.C_SHOW_GROUND_ITEMS++;
+				if (Config.C_SHOW_GROUND_ITEMS == 4)
+					Config.C_SHOW_GROUND_ITEMS = 0;
+				Config.saveConfiguration(false);
+			}
+
+			// Auto Message Tab Switch
+			if (settingIndex == 9 && this.mouseButtonClick == 1 && Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
+				Config.C_MESSAGE_TAB_SWITCH = !Config.C_MESSAGE_TAB_SWITCH;
+				Config.saveConfiguration(false);
+			}
+
+			// Side Menu
+			if (settingIndex == 10 && this.mouseButtonClick == 1 && Config.S_SIDE_MENU_TOGGLE) {
+				Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
+				Config.saveConfiguration(false);
+			}
+
+			// Kill Feed
+			if (settingIndex == 11 && this.mouseButtonClick == 1 && Config.S_WANT_KILL_FEED) {
+				Config.C_KILL_FEED = !Config.C_KILL_FEED;
+				Config.saveConfiguration(false);
+			}
+
+			// Combat Style
+			if (settingIndex == 12 && this.mouseButtonClick == 1 && Config.S_MENU_COMBAT_STYLE_TOGGLE) {
+				this.combatStyle++;
+				if (this.combatStyle == 4) {
+					this.combatStyle = 0;
+				}
+				this.getClientStream().newPacket(29);
+				this.getClientStream().writeBuffer1.putByte(this.combatStyle);
+				this.getClientStream().finishPacket();
+			}
+
+			// Fightmode Selector
+			if (settingIndex == 13 && this.mouseButtonClick == 1 && Config.S_FIGHTMODE_SELECTOR_TOGGLE) {
+				Config.C_FIGHT_MENU++;
+				if (Config.C_FIGHT_MENU == 3)
+					Config.C_FIGHT_MENU = 0;
+				Config.saveConfiguration(false);
+			}
+
+			// Experience Counter
+			if (settingIndex == 14 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_COUNTER_TOGGLE) {
+				Config.C_EXPERIENCE_COUNTER++;
+				if (Config.C_EXPERIENCE_COUNTER == 3)
+					Config.C_EXPERIENCE_COUNTER = 0;
+				Config.saveConfiguration(false);
+			}
+
+			// Inventory Count
+			if (settingIndex == 15 && this.mouseButtonClick == 1 && Config.S_INVENTORY_COUNT_TOGGLE) {
+				Config.C_INV_COUNT = !Config.C_INV_COUNT;
+				Config.saveConfiguration(false);
+			}
+
+			var7 += 184;
+
+			// Items On Death
+			if (Config.S_ITEMS_ON_DEATH_MENU) {
+				if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+						&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+					this.showUiTab = 0;
+					lostOnDeathInterface.setVisible(true);
+				}
+			}
+
+			var7 += 15;
+
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+					&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+				this.sendLogout(0);
+			}
+		}
+
+		private final void handleSocialSettingsClicks(short var5, int var6, int var7) {
+			boolean var11 = false;
+
+			var7 += 24;
+
+			// Block Chat
+			if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
+					&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+				this.settingsBlockChat = 1 - this.settingsBlockChat;
+				var11 = true;
+			}
+
+			var7 += 15;
+
+			// Block Private
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+					&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+				this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
+				var11 = true;
+			}
+
+			var7 += 15;
+
+			// Block Global
+			if (Config.S_WANT_GLOBAL_CHAT) {
+				if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+						&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+					if(this.settingsBlockGlobal >= 4) {
+						this.settingsBlockGlobal = 0;
+					}
+					this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
+					this.getClientStream().newPacket(111);
+					this.getClientStream().writeBuffer1.putByte(9);
+					this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
+					this.getClientStream().finishPacket();
+				}
+
+				var7 += 15;
+			}
+
+
+			// Block Trade
+			if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
+					&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
+				this.settingsBlockTrade = 1 - this.settingsBlockTrade;
+				var11 = true;
+			}
+
+			var7 += 15;
+
+			// Block Duel
+			if (this.mouseX > var6 && this.mouseX < var6 + var5
+					&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+				var11 = true;
+				this.settingsBlockDuel = 1 - this.settingsBlockDuel;
+			}
+
+			if (var11) {
+				this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
+						this.settingsBlockTrade, this.settingsBlockDuel);
+			}
+
+			var7 += 20;
+
+			if(Config.S_SHOW_FLOATING_NAMETAGS) {
+				// Floating Nametag
+				var7 += 15;
+				if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+						&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+					Config.C_NAME_CLAN_TAG_OVERLAY = !Config.C_NAME_CLAN_TAG_OVERLAY;
+					Config.saveConfiguration(false);
+				}
+
+			}
+
+			if (Config.S_WANT_CLANS) {
+				// Clan Invite Blocking
+				var7 += 15;
+				if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+						&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+					this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
+					this.getClientStream().newPacket(111);
+					this.getClientStream().writeBuffer1.putByte(11);
+					this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
+					this.getClientStream().finishPacket();
+				}
+			}
+
+			// Skip Tutorial Button
+			if (this.insideTutorial) {
+				var7 += 93;
+				if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
+						&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+					this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
+					this.showUiTab = 0;
+				}
+			}
+
+			var7 = 290;
+
+			// Logout
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+					&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+				this.sendLogout(0);
+			}
+		}
+
+		private final void handleAndroidSettingsClicks(short var5, int var6, int var7) {
+			int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
+			int settingIndex = checkPosition;
+
+			if (settingIndex == 0 && this.mouseButtonClick == 1) {
+				Config.F_LONG_PRESS_CALC = Config.C_LONG_PRESS_TIMER / 50;
+				if (++Config.F_LONG_PRESS_CALC >= 13) {
+					Config.F_LONG_PRESS_CALC = 1;
+				}
+				Config.C_LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
+				Config.saveConfiguration(false);
+			}
+
+			if (settingIndex == 1 && this.mouseButtonClick == 1) {
+				Config.C_MENU_SIZE++;
+				if (Config.C_MENU_SIZE == 8)
+					Config.C_MENU_SIZE = 1;
+				Config.saveConfiguration(false);
+				if(Config.isAndroid()) {
+					this.menuCommon.font = Config.C_MENU_SIZE;
+				}
+			}
+
+			if (settingIndex == 2 && this.mouseButtonClick == 1) {
+				Config.C_HOLD_AND_CHOOSE = !Config.C_HOLD_AND_CHOOSE;
+				Config.saveConfiguration(false);
+			}
+
+			if (settingIndex == 3 && this.mouseButtonClick == 1) {
+				Config.C_SWIPE_TO_SCROLL = !Config.C_SWIPE_TO_SCROLL;
+				Config.saveConfiguration(false);
+			}
+
+			if (settingIndex == 4 && this.mouseButtonClick == 1) {
+				Config.C_SWIPE_TO_ROTATE = !Config.C_SWIPE_TO_ROTATE;
+				Config.saveConfiguration(false);
+			}
+
+			var7 += 195;
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+					&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+				this.sendLogout(0);
+			}
+		}
+
+		private final void drawAuthenticSettingsOptions(int var3, byte var4, short var5, int var6, int var7, int chosenColor, int unchosenColor) {
+      int index = 0;
+      this.getSurface().drawString("Game options - click to toggle", 3 + var3, var7, 0, 1);
+
+			var7 += 15;
+
+      // Camera angle mode
+      if (this.optionCameraModeAuto) {
+        this.getSurface().drawString("@whi@Camera angle mode - @gre@Auto", 3 + var3, var7, 0, 1);
+      } else {
+        this.getSurface().drawString("@whi@Camera angle mode - @red@Manual", 3 + var3, var7, 0, 1);
+      }
+
+			var7 += 15;
+
+      // Mouse Buttons
+      if (this.optionMouseButtonOne) {
+        this.getSurface().drawString("@whi@Mouse Buttons - @red@One", 3 + var3, var7, 0, 1);
+      } else {
+        this.getSurface().drawString("@whi@Mouse Buttons - @gre@Two", 3 + var3, var7, 0, 1);
+      }
+
+			var7 += 15;
+
+      // Sound Effects
+      if (this.optionSoundDisabled) {
+        this.getSurface().drawString("@whi@Sound Effects - @red@<off>", 3 + var3, var7, 0, 1);
+      } else {
+				this.getSurface().drawString("@whi@Sound Effects - @gre@<on>", 3 + var3, var7, 0, 1);
+      }
+
+			var7 += 15;
+
+			this.getSurface().drawString("To change you contact details,", 3 + var3, var7, 0xFFFFFF, 0);
+			var7 += 15;
+			this.getSurface().drawString("password, recovery questions, etc..", 3 + var3, var7, 0xFFFFFF, 0);
+			var7 += 15;
+			this.getSurface().drawString("please contact the administrators of", 3 + var3, var7, 0xFFFFFF, 0);
+			var7 += 15;
+			this.getSurface().drawString("the server you are playing.", 3 + var3, var7, 0xFFFFFF, 0);
+
+			var7 += 20;
+
+			this.getSurface().drawString("Privacy settings. Will be applied to", 3 + var3, var7, 0, 1);
+			var7 += 15;
+			this.getSurface().drawString("all people not on your friends list", 3 + var3, var7, 0, 1);
+
+
+      var7 += 15;
+			if (this.settingsBlockChat != 0) {
+				this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
+			} else {
+				this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+			}
+
+			var7 += 15;
+			if (this.settingsBlockPrivate == 0) {
+				this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+			} else {
+				this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+			}
+
+			var7 += 15;
+      if (this.settingsBlockTrade != 0) {
+        this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+      } else {
+        this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+      }
+
+      var7 += 15;
+      if (this.settingsBlockDuel != 0) {
+        this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
+      } else {
+        this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
+      }
+
+			var7 += 20;
+
+      this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+
+      int var8 = 0xFFFFFF;
+      var7 += 15;
+      if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+        var8 = 0xFFFF00;
+      }
+      this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
+		}
+
+		private final void handleAuthenticSettingsClicks(short var5, int var6, int var7) {
+
+			var7 += 15;
+
+      // Camera Mode
+      if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
+          && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+        this.optionCameraModeAuto = !this.optionCameraModeAuto;
+        this.getClientStream().newPacket(111);
+        this.getClientStream().writeBuffer1.putByte(0);
+        this.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
+        this.getClientStream().finishPacket();
+      }
+
+			var7 += 15;
+
+      // One or Two Mouse Button(s)
+      if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
+          && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+        this.optionMouseButtonOne = !this.optionMouseButtonOne;
+        this.getClientStream().newPacket(111);
+        this.getClientStream().writeBuffer1.putByte(1);
+        this.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
+        this.getClientStream().finishPacket();
+
+      }
+
+			var7 += 15;
+
+      // Sound On/Off
+      if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
+          && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+        this.optionSoundDisabled = !this.optionSoundDisabled;
+        this.getClientStream().newPacket(111);
+        this.getClientStream().writeBuffer1.putByte(2);
+        this.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
+        this.getClientStream().finishPacket();
+      }
+
+			var7 += 7 * 15 + 5;
+
+			boolean var11 = false;
+			// Block Chat
+			if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
+					&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+				this.settingsBlockChat = 1 - this.settingsBlockChat;
+				var11 = true;
+			}
+
+			var7 += 15;
+
+			// Block Private
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+					&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+				this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
+				var11 = true;
+			}
+
+			var7 += 15;
+
+			// Block Trade
+			if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
+					&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
+				this.settingsBlockTrade = 1 - this.settingsBlockTrade;
+				var11 = true;
+			}
+
+			var7 += 15;
+
+			// Block Duel
+			if (this.mouseX > var6 && this.mouseX < var6 + var5
+					&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+				var11 = true;
+				this.settingsBlockDuel = 1 - this.settingsBlockDuel;
+			}
+
+			var7 += 20;
+			if (var11) {
+				this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
+						this.settingsBlockTrade, this.settingsBlockDuel);
+			}
+
+      var7 += 15;
+      if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+          && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+        this.sendLogout(0);
+      }
+
 		}
 
 		private int flag = 0;
@@ -8031,7 +8284,8 @@ public final class mudclient implements Runnable {
 			panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 263); // 251
 			panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 263); // 251 -remove??
 			//panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
-			panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
+			if (!authenticSettings)
+				panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
 
 			panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
 			panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
@@ -13344,9 +13598,11 @@ public final class mudclient implements Runnable {
 						/*this.panelPlayerTaskInfo = new Panel(this.getSurface(), 5);
 						this.controlPlayerTaskInfoPanel = this.panelPlayerTaskInfo.addScrollingList(var3, 24 + var12 + 27, 196, 224, 500,
 								7, true);*/
-						this.panelSettings = new Panel(this.getSurface(), 5);
-						this.controlSettingPanel = this.panelSettings.addScrollingList3(var3 + 1, 24 + var12 + 16, 195, 184, 500,
-								1, true, 1, 2);
+
+						if (!authenticSettings) {
+							this.panelSettings = new Panel(this.getSurface(), 5);
+							this.controlSettingPanel = this.panelSettings.addScrollingList3(var3 + 1, 24 + var12 + 16, 195, 184, 500, 1, true, 1, 2);
+						}
 
 						this.loadMedia((byte) -49);
 						if (!this.errorLoadingData) {
@@ -14197,4 +14453,4 @@ public final class mudclient implements Runnable {
 		public void kickClanPlayer(String player) {
 			this.clanKickPlayer = player;
 		}
-}
+	}
