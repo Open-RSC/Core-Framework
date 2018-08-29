@@ -465,6 +465,22 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
 		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
+		s.writeByte((byte)(Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
+		s.writeByte((byte)(Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // Fog Toggle
+		s.writeByte((byte)(Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // Ground Item Toggle
+		s.writeByte((byte)(Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // Auto Message Switch Toggle
+		s.writeByte((byte)(Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // Batch Progression
+		s.writeByte((byte)(Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // Side Menu Toggle
+		s.writeByte((byte)(Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // Inventory Count Toggle
+		s.writeByte((byte)(Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // Zoom View Toggle
+		s.writeByte((byte)(Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // Menu Combat Style Toggle
+		s.writeByte((byte)(Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // Fightmode Selector Toggle
+		s.writeByte((byte)(Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
+
 		player.write(s.toPacket());
 	}
 
@@ -1090,6 +1106,7 @@ public class ActionSender {
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
+		if (!Constants.GameServer.WANT_KILL_FEED) return;
 		PacketBuilder pb = new PacketBuilder(135);
 		pb.writeString(DataConversions.hashToUsername(killedHash));
 		pb.writeString(DataConversions.hashToUsername(killerHash));

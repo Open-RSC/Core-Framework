@@ -2050,15 +2050,17 @@ public final class mudclient implements Runnable {
 					}
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 100, "Private history", color, 0, 0,
 							this.getGameHeight() + 6);
-					color = GenUtil.buildColor(200, 200, 255);
-					if (this.messageTabSelected == MessageTab.CLAN) {
-						color = GenUtil.buildColor(255, 200, 50);
+					if (Config.S_WANT_CLANS) {
+						color = GenUtil.buildColor(200, 200, 255);
+						if (this.messageTabSelected == MessageTab.CLAN) {
+							color = GenUtil.buildColor(255, 200, 50);
+						}
+						if (this.messageTabActivity_Clan % 30 > 15) {
+							color = GenUtil.buildColor(255, 50, 50);
+						}
+						this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0,
+								6 + this.getGameHeight());
 					}
-					if (this.messageTabActivity_Clan % 30 > 15) {
-						color = GenUtil.buildColor(255, 50, 50);
-					}
-					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0,
-							6 + this.getGameHeight());
 				}
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.QB(" + var1 + ')');
@@ -3710,10 +3712,10 @@ public final class mudclient implements Runnable {
 							if (this.lastHeightOffset == 0
 									&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
 									                                                          / 128] & 0x80) == 0
-									                                                          && Config.SHOW_ROOF) {
+									                                                          && Config.C_SHOW_ROOF) {
 
 								this.scene.addModel(this.world.modelRoofGrid[this.lastHeightOffset][centerX]);
-								if (this.lastHeightOffset == 0 && Config.SHOW_ROOF) {
+								if (this.lastHeightOffset == 0 && Config.C_SHOW_ROOF) {
 									this.scene.addModel(this.world.modelWallGrid[1][centerX]);
 									this.scene.addModel(this.world.modelRoofGrid[1][centerX]);
 									this.scene.addModel(this.world.modelWallGrid[2][centerX]);
@@ -3861,13 +3863,13 @@ public final class mudclient implements Runnable {
 						}
 
 						int centerZ;
-						if (Config.SHOW_GROUND_ITEMS != 1) {
+						if (Config.C_SHOW_GROUND_ITEMS != 1) {
 
 							for (centerX = 0; centerX < this.groundItemCount; ++centerX) {
-								if(Config.SHOW_GROUND_ITEMS == 3
+								if(Config.C_SHOW_GROUND_ITEMS == 3
 										&& (this.groundItemID[centerX] == 20 || this.groundItemID[centerX] == 814 || this.groundItemID[centerX] == 413 || this.groundItemID[centerX] == 604))
 									continue;
-								else if(Config.SHOW_GROUND_ITEMS == 2 && (this.groundItemID[centerX] != 20 && this.groundItemID[centerX] != 814 && this.groundItemID[centerX] != 413 && this.groundItemID[centerX] != 604)) {
+								else if(Config.C_SHOW_GROUND_ITEMS == 2 && (this.groundItemID[centerX] != 20 && this.groundItemID[centerX] != 814 && this.groundItemID[centerX] != 413 && this.groundItemID[centerX] != 604)) {
 									continue;
 								}
 								centerZ = this.groundItemX[centerX] * this.tileSize + 64;
@@ -3937,7 +3939,7 @@ public final class mudclient implements Runnable {
 							if (this.optionCameraModeAuto && !this.fogOfWar) {
 								this.autoRotateCamera((byte) 94);
 							}
-							if (Config.SHOW_FOG) {
+							if (Config.C_SHOW_FOG) {
 								if (!this.interlace) {
 									this.scene.fogZFalloff = 1;
 									this.scene.fogLandscapeDistance = 2400;
@@ -3958,7 +3960,9 @@ public final class mudclient implements Runnable {
 
 							centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 							centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
-							float zoomMultiplier = Config.ZOOM == 0 ? 0 : Config.ZOOM == 1 ? +200 : Config.ZOOM == 2 ? +400 : -200;
+							float zoomMultiplier = 0;
+							if (Config.S_ZOOM_VIEW_TOGGLE)
+								zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
 							this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 									this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
 						}
@@ -4014,7 +4018,7 @@ public final class mudclient implements Runnable {
 								}
 							}
 						}
-						if(Config.KILL_FEED) {
+						if(Config.C_KILL_FEED) {
 							killQueue.clean();
 							int Offset = 0;
 							for(KillAnnouncer notify : killQueue.Kill) {
@@ -4067,7 +4071,7 @@ public final class mudclient implements Runnable {
 								this.showUiWildWarn = 1;
 							}
 						}
-						if (Config.SIDE_MENU_OVERLAY) {
+						if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
 							int i = 130;
 							if (adminRights) {
 								this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
@@ -4086,7 +4090,7 @@ public final class mudclient implements Runnable {
 									"Fatigue: " + (double) (this.statFatigue * 1000 / 750) / 10.0 + "%", 7, i, 0xffffff, 1);
 						}
 
-						if (Config.EXPERIENCE_COUNTER == 2) {
+						if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
 							this.drawExperienceCounter(recentSkill);
 						}
 
@@ -4544,7 +4548,7 @@ public final class mudclient implements Runnable {
 					// This should be one line thing!!!!
 					// IF android build and hold and choose = dont close when mouse
 					// exits, else close it.
-					if (Config.isAndroid() && Config.HOLD_AND_CHOOSE) {
+					if (Config.isAndroid() && Config.C_HOLD_AND_CHOOSE) {
 						renderAnyway = true;
 					}
 					if (renderAnyway) {
@@ -4919,12 +4923,12 @@ public final class mudclient implements Runnable {
 						this.characterDialogString[this.characterDialogCount++] = player.message;
 					}
 
-					if (Config.SHOW_FLOATING_NAMETAGS) {
-						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+					if (Config.S_SHOW_FLOATING_NAMETAGS) {
+						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.displayName != null)
 								this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
 						}
-						if (Config.NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
+						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.clanTag != null)
 								this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
 						}
@@ -5326,15 +5330,16 @@ public final class mudclient implements Runnable {
 
 		private int xpPerHourCount = 0; long timePassed = 0; double xpPerHour = 0;
 		private final void drawExperienceCounter(int skill) {
+			if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
 			if (selectedSkill >= 0) {
 				skill = selectedSkill;
 			}
-			int textColor = Config.EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-				Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-					Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-						Config.EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+			int textColor = Config.C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
+				Config.C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+					Config.C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
+						Config.C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
 			int totalXp = 0;
-			if (Config.EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
+			if (Config.C_EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
 				for (int i = 0; i < 18; i++) {
 					totalXp += this.playerExperience[i];
 				}
@@ -5362,7 +5367,7 @@ public final class mudclient implements Runnable {
 					setMouseClick(0);
 				}
 
-				if (Config.EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
+				if (Config.C_EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					// Checks for non-positive gains
 					if (this.playerXpGainedTotal < 0) {
 						this.playerXpGainedTotal = 0;
@@ -5422,7 +5427,7 @@ public final class mudclient implements Runnable {
 					setMouseClick(0);
 				}
 
-				if (Config.EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
+				if (Config.C_EXPERIENCE_CONFIG_SUBMENU && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
 					// Checks for non-positive gains
 					if (this.playerStatXpGained[skill] < 0) {
 						this.playerStatXpGained[skill] = 0;
@@ -5463,6 +5468,7 @@ public final class mudclient implements Runnable {
 		}
 
 		private final void drawExperienceConfig() {
+			if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
 			experienceConfigInterface.onRender(this.getSurface());
 		}
 
@@ -5557,7 +5563,7 @@ public final class mudclient implements Runnable {
 						this.drawExperienceConfig();
 					} else if (doSkillInterface.isVisible() && this.combatTimeout == 0) {
 						this.drawDoSkill();
-					} else if (lostOnDeathInterface.isVisible()) {
+					} else if (Config.S_ITEMS_ON_DEATH_MENU && lostOnDeathInterface.isVisible()) {
 						this.drawLostOnDeath();
 					} else if (territorySignupInterface.isVisible()) {
 						this.drawTerritorySignup();
@@ -5606,7 +5612,7 @@ public final class mudclient implements Runnable {
 					}
 
 					if (((this.localPlayer.direction == RSCharacterDirection.COMBAT_A
-							|| this.localPlayer.direction == RSCharacterDirection.COMBAT_B) || Config.FIGHT_MENU == 2) && Config.FIGHT_MENU != 0) {
+							|| this.localPlayer.direction == RSCharacterDirection.COMBAT_B) || Config.C_FIGHT_MENU == 2) && Config.C_FIGHT_MENU != 0) {
 						this.drawDialogCombatStyle();
 					}
 
@@ -5624,7 +5630,7 @@ public final class mudclient implements Runnable {
 						this.drawUiTab1(-15252, var3);
 					}
 
-					if (Config.INV_COUNT) {
+					if (Config.S_INVENTORY_COUNT_TOGGLE && Config.C_INV_COUNT) {
 						this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, 17, 0xFFFFFF, 1, true);
 					}
 
@@ -6186,7 +6192,7 @@ public final class mudclient implements Runnable {
 					this.cameraRotationX = -88;
 				}
 
-				if (Config.WANT_CLANS) {
+				if (Config.S_WANT_CLANS) {
 					int clanTab;
 					int colorB;
 					int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
@@ -6220,23 +6226,20 @@ public final class mudclient implements Runnable {
 					this.panelClan.clearList(this.controlClanPanel);
 				}
 				else { // Clans Disabled
-					int j = 36;
-					char c = '\304';
-					char c1 = '\266';
 					int l;
 					int k = l = GenUtil.buildColor(160, 160, 160);
 					if (this.panelSocialTab == 0)
 						k = GenUtil.buildColor(220, 220, 220);
 					else
 						l = GenUtil.buildColor(220, 220, 220);
-					this.getSurface().drawBoxAlpha(var3, j, c / 2, 24, k, 128);
-					this.getSurface().drawBoxAlpha(var3 + c / 2, j, c / 2, 24, l, 128);
-					this.getSurface().drawBoxAlpha(var3, j + 24, c, c1 - 24, GenUtil.buildColor(220, 220, 220), 128);
-					this.getSurface().drawLineHoriz(var3, j + 24, c, 0);
-					this.getSurface().drawLineVert(var3 + c / 2, j, 24, 0);
-					this.getSurface().drawLineHoriz(var3, j + c1 - 16, c, 0);
-					this.getSurface().drawColoredStringCentered(var3 + c / 4, "Friends", 0, 0, 4, j + 16);
-					this.getSurface().drawColoredStringCentered(var3 + c / 4 + c / 2, "Ignore", 0, 0, 4, j + 16);
+					this.getSurface().drawBoxAlpha(var3, var4, var5 / 2, 24, k, 128);
+					this.getSurface().drawBoxAlpha(var3 + var5 / 2, var4, var5 / 2, 24, l, 128);
+					this.getSurface().drawBoxAlpha(var3, var4 + 24, var5, var6 - 24, GenUtil.buildColor(220, 220, 220), 128);
+					this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
+					this.getSurface().drawLineVert(var3 + var5 / 2, var4, 24, 0);
+					this.getSurface().drawLineHoriz(var3, var4 + var6 - 16, var5, 0);
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 4, "Friends", 0, 0, 4, var4 + 16);
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Ignore", 0, 0, 4, var4 + 16);
 					this.panelSocial.clearList(this.controlSocialPanel);
 				}
 
@@ -6445,7 +6448,7 @@ public final class mudclient implements Runnable {
 						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (var15 <= 24 && this.mouseButtonClick == 1) {
-							if (Config.WANT_CLANS) {
+							if (Config.S_WANT_CLANS) {
 								if (var3 < 65 && (this.panelSocialTab == 2 || this.panelSocialTab == 1)) {
 									this.panelSocialTab = 0; // Show Friends Tab (Clicked)
 									this.panelSocial.resetList(this.controlSocialPanel);
@@ -6466,7 +6469,7 @@ public final class mudclient implements Runnable {
 						}
 					}
 					// HANDLE CLAN TAB
-					if (Config.WANT_CLANS) {
+					if (Config.S_WANT_CLANS) {
 						if(var3 >= 65 && var15 >= 0 && var3 < 132 && var15 < 26) {
 							this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 									this.currentMouseButtonDown, this.lastMouseButtonDown);
@@ -6522,7 +6525,7 @@ public final class mudclient implements Runnable {
 					}
 
 					// Clan Interactions
-					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1 && Config.WANT_CLANS) {
+					else if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 295 && this.panelSocialTab == 1 && Config.S_WANT_CLANS) {
 						this.panelClan.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.mouseButtonClick >= 1 && this.panelSocialTab == 1) {
@@ -6958,63 +6961,68 @@ public final class mudclient implements Runnable {
 
 				int var6 = 3 + var3;
 				int var7 = var4 + 15;
+				
+				/* Social Settings Definitions */
 				if (this.settingTab == 0) {
 					this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
 					var7 += 15;
 					//this.getSurface().drawString("all people not on your friends list", var3 + 3, var7, 0, 1);
 					//var7 += 15;
 					if (this.settingsBlockChat != 0) {
-						this.getSurface().drawString("Block chat messages: @gre@On", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block chat messages: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 16777215, 1);
 					}
 
 					var7 += 15;
 					if (this.settingsBlockPrivate == 0) {
-						this.getSurface().drawString("Block private messages: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block private messages: @gre@On", var3 + 3, var7, 16777215, 1);
+						this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 16777215, 1);
 					}
 
 					var7 += 15;
-					if (this.settingsBlockGlobal == 1) {
-						this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
-					} else if(this.settingsBlockGlobal == 2) {
-						this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
-					} else if(this.settingsBlockGlobal == 3) {
-						this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
-					} else if(this.settingsBlockGlobal == 4) {
-						this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
+
+					if (Config.S_WANT_GLOBAL_CHAT) {
+						if (this.settingsBlockGlobal == 1) {
+							this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
+						} else if(this.settingsBlockGlobal == 2) {
+							this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
+						} else if(this.settingsBlockGlobal == 3) {
+							this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
+						} else if(this.settingsBlockGlobal == 4) {
+							this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
+						}
+						var7 += 15;
 					}
 
-					var7 += 15;
 					if (this.settingsBlockTrade != 0) {
-						this.getSurface().drawString("Block trade requests: @gre@On", var3 + 3, var7, 16777215, 1);
+						this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block trade requests: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 16777215, 1);
 					}
 
 					var7 += 15;
 					if (this.settingsBlockDuel != 0) {
-						this.getSurface().drawString("Block duel requests: @gre@On", var3 + 3, var7, 16777215, 1);
+						this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
 					} else {
-						this.getSurface().drawString("Block duel requests: @red@Off", 3 + var3, var7, 16777215, 1);
+						this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 16777215, 1);
 					}
 
-					if(Config.WANT_CLANS) {
+					if(Config.S_WANT_CLANS) {
 						var7 += 20;
 						this.getSurface().drawString("Clan settings", var3 + 3, var7, 0, 1);
 					}
-					if(Config.SHOW_FLOATING_NAMETAGS) {
+					if(Config.S_SHOW_FLOATING_NAMETAGS) {
 						var7 += 15;
-						if (!Config.NAME_CLAN_TAG_OVERLAY) {
-							this.getSurface().drawString("Name and Clan Tag - @red@Off", var6, var7, 16777215, 1);
+						if (!Config.C_NAME_CLAN_TAG_OVERLAY) {
+							this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 16777215, 1);
 						} else {
-							this.getSurface().drawString("Name and Clan Tag - @gre@On", var6, var7, 16777215, 1);
+							this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 16777215, 1);
 						}
 					}
 
-					if(Config.WANT_CLANS) {
+					if(Config.S_WANT_CLANS) {
 						var7 += 15;
 						if (!this.clanInviteBlockSetting) {
 							this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
@@ -7025,20 +7033,16 @@ public final class mudclient implements Runnable {
 
 					int var8;
 					if (this.insideTutorial) {
-						var7 += 20;
-						this.getSurface().drawString("Skip Tutorial Island", 3 + var3, var7, 0, 1);
-						var7 += 15;
+						var7 += 125;
 						var8 = 16777215;
 						if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 								&& this.mouseY < 4 + var7) {
 							var8 = 16776960;
 						}
 						this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
-						var7 += 35;
-					} else {
-						var7 += 70;
 					}
 
+					var7 = 275;
 					this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 					var8 = 16777215;
 					var7 += 15;
@@ -7048,10 +7052,14 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
 				}
+
+				/* Game Settings Definitions */
 				if (this.settingTab == 1) {
 					this.panelSettings.clearList(this.controlSettingPanel);
 					int index = 0;
 					this.getSurface().drawString("Game options", 3 + var3, var7, 0, 1);
+
+					// Camera angle mode
 					if (this.optionCameraModeAuto) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 								"@whi@Camera angle mode - @gre@Auto", 0, (String) null, (String) null);
@@ -7060,114 +7068,153 @@ public final class mudclient implements Runnable {
 								"@whi@Camera angle mode - @red@Manual", 0, (String) null, (String) null);
 					}
 
+					// Mouse Buttons
 					if (this.optionMouseButtonOne) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Mouse Buttons - @red@One", 0, (String) null, (String) null);
+								"@whi@Mouse Buttons - @red@One", 1, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Mouse Buttons - @gre@Two", 0, (String) null, (String) null);
+								"@whi@Mouse Buttons - @gre@Two", 1, (String) null, (String) null);
 					}
 
+					// Sound Effects
 					if (this.optionSoundDisabled) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Sound Effects - @red@Off", 0, (String) null, (String) null);
+								"@whi@Sound Effects - @red@Off", 2, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Sound Effects - @gre@On", 0, (String) null, (String) null);
+								"@whi@Sound Effects - @gre@On", 2, (String) null, (String) null);
 					}
 
-					if (!Config.BATCH_PROGRESS_BAR) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Batch Progress Bar - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Batch Progress Bar - @gre@On", 0, (String) null, (String) null);
+					// Batch Progress Bar
+					if (Config.S_BATCH_PROGRESSION) {
+						if (!Config.C_BATCH_PROGRESS_BAR) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Batch Progress Bar - @red@Off", 3, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Batch Progress Bar - @gre@On", 3, (String) null, (String) null);
+						}
 					}
 
-					if (!Config.EXPERIENCE_DROPS) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Drops - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Experience Drops - @gre@On", 0, (String) null, (String) null);
+					// Experience Drops
+					if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
+						if (!Config.C_EXPERIENCE_DROPS) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Experience Drops - @red@Off", 4, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Experience Drops - @gre@On", 4, (String) null, (String) null);
+						}
 					}
 
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Zoom View - " + (Config.ZOOM == 0 ? "@yel@Normal" : Config.ZOOM == 1 ? "@ora@Far" : Config.ZOOM == 2 ? "@red@Super" : "@gre@Near"), 0, (String) null, (String) null);
-
-					if (!Config.SHOW_FOG) {
+					// Zoom View
+					if (Config.S_ZOOM_VIEW_TOGGLE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Fog - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Fog - @gre@On", 0, (String) null, (String) null);
+								"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
 					}
 
-					if (!Config.SHOW_ROOF) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Show Roof - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Show Roof - @gre@On", 0, (String) null, (String) null);
+					// Fog
+					if (Config.S_FOG_TOGGLE) {
+						if (!Config.C_SHOW_FOG) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Fog - @red@Off", 6, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Fog - @gre@On", 6, (String) null, (String) null);
+						}
 					}
 
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Ground Items - " + (Config.SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
-									: Config.SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-											: Config.SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 0, (String) null, (String) null);
-
-					if (!Config.MESSAGE_TAB_SWITCH) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Auto Message Switch - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Auto Message Switch - @gre@On", 0, (String) null, (String) null);
+					// Show Roof
+					if (Config.S_SHOW_ROOF_TOGGLE) {
+						if (!Config.C_SHOW_ROOF) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Show Roof - @red@Off", 7, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Show Roof - @gre@On", 7, (String) null, (String) null);
+						}
 					}
 
-					if (!Config.SIDE_MENU_OVERLAY) {
+					// Ground Items
+					if (Config.S_GROUND_ITEM_TOGGLE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Side Menu - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Side Menu - @gre@On", 0, (String) null, (String) null);
+								"@whi@Ground Items - " + (Config.C_SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
+										: Config.C_SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
+												: Config.C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, (String) null, (String) null);
 					}
 
-					if (!Config.KILL_FEED) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Kill Feed - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Kill Feed - @gre@On", 0, (String) null, (String) null);
+					// Auto Message Switch
+					if (Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
+						if (!Config.C_MESSAGE_TAB_SWITCH) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Auto Message Switch - @red@Off", 9, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Auto Message Switch - @gre@On", 9, (String) null, (String) null);
+						}
 					}
 
-					//this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 0, (String) null, (String) null);
-
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Fightmode Selector - " + (Config.FIGHT_MENU == 0 ? "@red@Never"
-									: Config.FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 0, (String) null, (String) null);
-
-					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Experience Counter - " + (Config.EXPERIENCE_COUNTER == 0 ? "@red@Never"
-									: Config.EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 0, (String) null, (String) null);
-
-					if (!Config.INV_COUNT) {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Inventory Count - @red@Off", 0, (String) null, (String) null);
-					} else {
-						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Inventory Count - @gre@On", 0, (String) null, (String) null);
+					// Side Menu
+					if (Config.S_SIDE_MENU_TOGGLE) {
+						if (!Config.C_SIDE_MENU_OVERLAY) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Side Menu - @red@Off", 10, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Side Menu - @gre@On", 10, (String) null, (String) null);
+						}
 					}
 
-					var7 += 195;
-					int onDeathColor = 16777215;
-
-					if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-						onDeathColor = 16776960;
+					// Kill Feed
+					if (Config.S_WANT_KILL_FEED) {
+						if (!Config.C_KILL_FEED) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Kill Feed - @red@Off", 11, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Kill Feed - @gre@On", 11, (String) null, (String) null);
+						}
 					}
-					this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
 
-					// var7 += 195;
-					// this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
+					// Combat Style
+					if (Config.S_MENU_COMBAT_STYLE_TOGGLE)
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++, "@whi@Combat Style - " + (this.combatStyle == 0 ? "@yel@Controlled" : this.combatStyle == 1 ? "@red@Aggressive" : this.combatStyle == 2 ? "@ora@Accurate" : "@gre@Defensive"), 12, (String) null, (String) null);
+
+					// Fightmode Selector
+					if (Config.S_FIGHTMODE_SELECTOR_TOGGLE)
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+								"@whi@Fightmode Selector - " + (Config.C_FIGHT_MENU == 0 ? "@red@Never"
+										: Config.C_FIGHT_MENU == 1 ? "@yel@In Combat" : "@gre@Always"), 13, (String) null, (String) null);
+
+					// Experience Counter
+					if (Config.S_EXPERIENCE_COUNTER_TOGGLE)
+						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+								"@whi@Experience Counter - " + (Config.C_EXPERIENCE_COUNTER == 0 ? "@red@Never"
+										: Config.C_EXPERIENCE_COUNTER == 1 ? "@yel@Recent" : "@gre@Always"), 14, (String) null, (String) null);
+
+					// Inventory Count
+					if (Config.S_INVENTORY_COUNT_TOGGLE) {
+						if (!Config.C_INV_COUNT) {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Inventory Count - @red@Off", 15, (String) null, (String) null);
+						} else {
+							this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+									"@whi@Inventory Count - @gre@On", 15, (String) null, (String) null);
+						}
+					}
+
+					var7 = 275;
+
+					if (Config.S_ITEMS_ON_DEATH_MENU) {
+						int onDeathColor = 16777215;
+						if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
+							onDeathColor = 16776960;
+						}
+						this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
+					}
+					else
+						this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 
 					int var8 = 16777215;
 					var7 += 15;
@@ -7184,33 +7231,33 @@ public final class mudclient implements Runnable {
 					int index = 0;
 					this.getSurface().drawString("Android options", 3 + var3, var7, 0, 1);
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Hold-time for Menu - @gre@" + Config.LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
+							"@whi@Hold-time for Menu - @gre@" + Config.C_LONG_PRESS_TIMER + "ms", 0, (String) null, (String) null);
 
 					this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-							"@whi@Menu Size - @lre@Font " + (Config.MENU_SIZE), 0, (String) null, (String) null);
+							"@whi@Menu Size - @lre@Font " + (Config.C_MENU_SIZE), 1, (String) null, (String) null);
 
-					if (!Config.HOLD_AND_CHOOSE) {
+					if (!Config.C_HOLD_AND_CHOOSE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Hold and Choose - @red@Off", 0, (String) null, (String) null);
+								"@whi@Hold and Choose - @red@Off", 2, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Hold and Choose - @gre@On", 0, (String) null, (String) null);
+								"@whi@Hold and Choose - @gre@On", 2, (String) null, (String) null);
 					}
 
-					if (!Config.SWIPE_TO_SCROLL) {
+					if (!Config.C_SWIPE_TO_SCROLL) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Scroll - @red@Off", 0, (String) null, (String) null);
+								"@whi@Swipe to Scroll - @red@Off", 3, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Scroll - @gre@On", 0, (String) null, (String) null);
+								"@whi@Swipe to Scroll - @gre@On", 3, (String) null, (String) null);
 					}
 
-					if (!Config.SWIPE_TO_ROTATE) {
+					if (!Config.C_SWIPE_TO_ROTATE) {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Rotate - @red@Off", 0, (String) null, (String) null);
+								"@whi@Swipe to Rotate - @red@Off", 4, (String) null, (String) null);
 					} else {
 						this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-								"@whi@Swipe to Rotate - @gre@On", 0, (String) null, (String) null);
+								"@whi@Swipe to Rotate - @gre@On", 4, (String) null, (String) null);
 					}
 
 					var7 += 195;
@@ -7247,10 +7294,10 @@ public final class mudclient implements Runnable {
 						else if (!Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
 							if (var13 <= 24 && this.mouseButtonClick == 1) {
 								if (var3 < 98 && this.settingTab == 1) {
-									this.settingTab = 0;
+									this.settingTab = 0; // Social Settings Panel
 									this.panelSettings.resetList(this.controlSettingPanel);
 								} else if (var3 >= 98 && this.settingTab == 0) {
-									this.settingTab = 1;
+									this.settingTab = 1; // General Settings Panel
 									this.panelSettings.resetList(this.controlSettingPanel);
 								}
 							}
@@ -7261,10 +7308,17 @@ public final class mudclient implements Runnable {
 						byte var10 = 36;
 						var5 = 184;
 						var7 = 30 + var10 + 25;
-						if (this.settingTab == 1) {
-							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
-							int settingIndex = checkPosition;
 
+						// Handle clicks on settings menu
+						if (this.settingTab == 1) {
+							int settingIndex = -1;
+							int checkPosition = this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel);
+							if (checkPosition >= 0)
+								settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
+							else
+								settingIndex = checkPosition;
+
+							// Camera Mode
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
 								this.optionCameraModeAuto = !this.optionCameraModeAuto;
 								this.getClientStream().newPacket(111);
@@ -7273,6 +7327,7 @@ public final class mudclient implements Runnable {
 								this.getClientStream().finishPacket();
 							}
 
+							// One or Two Mouse Button(s)
 							if (settingIndex == 1 && this.mouseButtonClick == 1) {
 								this.optionMouseButtonOne = !this.optionMouseButtonOne;
 								this.getClientStream().newPacket(111);
@@ -7282,6 +7337,7 @@ public final class mudclient implements Runnable {
 
 							}
 
+							// Sound On/Off
 							if (settingIndex == 2 && this.mouseButtonClick == 1) {
 								this.optionSoundDisabled = !this.optionSoundDisabled;
 								this.getClientStream().newPacket(111);
@@ -7290,57 +7346,69 @@ public final class mudclient implements Runnable {
 								this.getClientStream().finishPacket();
 							}
 
-							if (settingIndex == 3 && this.mouseButtonClick == 1) {
-								Config.BATCH_PROGRESS_BAR = !Config.BATCH_PROGRESS_BAR;
+							// Batch Progress Bar
+							if (Config.S_BATCH_PROGRESSION) {
+								if (settingIndex == 3 && this.mouseButtonClick == 1) {
+									Config.C_BATCH_PROGRESS_BAR = !Config.C_BATCH_PROGRESS_BAR;
+									Config.saveConfiguration(false);
+								}
+							}
+
+							// Experience Drops
+							if (settingIndex == 4 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_DROPS_TOGGLE) {
+								Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 4 && this.mouseButtonClick == 1) {
-								Config.EXPERIENCE_DROPS = !Config.EXPERIENCE_DROPS;
-								Config.saveConfiguration(false);
-							}
-
-							if (settingIndex == 5 && this.mouseButtonClick == 1) {
+							// Zoom View
+							if (settingIndex == 5 && this.mouseButtonClick == 1 && Config.S_ZOOM_VIEW_TOGGLE) {
 								this.cameraZoom = 750;
-								Config.ZOOM++;
-								if (Config.ZOOM == 4)
-									Config.ZOOM = 0;
+								Config.C_ZOOM++;
+								if (Config.C_ZOOM == 4)
+									Config.C_ZOOM = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 6 && this.mouseButtonClick == 1) {
-								Config.SHOW_FOG = !Config.SHOW_FOG;
+							// Fog
+							if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.S_FOG_TOGGLE) {
+								Config.C_SHOW_FOG = !Config.C_SHOW_FOG;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 7 && this.mouseButtonClick == 1) {
-								Config.SHOW_ROOF = !Config.SHOW_ROOF;
+							// Show Roof
+							if (settingIndex == 7 && this.mouseButtonClick == 1 && Config.S_SHOW_ROOF_TOGGLE) {
+								Config.C_SHOW_ROOF = !Config.C_SHOW_ROOF;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 8 && this.mouseButtonClick == 1) {
-								Config.SHOW_GROUND_ITEMS++;
-								if (Config.SHOW_GROUND_ITEMS == 4)
-									Config.SHOW_GROUND_ITEMS = 0;
+							// Show Ground Items
+							if (settingIndex == 8 && this.mouseButtonClick == 1 && Config.S_GROUND_ITEM_TOGGLE) {
+								Config.C_SHOW_GROUND_ITEMS++;
+								if (Config.C_SHOW_GROUND_ITEMS == 4)
+									Config.C_SHOW_GROUND_ITEMS = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 9 && this.mouseButtonClick == 1) {
-								Config.MESSAGE_TAB_SWITCH = !Config.MESSAGE_TAB_SWITCH;
+							// Auto Message Tab Switch
+							if (settingIndex == 9 && this.mouseButtonClick == 1 && Config.S_AUTO_MESSAGE_SWITCH_TOGGLE) {
+								Config.C_MESSAGE_TAB_SWITCH = !Config.C_MESSAGE_TAB_SWITCH;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 10 && this.mouseButtonClick == 1) {
-								Config.SIDE_MENU_OVERLAY = !Config.SIDE_MENU_OVERLAY;
+							// Side Menu
+							if (settingIndex == 10 && this.mouseButtonClick == 1 && Config.S_SIDE_MENU_TOGGLE) {
+								Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 11 && this.mouseButtonClick == 1) {
-								Config.KILL_FEED = !Config.KILL_FEED;
+							// Kill Feed
+							if (settingIndex == 11 && this.mouseButtonClick == 1 && Config.S_WANT_KILL_FEED) {
+								Config.C_KILL_FEED = !Config.C_KILL_FEED;
 								Config.saveConfiguration(false);
 							}
 
-							/*if (settingIndex == 12 && this.mouseButtonClick == 1) {
+							// Combat Style
+							if (settingIndex == 12 && this.mouseButtonClick == 1 && Config.S_MENU_COMBAT_STYLE_TOGGLE) {
 								this.combatStyle++;
 								if (this.combatStyle == 4) {
 									this.combatStyle = 0;
@@ -7348,33 +7416,39 @@ public final class mudclient implements Runnable {
 								this.getClientStream().newPacket(29);
 								this.getClientStream().writeBuffer1.putByte(this.combatStyle);
 								this.getClientStream().finishPacket();
-							}*/
+							}
 
-							if (settingIndex == 12 && this.mouseButtonClick == 1) {
-								Config.FIGHT_MENU++;
-								if (Config.FIGHT_MENU == 3)
-									Config.FIGHT_MENU = 0;
+							// Fightmode Selector
+							if (settingIndex == 13 && this.mouseButtonClick == 1 && Config.S_FIGHTMODE_SELECTOR_TOGGLE) {
+								Config.C_FIGHT_MENU++;
+								if (Config.C_FIGHT_MENU == 3)
+									Config.C_FIGHT_MENU = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 13 && this.mouseButtonClick == 1) {
-								Config.EXPERIENCE_COUNTER++;
-								if (Config.EXPERIENCE_COUNTER == 3)
-									Config.EXPERIENCE_COUNTER = 0;
+							// Experience Counter
+							if (settingIndex == 14 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_COUNTER_TOGGLE) {
+								Config.C_EXPERIENCE_COUNTER++;
+								if (Config.C_EXPERIENCE_COUNTER == 3)
+									Config.C_EXPERIENCE_COUNTER = 0;
 								Config.saveConfiguration(false);
 							}
 
-							if (settingIndex == 14 && this.mouseButtonClick == 1) {
-								Config.INV_COUNT = !Config.INV_COUNT;
+							// Inventory Count
+							if (settingIndex == 15 && this.mouseButtonClick == 1 && Config.S_INVENTORY_COUNT_TOGGLE) {
+								Config.C_INV_COUNT = !Config.C_INV_COUNT;
 								Config.saveConfiguration(false);
 							}
 
-							var7 += 182;
+							var7 += 184;
 
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
-								this.showUiTab = 0;
-								lostOnDeathInterface.setVisible(true);
+							// Items On Death
+							if (Config.S_ITEMS_ON_DEATH_MENU) {
+								if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+										&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+									this.showUiTab = 0;
+									lostOnDeathInterface.setVisible(true);
+								}
 							}
 
 							var7 += 15;
@@ -7385,9 +7459,12 @@ public final class mudclient implements Runnable {
 							}
 						}
 
+						// "Social" Panel in Settings
 						if (this.settingTab == 0) {
 							var7 += 0;
 							boolean var11 = false;
+
+							// Block Chat
 							if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
 									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 								this.settingsBlockChat = 1 - this.settingsBlockChat;
@@ -7395,6 +7472,8 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 15;
+
+							// Block Private
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
 								this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
@@ -7402,19 +7481,26 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 15;
-							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
-									&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
-								if(this.settingsBlockGlobal >= 4) {
-									this.settingsBlockGlobal = 0;
+
+							// Block Global
+							if (Config.S_WANT_GLOBAL_CHAT) {
+								if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
+										&& var7 + 4 > this.mouseY && this.mouseButtonClick == 1) {
+									if(this.settingsBlockGlobal >= 4) {
+										this.settingsBlockGlobal = 0;
+									}
+									this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
+									this.getClientStream().newPacket(111);
+									this.getClientStream().writeBuffer1.putByte(9);
+									this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
+									this.getClientStream().finishPacket();
 								}
-								this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(9);
-								this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
-								this.getClientStream().finishPacket();
+
+								var7 += 15;
 							}
 
-							var7 += 15;
+
+							// Block Trade
 							if (this.mouseX > var6 && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 									&& this.mouseY < 4 + var7 && this.mouseButtonClick == 1) {
 								this.settingsBlockTrade = 1 - this.settingsBlockTrade;
@@ -7422,6 +7508,8 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 15;
+
+							// Block Duel
 							if (this.mouseX > var6 && this.mouseX < var6 + var5
 									&& var7 - 12 < this.mouseY && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								var11 = true;
@@ -7435,32 +7523,42 @@ public final class mudclient implements Runnable {
 							}
 
 							var7 += 20;
-							if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-								Config.NAME_CLAN_TAG_OVERLAY = !Config.NAME_CLAN_TAG_OVERLAY;
-								Config.saveConfiguration(false);
-							}
-							var7 += 15;
-							if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
-									&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
-								this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
-								this.getClientStream().newPacket(111);
-								this.getClientStream().writeBuffer1.putByte(11);
-								this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
-								this.getClientStream().finishPacket();
+
+							if (Config.S_WANT_CLANS) {
+
+								// Floating Nametag
+								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+									Config.C_NAME_CLAN_TAG_OVERLAY = !Config.C_NAME_CLAN_TAG_OVERLAY;
+									Config.saveConfiguration(false);
+								}
+
+								var7 += 15;
+
+								// Clan Invite Blocking
+								if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+										&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+									this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
+									this.getClientStream().newPacket(111);
+									this.getClientStream().writeBuffer1.putByte(11);
+									this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
+									this.getClientStream().finishPacket();
+								}
 							}
 
+							// Skip Tutorial Button
 							if (this.insideTutorial) {
-								var7 += 35;
+								var7 += 95;
 								if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
 										&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 									this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
 									this.showUiTab = 0;
 								}
-								var7 -= 35;
 							}
 
-							var7 += 85;
+							var7 = 290;
+
+							// Logout
 							if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 									&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 								this.sendLogout(0);
@@ -7472,36 +7570,36 @@ public final class mudclient implements Runnable {
 							int settingIndex = checkPosition;
 
 							if (settingIndex == 0 && this.mouseButtonClick == 1) {
-								Config.F_LONG_PRESS_CALC = Config.LONG_PRESS_TIMER / 50;
+								Config.F_LONG_PRESS_CALC = Config.C_LONG_PRESS_TIMER / 50;
 								if (++Config.F_LONG_PRESS_CALC >= 13) {
 									Config.F_LONG_PRESS_CALC = 1;
 								}
-								Config.LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
+								Config.C_LONG_PRESS_TIMER = Config.F_LONG_PRESS_CALC * 50;
 								Config.saveConfiguration(false);
 							}
 
 							if (settingIndex == 1 && this.mouseButtonClick == 1) {
-								Config.MENU_SIZE++;
-								if (Config.MENU_SIZE == 8)
-									Config.MENU_SIZE = 1;
+								Config.C_MENU_SIZE++;
+								if (Config.C_MENU_SIZE == 8)
+									Config.C_MENU_SIZE = 1;
 								Config.saveConfiguration(false);
 								if(Config.isAndroid()) {
-									this.menuCommon.font = Config.MENU_SIZE;
+									this.menuCommon.font = Config.C_MENU_SIZE;
 								}
 							}
 
 							if (settingIndex == 2 && this.mouseButtonClick == 1) {
-								Config.HOLD_AND_CHOOSE = !Config.HOLD_AND_CHOOSE;
+								Config.C_HOLD_AND_CHOOSE = !Config.C_HOLD_AND_CHOOSE;
 								Config.saveConfiguration(false);
 							}
 
 							if (settingIndex == 3 && this.mouseButtonClick == 1) {
-								Config.SWIPE_TO_SCROLL = !Config.SWIPE_TO_SCROLL;
+								Config.C_SWIPE_TO_SCROLL = !Config.C_SWIPE_TO_SCROLL;
 								Config.saveConfiguration(false);
 							}
 
 							if (settingIndex == 4 && this.mouseButtonClick == 1) {
-								Config.SWIPE_TO_ROTATE = !Config.SWIPE_TO_ROTATE;
+								Config.C_SWIPE_TO_ROTATE = !Config.C_SWIPE_TO_ROTATE;
 								Config.saveConfiguration(false);
 							}
 
@@ -8424,7 +8522,7 @@ public final class mudclient implements Runnable {
 					}
 
 					if (!this.isSleeping) {
-						if (mouseY > (getGameHeight() - 4)) {
+						if (mouseY > (getGameHeight() - 4)) { // Chat Tab Selection
 							if (mouseX > 15 + ((getGameWidth() / 2) - 256) && mouseX < 96 + ((getGameWidth() / 2) - 256)
 									&& lastMouseButtonDown == 1)
 								this.messageTabSelected = MessageTab.ALL;
@@ -8443,10 +8541,12 @@ public final class mudclient implements Runnable {
 								this.messageTabSelected = MessageTab.PRIVATE;
 								this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
 							}
-							if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
-									&& lastMouseButtonDown == 1) {
-								this.messageTabSelected = MessageTab.CLAN;
-								this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
+							if (Config.S_WANT_CLANS) {
+								if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
+										&& lastMouseButtonDown == 1) {
+									this.messageTabSelected = MessageTab.CLAN;
+									this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
+								}
 							}
 
 							this.currentMouseButtonDown = 0;
@@ -8516,8 +8616,8 @@ public final class mudclient implements Runnable {
 									modMenu = true; 
 								} else if (var11.startsWith("::n ") && adminRights) {
 									devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
-								} else if (var11.equalsIgnoreCase("::overlay")) {
-									Config.SIDE_MENU_OVERLAY = Config.SIDE_MENU_OVERLAY;
+								} else if (var11.equalsIgnoreCase("::overlay") && Config.S_SIDE_MENU_TOGGLE) {
+									Config.C_SIDE_MENU_OVERLAY = Config.C_SIDE_MENU_OVERLAY;
 								}
 								else {
 									this.sendCommandString(var11.substring(2));
@@ -9575,10 +9675,11 @@ public final class mudclient implements Runnable {
 					return;
 				}
 				else if (opcode == 134) {
+					if (!Config.S_BATCH_PROGRESSION) return;
 					int interfaceID = packetsIncoming.getByte();
 					switch (interfaceID) {
 					case 0: // Progress Bar Updates
-						if (!Config.BATCH_PROGRESS_BAR) {
+						if (!Config.C_BATCH_PROGRESS_BAR) {
 							batchProgressBar.hide();
 							return;
 						}
@@ -9742,6 +9843,7 @@ public final class mudclient implements Runnable {
 					return;
 				}*/
 				else if(opcode == 135) { // Kill Announcements
+					if (!Config.S_WANT_KILL_FEED) return;
 					String killed = this.packetsIncoming.readString();
 					String killer = this.packetsIncoming.readString();
 					int killType = this.packetsIncoming.get32();
@@ -9935,15 +10037,46 @@ public final class mudclient implements Runnable {
 					String serverName = this.packetsIncoming.readString();
 					props.setProperty("SERVER_NAME", serverName);
 					int spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
+					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					int spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
+					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
 					int spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
+					props.setProperty("S_SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
 					int showFloatingNametags = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
+					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
 					int wantClans = this.packetsIncoming.getUnsignedByte();
-					props.setProperty("WANT_CLANS", wantClans == 1 ? "true" : "false");
+					props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false");
+					int wantKillFeed = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
+					int fogToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
+					int groundItemToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
+					int autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
+					int batchProgression = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
+					int sideMenuToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
+					int inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
+					int zoomViewToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
+					int menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
+					int fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false");
+					int experienceCounterToggle = this.packetsIncoming.getUnsignedByte();
+          props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
+					int experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
+          props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
+					int itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
+					int showRoofToggle = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
+					int wantGlobalChat = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
+
 					Config.updateServerConfiguration(props);
 				}
 				else {
@@ -10752,6 +10885,7 @@ public final class mudclient implements Runnable {
 
 													if (opcode != 123) { // Not ???
 														if (opcode == 159) { // Show Experience Notification
+															if (!Config.S_EXPERIENCE_DROPS_TOGGLE) return;
 															int skill = this.packetsIncoming.getUnsignedByte();
 															recentSkill = skill;
 															int oldXp = playerExperience[skill];
@@ -10771,7 +10905,7 @@ public final class mudclient implements Runnable {
 																this.totalXpGainedStartTime = System.currentTimeMillis();
 															}
 
-															if(Config.EXPERIENCE_DROPS) {
+															if(Config.C_EXPERIENCE_DROPS) {
 																if (receivedXp > 0) {
 																	xpNotifications.add(new XPNotification(skill, receivedXp, false));
 																}
@@ -12596,7 +12730,8 @@ public final class mudclient implements Runnable {
 					n.setVisible(false);
 
 				clan.putClan(false);
-				experienceOverlay.setVisible(true);
+				if (Config.S_EXPERIENCE_DROPS_TOGGLE)
+					experienceOverlay.setVisible(true);
 				this.getSurface().blackScreen(true);
 				// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 				// this.screenOffsetY);
@@ -12891,7 +13026,7 @@ public final class mudclient implements Runnable {
 						this.messageTabActivity_Game = 200;
 					}
 
-					if (Config.MESSAGE_TAB_SWITCH) {
+					if (Config.C_MESSAGE_TAB_SWITCH) {
 						if (type == MessageType.GAME && this.messageTabSelected != MessageTab.ALL) {
 							this.messageTabSelected = MessageTab.ALL;
 						}
@@ -13081,7 +13216,8 @@ public final class mudclient implements Runnable {
 						questGuideInterface = new QuestGuideInterface(this);
 						experienceConfigInterface = new ExperienceConfigInterface(this);
 						doSkillInterface = new DoSkillInterface(this);
-						lostOnDeathInterface = new LostOnDeathInterface(this);
+						if (Config.S_ITEMS_ON_DEATH_MENU)
+							lostOnDeathInterface = new LostOnDeathInterface(this);
 						territorySignupInterface = new TerritorySignupInterface(this);
 
 						mainComponent = new NComponent(this);
@@ -13095,8 +13231,10 @@ public final class mudclient implements Runnable {
 						fishingTrawlerInterface = new FishingTrawlerInterface(this);
 						mainComponent.addComponent(fishingTrawlerInterface);
 
-						batchProgressBar = new ProgressBarInterface(this);
-						mainComponent.addComponent(batchProgressBar.getComponent());
+						if (Config.S_BATCH_PROGRESSION) {
+							batchProgressBar = new ProgressBarInterface(this);
+							mainComponent.addComponent(batchProgressBar.getComponent());
+						}
 
 						onlineList = new OnlineListInterface(this);
 						mainComponent.addComponent(onlineList);
@@ -13104,84 +13242,85 @@ public final class mudclient implements Runnable {
 						//achievementInterface = new AchievementGUI(this);
 						clan = new Clan(this);
 
-						experienceOverlay = new NCustomComponent(this) {
-							@Override
-							public void render() {
-								if (Config.EXPERIENCE_DROPS) {
-									long new_time = System.currentTimeMillis();
-									time = new_time;
-									for (Iterator<XPNotification> iterator = xpNotifications.iterator(); iterator.hasNext();) {
-										XPNotification xpdrop = iterator.next();
-										if (!xpdrop.isActive) {
-											if (Config.EXPERIENCE_COUNTER > 0) {
-												if(time > m_timer && xpdrop.y > 20) {
-													m_timer = time + 250;
-													xpdrop.isActive = true;
+						if (Config.S_EXPERIENCE_DROPS_TOGGLE) {
+							experienceOverlay = new NCustomComponent(this) {
+								@Override
+								public void render() {
+									if (Config.C_EXPERIENCE_DROPS) {
+										long new_time = System.currentTimeMillis();
+										time = new_time;
+										for (Iterator<XPNotification> iterator = xpNotifications.iterator(); iterator.hasNext();) {
+											XPNotification xpdrop = iterator.next();
+											if (!xpdrop.isActive) {
+												if (Config.C_EXPERIENCE_COUNTER > 0) {
+													if(time > m_timer && xpdrop.y > 20) {
+														m_timer = time + 250;
+														xpdrop.isActive = true;
+													} else {
+														return;
+													}
 												} else {
-													return;
-												}
-											} else {
-												if(time > m_timer && xpdrop.y > 0) {
-													m_timer = time + 250;
-													xpdrop.isActive = true;
-												} else {
-													return;
+													if(time > m_timer && xpdrop.y > 0) {
+														m_timer = time + 250;
+														xpdrop.isActive = true;
+													} else {
+														return;
+													}
 												}
 											}
-										}
 
-										if (Config.EXPERIENCE_COUNTER == 1) {
-											drawExperienceCounter(xpdrop.skill);
-										}
-
-										int textColor = Config.EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-											Config.EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-												Config.EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-													Config.EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
-
-										if (!xpdrop.levelUp) {
-											if (textColor == 0xFFFFFF) {
-												graphics().drawShadowText("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
-														(int) xpdrop.y, textColor, 2, false);
-											} else {
-												graphics().drawString("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
-													(int) xpdrop.y, textColor, 2);
+											if (Config.C_EXPERIENCE_COUNTER == 1) {
+												drawExperienceCounter(xpdrop.skill);
 											}
-										} else {
-											if (textColor == 0xFFFFFF) {
-												graphics().drawShadowText("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
-													(int) xpdrop.y, textColor, 2, false);
-											} else {
-												graphics().drawString("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
+
+											int textColor = Config.C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
+												Config.C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
+													Config.C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
+														Config.C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+	
+											if (!xpdrop.levelUp) {
+												if (textColor == 0xFFFFFF) {
+													graphics().drawShadowText("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
+															(int) xpdrop.y, textColor, 2, false);
+												} else {
+													graphics().drawString("+" + xpdrop.amount + " " + getSkillNames()[xpdrop.skill] + " exp", xpdrop.x,
 														(int) xpdrop.y, textColor, 2);
+												}
+											} else {
+												if (textColor == 0xFFFFFF) {
+													graphics().drawShadowText("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
+														(int) xpdrop.y, textColor, 2, false);
+												} else {
+													graphics().drawString("+1 " + getSkillNames()[xpdrop.skill] + " level", xpdrop.x,
+															(int) xpdrop.y, textColor, 2);
+												}
 											}
-										}
 
-										double dropSpeed = Config.EXPERIENCE_DROP_SPEED == 0 ? 0.000000000001 :
-											Config.EXPERIENCE_DROP_SPEED == 1 ? 0.00005 : 1;
-										xpdrop.y -= dropSpeed;
+											double dropSpeed = Config.C_EXPERIENCE_DROP_SPEED == 0 ? 0.000000000001 :
+												Config.C_EXPERIENCE_DROP_SPEED == 1 ? 0.00005 : 1;
+											xpdrop.y -= dropSpeed;
 
-										if (Config.EXPERIENCE_COUNTER > 0 && xpdrop.y <= 30) {
-											xpdrop.isActive = false;
-										}
-										else if (xpdrop.y <= 0) {
-											xpdrop.isActive = false;
-										}
+											if (Config.C_EXPERIENCE_COUNTER > 0 && xpdrop.y <= 30) {
+												xpdrop.isActive = false;
+											}
+											else if (xpdrop.y <= 0) {
+												xpdrop.isActive = false;
+											}
 
-
-										if (Config.EXPERIENCE_COUNTER > 0 && (xpdrop.y <= 30 || xpdrop.y > getGameHeight() - 30)) {
-											iterator.remove();
-										}
-										else if (xpdrop.y <= 0 || xpdrop.y > getGameHeight()) {
-											iterator.remove();
+											if (Config.C_EXPERIENCE_COUNTER > 0 && (xpdrop.y <= 30 || xpdrop.y > getGameHeight() - 30)) {
+												iterator.remove();
+											}
+											else if (xpdrop.y <= 0 || xpdrop.y > getGameHeight()) {
+												iterator.remove();
+											}
 										}
 									}
 								}
-							}
-						};
-						mainComponent.addComponent(experienceOverlay);
+							};
+							mainComponent.addComponent(experienceOverlay);
+						}
 
-						this.menuCommon = new Menu(this.getSurface(), Config.isAndroid() ? Config.MENU_SIZE : 1, "Choose option");
+						this.menuCommon = new Menu(this.getSurface(), Config.isAndroid() ? Config.C_MENU_SIZE : 1, "Choose option");
 
 						this.menuTrade = new Menu(this.getSurface(), 1);
 						this.menuDuel = new Menu(this.getSurface(), 1);
@@ -13943,6 +14082,7 @@ public final class mudclient implements Runnable {
 		}
 
 		private void drawLostOnDeath() {
+			if (!Config.S_ITEMS_ON_DEATH_MENU) return;
 			lostOnDeathInterface.onRender();
 		}
 

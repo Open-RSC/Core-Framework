@@ -32,7 +32,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		if (Config.HOLD_AND_CHOOSE)
+		if (Config.C_HOLD_AND_CHOOSE)
 			return false;
 
 		mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
@@ -42,7 +42,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-		if (Config.HOLD_AND_CHOOSE)
+		if (Config.C_HOLD_AND_CHOOSE)
 			return;
 		mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
 		mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
@@ -53,7 +53,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		if (Config.HOLD_AND_CHOOSE)
+		if (Config.C_HOLD_AND_CHOOSE)
 			return false;
 		mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
 		mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
@@ -166,7 +166,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 		mudclient.lastMouseAction = 0;
 
 		if (!gestureDetector.onTouchEvent(e)) {
-			if (Config.HOLD_AND_CHOOSE) {
+			if (Config.C_HOLD_AND_CHOOSE) {
 				switch (e.getAction()) {
 				case MotionEvent.ACTION_UP:
 					isLongPress = false;
@@ -203,7 +203,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 									mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown = 2;
 								}
 							}
-						}, Config.LONG_PRESS_TIMER);
+						}, Config.C_LONG_PRESS_TIMER);
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
