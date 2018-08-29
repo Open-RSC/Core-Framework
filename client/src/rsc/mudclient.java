@@ -7769,12 +7769,23 @@ public final class mudclient implements Runnable {
         this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
       }
 
+      int var8 = 0xFFFFFF;
+      if (this.insideTutorial) {
+        var7 += 20;
+        if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
+            && this.mouseY < 4 + var7) {
+          var8 = 0xFFFF00;
+        }
+        this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
+      }
+
 			var7 += 20;
 
       this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 
-      int var8 = 0xFFFFFF;
+
       var7 += 15;
+			var8 = 0xFFFFFF;
       if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
         var8 = 0xFFFF00;
       }
@@ -7862,6 +7873,16 @@ public final class mudclient implements Runnable {
 				this.createPacket64(this.settingsBlockChat, this.settingsBlockPrivate,
 						this.settingsBlockTrade, this.settingsBlockDuel);
 			}
+
+      // Skip Tutorial Button
+      if (this.insideTutorial) {
+        if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
+            && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+          this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
+          this.showUiTab = 0;
+        }
+        var7 += 20;
+      }
 
       var7 += 15;
       if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
