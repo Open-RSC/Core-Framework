@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
@@ -24,6 +25,7 @@ public final class GameSettingHandler implements PacketHandler {
 			} else if(idx == 5) {
 				player.getCache().store("setting_showroof",  p.readByte() == 1);
 			} else if(idx == 6) {
+				if (!Constants.GameServer.FOG_TOGGLE) return;
 				player.getCache().store("setting_fogofwar",  p.readByte() == 1);
 			} else if(idx == 7) {
 				player.getCache().store("setting_android_holdnchoose",  p.readByte() == 1);

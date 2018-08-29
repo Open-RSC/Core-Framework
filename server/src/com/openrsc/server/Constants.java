@@ -137,6 +137,21 @@ public final class Constants {
 
 		public static boolean SHOW_FLOATING_NAMETAGS = false;
 		public static boolean WANT_CLANS = false;
+		public static boolean WANT_KILL_FEED = false;
+		public static boolean FOG_TOGGLE = false;
+		public static boolean GROUND_ITEM_TOGGLE = false;
+		public static boolean AUTO_MESSAGE_SWITCH_TOGGLE = false;
+		public static boolean BATCH_PROGRESSION = false;
+		public static boolean SIDE_MENU_TOGGLE = false;
+		public static boolean INVENTORY_COUNT_TOGGLE = false;
+		public static boolean ZOOM_VIEW_TOGGLE = false;
+		public static boolean MENU_COMBAT_STYLE_TOGGLE = false;
+		public static boolean FIGHTMODE_SELECTOR_TOGGLE = false;
+		public static boolean EXPERIENCE_COUNTER_TOGGLE = false;
+		public static boolean EXPERIENCE_DROPS_TOGGLE = false;
+		public static boolean ITEMS_ON_DEATH_MENU = false;
+		public static boolean SHOW_ROOF_TOGGLE = false;
+		public static boolean WANT_GLOBAL_CHAT = false;
 
 		/**
 		 * 
@@ -179,6 +194,21 @@ public final class Constants {
 
 			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
+			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
+			FOG_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
+			GROUND_ITEM_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
+			AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(props.getProperty("auto_message_switch_toggle"));
+			BATCH_PROGRESSION = Boolean.parseBoolean(props.getProperty("batch_progression"));
+			SIDE_MENU_TOGGLE = Boolean.parseBoolean(props.getProperty("side_menu_toggle"));
+			INVENTORY_COUNT_TOGGLE = Boolean.parseBoolean(props.getProperty("inventory_count_toggle"));
+			ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(props.getProperty("zoom_view_toggle"));
+			MENU_COMBAT_STYLE_TOGGLE = Boolean.parseBoolean(props.getProperty("menu_combat_style_toggle"));
+			FIGHTMODE_SELECTOR_TOGGLE = Boolean.parseBoolean(props.getProperty("fightmode_selector_toggle"));
+			EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_counter_toggle"));
+			EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_drops_toggle"));
+			ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
+			SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
+			WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
 
 			START_TIME = System.currentTimeMillis();
 		}

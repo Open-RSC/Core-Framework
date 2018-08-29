@@ -245,7 +245,7 @@ public final class Moderator implements CommandListener {
 				player.message("Invalid username or the player is currently offline.");
 			}
 		}
-		if (command.equals("say")) {
+		if (command.equals("say")) { // SAY is not configged out for mods.
 			String newStr = "";
 
 			for (int i = 0; i < args.length; i++) {

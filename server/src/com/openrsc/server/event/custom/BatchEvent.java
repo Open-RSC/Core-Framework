@@ -1,5 +1,6 @@
 package com.openrsc.server.event.custom;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -11,7 +12,8 @@ public abstract class BatchEvent extends DelayedEvent {
 	
 	public BatchEvent(Player owner, int delay, int repeatFor) {
 		super(owner, delay);
-		this.repeatFor = repeatFor;
+		if (Constants.GameServer.BATCH_PROGRESSION) this.repeatFor = repeatFor;
+		else this.repeatFor = 1;
 		ActionSender.sendProgressBar(owner, delay, repeatFor);
 		owner.setBusyTimer(delay + 200);
 	}
