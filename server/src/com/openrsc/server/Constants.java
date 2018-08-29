@@ -150,6 +150,7 @@ public final class Constants {
 		public static boolean EXPERIENCE_COUNTER_TOGGLE = false;
 		public static boolean EXPERIENCE_DROPS_TOGGLE = false;
 		public static boolean ITEMS_ON_DEATH_MENU = false;
+		public static boolean SHOW_ROOF_TOGGLE = false;
 
 		/**
 		 * 
@@ -205,6 +206,7 @@ public final class Constants {
 			EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_counter_toggle"));
 			EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_drops_toggle"));
 			ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
+			SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
 
 			START_TIME = System.currentTimeMillis();
 		}
