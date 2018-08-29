@@ -8,7 +8,7 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -22,7 +22,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (p.getQuestStage(Quests.ROMEO_N_JULIET) == 4) {
+		if (p.getQuestStage(Constants.Quests.ROMEO_N_JULIET) == 4) {
 			playerTalk(p, n, "Apothecary. Father Lawrence sent me",
 					"I need some Cadava potion to help Romeo and Juliet");
 			npcTalk(p, n, "Cadava potion. Its pretty nasty. And hard to make",
@@ -30,9 +30,9 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					"I have all that, but i need some cadavaberries",
 					"You will have to find them while i get the rest ready",
 					"Bring them here when you have them. But be careful. They are nasty");
-			p.updateQuestStage(Quests.ROMEO_N_JULIET, 5);
+			p.updateQuestStage(Constants.Quests.ROMEO_N_JULIET, 5);
 			return;
-		} else if (p.getQuestStage(Quests.ROMEO_N_JULIET) == 5) {
+		} else if (p.getQuestStage(Constants.Quests.ROMEO_N_JULIET) == 5) {
 			if (!p.getInventory().hasItemId(55)) {
 				npcTalk(p, n, "Keep searching for the berries",
 						"they are needed for the potion");
@@ -45,15 +45,22 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 				p.message("The apothecary gives you a Cadava potion");
 				p.getInventory().add(new Item(57));
 				p.message("I'm meant to give this to Juliet");
-				p.updateQuestStage(Quests.ROMEO_N_JULIET, 6);
+				p.updateQuestStage(Constants.Quests.ROMEO_N_JULIET, 6);
 			}
 			return;
 		}
 		npcTalk(p,n, "I am the apothecary", "I have potions to brew. Do you need anything specific?");
-		int option = showMenu(p,n, "Can you make a strength potion?",
-				"Do you know a potion to make hair fall out?",
-				"Have you got any good potions to give away?",
-				"Do you have any experience elixir?");
+		int option;
+		if (!Constants.GameServer.WANT_EXPERIENCE_ELIXIRS)
+      option = showMenu(p,n, "Can you make a strength potion?",
+          "Do you know a potion to make hair fall out?",
+          "Have you got any good potions to give away?");
+		else
+			option = showMenu(p,n, "Can you make a strength potion?",
+					"Do you know a potion to make hair fall out?",
+					"Have you got any good potions to give away?",
+					"Do you have any experience elixir?");
+
 		if(option == 0) {
 			if (hasItem(p, 10, 5)
 					&& hasItem(p, 220, 1)
@@ -99,7 +106,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 		else if(option == 2) {
 			npcTalk(p,n, "Sorry, charity is not my strongest point");
 		}
-		else if(option == 3) {
+		else if(option == 3 && Constants.GameServer.WANT_EXPERIENCE_ELIXIRS) {
 			npcTalk(p, n, "Yes, it's my most mysterious and special elixir",
 					"It has a strange taste and sure does give you a rush",
 					"I would know..",

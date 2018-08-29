@@ -4001,7 +4001,7 @@ public final class mudclient implements Runnable {
 										this.getGameHeight() - 7);
 							}
 						}
-						if (this.elixirTimer != 0) {
+						if (Config.S_WANT_EXPERIENCE_ELIXIRS && this.elixirTimer != 0) {
 							centerX = this.elixirTimer / 50;
 							centerZ = centerX / 60;
 							centerX %= 60;
@@ -8473,7 +8473,7 @@ public final class mudclient implements Runnable {
 				if (this.systemUpdate > 1) {
 					--this.systemUpdate;
 				}
-				if (this.elixirTimer > 1) {
+				if (Config.S_WANT_EXPERIENCE_ELIXIRS && this.elixirTimer > 1) {
 					--this.elixirTimer;
 					if(this.elixirTimer <= 1) {
 						this.elixirTimer = 0;
@@ -10355,6 +10355,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
 					int wantQuestMenus = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
+					int wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
@@ -11318,7 +11320,7 @@ public final class mudclient implements Runnable {
 																				return;
 																			}
 
-																			if (opcode == 54) { // Elixir Timer
+																			if (opcode == 54 && Config.S_WANT_EXPERIENCE_ELIXIRS) { // Elixir Timer
 																				this.elixirTimer = this.packetsIncoming
 																						.getShort() * 32;
 																				return;

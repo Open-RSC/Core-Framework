@@ -154,6 +154,7 @@ public final class Constants {
 		public static boolean WANT_GLOBAL_CHAT = false;
 		public static boolean WANT_SKILL_MENUS = false;
 		public static boolean WANT_QUEST_MENUS = false;
+		public static boolean WANT_EXPERIENCE_ELIXIRS = false;
 
 		/**
 		 * 
@@ -213,6 +214,7 @@ public final class Constants {
 			WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
 			WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
 			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
+			WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));
 
 			START_TIME = System.currentTimeMillis();
 		}

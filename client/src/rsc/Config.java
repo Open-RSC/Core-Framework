@@ -62,6 +62,7 @@ public class Config {
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
 	public static boolean S_WANT_SKILL_MENUS = false;
 	public static boolean S_WANT_QUEST_MENUS = false;
+	public static boolean S_WANT_EXPERIENCE_ELIXIRS = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
