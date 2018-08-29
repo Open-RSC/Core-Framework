@@ -117,3 +117,7 @@ server/avatars/
 /RSCL_Launcher/nbproject/private/
 /OLD_Launcher/nbproject/private/
 Launcher/Cache/
+
+client/Cache/uid\.dat
+
+client/Cache/client\.properties
