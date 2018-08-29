@@ -161,6 +161,7 @@ public final class RegularPlayer implements CommandListener {
 			player.teleport(World.EVENT_X, World.EVENT_Y);
 		}
 		if (command.equals("g") || command.equals("p")) {
+			if (!Constants.GameServer.WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message("You are muted, you cannot send messages");
 				return;
