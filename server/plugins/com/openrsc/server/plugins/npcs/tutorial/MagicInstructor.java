@@ -59,7 +59,7 @@ public class MagicInstructor implements TalkToNpcExecutiveListener, TalkToNpcLis
 			return;
 		}
 		npcTalk(p, n, "there's good magic potential in this one",
-				"Yes definately something I can work with");
+				"Yes definitely something I can work with");
 		int menu = showMenu(p, n, "Hmm are you talking about me?", "teach me some magic");
 		if(menu == 0) {
 			npcTalk(p, n, "Yes that is the one of which I speak");
