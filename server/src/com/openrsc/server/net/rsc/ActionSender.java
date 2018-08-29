@@ -477,6 +477,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // Fightmode Selector Toggle
 		s.writeByte((byte)(Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
 
 		player.write(s.toPacket());
 	}

@@ -74,6 +74,7 @@ public class Config {
 	public static boolean S_FIGHTMODE_SELECTOR_TOGGLE = false;
 	public static boolean S_EXPERIENCE_COUNTER_TOGGLE = false;
 	public static boolean S_EXPERIENCE_DROPS_TOGGLE = false;
+	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
