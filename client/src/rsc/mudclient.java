@@ -7940,13 +7940,13 @@ public final class mudclient implements Runnable {
 							var12 = 16711680;
 							var10 = var11;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-								if (doubleClick()) {
+								if (doubleClick() && Config.S_WANT_SKILL_MENUS) {
 									setSkillGuideChosen(this.skillNameLong[var10]);
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
 							}
-							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
+							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && Config.S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(this.skillNameLong[var10]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
@@ -7961,13 +7961,13 @@ public final class mudclient implements Runnable {
 							var12 = 16711680;
 							var10 = 9 + var11;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-								if (doubleClick()) {
+								if (doubleClick() && Config.S_WANT_SKILL_MENUS) {
 									setSkillGuideChosen(this.skillNameLong[var10]);
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
 							}
-							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
+							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && Config.S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(this.skillNameLong[var10]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
@@ -10330,6 +10330,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
 					int wantGlobalChat = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
+					int wantSkillMenus = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
