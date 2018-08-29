@@ -59,8 +59,12 @@ public class Config {
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
 	public static boolean S_SPAWN_SUBSCRIPTION_NPCS = false;
-
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
+
+	// if you change these, and the config file,
+	// they will also change the options menu to
+	// 2-tabs (3 on android). (Not enough room for
+	// additional options on the 1-tab layout.)
 	public static boolean S_WANT_CLANS = false;
 	public static boolean S_WANT_KILL_FEED = false;
 	public static boolean S_FOG_TOGGLE = false;
