@@ -60,6 +60,12 @@ public class Config {
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
 	public static boolean S_SPAWN_SUBSCRIPTION_NPCS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
+	public static boolean S_WANT_SKILL_MENUS = false;
+	public static boolean S_WANT_QUEST_MENUS = false;
+	public static boolean S_WANT_EXPERIENCE_ELIXIRS = false;
+	public static boolean S_WANT_KEYBOARD_SHORTCUTS = false;
+	public static boolean S_WANT_CUSTOM_BANKS = false;
+	public static boolean S_WANT_BANK_PINS = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
