@@ -152,6 +152,12 @@ public final class Constants {
 		public static boolean ITEMS_ON_DEATH_MENU = false;
 		public static boolean SHOW_ROOF_TOGGLE = false;
 		public static boolean WANT_GLOBAL_CHAT = false;
+		public static boolean WANT_SKILL_MENUS = false;
+		public static boolean WANT_QUEST_MENUS = false;
+		public static boolean WANT_EXPERIENCE_ELIXIRS = false;	
+		public static boolean WANT_KEYBOARD_SHORTCUTS = false;
+		public static boolean WANT_CUSTOM_BANKS = false;
+		public static boolean WANT_BANK_PINS = false;
 
 		/**
 		 * 
@@ -209,6 +215,12 @@ public final class Constants {
 			ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
 			SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
 			WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
+			WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
+			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
+			WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));
+			WANT_KEYBOARD_SHORTCUTS = Boolean.parseBoolean(props.getProperty("want_keyboard_shortcuts"));
+			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
+			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
 
 			START_TIME = System.currentTimeMillis();
 		}

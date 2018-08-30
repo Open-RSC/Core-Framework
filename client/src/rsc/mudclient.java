@@ -2723,8 +2723,8 @@ public final class mudclient implements Runnable {
 							k = 0xff0000;
 
 						this.getSurface().drawString(
-								(optionsMenuKeyboardInput ? "(" + (j + 1) + ")" : "") + optionsMenuText[j], startX + 10,
-								startY + j * spread, k, 6);
+								(optionsMenuKeyboardInput ? "(" + (j + 1) + ")" : "") + optionsMenuText[j],
+									startX + 10, startY + j * spread, k, 6);
 					}
 				} else {
 					int var2;
@@ -4001,7 +4001,7 @@ public final class mudclient implements Runnable {
 										this.getGameHeight() - 7);
 							}
 						}
-						if (this.elixirTimer != 0) {
+						if (Config.S_WANT_EXPERIENCE_ELIXIRS && this.elixirTimer != 0) {
 							centerX = this.elixirTimer / 50;
 							centerZ = centerX / 60;
 							centerX %= 60;
@@ -5564,9 +5564,9 @@ public final class mudclient implements Runnable {
 						clan.getClanInterface().onRender(getSurface());
 					} else if (this.showDialogShop && this.combatTimeout == 0) {
 						this.drawDialogShop();
-					} else if (skillGuideInterface.isVisible()) {
+					} else if (Config.S_WANT_SKILL_MENUS && skillGuideInterface.isVisible()) {
 						this.drawSkillGuide();
-					} else if (questGuideInterface.isVisible()) {
+					} else if (Config.S_WANT_QUEST_MENUS && questGuideInterface.isVisible()) {
 						this.drawQuestGuide();
 					} else if (experienceConfigInterface.isVisible()) {
 						this.drawExperienceConfig();
@@ -7769,12 +7769,23 @@ public final class mudclient implements Runnable {
         this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
       }
 
+      int var8 = 0xFFFFFF;
+      if (this.insideTutorial) {
+        var7 += 20;
+        if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
+            && this.mouseY < 4 + var7) {
+          var8 = 0xFFFF00;
+        }
+        this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
+      }
+
 			var7 += 20;
 
       this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 
-      int var8 = 0xFFFFFF;
+
       var7 += 15;
+			var8 = 0xFFFFFF;
       if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
         var8 = 0xFFFF00;
       }
@@ -7863,6 +7874,16 @@ public final class mudclient implements Runnable {
 						this.settingsBlockTrade, this.settingsBlockDuel);
 			}
 
+      // Skip Tutorial Button
+      if (this.insideTutorial) {
+        if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
+            && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
+          this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
+          this.showUiTab = 0;
+        }
+        var7 += 20;
+      }
+
       var7 += 15;
       if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
           && this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
@@ -7940,13 +7961,13 @@ public final class mudclient implements Runnable {
 							var12 = 16711680;
 							var10 = var11;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-								if (doubleClick()) {
+								if (doubleClick() && Config.S_WANT_SKILL_MENUS) {
 									setSkillGuideChosen(this.skillNameLong[var10]);
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
 							}
-							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
+							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && Config.S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(this.skillNameLong[var10]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
@@ -7961,13 +7982,13 @@ public final class mudclient implements Runnable {
 							var12 = 16711680;
 							var10 = 9 + var11;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-								if (doubleClick()) {
+								if (doubleClick() && Config.S_WANT_SKILL_MENUS) {
 									setSkillGuideChosen(this.skillNameLong[var10]);
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
 							}
-							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
+							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && Config.S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(this.skillNameLong[var10]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
@@ -8053,7 +8074,7 @@ public final class mudclient implements Runnable {
 					}
 
 					int position = this.panelQuestInfo.getControlSelectedListIndex(this.controlQuestInfoPanel) - 1;
-					if (this.mouseButtonClick == 1 && position >= 0
+					if (Config.S_WANT_QUEST_MENUS && this.mouseButtonClick == 1 && position >= 0
 							&& this.getMouseX() > var3 && this.getMouseY() > var4 + 36
 							&& this.getMouseX() < var3 + this.getSurface().stringWidth(1, this.questNames[position])
 							&& this.getMouseY() < var6 + 44) {
@@ -8452,7 +8473,7 @@ public final class mudclient implements Runnable {
 				if (this.systemUpdate > 1) {
 					--this.systemUpdate;
 				}
-				if (this.elixirTimer > 1) {
+				if (Config.S_WANT_EXPERIENCE_ELIXIRS && this.elixirTimer > 1) {
 					--this.elixirTimer;
 					if(this.elixirTimer <= 1) {
 						this.elixirTimer = 0;
@@ -9096,7 +9117,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private boolean optionsMenuKeyboardInput = true;
+		private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
 
 		public final void handleKeyPress(byte var1, int key) {
 			try {
@@ -10330,6 +10351,18 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
 					int wantGlobalChat = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
+					int wantSkillMenus = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
+					int wantQuestMenus = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
+					int wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
+					int wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
+					int wantCustomBanks = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
+					int wantBankPins = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
@@ -11293,7 +11326,7 @@ public final class mudclient implements Runnable {
 																				return;
 																			}
 
-																			if (opcode == 54) { // Elixir Timer
+																			if (opcode == 54 && Config.S_WANT_EXPERIENCE_ELIXIRS) { // Elixir Timer
 																				this.elixirTimer = this.packetsIncoming
 																						.getShort() * 32;
 																				return;
