@@ -21,7 +21,6 @@ public class AppFrame extends JFrame
 {
 	public static AppFrame instance;
     private NewsBox box;
-    private JLabel logo;
     private JLabel text;
     private JLabel subText;
     private JLabel bg;
@@ -65,13 +64,11 @@ public class AppFrame extends JFrame
     }
     
     private void addLogo() {
-        (this.logo = new JLabel(Utils.getImage("logo.png"))).setBounds(12, 12, 47, 47);
-        this.bg.add(this.logo);
-        (this.text = new JLabel("openrsc".toUpperCase())).setBounds(65, 24, 100, 15);
-        this.text.setForeground(new Color(126, 141, 9));
-        this.text.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 12.0f));
+        (this.text = new JLabel("Open RSC".toUpperCase())).setBounds(30, 24, 100, 15);
+        this.text.setForeground(new Color(255, 223, 0));
+        this.text.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 14.0f));
         this.bg.add(this.text);
-        (this.subText = new JLabel("LOADER")).setBounds(65, 35, 100, 15);
+        (this.subText = new JLabel("Game Launcher")).setBounds(30, 35, 100, 15);
         this.subText.setForeground(new Color(200, 200, 200));
         this.subText.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 10.0f));
         this.bg.add(this.subText);
@@ -110,14 +107,8 @@ public class AppFrame extends JFrame
         this.bg.add(new LinkButton("Register", new Rectangle(548, 480, 119, 40)));
         (this.launch = new LaunchButton()).setBounds(797, 481, 174, 69);
         this.bg.add(this.launch);
-        /**
-         * TODO Checkbox and force update? not needed I think.
-         */
-	        this.bg.add(new ControlButton(2, 958, 8, 10, 11));
-	        this.bg.add(new ControlButton(1, 940, 8, 10, 11));
-        /**
-         * END.
-         */
+        this.bg.add(new ControlButton(2, 958, 8, 10, 11));
+        this.bg.add(new ControlButton(1, 940, 8, 10, 11));
     }
     
     public NewsBox getBox() {
