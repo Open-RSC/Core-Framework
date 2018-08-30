@@ -10359,6 +10359,10 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
 					int wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
+					int wantCustomBanks = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
+					int wantBankPins = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}

@@ -156,6 +156,8 @@ public final class Constants {
 		public static boolean WANT_QUEST_MENUS = false;
 		public static boolean WANT_EXPERIENCE_ELIXIRS = false;	
 		public static boolean WANT_KEYBOARD_SHORTCUTS = false;
+		public static boolean WANT_CUSTOM_BANKS = false;
+		public static boolean WANT_BANK_PINS = false;
 
 		/**
 		 * 
@@ -217,6 +219,8 @@ public final class Constants {
 			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
 			WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));
 			WANT_KEYBOARD_SHORTCUTS = Boolean.parseBoolean(props.getProperty("want_keyboard_shortcuts"));
+			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
+			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
 
 			START_TIME = System.currentTimeMillis();
 		}
