@@ -27,11 +27,27 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 	@Override
 	public void onTalkToNpc(Player player, final Npc npc) {
 		npcTalk(player, npc, "Good day"+(npc.getID() == 617 ? " Bwana" : "")+", how may I help you?");
-		int menu = showMenu(player, npc, 
-				"I'd like to access my bank account please", 
-				"I'd like to talk about bank pin", 
-				"I'd like to collect my items from auction",
+	
+		int menu = showMenu(player, npc,
+				"I'd like to access my bank account please",
 				"What is this place?");
+		if (Constants.GameServer.SPAWN_AUCTION_NPCS && Constants.GameServer.WANT_BANK_PINS)
+			menu = showMenu(player, npc, 
+					"I'd like to access my bank account please", 
+					"What is this place?",
+					"I'd like to talk about bank pin", 
+					"I'd like to collect my items from auction");
+		else if (Constants.GameServer.WANT_BANK_PINS)
+      menu = showMenu(player, npc,
+          "I'd like to access my bank account please",
+          "What is this place?",
+          "I'd like to talk about bank pin");
+		else if (Constants.GameServer.SPAWN_AUCTION_NPCS)
+      menu = showMenu(player, npc,
+          "I'd like to access my bank account please",
+          "What is this place?",
+					"I'd like to collect my items from auction");
+
 		if (menu == 0) {
 			if(player.isIronMan(2)) {
 				player.message("As an Ultimate Iron Man, you cannot use the bank.");
@@ -54,8 +70,20 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 		} else if (menu == 1) {
-			menu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
-			if (menu == 0) {
+			npcTalk(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
+			int branchMenu = showMenu(player, npc, "And what do you do?",
+					"Didn't you used to be called the bank of Varrock");
+			if (branchMenu == 0) {
+				npcTalk(player, npc, "We will look after your items and money for you",
+						"So leave your valuables with us if you want to keep them safe");
+			} else if (branchMenu == 1) {
+				npcTalk(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
+						"And telling us our signs were wrong",
+						"As if we didn't know what town we were in or something!");
+			}
+		} else if (menu == 2 && Constants.GameServer.WANT_BANK_PINS) {
+			int bankPinMenu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+			if (bankPinMenu == 0) {
 				if (!player.getCache().hasKey("bank_pin")) {
 					String bankPin = getBankPinInput(player);
 					if (bankPin == null) {
@@ -64,7 +92,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					player.getCache().store("bank_pin", bankPin);
 					ActionSender.sendBox(player, "Your new bank pin is " + bankPin, false);
 				}
-			} else if (menu == 1) {
+			} else if (bankPinMenu == 1) {
 				if (player.getCache().hasKey("bank_pin")) {
 					String bankPin = getBankPinInput(player);
 					if (bankPin == null) {
@@ -80,7 +108,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				} else {
 					player.message("You don't have a bank pin");
 				}
-			} else if (menu == 2) {
+			} else if (bankPinMenu == 2) {
 				if (player.getCache().hasKey("bank_pin")) {
 					String bankPin = getBankPinInput(player);
 					if (bankPin == null) {
@@ -113,7 +141,8 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 					player.message("You don't have a bank pin");
 				}
 			}
-		} else if(menu == 2) {
+
+		} else if((menu == 2 || menu == 3) && Constants.GameServer.SPAWN_AUCTION_NPCS) {
 			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
 				String pin = getBankPinInput(player);
 				if (pin == null) {
@@ -127,18 +156,6 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				ActionSender.sendBox(player, "Bank pin correct", false);
 			}
 			Market.getInstance().addPlayerCollectItemsTask(player);
-		} else if (menu == 3) {
-			npcTalk(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
-			int branchMenu = showMenu(player, npc, "And what do you do?",
-					"Didn't you used to be called the bank of Varrock");
-			if (branchMenu == 0) {
-				npcTalk(player, npc, "We will look after your items and money for you",
-						"So leave your valuables with us if you want to keep them safe");
-			} else if (branchMenu == 1) {
-				npcTalk(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
-						"And telling us our signs were wrong",
-						"As if we didn't know what town we were in or something!");
-			}
 		}
 	}
 
