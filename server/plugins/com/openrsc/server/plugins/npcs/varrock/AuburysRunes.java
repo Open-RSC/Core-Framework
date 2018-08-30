@@ -16,8 +16,8 @@ public final class AuburysRunes implements ShopInterface,
 		TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(31,
-			500), new Item(32, 500), new Item(33, 500), new Item(34,
-			500), new Item(35, 500), new Item(36, 500));
+			50), new Item(32, 50), new Item(33, 50), new Item(34,
+			50), new Item(35, 50), new Item(36, 50));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {

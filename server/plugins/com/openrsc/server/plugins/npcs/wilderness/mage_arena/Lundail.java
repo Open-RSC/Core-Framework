@@ -16,8 +16,8 @@ public final class Lundail implements ShopInterface,
 		TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(33,
-			1000), new Item(31, 1000), new Item(32, 1000), new Item(34,
-			1000), new Item(35, 1000), new Item(36, 1000));
+			100), new Item(31, 100), new Item(32, 100), new Item(34,
+			100), new Item(35, 100), new Item(36, 100));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {

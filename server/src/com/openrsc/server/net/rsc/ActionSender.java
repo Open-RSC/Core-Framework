@@ -480,6 +480,12 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_BANK_PINS ? 1 : 0));
 
 		player.write(s.toPacket());
 	}
@@ -910,6 +916,7 @@ public class ActionSender {
 	 * Sends the elixir timer
 	 */
 	public static void sendElixirTimer(Player player, int seconds) {
+		if (!Constants.GameServer.WANT_EXPERIENCE_ELIXIRS) return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ELIXIR.opcode);
 		s.writeShort((int) (((double) seconds / 32D) * 50));
