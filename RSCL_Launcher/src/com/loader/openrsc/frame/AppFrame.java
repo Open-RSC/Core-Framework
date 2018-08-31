@@ -2,6 +2,7 @@ package com.loader.openrsc.frame;
 
 import java.awt.Rectangle;
 import java.awt.Color;
+import java.awt.Font;
 
 import java.awt.Dimension;
 import javax.swing.JProgressBar;
@@ -47,7 +48,7 @@ public class AppFrame extends JFrame
         this.addButtons();
         this.addNewsBox();
         //(this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
-        //this.postedDate.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 10.0f));
+        //this.postedDate.setFont(Utils.getFont("runescape_uf.ttf", 1, 10.0f));
         //this.postedDate.setHorizontalAlignment(0);
         //this.bg.add(this.postedDate);
         this.addMouseListener(new PositionListener(this));
@@ -66,14 +67,14 @@ public class AppFrame extends JFrame
     private void addLogo() {
         (this.text = new JLabel("Open RSC".toUpperCase())).setBounds(30, 24, 100, 15);
         this.text.setForeground(new Color(255, 223, 0));
-        this.text.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 14.0f));
+        this.text.setFont(Utils.getFont("runescape_uf.ttf", 1, 16.0f));
         this.bg.add(this.text);
         (this.subText = new JLabel("Game Launcher")).setBounds(30, 35, 100, 15);
         this.subText.setForeground(new Color(200, 200, 200));
-        this.subText.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 10.0f));
+        this.subText.setFont(Utils.getFont("runescape_uf.ttf", 1, 14.0f));
         this.bg.add(this.subText);
         (this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
-        this.status.setFont(Utils.getFont("OpenSans-Regular.ttf", 0, 12.0f));
+        this.status.setFont(Utils.getFont("runescape_uf.ttf", 0, 16.0f));
         this.status.setHorizontalAlignment(4);
         this.status.setBounds(625, 74, 315, 19);
         this.bg.add(this.status);
@@ -85,9 +86,18 @@ public class AppFrame extends JFrame
 
 	public void setDownloadProgress(String f, float percent) {
 		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530 , 640, 18);
-		this.progress.setForeground(new Color(0x412B0A));  //new Color(131,147,9));
-		this.progress.setBackground(new Color(0x2D2E2A));
-		this.progress.setFont(Utils.getFont("OpenSans-Regular.ttf", 1, 12.0f));
+		if (percent > 90) {
+                    this.progress.setForeground(new Color(0x009900));
+                    this.progress.repaint();
+                } else if (percent > 40 && percent < 80) {
+                    this.progress.setForeground(new Color(0xffad33));
+                    this.progress.repaint();
+                } else {
+                    this.progress.setForeground(new Color(0x990000));
+                    this.progress.repaint();
+                }
+                this.progress.setBackground(new Color(0x2D2E2A));
+		this.progress.setFont(Utils.getFont("runescape_uf.ttf", 1, 14.0f));
 		this.progress.setOpaque(true);
 		this.progress.setStringPainted(true);
 		this.progress.setBorderPainted(false);
@@ -100,7 +110,7 @@ public class AppFrame extends JFrame
 	
     
     private void addButtons() {
-        this.bg.add(new LinkButton("Website", new Rectangle(27, 480, 119, 40)));
+        this.bg.add(new LinkButton("Website" , new Rectangle(27, 480, 119, 40)));
         this.bg.add(new LinkButton("Forums", new Rectangle(158, 480, 119, 40)));
         this.bg.add(new LinkButton("Shop", new Rectangle(288, 480, 119, 40)));
         this.bg.add(new LinkButton("Support", new Rectangle(418, 480, 119, 40)));
