@@ -23,12 +23,12 @@ public class ArchiveBox extends JLabel implements MouseListener
         this.setFocusable(false);
         JLabel title = new JLabel(message.getTitle());
         title.setBounds(9, 8, 175, 12);
-        title.setFont(Utils.getFont("OpenSans-Regular.ttf", 0, 11.0f));
+        title.setFont(Utils.getFont("runescape_uf.ttf", 0, 11.0f));
         title.setForeground(new Color(220, 220, 220));
         this.add(title);
         title = new JLabel(message.getSplitDate());
         title.setBounds(9, 20, 163, 11);
-        title.setFont(Utils.getFont("OpenSans-Regular.ttf", 0, 9.0f));
+        title.setFont(Utils.getFont("runescape_uf.ttf", 0, 9.0f));
         title.setForeground(new Color(150, 150, 150));
         this.add(title);
         this.addMouseListener(this);
