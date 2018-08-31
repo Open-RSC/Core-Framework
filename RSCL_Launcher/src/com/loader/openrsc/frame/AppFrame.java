@@ -47,10 +47,10 @@ public class AppFrame extends JFrame
         this.addLogo();
         this.addButtons();
         this.addNewsBox();
-        //(this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
-        //this.postedDate.setFont(Utils.getFont("runescape_uf.ttf", 1, 10.0f));
-        //this.postedDate.setHorizontalAlignment(0);
-        //this.bg.add(this.postedDate);
+        /*(this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
+        this.postedDate.setFont(Utils.getFont("runescape_uf.ttf", 1, 10.0f));
+        this.postedDate.setHorizontalAlignment(0);
+        this.bg.add(this.postedDate);*/
         this.addMouseListener(new PositionListener(this));
         this.addMouseMotionListener(new PositionListener(this));
         this.pack();
@@ -86,15 +86,24 @@ public class AppFrame extends JFrame
 
 	public void setDownloadProgress(String f, float percent) {
 		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530 , 640, 18);
-		if (percent > 90) {
+		if (percent >= 90) {
                     this.progress.setForeground(new Color(0x009900));
-                    this.progress.repaint();
-                } else if (percent > 40 && percent < 80) {
-                    this.progress.setForeground(new Color(0xffad33));
-                    this.progress.repaint();
+                } else if (percent >= 80 && percent < 90) {    
+                    this.progress.setForeground(new Color(0x5b9900));
+                } else if (percent >= 70 && percent < 80) {    
+                    this.progress.setForeground(new Color(0x829900));
+                } else if (percent >= 60 && percent < 70) {    
+                    this.progress.setForeground(new Color(0x999300));
+                } else if (percent >= 50 && percent < 60) {    
+                    this.progress.setForeground(new Color(0x997a00));
+                } else if (percent >= 40 && percent < 50) {    
+                    this.progress.setForeground(new Color(0x996600));
+                } else if (percent >= 30 && percent < 40) {    
+                    this.progress.setForeground(new Color(0x993f00));
+                } else if (percent >= 20 && percent < 30) {
+                    this.progress.setForeground(new Color(0x992b00));
                 } else {
                     this.progress.setForeground(new Color(0x990000));
-                    this.progress.repaint();
                 }
                 this.progress.setBackground(new Color(0x2D2E2A));
 		this.progress.setFont(Utils.getFont("runescape_uf.ttf", 1, 14.0f));
@@ -110,11 +119,11 @@ public class AppFrame extends JFrame
 	
     
     private void addButtons() {
-        this.bg.add(new LinkButton("Website" , new Rectangle(27, 480, 119, 40)));
-        this.bg.add(new LinkButton("Forums", new Rectangle(158, 480, 119, 40)));
-        this.bg.add(new LinkButton("Shop", new Rectangle(288, 480, 119, 40)));
-        this.bg.add(new LinkButton("Support", new Rectangle(418, 480, 119, 40)));
-        this.bg.add(new LinkButton("Register", new Rectangle(548, 480, 119, 40)));
+        this.bg.add(new LinkButton("News" , new Rectangle(27, 480, 119, 40)));
+        this.bg.add(new LinkButton("Bug Reports", new Rectangle(158, 480, 119, 40)));
+        this.bg.add(new LinkButton("Discord", new Rectangle(288, 480, 119, 40)));
+        this.bg.add(new LinkButton("GitHub", new Rectangle(418, 480, 119, 40)));
+        this.bg.add(new LinkButton("FAQ", new Rectangle(548, 480, 119, 40)));
         (this.launch = new LaunchButton()).setBounds(797, 481, 174, 69);
         this.bg.add(this.launch);
         this.bg.add(new ControlButton(2, 958, 8, 10, 11));
