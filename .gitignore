@@ -121,3 +121,9 @@ Launcher/Cache/
 client/Cache/uid\.dat
 
 client/Cache/client\.properties
+
+RSCL_Launcher/Cache/uid\.dat
+
+RSCL_Launcher/Cache/client\.properties
+
+RSCL_Launcher/Cache/
