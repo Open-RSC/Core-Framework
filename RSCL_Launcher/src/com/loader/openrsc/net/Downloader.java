@@ -58,7 +58,7 @@ public class Downloader extends Observable
 			System.out.println("---------------------------------------");
 			String fileName = (String) entry.getKey();
 			String hash = (String) entry.getValue();
-			AppFrame.get().setDownloadProgress("Verifying file: " + getNiceName(fileName), 95);
+			//AppFrame.get().setDownloadProgress("Verifying file: " + getNiceName(fileName), 95);
 
 			System.out.println(fileName + ": " + hash);
 			File downloadedFile = new File(Constants.CONF_DIR + File.separator + File.separator + fileName);
