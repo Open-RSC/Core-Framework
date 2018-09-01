@@ -29,7 +29,7 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
 import com.openrsc.interfaces.misc.BankPinInterface;
 import com.openrsc.interfaces.misc.FishingTrawlerInterface;
 import com.openrsc.interfaces.misc.IronManInterface;
@@ -4221,7 +4221,6 @@ public final class mudclient implements Runnable {
 
 		private final void drawInputX() {
 			try {
-
 				if (this.inputTextFinal.length() <= 0 && !this.inputX_OK) {
 					if (this.inputX_Action.requiresNumeric()) {
 						String str = "";
@@ -4337,7 +4336,7 @@ public final class mudclient implements Runnable {
 						}
 					} else if (this.inputX_Action == InputXAction.BANK_DEPOSIT) {
 						try {
-							if (this.bank.selectedInventorySlot >= 0) {
+							if (this.bank.selectedBankSlot >= 0) {
 								if (str.length() > 10) {
 									str = str.substring(str.length() - 10, str.length());
 								}
@@ -5678,7 +5677,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private BankInterface bank;
+		private CustomBankInterface bank;
 
 		private int settingsBlockGlobal;
 		private int lastSelectedSpell = -1;
@@ -9148,7 +9147,7 @@ public final class mudclient implements Runnable {
 							auctionHouse.keyDown(key);
 							return;
 						}
-						if (bank.bank.focusOn(bank.bankSearch)) {
+						if (Config.S_WANT_CUSTOM_BANKS && bank.bank.focusOn(bank.bankSearch)) {
 							bank.keyDown(key);
 							return;
 						}
@@ -9176,6 +9175,9 @@ public final class mudclient implements Runnable {
 							} catch (Exception e) {
 
 							}
+						}
+						if ((key == '\n' || key == '\r') && (this.inputX_Action == InputXAction.BANK_DEPOSIT || this.inputX_Action == InputXAction.BANK_WITHDRAW)) {
+							this.inputX_OK = true;
 						}
 
 						if (this.panelSocialPopup_Mode == SocialPopupMode.NONE && this.reportAbuse_State == 0
@@ -10307,7 +10309,6 @@ public final class mudclient implements Runnable {
 				 */
 
 				else if (opcode == 19) { // Server Configs
-					System.out.println("Got Configs!");
 					Properties props = new Properties();
 					String serverName = this.packetsIncoming.readString();
 					props.setProperty("SERVER_NAME", serverName);
@@ -13497,7 +13498,7 @@ public final class mudclient implements Runnable {
 						this.getSurface().mudClientRef = this;
 						this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
 
-						bank = new BankInterface(this);
+						bank = new CustomBankInterface(this);
 						auctionHouse = new AuctionHouse(this);
 						skillGuideInterface = new SkillGuideInterface(this);
 						questGuideInterface = new QuestGuideInterface(this);
@@ -14156,8 +14157,22 @@ public final class mudclient implements Runnable {
 			return inventoryItemID;
 		}
 
+		public ArrayList<Integer> getInventoryItemsArray() {
+			ArrayList<Integer> toReturn = new ArrayList<>();
+			for (int i : getInventoryItems())
+				toReturn.add(i);
+			return toReturn;
+		}
+
 		public int[] getInventoryItemsCount() {
 			return inventoryItemSize;
+		}
+
+		public ArrayList<Integer> getInventoryItemsCountArray() {
+			ArrayList<Integer> toReturn = new ArrayList<>();
+			for (int i : getInventoryItems())
+				toReturn.add(i);
+			return toReturn;
 		}
 
 		public static final String formatStackAmount(int length) {
