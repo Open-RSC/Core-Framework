@@ -14,42 +14,41 @@ public class ButtonListener implements ActionListener
     public void actionPerformed(final ActionEvent event) {
         final String action = event.getActionCommand().toLowerCase();
         switch (action) {
-            case "support": {
-                Utils.openWebpage("http://www.openrsc.com/viewforum.php?id=8");
+            case "news": {
+                Utils.openWebpage("http://localhost/");
+                return;
+            }
+            case "bug reports": {
+                Utils.openWebpage("http://localhost/blog/bug-reports");
+                return;
+            }
+            case "discord": {
+                Utils.openWebpage("https://discord.gg/atX3Ruy");
+                return;
+            }
+            case "github": {
+            	 Utils.openWebpage("https://github.com/Open-RSC/Game");
+            	return;
+            }
+            case "faq": {
+                Utils.openWebpage("http://localhost/blog/faq");
                 return;
             }
             case "minimize": {
                 AppFrame.get().setState(1);
                 return;
             }
-            case "forums": {
-                Utils.openWebpage("http://openrsc.com/forum.php");
-                return;
-            }
             case "launch": {
-					try {
-						ClientLauncher.launchClient();
-					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-						e.printStackTrace();
-					}
+            try {
+                ClientLauncher.launchClient();
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+            }
                 return;
             }
             case "close": {
                 System.exit(0);
                 return;
-            }
-            case "shop": {
-                Utils.openWebpage("http://openrsc.com/shop.php");
-                return;
-            }
-            case "website": {
-                Utils.openWebpage("http://openrsc.com/");
-                return;
-            }
-            case "register": {
-            	 Utils.openWebpage("http://openrsc.com/register.php");
-            	return;
             }
             default:
                 break;
