@@ -1138,6 +1138,7 @@ public final class Player extends Mob {
 
 		hpXP *= getExperienceRate(skill);
 		skills.addExperience(skill, hpXP);
+		ActionSender.sendExperience(this, skill);
 	}
 
 	public void incQuestPoints(int amount) {
