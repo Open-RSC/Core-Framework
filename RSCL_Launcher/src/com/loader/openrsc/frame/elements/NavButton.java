@@ -20,7 +20,7 @@ public class NavButton extends JButton implements MouseListener
         this.setBorderPainted(false);
         this.setForeground(Color.WHITE);
         this.setHorizontalTextPosition(0);
-        this.setFont(Utils.getFont("OpenSans-Regular.ttf", 0, 10.0f));
+        this.setFont(Utils.getFont("runescape_uf.tff", 0, 10.0f));
         this.addMouseListener(this);
         this.setMargin(new Insets(0, 0, 0, 0));
         this.setFocusable(false);
