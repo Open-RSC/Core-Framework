@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -19,7 +20,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiv
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
-public class FireMaking implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
 	/** LOG IDs **/
 	public static int[] LOGS = { 14, 632, 633, 634, 635, 636 };
@@ -35,22 +36,83 @@ public class FireMaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		switch (item.getID()) {
-		case 14:
-		case 632:
-		case 633:
-		case 634:
-		case 635:
-		case 636:
-			handleFireMaking(item, player);
-			break;
-		default:
-			player.message("Nothing interesting happens");
-			return;
+		if (Constants.GameServer.CUSTOM_FIREMAKING) {
+			switch (item.getID()) {
+				case 14:
+				case 632:
+				case 633:
+				case 634:
+				case 635:
+				case 636:
+					handleCustomFiremaking(item, player);
+					break;
+				default:
+					player.message("Nothing interesting happens");
+					return;
+			}
+		}
+
+		else {
+			if (item.getID() == 14) { // Log
+				handleFiremaking(item, player);
+			}
 		}
 	}
-	
-	private void handleFireMaking(final GroundItem gItem, Player player) {
+
+	private void handleFiremaking(final GroundItem gItem, Player player) {
+		final FiremakingDef def = EntityHandler.getFiremakingDef(gItem.getID());
+		if (def == null) {
+			player.message("Nothing interesting happens.");
+			return;
+		}
+
+		if (player.getViewArea().getGameObject(gItem.getLocation()) != null) {
+			player.message("You can't light a fire here");
+			return;
+		}
+
+		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
+		player.message("You attempt to light the logs");
+
+		if (Formulae.lightLogs(player.getSkills().getLevel(11))) {
+
+			Server.getServer().getEventHandler().add(
+				new SingleEvent(null, 1000) {
+					@Override
+					public void action() {
+						player.message("The fire catches and the logs begin to burn");
+						World.getWorld().unregisterItem(gItem);
+
+						final GameObject fire = new GameObject(gItem.getLocation(), 97, 0, 0);
+						World.getWorld().registerGameObject(fire);
+
+						Server.getServer().getEventHandler().add(
+							new SingleEvent(null, def.getLength()) {
+								@Override
+								public void action() {
+									if (fire != null) {
+										World.getWorld().registerItem(new GroundItem(181,
+											fire.getX(),
+											fire.getY(),
+											1, null));
+										World.getWorld().unregisterGameObject(fire);
+									}
+								}
+							}
+						);
+						player.incExp(11, Formulae.firemakingExp(player.getSkills().getMaxStat(11), 25), true);
+					}
+				}
+			);
+		}
+
+		else {
+			player.message("You fail to light a fire");
+			player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
+		}
+	}
+
+	private void handleCustomFiremaking(final GroundItem gItem, Player player) {
 		final FiremakingDef def = EntityHandler.getFiremakingDef(gItem.getID());
 		
 		if (def == null) {
@@ -74,7 +136,7 @@ public class FireMaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		player.setBatchEvent(new BatchEvent(player, 650, Formulae.getRepeatTimes(player, 11)) {
 			@Override
 			public void action() {
-				if (Formulae.lightLogs(def, owner.getSkills().getLevel(11))) {
+				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(11))) {
 					owner.message("The fire catches and the logs begin to burn");
 					World.getWorld().unregisterItem(gItem);
 					
