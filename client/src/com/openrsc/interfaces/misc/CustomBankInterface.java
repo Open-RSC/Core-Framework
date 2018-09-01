@@ -15,7 +15,6 @@ import rsc.graphics.gui.Panel;
 public final class CustomBankInterface extends BankInterface {
 	private int organizeMode = 0;
 
-	public int selectedBankSlot = -1;
 	protected boolean rightClickMenu;
 	private int rightClickMenuX;
 	private int rightClickMenuY;
@@ -28,7 +27,6 @@ public final class CustomBankInterface extends BankInterface {
 
   public int bankSearch;
   public int bankScroll;
-	private int width, height;
 	private int x, y;
 	
 	public int lastXAmount = 0;

@@ -18,19 +18,9 @@ public class BankInterface {
 
 	public int width, height;
 	protected boolean rightClickMenu;
-	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
-	private static int fontSizeHeight;
 
 	public Panel bank;
-	private int[] bankItemSelector = { 0, 0, 40, 80, 120, 160, 200 };
 	protected ArrayList<BankItem> bankItems;
-
-	public enum BankTabShow {
-		FIRST_ITEM_IN_TAB,
-		DIGIT;
-	}
-
-	private BankTabShow bankTabShow = BankTabShow.FIRST_ITEM_IN_TAB;
 
 	public BankInterface(mudclient mc) {
 		this.mc = mc;
@@ -71,18 +61,6 @@ public class BankInterface {
       mouseOverBankPageText = 1;
     if (mouseOverBankPageText > 2 && currentBankIDs.size() <= 144)
       mouseOverBankPageText = 2;
-
-		// Deselect our bank slot if out of range
-    if (selectedBankSlot >= currentBankIDs.size() || selectedBankSlot < 0)
-      selectedBankSlot = -1;
-
-		// A different item resides in this slot now,
-		// so deselect it.
-    if (selectedBankSlot != -1 && currentBankIDs.get(selectedBankSlot) != selectedBankSlotItemID) {
-System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItemID);
-      selectedBankSlot = -1;
-      selectedBankSlotItemID = -2;
-    }
 
     if (mc.getMouseClick() != 0) {
 
@@ -135,41 +113,7 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
     drawString("Bank", relativeX + 1, relativeY + 10, 1, 0xffffff);
 
 		// Draw Bank Page Buttons
-    int pageButtonMargin = 50;
-    if (currentBankIDs.size() > 48) {
-      int pageButtonColour = 0xffffff;
-      if (mouseOverBankPageText == 0)
-        pageButtonColour = 0xff0000;
-      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
-        pageButtonColour = 0xffff00;
-      drawString("<page 1>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
-      pageButtonMargin += 65;
-      pageButtonColour = 0xffffff;
-      if (mouseOverBankPageText == 1)
-        pageButtonColour = 0xff0000;
-      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
-        pageButtonColour = 0xffff00;
-      drawString("<page 2>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
-      pageButtonMargin += 65;
-    }
-    if (currentBankIDs.size() > 96) {
-      int pageButtonColour = 0xffffff;
-      if (mouseOverBankPageText == 2)
-        pageButtonColour = 0xff0000;
-      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
-        pageButtonColour = 0xffff00;
-      drawString("<page 3>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
-      pageButtonMargin += 65;
-    }
-    if (currentBankIDs.size() > 144) {
-      int pageButtonColour = 0xffffff;
-      if (mouseOverBankPageText == 3)
-        pageButtonColour = 0xff0000;
-      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
-        pageButtonColour = 0xffff00;
-			drawString("<page 4>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
-			pageButtonMargin += 65;
-		}
+		drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
 
 		// Draw Top Descriptions & Close Button
 		int closeButtonColour = 0xffffff;
@@ -241,9 +185,9 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 		}
 		else if (currMouseX >= selectedX + 335 && currMouseY >= selectedY + 238 && currMouseX < selectedX + 368
 				&& currMouseY <= selectedY + 249) {
-			// Withdraw X TODO
-			//mc.showItemModX(InputXPrompt.bankWithdrawX, InputXAction.BANK_WITHDRAW, true);
-			//mc.setMouseClick(0);
+			// Withdraw X
+			mc.showItemModX(InputXPrompt.bankWithdrawX, InputXAction.BANK_WITHDRAW, true);
+			mc.setMouseClick(0);
 		}
 		else if (currMouseX >= selectedX + 370 && currMouseY >= selectedY + 238 && currMouseX < selectedX + 400
 				&& currMouseY <= selectedY + 249) {
@@ -269,13 +213,50 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 		}
 		else if (currMouseX >= selectedX + 335 && currMouseY >= selectedY + 263 && currMouseX < selectedX + 368
 				&& currMouseY <= selectedY + 274) {
-			// Deposit X TODO
-			//mc.showItemModX(InputXPrompt.bankDepositX, InputXAction.BANK_DEPOSIT, true);
-			//mc.setMouseClick(0);
+			// Deposit X
+			mc.showItemModX(InputXPrompt.bankDepositX, InputXAction.BANK_DEPOSIT, true);
+			mc.setMouseClick(0);
 		}
 		else if (currMouseX >= selectedX + 370 && currMouseY >= selectedY + 263 && currMouseX < selectedX + 400
 				&& currMouseY <= selectedY + 274) {
 			sendDeposit(Integer.MAX_VALUE); // Deposit All
+		}
+	}
+
+	private void drawPageButtons(int currMouseX, int currMouseY, int relativeX, int relativeY) {
+    int pageButtonMargin = 50;
+    if (currentBankIDs.size() > 48) {
+      int pageButtonColour = 0xffffff;
+      if (mouseOverBankPageText == 0)
+        pageButtonColour = 0xff0000;
+      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
+        pageButtonColour = 0xffff00;
+      drawString("<page 1>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
+      pageButtonMargin += 65;
+      pageButtonColour = 0xffffff;
+      if (mouseOverBankPageText == 1)
+        pageButtonColour = 0xff0000;
+      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
+        pageButtonColour = 0xffff00;
+      drawString("<page 2>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
+      pageButtonMargin += 65;
+    }
+    if (currentBankIDs.size() > 96) {
+      int pageButtonColour = 0xffffff;
+      if (mouseOverBankPageText == 2)
+        pageButtonColour = 0xff0000;
+      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
+        pageButtonColour = 0xffff00;
+      drawString("<page 3>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
+      pageButtonMargin += 65;
+    }
+    if (currentBankIDs.size() > 144) {
+      int pageButtonColour = 0xffffff;
+      if (mouseOverBankPageText == 3)
+        pageButtonColour = 0xff0000;
+      else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY && currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 12)
+        pageButtonColour = 0xffff00;
+			drawString("<page 4>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
 		}
 	}
 
@@ -359,8 +340,7 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 			if (currMouseX >= relativeX + 335 && currMouseY >= relativeY + 238 &&
 					currMouseX < relativeX + 368 && currMouseY <= relativeY + 249)
 				quantityColour = 0xff0000;
-			// TODO
-			//drawString("X", relativeX + 337, relativeY + 248, 1, quantityColour);
+			drawString("X", relativeX + 337, relativeY + 248, 1, quantityColour);
 
 			quantityColour = 0xffffff;
 			if (currMouseX >= relativeX + 370 && currMouseY >= relativeY + 238 &&
@@ -407,8 +387,7 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 			if (currMouseX >= relativeX + 335 && currMouseY >= relativeY + 263 &&
 					currMouseX < relativeX + 368 && currMouseY <= relativeY + 274)
 				quantityColour = 0xff0000;
-			// TODO
-			//drawString("X", relativeX + 337, relativeY + 273, 1, quantityColour);
+			drawString("X", relativeX + 337, relativeY + 273, 1, quantityColour);
 
 			quantityColour = 0xffffff;
 			if (currMouseX >= relativeX + 370 && currMouseY >= relativeY + 263 &&
@@ -424,31 +403,34 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 	}
 
 	public void sendDeposit(int i) {
+		int itemID = currentBankIDs.get(selectedBankSlot);
 		mc.getClientStream().newPacket(23);
-		mc.getClientStream().writeBuffer1.putShort(currentBankIDs.get(selectedBankSlot));
-		if (i > mc.getInventoryCount(currentBankIDs.get(selectedBankSlot))) {
-			i = mc.getInventoryCount(currentBankIDs.get(selectedBankSlot));
+		mc.getClientStream().writeBuffer1.putShort(itemID);
+		if (i > mc.getInventoryCount(itemID)) {
+			i = mc.getInventoryCount(itemID);
 		}
 		mc.getClientStream().writeBuffer1.putInt(i);
 		mc.getClientStream().finishPacket();
 		rightClickMenu = false;
 		mc.setMouseClick(0);
 		mc.setMouseButtonDown(0);
-		if (mc.getInventoryCount(currentBankIDs.get(selectedBankSlot)) < 1) selectedBankSlot = -1;
+		if (mc.getInventoryCount(itemID) < 1) selectedBankSlot = -1;
 	}
 
 	public void sendWithdraw(int i) {
+		int itemID = currentBankIDs.get(selectedBankSlot);
+		int amt = currentBankCounts.get(selectedBankSlot);
 		mc.getClientStream().newPacket(22);
-		mc.getClientStream().writeBuffer1.putShort(currentBankIDs.get(selectedBankSlot));
-		if (i > currentBankCounts.get(selectedBankSlot)) {
-			i = currentBankCounts.get(selectedBankSlot);
+		mc.getClientStream().writeBuffer1.putShort(itemID);
+		if (i > amt) {
+			i = amt;
 		}
 		mc.getClientStream().writeBuffer1.putInt(i);
 		mc.getClientStream().finishPacket();
 		rightClickMenu = false;
 		mc.setMouseClick(0);
 		mc.setMouseButtonDown(0);
-		if (currentBankCounts.get(selectedBankSlot) < 1) selectedBankSlot = -1;
+		if (amt < 1) selectedBankSlot = -1;
 	}
 
 	public void drawString(String str, int x, int y, int font, int color) {
