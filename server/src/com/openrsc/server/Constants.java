@@ -158,6 +158,7 @@ public final class Constants {
 		public static boolean WANT_KEYBOARD_SHORTCUTS = false;
 		public static boolean WANT_CUSTOM_BANKS = false;
 		public static boolean WANT_BANK_PINS = false;
+		public static boolean CUSTOM_FIREMAKING = false;
 
 		/**
 		 * 
@@ -221,6 +222,7 @@ public final class Constants {
 			WANT_KEYBOARD_SHORTCUTS = Boolean.parseBoolean(props.getProperty("want_keyboard_shortcuts"));
 			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
 			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
+			CUSTOM_FIREMAKING = Boolean.parseBoolean(props.getProperty("custom_firemaking"));
 
 			START_TIME = System.currentTimeMillis();
 		}

@@ -10364,6 +10364,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
 					int wantBankPins = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
+					int customFiremaking = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
