@@ -1,5 +1,6 @@
 package com.openrsc.server.util.rsc;
 
+import java.lang.Math;
 import java.util.ArrayList;
 
 import com.openrsc.server.external.EntityHandler;
@@ -797,7 +798,12 @@ public final class Formulae {
 	/**
 	 * Should the fire light or fail?
 	 */
-	public static boolean lightLogs(FiremakingDef def, int firemakingLvl) {
+	public static boolean lightLogs(int firemakingLvl) {
+		int chance = (int)(29 * ( Math.pow(firemakingLvl, (2 / 9))) + 20);
+		return chance > DataConversions.random(0, 100);
+	}
+
+	public static boolean lightCustomLogs(FiremakingDef def, int firemakingLvl) {
 		int levelDiff = firemakingLvl - def.getRequiredLevel();
 		if (levelDiff < 0) {
 			return false;
