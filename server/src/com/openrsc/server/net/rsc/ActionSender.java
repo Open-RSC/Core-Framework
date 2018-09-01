@@ -487,6 +487,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_BANK_PINS ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_DROP_X ? 1 : 0));
 
 		player.write(s.toPacket());
 	}

@@ -67,6 +67,7 @@ public class Config {
 	public static boolean S_WANT_CUSTOM_BANKS = false;
 	public static boolean S_WANT_BANK_PINS = false;
 	public static boolean S_CUSTOM_FIREMAKING = false;
+	public static boolean S_WANT_DROP_X = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
