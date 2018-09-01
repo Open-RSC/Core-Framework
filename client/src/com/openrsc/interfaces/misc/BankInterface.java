@@ -241,9 +241,9 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 		}
 		else if (currMouseX >= selectedX + 335 && currMouseY >= selectedY + 238 && currMouseX < selectedX + 368
 				&& currMouseY <= selectedY + 249) {
-				// Withdraw X
-			mc.showItemModX(InputXPrompt.bankWithdrawX, InputXAction.BANK_WITHDRAW, true);
-			mc.setMouseClick(0);
+			// Withdraw X TODO
+			//mc.showItemModX(InputXPrompt.bankWithdrawX, InputXAction.BANK_WITHDRAW, true);
+			//mc.setMouseClick(0);
 		}
 		else if (currMouseX >= selectedX + 370 && currMouseY >= selectedY + 238 && currMouseX < selectedX + 400
 				&& currMouseY <= selectedY + 249) {
@@ -269,8 +269,9 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 		}
 		else if (currMouseX >= selectedX + 335 && currMouseY >= selectedY + 263 && currMouseX < selectedX + 368
 				&& currMouseY <= selectedY + 274) {
-			mc.showItemModX(InputXPrompt.bankDepositX, InputXAction.BANK_DEPOSIT, true);
-			mc.setMouseClick(0);
+			// Deposit X TODO
+			//mc.showItemModX(InputXPrompt.bankDepositX, InputXAction.BANK_DEPOSIT, true);
+			//mc.setMouseClick(0);
 		}
 		else if (currMouseX >= selectedX + 370 && currMouseY >= selectedY + 263 && currMouseX < selectedX + 400
 				&& currMouseY <= selectedY + 274) {
@@ -358,7 +359,8 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 			if (currMouseX >= relativeX + 335 && currMouseY >= relativeY + 238 &&
 					currMouseX < relativeX + 368 && currMouseY <= relativeY + 249)
 				quantityColour = 0xff0000;
-			drawString("X", relativeX + 337, relativeY + 248, 1, quantityColour);
+			// TODO
+			//drawString("X", relativeX + 337, relativeY + 248, 1, quantityColour);
 
 			quantityColour = 0xffffff;
 			if (currMouseX >= relativeX + 370 && currMouseY >= relativeY + 238 &&
@@ -405,7 +407,8 @@ System.out.println(currentBankIDs.get(selectedBankSlot)+" "+selectedBankSlotItem
 			if (currMouseX >= relativeX + 335 && currMouseY >= relativeY + 263 &&
 					currMouseX < relativeX + 368 && currMouseY <= relativeY + 274)
 				quantityColour = 0xff0000;
-			drawString("X", relativeX + 337, relativeY + 273, 1, quantityColour);
+			// TODO
+			//drawString("X", relativeX + 337, relativeY + 273, 1, quantityColour);
 
 			quantityColour = 0xffffff;
 			if (currMouseX >= relativeX + 370 && currMouseY >= relativeY + 263 &&
