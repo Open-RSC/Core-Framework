@@ -34,7 +34,7 @@ public class ClientLauncher
 				.newInstance());
 		AppFrame.get().dispose();
 		JFrame gameFrame = new JFrame("Open RSC");
-		//gameFrame.setIconImage(Utils.getImage("RuneScape.png").getImage());
+		gameFrame.setIconImage(Utils.getImage("RuneScape.png").getImage());
 		gameFrame.setMinimumSize(new Dimension(512 + 16, 334 + 49));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.getContentPane().add(applet);
@@ -49,14 +49,14 @@ public class ClientLauncher
 			loader = new URLClassLoader(new URL[] { new URL(Constants.CLIENT_URL) });
 			mainClass = Class.forName("rsc.RSCFrame", true, loader);
 			if (loader == null) {
-				Launcher.getPopup().setMessage("Client failed to launch!");
+				Launcher.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
 				Launcher.getPopup().showFrame();
 				AppFrame.get().getLaunch().setEnabled(true);
 				return;
 			}
 		}
 		catch (Exception e) {
-			Launcher.getPopup().setMessage("Client failed to launch!");
+			Launcher.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
 			Launcher.getPopup().showFrame();
 			e.printStackTrace();
 		}

@@ -18,7 +18,7 @@ public class Constants
     //public static final String CONF_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
     public static final String CONF_DIR = "Cache";
 	
-	public static String CACHE_URL = "http://localhost/downloads/cache/";
+	public static String CACHE_URL = "http://game.wolfkingdom.net:8080/downloads/cache/";
         public static String CLIENT_URL = "http://localhost/downloads/Open_RSC_Client.jar";
    
 }
