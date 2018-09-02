@@ -404,9 +404,8 @@ public final class Formulae {
 	/**
 	 * Calculate how much experience a Mob gives
 	 */
-	public static int combatExperience(Mob mob) {// 28
-		double exp = ((mob.getCombatLevel() * 2) + 20);
-		return (int) (mob.isPlayer() ? (exp / 4D) : exp);
+	public static int combatExperience(Mob mob) {
+		return ((mob.getCombatLevel() * 2) + 20);
 	}
 
 	/*
@@ -457,7 +456,7 @@ public final class Formulae {
 	}
 
 	public static int firemakingExp(int level, int baseExp) {
-		return DataConversions.roundUp(baseExp + (level * 1.75D));
+		return (int)((baseExp + (level * 1.75)) * 4);
 	}
 
 	/**
@@ -699,8 +698,8 @@ public final class Formulae {
 	/**
 	 * Gets the smithing exp for the given amount of the right bars
 	 */
-	public static double getSmithingExp(int barID, int barCount) {
-		double[] exps = { 12.5, 25, 37.5, 50, 62.5, 75 };
+	public static int getSmithingExp(int barID, int barCount) {
+		int[] exps = { 50, 100, 150, 200, 250, 300 };
 		int type = getBarType(barID);
 		if (type < 0) {
 			return 0;

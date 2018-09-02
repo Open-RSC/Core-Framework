@@ -81,12 +81,12 @@ InvUseOnObjectExecutiveListener {
 							}
 							player.message("You forge a beautiful bowl made out of solid gold.");
 							player.getInventory().add(new Item(1188, 1));
-							player.incExp(13, 30, true);
+							player.incExp(13, 120, true);
 						} else {
 							player.message("You make a mistake forging the bowl..");
 							player.message("You pour molten gold all over the floor..");
 							player.getInventory().remove(172, 1);
-							player.incExp(13, 1, true);
+							player.incExp(13, 4, true);
 						}
 					}
 					break;
@@ -269,7 +269,7 @@ InvUseOnObjectExecutiveListener {
 					player.getInventory().remove(171, 1);
 					player.message("You hammer the metal and make some nails");
 					player.getInventory().add(new Item(419, 2));
-					player.incExp(13, Formulae.getSmithingExp(171, 1), true);
+					player.incExp(13, 70, true);
 				}
 				if(item.getID() == 169) {
 					player.message("What sort of craft item do you want to make?");
@@ -287,7 +287,7 @@ InvUseOnObjectExecutiveListener {
 						player.getInventory().remove(169, 1);
 						player.message("You hammer the Bronze Bar and make some bronze wire");
 						player.getInventory().add(new Item(979, 1));
-						player.incExp(13, Formulae.getSmithingExp(169, 1), true);
+						player.incExp(13, 50, true);
 						break;
 					}
 				}

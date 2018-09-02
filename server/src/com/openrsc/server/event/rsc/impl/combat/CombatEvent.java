@@ -47,7 +47,7 @@ public class CombatEvent extends GameTickEvent {
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
 
-			int exp = DataConversions.roundUp(Formulae.combatExperience(playerKilled) / 4D);
+			int exp = Formulae.combatExperience(playerKilled);
 			switch (playerKiller.getCombatStyle()) {
 			case 0:
 				for (int x = 0; x < 3; x++) {

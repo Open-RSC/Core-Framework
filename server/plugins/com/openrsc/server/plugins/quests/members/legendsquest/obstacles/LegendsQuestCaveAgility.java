@@ -44,7 +44,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 			if(Formulae.failCalculation(p, Skills.AGILITY, 50)) {
 				p.message("You manage to keep your balance.");
 				p.teleport(obj.getX(), obj.getY());
-				p.incExp(AGILITY, 5.0, true);
+				p.incExp(AGILITY, 20, true);
 			} else {
 				p.teleport(421, 3699);
 				p.message("You slip and fall...");
@@ -58,7 +58,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					p.damage(DataConversions.random(3, 25));
 					p.message("...and take damage.");
 				}
-				p.incExp(AGILITY, 1.25, true);
+				p.incExp(AGILITY, 5, true);
 			}
 			break;
 		case ROCK_HEWN_STAIRS_4:
@@ -72,13 +72,13 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					p.message("You climb down the steps.");
 					p.teleport(421, 3707);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(423, 3707);
 				} else {
 					p.message("You climb up the stairs.");
 					p.teleport(421, 3707);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(419, 3707);
 				}
 			} else {
@@ -86,7 +86,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 				p.damage(3);
 				p.teleport(421, 3707);
 				sleep(600);
-				p.incExp(AGILITY, 1.25, true);
+				p.incExp(AGILITY, 5, true);
 				p.teleport(423, 3707);
 			}
 			break;
@@ -101,13 +101,13 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					p.message("You climb down the steps.");
 					p.teleport(419, 3704);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(419, 3706);
 				} else {
 					p.message("You climb up the stairs.");
 					p.teleport(419, 3704);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(419, 3702);
 				}
 			} else {
@@ -115,7 +115,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 				p.damage(3);
 				p.teleport(419, 3704);
 				sleep(600);
-				p.incExp(AGILITY, 1.25, true);
+				p.incExp(AGILITY, 5, true);
 				p.teleport(419, 3706);
 			}
 			break;
@@ -130,13 +130,13 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					p.message("You climb down the steps.");
 					p.teleport(424, 3702);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(422, 3702);
 				} else {
 					p.message("You climb up the stairs.");
 					p.teleport(424, 3702);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(426, 3702);
 				}
 			} else {
@@ -144,7 +144,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 				p.damage(3);
 				p.teleport(424, 3702);
 				sleep(600);
-				p.incExp(AGILITY, 1.25, true);
+				p.incExp(AGILITY, 5, true);
 				p.teleport(422, 3702);
 			}
 			break;
@@ -159,13 +159,13 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					p.message("You climb down the steps.");
 					p.teleport(426, 3704);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(426, 3702);
 				} else {
 					p.message("You climb up the stairs.");
 					p.teleport(426, 3704);
 					sleep(600);
-					p.incExp(AGILITY, 5.0, true);
+					p.incExp(AGILITY, 20, true);
 					p.teleport(426, 3706);
 				}
 			} else {
@@ -173,7 +173,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 				p.damage(3);
 				p.teleport(426, 3704);
 				sleep(600);
-				p.incExp(AGILITY, 1.25, true);
+				p.incExp(AGILITY, 5, true);
 				p.teleport(426, 3702);
 			}
 			break;

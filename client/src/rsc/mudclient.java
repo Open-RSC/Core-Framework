@@ -6167,8 +6167,9 @@ public final class mudclient implements Runnable {
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
-								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
+								if (Config.S_WANT_DROP_X)
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
+											"@lre@" + EntityHandler.getItemDef(id).getName());
 								this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
 										"@lre@" + EntityHandler.getItemDef(id).getName()
 										+ (adminRights ? " @or1@(" + id + ")" : ""));
@@ -10366,6 +10367,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
 					int customFiremaking = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
+					int wantDropX = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
@@ -10829,7 +10832,7 @@ public final class mudclient implements Runnable {
 									}
 
 									for (int var4 = 0; var4 < 18; ++var4) {
-										this.playerExperience[var4] = this.packetsIncoming.get32();
+										this.playerExperience[var4] = (int)(this.packetsIncoming.get32()/4);
 									}
 
 									this.m_ii = this.packetsIncoming.getUnsignedByte();

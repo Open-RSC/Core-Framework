@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 
 public class AgilityUtils {
 	
-	public static void setNextObstacle(Player p, int id, int[] obstacleOrder, double bonus) {
+	public static void setNextObstacle(Player p, int id, int[] obstacleOrder, int bonus) {
 		if(p.getAttribute("nextObstacle", -1) == -1) {
 			if(id == obstacleOrder[0]) {
 				p.setAttribute("nextObstacle", obstacleOrder[1]);

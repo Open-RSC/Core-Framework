@@ -202,7 +202,6 @@ ObjectActionExecutiveListener {
 				if (Formulae.getOre(def, owner.getSkills().getLevel(14), axeId) && mineLvl >= def.getReqLevel()) {
 					if (DataConversions.random(0, 200) == 1) {
 						Item gem = new Item(Formulae.getGem(), 1);
-						owner.incExp(14, 100, true);
 						owner.getInventory().add(gem);
 						owner.message("You just found a" + gem.getDef().getName().toLowerCase().replaceAll("uncut", "") + "!");
 						interrupt();

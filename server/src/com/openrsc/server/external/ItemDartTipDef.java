@@ -12,7 +12,7 @@ public class ItemDartTipDef {
     /**
      * The exp given by attaching this arrow head
      */
-    public double exp;
+    public int exp;
     /**
      * The level required to attach this head to an arrow
      */
@@ -22,7 +22,7 @@ public class ItemDartTipDef {
         return dartID;
     }
 
-    public double getExp() {
+    public int getExp() {
         return exp;
     }
 

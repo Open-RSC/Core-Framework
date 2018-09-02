@@ -81,19 +81,19 @@ public class ItemActionHandler implements PacketHandler {
 							owner.getInventory().remove(item);
 							switch (item.getID()) {
 							case 20: // Bones
-								owner.incExp(5, Math.ceil(3.75), true); // 3.75
+								owner.incExp(5, 15, true); // 3.75
 								break;
 							case 604: // Bat bones
-								owner.incExp(5, Math.ceil(4.5), true); // 4.5
+								owner.incExp(5, 18, true); // 4.5
 								break;
 							case 413: // Big bones
-								owner.incExp(5, Math.ceil(12.5), true); // 12.5
+								owner.incExp(5, 50, true); // 12.5
 								break;
 							case 814: // Dragon bones
-								owner.incExp(5, Math.ceil(60), true); // 60
+								owner.incExp(5, 240, true); // 60
 								break;
-							case 2256: // Soul of Greatwood
-								owner.incExp(5, Math.ceil(800), true); // 800
+							case 2256: // Soul of Greatwood NOT INCLUDED
+								owner.incExp(5, 800 * 4, true); // 800
 								break;
 							}
 						}
