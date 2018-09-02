@@ -47,10 +47,10 @@ public class AppFrame extends JFrame
         this.addLogo();
         this.addButtons();
         this.addNewsBox();
-        /*(this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
+        (this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
         this.postedDate.setFont(Utils.getFont("runescape_uf.ttf", 1, 10.0f));
         this.postedDate.setHorizontalAlignment(0);
-        this.bg.add(this.postedDate);*/
+        this.bg.add(this.postedDate);
         this.addMouseListener(new PositionListener(this));
         this.addMouseMotionListener(new PositionListener(this));
         this.pack();

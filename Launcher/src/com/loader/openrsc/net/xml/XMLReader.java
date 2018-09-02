@@ -36,13 +36,13 @@ public class XMLReader
     }
     
     public static Feed getArchivedNews() {
-        final RSSFeedParser parser = new RSSFeedParser("http://www.openrsc.com/extern.php?action=feed&type=rss&fid=14");
+        final RSSFeedParser parser = new RSSFeedParser("http://localhost/blog/rss/"); // Archived news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
     }
     
     public static Feed getNews() {
-        final RSSFeedParser parser = new RSSFeedParser("http://www.openrsc.com/extern.php?action=feed&type=rss&fid=1&show=1&order=commented");
+        final RSSFeedParser parser = new RSSFeedParser("http://localhost/blog/rss/"); // Current news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
     }
