@@ -42,7 +42,7 @@ public class Skills {
 			exps[i] = 0;
 		}
 		levels[3] = 10;
-		exps[3] = 1154;
+		exps[3] = 4616;
 	}
 
 	/**
