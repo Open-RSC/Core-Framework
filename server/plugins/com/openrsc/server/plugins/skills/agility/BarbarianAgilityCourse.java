@@ -50,7 +50,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				} else {
 					movePlayer(p, 487, 551);
 				}
-				p.incExp(AGILITY, 5.0, true);
+				p.incExp(AGILITY, 20, true);
 				break;
 			case SWING:
 				p.message("you grab the rope and try and swing across");
@@ -59,8 +59,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				if(fail) {
 					p.message("you skillfully swing across the hole");
 					movePlayer(p, 486, 559);
-					p.incExp(AGILITY, 20.0, true);
-					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+					p.incExp(AGILITY, 80, true);
+					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				} else {
 					p.message("Your hands slip and you fall to the level below");
 					sleep(1000);
@@ -81,8 +81,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 					sleep(650);
 					p.message("and walk across");
 					movePlayer(p, 492, 563);
-					p.incExp(AGILITY, 12.0, true);
-					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+					p.incExp(AGILITY, 50, true);
+					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				} else {
 					p.message("You lose your footing and land in the water");
 					movePlayer(p, 490, 561);
@@ -93,8 +93,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			case NET:
 				p.message("You climb up the netting");
 				movePlayer(p, 496, 1507);
-				p.incExp(AGILITY, 12.0, true);
-				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+				p.incExp(AGILITY, 50, true);
+				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				break;
 			case LEDGE:
 				if(obj.getX() != 498) {
@@ -105,8 +105,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				if(fail) {
 					movePlayer(p, 501, 1506);
 					p.message("You skillfully balance across the hole");
-					p.incExp(AGILITY, 20.0, true);
-					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+					p.incExp(AGILITY, 80, true);
+					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				} else {
 					p.message("you lose your footing and fall to the level below");
 					movePlayer(p, 499, 563);
@@ -119,8 +119,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			case HANDHOLDS:
 				p.message("You climb up the wall");
 				movePlayer(p, 497, 555);
-				p.incExp(AGILITY, 5.0, true);
-				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+				p.incExp(AGILITY, 20, true);
+				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				break;
 		}
 		
@@ -149,8 +149,8 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				movePlayer(p, p.getX() == obj.getX() ? p.getX() - 1 : p.getX() + 1, p.getY());
 				break;
 		}
-		p.incExp(AGILITY, 5.0, true);
-		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+		p.incExp(AGILITY, 20, true);
+		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 		p.setBusy(false);
 	}
 	

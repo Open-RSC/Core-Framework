@@ -259,7 +259,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			if(hasItem(p, 904, 2) && hasItem(p, 902) && hasItem(p, 906)) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft two worm batta's a veg batta and a toad batta");
-				p.incExp(COOKING, 106.25, true);
+				p.incExp(COOKING, 425, true);
 				removeItem(p, 904, 2);
 				removeItem(p, 902, 1);
 				removeItem(p, 906, 1);
@@ -282,7 +282,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				removeItem(p, 907, 1);
 				removeItem(p, 911, 2);
 				removeItem(p, 913, 2);
-				p.incExp(COOKING, 168.75, true);
+				p.incExp(COOKING, 675, true);
 				npcTalk(p, n, "they look great, well done",
 						"here's your share of the profit");
 				p.message("mr gianne gives you 75 gold coins");
@@ -300,7 +300,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft the two choc crunchies");
 				removeItem(p, 911, 2);
-				p.incExp(COOKING, 75, true);
+				p.incExp(COOKING, 300, true);
 				npcTalk(p, n, "they look great, well done",
 						"here's your share of the profit");
 				p.message("mr gianne gives you 30 gold coins");
@@ -318,7 +318,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
 				removeItem(p, 907, 1);
 				removeItem(p, 911, 2);
-				p.incExp(COOKING, 106.25, true);
+				p.incExp(COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 						"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -335,7 +335,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				message(p, 1900, "you give aluft two veg batta's and a worm hole");
 				removeItem(p, 906, 2);
 				removeItem(p, 909, 1);
-				p.incExp(COOKING, 106.25, true);
+				p.incExp(COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 						"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -355,7 +355,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				removeItem(p, 908, 1);
 				removeItem(p, 910, 1);
 				removeItem(p, 909, 1);
-				p.incExp(COOKING, 106.25, true);
+				p.incExp(COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 						"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -373,7 +373,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				removeItem(p, 901, 1);
 				removeItem(p, 908, 1);
 				removeItem(p, 912, 2);
-				p.incExp(COOKING, 168.75, true);
+				p.incExp(COOKING, 675, true);
 				npcTalk(p, n, "they look great, well done",
 						"here's your share of the profit");
 				p.message("mr gianne gives you 75 gold coins");

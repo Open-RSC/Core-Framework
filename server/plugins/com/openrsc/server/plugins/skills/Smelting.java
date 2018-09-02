@@ -25,25 +25,25 @@ public class Smelting implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener { 
 
 	enum Smelt {
-		COPPER_ORE(150, 6.25, 1, 1, 169, 202, 1),
-		TIN_ORE(202, 6.25, 1, 1, 169, 150, 1),
-		IRON_ORE(151, 12.5, 15, 1, 170, -1, -1),
-		SILVER(383, 13.5, 20, 1, 384, -1, -1),
-		GOLD(152, 22.5, 40, 1, 172, -1, -1),
-		MITHRIL_ORE(153, 30, 50, 1, 173, 155, 4),
-		ADAMANTITE_ORE(154, 37.5, 70, 1, 174, 155, 6),
-		COAL(155, 17.5, 30, 2, 171, 151, 1),
-		RUNITE_ORE(409, 50, 85, 1, 408, 155, 8);
+		COPPER_ORE(150, 25, 1, 1, 169, 202, 1),
+		TIN_ORE(202, 25, 1, 1, 169, 150, 1),
+		IRON_ORE(151, 50, 15, 1, 170, -1, -1),
+		SILVER(383, 54, 20, 1, 384, -1, -1),
+		GOLD(152, 90, 40, 1, 172, -1, -1),
+		MITHRIL_ORE(153, 120, 50, 1, 173, 155, 4),
+		ADAMANTITE_ORE(154, 150, 70, 1, 174, 155, 6),
+		COAL(155, 70, 30, 2, 171, 151, 1),
+		RUNITE_ORE(409, 200, 85, 1, 408, 155, 8);
 
 		private final int id;
-		private final double xp;
+		private final int xp;
 		private final int requiredLevel;
 		private final int oreAmount;
 		private final int smeltBarId;
 		private final int requestedOreId;
 		private final int requestedOreAmount;
 
-		Smelt(int itemId, double exp, int req, int oreAmount, int barId, int reqOreId, int reqOreAmount) {
+		Smelt(int itemId, int exp, int req, int oreAmount, int barId, int reqOreId, int reqOreAmount) {
 			this.id = itemId;
 			this.xp = exp;
 			this.requiredLevel = req;
@@ -57,7 +57,7 @@ InvUseOnObjectExecutiveListener {
 			return id;
 		}
 
-		public double getXp() {
+		public int getXp() {
 			return xp;
 		}
 
@@ -117,7 +117,7 @@ InvUseOnObjectExecutiveListener {
 						"you then leave it to cool for a short while");
 				p.setBatchEvent(new BatchEvent(p, 2000, Formulae.getRepeatTimes(p, SMITHING)) {
 					public void action() {
-						p.incExp(SMITHING, 12.5, true);
+						p.incExp(SMITHING, 50, true);
 						p.getInventory().replace(STEEL_BAR, MULTI_CANNON_BALL);
 						addItem(p, MULTI_CANNON_BALL, 1);
 						ActionSender.sendInventory(p);
@@ -238,7 +238,7 @@ InvUseOnObjectExecutiveListener {
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
 						if(p.getInventory().wielding(GAUNTLETS_OF_GOLDSMITHING) && new Item(smelt.getSmeltBarId()).getID() == GOLD_BAR) {
-							p.incExp(SMITHING, smelt.getXp() + 11, true);	
+							p.incExp(SMITHING, smelt.getXp() + 45, true);	
 						} else {
 							p.incExp(SMITHING, smelt.getXp(), true);	
 						}

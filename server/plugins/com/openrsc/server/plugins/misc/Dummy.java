@@ -21,7 +21,7 @@ public class Dummy implements ObjectActionListener, ObjectActionExecutiveListene
 			player.message("There is only so much you can learn from hitting a dummy");
 		} else {
 			player.message("You hit the dummy");
-			player.incExp(0, 5, true);
+			player.incExp(0, 20, true);
 		}
 	}
 

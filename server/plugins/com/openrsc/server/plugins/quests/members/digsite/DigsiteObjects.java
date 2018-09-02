@@ -138,7 +138,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		if(obj.getID() == SPECIMEN_TRAY) {
 			int[] TRAY_ITEMS = { -1, 20, 1150, 28, 1165, 778, 1169, 10, 983 };
-			p.incExp(MINING, 1.0, true);
+			p.incExp(MINING, 4, true);
 			message(p, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];

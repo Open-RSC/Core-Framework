@@ -101,8 +101,8 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				}
 				break;
 		}
-		p.incExp(AGILITY, 7.5, true);
-		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 75.0);
+		p.incExp(AGILITY, 30, true);
+		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 140);
 		p.setBusy(false);
 	}
 }

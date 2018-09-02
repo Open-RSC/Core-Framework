@@ -8,7 +8,7 @@ public final class ObjectWoodcuttingDef {
     /**
      * How much experience identifying gives
      */
-    private double exp;
+    private int exp;
 
     /**
      * Percent chance the tree will fall
@@ -30,7 +30,7 @@ public final class ObjectWoodcuttingDef {
      */
     private int respawnTime;
 
-    public double getExp() {
+    public int getExp() {
         return exp;
     }
 

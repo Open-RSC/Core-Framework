@@ -735,7 +735,7 @@ public class ActionSender {
 			s.writeByte((byte) lvl);
 		for (int lvl : player.getSkills().getMaxStats())
 			s.writeByte((byte) lvl);
-		for (double exp : player.getSkills().getExperiences())
+		for (int exp : player.getSkills().getExperiences())
 			s.writeInt((int) exp);
 
 		s.writeByte(player.getQuestPoints());

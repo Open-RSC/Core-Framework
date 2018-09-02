@@ -50,6 +50,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			player.sendMemberErrorMessage();
 			return true;
 		}
+
+		// Amount is less than 10 if we do not have enough.
 		int amount = 10;
 		if (feathers.getAmount() < amount) {
 			amount = feathers.getAmount();
@@ -57,18 +59,21 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		if (item.getAmount() < amount) {
 			amount = item.getAmount();
 		}
+
+		// Determine EXP based on amount + item
 		final int itemID;
 		int exp;
 		ItemDartTipDef tipDef = null;
-		if (item.getID() == 280) {
-			itemID = 637;
+		if (item.getID() == 280) { // Arrow Shafts
+			itemID = 637; // Headless Arrows
 			exp = amount;
 		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
-			itemID = tipDef.getDartID();
-			exp = (int) (tipDef.getExp() * (double) amount);
+			itemID = tipDef.getDartID(); // Dart ID
+			exp = (int) (tipDef.getExp() * amount);
 		} else {
 			return false;
 		}
+
 		final int amt = amount;
 		final int xp = exp;
 		player.setBatchEvent(new BatchEvent(player, 650, Formulae
@@ -140,10 +145,8 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					owner.message("You attach "
 							+ arrowHeads.getDef().getName().toLowerCase()
 							+ " to some of your arrows");
-					owner.getInventory().add(
-							new Item(headDef.getArrowID(), amt));
-					owner.incExp(9, (int) (headDef.getExp() * (double) amt),
-							true);
+					owner.getInventory().add(new Item(headDef.getArrowID(), amt));
+					owner.incExp(9, headDef.getExp() * amt,	true);
 				} else {
 					interrupt();
 				}

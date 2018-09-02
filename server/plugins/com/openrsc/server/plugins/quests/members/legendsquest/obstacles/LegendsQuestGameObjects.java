@@ -332,7 +332,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 							playerTalk(p, null, "Easy as pie...");
 							sleep(1300);
 							message(p, 1300, "You tumble the lock mechanism and the door opens easily.");
-							p.incExp(THIEVING, 25.0, true);
+							p.incExp(THIEVING, 100, true);
 							replaceObjectDelayed(obj, 2000, 497);
 							p.teleport(441, 3703);
 						} else {

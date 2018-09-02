@@ -198,7 +198,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					"You succesfully attach the feathers to the dart tip.");
 			p.getInventory().replace(1071, 1014);
 			removeItem(p, 381, 10);
-			p.incExp(FLETCHING, 5.0, true);
+			p.incExp(FLETCHING, 20, true);
 		}
 	}
 

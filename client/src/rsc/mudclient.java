@@ -10832,7 +10832,7 @@ public final class mudclient implements Runnable {
 									}
 
 									for (int var4 = 0; var4 < 18; ++var4) {
-										this.playerExperience[var4] = this.packetsIncoming.get32();
+										this.playerExperience[var4] = (int)(this.packetsIncoming.get32()/4);
 									}
 
 									this.m_ii = this.packetsIncoming.getUnsignedByte();

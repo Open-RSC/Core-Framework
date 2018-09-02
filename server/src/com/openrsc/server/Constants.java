@@ -78,21 +78,21 @@ public final class Constants {
 		 */
 		public static double SKILLING_EXP_RATE = 1.0;
 		/**
-		 * standard subscriber rate for members
+		 * standard subscriber rate for members (added to SKILLING_EXP_RATE)
 		 */
-		public static double SUBSCRIBER_EXP_RATE = 1.0;
+		public static double SUBSCRIBER_EXP_RATE = 0;
 		/**
-		 * premium/ultimate subscriber rate for members
+		 * premium/ultimate subscriber rate for members (added to SKILLING_EXP_RATE)
 		 */
-		public static double PREMIUM_EXP_RATE = 1.0;
+		public static double PREMIUM_EXP_RATE = 0;
 		/**
-		 * Wilderness extra boost multiplier
+		 * Wilderness extra boost multiplier (added to SKILLING_EXP_RATE)
 		 */
-		public static double WILDERNESS_BOOST = 1.0;
+		public static double WILDERNESS_BOOST = 0;
 		/**
-		 * Skull extra boost multiplier
+		 * Skull extra boost multiplier (added to SKILLING_EXP_RATE)
 		 */
-		public static double SKULL_BOOST = 1.0;
+		public static double SKULL_BOOST = 0;
 		/**
 		 * A message players will receive upon login
 		 */
