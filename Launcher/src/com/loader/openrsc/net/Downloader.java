@@ -118,10 +118,30 @@ public class Downloader extends Observable
 		return result;
 	}
 
-	private final String nicename[] = { "Jagex library", "Landscape",
-			"Application Icon", "Graphics", "3D models", "Sound effects"};
+	private final String nicename[] = { "Game Library", "Landscape",
+			"Application Icon", "Graphics", "3D Models", "Index File", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
+                        "Game Sound", "Game Sound"};
 	private final String normalName[] = { "jagex.jag", "Landscape.rscd",
-			"RuneScape.png", "Sprites.rscd", "models.jag", "sounds.mem" };
+			"RuneScape.png", "Sprites.rscd", "models.jag", "index.html",  
+                        "Advance.mp3", "Anvil.mp3", "Chisel.mp3", "Click.mp3", 
+                        "Closedoor.mp3", "Coins.mp3", "Takeobject.mp3", "Victory.mp3", 
+                        "Combat1a.mp3", "Combat1b.mp3", "Combat2a.mp3", "Combat2b.mp3", 
+                        "Combat3a.mp3", "Combat3b.mp3", "Cooking.mp3", "Death.mp3", 
+                        "Dropobject.mp3", "Eat.mp3", "Filljug.mp3", "Fish.mp3", 
+                        "Foundgem.mp3", "Recharge.mp3", "Underattack.mp3", 
+                        "Mechanical.mp3", "Mine.mp3", "Mix.mp3", "Spellok.mp3", 
+                        "opendoor.mp3", "Out_of_ammo.mp3", "Potato.mp3", "Spellfail.mp3", 
+                        "Prayeroff.mp3", "Prayeron.mp3", "Prospect.mp3", "Shoot.mp3", 
+                        "Retreat.mp3", "Secretdoor.mp3"};
 
 	public String getNiceName(String s) {
 		for(int i=0;i < normalName.length; i++) {
