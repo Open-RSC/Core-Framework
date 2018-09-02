@@ -211,7 +211,7 @@ InvUseOnObjectExecutiveListener {
 													+ result.getDef()
 													.getName());
 											owner.getInventory().add(result);
-											owner.incExp(12, 50, true);
+											owner.incExp(12, 200, true);
 										} else {
 											interrupt();
 										}
@@ -243,7 +243,7 @@ InvUseOnObjectExecutiveListener {
 									new Item(623, 1));
 							owner.getInventory().add(
 									new Item(21, 1));
-							owner.incExp(12, 20, true);
+							owner.incExp(12, 80, true);
 						}
 						owner.setBusy(false);
 					}
@@ -321,7 +321,7 @@ InvUseOnObjectExecutiveListener {
 					if((gem.getID() == 889 || gem.getID() == 890 || gem.getID() == 891) && DataConversions.random(0, 3) == 2) {
 						owner.message("You miss hit the chisel and smash the " + cutGem.getDef().getName() + " to pieces!");
 						owner.getInventory().add(new Item(915));
-						owner.incExp(12, (gem.getID() == 889 ? 6.25 : gem.getID() == 890 ? 5 : 3.75), true);
+						owner.incExp(12, (gem.getID() == 889 ? 25 : gem.getID() == 890 ? 20 : 15), true);
 					} else {
 						owner.message("You cut the " + cutGem.getDef().getName().toLowerCase());
 						owner.playSound("chisel");
@@ -353,17 +353,17 @@ InvUseOnObjectExecutiveListener {
 						case 0:
 							result = new Item(465, 1);
 							reqLvl = 33;
-							exp = 35;
+							exp = 140;
 							break;
 						case 1:
 							result = new Item(611, 1);
 							reqLvl = 46;
-							exp = 53;
+							exp = 210;
 							break;
 						case 2:
 							result = new Item(620, 1);
 							reqLvl = 3;
-							exp = 18;
+							exp = 70;
 							break;
 						default:
 							return;
@@ -414,17 +414,17 @@ InvUseOnObjectExecutiveListener {
 						case 0:
 							result = new Item(15, 1);
 							reqLvl = 14;
-							exp = 25;
+							exp = 100;
 							break;
 						case 1:
 							result = new Item(16, 1);
 							reqLvl = 1;
-							exp = 14;
+							exp = 55;
 							break;
 						case 2:
 							result = new Item(17, 1);
 							reqLvl = 7;
-							exp = 17;
+							exp = 65;
 							break;
 						default:
 							return;

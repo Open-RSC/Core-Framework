@@ -141,7 +141,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(ROCK_PICK));
-				p.incExp(MINING, 17.5, true);
+				p.incExp(MINING, 70, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL2_ITEMS.length - 1));
@@ -159,7 +159,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 		if(item.getID() == TROWEL && inArray(obj.getID(), SOIL)) {
 			if(getTrainingAreas(p)) {
 				showBubble(p, new Item(TROWEL));
-				p.incExp(MINING, 12.5, true);
+				p.incExp(MINING, 50, true);
 				message(p, "You dig with the trowel...");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (TRAINING_AREA_ITEMS.length - 1));
@@ -202,7 +202,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(TROWEL));
-				p.incExp(MINING, 15.0, true);
+				p.incExp(MINING, 60, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL1_ITEMS.length - 1));
@@ -262,7 +262,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(TROWEL));
-				p.incExp(MINING, 20.0, true);
+				p.incExp(MINING, 80, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL3_ITEMS.length - 1));

@@ -179,17 +179,17 @@ public class ItemUseOnObject implements PacketHandler {
 							case 0:
 								result = new Item(279, 1);
 								reqLvl = 1;
-								exp = 6;
+								exp = 25;
 								break;
 							case 1:
 								result = new Item(278, 1);
 								reqLvl = 4;
-								exp = 10;
+								exp = 50;
 								break;
 							case 2:
 								result = new Item(340, 1);
 								reqLvl = 7;
-								exp = 10;
+								exp = 50;
 								break;
 							default:
 								owner.message("Nothing interesting happens");
@@ -219,17 +219,17 @@ public class ItemUseOnObject implements PacketHandler {
 					case 279: // Pot
 						resultID = 135;
 						reqLvl = 1;
-						xp = 7;
+						xp = 25;
 						break;
 					case 278: // Pie Dish
 						resultID = 251;
 						reqLvl = 4;
-						xp = 15;
+						xp = 50;
 						break;
 					case 340: // Bowl
 						resultID = 341;
 						reqLvl = 7;
-						xp = 15;
+						xp = 50;
 						break;
 					default:
 						player.message("Nothing interesting happens");

@@ -82,7 +82,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 						playerTalk(p, n, "here you go");
 						message(p, "you give blurberry the fruit blast");
 						removeItem(p, 866, 1);
-						p.incExp(COOKING, 40, true);
+						p.incExp(COOKING, 160, true);
 						p.message("he takes a sip");
 						npcTalk(p, n, "hmmm... not bad, not bad at all",
 								"now can you make me a drunk dragon",
@@ -110,7 +110,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 						playerTalk(p, n, "here you go");
 						message(p, "you give blurberry the drunk dragon");
 						removeItem(p, 872, 1);
-						p.incExp(COOKING, 40, true);
+						p.incExp(COOKING, 160, true);
 						p.message("he takes a sip");
 						npcTalk(p, n, "woooo, that's some good stuff",
 								"i can sell that",
@@ -139,7 +139,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 						playerTalk(p, n, "here you go");
 						message(p, "you give blurberry the short green guy");
 						removeItem(p, 874, 1);
-						p.incExp(COOKING, 40, true);
+						p.incExp(COOKING, 160, true);
 						p.message("he takes a sip");
 						npcTalk(p, n, "hmmm, not bad, not bad at all",
 								"i can sell that",
@@ -170,7 +170,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 						playerTalk(p, n, "here.. try some");
 						message(p, "you give blurberry the cocktail");
 						removeItem(p, 875, 1);
-						p.incExp(COOKING, 40, true);
+						p.incExp(COOKING, 160, true);
 						p.message("he takes a sip");
 						npcTalk(p, n, "that's blurberry-tastic",
 								"you're quite a bartender",
@@ -264,7 +264,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 			if(hasItem(p, 872) && hasItem(p, 875) && hasItem(p, 879)) {
 				playerTalk(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
 				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
-				p.incExp(COOKING, 90, true);
+				p.incExp(COOKING, 360, true);
 				removeItem(p, 872, 1);
 				removeItem(p, 875, 1);
 				removeItem(p, 879, 1);

@@ -192,7 +192,7 @@ public class DatabasePlayerLoader {
 			statement = conn.prepareStatement(Statements.updateExperience);
 			statement.setInt(19, s.getDatabaseID());
 			for (int index = 0; index < 18; index++)
-				statement.setDouble(index + 1, s.getSkills().getExperience(index));
+				statement.setInt(index + 1, s.getSkills().getExperience(index));
 			statement.executeUpdate();
 
 			statement = conn.prepareStatement(Statements.updateStats);
@@ -560,8 +560,8 @@ public class DatabasePlayerLoader {
 		return data;
 	}
 
-	private double[] fetchExperience(int playerID) {
-		double[] data = new double[Formulae.statArray.length];
+	private int[] fetchExperience(int playerID) {
+		int[] data = new int[Formulae.statArray.length];
 		try {
 			PreparedStatement statement = conn.prepareStatement(Statements.playerExp);
 			statement.setInt(1, playerID);
@@ -569,7 +569,7 @@ public class DatabasePlayerLoader {
 			result.next();
 			for (int i = 0; i < data.length; i++) {
 				try {
-					data[i] = result.getDouble("exp_" + Formulae.statArray[i]);
+					data[i] = result.getInt("exp_" + Formulae.statArray[i]);
 				} catch (SQLException e) {
 					LOGGER.catching(e);
 					return null;

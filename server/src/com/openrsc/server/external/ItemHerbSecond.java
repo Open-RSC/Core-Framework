@@ -8,7 +8,7 @@ public class ItemHerbSecond {
     /**
      * The exp given completing this potion
      */
-    public double exp;
+    public int exp;
     /**
      * The ID of the potion created
      */
@@ -26,7 +26,7 @@ public class ItemHerbSecond {
      */
     public int unfinishedID;
 
-    public double getExp() {
+    public int getExp() {
         return exp;
     }
 

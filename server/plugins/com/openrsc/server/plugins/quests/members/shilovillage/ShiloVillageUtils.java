@@ -438,7 +438,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 						"you start to craft the bone.");
 				p.message("You succesfully make a key out of the bone shard.");
 				p.getInventory().replace(974, 835);
-				p.incExp(CRAFTING, 8.0, true);
+				p.incExp(CRAFTING, 32, true);
 			} else {
 				message(p, "You're not quite sure what to make with this.");
 				p.message("Perhaps it will come to you as you discover more about Rashiliyia?");
@@ -448,7 +448,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			message(p, "You prepare the ivory pommel and the chisel to start crafting...",
 					"You successfully craft some of the ivory into beads.");
 			p.message("They may look good as part of a necklace.");
-			p.incExp(CRAFTING, 9.0, true);
+			p.incExp(CRAFTING, 36, true);
 			p.getInventory().replace(973, 976);
 		}
 	}

@@ -1040,27 +1040,27 @@ public final class Player extends Mob {
 		ActionSender.sendFatigue(this);
 	}
 
-	public void incQuestExp(int i, double amount) {
+	public void incQuestExp(int i, int amount) {
 		skills.addExperience(i, amount);
 	}
 
 	public double getExperienceRate(int skill) {
-		double multiplier = 0;
+		double multiplier = 1;
 		/**
 		 * Skilling Experience Rate
 		 **/
 		if (skill >= 4 && skill <= 17) {
-			multiplier = Constants.GameServer.SKILLING_EXP_RATE; // 2.0 default.
+			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
 			if (isSubscriber()) {
-				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;// 1.0+ boost (combat and skilling).
+				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;
 			}
 			if (isPremiumSubscriber()) {
-				multiplier += Constants.GameServer.PREMIUM_EXP_RATE; // 0.5+ boost skilling 
+				multiplier += Constants.GameServer.PREMIUM_EXP_RATE;
 			}
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
-				multiplier += Constants.GameServer.WILDERNESS_BOOST; // 0.5+ boost in wild.
+				multiplier += Constants.GameServer.WILDERNESS_BOOST;
 				if (isSkulled()) {
-					multiplier += Constants.GameServer.SKULL_BOOST; // 1.0+ boost with skull.
+					multiplier += Constants.GameServer.SKULL_BOOST;
 				}
 			}
 		}
@@ -1068,17 +1068,17 @@ public final class Player extends Mob {
 		 * Combat Experience Rate
 		 **/
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
-			multiplier = Constants.GameServer.COMBAT_EXP_RATE; // 3.0 default. // 8.0
+			multiplier = Constants.GameServer.COMBAT_EXP_RATE;
 			if(isSubscriber()) {
-				multiplier += 2.0; // 1.0+ subscriber combat boost. // 10
+				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;
 			}
 			if (isPremiumSubscriber()) {
-				multiplier += 2.0; // 1.0+ premium combat boost. // 12
+				multiplier += Constants.GameServer.PREMIUM_EXP_RATE;
 			}
 			if (getLocation().inWilderness()) {
-				multiplier += Constants.GameServer.WILDERNESS_BOOST; // 0.5+ boost in wild.
+				multiplier += Constants.GameServer.WILDERNESS_BOOST;
 				if (isSkulled()) {
-					multiplier += Constants.GameServer.SKULL_BOOST; // 1.0+ boost with skull.
+					multiplier += Constants.GameServer.SKULL_BOOST;
 				}
 			}
 		}
@@ -1098,14 +1098,14 @@ public final class Player extends Mob {
 				getCache().remove("elixir_time");
 				ActionSender.sendElixirTimer(this, 0);
 			} else {
-				multiplier += 1.0;
+				multiplier += 1;
 			}
 		}
 
 		return multiplier;
 	}
 
-	public void incExp(int skill, double hpXP, boolean useFatigue) {
+	public void incExp(int skill, int skillXP, boolean useFatigue) {
 		if (useFatigue) {
 			if (fatigue >= 7500) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
@@ -1115,7 +1115,7 @@ public final class Player extends Mob {
 				ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
 			}
 			if (skill >= 3 && useFatigue) {
-				int famt = (int) ((8 * hpXP / 5) / 3);
+				int famt = (int) ((8 * skillXP / 5) / 3);
 				if (isSubscriber()) {
 					famt = famt / 2;
 				}
@@ -1127,7 +1127,7 @@ public final class Player extends Mob {
 			}
 		}
 		if (getLocation().onTutorialIsland()) {
-			if (skills.getExperience(skill) + hpXP > 200) {
+			if (skills.getExperience(skill) + skillXP > 200) {
 				if (skill != 3) {
 					skills.setExperience(skill, 200);
 				} else {
@@ -1136,8 +1136,8 @@ public final class Player extends Mob {
 			}
 		}
 
-		hpXP *= getExperienceRate(skill);
-		skills.addExperience(skill, hpXP);
+		skillXP *= getExperienceRate(skill);
+		skills.addExperience(skill, skillXP);
 		ActionSender.sendExperience(this, skill);
 	}
 

@@ -346,7 +346,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				}
 				p.message("You cautiously grab a cake from the stall");
 				addItem(p, ROCK_CAKE, 1);
-				p.incExp(THIEVING, 16, true);
+				p.incExp(THIEVING, 64, true);
 				replaceObject(obj, new GameObject(obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 5000);
 			}
@@ -392,13 +392,8 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 										"Do you want to get hurt or something ?");
 							} else {
 								removeItem(p, 10, 20);
-								if (p.getFatigue() >= 7500) {
-									p.message("You are too tired to attempt this jump");
-									return;
-								}
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
-								p.incExp(AGILITY, 12.5, true);
 								playerTalk(p,null, "Phew! I just made it");
 							}
 						} else if(menu == 1) {
@@ -406,13 +401,8 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.message("The guard blocks your path");
 						}
 					} else {
-						if (p.getFatigue() >= 7500) {
-							p.message("You are too tired to attempt this jump");
-							return;
-						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);
-						p.incExp(AGILITY, 12.5, true);
 						playerTalk(p,null, "Phew! I just made it");
 					}
 				}
@@ -435,14 +425,9 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 
 		}
 		if(obj.getID() == SKAVID_HOLE) {
-			if(p.getFatigue() >= 7050) {
-				p.playerServerMessage(MessageType.QUEST, "You are too tired to enter this tunnel");
-				return;
-			}
 			p.playerServerMessage(MessageType.QUEST, "You enter the tunnel");
 			p.message("So that's how the skavids are getting into yanille!");
 			p.teleport(609, 742);
-			p.incExp(Skills.AGILITY, 10.0, true);
 		}
 	}
 

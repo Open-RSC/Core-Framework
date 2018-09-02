@@ -14,10 +14,10 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 		InvUseOnItemExecutiveListener {
 	
 	enum Battlestaff {
-		WATER_BATTLESTAFF(614, 613, 616, 100, 54, ""),
-		EARTH_BATTLESTAFF(614, 627, 618, 112, 58,  ""),
-		FIRE_BATTLESTAFF(614, 612, 615, 125, 62, ""),
-		AIR_BATTLESTAFF(614, 626, 617, 137, 66, "");
+		WATER_BATTLESTAFF(614, 613, 616, 400, 54, ""),
+		EARTH_BATTLESTAFF(614, 627, 618, 450, 58,  ""),
+		FIRE_BATTLESTAFF(614, 612, 615, 500, 62, ""),
+		AIR_BATTLESTAFF(614, 626, 617, 550, 66, "");
 		
 		private int itemID;
 		private int itemIDOther;

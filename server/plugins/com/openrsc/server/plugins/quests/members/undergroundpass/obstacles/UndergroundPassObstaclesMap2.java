@@ -311,7 +311,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 					else
 						p.teleport(obj.getX(), obj.getY());
 				}
-				p.incExp(THIEVING, 3.75, true);
+				p.incExp(THIEVING, 15, true);
 				sleep(1600);
 				p.message("the cage slams shut behind you");
 			} else if(click == 1) {

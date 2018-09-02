@@ -36,39 +36,39 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 					if (catchFish(81, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some manta ray");
 						addItem(p, 2068, 1); // RAW MANTA RAY NOTES
-						p.incExp(Skills.FISHING, 115, false);
+						p.incExp(Skills.FISHING, 460, false);
 					} else if (catchFish(75, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some sea turtle");
 						addItem(p, 2069, 1); // RAW SEA TURTLE NOTES
-						p.incExp(Skills.FISHING, 105, false);
+						p.incExp(Skills.FISHING, 420, false);
 					} else if (catchFish(70, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some shark");
 						addItem(p, 1752, 1); // RAW SHARK NOTES
-						p.incExp(Skills.FISHING, 110, false);
+						p.incExp(Skills.FISHING, 440, false);
 					} else if (catchFish(50, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some swordfish");
 						addItem(p, 1613, 1); // RAW SWORDFISH NOTES
-						p.incExp(Skills.FISHING, 100, false);
+						p.incExp(Skills.FISHING, 400, false);
 					} else if (catchFish(40, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some lobster...");
 						addItem(p, 1616, 1); // RAW LOBSTER NOTES
-						p.incExp(Skills.FISHING, 90, false);
+						p.incExp(Skills.FISHING, 360, false);
 					} else if (catchFish(30, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some tuna...");
 						addItem(p, 1610, 1); // RAW TUNA NOTES
-						p.incExp(Skills.FISHING, 80, false);
+						p.incExp(Skills.FISHING, 320, false);
 					} else if (catchFish(15, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some anchovies...");
 						addItem(p, 1595, 1); // RAW ANCHOVIES NOTES
-						p.incExp(Skills.FISHING, 40, false);
+						p.incExp(Skills.FISHING, 160, false);
 					} else if (catchFish(5, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some sardine...");
 						addItem(p, 1598, 1); // RAW SARDINE NOTES
-						p.incExp(Skills.FISHING, 20, false);
+						p.incExp(Skills.FISHING, 80, false);
 					} else if (catchFish(1, p.getSkills().getLevel(Skills.FISHING))) {
 						message(p, 1200, "..some shrimp...");
 						addItem(p, 1594, 1); // RAW SHRIMP NOTES
-						p.incExp(Skills.FISHING, 10, false);
+						p.incExp(Skills.FISHING, 40, false);
 					} else {
 						int randomJunkItem = JUNK_ITEMS[DataConversions.random(0, JUNK_ITEMS.length - 1)];
 						message(p, 1200, "..some " + EntityHandler.getItemDef(randomJunkItem).getName().toLowerCase());

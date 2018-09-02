@@ -92,12 +92,12 @@ ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecuti
 				GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 				if(jungleObject != null && jungleObject.getID() == obj.getID()) {
 					if(obj.getID() == JUNGLE_VINE) {
-						p.incExp(8, (int) 5, true);
+						p.incExp(8, 20, true);
 						World.getWorld().unregisterGameObject(jungleObject);
 						World.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 						message(p, 1200, "You hack your way through the jungle.");
 					} else {
-						p.incExp(8, (int) 25, true);
+						p.incExp(8, 20, true);
 						World.getWorld().replaceGameObject(obj, new GameObject(obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
 						World.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
 					}

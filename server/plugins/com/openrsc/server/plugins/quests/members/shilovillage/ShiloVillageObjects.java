@@ -153,7 +153,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.damage(0);
 				playerTalk(p, null, "Ooooff!");
 			}
-			p.incExp(AGILITY, 1.0, true);
+			p.incExp(AGILITY, 4, true);
 			p.setBusy(false);
 		}
 		if(obj.getID() == METALLIC_DUNGEON_GATE) {
@@ -317,7 +317,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 						message(p, "Some rocks fall on you.");
 						p.damage((int) (getCurrentLevel(p, HITS) * 0.1D + 1));
 					}
-					p.incExp(AGILITY, 2.5, true);
+					p.incExp(AGILITY, 10, true);
 				}
 			} else if(menu == 1) {
 				message(p, "You decide to leave the rocks well alone.");

@@ -28,76 +28,76 @@ implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener
 WallObjectActionExecutiveListener, WallObjectActionListener {
 
 	enum Pickpocket {
-		MAN(1, 8, "Oi what do you think you're doing",
-				new LootItem(10, 3, 100.0)), 
-		FARMER(10, 14.5, "What do you think you're doing",
-				new LootItem(10, 9, 100.0)), 
-		WARRIOR(25, 26, "Hey what do you think you're doing",
-				new LootItem(10, 18, 100.0)), 
+		MAN(1, 32, "Oi what do you think you're doing",
+				new LootItem(10, 3, 100)), 
+		FARMER(10, 58, "What do you think you're doing",
+				new LootItem(10, 9, 100)), 
+		WARRIOR(25, 104, "Hey what do you think you're doing",
+				new LootItem(10, 18, 100)), 
 		WORKMAN(25, 0, "Hey what do you think you're doing",
-				new LootItem(10, 10, 30.0), 
-				new LootItem(211, 1, 20.0),
-				new LootItem(21, 1, 18.0), 
-				new LootItem(237, 1, 16.0), 
-				new LootItem(1115, 1, 14.0),
-				new LootItem(1117, 1, 12.0), 
-				new LootItem(16, 1, 10.0), 
-				new LootItem(-1, 0, 8.0)), 
-		ROGUE(32, 35.5, "Hey what do you think you're doing",
-				new LootItem(10, 25, 40.0),
-				new LootItem(10, 40, 30.0), 
-				new LootItem(142, 1, 10.0), 
-				new LootItem(33, 8, 10.0),
-				new LootItem(714, 1, 10.0), 
-				new LootItem(559, 1, 3.0)), 
-		GUARD(40, 46.75, "Err what do you think you're doing",
-				new LootItem(10, 30, 100.0)), 
-		KNIGHT(55, 84.5, "Err what do you think you're doing",
-				new LootItem(10, 50, 100.0)),
-		YANILLE_WATCHMAN(65, 137.5, "Oi you nasty little thief",
-				new LootItem(10, 60, 100.0), 
-				new LootItem(138, 1, 100.0)), 
-		PALADIN(70, 152, "Get your hands off my valuables",
-				new LootItem(10, 80, 100.0), 
-				new LootItem(41, 1, 100.0)),
-		GNOME_LOCAL(75, 198, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22.5), 
-				new LootItem(10, 400, 17.5), 
-				new LootItem(152, 1, 10.0),
-				new LootItem(34, 1, 15.0), 
-				new LootItem(895, 1, 15.0), 
-				new LootItem(897, 1, 20.0)),
-		GNOME_CHILD(75, 198, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22.5), 
-				new LootItem(10, 400, 17.5), 
-				new LootItem(152, 1, 10.0),
-				new LootItem(34, 1, 15.0), 
-				new LootItem(895, 1, 15.0), 
-				new LootItem(897, 1, 20.0)),
-		BLURBERRY_BARMAN(75, 198, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22.5), 
-				new LootItem(10, 400, 17.5), 
-				new LootItem(152, 1, 10.0),
-				new LootItem(34, 1, 15.0), 
-				new LootItem(895, 1, 15.0), 
-				new LootItem(897, 1, 20.0)),
-		HERO(80, 274, "Get your hands off my valuables",
-				new LootItem(10, 100, 25.0), 
-				new LootItem(10, 200, 15.0), 
-				new LootItem(10, 300, 10.0),
-				new LootItem(612, 1, 10.0), 
-				new LootItem(142, 1, 14.0), 
-				new LootItem(152, 1, 5.0), 
-				new LootItem(38, 2, 10.0), 
-				new LootItem(619, 1, 5.0), 
-				new LootItem(161, 1, 1.0));
+				new LootItem(10, 10, 30), 
+				new LootItem(211, 1, 20),
+				new LootItem(21, 1, 18), 
+				new LootItem(237, 1, 16), 
+				new LootItem(1115, 1, 14),
+				new LootItem(1117, 1, 12), 
+				new LootItem(16, 1, 10), 
+				new LootItem(-1, 0, 8)), 
+		ROGUE(32, 142, "Hey what do you think you're doing",
+				new LootItem(10, 25, 40),
+				new LootItem(10, 40, 30), 
+				new LootItem(142, 1, 10), 
+				new LootItem(33, 8, 10),
+				new LootItem(714, 1, 10), 
+				new LootItem(559, 1, 3)), 
+		GUARD(40, 186, "Err what do you think you're doing",
+				new LootItem(10, 30, 100)), 
+		KNIGHT(55, 338, "Err what do you think you're doing",
+				new LootItem(10, 50, 100)),
+		YANILLE_WATCHMAN(65, 500, "Oi you nasty little thief",
+				new LootItem(10, 60, 100), 
+				new LootItem(138, 1, 100)), 
+		PALADIN(70, 608, "Get your hands off my valuables",
+				new LootItem(10, 80, 100), 
+				new LootItem(41, 1, 100)),
+		GNOME_LOCAL(75, 792, "Get your hands off my valuables human",
+				new LootItem(10, 200, 22), 
+				new LootItem(10, 400, 18), 
+				new LootItem(152, 1, 10),
+				new LootItem(34, 1, 15), 
+				new LootItem(895, 1, 15), 
+				new LootItem(897, 1, 20)),
+		GNOME_CHILD(75, 792, "Get your hands off my valuables human",
+				new LootItem(10, 200, 22), 
+				new LootItem(10, 400, 18), 
+				new LootItem(152, 1, 10),
+				new LootItem(34, 1, 15), 
+				new LootItem(895, 1, 15), 
+				new LootItem(897, 1, 20)),
+		BLURBERRY_BARMAN(75, 792, "Get your hands off my valuables human",
+				new LootItem(10, 200, 22), 
+				new LootItem(10, 400, 18), 
+				new LootItem(152, 1, 10),
+				new LootItem(34, 1, 15), 
+				new LootItem(895, 1, 15), 
+				new LootItem(897, 1, 20)),
+		HERO(80, 1096, "Get your hands off my valuables",
+				new LootItem(10, 100, 25), 
+				new LootItem(10, 200, 15), 
+				new LootItem(10, 300, 10),
+				new LootItem(612, 1, 10), 
+				new LootItem(142, 1, 14), 
+				new LootItem(152, 1, 5), 
+				new LootItem(38, 2, 10), 
+				new LootItem(619, 1, 5), 
+				new LootItem(161, 1, 1));
 
 		private final ArrayList<LootItem> lootTable;
-		private final double xp;
+		private final int xp;
 		private final int requiredLevel;
 		private final String shoutMessage;
 
-		Pickpocket(int req, double xp, String shoutMessage, LootItem... possibleLoot) {
+		Pickpocket(int req, int xp, String shoutMessage, LootItem... possibleLoot) {
 			this.xp = xp;
 			this.requiredLevel = req;
 			this.shoutMessage = shoutMessage;
@@ -116,22 +116,33 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			return lootTable;
 		}
 
-		public double getXp() {
+		public int getXp() {
 			return xp;
 		}
 	}
 
 	enum Stall {
-		BAKERS_STALL(325, 5, 16, 325, 5000, new LootItem(336, 1, 5.0), new LootItem(330, 1, 100.0),
-				new LootItem(138, 1, 15.0)), SILK_STALL(326, 20, 20, 326, 8000, new LootItem(200, 1, 100.0)), FUR_STALL(
-						327, 35, 36, 327, 15000, new LootItem(541, 1, 10.0), new LootItem(146, 1, 100.0)), SILVER_STALL(
-								328, 50, 54, 328, 30000, new LootItem(383, 1, 100.0)), SPICES_STALL(329, 65, 81, 329,
-										80000, new LootItem(707, 1, 100.0)), GEMS_STALL(330, 75, 160, 330, 180000,
-												new LootItem(160, 1, 65.0), new LootItem(159, 1, 20.0),
-												new LootItem(158, 1, 10.0), new LootItem(157, 1, 5.0));
+		BAKERS_STALL(325, 5, 64, 325, 5000,
+				new LootItem(336, 1, 5),
+				new LootItem(330, 1, 100),
+				new LootItem(138, 1, 15)),
+		SILK_STALL(326, 20, 96, 326, 8000,
+				new LootItem(200, 1, 100)),
+		FUR_STALL(327, 35, 144, 327, 15000,
+				new LootItem(541, 1, 10),
+				new LootItem(146, 1, 100)),
+		SILVER_STALL(328, 50, 216, 328, 30000,
+				new LootItem(383, 1, 100)),
+		SPICES_STALL(329, 65, 324, 329, 80000,
+				new LootItem(707, 1, 100)),
+		GEMS_STALL(330, 75, 640, 330, 180000,
+				new LootItem(160, 1, 65),
+				new LootItem(159, 1, 20),
+				new LootItem(158, 1, 10),
+				new LootItem(157, 1, 5));
 
 		ArrayList<LootItem> lootTable;
-		private double xp;
+		private int xp;
 		private int requiredLevel;
 		private int respawnTime;
 		private int ownerID;
@@ -164,11 +175,11 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			this.respawnTime = respawnTime;
 		}
 
-		public double getXp() {
+		public int getXp() {
 			return xp;
 		}
 
-		public void setXp(double xp) {
+		public void setXp(int xp) {
 			this.xp = xp;
 		}
 
@@ -220,7 +231,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			}
 		}
 
-		double random = DataConversions.random(1, 100);
+		int random = DataConversions.random(1, 100);
 		Item selectedLoot = null;
 		for (LootItem loot : stall.lootTable) {
 			if (loot.getChance() >= random) {
@@ -251,44 +262,44 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		int respawnTime = 0;
 		ArrayList<LootItem> loot = new ArrayList<LootItem>();
 		Point teleLoc = null;
-		double xp = 0;
+		int xp = 0;
 		switch (obj.getID()) {
 		case 334:
 			// 10gp Chest
 			req = 13;
-			xp = 7.5;
+			xp = 30;
 			respawnTime = 10000;
-			loot.add(new LootItem(10, 10, 100.0));
+			loot.add(new LootItem(10, 10, 100));
 			break;
 			// Nature-rune Chest
 		case 335:
 			req = 28;
-			xp = 25;
+			xp = 100;
 			respawnTime = 25000;
-			loot = getLootAsList(new LootItem(10, 3, 100.0), new LootItem(40, 1, 100.0));
+			loot = getLootAsList(new LootItem(10, 3, 100), new LootItem(40, 1, 100));
 			break;
 		case 336:
 			// 50gp Chest
 			req = 43;
-			xp = 125;
+			xp = 500;
 			respawnTime = 100000;
-			loot.add(new LootItem(10, 50, 100.0));
+			loot.add(new LootItem(10, 50, 100));
 			break;
 		case 337:
 			// blood Chest
 			req = 59;
-			xp = 250;
+			xp = 600;
 			respawnTime = 250000;
-			loot = getLootAsList(new LootItem(10, 500, 100.0), new LootItem(619, 2, 100.0));
+			loot = getLootAsList(new LootItem(10, 500, 100), new LootItem(619, 2, 100));
 			teleLoc = Point.location(614, 568);
 			break;
 		case 338:
 			// paladin Chest
 			req = 72;
-			xp = 500;
+			xp = 2000;
 			respawnTime = 500000;
-			loot = getLootAsList(new LootItem(10, 1000, 100.0), new LootItem(545, 1, 100.0),
-					new LootItem(154, 1, 100.0), new LootItem(160, 1, 100.0));
+			loot = getLootAsList(new LootItem(10, 1000, 100), new LootItem(545, 1, 100),
+					new LootItem(154, 1, 100), new LootItem(160, 1, 100));
 			teleLoc = Point.location(523, 606);
 			break;
 		}
@@ -312,7 +323,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		replaceObject(obj, new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 
 		message(player, "You open the chest");
-		double random = DataConversions.random(1, 100);
+		int random = DataConversions.random(1, 100);
 		Collections.sort(loot);
 		for (LootItem l : loot) {
 			if (l.getChance() >= random) {
@@ -427,7 +438,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					int hit = DataConversions.random(0, total);
 					total = 0;
 					for (LootItem loot : lootTable) {
-						if (loot.getChance() >= 100.0) {
+						if (loot.getChance() >= 100) {
 							player.getInventory().add(new Item(loot.getId(), loot.getAmount()));
 							continue;
 						}
@@ -507,7 +518,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 				message(player, "You find a treasure inside!");
 
-				player.incExp(17, 150, true);
+				player.incExp(17, 600, true);
 				addItem(player, 10, 20);
 				addItem(player, 671, 5);
 
@@ -632,7 +643,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		switch (obj.getID()) {
 		case 93: // 10gp chest door id (93)
 			req = 7;
-			exp = 4;
+			exp = 15;
 			if (player.getY() <= 591) {
 				goThrough = true;
 			}
@@ -641,7 +652,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			if (obj.getX() == 586 && obj.getY() == 581 || obj.getX() == 539 && obj.getY() == 599
 			|| obj.getX() == 581 && obj.getY() == 580) {
 				req = 16;
-				exp = 15;
+				exp = 60;
 				if (player.getX() == 539 && player.getY() >= 599) {
 					goThrough = true;
 				} else if (player.getX() <= 585 && player.getY() == 581) {
@@ -653,26 +664,26 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			break;
 		case 95: // Ardougne Sewer mine (95)
 			req = 31;
-			exp = 25;
+			exp = 100;
 			if (player.getX() <= 556) {
 				goThrough = true;
 			}
 			break;
 		case 96: // Chaos druid tower door id (96)
 			req = 46;
-			exp = 37;
+			exp = 150;
 			if (player.getY() <= 555) {
 				goThrough = true;
 			}
 			break;
 		case 162: // yanille druid door id(162)
 			req = 82;
-			exp = 50;
+			exp = 200;
 			requiresLockpick = true;
 			break;
 		case 100: // axe huts door id (100)
 			req = 32;
-			exp = 25;
+			exp = 100;
 			requiresLockpick = true;
 			if (player.getY() >= 103 && player.getY() <= 107) {
 				goThrough = true;
@@ -680,7 +691,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			break;
 		case 99: // pirate hut door id (99)
 			req = 39;
-			exp = 35;
+			exp = 140;
 			requiresLockpick = true;
 			if ((player.getX() >= 263 && player.getX() <= 269 && player.getY() == 104)
 					|| (player.getX() == 266 && player.getY() >= 100)) {
@@ -689,7 +700,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			break;
 		case 97:// Ardougne Paladin 2nd floor door id (97)
 			req = 61;
-			exp = 50;
+			exp = 200;
 			if (player.getY() >= 1548 && player.getX() == 609) {
 				goThrough = true;
 			}
@@ -750,17 +761,17 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 	}
 
 	static class LootItem implements Comparable<LootItem> {
-		private double chance;
+		private int chance;
 		private final int id;
 		private final int amount;
 
-		public LootItem(int id, int amount, double chance) {
+		public LootItem(int id, int amount, int chance) {
 			this.id = id;
 			this.amount = amount;
 			this.chance = chance;
 		}
 
-		public double getChance() {
+		public int getChance() {
 			return chance;
 		}
 

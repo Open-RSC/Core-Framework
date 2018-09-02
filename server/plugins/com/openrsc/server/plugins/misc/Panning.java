@@ -70,7 +70,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 		showBubble(p, new Item(FULL_PANNING_TRAY));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getInventory().replace(PANNING_TRAY, FULL_PANNING_TRAY);
-		p.incExp(MINING, 5.0, true);
+		p.incExp(MINING, 20, true);
 		p.setBusy(false);
 		return false;
 	}

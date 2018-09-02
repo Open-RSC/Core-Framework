@@ -14,27 +14,27 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class GnomeCooking implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	enum GnomeCook {
-		GNOME_BATTA_DOUGH(880, 884, 886, 30, 1, 
+		GNOME_BATTA_DOUGH(880, 884, 886, 120, 1, 
 				"You cook the gnome batta in the oven...",
 				"You remove the gnome batta from the oven",
 				"You accidentally burn the gnome batta"),
 
-		GNOME_BOWL_DOUGH(882, 885, 888, 30, 1,
+		GNOME_BOWL_DOUGH(882, 885, 888, 120, 1,
 				"You cook the gnome bowl in the oven...",
 				"You remove the gnome bowl from the oven",
 				"You accidentally burn the gnome bbowl"),
 
-		GNOME_CRUNCHIE_DOUGH(883, 900, 887, 0, 1,
+		GNOME_CRUNCHIE_DOUGH(883, 900, 887, 120, 1,
 				"You cook the gnome crunchie in the oven...",
 				"You remove the gnome crunchie from the oven",
 				"You accidentally burn the gnome crunchie"),
 
-		GNOME_BATTA_ALREADY_COOKED(884, 884, 886, 30, 1, 
+		GNOME_BATTA_ALREADY_COOKED(884, 884, 886, 120, 1, 
 				"You cook the gnome batta in the oven...",
 				"You remove the gnome batta from the oven",
 				"You accidentally burn the gnome batta"),
 
-		GNOME_BOWL_ALREADY_COOKED(885, 885, 888, 30, 1,
+		GNOME_BOWL_ALREADY_COOKED(885, 885, 888, 120, 1,
 				"You cook the gnome bowl in the oven...",
 				"You remove the gnome bowl from the oven",
 				"You accidentally burn the gnome bbowl");
@@ -204,7 +204,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 					p.getCache().store("gnomecrunchie_dough", true);
 				}
 			}
-			p.incExp(COOKING, 25.0, true);
+			p.incExp(COOKING, 100, true);
 			p.setBusy(false);
 		}
 		return true;

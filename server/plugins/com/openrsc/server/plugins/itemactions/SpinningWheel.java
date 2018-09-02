@@ -31,12 +31,12 @@ public class SpinningWheel implements InvUseOnObjectListener,
 		case 145: // Wool
 			produceID = 207;
 			requiredLevel = 1;
-			experience = 3;
+			experience = 12;
 			break;
 		case 675: // Flax
 			produceID = 676;
 			requiredLevel = 10;
-			experience = 15;
+			experience = 60;
 			break;
 		default:
 			player.message("Nothing interesting happens");

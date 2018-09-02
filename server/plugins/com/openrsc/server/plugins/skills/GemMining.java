@@ -87,7 +87,7 @@ ObjectActionExecutiveListener {
 				if (getGem(p, 40, owner.getSkills().getLevel(14), axeId) && mineLvl >= 40) { // always 40 required mining.
 					Item gem = new Item(getGemFormula(), 1);
 					owner.message(minedString(gem.getID()));
-					owner.incExp(14, 50, true); // always 50XP
+					owner.incExp(14, 200, true); // always 50XP
 					owner.getInventory().add(gem);
 					interrupt();
 					GameObject object = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
@@ -180,7 +180,7 @@ ObjectActionExecutiveListener {
 	 * Returns a gem ID
 	 */
 	private int getGemFormula() {
-		double rand = DataConversions.random(0, 100);
+		int rand = DataConversions.random(0, 100);
 		if (rand >= 0 && rand <= 46.86) {
 			return UNCUT_OPAL;
 		} else if (rand >= 46.86 && rand <= 70.12) {
