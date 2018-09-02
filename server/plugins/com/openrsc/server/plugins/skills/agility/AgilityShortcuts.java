@@ -158,7 +158,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			}
 			p.message("You climb over the wall");
 			movePlayer(p, 338, 555);
-			p.incExp(AGILITY, 10.0, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		case SHORTCUT_BRIMHAVEN_SWING:
 			if (getCurrentLevel(p, AGILITY) < 10) {
@@ -171,7 +171,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			movePlayer(p, 511, 669);
 			p.message("You skillfully swing across the stream");
 			playerTalk(p, null, "Aaaaahahah");
-			p.incExp(AGILITY, 7.0, true);
+			p.incExp(AGILITY, 20, true);
 			break;
 		case SHORTCUT_BRIMHAVEN_BACK_SWING:
 			if (getCurrentLevel(p, AGILITY) < 10) {
@@ -184,7 +184,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			movePlayer(p, 508, 668);
 			p.message("You skillfully swing across the stream");
 			playerTalk(p, null, "Aaaaahahah");
-			p.incExp(AGILITY, 7.0, true);
+			p.incExp(AGILITY, 20, true);
 			break;
 		case SHORTCUT_EDGE_DUNGEON_SWING:
 			if (getCurrentLevel(p, AGILITY) < 15) {
@@ -195,7 +195,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(1000);
 			movePlayer(p, 207, 3221);
 			p.message("You skillfully swing across the hole");
-			p.incExp(AGILITY, 10.0, true);
+			p.incExp(AGILITY, 40, true);
 			break;
 		case SHORTCUT_EDGE_DUNGEON_BACK_SWING:
 			if (getCurrentLevel(p, AGILITY) < 15) {
@@ -206,7 +206,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(1000);
 			movePlayer(p, 206, 3225);
 			p.message("You skillfully swing across the hole");
-			p.incExp(AGILITY, 10.0, true);
+			p.incExp(AGILITY, 40, true);
 			break;
 		case SHORTCUT_WEST_COALTRUCKS_LOG:
 			if (getCurrentLevel(p, AGILITY) < 20) {
@@ -220,7 +220,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				sleep(650);
 			}
 			p.message("and you walk across");
-			p.incExp(AGILITY, 8.5, true);
+			p.incExp(AGILITY, 34, true);
 			break;
 		case SHORTCUT_EAST_COALTRUCKS_LOG:
 			if (getCurrentLevel(p, AGILITY) < 20) {
@@ -234,7 +234,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				sleep(650);
 			}
 			p.message("and you walk across");
-			p.incExp(AGILITY, 8.5, true);
+			p.incExp(AGILITY, 34, true);
 			break;
 			// CONTINUE SHORTCUTS.
 		case SHORTCUT_YANILLE_AGILITY_ROPESWING:
@@ -258,7 +258,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(2200);
 			movePlayer(p, 596, 3581);
 			p.message("You skillfully swing across the hole");
-			p.incExp(AGILITY, 27.5, true);
+			p.incExp(AGILITY, 110, true);
 			break;
 		case SHORTCUT_YANILLE_AGILITY_ROPESWING_BACK:
 			if (getCurrentLevel(p, AGILITY) < 57) {
@@ -281,7 +281,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(2200);
 			movePlayer(p, 598, 3585);
 			p.message("You skillfully swing across the hole");
-			p.incExp(AGILITY, 27.5, true);
+			p.incExp(AGILITY, 110, true);
 			break;
 
 		case SHORTCUT_YANILLE_AGILITY_LEDGE:
@@ -306,7 +306,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			movePlayer(p, 601, 3563);
 			p.setBusyTimer(1000);
 			p.message("You skillfully balance across the hole");
-			p.incExp(AGILITY, 22.5, true);
+			p.incExp(AGILITY, 90, true);
 			break;
 		case SHORTCUT_YANILLE_AGILITY_LEDGE_BACK:
 			if (getCurrentLevel(p, AGILITY) < 40) {
@@ -330,7 +330,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			p.setBusyTimer(1000);
 			movePlayer(p, 601, 3557);
 			p.message("You skillfully balance across the hole");
-			p.incExp(AGILITY, 22.5, true);
+			p.incExp(AGILITY, 90, true);
 			break;
 
 		case SHORTCUT_YANILLE_PILE_OF_RUBBLE:
@@ -355,7 +355,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			}
 			movePlayer(p, 582, 3573);
 			p.message("You climb up the pile of rubble");
-			p.incExp(AGILITY, 13.5, true);
+			p.incExp(AGILITY, 54, true);
 			break;
 
 		case SHORTCUT_YANILLE_PIPE:
@@ -372,7 +372,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			p.message("You squeeze through the pipe");
 			sleep(2200);
 			movePlayer(p, 608, 3568);
-			p.incExp(AGILITY, 7.5, true);
+			p.incExp(AGILITY, 30, true);
 			break;
 		case SHORTCUT_YANILLE_PIPE_BACK:
 			if (getCurrentLevel(p, AGILITY) < 49) {
@@ -388,7 +388,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			p.message("You squeeze through the pipe");
 			sleep(2200);
 			movePlayer(p, 605, 3568);
-			p.incExp(AGILITY, 7.5, true);
+			p.incExp(AGILITY, 30, true);
 			break;
 		case GREW_ISLAND_ROPE_ATTACHED:
 			if (getCurrentLevel(p, AGILITY) < 30) {
@@ -400,14 +400,14 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(2200);
 			movePlayer(p, 664, 755);
 			p.message("You skillfully swing across the stream");
-			p.incExp(AGILITY, 12, true);
+			p.incExp(AGILITY, 48, true);
 			break;
 		case GREW_ISLAND_SWING_BACK:
 			p.message("You grab the rope and try and swing across");
 			sleep(2200);
 			movePlayer(p, 666, 755);
 			p.message("You skillfully swing across the stream");
-			p.incExp(AGILITY, 12, true);
+			p.incExp(AGILITY, 48, true);
 			break;
 		case EAST_KARAMJA_LOG:
 			if (getCurrentLevel(p, AGILITY) < 32) {
@@ -437,7 +437,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				movePlayer(p, 366, 781);
 			}
 			p.message("...and make it without any problems!");
-			p.incExp(AGILITY, 2.5, true);
+			p.incExp(AGILITY, 10, true);
 			break;
 		case EAST_KARAMJA_STONES:
 			p.setBusyTimer(1500);
@@ -482,7 +482,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				movePlayer(p, 347, 805);
 			}
 			p.message("And cross the water without problems.");
-			p.incExp(AGILITY, 2.5, true);
+			p.incExp(AGILITY, 10, true);
 			break;
 		case YANILLE_WATCHTOWER_HANDHOLDS:
 			if(p.getFatigue() >= 7500) {
@@ -498,7 +498,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			p.message("You climb up the wall");
 			p.teleport(637, 1680);
 			p.message("And climb in through the window");
-			p.incExp(AGILITY, 12.5, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		}
 		p.setBusy(false);

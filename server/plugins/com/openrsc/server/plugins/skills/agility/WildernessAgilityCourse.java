@@ -55,7 +55,7 @@ ObjectActionExecutiveListener {
 			} else {
 				message(p, "You skillfully balance across the ridge");
 				movePlayer(p, 298, 125);
-				p.incExp(AGILITY, 22.0, true);
+				p.incExp(AGILITY, 50, true);
 			}
 			break;
 		case SECOND_GATE:
@@ -74,14 +74,14 @@ ObjectActionExecutiveListener {
 			} else {
 				message(p, "You skillfully balance across the ridge");
 				movePlayer(p, 298, 134);
-				p.incExp(AGILITY, 22.0, true);
+				p.incExp(AGILITY, 50, true);
 			}
 			break;
 		case WILD_PIPE:
 			p.message("You squeeze through the pipe");
 			sleep(1000);
 			movePlayer(p, 294, 112);
-			p.incExp(AGILITY, 13.0, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		case WILD_ROPESWING:
 			p.message("You grab the rope and try and swing across");
@@ -90,7 +90,7 @@ ObjectActionExecutiveListener {
 			if (failCourse) {
 				message(p, "You skillfully swing across the hole");
 				movePlayer(p, 292, 108);
-				p.incExp(AGILITY, 25.0, true);
+				p.incExp(AGILITY, 100, true);
 			} else { // 13 damage on 85hp.
 				// 11 damage on 73hp.
 				// 
@@ -116,7 +116,7 @@ ObjectActionExecutiveListener {
 				movePlayer(p, 296, 105);
 				sleep(600);
 				movePlayer(p, 297, 105);
-				p.incExp(AGILITY, 20.0, true);
+				p.incExp(AGILITY, 80, true);
 			} else {
 				p.message("You lose your footing and land in the lava");
 				movePlayer(p, 292, 104);
@@ -141,7 +141,7 @@ ObjectActionExecutiveListener {
 				movePlayer(p, 300, 111);
 				sleep(600);
 				movePlayer(p, 301, 111);
-				p.incExp(AGILITY, 20.0, true);
+				p.incExp(AGILITY, 80, true);
 			} else {
 				p.message("you lose your footing and fall to the level below");
 				sleep(1000);
@@ -158,7 +158,7 @@ ObjectActionExecutiveListener {
 			movePlayer(p, 304, 119);
 			sleep(600);
 			movePlayer(p, 304, 120);
-			p.incExp(AGILITY, 375.0, true); // COMPLETION OF THE COURSE.
+			p.incExp(AGILITY, 1580, true); // COMPLETION OF THE COURSE.
 			break;
 		}
 		p.setBusy(false);

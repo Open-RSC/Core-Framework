@@ -101,7 +101,6 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				player.message("You need to have a herblaw level of 6 or over to mix this liquid");
 				return;
 			}
-			player.incExp(15, 5.0, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
 			showBubble(player, new Item(1160));
@@ -112,7 +111,6 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
-			player.incExp(15, 6.0, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
 			showBubble(player, new Item(1179));
@@ -123,7 +121,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
-			player.incExp(15, 7.0, true);
+			player.incExp(15, 75, true);
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
 			showBubble(player, new Item(1284));
@@ -316,7 +314,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				p.getInventory().remove(ingredient.getID(), 1);
 				p.getInventory().remove(unfinishedPot.getID(), 1);
 				p.getInventory().add(new Item(1053, 1));
-				p.incExp(15, 25.0, true);
+				p.incExp(15, 200, true);
 			}
 		}
 		return false;

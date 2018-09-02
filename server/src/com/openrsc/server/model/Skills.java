@@ -9,12 +9,12 @@ import com.openrsc.server.util.rsc.Formulae;
 
 public class Skills {
 
-	private static final int LEVEL_LIMIT = 1000;
-	public static long[] experienceArray;
+	private static final int LEVEL_LIMIT = 99;
+	public static int[] experienceArray;
 
 	public static final int SKILL_COUNT = 18;
 
-	public static final double MAXIMUM_EXP = 200000000;
+	public static final int MAXIMUM_EXP = 200000000;
 
 	public static final String[] SKILL_NAME = { "attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 			"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
@@ -27,7 +27,7 @@ public class Skills {
 	private Mob mob;
 
 	private int[] levels = new int[SKILL_COUNT];
-	private double[] exps = new double[SKILL_COUNT];
+	private int[] exps = new int[SKILL_COUNT];
 
 	/**
 	 * Creates a skills object.
@@ -42,7 +42,7 @@ public class Skills {
 			exps[i] = 0;
 		}
 		levels[3] = 10;
-		exps[3] = 1154;
+		exps[3] = 4616;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Skills {
 		return Formulae.getCombatlevel(getMaxStats());
 	}
 
-	public void setSkill(int skill, int level, double exp) {
+	public void setSkill(int skill, int level, int exp) {
 		levels[skill] = level;
 		exps[skill] = exp;
 		sendUpdate(skill);
@@ -76,7 +76,7 @@ public class Skills {
 		sendUpdate(skill);
 	}
 
-	public void setExperience(int skill, double exp) {
+	public void setExperience(int skill, int exp) {
 		int oldLvl = getMaxStat(skill);
 		exps[skill] = exp;
 		int newLvl = getMaxStat(skill);
@@ -129,7 +129,7 @@ public class Skills {
 		return levels[skill];
 	}
 
-	public static int getLevelForExperience(double experience, int limit) {
+	public static int getLevelForExperience(int experience, int limit) {
 		for (int level = 0; level < limit - 1; level++) {
 			if (experience >= experienceArray[level])
 				continue;
@@ -138,7 +138,7 @@ public class Skills {
 		return limit;
 	}
 
-	public static double experienceForLevel(int level) {
+	public static int experienceForLevel(int level) {
 		int lvlArrayIndex = level - 2;
 		if (lvlArrayIndex == -1)
 			return 0;
@@ -147,11 +147,11 @@ public class Skills {
 		return experienceArray[lvlArrayIndex];
 	}
 
-	public double getExperience(int skill) {
+	public int getExperience(int skill) {
 		return exps[skill];
 	}
 
-	public void addExperience(int skill, double exp) {
+	public void addExperience(int skill, int exp) {
 		int oldLevel = getMaxStat(skill);
 		exps[skill] += exp;
 		if (exps[skill] > MAXIMUM_EXP) {
@@ -220,11 +220,11 @@ public class Skills {
 		return levels;
 	}
 
-	public double[] getExperiences() {
+	public int[] getExperiences() {
 		return exps;
 	}
 
-	public void loadExp(double[] xp) {
+	public void loadExp(int[] xp) {
 		this.exps = xp;
 	}
 
@@ -233,13 +233,13 @@ public class Skills {
 	}
 
 	static {
-		long i = 0;
-		experienceArray = new long[LEVEL_LIMIT + 5];
+		int i = 0;
+		experienceArray = new int[LEVEL_LIMIT + 5];
 		for (int j = 0; j < LEVEL_LIMIT + 5; j++) {
 			int k = j + 1;
-			long i1 = (long) ((double) k + 300D * Math.pow(2D, (double) k / 7D));
+			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
 			i += i1;
-			experienceArray[j] = (i & 0xfffffffc) / 4;
+			experienceArray[j] = (i & 0xffffffc);
 		}
 	}
 }

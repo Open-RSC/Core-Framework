@@ -12,7 +12,7 @@ public class ItemArrowHeadDef {
     /**
      * The exp given by attaching this arrow head
      */
-    public double exp;
+    public int exp;
     /**
      * The level required to attach this head to an arrow
      */
@@ -22,7 +22,7 @@ public class ItemArrowHeadDef {
         return arrowID;
     }
 
-    public double getExp() {
+    public int getExp() {
         return exp;
     }
 

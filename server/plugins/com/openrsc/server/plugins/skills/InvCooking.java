@@ -78,11 +78,11 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 					&& player.getInventory().contains(item2)) {
 				int rand = DataConversions.random(0, 4);
 				if (rand == 2) {
-					player.incExp(7, 55, true);
+					player.incExp(7, 220, true);
 					player.getInventory().add(new Item(180));
 					player.message("You mix the grapes, and accidentally create Bad wine!");
 				} else {
-					player.incExp(7, 110, true);
+					player.incExp(7, 440, true);
 					player.getInventory().add(new Item(142));
 					player.message("You mix the grapes with the water and create wine!");
 				}

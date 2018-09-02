@@ -263,8 +263,9 @@ public class Npc extends Mob {
 		Player playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
 
-		double totalHitpointsXP = Formulae.combatExperience(this) / 4D;
+		int totalCombatXP = Formulae.combatExperience(this);
 
+		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
 			final Player p = World.getWorld().getPlayerID(playerID);
@@ -276,30 +277,32 @@ public class Npc extends Mob {
 				playerWithMostDamage = p;
 				currentHighestDamage = damageDoneByPlayer;
 			}
-			double hpXP = (totalHitpointsXP * damageDoneByPlayer) / getDef().hits;
-			double combatXP = (hpXP * 3D);
+
+			// Give the player their share of the experience.
+			int totalXP = (totalCombatXP / getDef().hits) * damageDoneByPlayer;
 
 			switch (p.getCombatStyle()) {
 			case 0:
 				for (int x = 0; x < 3; x++) {
-					p.incExp(x, hpXP, true);
+					p.incExp(x, totalXP, true);
 				}
 				break;
 			case 1:
-				p.incExp(2, combatXP, true);
+				p.incExp(2, totalXP * 3, true);
 				break;
 			case 2:
-				p.incExp(0, combatXP, true);
+				p.incExp(0, totalXP * 3, true);
 				break;
 			case 3:
-				p.incExp(1, combatXP, true);
+				p.incExp(1, totalXP * 3, true);
 				break;
 			}
-			p.incExp(3, hpXP, true);
+			p.incExp(3, totalXP, true);
 		}
-		for (int playerID : getRangeDamagers()) {
 
-			double newXP = 0;
+		// Ranged damagers
+		for (int playerID : getRangeDamagers()) {
+			int newXP = 0;
 			Player p = World.getWorld().getPlayerID(playerID);
 			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
 			if (p == null)
@@ -309,10 +312,12 @@ public class Npc extends Mob {
 				playerWithMostDamage = p;
 				currentHighestDamage = dmgDoneByPlayer;
 			}
-			newXP = (totalHitpointsXP * dmgDoneByPlayer) / this.getDef().hits;
+			newXP = (totalCombatXP / this.getDef().hits) * dmgDoneByPlayer;
 			p.incExp(4, newXP * 4, true);
 			ActionSender.sendStat(p, 4);
 		}
+
+		// Magic damagers
 		for (int playerID : getMageDamagers()) {
 
 			Player p = World.getWorld().getPlayerID(playerID);
