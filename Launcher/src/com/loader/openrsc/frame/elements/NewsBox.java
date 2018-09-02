@@ -45,7 +45,7 @@ public class NewsBox extends JPanel
         this.setLayout(null);
         this.setOpaque(false);
         (this.title = new JLabel("")).setBounds(5, 49, 217, 17);
-        this.title.setFont(Utils.getFont("OpenSans-Regular.ttf", 0, 10.0f));
+        this.title.setFont(Utils.getFont("runescape_uf.ttf", 0, 14.0f));
         this.title.setForeground(Color.WHITE);
         this.add(this.title);
         (this.textArea = new JTextPane()).setEditable(false);
@@ -61,7 +61,7 @@ public class NewsBox extends JPanel
         this.styleDoc = this.textArea.getStyledDocument();
         this.doc = (HTMLDocument)this.styleDoc;
         this.editorKit = (HTMLEditorKit)this.textArea.getEditorKit();
-        this.spane.setBounds(3, 69, 223, 260);
+        this.spane.setBounds(3, 69, 223, 260); // News textbox boundaries
         this.add(this.spane);
         this.textArea.addHyperlinkListener(new HyperlinkListener() {
             @Override
