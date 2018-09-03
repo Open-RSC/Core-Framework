@@ -110,7 +110,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 3 quest points!");
 		p.incQuestPoints(3);
-		p.incQuestExp(THIEVING, (p.getSkills().getMaxStat(THIEVING) * 50) + 500);
+		p.incQuestExp(THIEVING, (p.getSkills().getMaxStat(THIEVING) * 200) + 2000);
 		p.message("you have completed the biohazard quest");
 	}
 

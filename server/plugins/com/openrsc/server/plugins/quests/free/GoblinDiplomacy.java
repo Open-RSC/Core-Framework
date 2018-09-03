@@ -155,7 +155,7 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 30 + 20);
+		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 60 + 500);
 		player.incQuestPoints(5);
 		player.getInventory().add(new Item(172, 1));
 		player.message(

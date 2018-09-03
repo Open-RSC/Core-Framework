@@ -53,7 +53,7 @@ public class DwarfCannon
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestExp(12, p.getSkills().getMaxStat(12) * 50 + 250);
+		p.incQuestExp(12, p.getSkills().getMaxStat(12) * 200 + 1000);
 		p.incQuestPoints(1);
 		p.message("@gre@You have gained 1 quest point!");
 		message(p, "well done", "you have completed the dwarf cannon quest");
