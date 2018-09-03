@@ -7926,11 +7926,15 @@ public final class mudclient implements Runnable {
 		private final void drawUiTabPlayerInfo(boolean var1, int var2) {
 			try {
 
-				int var3 = this.surface.width2 - 199;
-				byte var4 = 36;
-				this.getSurface().drawSprite(mudclient.spriteMedia + 3, var3 - 49, 3);
-				short var5 = 196;
-				short var6 = 275;
+				int x = this.surface.width2 - 199;
+				byte y = 36;
+				this.getSurface().drawSprite(mudclient.spriteMedia + 3, x - 49, 3);
+				short width = 196;
+				short height;
+				if (Config.S_WANT_EXP_INFO)
+					height = 275;
+				else
+					height = 262;
 				int var8;
 				int var7 = var8 = GenUtil.buildColor(160, 160, 160);
 				if (this.uiTabPlayerInfoSubTab != 0) {
@@ -7939,26 +7943,26 @@ public final class mudclient implements Runnable {
 					var7 = GenUtil.buildColor(220, 220, 220);
 				}
 
-				this.surface.drawBoxAlpha(var3, var4, var5 / 2, 24, var7, 128);
-				this.surface.drawBoxAlpha(var3 + var5 / 2, var4, var5 / 2, 24, var8, 128);
-				this.surface.drawBoxAlpha(var3, 24 + var4, var5, var6 - 12, GenUtil.buildColor(220, 220, 220), 128);
-				this.surface.drawLineHoriz(var3, var4 + 24, var5, 0);
-				this.surface.drawLineVert(var3 + var5 / 2, 0 + var4, 0, 24);
-				this.surface.drawColoredStringCentered(var5 / 4 + var3, "Stats", 0, 0, 4, var4 + 16);
-				this.surface.drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Quests", 0, 0, 4, var4 + 16);
+				this.surface.drawBoxAlpha(x, y, width / 2, 24, var7, 128);
+				this.surface.drawBoxAlpha(x + width / 2, y, width / 2, 24, var8, 128);
+				this.surface.drawBoxAlpha(x, 24 + y, width, height - 12, GenUtil.buildColor(220, 220, 220), 128);
+				this.surface.drawLineHoriz(x, y + 24, width, 0);
+				this.surface.drawLineVert(x + width / 2, 0 + y, 0, 24);
+				this.surface.drawColoredStringCentered(x + width / 4, "Stats", 0, 0, 4, y + 16);
+				this.surface.drawColoredStringCentered(x + width / 4 + width / 2, "Quests", 0, 0, 4, y + 16);
 				int heightMargin;
 
 				// Skills Menu
 				if (this.uiTabPlayerInfoSubTab == 0) {
-					byte y = 72;
-					this.getSurface().drawString("Skills", var3 + 5, y, 0xFFFF00, 3);
+					byte yOffset = 72;
+					this.getSurface().drawString("Skills", x + 5, yOffset, 0xFFFF00, 3);
 					int currentlyHoveredSkill = -1;
-					heightMargin = y + 13;
+					heightMargin = yOffset + 13;
 					int currSkill = 0, textColour = 0, totalXp = 0;
 					for (currSkill = 0; currSkill < 9; currSkill++) {
 						textColour = 0xFFFFFF;
-						if (this.mouseX > 3 + var3 && this.mouseY >= heightMargin - 11 && this.mouseY < 2 + heightMargin
-								&& this.mouseX < 90 + var3) {
+						if (this.mouseX > 3 + x && this.mouseY >= heightMargin - 11 && this.mouseY < 2 + heightMargin
+								&& this.mouseX < 90 + x) {
 							textColour = 0xFF0000;
 							currentlyHoveredSkill = currSkill;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
@@ -7976,10 +7980,10 @@ public final class mudclient implements Runnable {
 						}
 
 						this.getSurface().drawString(this.getSkillNames()[currSkill] + ":@yel@" + this.playerStatCurrent[currSkill]
-								+ "/" + this.playerStatBase[currSkill], var3 + 5, heightMargin, textColour, 1);
+								+ "/" + this.playerStatBase[currSkill], x + 5, heightMargin, textColour, 1);
 						textColour = 0xFFFFFF;
-						if (this.mouseX >= var3 + 90 && this.mouseY >= heightMargin - 11 - 13 && heightMargin - 13 + 2 > this.mouseY
-								&& this.mouseX < var3 + 196) {
+						if (this.mouseX >= x + 90 && this.mouseY >= heightMargin - 11 - 13 && heightMargin - 13 + 2 > this.mouseY
+								&& this.mouseX < x + 196) {
 							textColour = 0xFF0000;
 							currentlyHoveredSkill = 9 + currSkill;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
@@ -7997,34 +8001,34 @@ public final class mudclient implements Runnable {
 						}
 
 						this.getSurface().drawString(this.skillNames[9 + currSkill] + ":@yel@" + this.playerStatCurrent[9 + currSkill]
-								+ "/" + this.playerStatBase[9 + currSkill], var5 / 2 - 5 + var3, heightMargin - 13, textColour, 1);
+								+ "/" + this.playerStatBase[9 + currSkill], width / 2 - 5 + x, heightMargin - 13, textColour, 1);
 						heightMargin += 13;
 					}
 
-					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, var3 - 5 + var5 / 2, heightMargin - 13, 0xFFFFFF, 1);
+					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
 					heightMargin += 12;
-					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue * 100 / 750 + "%", 5 + var3, heightMargin - 13,
+					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue * 100 / 750 + "%", 5 + x, heightMargin - 13,
 							0xFFFFFF, 1);
 					heightMargin += 8;
-					this.getSurface().drawString("Equipment Status", 5 + var3, heightMargin, 0xFFFF00, 3);
+					this.getSurface().drawString("Equipment Status", 5 + x, heightMargin, 0xFFFF00, 3);
 					heightMargin += 12;
 
 					for (currSkill = 0; currSkill < 3; ++currSkill) {
 						this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
-								5 + var3, heightMargin, 0xFFFFFF, 1);
+								5 + x, heightMargin, 0xFFFFFF, 1);
 						if (2 > currSkill) {
 							this.getSurface().drawString(
 									this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
-									var5 / 2 + var3 + 25, heightMargin, 0xFFFFFF, 1);
+									width / 2 + x + 25, heightMargin, 0xFFFFFF, 1);
 						}
 
 						heightMargin += 13;
 					}
 
 					heightMargin += 6;
-					this.getSurface().drawLineHoriz(var3, heightMargin - 15, var5, 0);
+					this.getSurface().drawLineHoriz(x, heightMargin - 15, width, 0);
 					if (currentlyHoveredSkill == -1) {
-						this.getSurface().drawString("Overall levels", var3 + 5, heightMargin, 0xFFFF00, 1);
+						this.getSurface().drawString("Overall levels", x + 5, heightMargin, 0xFFFF00, 1);
 						heightMargin += 12;
 						int currSkillTotal = 0; totalXp = 0;
 
@@ -8033,15 +8037,17 @@ public final class mudclient implements Runnable {
 							currSkillTotal += this.playerStatBase[currSkill];
 						}
 
-						this.getSurface().drawString("Total xp: " + totalXp, 5 + var3, heightMargin, 0xFFFFFF, 1);
+						if (Config.S_WANT_EXP_INFO) {
+							this.getSurface().drawString("Total xp: " + totalXp, 5 + x, heightMargin, 0xFFFFFF, 1);
+							heightMargin += 12;
+						}
+						this.getSurface().drawString("Skill total: " + currSkillTotal, 5 + x, heightMargin, 0xFFFFFF, 1);
 						heightMargin += 12;
-						this.getSurface().drawString("Skill total: " + currSkillTotal, 5 + var3, heightMargin, 0xFFFFFF, 1);
-						heightMargin += 12;
-						this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + var3, heightMargin, 0xFFFFFF, 1);
+						this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + x, heightMargin, 0xFFFFFF, 1);
 						heightMargin += 12;
 
 					} else {
-						this.getSurface().drawString(this.skillNameLong[currentlyHoveredSkill] + " skill", 5 + var3, heightMargin, 0xFFFF00, 1);
+						this.getSurface().drawString(this.skillNameLong[currentlyHoveredSkill] + " skill", 5 + x, heightMargin, 0xFFFF00, 1);
 						heightMargin += 12;
 						int nextLevelExp = this.experienceArray[0];
 
@@ -8051,12 +8057,14 @@ public final class mudclient implements Runnable {
 							}
 						}
 
-						this.getSurface().drawString("Total xp: " + this.playerExperience[currentlyHoveredSkill], 5 + var3, heightMargin, 0xFFFFFF,
+						this.getSurface().drawString("Total xp: " + this.playerExperience[currentlyHoveredSkill], 5 + x, heightMargin, 0xFFFFFF,
 								1);
 						heightMargin += 12;
-						this.getSurface().drawString("Next level at: " + nextLevelExp, 5 + var3, heightMargin, 0xFFFFFF, 1);
-						heightMargin += 12;
-						this.getSurface().drawString("Xp to next level: " + (nextLevelExp - this.playerExperience[currentlyHoveredSkill]), 5 + var3, heightMargin, 0xFFFFFF, 1);
+						this.getSurface().drawString("Next level at: " + nextLevelExp, 5 + x, heightMargin, 0xFFFFFF, 1);
+						if (Config.S_WANT_EXP_INFO) {
+							heightMargin += 12;
+							this.getSurface().drawString("Xp to next level: " + (nextLevelExp - this.playerExperience[currentlyHoveredSkill]), 5 + x, heightMargin, 0xFFFFFF, 1);
+						}
 					}
 				}
 
@@ -8076,9 +8084,9 @@ public final class mudclient implements Runnable {
 
 					int position = this.panelQuestInfo.getControlSelectedListIndex(this.controlQuestInfoPanel) - 1;
 					if (Config.S_WANT_QUEST_MENUS && this.mouseButtonClick == 1 && position >= 0
-							&& this.getMouseX() > var3 && this.getMouseY() > var4 + 36
-							&& this.getMouseX() < var3 + this.getSurface().stringWidth(1, this.questNames[position])
-							&& this.getMouseY() < var6 + 44) {
+							&& this.getMouseX() > x && this.getMouseY() > y + 36
+							&& this.getMouseX() < x + this.getSurface().stringWidth(1, this.questNames[position])
+							&& this.getMouseY() < height + 44) {
 						setQuestGuideChosen(this.questNames[position]);
 						setQuestGuideProgress(this.questStages[position]);
 						setQuestGuideStartWho(position);
@@ -8094,16 +8102,16 @@ public final class mudclient implements Runnable {
 				}
 
 				if (var1) {
-					int var14 = this.mouseY - 36;
-					var3 = -this.getSurface().width2 - (-199 - this.mouseX);
-					if (var3 >= 0 && var14 >= 0 && var3 < var5 && var14 < var6) {
+					int mouseYOffset = this.mouseY - 36;
+					x = -this.getSurface().width2 - (-199 - this.mouseX);
+					if (x >= 0 && mouseYOffset >= 0 && x < width && mouseYOffset < height) {
 						if (this.uiTabPlayerInfoSubTab == 1) {
-							this.panelQuestInfo.handleMouse(var3 + this.getSurface().width2 - 199, 36 + var14,
+							this.panelQuestInfo.handleMouse(x + this.getSurface().width2 - 199, 36 + mouseYOffset,
 									this.currentMouseButtonDown, this.lastMouseButtonDown);
 						}
-						if (var14 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 >= 98) {
-								if (var3 > 98) {
+						if (mouseYOffset <= 24 && this.mouseButtonClick == 1) {
+							if (x >= 98) {
+								if (x > 98) {
 									this.uiTabPlayerInfoSubTab = 1;
 								}
 							} else {
@@ -10370,6 +10378,8 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
 					int wantDropX = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false");
+					int wantExpInfo = this.packetsIncoming.getUnsignedByte();
+					props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 				}
