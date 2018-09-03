@@ -11058,7 +11058,7 @@ public final class mudclient implements Runnable {
 											if (opcode != 203) { // Not ???
 												if (opcode == 33) { // Update Experience
 													int skill = this.packetsIncoming.getUnsignedByte();
-													this.playerExperience[skill] = this.packetsIncoming.get32();
+													this.playerExperience[skill] = (int)(this.packetsIncoming.get32()/4);
 													return;
 												}
 
@@ -11196,7 +11196,7 @@ public final class mudclient implements Runnable {
 															int oldLvl = playerStatBase[skill];
 															this.playerStatCurrent[skill] = this.packetsIncoming.getUnsignedByte();
 															this.playerStatBase[skill] = this.packetsIncoming.getUnsignedByte();
-															this.playerExperience[skill] = this.packetsIncoming.get32();
+															this.playerExperience[skill] = (int)(this.packetsIncoming.get32()/4);
 
 															int receivedXp = playerExperience[skill] - oldXp;
 															receivedXp = receivedXp < 0 ? 0 : receivedXp;
