@@ -77,7 +77,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 		player.incQuestExp(8, (player.getSkills().getMaxStat(8) * 200) + 300);//WOODCUT
 		player.incQuestExp(15, (player.getSkills().getMaxStat(15) * 200) + 300);//HERBLAW
 		player.incQuestPoints(1);
-		player.message("@gre@You have gained 1 quest point!");
+		player.message("@gre@You haved gained 1 quest point!");
 
 	}
 	/** 457, 377**/

@@ -185,7 +185,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		addItem(p, 10, 700);
 		p.incQuestPoints(3);
 		p.message("You have completed the quest of the Prince of Al Kharid");
-		p.message("@gre@You have gained 3 quest points!");
+		p.message("@gre@You haved gained 3 quest points!");
 	}
 
 	public void hassanDialogue(final Player p, final Npc n) {

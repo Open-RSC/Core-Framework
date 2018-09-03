@@ -182,7 +182,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				Npc wizard = getNearestNpc(p, 672, 6);
 				if(wizard != null) {
 					p.incQuestPoints(4);
-					p.message("@gre@You have gained 4 quest points!");
+					p.message("@gre@You haved gained 4 quest points!");
 					npcTalk(p, wizard, "Marvellous! it works!",
 							"The town will now be safe",
 							"Your help was invaluable",

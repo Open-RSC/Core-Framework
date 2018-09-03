@@ -66,7 +66,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 		addItem(p, 10, 450);
 		p.incQuestPoints(2);
 		p.message("Well done you have completed the pirate treasure quest");
-		p.message("@gre@You have gained 2 quest points!");
+		p.message("@gre@You haved gained 2 quest points!");
 		p.updateQuestStage(this, -1);
 	}
 

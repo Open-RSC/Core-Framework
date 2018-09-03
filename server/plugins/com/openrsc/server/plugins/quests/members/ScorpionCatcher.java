@@ -46,7 +46,7 @@ WallObjectActionExecutiveListener {
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the scorpion catcher quest");
 		p.incQuestPoints(1);
-		p.message("@gre@You have gained 1 quest point!");
+		p.message("@gre@You haved gained 1 quest point!");
 		p.incQuestExp(2, p.getSkills().getMaxStat(2) * 500 + 1500);
 
 	}

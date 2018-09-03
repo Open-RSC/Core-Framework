@@ -171,7 +171,7 @@ TalkToNpcExecutiveListener {
 		player.message("Well done. You have completed the cook's assistant quest");
 		player.incQuestExp(7, player.getSkills().getMaxStat(7) * 200 + 1000);
 		player.incQuestPoints(1);
-		player.message("@gre@You have gained 1 quest point!");
+		player.message("@gre@You haved gained 1 quest point!");
 		player.getInventory().remove(19, 1);
 		player.getInventory().remove(136, 1);
 		player.getInventory().remove(22, 1);
