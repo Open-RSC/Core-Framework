@@ -55,7 +55,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 	@Override
 	public void handleReward(Player p) {
 		p.incQuestPoints(3);
-		p.message("@gre@You have gained 3 quest points!");
+		p.message("@gre@You haved gained 3 quest points!");
 		p.incQuestExp(12, p.getSkills().getMaxStat(12) * 300 + 800);
 		p.message("You have completed the Murder Mystery Quest");
 

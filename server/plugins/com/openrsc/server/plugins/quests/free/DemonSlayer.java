@@ -41,7 +41,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("You have completed the demonslayer quest");
-		p.message("@gre@You have gained 3 quest points!");
+		p.message("@gre@You haved gained 3 quest points!");
 		p.incQuestPoints(3);
 	}
 

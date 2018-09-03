@@ -230,7 +230,7 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 	public void handleReward(final Player p) {
 		p.updateQuestStage(Constants.Quests.FISHING_CONTEST, -1);
 		p.message("Well done you have completed the fishing competition quest");
-		p.message("@gre@You have gained 1 quest point!");
+		p.message("@gre@You haved gained 1 quest point!");
 		p.incQuestPoints(1);
 		if(p.getSkills().getMaxStat(10) <= 23) {
 			p.incQuestExp(10, (p.getSkills().getMaxStat(10) - 10) * 300 + 3900);

@@ -133,7 +133,7 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 		player.message("You have completed Dorics quest");
 		player.incQuestExp(14, (player.getSkills().getMaxStat(14) + 1) * 300 + 700);
 		player.incQuestPoints(1);
-		player.message("@gre@You have gained 1 quest points!");
+		player.message("@gre@You haved gained 1 quest points!");
 	}
 
 	@Override

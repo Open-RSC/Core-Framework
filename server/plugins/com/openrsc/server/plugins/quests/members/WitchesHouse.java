@@ -74,7 +74,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the Witches house quest");
 		p.incQuestPoints(4);
-		p.message("@gre@You have gained 4 quest points!");
+		p.message("@gre@You haved gained 4 quest points!");
 		p.incQuestExp(3, p.getSkills().getMaxStat(3) * 600 + 1300);
 		p.getCache().remove("witch_gone");
 		p.getCache().remove("shapeshifter");

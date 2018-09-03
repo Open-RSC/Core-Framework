@@ -67,7 +67,7 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 		player.incQuestPoints(6);
 		player.getCache().remove("magic_words");
 		player.message("Well done you have completed the Merlin's crystal quest");
-		player.message("You have gained 6 quest points!");
+		player.message("You haved gained 6 quest points!");
 	}
 
 	@Override
