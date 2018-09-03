@@ -733,12 +733,12 @@ public final class mudclient implements Runnable {
 		private String password = "";
 		private final int[] pathX = new int[8000];
 		private final int[] pathZ = new int[8000];
-		private final int[] playerClothingColors = new int[] { 16711680, 16744448, 16769024, 10543104, '\ue000', '\u8000',
-				'\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 16777215 };
+		private final int[] playerClothingColors = new int[] { 0xFF0000, 16744448, 16769024, 10543104, '\ue000', '\u8000',
+				'\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 0xFFFFFF };
 		private int playerCount = 0;
 		private final int[] playerExperience = new int[18];
 		private final int[] playerHairColors = new int[] { 16760880, 16752704, 8409136, 6307872, 3158064, 16736288,
-				16728064, 16777215, '\uff00', '\uffff' };
+				16728064, 0xFFFFFF, '\uff00', '\uffff' };
 		private int playerLocalX;
 		private int playerLocalZ;
 		private final RSCharacter[] players = new RSCharacter[500];
@@ -1716,7 +1716,7 @@ public final class mudclient implements Runnable {
 						}
 
 						if (var9 != null) {
-							this.getSurface().drawString(var9, 6, 14, 16776960, 1);
+							this.getSurface().drawString(var9, 6, 14, 0xFFFF00, 1);
 						}
 					}
 
@@ -1752,7 +1752,7 @@ public final class mudclient implements Runnable {
 						}
 
 						if (null != var11) {
-							this.getSurface().drawString(var11, 6, 14, 16776960, 1);
+							this.getSurface().drawString(var11, 6, 14, 0xFFFF00, 1);
 						}
 
 						if (!this.optionMouseButtonOne && this.mouseButtonClick == 1
@@ -1975,7 +1975,7 @@ public final class mudclient implements Runnable {
 					}
 
 					this.characterDialogY[i] = y;
-					this.getSurface().drawWrappedCenteredString(this.characterDialogString[i], x, y, 300, 1, 16776960,
+					this.getSurface().drawWrappedCenteredString(this.characterDialogString[i], x, y, 300, 1, 0xFFFF00,
 							false);
 				}
 
@@ -2113,7 +2113,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawLineHoriz(sx, 20 + sy + row * 20, width, 0);
 				}
 
-				this.getSurface().drawColoredStringCentered(width / 2 + sx, (Config.isAndroid() ? "C" : "Select c") + "ombat style", 16777215, 0, 3, 16 + sy);
+				this.getSurface().drawColoredStringCentered(width / 2 + sx, (Config.isAndroid() ? "C" : "Select c") + "ombat style", 0xFFFFFF, 0, 3, 16 + sy);
 				this.getSurface().drawColoredStringCentered(width / 2 + sx, "Controlled (+1 " + (Config.isAndroid() ? "all" : "of each") + ")", 0, 0, 3, sy + 36);
 				this.getSurface().drawColoredStringCentered(width / 2 + sx, "Aggressive (+3 " + (Config.isAndroid() ? "str" : "strength") + ")", 0, 0, 3, 56 + sy);
 				this.getSurface().drawColoredStringCentered(width / 2 + sx, "Accurate   (+3 " + (Config.isAndroid() ? "att" : "attack") + ")", 0, 0, 3, sy + 76);
@@ -2433,33 +2433,33 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawLineVert(8 + xr, yr + 215, 0, 43);
 					this.getSurface().drawLineVert(xr + 204, yr + 215, 0, 43);
 					this.getSurface().drawString("Preparing to duel with: " + this.duelConfirmOpponentName, 1 + xr, yr + 10,
-							16777215, 1);
-					this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 16777215, 4);
-					this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 16777215, 4);
-					this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 16777215, 4);
-					this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 16777215, 4);
-					this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 16776960, 3);
-					this.getSurface().drawString("No magic", 1 + 8 + xr, 250 + yr, 16776960, 3);
-					this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 16776960, 3);
-					this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 16776960, 3);
+							0xFFFFFF, 1);
+					this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 0xFFFFFF, 4);
+					this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
+					this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 0xFFFFFF, 4);
+					this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
+					this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 0xFFFF00, 3);
+					this.getSurface().drawString("No magic", 1 + 8 + xr, 250 + yr, 0xFFFF00, 3);
+					this.getSurface().drawString("No prayer", 8 + xr + 102, yr + 231, 0xFFFF00, 3);
+					this.getSurface().drawString("No weapons", 102 + 8 + xr, 35 + yr + 215, 0xFFFF00, 3);
 
-					this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 16776960);
+					this.getSurface().drawBoxBorder(xr + 93, 11, 215 + yr + 6, 11, 0xFFFF00);
 					if (this.duelSettingsRetreat) {
-						this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 16776960);
+						this.getSurface().drawBox(xr + 95, 8 + 215 + yr, 7, 7, 0xFFFF00);
 					}
 
-					this.getSurface().drawBoxBorder(93 + xr, 11, 25 + yr + 215, 11, 16776960);
+					this.getSurface().drawBoxBorder(93 + xr, 11, 25 + yr + 215, 11, 0xFFFF00);
 					if (this.duelSettingsMagic) {
-						this.getSurface().drawBox(xr + 95, 215 + yr + 27, 7, 7, 16776960);
+						this.getSurface().drawBox(xr + 95, 215 + yr + 27, 7, 7, 0xFFFF00);
 					}
 
-					this.getSurface().drawBoxBorder(191 + xr, 11, 6 + 215 + yr, 11, 16776960);
+					this.getSurface().drawBoxBorder(191 + xr, 11, 6 + 215 + yr, 11, 0xFFFF00);
 					if (this.duelSettingsPrayer) {
-						this.getSurface().drawBox(xr + 193, 8 + yr + 215, 7, 7, 16776960);
+						this.getSurface().drawBox(xr + 193, 8 + yr + 215, 7, 7, 0xFFFF00);
 					}
-					this.getSurface().drawBoxBorder(xr + 191, 11, yr + 215 + 25, 11, 16776960);
+					this.getSurface().drawBoxBorder(xr + 191, 11, yr + 215 + 25, 11, 0xFFFF00);
 					if (this.duelSettingsWeapons) {
-						this.getSurface().drawBox(193 + xr, 215 + yr + 27, 7, 7, 16776960);
+						this.getSurface().drawBox(193 + xr, 215 + yr + 27, 7, 7, 0xFFFF00);
 					}
 
 					if (!this.duelOfferAccepted) {
@@ -2468,13 +2468,13 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawSprite(26 + mudclient.spriteMedia, xr + 394, yr + 238);
 					if (this.duelOffsetOpponentAccepted) {
-						this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 16777215, 0, 1, 246 + yr);
-						this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 16777215, 0, 1, 256 + yr);
+						this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
+						this.getSurface().drawColoredStringCentered(341 + xr, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
 					}
 
 					if (this.duelOfferAccepted) {
-						this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 16777215, 0, 1, yr + 246);
-						this.getSurface().drawColoredStringCentered(252 + xr, "other player", 16777215, 0, 1, 256 + yr);
+						this.getSurface().drawColoredStringCentered(35 + 217 + xr, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
+						this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
 					}
 
 					for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
@@ -2493,7 +2493,7 @@ public final class mudclient implements Runnable {
 						}
 						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
 							this.getSurface().drawString("" + formatStackAmount(this.inventoryItemSize[itm]), xI + 1,
-									10 + yI, 16776960, 1);
+									10 + yI, 0xFFFF00, 1);
 						}
 					}
 
@@ -2513,7 +2513,7 @@ public final class mudclient implements Runnable {
 						}
 
 						if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
-							this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 16776960,
+							this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 0xFFFF00,
 									1);
 						}
 
@@ -2521,7 +2521,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getName() + ": @whi@"
 											+ EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getDescription(),
-											8 + xr, yr + 273, 16776960, 1);
+											8 + xr, yr + 273, 0xFFFF00, 1);
 						}
 					}
 
@@ -2544,14 +2544,14 @@ public final class mudclient implements Runnable {
 
 						if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
 							this.getSurface().drawString("" + this.duelOpponentItemCount[itmOffer], 1 + xI, 10 + yI,
-									16776960, 1);
+									0xFFFF00, 1);
 						}
 
 						if (this.mouseX > xI && 48 + xI > this.mouseX && yI < this.mouseY && this.mouseY < yI + 32) {
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getName() + ": @whi@"
 											+ EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getDescription(),
-											xr + 8, 273 + yr, 16776960, 1);
+											xr + 8, 273 + yr, 0xFFFF00, 1);
 						}
 					}
 
@@ -2574,8 +2574,8 @@ public final class mudclient implements Runnable {
 				int color = 10000536;
 				this.getSurface().drawBoxAlpha(xr, yr + 16, 468, 246, color, 160);
 				this.getSurface().drawColoredStringCentered(xr + 234,
-						"Please confirm your duel with @yel@" + this.duelOpponentName, 16777215, 0, 1, yr + 12);
-				this.getSurface().drawColoredStringCentered(xr + 117, "Your stake:", 16776960, 0, 1, yr + 30);
+						"Please confirm your duel with @yel@" + this.duelOpponentName, 0xFFFFFF, 0, 1, yr + 12);
+				this.getSurface().drawColoredStringCentered(xr + 117, "Your stake:", 0xFFFF00, 0, 1, yr + 30);
 
 				for (int var5 = 0; this.duelItemsCount > var5; ++var5) {
 					String var6 = EntityHandler.getItemDef(this.duelItems[var5]).getName();
@@ -2583,14 +2583,14 @@ public final class mudclient implements Runnable {
 						var6 = var6 + " x " + StringUtil.formatItemCount(this.duelItemCounts[var5]);
 					}
 
-					this.getSurface().drawColoredStringCentered(xr + 117, var6, 16777215, 0, 1, 42 + yr + var5 * 12);
+					this.getSurface().drawColoredStringCentered(xr + 117, var6, 0xFFFFFF, 0, 1, 42 + yr + var5 * 12);
 				}
 
 				if (this.duelItemsCount == 0) {
-					this.getSurface().drawColoredStringCentered(xr + 117, "Nothing!", 16777215, 0, 1, 42 + yr);
+					this.getSurface().drawColoredStringCentered(xr + 117, "Nothing!", 0xFFFFFF, 0, 1, 42 + yr);
 				}
 
-				this.getSurface().drawColoredStringCentered(351 + xr, "Your opponent\'s stake:", 16776960, 0, 1, 30 + yr);
+				this.getSurface().drawColoredStringCentered(351 + xr, "Your opponent\'s stake:", 0xFFFF00, 0, 1, 30 + yr);
 
 				for (int var5 = 0; var5 < this.duelOpponentItemsCount; ++var5) {
 					String var6 = EntityHandler.getItemDef(this.duelOpponentItems[var5]).getName();
@@ -2598,48 +2598,48 @@ public final class mudclient implements Runnable {
 						var6 = var6 + " x " + StringUtil.formatItemCount(this.duelOpponentItemCounts[var5]);
 					}
 
-					this.getSurface().drawColoredStringCentered(xr + 351, var6, 16777215, 0, 1, var5 * 12 + 42 + yr);
+					this.getSurface().drawColoredStringCentered(xr + 351, var6, 0xFFFFFF, 0, 1, var5 * 12 + 42 + yr);
 				}
 
 				if (this.duelOpponentItemsCount == 0) {
-					this.getSurface().drawColoredStringCentered(351 + xr, "Nothing!", 16777215, 0, 1, 42 + yr);
+					this.getSurface().drawColoredStringCentered(351 + xr, "Nothing!", 0xFFFFFF, 0, 1, 42 + yr);
 				}
 
 				if (this.duelOptionRetreat == 0) {
 					this.getSurface().drawColoredStringCentered(xr + 234, "You can retreat from this duel", '\uff00', 0, 1,
 							yr + 180);
 				} else {
-					this.getSurface().drawColoredStringCentered(234 + xr, "No retreat is possible!", 16711680, 0, 1,
+					this.getSurface().drawColoredStringCentered(234 + xr, "No retreat is possible!", 0xFF0000, 0, 1,
 							180 + yr);
 				}
 
 				if (this.duelOptionMagic == 0) {
 					this.getSurface().drawColoredStringCentered(234 + xr, "Magic may be used", '\uff00', 0, 1, yr + 192);
 				} else {
-					this.getSurface().drawColoredStringCentered(xr + 234, "Magic cannot be used", 16711680, 0, 1, 192 + yr);
+					this.getSurface().drawColoredStringCentered(xr + 234, "Magic cannot be used", 0xFF0000, 0, 1, 192 + yr);
 				}
 
 				if (this.duelOptionPrayer == 0) {
 					this.getSurface().drawColoredStringCentered(xr + 234, "Prayer may be used", '\uff00', 0, 1, 204 + yr);
 				} else {
-					this.getSurface().drawColoredStringCentered(xr + 234, "Prayer cannot be used", 16711680, 0, 1,
+					this.getSurface().drawColoredStringCentered(xr + 234, "Prayer cannot be used", 0xFF0000, 0, 1,
 							yr + 204);
 				}
 
 				if (this.duelOptionWeapons != 0) {
-					this.getSurface().drawColoredStringCentered(xr + 234, "Weapons cannot be used", 16711680, 0, 1,
+					this.getSurface().drawColoredStringCentered(xr + 234, "Weapons cannot be used", 0xFF0000, 0, 1,
 							216 + yr);
 				} else {
 					this.getSurface().drawColoredStringCentered(xr + 234, "Weapons may be used", '\uff00', 0, 1, yr + 216);
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 234, "If you are sure click \'Accept\' to begin the duel",
-						16777215, 0, 1, yr + 230);
+						0xFFFFFF, 0, 1, yr + 230);
 				if (!this.duelConfirmed) {
 					this.getSurface().drawSprite(mudclient.spriteMedia + 25, 83 + xr, 238 + yr);
 					this.getSurface().drawSprite(26 + mudclient.spriteMedia, xr - 35 + 352, yr + 238);
 				} else {
-					this.getSurface().drawColoredStringCentered(xr + 234, "Waiting for other player...", 16776960, 0, 1,
+					this.getSurface().drawColoredStringCentered(xr + 234, "Waiting for other player...", 0xFFFF00, 0, 1,
 							yr + 250);
 				}
 
@@ -2675,8 +2675,8 @@ public final class mudclient implements Runnable {
 			try {
 
 				this.getSurface().drawBox((getGameWidth() - 260) / 2, (getGameHeight() - 60) / 2, 260, 60, 0);
-				this.getSurface().drawBoxBorder((getGameWidth() - 260) / 2, 260, (getGameHeight() - 60) / 2, 60, 16777215);
-				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Logging out...", 16777215, 0, 5, (getGameHeight() - 60) / 2 + 36);
+				this.getSurface().drawBoxBorder((getGameWidth() - 260) / 2, 260, (getGameHeight() - 60) / 2, 60, 0xFFFFFF);
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Logging out...", 0xFFFFFF, 0, 5, (getGameHeight() - 60) / 2 + 36);
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.SD(" + "dummy" + ')');
 			}
@@ -2734,7 +2734,7 @@ public final class mudclient implements Runnable {
 							int var3 = '\uffff';
 							if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2])
 									&& this.mouseY > var2 * 12 && this.mouseY < var2 * 12 + 12) {
-								var3 = 16711680;
+								var3 = 0xFF0000;
 							}
 
 							this.getSurface().drawString(
@@ -2779,21 +2779,21 @@ public final class mudclient implements Runnable {
 				int yr = (getGameHeight() - var3) / 2;
 
 				this.getSurface().drawBox(xr, yr, var2, var3, 0);
-				this.getSurface().drawBoxBorder(xr, var2, yr, var3, 16777215);
+				this.getSurface().drawBoxBorder(xr, var2, yr, var3, 0xFFFFFF);
 				this.getSurface().drawWrappedCenteredString(this.serverMessage, xr + 256 - 56, yr + 17, var2 - 40, 1,
-						16777215, true);
+						0xFFFFFF, true);
 				int var4 = (getGameHeight() + (var3) - 23) / 2;
 
-				int var5 = 16777215;
+				int var5 = 0xFFFFFF;
 				if (var4 - 12 < this.mouseY && var4 >= this.mouseY && this.mouseX > xr + 50 && this.mouseX < xr + 350) {
-					var5 = 16711680;
+					var5 = 0xFF0000;
 
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Click here to close window", var5, 0, 1, var4);
 
 				if (this.mouseButtonClick == 1) {
-					if (var5 == 16711680) {
+					if (var5 == 0xFF0000) {
 						this.showDialogServerMessage = false;
 
 					}
@@ -2918,18 +2918,18 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawBoxAlpha(xr, yr + 29, 8, 170, color, 160);
 				this.getSurface().drawBoxAlpha(xr + 399, 29 + yr, 9, 170, color, 160);
 				this.getSurface().drawBoxAlpha(xr, 199 + yr, 408, 47, color, 160);
-				this.getSurface().drawString("Buying and selling items", xr + 1, yr + 10, 16777215, 1);
+				this.getSurface().drawString("Buying and selling items", xr + 1, yr + 10, 0xFFFFFF, 1);
 
-				int color2 = 16777215;
+				int color2 = 0xFFFFFF;
 				if (this.mouseX > 320 + xr && yr <= this.mouseY && this.mouseX < xr + 408 && this.mouseY < yr + 12) {
-					color2 = 16711680;
+					color2 = 0xFF0000;
 				}
 				this.getSurface().b(xr + 406, "Close window", yr + 10, color2, -92, 1);
 
 				this.getSurface().drawString("Shops stock in green", 2 + xr, 24 + yr, '\uff00', 1);
 				this.getSurface().drawString("Number you own in blue", xr + 135, yr + 24, '\uffff', 1);
 				this.getSurface().drawString("Your money: " + formatStackAmount(this.getInventoryCount((int) 10)) + "gp",
-						280 + xr, 24 + yr, 16776960, 1);
+						280 + xr, 24 + yr, 0xFFFF00, 1);
 				{
 					int slot = 0;
 					for (int row = 0; row < 5; ++row) {
@@ -2937,7 +2937,7 @@ public final class mudclient implements Runnable {
 							int sx = column * 49 + 7 + xr;
 							int sy = yr + 28 + row * 34;
 							if (this.shopSelectedItemIndex == slot) {
-								this.getSurface().drawBoxAlpha(sx, sy, 49, 34, 16711680, 160);
+								this.getSurface().drawBoxAlpha(sx, sy, 49, 34, 0xFF0000, 160);
 							} else {
 								this.getSurface().drawBoxAlpha(sx, sy, 49, 34, 13684944, 160);
 							}
@@ -2973,44 +2973,44 @@ public final class mudclient implements Runnable {
 						int count = this.shopItemCount[this.shopSelectedItemIndex];
 						if (count <= 0) {
 							this.getSurface().drawColoredStringCentered(204 + xr,
-									"This item is not currently available to buy", 16776960, 0, 3, 214 + yr);
+									"This item is not currently available to buy", 0xFFFF00, 0, 3, 214 + yr);
 						} else {
 							int cost = GenUtil.computeItemCost(EntityHandler.getItemDef(id).getBasePrice(),
 									this.shopItemPrice[this.shopSelectedItemIndex], this.shopBuyPriceMod, -30910, true, 1,
 									count, this.shopPriceMultiplier);
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(id).getName() + ": buy for " + cost + "gp each", 2 + xr,
-									yr + 214, 16776960, 1);
+									yr + 214, 0xFFFF00, 1);
 							boolean mouseInRow = 204 + yr <= this.mouseY && yr + 215 >= this.mouseY;
-							this.getSurface().drawString("Buy:", xr + 285, 214 + yr, 16777215, 3);
+							this.getSurface().drawString("Buy:", xr + 285, 214 + yr, 0xFFFFFF, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && this.mouseX > 318 + xr && this.mouseX < xr + 330) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("1", xr + 320, 214 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && this.mouseX > 333 + xr && this.mouseX < 345 + xr) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("5", 335 + xr, 214 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && 348 + xr < this.mouseX && this.mouseX < xr + 365) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("10", 350 + xr, 214 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && this.mouseX > 368 + xr && 385 + xr > this.mouseX) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("50", xr + 370, 214 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && this.mouseX > xr + 388 && this.mouseX < 400 + xr) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("X", 390 + xr, 214 + yr, color2, 3);
 						}
@@ -3018,7 +3018,7 @@ public final class mudclient implements Runnable {
 						int invCount = this.getInventoryCount((int) id);
 						if (invCount <= 0) {
 							this.getSurface().drawColoredStringCentered(xr + 204,
-									"You do not have any of this item to sell", 16776960, 0, 3, 239 + yr);
+									"You do not have any of this item to sell", 0xFFFF00, 0, 3, 239 + yr);
 						} else {
 
 							int sellCost = GenUtil.computeItemCost(EntityHandler.getItemDef(id).getBasePrice(),
@@ -3048,43 +3048,43 @@ public final class mudclient implements Runnable {
 							}
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(id).getName() + ": sell for " + sellCost + "gp each", 2 + xr,
-									yr + 239, 16776960, 1);
+									yr + 239, 0xFFFF00, 1);
 							boolean mouseInRow = this.mouseY >= yr + 229 && yr + 240 >= this.mouseY;
 
-							color2 = 16777215;
-							this.getSurface().drawString("Sell:", xr + 285, yr + 239, 16777215, 3);
+							color2 = 0xFFFFFF;
+							this.getSurface().drawString("Sell:", xr + 285, yr + 239, 0xFFFFFF, 3);
 							if (mouseInRow && xr + 318 < this.mouseX && this.mouseX < xr + 330) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("1", xr + 320, 239 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && xr + 333 < this.mouseX && this.mouseX < xr + 345) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("5", 335 + xr, 239 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && 348 + xr < this.mouseX && 365 + xr > this.mouseX) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("10", xr + 350, 239 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && this.mouseX > xr + 368 && 385 + xr > this.mouseX) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("50", xr + 370, 239 + yr, color2, 3);
 
-							color2 = 16777215;
+							color2 = 0xFFFFFF;
 							if (mouseInRow && this.mouseX > 388 + xr && xr + 400 > this.mouseX) {
-								color2 = 16711680;
+								color2 = 0xFF0000;
 							}
 							this.getSurface().drawString("X", xr + 390, yr + 239, color2, 3);
 						}
 					}
 				} else {
-					this.getSurface().drawColoredStringCentered(204 + xr, "Select an object to buy or sell", 16776960, 0, 3,
+					this.getSurface().drawColoredStringCentered(204 + xr, "Select an object to buy or sell", 0xFFFF00, 0, 3,
 							214 + yr);
 				}
 
@@ -3371,23 +3371,23 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawLineVert(216 + xr + var7 * 49, yr + 30, 0, 205);
 					}
 
-					this.getSurface().drawString("Trading with: " + this.tradeRecipientName, xr + 1, 10 + yr, 16777215, 1);
-					this.getSurface().drawString("Your Offer", xr + 9, yr + 27, 16777215, 4);
-					this.getSurface().drawString("Opponent\'s Offer", xr + 9, yr + 152, 16777215, 4);
-					this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 16777215, 4);
+					this.getSurface().drawString("Trading with: " + this.tradeRecipientName, xr + 1, 10 + yr, 0xFFFFFF, 1);
+					this.getSurface().drawString("Your Offer", xr + 9, yr + 27, 0xFFFFFF, 4);
+					this.getSurface().drawString("Opponent\'s Offer", xr + 9, yr + 152, 0xFFFFFF, 4);
+					this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
 					if (!this.tradeAccepted) {
 						this.getSurface().drawSprite(mudclient.spriteMedia + 25, xr + 217, yr + 238);
 					}
 
 					this.getSurface().drawSprite(mudclient.spriteMedia + 26, xr + 394, yr + 238);
 					if (this.tradeRecipientAccepted) {
-						this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 16777215, 0, 1, 246 + yr);
-						this.getSurface().drawColoredStringCentered(xr + 341, "has accepted", 16777215, 0, 1, 256 + yr);
+						this.getSurface().drawColoredStringCentered(xr + 341, "Other player", 0xFFFFFF, 0, 1, 246 + yr);
+						this.getSurface().drawColoredStringCentered(xr + 341, "has accepted", 0xFFFFFF, 0, 1, 256 + yr);
 					}
 
 					if (this.tradeAccepted) {
-						this.getSurface().drawColoredStringCentered(xr + 217 + 35, "Waiting for", 16777215, 0, 1, yr + 246);
-						this.getSurface().drawColoredStringCentered(xr + 252, "other player", 16777215, 0, 1, 256 + yr);
+						this.getSurface().drawColoredStringCentered(xr + 217 + 35, "Waiting for", 0xFFFFFF, 0, 1, yr + 246);
+						this.getSurface().drawColoredStringCentered(xr + 252, "other player", 0xFFFFFF, 0, 1, 256 + yr);
 					}
 
 					for (int slot = 0; slot < this.inventoryItemCount; ++slot) {
@@ -3407,7 +3407,7 @@ public final class mudclient implements Runnable {
 
 						if (EntityHandler.getItemDef(this.inventoryItemID[slot]).isStackable()) {
 							this.getSurface().drawString("" + formatStackAmount(this.inventoryItemSize[slot]), 1 + sX,
-									10 + sY, 16776960, 1);
+									10 + sY, 0xFFFF00, 1);
 						}
 					}
 
@@ -3419,7 +3419,7 @@ public final class mudclient implements Runnable {
 								48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0, false, 0, 1);
 						if (EntityHandler.getItemDef(this.tradeItemID[slot]).isStackable()) {
 							this.getSurface().drawString("" + formatStackAmount(this.tradeItemSize[slot]), sx + 1, 10 + sy,
-									16776960, 1);
+									0xFFFF00, 1);
 						}
 
 						ItemDef def = EntityHandler.getItemDef(this.tradeItemID[slot]);
@@ -3433,7 +3433,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(this.tradeItemID[slot]).getName() + ": @whi@"
 											+ EntityHandler.getItemDef(this.tradeItemID[slot]).getDescription(),
-											8 + xr, 273 + yr, 16776960, 1);
+											8 + xr, 273 + yr, 0xFFFF00, 1);
 						}
 					}
 
@@ -3453,7 +3453,7 @@ public final class mudclient implements Runnable {
 						}
 
 						if (EntityHandler.getItemDef(this.tradeRecipientItem[slot]).isStackable()) {
-							this.getSurface().drawString("" + this.tradeRecipientItemCount[slot], sx + 1, 10 + sy, 16776960,
+							this.getSurface().drawString("" + this.tradeRecipientItemCount[slot], sx + 1, 10 + sy, 0xFFFF00,
 									1);
 						}
 
@@ -3461,7 +3461,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getName() + ": @whi@"
 											+ EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getDescription(),
-											xr + 8, yr + 273, 16776960, 1);
+											xr + 8, yr + 273, 0xFFFF00, 1);
 						}
 					}
 
@@ -3495,10 +3495,10 @@ public final class mudclient implements Runnable {
 
 				this.getSurface().drawBox(xr, yr, 400, var2, 0);
 				int var3 = yr;
-				this.getSurface().drawBoxBorder(xr, 400, yr, var2, 16777215);
+				this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
 				var3 += 20;
 				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to RuneScape " + this.localPlayer.accountName,
-						16776960, 0, 4, var3);
+						0xFFFF00, 0, 4, var3);
 				var3 += 30;
 				String var4;
 				if (this.welcomeLastLoggedInDays == 0) {
@@ -3510,13 +3510,13 @@ public final class mudclient implements Runnable {
 				}
 
 				if (!this.welcomeLastLoggedInIp.equalsIgnoreCase("0.0.0.0")) {
-					this.getSurface().drawColoredStringCentered(xr + 256 - 56, "You last logged in " + var4, 16777215, 0, 1, var3);
+					this.getSurface().drawColoredStringCentered(xr + 256 - 56, "You last logged in " + var4, 0xFFFFFF, 0, 1, var3);
 					var3 += 15;
 					if (this.welcomeLastLoggedInHost == null) {
 						this.welcomeLastLoggedInHost = getHostnameFromIP();
 					}
 
-					this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 16777215,
+					this.getSurface().drawColoredStringCentered(xr + 256 - 56, "from: " + this.welcomeLastLoggedInHost, 0xFFFFFF,
 							var1 ^ -4853, 1, var3);
 					var3 += 15;
 					var3 += 15;
@@ -3525,13 +3525,13 @@ public final class mudclient implements Runnable {
 				if (this.welcomeUnreadMessages > 0) {
 					if (this.welcomeUnreadMessages == 1) {
 						this.getSurface().drawColoredStringCentered(xr + 256 - 56,
-								"You have @yel@0@whi@ unread messages in your message-centre", 16777215, 0, 1, var3);
+								"You have @yel@0@whi@ unread messages in your message-centre", 0xFFFFFF, 0, 1, var3);
 					} else {
 						this.getSurface()
 						.drawColoredStringCentered(xr + 256 - 56,
 								"You have @gre@" + (this.welcomeUnreadMessages - 1)
 								+ " unread messages @whi@in your message-centre",
-								16777215, var1 + 4853, 1, var3);
+								0xFFFFFF, var1 + 4853, 1, var3);
 					}
 
 					var3 += 15;
@@ -3553,25 +3553,25 @@ public final class mudclient implements Runnable {
 					var3 += 15;
 				}
 
-				int var5 = 16777215;
+				int var5 = 0xFFFFFF;
 				if(Config.isAndroid()) {
 
 					this.getSurface().drawBoxAlpha(150, var3 - 20, (207), var3 - (var3 - 12) + 20, 3158064, 160);
 					this.getSurface().drawBoxBorder(150, (207), var3 - 20, var3 - (var3 - 12) + 20,4210752);
 					if (this.mouseY >= var3 - 20 && this.mouseY <= (var3 - 20) + (var3 - (var3 - 12) + 20) && this.mouseX >= 150 && this.mouseX < 150+207) {
-						var5 = 16711680;
+						var5 = 0xFF0000;
 					}
 
 				} else {
 
 					if (this.mouseY > var3 - 12 && this.mouseY <= var3 && this.mouseX > xr + 106 - 56 && this.mouseX < xr + 406 - 56) {
-						var5 = 16711680;
+						var5 = 0xFF0000;
 					}
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Click here to close window", var5, var1 ^ var1, 1, var3);
 				if (this.mouseButtonClick == 1) {
-					if (var5 == 16711680) {
+					if (var5 == 0xFF0000) {
 						this.showDialogMessage = false;
 					}
 
@@ -3601,32 +3601,32 @@ public final class mudclient implements Runnable {
 					this.loadGameConfig(true);
 				}
 
-				this.getSurface().drawBoxBorder(86, 340, 77, 180, 16777215);
-				this.getSurface().drawColoredStringCentered(256, "Warning! Proceed with caution", 16711680, 0, 4, var2);
+				this.getSurface().drawBoxBorder(86, 340, 77, 180, 0xFFFFFF);
+				this.getSurface().drawColoredStringCentered(256, "Warning! Proceed with caution", 0xFF0000, 0, 4, var2);
 				int var5 = var2 + 26;
 				this.getSurface().drawColoredStringCentered(256, "If you go much further north you will enter the",
-						16777215, 0, 1, var5);
+						0xFFFFFF, 0, 1, var5);
 				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "wilderness. This a very dangerous area where", 16777215,
+				this.getSurface().drawColoredStringCentered(256, "wilderness. This a very dangerous area where", 0xFFFFFF,
 						0, 1, var5);
 				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "other players can attack you!", 16777215, 0, 1, var5);
+				this.getSurface().drawColoredStringCentered(256, "other players can attack you!", 0xFFFFFF, 0, 1, var5);
 				var5 += 22;
-				this.getSurface().drawColoredStringCentered(256, "The further north you go the more dangerous it", 16777215,
+				this.getSurface().drawColoredStringCentered(256, "The further north you go the more dangerous it", 0xFFFFFF,
 						0, 1, var5);
 				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "becomes, but the more treasure you will find.", 16777215,
+				this.getSurface().drawColoredStringCentered(256, "becomes, but the more treasure you will find.", 0xFFFFFF,
 						0, 1, var5);
 				var5 += 22;
 				this.getSurface().drawColoredStringCentered(256, "In the wilderness an indicator at the bottom-right",
-						16777215, 0, 1, var5);
+						0xFFFFFF, 0, 1, var5);
 				var5 += 13;
 				this.getSurface().drawColoredStringCentered(256, "of the screen will show the current level of danger",
-						16777215, 0, 1, var5);
+						0xFFFFFF, 0, 1, var5);
 				var5 += 22;
-				int var3 = 16777215;
+				int var3 = 0xFFFFFF;
 				if (this.mouseY > var5 - 12 && this.mouseY <= var5 && this.mouseX > 181 && this.mouseX < 331) {
-					var3 = 16711680;
+					var3 = 0xFF0000;
 				}
 
 				this.getSurface().drawColoredStringCentered(256, "Click here to close window", var3, 0, 1, var5);
@@ -3653,7 +3653,7 @@ public final class mudclient implements Runnable {
 					if (this.deathScreenTimeout != 0) {
 						this.getSurface().fade2black(16316665);
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "Oh dear! You are dead...",
-								16711680, 0, 7, this.getGameHeight() / 2);
+								0xFF0000, 0, 7, this.getGameHeight() / 2);
 						this.drawChatMessageTabs(var1 - 8);
 						// this.getSurface().draw(this.graphics, this.screenOffsetX,
 						// 256, this.screenOffsetY);
@@ -3676,32 +3676,32 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawBox(this.getGameWidth() / 2 - 100, 160 - (Config.isAndroid() ? 80 : 0), 200, 40, 0);
 						if(Config.isAndroid()) {
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-									"You are sleeping - Fatigue: " + this.fatigueSleeping * 100 / 750 + "%", 16776960, var1 - 13, 7, 31);
+									"You are sleeping - Fatigue: " + this.fatigueSleeping * 100 / 750 + "%", 0xFFFF00, var1 - 13, 7, 31);
 						} else {
-							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "You are sleeping", 16776960,
+							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "You are sleeping", 0xFFFF00,
 									var1 - 13, 7, 50);
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-									"Fatigue: " + this.fatigueSleeping * 100 / 750 + "%", 16776960, var1 - 13, 7, 90);
+									"Fatigue: " + this.fatigueSleeping * 100 / 750 + "%", 0xFFFF00, var1 - 13, 7, 90);
 						}
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-								"When you want to wake up just use your", 16777215, 0, 5, 140 - (Config.isAndroid() ? 80 : 0));
+								"When you want to wake up just use your", 0xFFFFFF, 0, 5, 140 - (Config.isAndroid() ? 80 : 0));
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-								"keyboard to type the word in the box below", 16777215, var1 ^ 13, 5, 160 - (Config.isAndroid() ? 80 : 0));
+								"keyboard to type the word in the box below", 0xFFFFFF, var1 ^ 13, 5, 160 - (Config.isAndroid() ? 80 : 0));
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, this.inputTextCurrent + "*",
 								'\uffff', var1 - 13, 5, 180 - (Config.isAndroid() ? 80 : 0));
 						if (null != this.sleepingStatusText) {
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, this.sleepingStatusText,
-									16711680, 0, 5, 260 - (Config.isAndroid() ? 110 : 0));
+									0xFF0000, 0, 5, 260 - (Config.isAndroid() ? 110 : 0));
 						} else {
 							this.getSurface().drawSprite(mudclient.spriteLogo + 2, this.getGameWidth() / 2 - 127, 230 - (Config.isAndroid() ? 110 : 0));
 						}
 
-						this.getSurface().drawBoxBorder(this.getGameWidth() / 2 - 128, 257, 229 - (Config.isAndroid() ? 110 : 0), 42, 16777215);
+						this.getSurface().drawBoxBorder(this.getGameWidth() / 2 - 128, 257, 229 - (Config.isAndroid() ? 110 : 0), 42, 0xFFFFFF);
 						this.drawChatMessageTabs(5);
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "If you can\'t read the word",
-								16777215, var1 - 13, 1, 290 - (Config.isAndroid() ? 110 : 0));
+								0xFFFFFF, var1 - 13, 1, 290 - (Config.isAndroid() ? 110 : 0));
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-								"@yel@click here@whi@ to get a different one", 16777215, var1 ^ 13, 1, 305 - (Config.isAndroid() ? 110 : 0));
+								"@yel@click here@whi@ to get a different one", 0xFFFFFF, var1 ^ 13, 1, 305 - (Config.isAndroid() ? 110 : 0));
 						// this.getSurface().draw(this.graphics, this.screenOffsetX,
 						// 256, this.screenOffsetY);
 						clientPort.draw();
@@ -3993,11 +3993,11 @@ public final class mudclient implements Runnable {
 							centerX %= 60;
 							if (centerX < 10) {
 								this.getSurface().drawColoredStringCentered(256,
-										"System update in: " + centerZ + ":0" + centerX, 16776960, 0, 1,
+										"System update in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 							} else {
 								this.getSurface().drawColoredStringCentered(256,
-										"System update in: " + centerZ + ":" + centerX, 16776960, 0, 1,
+										"System update in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 							}
 						}
@@ -4065,9 +4065,9 @@ public final class mudclient implements Runnable {
 								inWild = true;
 								centerZ = centerX / 6 + 1;
 								this.getSurface().drawSprite(13 + mudclient.spriteMedia, this.getGameWidth() - 59, this.getGameHeight() - 56);
-								this.getSurface().drawColoredStringCentered(this.getGameWidth() - 47, "Wilderness", 16776960, 0, 1,
+								this.getSurface().drawColoredStringCentered(this.getGameWidth() - 47, "Wilderness", 0xFFFF00, 0, 1,
 										this.getGameHeight() - 20);
-								this.getSurface().drawColoredStringCentered(this.getGameWidth() - 47, "Level: " + centerZ, 16776960, 0, 1,
+								this.getSurface().drawColoredStringCentered(this.getGameWidth() - 47, "Level: " + centerZ, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 								if (this.showUiWildWarn == 0) {
 									this.showUiWildWarn = 2;
@@ -4175,7 +4175,7 @@ public final class mudclient implements Runnable {
 									if(Config.isAndroid() && Config.F_SHOWING_KEYBOARD)
 										boost = (boost / 2.5) + 8;
 									this.getSurface().drawColoredString(7, (int)boost - centerX * 12 - 18, var17,
-											1, 16776960, MessageHistory.messageHistoryCrownID[centerX]);
+											1, 0xFFFF00, MessageHistory.messageHistoryCrownID[centerX]);
 								}
 							}
 						}
@@ -4240,27 +4240,27 @@ public final class mudclient implements Runnable {
 					int xr = (getGameWidth() - this.inputX_Width) / 2;
 					int yr = (getGameHeight() - this.inputX_Height) / 2;
 					this.getSurface().drawBox(xr, yr, this.inputX_Width, this.inputX_Height, 0);
-					this.getSurface().drawBoxBorder(xr, this.inputX_Width, yr, this.inputX_Height, 16777215);
+					this.getSurface().drawBoxBorder(xr, this.inputX_Width, yr, this.inputX_Height, 0xFFFFFF);
 					int lineHeightBase = this.getSurface().fontHeight(1);
 					int inputLineHeight = this.getSurface().fontHeight(4);
 					int lineHeight = lineHeightBase + 2;
 
 					for (int i = 0; i < this.inputX_Lines.length; ++i) {
-						this.getSurface().drawColoredStringCentered(200 + xr, this.inputX_Lines[i], 16776960, 0, 1,
+						this.getSurface().drawColoredStringCentered(200 + xr, this.inputX_Lines[i], 0xFFFF00, 0, 1,
 								lineHeight * i + 5 + yr + lineHeightBase);
 					}
 
 					if (this.inputX_Focused) {
-						this.getSurface().drawColoredStringCentered(200 + xr, this.inputTextCurrent + "*", 16777215, 0, 4,
+						this.getSurface().drawColoredStringCentered(200 + xr, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4,
 								yr + 5 + lineHeight * this.inputX_Lines.length + 3 + inputLineHeight);
 					}
 
 					int okLineY = lineHeightBase + 8 + yr + inputLineHeight + 2 + this.inputX_Lines.length * lineHeight;
 
-					int color = 16777215;
+					int color = 0xFFFFFF;
 					if (this.mouseX > xr + 200 - 26 && this.mouseX < xr + 200 - 8 && okLineY - lineHeightBase < this.mouseY
 							&& this.mouseY < okLineY) {
-						color = 16776960;
+						color = 0xFFFF00;
 						if (this.mouseButtonClick != 0) {
 							this.inputX_OK = true;
 							this.mouseButtonClick = 0;
@@ -4269,10 +4269,10 @@ public final class mudclient implements Runnable {
 					}
 					this.getSurface().drawString("OK", 200 + xr - 26, okLineY, color, 1);
 
-					color = 16777215;
+					color = 0xFFFFFF;
 					if (this.mouseX > xr + 208 && this.mouseX < xr + 208 + 40 && this.mouseY > okLineY - lineHeightBase
 							&& this.mouseY < okLineY) {
-						color = 16776960;
+						color = 0xFFFF00;
 						if (this.mouseButtonClick != 0) {
 							this.mouseButtonClick = 0;
 							this.inputX_Action = InputXAction.ACT_0;
@@ -4784,7 +4784,7 @@ public final class mudclient implements Runnable {
 
 						this.getSurface().drawSprite(mudclient.spriteMedia + 12, var15 - (12 - width1 / 2),
 								y + height / 2 - 12);
-						this.getSurface().drawColoredStringCentered(width1 / 2 - 1 + var15, "" + npc.damageTaken, 16777215,
+						this.getSurface().drawColoredStringCentered(width1 / 2 - 1 + var15, "" + npc.damageTaken, 0xFFFFFF,
 								0, 3, 5 + y + height / 2);
 					}
 
@@ -4977,7 +4977,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawSprite(mudclient.spriteMedia + 11, width / 2 + var14 - 12,
 									height / 2 + (y - 12));
 							this.getSurface().drawColoredStringCentered(width / 2 + (var14 - 1), "" + player.damageTaken,
-									16777215, 0, 3, height / 2 + y + 5);
+									0xFFFFFF, 0, 3, height / 2 + y + 5);
 						}
 					}
 
@@ -5047,14 +5047,14 @@ public final class mudclient implements Runnable {
 					int var7 = 256 - var5 / 2;
 					int var8 = 180 - var6 / 2;
 					this.getSurface().drawBox(var7, var8, var5, var6, 0);
-					this.getSurface().drawBoxBorder(var7, var5, var8, var6, 16777215);
+					this.getSurface().drawBoxBorder(var7, var5, var8, var6, 0xFFFFFF);
 					this.getSurface().drawColoredStringCentered(256, "Enter the name of the player you wish to report:",
-							16776960, 0, 1, 5 + var8 + var3);
+							0xFFFF00, 0, 1, 5 + var8 + var3);
 					int var9 = var3 + 2;
-					this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 16777215, 0, 4,
+					this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4,
 							var4 + var8 + 5 + var9 + 3);
 					int var10 = var3 + var4 + 8 + var8 + var9 + 2;
-					int var11 = 16777215;
+					int var11 = 0xFFFFFF;
 					if (var2 > 0) {
 						String var12 = this.m_ue ? "[X]" : "[ ]";
 						if (var2 > 1) {
@@ -5071,27 +5071,27 @@ public final class mudclient implements Runnable {
 								this.mouseButtonClick = 0;
 							}
 
-							var11 = 16776960;
+							var11 = 0xFFFF00;
 						}
 
 						this.getSurface().drawColoredStringCentered(256, var12, var11, 0, 1, var10);
 						var10 += 10 + var3;
 					}
 
-					var11 = 16777215;
+					var11 = 0xFFFFFF;
 					if (this.mouseX > 210 && this.mouseX < 228 && var10 - var3 < this.mouseY && var10 > this.mouseY) {
 						if (this.mouseButtonClick != 0) {
 							this.inputTextFinal = this.inputTextCurrent;
 							this.mouseButtonClick = 0;
 						}
 
-						var11 = 16776960;
+						var11 = 0xFFFF00;
 					}
 
 					this.getSurface().drawString("OK", 210, var10, var11, 1);
-					var11 = 16777215;
+					var11 = 0xFFFFFF;
 					if (this.mouseX > 264 && this.mouseX < 304 && this.mouseY > var10 - var3 && var10 > this.mouseY) {
-						var11 = 16776960;
+						var11 = 0xFFFF00;
 						if (this.mouseButtonClick != 0) {
 							this.mouseButtonClick = 0;
 							this.reportAbuse_State = 0;
@@ -5147,12 +5147,12 @@ public final class mudclient implements Runnable {
 				}
 				if (this.panelSocialPopup_Mode == SocialPopupMode.ADD_FRIEND) {
 					this.getSurface().drawBox(106, y, 300, 70, 0);
-					this.getSurface().drawBoxBorder(106, 300, y, 70, 16777215);
+					this.getSurface().drawBoxBorder(106, 300, y, 70, 0xFFFFFF);
 					y += 20;
-					this.getSurface().drawColoredStringCentered(256, "Enter name to add to friends list", 16777215, 0, 4,
+					this.getSurface().drawColoredStringCentered(256, "Enter name to add to friends list", 0xFFFFFF, 0, 4,
 							y);
 					y += 20;
-					this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 16777215, 0, 4, y);
+					this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4, y);
 					String localKey = StringUtil.displayNameToKey(this.localPlayer.accountName);
 					if (null != localKey && this.inputTextFinal.length() > 0) {
 						String friend = this.inputTextFinal.trim();
@@ -5166,12 +5166,12 @@ public final class mudclient implements Runnable {
 				}
 				if (this.panelSocialPopup_Mode == SocialPopupMode.MESSAGE_FRIEND) {
 					this.getSurface().drawBox(6, y, 500, 70, 0);
-					this.getSurface().drawBoxBorder(6, 500, y, 70, 16777215);
+					this.getSurface().drawBoxBorder(6, 500, y, 70, 0xFFFFFF);
 					y += 20;
 					this.getSurface().drawColoredStringCentered(256, "Enter message to send to " + this.chatMessageTarget,
-							16777215, 0, 4, y);
+							0xFFFFFF, 0, 4, y);
 					y += 20;
-					this.getSurface().drawColoredStringCentered(256, this.chatMessageInput + "*", 16777215, 0, 4, y);
+					this.getSurface().drawColoredStringCentered(256, this.chatMessageInput + "*", 0xFFFFFF, 0, 4, y);
 					if (this.chatMessageInputCommit.length() > 0) {
 						String var3 = this.chatMessageInputCommit;
 						this.chatMessageInput = "";
@@ -5183,11 +5183,11 @@ public final class mudclient implements Runnable {
 
 				if (this.panelSocialPopup_Mode == SocialPopupMode.ADD_IGNORE) {
 					this.getSurface().drawBox(106, y, 300, 70, 0);
-					this.getSurface().drawBoxBorder(106, 300, y, 70, 16777215);
+					this.getSurface().drawBoxBorder(106, 300, y, 70, 0xFFFFFF);
 					y += 20;
-					this.getSurface().drawColoredStringCentered(256, "Enter name to add to ignore list", 16777215, 0, 4, y);
+					this.getSurface().drawColoredStringCentered(256, "Enter name to add to ignore list", 0xFFFFFF, 0, 4, y);
 					y += 20;
-					this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 16777215, 0, 4, y);
+					this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4, y);
 					String localKey = StringUtil.displayNameToKey(this.localPlayer.accountName);
 					if (localKey != null && this.inputTextFinal.length() > 0) {
 						String ignore = this.inputTextFinal.trim();
@@ -5200,9 +5200,9 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				int color = 16777215;
+				int color = 0xFFFFFF;
 				if (this.mouseX > x + 130 && this.mouseX < x + 170 && this.mouseY > y + 10 && this.mouseY < y + 28) {
-					color = 16776960;
+					color = 0xFFFF00;
 				}
 				this.getSurface().drawColoredStringCentered(256, "Cancel", color, 0, 1, y + 23);
 			} catch (RuntimeException var5) {
@@ -5227,7 +5227,7 @@ public final class mudclient implements Runnable {
 				}
 
 				if (type == 1) {
-					color = 16711680 + time * 1280;
+					color = 0xFF0000 + time * 1280;
 					this.getSurface().drawCircle(x + width / 2, y + height / 2, time + 10, color, alpha, -1057205208);
 				}
 
@@ -5258,8 +5258,8 @@ public final class mudclient implements Runnable {
 				int var4 = 10000536;
 				this.getSurface().drawBoxAlpha(var2, var3 + 16, 468, 246, var4, 160);
 				this.getSurface().drawColoredStringCentered(234 + var2,
-						"Please confirm your trade with @yel@" + this.tradeRecipientConfirmName, 16777215, 0, 1, var3 + 12);
-				this.getSurface().drawColoredStringCentered(var2 + 117, "You are about to give:", 16776960, 0, 1,
+						"Please confirm your trade with @yel@" + this.tradeRecipientConfirmName, 0xFFFFFF, 0, 1, var3 + 12);
+				this.getSurface().drawColoredStringCentered(var2 + 117, "You are about to give:", 0xFFFF00, 0, 1,
 						30 + var3);
 
 				int var5;
@@ -5270,14 +5270,14 @@ public final class mudclient implements Runnable {
 						var6 = var6 + " x " + StringUtil.formatItemCount(this.tradeConfirmItemsCount1[var5]);
 					}
 
-					this.getSurface().drawColoredStringCentered(var2 + 117, var6, 16777215, 0, 1, var5 * 12 + 42 + var3);
+					this.getSurface().drawColoredStringCentered(var2 + 117, var6, 0xFFFFFF, 0, 1, var5 * 12 + 42 + var3);
 				}
 
 				if (this.tradeConfirmItemsCount == 0) {
-					this.getSurface().drawColoredStringCentered(var2 + 117, "Nothing!", 16777215, 0, 1, 42 + var3);
+					this.getSurface().drawColoredStringCentered(var2 + 117, "Nothing!", 0xFFFFFF, 0, 1, 42 + var3);
 				}
 
-				this.getSurface().drawColoredStringCentered(351 + var2, "In return you will receive:", 16776960, 0, 1,
+				this.getSurface().drawColoredStringCentered(351 + var2, "In return you will receive:", 0xFFFF00, 0, 1,
 						30 + var3);
 
 				for (var5 = 0; var5 < this.tradeRecipientConfirmItemsCount; ++var5) {
@@ -5286,21 +5286,21 @@ public final class mudclient implements Runnable {
 						var6 = var6 + " x " + StringUtil.formatItemCount(this.tradeRecipientConfirmItemCount[var5]);
 					}
 
-					this.getSurface().drawColoredStringCentered(351 + var2, var6, 16777215, 0, 1, 42 + var3 + var5 * 12);
+					this.getSurface().drawColoredStringCentered(351 + var2, var6, 0xFFFFFF, 0, 1, 42 + var3 + var5 * 12);
 				}
 
 				if (this.tradeRecipientConfirmItemsCount == 0) {
-					this.getSurface().drawColoredStringCentered(351 + var2, "Nothing!", 16777215, 0, 1, var3 + 42);
+					this.getSurface().drawColoredStringCentered(351 + var2, "Nothing!", 0xFFFFFF, 0, 1, var3 + 42);
 				}
 
 				this.getSurface().drawColoredStringCentered(var2 + 234, "Are you sure you want to do this?", '\uffff', 0, 4,
 						200 + var3);
 				this.getSurface().drawColoredStringCentered(var2 + 234,
-						"There is NO WAY to reverse a trade if you change your mind.", 16777215, 0, 1, var3 + 215);
+						"There is NO WAY to reverse a trade if you change your mind.", 0xFFFFFF, 0, 1, var3 + 215);
 				this.getSurface().drawColoredStringCentered(234 + var2, "Remember that not all players are trustworthy",
-						16777215, 0, 1, var3 + 230);
+						0xFFFFFF, 0, 1, var3 + 230);
 				if (this.tradeConfirmAccepted) {
-					this.getSurface().drawColoredStringCentered(234 + var2, "Waiting for other player...", 16776960, 0, 1,
+					this.getSurface().drawColoredStringCentered(234 + var2, "Waiting for other player...", 0xFFFF00, 0, 1,
 							250 + var3);
 				} else {
 					this.getSurface().drawSprite(mudclient.spriteMedia + 25, var2 - 35 + 118, 238 + var3);
@@ -5608,12 +5608,12 @@ public final class mudclient implements Runnable {
 					/*if (ANDROID_BUILD && SHOWING_KEYBOARD) {
 						String var11 = this.panelMessageTabs.getControlText(this.panelMessageEntry);
 						int var3 = 45;
-						this.getSurface().drawBoxBorder(106, 300, var3, 50, 16777215);
+						this.getSurface().drawBoxBorder(106, 300, var3, 50, 0xFFFFFF);
 						this.getSurface().drawBoxAlpha(106, var3, 300, 50, 0, 128);
 						var3 += 20;
-						this.getSurface().drawColoredStringCentered(256, "Enter chat message", 16777215, 0, 4, var3);
+						this.getSurface().drawColoredStringCentered(256, "Enter chat message", 0xFFFFFF, 0, 4, var3);
 						var3 += 20;
-						this.getSurface().drawColoredStringCentered(256, var11 + "*", 16777215, 0, 4, var3);
+						this.getSurface().drawColoredStringCentered(256, var11 + "*", 0xFFFFFF, 0, 4, var3);
 					}*/
 					if (this.optionsMenuShow) {
 						this.drawDialogOptionsMenu(-312);
@@ -5935,50 +5935,50 @@ public final class mudclient implements Runnable {
 									}
 								} else if (id == 3) { // NPC Right Click Menu
 									String var11 = "";
-									int var12 = -1;
+									int levelDifference = 0;
 									int var13 = this.npcs[var9].npcId;
 									if (EntityHandler.getNpcDef(var13).isAttackable()) {
-										int var14 = (EntityHandler.getNpcDef(var13).getStr()
+										int npcLevel = (EntityHandler.getNpcDef(var13).getStr()
 												+ EntityHandler.getNpcDef(var13).getAtt()
 												+ EntityHandler.getNpcDef(var13).getDef()
 												+ EntityHandler.getNpcDef(var13).getHits()) / 4;
-										int var15 = (this.playerStatBase[3] + this.playerStatBase[2]
+										int playerLevel = (this.playerStatBase[3] + this.playerStatBase[2]
 												+ this.playerStatBase[1] + this.playerStatBase[0] + 27) / 4;
 										var11 = "@yel@";
-										var12 = var15 - var14;
-										if (var12 < 0) {
+										levelDifference = playerLevel - npcLevel;
+										if (levelDifference < 0) {
 											var11 = "@or1@";
 										}
 
-										if (var12 < -3) {
+										if (levelDifference < -3) {
 											var11 = "@or2@";
 										}
 
-										if (var12 < -6) {
+										if (levelDifference < -6) {
 											var11 = "@or3@";
 										}
 
-										if (var12 < -9) {
+										if (levelDifference < -9) {
 											var11 = "@red@";
 										}
 
-										if (var12 > 0) {
+										if (levelDifference > 0) {
 											var11 = "@gr1@";
 										}
 
-										if (var12 > 3) {
+										if (levelDifference > 3) {
 											var11 = "@gr2@";
 										}
 
-										if (var12 > 6) {
+										if (levelDifference > 6) {
 											var11 = "@gr3@";
 										}
 
-										if (var12 > 9) {
+										if (levelDifference > 9) {
 											var11 = "@gre@";
 										}
 
-										var11 = " " + var11 + "(level-" + var14 + ")";
+										var11 = " " + var11 + "(level-" + npcLevel + ")";
 									}
 
 									if (this.selectedSpell >= 0) {
@@ -5992,7 +5992,7 @@ public final class mudclient implements Runnable {
 									} else if (this.selectedItemInventoryIndex < 0) {
 										if (EntityHandler.getNpcDef(var13).isAttackable()) {
 											this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-													var12 >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
+													levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
 															"Attack",
 															"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
 															+ var11);
@@ -6092,7 +6092,7 @@ public final class mudclient implements Runnable {
 					var5 = var3 + var4 % 5 * 49;
 					id = var4 / 5 * 34 + 36;
 					if (this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
-						this.getSurface().drawBoxAlpha(var5, id, 49, 34, 16711680, 128);
+						this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
 					} else {
 						this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
 					}
@@ -6111,7 +6111,7 @@ public final class mudclient implements Runnable {
 						}
 						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
 							this.getSurface().drawString("" + formatStackAmount(this.inventoryItemSize[var4]), 1 + var5,
-									id + 10, 16776960, 1);
+									id + 10, 0xFFFF00, 1);
 						}
 					}
 				}
@@ -6413,13 +6413,13 @@ public final class mudclient implements Runnable {
 						}
 					}
 
-					this.getSurface().drawColoredStringCentered(var5 / 2 + var3, "Click a name to send a message", 16777215,
+					this.getSurface().drawColoredStringCentered(var5 / 2 + var3, "Click a name to send a message", 0xFFFFFF,
 							0, 1, 35 + var4);
 					if (var3 < this.mouseX && this.mouseX < var3 + var5 && this.mouseY > var6 + (var4 - 16)
 							&& this.mouseY < var6 + var4) {
-						var17 = 16776960;
+						var17 = 0xFFFF00;
 					} else {
-						var17 = 16777215;
+						var17 = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(var5 / 2 + var3, "Click here to add a friend", var17, 0, 1,
@@ -6436,13 +6436,13 @@ public final class mudclient implements Runnable {
 						}
 					}
 
-					this.getSurface().drawColoredStringCentered(var3 + var5 / 2, "Blocking messages from:", 16777215, 0, 1,
+					this.getSurface().drawColoredStringCentered(var3 + var5 / 2, "Blocking messages from:", 0xFFFFFF, 0, 1,
 							35 + var4);
 					if (this.mouseX > var3 && var3 + var5 > this.mouseX && var6 + var4 - 16 < this.mouseY
 							&& var6 + var4 > this.mouseY) {
-						var17 = 16776960;
+						var17 = 0xFFFF00;
 					} else {
-						var17 = 16777215;
+						var17 = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(var5 / 2 + var3, "Click here to add a name", var17, 0, 1,
@@ -6577,8 +6577,8 @@ public final class mudclient implements Runnable {
 						}
 					}
 				}
-			} catch (RuntimeException var14) {
-				throw GenUtil.makeThrowable(var14, "client.VD(" + var1 + ',' + var2 + ')');
+			} catch (RuntimeException npcLevel) {
+				throw GenUtil.makeThrowable(npcLevel, "client.VD(" + var1 + ',' + var2 + ')');
 			}
 		}
 
@@ -6647,9 +6647,9 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString(
 									"Level " + EntityHandler.getSpellDef(var10).getReqLevel() + ": "
 											+ EntityHandler.getSpellDef(var10).getName(),
-											2 + var3, var4 + 124, 16776960, 1);
+											2 + var3, var4 + 124, 0xFFFF00, 1);
 							this.getSurface().drawString(EntityHandler.getSpellDef(var10).getDescription(), 2 + var3,
-									136 + var4, 16777215, 0);
+									136 + var4, 0xFFFFFF, 0);
 							var18 = 0;
 							for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(var10).getRunesRequired()) {
 								var12 = e.getKey();
@@ -6663,7 +6663,7 @@ public final class mudclient implements Runnable {
 									var15 = "@gre@";
 								}
 								this.getSurface().drawString(var15 + var13 + "/" + var14, 2 + var3 + var18 * 44, var4 + 150,
-										16777215, 1);
+										0xFFFFFF, 1);
 								var18++;
 							}
 						} else {
@@ -6701,9 +6701,9 @@ public final class mudclient implements Runnable {
 							.drawColoredStringCentered(var3 + var5 / 2,
 									"Level " + EntityHandler.getPrayerDef(var10).getReqLevel() + ": "
 											+ EntityHandler.getPrayerDef(var10).getName(),
-											16776960, 0, 1, var4 + 130);
+											0xFFFF00, 0, 1, var4 + 130);
 							this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
-									EntityHandler.getPrayerDef(var10).getDescription(), 16777215, 0, 0, 145 + var4);
+									EntityHandler.getPrayerDef(var10).getDescription(), 0xFFFFFF, 0, 0, 145 + var4);
 							this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
 									"Drain rate: " + EntityHandler.getPrayerDef(var10).getDrainRate(), 0, 0, 1, 160 + var4);
 						}
@@ -6840,7 +6840,7 @@ public final class mudclient implements Runnable {
 										mZ = var6 * 3 * (64 + this.tileSize * this.groundItemZ[var13] - this.localPlayer.currentZ) / 2048;
 										var12 = var11 * mX + var10 * mZ >> 18;
 									mZ = var11 * mZ - mX * var10 >> 18;
-									this.drawMinimapEntity(16711680, var3 - (-(var4 / 2) - var12), (byte) -53, var5 / 2 + 36 - mZ);
+									this.drawMinimapEntity(0xFF0000, var3 - (-(var4 / 2) - var12), (byte) -53, var5 / 2 + 36 - mZ);
 									}
 
 									RSCharacter var14;
@@ -6850,7 +6850,7 @@ public final class mudclient implements Runnable {
 										mX = (var14.currentX - this.localPlayer.currentX) * var6 * 3 / 2048;
 										var12 = mZ * var10 + mX * var11 >> 18;
 										mZ = var11 * mZ - mX * var10 >> 18;
-										this.drawMinimapEntity(16776960, var4 / 2 + var3 + var12, (byte) -93, var5 / 2 - mZ + 36);
+										this.drawMinimapEntity(0xFFFF00, var4 / 2 + var3 + var12, (byte) -93, var5 / 2 - mZ + 36);
 									}
 
 									for (var13 = 0; this.playerCount > var13; ++var13) {
@@ -6859,7 +6859,7 @@ public final class mudclient implements Runnable {
 										mZ = var6 * (var14.currentZ - this.localPlayer.currentZ) * 3 / 2048;
 										var12 = mX * var11 + var10 * mZ >> 18;
 										mZ = var11 * mZ - mX * var10 >> 18;
-										int var15 = 16777215;
+										int var15 = 0xFFFFFF;
 										String var16 = StringUtil.displayNameToKey(var14.accountName);
 										if (null != var16) {
 											for (int var17 = 0; var17 < SocialLists.friendListCount; ++var17) {
@@ -6881,7 +6881,7 @@ public final class mudclient implements Runnable {
 										this.drawMinimapEntity(var15, var12 + var3 + var4 / 2, (byte) -67, 36 - mZ + var5 / 2);
 									}
 
-									this.getSurface().drawCircle(var3 + var4 / 2, var5 / 2 + 36, 2, 16777215, 255, -1057205208);
+									this.getSurface().drawCircle(var3 + var4 / 2, var5 / 2 + 36, 2, 0xFFFFFF, 255, -1057205208);
 									this.getSurface().drawMinimapSprite(mudclient.spriteMedia + 24, 55, var3 + 19, 842218000, 128,
 											255 & this.cameraRotation + 128);
 									this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
@@ -7089,44 +7089,44 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawString("Privacy settings", 3 + var3, var7, 0, 1);
 			var7 += 15;
 			if (this.settingsBlockChat != 0) {
-				this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 16777215, 1);
+				this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + var3, var7, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 16777215, 1);
+				this.getSurface().drawString("Block chat messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
 			}
 
 			var7 += 15;
 			if (this.settingsBlockPrivate == 0) {
-				this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 16777215, 1);
+				this.getSurface().drawString("Block private messages: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 16777215, 1);
+				this.getSurface().drawString("Block private messages: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
 			}
 
 			var7 += 15;
 
 			if (Config.S_WANT_GLOBAL_CHAT) {
 				if (this.settingsBlockGlobal == 1) {
-					this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 16777215, 1);
+					this.getSurface().drawString("Block global messages: @red@None", 3 + var3, var7, 0xFFFFFF, 1);
 				} else if(this.settingsBlockGlobal == 2) {
-					this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 16777215, 1);
+					this.getSurface().drawString("Block global messages: @gre@All", var3 + 3, var7, 0xFFFFFF, 1);
 				} else if(this.settingsBlockGlobal == 3) {
-					this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 16777215, 1);
+					this.getSurface().drawString("Block global messages: @or1@Pking", var3 + 3, var7, 0xFFFFFF, 1);
 				} else if(this.settingsBlockGlobal == 4) {
-					this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 16777215, 1);
+					this.getSurface().drawString("Block global messages: @gr1@General", var3 + 3, var7, 0xFFFFFF, 1);
 				}
 				var7 += 15;
 			}
 
 			if (this.settingsBlockTrade != 0) {
-				this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
+				this.getSurface().drawString("Block trade requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 16777215, 1);
+				this.getSurface().drawString("Block trade requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
 			}
 
 			var7 += 15;
 			if (this.settingsBlockDuel != 0) {
-				this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 16777215, 1);
+				this.getSurface().drawString("Block duel requests: @gre@<on>", var3 + 3, var7, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 16777215, 1);
+				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + var3, var7, 0xFFFFFF, 1);
 			}
 
 			if(Config.S_WANT_CLANS) {
@@ -7136,38 +7136,38 @@ public final class mudclient implements Runnable {
 			if(Config.S_SHOW_FLOATING_NAMETAGS) {
 				var7 += 15;
 				if (!Config.C_NAME_CLAN_TAG_OVERLAY) {
-					this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 16777215, 1);
+					this.getSurface().drawString("Name and Clan Tag - @red@<off>", var6, var7, 0xFFFFFF, 1);
 				} else {
-					this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 16777215, 1);
+					this.getSurface().drawString("Name and Clan Tag - @gre@<on>", var6, var7, 0xFFFFFF, 1);
 				}
 			}
 
 			if(Config.S_WANT_CLANS) {
 				var7 += 15;
 				if (!this.clanInviteBlockSetting) {
-					this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 16777215, 1);
+					this.getSurface().drawString("Clan Invitation - @gre@Receive", var6, var7, 0xFFFFFF, 1);
 				} else {
-					this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 16777215, 1);
+					this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 0xFFFFFF, 1);
 				}
 			}
 
 			int var8;
 			if (this.insideTutorial) {
 				var7 += 123;
-				var8 = 16777215;
+				var8 = 0xFFFFFF;
 				if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 						&& this.mouseY < 4 + var7) {
-					var8 = 16776960;
+					var8 = 0xFFFF00;
 				}
 				this.getSurface().drawString("Skip the tutorial", var6, var7, var8, 1);
 			}
 
 			var7 = 275;
 			this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-			var8 = 16777215;
+			var8 = 0xFFFFFF;
 			var7 += 15;
 			if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-				var8 = 16776960;
+				var8 = 0xFFFF00;
 			}
 
 			this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
@@ -7326,19 +7326,19 @@ public final class mudclient implements Runnable {
 			var7 = 275;
 
 			if (Config.S_ITEMS_ON_DEATH_MENU) {
-				int onDeathColor = 16777215;
+				int onDeathColor = 0xFFFFFF;
 				if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-					onDeathColor = 16776960;
+					onDeathColor = 0xFFFF00;
 				}
 				this.getSurface().drawString("Items on death", var3 + 3, var7, onDeathColor, 1);
 			}
 			else
 				this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 
-			int var8 = 16777215;
+			int var8 = 0xFFFFFF;
 			var7 += 15;
 			if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-				var8 = 16776960;
+				var8 = 0xFFFF00;
 			}
 			this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
 
@@ -7382,10 +7382,10 @@ public final class mudclient implements Runnable {
 
 			var7 += 195;
 			this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
-			int var8 = 16777215;
+			int var8 = 0xFFFFFF;
 			var7 +=15;
 			if (var6 < this.mouseX && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY && this.mouseY < 4 + var7) {
-				var8 = 16776960;
+				var8 = 0xFFFF00;
 			}
 			this.getSurface().drawString("Click here to logout", var3 + 3, var7, var8, 1);
 
@@ -7946,129 +7946,130 @@ public final class mudclient implements Runnable {
 				this.surface.drawLineVert(var3 + var5 / 2, 0 + var4, 0, 24);
 				this.surface.drawColoredStringCentered(var5 / 4 + var3, "Stats", 0, 0, 4, var4 + 16);
 				this.surface.drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Quests", 0, 0, 4, var4 + 16);
-				int var15;
+				int heightMargin;
 
+				// Skills Menu
 				if (this.uiTabPlayerInfoSubTab == 0) {
-					byte var9 = 72;
-					this.getSurface().drawString("Skills", var3 + 5, var9, 16776960, 3);
-					int var10 = -1;
-					var15 = var9 + 13;
-					int var11 = 0, var12 = 0, totalXp = 0;
-					for (var11 = 0; var11 < 9; var11++) {
-						var12 = 16777215;
-						if (this.mouseX > 3 + var3 && var15 - 11 <= this.mouseY && 2 + var15 > this.mouseY
-								&& 90 + var3 > this.mouseX) {
-							var12 = 16711680;
-							var10 = var11;
+					byte y = 72;
+					this.getSurface().drawString("Skills", var3 + 5, y, 0xFFFF00, 3);
+					int currentlyHoveredSkill = -1;
+					heightMargin = y + 13;
+					int currSkill = 0, textColour = 0, totalXp = 0;
+					for (currSkill = 0; currSkill < 9; currSkill++) {
+						textColour = 0xFFFFFF;
+						if (this.mouseX > 3 + var3 && this.mouseY >= heightMargin - 11 && this.mouseY < 2 + heightMargin
+								&& this.mouseX < 90 + var3) {
+							textColour = 0xFF0000;
+							currentlyHoveredSkill = currSkill;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
 								if (doubleClick() && Config.S_WANT_SKILL_MENUS) {
-									setSkillGuideChosen(this.skillNameLong[var10]);
+									setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
 							}
 							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && Config.S_WANT_SKILL_MENUS) {
-								setSkillGuideChosen(this.skillNameLong[var10]);
+								setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
 							}
 						}
 
-						this.getSurface().drawString(this.getSkillNames()[var11] + ":@yel@" + this.playerStatCurrent[var11]
-								+ "/" + this.playerStatBase[var11], var3 + 5, var15, var12, 1);
-						var12 = 16777215;
-						if (this.mouseX >= var3 + 90 && this.mouseY >= var15 - 11 - 13 && var15 - 13 + 2 > this.mouseY
+						this.getSurface().drawString(this.getSkillNames()[currSkill] + ":@yel@" + this.playerStatCurrent[currSkill]
+								+ "/" + this.playerStatBase[currSkill], var3 + 5, heightMargin, textColour, 1);
+						textColour = 0xFFFFFF;
+						if (this.mouseX >= var3 + 90 && this.mouseY >= heightMargin - 11 - 13 && heightMargin - 13 + 2 > this.mouseY
 								&& this.mouseX < var3 + 196) {
-							var12 = 16711680;
-							var10 = 9 + var11;
+							textColour = 0xFF0000;
+							currentlyHoveredSkill = 9 + currSkill;
 							if (Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
 								if (doubleClick() && Config.S_WANT_SKILL_MENUS) {
-									setSkillGuideChosen(this.skillNameLong[var10]);
+									setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
 									skillGuideInterface.setVisible(true);
 									this.showUiTab = 0;
 								}
 							}
 							else if (!Config.isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && Config.S_WANT_SKILL_MENUS) {
-								setSkillGuideChosen(this.skillNameLong[var10]);
+								setSkillGuideChosen(this.skillNameLong[currentlyHoveredSkill]);
 								skillGuideInterface.setVisible(true);
 								this.showUiTab = 0;
 							}
 						}
 
-						this.getSurface().drawString(this.skillNames[9 + var11] + ":@yel@" + this.playerStatCurrent[9 + var11]
-								+ "/" + this.playerStatBase[9 + var11], var5 / 2 - 5 + var3, var15 - 13, var12, 1);
-						var15 += 13;
+						this.getSurface().drawString(this.skillNames[9 + currSkill] + ":@yel@" + this.playerStatCurrent[9 + currSkill]
+								+ "/" + this.playerStatBase[9 + currSkill], var5 / 2 - 5 + var3, heightMargin - 13, textColour, 1);
+						heightMargin += 13;
 					}
 
-					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, var3 - 5 + var5 / 2, var15 - 13, 16777215, 1);
-					var15 += 12;
-					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue * 100 / 750 + "%", 5 + var3, var15 - 13,
-							16777215, 1);
-					var15 += 8;
-					this.getSurface().drawString("Equipment Status", 5 + var3, var15, 16776960, 3);
-					var15 += 12;
+					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, var3 - 5 + var5 / 2, heightMargin - 13, 0xFFFFFF, 1);
+					heightMargin += 12;
+					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue * 100 / 750 + "%", 5 + var3, heightMargin - 13,
+							0xFFFFFF, 1);
+					heightMargin += 8;
+					this.getSurface().drawString("Equipment Status", 5 + var3, heightMargin, 0xFFFF00, 3);
+					heightMargin += 12;
 
-					for (var11 = 0; var11 < 3; ++var11) {
-						this.getSurface().drawString(this.equipmentStatNames[var11] + ":@yel@" + this.playerStatEquipment[var11],
-								5 + var3, var15, 16777215, 1);
-						if (2 > var11) {
+					for (currSkill = 0; currSkill < 3; ++currSkill) {
+						this.getSurface().drawString(this.equipmentStatNames[currSkill] + ":@yel@" + this.playerStatEquipment[currSkill],
+								5 + var3, heightMargin, 0xFFFFFF, 1);
+						if (2 > currSkill) {
 							this.getSurface().drawString(
-									this.equipmentStatNames[var11 + 3] + ":@yel@" + this.playerStatEquipment[3 + var11],
-									var5 / 2 + var3 + 25, var15, 16777215, 1);
+									this.equipmentStatNames[currSkill + 3] + ":@yel@" + this.playerStatEquipment[3 + currSkill],
+									var5 / 2 + var3 + 25, heightMargin, 0xFFFFFF, 1);
 						}
 
-						var15 += 13;
+						heightMargin += 13;
 					}
 
-					var15 += 6;
-					this.getSurface().drawLineHoriz(var3, var15 - 15, var5, 0);
-					if (var10 == -1) {
-						this.getSurface().drawString("Overall levels", var3 + 5, var15, 16776960, 1);
-						var15 += 12;
-						var11 = 0; totalXp = 0;
+					heightMargin += 6;
+					this.getSurface().drawLineHoriz(var3, heightMargin - 15, var5, 0);
+					if (currentlyHoveredSkill == -1) {
+						this.getSurface().drawString("Overall levels", var3 + 5, heightMargin, 0xFFFF00, 1);
+						heightMargin += 12;
+						int currSkillTotal = 0; totalXp = 0;
 
-						for (var12 = 0; var12 < 18; ++var12) {
-							totalXp += this.playerExperience[var12];
-							var11 += this.playerStatBase[var12];
+						for (currSkill = 0; currSkill < 18; ++currSkill) {
+							totalXp += this.playerExperience[currSkill];
+							currSkillTotal += this.playerStatBase[currSkill];
 						}
 
-						this.getSurface().drawString("Total xp: " + totalXp, 5 + var3, var15, 16777215, 1);
-						var15 += 12;
-						this.getSurface().drawString("Skill total: " + var11, 5 + var3, var15, 16777215, 1);
-						var15 += 12;
-						this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + var3, var15, 16777215, 1);
-						var15 += 12;
+						this.getSurface().drawString("Total xp: " + totalXp, 5 + var3, heightMargin, 0xFFFFFF, 1);
+						heightMargin += 12;
+						this.getSurface().drawString("Skill total: " + currSkillTotal, 5 + var3, heightMargin, 0xFFFFFF, 1);
+						heightMargin += 12;
+						this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + var3, heightMargin, 0xFFFFFF, 1);
+						heightMargin += 12;
 
 					} else {
-						this.getSurface().drawString(this.skillNameLong[var10] + " skill", 5 + var3, var15, 16776960, 1);
-						var15 += 12;
-						var11 = this.experienceArray[0];
+						this.getSurface().drawString(this.skillNameLong[currentlyHoveredSkill] + " skill", 5 + var3, heightMargin, 0xFFFF00, 1);
+						heightMargin += 12;
+						int nextLevelExp = this.experienceArray[0];
 
-						for (var12 = 0; var12 < 98; ++var12) {
-							if (this.experienceArray[var12] <= this.playerExperience[var10]) {
-								var11 = this.experienceArray[var12 + 1];
+						for (int currLevel = 0; currLevel < 98; ++currLevel) {
+							if (this.experienceArray[currLevel] <= this.playerExperience[currentlyHoveredSkill]) {
+								nextLevelExp = this.experienceArray[currLevel + 1];
 							}
 						}
 
-						this.getSurface().drawString("Total xp: " + this.playerExperience[var10], 5 + var3, var15, 16777215,
+						this.getSurface().drawString("Total xp: " + this.playerExperience[currentlyHoveredSkill], 5 + var3, heightMargin, 0xFFFFFF,
 								1);
-						var15 += 12;
-						this.getSurface().drawString("Next level at: " + var11, 5 + var3, var15, 16777215, 1);
-						var15 += 12;
-						this.getSurface().drawString("Xp to next level: " + (var11 - this.playerExperience[var10]), 5 + var3, var15, 16777215, 1);
+						heightMargin += 12;
+						this.getSurface().drawString("Next level at: " + nextLevelExp, 5 + var3, heightMargin, 0xFFFFFF, 1);
+						heightMargin += 12;
+						this.getSurface().drawString("Xp to next level: " + (nextLevelExp - this.playerExperience[currentlyHoveredSkill]), 5 + var3, heightMargin, 0xFFFFFF, 1);
 					}
 				}
 
 				if (this.uiTabPlayerInfoSubTab == 1) {
 					this.panelQuestInfo.clearList(this.controlQuestInfoPanel);
-					int index = 0;
+					int index = 0, questNum = 0;
 					this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
 							"@whi@Quest-list (green=completed)", 0, (String) null, (String) null);
-					for (var15 = 0; var15 < 50; ++var15) {
-						if (this.questNames[var15] != null) {
+					for (questNum = 0; questNum < 50; ++questNum) {
+						if (this.questNames[questNum] != null) {
 							this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
-									(questStages[var15] == 0 ? "@red@" : questStages[var15] > 0 ? "@yel@" : "@gre@")
-									+ this.questNames[var15],
+									(questStages[questNum] == 0 ? "@red@" : questStages[questNum] > 0 ? "@yel@" : "@gre@")
+									+ this.questNames[questNum],
 									0, (String) null, (String) null);
 						}
 					}
@@ -11795,27 +11796,27 @@ public final class mudclient implements Runnable {
 					}
 
 					this.getSurface().drawBox(31, 35, 450, 275, 0);
-					this.getSurface().drawBoxBorder(31, 450, 35, 275, 16777215);
+					this.getSurface().drawBoxBorder(31, 450, 35, 275, 0xFFFFFF);
 					byte var7 = 50;
 					this.getSurface().drawColoredStringCentered(256,
-							"This form is for reporting players who are breaking our rules", 16777215, 0, 1, var7);
+							"This form is for reporting players who are breaking our rules", 0xFFFFFF, 0, 1, var7);
 					var3 = var7 + 15;
 					this.getSurface().drawColoredStringCentered(256,
-							"Using it sends a snapshot of the last 60 seconds of activity to us", 16777215, 0, 1, var3);
+							"Using it sends a snapshot of the last 60 seconds of activity to us", 0xFFFFFF, 0, 1, var3);
 					var3 += 15;
 					this.getSurface().drawColoredStringCentered(256, "If you misuse this form, you will be banned.",
 							16744448, 0, 1, var3);
 					var3 += 15;
 					var3 += 10;
 					this.getSurface().drawColoredStringCentered(256,
-							"Click on the most suitable option from the Rules of RuneScape.", 16776960, 0, 1, var3);
+							"Click on the most suitable option from the Rules of RuneScape.", 0xFFFF00, 0, 1, var3);
 					var3 += 15;
 					this.getSurface().drawColoredStringCentered(256,
-							"This will send a report to our Player Support team for investigation.", 16776960, 0, 1, var3);
+							"This will send a report to our Player Support team for investigation.", 0xFFFF00, 0, 1, var3);
 					var3 += 18;
-					this.getSurface().drawColoredStringCentered(106, "Honour", 16711680, 0, 4, var3);
-					this.getSurface().drawColoredStringCentered(256, "Respect", 16711680, 0, 4, var3);
-					this.getSurface().drawColoredStringCentered(406, "Security", 16711680, 0, 4, var3);
+					this.getSurface().drawColoredStringCentered(106, "Honour", 0xFF0000, 0, 4, var3);
+					this.getSurface().drawColoredStringCentered(256, "Respect", 0xFF0000, 0, 4, var3);
+					this.getSurface().drawColoredStringCentered(406, "Security", 0xFF0000, 0, 4, var3);
 					var3 += 18;
 					if (this.reportAbuse_AbuseType == 1) {
 						this.getSurface().drawBox(36, var3 - 12, 140, 30, 3158064);
@@ -11835,19 +11836,19 @@ public final class mudclient implements Runnable {
 					if (this.reportAbuse_AbuseType == 1) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(106, "Buying or", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType == 7) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(256, "Seriously offensive", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 12) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -11855,21 +11856,21 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered(406, "Asking for or providing", color, 0, 0, var3);
 					var3 += 12;
 					if (this.reportAbuse_AbuseType != 1) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
 
 					this.getSurface().drawColoredStringCentered(106, "selling an account", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 7) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
 
 					this.getSurface().drawColoredStringCentered(256, "language", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 12) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -11894,19 +11895,19 @@ public final class mudclient implements Runnable {
 					if (this.reportAbuse_AbuseType == 2) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(106, "Encouraging rule-breaking", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType == 8) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(256, "Solicitation", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 13) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -11931,19 +11932,19 @@ public final class mudclient implements Runnable {
 					if (this.reportAbuse_AbuseType == 3) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(106, "Staff impersonation", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 9) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
 
 					this.getSurface().drawColoredStringCentered(256, "Disruptive behaviour", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 14) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -11961,7 +11962,7 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawBoxBorder(186, 140, var3 - 12, 18, 4210752);
 					if (this.reportAbuse_AbuseType != 4) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -11970,7 +11971,7 @@ public final class mudclient implements Runnable {
 					if (this.reportAbuse_AbuseType == 10) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(256, "Offensive account name", color, 0, 0, var3);
@@ -11988,12 +11989,12 @@ public final class mudclient implements Runnable {
 					if (this.reportAbuse_AbuseType == 5) {
 						color = 16744448;
 					} else {
-						color = 16777215;
+						color = 0xFFFFFF;
 					}
 
 					this.getSurface().drawColoredStringCentered(106, "Scamming", color, 0, 0, var3);
 					if (this.reportAbuse_AbuseType != 11) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -12006,7 +12007,7 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawBoxBorder(36, 140, var3 - 12, 18, 4210752);
 					if (this.reportAbuse_AbuseType != 6) {
-						color = 16777215;
+						color = 0xFFFFFF;
 					} else {
 						color = 16744448;
 					}
@@ -12014,9 +12015,9 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered(106, "Exploiting a bug", color, 0, 0, var3);
 					var3 += 18;
 					var3 += 15;
-					color = 16777215;
+					color = 0xFFFFFF;
 					if (this.mouseX > 196 && this.mouseX < 316 && this.mouseY > var3 - 15 && this.mouseY < 5 + var3) {
-						color = 16776960;
+						color = 0xFFFF00;
 					}
 
 					this.getSurface().drawColoredStringCentered(256, "Click here to cancel", color, 0, 1, var3);
@@ -12325,7 +12326,7 @@ public final class mudclient implements Runnable {
 						this.world.playerAlive = true;
 						return false;
 					} else {
-						this.getSurface().drawColoredStringCentered(256, "Loading... Please wait", 16777215, 0, 1, 192);
+						this.getSurface().drawColoredStringCentered(256, "Loading... Please wait", 0xFFFFFF, 0, 1, 192);
 						this.drawChatMessageTabs(5);
 						// this.getSurface().draw(this.graphics, this.screenOffsetX,
 						// 256, this.screenOffsetY);
@@ -13474,13 +13475,13 @@ public final class mudclient implements Runnable {
 					this.errorLoadingData = true;
 				} else {
 					RSBufferUtils.setStringEncryptor(RSBufferUtils.encryption);
-					int var10 = 0;
+					int experience = 0;
 
-					for (int var3 = 0; var3 < 99; ++var3) {
-						int var4 = 1 + var3;
-						int var5 = (int) (300.0D * Math.pow(2.0D, (double) var4 / 7.0D) + (double) var4);
-						var10 += var5;
-						this.experienceArray[var3] = FastMath.bitwiseAnd(var10, 268435452) / 4;
+					for (int i = 0; i < 99; ++i) {
+						int experienceFactor = 1 + i;
+						int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
+						experience += experienceIncrease;
+						this.experienceArray[i] = (int)((experience & 0xffffffc) / 4);
 					}
 
 					MiscFunctions.maxReadTries = 1000;

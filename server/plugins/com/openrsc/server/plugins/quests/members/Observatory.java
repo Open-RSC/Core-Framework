@@ -49,7 +49,7 @@ InvUseOnObjectExecutiveListener {
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 2 quest points!");
 		p.incQuestPoints(2);
-		p.incQuestExp(12, (p.getSkills().getMaxStat(12) * 100) + 250);
+		p.incQuestExp(12, (p.getSkills().getMaxStat(12) * 400) + 1000);
 		p.getCache().remove("keep_key_gate");
 	}
 
@@ -618,7 +618,7 @@ InvUseOnObjectExecutiveListener {
 		if(selectedNumber == 0) {
 			npcTalk(p, n, "Virgo the virtuous",
 					"you are granted an increase in defense");
-			p.incQuestExp(1, 875);
+			p.incQuestExp(1, p.getSkills().getMaxStat(1) * 100 + 500);
 			addItem(p, 160, 1);
 		} else if(selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
@@ -650,7 +650,7 @@ InvUseOnObjectExecutiveListener {
 		} else if(selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
 					"you are granted an increase in attack");
-			p.incQuestExp(0, 875);
+			p.incQuestExp(0, p.getSkills().getMaxStat(0) * 100 + 500);
 			addItem(p, 160, 1);
 		} else if(selectedNumber == 8) {
 			npcTalk(p, n, "Sagittarius the Centaur");
@@ -659,12 +659,12 @@ InvUseOnObjectExecutiveListener {
 		} else if(selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
 					"you are granted an increase in hits");
-			p.incQuestExp(3, 875);
+			p.incQuestExp(3, p.getSkills().getMaxStat(3) * 100 + 500);
 			addItem(p, 160, 1);
 		}  else if(selectedNumber == 10) {
 			npcTalk(p, n, "Capricorn the goat",
 					"you are granted an increase in strength");
-			p.incQuestExp(2, 875);
+			p.incQuestExp(2, p.getSkills().getMaxStat(2) * 100 + 500);
 			addItem(p, 160, 1);
 		} else if(selectedNumber == 11) {
 			npcTalk(p, n, "Cancer the crab");

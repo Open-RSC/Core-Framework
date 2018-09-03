@@ -1072,7 +1072,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 			p.message("@gre@You haved gained 1 quest point!");
 			p.incQuestPoints(1);
 			//THIEVING LEVEL
-			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 57 + 205);
+			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
 			p.message("ceril gives you 2000 gold coins");
 			addItem(p, 10, 2000);
 		} else if(p.getCache().hasKey("evil_side")) {
@@ -1081,7 +1081,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 			p.message("@gre@You haved gained 1 quest point!");
 			p.incQuestPoints(1);
 			// THIEVING LEVEL
-			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 57 + 205);
+			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
 			p.message("you have completed the hazeel cult quest");
 		}
 	}

@@ -98,8 +98,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		p.getCache().remove("openSpiderDoor");
 		p.getCache().remove("completeLever");
 		p.getCache().remove("killedLesarkus");
-		p.incQuestExp(RANGED, (p.getSkills().getMaxStat(RANGED) * 250) + 500);
-		p.incQuestExp(FLETCHING, (p.getSkills().getMaxStat(FLETCHING) * 250) + 500);
+		p.incQuestExp(RANGED, (p.getSkills().getMaxStat(RANGED) * 1000) + 2000);
+		p.incQuestExp(FLETCHING, (p.getSkills().getMaxStat(FLETCHING) * 1000) + 2000);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.incQuestPoints(1);
 		p.message("Well done you have completed the temple of Ikov quest");

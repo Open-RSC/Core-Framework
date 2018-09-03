@@ -52,7 +52,7 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 		p.incQuestPoints(1);
 		p.message("Well done you have completed the tribal totem quest");
 		p.message("@gre@You haved gained 1 quest point!");
-		p.incQuestExp(17, (75 * p.getSkills().getMaxStat(17)) + 200); // THIEVING XP.
+		p.incQuestExp(17, (300 * p.getSkills().getMaxStat(17)) + 800); // THIEVING XP.
 
 	}
 

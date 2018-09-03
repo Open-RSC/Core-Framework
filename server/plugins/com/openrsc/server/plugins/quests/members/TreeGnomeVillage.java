@@ -52,7 +52,7 @@ PlayerKilledNpcExecutiveListener {
 		p.message("Well done you have completed the treequest");
 		p.incQuestPoints(2);
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestExp(0, 6950 + 75 * p.getSkills().getMaxStat(0));
+		p.incQuestExp(0, 800 + 900 * p.getSkills().getMaxStat(0));
 		addItem(p, 744, 1);
 
 	}
