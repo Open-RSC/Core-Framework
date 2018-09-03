@@ -64,8 +64,8 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 		player.message("Well done you have completed the holy grail quest");
 		player.incQuestPoints(2);
 		player.message("@gre@You have gained 2 quest points!");
-		player.incQuestExp(5, (player.getSkills().getMaxStat(5) + 1) * 250);
-		player.incQuestExp(1, (player.getSkills().getMaxStat(1) + 1) * 300);
+		player.incQuestExp(5, (player.getSkills().getMaxStat(5) + 1) * 1000);
+		player.incQuestExp(1, (player.getSkills().getMaxStat(1) + 1) * 1200);
 	}
 
 	/**

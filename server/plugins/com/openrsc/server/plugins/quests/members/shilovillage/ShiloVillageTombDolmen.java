@@ -61,7 +61,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 		player.message("You gain some experience in crafting.");
 		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(CRAFTING, (player.getSkills().getMaxStat(CRAFTING) + 1) * 125);
+		player.incQuestExp(CRAFTING, (player.getSkills().getMaxStat(CRAFTING) + 1) * 500);
 	}
 
 	@Override
