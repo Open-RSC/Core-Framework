@@ -5935,50 +5935,50 @@ public final class mudclient implements Runnable {
 									}
 								} else if (id == 3) { // NPC Right Click Menu
 									String var11 = "";
-									int var12 = -1;
+									int levelDifference = 0;
 									int var13 = this.npcs[var9].npcId;
 									if (EntityHandler.getNpcDef(var13).isAttackable()) {
-										int var14 = (EntityHandler.getNpcDef(var13).getStr()
+										int npcLevel = (EntityHandler.getNpcDef(var13).getStr()
 												+ EntityHandler.getNpcDef(var13).getAtt()
 												+ EntityHandler.getNpcDef(var13).getDef()
 												+ EntityHandler.getNpcDef(var13).getHits()) / 4;
-										int var15 = (this.playerStatBase[3] + this.playerStatBase[2]
+										int playerLevel = (this.playerStatBase[3] + this.playerStatBase[2]
 												+ this.playerStatBase[1] + this.playerStatBase[0] + 27) / 4;
 										var11 = "@yel@";
-										var12 = var15 - var14;
-										if (var12 < 0) {
+										levelDifference = playerLevel - npcLevel;
+										if (levelDifference < 0) {
 											var11 = "@or1@";
 										}
 
-										if (var12 < -3) {
+										if (levelDifference < -3) {
 											var11 = "@or2@";
 										}
 
-										if (var12 < -6) {
+										if (levelDifference < -6) {
 											var11 = "@or3@";
 										}
 
-										if (var12 < -9) {
+										if (levelDifference < -9) {
 											var11 = "@red@";
 										}
 
-										if (var12 > 0) {
+										if (levelDifference > 0) {
 											var11 = "@gr1@";
 										}
 
-										if (var12 > 3) {
+										if (levelDifference > 3) {
 											var11 = "@gr2@";
 										}
 
-										if (var12 > 6) {
+										if (levelDifference > 6) {
 											var11 = "@gr3@";
 										}
 
-										if (var12 > 9) {
+										if (levelDifference > 9) {
 											var11 = "@gre@";
 										}
 
-										var11 = " " + var11 + "(level-" + var14 + ")";
+										var11 = " " + var11 + "(level-" + npcLevel + ")";
 									}
 
 									if (this.selectedSpell >= 0) {
@@ -5992,7 +5992,7 @@ public final class mudclient implements Runnable {
 									} else if (this.selectedItemInventoryIndex < 0) {
 										if (EntityHandler.getNpcDef(var13).isAttackable()) {
 											this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-													var12 >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
+													levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
 															"Attack",
 															"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
 															+ var11);
@@ -6577,8 +6577,8 @@ public final class mudclient implements Runnable {
 						}
 					}
 				}
-			} catch (RuntimeException var14) {
-				throw GenUtil.makeThrowable(var14, "client.VD(" + var1 + ',' + var2 + ')');
+			} catch (RuntimeException npcLevel) {
+				throw GenUtil.makeThrowable(npcLevel, "client.VD(" + var1 + ',' + var2 + ')');
 			}
 		}
 
@@ -13474,13 +13474,13 @@ public final class mudclient implements Runnable {
 					this.errorLoadingData = true;
 				} else {
 					RSBufferUtils.setStringEncryptor(RSBufferUtils.encryption);
-					int var10 = 0;
+					int experience = 0;
 
-					for (int var3 = 0; var3 < 99; ++var3) {
-						int var4 = 1 + var3;
-						int var5 = (int) (300.0D * Math.pow(2.0D, (double) var4 / 7.0D) + (double) var4);
-						var10 += var5;
-						this.experienceArray[var3] = FastMath.bitwiseAnd(var10, 268435452) / 4;
+					for (int i = 0; i < 99; ++i) {
+						int experienceFactor = 1 + i;
+						int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
+						experience += experienceIncrease;
+						this.experienceArray[i] = experience & 0xffffffc;
 					}
 
 					MiscFunctions.maxReadTries = 1000;

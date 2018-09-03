@@ -227,7 +227,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	private void skillReward(Player p, Npc n, int skill) {
-		p.incQuestExp(skill, (p.getSkills().getLevel(skill) + 1) * 150);
+		p.incQuestExp(skill, (p.getSkills().getLevel(skill) + 1) * 600);
 		updateRewardClaimCount(p);
 		p.message("You receive some training and increase experience to your " + Skills.SKILL_NAME[skill] + ".");
 		if(getRewardClaimCount(p) == 0) {

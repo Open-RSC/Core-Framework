@@ -94,8 +94,8 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 		player.message("Congratulations, you have finished the digsite quest");
 		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(MINING, 300 * (player.getSkills().getLevel(MINING) + 1));
-		player.incQuestExp(HERBLAW, 125 * (player.getSkills().getLevel(HERBLAW) + 1));
+		player.incQuestExp(MINING, 1200 * (player.getSkills().getLevel(MINING) + 1));
+		player.incQuestExp(HERBLAW, 500 * (player.getSkills().getLevel(HERBLAW) + 1));
 		player.getCache().remove("winch_rope_2");
 		player.getCache().remove("winch_rope_1");
 		player.getCache().remove("digsite_winshaft");

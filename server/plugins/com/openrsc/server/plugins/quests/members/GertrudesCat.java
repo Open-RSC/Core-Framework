@@ -59,7 +59,7 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 
 	@Override
 	public void handleReward(final Player p) {
-		p.incQuestExp(COOKING, p.getSkills().getMaxStat(COOKING) * 45 + 175);
+		p.incQuestExp(COOKING, p.getSkills().getMaxStat(COOKING) * 180 + 700);
 		p.incQuestPoints(1);
 		p.message("@gre@You have gained 1 quest point!");
 		p.message("well done, you have completed gertrudes cat quest");

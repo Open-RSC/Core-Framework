@@ -108,9 +108,9 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	@Override
 	public void handleReward(Player p) {
 		p.message("well done you have completed the grand tree quest");
-		p.incQuestExp(16, (300 * p.getSkills().getMaxStat(16)) + 400); // AGILITY
-		p.incQuestExp(6, (50 * p.getSkills().getMaxStat(6)) + 150); // MAGIC
-		p.incQuestExp(0, (300 * p.getSkills().getMaxStat(0)) + 400); // ATTACK
+		p.incQuestExp(16, (1200 * p.getSkills().getMaxStat(16)) + 1600); // AGILITY
+		p.incQuestExp(6, (200 * p.getSkills().getMaxStat(6)) + 600); // MAGIC
+		p.incQuestExp(0, (1200 * p.getSkills().getMaxStat(0)) + 1600); // ATTACK
 		p.message("@gre@You haved gained 5 quest points!");
 		p.incQuestPoints(5);
 	}

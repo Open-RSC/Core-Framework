@@ -52,7 +52,7 @@ public class KnightsSword implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the knight's sword quest");
-		player.incQuestExp(13, player.getSkills().getMaxStat(13) * 375 + 350);
+		player.incQuestExp(13, player.getSkills().getMaxStat(13) * 1500 + 1400);
 		player.incQuestPoints(QUEST_POINTS);
 		player.message("@gre@You have gained 1 quest point!");
 	}
