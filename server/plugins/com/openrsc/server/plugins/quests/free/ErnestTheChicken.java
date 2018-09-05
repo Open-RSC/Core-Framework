@@ -120,7 +120,7 @@ InvUseOnObjectExecutiveListener {
 	public void handleReward(Player p) {
 		p.getInventory().add(new Item(10, 300));
 		p.message("Well done. You have completed the Ernest the chicken quest");
-		p.message("@gre@You have gained 4 quest points!");
+		p.message("@gre@You haved gained 4 quest points!");
 		p.incQuestPoints(4);
 	}
 

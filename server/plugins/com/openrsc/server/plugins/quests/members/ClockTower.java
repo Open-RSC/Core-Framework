@@ -60,7 +60,7 @@ PickupExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.incQuestPoints(1);
-		p.message("@gre@You have gained 1 quest point!");
+		p.message("@gre@You haved gained 1 quest point!");
 		p.getCache().remove("rats_dead");
 		p.getCache().remove("1st_cog");
 		p.getCache().remove("2nd_cog");

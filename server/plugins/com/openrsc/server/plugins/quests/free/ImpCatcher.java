@@ -129,7 +129,7 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 		p.message("Well done. You have completed the Imp catcher quest");
 		p.incQuestExp(6, p.getSkills().getMaxStat(6) * 400 + 1500);
 		p.incQuestPoints(1);
-		p.message("@gre@You have gained 1 quest point!");
+		p.message("@gre@You haved gained 1 quest point!");
 
 	}
 

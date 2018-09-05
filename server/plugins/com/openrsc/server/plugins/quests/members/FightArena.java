@@ -51,7 +51,7 @@ PlayerKilledNpcExecutiveListener {
 				"you gain two quest points");
 		addItem(p, 10, 1000);
 		p.incQuestPoints(2);
-		p.message("@gre@You have gained 2 quest points!");
+		p.message("@gre@You haved gained 2 quest points!");
 		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 800 + 700);
 		p.incQuestExp(17, p.getSkills().getMaxStat(17) * 800 + 700);
 		p.getCache().remove("freed_servil");

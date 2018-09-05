@@ -159,7 +159,8 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			sleep(1200);
 			player.message("You start to feel sick");
 			break;
-		case 142:
+		case 246: // Half Wine
+		case 142: // Wine
 			showBubble(player, item);
 			player.playerServerMessage(MessageType.QUEST, "You drink the wine");
 			player.playerServerMessage(MessageType.QUEST, "It makes you feel a bit dizzy");

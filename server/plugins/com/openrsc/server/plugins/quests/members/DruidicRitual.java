@@ -47,7 +47,7 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the druidic ritual quest");
 		p.incQuestPoints(4);
-		p.message("@gre@You have gained 4 quest points!");
+		p.message("@gre@You haved gained 4 quest points!");
 		p.incQuestExp(15, 250);
 	}
 

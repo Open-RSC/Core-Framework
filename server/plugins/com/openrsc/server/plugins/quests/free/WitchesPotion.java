@@ -214,7 +214,7 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 		player.message("Well done you have completed the witches potion quest");
 		player.incQuestExp(6, 900 + 200 * player.getSkills().getMaxStat(6));
 		player.incQuestPoints(1);
-		player.message("@gre@You have gained 1 quest point!");
+		player.message("@gre@You haved gained 1 quest point!");
 
 	}
 
