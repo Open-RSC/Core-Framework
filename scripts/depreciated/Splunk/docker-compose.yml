@@ -1,0 +1,25 @@
+version: '3'
+
+volumes:
+    opt-splunk-etc:
+    opt-splunk-var:
+
+services:
+    splunk:
+        hostname: splunk
+        image: splunk/splunk:latest
+        environment:
+            SPLUNK_START_ARGS: --accept-license --answer-yes --seed-passwd defaultpassword
+            OPTIMISTIC_ABOUT_FILE_LOCKING: '1'
+            SPLUNK_ENABLE_LISTEN: 9997
+            SPLUNK_ADD: tcp 1514
+        ports:
+            - "8000:8000" #Splunk Web interface
+            - "9997:9997" #Splunk receiving Port (not used by default) typically used by the Splunk Universal Forwarder
+            - "8088:8088" #HTTP Event Collector
+            - "1514:1514" #Network Input (not used by default) typically used to collect syslog TCP data
+        volumes:
+            - "../:/home/Docker-Home"
+            - "../etc/logs/nginx:/home/nginx-logs"
+            - "./opt-splunk-etc:/opt/splunk/etc"
+            - "./opt-splunk-var:/opt/splunk/var"
