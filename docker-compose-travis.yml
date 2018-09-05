@@ -17,4 +17,4 @@ services:
             - "3306:3306"
         volumes:
             - "./data/db/mysql:/var/lib/mysql"
-            - "./etc/mariadb/innodb-fix.cnf:/etc/mysql/conf.d/innodb-fix.cnf"
+            - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf"
