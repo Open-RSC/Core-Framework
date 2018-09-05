@@ -11188,8 +11188,7 @@ public final class mudclient implements Runnable {
 													}
 
 													if (opcode != 123) { // Not ???
-														if (opcode == 159) { // Show Experience Notification
-															if (!Config.S_EXPERIENCE_DROPS_TOGGLE) return;
+														if (opcode == 159) { // Experience Updates & Notification
 															int skill = this.packetsIncoming.getUnsignedByte();
 															recentSkill = skill;
 															int oldXp = playerExperience[skill];
@@ -11209,7 +11208,7 @@ public final class mudclient implements Runnable {
 																this.totalXpGainedStartTime = System.currentTimeMillis();
 															}
 
-															if(Config.C_EXPERIENCE_DROPS) {
+															if(Config.S_EXPERIENCE_DROPS_TOGGLE && Config.C_EXPERIENCE_DROPS) {
 																if (receivedXp > 0) {
 																	xpNotifications.add(new XPNotification(skill, receivedXp, false));
 																}
