@@ -22,7 +22,7 @@ compile:
 	ant -f Launcher/build.xml jar
 
 import-game:
-	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < openrsc_game.sql
+	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < Databases/openrsc_game.sql
 
 run-game:
 	ant -f server/build.xml runservermembers
