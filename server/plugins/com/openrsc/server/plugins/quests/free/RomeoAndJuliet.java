@@ -277,7 +277,7 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.message("You have completed the quest of Romeo and Juliet");
 		player.incQuestPoints(5);
-		player.message("@gre@You have gained 5 quest points!");
+		player.message("@gre@You haved gained 5 quest points!");
 
 	}
 

@@ -70,7 +70,7 @@ InvUseOnObjectExecutiveListener {
 	public void handleReward(Player p) {
 		p.message("well done, you have completed the Plaguesheep quest");
 		p.incQuestPoints(4);
-		p.message("@gre@You have gained 4 quest points!");
+		p.message("@gre@You haved gained 4 quest points!");
 		addItem(p, 10, 3100);
 	}
 

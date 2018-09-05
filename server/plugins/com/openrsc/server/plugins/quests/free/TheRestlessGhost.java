@@ -366,7 +366,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 		player.message("You have completed the restless ghost quest");
 		player.incQuestExp(5, player.getSkills().getMaxStat(5) * 250 + 2000);
 		player.incQuestPoints(1);
-		player.message("@gre@You have gained 1 quest point!");
+		player.message("@gre@You haved gained 1 quest point!");
 
 	}
 

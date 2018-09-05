@@ -246,7 +246,7 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 		addItem(p, 10, 2500);
 		p.message("Well done. You have completed the Black Knights Fortress quest");
 		p.incQuestPoints(3);
-		p.message("@gre@You have gained 3 quest points!");
+		p.message("@gre@You haved gained 3 quest points!");
 	}
 
 	@Override
