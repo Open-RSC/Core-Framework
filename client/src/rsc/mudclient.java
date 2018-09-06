@@ -856,9 +856,9 @@ public final class mudclient implements Runnable {
 
 		private boolean welcomeScreenShown = false;
 
-		private int welcomeUnreadMessages = 0;
-		private int welcomeSubscriptionDaysLeft = 0;
-		private int welcomePremiumDaysLeft = 0;
+		//private int welcomeUnreadMessages = 0;
+		//private int welcomeSubscriptionDaysLeft = 0;
+		//private int welcomePremiumDaysLeft = 0;
 		private World world;
 
 		public World getWorld() {
@@ -3479,13 +3479,13 @@ public final class mudclient implements Runnable {
 			try {
 
 				int var2 = 65;
-				if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
+				/*if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
 					var2 += 30;
-				}
+				}*/
 
-				if (this.welcomeUnreadMessages > 0) {
+				/*if (this.welcomeUnreadMessages > 0) {
 					var2 += 30;
-				}
+				}*/
 
 				if (!this.welcomeLastLoggedInIp.equalsIgnoreCase("0.0.0.0")) {
 					var2 += 45;
@@ -3522,7 +3522,7 @@ public final class mudclient implements Runnable {
 					var3 += 15;
 				}
 
-				if (this.welcomeUnreadMessages > 0) {
+				/*if (this.welcomeUnreadMessages > 0) {
 					if (this.welcomeUnreadMessages == 1) {
 						this.getSurface().drawColoredStringCentered(xr + 256 - 56,
 								"You have @yel@0@whi@ unread messages in your message-centre", 0xFFFFFF, 0, 1, var3);
@@ -3536,9 +3536,9 @@ public final class mudclient implements Runnable {
 
 					var3 += 15;
 					var3 += 15;
-				}
+				}*/
 
-				if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
+				/*if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
 					if(this.welcomeSubscriptionDaysLeft > 0) {
 						this.getSurface().drawColoredStringCentered((this.welcomePremiumDaysLeft > 0 ? xr + 156 - 56 : xr + 256 - 56),
 								"Standard subscription: @yel@" + welcomeSubscriptionDaysLeft + " @whi@days", 0xFFFFFF,
@@ -3551,7 +3551,7 @@ public final class mudclient implements Runnable {
 					}
 					var3 += 15;
 					var3 += 15;
-				}
+				}*/
 
 				int var5 = 0xFFFFFF;
 				if(Config.isAndroid()) {
@@ -11280,12 +11280,12 @@ public final class mudclient implements Runnable {
 																				.readString();
 																		this.welcomeLastLoggedInDays = this.packetsIncoming
 																				.getShort();
-																		this.welcomeSubscriptionDaysLeft = this.packetsIncoming
-																				.getShort();
-																		this.welcomePremiumDaysLeft = this.packetsIncoming
-																				.getShort();
-																		this.welcomeUnreadMessages = this.packetsIncoming
-																				.getShort();
+																		//this.welcomeSubscriptionDaysLeft = this.packetsIncoming
+																		//		.getShort();
+																		//this.welcomePremiumDaysLeft = this.packetsIncoming
+																		//		.getShort();
+																		//this.welcomeUnreadMessages = this.packetsIncoming
+																		//		.getShort();
 																		this.showDialogMessage = true;
 																		this.welcomeLastLoggedInHost = null;
 																		this.welcomeScreenShown = true;

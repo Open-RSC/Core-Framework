@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Aug 24, 2018 at 02:04 PM
--- Server version: 10.1.35-MariaDB
+-- Generation Time: Sep 06, 2018 at 02:56 AM
+-- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic
 -- PHP Version: 7.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -27,624 +27,6 @@ USE `openrsc_game`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bans`
---
-
-DROP TABLE IF EXISTS `bans`;
-CREATE TABLE IF NOT EXISTS `bans` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `username` varchar(200) DEFAULT NULL,
-  `ip` varchar(255) DEFAULT NULL,
-  `email` varchar(80) DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
-  `expire` int(10) UNSIGNED DEFAULT NULL,
-  `ban_creator` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `bans_username_idx` (`username`(25))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `categories`
---
-
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `cat_name` varchar(80) NOT NULL DEFAULT 'New Category',
-  `disp_position` int(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `categories`
---
-
-INSERT INTO `categories` (`id`, `cat_name`, `disp_position`) VALUES
-(8, 'General', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `censoring`
---
-
-DROP TABLE IF EXISTS `censoring`;
-CREATE TABLE IF NOT EXISTS `censoring` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `search_for` varchar(60) NOT NULL DEFAULT '',
-  `replace_with` varchar(60) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `comments`
---
-
-DROP TABLE IF EXISTS `comments`;
-CREATE TABLE IF NOT EXISTS `comments` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `commenter` varchar(200) NOT NULL DEFAULT '',
-  `commenter_id` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `commenter_ip` varchar(39) DEFAULT NULL,
-  `commenter_email` varchar(80) DEFAULT NULL,
-  `message` mediumtext,
-  `admin_note` mediumtext,
-  `hide_smilies` tinyint(1) NOT NULL DEFAULT '0',
-  `commented` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `edited` int(10) UNSIGNED DEFAULT NULL,
-  `edited_by` varchar(200) DEFAULT NULL,
-  `thread_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `marked` tinyint(1) NOT NULL DEFAULT '0',
-  `soft` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `comments_thread_id_idx` (`thread_id`),
-  KEY `comments_multi_idx` (`commenter_id`,`thread_id`),
-  KEY `commented` (`commented`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `comments`
---
-
-INSERT INTO `comments` (`id`, `commenter`, `commenter_id`, `commenter_ip`, `commenter_email`, `message`, `admin_note`, `hide_smilies`, `commented`, `edited`, `edited_by`, `thread_id`, `marked`, `soft`) VALUES
-(2, 'Marwolf', 2, '127.0.0.1', NULL, 'This has been made possible thanks to those who released the openrsc source. I have been working hard to clean it up and update a whole lot of things.', NULL, 0, 1527784187, NULL, NULL, 19, 0, 0),
-(3, 'Marwolf', 2, '127.0.0.1', NULL, 'Hey everyone!', NULL, 0, 1527784708, NULL, NULL, 20, 0, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `config`
---
-
-DROP TABLE IF EXISTS `config`;
-CREATE TABLE IF NOT EXISTS `config` (
-  `conf_name` varchar(255) NOT NULL DEFAULT '',
-  `conf_value` text,
-  PRIMARY KEY (`conf_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `config`
---
-
-INSERT INTO `config` (`conf_name`, `conf_value`) VALUES
-('o_cur_version', '2.0.7'),
-('o_core_version', '2.0.5771'),
-('o_code_name', 'Emerald'),
-('o_database_revision', '91.26'),
-('o_searchindex_revision', '2.0'),
-('o_parser_revision', '11.4.2'),
-('o_board_title', 'Open RSC'),
-('o_board_slogan', 'A RuneScape Classic Private Server based on RSCL'),
-('o_board_description', ''),
-('o_board_tags', 'runescape classic,rsc'),
-('o_timezone', 'America/New_York'),
-('o_time_format', 'H:i'),
-('o_date_format', 'j M Y'),
-('o_timeout_visit', '1800'),
-('o_timeout_online', '300'),
-('o_show_user_info', '1'),
-('o_show_comment_count', '1'),
-('o_signatures', '1'),
-('o_smilies_sig', '1'),
-('o_make_links', '1'),
-('o_default_lang', 'English'),
-('o_default_style', 'openrsc'),
-('o_default_user_group', '4'),
-('o_disp_threads', '30'),
-('o_disp_comments', '20'),
-('o_indent_num_spaces', '4'),
-('o_quote_depth', '3'),
-('o_allow_center', '1'),
-('o_allow_size', '1'),
-('o_allow_spoiler', '1'),
-('o_users_online', '1'),
-('o_censoring', '1'),
-('o_ranks', '1'),
-('o_has_commented', '1'),
-('o_thread_views', '1'),
-('o_gzip', '1'),
-('o_report_method', '0'),
-('o_regs_report', '0'),
-('o_default_email_setting', '1'),
-('o_mailing_list', 'cleako@gmail.com'),
-('o_avatars', '1'),
-('o_avatars_dir', 'img/avatars'),
-('o_avatars_width', '250'),
-('o_avatars_height', '250'),
-('o_avatars_size', '250000'),
-('o_search_all_forums', '1'),
-('o_base_url', 'http://localhost'),
-('o_admin_email', 'cleako@gmail.com'),
-('o_webmaster_email', 'cleako@gmail.com'),
-('o_forum_subscriptions', '1'),
-('o_thread_subscriptions', '1'),
-('recaptcha_secret_key', '6Lc2tAgUAAAAAD1UAHTe5p-a5K4OxoYnDtOB0jw9'),
-('o_allow_advanced_editor', '0'),
-('o_allow_dialog_editor', '0'),
-('o_first_run_backstage', '1'),
-('o_smtp_host', 'smtp.gmail.com'),
-('o_smtp_user', 'cleako@gmail.com'),
-('o_smtp_pass', NULL),
-('o_smtp_ssl', '1'),
-('o_regs_allow', '1'),
-('o_regs_verify', '0'),
-('o_enable_advanced_search', '1'),
-('o_announcement', '0'),
-('o_announcement_message', 'Enter your announcement here.'),
-('o_announcement_title', '<b>Announcement</b>'),
-('o_announcement_type', 'default'),
-('o_rules', '0'),
-('o_rules_message', 'Rules'),
-('o_maintenance', '0'),
-('o_maintenance_message', '<font color=\"black\">Open RSC is temporarily down for maintenance. Please try again in a few minutes.</font>'),
-('o_feed_type', '2'),
-('o_feed_ttl', '5'),
-('o_cookie_bar', '0'),
-('o_cookie_bar_url', 'http://getluna.org/docs/cookies.php'),
-('o_moderated_by', '1'),
-('o_admin_note', 'Needed to insert this into the database to correct a SQL issue with boards being displayed:\r\n\r\nSET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,&#039;ONLY_FULL_GROUP_BY&#039;,&#039;&#039;));'),
-('o_enable_inbox', '1'),
-('o_message_per_page', '10'),
-('o_max_receivers', '5'),
-('o_inbox_notification', '0'),
-('o_emoji', '1'),
-('o_emoji_size', '16'),
-('o_back_to_top', '1'),
-('o_show_copyright', '0'),
-('o_copyright_type', '0'),
-('o_custom_copyright', NULL),
-('o_header_search', '1'),
-('o_board_statistics', '1'),
-('o_notification_flyout', '1'),
-('recaptcha_site_key', '6Lc2tAgUAAAAAKiW5FtVpH4u9Ueqw42IFuL1n2Dg'),
-('o_message_img_tag', '1'),
-('o_message_all_caps', '1'),
-('o_subject_all_caps', '1'),
-('o_sig_all_caps', '0'),
-('o_sig_img_tag', '1'),
-('o_sig_length', '400'),
-('o_sig_lines', '4'),
-('o_allow_banned_email', '1'),
-('o_allow_dupe_email', '1'),
-('o_force_guest_email', '1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forums`
---
-
-DROP TABLE IF EXISTS `forums`;
-CREATE TABLE IF NOT EXISTS `forums` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `forum_name` varchar(80) NOT NULL DEFAULT 'New forum',
-  `forum_desc` text,
-  `moderators` text,
-  `num_threads` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
-  `num_comments` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
-  `last_comment` int(10) UNSIGNED DEFAULT NULL,
-  `last_comment_id` int(10) UNSIGNED DEFAULT NULL,
-  `last_commenter_id` int(10) DEFAULT NULL,
-  `sort_by` tinyint(1) NOT NULL DEFAULT '0',
-  `disp_position` int(10) NOT NULL DEFAULT '0',
-  `cat_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `color` varchar(25) NOT NULL DEFAULT '#2788cb',
-  `parent_id` int(11) DEFAULT '0',
-  `solved` tinyint(1) NOT NULL DEFAULT '1',
-  `icon` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `forums`
---
-
-INSERT INTO `forums` (`id`, `forum_name`, `forum_desc`, `moderators`, `num_threads`, `num_comments`, `last_comment`, `last_comment_id`, `last_commenter_id`, `sort_by`, `disp_position`, `cat_id`, `color`, `parent_id`, `solved`, `icon`) VALUES
-(16, 'Development News and Updates', NULL, NULL, 1, 1, 1527784187, 2, 2, 0, 0, 8, '#2788cb', 0, 1, ''),
-(17, 'The Pub', 'Talk about anything you want here', NULL, 1, 1, 1527784708, 3, 2, 0, 0, 8, '#2788cb', 0, 1, ''),
-(18, 'Development Requests', 'Ask for features here', NULL, 0, 0, NULL, NULL, NULL, 0, 0, 8, '#2788cb', 0, 1, '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forum_perms`
---
-
-DROP TABLE IF EXISTS `forum_perms`;
-CREATE TABLE IF NOT EXISTS `forum_perms` (
-  `group_id` int(10) NOT NULL DEFAULT '0',
-  `forum_id` int(10) NOT NULL DEFAULT '0',
-  `read_forum` tinyint(1) NOT NULL DEFAULT '1',
-  `comment` tinyint(1) NOT NULL DEFAULT '1',
-  `create_threads` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`group_id`,`forum_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `forum_perms`
---
-
-INSERT INTO `forum_perms` (`group_id`, `forum_id`, `read_forum`, `comment`, `create_threads`) VALUES
-(2, 16, 1, 1, 0),
-(4, 16, 1, 1, 0),
-(9, 16, 1, 1, 0),
-(10, 16, 1, 1, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forum_subscriptions`
---
-
-DROP TABLE IF EXISTS `forum_subscriptions`;
-CREATE TABLE IF NOT EXISTS `forum_subscriptions` (
-  `user_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `forum_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`,`forum_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `forum_subscriptions`
---
-
-INSERT INTO `forum_subscriptions` (`user_id`, `forum_id`) VALUES
-(2, 7);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `groups`
---
-
-DROP TABLE IF EXISTS `groups`;
-CREATE TABLE IF NOT EXISTS `groups` (
-  `g_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `g_title` varchar(50) NOT NULL DEFAULT '',
-  `g_user_title` varchar(50) DEFAULT NULL,
-  `g_moderator` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_edit_users` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_rename_users` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_change_passwords` tinyint(1) NOT NULL DEFAULT '0',
-  `g_mod_ban_users` tinyint(1) NOT NULL DEFAULT '0',
-  `g_read_board` tinyint(1) NOT NULL DEFAULT '1',
-  `g_view_users` tinyint(1) NOT NULL DEFAULT '1',
-  `g_comment` tinyint(1) NOT NULL DEFAULT '1',
-  `g_create_threads` tinyint(1) NOT NULL DEFAULT '1',
-  `g_edit_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `g_delete_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `g_delete_threads` tinyint(1) NOT NULL DEFAULT '1',
-  `g_set_title` tinyint(1) NOT NULL DEFAULT '1',
-  `g_search` tinyint(1) NOT NULL DEFAULT '1',
-  `g_search_users` tinyint(1) NOT NULL DEFAULT '1',
-  `g_send_email` tinyint(1) NOT NULL DEFAULT '1',
-  `g_comment_flood` smallint(6) NOT NULL DEFAULT '30',
-  `g_search_flood` smallint(6) NOT NULL DEFAULT '30',
-  `g_email_flood` smallint(6) NOT NULL DEFAULT '60',
-  `g_inbox` tinyint(1) NOT NULL DEFAULT '1',
-  `g_inbox_limit` int(11) NOT NULL DEFAULT '20',
-  `g_report_flood` smallint(6) NOT NULL DEFAULT '60',
-  `g_soft_delete_view` tinyint(1) NOT NULL DEFAULT '1',
-  `g_soft_delete_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `g_soft_delete_threads` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`g_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `groups`
---
-
-INSERT INTO `groups` (`g_id`, `g_title`, `g_user_title`, `g_moderator`, `g_mod_edit_users`, `g_mod_rename_users`, `g_mod_change_passwords`, `g_mod_ban_users`, `g_read_board`, `g_view_users`, `g_comment`, `g_create_threads`, `g_edit_comments`, `g_delete_comments`, `g_delete_threads`, `g_set_title`, `g_search`, `g_search_users`, `g_send_email`, `g_comment_flood`, `g_search_flood`, `g_email_flood`, `g_inbox`, `g_inbox_limit`, `g_report_flood`, `g_soft_delete_view`, `g_soft_delete_comments`, `g_soft_delete_threads`) VALUES
-(1, 'Administrators', 'Administrator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 20, 0, 1, 1, 1),
-(2, 'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 20, 0, 1, 1, 1),
-(3, 'Guests', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 60, 30, 0, 1, 20, 0, 0, 0, 0),
-(4, 'Members', 'Member', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 1, 20, 60, 0, 0, 0),
-(9, 'Subscribers', 'Subscriber', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 1, 20, 60, 0, 0, 0),
-(10, 'Premium Subscribers', 'Premium Subscriber', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 1, 20, 60, 0, 0, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `guides`
---
-
-DROP TABLE IF EXISTS `guides`;
-CREATE TABLE IF NOT EXISTS `guides` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(80) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `type` tinyint(1) NOT NULL,
-  `difficulty` varchar(130) NOT NULL,
-  `start_location` varchar(255) NOT NULL,
-  `post` text NOT NULL,
-  `poster` varchar(12) NOT NULL,
-  `length` varchar(6) NOT NULL,
-  `quest_points` int(2) UNSIGNED NOT NULL,
-  `guide_type` varchar(6) NOT NULL,
-  `reqs` mediumtext,
-  `items_needed` mediumtext,
-  `rewards` mediumtext,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `guides`
---
-
-INSERT INTO `guides` (`id`, `title`, `description`, `type`, `difficulty`, `start_location`, `post`, `poster`, `length`, `quest_points`, `guide_type`, `reqs`, `items_needed`, `rewards`) VALUES
-(1, 'Black Knights\' Fortress', 'The Black Knights are up to no good. You are hired by the white knights to spy on them and destroy their secret weapon.', 0, '<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i>', 'Falador', 'hejhejhej', 'Imposter', 'Medium', 3, 'Free', NULL, NULL, '1 Quest Point\r\n2500 thieving xpf'),
-(2, 'Cook\'s Assistant', 'The Lumbridge Castle cook is in a mess. It is the Duke of Lumbridge\'s birthday and the cook is making the cake. He needs a lot of ingredients and doesn\'t have much time.', 0, '<i class=\'fa fa-star\'></i>', 'Lumbridge', 'Speak with the Cook on Lumbridge Castle\'s first floor. He will tell the player that he needs ingredients to make a cake for the Duke of Lumbridge\'s birthday. He wants the player to retrieve flour, milk, and an egg, and to bring those items back to him. Before you set off and collect your ingredients, pick up the pot that\'s sitting nearby on a table, which you will need later. You\'ll also want to purchase a bucket from the nearby General Store.\r\n\r\n[b]Obtaining milk[/b]\r\nTo obtain milk, you simply have to use a bucket on a Cow. A bucket item spawn point can be found inside the chicken farm across the river north-west of Lumbridge, or you can simply purchase one from the General Store north of the castle. Cows can be found by following the path that leads north-west out of Lumbridge.\r\n[center][img]http://vignette1.wikia.nocookie.net/runescapeclassic/images/9/9a/IngredientLocationsForCooksQuest.png/revision/latest/scale-to-width-down/180?cb=20110818225925[/img][/center]\r\n\r\n[b]Obtaining flour[/b]\r\nBefore doing anything, make sure you have a pot in your inventory. Now, to obtain flour, follow the path that leads north-west out of Lumbridge. Go past the chicken farm and you\'ll see a field of wheat. Right-click on one and pick it, you\'ll obtain grain. Now, go into the windmill beside the field and go to the top floor. Use the grain on the hopper, and then operate the operate. The grain will go down the chute to the bottom of the windmill, so head there. At the bottom, you should see a pile of flour in the centre of the room. Simply use your pot on the pile of flour, and you now have flour in your inventory.\r\n\r\n[b]Obtaining an egg[/b]\r\nEggs can be found to the north-east of Lumbridge. Cross the bridge going across river and follow the path north. After a little while, you will come across a chicken farm on the west side of the path. Beside the little coup is a single egg item spawn. Pick it up, and if you now have all the items the cook needs, head back to him. The map is incorrect, the egg is located in the coop right next to where you get the bucket of milk from the cows.\r\n\r\n[b]The End[/b]\r\nOnce you have all three ingredients, speak to the cook in the castle. He\'ll take the ingredients and thank you for helping him, completing one of the easiest quests in the game.\r\n\r\n[b]Rewards[/b]\r\n[list]\r\n[*]1 Quest Point[/*]\r\n[*]Cooking experience[/*]\r\n[*]Access to the Cook\'s Range in Lumbridge Castle[/*]\r\n[/list]', 'Imposter', 'Short', 1, 'Free', 'None', '<img src=\"img/items/22.png\" data-toggle=\"tooltip\" title=\"Milk\"><img src=\"img/items/136.png\" data-toggle=\"tooltip\" title=\"Flour\"><img src=\"img/items/19.png\" data-toggle=\"tooltip\" title=\"Egg\"> (These items are obtained during the quest)', NULL),
-(3, 'Demon Slayer', 'A mighty demon is being summoned to destroy the city of Varrock. You are the one destined to stop him (or at least try).', 0, '<i class=\'fa fa-star\'></i><i class=\'fa fa-star\'></i>', 'Varrock Square', 'Talk to the Gypsy in Varrock Square and have her predict your future for 1 coin. She will tell you that 150 years ago a demon named Delrith came to Varrock, but was quarantined by a hero named Wally who defeated him with a special sword named Silverlight and trapped him away. The Gypsy says that Darkwizards at the stone circle south of Varrock\'s are trying to resurrect him. She tells you that you are destined to kill the demon again using Silverlight which has been passed down to Sir Prysin, a knight in Varrock Palace.', 'Davve', 'Medium', 3, 'Free', NULL, NULL, NULL),
-(4, 'Starting the Game', 'Are you having trouble starting Open RSC?', 1, '<i class=\'fa fa-star\'></i>', 'NULL', 'Hello we are a legacy.', 'Imposter', 'Short', 0, 'Free', NULL, NULL, NULL),
-(5, 'Create Your Character', 'Create your character on Open RSC and begin your adventure!', 1, '<i class=\'fa fa-star\'></i>', 'NULL', 'We are creating a char yes?', 'Imposter', 'Short', 0, 'Free', NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hof_categories`
---
-
-DROP TABLE IF EXISTS `hof_categories`;
-CREATE TABLE IF NOT EXISTS `hof_categories` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `hof_name` varchar(80) NOT NULL DEFAULT 'New Hof Category',
-  `hof_position` int(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `hof_categories`
---
-
-INSERT INTO `hof_categories` (`id`, `hof_name`, `hof_position`) VALUES
-(1, 'Quests', 0),
-(2, 'NPC Kills', 0),
-(3, 'Drops', 0),
-(4, 'Achievement Diary', 0),
-(5, 'Skills', 0),
-(6, 'Capes', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hof_entrys`
---
-
-DROP TABLE IF EXISTS `hof_entrys`;
-CREATE TABLE IF NOT EXISTS `hof_entrys` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `accomplishment` varchar(60) NOT NULL,
-  `category` tinyint(1) UNSIGNED NOT NULL,
-  `username` varchar(12) DEFAULT NULL,
-  `time` varchar(8) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `hof_entrys`
---
-
-INSERT INTO `hof_entrys` (`id`, `accomplishment`, `category`, `username`, `time`) VALUES
-(7, 'First player to complete all quests', 1, 'Imposter', '18/11/16'),
-(8, 'First player to complete all F2P quests', 1, '-', '-'),
-(9, 'First player to pick up a Rune Large Helmet', 3, 'Mud', '16/11/16'),
-(10, 'First player to get 99 Fishing level', 5, '-', '-'),
-(11, 'First player who completed Dragon Slayer', 1, '-', '-'),
-(12, 'First to loot Rune Long Sword', 3, '-', '-'),
-(14, 'First player to get Fishing Cape', 6, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `menu`
---
-
-DROP TABLE IF EXISTS `menu`;
-CREATE TABLE IF NOT EXISTS `menu` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `url` varchar(200) NOT NULL DEFAULT '',
-  `name` varchar(200) NOT NULL DEFAULT '',
-  `disp_position` int(10) NOT NULL DEFAULT '0',
-  `visible` int(10) NOT NULL DEFAULT '1',
-  `sys_entry` int(10) DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `menu`
---
-
-INSERT INTO `menu` (`id`, `url`, `name`, `disp_position`, `visible`, `sys_entry`) VALUES
-(1, 'index.php', 'Index', 1, 1, 1),
-(2, 'userlist.php', 'Users', 2, 1, 1),
-(3, 'search.php', 'Search', 3, 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `messages`
---
-
-DROP TABLE IF EXISTS `messages`;
-CREATE TABLE IF NOT EXISTS `messages` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `shared_id` int(10) NOT NULL DEFAULT '0',
-  `last_shared_id` int(10) NOT NULL DEFAULT '0',
-  `last_comment` int(10) DEFAULT '0',
-  `last_comment_id` int(10) DEFAULT '0',
-  `last_commenter` varchar(255) NOT NULL DEFAULT '0',
-  `owner` int(11) NOT NULL DEFAULT '0',
-  `subject` varchar(255) NOT NULL,
-  `message` mediumtext NOT NULL,
-  `hide_smilies` tinyint(1) NOT NULL DEFAULT '0',
-  `show_message` tinyint(1) NOT NULL DEFAULT '0',
-  `sender` varchar(200) NOT NULL,
-  `receiver` varchar(200) DEFAULT NULL,
-  `sender_id` int(10) NOT NULL DEFAULT '0',
-  `receiver_id` varchar(255) DEFAULT '0',
-  `sender_ip` varchar(39) DEFAULT NULL,
-  `commented` int(10) NOT NULL,
-  `showed` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `notifications`
---
-
-DROP TABLE IF EXISTS `notifications`;
-CREATE TABLE IF NOT EXISTS `notifications` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) NOT NULL DEFAULT '0',
-  `message` varchar(255) NOT NULL DEFAULT '0',
-  `icon` varchar(255) NOT NULL DEFAULT '0',
-  `link` varchar(255) NOT NULL DEFAULT '0',
-  `time` int(11) NOT NULL DEFAULT '0',
-  `viewed` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `online`
---
-
-DROP TABLE IF EXISTS `online`;
-CREATE TABLE IF NOT EXISTS `online` (
-  `user_id` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `ident` varchar(200) NOT NULL DEFAULT '',
-  `logged` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `idle` tinyint(1) NOT NULL DEFAULT '0',
-  `last_comment` int(10) UNSIGNED DEFAULT NULL,
-  `last_search` int(10) UNSIGNED DEFAULT NULL,
-  UNIQUE KEY `online_user_id_ident_idx` (`user_id`,`ident`(25)),
-  KEY `online_ident_idx` (`ident`(25)),
-  KEY `online_logged_idx` (`logged`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `polls`
---
-
-DROP TABLE IF EXISTS `polls`;
-CREATE TABLE IF NOT EXISTS `polls` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `started_by` int(5) UNSIGNED NOT NULL,
-  `started_when` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `question` varchar(140) NOT NULL,
-  `poll_closed` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `option_1` varchar(140) NOT NULL,
-  `option_2` varchar(140) NOT NULL,
-  `option_3` varchar(140) NOT NULL,
-  `option_4` varchar(140) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `polls`
---
-
-INSERT INTO `polls` (`id`, `started_by`, `started_when`, `question`, `poll_closed`, `option_1`, `option_2`, `option_3`, `option_4`) VALUES
-(1, 2, 1490528282, 'The closest server to real RSC?', 1, 'Open RSC', '???', '', '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `poll_results`
---
-
-DROP TABLE IF EXISTS `poll_results`;
-CREATE TABLE IF NOT EXISTS `poll_results` (
-  `primary_id` int(10) NOT NULL AUTO_INCREMENT,
-  `poll_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `user` int(5) UNSIGNED NOT NULL,
-  `user_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
-  `option_selected` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`primary_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `poll_results`
---
-
-INSERT INTO `poll_results` (`primary_id`, `poll_id`, `user`, `user_ip`, `option_selected`) VALUES
-(7, 1, 2, '::1', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ranks`
---
-
-DROP TABLE IF EXISTS `ranks`;
-CREATE TABLE IF NOT EXISTS `ranks` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `rank` varchar(50) NOT NULL DEFAULT '',
-  `min_comments` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `ranks`
---
-
-INSERT INTO `ranks` (`id`, `rank`, `min_comments`) VALUES
-(1, 'New member', 0),
-(2, 'Member', 10);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reports`
---
-
-DROP TABLE IF EXISTS `reports`;
-CREATE TABLE IF NOT EXISTS `reports` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `comment_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `thread_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `forum_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `reported_by` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `created` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `message` text,
-  `zapped` int(10) UNSIGNED DEFAULT NULL,
-  `zapped_by` int(10) UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `reports_zapped_idx` (`zapped`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `openrsc_achievements`
 --
 
@@ -654,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_achievements` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `extra` varchar(255) DEFAULT NULL,
-  `added` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `added` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
@@ -701,8 +83,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_achievement_status` (
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   `id` int(10) UNSIGNED NOT NULL,
   `playerID` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `unlocked` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `unlocked` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`dbid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=799 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -738,9 +120,9 @@ CREATE TABLE IF NOT EXISTS `openrsc_auctions` (
   `seller` int(10) UNSIGNED NOT NULL,
   `seller_username` varchar(12) NOT NULL,
   `buyer_info` text NOT NULL,
-  `sold-out` tinyint(4) NOT NULL DEFAULT '0',
+  `sold-out` tinyint(4) NOT NULL DEFAULT 0,
   `time` varchar(255) NOT NULL DEFAULT '0',
-  `was_cancel` tinyint(1) NOT NULL DEFAULT '0',
+  `was_cancel` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`auctionID`),
   KEY `auctionID` (`auctionID`),
   KEY `itemID` (`itemID`),
@@ -758,33 +140,11 @@ DROP TABLE IF EXISTS `openrsc_bank`;
 CREATE TABLE IF NOT EXISTS `openrsc_bank` (
   `playerID` int(10) UNSIGNED NOT NULL,
   `id` int(10) UNSIGNED NOT NULL,
-  `amount` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `slot` int(5) UNSIGNED NOT NULL DEFAULT '0',
+  `amount` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `slot` int(5) UNSIGNED NOT NULL DEFAULT 0,
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `openrsc_bank`
---
-
-INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`, `slot`, `dbid`) VALUES
-(2, 87, 2, 0, 1),
-(2, 166, 2, 1, 2),
-(2, 132, 2, 2, 3),
-(2, 70, 1, 3, 4),
-(2, 108, 1, 4, 5),
-(2, 117, 1, 5, 6),
-(2, 206, 1, 6, 7),
-(2, 4, 1, 7, 8),
-(2, 376, 1, 8, 9),
-(2, 156, 1, 9, 10),
-(2, 33, 12, 10, 11),
-(2, 35, 8, 11, 12),
-(2, 32, 3, 12, 13),
-(2, 34, 2, 13, 14),
-(2, 36, 1, 14, 15),
-(2, 1263, 1, 15, 16);
 
 -- --------------------------------------------------------
 
@@ -797,24 +157,11 @@ CREATE TABLE IF NOT EXISTS `openrsc_chat_logs` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `sender` varchar(12) NOT NULL,
   `message` varchar(255) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `time` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `time` (`time`),
   KEY `sender` (`sender`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `openrsc_chat_logs`
---
-
-INSERT INTO `openrsc_chat_logs` (`id`, `sender`, `message`, `time`) VALUES
-(1, 'Wolf', 'D ', 1527971815),
-(2, 'Wolf', 'D ', 1527971817),
-(3, 'Wolf', 'A ', 1527971818),
-(4, 'Wolf', 'Wolf', 1527971820),
-(5, 'Wolf', 'We;;f icl', 1527971821),
-(6, 'Wolf', 'hi ', 1527971822),
-(7, 'Marwolf', 'K', 1527971912);
 
 -- --------------------------------------------------------
 
@@ -828,13 +175,13 @@ CREATE TABLE IF NOT EXISTS `openrsc_clan` (
   `name` varchar(16) NOT NULL,
   `tag` varchar(5) NOT NULL,
   `leader` varchar(12) NOT NULL,
-  `kick_setting` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-  `invite_setting` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-  `allow_search_join` tinyint(1) UNSIGNED NOT NULL DEFAULT '2',
-  `matches_won` mediumint(5) UNSIGNED NOT NULL DEFAULT '0',
-  `matches_lost` mediumint(5) UNSIGNED NOT NULL DEFAULT '0',
-  `clan_points` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `bank_size` mediumint(5) UNSIGNED NOT NULL DEFAULT '10',
+  `kick_setting` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `invite_setting` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `allow_search_join` tinyint(1) UNSIGNED NOT NULL DEFAULT 2,
+  `matches_won` mediumint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `matches_lost` mediumint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `clan_points` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `bank_size` mediumint(5) UNSIGNED NOT NULL DEFAULT 10,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -850,8 +197,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_clan_players` (
   `clan_id` int(10) UNSIGNED NOT NULL,
   `username` varchar(12) NOT NULL,
   `rank` tinyint(1) UNSIGNED NOT NULL,
-  `kills` mediumint(5) UNSIGNED NOT NULL DEFAULT '0',
-  `deaths` mediumint(5) UNSIGNED NOT NULL DEFAULT '0',
+  `kills` mediumint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `deaths` mediumint(5) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -865,27 +212,27 @@ DROP TABLE IF EXISTS `openrsc_curstats`;
 CREATE TABLE IF NOT EXISTS `openrsc_curstats` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `playerID` int(10) UNSIGNED NOT NULL,
-  `cur_attack` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_defense` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_strength` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_hits` tinyint(3) UNSIGNED NOT NULL DEFAULT '10',
-  `cur_ranged` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_prayer` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_magic` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_cooking` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_woodcut` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_fletching` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_fishing` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_firemaking` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_crafting` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_smithing` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_mining` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_herblaw` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_agility` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `cur_thieving` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  `cur_attack` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_defense` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_strength` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_hits` tinyint(3) UNSIGNED NOT NULL DEFAULT 10,
+  `cur_ranged` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_prayer` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_magic` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_cooking` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_woodcut` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_fletching` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_fishing` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_firemaking` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_crafting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_smithing` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_mining` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_herblaw` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_agility` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `cur_thieving` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `playerID` (`playerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -897,27 +244,27 @@ DROP TABLE IF EXISTS `openrsc_experience`;
 CREATE TABLE IF NOT EXISTS `openrsc_experience` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `playerID` int(10) UNSIGNED NOT NULL,
-  `exp_attack` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_defense` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_strength` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_hits` int(9) UNSIGNED NOT NULL DEFAULT '4616',
-  `exp_ranged` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_prayer` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_magic` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_cooking` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_woodcut` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_fletching` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_fishing` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_firemaking` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_crafting` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_smithing` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_mining` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_herblaw` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_agility` int(9) UNSIGNED NOT NULL DEFAULT '0',
-  `exp_thieving` int(9) UNSIGNED NOT NULL DEFAULT '0',
+  `exp_attack` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_defense` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_strength` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_hits` int(9) UNSIGNED NOT NULL DEFAULT 4616,
+  `exp_ranged` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_prayer` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_magic` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_cooking` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_woodcut` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_fletching` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_fishing` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_firemaking` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_crafting` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_smithing` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_mining` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_herblaw` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_agility` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `exp_thieving` int(9) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `playerID` (`playerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -933,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_expired_auctions` (
   `item_amount` int(11) NOT NULL,
   `time` varchar(255) NOT NULL,
   `claim_time` varchar(255) NOT NULL DEFAULT '0',
-  `claimed` tinyint(1) NOT NULL DEFAULT '0',
+  `claimed` tinyint(1) NOT NULL DEFAULT 0,
   `explanation` varchar(255) NOT NULL DEFAULT ' ',
   PRIMARY KEY (`claim_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -967,11 +314,11 @@ CREATE TABLE IF NOT EXISTS `openrsc_game_reports` (
   `reported` varchar(12) NOT NULL,
   `time` int(10) UNSIGNED NOT NULL,
   `reason` int(5) UNSIGNED NOT NULL,
-  `chatlog` text,
+  `chatlog` text DEFAULT NULL,
   `reporter_x` int(5) DEFAULT NULL,
   `reporter_y` int(5) DEFAULT NULL,
-  `reported_x` int(5) NOT NULL DEFAULT '0',
-  `reported_y` int(5) DEFAULT '0',
+  `reported_x` int(5) NOT NULL DEFAULT 0,
+  `reported_y` int(5) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -989,7 +336,14 @@ CREATE TABLE IF NOT EXISTS `openrsc_generic_logs` (
   PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `time` (`time`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `openrsc_generic_logs`
+--
+
+INSERT INTO `openrsc_generic_logs` (`id`, `message`, `time`) VALUES
+(1, 'Marwolf picked up Leather Gloves x1 at (217, 453)', 1536202258);
 
 -- --------------------------------------------------------
 
@@ -1991,8 +1345,8 @@ DROP TABLE IF EXISTS `openrsc_invitems`;
 CREATE TABLE IF NOT EXISTS `openrsc_invitems` (
   `playerID` int(10) UNSIGNED NOT NULL,
   `id` int(10) UNSIGNED NOT NULL,
-  `amount` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `wielded` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `amount` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `wielded` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `slot` int(5) UNSIGNED NOT NULL,
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`)
@@ -4314,7 +3668,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_live_feeds` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `username` varchar(12) NOT NULL,
   `message` varchar(165) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `time` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -4332,7 +3686,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_logins` (
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`),
   KEY `ip` (`ip`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4347,7 +3701,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_name_changes` (
   `owner` int(10) UNSIGNED NOT NULL,
   `old_name` varchar(12) NOT NULL,
   `new_name` varchar(12) NOT NULL,
-  `date` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `date` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -4369,8 +3723,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdef` (
   `strength` int(10) DEFAULT NULL,
   `hits` int(10) DEFAULT NULL,
   `defense` int(10) DEFAULT NULL,
-  `combatlvl` int(10) NOT NULL DEFAULT '0',
-  `isMembers` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `combatlvl` int(10) NOT NULL DEFAULT 0,
+  `isMembers` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `attackable` tinyint(1) DEFAULT NULL,
   `aggressive` tinyint(1) DEFAULT NULL,
   `respawnTime` int(10) DEFAULT NULL,
@@ -11703,14 +11057,14 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (673, 656, 648, 664, 3610, 3602, 3618, 6801),
 (40, 656, 649, 663, 3613, 3606, 3620, 6802),
 (202, 661, 655, 667, 3617, 3611, 3623, 6803),
-(531, 657, 650, 664, 3618, 3611, 3625, 6804);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(531, 657, 650, 664, 3618, 3611, 3625, 6804),
 (531, 658, 651, 665, 3623, 3616, 3630, 6805),
 (43, 665, 657, 673, 3628, 3620, 3636, 6806),
 (43, 666, 659, 673, 3630, 3623, 3637, 6807),
 (290, 664, 656, 672, 3632, 3624, 3640, 6808),
 (290, 666, 657, 675, 3633, 3624, 3642, 6810),
-(34, 650, 643, 657, 3628, 3621, 3635, 6811),
+(34, 650, 643, 657, 3628, 3621, 3635, 6811);
+INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
 (672, 494, 492, 496, 3522, 3520, 3524, 6812),
 (672, 492, 490, 494, 3521, 3519, 3523, 6813),
 (672, 492, 490, 494, 3524, 3522, 3526, 6814),
@@ -11748,7 +11102,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_objects` (
   `d_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`d_id`),
   UNIQUE KEY `d_id` (`d_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28396 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=28431 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `openrsc_objects`
@@ -21474,10 +20828,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (278, 493, 197, 1, 1, 9753),
 (267, 486, 21, 0, 0, 9754),
 (271, 491, 994, 7, 0, 9755),
-(269, 488, 994, 7, 0, 9756);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(269, 488, 994, 7, 0, 9756),
 (258, 502, 0, 0, 0, 9757),
-(263, 503, 0, 0, 0, 9758),
+(263, 503, 0, 0, 0, 9758);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (260, 499, 38, 0, 0, 9759),
 (258, 477, 70, 6, 0, 9760),
 (258, 500, 0, 0, 0, 9761),
@@ -23313,10 +22667,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (457, 438, 23, 2, 0, 11591),
 (456, 434, 26, 2, 0, 11592),
 (461, 439, 25, 2, 0, 11593),
-(463, 433, 145, 4, 0, 11594);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(463, 433, 145, 4, 0, 11594),
 (461, 437, 25, 2, 0, 11595),
-(460, 439, 46, 2, 0, 11596),
+(460, 439, 46, 2, 0, 11596);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (460, 436, 46, 2, 0, 11597),
 (461, 435, 25, 2, 0, 11598),
 (469, 436, 10, 4, 0, 11599),
@@ -25139,10 +24493,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (473, 728, 405, 1, 0, 13416),
 (475, 734, 394, 0, 0, 13417),
 (477, 733, 33, 0, 0, 13418),
-(474, 733, 33, 1, 0, 13419);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(474, 733, 33, 1, 0, 13419),
 (453, 735, 399, 1, 0, 13420),
-(454, 732, 398, 6, 0, 13421),
+(454, 732, 398, 6, 0, 13421);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (455, 734, 397, 6, 0, 13422),
 (455, 733, 33, 6, 0, 13423),
 (452, 730, 397, 1, 0, 13424),
@@ -26940,10 +26294,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (399, 827, 21, 0, 0, 15216),
 (398, 824, 21, 0, 0, 15217),
 (396, 826, 5, 0, 0, 15218),
-(394, 830, 21, 0, 0, 15219);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(394, 830, 21, 0, 0, 15219),
 (392, 824, 21, 0, 0, 15220),
-(399, 825, 21, 0, 0, 15221),
+(399, 825, 21, 0, 0, 15221);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (392, 828, 21, 0, 0, 15222),
 (398, 828, 21, 0, 0, 15223),
 (396, 830, 21, 0, 0, 15224),
@@ -28751,10 +28105,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (496, 562, 21, 0, 0, 17026),
 (499, 560, 20, 0, 0, 17027),
 (498, 562, 21, 0, 0, 17028),
-(496, 564, 21, 2, 0, 17029);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(496, 564, 21, 2, 0, 17029),
 (499, 563, 666, 0, 0, 17030),
-(495, 563, 677, 2, 0, 17031),
+(495, 563, 677, 2, 0, 17031);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (488, 563, 676, 2, 0, 17032),
 (488, 560, 20, 0, 0, 17033),
 (489, 563, 676, 2, 0, 17034),
@@ -30586,10 +29940,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (616, 3488, 51, 0, 0, 18860),
 (617, 3489, 5, 4, 0, 18861),
 (621, 3495, 20, 4, 0, 18862),
-(618, 3490, 51, 4, 0, 18863);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(618, 3490, 51, 4, 0, 18863),
 (620, 3494, 51, 0, 0, 18864),
-(616, 3490, 51, 4, 0, 18865),
+(616, 3490, 51, 4, 0, 18865);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (618, 3488, 51, 0, 0, 18866),
 (617, 3491, 1, 0, 1, 18867),
 (617, 3494, 1, 0, 1, 18868),
@@ -32398,10 +31752,10 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (572, 685, 51, 0, 0, 20671),
 (570, 685, 51, 0, 0, 20672),
 (588, 682, 1, 0, 0, 20673),
-(584, 683, 0, 4, 0, 20674);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(584, 683, 0, 4, 0, 20674),
 (586, 685, 1, 0, 0, 20675),
-(570, 680, 3, 0, 0, 20676),
+(570, 680, 3, 0, 0, 20676);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (591, 685, 1, 0, 0, 20677),
 (582, 682, 0, 0, 0, 20678),
 (568, 684, 55, 0, 0, 20679),
@@ -34212,9 +33566,9 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (643, 732, 398, 7, 0, 22484),
 (646, 732, 34, 0, 0, 22485),
 (644, 724, 1, 1, 0, 22486),
-(642, 725, 0, 1, 0, 22487);
+(642, 725, 0, 1, 0, 22487),
+(643, 713, 284, 2, 0, 22488);
 INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
-(643, 713, 284, 2, 0, 22488),
 (641, 712, 284, 2, 0, 22489),
 (641, 717, 284, 0, 0, 22490),
 (643, 714, 284, 2, 0, 22491),
@@ -35997,9 +35351,9 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (679, 3467, 729, 7, 0, 24268),
 (677, 3465, 729, 4, 0, 24269),
 (678, 3468, 940, 0, 0, 24270),
-(679, 3464, 763, 1, 0, 24271);
+(679, 3464, 763, 1, 0, 24271),
+(675, 3467, 766, 4, 0, 24272);
 INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
-(675, 3467, 766, 4, 0, 24272),
 (678, 3466, 734, 7, 0, 24273),
 (675, 3465, 729, 0, 0, 24274),
 (672, 3468, 755, 3, 0, 24275),
@@ -37750,12 +37104,12 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (6, 3353, 205, 4, 0, 26459),
 (7, 3354, 1043, 5, 0, 26460),
 (6, 3348, 205, 2, 0, 26461),
-(6, 3330, 34, 0, 0, 26462);
-INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+(6, 3330, 34, 0, 0, 26462),
 (7, 3325, 55, 0, 0, 26463),
 (5, 3348, 34, 2, 0, 26464),
 (4, 3351, 34, 0, 0, 26465),
-(5, 3346, 195, 6, 0, 26466),
+(5, 3346, 195, 6, 0, 26466);
+INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 (6, 3401, 205, 4, 0, 26467),
 (24, 3394, 1075, 0, 0, 26468),
 (5, 3396, 34, 2, 0, 26469),
@@ -39489,58 +38843,58 @@ DROP TABLE IF EXISTS `openrsc_players`;
 CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(12) NOT NULL DEFAULT '',
-  `group_id` int(10) DEFAULT '0',
+  `group_id` int(10) DEFAULT 0,
   `owner` int(5) UNSIGNED NOT NULL,
   `pass` varchar(512) NOT NULL,
   `salt` varchar(250) NOT NULL DEFAULT '',
-  `sub_expires` int(5) UNSIGNED DEFAULT '0',
-  `platinum_expires` int(5) UNSIGNED DEFAULT '0',
-  `combat` int(10) DEFAULT '3',
-  `skill_total` int(10) DEFAULT '27',
-  `x` int(5) UNSIGNED DEFAULT '216',
-  `y` int(5) UNSIGNED DEFAULT '451',
-  `fatigue` int(10) DEFAULT '0',
-  `combatstyle` tinyint(1) DEFAULT '0',
-  `block_chat` tinyint(1) UNSIGNED DEFAULT '0',
-  `block_private` tinyint(1) UNSIGNED DEFAULT '0',
-  `block_trade` tinyint(1) UNSIGNED DEFAULT '0',
-  `block_duel` tinyint(1) UNSIGNED DEFAULT '0',
-  `cameraauto` tinyint(1) UNSIGNED DEFAULT '0',
-  `onemouse` tinyint(1) UNSIGNED DEFAULT '0',
-  `soundoff` tinyint(1) UNSIGNED DEFAULT '1',
-  `haircolour` int(5) UNSIGNED DEFAULT '2',
-  `topcolour` int(5) UNSIGNED DEFAULT '8',
-  `trousercolour` int(5) UNSIGNED DEFAULT '14',
-  `skincolour` int(5) UNSIGNED DEFAULT '0',
-  `headsprite` int(5) UNSIGNED DEFAULT '1',
-  `bodysprite` int(5) UNSIGNED DEFAULT '2',
-  `male` tinyint(1) UNSIGNED DEFAULT '1',
-  `skulled` int(10) UNSIGNED DEFAULT '0',
-  `charged` int(10) UNSIGNED DEFAULT '0',
-  `creation_date` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `sub_expires` int(5) UNSIGNED DEFAULT 0,
+  `platinum_expires` int(5) UNSIGNED DEFAULT 0,
+  `combat` int(10) DEFAULT 3,
+  `skill_total` int(10) DEFAULT 27,
+  `x` int(5) UNSIGNED DEFAULT 216,
+  `y` int(5) UNSIGNED DEFAULT 451,
+  `fatigue` int(10) DEFAULT 0,
+  `combatstyle` tinyint(1) DEFAULT 0,
+  `block_chat` tinyint(1) UNSIGNED DEFAULT 0,
+  `block_private` tinyint(1) UNSIGNED DEFAULT 0,
+  `block_trade` tinyint(1) UNSIGNED DEFAULT 0,
+  `block_duel` tinyint(1) UNSIGNED DEFAULT 0,
+  `cameraauto` tinyint(1) UNSIGNED DEFAULT 0,
+  `onemouse` tinyint(1) UNSIGNED DEFAULT 0,
+  `soundoff` tinyint(1) UNSIGNED DEFAULT 1,
+  `haircolour` int(5) UNSIGNED DEFAULT 2,
+  `topcolour` int(5) UNSIGNED DEFAULT 8,
+  `trousercolour` int(5) UNSIGNED DEFAULT 14,
+  `skincolour` int(5) UNSIGNED DEFAULT 0,
+  `headsprite` int(5) UNSIGNED DEFAULT 1,
+  `bodysprite` int(5) UNSIGNED DEFAULT 2,
+  `male` tinyint(1) UNSIGNED DEFAULT 1,
+  `skulled` int(10) UNSIGNED DEFAULT 0,
+  `charged` int(10) UNSIGNED DEFAULT 0,
+  `creation_date` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `creation_ip` varchar(15) NOT NULL DEFAULT '0.0.0.0',
-  `login_date` int(10) UNSIGNED DEFAULT '0',
+  `login_date` int(10) UNSIGNED DEFAULT 0,
   `login_ip` varchar(15) DEFAULT '0.0.0.0',
   `banned` varchar(255) NOT NULL DEFAULT '0',
-  `offences` int(11) NOT NULL DEFAULT '0',
+  `offences` int(11) NOT NULL DEFAULT 0,
   `muted` varchar(255) NOT NULL DEFAULT '0',
-  `kills` int(10) NOT NULL DEFAULT '0',
-  `deaths` int(10) DEFAULT '0',
-  `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-  `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `online` tinyint(1) UNSIGNED ZEROFILL DEFAULT '0',
+  `kills` int(10) NOT NULL DEFAULT 0,
+  `deaths` int(10) DEFAULT 0,
+  `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `online` tinyint(1) UNSIGNED ZEROFILL DEFAULT 0,
   `quest_points` int(5) DEFAULT NULL,
-  `bank_size` int(10) UNSIGNED NOT NULL DEFAULT '200',
-  `highscoreopt` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `forum_active` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `bank_size` int(10) UNSIGNED NOT NULL DEFAULT 200,
+  `highscoreopt` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `forum_active` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `skill_total` (`skill_total`),
   KEY `group_id` (`group_id`),
   KEY `highscoreopt` (`highscoreopt`),
   KEY `banned` (`banned`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -39556,7 +38910,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_player_cache` (
   `value` varchar(13) NOT NULL,
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -39570,7 +38924,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_private_message_logs` (
   `sender` varchar(12) NOT NULL,
   `message` varchar(255) NOT NULL,
   `reciever` varchar(12) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `time` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `reciever` (`reciever`),
   KEY `time` (`time`),
@@ -39605,10 +38959,10 @@ CREATE TABLE IF NOT EXISTS `openrsc_staff_logs` (
   `action` tinyint(2) UNSIGNED DEFAULT NULL,
   `affected_player` varchar(12) DEFAULT NULL,
   `time` int(10) UNSIGNED NOT NULL,
-  `staff_x` int(5) UNSIGNED NOT NULL DEFAULT '0',
-  `staff_y` int(5) UNSIGNED DEFAULT '0',
-  `affected_x` int(5) UNSIGNED DEFAULT '0',
-  `affected_y` int(5) UNSIGNED DEFAULT '0',
+  `staff_x` int(5) UNSIGNED NOT NULL DEFAULT 0,
+  `staff_y` int(5) UNSIGNED DEFAULT 0,
+  `affected_x` int(5) UNSIGNED DEFAULT 0,
+  `affected_y` int(5) UNSIGNED DEFAULT 0,
   `staff_ip` varchar(15) DEFAULT '0.0.0.0',
   `affected_ip` varchar(15) DEFAULT '0.0.0.0',
   `extra` varchar(255) DEFAULT NULL,
@@ -39642,216 +38996,13 @@ CREATE TABLE IF NOT EXISTS `openrsc_trade_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `search_cache`
---
-
-DROP TABLE IF EXISTS `search_cache`;
-CREATE TABLE IF NOT EXISTS `search_cache` (
-  `id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `ident` varchar(200) NOT NULL DEFAULT '',
-  `search_data` mediumtext,
-  PRIMARY KEY (`id`),
-  KEY `search_cache_ident_idx` (`ident`(8))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `search_matches`
---
-
-DROP TABLE IF EXISTS `search_matches`;
-CREATE TABLE IF NOT EXISTS `search_matches` (
-  `comment_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `word_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `subject_match` tinyint(1) NOT NULL DEFAULT '0',
-  KEY `search_matches_word_id_idx` (`word_id`),
-  KEY `search_matches_comment_id_idx` (`comment_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `search_matches`
---
-
-INSERT INTO `search_matches` (`comment_id`, `word_id`, `subject_match`) VALUES
-(2, 1, 0),
-(2, 2, 0),
-(2, 3, 0),
-(2, 4, 0),
-(2, 5, 0),
-(2, 6, 0),
-(2, 7, 0),
-(2, 8, 0),
-(2, 9, 0),
-(2, 10, 0),
-(2, 11, 0),
-(2, 12, 0),
-(2, 13, 1),
-(2, 4, 1),
-(2, 5, 1),
-(3, 14, 0),
-(3, 15, 1),
-(3, 16, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `search_words`
---
-
-DROP TABLE IF EXISTS `search_words`;
-CREATE TABLE IF NOT EXISTS `search_words` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `word` varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  PRIMARY KEY (`word`),
-  KEY `search_words_id_idx` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `search_words`
---
-
-INSERT INTO `search_words` (`id`, `word`) VALUES
-(1, 'made'),
-(2, 'possible'),
-(3, 'released'),
-(4, 'openrsc'),
-(5, 'source'),
-(6, 'working'),
-(7, 'hard'),
-(8, 'clean'),
-(9, 'update'),
-(10, 'whole'),
-(11, 'lot'),
-(12, 'things'),
-(13, 'release'),
-(14, 'hey'),
-(15, 'introduce'),
-(16, 'yourself');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `shop`
---
-
-DROP TABLE IF EXISTS `shop`;
-CREATE TABLE IF NOT EXISTS `shop` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `item_id` mediumint(5) UNSIGNED NOT NULL,
-  `product_name` varchar(60) NOT NULL,
-  `product_desc` text NOT NULL,
-  `product_category` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `redirect_url` varchar(60) NOT NULL,
-  `product_image` varchar(60) NOT NULL,
-  `product_price` mediumint(5) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `shop`
---
-
-INSERT INTO `shop` (`id`, `item_id`, `product_name`, `product_desc`, `product_category`, `redirect_url`, `product_image`, `product_price`) VALUES
-(1, 0, 'Character Slot', 'Extra character slot.\r\nThis service gives you [b]ONE[/b] extra character slot to your character manager.\r\n\r\nThe default character slot is 6 and maximum capacity to have per forum account is 10.', 0, '', 'img/icons/character_slot.png', 540),
-(2, 0, 'Character Deletion', '', 0, 'char_manager.php', 'img/icons/delete_character.png', 100),
-(3, 0, 'Character Renaming', 'Character renamer. \r\nRename your character in your character manager page. \r\n\r\nRemember changing your name results in your previous name being available for others.', 0, 'char_manager.php?setting=character_renaming', 'img/icons/rename_character.png', 200),
-(4, 2092, 'Gold Subscription', 'The gold subscription token.\r\n\r\nUse this token in order to activate your subscription features and faster experience rate. This token last for 30 days.\r\n\r\nHere\'s the full list of what this item include:\r\n[list]\r\n[*]-Faster xp rate[/*]\r\n[*]-Slower fatigue[/*]\r\n[/list]\r\n\r\nTo get the full maximum subscriber benefits use this token together with the Premium subscription token.', 2, '', 'img/items/2092.png', 540),
-(5, 2094, 'Premium Subscription', 'The premium subscription token.\r\n\r\nThis token last for 30 days and can only be used if you already have a gold subscription active.\r\n\r\nHere\'s the full list of what this item include:\r\n[list]\r\n[*]-Faster xp rate[/*]\r\n[*]-Slower fatigue[/*]\r\n[/list]', 2, '', 'img/items/2094.png', 1000),
-(6, 2110, 'Spotted Cape', 'A cosmetic item, a spotted cape.', 1, '', 'img/items/2110.png', 100);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `shop_logs`
---
-
-DROP TABLE IF EXISTS `shop_logs`;
-CREATE TABLE IF NOT EXISTS `shop_logs` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `package` varchar(60) NOT NULL,
-  `product_id` mediumint(5) UNSIGNED NOT NULL,
-  `price` int(10) UNSIGNED NOT NULL,
-  `quantity` tinyint(2) UNSIGNED NOT NULL,
-  `creation` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `forum_name` varchar(12) NOT NULL,
-  `game_name` varchar(12) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `threads`
---
-
-DROP TABLE IF EXISTS `threads`;
-CREATE TABLE IF NOT EXISTS `threads` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `commenter` varchar(200) NOT NULL DEFAULT '',
-  `subject` varchar(255) NOT NULL DEFAULT '',
-  `commented` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `first_comment_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `last_comment` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `last_comment_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `last_commenter` varchar(200) DEFAULT NULL,
-  `num_views` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
-  `num_replies` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
-  `last_commenter_id` int(10) DEFAULT NULL,
-  `closed` tinyint(1) NOT NULL DEFAULT '0',
-  `pinned` tinyint(1) NOT NULL DEFAULT '0',
-  `important` tinyint(1) NOT NULL DEFAULT '0',
-  `moved_to` int(10) UNSIGNED DEFAULT NULL,
-  `forum_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `soft` tinyint(1) NOT NULL DEFAULT '0',
-  `solved` int(10) UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `threads_forum_id_idx` (`forum_id`),
-  KEY `threads_moved_to_idx` (`moved_to`),
-  KEY `threads_last_comment_idx` (`last_comment`),
-  KEY `threads_last_commenter_id` (`last_commenter`),
-  KEY `threads_first_comment_id_idx` (`first_comment_id`),
-  KEY `commented` (`commented`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `threads`
---
-
-INSERT INTO `threads` (`id`, `commenter`, `subject`, `commented`, `first_comment_id`, `last_comment`, `last_comment_id`, `last_commenter`, `num_views`, `num_replies`, `last_commenter_id`, `closed`, `pinned`, `important`, `moved_to`, `forum_id`, `soft`, `solved`) VALUES
-(19, 'Marwolf', 'Thanks to the openrsc source release', 1527784187, 2, 1527784187, 2, 'Marwolf', 4, 0, 2, 0, 0, 0, NULL, 16, 0, NULL),
-(20, 'Marwolf', 'Introduce yourself', 1527784708, 3, 1527784708, 3, 'Marwolf', 1, 0, 2, 0, 0, 0, NULL, 17, 0, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `thread_subscriptions`
---
-
-DROP TABLE IF EXISTS `thread_subscriptions`;
-CREATE TABLE IF NOT EXISTS `thread_subscriptions` (
-  `user_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `thread_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`,`thread_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `thread_subscriptions`
---
-
-INSERT INTO `thread_subscriptions` (`user_id`, `thread_id`) VALUES
-(2, 0);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `group_id` int(10) UNSIGNED NOT NULL DEFAULT '3',
+  `group_id` int(10) UNSIGNED NOT NULL DEFAULT 3,
   `username` varchar(200) NOT NULL DEFAULT '',
   `password` varchar(512) NOT NULL DEFAULT '',
   `salt` varchar(8) NOT NULL DEFAULT '',
@@ -39864,55 +39015,47 @@ CREATE TABLE IF NOT EXISTS `users` (
   `twitter` varchar(50) DEFAULT NULL,
   `google` varchar(50) DEFAULT NULL,
   `location` varchar(30) DEFAULT NULL,
-  `signature` text,
+  `signature` text DEFAULT NULL,
   `disp_threads` tinyint(3) UNSIGNED DEFAULT NULL,
   `disp_comments` tinyint(3) UNSIGNED DEFAULT NULL,
-  `email_setting` tinyint(1) NOT NULL DEFAULT '1',
-  `notify_with_comment` tinyint(1) NOT NULL DEFAULT '0',
-  `advanced_editor` tinyint(1) NOT NULL DEFAULT '1',
-  `dialog_editor` tinyint(1) NOT NULL DEFAULT '1',
-  `auto_notify` tinyint(1) NOT NULL DEFAULT '0',
-  `show_smilies` tinyint(1) NOT NULL DEFAULT '1',
-  `show_img` tinyint(1) NOT NULL DEFAULT '1',
-  `show_img_sig` tinyint(1) NOT NULL DEFAULT '1',
-  `show_avatars` tinyint(1) NOT NULL DEFAULT '1',
-  `show_sig` tinyint(1) NOT NULL DEFAULT '1',
+  `email_setting` tinyint(1) NOT NULL DEFAULT 1,
+  `notify_with_comment` tinyint(1) NOT NULL DEFAULT 0,
+  `advanced_editor` tinyint(1) NOT NULL DEFAULT 1,
+  `dialog_editor` tinyint(1) NOT NULL DEFAULT 1,
+  `auto_notify` tinyint(1) NOT NULL DEFAULT 0,
+  `show_smilies` tinyint(1) NOT NULL DEFAULT 1,
+  `show_img` tinyint(1) NOT NULL DEFAULT 1,
+  `show_img_sig` tinyint(1) NOT NULL DEFAULT 1,
+  `show_avatars` tinyint(1) NOT NULL DEFAULT 1,
+  `show_sig` tinyint(1) NOT NULL DEFAULT 1,
   `php_timezone` varchar(100) NOT NULL DEFAULT 'UTC',
-  `time_format` tinyint(1) NOT NULL DEFAULT '0',
-  `date_format` tinyint(1) NOT NULL DEFAULT '0',
+  `time_format` tinyint(1) NOT NULL DEFAULT 0,
+  `date_format` tinyint(1) NOT NULL DEFAULT 0,
   `language` varchar(25) NOT NULL DEFAULT 'English',
-  `num_comments` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `num_comments` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `last_comment` int(10) UNSIGNED DEFAULT NULL,
   `last_search` int(10) UNSIGNED DEFAULT NULL,
   `last_email_sent` int(10) UNSIGNED DEFAULT NULL,
   `last_report_sent` int(10) UNSIGNED DEFAULT NULL,
-  `registered` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `registered` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `registration_ip` varchar(39) NOT NULL DEFAULT '0.0.0.0',
-  `last_visit` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `last_visit` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `admin_note` varchar(30) DEFAULT NULL,
   `activate_string` varchar(128) DEFAULT NULL,
   `activate_key` varchar(8) DEFAULT NULL,
-  `use_inbox` tinyint(1) NOT NULL DEFAULT '1',
-  `notify_inbox` tinyint(1) NOT NULL DEFAULT '1',
-  `notify_inbox_full` tinyint(1) NOT NULL DEFAULT '0',
-  `num_inbox` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `jewels` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `teleport_stone` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `character_slots` tinyint(3) UNSIGNED NOT NULL DEFAULT '6',
-  `gold_time` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `premium_time` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `use_inbox` tinyint(1) NOT NULL DEFAULT 1,
+  `notify_inbox` tinyint(1) NOT NULL DEFAULT 1,
+  `notify_inbox_full` tinyint(1) NOT NULL DEFAULT 0,
+  `num_inbox` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `jewels` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `teleport_stone` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `character_slots` tinyint(3) UNSIGNED NOT NULL DEFAULT 6,
+  `gold_time` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `premium_time` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_username_idx` (`username`(25)),
   KEY `users_registered_idx` (`registered`)
-) ENGINE=MyISAM AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `group_id`, `username`, `password`, `salt`, `email`, `title`, `realname`, `url`, `facebook`, `msn`, `twitter`, `google`, `location`, `signature`, `disp_threads`, `disp_comments`, `email_setting`, `notify_with_comment`, `advanced_editor`, `dialog_editor`, `auto_notify`, `show_smilies`, `show_img`, `show_img_sig`, `show_avatars`, `show_sig`, `php_timezone`, `time_format`, `date_format`, `language`, `num_comments`, `last_comment`, `last_search`, `last_email_sent`, `last_report_sent`, `registered`, `registration_ip`, `last_visit`, `admin_note`, `activate_string`, `activate_key`, `use_inbox`, `notify_inbox`, `notify_inbox_full`, `num_inbox`, `jewels`, `teleport_stone`, `character_slots`, `gold_time`, `premium_time`) VALUES
-(1, 3, 'Guest', 'Guest', '', 'Guest', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 'UTC', 0, 0, 'English', 0, NULL, NULL, NULL, NULL, 0, '0.0.0.0', 0, NULL, NULL, NULL, 1, 1, 0, 0, 0, 0, 6, 0, 0),
-(2, 1, 'Marwolf', 'ab1c8e6e77f6e01716c8f7838807687c80eb45f2383940284a8a85710b21040d55af5b7d03c964b74341b1ef2878a36e42958f158e3e3b3dcdb0eda75125154a', 'UqqYG1aE', 'cleako@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 'America/New_York', 4, 5, 'English', 29, 1527784708, 0, 1527788866, 1469742274, 0, '::1', 1527975341, NULL, NULL, NULL, 1, 1, 0, 200, 20, 50000, 50, 1487505329, 1510583603);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
