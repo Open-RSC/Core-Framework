@@ -9,25 +9,25 @@ exec 0</dev/tty
 #
 # curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Simple_Cloner.sh | bash
 
-rm install.log
-touch install.log && chmod 777 install.log | tee -a install.log &>/dev/null
+rm installer.log
+touch installer.log && chmod 777 installer.log | tee -a installer.log &>/dev/null
 
 # Software installations
 clear
 echo "Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git. Please wait."
-sudo add-apt-repository ppa:webupd8team/java -y | tee -a install.log &>/dev/null
-sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y | tee -a install.log &>/dev/null
-sudo apt-get update | tee -a install.log &>/dev/null
-sudo apt remove mysql-server mysql-server-5.7 mysql-client apache2 -y | tee -a install.log &>/dev/null
-sudo apt-get install nano htop screen ant git oracle-java8-installer mariadb-server mariadb-client nginx -y | tee -a install.log &>/dev/null
-sudo apt-get autoremove -y | tee -a install.log &>/dev/null
+sudo add-apt-repository ppa:webupd8team/java -y | tee -a installer.log &>/dev/null
+sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y | tee -a installer.log &>/dev/null
+sudo apt-get update | tee -a installer.log &>/dev/null
+sudo apt remove mysql-server mysql-server-5.7 mysql-client apache2 -y | tee -a installer.log &>/dev/null
+sudo apt-get install nano htop screen ant git oracle-java8-installer mariadb-server mariadb-client nginx -y | tee -a installer.log &>/dev/null
+sudo apt-get autoremove -y | tee -a installer.log &>/dev/null
 
 # PHPMyAdmin installation
 clear
 echo "Installing PHP 7.2 and PHPMyAdmin. Please wait."
 sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
-sudo phpenmod mbstring | tee -a install.log &>/dev/null
-sudo systemctl restart nginx | tee -a install.log &>/dev/null
+sudo phpenmod mbstring | tee -a installer.log &>/dev/null
+sudo systemctl restart nginx | tee -a installer.log &>/dev/null
 
 # Database configuration
 clear
@@ -38,41 +38,41 @@ read -s pass
 clear
 echo "Please enter your server's domain name."
 read -s domain
-sudo mysql -uroot -Bse "DROP USER 'openrsc'@'localhost';FLUSH PRIVILEGES;" | tee -a install.log &>/dev/null
-sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;" | tee -a install.log &>/dev/null
+sudo mysql -uroot -Bse "DROP USER 'openrsc'@'localhost';FLUSH PRIVILEGES;" | tee -a installer.log &>/dev/null
+sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;" | tee -a installer.log &>/dev/null
 
 # Database imports
 clear
 echo "Importing database."
-sudo mysql -u"root" -p"$pass" < "openrsc_game.sql" | tee -a install.log &>/dev/null
+sudo mysql -u"root" -p"$pass" < "openrsc_game.sql" | tee -a installer.log &>/dev/null
 
 # Automated file edits
 #clear
-#sudo sed -i 's/DB_LOGIN">root/DB_LOGIN">openrsc/g' server/config/config.xml | tee -a install.log &>/dev/null
-#sudo sed -i 's/DB_PASS">root/DB_PASS">'$pass'/g' server/config/config.xml | tee -a install.log &>/dev/null
-#sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java | tee -a install.log &>/dev/null
+#sudo sed -i 's/DB_LOGIN">root/DB_LOGIN">openrsc/g' server/config/config.xml | tee -a installer.log &>/dev/null
+#sudo sed -i 's/DB_PASS">root/DB_PASS">'$pass'/g' server/config/config.xml | tee -a installer.log &>/dev/null
+#sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java | tee -a installer.log &>/dev/null
 
 # Website
 clear
-sudo mkdir /var/www/html/downloads | tee -a install.log &>/dev/null
+sudo mkdir /var/www/html/downloads | tee -a installer.log &>/dev/null
 
 # Server
 clear
-echo "Compiling the game server. Any errors will be in install.log"
-sudo ant -f "server/build.xml" compile_core | tee -a install.log &>/dev/null
-sudo ant -f "server/build.xml" compile_plugins | tee -a install.log &>/dev/null
+echo "Compiling the game server. Any errors will be in installer.log"
+sudo ant -f "server/build.xml" compile_core | tee -a installer.log &>/dev/null
+sudo ant -f "server/build.xml" compile_plugins | tee -a installer.log &>/dev/null
 
 # Client
 clear
-echo "Compiling and preparing the game client. Any errors will be in install.log"
-sudo ant -f "client/build.xml" compile | tee -a install.log &>/dev/null
-yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads" | tee -a install.log &>/dev/null
+echo "Compiling and preparing the game client. Any errors will be in installer.log"
+sudo ant -f "client/build.xml" compile | tee -a installer.log &>/dev/null
+yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads" | tee -a installer.log &>/dev/null
 
 # Launcher
 clear
 echo "Compiling and preparing the game launcher. Any errors will be in updater.log"
-sudo ant -f "Launcher/nbbuild.xml" jar | tee -a install.log &>/dev/null
-yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/" | tee -a install.log &>/dev/null
+sudo ant -f "Launcher/nbbuild.xml" jar | tee -a installer.log &>/dev/null
+yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/" | tee -a installer.log &>/dev/null
 
 # Cache
 clear
