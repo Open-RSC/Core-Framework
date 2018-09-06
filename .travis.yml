@@ -21,10 +21,10 @@ before_install:
   - sudo service mysql stop
 
 script:
-  - sudo docker-compose --file docker-compose-travis.yml up -d
   - sudo ant -f server/build.xml compile_core
   - sudo ant -f server/build.xml compile_plugins
   - sudo ant -f client/build.xml compile
   - sudo ant -f Launcher/nbbuild.xml jar
-  - sudo docker-compose -f docker-compose-travis.yml ps
-  - sudo docker exec -i mysql mysql -u"root" -p"root" < openrsc_game.sql
+  - sudo docker-compose up -d
+  - sudo make import-game
+  - sudo make import-forum
