@@ -17,8 +17,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         continue
     fi
-    #brew tap AdoptOpenJDK/openjdk
-    #brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
+    #brew tap AdoptOpenJDK/openjdk && brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
     PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 fi
 
@@ -61,116 +60,234 @@ if [ "$install" == "2" ]; then
         jumpto start
     fi
 
+    pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    tick=$(whiptail --inputbox "What speed should the game run? (620 is the default and 320 is twice as fast)" 8 50 620 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    gamename=$(whiptail --inputbox "Please enter the name of your game." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    combatrate=$(whiptail --inputbox "Please enter the combat XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    skillrate=$(whiptail --inputbox "Please enter the skilling XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    banksize=$(whiptail --inputbox "Please enter the max bank size." 8 50 192 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    auctionhouse=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow the auctionhouse" OFF \
+        "false" "Do not allow the auctionhouse" ON 3>&1 1>&2 2>&3)
+    ironman=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow ironman mode" OFF \
+        "false" "Do not allow ironman mode" ON 3>&1 1>&2 2>&3)
+    nametags=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow name tags over players" OFF \
+        "false" "Do not allow name tags over players" ON 3>&1 1>&2 2>&3)
+    clans=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow player clans" OFF \
+        "false" "Do not allow player clans" ON 3>&1 1>&2 2>&3)
+    killfeed=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow the kill feed" OFF \
+        "false" "Do not allow the kill feed" ON 3>&1 1>&2 2>&3)
+    fog=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow fog to be disabled" OFF \
+        "false" "Do not allow fog to be disabled" ON 3>&1 1>&2 2>&3)
+    grounditems=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow ground items to be hidden" OFF \
+        "false" "Do not allow ground items to be hidden" ON 3>&1 1>&2 2>&3)
+    batchprogression=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow batch mode progression" OFF \
+        "false" "Do not allow batch mode progression" ON 3>&1 1>&2 2>&3)
+    sidemenu=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow the side menu to be toggled on" OFF \
+        "false" "Do not allow the side menu to be toggled on" ON 3>&1 1>&2 2>&3)
+    inventorycount=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow inventory counting mode" OFF \
+        "false" "Do not allow inventory counting mode" ON 3>&1 1>&2 2>&3)
+    itemdeath=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Show the items on death menu option" OFF \
+        "false" "Do not show the items on death menu option" ON 3>&1 1>&2 2>&3)
+    globalchat=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow global chat" OFF \
+        "false" "Do not allow global chat" ON 3>&1 1>&2 2>&3)
+    skillmenus=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow skill menus" OFF \
+        "false" "Do not allow skill menus" ON 3>&1 1>&2 2>&3)
+    custombank=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow enhanced banking mode" OFF \
+        "false" "Do not allow enhanced banking mode" ON 3>&1 1>&2 2>&3)
+    bankpins=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow bank pins" OFF \
+        "false" "Do not allow bank pins" ON 3>&1 1>&2 2>&3)
+    dropx=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow drop X" OFF \
+        "false" "Do not allow drop X" ON 3>&1 1>&2 2>&3)
+
+
+        function firstroutine {
+        $guake=true
+        }
+        function secondroutine {
+        $gtkash=true
+        }
+        function thirdroutine {
+        $nemogtkhash=true
+        }
+        whiptail --title "Test" --checklist --separate-output "Choose:" 20 78 15 \
+        "guake" "" off \
+        "gtkash" "" off \
+        "nemogtkhash" "" off 2>results
+        while read choice
+        do case $choice in
+        guake) firstroutine;;
+        gtkash) secondroutine;;
+        namogtkhash) thirdroutine;;
+        *) ;;
+        esac
+        done < results
+
+
+
+
+
+    =$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow " OFF \
+        "false" "Do not allow " ON 3>&1 1>&2 2>&3)
+    =$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow " OFF \
+        "false" "Do not allow " ON 3>&1 1>&2 2>&3)
+    =$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Allow " OFF \
+        "false" "Do not allow " ON 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+
     phases=(
-    'Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git...'
-    'Installing PHP 7.2 and PHPMyAdmin...'
-    'Treating Kessler Syndrome...'
-    'Recruiting Kerbals...'
+    'Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git...' #10
+    'Installing PHP 7.2 and PHPMyAdmin...' #20
+    'Setting up databases...' #30
+    'Configuring game files based on your input...' #40
+    'Creating the website downloads folder...' #60
+    'Compiling the game server...' #70
+    'Compiling and preparing the game client...' #80
+    'Compiling and preparing the game launcher...' #90
+    'Preparing the cache...' #100
     )
-
     for i in $(seq 1 100); do
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=10
+        # Software installations
+        sudo add-apt-repository ppa:webupd8team/java -y
+        sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
+        sudo apt-get update
+        sudo apt remove mysql-server mysql-server-5.7 mysql-client apache2 -y
+        sudo apt-get install nano htop screen ant git oracle-java8-installer mariadb-server mariadb-client nginx -y
+        sudo apt-get autoremove -y
 
-      sleep 1
-      i=25
-      echo -e "XXX\n$i\n${phases[phase]}\nXXX"
-      sleep 1
-      i=50
-      echo -e "XXX\n$i\n${phases[phase]}\nXXX"
-      sleep 1
-      i=75
-      echo -e "XXX\n$i\n${phases[phase]}\nXXX"
-      sleep 1
-      i=100
-      exit
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        i=20
+        # PHPMyAdmin installation
+        sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
+        sudo phpenmod mbstring
+        sudo systemctl restart nginx
 
-      if [ $i -eq 100 ]; then
-          echo -e "XXX\n100\nDone!\nXXX"
-      elif [ $(($i % 25)) -eq 0 ]; then
-          let "phase = $i / 25"
-          echo -e "XXX\n$i\n${phases[phase]}\nXXX"
-      else
-          echo $i
-      fi
+        echo -e "XXX\n$i\n${phases[2]}\nXXX"
+        i=30
+        sleep 1
+        # Database configuration and imports
+        sudo mysql_secure_installation
+        sudo mysql -uroot -Bse "DROP USER 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        sudo mysql -u"root" -p"$pass" < "Databases/openrsc_game.sql"
+        sudo mysql -u"root" -p"$pass" < "Databases/openrsc_forum.sql"
+
+        echo -e "XXX\n$i\n${phases[3]}\nXXX"
+        i=40
+        # Automated file edits
+        sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/free.conf
+        sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/members.conf
+        sudo sed -i 's/mysql_pass">root/mysql_pass">'$pass'/g' server/free.conf
+        sudo sed -i 's/mysql_pass">root/mysql_pass">'$pass'/g' server/members.conf
+        sudo sed -i 's/game_tick">620/game_tick">'$tick'/g' server/free.conf
+        sudo sed -i 's/game_tick">620/game_tick">'$tick'/g' server/members.conf
+        sudo sed -i 's/server_name">Open RSC/server_name">"'$gamename'"/g' server/free.conf
+        sudo sed -i 's/server_name">Open RSC/server_name">"'$gamename'"/g' server/members.conf
+        sudo sed -i 's/combat_exp_rate">1/combat_exp_rate">'$combatrate'/g' server/free.conf
+        sudo sed -i 's/combat_exp_rate">1/combat_exp_rate">'$combatrate'/g' server/members.conf
+        sudo sed -i 's/skilling_exp_rate">1/skilling_exp_rate">'$skillrate'/g' server/free.conf
+        sudo sed -i 's/skilling_exp_rate">1/skilling_exp_rate">'$skillrate'/g' server/members.conf
+        sudo sed -i 's/bank_size">192/bank_size">'$banksize'/g' server/free.conf
+        sudo sed -i 's/bank_size">192/bank_size">'$banksize'/g' server/members.conf
+        sudo sed -i 's/spawn_auction_npcs">false/spawn_auction_npcs">'$auctionhouse'/g' server/free.conf
+        sudo sed -i 's/spawn_auction_npcs">false/spawn_auction_npcs">'$auctionhouse'/g' server/members.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+        sudo sed -i 's/A/'$'/g' server/free.conf
+
+        sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java
+
+        echo -e "XXX\n$i\n${phases[4]}\nXXX"
+        i=60
+        # Create Website downloads folder
+        sudo mkdir /var/www/html/downloads
+
+        echo -e "XXX\n$i\n${phases[5]}\nXXX"
+        i=70
+        # Server
+        sudo ant -f "server/build.xml" compile_core
+        sudo ant -f "server/build.xml" compile_plugins
+
+        echo -e "XXX\n$i\n${phases[6]}\nXXX"
+        i=80
+        # Client
+        sudo ant -f "client/build.xml" compile
+        yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
+
+        echo -e "XXX\n$i\n${phases[7]}\nXXX"
+        i=90
+        # Launcher
+        sudo ant -f "Launcher/nbbuild.xml" jar
+        yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
+
+        echo -e "XXX\n$i\n${phases[8]}\nXXX"
+        i=100
+        # Cache
+        yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
+        sudo rm /var/www/html/downloads/cache/MD5CHECKSUM
+        sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM
+        md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM
+        sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
+
+        exit
+        if [ $i -eq 100 ]; then
+            echo -e "XXX\n100\nDone!\nXXX"
+        elif [ $(($i % 25)) -eq 0 ]; then
+            let "phase = $i / 25"
+            echo -e "XXX\n$i\n${phases[phase]}\nXXX"
+        else
+            echo $i
+        fi
     done | whiptail --title 'Open RSC Native Installation' --gauge "${phases[0]}" 7 70 0
 
-
-    # Software installations
-    echo ""
-    echo "Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git. Please wait."
-    echo ""
-    sudo add-apt-repository ppa:webupd8team/java -y
-    sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
-    sudo apt-get update
-    sudo apt remove mysql-server mysql-server-5.7 mysql-client apache2 -y
-    sudo apt-get install nano htop screen ant git oracle-java8-installer mariadb-server mariadb-client nginx -y
-    sudo apt-get autoremove -y
-
-    # PHPMyAdmin installation
-    echo ""
-    echo "Installing PHP 7.2 and PHPMyAdmin. Please wait."
-    echo ""
-    sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
-    sudo phpenmod mbstring
-    sudo systemctl restart nginx
-
-    # Database configuration
-    echo ""
-    sudo mysql_secure_installation
-    echo ""
-    echo "Please enter your MySQL password."
-    echo ""
-    read -s pass
-    echo ""
-    echo "Please enter your server's domain name."
-    echo ""
-    read -s domain
-    sudo mysql -uroot -Bse "DROP USER 'openrsc'@'localhost';FLUSH PRIVILEGES;"
-    sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
-
-    # Database imports
-    echo ""
-    echo "Importing database."
-    echo ""
-    sudo mysql -u"root" -p"$pass" < "openrsc_game.sql"
-
-    # Automated file edits
-    #sudo sed -i 's/DB_LOGIN">root/DB_LOGIN">openrsc/g' server/config/config.xml
-    #sudo sed -i 's/DB_PASS">root/DB_PASS">'$pass'/g' server/config/config.xml
-    #sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java
-
-    # Website
-    sudo mkdir /var/www/html/downloads
-
-    # Server
-    echo ""
-    echo "Compiling the game server."
-    echo ""
-    sudo ant -f "server/build.xml" compile_core
-    sudo ant -f "server/build.xml" compile_plugins
-
-    # Client
-    echo ""
-    echo "Compiling and preparing the game client."
-    echo ""
-    sudo ant -f "client/build.xml" compile
-    yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
-
-    # Launcher
-    echo ""
-    echo "Compiling and preparing the game launcher. Any errors will be in updater.log"
-    echo ""
-    sudo ant -f "Launcher/nbbuild.xml" jar
-    yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
-
-    # Cache
-    echo ""
-    echo "Preparing the cache."
-    echo ""
-    yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
-    sudo rm /var/www/html/downloads/cache/MD5CHECKSUM
-    sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM
-    md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM
-    sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
 
     # Completion
     myip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
