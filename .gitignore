@@ -109,21 +109,54 @@ Tools/RSC Map Generator/map\.png
 Tools/Sprite Editor/unpack/*.spr
 Tools/Sprite Editor/unpack/*.png
 /Launcher/nbproject/private/
-/PC_Client/nbproject/private/
 /Client/nbproject/private/
 Android_Client/\.settings/
 
 server/avatars/
-/RSCL_Launcher/nbproject/private/
-/OLD_Launcher/nbproject/private/
 Launcher/Cache/
 
 client/Cache/uid\.dat
-
 client/Cache/client\.properties
 
-RSCL_Launcher/Cache/uid\.dat
+# Global
+.*.swp
+.DS_Store
 
-RSCL_Launcher/Cache/client\.properties
+# Website
+Website
 
-RSCL_Launcher/Cache/
+# Wiki
+Wiki
+
+# Database
+data/
+
+# SSL Certs
+etc/ssl/
+
+get-docker\.sh
+
+etc/nginx/logs/*
+!etc/nginx/logs/empty
+
+Splunk/opt-splunk-etc/*
+!Splunk/opt-splunk-etc/empty
+
+Splunk/opt-splunk-var/*
+!Splunk/opt-splunk-var/empty
+
+*.log
+
+etc/logs/nginx/*.log
+etc/logs/letsencrypt/*
+etc/ghost/logs/*.log
+etc/ghost/logs/*.log.*
+!etc/ghost/content/data/
+!etc/ghost/content/logs
+etc/ghost/content/data/\.DS_Store
+
+etc/ghost/content/themes/
+
+etc/ghost/content/logs/*.log.*
+
+etc/ghost/content/data/ghost\.db

@@ -1,0 +1,87 @@
+version: '3.1'
+services:
+
+    nginx:
+        image: nginx:1.15.3-alpine-perl
+        container_name: nginx
+        volumes:
+            - "./etc/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+            - "./Website:/var/www/html"
+            - "./etc/nginx/logs:/var/log/nginx"
+            - "./etc/letsencrypt:/etc/letsencrypt"
+        ports:
+            - "80:80"
+            - "443:443"
+        environment:
+            - NGINX_HOST=${NGINX_HOST}
+        restart: always
+        depends_on:
+            - tomcat
+            - mysqldb
+
+    ghost:
+        image: ghost:2.0.3-alpine
+        container_name: ghost
+        ports:
+            - "127.0.0.1:2368:2368"
+        restart: always
+        env_file:
+            - ".env"
+        volumes:
+            - "./etc/ghost/content:/var/lib/ghost/content"
+        environment:
+            - url=${URL}
+            - privacy__useUpdateCheck=false
+
+    php:
+        image: nanoninja/php-fpm
+        container_name: php
+        ports:
+            - "127.0.0.1:9000:9000"
+        volumes:
+            - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "./Website:/var/www/html"
+
+    tomcat:
+        image: tomcat:latest
+        container_name: tomcat
+        ports:
+            - "127.0.0.1:8080:8080"
+        restart: always
+        volumes:
+            - "./Website:/usr/local/tomcat/webapps/ROOT"
+            - "./etc/tomcat:/usr/local/tomcat/conf"
+
+    mysqldb:
+        image: mariadb:latest
+        container_name: mysql
+        restart: always
+        env_file:
+            - ".env"
+        command: [
+            '--wait_timeout=360000',
+            ]
+        environment:
+            - MYSQL_DATABASE=mysql
+            - MYSQL_ROOT_USER=${MARIADB_ROOT_USER}
+            - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+            - MYSQL_ALLOW_EMPTY_PASSWORD=no
+            - MYSQL_USER=${MARIADB_USER}
+            - MYSQL_PASSWORD=${MARIADB_PASS}
+        ports:
+            - "127.0.0.1:3306:3306"
+        volumes:
+            - "./data/db/mysql:/var/lib/mysql"
+            - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro"
+
+    myadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: phpmyadmin
+        ports:
+            - "55555:80"
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=mysql
+        restart: always
+        depends_on:
+            - mysqldb
