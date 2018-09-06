@@ -2,3 +2,5 @@
 innodb_flush_method=littlesync
 innodb_use_native_aio=OFF
 log_bin=ON
+innodb_data_file_path = ibdata1:10M:autoextend
+max_allowed_packet = 1024M

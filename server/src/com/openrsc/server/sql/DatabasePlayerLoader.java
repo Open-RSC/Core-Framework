@@ -430,15 +430,15 @@ public class DatabasePlayerLoader {
 				}
 			}
 
-			result = resultSetFromInteger(Statements.unreadMessages, save.getOwner());
+			/*result = resultSetFromInteger(Statements.unreadMessages, save.getOwner());
 			while (result.next()) {
 				save.setUnreadMessages(result.getInt(1));
-			}
+			}*/
 
-			result = resultSetFromInteger(Statements.teleportStones, save.getOwner());
+			/*result = resultSetFromInteger(Statements.teleportStones, save.getOwner());
 			while (result.next()) {
 				save.setTeleportStones(result.getInt(1));
-			}
+			}*/
 
 		} catch (SQLException e) {
 			LOGGER.catching(e);
@@ -641,9 +641,9 @@ public class DatabasePlayerLoader {
 	public class Statements {
 		private static final String PREFIX = "openrsc_";
 
-		private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
+		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 
-		private static final String teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";
+		//private static final String teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";
 
 		private static final String addFriend = "INSERT INTO `" + PREFIX
 				+ "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";

@@ -1,19 +1,22 @@
 include .env
 
-MYSQL_DUMPS_DIR=./data/db
+MYSQL_DUMPS_DIR=./data
 
 start:
-	docker-compose --file docker-compose-travis.yml up -d
+	docker-compose up -d
+
+start-single-player:
+	docker-compose --file docker-compose-single-player.yml up -d
 
 stop:
-	@docker-compose -f docker-compose-travis.yml down -v
+	@docker-compose down -v
 
 restart:
-	@docker-compose -f docker-compose-travis.yml down -v
-	docker-compose -f docker-compose-travis.yml up -d
+	@docker-compose down -v
+	docker-compose up -d
 
 ps:
-	docker-compose -f docker-compose-travis.yml ps
+	docker-compose ps
 
 compile:
 	ant -f server/build.xml compile_core
@@ -22,7 +25,23 @@ compile:
 	ant -f Launcher/build.xml jar
 
 import-game:
-	docker exec -i mysql mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" < openrsc_game.sql
+	@docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" < Databases/openrsc_game.sql 2>/dev/null
 
 run-game:
 	ant -f server/build.xml runservermembers
+
+clone-website:
+	@$(shell git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
+
+pull-website:
+	@cd Website && git pull
+
+logs:
+	@docker-compose logs -f
+
+backup:
+	@mkdir -p $(MYSQL_DUMPS_DIR)
+	docker exec $(shell docker-compose ps -q mysqldb) mysqldump --all-databases -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d %H%M %Z"`.sql.zip
+
+flush-website:
+	@$(shell sudo rm -rf Website)

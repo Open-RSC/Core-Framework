@@ -546,9 +546,9 @@ public class ActionSender {
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
 		s.writeString(player.getLastIP());
 		s.writeShort(player.getDaysSinceLastLogin());
-		s.writeShort(player.getDaysSubscriptionLeft());
-		s.writeShort(player.premiumSubDaysLeft());
-		s.writeShort(player.getUnreadMessages());
+		//s.writeShort(player.getDaysSubscriptionLeft());
+		//s.writeShort(player.premiumSubDaysLeft());
+		//s.writeShort(player.getUnreadMessages());
 		player.write(s.toPacket());
 	}
 

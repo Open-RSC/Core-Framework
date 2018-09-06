@@ -618,7 +618,7 @@ public final class Player extends Mob {
 
 	private DelayedEvent unregisterEvent;
 
-	private int unreadMessages, teleportStones;
+	//private int unreadMessages, teleportStones;
 
 	/**
 	 * Unregisters this player instance from the server
@@ -2061,18 +2061,18 @@ public final class Player extends Mob {
 	public void setDatabaseID(int i) {
 		this.databaseID = i;
 	}
-	public int getUnreadMessages() {
+	/*public int getUnreadMessages() {
 		return unreadMessages + 1;
-	}
-	public void setUnreadMessages(int unreadMessages) {
+	}*/
+	/*public void setUnreadMessages(int unreadMessages) {
 		this.unreadMessages = unreadMessages;
-	}
-	public int getTeleportStones() {
+	}*/
+	/*public int getTeleportStones() {
 		return teleportStones;
-	}
-	public void setTeleportStones(int stones) {
+	}*/
+	/*public void setTeleportStones(int stones) {
 		this.teleportStones = stones;
-	}
+	}*/
 
 	private Clan clan;
 	private ClanInvite activeClanInvitation;
