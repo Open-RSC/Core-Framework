@@ -25,6 +25,6 @@ script:
   - sudo ant -f server/build.xml compile_plugins
   - sudo ant -f client/build.xml compile
   - sudo ant -f Launcher/nbbuild.xml jar
-  - sudo docker-compose up -d
-  - sudo make import-game
-  - sudo make import-forum
+  - sudo docker-compose --file docker-compose-travis.yml up -d
+  - sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
+  - sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
