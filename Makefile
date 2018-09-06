@@ -27,6 +27,9 @@ compile:
 import-game:
 	@docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" < Databases/openrsc_game.sql 2>/dev/null
 
+import-forum:
+	@docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" < Databases/openrsc_forum.sql 2>/dev/null
+
 run-game:
 	ant -f server/build.xml runservermembers
 
