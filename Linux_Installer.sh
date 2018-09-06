@@ -17,7 +17,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         continue
     fi
-    brew install gnu-sed
+    #brew tap AdoptOpenJDK/openjdk
+    #brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
     PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 fi
 
@@ -43,7 +44,7 @@ An easy to use RSC private server framework.
 Which method of installation do you wish to use?
 
 Choices:
-  ${RED}1${NC} - Docker virtual containers (recommended)
+  ${RED}1${NC} - Use Docker virtual containers (recommended)
   ${RED}2${NC} - Direct installation
   ${RED}3${NC} - Exit"
 echo ""
@@ -57,8 +58,7 @@ if [ "$install" == "2" ]; then
     if (whiptail --title "Open RSC Native Installation" --yesno "Are you sure you wish to install Open RSC natively?" 7 70) then
         break
     else
-        ./Linux_Installer.sh
-        exit
+        jumpto start
     fi
 
     phases=(
@@ -69,7 +69,19 @@ if [ "$install" == "2" ]; then
     )
 
     for i in $(seq 1 100); do
-      sleep 0.1
+
+      sleep 1
+      i=25
+      echo -e "XXX\n$i\n${phases[phase]}\nXXX"
+      sleep 1
+      i=50
+      echo -e "XXX\n$i\n${phases[phase]}\nXXX"
+      sleep 1
+      i=75
+      echo -e "XXX\n$i\n${phases[phase]}\nXXX"
+      sleep 1
+      i=100
+      exit
 
       if [ $i -eq 100 ]; then
           echo -e "XXX\n100\nDone!\nXXX"
@@ -244,30 +256,6 @@ if [ "$install" == "1" ]; then
     # Mac OS ===================================================>
   elif [ "$os" == "2" ]; then
         echo ""
-        echo "Do you have Brew installed? It is required for this."
-        echo ""
-        echo "${RED}1${NC} - No, install it for me!"
-        echo "${RED}2${NC} - Yes"
-        echo ""
-        echo "Which of the above do you wish to do? Type the choice number and press enter."
-        echo ""
-        read brew
-
-        # Mac Brew ===================================================>
-        if [ "$brew" == "1" ]; then
-            /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-            brew install git
-        fi
-        # Mac Brew <===================================================
-
-        echo ""
-        echo "Verifying the basics are installed via Brew."
-        echo ""
-        brew install unzip wget git curl zip screen
-        brew tap AdoptOpenJDK/openjdk
-        brew install adoptopenjdk-openjdk8 ant openjfx
-
-        echo ""
         echo "Downloading the Docker for Mac installer."
         echo ""
         wget https://download.docker.com/mac/stable/Docker.dmg
@@ -287,7 +275,6 @@ if [ "$install" == "1" ]; then
         read
         fi
     # Mac OS <===================================================
-    # Docker Selection <===================================================
 
 # Install Choice <===================================================
 
