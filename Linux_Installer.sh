@@ -166,7 +166,7 @@ if [ "$install" == "2" ]; then
         echo -e "XXX\n$i\n${phases[0]}\nXXX"
         i=1
         # Uninstall previous conflicting software
-        sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y &>/dev/null
+        sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php7.2-fpm php-mysql php-gettext phpmyadmin -y &>/dev/null
         sudo apt autoremove -y &>/dev/null
 
         echo -e "XXX\n$i\n${phases[1]}\nXXX"
@@ -214,16 +214,19 @@ if [ "$install" == "2" ]; then
 
         echo -e "XXX\n$i\n${phases[11]}\nXXX"
         i=15
-        sudo apt-get install php-fpm php-mysql  -y
+        sudo apt-get install php-fpm php7.2-fpm php-mysql  -y
 
         echo -e "XXX\n$i\n${phases[12]}\nXXX"
         i=16
+        debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
         sudo apt-get install php-gettext phpmyadmin  -y
+        sudo ln -s /usr/share/phpmyadmin /var/www/html
 
         echo -e "XXX\n$i\n${phases[13]}\nXXX"
         i=17
         sudo phpenmod mbstring
-
+        sudo rm "/etc/nginx/sites-available/default"
+        sudo cat "etc/nginx/simplified.conf" > "/etc/nginx/sites-available/default"
         echo -e "XXX\n$i\n${phases[14]}\nXXX"
         i=20
         sudo systemctl restart nginx
