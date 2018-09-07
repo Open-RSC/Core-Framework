@@ -221,7 +221,9 @@ if [ "$install" == "2" ]; then
 
         echo -e "XXX\n$i\n${phases[12]}\nXXX"
         i=16
-        debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
+        debconf-set-selections <<< "phpmyadmin phpmyadmin/internal/skip-preseed boolean true"
+        debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect"
+        debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean false"
         sudo apt-get install php-gettext phpmyadmin  -y
         sudo rm /var/www/html/phpmyadmin
         sudo ln -s /usr/share/phpmyadmin /var/www/html
