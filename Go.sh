@@ -10,14 +10,14 @@ exec 0</dev/tty
 # curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Cloner.sh | bash
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "MacOS detected. Performing needed actions to make this script work properly."
+    echo "Apple MacOS detected. Performing needed actions to make this script work properly."
     which -s brew
     if [[ $? != 0 ]] ; then
         # Install Homebrew
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         continue
     fi
-    #brew tap AdoptOpenJDK/openjdk && brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
+    brew tap AdoptOpenJDK/openjdk && brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
     PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 fi
 
@@ -35,8 +35,37 @@ start=${1:-"start"}
 deployment=${1:-"deployment"}
 jumpto $start
 
-# Install Choice ===================================================>
+# Start ===================================================>
 start:
+clear
+echo "${RED}Open RSC:${NC}
+An easy to use RSC private server framework.
+
+What would you like to do?
+
+Choices:
+  ${RED}1${NC} - Install
+  ${RED}2${NC} - Update
+  ${RED}3${NC} - Run
+  ${RED}4${NC} - Exit"
+echo ""
+echo "Which of the above do you wish to do? Type the choice number and press enter."
+echo ""
+read action
+
+if [ "$action" == "1" ]; then
+    jumpto $installer
+elif [ "$action" == "2" ]; then
+    jumpto $deployment
+elif [ "$action" == "3" ]; then
+    jumpto $run
+elif [ "$action" == "4" ]; then
+    exit
+fi
+# Start <===================================================>
+
+# Install Choice ===================================================>
+installer:
 clear
 echo "${RED}Open RSC Installer:${NC}
 An easy to use RSC private server framework.
@@ -45,7 +74,7 @@ Which method of installation do you wish to use?
 
 Choices:
   ${RED}1${NC} - Use Docker virtual containers (recommended)
-  ${RED}2${NC} - Direct installation
+  ${RED}2${NC} - Direct installation (Ubuntu Linux only)
   ${RED}3${NC} - Skip to game deployment
   ${RED}4${NC} - Exit"
 echo ""
@@ -688,7 +717,7 @@ elif [ "$choice" == "3" ]; then
   echo ""
   echo "Done! - Press enter to return back to the menu."
   read
-  ./Linux_Installer.sh
+  ./Go.sh
 # 3. Backup <===================================================
 
 else
@@ -696,6 +725,30 @@ else
     echo "Error! ${RED}$choice${NC} is not a valid option. Press enter to try again."
     echo ""
     read
-    ./Linux_Installer.sh
+    ./Go.sh
     continue
 fi
+
+# Run ===================================================>
+run:
+clear
+
+# Backs up all databases
+echo "Performing database backup"
+echo ""
+make backup
+echo ""
+
+# Run the game server in a detached screen
+echo ""
+echo "Launching the game server in a new screen."
+echo ""
+echo "Type 'screen -r' to access the game server screen."
+echo "Use CTRL + A + D to detach the live server screen so it runs in the background."
+echo ""
+echo ""
+touch gameserver.log && chmod 777 gameserver.log &>/dev/null
+cd server
+screen -dmS name ./ant_launcher.sh
+exit
+# Run <===================================================

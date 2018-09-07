@@ -4,8 +4,8 @@
 #
 # Install with this command (from your Linux machine):
 #
-# curl -sSL https://raw.githubusercontent.com/Open-RSC/Docker-Home/master/Linux_Cloner.sh | bash
+# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Cloner.sh | bash
 
-sudo git clone https://github.com/Open-RSC/Docker-Home.git
-cd Docker-Home
-"./v2_Linux_Installer.sh"
+sudo git clone https://github.com/Open-RSC/Game.git
+cd Game
+"./Go.sh"
