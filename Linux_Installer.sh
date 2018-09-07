@@ -253,6 +253,36 @@ if [ "$install" == "2" ]; then
       	#sudo sed -i 's/C_FIGHT_MENU = 1/C_FIGHT_MENU = 1/g' client/src/rsc/Config.java
       	#sudo sed -i 's/C_ZOOM = 0/C_ZOOM = 0/g' client/src/rsc/Config.java
       	sudo sed -i 's/C_INV_COUNT = false/C_INV_COUNT = "'$inventorycount'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/C_EXPERIENCE_CONFIG_SUBMENU = true/C_EXPERIENCE_CONFIG_SUBMENU = "'$expinfo'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/S_SPAWN_AUCTION_NPCS = false/S_SPAWN_AUCTION_NPCS = "'$actionhouse'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_SPAWN_IRON_MAN_NPCS = false/S_SPAWN_IRON_MAN_NPCS = "'$ironman'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/S_SHOW_FLOATING_NAMETAGS = false/S_SHOW_FLOATING_NAMETAGS = "'$nametags'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_SKILL_MENUS = false/S_WANT_SKILL_MENUS = "'$skillmenu'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_QUEST_MENUS = false/S_WANT_QUEST_MENUS = "'$questmenu'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/S_WANT_KEYBOARD_SHORTCUTS = false/S_WANT_KEYBOARD_SHORTCUTS = "'$shortcuts'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_CUSTOM_BANKS = false/S_WANT_CUSTOM_BANKS = "'$custombank'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_BANK_PINS = false/S_WANT_BANK_PINS = "'$bankpins'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_CUSTOM_FIREMAKING = false/S_CUSTOM_FIREMAKING = "'$customfiremaking'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_DROP_X = false/S_WANT_DROP_X = "'$dropx'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_EXP_INFO = false/S_WANT_EXP_INFO = "'$expinfo'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/S_WANT_CLANS = false/S_WANT_CLANS = "'$clans'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_KILL_FEED = false/S_WANT_KILL_FEED = "'$killfeed'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_FOG_TOGGLE = false/S_FOG_TOGGLE = "'$fog'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_GROUND_ITEM_TOGGLE = false/S_GROUND_ITEM_TOGGLE = "'$grounditems'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/S_BATCH_PROGRESSION = false/S_BATCH_PROGRESSION = "'$batchprogress'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_SIDE_MENU_TOGGLE = false/S_SIDE_MENU_TOGGLE = "'$sidemenu'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_INVENTORY_COUNT_TOGGLE = false/S_INVENTORY_COUNT_TOGGLE = "'$inventorycount'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_ZOOM_VIEW_TOGGLE = false/S_ZOOM_VIEW_TOGGLE = "'$zoomview'"/g' client/src/rsc/Config.java
+      	#sudo sed -i 's/S_MENU_COMBAT_STYLE_TOGGLE = false/S_MENU_COMBAT_STYLE_TOGGLE = "'$'"/g' client/src/rsc/Config.java
+      	#sudo sed -i 's/S_FIGHTMODE_SELECTOR_TOGGLE = false/S_FIGHTMODE_SELECTOR_TOGGLE = "'$'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_EXPERIENCE_COUNTER_TOGGLE = false/S_EXPERIENCE_COUNTER_TOGGLE = "'$expcounter'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_EXPERIENCE_DROPS_TOGGLE = false/S_EXPERIENCE_DROPS_TOGGLE = "'$experiencedrops'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_ITEMS_ON_DEATH_MENU = false/S_ITEMS_ON_DEATH_MENU = "'$itemdeath'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/S_WANT_GLOBAL_CHAT = false/S_WANT_GLOBAL_CHAT = "'$globalchat'"/g' client/src/rsc/Config.java
+        #Launcher
+        sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = ""'$gamename'""/g' Launcher/src/com/loader/openrsc/Constants.java
+        sudo sed -i 's/localhost/"'$domain'"/g' Launcher/src/com/loader/openrsc/Constants.java
+        sudo sed -i 's/43594/"'$port'"/g' Launcher/src/com/loader/openrsc/Constants.java
 
         echo -e "XXX\n$i\n${phases[4]}\nXXX"
         i=60
