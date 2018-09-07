@@ -138,8 +138,21 @@ if [ "$install" == "2" ]; then
         "false" "Do not enable custom firemaking" ON 3>&1 1>&2 2>&3)
 
     phases=(
-    'Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git. This will take some time...' #10
-    'Installing PHP 7.2 and PHPMyAdmin...' #20
+    'Uninstalling previous conflicting software' #1
+    'Adding needed repositories' #2
+    'Running APT Update' #3
+    'Installing nano and htop' #4
+    'Installing screen and git' #5
+    'Installing MariaDB server and client' #6
+    'Installing Nginx' #7
+    'Accepting Oracle JDK 8 licence' #8
+    'Installing Oracle JDK 8 and Apache Ant' #10
+    'Installing PHP and PHP-CGI' #11
+    'Installing PHP-Common, PHP-Pear, and PHP-MBString' #13
+    'Installing PHP-FPM and PHP-MySQL' #15
+    'Installing PHP-GetText and PHPMyAdmin' #16
+    'Configuring MBString' #17
+    'Restarting Nginx to apply changes' #20
     'Setting up databases...' #30
     'Configuring game files based on your input...' #40
     'Creating the website downloads folder...' #60
@@ -149,21 +162,69 @@ if [ "$install" == "2" ]; then
     'Preparing the cache...' #100
     )
     for i in $(seq 1 100); do
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=1
+        # Uninstall previous conflicting software
+        sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=2
+        # Software installations
+        sudo add-apt-repository ppa:webupd8team/java -y &>/dev/null
+        sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=3
+        sudo apt-get update -y &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=4
+        sudo apt-get install nano htop -y &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=5
+        sudo apt-get install screen git -y &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=6
+        sudo apt-get install mariadb-server mariadb-client -y &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=7
+        sudo apt-get install nginx -y &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        i=8
+        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
+
         echo -e "XXX\n$i\n${phases[0]}\nXXX"
         i=10
-        # Software installations
-        sudo add-apt-repository ppa:webupd8team/java -y
-        sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
-        sudo apt-get update
-        sudo apt-get install nano htop screen ant git mariadb-server mariadb-client nginx -y
-        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-        sudo apt-get install -y oracle-java8-installer
+        sudo apt-get install -y oracle-java8-installer ant &>/dev/null
+
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        i=11
+        # PHPMyAdmin installation
+        sudo apt-get install php php-cgi  -y
+
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        i=13
+        sudo apt-get install php-common php-pear php-mbstring  -y
+
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        i=15
+        sudo apt-get install php-fpm php-mysql  -y
+
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        i=16
+        sudo apt-get install php-gettext phpmyadmin  -y
+
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        i=17
+        sudo phpenmod mbstring
 
         echo -e "XXX\n$i\n${phases[1]}\nXXX"
         i=20
-        # PHPMyAdmin installation
-        sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
-        sudo phpenmod mbstring
         sudo systemctl restart nginx
 
         echo -e "XXX\n$i\n${phases[2]}\nXXX"
