@@ -167,67 +167,68 @@ if [ "$install" == "2" ]; then
         i=1
         # Uninstall previous conflicting software
         sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
+        sudo apt autoremove -y
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[1]}\nXXX"
         i=2
         # Software installations
         sudo add-apt-repository ppa:webupd8team/java -y &>/dev/null
         sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[2]}\nXXX"
         i=3
         sudo apt-get update -y &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[3]}\nXXX"
         i=4
         sudo apt-get install nano htop -y &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[4]}\nXXX"
         i=5
         sudo apt-get install screen git -y &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[5]}\nXXX"
         i=6
         sudo apt-get install mariadb-server mariadb-client -y &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[6]}\nXXX"
         i=7
         sudo apt-get install nginx -y &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[7]}\nXXX"
         i=8
         echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
 
-        echo -e "XXX\n$i\n${phases[0]}\nXXX"
+        echo -e "XXX\n$i\n${phases[8]}\nXXX"
         i=10
         sudo apt-get install -y oracle-java8-installer ant &>/dev/null
 
-        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        echo -e "XXX\n$i\n${phases[9]}\nXXX"
         i=11
         # PHPMyAdmin installation
         sudo apt-get install php php-cgi  -y
 
-        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        echo -e "XXX\n$i\n${phases[10]}\nXXX"
         i=13
         sudo apt-get install php-common php-pear php-mbstring  -y
 
-        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        echo -e "XXX\n$i\n${phases[11]}\nXXX"
         i=15
         sudo apt-get install php-fpm php-mysql  -y
 
-        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        echo -e "XXX\n$i\n${phases[12]}\nXXX"
         i=16
         sudo apt-get install php-gettext phpmyadmin  -y
 
-        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        echo -e "XXX\n$i\n${phases[13]}\nXXX"
         i=17
         sudo phpenmod mbstring
 
-        echo -e "XXX\n$i\n${phases[1]}\nXXX"
+        echo -e "XXX\n$i\n${phases[14]}\nXXX"
         i=20
         sudo systemctl restart nginx
 
-        echo -e "XXX\n$i\n${phases[2]}\nXXX"
+        echo -e "XXX\n$i\n${phases[15]}\nXXX"
         i=30
         sleep 1
         # Database configuration and imports
@@ -237,7 +238,7 @@ if [ "$install" == "2" ]; then
         sudo mysql -u"root" -p"$pass" < "Databases/openrsc_game.sql"
         sudo mysql -u"root" -p"$pass" < "Databases/openrsc_forum.sql"
 
-        echo -e "XXX\n$i\n${phases[3]}\nXXX"
+        echo -e "XXX\n$i\n${phases[16]}\nXXX"
         i=40
         # Server configuration edits
         sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/free.conf
@@ -345,30 +346,30 @@ if [ "$install" == "2" ]; then
         sudo sed -i 's/localhost/"'$domain'"/g' Launcher/src/com/loader/openrsc/Constants.java
         sudo sed -i 's/43594/"'$port'"/g' Launcher/src/com/loader/openrsc/Constants.java
 
-        echo -e "XXX\n$i\n${phases[4]}\nXXX"
+        echo -e "XXX\n$i\n${phases[17]}\nXXX"
         i=60
         # Create Website downloads folder
         sudo mkdir /var/www/html/downloads
 
-        echo -e "XXX\n$i\n${phases[5]}\nXXX"
+        echo -e "XXX\n$i\n${phases[18]}\nXXX"
         i=70
         # Server
         sudo ant -f "server/build.xml" compile_core
         sudo ant -f "server/build.xml" compile_plugins
 
-        echo -e "XXX\n$i\n${phases[6]}\nXXX"
+        echo -e "XXX\n$i\n${phases[19]}\nXXX"
         i=80
         # Client
         sudo ant -f "client/build.xml" compile
         yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
 
-        echo -e "XXX\n$i\n${phases[7]}\nXXX"
+        echo -e "XXX\n$i\n${phases[20]}\nXXX"
         i=90
         # Launcher
         sudo ant -f "Launcher/nbbuild.xml" jar
         yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
 
-        echo -e "XXX\n$i\n${phases[8]}\nXXX"
+        echo -e "XXX\n$i\n${phases[21]}\nXXX"
         i=100
         # Cache
         yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
