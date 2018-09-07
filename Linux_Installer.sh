@@ -168,6 +168,9 @@ if [ "$install" == "2" ]; then
         # Uninstall previous conflicting software
         sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php7.2-fpm php-mysql php-gettext phpmyadmin -y &>/dev/null
         sudo apt autoremove -y &>/dev/null
+        sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 720/g' /etc/ssh/sshd_config
+        sudo sed -i 's/#ClientAliveCountMax 3/#ClientAliveCountMax 720/g' /etc/ssh/sshd_config
+        sudo service ssh restart
 
         echo -e "XXX\n$i\n${phases[1]}\nXXX"
         i=2
