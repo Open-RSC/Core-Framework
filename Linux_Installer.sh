@@ -138,7 +138,7 @@ if [ "$install" == "2" ]; then
         "false" "Do not enable custom firemaking" ON 3>&1 1>&2 2>&3)
 
     phases=(
-    'Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git...' #10
+    'Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git. This will take some time...' #10
     'Installing PHP 7.2 and PHPMyAdmin...' #20
     'Setting up databases...' #30
     'Configuring game files based on your input...' #40
@@ -155,9 +155,9 @@ if [ "$install" == "2" ]; then
         sudo add-apt-repository ppa:webupd8team/java -y
         sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
         sudo apt-get update
-        sudo apt remove mysql-server mysql-server-5.7 mysql-client apache2 -y
-        sudo apt-get install nano htop screen ant git oracle-java8-installer mariadb-server mariadb-client nginx -y
-        sudo apt-get autoremove -y
+        sudo apt-get install nano htop screen ant git mariadb-server mariadb-client nginx -y
+        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
+        sudo apt-get install -y oracle-java8-installer
 
         echo -e "XXX\n$i\n${phases[1]}\nXXX"
         i=20
