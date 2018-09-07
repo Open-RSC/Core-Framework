@@ -7150,6 +7150,7 @@ public final class mudclient implements Runnable {
 				}
 			}
 
+			int var8;
 			if(Config.S_WANT_CLANS) {
 				var7 += 15;
 				if (!this.clanInviteBlockSetting) {
@@ -7157,9 +7158,16 @@ public final class mudclient implements Runnable {
 				} else {
 					this.getSurface().drawString("Clan Invitation - @red@Block", var6, var7, 0xFFFFFF, 1);
 				}
+
+				var7 += 20;
+				var8 = 0xFF0000;
+				if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
+            && this.mouseY < 4 + var7) {
+          var8 = 0xFFFF00;
+				}
+				this.getSurface().drawString("Report Abuse", var6, var7, var8, 1);
 			}
 
-			int var8;
 			if (this.insideTutorial) {
 				var7 += 123;
 				var8 = 0xFFFFFF;
@@ -7634,6 +7642,15 @@ public final class mudclient implements Runnable {
 					this.getClientStream().writeBuffer1.putByte(11);
 					this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
 					this.getClientStream().finishPacket();
+				}
+
+				// Report Abuse
+				var7 += 20;
+				if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
+						&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
+					this.inputTextFinal = "";
+					this.inputTextCurrent = "";
+					this.reportAbuse_State = 1;
 				}
 			}
 
