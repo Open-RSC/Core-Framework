@@ -166,8 +166,8 @@ if [ "$install" == "2" ]; then
         echo -e "XXX\n$i\n${phases[0]}\nXXX"
         i=1
         # Uninstall previous conflicting software
-        sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y
-        sudo apt autoremove -y
+        sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin -y &>/dev/null
+        sudo apt autoremove -y &>/dev/null
 
         echo -e "XXX\n$i\n${phases[1]}\nXXX"
         i=2
@@ -181,19 +181,19 @@ if [ "$install" == "2" ]; then
 
         echo -e "XXX\n$i\n${phases[3]}\nXXX"
         i=4
-        sudo apt-get install nano htop -y &>/dev/null
+        sudo apt-get install nano htop -y
 
         echo -e "XXX\n$i\n${phases[4]}\nXXX"
         i=5
-        sudo apt-get install screen git -y &>/dev/null
+        sudo apt-get install screen git -y
 
         echo -e "XXX\n$i\n${phases[5]}\nXXX"
         i=6
-        sudo apt-get install mariadb-server mariadb-client -y &>/dev/null
+        sudo apt-get install mariadb-server mariadb-client -y
 
         echo -e "XXX\n$i\n${phases[6]}\nXXX"
         i=7
-        sudo apt-get install nginx -y &>/dev/null
+        sudo apt-get install nginx -y
 
         echo -e "XXX\n$i\n${phases[7]}\nXXX"
         i=8
@@ -201,7 +201,7 @@ if [ "$install" == "2" ]; then
 
         echo -e "XXX\n$i\n${phases[8]}\nXXX"
         i=10
-        sudo apt-get install -y oracle-java8-installer ant &>/dev/null
+        sudo apt-get install -y oracle-java8-installer ant
 
         echo -e "XXX\n$i\n${phases[9]}\nXXX"
         i=11
