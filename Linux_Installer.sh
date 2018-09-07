@@ -147,7 +147,10 @@ if [ "$install" == "2" ]; then
     'Installing Nginx' #7
     'Accepting Oracle JDK 8 licence' #8
     'Installing Oracle JDK 8 and Apache Ant' #10
-    'Installing PHP and PHPMyAdmin packages' #11
+    'Installing PHP and PHP-CGI' #11
+    'Installing PHP-Common, PHP-Pear, and PHP-MBString' #13
+    'Installing PHP-FPM and PHP-MySQL' #15
+    'Installing PHP-GetText and PHPMyAdmin' #16
     'Configuring MBString' #17
     'Restarting Nginx to apply changes' #20
     'Setting up databases...' #30
@@ -203,7 +206,19 @@ if [ "$install" == "2" ]; then
         echo -e "XXX\n$i\n${phases[9]}\nXXX"
         i=11
         # PHPMyAdmin installation
-        sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php-mysql php-gettext phpmyadmin  -y
+        sudo apt-get install php php-cgi  -y
+
+        echo -e "XXX\n$i\n${phases[10]}\nXXX"
+        i=13
+        sudo apt-get install php-common php-pear php-mbstring  -y
+
+        echo -e "XXX\n$i\n${phases[11]}\nXXX"
+        i=15
+        sudo apt-get install php-fpm php-mysql  -y
+
+        echo -e "XXX\n$i\n${phases[12]}\nXXX"
+        i=16
+        sudo apt-get install php-gettext phpmyadmin  -y
 
         echo -e "XXX\n$i\n${phases[13]}\nXXX"
         i=17
