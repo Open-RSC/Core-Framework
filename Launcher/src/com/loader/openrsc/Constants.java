@@ -9,6 +9,6 @@ public class Constants
     public static final String frameTitle = "Open RSC";
     public static final String base_url = "http://localhost/";
     public static final String CONF_DIR = "Cache";
-    public static String CACHE_URL = "http://localhost/downloads/cache/";
-    public static String CLIENT_URL = "http://localhost/downloads/Open_RSC_Client.jar";
+    public static String CACHE_URL = base_url+"downloads/cache/";
+    public static String CLIENT_URL = base_url+"downloads/Open_RSC_Client.jar";
 }
