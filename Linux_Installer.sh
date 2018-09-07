@@ -329,12 +329,11 @@ if [ "$install" == "2" ]; then
 
 
     # Completion
-    myip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
     echo ""
     cd Game
     echo "The installation script has completed."
     echo ""
-    echo "You should now be able to download the game launcher at: http://${myip}/downloads/Open_RSC_Launcher.jar"
+    echo "You should now be able to download the game launcher at: http://$domain/downloads/Open_RSC_Launcher.jar"
     echo ""
     echo "Launch the game server via: ./Linux_Simple_Run.sh"
     echo ""
