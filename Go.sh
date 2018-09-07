@@ -710,35 +710,19 @@ elif [ "$choice" == "2" ]; then
 
 # 3. Backup ===================================================>
 elif [ "$choice" == "3" ]; then
-
-  echo "You have picked ${GREEN}backup all databases!${NC}"
-  echo ""
-  sudo make backup
-  echo ""
-  echo "Done! - Press enter to return back to the menu."
-  read
-  ./Go.sh
-# 3. Backup <===================================================
-
-else
+    backup:
+    echo "You have picked ${GREEN}backup all databases!${NC}"
     echo ""
-    echo "Error! ${RED}$choice${NC} is not a valid option. Press enter to try again."
+    make backup
     echo ""
+    echo "Done! - Press enter to return back to the menu."
     read
     ./Go.sh
-    continue
-fi
+# 3. Backup <===================================================
 
 # Run ===================================================>
 run:
 clear
-
-# Backs up all databases
-echo "Performing database backup"
-echo ""
-make backup
-echo ""
-
 # Run the game server in a detached screen
 echo ""
 echo "Launching the game server in a new screen."
@@ -752,3 +736,12 @@ cd server
 screen -dmS name ./ant_launcher.sh
 exit
 # Run <===================================================
+
+else
+    echo ""
+    echo "Error! ${RED}$choice${NC} is not a valid option. Press enter to try again."
+    echo ""
+    read
+    ./Go.sh
+    continue
+fi
