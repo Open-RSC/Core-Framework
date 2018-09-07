@@ -32,6 +32,7 @@ function jumpto {
     exit
 }
 start=${1:-"start"}
+deployment=${1:-"deployment"}
 jumpto $start
 
 # Install Choice ===================================================>
@@ -45,7 +46,8 @@ Which method of installation do you wish to use?
 Choices:
   ${RED}1${NC} - Use Docker virtual containers (recommended)
   ${RED}2${NC} - Direct installation
-  ${RED}3${NC} - Exit"
+  ${RED}3${NC} - Skip to game deployment
+  ${RED}4${NC} - Exit"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
@@ -225,7 +227,6 @@ if [ "$install" == "2" ]; then
         debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect"
         debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean false"
         sudo apt-get install php-gettext phpmyadmin  -y
-        sudo rm /var/www/html/phpmyadmin
         sudo ln -s /usr/share/phpmyadmin /var/www/html
 
         echo -e "XXX\n$i\n${phases[13]}\nXXX"
@@ -405,17 +406,25 @@ if [ "$install" == "2" ]; then
 
     # Completion
     echo ""
-    cd Game
     echo "The installation script has completed."
     echo ""
     echo "You should now be able to download the game launcher at: http://$domain/downloads/Open_RSC_Launcher.jar"
     echo ""
     echo "Launch the game server via: ./Linux_Simple_Run.sh"
     echo ""
+    echo "Press enter to continue"
+    echo ""
+    read
+    jumpto $deployment
+fi
+
+# Deployment ===================================================>
+if [ "$install" == "3" ]; then
+  jumpto $deployment
 fi
 
 # Exit ===================================================>
-if [ "$install" == "3" ]; then
+if [ "$install" == "4" ]; then
   exit
 fi
 # Exit <===================================================
@@ -507,7 +516,8 @@ if [ "$install" == "1" ]; then
     # Mac OS <===================================================
 
 # Install Choice <===================================================
-
+deployment:
+clear
 echo ""
 echo "Fetching updates from the Docker-Home GitHub repository."
 echo ""
