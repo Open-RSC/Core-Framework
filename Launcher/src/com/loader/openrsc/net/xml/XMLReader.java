@@ -1,5 +1,6 @@
 package com.loader.openrsc.net.xml;
 
+import static com.loader.openrsc.Constants.base_url;
 import com.loader.openrsc.frame.elements.ArchiveBox;
 import com.loader.openrsc.frame.elements.NewsBox;
 
@@ -36,13 +37,13 @@ public class XMLReader
     }
     
     public static Feed getArchivedNews() {
-        final RSSFeedParser parser = new RSSFeedParser("http://localhost/blog/rss/"); // Archived news RSS feed URL
+        final RSSFeedParser parser = new RSSFeedParser(base_url+"blog/rss/"); // Archived news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
     }
     
     public static Feed getNews() {
-        final RSSFeedParser parser = new RSSFeedParser("http://localhost/blog/rss/"); // Current news RSS feed URL
+        final RSSFeedParser parser = new RSSFeedParser(base_url+"blog/rss/"); // Current news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
     }

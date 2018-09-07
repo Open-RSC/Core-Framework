@@ -1,5 +1,6 @@
 package com.loader.openrsc.util;
 
+import static com.loader.openrsc.Constants.base_url;
 import java.io.Reader;
 import java.net.URLConnection;
 import java.io.InputStreamReader;
@@ -40,7 +41,7 @@ public class ConnectHttps
             }
         };
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        final URL url = new URL("http://localhost");
+        final URL url = new URL(base_url);
         final URLConnection con = url.openConnection();
         final Reader reader = new InputStreamReader(con.getInputStream());
         while (true) {
