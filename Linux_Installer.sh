@@ -68,20 +68,17 @@ if [ "$install" == "2" ]; then
     skillrate=$(whiptail --inputbox "Please enter the skilling XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     banksize=$(whiptail --inputbox "Please enter the max bank size." 8 50 192 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     auctionhouse=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow the auctionhouse" OFF \
-        "false" "Do not allow the auctionhouse" ON 3>&1 1>&2 2>&3)
+        "true" "Enable the auctionhouse" OFF \
+        "false" "Do not enable the auctionhouse" ON 3>&1 1>&2 2>&3)
     ironman=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow ironman mode" OFF \
-        "false" "Do not allow ironman mode" ON 3>&1 1>&2 2>&3)
+        "true" "Enable ironman mode" OFF \
+        "false" "Do not enable ironman mode" ON 3>&1 1>&2 2>&3)
     nametags=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow name tags over players" OFF \
-        "false" "Do not allow name tags over players" ON 3>&1 1>&2 2>&3)
+        "true" "Enable name tags over players" OFF \
+        "false" "Do not enable name tags over players" ON 3>&1 1>&2 2>&3)
     clans=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow player clans" OFF \
-        "false" "Do not allow player clans" ON 3>&1 1>&2 2>&3)
-    killfeed=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow the kill feed" OFF \
-        "false" "Do not allow the kill feed" ON 3>&1 1>&2 2>&3)
+        "true" "Enable player clans" OFF \
+        "false" "Do not enable player clans" ON 3>&1 1>&2 2>&3)
     fog=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
         "true" "Allow fog to be disabled" OFF \
         "false" "Do not allow fog to be disabled" ON 3>&1 1>&2 2>&3)
@@ -89,82 +86,56 @@ if [ "$install" == "2" ]; then
         "true" "Allow ground items to be hidden" OFF \
         "false" "Do not allow ground items to be hidden" ON 3>&1 1>&2 2>&3)
     batchprogression=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow batch mode progression" OFF \
-        "false" "Do not allow batch mode progression" ON 3>&1 1>&2 2>&3)
+        "true" "Enable batch mode progression" OFF \
+        "false" "Do not enable batch mode progression" ON 3>&1 1>&2 2>&3)
     sidemenu=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow the side menu to be toggled on" OFF \
-        "false" "Do not allow the side menu to be toggled on" ON 3>&1 1>&2 2>&3)
+        "true" "Enable the side menu to be toggled" OFF \
+        "false" "Do not enable the side menu to be toggled" ON 3>&1 1>&2 2>&3)
     inventorycount=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow inventory counting mode" OFF \
-        "false" "Do not allow inventory counting mode" ON 3>&1 1>&2 2>&3)
+        "true" "Enable inventory counting mode" OFF \
+        "false" "Do not enable inventory counting mode" ON 3>&1 1>&2 2>&3)
     itemdeath=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Show the items on death menu option" OFF \
-        "false" "Do not show the items on death menu option" ON 3>&1 1>&2 2>&3)
+        "true" "Show the items on death menu" OFF \
+        "false" "Do not show the items on death menu" ON 3>&1 1>&2 2>&3)
     globalchat=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow global chat" OFF \
-        "false" "Do not allow global chat" ON 3>&1 1>&2 2>&3)
-    skillmenus=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow skill menus" OFF \
-        "false" "Do not allow skill menus" ON 3>&1 1>&2 2>&3)
+        "true" "Enable global chat" OFF \
+        "false" "Do not enable global chat" ON 3>&1 1>&2 2>&3)
     custombank=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow enhanced banking mode" OFF \
-        "false" "Do not allow enhanced banking mode" ON 3>&1 1>&2 2>&3)
+        "true" "Enable enhanced banking mode" OFF \
+        "false" "Do not enable enhanced banking mode" ON 3>&1 1>&2 2>&3)
     bankpins=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow bank pins" OFF \
-        "false" "Do not allow bank pins" ON 3>&1 1>&2 2>&3)
+        "true" "Enable bank pins" OFF \
+        "false" "Do not enable bank pins" ON 3>&1 1>&2 2>&3)
     dropx=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow drop X" OFF \
-        "false" "Do not allow drop X" ON 3>&1 1>&2 2>&3)
-
-
-        function firstroutine {
-        $guake=true
-        }
-        function secondroutine {
-        $gtkash=true
-        }
-        function thirdroutine {
-        $nemogtkhash=true
-        }
-        whiptail --title "Test" --checklist --separate-output "Choose:" 20 78 15 \
-        "guake" "" off \
-        "gtkash" "" off \
-        "nemogtkhash" "" off 2>results
-        while read choice
-        do case $choice in
-        guake) firstroutine;;
-        gtkash) secondroutine;;
-        namogtkhash) thirdroutine;;
-        *) ;;
-        esac
-        done < results
-
-
-
-
-
-    =$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow " OFF \
-        "false" "Do not allow " ON 3>&1 1>&2 2>&3)
-    =$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow " OFF \
-        "false" "Do not allow " ON 3>&1 1>&2 2>&3)
-    =$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
-        "true" "Allow " OFF \
-        "false" "Do not allow " ON 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    =$(whiptail --inputbox "" 8 50 DEF --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+        "true" "Enable drop X" OFF \
+        "false" "Do not enable drop X" ON 3>&1 1>&2 2>&3)
+    killfeed=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable kill feed" OFF \
+        "false" "Do not enable kill feed" ON 3>&1 1>&2 2>&3)
+    zoomview=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable zoom view toggle" OFF \
+        "false" "Do not enable zoom view toggle" ON 3>&1 1>&2 2>&3)
+    expcounter=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable experience counters" OFF \
+        "false" "Do not enable experience counters" ON 3>&1 1>&2 2>&3)
+    expinfo=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable custom experience info" OFF \
+        "false" "Do not enable custom experience info" ON 3>&1 1>&2 2>&3)
+    experiencedrops=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable experience drops" OFF \
+        "false" "Do not enable experience drops" ON 3>&1 1>&2 2>&3)
+    skillmenu=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable skill menus" OFF \
+        "false" "Do not enable skill menus" ON 3>&1 1>&2 2>&3)
+    questmenu=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable quest menus" OFF \
+        "false" "Do not enable quest menus" ON 3>&1 1>&2 2>&3)
+    shortcuts=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable keyboard shortcuts" OFF \
+        "false" "Do not enable keyboard shortcuts" ON 3>&1 1>&2 2>&3)
+    customfiremaking=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+        "true" "Enable custom firemaking" OFF \
+        "false" "Do not enable custom firemaking" ON 3>&1 1>&2 2>&3)
 
     phases=(
     'Installing Oracle JDK 8, MariaDB, nano, htop, screen, Apache Ant, and git...' #10
@@ -207,7 +178,7 @@ if [ "$install" == "2" ]; then
 
         echo -e "XXX\n$i\n${phases[3]}\nXXX"
         i=40
-        # Automated file edits
+        # Server configuration edits
         sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/free.conf
         sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/members.conf
         sudo sed -i 's/mysql_pass">root/mysql_pass">'$pass'/g' server/free.conf
@@ -224,26 +195,64 @@ if [ "$install" == "2" ]; then
         sudo sed -i 's/bank_size">192/bank_size">'$banksize'/g' server/members.conf
         sudo sed -i 's/spawn_auction_npcs">false/spawn_auction_npcs">'$auctionhouse'/g' server/free.conf
         sudo sed -i 's/spawn_auction_npcs">false/spawn_auction_npcs">'$auctionhouse'/g' server/members.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-        sudo sed -i 's/A/'$'/g' server/free.conf
-
-        sudo sed -i 's/String IP = "127.0.0.1";/String IP = "'$domain'";/g' client/src/org/openrsc/client/Config.java
+        sudo sed -i 's/spawn_iron_man_npcs">false/spawn_iron_man_npcs">'$ironman'/g' server/free.conf
+        sudo sed -i 's/spawn_iron_man_npcs">false/spawn_iron_man_npcs">'$ironman'/g' server/members.conf
+        sudo sed -i 's/show_floating_nametags">false/show_floating_nametags">'$nametags'/g' server/free.conf
+        sudo sed -i 's/show_floating_nametags">false/show_floating_nametags">'$nametags'/g' server/members.conf
+        sudo sed -i 's/want_clans">false/want_clans">'$clans'/g' server/free.conf
+        sudo sed -i 's/want_clans">false/want_clans">'$clans'/g' server/members.conf
+        sudo sed -i 's/fog_toggle">false/fog_toggle">'$fog'/g' server/free.conf
+        sudo sed -i 's/fog_toggle">false/fog_toggle">'$fog'/g' server/members.conf
+        sudo sed -i 's/ground_item_toggle">false/ground_item_toggle">'$grounditems'/g' server/free.conf
+        sudo sed -i 's/ground_item_toggle">false/ground_item_toggle">'$grounditems'/g' server/members.conf
+        sudo sed -i 's/batch_progression">false/batch_progression">'$batchprogress'/g' server/free.conf
+        sudo sed -i 's/batch_progression">false/batch_progression">'$batchprogress'/g' server/members.conf
+        sudo sed -i 's/side_menu_toggle">false/side_menu_toggle">'$sidemenu'/g' server/free.conf
+        sudo sed -i 's/side_menu_toggle">false/side_menu_toggle">'$sidemenu'/g' server/members.conf
+        sudo sed -i 's/inventory_count_toggle">false/inventory_count_toggle">'$inventorycount'/g' server/free.conf
+        sudo sed -i 's/inventory_count_toggle">false/inventory_count_toggle">'$inventorycount'/g' server/members.conf
+        sudo sed -i 's/items_on_death_menu">false/items_on_death_menu">'$itemdeath'/g' server/free.conf
+        sudo sed -i 's/items_on_death_menu">false/items_on_death_menu">'$itemdeath'/g' server/members.conf
+        sudo sed -i 's/want_global_chat">false/want_global_chat">'$globalchat'/g' server/free.conf
+        sudo sed -i 's/want_global_chat">false/want_global_chat">'$globalchat'/g' server/members.conf
+        sudo sed -i 's/want_custom_banks">false/want_custom_banks">'$custombank'/g' server/free.conf
+        sudo sed -i 's/want_custom_banks">false/want_custom_banks">'$custombank'/g' server/members.conf
+        sudo sed -i 's/want_bank_pins">false/want_bank_pins">'$bankpins'/g' server/free.conf
+        sudo sed -i 's/want_bank_pins">false/want_bank_pins">'$bankpins'/g' server/members.conf
+        sudo sed -i 's/want_drop_x">false/want_drop_x">'$dropx'/g' server/free.conf
+        sudo sed -i 's/want_drop_x">false/want_drop_x">'$dropx'/g' server/members.conf
+        sudo sed -i 's/want_kill_feed">false/want_kill_feed">'$killfeed'/g' server/free.conf
+        sudo sed -i 's/want_kill_feed">false/want_kill_feed">'$killfeed'/g' server/members.conf
+        sudo sed -i 's/zoom_view_toggle">false/zoom_view_toggle">'$zoomview'/g' server/free.conf
+        sudo sed -i 's/zoom_view_toggle">false/zoom_view_toggle">'$zoomview'/g' server/members.conf
+        sudo sed -i 's/experience_counter_toggle">false/experience_counter_toggle">'$expcounter'/g' server/free.conf
+        sudo sed -i 's/experience_counter_toggle">false/experience_counter_toggle">'$expcounter'/g' server/members.conf
+        sudo sed -i 's/want_exp_info">false/want_exp_info">'$expinfo'/g' server/free.conf
+        sudo sed -i 's/want_exp_info">false/want_exp_info">'$expinfo'/g' server/members.conf
+        sudo sed -i 's/want_skill_menus">false/want_skill_menus">'$skillmenu'/g' server/free.conf
+        sudo sed -i 's/want_skill_menus">false/want_skill_menus">'$skillmenu'/g' server/members.conf
+        sudo sed -i 's/want_quest_menus">false/want_quest_menus">'$questmenu'/g' server/free.conf
+        sudo sed -i 's/want_quest_menus">false/want_quest_menus">'$questmenu'/g' server/members.conf
+        sudo sed -i 's/want_keyboard_shortcuts">false/want_keyboard_shortcuts">'$shortcuts'/g' server/free.conf
+        sudo sed -i 's/want_keyboard_shortcuts">false/want_keyboard_shortcuts">'$shortcuts'/g' server/members.conf
+        sudo sed -i 's/custom_firemaking">false/custom_firemaking">'$customfiremaking'/g' server/free.conf
+        sudo sed -i 's/custom_firemaking">false/custom_firemaking">'$customfiremaking'/g' server/members.conf
+        sudo sed -i 's/experience_drops_toggle">false/experience_drops_toggle">'$experiencedrops'/g' server/free.conf
+        sudo sed -i 's/experience_drops_toggle">false/experience_drops_toggle">'$experiencedrops'/g' server/members.conf
+        #Client configuration edits
+        sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = "'$gamename'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = "'$domain'"/g' client/src/rsc/Config.java
+        sudo sed -i 's/C_EXPERIENCE_DROPS = false/C_EXPERIENCE_DROPS = "'$experiencedrops'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/C_BATCH_PROGRESS_BAR = true/C_BATCH_PROGRESS_BAR = "'$batchprogress'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/C_SHOW_FOG = true/C_SHOW_FOG = "'$fog'"/g' client/src/rsc/Config.java
+      	#sudo sed -i 's/C_SHOW_GROUND_ITEMS = 0/C_SHOW_GROUND_ITEMS = 0/g' client/src/rsc/Config.java
+      	#sudo sed -i 's/C_MESSAGE_TAB_SWITCH = true/C_MESSAGE_TAB_SWITCH = true/g' client/src/rsc/Config.java
+      	sudo sed -i 's/C_NAME_CLAN_TAG_OVERLAY = true/C_NAME_CLAN_TAG_OVERLAY = "'$nametags'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/C_SIDE_MENU_OVERLAY = false/C_SIDE_MENU_OVERLAY = "'$sidemenu'"/g' client/src/rsc/Config.java
+      	sudo sed -i 's/C_KILL_FEED = false/C_KILL_FEED = "'$killfeed'"/g' client/src/rsc/Config.java
+      	#sudo sed -i 's/C_FIGHT_MENU = 1/C_FIGHT_MENU = 1/g' client/src/rsc/Config.java
+      	#sudo sed -i 's/C_ZOOM = 0/C_ZOOM = 0/g' client/src/rsc/Config.java
+      	sudo sed -i 's/C_INV_COUNT = false/C_INV_COUNT = "'$inventorycount'"/g' client/src/rsc/Config.java
 
         echo -e "XXX\n$i\n${phases[4]}\nXXX"
         i=60
