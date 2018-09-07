@@ -2014,13 +2014,18 @@ public final class mudclient implements Runnable {
 			try {
 
 
-				this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false,
-						0, 1);
-				this.getSurface().drawSprite(mudclient.spriteMedia + 23, (getGameWidth() / 2) - 256,
-						this.getGameHeight() - 4);
+				this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
+				if (Config.S_WANT_CLANS) {
+					this.getSurface().drawSprite(mudclient.spriteMedia + 30, (getGameWidth() / 2) - 256,
+							this.getGameHeight() - 4);
+				}
+				else {
+					this.getSurface().drawSprite(mudclient.spriteMedia + 23, (getGameWidth() / 2) - 256,
+							this.getGameHeight() - 4);
+				}
 
 				if (var1 == 5) {
-					int color = GenUtil.buildColor(200, 200, 255);
+					int color = GenUtil.buildColor(255, 255, 255);
 					if (this.messageTabSelected == MessageTab.ALL) {
 						color = GenUtil.buildColor(255, 200, 50);
 					}
@@ -2030,7 +2035,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) - 200, "All messages", color, 0, 0,
 							6 + this.getGameHeight());
 
-					color = GenUtil.buildColor(200, 200, 255);
+					color = GenUtil.buildColor(255, 255, 255);
 					if (this.messageTabSelected == MessageTab.CHAT) {
 						color = GenUtil.buildColor(255, 200, 50);
 					}
@@ -2040,7 +2045,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) - 100, "Chat history", color, 0, 0,
 							this.getGameHeight() + 6);
 
-					color = GenUtil.buildColor(200, 200, 255);
+					color = GenUtil.buildColor(255, 255, 255);
 					if (this.messageTabSelected == MessageTab.QUEST) {
 						color = GenUtil.buildColor(255, 200, 50);
 					}
@@ -2050,7 +2055,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2), "Quest history", color, 0, 0,
 							6 + this.getGameHeight());
 
-					color = GenUtil.buildColor(200, 200, 255);
+					color = GenUtil.buildColor(255, 255, 255);
 					if (this.messageTabSelected == MessageTab.PRIVATE) {
 						color = GenUtil.buildColor(255, 200, 50);
 					}
@@ -2060,15 +2065,18 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 100, "Private history", color, 0, 0,
 							this.getGameHeight() + 6);
 					if (Config.S_WANT_CLANS) {
-						color = GenUtil.buildColor(200, 200, 255);
+						color = GenUtil.buildColor(255, 255, 255);
 						if (this.messageTabSelected == MessageTab.CLAN) {
 							color = GenUtil.buildColor(255, 200, 50);
 						}
 						if (this.messageTabActivity_Clan % 30 > 15) {
 							color = GenUtil.buildColor(255, 50, 50);
 						}
-						this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0,
-								6 + this.getGameHeight());
+						this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0, 6 + this.getGameHeight());
+					}
+					else {
+						color = GenUtil.buildColor(255, 255, 255);
+						this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Report Abuse", color, 0, 0, 6 + this.getGameHeight());
 					}
 				}
 			} catch (RuntimeException var3) {
@@ -8825,11 +8833,16 @@ public final class mudclient implements Runnable {
 								this.messageTabSelected = MessageTab.PRIVATE;
 								this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
 							}
-							if (Config.S_WANT_CLANS) {
-								if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
+							if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
 										&& lastMouseButtonDown == 1) {
+								if (Config.S_WANT_CLANS) {
 									this.messageTabSelected = MessageTab.CLAN;
 									this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] = 999999;
+								}
+								else {
+									this.inputTextFinal = "";
+									this.inputTextCurrent = "";
+									this.reportAbuse_State = 1;
 								}
 							}
 
@@ -8837,54 +8850,16 @@ public final class mudclient implements Runnable {
 							this.lastMouseButtonDown = 0;
 						}
 
-						// if (this.mouseY > this.getGameHeight() - 4) {
-						// if (this.mouseX > 15 && this.mouseX < 96 &&
-						// this.lastMouseButtonDown == 1) {
-						// this.messageTabSelected = MessageTab.ALL;
-						// }
-						//
-						// if (this.mouseX > 110 && this.mouseX < 194 &&
-						// this.lastMouseButtonDown == 1) {
-						// this.messageTabSelected = MessageTab.CHAT;
-						// this.panelMessageTabs.controlScrollAmount[this.panelMessageChat]
-						// = 999999;
-						// }
-						//
-						// if (this.mouseX > 215 && this.mouseX < 295 &&
-						// this.lastMouseButtonDown == 1) {
-						// this.messageTabSelected = MessageTab.QUEST;
-						// this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest]
-						// = 999999;
-						// }
-						//
-						// if (this.mouseX > 315 && this.mouseX < 395 &&
-						// this.lastMouseButtonDown == 1) {
-						// this.messageTabSelected = MessageTab.PRIVATE;
-						// this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate]
-						// = 999999;
-						// }
-						//
-						// if (this.mouseX > 417 && this.mouseX < 497 &&
-						// this.lastMouseButtonDown == 1) {
-						// this.inputTextFinal = "";
-						// this.reportAbuse_State = 1;
-						// this.inputTextCurrent = "";
-						// }
-						//
-						// this.currentMouseButtonDown = 0;
-						// this.lastMouseButtonDown = 0;
-						// }
-
-						this.panelMessageTabs.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-								this.lastMouseButtonDown);
-						auctionHouse.myAuctions.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-								this.lastMouseButtonDown);
-						auctionHouse.auctionMenu.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-								this.lastMouseButtonDown);
-						clan.getClanInterface().clanSetupPanel.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-								this.lastMouseButtonDown);
-						bank.bank.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
-								this.lastMouseButtonDown);
+						this.panelMessageTabs.handleMouse(this.mouseX, this.mouseY,
+								this.currentMouseButtonDown, this.lastMouseButtonDown);
+						auctionHouse.myAuctions.handleMouse(this.mouseX, this.mouseY,
+								this.currentMouseButtonDown, this.lastMouseButtonDown);
+						auctionHouse.auctionMenu.handleMouse(this.mouseX, this.mouseY,
+								this.currentMouseButtonDown, this.lastMouseButtonDown);
+						clan.getClanInterface().clanSetupPanel.handleMouse(this.mouseX, this.mouseY,
+								this.currentMouseButtonDown,	this.lastMouseButtonDown);
+						bank.bank.handleMouse(this.mouseX, this.mouseY,
+								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (this.messageTabSelected != MessageTab.ALL && this.mouseX >= 494
 								&& this.mouseY >= this.getGameHeight() - 66) {
 							this.lastMouseButtonDown = 0;
@@ -12277,6 +12252,7 @@ public final class mudclient implements Runnable {
 
 			loadSprite(spriteMedia + 25, "media", 2);
 			loadSprite(spriteMedia + 27, "media", 2);
+			loadSprite(spriteMedia + 30, "media", 1);
 			loadSprite(spriteUtil, "media", 2);
 			loadSprite(spriteUtil + 2, "media", 4);
 			loadSprite(spriteUtil + 6, "media", 2);
