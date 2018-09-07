@@ -235,8 +235,12 @@ if [ "$install" == "2" ]; then
         i=30
         sleep 1
         # Database configuration and imports
-        sudo mysql_secure_installation
-        sudo mysql -uroot -Bse "DROP USER 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        sudo mysql -uroot -Bse "
+            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
+            DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+            DELETE FROM mysql.user WHERE User='';
+            DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
+            FLUSH PRIVILEGES;"
         sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
         sudo mysql -u"root" -p"$pass" < "Databases/openrsc_game.sql"
         sudo mysql -u"root" -p"$pass" < "Databases/openrsc_forum.sql"
