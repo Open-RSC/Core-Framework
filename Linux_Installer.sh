@@ -169,7 +169,7 @@ if [ "$install" == "2" ]; then
         sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php7.2-fpm php-mysql php-gettext phpmyadmin -y &>/dev/null
         sudo apt autoremove -y &>/dev/null
         sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 720/g' /etc/ssh/sshd_config
-        sudo sed -i 's/#ClientAliveCountMax 3/#ClientAliveCountMax 720/g' /etc/ssh/sshd_config
+        sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 720/g' /etc/ssh/sshd_config
         sudo service ssh restart
 
         echo -e "XXX\n$i\n${phases[1]}\nXXX"
@@ -223,6 +223,7 @@ if [ "$install" == "2" ]; then
         i=16
         debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
         sudo apt-get install php-gettext phpmyadmin  -y
+        sudo rm /var/www/html/phpmyadmin
         sudo ln -s /usr/share/phpmyadmin /var/www/html
 
         echo -e "XXX\n$i\n${phases[13]}\nXXX"
