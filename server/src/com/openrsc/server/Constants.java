@@ -105,7 +105,7 @@ public final class Constants {
 		/**
 		 * Avatar web directory (full path required)
 		 */
-		public static final String AVATAR_DIR = "../Website/avatars/";
+		public static final String AVATAR_DIR = "avatars/";
 
 		public static long START_TIME = 0L;
 		/**
