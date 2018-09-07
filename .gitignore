@@ -112,7 +112,7 @@ Tools/Sprite Editor/unpack/*.png
 /Client/nbproject/private/
 Android_Client/\.settings/
 
-server/avatars/
+server/avatars/*.png
 Launcher/Cache/
 
 client/Cache/uid\.dat
