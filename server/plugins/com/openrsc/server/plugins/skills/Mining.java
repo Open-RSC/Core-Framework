@@ -195,7 +195,7 @@ ObjectActionExecutiveListener {
 		owner.playSound("mine");
 		showBubble(owner, new Item(1258));
 		owner.message("You swing your pick at the rock...");
-		owner.setBatchEvent(new BatchEvent(owner, 2000, retrytimes) {
+		owner.setBatchEvent(new BatchEvent(owner, 2000, 1000 + retrytimes) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
