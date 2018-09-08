@@ -1,6 +1,23 @@
 include .env
-
 MYSQL_DUMPS_DIR=./data
+
+certbot:
+	`pwd`/scripts/certbot.sh
+
+combined-install:
+	`pwd`/scripts/combined-install.sh
+
+direct-install:
+	`pwd`/scripts/direct-install.sh
+
+docker-install:
+	`pwd`/scripts/docker-install.sh
+
+get-updates:
+	`pwd`/scripts/get-updates.sh
+
+single-player:
+	`pwd`/scripts/single-player.sh
 
 start:
 	docker-compose up -d
