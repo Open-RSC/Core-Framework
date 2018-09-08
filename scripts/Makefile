@@ -1,6 +1,12 @@
 include ../.env
 MYSQL_DUMPS_DIR=../data
 
+go:
+	cd ../ && `pwd`/go.sh
+
+run:
+	`pwd`/run.sh
+
 certbot:
 	`pwd`/certbot.sh
 
