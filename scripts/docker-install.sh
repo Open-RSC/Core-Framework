@@ -65,14 +65,14 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "-w /usr/bin/docker-runc -p wa" | sudo tee -a /etc/audit/rules.d/audit.rules
     sudo service auditd restart
 
-    # Data-store volume
-    echo "Creating a Docker data-store volume"
-    echo ""
-    sudo mkfs -t ext4 /dev/xvdf
-    sudo mkdir /mnt/data-store
-    sudo mount /dev/xvdf /mnt/data-store
-    echo "/var/lib/docker /mnt/data-store bind defaults,bind 0 0" | sudo tee -a /etc/fstab
-    echo ""
+    # Data-store volume (disabled due to repeat install runs causing issues)
+    #echo "Creating a Docker data-store volume"
+    #echo ""
+    #sudo mkfs -t ext4 /dev/xvdf
+    #sudo mkdir /mnt/data-store
+    #sudo mount /dev/xvdf /mnt/data-store
+    #echo "/var/lib/docker /mnt/data-store bind defaults,bind 0 0" | sudo tee -a /etc/fstab
+    #echo ""
 
     # Start Docker and pull containers
     sudo make start
