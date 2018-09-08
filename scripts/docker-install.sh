@@ -1,5 +1,8 @@
 #!/bin/bash
 # source => https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+NC=`tput sgr0` # No Color
 
 # Ubuntu Linux Docker installation
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -71,7 +74,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "/var/lib/docker /mnt/data-store bind defaults,bind 0 0" | sudo tee -a /etc/fstab
     echo ""
 
-    # Start Docker
+    # Start Docker and pull containers
     sudo make start
 
 
@@ -98,14 +101,17 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 
-# Database
+# Database imports
 echo ""
 echo "Importing the game and forum databases."
 echo ""
-ls
 sudo make import-game
 sudo make import-forum
 sudo make backup
+
+
+# Website clone
+sudo make clone-website
 
 
 # Finished
@@ -113,21 +119,18 @@ echo ""
 echo "${RED}Open RSC Installer:${NC}
 An easy to use RSC private server framework.
 
-Which method of installation do you wish to use?
+What would you like to do next?
 
 Choices:
-  ${RED}1${NC} -
-  ${RED}2${NC} -
-  ${RED}3${NC} - Return to main menu"
+  ${RED}1${NC} - Run Open RSC
+  ${RED}2${NC} - Return to the main menu"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
 read finished
 
 if [ "$finished" == "1" ]; then
-    make
+    make run
 elif [ "$finished" == "2" ]; then
-    make
-elif [ "$finished" == "3" ]; then
     make go
 fi
