@@ -1,42 +1,17 @@
 #!/bin/bash
 exec 0</dev/tty
-
-# Open RSC: A replica RSC private server framework
-#
-# Installs and updates Open RSC
-#
-# Install with this command (from your Linux machine):
-#
-# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/Linux_Cloner.sh | bash
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "Apple MacOS detected. Performing needed actions to make this script work properly."
-    which -s brew
-    if [[ $? != 0 ]] ; then
-        # Install Homebrew
-        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        continue
-    fi
-    brew tap AdoptOpenJDK/openjdk && brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
-    PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-fi
-
 RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
-function jumpto {
-    label=$1
-    cmd=$(sed -n "/$label:/{:a;n;p;ba};" $0 | grep -v ':$')
-    eval "$cmd"
-    exit
-}
-start=${1:-"start"}
-deployment=${1:-"deployment"}
-jumpto $start
+# Open RSC: A replica RSC private server framework
+#
+# Multi-purpose script for Open RSC
+#
+# Install everything with this command:
+#
+# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/scripts/clone.sh | bash
 
-# Start ===================================================>
-start:
 clear
 echo "${RED}Open RSC:${NC}
 An easy to use RSC private server framework.
@@ -54,15 +29,29 @@ echo ""
 read action
 
 if [ "$action" == "1" ]; then
-    jumpto $installer
+    make combined-install
 elif [ "$action" == "2" ]; then
-    jumpto $deployment
+    make get-updates
 elif [ "$action" == "3" ]; then
     jumpto $run
 elif [ "$action" == "4" ]; then
     exit
 fi
-# Start <===================================================>
+
+#=================================================================
+
+function jumpto {
+    label=$1
+    cmd=$(sed -n "/$label:/{:a;n;p;ba};" $0 | grep -v ':$')
+    eval "$cmd"
+    exit
+}
+start=${1:-"start"}
+deployment=${1:-"deployment"}
+jumpto $start
+#=================================================================
+
+start:
 
 # Install Choice ===================================================>
 installer:
@@ -75,8 +64,7 @@ Which method of installation do you wish to use?
 Choices:
   ${RED}1${NC} - Use Docker virtual containers (recommended)
   ${RED}2${NC} - Direct installation (Ubuntu Linux only)
-  ${RED}3${NC} - Skip to game deployment
-  ${RED}4${NC} - Exit"
+  ${RED}3${NC} - Exit"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
@@ -447,102 +435,13 @@ if [ "$install" == "2" ]; then
     jumpto $deployment
 fi
 
-# Deployment ===================================================>
-if [ "$install" == "3" ]; then
-  jumpto $deployment
-fi
-
 # Exit ===================================================>
-if [ "$install" == "4" ]; then
+if [ "$install" == "3" ]; then
   exit
 fi
 # Exit <===================================================
 
-# Docker Selection ===================================================>
-if [ "$install" == "1" ]; then
-    echo ""
-    echo "Which operating system are you running?"
-    echo ""
-    echo "${RED}1${NC} - Ubuntu Linux 18.04 or above"
-    echo "${RED}2${NC} - Mac OS High Sierra or above"
-    echo ""
-    echo "Which of the above do you wish to do? Type the choice number and press enter."
-    echo ""
-    read os
 
-    # Ubuntu OS ===================================================>
-    if [ "$os" == "1" ]; then
-        sudo dpkg-reconfigure tzdata
-
-        echo ""
-        echo "Installing required software. Please wait, this will take a while."
-        echo "Installing certbot, screen, zip, fail2ban, unzip, git, build-essential, "
-        echo "software-properties-common, apt-transport-https, ca-certificates, and curl."
-        echo ""
-        sudo apt-get update
-        sudo apt-get install software-properties-common -y
-        sudo add-apt-repository ppa:certbot/certbot -y
-        sudo apt-get update
-        sudo apt-get install certbot screen zip fail2ban unzip git build-essential apt-transport-https ca-certificates curl -y
-
-        echo ""
-        echo "Attempting to install Docker CE and Docker Compose. Please wait."
-        echo ""
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-        sudo apt-get update && sudo apt-get install docker-ce docker-compose -y
-        sudo setfacl -m user:$USER:rw /var/run/docker.sock
-
-        echo ""
-        echo "Setting Docker to have the correct storage driver and restarting the service."
-        echo ""
-        echo '{
-    "storage-driver": "devicemapper"
-}' | sudo tee /etc/docker/daemon.json && sudo service docker restart
-
-        echo ""
-        echo "Setting Ubuntu Firewall permissions."
-        echo ""
-        sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 8080/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 53595/tcp && sudo ufw deny 3306/tcp
-        sudo sed -i 's/DEFAULT_FORWARD_POLICY="DENY"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
-        sudo ufw reload
-        sudo ufw --force enable
-
-        echo ""
-        echo "Installing Oracle Java JDK 8, openjfx, and Apache ant. Please wait."
-        echo ""
-        sudo apt-get remove -y openjdk-6-jre default-jre default-jre-headless
-        sudo add-apt-repository -y ppa:webupd8team/java
-        sudo apt update
-        sudo apt install -y openjfx ant
-        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-        sudo apt-get install -y oracle-java8-installer
-        sudo apt install oracle-java8-set-default
-        fi
-    # Ubuntu OS <===================================================
-
-    # Mac OS ===================================================>
-  elif [ "$os" == "2" ]; then
-        echo ""
-        echo "Downloading the Docker for Mac installer."
-        echo ""
-        wget https://download.docker.com/mac/stable/Docker.dmg
-        hdiutil attach Docker.dmg
-        echo ""
-        echo "Please drag Docker as instructed in the popup."
-        echo ""
-        echo "Press enter when finished."
-        read
-
-        echo ""
-        open /Applications/Docker.app
-        echo ""
-        echo "Docker is launching. Please follow the directions that it gives you."
-        echo ""
-        echo "Press enter when finished."
-        read
-        fi
-    # Mac OS <===================================================
 
 # Install Choice <===================================================
 deployment:
