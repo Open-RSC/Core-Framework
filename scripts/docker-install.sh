@@ -102,3 +102,28 @@ echo ""
 make import-game
 make import-forum
 make backup
+
+
+# Finished
+echo ""
+echo "${RED}Open RSC Installer:${NC}
+An easy to use RSC private server framework.
+
+Which method of installation do you wish to use?
+
+Choices:
+  ${RED}1${NC} -
+  ${RED}2${NC} -
+  ${RED}3${NC} - Return to main menu"
+echo ""
+echo "Which of the above do you wish to do? Type the choice number and press enter."
+echo ""
+read finished
+
+if [ "$finished" == "1" ]; then
+    make
+elif [ "$finished" == "2" ]; then
+    make
+elif [ "$finished" == "3" ]; then
+    make go
+fi
