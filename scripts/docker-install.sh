@@ -71,6 +71,9 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "/var/lib/docker /mnt/data-store bind defaults,bind 0 0" | sudo tee -a /etc/fstab
     echo ""
 
+    # Start Docker
+    sudo make start
+
 
 # Apple MacOS Docker installation
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -99,9 +102,9 @@ fi
 echo ""
 echo "Importing the game and forum databases."
 echo ""
-make import-game
-make import-forum
-make backup
+sudo make import-game
+sudo make import-forum
+sudo make backup
 
 
 # Finished
