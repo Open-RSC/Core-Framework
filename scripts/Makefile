@@ -48,10 +48,10 @@ compile:
 	ant -f ../Launcher/build.xml jar
 
 import-game:
-	@docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" < ../Databases/openrsc_game.sql 2>/dev/null
+	@docker exec -i mysql mysql -u"root" -p"root" < ../Databases/openrsc_game.sql 2>/dev/null
 
 import-forum:
-	@docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" < ../Databases/openrsc_forum.sql 2>/dev/null
+	@docker exec -i mysql mysql -u"root" -p"root" < ../Databases/openrsc_forum.sql 2>/dev/null
 
 run-game:
 	ant -f ../server/build.xml runservermembers
@@ -67,7 +67,7 @@ logs:
 
 backup:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
-	docker exec $(shell docker-compose ps -q mysqldb) mysqldump --all-databases -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d %H%M %Z"`.sql.zip
+	docker exec mysql mysqldump --all-databases -u"root" -p"root" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d %H%M %Z"`.sql.zip
 
 flush-website:
 	@$(shell sudo rm -rf ../Website)

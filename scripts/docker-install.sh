@@ -102,6 +102,7 @@ fi
 echo ""
 echo "Importing the game and forum databases."
 echo ""
+ls
 sudo make import-game
 sudo make import-forum
 sudo make backup
