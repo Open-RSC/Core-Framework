@@ -1,4 +1,7 @@
 #!/bin/bash
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+NC=`tput sgr0` # No Color
 
 if (whiptail --title "Open RSC Native Installation" --yesno "Are you sure you wish to install Open RSC natively?" 7 70) then
     break
@@ -357,7 +360,7 @@ Which method of installation do you wish to use?
 
 Choices:
   ${RED}1${NC} - Run Open RSC
-  ${RED}2${NC} - Return to main menu"
+  ${RED}2${NC} - Return to the main menu"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
