@@ -155,9 +155,7 @@ if [ "$configure" == "true" ]; then
     #Client configuration edits
     sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = "'$gamename'"/g' client/src/rsc/Config.java
     sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = '$domain'/g' client/src/rsc/Config.java
-    if [ "$experiencedrops" == "true" ]; then
-        sudo sed -i 's/C_EXPERIENCE_DROPS = false/C_EXPERIENCE_DROPS = '$experiencedrops'/g' client/src/rsc/Config.java
-    fi
+    sudo sed -i 's/C_EXPERIENCE_DROPS = false/C_EXPERIENCE_DROPS = '$experiencedrops'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_BATCH_PROGRESS_BAR = true/C_BATCH_PROGRESS_BAR = '$batchprogress'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_SHOW_FOG = true/C_SHOW_FOG = '$fog'/g' client/src/rsc/Config.java
     #sudo sed -i 's/C_SHOW_GROUND_ITEMS = 0/C_SHOW_GROUND_ITEMS = 0/g' client/src/rsc/Config.java
@@ -196,7 +194,7 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/S_WANT_GLOBAL_CHAT = false/S_WANT_GLOBAL_CHAT = '$globalchat'/g' client/src/rsc/Config.java
 
     #Launcher configuration edits
-    sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = '$gamename'"/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = "'$gamename'"/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
