@@ -110,13 +110,9 @@ echo "Waiting 10 seconds then importing the game and forum databases."
 echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
-export dbuser=root
-echo "$dbuser" > .dbuser
-export pass=root
-echo "$dbpass" > .dbpass
-sudo make import-game
-sudo make import-forum
-sudo make backup
+sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
+sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
+sudo docker exec mysql mysqldump --all-databases -u"root" -p"root" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.sql.zip
 
 
 # Website clone
