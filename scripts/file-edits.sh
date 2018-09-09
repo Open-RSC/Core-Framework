@@ -202,6 +202,10 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
+    installmode=$(whiptail --title "Which install mode are you using?" --radiolist "" 8 60 2 \
+        "docker" "Docker installation" ON \
+        "direct" "Direct installation" OFF 3>&1 1>&2 2>&3)
+
     if [ "$installmode" == "direct" ]; then
         # Database configuration
         sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
