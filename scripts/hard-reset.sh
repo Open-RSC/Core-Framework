@@ -30,16 +30,37 @@ else
         sudo rm -rf /etc/mysql/
         sudo git reset HEAD --hard
         sudo git pull
+
+        sudo rm .dbuser
+        sudo touch .dbuser
+        sudo chmod 777 .dbuser
         export dbuser=root
-        sudo echo "$dbuser" > .dbuser
+        echo "$dbuser" > .dbuser
+
+        sudo rm .pass
+        sudo touch .pass
+        sudo chmod 777 .pass
         export pass=root
-        sudo echo "$pass" > .pass
+        echo "$pass" > .pass
+
+        sudo rm .email
+        sudo touch .email
+        sudo chmod 777 .email
         export email=""
-        sudo echo "$email" > .email
+        echo "$email" > .email
+
+        sudo rm .methodinstall
+        sudo touch .methodinstall
+        sudo chmod 777 .methodinstall
         export installmode=""
-        sudo echo "$installmode" > .methodinstall
+        echo "$installmode" > .methodinstall
+
+        sudo rm .installedalready
+        sudo touch .installedalready
+        sudo chmod 777 .installedlaready
         export installedalready=""
-        sudo echo "$installedalready" > .installedalready
+        echo "$installedalready" > .installedalready
+
         echo "Done!"
         make go
     else
@@ -49,16 +70,37 @@ else
         sudo rm -rf etc/letsencrypt/live
         sudo git reset HEAD --hard
         sudo git pull
+
+        sudo rm .dbuser
+        sudo touch .dbuser
+        sudo chmod 777 .dbuser
         export dbuser=root
-        sudo echo "$dbuser" > .dbuser
+        echo "$dbuser" > .dbuser
+
+        sudo rm .pass
+        sudo touch .pass
+        sudo chmod 777 .pass
         export pass=root
-        sudo echo "$pass" > .pass
+        echo "$pass" > .pass
+
+        sudo rm .email
+        sudo touch .email
+        sudo chmod 777 .email
         export email=""
-        sudo echo "$email" > .email
+        echo "$email" > .email
+
+        sudo rm .methodinstall
+        sudo touch .methodinstall
+        sudo chmod 777 .methodinstall
         export installmode=""
-        sudo echo "$installmode" > .methodinstall
+        echo "$installmode" > .methodinstall
+
+        sudo rm .installedalready
+        sudo touch .installedalready
+        sudo chmod 777 .installedalready
         export installedalready=""
-        sudo echo "$installedalready" > .installedalready
+        echo "$installedalready" > .installedalready
+
         echo "Done!"
         make go
     fi
