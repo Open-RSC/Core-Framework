@@ -4,6 +4,8 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
+installmode=docker
+
 # Ubuntu Linux Docker installation
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Installing Docker Community Edition"
@@ -114,23 +116,66 @@ sudo make backup
 sudo make clone-website
 
 
-# Finished
+# HTTPS
 echo ""
-echo "${RED}Open RSC Installer:${NC}
-An easy to use RSC private server framework.
-
-What would you like to do next?
+echo "Do you want a Lets Encrypt HTTPS certificate installed?
 
 Choices:
-  ${RED}1${NC} - Run Open RSC
-  ${RED}2${NC} - Return to the main menu"
+  ${RED}1${NC} - Yes
+  ${RED}2${NC} - No
+"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
-read finished
+read httpsask
 
-if [ "$finished" == "1" ]; then
-    make run
-elif [ "$finished" == "2" ]; then
-    make go
+if [ "$httpsask" == "1" ]; then
+    echo ""
+    echo "Please enter your email address for Lets Encrypt HTTPS registration."
+    echo ""
+    read -s email
+
+    sudo docker stop nginx
+    sudo mv etc/nginx/default.conf etc/nginx/default.conf.BAK
+    sudo mv etc/nginx/HTTPS_default.conf.BAK etc/nginx/default.conf
+    sudo sed -i 's/live\/openrsc.com/live\/'"$domain"'/g' etc/nginx/default.conf
+
+    echo ""
+    echo "Enabling HTTPS"
+    echo ""
+    sudo certbot certonly --standalone --preferred-challenges http --agree-tos -n --config-dir ./etc/letsencrypt -d $domain -d $privatedomain --expand -m $email
 fi
+
+    #echo ""
+    #echo "Please enter the name of your game."
+    #echo ""
+    #read -s gamename
+
+    #echo ""
+    #echo "What should the combat xp multiplier be? ex: 1, 1.5, 2, 5, 10"
+    #echo ""
+    #read -s xprate
+
+    #echo ""
+    #echo "What should the skill xp multiplier be? ex: 1, 1.5, 2, 5, 10"
+    #echo ""
+    #read -s skillrate
+
+    #echo ""
+    #echo "Should batched skills be enabled? 0 = disabled, 1 = try till success, 2 = full auto till empty"
+    #echo ""
+    #read -s loopmode
+
+    # Automated edits of the .env file
+    sudo sed -i 's/URL=http:\/\/localhost\/blog/URL=http:\/\/'"$publicdomain"'\/blog/g' .env
+    sudo sed -i 's/NGINX_HOST=localhost/NGINX_HOST='"$publicdomain"'/g' .env
+    sudo sed -i 's/MARIADB_PASS=pass/MARIADB_PASS='"$dbpass"'/g' .env
+    sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='"$dbpass"'/g' .env
+
+    echo ""
+    echo "Restarting Docker containers to enact changes."
+    echo ""
+    sudo make stop && sudo make start
+
+
+make file-edits

@@ -24,36 +24,23 @@ echo ""
 sudo chmod -R 777 .
 sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
-# Server
+# Finished
 echo ""
-echo "Compiling the game server. Any errors will be in updater.log"
-echo ""
-sudo ant -f "server/build.xml" compile
+echo "${RED}Open RSC:${NC}
+An easy to use RSC private server framework.
 
-# Client
-echo ""
-echo "Compiling and preparing the game client. Any errors will be in updater.log"
-echo ""
-sudo ant -f "client/build.xml" compile
-yes | sudo cp -rf "client/Open_RSC_Client.jar" "Website/downloads/"
-sudo chmod +x "Website/downloads/Open_RSC_Client.jar"
-sudo chmod 777 "Website/downloads/Open_RSC_Client.jar"
+What would you like to do next?
 
-# Launcher
+Choices:
+  ${RED}1${NC} - Run Open RSC
+  ${RED}2${NC} - Return to the main menu"
 echo ""
-echo "Compiling and preparing the game launcher. Any errors will be in updater.log"
+echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
-sudo ant -f "Launcher/nbbuild.xml" jar
-yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "Website/downloads/"
-sudo chmod +x "Website/downloads/Open_RSC_Launcher.jar"
-sudo chmod 777 "Website/downloads/Open_RSC_Launcher.jar"
+read finished
 
-# Cache
-echo ""
-echo "Preparing the client cache."
-echo ""
-yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
-sudo rm Website/downloads/cache/MD5CHECKSUM
-sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM | tee updater.log
-md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
-sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
+if [ "$finished" == "1" ]; then
+    make run-game
+elif [ "$finished" == "2" ]; then
+    make go
+fi
