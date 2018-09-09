@@ -17,6 +17,7 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCDef;
@@ -213,10 +214,17 @@ public final class Admins implements CommandListener {
 		}
 		if (command.equals("simulatedrop")) {
 			int npcID = Integer.parseInt(args[0]);
-			int itemID = Integer.parseInt(args[1]);
-			int maxAttempts = Integer.parseInt(args[2]);
+			int maxAttempts = Integer.parseInt(args[1]);
+
+			HashMap<String, Integer> hmap = new HashMap<String, Integer>();
 
 			ItemDropDef[] drops = EntityHandler.getNpcDef(npcID).getDrops();
+			for (ItemDropDef drop : drops) {
+				if (drop.getID() == -1) continue;
+				ItemDefinition def = EntityHandler.getItemDef(drop.getID());
+				hmap.put(def.getName()+drop.getID(), 0);
+			}
+
 			for (int i = 0; i < maxAttempts; i++) {
 				int total = 0;
 				for (ItemDropDef drop : drops) {
@@ -233,15 +241,16 @@ public final class Admins implements CommandListener {
 					}
 					if (hit >= total && hit < (total + drop.getWeight())) {
 						if (drop.getID() != -1) {
-							if (drop.getID() == itemID) {
-								player.message("Dropped within " + i + " tries.");
-								break;
-							}
+							ItemDefinition def = EntityHandler.getItemDef(drop.getID());
+							hmap.put(def.getName()+drop.getID(), hmap.get(def.getName()+drop.getID()) + 1);
+							break;
 						}
 					}
 					total += drop.getWeight();
 				}
 			}
+
+			System.out.println(hmap);
 		}
 		if (command.equals("reloaddrops")) {
 			try {
