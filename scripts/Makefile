@@ -54,10 +54,10 @@ compile:
 	sudo ant -f ../Launcher/build.xml jar
 
 import-game:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql 2>/dev/null
+	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql
 
 import-forum:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_forum.sql 2>/dev/null
+	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_forum.sql
 
 run-game:
 	`pwd`/run.sh
