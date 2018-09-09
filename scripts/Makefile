@@ -25,6 +25,9 @@ get-updates:
 single-player:
 	`pwd`/single-player.sh
 
+file-edits:
+	`pwd`/file-edits.sh
+
 start:
 	docker-compose up -d
 
