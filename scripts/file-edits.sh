@@ -38,7 +38,7 @@ if [ "$configure" == "true" ]; then
     grounditems=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
         "true" "Allow ground items to be hidden" OFF \
         "false" "Do not allow ground items to be hidden" ON 3>&1 1>&2 2>&3)
-    batchprogression=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
+    batchprogress=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
         "true" "Enable batch mode progression" OFF \
         "false" "Do not enable batch mode progression" ON 3>&1 1>&2 2>&3)
     sidemenu=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
@@ -167,7 +167,7 @@ if [ "$configure" == "true" ]; then
     #sudo sed -i 's/C_ZOOM = 0/C_ZOOM = 0/g' client/src/rsc/Config.java
     sudo sed -i 's/C_INV_COUNT = false/C_INV_COUNT = '$inventorycount'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_EXPERIENCE_CONFIG_SUBMENU = true/C_EXPERIENCE_CONFIG_SUBMENU = '$expinfo'/g' client/src/rsc/Config.java
-    sudo sed -i 's/S_SPAWN_AUCTION_NPCS = false/S_SPAWN_AUCTION_NPCS = '$actionhouse'/g' client/src/rsc/Config.java
+    sudo sed -i 's/S_SPAWN_AUCTION_NPCS = false/S_SPAWN_AUCTION_NPCS = '$auctionhouse'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_SPAWN_IRON_MAN_NPCS = false/S_SPAWN_IRON_MAN_NPCS = '$ironman'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_SHOW_FLOATING_NAMETAGS = false/S_SHOW_FLOATING_NAMETAGS = '$nametags'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_WANT_SKILL_MENUS = false/S_WANT_SKILL_MENUS = '$skillmenu'/g' client/src/rsc/Config.java
