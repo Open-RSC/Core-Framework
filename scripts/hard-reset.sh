@@ -37,7 +37,7 @@ else
         export email=""
         sudo echo "$email" > .email
         export installmode=""
-        sudo echo "$installmode" > .installmode
+        sudo echo "$installmode" > .methodinstall
         export installedalready=""
         sudo echo "$installedalready" > .installedalready
         echo "Done!"
@@ -56,7 +56,7 @@ else
         export email=""
         sudo echo "$email" > .email
         export installmode=""
-        sudo echo "$installmode" > .installmode
+        sudo echo "$installmode" > .methodinstall
         export installedalready=""
         sudo echo "$installedalready" > .installedalready
         echo "Done!"
