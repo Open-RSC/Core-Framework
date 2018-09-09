@@ -7,6 +7,9 @@ go:
 run:
 	`pwd`/scripts/run.sh
 
+hard-reset:
+	`pwd`/scripts/hard-reset.sh
+
 certbot:
 	`pwd`/scripts/certbot.sh
 

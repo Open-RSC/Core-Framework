@@ -23,7 +23,8 @@ Choices:
   ${RED}2${NC} - Update Open RSC
   ${RED}3${NC} - Run Open RSC
   ${RED}4${NC} - Manage Players
-  ${RED}5${NC} - Exit"
+  ${RED}5${NC} - Perform a Hard Reset
+  ${RED}6${NC} - Exit"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
@@ -38,5 +39,7 @@ elif [ "$action" == "3" ]; then
 elif [ "$action" == "4" ]; then
     make rank
 elif [ "$action" == "5" ]; then
+    make hard-reset
+elif [ "$action" == "6" ]; then
     exit
 fi
