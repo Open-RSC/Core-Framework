@@ -15,6 +15,7 @@ if [ "$configure" == "true" ]; then
     pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    port=$(whiptail --inputbox "What port should the game use?" 8 50 43594 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     tick=$(whiptail --inputbox "What speed should the game run? (620 is the default and 320 is twice as fast)" 8 50 620 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     gamename=$(whiptail --inputbox "Please enter the name of your game." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     combatrate=$(whiptail --inputbox "Please enter the combat XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
@@ -97,6 +98,8 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/mysql_pass">root/mysql_pass">'$pass'/g' server/members.conf
     sudo sed -i 's/game_tick">620/game_tick">'$tick'/g' server/free.conf
     sudo sed -i 's/game_tick">620/game_tick">'$tick'/g' server/members.conf
+    sudo sed -i 's/43594/'$port'/g' server/free.conf
+    sudo sed -i 's/43594/'$port'/g' server/members.conf
     sudo sed -i 's/server_name">Open RSC/server_name">"'$gamename'"/g' server/free.conf
     sudo sed -i 's/server_name">Open RSC/server_name">"'$gamename'"/g' server/members.conf
     sudo sed -i 's/combat_exp_rate">1/combat_exp_rate">'$combatrate'/g' server/free.conf
@@ -155,6 +158,7 @@ if [ "$configure" == "true" ]; then
     #Client configuration edits
     sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = "'$gamename'"/g' client/src/rsc/Config.java
     sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = '$subdomain'/g' client/src/rsc/Config.java
+    sudo sed -i 's/43594/'$port'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_EXPERIENCE_DROPS = false/C_EXPERIENCE_DROPS = '$experiencedrops'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_BATCH_PROGRESS_BAR = true/C_BATCH_PROGRESS_BAR = '$batchprogress'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_SHOW_FOG = true/C_SHOW_FOG = '$fog'/g' client/src/rsc/Config.java
