@@ -8,7 +8,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Basics
     echo ""
     echo ""
-    echo "Installing certbot, screen, zip, fail2ban, unzip, git, build-essential, software-properties-common, apt-transport-https, ca-certificates, curl, and setting the system timezone."
+    echo "Installing Certbot, Screen, Zip, Fail2Ban, Unzip, Git, Build-Essential, Software-Properties-Common, APT-Transport-HTTPS, CA-Certificates, Curl, and configuring the system timezone."
     echo ""
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
     sudo apt-get install software-properties-common -y
@@ -20,7 +20,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Java
     echo ""
     echo ""
-    echo "Installing Oracle Java JDK 8, openjfx, and Apache ant. Please wait."
+    echo "Installing Oracle Java JDK 8, OpenJFX, and Apache ant. Please wait."
     echo ""
     sudo apt-get remove -y openjdk-6-jre default-jre default-jre-headless
     sudo add-apt-repository -y ppa:webupd8team/java
