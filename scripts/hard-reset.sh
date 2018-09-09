@@ -31,7 +31,9 @@ else
         sudo git reset HEAD --hard
         sudo git pull
         export dbuser=root
+        echo "$dbuser" > .dbuser
         export pass=root
+        echo "$pass" > .pass
         echo "Done!"
         make go
     else
@@ -42,7 +44,9 @@ else
         sudo git reset HEAD --hard
         sudo git pull
         export dbuser=root
+        echo "$dbuser" > .dbuser
         export pass=root
+        echo "$pass" > .pass
         echo "Done!"
         make go
     fi
