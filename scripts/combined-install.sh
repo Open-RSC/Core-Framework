@@ -42,6 +42,7 @@ if [[ "$installedalready" != "true" ]]; then
         sudo ufw reload
         sudo ufw --force enable
         export installedalready=true
+        echo "$installedalready" > .installedalready
 
 
     # Apple MacOS
@@ -56,6 +57,7 @@ if [[ "$installedalready" != "true" ]]; then
         brew tap AdoptOpenJDK/openjdk && brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
         PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
         export installedalready=true
+        echo "$installedalready" > .installedalready
     fi
 fi
 
