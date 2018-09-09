@@ -32,6 +32,8 @@ else
         sudo git pull
         export dbuser=root
         export pass=root
+        echo "Done!"
+        make go
     else
         sudo make stop
         sudo rm -rf Website
@@ -41,5 +43,7 @@ else
         sudo git pull
         export dbuser=root
         export pass=root
+        echo "Done!"
+        make go
     fi
 fi
