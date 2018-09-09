@@ -22,7 +22,6 @@ echo ""
 echo "Verifying file and user permissions are set correctly"
 echo ""
 sudo chmod -R 777 .
-sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
 echo ""
 echo "Compiling all code now."
@@ -30,11 +29,9 @@ echo ""
 echo ""
 make compile
 
-installmode=$(whiptail --title "Which install mode are you using?" --radiolist "" 8 60 2 \
-    "docker" "Docker installation" ON \
-    "direct" "Direct installation" OFF 3>&1 1>&2 2>&3)
-
 if [ "$installmode" == "direct" ]; then
+    sudo chmod 644 /var/www/html/board/config.php
+
     # Client
     yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
     sudo chmod +x "/var/www/html/downloads/Open_RSC_Client.jar"
@@ -53,6 +50,10 @@ if [ "$installmode" == "direct" ]; then
     sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
 
 elif [ "$installmode" == "docker" ]; then
+    sudo chmod 644 etc/mariadb/innodb.cnf
+    sudo chmod 644 Website/board/config.php
+    sudo setfacl -m user:$USER:rw /var/run/docker.sock
+
     # Client
     yes | sudo cp -rf "client/Open_RSC_Client.jar" "Website/downloads/"
     sudo chmod +x "Website/downloads/Open_RSC_Client.jar"
