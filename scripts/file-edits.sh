@@ -217,8 +217,8 @@ if [ "$configure" == "true" ]; then
             FLUSH PRIVILEGES;"
 
         # PHPBB config.php
-        sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' /var/www/html/board/config.php
-        sudo sed -i 's/dbpass = 'root'/dbpass = '$pass'/g' /var/www/html/board/config.php
+        sudo sed -i "s/dbuser = 'root'/dbuser = 'openrsc'/g" /var/www/html/board/config.php
+        sudo sed -i "s/dbpasswd = 'root'/dbpasswd = '$pass'/g" /var/www/html/board/config.php
 
     elif [ "$installmode" == "docker" ]; then
         # Database configuration
@@ -238,8 +238,8 @@ if [ "$configure" == "true" ]; then
         sudo make stop && sudo make start
 
         # PHPBB config.php
-        sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' Website/board/config.php
-        sudo sed -i 's/dbpass = 'root'/dbpass = '$pass'/g' Website/board/config.php
+        sudo sed -i "s/dbuser = 'root'/dbuser = 'openrsc'/g" Website/board/config.php
+        sudo sed -i "s/dbpasswd = 'root'/dbpasswd = '$pass'/g" Website/board/config.php
     fi
 
     make get-updates
