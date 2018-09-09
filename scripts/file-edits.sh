@@ -222,10 +222,11 @@ if [ "$configure" == "true" ]; then
 
     elif [ "$installmode" == "docker" ]; then
         # Database configuration
-        docker exec -i mysql mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        sudo chmod 644 etc/mariadb/innodb.cnf
+        docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
         docker exec -i mysql mysql -uopenrsc -p$pass -Bse "
             UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
-            DELETE FROM mysql.user WHERE User='root';
+            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='user';
             DELETE FROM mysql.user WHERE User='';
             DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
             FLUSH PRIVILEGES;"
