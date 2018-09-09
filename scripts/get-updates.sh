@@ -24,6 +24,60 @@ echo ""
 sudo chmod -R 777 .
 sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
+echo ""
+echo "Compiling all code now."
+echo ""
+echo ""
+make compile
+
+installmode=$(whiptail --title "Which install mode are you using?" --radiolist "" 8 60 2 \
+    "docker" "Docker installation" ON \
+    "direct" "Direct installation" OFF 3>&1 1>&2 2>&3)
+
+if [ "$installmode" == "direct" ]; then
+    # Client
+    yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
+    sudo chmod +x "/var/www/html/downloads/Open_RSC_Client.jar"
+    sudo chmod 777 "/var/www/html/downloads/Open_RSC_Client.jar"
+
+    # Launcher
+    yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
+    sudo chmod +x "/var/www/html/downloads/Open_RSC_Launcher.jar"
+    sudo chmod 777 "/var/www/html/downloads/Open_RSC_Launcher.jar"
+
+    # Cache
+    yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
+    sudo rm /var/www/html/downloads/cache/MD5CHECKSUM
+    sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM
+    md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM
+    sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
+
+elif [ "$installmode" == "docker" ]; then
+    # Client
+    yes | sudo cp -rf "client/Open_RSC_Client.jar" "Website/downloads/"
+    sudo chmod +x "Website/downloads/Open_RSC_Client.jar"
+    sudo chmod 777 "Website/downloads/Open_RSC_Client.jar"
+
+    # Launcher
+    yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "Website/downloads/"
+    sudo chmod +x "Website/downloads/Open_RSC_Launcher.jar"
+    sudo chmod 777 "Website/downloads/Open_RSC_Launcher.jar"
+
+    # Cache
+    yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
+    sudo rm Website/downloads/cache/MD5CHECKSUM
+    sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM | tee updater.log
+    md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
+    sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
+
+    # .env
+    sudo sed -i 's/URL=http:\/\/localhost\/blog/URL=http:\/\/'"$domain"'\/blog/g' .env
+    sudo sed -i 's/NGINX_HOST=localhost/NGINX_HOST='"$domain"'/g' .env
+    sudo sed -i 's/MARIADB_PASS=pass/MARIADB_PASS='"$pass"'/g' .env
+    sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='"$pass"'/g' .env
+    sudo make stop && sudo make start
+fi
+
 # Finished
 echo ""
 echo "${RED}Open RSC:${NC}
