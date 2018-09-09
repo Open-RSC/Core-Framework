@@ -54,10 +54,10 @@ compile:
 	sudo ant -f ../Launcher/build.xml jar
 
 import-game:
-	@docker exec -i mysql mysql -u"'$dbuser'" -p"'$pass'" < ../Databases/openrsc_game.sql 2>/dev/null
+	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql 2>/dev/null
 
 import-forum:
-	@docker exec -i mysql mysql -u"'$dbuser'" -p"'$pass'" < ../Databases/openrsc_forum.sql 2>/dev/null
+	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_forum.sql 2>/dev/null
 
 run-game:
 	`pwd`/run.sh
@@ -75,7 +75,7 @@ backup:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo chmod 644 etc/mariadb/innodb.cnf
-	docker exec mysql mysqldump --all-databases -u"'$dbuser'" -p"'$pass'" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.sql.zip
+	docker exec mysql mysqldump --all-databases -u$(dbuser) -p$(pass) | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.sql.zip
 
 flush-website:
 	@$(shell sudo rm -rf ../Website)
