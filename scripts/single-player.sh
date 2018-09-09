@@ -1,14 +1,5 @@
 #!/bin/bash
 exec 0</dev/tty
-
-# Open RSC: A replica RSC private server framework
-#
-# Installs and updates Open RSC
-#
-# Install with this command (from your Linux machine):
-#
-# curl -sSL https://raw.githubusercontent.com/Open-RSC/Docker-Home/master/Linux_Cloner.sh | bash
-
 source .env
 
 rm singleplayer.log
@@ -21,6 +12,7 @@ sudo git pull | tee -a singleplayer.log &>/dev/null
 sudo make pull-game | tee -a singleplayer.log &>/dev/null
 sudo chmod -R 777 Game | tee -a installer.log &>/dev/null
 
+# Docker
 clear
 echo "Starting Docker containers."
 sudo make stop | tee -a singleplayer.log &>/dev/null
