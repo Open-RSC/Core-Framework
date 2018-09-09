@@ -198,5 +198,23 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
+    if [ "$installmode" == "direct" ]; then
+        # PHPBB config.php
+        sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' /var/www/html/board/config.php
+        sudo sed -i 's/dbpass = 'root'/dbpass = '$pass'/g' /var/www/html/board/config.php
+
+    elif [ "$installmode" == "docker" ]; then
+        # .env
+        sudo sed -i 's/URL=http:\/\/localhost\/blog/URL=http:\/\/'$domain'\/blog/g' .env
+        sudo sed -i 's/NGINX_HOST=localhost/NGINX_HOST='$domain'/g' .env
+        sudo sed -i 's/MARIADB_PASS=pass/MARIADB_PASS='$pass'/g' .env
+        sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='$pass'/g' .env
+        sudo make stop && sudo make start
+
+        # PHPBB config.php
+        sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' Website/board/config.php
+        sudo sed -i 's/dbpass = 'root'/dbpass = '$pass'/g' Website/board/config.php
+    fi
+
     make get-updates
 fi
