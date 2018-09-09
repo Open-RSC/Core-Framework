@@ -4,9 +4,6 @@ GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 installmode=direct
 
-pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-
 phases=(
 'Uninstalling previous conflicting software' #0
 'Adding needed repositories' #1
@@ -107,13 +104,6 @@ for i in $(seq 1 100); do
     echo -e "XXX\n$i\n${phases[15]}\nXXX"
     sleep 1
     # Database configuration and imports
-    sudo mysql -uroot -Bse "
-        UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
-        DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-        DELETE FROM mysql.user WHERE User='';
-        DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
-        FLUSH PRIVILEGES;"
-    sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
     sudo mysql -u"root" -p"$pass" < "Databases/openrsc_game.sql"
     sudo mysql -u"root" -p"$pass" < "Databases/openrsc_forum.sql"
 

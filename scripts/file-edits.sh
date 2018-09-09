@@ -203,15 +203,32 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
     if [ "$installmode" == "direct" ]; then
+        # Database configuration
+        sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        sudo mysql -uroot -Bse "
+            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
+            DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+            DELETE FROM mysql.user WHERE User='';
+            DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
+            FLUSH PRIVILEGES;"
+
         # PHPBB config.php
         sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' /var/www/html/board/config.php
         sudo sed -i 's/dbpass = 'root'/dbpass = '$pass'/g' /var/www/html/board/config.php
 
     elif [ "$installmode" == "docker" ]; then
+        # Database configuration
+        docker exec -i mysql mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        docker exec -i mysql mysql -uopenrsc -p$pass -Bse "
+            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
+            DELETE FROM mysql.user WHERE User='root';
+            DELETE FROM mysql.user WHERE User='';
+            DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
+            FLUSH PRIVILEGES;"
+
         # .env
-        sudo sed -i 's/URL=http:\/\/localhost\/blog/URL=http:\/\/'$domain'\/blog/g' .env
-        sudo sed -i 's/NGINX_HOST=localhost/NGINX_HOST='$domain'/g' .env
-        sudo sed -i 's/MARIADB_PASS=pass/MARIADB_PASS='$pass'/g' .env
+        sudo sed -i 's/localhost/'$domain'/g' .env
+        sudo sed -i 's/MARIADB_ROOT_USER=root/MARIADB_ROOT_USER='openrsc'/g' .env
         sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='$pass'/g' .env
         sudo make stop && sudo make start
 
