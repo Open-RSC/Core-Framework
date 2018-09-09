@@ -12,9 +12,9 @@ fi
 
 
 if [ "$configure" == "true" ]; then
-    export pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 $pass --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$pass" > .pass
-    export domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$domain" > .domain
     export subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$subdomain" > .subdomain
@@ -104,8 +104,8 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/game_tick">620/game_tick">'$tick'/g' server/members.conf
     sudo sed -i 's/43594/'$port'/g' server/free.conf
     sudo sed -i 's/43594/'$port'/g' server/members.conf
-    sudo sed -i 's/server_name">Open RSC/server_name">"'$gamename'"/g' server/free.conf
-    sudo sed -i 's/server_name">Open RSC/server_name">"'$gamename'"/g' server/members.conf
+    sudo sed -i 's/server_name">Open RSC/server_name">'"$gamename"'/g' server/free.conf
+    sudo sed -i 's/server_name">Open RSC/server_name">'"$gamename"'/g' server/members.conf
     sudo sed -i 's/combat_exp_rate">1/combat_exp_rate">'$combatrate'/g' server/free.conf
     sudo sed -i 's/combat_exp_rate">1/combat_exp_rate">'$combatrate'/g' server/members.conf
     sudo sed -i 's/skilling_exp_rate">1/skilling_exp_rate">'$skillrate'/g' server/free.conf
@@ -160,7 +160,7 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/experience_drops_toggle">false/experience_drops_toggle">'$experiencedrops'/g' server/members.conf
 
     #Client configuration edits
-    sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = "'$gamename'"/g' client/src/rsc/Config.java
+    sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = '"$gamename"'/g' client/src/rsc/Config.java
     sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = '$subdomain'/g' client/src/rsc/Config.java
     sudo sed -i 's/43594/'$port'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_EXPERIENCE_DROPS = false/C_EXPERIENCE_DROPS = '$experiencedrops'/g' client/src/rsc/Config.java
@@ -202,7 +202,7 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/S_WANT_GLOBAL_CHAT = false/S_WANT_GLOBAL_CHAT = '$globalchat'/g' client/src/rsc/Config.java
 
     #Launcher configuration edits
-    sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = "'$gamename'"/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = '"$gamename"'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
