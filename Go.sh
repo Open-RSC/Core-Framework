@@ -5,7 +5,7 @@ GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
 installedalready=`cat .installedalready`
-installmode=`cat .installmode `
+installmode=`cat .methodinstall`
 dbuser=`cat .dbuser`
 pass=`cat .pass`
 email=`cat .email`
