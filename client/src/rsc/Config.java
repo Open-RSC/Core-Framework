@@ -27,12 +27,12 @@ public class Config {
 
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
-	public static boolean C_BATCH_PROGRESS_BAR = true;
-	public static boolean C_SHOW_ROOF = true;
-	public static boolean C_SHOW_FOG = true;
+	public static boolean C_BATCH_PROGRESS_BAR = false;
+	public static boolean C_SHOW_ROOF = false;
+	public static boolean C_SHOW_FOG = false;
 	public static int C_SHOW_GROUND_ITEMS = 0;
-	public static boolean C_MESSAGE_TAB_SWITCH = true;
-	public static boolean C_NAME_CLAN_TAG_OVERLAY = true;
+	public static boolean C_MESSAGE_TAB_SWITCH = false;
+	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;
 	public static boolean C_SIDE_MENU_OVERLAY = false;
 	public static boolean C_KILL_FEED = false;
 	public static int C_FIGHT_MENU = 1;
@@ -53,7 +53,7 @@ public class Config {
 	public static int C_EXPERIENCE_COUNTER_MODE = 0;
 	public static int C_EXPERIENCE_COUNTER_COLOR = 0;
 	public static int C_EXPERIENCE_DROP_SPEED = 1;
-	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = true;
+	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = false;
 
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
@@ -165,13 +165,11 @@ public class Config {
 
 	public static void setConfigurationFromProperties() {
 		Field[] fields = Config.class.getDeclaredFields();
-		boolean found = false;
 		for (Map.Entry<Object, Object> entry : prop.entrySet()) {
 			for (Field f : fields) {
 				if (f.getName().startsWith("F_"))
 					continue;
 				if (f.getName().equals(entry.getKey())) {
-					found = true;
 					try {
 						Class<?> t = f.getType();
 						if (t == int.class) {
@@ -190,8 +188,8 @@ public class Config {
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					}
+					break;
 				}
-				if (found == true) break;
 			}
 		}
 

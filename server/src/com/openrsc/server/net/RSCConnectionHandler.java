@@ -1,6 +1,7 @@
 package com.openrsc.server.net;
 
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
 
 import io.netty.channel.Channel;
@@ -37,7 +38,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter {
 					player = att.player.get();
 				}
 				if (player == null) {
-					loginHandler.processLogin(packet, channel);
+					if (packet.getID() == 19) ActionSender.sendInitialServerConfigs(channel);
+					else loginHandler.processLogin(packet, channel);
 				} else {
 					if (loginHandler != null) {
 						loginHandler = null;
