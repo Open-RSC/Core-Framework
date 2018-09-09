@@ -216,9 +216,13 @@ if [ "$configure" == "true" ]; then
             DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
             FLUSH PRIVILEGES;"
 
-        # PHPBB config.php
+        # Website
         sudo sed -i "s/dbuser = 'root'/dbuser = 'openrsc'/g" /var/www/html/board/config.php
         sudo sed -i "s/dbpasswd = 'root'/dbpasswd = '$pass'/g" /var/www/html/board/config.php
+        sudo sed -i "s/localhost/'$subdomain'/g" /var/www/html/header.php
+        sudo sed -i "s/localhost/'$subdomain'/g" /var/www/html/header5.php
+        sudo sed -i "s/43594/'$port'/g" /var/www/html/header.php
+        sudo sed -i "s/43594/'$port'/g" /var/www/html/header5.php
 
     elif [ "$installmode" == "docker" ]; then
         # Database configuration
@@ -237,9 +241,13 @@ if [ "$configure" == "true" ]; then
         sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='$pass'/g' .env
         sudo make stop && sudo make start
 
-        # PHPBB config.php
+        # Website
         sudo sed -i "s/dbuser = 'root'/dbuser = 'openrsc'/g" Website/board/config.php
         sudo sed -i "s/dbpasswd = 'root'/dbpasswd = '$pass'/g" Website/board/config.php
+        sudo sed -i "s/localhost/'$subdomain'/g" Website/header.php
+        sudo sed -i "s/localhost/'$subdomain'/g" Website/header5.php
+        sudo sed -i "s/43594/'$port'/g" Website/header.php
+        sudo sed -i "s/43594/'$port'/g" Website/header5.php
     fi
 
     make get-updates
