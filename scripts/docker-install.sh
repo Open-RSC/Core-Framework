@@ -104,8 +104,9 @@ fi
 
 # Database imports
 echo ""
-echo "Importing the game and forum databases."
+echo "Waiting 10 seconds then importing the game and forum databases."
 echo ""
+sleep 10
 sudo make import-game
 sudo make import-forum
 sudo make backup
