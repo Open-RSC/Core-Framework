@@ -55,3 +55,5 @@ elif [ "$installmode" == "docker" ]; then
         make go
     fi
 fi
+
+make go
