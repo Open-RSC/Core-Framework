@@ -10,6 +10,9 @@ run:
 certbot:
 	`pwd`/certbot.sh
 
+rank:
+	`pwd`/rank.sh
+
 combined-install:
 	`pwd`/combined-install.sh
 
