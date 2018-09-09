@@ -27,12 +27,6 @@ else
 
     player=$(whiptail --inputbox "Please enter the player name." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
 
-    installmode=$(whiptail --title "Which install mode are you using?" --radiolist "" 8 60 2 \
-        "docker" "Docker installation" ON \
-        "direct" "Direct installation" OFF 3>&1 1>&2 2>&3)
-
-    pass=$(whiptail --inputbox "Please enter the MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-
     if [ "$installmode" == "direct" ]; then
         if [ "$rank" == "3" ]; then
             sudo mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '4' WHERE username = '$player';"
