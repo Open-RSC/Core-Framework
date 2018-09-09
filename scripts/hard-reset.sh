@@ -31,15 +31,15 @@ else
         sudo git reset HEAD --hard
         sudo git pull
         export dbuser=root
-        echo "$dbuser" > .dbuser
+        sudo echo "$dbuser" > .dbuser
         export pass=root
-        echo "$pass" > .pass
+        sudo echo "$pass" > .pass
         export email=""
-        echo "$email" > .email
+        sudo echo "$email" > .email
         export installmode=""
-        echo "$installmode" > .installmode
+        sudo echo "$installmode" > .installmode
         export installedalready=""
-        echo "$installedalready" > .installedalready
+        sudo echo "$installedalready" > .installedalready
         echo "Done!"
         make go
     else
@@ -50,15 +50,15 @@ else
         sudo git reset HEAD --hard
         sudo git pull
         export dbuser=root
-        echo "$dbuser" > .dbuser
+        sudo echo "$dbuser" > .dbuser
         export pass=root
-        echo "$pass" > .pass
+        sudo echo "$pass" > .pass
         export email=""
-        echo "$email" > .email
+        sudo echo "$email" > .email
         export installmode=""
-        echo "$installmode" > .installmode
+        sudo echo "$installmode" > .installmode
         export installedalready=""
-        echo "$installedalready" > .installedalready
+        sudo echo "$installedalready" > .installedalready
         echo "Done!"
         make go
     fi
