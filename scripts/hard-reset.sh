@@ -34,6 +34,12 @@ else
         echo "$dbuser" > .dbuser
         export pass=root
         echo "$pass" > .pass
+        export email=""
+        echo "$email" > .email
+        export installmode=""
+        echo "$installmode" > .installmode
+        export installedalready=""
+        echo "$installedalready" > .installedalready
         echo "Done!"
         make go
     else
@@ -47,6 +53,12 @@ else
         echo "$dbuser" > .dbuser
         export pass=root
         echo "$pass" > .pass
+        export email=""
+        echo "$email" > .email
+        export installmode=""
+        echo "$installmode" > .installmode
+        export installedalready=""
+        echo "$installedalready" > .installedalready
         echo "Done!"
         make go
     fi
