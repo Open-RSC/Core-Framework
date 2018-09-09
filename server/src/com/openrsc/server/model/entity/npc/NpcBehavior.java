@@ -48,12 +48,16 @@ public class NpcBehavior {
 					npc.walk(newX, newY);
 				}
 			}
-			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000 && ((npc.getDef().isAggressive())
-					|| (npc.getDef().isAggressive() && npc.getLocation().inWilderness()))) {
+			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
+					&& (npc.getDef().isAggressive()
+					|| (npc.getLocation().inWilderness() && npc.getID() != 342))) {
+
+				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
+
 					// 5 tiles away aggro for UndeadOne, rest should be 1 tile (RSC) we are using 2 tiles.
-					if (!canAggro(p) || !p.withinRange(npc, (npc.getID() == 542 ? 5 : 2))) {
-						continue;
+					if (!canAggro(p) || !p.withinRange(npc, (npc.getID() == 542 ? 5 : 1))) {
+						continue; // Can't aggro or is not in range.
 					}
 					state = State.AGGRO;
 					target = p;
@@ -113,7 +117,7 @@ public class NpcBehavior {
 					npc.walk(walkTo.getX(), walkTo.getY());
 				}
 			} else if (!npc.inCombat()) {
-				if (npc.getDef().isAggressive() || (npc.getDef().isAggressive() && npc.getLocation().inWilderness())) {
+				if (npc.getDef().isAggressive() || npc.getLocation().inWilderness()) {
 					state = State.AGGRO;
 				} else {
 					state = State.ROAM;
