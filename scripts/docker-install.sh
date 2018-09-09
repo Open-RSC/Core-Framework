@@ -6,6 +6,7 @@ NC=`tput sgr0` # No Color
 
 # Ubuntu Linux Docker installation
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    echo ""
     echo "Installing Docker Community Edition"
     echo ""
     sudo apt-get update
