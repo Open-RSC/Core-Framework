@@ -21,10 +21,25 @@ read reset
 if [ "$reset" == "2" ]; then
     make go
 else
-    sudo make stop
-    sudo rm -rf Website
-    sudo rm -rf data/db/mysql
-    sudo rm -rf etc/letsencrypt/live
-    sudo git reset HEAD --hard
-    sudo git pull
+    if [ "$installmode" == "direct" ]; then
+        sudo service nginx stop
+        sudo apt-get purge "nginx*" -y
+        sudo rm -rf /var/www/http
+        sudo service mariadb stop
+        sudo apt-get purge "mariadb*" -y
+        sudo rm -rf /etc/mysql/
+        sudo git reset HEAD --hard
+        sudo git pull
+        export dbuser=root
+        export pass=root
+    else
+        sudo make stop
+        sudo rm -rf Website
+        sudo rm -rf data/db/mysql
+        sudo rm -rf etc/letsencrypt/live
+        sudo git reset HEAD --hard
+        sudo git pull
+        export dbuser=root
+        export pass=root
+    fi
 fi
