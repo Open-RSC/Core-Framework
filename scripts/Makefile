@@ -60,7 +60,7 @@ run-game:
 	sudo ant -f ../server/build.xml runservermembers
 
 clone-website:
-	@$(shell git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
+	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
 
 pull-website:
 	@cd ../Website && git pull
