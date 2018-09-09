@@ -1045,7 +1045,7 @@ public final class Player extends Mob {
 	}
 
 	public double getExperienceRate(int skill) {
-		double multiplier = 1;
+		double multiplier = 1.0;
 		/**
 		 * Skilling Experience Rate
 		 **/
@@ -1137,7 +1137,7 @@ public final class Player extends Mob {
 		}
 
 		skillXP *= getExperienceRate(skill);
-		skills.addExperience(skill, skillXP);
+		skills.addExperience(skill, (int)skillXP);
 		// ActionSender.sendExperience(this, skill);
 	}
 

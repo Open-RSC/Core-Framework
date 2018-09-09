@@ -264,7 +264,6 @@ public class Npc extends Mob {
 		int currentHighestDamage = 0;
 
 		int totalCombatXP = Formulae.combatExperience(this);
-
 		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
@@ -279,7 +278,7 @@ public class Npc extends Mob {
 			}
 
 			// Give the player their share of the experience.
-			int totalXP = (totalCombatXP / getDef().hits) * damageDoneByPlayer;
+			int totalXP = (int)(((double)(totalCombatXP) / (double)(getDef().hits)) * (double)(damageDoneByPlayer));
 
 			switch (p.getCombatStyle()) {
 			case 0:
