@@ -57,7 +57,7 @@ import-forum:
 	@docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u"$(MARIADB_ROOT_USER)" -p"$(MARIADB_ROOT_PASSWORD)" < Databases/openrsc_forum.sql 2>/dev/null
 
 run-game:
-	sudo ant -f server/build.xml runservermembers
+	`pwd`/scripts/run.sh
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)

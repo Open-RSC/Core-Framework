@@ -57,7 +57,7 @@ import-forum:
 	@docker exec -i mysql mysql -u"root" -p"root" < ../Databases/openrsc_forum.sql 2>/dev/null
 
 run-game:
-	sudo ant -f ../server/build.xml runservermembers
+	`pwd`/run.sh
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
