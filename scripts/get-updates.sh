@@ -22,6 +22,7 @@ echo ""
 echo "Verifying file and user permissions are set correctly"
 echo ""
 sudo chmod -R 777 .
+sudo chmod 644 etc/mariadb/innodb.cnf
 sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
 echo ""

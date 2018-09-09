@@ -74,6 +74,7 @@ logs:
 backup:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
+	sudo chmod 644 etc/mariadb/innodb.cnf
 	docker exec mysql mysqldump --all-databases -u"root" -p"root" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.sql.zip
 
 flush-website:

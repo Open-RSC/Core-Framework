@@ -12,7 +12,7 @@ NC=`tput sgr0` # No Color
 #
 # curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/scripts/clone.sh | bash
 
-clear
+echo ""
 echo "${RED}Open RSC:${NC}
 An easy to use RSC private server framework.
 
