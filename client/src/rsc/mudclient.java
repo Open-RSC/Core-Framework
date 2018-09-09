@@ -281,35 +281,29 @@ public final class mudclient implements Runnable {
 					}
 
 					this.startGame((byte) -92);
-					this.gameState = 0;
+					this.gameState = 2;
 				}
-				//
-				// ClientBase.containerFrame.addMouseListener(this);
-				// ClientBase.containerFrame.addMouseMotionListener(this);
-				// ClientBase.containerFrame.addKeyListener(this);
-				// ClientBase.containerFrame.addWindowListener(new
-				// WindowAdapter() {
-				// @Override
-				// public void windowClosing(WindowEvent e) {
-				// threadState = -1;
-				//
-				// GenUtil.sleepShadow(5000L);
-				// if (threadState == -1) {
-				// System.out.println("5 seconds expired, forcing kill");
-				// closeProgram();
-				// if (clientBaseThread != null) {
-				// try {
-				// clientBaseThread.join();
-				// } catch (InterruptedException e1) {
-				// e1.printStackTrace();
-				// }
-				// clientBaseThread = null;
-				// }
-				// }
-				// }
-				// });
-				// ClientBase.containerFrame.addComponentListener(this);
 
+				while (this.gameState == 2) {
+					if (this.gotInitialConfigs) {
+						this.gameState = 0;
+						run2();
+					}
+				}
+
+      } catch (Exception var10) {
+        var10.printStackTrace();
+        this.errorGameCrash("crash");
+      }
+
+    } catch (RuntimeException var11) {
+      throw GenUtil.makeThrowable(var11, "e.run()");
+    }
+	}
+
+	public final void run2() {
+		try {
+			try {
 				int var3 = 0;
 				int var4 = 256;
 				int var5 = 1;
@@ -10312,68 +10306,129 @@ public final class mudclient implements Runnable {
 
 				else if (opcode == 19) { // Server Configs
 					Properties props = new Properties();
-					String serverName = this.packetsIncoming.readString();
+					String serverName;
+					int spawnAuctionNpcs, spawnIronManNpcs, spawnSubscriptionNpcs;
+					int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
+					int groundItemToggle, autoMessageSwitchToggle, batchProgression;
+					int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
+					int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
+					int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle;
+					int wantGlobalChat, wantSkillMenus, wantQuestMenus;
+					int wantExperienceElixirs, wantKeyboardShortcuts;
+					int wantCustomBanks, wantBankPins, customFiremaking;
+					int wantDropX, wantExpInfo;
+
+					if (!this.gotInitialConfigs) {
+						serverName = this.getClientStream().readString();
+						spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
+						spawnIronManNpcs = this.getClientStream().getUnsignedByte();
+						spawnSubscriptionNpcs = this.getClientStream().getUnsignedByte();
+						showFloatingNametags = this.getClientStream().getUnsignedByte();
+						wantClans = this.getClientStream().getUnsignedByte();
+						wantKillFeed = this.getClientStream().getUnsignedByte();
+						fogToggle = this.getClientStream().getUnsignedByte();
+						groundItemToggle = this.getClientStream().getUnsignedByte();
+						autoMessageSwitchToggle = this.getClientStream().getUnsignedByte();
+						batchProgression = this.getClientStream().getUnsignedByte();
+						sideMenuToggle = this.getClientStream().getUnsignedByte();
+						inventoryCountToggle = this.getClientStream().getUnsignedByte();
+						zoomViewToggle = this.getClientStream().getUnsignedByte();
+						menuCombatStyleToggle = this.getClientStream().getUnsignedByte();
+						fightmodeSelectorToggle = this.getClientStream().getUnsignedByte();
+						experienceCounterToggle = this.getClientStream().getUnsignedByte();
+						experienceDropsToggle = this.getClientStream().getUnsignedByte();
+						itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
+						showRoofToggle = this.getClientStream().getUnsignedByte();
+						wantGlobalChat = this.getClientStream().getUnsignedByte();
+						wantSkillMenus = this.getClientStream().getUnsignedByte();
+						wantQuestMenus = this.getClientStream().getUnsignedByte();
+						wantExperienceElixirs = this.getClientStream().getUnsignedByte();
+						wantKeyboardShortcuts = this.getClientStream().getUnsignedByte();
+						wantCustomBanks = this.getClientStream().getUnsignedByte();
+						wantBankPins = this.getClientStream().getUnsignedByte();
+						customFiremaking = this.getClientStream().getUnsignedByte();
+						wantDropX = this.getClientStream().getUnsignedByte();
+						wantExpInfo = this.getClientStream().getUnsignedByte();
+					} else {
+						serverName = this.packetsIncoming.readString();
+						spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
+						spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
+						spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
+						showFloatingNametags = this.packetsIncoming.getUnsignedByte();
+						wantClans = this.packetsIncoming.getUnsignedByte();
+						wantKillFeed = this.packetsIncoming.getUnsignedByte();
+						fogToggle = this.packetsIncoming.getUnsignedByte();
+						groundItemToggle = this.packetsIncoming.getUnsignedByte();
+						autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
+						batchProgression = this.packetsIncoming.getUnsignedByte();
+						sideMenuToggle = this.packetsIncoming.getUnsignedByte();
+						inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
+						zoomViewToggle = this.packetsIncoming.getUnsignedByte();
+						menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
+						fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
+						experienceCounterToggle = this.packetsIncoming.getUnsignedByte();
+						experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
+						itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
+						showRoofToggle = this.packetsIncoming.getUnsignedByte();
+						wantGlobalChat = this.packetsIncoming.getUnsignedByte();
+						wantSkillMenus = this.packetsIncoming.getUnsignedByte();
+						wantQuestMenus = this.packetsIncoming.getUnsignedByte();
+						wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
+						wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
+						wantCustomBanks = this.packetsIncoming.getUnsignedByte();
+						wantBankPins = this.packetsIncoming.getUnsignedByte();
+						customFiremaking = this.packetsIncoming.getUnsignedByte();
+						wantDropX = this.packetsIncoming.getUnsignedByte();
+						wantExpInfo = this.packetsIncoming.getUnsignedByte();
+					}
+
 					props.setProperty("SERVER_NAME", serverName);
-					int spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
-					int spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
-					int spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
-					int showFloatingNametags = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
-					int wantClans = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false");
-					int wantKillFeed = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
-					int fogToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
-					int groundItemToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
-					int autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
-					int batchProgression = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
-					int sideMenuToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
-					int inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
-					int zoomViewToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
-					int menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
-					int fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false");
-					int experienceCounterToggle = this.packetsIncoming.getUnsignedByte();
           props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
-					int experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
           props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
-					int itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
-					int showRoofToggle = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
-					int wantGlobalChat = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
-					int wantSkillMenus = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
-					int wantQuestMenus = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
-					int wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
-					int wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
-					int wantCustomBanks = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
-					int wantBankPins = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
-					int customFiremaking = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
-					int wantDropX = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false");
-					int wantExpInfo = this.packetsIncoming.getUnsignedByte();
 					props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
+
+					authenticSettings = !(
+							Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+							|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+							|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+							|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+							|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
+							|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+							|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+							|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+
+					if (!gotInitialConfigs) {
+						gotInitialConfigs = true;
+						continueStartGame((byte) -92);
+					}
 				}
 				else {
 					 this.handlePacket2(opcode, length);
@@ -13470,6 +13525,8 @@ public final class mudclient implements Runnable {
 
 		public boolean PAUSED;
 
+		public boolean gotInitialConfigs = false;
+
 		final void startGame(byte var1) {
 			try {
 				this.fetchContainerSize();
@@ -13487,6 +13544,33 @@ public final class mudclient implements Runnable {
 					}
 
 					MiscFunctions.maxReadTries = 1000;
+					// We get the server config before continuing.
+					System.out.println("Getting server configs...");
+					this.getServerConfig();
+				}
+			}
+      catch (RuntimeException var9) {
+        throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');
+      }
+		}
+
+		final void getServerConfig() {
+			try {
+				this.setClientStream(new Network_Socket(this.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this));
+				this.getClientStream().newPacket(19);
+				this.getClientStream().finishPacketAndFlush();
+				this.getClientStream().getUnsignedByte();
+				int len = this.getClientStream().getUnsignedByte();
+				handlePacket1(this.getClientStream().getUnsignedByte(), len);
+			}
+      catch (IOException var9) {
+        throw GenUtil.makeThrowable(var9, "client.KC()");
+      }
+		}
+
+		final void continueStartGame(byte var1) {
+			System.out.println("Got server configs!");
+			try {
 					this.loadGameConfig(false);
 					if (!this.errorLoadingData) {
 						// mudclient.spriteMedia = 2000;
@@ -13682,7 +13766,7 @@ public final class mudclient implements Runnable {
 						}
 					}
 				}
-			} catch (RuntimeException var9) {
+			catch (RuntimeException var9) {
 				throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');
 			}
 		}

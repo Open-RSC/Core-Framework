@@ -24,7 +24,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.PacketBuilder;
+import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.util.IPTrackerPredicate;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
@@ -32,6 +34,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 
@@ -456,7 +459,20 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
+	public static void sendInitialServerConfigs(Channel channel) throws Exception {
+		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
+		ConnectionAttachment attachment = new ConnectionAttachment();
+		channel.attr(RSCConnectionHandler.attachment).set(attachment);
+		channel.writeAndFlush(s.toPacket());
+		channel.close();
+	}
+
 	public static void sendServerConfigs(Player player) {
+		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
+		player.write(s.toPacket());
+	}
+
+	public static com.openrsc.server.net.PacketBuilder prepareServerConfigs() {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
@@ -489,8 +505,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_DROP_X ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
-
-		player.write(s.toPacket());
+		return s;
 	}
 
 	/**

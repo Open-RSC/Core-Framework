@@ -91,6 +91,31 @@ public final class Network_Socket extends Network_Base implements Runnable {
 		}
 	}
 
+	public final int getUnsignedByte() {
+		try {
+			int r = this.inStream.read();
+			return r & 255;
+		} catch (IOException var3) {
+			throw GenUtil.makeThrowable(var3, "");
+		}
+	}
+
+	public final String readString() {
+		try {
+			StringBuilder bldr = new StringBuilder();
+			int i;
+			while ((i = this.inStream.read()) != 10) {
+				if (i == -1) break;
+				bldr.append((char) i);
+			}
+			return bldr.toString();
+		}
+		catch (IOException var3) {
+			throw GenUtil.makeThrowable(var3, "");
+		}
+	}
+
+
 	@Override
 	final void read(byte[] data, int offset, int count) throws IOException {
 		try {
