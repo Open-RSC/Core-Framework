@@ -1,11 +1,6 @@
 #!/bin/bash
 exec 0</dev/tty
 
-domain=$(whiptail --inputbox "Please enter your server's public domain name." 8 50 $domain --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
-privatedomain=$(whiptail --inputbox "Please enter your server's private domain name if one exists." 8 50 $domain --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
-email=$(whiptail --inputbox "Please enter your email address for Lets Encrypt HTTPS registration." 8 50 --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
-
-
 echo ""
 echo ""
 sudo docker stop nginx
@@ -22,7 +17,7 @@ sudo certbot certonly \
 --preferred-challenges http \
 --agree-tos -n \
 --config-dir ./etc/letsencrypt \
--d $domain -d $privatedomain --expand \
+-d $domain -d $subdomain --expand \
 -m $email
 
 sudo docker start nginx
