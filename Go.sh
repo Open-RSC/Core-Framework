@@ -4,6 +4,12 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
+installedalready=`cat .installedalready`
+installmode=`cat .installmode `
+dbuser=`cat .dbuser`
+pass=`cat .pass`
+email=`cat .email`
+
 # Open RSC: A replica RSC private server framework
 #
 # Multi-purpose script for Open RSC
