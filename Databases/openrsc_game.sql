@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Sep 06, 2018 at 02:56 AM
+-- Generation Time: Sep 09, 2018 at 12:10 PM
 -- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic
 -- PHP Version: 7.2.8
 
@@ -336,14 +336,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_generic_logs` (
   PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `time` (`time`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `openrsc_generic_logs`
---
-
-INSERT INTO `openrsc_generic_logs` (`id`, `message`, `time`) VALUES
-(1, 'Marwolf picked up Leather Gloves x1 at (217, 453)', 1536202258);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1350,7 +1343,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_invitems` (
   `slot` int(5) UNSIGNED NOT NULL,
   `dbid` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`dbid`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -10595,21 +10588,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (232, 263, 258, 268, 299, 294, 304, 4681),
 (232, 270, 265, 275, 319, 314, 324, 4682),
 (6, 103, 98, 108, 623, 618, 628, 4850),
-(47, 199, 194, 204, 27, 22, 32, 4912),
-(47, 199, 194, 204, 21, 16, 26, 4913),
-(47, 232, 227, 237, 7, 2, 12, 4915),
-(47, 232, 227, 237, 13, 8, 18, 4916),
-(47, 230, 225, 235, 19, 14, 24, 4917),
-(47, 230, 225, 235, 25, 20, 30, 4918),
-(47, 231, 226, 236, 30, 25, 35, 4919),
-(47, 231, 226, 236, 35, 30, 40, 4920),
-(47, 227, 222, 232, 38, 33, 43, 4921),
-(47, 221, 216, 226, 38, 33, 43, 4922),
-(47, 216, 211, 221, 42, 37, 47, 4923),
-(47, 211, 206, 216, 41, 36, 46, 4924),
-(47, 204, 199, 209, 39, 34, 44, 4925),
-(47, 198, 193, 203, 36, 31, 41, 4926),
-(47, 199, 194, 204, 30, 25, 35, 4927),
 (0, 91, 86, 96, 543, 538, 548, 4928),
 (0, 197, 192, 202, 650, 645, 655, 4929),
 (0, 180, 175, 185, 662, 657, 667, 4930),
@@ -11063,8 +11041,7 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (43, 666, 659, 673, 3630, 3623, 3637, 6807),
 (290, 664, 656, 672, 3632, 3624, 3640, 6808),
 (290, 666, 657, 675, 3633, 3624, 3642, 6810),
-(34, 650, 643, 657, 3628, 3621, 3635, 6811);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(34, 650, 643, 657, 3628, 3621, 3635, 6811),
 (672, 494, 492, 496, 3522, 3520, 3524, 6812),
 (672, 492, 490, 494, 3521, 3519, 3523, 6813),
 (672, 492, 490, 494, 3524, 3522, 3526, 6814),
@@ -11077,7 +11054,8 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (777, 466, 465, 467, 878, 877, 879, 6840),
 (777, 466, 465, 467, 876, 875, 877, 6841),
 (775, 467, 466, 468, 877, 876, 878, 6842),
-(775, 466, 465, 467, 877, 876, 878, 6843),
+(775, 466, 465, 467, 877, 876, 878, 6843);
+INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
 (777, 470, 469, 471, 870, 869, 871, 6846),
 (87, 127, 126, 128, 516, 515, 517, 6847),
 (766, 454, 453, 455, 3708, 3707, 3709, 6849),
@@ -11102,7 +11080,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_objects` (
   `d_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`d_id`),
   UNIQUE KEY `d_id` (`d_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28431 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=28432 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `openrsc_objects`
@@ -31753,9 +31731,9 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (588, 682, 1, 0, 0, 20673),
 (584, 683, 0, 4, 0, 20674),
 (586, 685, 1, 0, 0, 20675),
-(570, 680, 3, 0, 0, 20676);
+(570, 680, 3, 0, 0, 20676),
+(591, 685, 1, 0, 0, 20677);
 INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
-(591, 685, 1, 0, 0, 20677),
 (582, 682, 0, 0, 0, 20678),
 (568, 684, 55, 0, 0, 20679),
 (591, 681, 0, 4, 0, 20680),
@@ -33566,9 +33544,9 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (646, 732, 34, 0, 0, 22485),
 (644, 724, 1, 1, 0, 22486),
 (642, 725, 0, 1, 0, 22487),
-(643, 713, 284, 2, 0, 22488);
+(643, 713, 284, 2, 0, 22488),
+(641, 712, 284, 2, 0, 22489);
 INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
-(641, 712, 284, 2, 0, 22489),
 (641, 717, 284, 0, 0, 22490),
 (643, 714, 284, 2, 0, 22491),
 (647, 723, 309, 0, 0, 22492),
@@ -35351,9 +35329,9 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (677, 3465, 729, 4, 0, 24269),
 (678, 3468, 940, 0, 0, 24270),
 (679, 3464, 763, 1, 0, 24271),
-(675, 3467, 766, 4, 0, 24272);
+(675, 3467, 766, 4, 0, 24272),
+(678, 3466, 734, 7, 0, 24273);
 INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
-(678, 3466, 734, 7, 0, 24273),
 (675, 3465, 729, 0, 0, 24274),
 (672, 3468, 755, 3, 0, 24275),
 (672, 3465, 755, 2, 0, 24276),
@@ -37107,9 +37085,9 @@ INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALU
 (7, 3325, 55, 0, 0, 26463),
 (5, 3348, 34, 2, 0, 26464),
 (4, 3351, 34, 0, 0, 26465),
-(5, 3346, 195, 6, 0, 26466);
+(5, 3346, 195, 6, 0, 26466),
+(6, 3401, 205, 4, 0, 26467);
 INSERT INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
-(6, 3401, 205, 4, 0, 26467),
 (24, 3394, 1075, 0, 0, 26468),
 (5, 3396, 34, 2, 0, 26469),
 (5, 3400, 34, 7, 0, 26470),
@@ -38894,7 +38872,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   KEY `group_id` (`group_id`),
   KEY `highscoreopt` (`highscoreopt`),
   KEY `banned` (`banned`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
