@@ -55,26 +55,32 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 
-# Installation selection
-echo ""
-echo "${RED}Open RSC:${NC}
-An easy to use RSC private server framework.
-
-Which method of installation do you wish to use?
-
-Choices:
-  ${RED}1${NC} - Use Docker virtual containers (recommended)
-  ${RED}2${NC} - Direct installation (Ubuntu Linux only)
-  ${RED}3${NC} - Return to main menu"
-echo ""
-echo "Which of the above do you wish to do? Type the choice number and press enter."
-echo ""
-read install
-
-if [ "$install" == "1" ]; then
+if [ "$installmode" == "docker" ]; then
     make docker-install
-elif [ "$install" == "2" ]; then
+elif [ "$installmode" == "direct" ]; then
     make direct-install
-elif [ "$install" == "3" ]; then
-    make go
+else
+    # Installation selection
+    echo ""
+    echo "${RED}Open RSC:${NC}
+    An easy to use RSC private server framework.
+
+    Which method of installation do you wish to use?
+
+    Choices:
+      ${RED}1${NC} - Use Docker virtual containers (recommended)
+      ${RED}2${NC} - Direct installation (Ubuntu Linux only)
+      ${RED}3${NC} - Return to main menu"
+    echo ""
+    echo "Which of the above do you wish to do? Type the choice number and press enter."
+    echo ""
+    read install
+
+    if [ "$install" == "1" ]; then
+        make docker-install
+    elif [ "$install" == "2" ]; then
+        make direct-install
+    elif [ "$install" == "3" ]; then
+        make go
+    fi
 fi
