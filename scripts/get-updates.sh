@@ -29,10 +29,6 @@ echo ""
 echo ""
 make compile
 
-installmode=$(whiptail --title "Which install mode are you using?" --radiolist "" 8 60 2 \
-    "docker" "Docker installation" ON \
-    "direct" "Direct installation" OFF 3>&1 1>&2 2>&3)
-
 if [ "$installmode" == "direct" ]; then
     sudo chmod 644 /var/www/html/board/config.php
 
