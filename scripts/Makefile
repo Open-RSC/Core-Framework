@@ -2,7 +2,7 @@ include ../.env
 MYSQL_DUMPS_DIR=../data
 
 go:
-	cd ../ && `pwd`/go.sh
+	cd ../ && `pwd`/Go.sh
 
 run:
 	`pwd`/run.sh

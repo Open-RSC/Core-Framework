@@ -14,7 +14,7 @@ fi
 if [ "$configure" == "true" ]; then
     pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    subdomain=$(whiptail --inputbox "Please enter your server's subdomain if one exists." 8 50 .$domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     tick=$(whiptail --inputbox "What speed should the game run? (620 is the default and 320 is twice as fast)" 8 50 620 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     gamename=$(whiptail --inputbox "Please enter the name of your game." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     combatrate=$(whiptail --inputbox "Please enter the combat XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
@@ -154,7 +154,7 @@ if [ "$configure" == "true" ]; then
 
     #Client configuration edits
     sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = "'$gamename'"/g' client/src/rsc/Config.java
-    sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = '$domain'/g' client/src/rsc/Config.java
+    sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = '$subdomain'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_EXPERIENCE_DROPS = false/C_EXPERIENCE_DROPS = '$experiencedrops'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_BATCH_PROGRESS_BAR = true/C_BATCH_PROGRESS_BAR = '$batchprogress'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_SHOW_FOG = true/C_SHOW_FOG = '$fog'/g' client/src/rsc/Config.java
@@ -198,104 +198,5 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
-    echo ""
-    echo "Compiling all code now."
-    echo ""
-    echo ""
-    make compile
-
-    if [ "$installmode" == "direct" ]; then
-        # Client
-        yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
-        sudo chmod +x "/var/www/html/downloads/Open_RSC_Client.jar"
-        sudo chmod 777 "/var/www/html/downloads/Open_RSC_Client.jar"
-
-        # Launcher
-        yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
-        sudo chmod +x "/var/www/html/downloads/Open_RSC_Launcher.jar"
-        sudo chmod 777 "/var/www/html/downloads/Open_RSC_Launcher.jar"
-
-        # Cache
-        yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
-        sudo rm /var/www/html/downloads/cache/MD5CHECKSUM
-        sudo touch /var/www/html/downloads/cache/MD5CHECKSUM && sudo chmod 777 /var/www/html/downloads/cache/MD5CHECKSUM
-        md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM
-        sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
-
-    elif [ "$installmode" == "docker" ]; then
-        # Client
-        yes | sudo cp -rf "client/Open_RSC_Client.jar" "Website/downloads/"
-        sudo chmod +x "Website/downloads/Open_RSC_Client.jar"
-        sudo chmod 777 "Website/downloads/Open_RSC_Client.jar"
-
-        # Launcher
-        yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "Website/downloads/"
-        sudo chmod +x "Website/downloads/Open_RSC_Launcher.jar"
-        sudo chmod 777 "Website/downloads/Open_RSC_Launcher.jar"
-
-        # Cache
-        yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
-        sudo rm Website/downloads/cache/MD5CHECKSUM
-        sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM | tee updater.log
-        md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
-        sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
-
-        # .env
-        sudo sed -i 's/URL=http:\/\/localhost\/blog/URL=http:\/\/'"$domain"'\/blog/g' .env
-        sudo sed -i 's/NGINX_HOST=localhost/NGINX_HOST='"$domain"'/g' .env
-        sudo sed -i 's/MARIADB_PASS=pass/MARIADB_PASS='"$pass"'/g' .env
-        sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='"$pass"'/g' .env
-        sudo make stop && sudo make start
-
-        # HTTPS
-        echo ""
-        echo "Do you want a Lets Encrypt HTTPS certificate installed?
-
-        Choices:
-          ${RED}1${NC} - Yes
-          ${RED}2${NC} - No
-        "
-        echo ""
-        echo "Which of the above do you wish to do? Type the choice number and press enter."
-        echo ""
-        read httpsask
-        if [ "$httpsask" == "1" ]; then
-            echo ""
-            echo "Please enter your email address for Lets Encrypt HTTPS registration."
-            echo ""
-            read -s email
-            sudo docker stop nginx
-            sudo mv etc/nginx/default.conf etc/nginx/default.conf.BAK
-            sudo mv etc/nginx/HTTPS_default.conf.BAK etc/nginx/default.conf
-            sudo sed -i 's/live\/openrsc.com/live\/'"$domain"'/g' etc/nginx/default.conf
-            echo ""
-            echo "Enabling HTTPS"
-            echo ""
-            sudo certbot certonly --standalone --preferred-challenges http --agree-tos -n --config-dir ./etc/letsencrypt -d $domain -d $subdomain --expand -m $email
-        fi
-    fi
-
-
-    # Finished
-    echo ""
-    echo "${RED}Open RSC:${NC}
-    An easy to use RSC private server framework.
-
-    What would you like to do next?
-
-    Choices:
-      ${RED}1${NC} - Run Open RSC
-      ${RED}2${NC} - Return to the main menu"
-    echo ""
-    echo "Which of the above do you wish to do? Type the choice number and press enter."
-    echo ""
-    read finished
-
-    if [ "$finished" == "1" ]; then
-        make run-game
-    elif [ "$finished" == "2" ]; then
-        make go
-    fi
-
-
+    make get-updates
 fi
