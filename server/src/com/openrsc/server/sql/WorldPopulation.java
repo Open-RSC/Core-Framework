@@ -83,7 +83,7 @@ public final class WorldPopulation {
 						.executeQuery("SELECT `amount`, `id`, `weight` FROM `"
 								+ Constants.GameServer.MYSQL_TABLE_PREFIX
 								+ "npcdrops` WHERE npcdef_id = '"
-								+ result.getInt("id") + "'");
+								+ result.getInt("id") + "' ORDER BY `weight` DESC");
 				while (dropResult.next()) {
 					ItemDropDef drop = new ItemDropDef(dropResult.getInt("id"),
 							dropResult.getInt("amount"),
