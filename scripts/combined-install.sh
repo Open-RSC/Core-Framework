@@ -57,7 +57,7 @@ fi
 
 # Installation selection
 echo ""
-echo "${RED}Open RSC Installer:${NC}
+echo "${RED}Open RSC:${NC}
 An easy to use RSC private server framework.
 
 Which method of installation do you wish to use?
