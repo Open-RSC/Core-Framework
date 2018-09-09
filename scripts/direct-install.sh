@@ -2,7 +2,7 @@
 RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
-installmode=direct
+export installmode=direct
 
 phases=(
 'Uninstalling previous conflicting software' #0
@@ -104,8 +104,8 @@ for i in $(seq 1 100); do
     echo -e "XXX\n$i\n${phases[15]}\nXXX"
     sleep 1
     # Database configuration and imports
-    sudo mysql -u"root" -p"$pass" < "Databases/openrsc_game.sql"
-    sudo mysql -u"root" -p"$pass" < "Databases/openrsc_forum.sql"
+    sudo mysql -u"root" -p"root" < "Databases/openrsc_game.sql"
+    sudo mysql -u"root" -p"root" < "Databases/openrsc_forum.sql"
 
     i=99
     echo -e "XXX\n$i\n${phases[16]}\nXXX"

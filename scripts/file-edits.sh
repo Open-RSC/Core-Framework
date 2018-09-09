@@ -12,10 +12,10 @@ fi
 
 
 if [ "$configure" == "true" ]; then
-    pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    port=$(whiptail --inputbox "What port should the game use?" 8 50 43594 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export port=$(whiptail --inputbox "What port should the game use?" 8 50 43594 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     tick=$(whiptail --inputbox "What speed should the game run? (620 is the default and 320 is twice as fast)" 8 50 620 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     gamename=$(whiptail --inputbox "Please enter the name of your game." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     combatrate=$(whiptail --inputbox "Please enter the combat XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
@@ -202,14 +202,12 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
 
-    installmode=$(whiptail --title "Which install mode are you using?" --radiolist "" 8 60 2 \
-        "docker" "Docker installation" ON \
-        "direct" "Direct installation" OFF 3>&1 1>&2 2>&3)
-
     if [ "$installmode" == "direct" ]; then
         # Database configuration
-        sudo mysql -uroot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
-        sudo mysql -uroot -Bse "
+        export dbuser=root
+        sudo mysql -u$dbuser -proot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        export dbuser=openrsc
+        sudo mysql -u$dbuser -p$pass -Bse "
             UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
             DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
             DELETE FROM mysql.user WHERE User='';
@@ -219,16 +217,18 @@ if [ "$configure" == "true" ]; then
         # Website
         sudo sed -i "s/dbuser = 'root'/dbuser = 'openrsc'/g" /var/www/html/board/config.php
         sudo sed -i "s/dbpasswd = 'root'/dbpasswd = '$pass'/g" /var/www/html/board/config.php
-        sudo sed -i "s/localhost/'$subdomain'/g" /var/www/html/header.php
-        sudo sed -i "s/localhost/'$subdomain'/g" /var/www/html/header5.php
-        sudo sed -i "s/43594/'$port'/g" /var/www/html/header.php
-        sudo sed -i "s/43594/'$port'/g" /var/www/html/header5.php
+        sudo sed -i "s/localhost/$subdomain/g" /var/www/html/header.php
+        sudo sed -i "s/localhost/$subdomain/g" /var/www/html/header5.php
+        sudo sed -i "s/43594/$port/g" /var/www/html/header.php
+        sudo sed -i "s/43594/$port/g" /var/www/html/header5.php
 
     elif [ "$installmode" == "docker" ]; then
         # Database configuration
         sudo chmod 644 etc/mariadb/innodb.cnf
-        docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
-        docker exec -i mysql mysql -uopenrsc -p$pass -Bse "
+        export dbuser=root
+        docker exec -i mysql mysql -u$dbuser -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
+        export dbuser=openrsc
+        docker exec -i mysql mysql -u$dbuser -p$pass -Bse "
             UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
             UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='user';
             DELETE FROM mysql.user WHERE User='';
@@ -244,10 +244,13 @@ if [ "$configure" == "true" ]; then
         # Website
         sudo sed -i "s/dbuser = 'root'/dbuser = 'openrsc'/g" Website/board/config.php
         sudo sed -i "s/dbpasswd = 'root'/dbpasswd = '$pass'/g" Website/board/config.php
-        sudo sed -i "s/localhost/'$subdomain'/g" Website/header.php
-        sudo sed -i "s/localhost/'$subdomain'/g" Website/header5.php
-        sudo sed -i "s/43594/'$port'/g" Website/header.php
-        sudo sed -i "s/43594/'$port'/g" Website/header5.php
+        sudo sed -i "s/localhost/$subdomain/g" Website/header.php
+        sudo sed -i "s/localhost/$subdomain/g" Website/header5.php
+        sudo sed -i "s/43594/$port/g" Website/header.php
+        sudo sed -i "s/43594/$port/g" Website/header5.php
+
+        export email=$(whiptail --inputbox "Please enter your email address for Lets Encrypt HTTPS registration." 8 50 $email --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
+        make certbot
     fi
 
     make get-updates
