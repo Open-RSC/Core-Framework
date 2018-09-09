@@ -108,6 +108,7 @@ echo ""
 echo "Waiting 10 seconds then importing the game and forum databases."
 echo ""
 sleep 10
+sudo chmod 644 etc/mariadb/innodb.cnf
 sudo make import-game
 sudo make import-forum
 sudo make backup
