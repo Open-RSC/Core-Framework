@@ -248,6 +248,8 @@ if [ "$configure" == "true" ]; then
         sudo sed -i "s/localhost/'$subdomain'/g" Website/header5.php
         sudo sed -i "s/43594/'$port'/g" Website/header.php
         sudo sed -i "s/43594/'$port'/g" Website/header5.php
+
+        make certbot
     fi
 
     make get-updates

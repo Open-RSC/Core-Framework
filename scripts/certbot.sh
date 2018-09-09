@@ -1,27 +1,17 @@
 #!/bin/bash
 exec 0</dev/tty
 
-clear
-echo "Please enter your server's public domain name."
-echo ""
-read -s publicdomain
+domain=$(whiptail --inputbox "Please enter your server's public domain name." 8 50 $domain --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
+privatedomain=$(whiptail --inputbox "Please enter your server's private domain name if one exists." 8 50 $domain --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
+email=$(whiptail --inputbox "Please enter your email address for Lets Encrypt HTTPS registration." 8 50 --title "Open RSC HTTPS Configuration" 3>&1 1>&2 2>&3)
 
-clear
-echo "Please enter your server's private domain name if one exists or re-enter the public domain name again."
-echo ""
-read -s privatedomain
-
-clear
-echo "Please enter your email address for Lets Encrypt HTTPS registration."
-echo ""
-read -s email
 
 echo ""
 echo ""
 sudo docker stop nginx
 sudo mv etc/nginx/default.conf etc/nginx/default.conf.BAK
 sudo mv etc/nginx/HTTPS_default.conf.BAK etc/nginx/default.conf
-sudo sed -i 's/live\/openrsc.com/live\/'"$publicdomain"'/g' etc/nginx/default.conf
+sudo sed -i 's/live\/openrsc.com/live\/'"$domain"'/g' etc/nginx/default.conf
 
 echo ""
 echo ""
@@ -32,7 +22,7 @@ sudo certbot certonly \
 --preferred-challenges http \
 --agree-tos -n \
 --config-dir ./etc/letsencrypt \
--d $publicdomain -d $privatedomain --expand \
+-d $domain -d $privatedomain --expand \
 -m $email
 
 sudo docker start nginx
