@@ -2,31 +2,30 @@
 exec 0</dev/tty
 source .env
 
-rm singleplayer.log
-touch singleplayer.log && chmod 777 singleplayer.log | tee -a singleplayer.log &>/dev/null
 
 # Check for any updates to the game server
 clear
 echo "Pulling recent updates from the Open-RSC Game repository."
-sudo git pull | tee -a singleplayer.log &>/dev/null
-sudo make pull-game | tee -a singleplayer.log &>/dev/null
-sudo chmod -R 777 Game | tee -a installer.log &>/dev/null
+sudo git pull
+sudo make pull-game
+sudo chmod -R 777 Game
+sudo chmod 644 etc/mariadb/innodb.cnf
 
 # Docker
 clear
 echo "Starting Docker containers."
-sudo make stop | tee -a singleplayer.log &>/dev/null
-sudo make start-single-player | tee -a singleplayer.log &>/dev/null
+sudo make stop
+sudo make start-single-player
 
 # Compile the game server and client
 clear
 echo "Compiling the game client. Any errors will be in singleplayer.log"
-sudo ant -f "Game/client/build.xml" compile | tee -a singleplayer.log &>/dev/null
+sudo ant -f "Game/client/build.xml" compile
 
 clear
 echo "Compiling the game server. Any errors will be in singleplayer.log"
-sudo ant -f "Game/server/build.xml" compile_core | tee -a singleplayer.log &>/dev/null
-sudo ant -f "Game/server/build.xml" compile_plugins | tee -a singleplayer.log &>/dev/null
+sudo ant -f "Game/server/build.xml" compile_core
+sudo ant -f "Game/server/build.xml" compile_plugins
 
 # Run the game client in a new window
 clear

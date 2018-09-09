@@ -12,7 +12,7 @@ NC=`tput sgr0` # No Color
 #
 # curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/scripts/clone.sh | bash
 
-clear
+echo ""
 echo "${RED}Open RSC:${NC}
 An easy to use RSC private server framework.
 
@@ -22,7 +22,8 @@ Choices:
   ${RED}1${NC} - Install Open RSC
   ${RED}2${NC} - Update Open RSC
   ${RED}3${NC} - Run Open RSC
-  ${RED}4${NC} - Exit"
+  ${RED}4${NC} - Manage Players
+  ${RED}5${NC} - Exit"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 echo ""
@@ -35,5 +36,7 @@ elif [ "$action" == "2" ]; then
 elif [ "$action" == "3" ]; then
     make run-game
 elif [ "$action" == "4" ]; then
+    make rank
+elif [ "$action" == "5" ]; then
     exit
 fi
