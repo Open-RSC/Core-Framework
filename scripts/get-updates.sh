@@ -69,13 +69,6 @@ elif [ "$installmode" == "docker" ]; then
     sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM | tee updater.log
     md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
     sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
-
-    # .env
-    sudo sed -i 's/URL=http:\/\/localhost\/blog/URL=http:\/\/'"$domain"'\/blog/g' .env
-    sudo sed -i 's/NGINX_HOST=localhost/NGINX_HOST='"$domain"'/g' .env
-    sudo sed -i 's/MARIADB_PASS=pass/MARIADB_PASS='"$pass"'/g' .env
-    sudo sed -i 's/MARIADB_ROOT_PASSWORD=root/MARIADB_ROOT_PASSWORD='"$pass"'/g' .env
-    sudo make stop && sudo make start
 fi
 
 # Finished
