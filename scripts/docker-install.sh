@@ -4,7 +4,7 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 export installmode=docker
-echo "$installmode" > .installmode
+sudo echo "$installmode" > .installmode
 
 # Ubuntu Linux Docker installation
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -111,9 +111,9 @@ echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
 export dbuser=root
-echo "$dbuser" > .dbuser
+sudo echo "$dbuser" > .dbuser
 export pass=root
-echo "$dbpass" > .dbpass
+sudo echo "$dbpass" > .dbpass
 sudo make import-game
 sudo make import-forum
 sudo make backup

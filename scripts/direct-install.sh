@@ -3,7 +3,7 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 export installmode=direct
-echo "$installmode" > .installmode
+sudo echo "$installmode" > .installmode
 
 phases=(
 'Uninstalling previous conflicting software' #0
