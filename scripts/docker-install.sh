@@ -112,7 +112,7 @@ sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
 sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
 sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
-sudo docker exec mysql mysqldump --all-databases -u"root" -p"root" | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.sql.zip
+sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
 
 
 # Website clone

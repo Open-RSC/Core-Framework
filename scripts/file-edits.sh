@@ -12,14 +12,19 @@ fi
 
 
 if [ "$configure" == "true" ]; then
+
     export pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 $pass --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$pass" > .pass
+
     export domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$domain" > .domain
+
     export subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$subdomain" > .subdomain
+
     export port=$(whiptail --inputbox "What port should the game use?" 8 50 43594 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     echo "$port" > .port
+
     tick=$(whiptail --inputbox "What speed should the game run? (620 is the default and 320 is twice as fast)" 8 50 620 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     gamename=$(whiptail --inputbox "Please enter the name of your game." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     combatrate=$(whiptail --inputbox "Please enter the combat XP rate multiplier." 8 50 1 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
@@ -94,6 +99,7 @@ if [ "$configure" == "true" ]; then
     customfiremaking=$(whiptail --title "Open RSC Configuration" --radiolist "" 8 60 2 \
         "true" "Enable custom firemaking" OFF \
         "false" "Do not enable custom firemaking" ON 3>&1 1>&2 2>&3)
+
 
     # Server configuration edits
     sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/free.conf
@@ -171,8 +177,6 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/C_NAME_CLAN_TAG_OVERLAY = true/C_NAME_CLAN_TAG_OVERLAY = '$nametags'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_SIDE_MENU_OVERLAY = false/C_SIDE_MENU_OVERLAY = '$sidemenu'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_KILL_FEED = false/C_KILL_FEED = '$killfeed'/g' client/src/rsc/Config.java
-    #sudo sed -i 's/C_FIGHT_MENU = 1/C_FIGHT_MENU = 1/g' client/src/rsc/Config.java
-    #sudo sed -i 's/C_ZOOM = 0/C_ZOOM = 0/g' client/src/rsc/Config.java
     sudo sed -i 's/C_INV_COUNT = false/C_INV_COUNT = '$inventorycount'/g' client/src/rsc/Config.java
     sudo sed -i 's/C_EXPERIENCE_CONFIG_SUBMENU = true/C_EXPERIENCE_CONFIG_SUBMENU = '$expinfo'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_SPAWN_AUCTION_NPCS = false/S_SPAWN_AUCTION_NPCS = '$auctionhouse'/g' client/src/rsc/Config.java
@@ -194,8 +198,6 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/S_SIDE_MENU_TOGGLE = false/S_SIDE_MENU_TOGGLE = '$sidemenu'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_INVENTORY_COUNT_TOGGLE = false/S_INVENTORY_COUNT_TOGGLE = '$inventorycount'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_ZOOM_VIEW_TOGGLE = false/S_ZOOM_VIEW_TOGGLE = '$zoomview'/g' client/src/rsc/Config.java
-    #sudo sed -i 's/S_MENU_COMBAT_STYLE_TOGGLE = false/S_MENU_COMBAT_STYLE_TOGGLE = '$'/g' client/src/rsc/Config.java
-    #sudo sed -i 's/S_FIGHTMODE_SELECTOR_TOGGLE = false/S_FIGHTMODE_SELECTOR_TOGGLE = '$'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_EXPERIENCE_COUNTER_TOGGLE = false/S_EXPERIENCE_COUNTER_TOGGLE = '$expcounter'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_EXPERIENCE_DROPS_TOGGLE = false/S_EXPERIENCE_DROPS_TOGGLE = '$experiencedrops'/g' client/src/rsc/Config.java
     sudo sed -i 's/S_ITEMS_ON_DEATH_MENU = false/S_ITEMS_ON_DEATH_MENU = '$itemdeath'/g' client/src/rsc/Config.java
@@ -205,6 +207,7 @@ if [ "$configure" == "true" ]; then
     sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = "'$gamename'"/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/localhost/'$domain'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'$port'/g' Launcher/src/com/loader/openrsc/Constants.java
+
 
     if [ "$installmode" == "direct" ]; then
         # Database configuration
@@ -227,6 +230,7 @@ if [ "$configure" == "true" ]; then
         sudo sed -i "s/localhost/$subdomain/g" /var/www/html/header5.php
         sudo sed -i "s/43594/$port/g" /var/www/html/header.php
         sudo sed -i "s/43594/$port/g" /var/www/html/header5.php
+
 
     elif [ "$installmode" == "docker" ]; then
         # Database configuration
@@ -261,6 +265,7 @@ if [ "$configure" == "true" ]; then
         echo "$email" > .email
         make certbot
     fi
+
 
     make get-updates
 fi
