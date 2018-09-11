@@ -7,6 +7,9 @@ go:
 run:
 	`pwd`/scripts/run.sh
 
+hard-reset:
+	`pwd`/scripts/hard-reset.sh
+
 certbot:
 	`pwd`/scripts/certbot.sh
 
@@ -75,7 +78,7 @@ backup:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo chmod 644 etc/mariadb/innodb.cnf
-	docker exec $(shell docker-compose ps -q mysqldb) mysqldump --all-databases -u$(dbuser) -p$(pass) | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.sql.zip
+	docker exec mysql mysqldump --all-databases -u$(dbuser) -p$(pass) --all-databases | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.zip
 
 flush-website:
 	@$(shell sudo rm -rf Website)
