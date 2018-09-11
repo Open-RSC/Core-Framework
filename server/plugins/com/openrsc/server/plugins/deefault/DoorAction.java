@@ -22,6 +22,7 @@ public class DoorAction {
 
 	public boolean blockWallObjectAction(final GameObject obj,
 			final Integer click, final Player player) {
+
 		if (obj.getDoorDef().name.toLowerCase().contains("door")
 				|| obj.getDoorDef().name.equalsIgnoreCase("door")
 				|| obj.getDoorDef().name.equalsIgnoreCase("odd looking wall")
@@ -731,8 +732,9 @@ public class DoorAction {
 
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 			Player player) {
+
 		/* Ernest the Chicken */
-		if (obj.getID() == 35) {
+		if (obj.getID() == 35 && obj.getY() == 545) {
 			return true;
 		}
 		if (obj.getID() == 110) {

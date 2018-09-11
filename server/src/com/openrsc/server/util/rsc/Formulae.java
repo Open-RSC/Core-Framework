@@ -548,6 +548,13 @@ public final class Formulae {
 	}
 
 	/**
+	 * Chance to cut cacti is 75% success
+	 */
+	public static boolean cutCacti() { // Check is for FAIL, not SUCCESS.
+		return DataConversions.random(0, 100) > 75; 
+	}
+
+	/**
 	 * Returns a gem ID
 	 */
 	public static int getGem() {
