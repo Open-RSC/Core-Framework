@@ -4,6 +4,7 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 export installmode=docker
+echo "$installmode" > .methodinstall
 
 # Ubuntu Linux Docker installation
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -109,11 +110,9 @@ echo "Waiting 10 seconds then importing the game and forum databases."
 echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
-export dbuser=root
-export pass=root
-sudo make import-game
-sudo make import-forum
-sudo make backup
+sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
+sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
+sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
 
 
 # Website clone
