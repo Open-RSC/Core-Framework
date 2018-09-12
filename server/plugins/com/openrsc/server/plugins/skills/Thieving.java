@@ -411,7 +411,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			return;
 		}
 		final ArrayList<LootItem> lootTable = (ArrayList<LootItem>) pickpocket.getLootTable().clone();
-		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName() + "'s pocket");
+		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 		player.setBatchEvent(new BatchEvent(player, 1300, Formulae.getRepeatTimes(player, THIEVING)) {
 			@Override
 			public void action() {
@@ -450,7 +450,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 						}
 						total += loot.getChance();
 					}
-					player.message("You pick the " + npc.getDef().getName() + "'s pocket");
+					player.message("You pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 					if (selectedLoot != null) {
 						player.getInventory().add(selectedLoot);
 					} 
@@ -459,7 +459,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					player.setBusyTimer(0);
 					npc.setBusyTimer(0);
 					setDelay(650);
-					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + npc.getDef().getName() + "'s pocket");
+					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 					npc.getUpdateFlags()
 					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
 					interrupt();
