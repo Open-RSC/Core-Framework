@@ -6247,7 +6247,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawBoxAlpha(var3 + var5 / 2, var4, var5 / 2, 24, l, 128);
 					this.getSurface().drawBoxAlpha(var3, var4 + 24, var5, var6 - 24, GenUtil.buildColor(220, 220, 220), 128);
 					this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
-					this.getSurface().drawLineVert(var3 + var5 / 2, var4, 24, 0);
+					this.getSurface().drawLineVert(var3 + var5 / 2, var4, 0, 24);
 					this.getSurface().drawLineHoriz(var3, var4 + var6 - 16, var5, 0);
 					this.getSurface().drawColoredStringCentered(var3 + var5 / 4, "Friends", 0, 0, 4, var4 + 16);
 					this.getSurface().drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Ignore", 0, 0, 4, var4 + 16);
