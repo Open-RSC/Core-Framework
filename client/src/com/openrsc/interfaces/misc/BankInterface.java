@@ -285,7 +285,7 @@ public class BankInterface {
 							slotX, slotY, 48, 32,
 							EntityHandler.getItemDef(currentBankIDs.get(inventorySlot)).getPictureMask(),
 							0, false, 0, 1);
-					drawString(mc.formatStackAmount(currentBankCounts.get(inventorySlot)), slotX + 1, slotY + 10, 1, 65280); // Amount in bank (green)
+					drawString(""+currentBankCounts.get(inventorySlot), slotX + 1, slotY + 10, 1, 65280); // Amount in bank (green)
 
 					inventoryCount = mc.getInventoryCount(currentBankIDs.get(inventorySlot));
 					drawString(String.valueOf(inventoryCount), (slotX + 47) - mc.getSurface().stringWidth(1, String.valueOf(inventoryCount)), slotY + 29, 1, 65535); // Amount in inventory (blue)
