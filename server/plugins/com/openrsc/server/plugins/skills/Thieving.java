@@ -123,9 +123,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 	enum Stall {
 		BAKERS_STALL(325, 5, 64, 325, 5000,
-				new LootItem(336, 1, 5),
-				new LootItem(330, 1, 100),
-				new LootItem(138, 1, 15)),
+				new LootItem(330, 1, 100)),
 		SILK_STALL(326, 20, 96, 326, 8000,
 				new LootItem(200, 1, 100)),
 		FUR_STALL(327, 35, 144, 327, 15000,
