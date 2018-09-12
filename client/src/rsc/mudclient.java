@@ -2494,7 +2494,7 @@ public final class mudclient implements Runnable {
 									33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
 						}
 						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
-							this.getSurface().drawString("" + formatStackAmount(this.inventoryItemSize[itm]), xI + 1,
+							this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
 									10 + yI, 0xFFFF00, 1);
 						}
 					}
@@ -2930,7 +2930,7 @@ public final class mudclient implements Runnable {
 
 				this.getSurface().drawString("Shops stock in green", 2 + xr, 24 + yr, '\uff00', 1);
 				this.getSurface().drawString("Number you own in blue", xr + 135, yr + 24, '\uffff', 1);
-				this.getSurface().drawString("Your money: " + formatStackAmount(this.getInventoryCount((int) 10)) + "gp",
+				this.getSurface().drawString("Your money: " + this.getInventoryCount((int) 10) + "gp",
 						280 + xr, 24 + yr, 0xFFFF00, 1);
 				{
 					int slot = 0;
@@ -3408,7 +3408,7 @@ public final class mudclient implements Runnable {
 						}
 
 						if (EntityHandler.getItemDef(this.inventoryItemID[slot]).isStackable()) {
-							this.getSurface().drawString("" + formatStackAmount(this.inventoryItemSize[slot]), 1 + sX,
+							this.getSurface().drawString("" + this.inventoryItemSize[slot], 1 + sX,
 									10 + sY, 0xFFFF00, 1);
 						}
 					}
@@ -3420,7 +3420,7 @@ public final class mudclient implements Runnable {
 								EntityHandler.getItemDef(this.tradeItemID[slot]).getSprite() + mudclient.spriteItem, sx, sy,
 								48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0, false, 0, 1);
 						if (EntityHandler.getItemDef(this.tradeItemID[slot]).isStackable()) {
-							this.getSurface().drawString("" + formatStackAmount(this.tradeItemSize[slot]), sx + 1, 10 + sy,
+							this.getSurface().drawString("" + this.tradeItemSize[slot], sx + 1, 10 + sy,
 									0xFFFF00, 1);
 						}
 
@@ -6112,7 +6112,7 @@ public final class mudclient implements Runnable {
 									id + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
 						}
 						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
-							this.getSurface().drawString("" + formatStackAmount(this.inventoryItemSize[var4]), 1 + var5,
+							this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
 									id + 10, 0xFFFF00, 1);
 						}
 					}
@@ -6247,7 +6247,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawBoxAlpha(var3 + var5 / 2, var4, var5 / 2, 24, l, 128);
 					this.getSurface().drawBoxAlpha(var3, var4 + 24, var5, var6 - 24, GenUtil.buildColor(220, 220, 220), 128);
 					this.getSurface().drawLineHoriz(var3, var4 + 24, var5, 0);
-					this.getSurface().drawLineVert(var3 + var5 / 2, var4, 24, 0);
+					this.getSurface().drawLineVert(var3 + var5 / 2, var4, 0, 24);
 					this.getSurface().drawLineHoriz(var3, var4 + var6 - 16, var5, 0);
 					this.getSurface().drawColoredStringCentered(var3 + var5 / 4, "Friends", 0, 0, 4, var4 + 16);
 					this.getSurface().drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Ignore", 0, 0, 4, var4 + 16);
@@ -9454,15 +9454,15 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_EXAMINE: {
-					if (EntityHandler.getItemDef(indexOrX).stackable) {
-						this.showMessage(false, (String) null,
-								StringUtil.formatItemCount(getInventoryCount(indexOrX)) + (getInventoryCount(indexOrX) < 1000 ? "x" : "") + " - "
-										+ EntityHandler.getItemDef(indexOrX).getDescription(),
-										MessageType.GAME, 0, (String) null, (String) null);
-					} else {
+					//if (EntityHandler.getItemDef(indexOrX).stackable) {
+					//	this.showMessage(false, (String) null,
+					//			StringUtil.formatItemCount(getInventoryCount(indexOrX)) + (getInventoryCount(indexOrX) < 1000 ? "x" : "") + " - "
+					//					+ EntityHandler.getItemDef(indexOrX).getDescription(),
+					//					MessageType.GAME, 0, (String) null, (String) null);
+					//} else {
 						this.showMessage(false, (String) null, EntityHandler.getItemDef(indexOrX).getDescription(),
 								MessageType.GAME, 0, (String) null, (String) null);
-					}
+					//}
 					break;
 				}
 				case WALL_CAST_SPELL: {
