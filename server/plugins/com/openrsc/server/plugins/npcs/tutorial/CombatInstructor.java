@@ -83,6 +83,7 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if(n.getID() == 473) {
 			n.resetCombatEvent();
+			n.remove();
 			// GIVE NO XP ACCORDING TO YOUTUBE VIDEOS FOR COMBAT SINCE IT WAS HEAVILY ABUSED IN REAL RSC TO TRAIN ON THOSE RATS.
 			if((p.getInventory().wielding(4) || p.getInventory().wielding(70)) && 
 					p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 15) { // either
