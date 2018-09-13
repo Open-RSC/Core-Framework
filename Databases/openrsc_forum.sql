@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Sep 06, 2018 at 01:43 AM
--- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic
+-- Generation Time: Sep 13, 2018 at 06:56 PM
+-- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic-log
 -- PHP Version: 7.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -21,7 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `openrsc_forum`
 --
-DROP DATABASE IF EXISTS `openrsc_forum`;
 CREATE DATABASE IF NOT EXISTS `openrsc_forum` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `openrsc_forum`;
 
@@ -97,7 +96,88 @@ INSERT INTO `phpbb_acl_groups` (`group_id`, `forum_id`, `auth_option_id`, `auth_
 (1, 17, 0, 17, 0),
 (7, 17, 0, 17, 0),
 (2, 17, 0, 17, 0),
-(5, 0, 127, 0, 1);
+(5, 0, 127, 0, 1),
+(6, 18, 0, 17, 0),
+(1, 18, 0, 17, 0),
+(5, 18, 0, 14, 0),
+(4, 18, 7, 0, 1),
+(4, 18, 9, 0, 1),
+(4, 18, 17, 0, 1),
+(4, 18, 20, 0, 1),
+(4, 18, 23, 0, 1),
+(4, 18, 33, 0, 1),
+(4, 18, 4, 0, 1),
+(4, 18, 5, 0, 1),
+(4, 18, 12, 0, 1),
+(4, 18, 14, 0, 1),
+(4, 18, 125, 0, 1),
+(4, 18, 26, 0, 1),
+(4, 18, 27, 0, 1),
+(4, 18, 6, 0, 1),
+(4, 18, 8, 0, 1),
+(4, 18, 10, 0, 1),
+(4, 18, 15, 0, 1),
+(4, 18, 16, 0, 1),
+(4, 18, 21, 0, 1),
+(4, 18, 22, 0, 1),
+(4, 18, 24, 0, 1),
+(4, 18, 25, 0, 1),
+(4, 18, 29, 0, 1),
+(4, 18, 31, 0, 1),
+(4, 18, 32, 0, 1),
+(4, 18, 1, 0, 1),
+(7, 18, 7, 0, 1),
+(7, 18, 9, 0, 1),
+(7, 18, 17, 0, 1),
+(7, 18, 20, 0, 1),
+(7, 18, 23, 0, 1),
+(7, 18, 33, 0, 1),
+(7, 18, 4, 0, 1),
+(7, 18, 5, 0, 1),
+(7, 18, 12, 0, 1),
+(7, 18, 14, 0, 1),
+(7, 18, 125, 0, 1),
+(7, 18, 26, 0, 1),
+(7, 18, 27, 0, 1),
+(7, 18, 6, 0, 1),
+(7, 18, 8, 0, 1),
+(7, 18, 10, 0, 1),
+(7, 18, 15, 0, 1),
+(7, 18, 16, 0, 1),
+(7, 18, 21, 0, 1),
+(7, 18, 22, 0, 1),
+(7, 18, 24, 0, 1),
+(7, 18, 25, 0, 1),
+(7, 18, 29, 0, 1),
+(7, 18, 31, 0, 1),
+(7, 18, 32, 0, 1),
+(7, 18, 1, 0, 1),
+(2, 18, 7, 0, 1),
+(2, 18, 9, 0, 1),
+(2, 18, 17, 0, 1),
+(2, 18, 20, 0, 1),
+(2, 18, 23, 0, 1),
+(2, 18, 33, 0, 1),
+(2, 18, 4, 0, 1),
+(2, 18, 5, 0, 1),
+(2, 18, 12, 0, 1),
+(2, 18, 14, 0, 1),
+(2, 18, 125, 0, 1),
+(2, 18, 26, 0, 1),
+(2, 18, 27, 0, 1),
+(2, 18, 6, 0, 1),
+(2, 18, 8, 0, 1),
+(2, 18, 10, 0, 1),
+(2, 18, 15, 0, 1),
+(2, 18, 16, 0, 1),
+(2, 18, 21, 0, 1),
+(2, 18, 22, 0, 1),
+(2, 18, 24, 0, 1),
+(2, 18, 25, 0, 1),
+(2, 18, 29, 0, 1),
+(2, 18, 31, 0, 1),
+(2, 18, 32, 0, 1),
+(2, 18, 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1025,7 +1105,7 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('allow_topic_notify', '1', 0),
 ('allow_user_recent_activity', '1', 0),
 ('allowed_schemes_links', 'http,https', 0),
-('assets_version', '10', 0),
+('assets_version', '13', 0),
 ('attachment_quota', '52428800', 0),
 ('auth_bbcode_pm', '1', 0),
 ('auth_flash_pm', '0', 0),
@@ -1067,13 +1147,13 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('board_email_sig', '', 0),
 ('board_hide_emails', '1', 0),
 ('board_index_text', '', 0),
-('board_startdate', '1536197775', 0),
+('board_startdate', '1536861822', 0),
 ('board_timezone', 'America/New_York', 0),
 ('browser_check', '1', 0),
 ('bump_interval', '10', 0),
 ('bump_type', 'd', 0),
 ('cache_gc', '7200', 0),
-('cache_last_gc', '1536194755', 1),
+('cache_last_gc', '1536859754', 1),
 ('captcha_gd', '0', 0),
 ('captcha_gd_3d_noise', '1', 0),
 ('captcha_gd_fonts', '1', 0),
@@ -1097,7 +1177,7 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('coppa_mail', '', 0),
 ('cron_lock', '0', 1),
 ('database_gc', '604800', 0),
-('database_last_gc', '1536194759', 1),
+('database_last_gc', '1536851802', 1),
 ('dbms_version', '10.1.29-MariaDB-6', 0),
 ('default_dateformat', 'D M d, Y g:i a', 0),
 ('default_lang', 'en', 0),
@@ -1112,6 +1192,7 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('email_force_sender', '0', 0),
 ('email_max_chunk_size', '50', 0),
 ('email_package_size', '20', 0),
+('enable_accurate_pm_button', '1', 0),
 ('enable_confirm', '1', 0),
 ('enable_mod_rewrite', '0', 0),
 ('enable_pm_icons', '1', 0),
@@ -1266,10 +1347,10 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('ranks_path', 'images/ranks', 0),
 ('read_notification_expire_days', '30', 0),
 ('read_notification_gc', '86400', 0),
-('read_notification_last_gc', '1536194657', 1),
+('read_notification_last_gc', '1536851757', 1),
 ('recaptcha_privkey', '6LdOSWAUAAAAAPqEsMaRJzj3VjUIhvQdnfNn8ZhC', 0),
 ('recaptcha_pubkey', '6LdOSWAUAAAAAJBOnf566Upc0nY9HM3YEBZ4Qzpa', 0),
-('record_online_date', '1536197774', 1),
+('record_online_date', '1536861819', 1),
 ('record_online_users', '1', 1),
 ('referer_validation', '0', 0),
 ('remote_upload_verify', '0', 0),
@@ -1280,7 +1361,7 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('search_gc', '7200', 0),
 ('search_indexing_state', '', 1),
 ('search_interval', '0', 0),
-('search_last_gc', '1536194939', 1),
+('search_last_gc', '1536861922', 1),
 ('search_store_results', '1800', 0),
 ('search_type', '\\phpbb\\search\\fulltext_native', 0),
 ('secure_allow_deny', '1', 0),
@@ -1291,7 +1372,7 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('server_port', '80', 0),
 ('server_protocol', 'http://', 0),
 ('session_gc', '3600', 0),
-('session_last_gc', '1536194667', 1),
+('session_last_gc', '1536859735', 1),
 ('session_length', '3600', 0),
 ('show_user_recent_post', '1', 0),
 ('site_desc', 'Striving for a replica RSC game and more', 0),
@@ -1317,10 +1398,10 @@ INSERT INTO `phpbb_config` (`config_name`, `config_value`, `is_dynamic`) VALUES
 ('upload_icons_path', 'images/upload_icons', 0),
 ('upload_path', 'files', 0),
 ('use_system_cron', '0', 0),
-('version', '3.2.2', 0),
+('version', '3.2.3', 0),
 ('warnings_expire_days', '90', 0),
 ('warnings_gc', '14400', 0),
-('warnings_last_gc', '1536194650', 1);
+('warnings_last_gc', '1536851810', 1);
 
 -- --------------------------------------------------------
 
@@ -1363,15 +1444,6 @@ CREATE TABLE IF NOT EXISTS `phpbb_confirm` (
   PRIMARY KEY (`session_id`,`confirm_id`),
   KEY `confirm_type` (`confirm_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `phpbb_confirm`
---
-
-INSERT INTO `phpbb_confirm` (`confirm_id`, `session_id`, `confirm_type`, `code`, `seed`, `attempts`) VALUES
-('256e2b4d6e5c45c9ed4b65d1f287aa6f', 'e3bb54f5bae8f37cc70f6ce30628b90a', 1, '27IYQE', 276654176, 0),
-('67e947a09bb1de77ffd0f22329e3c37d', 'e3bb54f5bae8f37cc70f6ce30628b90a', 1, '3K5FYV', 554515866, 0),
-('d9777a61df38908f60469f357c8015e2', 'e3bb54f5bae8f37cc70f6ce30628b90a', 1, '63I7YUH', 1276002970, 0);
 
 -- --------------------------------------------------------
 
@@ -1611,19 +1683,20 @@ CREATE TABLE IF NOT EXISTS `phpbb_forums` (
   PRIMARY KEY (`forum_id`),
   KEY `left_right_id` (`left_id`,`right_id`),
   KEY `forum_lastpost_id` (`forum_last_post_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `phpbb_forums`
 --
 
 INSERT INTO `phpbb_forums` (`forum_id`, `parent_id`, `left_id`, `right_id`, `forum_parents`, `forum_name`, `forum_desc`, `forum_desc_bitfield`, `forum_desc_options`, `forum_desc_uid`, `forum_link`, `forum_password`, `forum_style`, `forum_image`, `forum_rules`, `forum_rules_link`, `forum_rules_bitfield`, `forum_rules_options`, `forum_rules_uid`, `forum_topics_per_page`, `forum_type`, `forum_status`, `forum_last_post_id`, `forum_last_poster_id`, `forum_last_post_subject`, `forum_last_post_time`, `forum_last_poster_name`, `forum_last_poster_colour`, `forum_flags`, `display_on_index`, `enable_indexing`, `enable_icons`, `enable_prune`, `prune_next`, `prune_days`, `prune_viewed`, `prune_freq`, `display_subforum_list`, `forum_options`, `forum_posts_approved`, `forum_posts_unapproved`, `forum_posts_softdeleted`, `forum_topics_approved`, `forum_topics_unapproved`, `forum_topics_softdeleted`, `enable_shadow_prune`, `prune_shadow_days`, `prune_shadow_freq`, `prune_shadow_next`) VALUES
-(4, 10, 2, 3, 'a:1:{i:10;a:2:{i:0;s:17:\"Global Discussion\";i:1;i:0;}}', 'The Pub', '<t>Discuss anything you would like in here.</t>', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 1, 0, 0, 0, '', 0, '', '', 112, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0),
-(8, 13, 6, 7, '', 'Join us in Discord', '<t>Click the link for the invite.</t>', '', 7, '', 'https://discord.gg/94vVKND', '', 0, '', '', '', '', 7, '', 0, 2, 0, 0, 0, '', 0, '', '', 97, 1, 1, 0, 0, 0, 7, 7, 1, 1, 0, 3, 0, 0, 0, 0, 0, 0, 7, 1, 0),
-(9, 13, 8, 9, '', 'GitHub Project', '<t>Fork the project, write code, and send pull requests to assist in development!</t>', '', 7, '', 'https://github.com/Marwolf/Open-RSC', '', 0, '', '', '', '', 7, '', 0, 2, 0, 0, 0, '', 0, '', '', 97, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 4, 0, 0, 0, 0, 0, 0, 7, 1, 0),
-(10, 0, 1, 4, '', 'Global Discussion', '', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 0, 0, 0, 0, '', 0, '', '', 32, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0),
-(13, 0, 5, 12, '', 'Links', '', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 0, 0, 0, 0, '', 0, '', '', 32, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0),
-(17, 13, 10, 11, '', 'Bug Tracker', '<t>Issues to fix are kept here.</t>', '', 7, '', 'https://github.com/Marwolf/Open-RSC/issues', '', 0, '', '', '', '', 7, '', 0, 2, 0, 0, 0, '', 0, '', '', 33, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 7, 1, 0);
+(4, 10, 4, 5, '', 'The Pub', '<t>Talk about anything you would like in here.</t>', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 1, 0, 0, 0, '', 0, '', '', 112, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0),
+(8, 13, 8, 9, '', 'Join the Discord', '<t>Click the link for the invite.</t>', '', 7, '', 'https://discord.gg/94vVKND', '', 0, '', '', '', '', 7, '', 0, 2, 0, 0, 0, '', 0, '', '', 96, 1, 1, 0, 0, 0, 7, 7, 1, 1, 0, 3, 0, 0, 0, 0, 0, 0, 7, 1, 0),
+(9, 13, 10, 11, '', 'GitHub Project', '<t>Fork the project, write code, and send pull requests to assist in development!</t>', '', 7, '', 'https://github.com/Marwolf/Open-RSC', '', 0, '', '', '', '', 7, '', 0, 2, 0, 0, 0, '', 0, '', '', 96, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 4, 0, 0, 0, 0, 0, 0, 7, 1, 0),
+(10, 0, 1, 6, '', 'Global Discussion', '', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 0, 0, 0, 0, '', 0, '', '', 32, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0),
+(13, 0, 7, 14, '', 'Links', '', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 0, 0, 0, 0, '', 0, '', '', 32, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0),
+(17, 13, 12, 13, '', 'Bug Tracker', '<t>Issues to fix are kept here.</t>', '', 7, '', 'https://github.com/Marwolf/Open-RSC/issues', '', 0, '', '', '', '', 7, '', 0, 2, 0, 0, 0, '', 0, '', '', 32, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 7, 1, 0),
+(18, 10, 2, 3, '', 'News', '<t>Find out the latest news about Open RSC here.</t>', '', 7, '', '', '', 0, '', '', '', '', 7, '', 0, 1, 0, 0, 0, '', 0, '', '', 112, 0, 1, 0, 0, 0, 7, 7, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1808,219 +1881,24 @@ CREATE TABLE IF NOT EXISTS `phpbb_log` (
   KEY `reportee_id` (`reportee_id`),
   KEY `user_id` (`user_id`),
   KEY `log_time` (`log_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=213 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=242 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `phpbb_log`
 --
 
 INSERT INTO `phpbb_log` (`log_id`, `log_type`, `user_id`, `forum_id`, `topic_id`, `post_id`, `reportee_id`, `log_ip`, `log_time`, `log_operation`, `log_data`) VALUES
-(1, 2, 1, 0, 0, 0, 0, '108.162.237.186', 1529675817, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:82:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/install/app.php</em><br /><br /><br />\";}'),
-(2, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529675817, 'LOG_INSTALL_INSTALLED', 'a:1:{i:0;s:5:\"3.2.2\";}'),
-(3, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529675863, 'LOG_CONFIG_SERVER', ''),
-(4, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529675884, 'LOG_CONFIG_SECURITY', ''),
-(5, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676479, 'LOG_DOWNLOAD_IP', 'a:1:{i:0;s:11:\"openrsc.com\";}'),
-(6, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676519, 'LOG_CONFIG_SETTINGS', ''),
-(7, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676584, 'LOG_CONFIG_AVATAR', ''),
-(8, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676635, 'LOG_CONFIG_SIGNATURE', ''),
-(9, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676653, 'LOG_CONFIG_FEED', ''),
-(10, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676682, 'LOG_CONFIG_REGISTRATION', ''),
-(11, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676736, 'LOG_CONFIG_VISUAL', ''),
-(12, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676748, 'LOG_CONFIG_VISUAL', ''),
-(13, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676766, 'LOG_CONFIG_ATTACH', ''),
-(14, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529676998, 'LOG_STYLE_ADD', 'a:1:{i:0;s:25:\"prosilver Special Edition\";}'),
-(15, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677180, 'LOG_STYLE_ADD', 'a:1:{i:0;s:6:\"PBWoW3\";}'),
-(16, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677248, 'LOG_CONFIG_POST', ''),
-(17, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677293, 'LOG_CONFIG_POST', ''),
-(18, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677325, 'LOG_ATTACH_EXTGROUP_EDIT', 'a:1:{i:0;s:8:\"Archives\";}'),
-(19, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677496, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(20, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677520, 'LOG_CONFIG_COOKIE', ''),
-(21, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677585, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:9:\"phpbb_aol\";}'),
-(22, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677589, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:9:\"phpbb_icq\";}'),
-(23, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677592, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:11:\"phpbb_yahoo\";}'),
-(24, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677598, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:16:\"phpbb_googleplus\";}'),
-(25, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677603, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:16:\"phpbb_occupation\";}'),
-(26, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677608, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:15:\"phpbb_interests\";}'),
-(27, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677616, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:14:\"phpbb_facebook\";}'),
-(28, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677619, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:13:\"phpbb_twitter\";}'),
-(29, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677622, 'LOG_PROFILE_FIELD_REMOVED', 'a:1:{i:0;s:13:\"phpbb_youtube\";}'),
-(30, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677717, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(31, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677739, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:11:\"Information\";}'),
-(32, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677766, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:4:\"News\";}'),
-(33, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677828, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:4:\"News\";i:1;s:42:\"<span class=\"sep\">Global moderators</span>\";}'),
-(34, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677870, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:4:\"News\";i:1;s:139:\"<span class=\"sep\">Registered users</span>, <span class=\"sep\">Registered COPPA users</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(35, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677907, 'LOG_FORUM_ADD', 'a:1:{i:0;s:7:\"General\";}'),
-(36, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677932, 'LOG_FORUM_ADD', 'a:1:{i:0;s:7:\"The Pub\";}'),
-(37, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677932, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:7:\"General\";i:1;s:7:\"The Pub\";}'),
-(38, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529677979, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:7:\"General\";}'),
-(39, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678045, 'LOG_FORUM_ADD', 'a:1:{i:0;s:8:\"Requests\";}'),
-(40, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678045, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:7:\"General\";i:1;s:8:\"Requests\";}'),
-(41, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678105, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:7:\"General\";}'),
-(42, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678141, 'LOG_ACL_ADD_GROUP_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:39:\"<span class=\"sep\">Administrators</span>\";}'),
-(43, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678171, 'LOG_ACL_ADD_GROUP_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:29:\"<span class=\"sep\">Bots</span>\";}'),
-(44, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678225, 'LOG_ACL_ADD_GROUP_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:42:\"<span class=\"sep\">Global moderators</span>\";}'),
-(45, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678242, 'LOG_ACL_ADD_GROUP_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:31:\"<span class=\"sep\">Guests</span>\";}'),
-(46, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678276, 'LOG_ACL_ADD_GROUP_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:47:\"<span class=\"sep\">Newly registered users</span>\";}'),
-(47, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678329, 'LOG_ACL_ADD_GROUP_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:41:\"<span class=\"sep\">Registered users</span>\";}'),
-(48, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678376, 'LOG_FORUM_ADD', 'a:1:{i:0;s:11:\"Development\";}'),
-(49, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678489, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:11:\"Development\";i:1;s:196:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(50, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678489, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:11:\"Development\";i:1;s:41:\"<span class=\"sep\">Registered users</span>\";}'),
-(51, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678502, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:11:\"Development\";i:1;s:47:\"<span class=\"sep\">Newly registered users</span>\";}'),
-(52, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678523, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:45:\"Information, News, General, The Pub, Requests\";i:1;s:47:\"<span class=\"sep\">Newly registered users</span>\";}'),
-(53, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678523, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:11:\"Development\";i:1;s:47:\"<span class=\"sep\">Newly registered users</span>\";}'),
-(54, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678575, 'LOG_FORUM_ADD', 'a:1:{i:0;s:22:\"Development Discussion\";}'),
-(55, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678575, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:11:\"Development\";i:1;s:22:\"Development Discussion\";}'),
-(56, 2, 1, 0, 0, 0, 0, '108.162.237.186', 1529678785, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:74:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/ucp.php</em><br /><br /><br />\";}'),
-(57, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678836, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(58, 2, 2, 0, 0, 0, 0, '108.162.237.186', 1529678858, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:80:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/adm/index.php</em><br /><br /><br />\";}'),
-(59, 0, 2, 0, 0, 0, 0, '108.162.237.186', 1529678864, 'LOG_CONFIG_EMAIL', ''),
-(60, 2, 1, 0, 0, 0, 0, '162.158.122.134', 1529678870, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:74:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/ucp.php</em><br /><br /><br />\";}'),
-(61, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529679053, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(62, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529679078, 'LOG_USER_ACTIVE', 'a:1:{i:0;s:5:\"Kenix\";}'),
-(64, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529679083, 'LOG_USER_USER_UPDATE', 'a:1:{i:0;s:5:\"Kenix\";}'),
-(65, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529679125, 'LOG_GROUP_DEFAULTS', 'a:2:{i:0;s:14:\"Administrators\";i:1;s:5:\"Kenix\";}'),
-(66, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529679125, 'LOG_MODS_ADDED', 'a:2:{i:0;s:14:\"Administrators\";i:1;s:5:\"Kenix\";}'),
-(67, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529679941, 'LOG_CONFIG_EMAIL', ''),
-(68, 2, 1, 0, 0, 0, 0, '172.68.78.6', 1529679966, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:74:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/ucp.php</em><br /><br /><br />\";}'),
-(69, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529680120, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(70, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529680139, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:4:\"News\";}'),
-(71, 2, 2, 0, 0, 0, 0, '172.68.78.6', 1529680147, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:80:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/adm/index.php</em><br /><br /><br />\";}'),
-(72, 2, 2, 0, 0, 0, 0, '172.68.78.6', 1529680273, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:80:\"<strong>EMAIL/PHP/mail()</strong><br /><em>/adm/index.php</em><br /><br /><br />\";}'),
-(73, 0, 1, 0, 0, 0, 0, '162.158.122.134', 1529680351, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(74, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529680421, 'LOG_CONFIG_EMAIL', ''),
-(75, 2, 2, 0, 0, 0, 0, '172.68.78.6', 1529680436, 'LOG_ERROR_EMAIL', 'a:1:{i:0;s:172:\"<strong>EMAIL/SMTP</strong><br /><em>/adm/index.php</em><br /><br />Could not get mail server response codes.<h1>Backtrace</h1><p>Connecting to smtp.gmail.com:465</p><br />\";}'),
-(76, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529680532, 'LOG_CONFIG_EMAIL', ''),
-(78, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529680600, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(79, 0, 2, 0, 0, 0, 0, '172.68.78.6', 1529680617, 'LOG_USER_DELETED', 'a:1:{i:0;s:4:\"wolf\";}'),
-(81, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710660, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(82, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710673, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:4:\"News\";}'),
-(83, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710686, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:7:\"The Pub\";}'),
-(84, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710693, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:8:\"Requests\";}'),
-(85, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710711, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:22:\"Development Discussion\";}'),
-(86, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710724, 'LOG_FORUM_DEL_FORUM', 'a:1:{i:0;s:11:\"Information\";}'),
-(87, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710728, 'LOG_FORUM_DEL_FORUM', 'a:1:{i:0;s:7:\"General\";}'),
-(88, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710733, 'LOG_FORUM_DEL_FORUM', 'a:1:{i:0;s:11:\"Development\";}'),
-(89, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710785, 'LOG_FORUM_ADD', 'a:1:{i:0;s:18:\"Join us in Discord\";}'),
-(90, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710818, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:18:\"Join us in Discord\";}'),
-(91, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710830, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:18:\"Join us in Discord\";}'),
-(92, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710830, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:4:\"News\";i:1;s:18:\"Join us in Discord\";}'),
-(93, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529710843, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:18:\"Join us in Discord\";}'),
-(94, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711155, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:4:\"News\";i:1;s:196:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(95, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711155, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:13:\"News, The Pub\";i:1;s:206:\"<span class=\"sep\">Registered users</span>, <span class=\"sep\">Registered COPPA users</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>\";}'),
-(96, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711155, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:17:\"The Pub, Requests\";i:1;s:213:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Registered users</span>, <span class=\"sep\">Registered COPPA users</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(97, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711155, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:8:\"Requests\";i:1;s:198:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Registered users</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Bots</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(98, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711155, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:32:\"Requests, Development Discussion\";i:1;s:196:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Registered COPPA users</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>\";}'),
-(99, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711156, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:42:\"Development Discussion, Join us in Discord\";i:1;s:211:\"<span class=\"sep\">Registered users</span>, <span class=\"sep\">Registered COPPA users</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(100, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529711156, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:18:\"Join us in Discord\";i:1;s:216:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Registered users</span>, <span class=\"sep\">Registered COPPA users</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(101, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529713872, 'LOG_FORUM_ADD', 'a:1:{i:0;s:23:\"Open RSC GitHub Project\";}'),
-(102, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529713900, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:23:\"Open RSC GitHub Project\";i:1;s:196:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(103, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529713901, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:23:\"Open RSC GitHub Project\";i:1;s:41:\"<span class=\"sep\">Registered users</span>\";}'),
-(104, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529714098, 'LOG_CONFIG_POST', ''),
-(105, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529714129, 'LOG_BBCODE_ADD', 'a:1:{i:0;s:1:\"s\";}'),
-(106, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715199, 'LOG_FORUM_ADD', 'a:1:{i:0;s:6:\"Global\";}'),
-(107, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715248, 'LOG_FORUM_ADD', 'a:1:{i:0;s:14:\"Distinct Games\";}'),
-(108, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715269, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:4:\"News\";}'),
-(109, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715289, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:7:\"The Pub\";}'),
-(110, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715373, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:6:\"Global\";i:1;s:196:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(111, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715373, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:22:\"Global, Distinct Games\";i:1;s:190:\"<span class=\"sep\">Guests</span>, <span class=\"sep\">Registered users</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Administrators</span>, <span class=\"sep\">Bots</span>\";}'),
-(112, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529715373, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:14:\"Distinct Games\";i:1;s:90:\"<span class=\"sep\">Registered users</span>, <span class=\"sep\">Newly registered users</span>\";}'),
-(113, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529716204, 'LOG_FORUM_ADD', 'a:1:{i:0;s:5:\"Media\";}'),
-(114, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529716204, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:7:\"The Pub\";i:1;s:5:\"Media\";}'),
-(115, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723235, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:8:\"Requests\";}'),
-(116, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723257, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:22:\"Development Discussion\";}'),
-(117, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723289, 'LOG_FORUM_ADD', 'a:1:{i:0;s:5:\"Links\";}'),
-(118, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723289, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:6:\"Global\";i:1;s:5:\"Links\";}'),
-(119, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723298, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:18:\"Join us in Discord\";}'),
-(120, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723305, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:23:\"Open RSC GitHub Project\";}'),
-(121, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723312, 'LOG_FORUM_MOVE_DOWN', 'a:2:{i:0;s:14:\"Distinct Games\";i:1;s:5:\"Links\";}'),
-(122, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723328, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:14:\"Distinct Games\";}'),
-(123, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723328, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:6:\"Global\";i:1;s:14:\"Distinct Games\";}'),
-(124, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723455, 'LOG_FORUM_ADD', 'a:1:{i:0;s:15:\"Traditional RSC\";}'),
-(125, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723455, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:7:\"The Pub\";i:1;s:15:\"Traditional RSC\";}'),
-(126, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723458, 'LOG_FORUM_ADD', 'a:1:{i:0;s:13:\"Open World PK\";}'),
-(127, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723458, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:7:\"The Pub\";i:1;s:13:\"Open World PK\";}'),
-(128, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723688, 'LOG_FORUM_ADD', 'a:1:{i:0;s:12:\"Survival RSC\";}'),
-(129, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723688, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:7:\"The Pub\";i:1;s:12:\"Survival RSC\";}'),
-(130, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723772, 'LOG_FORUM_ADD', 'a:1:{i:0;s:20:\"Open RSC Bug Tracker\";}'),
-(131, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723772, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:5:\"Links\";i:1;s:20:\"Open RSC Bug Tracker\";}'),
-(132, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723789, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:14:\"GitHub Project\";}'),
-(133, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723795, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:11:\"Bug Tracker\";}'),
-(134, 0, 2, 0, 0, 0, 0, '108.162.237.150', 1529723812, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:17:\"Global Discussion\";}'),
-(135, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771370, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(136, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771548, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(137, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771762, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(138, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771788, 'LOG_CONFIG_SERVER', ''),
-(139, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771821, 'LOG_USER_USER_UPDATE', 'a:1:{i:0;s:5:\"Kenix\";}'),
-(140, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771826, 'LOG_USER_DELETED', 'a:1:{i:0;s:5:\"Kenix\";}'),
-(141, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771834, 'LOG_USER_DELETED', 'a:1:{i:0;s:11:\"cjdickmeyer\";}'),
-(142, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771842, 'LOG_RESET_ONLINE', ''),
-(143, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771845, 'LOG_RESYNC_STATS', ''),
-(144, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771850, 'LOG_PURGE_SESSIONS', ''),
-(145, 0, 2, 0, 0, 0, 0, '127.0.0.1', 1529771853, 'LOG_PURGE_CACHE', ''),
-(146, 3, 2, 0, 0, 0, 2, '127.0.0.1', 1529771940, 'LOG_USER_NEW_PASSWORD', 'a:1:{i:0;s:7:\"Marwolf\";}'),
-(147, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194670, 'LOG_ADMIN_AUTH_SUCCESS', ''),
-(148, 3, 2, 0, 0, 0, 2, '192.168.240.1', 1536194745, 'LOG_USER_UPDATE_NAME', 'a:2:{i:0;s:7:\"Marwolf\";i:1;s:4:\"root\";}'),
-(149, 3, 2, 0, 0, 0, 2, '192.168.240.1', 1536194745, 'LOG_USER_UPDATE_EMAIL', 'a:3:{i:0;s:7:\"Marwolf\";i:1;s:16:\"cleako@gmail.com\";i:2;s:24:\"openrsc.mailer@gmail.com\";}'),
-(150, 3, 2, 0, 0, 0, 2, '192.168.240.1', 1536194745, 'LOG_USER_NEW_PASSWORD', 'a:1:{i:0;s:7:\"Marwolf\";}'),
-(151, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194745, 'LOG_USER_USER_UPDATE', 'a:1:{i:0;s:4:\"root\";}'),
-(153, 1, 2, 4, 3, 0, 0, '192.168.240.1', 1536194778, 'LOG_DELETE_TOPIC', 'a:3:{i:0;s:19:\"Introduce yourself!\";i:1;s:4:\"root\";i:2;s:0:\"\";}'),
-(156, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194877, 'LOG_SEARCH_INDEX_CREATED', 'a:1:{i:0;s:15:\"Sphinx Fulltext\";}'),
-(157, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194880, 'LOG_SEARCH_INDEX_CREATED', 'a:1:{i:0;s:14:\"MySQL Fulltext\";}'),
-(158, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194883, 'LOG_SEARCH_INDEX_CREATED', 'a:1:{i:0;s:21:\"phpBB Native Fulltext\";}'),
-(159, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194900, 'LOG_SEARCH_INDEX_REMOVED', 'a:1:{i:0;s:14:\"MySQL Fulltext\";}'),
-(160, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194907, 'LOG_SEARCH_INDEX_CREATED', 'a:1:{i:0;s:14:\"MySQL Fulltext\";}'),
-(161, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194910, 'LOG_SEARCH_INDEX_CREATED', 'a:1:{i:0;s:21:\"phpBB Native Fulltext\";}'),
-(162, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194939, 'LOG_SEARCH_INDEX_CREATED', 'a:1:{i:0;s:21:\"phpBB Native Fulltext\";}'),
-(163, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194981, 'LOG_RESET_ONLINE', ''),
-(164, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194983, 'LOG_RESET_DATE', ''),
-(165, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194986, 'LOG_RESYNC_STATS', ''),
-(166, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194990, 'LOG_RESYNC_POST_MARKING', ''),
-(167, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194994, 'LOG_RESYNC_POSTCOUNTS', ''),
-(168, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194996, 'LOG_PURGE_SESSIONS', ''),
-(169, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536194999, 'LOG_PURGE_CACHE', ''),
-(170, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536195037, 'LOG_CONFIG_SERVER', ''),
-(171, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536195084, 'LOG_CONFIG_SETTINGS', ''),
-(172, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536196070, 'LOG_MODULE_ADD', 'a:1:{i:0;s:21:\"ACP_PHPBB_MEDIA_EMBED\";}'),
-(173, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536196070, 'LOG_MODULE_ADD', 'a:1:{i:0;s:30:\"ACP_PHPBB_MEDIA_EMBED_SETTINGS\";}'),
-(174, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536196070, 'LOG_MODULE_ADD', 'a:1:{i:0;s:28:\"ACP_PHPBB_MEDIA_EMBED_MANAGE\";}'),
-(175, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536196070, 'LOG_EXT_ENABLE', 'a:1:{i:0;s:16:\"phpbb/mediaembed\";}'),
-(176, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197309, 'LOG_EXT_ENABLE', 'a:1:{i:0;s:25:\"rmcgirr83/activity24hours\";}'),
-(177, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197317, 'LOG_EXT_DISABLE', 'a:1:{i:0;s:16:\"phpbb/mediaembed\";}'),
-(178, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197324, 'LOG_EXT_ENABLE', 'a:1:{i:0;s:16:\"phpbb/mediaembed\";}'),
-(179, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197328, 'LOG_MODULE_ADD', 'a:1:{i:0;s:12:\"ACP_BH_TITLE\";}'),
-(180, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197328, 'LOG_MODULE_ADD', 'a:1:{i:0;s:15:\"ACP_BH_SETTINGS\";}'),
-(181, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197328, 'LOG_EXT_ENABLE', 'a:1:{i:0;s:22:\"phpbbmodders/banhammer\";}'),
-(182, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197333, 'LOG_MODULE_ADD', 'a:1:{i:0;s:19:\"ADM_LINKED_ACCOUNTS\";}'),
-(183, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197333, 'LOG_MODULE_ADD', 'a:1:{i:0;s:28:\"ADM_LINKED_ACCOUNTS_OVERVIEW\";}'),
-(184, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197333, 'LOG_MODULE_ADD', 'a:1:{i:0;s:30:\"ADM_LINKED_ACCOUNTS_MANAGEMENT\";}'),
-(185, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197333, 'LOG_MODULE_ADD', 'a:1:{i:0;s:15:\"LINKED_ACCOUNTS\";}'),
-(186, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197333, 'LOG_MODULE_ADD', 'a:1:{i:0;s:26:\"LINKED_ACCOUNTS_MANAGEMENT\";}'),
-(187, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197333, 'LOG_MODULE_ADD', 'a:1:{i:0;s:15:\"LINKING_ACCOUNT\";}'),
-(188, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197334, 'LOG_EXT_ENABLE', 'a:1:{i:0;s:21:\"flerex/linkedaccounts\";}'),
-(189, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197338, 'LOG_MODULE_ADD', 'a:1:{i:0;s:30:\"ACP_USER_RECENT_ACTIVITY_TITLE\";}'),
-(190, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197338, 'LOG_MODULE_ADD', 'a:1:{i:0;s:12:\"ACP_SETTINGS\";}'),
-(191, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197338, 'LOG_EXT_ENABLE', 'a:1:{i:0;s:24:\"senky/userrecentactivity\";}'),
-(192, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197398, 'LOG_REASON_REMOVED', 'a:1:{i:0;s:5:\"warez\";}'),
-(193, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197444, 'BH_SETTINGS_SUCCESS', ''),
-(194, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197588, 'LOG_CONFIG_VISUAL', ''),
-(195, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197623, 'LOG_CONFIG_VISUAL', ''),
-(196, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197632, 'LOG_CONFIG_VISUAL', ''),
-(197, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197637, 'LOG_CONFIG_VISUAL', ''),
-(198, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197665, 'LOG_CONFIG_REGISTRATION', ''),
-(199, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197685, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:15:\"Traditional RSC\";}'),
-(200, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197687, 'LOG_FORUM_SYNC', 'a:1:{i:0;s:13:\"Open World PK\";}'),
-(201, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197690, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:13:\"Open World PK\";}'),
-(202, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197694, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:12:\"Survival RSC\";}'),
-(203, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197700, 'LOG_FORUM_DEL_FORUM', 'a:1:{i:0;s:14:\"Distinct Games\";}'),
-(204, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197713, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:4:\"News\";}'),
-(205, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197722, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:5:\"Media\";}'),
-(206, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197733, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:8:\"Requests\";}'),
-(207, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197741, 'LOG_FORUM_DEL_POSTS', 'a:1:{i:0;s:22:\"Development Discussion\";}'),
-(208, 3, 2, 0, 0, 0, 2, '192.168.240.1', 1536197763, 'LOG_USER_UPDATE_NAME', 'a:2:{i:0;s:4:\"root\";i:1;s:13:\"Administrator\";}'),
-(209, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197763, 'LOG_USER_USER_UPDATE', 'a:1:{i:0;s:13:\"Administrator\";}'),
-(210, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197774, 'LOG_RESET_ONLINE', ''),
-(211, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197776, 'LOG_RESET_DATE', ''),
-(212, 0, 2, 0, 0, 0, 0, '192.168.240.1', 1536197779, 'LOG_PURGE_CACHE', '');
+(231, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536861953, 'LOG_CLEAR_ADMIN', ''),
+(232, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862020, 'LOG_FORUM_ADD', 'a:1:{i:0;s:4:\"News\";}'),
+(233, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862020, 'LOG_FORUM_COPIED_PERMISSIONS', 'a:2:{i:0;s:17:\"Global Discussion\";i:1;s:4:\"News\";}'),
+(234, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862027, 'LOG_FORUM_MOVE_UP', 'a:2:{i:0;s:4:\"News\";i:1;s:7:\"The Pub\";}'),
+(235, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862047, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:7:\"The Pub\";}'),
+(236, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862073, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:4:\"News\";i:1;s:39:\"<span class=\"sep\">Administrators</span>\";}'),
+(237, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862166, 'LOG_ACL_ADD_FORUM_LOCAL_F_', 'a:2:{i:0;s:4:\"News\";i:1;s:134:\"<span class=\"sep\">Registered users</span>, <span class=\"sep\">Global moderators</span>, <span class=\"sep\">Newly registered users</span>\";}'),
+(238, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862191, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:18:\"Join us in Discord\";}'),
+(239, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862200, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:14:\"GitHub Project\";}'),
+(240, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862209, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:11:\"Bug Tracker\";}'),
+(241, 0, 2, 0, 0, 0, 0, '192.168.176.1', 1536862236, 'LOG_FORUM_EDIT', 'a:1:{i:0;s:16:\"Join the Discord\";}');
 
 -- --------------------------------------------------------
 
@@ -2276,6 +2154,7 @@ INSERT INTO `phpbb_migrations` (`migration_name`, `migration_depends_on`, `migra
 ('\\phpbb\\db\\migration\\data\\v320\\v320rc2', 'a:3:{i:0;s:57:\"\\phpbb\\db\\migration\\data\\v31x\\remove_duplicate_migrations\";i:1;s:48:\"\\phpbb\\db\\migration\\data\\v31x\\add_log_time_index\";i:2;s:44:\"\\phpbb\\db\\migration\\data\\v320\\add_help_phpbb\";}', 1, 1, '', 1529675817, 1529675817),
 ('\\phpbb\\db\\migration\\data\\v32x\\cookie_notice_p2', 'a:1:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v320\\v320\";}', 1, 1, '', 1529675817, 1529675817),
 ('\\phpbb\\db\\migration\\data\\v32x\\email_force_sender', 'a:1:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v32x\\v321\";}', 1, 1, '', 1529675817, 1529675817),
+('\\phpbb\\db\\migration\\data\\v32x\\enable_accurate_pm_button', 'a:1:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v32x\\v322\";}', 1, 1, '', 1536861716, 1536861716),
 ('\\phpbb\\db\\migration\\data\\v32x\\f_list_topics_permission_add', 'a:1:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v32x\\v321\";}', 1, 1, '', 1529675817, 1529675817),
 ('\\phpbb\\db\\migration\\data\\v32x\\fix_user_styles', 'a:1:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v320\\v320\";}', 1, 1, '', 1529675817, 1529675817),
 ('\\phpbb\\db\\migration\\data\\v32x\\load_user_activity_limit', 'a:1:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v320\\v320\";}', 1, 1, '', 1529675817, 1529675817),
@@ -2292,6 +2171,9 @@ INSERT INTO `phpbb_migrations` (`migration_name`, `migration_depends_on`, `migra
 ('\\phpbb\\db\\migration\\data\\v32x\\v321rc1', 'a:4:{i:0;s:34:\"\\phpbb\\db\\migration\\data\\v320\\v320\";i:1;s:38:\"\\phpbb\\db\\migration\\data\\v31x\\v3111rc1\";i:2;s:54:\"\\phpbb\\db\\migration\\data\\v32x\\load_user_activity_limit\";i:3;s:67:\"\\phpbb\\db\\migration\\data\\v32x\\user_notifications_table_unique_index\";}', 1, 1, '', 1529675817, 1529675817),
 ('\\phpbb\\db\\migration\\data\\v32x\\v322', 'a:2:{i:0;s:35:\"\\phpbb\\db\\migration\\data\\v31x\\v3112\";i:1;s:37:\"\\phpbb\\db\\migration\\data\\v32x\\v322rc1\";}', 1, 1, '', 1529675817, 1529675817),
 ('\\phpbb\\db\\migration\\data\\v32x\\v322rc1', 'a:5:{i:0;s:45:\"\\phpbb\\db\\migration\\data\\v32x\\fix_user_styles\";i:1;s:55:\"\\phpbb\\db\\migration\\data\\v32x\\update_prosilver_bitfield\";i:2;s:48:\"\\phpbb\\db\\migration\\data\\v32x\\email_force_sender\";i:3;s:58:\"\\phpbb\\db\\migration\\data\\v32x\\f_list_topics_permission_add\";i:4;s:53:\"\\phpbb\\db\\migration\\data\\v32x\\merge_duplicate_bbcodes\";}', 1, 1, '', 1529675817, 1529675817),
+('\\phpbb\\db\\migration\\data\\v32x\\v323', 'a:1:{i:0;s:37:\"\\phpbb\\db\\migration\\data\\v32x\\v323rc2\";}', 1, 1, '', 1536861716, 1536861716),
+('\\phpbb\\db\\migration\\data\\v32x\\v323rc1', 'a:1:{i:0;s:55:\"\\phpbb\\db\\migration\\data\\v32x\\enable_accurate_pm_button\";}', 1, 1, '', 1536861716, 1536861716),
+('\\phpbb\\db\\migration\\data\\v32x\\v323rc2', 'a:1:{i:0;s:37:\"\\phpbb\\db\\migration\\data\\v32x\\v323rc1\";}', 1, 1, '', 1536861716, 1536861716),
 ('\\phpbb\\mediaembed\\migrations\\m1_install_data', 'a:1:{i:0;s:37:\"\\phpbb\\db\\migration\\data\\v320\\v320rc1\";}', 1, 1, '', 1536196069, 1536196070),
 ('\\phpbb\\mediaembed\\migrations\\m2_signature_config', 'a:1:{i:0;s:44:\"\\phpbb\\mediaembed\\migrations\\m1_install_data\";}', 1, 1, '', 1536196070, 1536196070),
 ('\\phpbb\\mediaembed\\migrations\\m3_plain_urls_config', 'a:1:{i:0;s:44:\"\\phpbb\\mediaembed\\migrations\\m1_install_data\";}', 1, 1, '', 1536196070, 1536196070),
@@ -3689,7 +3571,11 @@ CREATE TABLE IF NOT EXISTS `phpbb_sessions` (
 --
 
 INSERT INTO `phpbb_sessions` (`session_id`, `session_user_id`, `session_last_visit`, `session_start`, `session_time`, `session_ip`, `session_browser`, `session_forwarded_for`, `session_page`, `session_viewonline`, `session_autologin`, `session_admin`, `session_forum_id`) VALUES
-('e3bb54f5bae8f37cc70f6ce30628b90a', 2, 1529772106, 1536194670, 1536198093, '192.168.240.1', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0', '', 'index.php', 1, 1, 1, 0);
+('7a7e935377b676dc8e4a6a11678e25f9', 2, 1536852088, 1536861143, 1536861143, '192.168.160.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0', '', 'index.php', 1, 1, 0, 0),
+('8abd4e6a2f974b6d5349d62d4fddd803', 1, 1536861716, 1536861716, 1536861716, '192.168.176.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0', '', 'install/app.php/update', 1, 0, 0, 0),
+('a08104ca66e0398fcd8fb8f41c80e7bd', 2, 1536852088, 1536861812, 1536862243, '192.168.176.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0', '', 'index.php', 1, 1, 1, 0),
+('db2f170d5e2a879cd777e29cbc2c2c7c', 2, 1536852088, 1536861716, 1536861716, '192.168.176.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0', '', 'install/app.php/update', 1, 1, 0, 0),
+('ea1b1f7f72e8812c829f335502419562', 2, 1536852088, 1536859794, 1536859906, '172.30.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0', '', 'index.php', 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -3706,6 +3592,14 @@ CREATE TABLE IF NOT EXISTS `phpbb_sessions_keys` (
   PRIMARY KEY (`key_id`,`user_id`),
   KEY `last_login` (`last_login`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `phpbb_sessions_keys`
+--
+
+INSERT INTO `phpbb_sessions_keys` (`key_id`, `user_id`, `last_ip`, `last_login`) VALUES
+('5de1abdbc24a81c92ccfdebaff35a2ee', 2, '192.168.176.1', 1536861716),
+('fc389d46626a1264e01bf7098dbe8c87', 2, '192.168.176.1', 1536861812);
 
 -- --------------------------------------------------------
 
@@ -4059,8 +3953,8 @@ CREATE TABLE IF NOT EXISTS `phpbb_users` (
 --
 
 INSERT INTO `phpbb_users` (`user_id`, `user_type`, `group_id`, `user_permissions`, `user_perm_from`, `user_ip`, `user_regdate`, `username`, `username_clean`, `user_password`, `user_passchg`, `user_email`, `user_email_hash`, `user_birthday`, `user_lastvisit`, `user_lastmark`, `user_lastpost_time`, `user_lastpage`, `user_last_confirm_key`, `user_last_search`, `user_warnings`, `user_last_warning`, `user_login_attempts`, `user_inactive_reason`, `user_inactive_time`, `user_posts`, `user_lang`, `user_timezone`, `user_dateformat`, `user_style`, `user_rank`, `user_colour`, `user_new_privmsg`, `user_unread_privmsg`, `user_last_privmsg`, `user_message_rules`, `user_full_folder`, `user_emailtime`, `user_topic_show_days`, `user_topic_sortby_type`, `user_topic_sortby_dir`, `user_post_show_days`, `user_post_sortby_type`, `user_post_sortby_dir`, `user_notify`, `user_notify_pm`, `user_notify_type`, `user_allow_pm`, `user_allow_viewonline`, `user_allow_viewemail`, `user_allow_massemail`, `user_options`, `user_avatar`, `user_avatar_type`, `user_avatar_width`, `user_avatar_height`, `user_sig`, `user_sig_bbcode_uid`, `user_sig_bbcode_bitfield`, `user_jabber`, `user_actkey`, `user_newpasswd`, `user_form_salt`, `user_new`, `user_reminded`, `user_reminded_time`) VALUES
-(1, 2, 1, '', 0, '', 1529675815, 'Anonymous', 'anonymous', '', 0, '', 0, '', 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'en', '', 'd M Y H:i', 3, 0, '', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '8c84dd198838df98', 1, 0, 0),
-(2, 3, 5, 'zik0zjzik0zjzik0zjhra0hs\n\n\n\nzik0zjqmyfb4\n\n\n\nzik0zjziimf4\nzik0zjqmyfb4\nhwby9w000000\n\n\nhwby9w000000\n\n\n\nhwby9w000000', 0, '108.162.237.186', 1529675815, 'Administrator', 'administrator', '$2y$10$GSlXO2CzM4y2Mi1puUdD7.xi16waq1/dcaangExACy2N1Mc7WcHhe', 1536194745, 'openrsc.mailer@gmail.com', 255669274424, ' 0- 0-   0', 1536194711, 0, 1529716441, 'adm/index.php?i=acp_users&mode=overview&u=2', '', 0, 0, 0, 0, 0, 0, 0, 'en', 'America/Anguilla', 'D M d, Y g:i a', 3, 1, 'AA0000', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 1, 230271, '', '', 0, 0, '', '', '', '', '', '', '0ba215ee95f1cfde', 0, 0, 0),
+(1, 2, 1, '', 0, '', 1529675815, 'Anonymous', 'anonymous', '', 0, '', 0, '', 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'en', '', 'd M Y H:i', 3, 0, '', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '9f1df9444136d569', 1, 0, 0),
+(2, 3, 5, 'zik0zjzik0zjzik0zjhra0hs\n\n\n\nzik0zjqmyfb4\n\n\n\nzik0zjziimf4\nzik0zjqmyfb4\nhwby9w000000\n\n\nhwby9w000000\n\n\n\nhwby9w000000\nzik0zjqmyfb4', 0, '108.162.237.186', 1529675815, 'Administrator', 'administrator', '$2y$10$GSlXO2CzM4y2Mi1puUdD7.xi16waq1/dcaangExACy2N1Mc7WcHhe', 1536194745, 'openrsc.mailer@gmail.com', 255669274424, ' 0- 0-   0', 1536852088, 0, 1529716441, 'index.php', '', 0, 0, 0, 0, 0, 0, 0, 'en', 'America/Anguilla', 'D M d, Y g:i a', 3, 1, 'AA0000', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 1, 1, 1, 1, 230271, '', '', 0, 0, '', '', '', '', '', '', '13417e266a06fbc4', 0, 0, 0),
 (3, 2, 6, '', 0, '', 1529675815, 'AdsBot [Google]', 'adsbot [google]', '', 1529675815, '', 0, '', 0, 1529675815, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'en', 'UTC', 'D M d, Y g:i a', 3, 0, '9E8DA7', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 0, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '78b19ecb290d083b', 0, 0, 0),
 (4, 2, 6, '', 0, '', 1529675815, 'Alexa [Bot]', 'alexa [bot]', '', 1529675815, '', 0, '', 0, 1529675815, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'en', 'UTC', 'D M d, Y g:i a', 3, 0, '9E8DA7', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 0, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', '67f695fa9783b0b7', 0, 0, 0),
 (5, 2, 6, '', 0, '', 1529675815, 'Alta Vista [Bot]', 'alta vista [bot]', '', 1529675815, '', 0, '', 0, 1529675815, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 'en', 'UTC', 'D M d, Y g:i a', 3, 0, '9E8DA7', 0, 0, 0, 0, -3, 0, 0, 't', 'd', 0, 't', 'a', 0, 1, 0, 0, 1, 1, 0, 230271, '', '', 0, 0, '', '', '', '', '', '', 'e66b20807371b4ad', 0, 0, 0),
@@ -4348,17 +4242,6 @@ CREATE TABLE IF NOT EXISTS `phpbb_zebra` (
   `foe` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`,`zebra_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `phpbb_posts`
---
-ALTER TABLE `phpbb_posts` ADD FULLTEXT KEY `post_subject` (`post_subject`);
-ALTER TABLE `phpbb_posts` ADD FULLTEXT KEY `post_content` (`post_text`,`post_subject`);
-ALTER TABLE `phpbb_posts` ADD FULLTEXT KEY `post_text` (`post_text`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
