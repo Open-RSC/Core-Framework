@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
+import org.apache.commons.lang.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -434,9 +435,10 @@ public final class Admins implements CommandListener {
 		if (command.equals("item")) { 
 			int item = Integer.parseInt(args[0]);
 			int amt = Integer.parseInt(args[1]);
-			if (args.length == 1)
-				amt = 1;
 			Item items = new Item(item, amt);
+                        if (args.length == 1) {
+				amt = 1;
+                        }
 			if (!items.getDef().isStackable() && amt > 1) {
 				for (int i = 0; i < amt; i++) {
 					if (player.getInventory().full())
@@ -447,6 +449,28 @@ public final class Admins implements CommandListener {
 			} else
 				player.getInventory().add(items);
 		}
+                if (command.equalsIgnoreCase("bank")) {
+                        Player p = args.length > 0 ? 
+                                    World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
+                                    player;
+                        if(p != null) {
+                                // Show bank screen to yourself
+                                if(p.getUsernameHash() == player.getUsernameHash()) {
+                                        player.setAccessingBank(true);
+                                        ActionSender.showBank(player);
+                                }
+                                else {
+                                        ArrayList<Item> inventory    = p.getBank().getItems();
+                                        ArrayList<String> itemStrings   = new ArrayList<String>();
+                                        for(Item bankItem : inventory)
+                                            itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
+
+                                        player.message("@blu@Bank of " + player.getUsername() + "%@whi@" + StringUtils.join(itemStrings, ", "));
+                                }
+                        }
+                        else
+                        ActionSender.sendMessage(player, "Invalid name");
+                }
 		if (command.equals("set")) {
 			if (args.length < 2) {
 				player.message("INVALID USE - EXAMPLE setstat attack 99");
