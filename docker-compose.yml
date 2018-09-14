@@ -47,7 +47,7 @@ services:
         image: tomcat:latest
         container_name: tomcat
         ports:
-            - "127.0.0.1:8080:8080"
+            - "8080:8080"
         restart: always
         volumes:
             - "./Website:/usr/local/tomcat/webapps/ROOT"
