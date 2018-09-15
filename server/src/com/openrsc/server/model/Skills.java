@@ -9,7 +9,7 @@ import com.openrsc.server.util.rsc.Formulae;
 
 public class Skills {
 
-	private static final int LEVEL_LIMIT = 99;
+	private static final int LEVEL_LIMIT = 1000;
 	public static int[] experienceArray;
 
 	public static final int SKILL_COUNT = 18;
