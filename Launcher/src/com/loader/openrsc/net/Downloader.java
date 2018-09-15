@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.Launcher;
+import com.loader.openrsc.OpenRSC;
 import com.loader.openrsc.frame.AppFrame;
 
 public class Downloader extends Observable 
@@ -74,11 +74,11 @@ public class Downloader extends Observable
 				downloadedFileHash = getMD5Checksum(downloadedFile).toLowerCase();
 			} catch (Exception e) {
 				e.printStackTrace();
-				Launcher.getPopup().setMessage("" + e);
+				OpenRSC.getPopup().setMessage("" + e);
 			}
 
 			if(!downloadedFileHash.equalsIgnoreCase(hash)) {
-				Launcher.getPopup().setMessage(downloadedFile.getName() + " hash:"+ downloadedFileHash + " doesn't match MD5: " + hash + " re-downloading");
+				OpenRSC.getPopup().setMessage(downloadedFile.getName() + " hash:"+ downloadedFileHash + " doesn't match MD5: " + hash + " re-downloading");
 				load(fileName, true);
 				verified = false;
 			}
