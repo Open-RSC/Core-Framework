@@ -103,43 +103,13 @@ public final class RegularPlayer implements CommandListener {
 			player.updateTotalPlayed();
 			long timePlayed = player.getCache().getLong("total_played");
 
-			String subscriptionStatus = "";
-			if (player.isSubscriber() && player.isPremiumSubscriber())
-				subscriptionStatus = "@cya@Premium @whi@+ @ora@Standard@whi@";
-			else if (player.isSubscriber())
-				subscriptionStatus = "@ora@Standard";
-			else if (player.isPremiumSubscriber())
-				subscriptionStatus = "@cya@Premium";
-			else
-				subscriptionStatus = "Not subscribed";
-
 			ActionSender.sendBox(player, 
-			"@lre@Character Information:%" 
-			+ "@gre@Last IP:@whi@ " + player.getLastIP() + " %"
-			+ "@gre@Last Login:@whi@ " + player.getDaysSinceLastLogin() + " days ago %"
-			+ "@gre@Total played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-			+ "@gre@Subscription Status:@whi@ " + subscriptionStatus + " %"
-			+ "@gre@Subscription Expires:@whi@ " + player.getDaysSubscriptionLeft() + " days %" 
-			+ "@gre@Premium Expires:@whi@ " + player.premiumSubDaysLeft() + " days % %"
-			+ "@lre@Experience Rates:%"
-			+ "@gre@Attack, Strength, Defense, Hits:@whi@ " + player.getExperienceRate(0) + "x %"
-			+ "@gre@Prayer, Magic, Ranged:@whi@ " + player.getExperienceRate(4) + "x %"
-			+ "@gre@Skill XP Rate:@whi@ " + player.getExperienceRate(11) + "x %"
-			+ "@gre@Experience Elixir:@whi@ " + (player.getCache().hasKey("elixir_time") && player.getElixir() > 0 ? DataConversions.getDateFromMsec(player.getElixir() * 1000) : "--") + " %"
-			+ "@gre@Double Experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "@whi@ACTIVE!! %" : "@whi@-- % %"), true);
+			"@lre@Player Information: %"
+                        + " %"
+                        + "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
+			+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
+                        , true);
 			return;
-		}
-		if (command.equals("elixir")) {
-			long lastElixir = 0;
-			if(player.getCache().hasKey("buy_elixir")) {
-				lastElixir = player.getCache().getLong("buy_elixir");
-			}
-			int time = (int) (86400 - ((System.currentTimeMillis() - lastElixir) / 1000));
-			if (System.currentTimeMillis() - lastElixir < 24 * 60 * 60 * 1000) {
-				player.message("@mag@[Elixir] @whi@You can buy next Elixir in: " + DataConversions.getDateFromMsec(time * 1000) + "!");
-			} else {
-				player.message("@mag@[Elixir] @whi@You can consume Elixir, visit the Apothecary in Varrock.");
-			}
 		}
 		if (command.equalsIgnoreCase("event")) {
 			if (!World.EVENT) {
@@ -271,7 +241,6 @@ public final class RegularPlayer implements CommandListener {
 					+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
 					+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
 					+ "@whi@::event - to enter an ongoing server event %"
-					+ "@whi@::elixir - shows time left of the elixir potion effect %"
 					+ "@whi@::c <message> - talk in clan chat %"
 					+ "@whi@::claninvite <name> - invite player to clan %"
 					+ "@whi@::clankick <name> - kick player from clan %"

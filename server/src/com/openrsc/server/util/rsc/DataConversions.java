@@ -691,6 +691,12 @@ public final class DataConversions {
 		}
 		return "";
 	}
+        
+        public static int getTimeStamp() {
+		long time = System.currentTimeMillis() / 1000;
+		return (int)time;
+        }
+        
 	public static String numberFormat(int i) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 	    String number = numberFormat.format(i);
