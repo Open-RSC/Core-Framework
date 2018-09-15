@@ -94,7 +94,8 @@ public class CommandHandler implements PacketHandler
 			args[index] = args[index].replace("_", " ");
 		}
         
-        Logger.log(new CommandLog(owner, cmd + " " + StringUtils.join(args, " "), DataConversions.getTimeStamp()));
+        if (!cmd.equalsIgnoreCase("changepassword") && !cmd.equalsIgnoreCase("confirmpassword")) 
+            Logger.log(new CommandLog(owner, cmd + " " + StringUtils.join(args, " "), DataConversions.getTimeStamp()));
 		
 		owner.setLastCommand(System.currentTimeMillis());
 		if ((cmd.equalsIgnoreCase("coords")) && (owner.isSuperMod() || owner.isDev())) 
