@@ -62,8 +62,8 @@ class Browser extends Region {
     private static String Secure = "http://";
     private static String Domain = "localhost";
     private static String Dev_Domain = "localhost";
-    private static String Tomcat = "http://"+Domain;
-    private static String Dev_Tomcat = "http://"+Dev_Domain;
+    private static String Tomcat = "http://"+Domain+":8080";
+    private static String Dev_Tomcat = "http://"+Dev_Domain+":8080";
     private static String CLIENT_FILENAME = "client.zip";
     private static String CACHE_FILENAME = "cache.zip";
     private static String CLIENT_JAR_FILENAME = "Open_RSC_Client.jar";

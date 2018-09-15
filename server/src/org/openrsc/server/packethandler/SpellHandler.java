@@ -118,14 +118,6 @@ public class SpellHandler implements PacketHandler {
 							return;															
 						}
                         
-						if (!affectedPlayer.getLocation().isInWarZone() || !World.pvpEnabled) 
-						{
-                            player.sendMessage(Config.getPrefix() + "PVP is currently disabled.");
-							player.resetFollowing();
-							player.resetPath();															
-							return;															
-						}
-						
 						if (player.isDMing() && player.getDMSetting(1)) 
 						{
 							player.sendMessage(Config.getPrefix() + "Magic cannot be used in this Death Match");

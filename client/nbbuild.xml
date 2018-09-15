@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="Open_RSC_Client" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Open RSC Client.</description>
+<project name="Open_RSC_Client_v1" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Open RSC Client v1.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -58,7 +58,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="Open_RSC_Client-impl.jar">
+        <target name="run" depends="Open_RSC_Client_v1-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>

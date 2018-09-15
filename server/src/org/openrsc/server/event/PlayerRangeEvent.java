@@ -49,14 +49,6 @@ public class PlayerRangeEvent extends DelayedEvent {
 							}
 						}
                         
-						if (!target.getLocation().isInWarZone() || !World.pvpEnabled) 
-						{
-                            owner.sendMessage(Config.getPrefix() + "PVP is currently disabled.");
-							owner.resetFollowing();
-							owner.resetPath();															
-							return;															
-						}
-                        
                         if ( target.isInvulnerable() /*affectedPlayer.isSuperMod() || affectedPlayer.isDev() || affectedPlayer.isEvent()*/)
                         {
                         	owner.sendMessage(Config.getPrefix() + target.getUsername() + " is currently invulnerable!");
