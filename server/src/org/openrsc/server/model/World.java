@@ -207,7 +207,6 @@ public final class World
 
 	private static WorldLoader worldLoader;
 	public static boolean eventRunning = false;
-    public static boolean pvpEnabled = true;
 	public static boolean safeCombat = false;
 	public static boolean muted = false;
 	public static Point eventPoint = null;
@@ -217,7 +216,7 @@ public final class World
 	private static byte wildernessSwitchType = (byte)0;
 
 	private static boolean changingWildernessState;
-	public static boolean wildernessP2P = false;
+	public static boolean wildernessP2P = true;
 
 	
 	public static boolean joinEvent(Player player) {
@@ -272,18 +271,18 @@ public final class World
 		
 	private static void minuteChecks() 
 	{
-		World.getDelayedEventHandler().add(new SingleEvent(null, 60000) //default 60000 for 1 minute
+		World.getDelayedEventHandler().add(new SingleEvent(null, 1000) //default 60000 for 1 minute check for events
 		{
 			public void action() 
 			{
-				if ((System.currentTimeMillis() - Config.getStartTime()) > 21600000) //54000000 = 15 hours, 43200000 = 12 hours, 21600000 = 6 hours
+				if ((System.currentTimeMillis() - Config.getStartTime()) > Config.getAutoRestartTimeMillis())
 				{
-					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "performing automatic world restart, try logging back in again in ~20 seconds!"));
+					World.getWorld().getEventPump().submit(new ShutdownEvent(true, "performing automatic world restart, log back in after 5 seconds"));
 					global = false;
 				} 
 				else 
 				{
-					if (!World.isWildernessChanging())
+					/*if (!World.isWildernessChanging())
 					{
 						Calendar c = Calendar.getInstance();
 						int day_of_week = c.get(Calendar.DAY_OF_WEEK);
@@ -346,7 +345,7 @@ public final class World
 								
 						}
 						
-					}
+					}*/
 					minuteChecks();
 				}
 			}
@@ -356,17 +355,17 @@ public final class World
 	public static void toggleWilderness() {
 		if (!World.isWildernessChanging()) {
 			for (Player p : getPlayers()) {
-				p.sendGraciousAlert("The wilderness state will change to " + (wildernessP2P ? "F2P" : "P2P") + " in 30 seconds!" + (wildernessP2P ? " After the time is up you will no longer be able to eat P2P food, drink P2P potions, use P2P armour/weapons or cast P2P spells." : ""));
+				//p.sendGraciousAlert("The wilderness state will change to " + (wildernessP2P ? "F2P" : "P2P") + " in 30 seconds!" + (wildernessP2P ? " After the time is up you will no longer be able to eat P2P food, drink P2P potions, use P2P armour/weapons or cast P2P spells." : ""));
 				p.startWildernessUpdate(30, (byte)(wildernessP2P ? 0 : 1));
 				setWildernessSwitchType((byte)(wildernessP2P ? 0 : 1));
-				setWildernessCountdown(System.currentTimeMillis() + 30000);
+				setWildernessCountdown(System.currentTimeMillis() + 1000); //was 30000
 			}
-			World.getDelayedEventHandler().add(new SingleEvent(null, 30000) {
+			World.getDelayedEventHandler().add(new SingleEvent(null, 1000) {
 				public void action() {
 					setWildernessCountdown(0);
 					wildernessP2P = !wildernessP2P;
 					for (Player p : getPlayers()) {
-						p.sendMessage(Config.getPrefix() + "The wilderness state has been changed to: @gre@" + (wildernessP2P ? "P2P" : "F2P"));
+						//p.sendMessage(Config.getPrefix() + "The wilderness state has been changed to: @gre@" + (wildernessP2P ? "P2P" : "F2P"));
 						if (!wildernessP2P) {
 							if (p.getLocation().inWilderness()) {
 								for (InvItem currentItem : p.getInventory().getItems()) {

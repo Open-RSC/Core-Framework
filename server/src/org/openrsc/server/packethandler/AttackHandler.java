@@ -37,7 +37,6 @@ public class AttackHandler implements PacketHandler {
 						if (pID == 18) {
 							final Player affectedPlayer = World.getPlayer(serverIndex);
 							if (affectedPlayer != null && !affectedPlayer.equals(player)) {
-								if (!affectedPlayer.getLocation().isInWarZone() || !World.pvpEnabled) {
                                     if (!player.getLocation().isInDMArena() || (player.getLocation().isInDMArena() && affectedPlayer == player.getInDMWith())) 
                                     {
                                         if( !affectedPlayer.isInvulnerable() /*!affectedPlayer.isDev() && !affectedPlayer.isSuperMod() && !affectedPlayer.isEvent()*/) 
@@ -115,11 +114,6 @@ public class AttackHandler implements PacketHandler {
                                         player.resetFollowing();
                                         player.resetPath();	
                                     }
-                                } else {
-                                    player.sendMessage(Config.getPrefix() + "PVP is currently disabled.");
-                                    player.resetFollowing();
-                                    player.resetPath();
-                                }
                             }
                         } else if (pID == 19) {
 							final Npc npc = World.getNpc(serverIndex);
