@@ -381,6 +381,15 @@ public final class Admins implements CommandListener {
 			int q = Integer.parseInt(args[0]);
 			player.sendQuestComplete(q);
 		}
+                if (command.equals("shutdown")) {
+                        String reason = "";
+			int seconds = 0;
+			if (Server.getServer().shutdownForUpdate(seconds)) {
+				for (Player p : world.getPlayers()) {
+					ActionSender.startShutdown(p, seconds);
+				}
+			}
+                }
 		if (command.equals("update")) {
 			String reason = "";
 			int seconds = 60;
