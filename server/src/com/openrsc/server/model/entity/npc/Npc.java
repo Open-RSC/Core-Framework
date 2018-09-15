@@ -381,11 +381,30 @@ public class Npc extends Mob {
 								&& !Constants.GameServer.MEMBER_WORLD) {
 							continue;
 						}
-						
+
 						if (!EntityHandler.getItemDef(drop.getID()).isStackable()) {
-							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), 1, owner);
+
+							int dropID  = drop.getID();
+							int dropAmt = drop.getAmount();
+
+							// Rare Drop Table
+							if (drop.getID() == 160) {
+								dropID = Formulae.calculateRareDrop();
+								dropAmt = 1;
+							}
+
+							// Herb Drop Table
+							else if (drop.getID() == 165) {
+								dropID = Formulae.calculateHerbDrop();
+							}
+
+							else {
+
+							}
+
+							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
 							groundItem.setAttribute("npcdrop", true);
-							for (int count = 0; count < drop.getAmount(); count++)
+							for (int count = 0; count < dropAmt; count++)
 								world.registerItem(groundItem);
 						} else {
 							int amount = drop.getAmount();
@@ -395,6 +414,7 @@ public class Npc extends Mob {
 							world.registerItem(groundItem);
 						}
 					}
+					break;
 				}
 				total += drop.getWeight();
 			}

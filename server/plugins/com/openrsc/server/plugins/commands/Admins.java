@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -229,42 +230,70 @@ public final class Admins implements CommandListener {
 		if (command.equals("simulatedrop")) {
 			int npcID = Integer.parseInt(args[0]);
 			int maxAttempts = Integer.parseInt(args[1]);
+			int dropID = -1;
+			int dropWeight = 0;
 
 			HashMap<String, Integer> hmap = new HashMap<String, Integer>();
 
 			ItemDropDef[] drops = EntityHandler.getNpcDef(npcID).getDrops();
 			for (ItemDropDef drop : drops) {
-				if (drop.getID() == -1) continue;
-				ItemDefinition def = EntityHandler.getItemDef(drop.getID());
-				hmap.put(def.getName()+drop.getID(), 0);
-			}
-
-			for (int i = 0; i < maxAttempts; i++) {
-				int total = 0;
-				for (ItemDropDef drop : drops) {
-					total += drop.getWeight();
+				dropID = drop.getID();
+				if (dropID == -1) continue;
+				if (dropID == 160) {
+					int[] rares = { 160, 159, 158, 157, 526, 527, 1277 };
+					String[] rareNames = {"uncut sapphire", "uncut emerald",
+							"uncut ruby", "uncut diamond", "Half of a key", "Half of a key", "Half Dragon Square Shield"};
+					for (int r = 0; r < rares.length; r++)
+						hmap.put(rareNames[r]+" "+rares[r], 0);
 				}
-				int hit = DataConversions.random(0, total);
+				else if (dropID == 165) {
+					int[] herbs = { 165, 435, 436, 437, 438, 439, 440, 441, 442, 443 };
+					for (int h : herbs)
+						hmap.put("Herb "+h, 0);
+				}
+				else {
+					ItemDefinition def = EntityHandler.getItemDef(dropID);
+					hmap.put(def.getName()+" "+dropID, 0);
+				}
+			}
+			int originalTotal = 0;
+			for (ItemDropDef drop : drops) {
+				originalTotal += drop.getWeight();
+			}
+			System.out.println("Total Weight: "+originalTotal);
+
+			int total = 0;
+			for (int i = 0; i < maxAttempts; i++) {
+				int hit = DataConversions.random(0, originalTotal);
 				total = 0;
 				for (ItemDropDef drop : drops) {
 					if (drop == null) {
 						continue;
 					}
-					if (drop.getWeight() == 0 && drop.getID() != -1) {
+					dropID = drop.getID();
+					dropWeight = drop.getWeight();
+					if (dropWeight == 0 && dropID != -1) {
 						continue;
 					}
-					if (hit >= total && hit < (total + drop.getWeight())) {
-						if (drop.getID() != -1) {
-							ItemDefinition def = EntityHandler.getItemDef(drop.getID());
-							hmap.put(def.getName()+drop.getID(), hmap.get(def.getName()+drop.getID()) + 1);
+					if (hit >= total && hit < (total + dropWeight)) {
+						if (dropID != -1) {
+							if (dropID == 160)
+								dropID = Formulae.calculateRareDrop();
+							else if (dropID == 165)
+								dropID = Formulae.calculateHerbDrop();
+							ItemDefinition def = EntityHandler.getItemDef(dropID);
+							try {
+								hmap.put(def.getName()+" "+dropID, hmap.get(def.getName()+" "+dropID) + 1);
+							}
+							catch (NullPointerException n) {
+							}
 							break;
 						}
 					}
-					total += drop.getWeight();
+					total += dropWeight;
 				}
 			}
-
-			System.out.println(hmap);
+			System.out.println(Arrays.toString(hmap.entrySet().toArray()));
 		}
 		if (command.equals("reloaddrops")) {
 			try {
