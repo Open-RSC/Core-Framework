@@ -487,19 +487,21 @@ public final class Admins implements CommandListener {
                         p.updateTotalPlayed();
 			long timePlayed = p.getCache().getLong("total_played");
                         long timeMoved = System.currentTimeMillis() - p.getLastMoved();
+                        long timeOnline = System.currentTimeMillis() - p.getCurrentLogin();
                         if(p != null) {
                         
                         ActionSender.sendBox(player, 
                         "@lre@Player Information: %"
                         + " %"
 			+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
-                        + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"
-			+ "@gre@IP:@whi@ " + p.getLastIP() + " %"
                         + "@gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " %"
+                        + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
                         + "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
+                        + "@gre@IP:@whi@ " + p.getLastIP() + " %"
 			+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
                         + "@gre@Coordinates:@whi@ " + p.getStatus() + " at " + p.getLocation().toString() + " %"
                         + "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
+                        + "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
 			+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
                         , true);
 			return;
