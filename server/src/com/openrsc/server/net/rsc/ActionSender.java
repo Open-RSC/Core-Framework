@@ -1034,7 +1034,7 @@ public class ActionSender {
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
 				sendMessage(p, null, 0, MessageType.QUEST, Constants.GameServer.MOTD, 0);
-				sendMessage(p, null, 0, MessageType.QUEST, "For guides and tips - please visit http://runescapeclassic.wikia.com", 0);
+				//sendMessage(p, null, 0, MessageType.QUEST, "For guides and tips - please visit http://runescapeclassic.wikia.com", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
 							+ (double) (System.currentTimeMillis() - p.getMuteExpires()) / 3600000D + " hours.");

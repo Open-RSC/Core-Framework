@@ -208,10 +208,7 @@ public final class RegularPlayer implements CommandListener {
 			player.message("Your fatigue has been updated to 100%");
 		}
 		if (command.equals("online")) {
-			int players = (int) (World.getWorld().getPlayers().size() * 1.12);
-			
-			
-
+			int players = (int) (World.getWorld().getPlayers().size());
 			for (Player p : World.getWorld().getPlayers()) {
 				if (p.isMod() && p.getSettings().getPrivacySetting(1)) {
 					players--;

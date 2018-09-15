@@ -37,6 +37,7 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
+import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -70,6 +71,18 @@ public final class Admins implements CommandListener {
 			}
 			player.message("There are " + IP_ADDRESSES.size() + " unique players online");
 		}
+                /*if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
+			StringBuilder sb = new StringBuilder();
+                        synchronized (World.getWorld().getPlayers()) {
+                                EntityList<Player> players = World.getWorld().getPlayers();
+                                sb.append("@gre@There are currently ").append(players.size()).append(" player(s) online.\n\n");
+                                for (Player p : players) {
+                                        Point loc = p.getLocation();
+                                        sb.append("@whi@").append(p.getUsername()).append(" @yel@(").append(loc).append(")").append(loc.inWilderness() ? " @red@".concat("Wilderness").concat("\n") : "\n");
+                                }
+                        }
+                        ActionSender.sendBox(player, sb.toString(), true);
+		}*/
 		if (command.equals("events")) {
 			player.message("Total amount of events running: " + Server.getServer().getGameEventHandler().getEvents().size());
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
@@ -368,6 +381,15 @@ public final class Admins implements CommandListener {
 			int q = Integer.parseInt(args[0]);
 			player.sendQuestComplete(q);
 		}
+                if (command.equals("shutdown")) {
+                        String reason = "";
+			int seconds = 0;
+			if (Server.getServer().shutdownForUpdate(seconds)) {
+				for (Player p : world.getPlayers()) {
+					ActionSender.startShutdown(p, seconds);
+				}
+			}
+                }
 		if (command.equals("update")) {
 			String reason = "";
 			int seconds = 60;
@@ -432,41 +454,54 @@ public final class Admins implements CommandListener {
 				ActionSender.sendBox(p, sb.toString(), false);
 			}
 		}
-		if (command.equals("item")) { 
-			int item = Integer.parseInt(args[0]);
-			int amt = Integer.parseInt(args[1]);
-			Item items = new Item(item, amt);
-                        if (args.length == 1) {
-				amt = 1;
+                if (command.equals("item")) {
+                        if (args.length < 1 || args.length > 2) {
+                                ActionSender.sendMessage(player, "Invalid args. Syntax: ITEM id [amount]");
+                                return;
                         }
-			if (!items.getDef().isStackable() && amt > 1) {
-				for (int i = 0; i < amt; i++) {
-					if (player.getInventory().full())
-						break;
-
-					player.getInventory().add(new Item(item, amt));
-				}
-			} else
-				player.getInventory().add(items);
-		}
+                        int id = Integer.parseInt(args[0]);
+                        if (EntityHandler.getItemDef(id) != null) {
+                                int amount = 1;
+                                if (args.length == 2) {
+                                        amount = Integer.parseInt(args[1]);
+                                }
+                                if (EntityHandler.getItemDef(id).isStackable())
+                                        player.getInventory().add(new Item(id, amount));
+                                else {
+                                        for (int i = 0; i < amount; i++) {
+                                                if (amount > 30) { // Prevents too many un-stackable items from being spawned and crashing clients in the local area.
+                                                        ActionSender.sendMessage(player, "Invalid amount specified. Please spawn 30 or less of that item.");
+                                                        return;
+                                                }
+                                                player.getInventory().add(new Item(id, 1));
+                                        }
+                                }
+                        } 
+                        else {
+                                ActionSender.sendMessage(player, "Invalid id");
+                        }
+                        return;
+                }
                 if (command.equalsIgnoreCase("about")) {
                         Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
                         p.updateTotalPlayed();
 			long timePlayed = p.getCache().getLong("total_played");
                         long timeMoved = System.currentTimeMillis() - p.getLastMoved();
+                        long timeOnline = System.currentTimeMillis() - p.getCurrentLogin();
                         if(p != null) {
                         
                         ActionSender.sendBox(player, 
                         "@lre@Player Information: %"
                         + " %"
 			+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
-                        + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"
-			+ "@gre@IP:@whi@ " + p.getLastIP() + " %"
                         + "@gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " %"
+                        + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
                         + "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
+                        + "@gre@IP:@whi@ " + p.getLastIP() + " %"
 			+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
                         + "@gre@Coordinates:@whi@ " + p.getStatus() + " at " + p.getLocation().toString() + " %"
                         + "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
+                        + "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
 			+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
                         , true);
 			return;
