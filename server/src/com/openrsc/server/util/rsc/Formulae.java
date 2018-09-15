@@ -27,8 +27,12 @@ public final class Formulae {
 	public static final int[] boltIDs = { 786, 592, 190 };
 	public static final int[] bowIDs = { 188, 189, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657 };
 	public static final int[] headSprites = { 1, 4, 6, 7, 8 };
+	public static final int[] herbDropIDs = { 165, 435, 436, 437, 438, 439, 440, 441, 442, 443 };
+	public static final int[] herbDropWeights = { 89, 55, 34, 21, 13, 8, 5, 3, 2, 1 };
 	public static final int[] miningAxeIDs = { 1262, 1261, 1260, 1259, 1258, 156 };
 	public static final int[] miningAxeLvls = { 41, 31, 21, 6, 1, 1 };
+	public static final int[] rareDropIDs = { 160, 159, 158, 157, 526, 527, 1277 };
+	public static final int[] rareDropWeights = { 80, 70, 60, 50, 25, 25, 1 };
 	public static final int[] throwingIDs = { 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1013, 1015, 
 			1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1070, 1069, 
 			1068, 1024, 827, 1088, 1089, 1090, 1091, 1092, 1135, 1136, 1137, 1138, 1139, 1140 };
@@ -951,6 +955,35 @@ public final class Formulae {
 		} catch (Exception e) {
 		}
 		return 1;
+	}
+
+	/**
+	 *	Must consume equal length lists.
+	 **/
+	public static int weightedRandomChoice(int[] list, int[] weights) {
+		return weightedRandomChoice(list, weights, 0);
+	}
+	public static int weightedRandomChoice(int[] list, int[] weights, int defaultReturn) {
+		int total = 0;
+		for (int x : weights)
+			total += x;
+		int r = DataConversions.random(0, total);
+		total = 0;
+		for (int i = 0; i < list.length; i++) {
+			if (r >= total && r < (total + weights[i])) {
+				return list[i];
+			}
+			total += weights[i];
+		}
+		return defaultReturn;
+	}
+
+	public static int calculateRareDrop() {
+		return weightedRandomChoice(rareDropIDs, rareDropWeights, 160);
+	}
+
+	public static int calculateHerbDrop() {
+		return weightedRandomChoice(herbDropIDs, herbDropWeights, 165);
 	}
 
 }
