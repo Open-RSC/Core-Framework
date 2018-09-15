@@ -360,7 +360,7 @@ public class Npc extends Mob {
 			for (ItemDropDef drop : drops) {
 				total += drop.getWeight();
 			}
-			//
+
 			int hit = DataConversions.random(0, total);
 			total = 0;
 			
@@ -414,7 +414,6 @@ public class Npc extends Mob {
 							world.registerItem(groundItem);
 						}
 					}
-					break;
 				}
 				total += drop.getWeight();
 			}
