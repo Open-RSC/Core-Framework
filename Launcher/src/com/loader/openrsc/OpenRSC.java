@@ -8,7 +8,7 @@ import com.loader.openrsc.frame.popup.PopupFrame;
 import com.loader.openrsc.frame.threads.StatusChecker;
 import com.loader.openrsc.net.Downloader;
 
-public class Launcher
+public class OpenRSC
 {
 	private static PopupFrame popup;
 	private static Downloader updater;
@@ -18,20 +18,20 @@ public class Launcher
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} 
 		catch (UnsupportedLookAndFeelException e) {
-			Launcher.getPopup().setMessage("" + e);
+			OpenRSC.getPopup().setMessage("" + e);
 		}
 		catch (ClassNotFoundException e) {
-			Launcher.getPopup().setMessage("" + e);
+			OpenRSC.getPopup().setMessage("" + e);
 		}
 		catch (InstantiationException e) {
-			Launcher.getPopup().setMessage("" + e);
+			OpenRSC.getPopup().setMessage("" + e);
 		}
 		catch (IllegalAccessException e) {
-			Launcher.getPopup().setMessage("" + e);
+			OpenRSC.getPopup().setMessage("" + e);
 		}
 		final AppFrame frame = new AppFrame();
 		frame.build();
-		Launcher.popup = new PopupFrame();
+		OpenRSC.popup = new PopupFrame();
 		new Thread(new StatusChecker(Constants.SERVER_IP, Constants.SERVER_PORT)).start();
 		updater = new Downloader();
 		updater.init();
@@ -39,7 +39,7 @@ public class Launcher
 	}
 
 	public static PopupFrame getPopup() {
-		return Launcher.popup;
+		return OpenRSC.popup;
 	}
 
 }
