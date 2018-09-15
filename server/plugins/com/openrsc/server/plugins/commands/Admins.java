@@ -50,8 +50,8 @@ public final class Admins implements CommandListener {
 	private final World world = World.getWorld();
 	private DelayedEvent globalDropEvent;
 	private int count = 0;
-
-	@Override
+        
+        @Override
 	public void onCommand(String command, String[] args, final Player player) {
 		if (!player.isAdmin()) {
 			return;
@@ -449,10 +449,49 @@ public final class Admins implements CommandListener {
 			} else
 				player.getInventory().add(items);
 		}
+                if (command.equalsIgnoreCase("about")) {
+                        Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+                        p.updateTotalPlayed();
+			long timePlayed = p.getCache().getLong("total_played");
+                        long timeMoved = System.currentTimeMillis() - p.getLastMoved();
+                        if(p != null) {
+                        
+                        ActionSender.sendBox(player, 
+                        "@lre@Player Information: %"
+                        + " %"
+			+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
+                        + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"
+			+ "@gre@IP:@whi@ " + p.getLastIP() + " %"
+                        + "@gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " %"
+                        + "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
+			+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
+                        + "@gre@Coordinates:@whi@ " + p.getStatus() + " at " + p.getLocation().toString() + " %"
+                        + "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
+			+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
+                        , true);
+			return;
+                        
+                        }
+                        else
+                                ActionSender.sendMessage(player, "Invalid name");
+                }
+                if (command.equalsIgnoreCase("inventory")) {
+                        Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+                        if(p != null) {
+                                ArrayList<Item> inventory = p.getInventory().getItems();
+                                ArrayList<String> itemStrings = new ArrayList<String>();
+                                for(Item invItem : inventory) itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
+                                
+                                ActionSender.sendBox(player, 
+                                "@lre@Inventory of " + p.getUsername() + ":%" 
+                                + "@whi@" + StringUtils.join(itemStrings, ", "), true);
+                                return;
+                        }
+                        else
+                                ActionSender.sendMessage(player, "Invalid name");
+                }
                 if (command.equalsIgnoreCase("bank")) {
-                        Player p = args.length > 0 ? 
-                                    World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
-                                    player;
+                        Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
                         if(p != null) {
                                 // Show bank screen to yourself
                                 if(p.getUsernameHash() == player.getUsernameHash()) {
@@ -460,16 +499,17 @@ public final class Admins implements CommandListener {
                                         ActionSender.showBank(player);
                                 }
                                 else {
-                                        ArrayList<Item> inventory    = p.getBank().getItems();
-                                        ArrayList<String> itemStrings   = new ArrayList<String>();
-                                        for(Item bankItem : inventory)
-                                            itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
-
-                                        player.message("@blu@Bank of " + player.getUsername() + "%@whi@" + StringUtils.join(itemStrings, ", "));
+                                        ArrayList<Item> inventory = p.getBank().getItems();
+                                        ArrayList<String> itemStrings = new ArrayList<String>();
+                                        for(Item bankItem : inventory) itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
+                                        ActionSender.sendBox(player, 
+                                        "@lre@Bank of " + p.getUsername() + ":%" 
+                                        + "@whi@" + StringUtils.join(itemStrings, ", "), true);
+                                        return;
                                 }
                         }
                         else
-                        ActionSender.sendMessage(player, "Invalid name");
+                                ActionSender.sendMessage(player, "Invalid name");
                 }
 		if (command.equals("set")) {
 			if (args.length < 2) {
