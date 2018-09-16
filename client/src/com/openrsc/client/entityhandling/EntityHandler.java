@@ -736,7 +736,7 @@ public class EntityHandler {
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1 };
 		npcs.add(new NPCDef("Fairy Shop Assistant","Maybe he'd like to buy some of my junk", "", 0, 0, 3, 0, false, sprites, 6307872, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Fairy banker","He can look after my money", "Bank", "Collect", 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 94, 143, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Fairy banker","He can look after my money", "Bank", bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 94, 143, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Giles","He runs an ore exchange store", "", 30, 30, 30, 30, false, sprites, 1, 255, 14508096, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -1399,7 +1399,7 @@ public class EntityHandler {
 		sprites = new int[] { 0, 1, 2, 180, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Mosol","A jungle warrior", "", 0, 0, 3, 0, false, sprites, 1, 9461792, 9461792, 9461792, 160, 220, 6, 6, 5, i++));
 		sprites = new int[] { 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Gnome banker","It's tree gnome banker", "Bank", "Collect", 3, 3, 3, 3, false, sprites, 16777215, 1052688, 1052688, 36864, 90, 130, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Gnome banker","It's tree gnome banker", "Bank", bankerOption2, 3, 3, 3, 3, false, sprites, 16777215, 1052688, 1052688, 36864, 90, 130, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62 };
 		npcs.add(new NPCDef("King Narnode Shareen","It's a gnome he look's important", "", 3, 3, 3, 3, false, sprites, 1, 16776960, 16711424, 36864, 100, 150, 6, 6, 5, i++));
 		sprites = new int[] { 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -1903,7 +1903,7 @@ public class EntityHandler {
 		sprites = new int[] { 6, 1, 2, -1, 218, -1, 85, 86, -1, -1, -1, 64 };
 		npcs.add(new NPCDef("Battle mage","He kills in the name of Saradomin", "", 0, 90, 120, 0, true, sprites, 3158064, 16763952, 15609986, 9461792, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
-		npcs.add(new NPCDef("Gundai","He must get lonely out here", "Bank", "Collect", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Gundai","He must get lonely out here", "Bank", bankerOption2, 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
 		npcs.add(new NPCDef("Lundail","He sells rune stones", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
