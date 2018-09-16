@@ -13,6 +13,7 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -28,21 +29,25 @@ import com.openrsc.client.entityhandling.defs.SpellDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
+import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.CustomBankInterface;
 import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
 import com.openrsc.interfaces.misc.FishingTrawlerInterface;
 import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
 import com.openrsc.interfaces.misc.OnlineListInterface;
 import com.openrsc.interfaces.misc.ProgressBarInterface;
 import com.openrsc.interfaces.misc.QuestGuideInterface;
 import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
 import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
-import com.openrsc.interfaces.NCustomComponent;
+
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import rsc.buffers.RSBufferUtils;
 import rsc.buffers.RSBuffer_Bits;
 import rsc.enumerations.GameMode;
@@ -711,6 +716,8 @@ public final class mudclient implements Runnable {
 		private Panel panelQuestInfo;
 		//private Panel panelPlayerTaskInfo;
 		private Panel panelSettings;
+		public HashMap<String, Media> soundCache = new HashMap<String, Media>();
+		final JFXPanel fxPanel = new JFXPanel();
 		private boolean authenticSettings = !(
 						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
             || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
@@ -12498,12 +12505,20 @@ public final class mudclient implements Runnable {
 
 		private final void loadSounds() {
 			try {
-				//soundData = unpackData("sounds.mem", "Sound effects", 90);
-				return;
-			} catch (Throwable throwable) {
-				System.out.println("Unable to init sounds:" + throwable);
+				File folder = new File(Config.F_CACHE_DIR + System.getProperty("file.separator"));
+				File[] listOfFiles = folder.listFiles();
+				
+				for (int i = 0; i < listOfFiles.length; i++)
+					if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
+						Media mp3 = new Media(listOfFiles[i].toURI().toString());
+						soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
+					}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
+
 
 		private final void loadTextures(byte var1) {
 			clientPort.showLoadingProgress(50, "Textures");
@@ -12875,14 +12890,20 @@ public final class mudclient implements Runnable {
 		private final void playSoundFile(String key) {
 			try {
 				if (!optionSoundDisabled) {
-					int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
-					int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
-
-					clientPort.playSound(soundData, offset, dataLength);
-					//
-					// soundPlayer.writeStream(soundData,
-					// DataOperations.getDataFileOffset(key + ".pcm", soundData),
-					// DataOperations.getDataFileLength(key + ".pcm", soundData));
+					Media sound = soundCache.get(key + ".mp3");
+					if (sound == null)
+						return;
+					try {
+						MediaPlayer mp = new MediaPlayer(sound);
+						mp.setOnReady(() -> {
+							mp.play();
+							mp.setOnEndOfMedia(() -> {
+								mp.dispose();
+							});
+						});
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 
 			} catch (RuntimeException var6) {
@@ -13750,7 +13771,7 @@ public final class mudclient implements Runnable {
 									this.loadModels(true);
 									if (!this.errorLoadingData) {
 										if (!this.errorLoadingData) {
-											//this.loadSounds();
+											this.loadSounds();
 											if (!this.errorLoadingData) {
 												clientPort.showLoadingProgress(100, "Starting game...");
 												this.createMessageTabPanel(56);
