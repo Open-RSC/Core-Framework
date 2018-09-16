@@ -29,73 +29,87 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			}
 			p.setConsumeTimer(325);
 			ActionSender.sendSound(p, "eat");
-			if (item.getID() == 228 || item.getID() == 18) {
+			if (item.getID() == 228 || item.getID() == 18) { // Cabbage
 				p.message("You eat the " + item.getDef().getName()
 						+ ". Yuck!");
-			} else if(item.getID() == 907 || item.getID() == 950) {
+				if (item.getID() == 228) { // Special defense cabbage
+					int lv = p.getSkills().getMaxStat(1);
+					int newStat = p.getSkills().getLevel(1) + 1;
+					if (newStat <= (lv + 1))
+						p.getSkills().setLevel(1, newStat);
+				}
+			} else if(item.getID() == 907 || item.getID() == 950) { // Chocolate bomb
 				message(p, "You eat the choc bomb");
 				p.message("it tastes great");
-			} else if(item.getID() == 908 || item.getID() == 951) {
+			} else if(item.getID() == 908 || item.getID() == 951) { // Vegball
 				message(p, "You eat the veg ball");
 				p.message("it tastes quite good");
-			} else if(item.getID() == 909 || item.getID() == 952) {
+			} else if(item.getID() == 909 || item.getID() == 952) { // worm hole
 				message(p, "You eat the " + item.getDef().getName().toLowerCase());
 				playerTalk(p,null, "yuck");
 				p.message("that was awful");
-			} else if(item.getID() == 910 || item.getID() == 953) {
+			} else if(item.getID() == 910 || item.getID() == 953) { // Tangled toads legs
 				message(p, "You eat the tangled toads legs");
 				p.message("it tastes.....slimey");
-			} else if(item.getID() == 1061) {
+			} else if(item.getID() == 1061) { // Rock cake
 				message(p, "You eat the " + item.getDef().getName().toLowerCase());
 				playerTalk(p,null, "Ow! I nearly broke a tooth!");
 				p.message("You feel strangely heavier and more tired");
-			} else if(item.getID() == 873) {
+			} else if(item.getID() == 873) { // Equa leaves
 				p.message("You eat the leaves..chewy but tasty");
-			} else if(item.getID() == 855) {
+			} else if(item.getID() == 855) { // lemon
 				p.message("You eat the lemon. Yuck!");
-			} else if(item.getID() == 856 || item.getID() == 860) {
+			} else if(item.getID() == 856 || item.getID() == 860) { // lemon slices
 				p.message("You eat the " + item.getDef().getName().toLowerCase() + " ..they're very sour");
-			} else if(item.getID() == 765) {
+			} else if(item.getID() == 765) { // dwellberries
 				p.message("You eat the berrys..quite tasty");
-			} else if(item.getID() == 863) {
+			} else if(item.getID() == 863) { // lime
 				p.message("You eat the lime ..it's quite sour");
-			} else if(item.getID() == 865 || item.getID() == 865) {
+			} else if(item.getID() == 865 || item.getID() == 865) { // lime slices
 				p.message("You eat the " + item.getDef().getName().toLowerCase() + "..they're quite sour");
-			} else if(item.getID() == 858) {
+			} else if(item.getID() == 858) { // orange slices
 				p.message("You eat the orange slices ...yum");
-			} else if(item.getID() == 859) {
+			} else if(item.getID() == 859) { // Diced orange
 				p.message("You eat the orange cubes ...yum");
-			} else if(item.getID() == 861) {
+			} else if(item.getID() == 861) { // Fresh Pineapple
 				p.message("You eat the pineapple ...yum");
-			} else if(item.getID() == 862) {
+			} else if(item.getID() == 862) { // Pineapple chunks
 				p.message("You eat the pineapple chunks ..yum");
-			} else if(item.getID() == 871) {
+			} else if(item.getID() == 871) { // cream
 				p.message("You eat the cream..you get some on your nose");
-			} else if(item.getID() == 885) {
+			} else if(item.getID() == 885) { // gnomebowl
 				message(p, 1200, "You eat the gnome bowl");
 				p.message("it's pretty tastless");
 				resetGnomeCooking(p);
-			} else if(item.getID() == 900) {
+			} else if(item.getID() == 900) { // gnomecrunchie
 				p.message("You eat the gnome crunchies");
 				resetGnomeCooking(p);
-			} else if(item.getID() == 901 || item.getID() == 944) {
+			} else if(item.getID() == 901 || item.getID() == 944) { // cheese and tomato batta
 				message(p, "You eat the cheese and tomato batta");
 				p.message("it's quite tasty");
-			} else if(item.getID() == 902 || item.getID() == 945 || item.getID() == 904 || item.getID() == 947) {
+			} else if(item.getID() == 902 || item.getID() == 945 ||
+					item.getID() == 904 || item.getID() == 947) {
+				// toad batta & worm batta
 				message(p, "You eat the " + item.getDef().getName().toLowerCase());
 				p.message("it's a bit chewy");
-			} else if(item.getID() == 905 || item.getID() == 948 || item.getID() == 906 || item.getID() == 949) {
+			} else if(item.getID() == 905 || item.getID() == 948 ||
+					item.getID() == 906 || item.getID() == 949) {
+				// fruit batta & veg batta
 				message(p, "You eat the " + item.getDef().getName().toLowerCase());
 				p.message("it's tastes pretty good");
-			} else if(item.getID() == 911 || item.getID() == 954 || item.getID() == 914 || item.getID() == 957) {
+			} else if(item.getID() == 911 || item.getID() == 954 ||
+					item.getID() == 914 || item.getID() == 957) {
+				// Choc crunchies & Spice crunchies
 				message(p, "You eat the " + item.getDef().getName().toLowerCase());
 				p.message("they're very tasty");
-			} else if(item.getID() == 912 || item.getID() == 955 || item.getID() == 913 || item.getID() == 956) {
+			} else if(item.getID() == 912 || item.getID() == 955 ||
+					item.getID() == 913 || item.getID() == 956) {
+				// Worm crunchies & Toad crunchies
 				message(p, "You eat the " + item.getDef().getName().toLowerCase());
 				p.message("they're a bit chewy");
-			} else if(item.getID() == 2112) {
+			} else if(item.getID() == 2112) { // Blood egg (custom)
 				p.message("You drink the blood from the egg ...aeehm");
-			} else if(item.getID() == 2113) {
+			} else if(item.getID() == 2113) { // Easter egg (custom)
 				p.message("You eat the easter egg ...yumm.. you get some on your nose");
 			} else
 				p.message("You eat the "
