@@ -12503,15 +12503,13 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		public final void loadSounds() {
+		private final void loadSounds() {
 			try {
 				File folder = new File(Config.F_CACHE_DIR + System.getProperty("file.separator"));
-				System.out.println(Config.F_CACHE_DIR + System.getProperty("file.separator"));
 				File[] listOfFiles = folder.listFiles();
 				
 				for (int i = 0; i < listOfFiles.length; i++)
 					if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
-						System.out.println(listOfFiles[i].toURI().toString());
 						Media mp3 = new Media(listOfFiles[i].toURI().toString());
 						soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
 					}
