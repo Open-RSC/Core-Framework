@@ -32,6 +32,12 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			if (item.getID() == 228 || item.getID() == 18) {
 				p.message("You eat the " + item.getDef().getName()
 						+ ". Yuck!");
+				if (item.getID() == 228) { // Special defense cabbage
+					int lv = p.getSkills().getMaxStat(1);
+					int newStat = p.getSkills().getLevel(1) + 1;
+					if (newStat <= (lv + 1))
+						p.getSkills().setLevel(1, newStat);
+				}
 			} else if(item.getID() == 907 || item.getID() == 950) {
 				message(p, "You eat the choc bomb");
 				p.message("it tastes great");
