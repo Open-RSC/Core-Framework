@@ -44,23 +44,24 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 				"I'm an expert in armour modification",
 				"Give me your armour designed for men",
 				"And I can convert it into something more comfortable for a women",
-				"And visa versa",
-				"If you want me to modificate your helmet feather it will cost 500 gold",
-				"Give me your helmet and pick the color of your choice");
+				"And visa versa"
+				/*"If you want me to modificate your helmet feather it will cost 500 gold",
+				"Give me your helmet and pick the color of your choice"*/
+		);
 	}
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == THRANDER && (getNewID(item) != -1 || inArray(item.getID(), 108, 6, 109, 230, 110, 111, 112, 2144, 2146, 2148, 2150, 2152, 2154, 2156,
+		return npc.getID() == THRANDER && getNewID(item) != -1; /* || inArray(item.getID(), 108, 6, 109, 230, 110, 111, 112, 2144, 2146, 2148, 2150, 2152, 2154, 2156,
 				2158, 2160, 2162, 2164, 2166, 2168, 2170, 2172, 2174, 2176, 2178, 2180, 2182, 2184,
 				2186, 2188, 2190, 2192, 2194, 2196, 2198, 2200, 2202, 2204, 2206, 2208, 2210, 2212,
 				2214, 2216, 2218, 2220, 2222, 2224, 2226, 2228, 2230, 2232, 2234, 2236, 2238, 2240, 
-				2242, 2244, 2246, 2248, 2250, 2252, 2254));
+				2242, 2244, 2246, 2248, 2250, 2252, 2254));*/
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if(inArray(item.getID(), 108, 6, 109, 230, 110, 111, 112, 2144, 2146, 2148, 2150, 2152, 2154, 2156,
+		/*if(inArray(item.getID(), 108, 6, 109, 230, 110, 111, 112, 2144, 2146, 2148, 2150, 2152, 2154, 2156,
 				2158, 2160, 2162, 2164, 2166, 2168, 2170, 2172, 2174, 2176, 2178, 2180, 2182, 2184,
 				2186, 2188, 2190, 2192, 2194, 2196, 2198, 2200, 2202, 2204, 2206, 2208, 2210, 2212,
 				2214, 2216, 2218, 2220, 2222, 2224, 2226, 2228, 2230, 2232, 2234, 2236, 2238, 2240, 
@@ -137,8 +138,8 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 					playerTalk(player, npc, "Oops, I don't have enough money");
 				}
 			} 
-		}
-		else if(inArray(item.getID(), 308, 312, 309, 313, 310, 311, 407, 117, 
+		}*/
+		if(inArray(item.getID(), 308, 312, 309, 313, 310, 311, 407, 117, 
 				8, 118, 196, 119, 120, 401, 214, 215, 225, 434, 226, 227, 406, 206, 9, 121, 248, 122, 123, 402)) {
 			int newID = -1;
 			switch (item.getID()) {
