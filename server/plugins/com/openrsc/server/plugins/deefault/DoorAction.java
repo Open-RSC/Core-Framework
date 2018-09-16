@@ -30,55 +30,60 @@ public class DoorAction {
 			return true;
 		}
 
-		if (obj.getID() == 75 && obj.getX() == 222 && obj.getY() == 743) { // FIRST
-			// ROOM
+		// Tutorial Doors
+		if (obj.getID() == 75 && obj.getX() == 222 && obj.getY() == 743) {
 			return true;
 		}
-		if (obj.getID() == 76 && obj.getX() == 224 && obj.getY() == 737) {
+		else if (obj.getID() == 76 && obj.getX() == 224 && obj.getY() == 737) {
 			return true;
 		}
-		if (obj.getID() == 77 && obj.getX() == 220 && obj.getY() == 727) {
+		else if (obj.getID() == 77 && obj.getX() == 220 && obj.getY() == 727) {
 			return true;
 		}
-		if (obj.getID() == 78 && obj.getX() == 212 && obj.getY() == 729) {
+		else if (obj.getID() == 78 && obj.getX() == 212 && obj.getY() == 729) {
 			return true;
 		}
-		if (obj.getID() == 80 && obj.getX() == 206 && obj.getY() == 730) {
+		else if (obj.getID() == 80 && obj.getX() == 206 && obj.getY() == 730) {
 			return true;
 		}
-		if (obj.getID() == 81 && obj.getX() == 201 && obj.getY() == 734) {
+		else if (obj.getID() == 81 && obj.getX() == 201 && obj.getY() == 734) {
 			return true;
 		}
-		if (obj.getID() == 82 && obj.getX() == 198 && obj.getY() == 746) {
+		else if (obj.getID() == 82 && obj.getX() == 198 && obj.getY() == 746) {
 			return true;
 		}
-		if (obj.getID() == 83 && obj.getX() == 204 && obj.getY() == 752) {
+		else if (obj.getID() == 83 && obj.getX() == 204 && obj.getY() == 752) {
 			return true;
 		}
-		if (obj.getID() == 84 && obj.getX() == 209 && obj.getY() == 754) {
+		else if (obj.getID() == 84 && obj.getX() == 209 && obj.getY() == 754) {
 			return true;
 		}
-		if (obj.getID() == 85 && obj.getX() == 217 && obj.getY() == 760) {
+		else if (obj.getID() == 85 && obj.getX() == 217 && obj.getY() == 760) {
 			return true;
 		}
-		if (obj.getID() == 88 && obj.getX() == 222 && obj.getY() == 760) {
+		else if (obj.getID() == 88 && obj.getX() == 222 && obj.getY() == 760) {
 			return true;
 		}
-		if (obj.getID() == 89 && obj.getX() == 226 && obj.getY() == 760) {
+		else if (obj.getID() == 89 && obj.getX() == 226 && obj.getY() == 760) {
 			return true;
 		}
-		if (obj.getID() == 90 && obj.getX() == 230 && obj.getY() == 759) {
+		else if (obj.getID() == 90 && obj.getX() == 230 && obj.getY() == 759) {
 			return true;
 		}
+
 		return false;
 	}
 
 	public void onWallObjectAction(final GameObject obj, final Integer click,
 			final Player p) {
+
+		// Door's lock needs to be picked, or needs a key.
 		if (blockInvUseOnWallObject(obj, null, p)) {
 			p.message("The door is locked.");
 			return;
 		}
+
+		// Tutorial Doors
 		if (obj.getID() == 75 && obj.getX() == 222 && obj.getY() == 743) {
 			if (p.getCache().hasKey("tutorial")
 					&& p.getCache().getInt("tutorial") >= 10) {
@@ -171,26 +176,31 @@ public class DoorAction {
 				p.message("You should speak to the community instructor before going through this door");
 			}
 		}
+
+
 		switch (obj.getID()) {
-		case 54: /* Dragon Slayer: Door out of maze near entrace*/
+
+		case 54: // Dragon Slayer: Door out of maze near entrace
 			if(p.getX() == 339) {
 				doDoor(obj, p);
 			} else {
 				p.message("this door is locked");
 			}
 			break;
-		case 154:
+
+		case 154: // Grand Tree: main door (outside)
 			message(p, 1900, "you open the door");
 			p.teleport(703, 455);
 			p.message("and walk through");
 			break;
-		case 153:
+
+		case 153: // Grand Tree: main door (inside) 
 			message(p, 1900, "you open the door");
 			p.teleport(416, 165);
 			p.message("and walk through");
 			break;
-			/** grand tree quest - shipyard hut foreman **/
-		case 161:
+
+		case 161: // Karamja: shipyard gate (401, 762)
 			if(p.getQuestStage(Constants.Quests.GRAND_TREE) >= 8) {
 				if(p.getX() >= 407) {
 					doDoor(obj, p);
@@ -201,7 +211,8 @@ public class DoorAction {
 				}
 			}
 			break;
-		case 74:
+
+		case 74: // Hero's Guild: main door
 			if (p.getQuestStage(Constants.Quests.HEROS_QUEST) == -1) {
 				doDoor(obj, p);
 			} else {
@@ -247,23 +258,27 @@ public class DoorAction {
 				}
 			}
 			break;
+
 		case 20:
 			replaceGameObject(obj, p, 1, true);
 			break;
+
 		case 1:
 			replaceGameObject(obj, p, 2, false);
 			break;
+
 		case 2:
 			replaceGameObject(obj, p, 1, true);
 			break;
-			/** Shantay Pass **/
-		case 176:
+
+		case 176: // Alkarid: Shantay Pass jail door
 			p.message("The door opens.");
 			p.message(""); // strange.
 			doDoor(obj, p);
 			break;
-			/** TEMPLE OF IKOV DOORS **/
-		case 109:
+
+		/** TEMPLE OF IKOV DOORS **/
+		case 109: // 
 			if(p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) >= 1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
 				p.message("You go through the door");
 				doDoor(obj, p);	
@@ -272,7 +287,8 @@ public class DoorAction {
 						"No one seems to be in");
 			}
 			break;
-		case 108:
+
+		case 108: // Temple of Ikov: Jail door near Fire Warrior (546, 3302) 
 			if(p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -282,7 +298,8 @@ public class DoorAction {
 						"The door handle is too hot to handle");
 			}
 			break;
-		case 107:
+
+		case 107: // Temple of Ikov: Door deeper into tunnel (545, 3307)
 			if(p.getCache().hasKey("completeLever") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -290,7 +307,8 @@ public class DoorAction {
 				p.message("The door won't open");
 			}
 			break;
-		case 106:
+
+		case 106: // Temple of Ikov: Door to Ice Spiders (536, 3349)
 			if(p.getCache().hasKey("openSpiderDoor") || p.getX() >= 536 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2) {
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -298,7 +316,8 @@ public class DoorAction {
 				p.message("The door won't open");
 			}
 			break;
-		case 104:
+
+		case 104: // Temple of Ikov: First door (533, 3342)
 			if(p.getInventory().wielding(721) ||  p.getY() >= 3335 && p.getY() <= 3341) {
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -308,7 +327,8 @@ public class DoorAction {
 						"You decide not to open the door today");
 			}
 			break;
-		case 105:
+
+		case 105: // Temple of Ikov: Bridge door (546, 3328)
 			if(p.getInventory().wielding(722) || p.getX() >= 546) {
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -322,18 +342,21 @@ public class DoorAction {
 				p.damage(DataConversions.roundUp(p.getSkills().getLevel(3) / 5));
 			}
 			break;
-			/** END **/
+
 		case 9:
 			replaceGameObject(obj, p, 8, false);
 			break;
+
 		case 8:
 			replaceGameObject(obj, p, 9, true);
 			break;
+
 		case 94:
 		case 23:
 			p.message("The door is locked");
 			break;
-		case 113:
+
+		case 113: // Fight Arena (621, 699), (603, 717)
 			if (p.getInventory().wielding(733)
 					&& p.getInventory().wielding(734)) {
 				doDoor(obj, p);
@@ -352,7 +375,8 @@ public class DoorAction {
 				}
 			}
 			break;
-		case 114:
+
+		case 114: // Fight Arena (615, 715), (619, 711)
 			if (p.getCache().hasKey("freed_servil")
 					|| p.getQuestStage(Constants.Quests.FIGHT_ARENA) == -1
 					|| p.getQuestStage(Constants.Quests.FIGHT_ARENA) == 3) {
@@ -366,7 +390,8 @@ public class DoorAction {
 						"so get out of here");
 			}
 			break;
-		case 122:
+
+		case 122: // Plague City
 			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 6
 			|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
 				if (p.getY() >= 569) {
@@ -393,7 +418,8 @@ public class DoorAction {
 				}
 			}
 			break;
-		case 123:
+
+		case 123: // Plague City
 			Npc mourner = getNearestNpc(p, 445, 8);
 			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == 11
 					|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
@@ -461,7 +487,8 @@ public class DoorAction {
 				doDoor(obj, p);
 			}
 			break;
-		case 121:
+
+		case 121: // Plague City
 			Npc Bravek = getNearestNpc(p, 445, 8);
 			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 9
 					|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
@@ -474,9 +501,12 @@ public class DoorAction {
 				p.message("The door won't open");
 			}
 			break;
+
 		case 115:
 			doDoor(obj, p);
 			break;
+
+		/** Guild Doors */
 		case 112: // Fishing Guild Door
 			if (obj.getX() != 586 || obj.getY() != 524) {
 				break;
@@ -504,6 +534,7 @@ public class DoorAction {
 				doDoor(obj, p);
 			}
 			break;
+
 		case 55: // Mining Guild Door
 			if (obj.getX() != 268 || obj.getY() != 3381) {
 				break;
@@ -543,6 +574,7 @@ public class DoorAction {
 				doDoor(obj, p);
 			}
 			break;
+
 		case 43: // Cooking Guild Door
 			if (obj.getX() != 179 || obj.getY() != 488) {
 				break;
@@ -564,6 +596,7 @@ public class DoorAction {
 				doDoor(obj, p);
 			}
 			break;
+
 		case 146: // Magic Guild Door
 			if (obj.getX() != 599 || obj.getY() != 757) {
 				break;
@@ -580,11 +613,13 @@ public class DoorAction {
 				doDoor(obj, p);
 			}
 			break;
-		case 22:// Odd looking wall
+
+		case 22: // Odd looking wall (545, 3283)
 			p.playSound("secretdoor");
 			doDoor(obj, p, -1);
 			p.message("You just went through a secret door");
 			break;
+
 		case 38: // Black Knight Guard Door
 			if (obj.getX() != 271 || obj.getY() != 441) {
 				return;
@@ -599,6 +634,7 @@ public class DoorAction {
 				doDoor(obj, p);
 			}
 			break;
+
 		case 36: // Draynor mansion front door
 			if (obj.getX() != 210 || obj.getY() != 553) {
 				return;
@@ -609,6 +645,7 @@ public class DoorAction {
 				p.message("The door won't open");
 			}
 			break;
+
 		case 37: // Draynor mansion back door
 			if (obj.getX() != 199 || obj.getY() != 551) {
 				return;
@@ -619,9 +656,11 @@ public class DoorAction {
 				p.message("The door is locked shut");
 			}
 			break;
+
 		case 30: // Locked Doors
 			p.message("The door is locked shut");
 			break;
+
 		case 44: // champs guild door
 			if (obj.getX() != 150 && obj.getY() != 554) {// champs guild door
 				return;
@@ -639,7 +678,7 @@ public class DoorAction {
 			doDoor(obj, p);
 			break;
 
-		case 67:
+		case 67: // Lost City Market Door (117, 3539), (116, 3537)
 			Npc n = World.getWorld().getNpcById(221);
 			if (n != null) {
 				npcTalk(p, n,
@@ -663,10 +702,12 @@ public class DoorAction {
 				}
 			}
 			break;
-		case 150: /* Fight Arena Ogre Cage */
+
+		case 150: // Fight Arena: Ogre Cage (?)
 			doDoor(obj, p);
 			break;
-		case 138:
+
+		case 138: // Biohazard
 			if(!p.getCache().hasKey("rotten_apples") && p.getQuestStage(Constants.Quests.BIOHAZARD) == 4) {
 				message(p, "the door is locked",
 						"inside you can hear the mourners eating",
@@ -696,7 +737,8 @@ public class DoorAction {
 				p.message("the door is locked");
 			}
 			break;
-		case 141:
+
+		case 141: // Biohazard
 			if(p.getY() >= 1513) {
 				doDoor(obj, p);
 				p.message("You go through the door");
@@ -709,7 +751,8 @@ public class DoorAction {
 				p.message("the mourner is refusing to open the door");
 			}
 			break;
-		case 145:
+
+		case 145: // Biohazard
 			if(p.getQuestStage(Constants.Quests.BIOHAZARD) == 7 || p.getQuestStage(Constants.Quests.BIOHAZARD) == 8 || p.getQuestStage(Constants.Quests.BIOHAZARD) == 9 || p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
 				if(p.getX() <= 82) {
 					p.message("You go through the door");
@@ -876,10 +919,12 @@ public class DoorAction {
 	}
 
 	private void handleObjectDoor(GameObject obj, Player player) {
+
 		if (blockInvUseOnWallObject(obj, null, player)) {
 			player.message("the door is locked");
 			return;
 		}
+
 		switch (obj.getID()) {
 		case 142: // Black Knight Big Door
 			player.message("The doors are locked");
@@ -894,8 +939,9 @@ public class DoorAction {
 		case 58:
 			replaceGameObject(57, false, player, obj);
 			break;
-		case 57:
-			if (obj.getX() == 435 && obj.getY() == 682) {
+
+		case 57: // Brimhaven Gate (434, 682)
+			if (obj.getX() == 434 && obj.getY() == 682) {
 				if (!Constants.GameServer.MEMBER_WORLD) {
 					player.message(
 							"You need to be a member to use this gate");
@@ -904,9 +950,11 @@ public class DoorAction {
 			}
 			replaceGameObject(58, true, player, obj);
 			break;
+
 		case 63:
 			replaceGameObject(64, false, player, obj);
 			break;
+
 		case 64:
 			if (obj.getX() == 467 && obj.getY() == 518) {
 				player.message("The doors are locked");
@@ -918,18 +966,23 @@ public class DoorAction {
 				replaceGameObject(63, true, player, obj);
 			}
 			break;
+
 		case 79:
 			replaceGameObject(78, false, player, obj);
 			break;
+
 		case 78:
 			replaceGameObject(79, true, player, obj);
 			break;
+
 		case 135:
 			replaceGameObject(136, true, player, obj);
 			break;
+
 		case 136:
 			replaceGameObject(135, false, player, obj);
 			break;
+
 		default:
 			player.message(
 					"Nothing interesting happens");
@@ -940,22 +993,26 @@ public class DoorAction {
 
 	private void handleGates(GameObject obj, Player player) {
 		boolean members = false;
+
 		switch (obj.getID()) {
 		case 60:
 			replaceGameObject(59, true, player, obj);
 			return;
+
 		case 59:
 			replaceGameObject(60, false, player, obj);
 			return;
+
 		case 57:
 			replaceGameObject(obj, player, 58, true);
 			return;
+
 		case 58:
 			replaceGameObject(obj, player, 57, false);
 			return;
 
 			/** Gnome glider Karamja gate **/
-		case 660:
+		case 660: // (387, 760)
 			if (obj.getX() != 387 || obj.getY() != 760) {
 				return;
 			}
@@ -964,7 +1021,8 @@ public class DoorAction {
 			sleep(1000);
 			player.message("and walk through");
 			return;
-		case 356: // Woodcutting Guild Gate
+
+		case 356: // McGrouber's Wood / Woodcutting Guild Gate (560, 472)
 			if (obj.getX() != 560 || obj.getY() != 472) {
 				return;
 			}
@@ -991,7 +1049,7 @@ public class DoorAction {
 				}
 			}
 			return;
-			/* End of gate handling */
+
 		case 712: // Shilo inside gate
 			if (obj.getX() != 394 || obj.getY() != 851) {
 				return;
@@ -1004,7 +1062,7 @@ public class DoorAction {
 				player.message("The gate won't open");
 			}
 			return;
-			// 612
+
 		case 611: // Shilo outside gate
 			if (obj.getX() != 388 || obj.getY() != 851) {
 				return;
@@ -1037,7 +1095,7 @@ public class DoorAction {
 				player.message("You look around, but you don't think anyone saw you.");
 			}
 			return;
-			/* Gates */
+
 		case 513: // eastern Varrock gate for family crest or biohazard or just wanna go in :)
 			if (obj.getX() != 93 || obj.getY() != 521) {
 				return;
@@ -1073,22 +1131,28 @@ public class DoorAction {
 			}
 			player.message("you open the gate and pass through");
 			return;
-		case 93: /* Red dragon gate */
+
+		case 93: // Red dragon gate (140, 180)
 			members = true;
 			break;
-		case 137: /* Members Gate (Doriks) */
+
+		case 137: // Members Gate near Doric (341, 487)
 			members = true;
 			break;
-		case 347:
+
+		case 347: // 
 			members = true;
 			break;
-		case 138: /* Members Gate (Crafting Guild) */
+
+		case 138: // Members Gate near Crafting Guild (343, 581)
 			members = true;
 			break;
-		case 254: /* Karamja Gate (members) */
+
+		case 254: // Members Gate near Brimhaven (434, 682)
 			members = true;
 			break;
-		case 563: /* King Lanthlas Gate */
+
+		case 563: // King Lathas Training Area (660, 551)
 			Npc lathasGuard = getNearestNpc(player, 524, 10);
 			if(player.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
 				if(player.getY() <= 551) {
@@ -1106,7 +1170,8 @@ public class DoorAction {
 						"you can only enter under the authority of king lathas");
 			}
 			return;
-		case 626: /* Gnome Stronghold Gate */
+
+		case 626: // Gnome Stronghold Gate (703, 531)
 			if(player.getY() != 532 && player.getQuestStage(Constants.Quests.GRAND_TREE) == 8) {
 				Npc n = getNearestNpc(player, 562, 15);
 				if(n != null) {
@@ -1135,6 +1200,7 @@ public class DoorAction {
 					newN.remove();
 				}
 				return;
+
 			} else if(player.getY() >= 532 && player.getQuestStage(Constants.Quests.GRAND_TREE) == 10) {
 				Npc n = getNearestNpc(player, 562, 15);
 				npcTalk(player,n, "i'm afraid that we have orders not to let you in");
@@ -1146,18 +1212,24 @@ public class DoorAction {
 			}
 			members = true;
 			break;
-		case 305: /* Edgeville Members Gate */
+
+		case 305: // Members Gate in Edgeville Dungeon (196, 1266)
 			members = true;
 			break;
-		case 1089: /* Dig Site Gate */
+
+		case 1089: // Members Gate near Dig Site (59, 573)
 			members = true;
 			break;
-		case 508: /* Lesser Cage Gate */
+
+		case 508: // Lesser Cage Gate
 			members = false;
 			break;
-		case 319: // Lava Maze Gate (members)
+
+		case 319:
+			// Members Gate near King Black Dragon ladder (285, 185)
 			members = true;
 			break;
+
 		default:
 			player.message(
 					"Nothing interesting happens");
