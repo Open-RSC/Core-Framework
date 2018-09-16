@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.wilderness.mage_arena;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,88 +25,98 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			@Override
 			public void action() {
 				p.setAccessingBank(true);
-				if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
-					String pin = getBankPinInput(p);
-					if (pin == null) {
-						return;
+				if (Constants.GameServer.WANT_BANK_PINS) {
+					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
+						String pin = getBankPinInput(p);
+						if (pin == null) {
+							return;
+						}
+						if (!p.getCache().getString("bank_pin").equals(pin)) {
+							ActionSender.sendBox(p, "Incorrect bank pin", false);
+							return;
+						}
+						p.setAttribute("bankpin", true);
+						ActionSender.sendBox(p, "Bank pin correct", false);
 					}
-					if (!p.getCache().getString("bank_pin").equals(pin)) {
-						ActionSender.sendBox(p, "Incorrect bank pin", false);
-						return;
-					}
-					p.setAttribute("bankpin", true);
-					ActionSender.sendBox(p, "Bank pin correct", false);
 				}
 				npcTalk(p, n, "no problem");
 				ActionSender.showBank(p);
 			}
 		});
-		defaultMenu.addOption(new Option("I'd like to talk about bank pin") {
-			@Override
-			public void action() {
-				int menu = showMenu(p, "Set a bank pin", "Change bank pin", "Delete bank pin");
-				if (menu == 0) {
-					if (!p.getCache().hasKey("bank_pin")) {
-						String bankPin = getBankPinInput(p);
-						if (bankPin == null) {
-							return;
+		if (Constants.GameServer.WANT_BANK_PINS) {
+			defaultMenu.addOption(new Option("I'd like to talk about bank pin") {
+				@Override
+				public void action() {
+					int menu = showMenu(p, "Set a bank pin", "Change bank pin", "Delete bank pin");
+					if (menu == 0) {
+						if (!p.getCache().hasKey("bank_pin")) {
+							String bankPin = getBankPinInput(p);
+							if (bankPin == null) {
+								return;
+							}
+							p.getCache().store("bank_pin", bankPin);
+							ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
 						}
-						p.getCache().store("bank_pin", bankPin);
-						ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
-					}
-				} else if (menu == 1) {
-					if (p.getCache().hasKey("bank_pin")) {
-						String bankPin = getBankPinInput(p);
-						if (bankPin == null) {
-							return;
+					} else if (menu == 1) {
+						if (p.getCache().hasKey("bank_pin")) {
+							String bankPin = getBankPinInput(p);
+							if (bankPin == null) {
+								return;
+							}
+							if (!p.getCache().getString("bank_pin").equals(bankPin)) {
+								ActionSender.sendBox(p, "Incorrect bank pin", false);
+								return;
+							}
+							String changeTo = getBankPinInput(p);
+							p.getCache().store("bank_pin", changeTo);
+							ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
+						} else {
+							p.message("You don't have a bank pin");
 						}
-						if (!p.getCache().getString("bank_pin").equals(bankPin)) {
-							ActionSender.sendBox(p, "Incorrect bank pin", false);
-							return;
-						}
-						String changeTo = getBankPinInput(p);
-						p.getCache().store("bank_pin", changeTo);
-						ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
-					} else {
-						p.message("You don't have a bank pin");
-					}
-				} else if (menu == 2) {
-					if (p.getCache().hasKey("bank_pin")) {
-						String bankPin = getBankPinInput(p);
-						if (bankPin == null) {
-							return;
-						}
-						if (!p.getCache().getString("bank_pin").equals(bankPin)) {
-							ActionSender.sendBox(p, "Incorrect bank pin", false);
-							return;
-						}
-						p.getCache().remove("bank_pin");
+					} else if (menu == 2) {
+						if (p.getCache().hasKey("bank_pin")) {
+							String bankPin = getBankPinInput(p);
+							if (bankPin == null) {
+								return;
+							}
+							if (!p.getCache().getString("bank_pin").equals(bankPin)) {
+								ActionSender.sendBox(p, "Incorrect bank pin", false);
+								return;
+							}
+							p.getCache().remove("bank_pin");
 
-						ActionSender.sendBox(p, "Your bank pin is removed", false);
-					} else {
-						p.message("You don't have a bank pin");
+							ActionSender.sendBox(p, "Your bank pin is removed", false);
+						} else {
+							p.message("You don't have a bank pin");
+						}
 					}
 				}
-			}
-		});
-		defaultMenu.addOption(new Option("I'd like to collect my items from auction") {
-			@Override
-			public void action() {
-				if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
-					String pin = getBankPinInput(p);
-					if (pin == null) {
-						return;
+			});
+		}
+
+		if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
+			defaultMenu.addOption(new Option("I'd like to collect my items from auction") {
+				@Override
+				public void action() {
+					if (Constants.GameServer.WANT_BANK_PINS) {
+						if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
+							String pin = getBankPinInput(p);
+							if (pin == null) {
+								return;
+							}
+							if (!p.getCache().getString("bank_pin").equals(pin)) {
+								ActionSender.sendBox(p, "Incorrect bank pin", false);
+								return;
+							}
+							p.setAttribute("bankpin", true);
+							ActionSender.sendBox(p, "Bank pin correct", false);
+						}
 					}
-					if (!p.getCache().getString("bank_pin").equals(pin)) {
-						ActionSender.sendBox(p, "Incorrect bank pin", false);
-						return;
-					}
-					p.setAttribute("bankpin", true);
-					ActionSender.sendBox(p, "Bank pin correct", false);
+					Market.getInstance().addPlayerCollectItemsTask(p);
 				}
-				Market.getInstance().addPlayerCollectItemsTask(p);
-			}
-		});
+			});
+		}
+
 		defaultMenu.addOption(new Option("Well, now i know") {
 			@Override
 			public void action() {
@@ -125,7 +136,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 		if(n.getID() == 792) {
 			if(command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, p, false);
-			} else if(command.equalsIgnoreCase("Collect"))	{
+			} else if(Constants.GameServer.SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect"))	{
 				quickFeature(n, p, true);
 			}
 		}
@@ -136,26 +147,28 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 		if(n.getID() == 792 && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if(n.getID() == 792 && command.equalsIgnoreCase("Collect")) {
+		if(n.getID() == 792 && Constants.GameServer.SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;
 	}
 	
 	private void quickFeature(Npc npc, Player player, boolean auction) {
-		if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-			String pin = getBankPinInput(player);
-			if (pin == null) {
-				return;
+		if (Constants.GameServer.WANT_BANK_PINS) {
+			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
+				String pin = getBankPinInput(player);
+				if (pin == null) {
+					return;
+				}
+				if (!player.getCache().getString("bank_pin").equals(pin)) {
+					ActionSender.sendBox(player, "Incorrect bank pin", false);
+					return;
+				}
+				player.setAttribute("bankpin", true);
+				ActionSender.sendBox(player, "Bank pin correct", false);
 			}
-			if (!player.getCache().getString("bank_pin").equals(pin)) {
-				ActionSender.sendBox(player, "Incorrect bank pin", false);
-				return;
-			}
-			player.setAttribute("bankpin", true);
-			ActionSender.sendBox(player, "Bank pin correct", false);
 		}
-		if(auction) {
+		if(Constants.GameServer.SPAWN_AUCTION_NPCS && auction) {
 			Market.getInstance().addPlayerCollectItemsTask(player);
 		} else {
 			player.setAccessingBank(true);
