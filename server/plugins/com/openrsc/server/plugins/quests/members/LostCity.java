@@ -89,8 +89,8 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.incQuestPoints(3);
-		player.message("Well done you have completed the Lost City of Zanaris quest");
 		player.message("@gre@You haved gained 3 quest points!");
+		player.message("Well done you have completed the Lost City of Zanaris quest");
 	}
 
 	@Override
