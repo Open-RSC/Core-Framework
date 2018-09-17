@@ -1,0 +1,4 @@
+#Mon Sep 17 12:57:22 EDT 2018
+base.0=/Users/breellis/Desktop/Game/Android/Open RSC Android Client/build/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex
