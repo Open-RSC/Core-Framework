@@ -183,6 +183,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				if(wizard != null) {
 					p.incQuestPoints(4);
 					p.message("@gre@You haved gained 4 quest points!");
+					p.incQuestExp(6, (p.getSkills().getMaxStat(6) + 1) * 1000);
 					npcTalk(p, wizard, "Marvellous! it works!",
 							"The town will now be safe",
 							"Your help was invaluable",
@@ -192,7 +193,6 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 					npcTalk(p, wizard, "Also, let me improve your magic level for you");
 					p.message("The wizard lays his hands on you...");
 					p.message("You feel magic power increasing");
-					p.incQuestExp(6, (p.getSkills().getMaxStat(6) + 1) * 1000);
 					npcTalk(p, wizard, "Here is a special item for you...");
 					addItem(p, 1181, 1);
 					npcTalk(p, wizard, "It's a new spell",
