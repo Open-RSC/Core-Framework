@@ -63,19 +63,18 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 		player.getCache().remove("talked_grubor");
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
-		player.incQuestExp(0, (player.getSkills().getMaxStat(0) * 200) + 300);//ATTACK
+		player.incQuestExp(2, (player.getSkills().getMaxStat(2) * 200) + 300);//STRENGTH
 		player.incQuestExp(1, (player.getSkills().getMaxStat(1) * 200) + 300);//DEFENSE
 		player.incQuestExp(3, (player.getSkills().getMaxStat(3) * 200) + 300);//HITS
-		player.incQuestExp(2, (player.getSkills().getMaxStat(2) * 200) + 300);//STRENGTH
-		
-		player.incQuestExp(7, (player.getSkills().getMaxStat(7) * 200) + 300);//COOKING
-		player.incQuestExp(10, (player.getSkills().getMaxStat(10) * 200) + 300);//FISHING
-		player.incQuestExp(14, (player.getSkills().getMaxStat(14) * 200) + 300);//MINING
-		player.incQuestExp(13, (player.getSkills().getMaxStat(13) * 200) + 300);//SMITHING
+		player.incQuestExp(0, (player.getSkills().getMaxStat(0) * 200) + 300);//ATTACK
 		player.incQuestExp(4, (player.getSkills().getMaxStat(4) * 200) + 300);//RANGED
+		player.incQuestExp(15, (player.getSkills().getMaxStat(15) * 200) + 300);//HERBLAW
+		player.incQuestExp(10, (player.getSkills().getMaxStat(10) * 200) + 300);//FISHING
+		player.incQuestExp(7, (player.getSkills().getMaxStat(7) * 200) + 300);//COOKING
 		player.incQuestExp(11, (player.getSkills().getMaxStat(11) * 200) + 300);//FIREMAKING
 		player.incQuestExp(8, (player.getSkills().getMaxStat(8) * 200) + 300);//WOODCUT
-		player.incQuestExp(15, (player.getSkills().getMaxStat(15) * 200) + 300);//HERBLAW
+		player.incQuestExp(14, (player.getSkills().getMaxStat(14) * 200) + 300);//MINING
+		player.incQuestExp(13, (player.getSkills().getMaxStat(13) * 200) + 300);//SMITHING
 		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
 

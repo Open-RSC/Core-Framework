@@ -386,8 +386,8 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	@Override
 	public void handleReward(Player p) {
 		p.teleport(411, 3480, false);
-		p.message("@gre@You haved gained 2 quest points!");
 		p.message("Well done you have completed the dragon slayer quest!");
+		p.message("@gre@You haved gained 2 quest points!");
 		p.incQuestExp(2, p.getSkills().getMaxStat(2) * 1200 + 2600);
 		p.incQuestExp(1, p.getSkills().getMaxStat(1) * 1200 + 2600);
 		p.incQuestPoints(2);
