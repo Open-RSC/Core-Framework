@@ -1029,23 +1029,32 @@ public class DoorAction {
 			if (player.getY() <= 472) {
 				doGate(player, obj);
 			} else {
-				if (player.getSkills().getLevel(8) < 70) {
-					player.setBusy(true);
-					final Npc mcgrubor = World.getWorld().getNpc(255, 556, 564,
-							473, 476);
-					if (mcgrubor != null) {
-						npcTalk(player,mcgrubor, "Hello only the top woodcutters are allowed in here");
+				if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
+					if (player.getSkills().getLevel(8) < 70) {
+						player.setBusy(true);
+						final Npc forester = World.getWorld().getNpc(348, 562, 565,
+								468, 472);
+						if (forester != null) {
+							npcTalk(player, forester, "Hello only the top woodcutters are allowed in here");
+						}
+						Server.getServer().getEventHandler().add(
+								new ShortEvent(player) {
+									public void action() {
+										owner.setBusy(false);
+										owner.message(
+												"You need a woodcutting level of 70 to enter");
+									}
+								});
+					} else {
+						doGate(player, obj);
 					}
-					Server.getServer().getEventHandler().add(
-							new ShortEvent(player) {
-								public void action() {
-									owner.setBusy(false);
-									owner.message(
-											"You need a woodcutting level of 70 to enter");
-								}
-							});
-				} else {
-					doGate(player, obj);
+				}
+
+				else { // Deny Entry
+					final Npc forester = World.getWorld().getNpc(348, 562, 565,
+							468, 472);
+					npcTalk(player, forester, "Hey you can't come through here", "This is private land");
+					message(player, 1200, "You will need to find another way in");
 				}
 			}
 			return;
