@@ -1,20 +1,19 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+		TalkToNpcListener, ObjectActionListener {
 
+	public static final int SHIP = 736;
+	public static final int OFFICER = 317;
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "You need to be searched before you can board");
@@ -67,4 +66,22 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 		return n.getID() == 317;
 	}
 
+
+	@Override
+	public void onObjectAction(GameObject obj, String command, Player p) {
+		if(obj.getID() == SHIP) {
+			if(command.equals("board")) {
+				if(p.getX() != 467 ) {
+					return;
+			}
+			Npc n = getNearestNpc(p, OFFICER, 5);
+				if(n != null) {		
+					npcTalk(p, n, "You need to be searched before you can board");
+				} else {
+					p.message("I need to speak to the customs officer before boarding the ship.");
+				}
+			}
+		}		
+	}
 }
+
