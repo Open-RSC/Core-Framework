@@ -48,8 +48,8 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.incQuestPoints(1);
-		p.incQuestExp(10, 700 + 800 * p.getSkills().getMaxStat(10));
 		p.message("@gre@You haved gained 1 quest point!");
+		p.incQuestExp(10, 700 + 800 * p.getSkills().getMaxStat(10));
 		p.message("well done, you have completed the sea slug quest");
 	}
 

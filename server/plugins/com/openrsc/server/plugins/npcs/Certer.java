@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Item;
@@ -19,6 +20,13 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
+
+		// Forester (Log certer; custom)
+		if ((n.getID() == 348) 
+				&& !Constants.GameServer.WANT_WOODCUTTING_GUILD) {
+			return;
+		}
+
 		final CerterDef certerDef = EntityHandler.getCerterDef(n.getID());
 		if (certerDef == null) {
 			return;
