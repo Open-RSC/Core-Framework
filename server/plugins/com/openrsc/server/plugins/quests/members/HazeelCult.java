@@ -1069,19 +1069,19 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	public void handleReward(Player p) {
 		if(p.getCache().hasKey("good_side")) {
 			p.message("Well done you have completed the Hazeel cult quest");
-			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			//THIEVING LEVEL
 			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
+			p.message("@gre@You haved gained 1 quest point!");
+			p.incQuestPoints(1);
 			p.message("ceril gives you 2000 gold coins");
 			addItem(p, 10, 2000);
 		} else if(p.getCache().hasKey("evil_side")) {
 			p.message("Hazeel gives you some coins");
 			addItem(p, 10, 2000);
-			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			// THIEVING LEVEL
 			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
+			p.message("@gre@You haved gained 1 quest point!");
+			p.incQuestPoints(1);
 			p.message("you have completed the hazeel cult quest");
 		}
 	}
