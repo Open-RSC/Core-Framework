@@ -70,8 +70,8 @@ public class Waterfall_Quest implements QuestInterface,TalkToNpcListener,
 		addItem(p, 796, 40);
 		addItem(p, 172, 2);
 		addItem(p, 161, 2);
-		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 900 + 1000);
 		p.incQuestExp(2, p.getSkills().getMaxStat(2) * 900 + 1000);
+		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 900 + 1000);
 		p.incQuestPoints(1);
 	}
 
