@@ -416,7 +416,7 @@ public final class Player extends Mob {
 
 	private boolean sleeping = false;
 	/**
-	 * Players sleepword
+	 * Player sleep word
 	 */
 	private String sleepword;
 	/**
@@ -424,14 +424,9 @@ public final class Player extends Mob {
 	 */
 	private Action status = Action.IDLE;
 	/**
-	 * When the users subscription expires (or 0 if they don't have one)
-	 */
-	private long subscriptionExpires = 0;
-	/**
-	 * If the player has been sending suscicious packets
+	 * If the player has been sending suspicious packets
 	 */
 	private boolean suspiciousPlayer;
-
 	/**
 	 * The player's username
 	 */
@@ -792,18 +787,6 @@ public final class Player extends Mob {
 		return (int) ((now - lastLogin) / 86400);
 	}
 
-	public int getDaysSubscriptionLeft() {
-		long now = (System.currentTimeMillis() / 1000);
-		if (subscriptionExpires == 0 || now >= subscriptionExpires) {
-			return 0;
-		}
-		double days = (double) (subscriptionExpires - now) / (double) 86400;
-		if (days > 0.0 && days < 1.0) {
-			return 1;
-		}
-		return (int) Math.round(days);
-	}
-
 	public PrayerDrainEvent getDrainer() {
 		return prayerDrainEvent;
 	}
@@ -992,10 +975,6 @@ public final class Player extends Mob {
 		return status;
 	}
 
-	public long getSubscriptionExpires() {
-		return subscriptionExpires;
-	}
-
 	public String getUsername() {
 
 		return username;
@@ -1114,9 +1093,6 @@ public final class Player extends Mob {
 			}
 			if (skill >= 3 && useFatigue) {
 				int famt = (int) ((8 * skillXP / 5) / 3);
-				if (isSubscriber()) {
-					famt = famt / 2;
-				}
 				fatigue += famt;
 				ActionSender.sendFatigue(this);
 			}
@@ -1220,16 +1196,6 @@ public final class Player extends Mob {
 		return sleeping;
 	}
 
-	public boolean isSubscriber() {
-		if (isMod() || isAdmin())
-			return false;
-
-		if (getDaysSubscriptionLeft() == 0) {
-			return false;
-		}
-		return groupID == 6;
-	}
-
 	public boolean isSuspiciousPlayer() {
 		return suspiciousPlayer;
 	}
@@ -1290,7 +1256,7 @@ public final class Player extends Mob {
 		removeSkull(); // destroy
 		resetCombatEvent();
 		world.registerItem(new GroundItem(20, getX(), getY(), 1, player));
-		if((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y")) || getDaysSubscriptionLeft() <= 0) {
+		if((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(122, 647), true);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
@@ -1770,10 +1736,6 @@ public final class Player extends Mob {
 
 	public void setStatus(Action a) {
 		status = a;
-	}
-
-	public void setSubscriptionExpires(long expires) {
-		subscriptionExpires = expires;
 	}
 
 	public void setSuspiciousPlayer(boolean suspicious) {
