@@ -146,11 +146,6 @@ ObjectActionExecutiveListener {
 			break;
 		}
 		
-		if(owner.isPremiumSubscriber())
-			retrytimes *= 2.0;
-		else if(owner.isSubscriber() && !owner.isPremiumSubscriber())
-			retrytimes *= 1.5;
-		
 		if (def == null || def.getRespawnTime() < 1 || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6)) {
 			if (axeId < 0 || reqlvl > mineLvl) {
 				message(owner, "You need a pickaxe to mine this rock",

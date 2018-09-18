@@ -145,6 +145,16 @@ public final class Player extends Mob {
 	public void setConsumeTimer(long l) {
 		consumeTimer = System.currentTimeMillis() + l;
 	}
+        
+        public long getLastSaveTime() {
+		return lastSaveTime;
+        }
+        
+        public void setLastSaveTime(long save) {
+		lastSaveTime = save;
+        }
+        
+        private long lastSaveTime = System.currentTimeMillis();
 
 	private int appearanceID;
 
@@ -1051,12 +1061,6 @@ public final class Player extends Mob {
 		 **/
 		if (skill >= 4 && skill <= 17) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
-			if (isSubscriber()) {
-				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;
-			}
-			if (isPremiumSubscriber()) {
-				multiplier += Constants.GameServer.PREMIUM_EXP_RATE;
-			}
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;
 				if (isSkulled()) {
@@ -1069,12 +1073,6 @@ public final class Player extends Mob {
 		 **/
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
 			multiplier = Constants.GameServer.COMBAT_EXP_RATE;
-			if(isSubscriber()) {
-				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;
-			}
-			if (isPremiumSubscriber()) {
-				multiplier += Constants.GameServer.PREMIUM_EXP_RATE;
-			}
 			if (getLocation().inWilderness()) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;
 				if (isSkulled()) {
@@ -1941,33 +1939,8 @@ public final class Player extends Mob {
 		return walkToAction;
 	}
 
-	private long premiumSubscriptionExpires;
-
 	private Trade trade;
 
-	public int premiumSubDaysLeft() {
-		long now = (System.currentTimeMillis() / 1000);
-		if (premiumSubscriptionExpires == 0 || now >= premiumSubscriptionExpires) {
-			return 0;
-		}
-		double days = (double) (premiumSubscriptionExpires - now) / (double) 86400;
-		if (days > 0.0 && days < 1.0) {
-			return 1;
-		}
-		return (int) Math.round(days);
-	}
-
-	public boolean isPremiumSubscriber() {
-		return premiumSubDaysLeft() > 0;
-	}
-
-	public long getPremiumExpires() {
-		return premiumSubscriptionExpires;
-	}
-
-	public void setPremiumExpires(long long1) {
-		this.premiumSubscriptionExpires = long1;
-	}
 	public int getElixir() {
 		if (getCache().hasKey("elixir_time")) {
 			int now = (int) (System.currentTimeMillis() / 1000);
