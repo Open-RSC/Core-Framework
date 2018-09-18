@@ -148,11 +148,7 @@ public final class RegularPlayer implements CommandListener {
 
 			long waitTime = 15000;
 
-			if (player.isPremiumSubscriber()) {
-				waitTime = 5000;
-			} else if (player.isSubscriber() && !player.isPremiumSubscriber()) {
-				waitTime = 10000;
-			} else if(player.isMod()) {
+                        if(player.isMod()) {
 				waitTime = 0;
 			}
 
@@ -186,11 +182,6 @@ public final class RegularPlayer implements CommandListener {
 				}
 				if (p.getGlobalBlock() != 2) {
 					String header = "";
-					if (player.isSubscriber())
-						header = "@ora@";
-					if (player.isPremiumSubscriber()) {
-						header = "@pre@";
-					}
 					ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getUsername() + ": "
 							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
 				}
