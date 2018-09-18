@@ -326,8 +326,6 @@ public class DatabasePlayerLoader {
 			save.setOwner(result.getInt("owner"));
 			save.setDatabaseID(result.getInt("id"));
 			save.setGroupID(result.getInt("group_id"));
-			save.setSubscriptionExpires(result.getLong("sub_expires"));
-			save.setPremiumExpires(result.getLong("platinum_expires"));
 			save.setCombatStyle((byte) result.getInt("combatstyle"));
 			save.setLastLogin(result.getLong("login_date"));
 			save.setLastIP(result.getString("login_ip"));
