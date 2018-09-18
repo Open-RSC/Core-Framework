@@ -62,11 +62,6 @@ ObjectActionExecutiveListener {
 			break;
 		}
 
-		if(p.isPremiumSubscriber())
-			retrytimes *= 2.0;
-		else if(p.isSubscriber() && !p.isPremiumSubscriber())
-			retrytimes *= 1.5;
-
 		if (axeId < 0 || reqlvl > mineLvl) {
 			message(p, "You need a pickaxe to mine this rock",
 					"You do not have a pickaxe which you have the mining level to use");

@@ -197,18 +197,26 @@ public final class GameStateUpdater {
 	 * Checks if the player has moved within the last X minutes
 	 */
 	private static void updateTimeouts(Player player) {
-		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
-			return;
-		}
 		long curTime = System.currentTimeMillis();
 		int timeoutLimit = 300000; // 5 minute idle log out
+                int autoSave = 5000; // 5 second autosave
+                
+                if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
+			return;
+		}
+                if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
+			player.save();
+                        player.setLastSaveTime(curTime);
+                }
 		if (curTime - player.getLastPing() >= 30000) {
 			player.unregister(false, "Ping time-out");
-		} else if (player.warnedToMove()) {
+		}
+                else if (player.warnedToMove()) {
 			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isMod()) {
 				player.unregister(false, "Movement time-out");
 			}
-		} else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
+		}
+                else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
 			if (player.isSleeping()) {
 				player.setSleeping(false);
 				ActionSender.sendWakeUp(player, false, false);
