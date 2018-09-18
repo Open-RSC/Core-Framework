@@ -145,6 +145,16 @@ public final class Player extends Mob {
 	public void setConsumeTimer(long l) {
 		consumeTimer = System.currentTimeMillis() + l;
 	}
+        
+        public long getLastSaveTime() {
+		return lastSaveTime;
+        }
+        
+        public void setLastSaveTime(long save) {
+		lastSaveTime = save;
+        }
+        
+        private long lastSaveTime = System.currentTimeMillis();
 
 	private int appearanceID;
 
