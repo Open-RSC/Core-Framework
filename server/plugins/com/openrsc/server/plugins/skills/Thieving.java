@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -248,9 +249,26 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		player.message("You steal " + selectedLoot.getDef().getName().toLowerCase() + " from the stall");
 
 		player.incExp(17, stall.getXp(), true);
+
+		if (stall.equals(Stall.SILK_STALL)) { // Silk
+			player.getCache().put("silkStolen", Instant.now().getEpochSecond());
+		}
+		else if (stall.equals(Stall.FUR_STALL)) { // Fur
+			player.getCache().put("furStolen", Instant.now().getEpochSecond());
+		}
+		else if (stall.equals(Stall.SILVER_STALL)) { // Silver
+			player.getCache().put("silverStolen", Instant.now().getEpochSecond());
+		}
+		else if (stall.equals(Stall.SPICES_STALL)) { // Spice
+			player.getCache().put("spiceStolen", Instant.now().getEpochSecond());
+		}
+		else if (stall.equals(Stall.GEMS_STALL)) { // Gem
+			player.getCache().put("gemStolen", Instant.now().getEpochSecond());
+		}
+
+		// Replace stall with empty version
 		World.getWorld().replaceGameObject(object,
 				new GameObject(object.getLocation(), 341, object.getDirection(), object.getType()));
-
 		World.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
 	}
 
