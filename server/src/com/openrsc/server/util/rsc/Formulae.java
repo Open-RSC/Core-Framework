@@ -939,11 +939,6 @@ public final class Formulae {
 
 		int regular = (maxStat / 10) + 1 + (maxStat == 99 ? 1 : 0);
 
-		if (p.isPremiumSubscriber()) {
-			regular *= 2.0;
-		} else if(p.isSubscriber() && !p.isPremiumSubscriber()) {
-			regular *= 1.5;
-		}
 		return regular;
 	}
 
