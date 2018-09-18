@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import java.time.Instant;
+
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
@@ -20,12 +23,22 @@ public class GemMerchant implements ShopInterface, TalkToNpcExecutiveListener, T
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(p.getCache().hasKey("stolenGem")) {
+		if(p.getCache().hasKey("gemStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("gemStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
 					"That you have just stolen from me",
 					"guards guards");
-			//Hero = 324, Knight = 322, Guard = 65, Paladin = 323.
-			//attacker.setChasing(p);
+
+			Npc attacker = getNearestNpc(p, 324, 5); // Hero first
+			if (attacker == null)
+				attacker = getNearestNpc(p, 323, 5); // Paladin second
+			if (attacker == null)
+				attacker = getNearestNpc(p, 322, 5); // Knight third
+			if (attacker == null)
+				attacker = getNearestNpc(p, 321, 5); // Guard fourth
+
+			if (attacker != null)
+				attacker.setChasing(p);
+
 		} else {
 			npcTalk(p, n, "Here, look at my lovely gems");
 			int menu = showMenu(p, n, "Ok show them to me", "I'm not interested thankyou");
