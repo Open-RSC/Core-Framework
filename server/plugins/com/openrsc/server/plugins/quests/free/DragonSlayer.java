@@ -122,7 +122,6 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 			case 0:
 				npcTalk(p, n, "Aye tiz a fair day my friend");
 				int menu2 = showMenu(p, n,
-						"Can you sell me some rune plate mail?",
 						"I'm not your friend", "Yes it's a very nice day");
 				if (menu2 == 1) {
 					npcTalk(p, n,
@@ -172,11 +171,8 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 					"So you'll need to prove to me that you're a hero before you can buy some");
 			int sub_menu2 = showMenu(p, n, "So how am I meant to prove that?",
 					"That's a pity, I'm not a hero");
-			if (sub_menu2 == 0) {
+			if (sub_menu2 == 0)
 				oziachDialogue(p, n, Oziach.PROVE_THAT);
-			} else if (sub_menu2 == 1) {
-				// TODO: Possibly missing dialogue.
-			}
 			break;
 		case Oziach.PROVE_THAT:
 			npcTalk(p, n, "Well if you want to prove yourself",
