@@ -82,9 +82,9 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 292 || obj.getID() == 293) {
-			Npc arhain = getNearestNpc(p, 280, 10);
-			if (arhain != null) {
-				npcTalk(p, arhain, "Oi get away from there!");
+			Npc arhein = getNearestNpc(p, 280, 10);
+			if (arhein != null) {
+				npcTalk(p, arhein, "Oi get away from there!");
 			} else {
 				p.teleport(450, 521, false);// TODO RIGHT COORDS.
 				message(p, "You hide away in the ship",
