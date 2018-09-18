@@ -665,7 +665,7 @@ public class DatabasePlayerLoader {
 
 		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
 
-		private static final String playerData = "SELECT `owner`, `id`, `group_id`, `sub_expires`, `platinum_expires`,"
+		private static final String playerData = "SELECT `owner`, `id`, `group_id`, "
 				+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`, `kills`,"
 				+ "`deaths`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
 				+ "`block_trade`, `block_duel`, `cameraauto`,"
