@@ -194,20 +194,14 @@ public final class GameStateUpdater {
 	}
 
 	/**
-	 * Checks the player has moved within the last 5mins
+	 * Checks if the player has moved within the last X minutes
 	 */
 	private static void updateTimeouts(Player player) {
 		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
 		long curTime = System.currentTimeMillis();
-		int timeoutLimit = 300000;
-		if (player.isSubscriber()) {
-			timeoutLimit += 300000;
-		}
-		if (player.isPremiumSubscriber()) {
-			timeoutLimit += 300000 * 2;
-		}
+		int timeoutLimit = 300000; // 5 minute idle log out
 		if (curTime - player.getLastPing() >= 30000) {
 			player.unregister(false, "Ping time-out");
 		} else if (player.warnedToMove()) {
