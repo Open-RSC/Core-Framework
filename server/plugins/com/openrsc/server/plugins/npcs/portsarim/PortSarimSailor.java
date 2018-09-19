@@ -24,7 +24,7 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Do you want to go on a trip to Karamja?");
 		Menu defaultMenu = new Menu();
-		if (p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+		if (p.getQuestStage(Quests.DRAGON_SLAYER) < 3) {
 			defaultMenu.addOption(new Option("I'd rather go to Crandor Isle") {
 				@Override
 				public void action() {
@@ -63,10 +63,13 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 
 	@Override
 	public void onObjectAction(GameObject arg0, String arg1, Player p) {
-		Npc sailor = getNearestNpc(p, 166, 10);
+		Npc sailor = getNearestNpc(p, 166, 5);
 		if(sailor != null) {
 			sailor.initializeTalkScript(p);
+		} else {
+			p.message("I need to speak to the captain before boarding the ship.");
 		}
+		
 	}
  
 	@Override
@@ -76,3 +79,4 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 				|| (arg0.getID() == 157 && arg0.getLocation().equals(Point.location(265, 652)));
 	}
 }
+
