@@ -10522,14 +10522,14 @@ public final class mudclient implements Runnable {
 
 					while (length * 8 > this.packetsIncoming.getBitHead() - -24) {
 						int var9 = this.packetsIncoming.getBitMask(11);
-						int var10 = this.packetsIncoming.getBitMask(5);
-						if (var10 > 15) {
-							var10 -= 32;
+						int var10 = this.packetsIncoming.getBitMask(6);
+						if (var10 > 31) {
+							var10 -= 64;
 						}
 
-						int var11 = this.packetsIncoming.getBitMask(5);
-						if (var11 > 15) {
-							var11 -= 32;
+						int var11 = this.packetsIncoming.getBitMask(6);
+						if (var11 > 31) {
+							var11 -= 64;
 						}
 
 						direction = this.packetsIncoming.getBitMask(4);
@@ -10811,16 +10811,14 @@ public final class mudclient implements Runnable {
 
 								while (this.packetsIncoming.getBitHead() - -34 < length * 8) {
 									var19 = this.packetsIncoming.getBitMask(12);
-									int var6 = this.packetsIncoming.getBitMask(5);
-									if (var6 > 15) {
-										var6 -= 32;
+									int var6 = this.packetsIncoming.getBitMask(6);
+									if (var6 > 31) {
+										var6 -= 64;
 									}
-
-									int var7 = this.packetsIncoming.getBitMask(5);
-									if (var7 > 15) {
-										var7 -= 32;
+									int var7 = this.packetsIncoming.getBitMask(6);
+									if (var7 > 31) {
+										var7 -= 64;
 									}
-
 									dir = this.packetsIncoming.getBitMask(4);
 									var9 = 64 + (var6 + this.playerLocalX) * this.tileSize;
 									var10 = (var7 + this.playerLocalZ) * this.tileSize - -64;

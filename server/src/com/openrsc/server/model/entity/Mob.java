@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
@@ -653,9 +654,14 @@ public abstract class Mob extends Entity {
 
 	public boolean withinRange(Entity e) {
 		if (e != null) {
-			int xDiff = getLocation().getX() - e.getLocation().getX();
-			int yDiff = getLocation().getY() - e.getLocation().getY();
-			return xDiff <= 15 && xDiff >= -15 && yDiff <= 15 && yDiff >= -15;
+			return getLocation().withinRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE * 8);
+		}
+		return false;
+	}
+
+	public boolean withinGridRange(Entity e) {
+		if (e != null) {
+			return getLocation().withinGridRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE);
 		}
 		return false;
 	}
