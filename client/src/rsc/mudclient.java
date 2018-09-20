@@ -10825,7 +10825,7 @@ public final class mudclient implements Runnable {
 					return;
 				}
 
-				else if (opcode == 104) { // ???
+				else if (opcode == 104) { // NPC Quest Message
 					int var4 = this.packetsIncoming.getShort();
 
 					for (int var19 = 0; var4 > var19; ++var19) {
@@ -11386,25 +11386,24 @@ public final class mudclient implements Runnable {
 					return;
 				}
 
-        else if (opcode == 244) {
-  				this.fatigueSleeping = this.packetsIncoming
-  						.getShort();
+        else if (opcode == 244) { // Sleeping Menu Fatigue
+  				this.fatigueSleeping = this.packetsIncoming.getShort();
   				return;
         }
 
-        else if (opcode == 114) {
+        else if (opcode == 114) { // Total Fatigue
   				this.statFatigue = this.packetsIncoming.getShort();
   				return;
         }
 
-        else if (opcode == 89) {
+        else if (opcode == 89) { // Server Message
   				this.serverMessage = this.packetsIncoming.readString();
   				this.showDialogServerMessage = true;
   				this.serverMessageBoxTop = false;
   				return;
         }
 
-        else if (opcode == 36) {
+        else if (opcode == 36) { // Teleport Bubbles
   				if (this.teleportBubbleCount < 50) {
   					int type = this.packetsIncoming.getUnsignedByte();
   					int x = this.packetsIncoming.getByte()
@@ -11421,7 +11420,7 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 253) {
+        else if (opcode == 253) { // Duel Acceptance
   				byte accepted = this.packetsIncoming.getByte();
   				if (accepted != 1) {
   					this.duelOffsetOpponentAccepted = false;
@@ -11432,7 +11431,7 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 123) {
+        else if (opcode == 123) { // Item Dropped
   				int slot = this.packetsIncoming.getUnsignedByte();
   				--this.inventoryItemCount;
 
@@ -11447,7 +11446,7 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 176) {
+        else if (opcode == 176) { // Duel Initial Dialog
   				int var4 = this.packetsIncoming.getShort();
   				if (null != this.playerServer[var4]) {
   					this.duelConfirmOpponentName = this.playerServer[var4].displayName;
@@ -11465,12 +11464,12 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 203) {
+        else if (opcode == 203) { // Bank Dialog
 				  this.setShowDialogBank(false);
 				  return;
         }
 
-        else if (opcode == 101) {
+        else if (opcode == 101) { // Shop Dialog
   				this.showDialogShop = true;
   				int shopItemCount = this.packetsIncoming.getUnsignedByte();
   				byte shopType = this.packetsIncoming.getByte();
@@ -11525,7 +11524,7 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 97) {
+        else if (opcode == 97) { // Trade Dialog Update
   				this.tradeRecipientItemsCount = this.packetsIncoming.getUnsignedByte();
 
   				for (int var4 = 0; var4 < this.tradeRecipientItemsCount; ++var4) {
@@ -11538,7 +11537,7 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 153) {
+        else if (opcode == 153) { // Equipment Stats
   				for (int eq = 0; eq < 5; ++eq) {
   					this.playerStatEquipment[eq] = this.packetsIncoming.getUnsignedByte();
   				}
@@ -11546,12 +11545,12 @@ public final class mudclient implements Runnable {
   				return;
         }
 
-        else if (opcode == 252) {
+        else if (opcode == 252) { // Options Menu Hide
   				this.optionsMenuShow = false;
   				return;
         }
 
-        else if (opcode == 234) {
+        else if (opcode == 234) { // Draw Players Nearby
   				int playerCount = this.packetsIncoming.getShort();
 
   				for (int pp = 0; playerCount > pp; ++pp) {
@@ -11674,7 +11673,7 @@ public final class mudclient implements Runnable {
           return;
         }
 
-        else if (opcode == 99) {
+        else if (opcode == 99) { // Draw Ground Items
 					while (length > this.packetsIncoming.packetEnd) {
  						if (this.packetsIncoming.getUnsignedByte() != 255) {
  							--this.packetsIncoming.packetEnd;
