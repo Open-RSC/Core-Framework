@@ -94,6 +94,10 @@ public final class Constants {
 		 */
 		public static double SKULL_BOOST = 0;
 		/**
+		 * Player view distance
+		 */
+		public static int VIEW_DISTANCE = 2;
+		/**
 		 * A message players will receive upon login
 		 */
 		public static String MOTD = "Welcome to " + SERVER_NAME + "!";
@@ -186,6 +190,7 @@ public final class Constants {
 			MYSQL_TABLE_PREFIX = props.getProperty("mysql_table_prefix");
 			MYSQL_HOST = props.getProperty("mysql_host");
 			HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
+			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
@@ -231,6 +236,10 @@ public final class Constants {
 			WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
 
 			START_TIME = System.currentTimeMillis();
+
+			// Make sure config doesn't exceed max values
+			if (VIEW_DISTANCE > 4)
+				VIEW_DISTANCE = 4;
 		}
 	}
 
