@@ -654,14 +654,14 @@ public abstract class Mob extends Entity {
 
 	public boolean withinRange(Entity e) {
 		if (e != null) {
-			return getLocation().withinRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE * 8);
+			return getLocation().withinRange(e.getLocation(), (Constants.GameServer.VIEW_DISTANCE * 8) -1);
 		}
 		return false;
 	}
 
 	public boolean withinGridRange(Entity e) {
 		if (e != null) {
-			return getLocation().withinGridRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE);
+			return getLocation().withinGridRange(e.getLocation(), (Constants.GameServer.VIEW_DISTANCE * 8) - 1);
 		}
 		return false;
 	}
