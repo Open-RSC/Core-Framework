@@ -10533,8 +10533,8 @@ public final class mudclient implements Runnable {
 						}
 
 						direction = this.packetsIncoming.getBitMask(4);
-						var7 = 64 + (var11 + this.playerLocalZ) * this.tileSize;
-						var6 = (this.playerLocalX + var10) * this.tileSize + 64;
+						var7 = 128 + (var11 + this.playerLocalZ) * this.tileSize;
+						var6 = (this.playerLocalX + var10) * this.tileSize + 128;
 						this.createPlayer(var7, var9, var6, 1, RSCharacterDirection.lookup(direction));
 					}
 
@@ -10820,8 +10820,8 @@ public final class mudclient implements Runnable {
 										var7 -= 64;
 									}
 									dir = this.packetsIncoming.getBitMask(4);
-									var9 = 64 + (var6 + this.playerLocalX) * this.tileSize;
-									var10 = (var7 + this.playerLocalZ) * this.tileSize - -64;
+									var9 = 128 + (var6 + this.playerLocalX) * this.tileSize;
+									var10 = (var7 + this.playerLocalZ) * this.tileSize + 128;
 									var11 = this.packetsIncoming.getBitMask(10);
 									this.createNpc(dir, var11, var9, var10, var19);
 								}
