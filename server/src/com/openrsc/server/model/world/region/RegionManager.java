@@ -72,7 +72,7 @@ public class RegionManager {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (GameObject o : region.getGameObjects()) {
-				if (o.getLocation().withinGridRange(entity.getLocation(), Constants.GameServer.VIEW_DISTANCE)) {
+				if (o.getLocation().withinGridRange(entity.getLocation(), (Constants.GameServer.VIEW_DISTANCE * 8) - 1)) {
 					localObjects.add(o);
 				}
 			}
@@ -84,7 +84,7 @@ public class RegionManager {
 		LinkedHashSet<GroundItem> localItems = new LinkedHashSet<GroundItem>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (GroundItem o : region.getGroundItems()) {
-				if (o.getLocation().withinGridRange(entity.getLocation(), Constants.GameServer.VIEW_DISTANCE)) {
+				if (o.getLocation().withinGridRange(entity.getLocation(), (Constants.GameServer.VIEW_DISTANCE * 8) - 1)) {
 					localItems.add(o);
 				}
 			}
