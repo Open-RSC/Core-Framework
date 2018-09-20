@@ -80,6 +80,14 @@ public class Point {
 				&& yDiff >= -radius;
 	}
 
+	public final boolean withinGridRange(Point p, int radius) {
+		// Snap coordinates to an 8x8 grid
+		// radius is compared in multiples of 8
+		final int xDiff = (this.x >> 3) - (p.x >> 3);
+		final int yDiff = (this.y >> 3) - (p.y >> 3);
+		return xDiff <= radius && xDiff >= -radius && yDiff <= radius && yDiff >= -radius;
+	}
+
 	public final int getX() {
 		return x;
 	}
