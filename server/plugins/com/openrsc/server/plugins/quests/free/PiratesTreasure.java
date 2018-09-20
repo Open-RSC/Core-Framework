@@ -21,15 +21,17 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.TeleportExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+
 public class PiratesTreasure implements QuestInterface,InvActionListener,
 InvActionExecutiveListener, TalkToNpcListener, ObjectActionListener,
 ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
-InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListener {
 
 	class Frank {
 		public static final int TREASURE = 0;
@@ -351,11 +353,19 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 		}
 
 	}
-
+	
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
 		return (p.getY() == 548 && p.getX() > 287 && p.getX() < 291)
 				&& item.getID() == 211;
+	}
+	
+	@Override	
+	public boolean blockTeleport(Player p) {
+		if (p.getInventory().hasItemId(318) && (p.getLocation().inKaramja())) {		
+			p.getInventory().remove(318);										
+			}
+		return false;
 	}
 
 	@Override
@@ -393,5 +403,4 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 			}
 		}
 	}
-
 }
