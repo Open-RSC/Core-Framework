@@ -23,6 +23,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.GoldDrops;
 
 public class Npc extends Mob {
 
@@ -387,15 +388,22 @@ public class Npc extends Mob {
 							int dropID  = drop.getID();
 							int dropAmt = drop.getAmount();
 
-							// Rare Drop Table
-							if (drop.getID() == 160) {
-								dropID = Formulae.calculateRareDrop();
-								dropAmt = 1;
+							// Gold Drops
+							if (drop.getID() == 10) {
+								dropAmt = Formulae.calculateGoldDrop(
+									GoldDrops.drops.getOrDefault(this.getID(), new int[] {1})
+								);
 							}
 
 							// Herb Drop Table
 							else if (drop.getID() == 165) {
 								dropID = Formulae.calculateHerbDrop();
+							}
+
+							// Rare Drop Table
+							else if (drop.getID() == 160) {
+								dropID = Formulae.calculateRareDrop();
+								dropAmt = 1;
 							}
 
 							else {
