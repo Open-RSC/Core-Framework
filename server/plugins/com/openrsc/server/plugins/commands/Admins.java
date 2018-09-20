@@ -41,6 +41,7 @@ import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.GoldDrops;
 
 public final class Admins implements CommandListener {
 
@@ -239,7 +240,12 @@ public final class Admins implements CommandListener {
 			for (ItemDropDef drop : drops) {
 				dropID = drop.getID();
 				if (dropID == -1) continue;
-				if (dropID == 160) {
+
+				if (dropID == 10) {
+					for (int g : GoldDrops.drops.getOrDefault(npcID, new int[] {1}))
+						hmap.put("Coins "+g, 0);
+				}
+				else if (dropID == 160) {
 					int[] rares = { 160, 159, 158, 157, 526, 527, 1277 };
 					String[] rareNames = {"uncut sapphire", "uncut emerald",
 							"uncut ruby", "uncut diamond", "Half of a key", "Half of a key", "Half Dragon Square Shield"};
@@ -277,15 +283,25 @@ public final class Admins implements CommandListener {
 					}
 					if (hit >= total && hit < (total + dropWeight)) {
 						if (dropID != -1) {
-							if (dropID == 160)
-								dropID = Formulae.calculateRareDrop();
-							else if (dropID == 165)
-								dropID = Formulae.calculateHerbDrop();
-							ItemDefinition def = EntityHandler.getItemDef(dropID);
-							try {
-								hmap.put(def.getName()+" "+dropID, hmap.get(def.getName()+" "+dropID) + 1);
+							if (dropID == 10) {
+								int d = Formulae.calculateGoldDrop(GoldDrops.drops.getOrDefault(npcID, new int[] {1}));
+								try {
+									hmap.put("Coins "+d, hmap.get("Coins "+d) + 1);
+								}
+								catch (NullPointerException n) { // No coin value for npc
+								}
 							}
-							catch (NullPointerException n) {
+							else {
+								if (dropID == 160)
+									dropID = Formulae.calculateRareDrop();
+								else if (dropID == 165)
+									dropID = Formulae.calculateHerbDrop();
+								ItemDefinition def = EntityHandler.getItemDef(dropID);
+								try {
+									hmap.put(def.getName()+" "+dropID, hmap.get(def.getName()+" "+dropID) + 1);
+								}
+								catch (NullPointerException n) {
+								}
 							}
 							break;
 						}
