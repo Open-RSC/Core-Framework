@@ -23,18 +23,6 @@ public class NewMarketItemTask extends MarketTask {
 	public void doTask() throws Exception {
 		ItemDefinition def = EntityHandler.getItemDef(newItem.getItemID());
 
-		if(MarketDatabase.getMyAuctionsCount(owner.getDatabaseID()) >= 10 && !owner.isSubscriber() && !owner.isPremiumSubscriber()) {
-			ActionSender.sendBox(owner, "@red@[Auction House - Warning] % @whi@ You are not allowed to have more than ten active auctions!", false);
-			return;
-		}
-		if(MarketDatabase.getMyAuctionsCount(owner.getDatabaseID()) >= 15 && owner.isSubscriber() && !owner.isPremiumSubscriber()) {
-			ActionSender.sendBox(owner, "@red@[Auction House - Warning] % @whi@ You are not allowed to have more than fifteen active auctions!", false);
-			return;
-		}
-		if(MarketDatabase.getMyAuctionsCount(owner.getDatabaseID()) >= 20 && !owner.isSubscriber() && owner.isPremiumSubscriber()) {
-			ActionSender.sendBox(owner, "@red@[Auction House - Warning] % @whi@ You are not allowed to have more than twenty active auctions!", false);
-			return;
-		}
 		if (newItem.getItemID() == 10 || def.isUntradable()) {
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ You cannot sell that item on auction house!", false);
 			return;
