@@ -13756,7 +13756,7 @@ public final class mudclient implements Runnable {
 						if (!this.errorLoadingData) {
 							this.loadEntities(true);
 							if (!this.errorLoadingData) {
-								this.scene = new Scene(this.getSurface(), 25000, 25000, 1000);
+								this.scene = new Scene(this.getSurface(), 25000, 50000, 1000);
 								this.scene.setMidpoints(this.getGameHeight() / 2, true, this.getGameWidth(),
 										this.getGameWidth() / 2, this.getGameHeight() / 2, this.m_qd,
 										this.getGameWidth() / 2);
