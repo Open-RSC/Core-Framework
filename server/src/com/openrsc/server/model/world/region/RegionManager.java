@@ -2,6 +2,7 @@ package com.openrsc.server.model.world.region;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -71,7 +72,7 @@ public class RegionManager {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (GameObject o : region.getGameObjects()) {
-				if (o.getLocation().withinRange(entity.getLocation(), 15)) {
+				if (o.getLocation().withinGridRange(entity.getLocation(), Constants.GameServer.VIEW_DISTANCE)) {
 					localObjects.add(o);
 				}
 			}
@@ -83,7 +84,7 @@ public class RegionManager {
 		LinkedHashSet<GroundItem> localItems = new LinkedHashSet<GroundItem>();
 		for (Region region : getSurroundingRegions(entity.getLocation())) {
 			for (GroundItem o : region.getGroundItems()) {
-				if (o.getLocation().withinRange(entity.getLocation(), 15)) {
+				if (o.getLocation().withinGridRange(entity.getLocation(), Constants.GameServer.VIEW_DISTANCE)) {
 					localItems.add(o);
 				}
 			}
