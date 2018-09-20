@@ -1045,14 +1045,6 @@ public class ActionSender {
 					sendBox(p, "@gre@Welcome to the RuneScape tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				if (!p.isMod()) {
-					if (p.getDaysSubscriptionLeft() > 0) {
-						p.setGroupID(6);
-					} else if (p.getDaysSubscriptionLeft() <= 0) {
-						p.setGroupID(4);
-					}
-				}
-
 				sendGameSettings(p);
 				sendPrivacySettings(p);
 

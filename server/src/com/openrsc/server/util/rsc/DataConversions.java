@@ -311,7 +311,7 @@ public final class DataConversions {
 	private static byte getMobCoordOffset(int coord1, int coord2) {
 		byte offset = (byte) (coord1 - coord2);
 		if (offset < 0) {
-			offset += 32;
+			offset += 64;
 		}
 		return offset;
 	}

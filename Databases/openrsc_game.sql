@@ -38184,8 +38184,6 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `owner` int(5) UNSIGNED NOT NULL,
   `pass` varchar(512) NOT NULL,
   `salt` varchar(250) NOT NULL DEFAULT '',
-  `sub_expires` int(5) UNSIGNED DEFAULT 0,
-  `platinum_expires` int(5) UNSIGNED DEFAULT 0,
   `combat` int(10) DEFAULT 3,
   `skill_total` int(10) DEFAULT 27,
   `x` int(5) UNSIGNED DEFAULT 216,
