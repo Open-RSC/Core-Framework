@@ -10518,7 +10518,7 @@ public final class mudclient implements Runnable {
 						this.players[this.playerCount++] = var34;
 					}
 
-					while (length * 8 > this.packetsIncoming.getBitHead() - -24) {
+					while (length * 8 > this.packetsIncoming.getBitHead() + 24) {
 						int var9 = this.packetsIncoming.getBitMask(11);
 						int var10 = this.packetsIncoming.getBitMask(6);
 						if (var10 > 31) {
@@ -10531,7 +10531,7 @@ public final class mudclient implements Runnable {
 						}
 
 						direction = this.packetsIncoming.getBitMask(4);
-						var7 = 128 + (var11 + this.playerLocalZ) * this.tileSize;
+						var7 = (this.playerLocalZ + var11) * this.tileSize + 128;
 						var6 = (this.playerLocalX + var10) * this.tileSize + 128;
 						this.createPlayer(var7, var9, var6, 1, RSCharacterDirection.lookup(direction));
 					}
@@ -10804,7 +10804,7 @@ public final class mudclient implements Runnable {
 						this.npcs[this.npcCount++] = var28;
 					}
 
-					while (this.packetsIncoming.getBitHead() - -34 < length * 8) {
+					while (length * 8 > this.packetsIncoming.getBitHead() + 34) {
 						var19 = this.packetsIncoming.getBitMask(12);
 						int var6 = this.packetsIncoming.getBitMask(6);
 						if (var6 > 31) {
@@ -10815,8 +10815,8 @@ public final class mudclient implements Runnable {
 							var7 -= 64;
 						}
 						dir = this.packetsIncoming.getBitMask(4);
-						var9 = 128 + (var6 + this.playerLocalX) * this.tileSize;
-						var10 = (var7 + this.playerLocalZ) * this.tileSize + 128;
+						var9  = (var6 + this.playerLocalX) * this.tileSize + 64;
+						var10 = (var7 + this.playerLocalZ) * this.tileSize + 64;
 						var11 = this.packetsIncoming.getBitMask(10);
 						this.createNpc(dir, var11, var9, var10, var19);
 					}
