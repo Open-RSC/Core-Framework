@@ -56,6 +56,8 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 			if (item.getID() == 14) { // Log
 				handleFiremaking(item, player);
 			}
+			else
+				player.message("Nothing interesting happens");
 		}
 	}
 
