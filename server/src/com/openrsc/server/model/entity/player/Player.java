@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -367,7 +368,7 @@ public final class Player extends Mob {
 	/**
 	 * Received packets from this player yet to be processed.
 	 */
-	private final ArrayList<Packet> incomingPackets = new ArrayList<Packet>();
+	private final LinkedHashMap<Integer, Packet> incomingPackets = new LinkedHashMap<Integer, Packet>();
 	private final Object incomingPacketLock = new Object();
 
 	/**
@@ -1312,7 +1313,8 @@ public final class Player extends Mob {
 	public void addToPacketQueue(Packet e) {
 		ping();
 		synchronized (incomingPacketLock) {
-			incomingPackets.add(e);
+			if (!incomingPackets.containsKey(e.getID()))
+				incomingPackets.put(e.getID(), e);
 		}
 	}
 
@@ -1362,11 +1364,11 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (incomingPacketLock) {
-			for (Packet p : incomingPackets) {
-				PacketHandler ph = PacketHandlerLookup.get(p.getID());
-				if (ph != null && p.getBuffer().readableBytes() >= 0) {
+			for (Map.Entry<Integer, Packet> p : incomingPackets.entrySet()) {
+				PacketHandler ph = PacketHandlerLookup.get(p.getValue().getID());
+				if (ph != null && p.getValue().getBuffer().readableBytes() >= 0) {
 					try {
-						ph.handlePacket(p, this);
+						ph.handlePacket(p.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
