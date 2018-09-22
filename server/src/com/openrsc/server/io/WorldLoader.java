@@ -152,7 +152,6 @@ public class WorldLoader {
 			}
 		}
 		LOGGER.info(((System.currentTimeMillis() - start) / 1000) + "s to load landscape with " + sectors + " regions.");
-		System.gc();
 	}
 	
 	public static final int[] ALLOWED_WALL_ID_TYPES = { 5, 6, 14, 42, 128, 229, 230 };
