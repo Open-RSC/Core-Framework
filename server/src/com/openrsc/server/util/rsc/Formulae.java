@@ -809,7 +809,7 @@ public final class Formulae {
 	 * Should the fire light or fail?
 	 */
 	public static boolean lightLogs(int firemakingLvl) {
-		int chance = (int)(29 * ( Math.pow(firemakingLvl, (2 / 9))) + 20);
+		int chance = (int)(35 * Math.pow(firemakingLvl, (1 / 4)));
 		return chance > DataConversions.random(0, 100);
 	}
 
@@ -971,6 +971,21 @@ public final class Formulae {
 			total += weights[i];
 		}
 		return defaultReturn;
+	}
+
+	public static int calculateGoldDrop(int[] goldValues) {
+		int[] weights = new int[] {100};
+		if (goldValues.length == 2) weights = new int[] {67, 33};
+    else if (goldValues.length == 3) weights = new int[] {45, 33, 22};
+		else if (goldValues.length == 4) weights = new int[] {33, 27, 22, 18};
+		else if (goldValues.length == 5) weights = new int[] {33, 26, 19, 13, 9};
+		else if (goldValues.length == 6) weights = new int[] {30, 24, 19, 14, 8, 5};
+		else if (goldValues.length == 7) weights = new int[] {28, 24, 18, 13, 9, 6, 2};
+		else if (goldValues.length == 8) weights = new int[] {27, 23, 18, 13, 9, 7, 2, 1};
+		else if (goldValues.length == 9) weights = new int[] {27, 23, 17, 12, 8, 6, 4, 2, 1};
+		
+
+		return weightedRandomChoice(goldValues, weights, goldValues[0]);
 	}
 
 	public static int calculateRareDrop() {
