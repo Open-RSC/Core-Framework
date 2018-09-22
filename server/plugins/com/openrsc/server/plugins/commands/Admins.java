@@ -88,7 +88,8 @@ public final class Admins implements CommandListener {
 		if (command.equals("events")) {
 			player.message("Total amount of events running: " + Server.getServer().getGameEventHandler().getEvents().size());
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
-			for (GameTickEvent e : Server.getServer().getGameEventHandler().getEvents()) {
+			for (Iterator<Entry<String, GameTickEvent>> event = Server.getServer().getGameEventHandler().getEvents().entrySet().iterator(); event.hasNext();) {
+				GameTickEvent e = event.next().getValue();
 				String eventName = e.getClass().getName();
 				if (e.getOwner() != null && e.getOwner().isUnregistering()) {
 					if (!events.containsKey(eventName)) {

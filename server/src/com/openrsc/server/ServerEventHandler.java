@@ -1,8 +1,9 @@
 package com.openrsc.server;
 
 import java.util.Iterator;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,30 +18,35 @@ public final class ServerEventHandler {
      */
     private static final Logger LOGGER = LogManager.getLogger();
 
-	private Queue<DelayedEvent> events = new ConcurrentLinkedQueue<DelayedEvent>();
-	private Queue<DelayedEvent> toAdd = new ConcurrentLinkedQueue<DelayedEvent>();
+	private LinkedHashMap<String, DelayedEvent> events = new LinkedHashMap<String, DelayedEvent>();
+	private LinkedHashMap<String, DelayedEvent> toAdd = new LinkedHashMap<String, DelayedEvent>();
 
 	public void add(DelayedEvent event) {
-		if (!events.contains(event)) {
-			toAdd.add(event);
+		if (event.getOwner() == null) {
+			String u;
+			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {}
+			toAdd.put(u, event);
 		}
+		else
+			toAdd.put(String.valueOf(event.getOwner().getID()), event);
 	}
 
 	public boolean contains(DelayedEvent event) {
-		return events.contains(event);
+		if (event.getOwner() != null)
+			return events.containsKey(event.getOwner().getID());
+		return false;
 	}
 
 	public void doEvents() {
 		if (toAdd.size() > 0) {
-			events.addAll(toAdd);
+			for (Map.Entry<String, DelayedEvent> e : toAdd.entrySet())
+				events.put(e.getKey(), e.getValue());
 			toAdd.clear();
 		}
-
-		Iterator<DelayedEvent> iterator = events.iterator();
-		while (iterator.hasNext()) {
-			DelayedEvent event = iterator.next();
+		for (Iterator<Map.Entry<String, DelayedEvent>> it = events.entrySet().iterator(); it.hasNext();) {
+			DelayedEvent event = it.next().getValue();
 			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
-				iterator.remove();
+				it.remove();
 				continue;
 			}
 			try {
@@ -53,12 +59,12 @@ public final class ServerEventHandler {
 				event.stop();
 			}
 			if (event.shouldRemove()) {
-				iterator.remove();
+				it.remove();
 			}
 		}
 	}
 
-	public Queue<DelayedEvent> getEvents() {
+	public LinkedHashMap<String, DelayedEvent> getEvents() {
 		return events;
 	}
 
@@ -68,9 +74,9 @@ public final class ServerEventHandler {
 
 	public void removePlayersEvents(Player player) {
 		try {
-			Iterator<DelayedEvent> iterator = events.iterator();
+			Iterator<Map.Entry<String, DelayedEvent>> iterator = events.entrySet().iterator();
 			while (iterator.hasNext()) {
-				DelayedEvent event = iterator.next();
+				DelayedEvent event = iterator.next().getValue();
 				if (event.belongsTo(player)) {
 					iterator.remove();
 				}
