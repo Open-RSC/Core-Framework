@@ -1,25 +1,23 @@
 package com.openrsc.server.plugins.npcs.karamja;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.movePlayer;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.model.entity.GameObject;
 
 public final class BoatFromKaramja implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+		TalkToNpcListener, ObjectActionListener, ObjectActionExecutiveListener  {
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 		int option = showMenu(p, n, "Can I board this ship?",
-				"Does Karamja have any unusal customs then?");
+				"Does Karamja have any unusual customs then?");
 		if (option == 0) {
 			npcTalk(p, n, "You need to be searched before you can board");
 			int sub_opt = showMenu(p, n, "Why?",
@@ -55,9 +53,30 @@ public final class BoatFromKaramja implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "I'm not that sort of customs officer");
 		}
 	}
-
+	@Override
+	public void onObjectAction(GameObject obj, String command, Player p) {
+		if(obj.getID() == 161 || (obj.getID() == 163))  {
+			if(command.equals("board")) {
+				if(p.getY() != 713 ) {
+					return;
+			}
+			Npc officer = getNearestNpc(p, 163, 3);
+				if(officer != null) {		
+					officer.initializeTalkScript(p);
+					} else {
+						p.message("I need to speak to the customs officer before boarding the ship.");
+				}
+			}
+		}
+	}
+	
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == 163;
+	}
+	@Override
+	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
+		return (arg0.getID() == 161 && arg0.getLocation().equals(Point.location(326, 710)))
+				|| (arg0.getID() == 163 && arg0.getLocation().equals(Point.location(319, 710)));
 	}
 }
