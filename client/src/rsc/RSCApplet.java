@@ -27,6 +27,7 @@ import java.awt.image.MemoryImageSource;
 import java.io.ByteArrayInputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import com.openrsc.client.data.DataOperations;
 import com.openrsc.client.model.Sprite;
@@ -355,7 +356,7 @@ public class RSCApplet extends Applet implements MouseListener, MouseMotionListe
 			
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
-			if (var1.isMetaDown()) {
+			if (SwingUtilities.isRightMouseButton(var1)) {
 				mudclient.currentMouseButtonDown = 2;
 			} else {
 				mudclient.currentMouseButtonDown = 1;
@@ -408,7 +409,7 @@ public class RSCApplet extends Applet implements MouseListener, MouseMotionListe
 			
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
-			if (!var1.isMetaDown()) {
+			if (!SwingUtilities.isRightMouseButton(var1)) {
 				mudclient.currentMouseButtonDown = 1;
 			} else {
 				mudclient.currentMouseButtonDown = 2;
