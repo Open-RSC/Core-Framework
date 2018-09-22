@@ -678,7 +678,7 @@ public final class mudclient implements Runnable {
 		private final RSModel[] modelCache = new RSModel[1000];
 		public int mouseButtonClick = 0;
 		private int mouseButtonDownTime = 0;
-		private int mouseButtonItemCountIncrement = 0;
+		public int mouseButtonItemCountIncrement = 0;
 		public int mouseClickCount = 0;
 		public final int[] mouseClickX = new int[8192];
 		public int mouseClickXStep = 0;
@@ -8932,31 +8932,27 @@ public final class mudclient implements Runnable {
 							this.mouseButtonDownTime = 0;
 							this.mouseButtonItemCountIncrement = 0;
 						} else {
-							if (-1 == ~this.currentMouseButtonDown) {
+							if (this.currentMouseButtonDown == 0) {
 								this.mouseButtonDownTime = 0;
+								this.mouseButtonItemCountIncrement = 0;
 							} else {
 								++this.mouseButtonDownTime;
 							}
 							if (!Config.isAndroid()) {
-								if (this.mouseButtonDownTime <= 600) {
-									if (this.mouseButtonDownTime > 450) {
-										this.mouseButtonItemCountIncrement += 500;
-									} else if (this.mouseButtonDownTime > 300) {
-										this.mouseButtonItemCountIncrement += 50;
-									} else if (this.mouseButtonDownTime <= 150) {
-										if (this.mouseButtonDownTime <= 50) {
-											if (this.mouseButtonDownTime > 20 && (this.mouseButtonDownTime & 5) == 0) {
-												++this.mouseButtonItemCountIncrement;
-											}
-										} else {
-											++this.mouseButtonItemCountIncrement;
-										}
-									} else {
-										this.mouseButtonItemCountIncrement += 5;
-									}
-								} else {
-									this.mouseButtonItemCountIncrement += 5000;
-								}
+								if (this.mouseButtonDownTime > 500)
+									this.mouseButtonItemCountIncrement += 100000;
+								else if (this.mouseButtonDownTime > 350)
+									this.mouseButtonItemCountIncrement += 10000;
+								else if (this.mouseButtonDownTime > 250)
+									this.mouseButtonItemCountIncrement += 1000;
+								else if (this.mouseButtonDownTime > 150)
+									this.mouseButtonItemCountIncrement += 100;
+								else if (this.mouseButtonDownTime > 100)
+									this.mouseButtonItemCountIncrement += 10;
+								else if (this.mouseButtonDownTime > 50)
+									this.mouseButtonItemCountIncrement++;
+								else if (this.mouseButtonDownTime > 20 && (this.mouseButtonDownTime & 5) == 0)
+									++this.mouseButtonItemCountIncrement;
 							}
 						}
 
@@ -8966,7 +8962,7 @@ public final class mudclient implements Runnable {
 							this.mouseButtonClick = 2;
 						}
 						if (mainComponent.checkMouseInput(getMouseX(), getMouseY(), getMouseButtonDown(),
-								getMouseClick())) {
+								getMouseClick()) && !this.isShowDialogBank()) {
 							this.currentMouseButtonDown = 0;
 							this.mouseButtonClick = 0;
 							this.lastMouseButtonDown = 0;
