@@ -88,6 +88,7 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
 			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST)); 
 			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled")); 
+			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));
 		}
 		if(server == null) {
 			server = new Server();
