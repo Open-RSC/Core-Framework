@@ -179,7 +179,6 @@ public final class Admins implements CommandListener {
 										i.remove();
 								}
 						}
-					System.gc();
 				}
 			});
 			player.message("Done");
