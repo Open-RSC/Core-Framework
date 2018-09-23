@@ -406,7 +406,6 @@ public final class PluginHandler {
 		knownInterfaces = new ArrayList<Class<?>>();
 		queue = new ConcurrentHashMap<String, Class<?>>();
 		defaultHandler = null;
-		System.gc();
 	}
 
 	public void reload() throws Exception {
