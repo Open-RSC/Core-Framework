@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -1439,7 +1440,7 @@ public class Functions {
 			if (Thread.currentThread().getName().toLowerCase().contains("gameengine"))
 				return;
 
-			Thread.sleep(650);
+			Thread.sleep(Constants.GameServer.GAME_TICK);
 		} catch (final InterruptedException e) {
 		}
 	}
