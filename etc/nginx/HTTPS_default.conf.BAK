@@ -62,7 +62,7 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
-        try_files $uri $uri/ /board/app.php$is_args$args;
+        try_files $uri $uri/ /elite/index.php$is_args$args /board/app.php$is_args$args;
     }
 
     # Ghost proxy
@@ -93,12 +93,20 @@ server {
         rewrite ^(.*)$ /board/app.php/$1 last;
     }
 
+    location /elite/ {
+        try_files $uri $uri/ @rewriteapp2;
+    }
+
+    location @rewriteapp2 {
+        rewrite ^(.*)$ index.php/$1 last;
+    }
+
 	 	location /board/install/ {
 	 	    try_files $uri $uri/ @rewrite_installapp;
     }
 
 	 	location @rewrite_installapp {
-	 	    rewrite ^(.*)$ /install/app.php/$1 last;
+	 	    rewrite ^(.*)$ /board/install/app.php/$1 last;
 	 	}
 
     location ~ \.php(/|$) {
@@ -107,7 +115,7 @@ server {
 	 	    fastcgi_param PATH_INFO $fastcgi_path_info;
 	 	    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
 	 	    fastcgi_param DOCUMENT_ROOT $realpath_root;
-	 	    try_files $uri $uri/ /board/install/app.php$is_args$args;
+	 	    try_files $uri $uri/ /elite/index.php$is_args$args /board/install/app.php$is_args$args;
 	 	    fastcgi_pass php;
 	 	}
 
