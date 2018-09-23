@@ -48,8 +48,6 @@ public final class Server implements Runnable {
 
 	private static PlayerDatabaseExecutor playerDataProcessor;
 
-	private long currentTick = 0;
-
 	private long lastClientUpdate;
 	
 	private static Server server = null;
@@ -169,17 +167,11 @@ public final class Server implements Runnable {
 			LOGGER.catching(e);
 			System.exit(1);
 		}
-
-		lastClientUpdate = System.currentTimeMillis();
 	}
 	private ChannelFuture serverChannel;
 
 	public boolean isRunning() {
 		return running;
-	}
-
-	public long getCurrentTick() {
-		return currentTick;
 	}
 
 	public void kill() {
@@ -245,29 +237,11 @@ public final class Server implements Runnable {
 			p.processIncomingPackets();
 		}
 		getEventHandler().doEvents();
-
 		try {
-			long timeElapsed = System.currentTimeMillis() - lastClientUpdate;
-			if (timeElapsed >= Constants.GameServer.GAME_TICK) {
-				long timeLate = timeElapsed - Constants.GameServer.GAME_TICK;
-				if (timeLate > 0) {
-					LOGGER.warn("Tick executing " + timeElapsed + "ms late");
-				}
-
-				// Reset timer in the future, we have fallen behind too far
-				if (timeLate >= Constants.GameServer.GAME_TICK) {
-					lastClientUpdate += (timeLate / Constants.GameServer.GAME_TICK) * Constants.GameServer.GAME_TICK;
-				}
-
-				// Make sure next tick update actually runs at tick rate
-				lastClientUpdate += Constants.GameServer.GAME_TICK;
-
-				// Process events and updating
+			if (System.currentTimeMillis() - lastClientUpdate >= Constants.GameServer.GAME_TICK) {
+				lastClientUpdate = System.currentTimeMillis();
 				tickEventHandler.doGameEvents();
 				gameUpdater.doUpdates();
-
-				// Increment tick counter
-				currentTick++;
 			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
