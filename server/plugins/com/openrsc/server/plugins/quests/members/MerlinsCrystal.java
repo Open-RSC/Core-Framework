@@ -86,7 +86,7 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 			if (arhein != null) {
 				npcTalk(p, arhein, "Oi get away from there!");
 			} else {
-				p.teleport(450, 521, false);// TODO RIGHT COORDS.
+				p.teleport(456, 3352, false);
 				message(p, "You hide away in the ship",
 						"The ship starts to move.", "You are out at sea",
 						"The ship comes to a stop");
