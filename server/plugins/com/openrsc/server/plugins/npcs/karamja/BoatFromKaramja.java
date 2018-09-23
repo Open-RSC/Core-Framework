@@ -55,13 +55,13 @@ public final class BoatFromKaramja implements TalkToNpcExecutiveListener,
 	}
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == 161 || (obj.getID() == 163))  {
+		if(obj.getID() == 161 || (obj.getID() == 162) || (obj.getID() == 163))  {
 			if(command.equals("board")) {
 				if(p.getY() != 713 ) {
 					return;
 			}
-			Npc officer = getNearestNpc(p, 163, 3);
-				if(officer != null) {		
+			Npc officer = getNearestNpc(p, 163, 4);
+				if(officer != null) {
 					officer.initializeTalkScript(p);
 					} else {
 						p.message("I need to speak to the customs officer before boarding the ship.");
@@ -77,6 +77,7 @@ public final class BoatFromKaramja implements TalkToNpcExecutiveListener,
 	@Override
 	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
 		return (arg0.getID() == 161 && arg0.getLocation().equals(Point.location(326, 710)))
-				|| (arg0.getID() == 163 && arg0.getLocation().equals(Point.location(319, 710)));
+				|| (arg0.getID() == 163 && arg0.getLocation().equals(Point.location(319, 710)))
+				|| (arg0.getID() == 162 && arg0.getLocation().equals(Point.location(324, 710)));
 	}
 }
