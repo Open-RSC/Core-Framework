@@ -199,7 +199,7 @@ public final class GameStateUpdater {
 	private static void updateTimeouts(Player player) {
 		long curTime = System.currentTimeMillis();
 		int timeoutLimit = 300000; // 5 minute idle log out
-                int autoSave = 5000; // 5 second autosave
+                int autoSave = 30000; // 30 second autosave
                 
                 if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;

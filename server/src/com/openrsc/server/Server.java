@@ -167,6 +167,8 @@ public final class Server implements Runnable {
 			LOGGER.catching(e);
 			System.exit(1);
 		}
+
+		lastClientUpdate = System.currentTimeMillis();
 	}
 	private ChannelFuture serverChannel;
 
@@ -238,10 +240,18 @@ public final class Server implements Runnable {
 		}
 		getEventHandler().doEvents();
 		try {
-			if (System.currentTimeMillis() - lastClientUpdate >= Constants.GameServer.GAME_TICK) {
-				lastClientUpdate = System.currentTimeMillis();
+			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
+			if (timeLate >= 0) {
+				lastClientUpdate += Constants.GameServer.GAME_TICK;
 				tickEventHandler.doGameEvents();
 				gameUpdater.doUpdates();
+
+				// Server fell behind, skip ticks
+				if (timeLate >= Constants.GameServer.GAME_TICK) {
+					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
+					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
+					LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
