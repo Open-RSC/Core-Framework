@@ -166,6 +166,7 @@ public final class Constants {
 		public static boolean WANT_DROP_X = false;
 		public static boolean WANT_EXP_INFO = false;
 		public static boolean WANT_WOODCUTTING_GUILD = false;
+		public static boolean WANT_DECANTING = false;
 
 		/**
 		 * 
@@ -234,6 +235,7 @@ public final class Constants {
 			WANT_DROP_X = Boolean.parseBoolean(props.getProperty("want_drop_x"));
 			WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
 			WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
+			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 
 			START_TIME = System.currentTimeMillis();
 
