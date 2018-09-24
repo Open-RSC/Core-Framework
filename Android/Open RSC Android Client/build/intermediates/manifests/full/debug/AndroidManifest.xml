@@ -43,6 +43,7 @@
         android:label="OpenRSC"
         android:largeHeap="true"
         android:noHistory="true"
+        android:testOnly="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
             android:name="com.openrsc.android.updater.ApplicationUpdater"

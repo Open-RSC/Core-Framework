@@ -19,8 +19,8 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.openrsc.client.data.DataFileDecrypter;
-import com.openrsc.client.data.DataOperations;
+import com.openrsc.data.DataFileDecrypter;
+import com.openrsc.data.DataOperations;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.defs.NPCDef;

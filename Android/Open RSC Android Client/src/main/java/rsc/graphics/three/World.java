@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.openrsc.client.data.DataConversions;
+import com.openrsc.data.DataConversions;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sector;
 
