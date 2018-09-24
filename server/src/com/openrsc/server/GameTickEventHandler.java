@@ -24,10 +24,10 @@ public class GameTickEventHandler {
 		if (event.getOwner() == null) {
 			String u;
 			while (events.containsKey(u = UUID.randomUUID().toString())) {}
-			events.put(u, event);
+			toAdd.put(u, event);
 		}
 		else
-			events.put(String.valueOf(event.getOwner().getID()), event);
+			toAdd.put(String.valueOf(event.getOwner().getID()), event);
 	}
 
 	public boolean contains(GameTickEvent event) {
