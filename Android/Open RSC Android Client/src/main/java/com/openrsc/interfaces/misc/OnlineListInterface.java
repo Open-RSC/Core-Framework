@@ -5,8 +5,8 @@ import com.openrsc.interfaces.MenuAction;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NRightClickMenu;
 
-import rsc.graphics.gui.Panel;
 import rsc.mudclient;
+import rsc.graphics.gui.Panel;
 
 public class OnlineListInterface extends NComponent {
 
