@@ -186,3 +186,7 @@ Docker\.dmg
 \.installedalready
 
 \.methodinstall
+Android/Open RSC Android Client/build/intermediates
+Android/Open RSC Android Client/build/outputs/apk/debug/
+
+*.dex
