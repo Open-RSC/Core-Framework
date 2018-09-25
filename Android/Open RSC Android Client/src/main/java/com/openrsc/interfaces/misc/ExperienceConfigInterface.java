@@ -1,9 +1,9 @@
 package com.openrsc.interfaces.misc;
 
 import rsc.Config;
-import rsc.mudclient;
 import rsc.graphics.gui.Panel;
 import rsc.graphics.two.GraphicsController;
+import rsc.mudclient;
 
 
 public final class ExperienceConfigInterface {
