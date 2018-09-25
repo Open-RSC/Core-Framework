@@ -124,6 +124,7 @@ UPDATE `openrsc_players` SET openrsc_players.id = openrsc_players.owner;
 ALTER TABLE `openrsc_players` CHANGE `id` `id` INT(10) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `openrsc_players` DROP `user`;
 UPDATE `openrsc_players` SET cameraauto = 0;
+UPDATE `openrsc_players` SET username = REPLACE(username,'_',' ');
 
 - Export to CSV, import in new table
 

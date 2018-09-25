@@ -65,15 +65,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message("Added bank items.");
 		}
-		if (command.equals("uniqueonline")) {
-			ArrayList<String> IP_ADDRESSES = new ArrayList<String>();
-			for (Player p : World.getWorld().getPlayers()) {
-				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
-					IP_ADDRESSES.add(p.getCurrentIP());
-			}
-			player.message("There are " + IP_ADDRESSES.size() + " unique players online");
-		}
-                /*if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
+		/*if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
 			StringBuilder sb = new StringBuilder();
                         synchronized (World.getWorld().getPlayers()) {
                                 EntityList<Player> players = World.getWorld().getPlayers();
