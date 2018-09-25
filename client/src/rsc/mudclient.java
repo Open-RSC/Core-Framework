@@ -3685,12 +3685,12 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawBox(this.getGameWidth() / 2 - 100, 160 - (Config.isAndroid() ? 80 : 0), 200, 40, 0);
 						if(Config.isAndroid()) {
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-									"You are sleeping - Fatigue: " + this.fatigueSleeping * 100 / 750 + "%", 0xFFFF00, var1 - 13, 7, 31);
+									"You are sleeping - Fatigue: " + this.fatigueSleeping + "%", 0xFFFF00, var1 - 13, 7, 31);
 						} else {
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "You are sleeping", 0xFFFF00,
 									var1 - 13, 7, 50);
 							this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
-									"Fatigue: " + this.fatigueSleeping * 100 / 750 + "%", 0xFFFF00, var1 - 13, 7, 90);
+									"Fatigue: " + this.fatigueSleeping + "%", 0xFFFF00, var1 - 13, 7, 90);
 						}
 						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
 								"When you want to wake up just use your", 0xFFFFFF, 0, 5, 140 - (Config.isAndroid() ? 80 : 0));
@@ -4105,7 +4105,7 @@ public final class mudclient implements Runnable {
 									"Prayer: " + this.playerStatCurrent[5] + "@gre@/@whi@" + this.playerStatBase[5], 7, i, 0xffffff, 1);
 							i += 14;
 							this.getSurface().drawString(
-									"Fatigue: " + (double) (this.statFatigue * 1000 / 750) / 10.0 + "%", 7, i, 0xffffff, 1);
+									"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
 						}
 
 						if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
@@ -8033,7 +8033,7 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
 					heightMargin += 12;
-					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue * 100 / 750 + "%", 5 + x, heightMargin - 13,
+					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", 5 + x, heightMargin - 13,
 							0xFFFFFF, 1);
 					heightMargin += 8;
 					this.getSurface().drawString("Equipment Status", 5 + x, heightMargin, 0xFFFF00, 3);

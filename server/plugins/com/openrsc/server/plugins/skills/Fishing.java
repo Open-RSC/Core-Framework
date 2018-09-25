@@ -42,7 +42,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (def == null) { // This shouldn't happen
 			return;
 		}
-		if (owner.getFatigue() >= 7500) {
+		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.playerServerMessage(MessageType.QUEST, "@gre@You are too tired to catch this fish");
 			return;
 		}
@@ -90,7 +90,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						return;
 					}
 				}
-				if (owner.getFatigue() >= 7500) {
+				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 					owner.playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
 					interrupt();
 					return;
