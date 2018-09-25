@@ -285,7 +285,7 @@ public final class Player extends Mob {
 	 */
 	private int drainRate = 0;
 	/**
-	 * Amount of fatigue - 0 to 18750
+	 * Amount of fatigue - 0 to 75000
 	 */
 	private int fatigue = 0, sleepStateFatigue = 0;
 
