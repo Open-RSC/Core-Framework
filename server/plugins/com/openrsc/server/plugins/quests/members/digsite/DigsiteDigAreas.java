@@ -136,7 +136,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 			}
 
 			if(p.getQuestStage(Constants.Quests.DIGSITE) >= 4 && getLevel2Digsite(p)) {
-				if(p.getFatigue() >= 6975) {
+				if(p.getFatigue() >= 69750) {
 					p.message("You are too tired to do any more digging");
 					return;
 				}
@@ -197,7 +197,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if(p.getFatigue() >= 6975) {
+				if(p.getFatigue() >= 69750) {
 					p.message("You are too tired to do any more digging");
 					return;
 				}

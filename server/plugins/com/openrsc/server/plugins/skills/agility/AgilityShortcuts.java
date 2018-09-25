@@ -243,7 +243,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to swing on the rope");
 				p.setBusy(false);
 				return;
@@ -266,7 +266,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to swing on the rope");
 				p.setBusy(false);
 				return;
@@ -290,7 +290,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to balance on the ledge");
 				p.setBusy(false);
 				return;
@@ -314,7 +314,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to balance on the ledge");
 				p.setBusy(false);
 				return;
@@ -348,7 +348,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to climb up the rubble");
 				p.setBusy(false);
 				return;
@@ -364,7 +364,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to squeeze through the pipe");
 				p.setBusy(false);
 				return;
@@ -380,7 +380,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 6975) {
+			if(p.getFatigue() >= 69750) {
 				p.message("You are too tired to squeeze through the pipe");
 				p.setBusy(false);
 				return;
@@ -446,7 +446,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if(p.getFatigue() >= 7500) {
+			if(p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too fatigued to continue.");
 				p.setBusy(false);
 				return;
@@ -485,7 +485,7 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			p.incExp(AGILITY, 10, true);
 			break;
 		case YANILLE_WATCHTOWER_HANDHOLDS:
-			if(p.getFatigue() >= 7500) {
+			if(p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to climb up the wall");
 				p.setBusy(false);
 				return;
