@@ -127,7 +127,7 @@ InvUseOnObjectExecutiveListener {
 						if(!isCompleted()) {
 							showBubble(p, item);
 						}
-						if (p.getFatigue() >= 7500) {
+						if (p.getFatigue() >= p.MAX_FATIGUE) {
 							p.message("You are too tired to smelt cannon ball");
 							interrupt();
 							return;
@@ -166,7 +166,7 @@ InvUseOnObjectExecutiveListener {
 		if (!p.withinRange(obj, 2)) {
 			return;
 		}
-		if (p.getFatigue() >= 7500) {
+		if (p.getFatigue() >= p.MAX_FATIGUE) {
 			p.message("You are too tired to smelt this ore");
 			return;
 		}
@@ -193,7 +193,7 @@ InvUseOnObjectExecutiveListener {
 		p.message(smeltString(smelt, item));
 		p.setBatchEvent(new BatchEvent(p, 1600, Formulae.getRepeatTimes(p, SMITHING)) {
 			public void action() {
-				if (p.getFatigue() >= 7500) {
+				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to smelt this ore");
 					interrupt();
 					return;

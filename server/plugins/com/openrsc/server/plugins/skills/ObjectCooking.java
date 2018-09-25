@@ -101,7 +101,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
-					if (owner.getFatigue() >= 7500) {
+					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to cook this fish");
 						interrupt();
 						return;
