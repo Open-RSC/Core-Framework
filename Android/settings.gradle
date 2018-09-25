@@ -1,1 +1,1 @@
-include ':Open RSC Android Client'
+include ':app'
