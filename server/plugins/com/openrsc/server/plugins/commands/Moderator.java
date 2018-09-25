@@ -137,7 +137,7 @@ public final class Moderator implements CommandListener {
 				player.message("::resetq <playername>, <questid>, <stage>");
 			}
 		} 
-		/*if (command.equals("wildrule")) {
+		if (command.equals("wildrule")) {
 			if (args[0].equals("god")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
@@ -155,7 +155,7 @@ public final class Moderator implements CommandListener {
 			} else {
 				player.message("Unknown rule. Use ::wildrule <god/members> <startLevel> <endLevel>");
 			}
-		}*/
+		}
 		if(command.equals("gmute")) {
 			if (args.length != 2) {
 				player.message("Wrong syntax. ::mute <name> <time in minutes> (-1 for permanent)");

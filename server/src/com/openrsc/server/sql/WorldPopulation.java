@@ -169,8 +169,6 @@ public final class WorldPopulation {
 					&& !Constants.GameServer.SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
 				else if ((npcID == 799 || npcID == 800 || npcID == 801)
 					&& !Constants.GameServer.SPAWN_IRON_MAN_NPCS)	continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
-				else if ((npcID == 796 || npcID == 797)
-					&& !Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS)	continue; // Subscription Vendors
 
 				NPCLoc n = new NPCLoc(npcID,
 						result.getInt("startX"), result.getInt("startY"),
@@ -201,8 +199,7 @@ public final class WorldPopulation {
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "grounditems`");
 			int countGI = 0;
 			while (result.next()) {
-				if ((result.getInt("id") == 2092 || result.getInt("id") == 2094)
-					&& !Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS) continue; // Subscription Coins
+				if ((result.getInt("id") == 2092 || result.getInt("id") == 2094)) continue; // Subscription Coins
 				ItemLoc i = new ItemLoc(result.getInt("id"),
 						result.getInt("x"), result.getInt("y"),
 						result.getInt("amount"), result.getInt("respawn"));

@@ -478,7 +478,6 @@ public class ActionSender {
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
 		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
-		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
 		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
 		s.writeByte((byte)(Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
@@ -563,8 +562,6 @@ public class ActionSender {
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
 		s.writeString(player.getLastIP());
 		s.writeShort(player.getDaysSinceLastLogin());
-		//s.writeShort(player.getDaysSubscriptionLeft());
-		//s.writeShort(player.premiumSubDaysLeft());
 		//s.writeShort(player.getUnreadMessages());
 		player.write(s.toPacket());
 	}
