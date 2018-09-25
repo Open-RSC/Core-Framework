@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 import rsc.Config;
-import rsc.mudclient;
 import rsc.enumerations.InputXAction;
 import rsc.enumerations.MenuItemAction;
 import rsc.graphics.gui.InputXPrompt;
@@ -15,6 +14,7 @@ import rsc.graphics.gui.Menu;
 import rsc.graphics.gui.Panel;
 import rsc.graphics.gui.SocialLists;
 import rsc.graphics.two.GraphicsController;
+import rsc.mudclient;
 
 public final class ClanInterface {
 	private mudclient mc;

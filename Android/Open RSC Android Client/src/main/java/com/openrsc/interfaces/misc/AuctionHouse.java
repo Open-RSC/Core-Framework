@@ -1,17 +1,17 @@
 package com.openrsc.interfaces.misc;
 
+import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.entityhandling.defs.ItemDef;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import com.openrsc.client.entityhandling.EntityHandler;
-import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import rsc.mudclient;
 import rsc.enumerations.MessageType;
 import rsc.graphics.gui.Panel;
 import rsc.graphics.two.GraphicsController;
+import rsc.mudclient;
 
 public final class AuctionHouse {
 	private int x, y;
