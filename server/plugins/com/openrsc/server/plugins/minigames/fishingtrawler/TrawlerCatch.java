@@ -26,7 +26,9 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 		1167, // broken staff
 		1168, // vase
 		1169, // ceramic remains
-		1170 // Broken glass
+		1170, // Broken glass
+		1245, // Edible seaweed
+		793   // oyster
 	};
 
 	@Override
@@ -81,7 +83,7 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 						p.incExp(Skills.FISHING, 40, false);
 					} else {
 						int randomJunkItem = JUNK_ITEMS[DataConversions.random(0, JUNK_ITEMS.length - 1)];
-						if (randomJunkItem == 1245) {
+						if (randomJunkItem == 1245) { // Edible seaweed
 							message(p, 1200, "..some seaweed");
 							addItem(p, 1245, 1);
 							p.incExp(Skills.FISHING, 20, false);
