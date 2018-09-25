@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Sep 09, 2018 at 12:10 PM
--- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic
+-- Generation Time: Sep 25, 2018 at 01:20 AM
+-- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic-log
 -- PHP Version: 7.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_chat_logs` (
   PRIMARY KEY (`id`),
   KEY `time` (`time`),
   KEY `sender` (`sender`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4573,7 +4573,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdrops` (
   `db_index` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`db_index`),
   UNIQUE KEY `db_index` (`db_index`)
-) ENGINE=MyISAM AUTO_INCREMENT=13928 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=16063 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `openrsc_npcdrops`
@@ -6341,8 +6341,7 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (291, '20', 520, 350, 12316),
 (291, '20', 518, 350, 12317),
 (291, '1', 174, 1475, 12318),
-(291, '1', 10, 1900, 12319);
-INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`) VALUES
+(291, '1', 10, 1900, 12319),
 (291, '1', 160, 50, 12328),
 (291, '2', 42, 1000, 12329),
 (291, '10', 619, 1000, 12330),
@@ -6634,7 +6633,8 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (344, '3', 38, 500, 13596),
 (344, '30', 38, 500, 13597),
 (344, '1', 223, 1550, 13598),
-(344, '1', 373, 1550, 13602),
+(344, '1', 373, 1550, 13602);
+INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`) VALUES
 (344, '1', 171, 1550, 13603),
 (344, '1', 88, 1500, 13604),
 (344, '1', 81, 80, 13605),
@@ -7993,10 +7993,10 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (21, 279, 277, 281, 663, 662, 664, 1592),
 (192, 283, 282, 284, 663, 662, 664, 1593),
 (137, 282, 282, 284, 661, 658, 661, 1594),
-(64, 282, 282, 284, 655, 655, 657, 1595);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(64, 282, 282, 284, 655, 655, 657, 1595),
 (714, 161, 158, 166, 513, 511, 519, 1596),
-(783, 166, 158, 166, 513, 511, 519, 1597),
+(783, 166, 158, 166, 513, 511, 519, 1597);
+INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
 (31, 168, 165, 174, 500, 494, 502, 1598),
 (133, 178, 176, 181, 484, 480, 487, 1599),
 (33, 143, 141, 145, 519, 518, 521, 1600),
@@ -9203,10 +9203,10 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (489, 209, 204, 214, 748, 743, 753, 3253),
 (493, 206, 201, 211, 758, 753, 763, 3254),
 (493, 210, 205, 215, 760, 755, 765, 3255),
-(493, 211, 206, 216, 756, 751, 761, 3256);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(493, 211, 206, 216, 756, 751, 761, 3256),
 (494, 218, 213, 223, 758, 753, 763, 3257),
-(494, 220, 215, 225, 758, 753, 763, 3258),
+(494, 220, 215, 225, 758, 753, 763, 3258);
+INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
 (494, 221, 216, 226, 761, 756, 766, 3259),
 (3, 219, 214, 224, 755, 750, 760, 3260),
 (3, 218, 213, 223, 755, 750, 760, 3261),
@@ -10269,17 +10269,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (497, 227, 225, 229, 754, 752, 756, 6654),
 (497, 229, 227, 231, 750, 748, 752, 6655),
 (497, 230, 228, 232, 757, 755, 759, 6656),
-(47, 263, 259, 267, 359, 355, 363, 6657),
-(47, 264, 261, 267, 360, 357, 363, 6658),
-(47, 256, 252, 260, 358, 354, 362, 6659),
-(47, 249, 245, 253, 360, 356, 364, 6660),
-(47, 249, 245, 253, 360, 356, 364, 6661),
-(47, 250, 246, 254, 353, 349, 357, 6662),
-(47, 249, 245, 253, 345, 341, 349, 6664),
-(47, 249, 245, 253, 345, 341, 349, 6665),
-(47, 256, 252, 260, 347, 343, 351, 6666),
-(47, 263, 259, 267, 345, 341, 349, 6667),
-(47, 263, 259, 267, 345, 341, 349, 6668),
 (199, 257, 249, 265, 345, 337, 353, 6669),
 (199, 256, 247, 265, 360, 351, 369, 6670),
 (199, 261, 252, 270, 353, 344, 362, 6671),
@@ -10299,13 +10288,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (57, 312, 310, 314, 409, 407, 411, 6686),
 (60, 312, 310, 314, 414, 412, 416, 6687),
 (60, 316, 314, 318, 412, 410, 414, 6688),
-(47, 248, 246, 250, 346, 344, 348, 6689),
-(47, 251, 249, 253, 355, 353, 357, 6690),
-(47, 257, 255, 259, 348, 346, 350, 6691),
-(47, 263, 261, 265, 348, 346, 350, 6692),
-(47, 248, 246, 250, 346, 344, 348, 6693),
-(47, 249, 247, 251, 359, 357, 361, 6694),
-(47, 263, 261, 265, 358, 356, 360, 6695),
 (158, 332, 330, 334, 151, 149, 153, 6697),
 (158, 331, 329, 333, 159, 157, 161, 6698),
 (95, 73, 71, 75, 1643, 1641, 1645, 6699),
@@ -10409,8 +10391,7 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (777, 466, 465, 467, 878, 877, 879, 6840),
 (777, 466, 465, 467, 876, 875, 877, 6841),
 (775, 467, 466, 468, 877, 876, 878, 6842),
-(775, 466, 465, 467, 877, 876, 878, 6843);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(775, 466, 465, 467, 877, 876, 878, 6843),
 (777, 470, 469, 471, 870, 869, 871, 6846),
 (87, 127, 126, 128, 516, 515, 517, 6847),
 (766, 454, 453, 455, 3708, 3707, 3709, 6849),
@@ -10436,7 +10417,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_objects` (
   `d_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`d_id`),
   UNIQUE KEY `d_id` (`d_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28432 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=28434 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `openrsc_objects`
