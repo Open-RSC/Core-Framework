@@ -183,7 +183,7 @@ ObjectActionExecutiveListener {
 					"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
-		if (owner.getFatigue() >= 7500) {
+		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.message("You are too tired to mine this rock");
 			return;
 		}

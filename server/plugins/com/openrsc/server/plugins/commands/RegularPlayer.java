@@ -196,7 +196,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 		}
 		if (command.equals("fatigue")) {
-			player.setFatigue(7500);
+			player.setFatigue(player.MAX_FATIGUE);
 			player.message("Your fatigue has been updated to 100%");
 		}
 		if (command.equals("online")) {

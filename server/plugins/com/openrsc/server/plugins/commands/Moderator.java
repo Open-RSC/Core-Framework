@@ -238,7 +238,7 @@ public final class Moderator implements CommandListener {
 			int fatPercentage = Integer.parseInt(args[1]);
 			Player p = world.getPlayer(PlayerHash);
 			if (p != null) {
-				p.setFatigue((fatPercentage * 100) / 750);
+				p.setFatigue(fatPercentage * 750);
 				player.message("You have set " + p.getUsername() + " fatigue to " + fatPercentage + "%.");
 				GameLogging.addQuery(new StaffLog(player, 12, p, "Fatigue percentage was set to " + fatPercentage + "%"));
 			} else {
