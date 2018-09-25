@@ -1288,8 +1288,8 @@ public final class Player extends Mob {
 	}
 
 	public void message(String string) {
-		resetMenuHandler();
-		setOption(-1);
+		// resetMenuHandler();
+		// setOption(-1);
 		ActionSender.sendMessage(this, string);
 	}
 
