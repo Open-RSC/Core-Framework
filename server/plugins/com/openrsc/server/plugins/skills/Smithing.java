@@ -333,7 +333,7 @@ InvUseOnObjectExecutiveListener {
 						interrupt();
 						return;
 					}
-					if (player.getFatigue() >= 7500) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to smith");
 						interrupt();
 						return;

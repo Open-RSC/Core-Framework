@@ -539,7 +539,7 @@ public final class Admins implements CommandListener {
                         "@lre@Player Information: %"
                         + " %"
 			+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
-                        + "@gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " %"
+                        + "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
                         + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
                         + "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
                         + "@gre@IP:@whi@ " + p.getLastIP() + " %"

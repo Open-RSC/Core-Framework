@@ -68,7 +68,7 @@ ObjectActionExecutiveListener {
 			return;
 		}
 
-		if (p.getFatigue() >= 7500) {
+		if (p.getFatigue() >= p.MAX_FATIGUE) {
 			p.message("You are too tired to mine this rock");
 			return;
 		}
