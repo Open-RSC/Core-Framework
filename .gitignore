@@ -192,3 +192,5 @@ Android/Open RSC Android Client/build/outputs/apk/debug/
 *.dex
 
 Android/app/build/outputs/apk/debug/
+
+Android/local\.properties
