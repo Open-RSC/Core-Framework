@@ -74,7 +74,7 @@ public final class Server implements Runnable {
 		LOGGER.info("Launching Open RSC Game Server...");
 		if (args.length == 0) {
 			Constants.GameServer.initConfig("members.conf");
-			LOGGER.info("Server Configuration file not provided. Default: free.conf");
+			LOGGER.info("Server Configuration file not provided. Default: members.conf");
 		} else {
 			Constants.GameServer.initConfig(args[0]);
 			LOGGER.info("Server Configuration file: " + args[0]);
@@ -83,8 +83,6 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
 			LOGGER.info("\t Combat Experience Rate: {}", box(Constants.GameServer.COMBAT_EXP_RATE));
 			LOGGER.info("\t Skilling Experience Rate: {}", box(Constants.GameServer.SKILLING_EXP_RATE));
-			LOGGER.info("\t Standard Subscription Rate: {}", box(Constants.GameServer.SUBSCRIBER_EXP_RATE));
-			LOGGER.info("\t Premium Subscription Rate: {}", box(Constants.GameServer.PREMIUM_EXP_RATE));
 			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
 			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST)); 
 			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled")); 
@@ -158,7 +156,7 @@ public final class Server implements Runnable {
 			{
 				PluginHandler.getPluginHandler().handleAction("Startup", new Object[] {});
 				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
-				LOGGER.info("Open RSC channel is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
+				LOGGER.info("Open RSC world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			} 
