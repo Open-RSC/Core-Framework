@@ -10531,8 +10531,8 @@ public final class mudclient implements Runnable {
 						}
 
 						direction = this.packetsIncoming.getBitMask(4);
-						var7 = (this.playerLocalZ + var11) * this.tileSize + 128;
-						var6 = (this.playerLocalX + var10) * this.tileSize + 128;
+						var7 = (this.playerLocalZ + var11) * this.tileSize + 64;
+						var6 = (this.playerLocalX + var10) * this.tileSize + 64;
 						this.createPlayer(var7, var9, var6, 1, RSCharacterDirection.lookup(direction));
 					}
 
