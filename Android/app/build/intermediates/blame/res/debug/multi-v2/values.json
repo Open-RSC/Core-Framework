@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+            "outputFile": "/Users/breellis/Desktop/Game/Android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
             "map": [
                 {
-                    "source": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/src/main/res/values/dimens.xml",
-                    "from": {
-                        "startLines": "3,4",
-                        "startColumns": "4,4",
-                        "startOffsets": "92,151",
-                        "endColumns": "57,55",
-                        "endOffsets": "145,202"
-                    },
-                    "to": {
-                        "startLines": "158,159",
-                        "startColumns": "4,4",
-                        "startOffsets": "6838,6896",
-                        "endColumns": "57,55",
-                        "endOffsets": "6891,6947"
-                    }
-                },
-                {
-                    "source": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/src/main/res/values/colors.xml",
+                    "source": "/Users/breellis/Desktop/Game/Android/app/src/main/res/values/colors.xml",
                     "from": {
                         "startLines": "62,52,142,115,60,57,31,157,29,153,108,96,70,126,116,80,41,125,25,73,143,155,149,88,95,152,85,106,127,40,99,107,67,104,130,136,147,101,45,148,123,140,89,23,138,46,72,54,35,75,111,151,93,61,42,82,128,19,63,68,27,117,24,94,64,69,50,103,78,37,39,139,109,119,91,20,145,135,51,47,114,124,154,87,102,134,118,146,129,83,141,55,30,32,33,156,49,112,121,38,44,76,65,100,92,74,28,34,81,36,71,90,113,48,86,132,105,53,59,137,26,97,84,110,122,120,22,144,131,79,150,77,43,133,66,58,18,56,21,98,11,17,15,4,7,14,12,10,16,8,9,5,6,13,2,3",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,24 +21,24 @@
                     }
                 },
                 {
-                    "source": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/src/main/res/values/strings.xml",
+                    "source": "/Users/breellis/Desktop/Game/Android/app/src/main/res/values/dimens.xml",
                     "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "19",
-                        "endColumns": "46",
-                        "endOffsets": "61"
+                        "startLines": "3,4",
+                        "startColumns": "4,4",
+                        "startOffsets": "92,151",
+                        "endColumns": "57,55",
+                        "endOffsets": "145,202"
                     },
                     "to": {
-                        "startLines": "160",
-                        "startColumns": "4",
-                        "startOffsets": "6952",
-                        "endColumns": "46",
-                        "endOffsets": "6994"
+                        "startLines": "158,159",
+                        "startColumns": "4,4",
+                        "startOffsets": "6838,6896",
+                        "endColumns": "57,55",
+                        "endOffsets": "6891,6947"
                     }
                 },
                 {
-                    "source": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/src/main/res/values/styles.xml",
+                    "source": "/Users/breellis/Desktop/Game/Android/app/src/main/res/values/styles.xml",
                     "from": {
                         "startLines": "6,15",
                         "startColumns": "4,4",
@@ -71,6 +54,23 @@
                         "endLines": "167,170",
                         "endColumns": "12,12",
                         "endOffsets": "7285,7445"
+                    }
+                },
+                {
+                    "source": "/Users/breellis/Desktop/Game/Android/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "19",
+                        "endColumns": "46",
+                        "endOffsets": "61"
+                    },
+                    "to": {
+                        "startLines": "160",
+                        "startColumns": "4",
+                        "startOffsets": "6952",
+                        "endColumns": "46",
+                        "endOffsets": "6994"
                     }
                 }
             ]

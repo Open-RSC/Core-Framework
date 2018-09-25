@@ -1,4 +1,4 @@
-#Tue Sep 25 11:22:35 EDT 2018
-base.0=/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/build/intermediates/transforms/dexMerger/debug/3
+#Tue Sep 25 11:32:05 EDT 2018
+base.0=/Users/breellis/Desktop/Game/Android/app/build/intermediates/transforms/dexMerger/debug/3
 path.0=classes.dex
 renamed.0=classes.dex

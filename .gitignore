@@ -190,3 +190,5 @@ Android/Open RSC Android Client/build/intermediates
 Android/Open RSC Android Client/build/outputs/apk/debug/
 
 *.dex
+
+Android/app/build/outputs/apk/debug/
