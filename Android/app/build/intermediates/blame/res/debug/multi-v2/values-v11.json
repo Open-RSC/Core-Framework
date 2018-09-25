@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v11/values-v11.xml",
+            "map": [
+                {
+                    "source": "/Users/breellis/Desktop/Game/Android_Client_NewLogo/app/src/main/res/values-v11/styles.xml",
+                    "from": {
+                        "startLines": "6,15",
+                        "startColumns": "4,4",
+                        "startOffsets": "192,525",
+                        "endLines": "12,17",
+                        "endColumns": "12,12",
+                        "endOffsets": "484,682"
+                    },
+                    "to": {
+                        "startLines": "2,9",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,346",
+                        "endLines": "8,11",
+                        "endColumns": "12,12",
+                        "endOffsets": "341,501"
+                    }
+                }
+            ]
+        }
+    ]
+}
