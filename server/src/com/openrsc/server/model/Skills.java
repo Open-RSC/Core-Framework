@@ -190,6 +190,11 @@ public class Skills {
 		}
 	}
 
+	public void sendUpdateAll() {
+		if (mob.isPlayer())
+			ActionSender.sendStats((Player) mob);
+	}
+
 	public int[] getMaxStats() {
 		int[] maxStats = new int[SKILL_COUNT];
 		for (int skill = 0; skill < maxStats.length; skill++) {
