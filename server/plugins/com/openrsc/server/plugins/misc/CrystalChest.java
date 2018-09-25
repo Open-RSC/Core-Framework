@@ -27,42 +27,35 @@ public class CrystalChest implements InvUseOnObjectListener,
 			player.getInventory().add(new Item(542, 1));
 			Item[] loot = null;
 			int percent = DataConversions.random(0, 100);
-			if (percent <= 100) {
-				loot = new Item[] { new Item(179, 1), new Item(10, 2000) };
-			}
-			if (percent < 80) {
+			if (percent <= 70) {
 				loot = new Item[] { new Item(179, 1), new Item(10, 2000) };
 			}
 			if (percent < 60) {
-				loot = new Item[] { new Item(179, 1), new Item(536, 1),
-						new Item(10, 1000) };
+				loot = new Item[] { new Item(536, 1),	new Item(10, 1000) };
 			}
-			if (percent < 40) {
+			if (percent < 30) {
 				loot = new Item[] { new Item(33, 50), new Item(32, 50),
 						new Item(34, 50), new Item(31, 50), new Item(35, 50),
 						new Item(36, 50), new Item(41, 10), new Item(46, 10),
 						new Item(40, 10), new Item(42, 10), new Item(38, 10) };
 			}
-			if (percent < 18) {
-				loot = new Item[] { new Item(518, 20) };
-			}
-			if (percent < 15) {
+			if (percent < 14) {
 				loot = new Item[] { new Item(162, 2), new Item(161, 2) };
 			}
 			if (percent < 12) {
-				loot = new Item[] { new Item(526, 1), new Item(10, 750) };
+				loot = new Item[] { new Item(517, 30) };
 			}
 			if (percent < 10) {
+				loot = new Item[] { new Item(518, 20) };
+			}
+			if (percent < 9) {
+				loot = new Item[] { new Item(408, 3) };
+			}
+			if (percent < 4) {
 				if (DataConversions.random(0, 1) == 1) {
 					loot = new Item[] { new Item(526, 1), new Item(10, 750) };
 				} else
 					loot = new Item[] { new Item(527, 1), new Item(10, 750) };
-			}
-			if (percent < 5) {
-				loot = new Item[] { new Item(408, 3) };
-			}
-			if (percent < 5) {
-				loot = new Item[] { new Item(517, 30) };
 			}
 			if (percent < 2) {
 				loot = new Item[] { new Item(127, 1) };
