@@ -121,26 +121,39 @@ public class Ladders {
 		else if (obj.getID() == 198 && obj.getX() == 251 && obj.getY() == 468) { // Prayer
 			// Guild
 			// Ladder
-			if (player.getSkills().getMaxStat(5) < 31) {
+			if (player.getSkills().getMaxStat(5) < 31 || !player.getCache().hasKey("prayer_guild")) {
 				player.setBusy(true);
 				Npc abbot = World.getWorld().getNpc(174, 249, 252, 458, 468);
 				if (abbot != null) {
-
-					npcTalk(player, abbot, "Hello only people with high prayer are allowed in here");
-				} else {
+					npcTalk(player, abbot, "Only members of our order can go up there");
+					int op = showMenu(player, abbot, "Well can I join your order?",
+							"Oh Sorry");	
+					if (op == 0) {
+						if (player.getSkills().getMaxStat(5) >= 31) {
+							npcTalk(player, abbot, "Ok I see you are someone suitable for our order",
+									"You may join");
+							player.getCache().set("prayer_guild", 1);
+							player.teleport(251, 1411, false);
+						}
+						else {
+							npcTalk(player, abbot, "No I feel you are not devout enough");
+							Server.getServer().getEventHandler().add(
+								new ShortEvent(player) {
+									public void action() {
+										owner.setBusy(false);
+										owner.message(
+												"You need a prayer level of 31");
+									}
+								}
+							);
+						}
+					}
+					else if (op == 1)
+						return;
+				} else
 					return;
-				}
-				Server.getServer().getEventHandler().add(
-						new ShortEvent(player) {
-							public void action() {
-								owner.setBusy(false);
-								owner.message(
-										"You need a prayer level of 31 to enter");
-							}
-						});
-			} else {
+			} else
 				player.teleport(251, 1411, false);
-			}
 			return;
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
