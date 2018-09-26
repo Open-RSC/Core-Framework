@@ -6716,8 +6716,8 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
 									"Drain rate: " + EntityHandler.getPrayerDef(var10).getDrainRate(), 0, 0, 1, 160 + var4);
 						}
-						this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
-								"Prayer points: " + this.playerStatCurrent[5] + "/" + this.playerStatBase[5], 0, 0, 1, 175 + var4);
+						// this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
+						//		"Prayer points: " + this.playerStatCurrent[5] + "/" + this.playerStatBase[5], 0, 0, 1, 175 + var4);
 					}
 
 					if (var1) {
@@ -8337,8 +8337,8 @@ public final class mudclient implements Runnable {
 			panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
 			panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
 			panelClan.reposition(controlClanPanel, var3, var12 + 72, 196, 128);
-			panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 263); // 251
-			panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 263); // 251 -remove??
+			panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
+			panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
 			//panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
 			if (!authenticSettings)
 				panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
@@ -13722,7 +13722,7 @@ public final class mudclient implements Runnable {
 						this.controlPlayerInfoPanel = this.panelPlayerInfo.addScrollingList(var3, 24 + var12, 196, 263, 500,
 								1, true);
 						this.panelQuestInfo = new Panel(this.getSurface(), 5);
-						this.controlQuestInfoPanel = this.panelQuestInfo.addScrollingList(var3, 24 + var12, 196, 263, 500,
+						this.controlQuestInfoPanel = this.panelQuestInfo.addScrollingList(var3, 24 + var12, 196, 251, 500,
 								1, true);
 						/*this.panelPlayerTaskInfo = new Panel(this.getSurface(), 5);
 						this.controlPlayerTaskInfoPanel = this.panelPlayerTaskInfo.addScrollingList(var3, 24 + var12 + 27, 196, 224, 500,
