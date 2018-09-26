@@ -10299,7 +10299,7 @@ public final class mudclient implements Runnable {
 					int wantExperienceElixirs, wantKeyboardShortcuts;
 					int wantCustomBanks, wantBankPins, customFiremaking;
 					int wantDropX, wantExpInfo, wantWoodcuttingGuild;
-					int wantDecanting;
+					int wantDecanting, wantCertsToBank;
 
 					if (!this.gotInitialConfigs) {
 						serverName = this.getClientStream().readString();
@@ -10333,6 +10333,7 @@ public final class mudclient implements Runnable {
 						wantExpInfo = this.getClientStream().getUnsignedByte();
 						wantWoodcuttingGuild = this.getClientStream().getUnsignedByte();
 						wantDecanting = this.getClientStream().getUnsignedByte();
+						wantCertsToBank = this.getClientStream().getUnsignedByte();
 					} else {
 						serverName = this.packetsIncoming.readString();
 						spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
@@ -10365,6 +10366,7 @@ public final class mudclient implements Runnable {
 						wantExpInfo = this.packetsIncoming.getUnsignedByte();
 						wantWoodcuttingGuild = this.packetsIncoming.getUnsignedByte();
 						wantDecanting = this.packetsIncoming.getUnsignedByte();
+						wantCertsToBank = this.packetsIncoming.getUnsignedByte();
 					}
 
 					props.setProperty("SERVER_NAME", serverName);
@@ -10398,6 +10400,7 @@ public final class mudclient implements Runnable {
 					props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false");
 					props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false");
 					props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false");
+					props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
 
 					Config.updateServerConfiguration(props);
 

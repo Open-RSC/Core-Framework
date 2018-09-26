@@ -35,14 +35,22 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		npcTalk(p, n, "Welcome to my " + certerDef.getType()
 		+ " exchange stall");
 		int option = showMenu(p, n, "I have some certificates to trade in",
-				"I have some " + certerDef.getType() + " to trade in");
+				"I have some " + certerDef.getType() + 
+				(n.getID() == 226 || n.getID() == 341 || n.getID() == 467 ? "s" : "")
+				+ " to trade in");
 		switch (option) {
 		case 0:
 			p.message("What sort of certificate do you wish to trade in?");
 			int index = showMenu(p, n, names);
 			p.message("How many certificates do you wish to trade in?");
-			int certAmount = showMenu(p, n, "One", "Two", "Three", "Four",
-					"Five", "All to bank");
+			int certAmount;
+			if (Constants.GameServer.WANT_CERTS_TO_BANK) {
+				certAmount = showMenu(p, n, "One", "Two", "Three", "Four",
+						"Five", "All to bank");
+			}
+			else {
+				certAmount = showMenu(p, n, "One", "Two", "Three", "Four", "Five");
+			}
 			int certID = certerDef.getCertID(index);
 			if (certID < 0) {
 				return;
