@@ -858,8 +858,6 @@ public final class mudclient implements Runnable {
 		private boolean welcomeScreenShown = false;
 
 		//private int welcomeUnreadMessages = 0;
-		//private int welcomeSubscriptionDaysLeft = 0;
-		//private int welcomePremiumDaysLeft = 0;
 		private World world;
 
 		public World getWorld() {
@@ -3488,10 +3486,6 @@ public final class mudclient implements Runnable {
 			try {
 
 				int var2 = 65;
-				/*if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
-					var2 += 30;
-				}*/
-
 				/*if (this.welcomeUnreadMessages > 0) {
 					var2 += 30;
 				}*/
@@ -3543,21 +3537,6 @@ public final class mudclient implements Runnable {
 								0xFFFFFF, var1 + 4853, 1, var3);
 					}
 
-					var3 += 15;
-					var3 += 15;
-				}*/
-
-				/*if (this.welcomeSubscriptionDaysLeft > 0 || this.welcomePremiumDaysLeft > 0) {
-					if(this.welcomeSubscriptionDaysLeft > 0) {
-						this.getSurface().drawColoredStringCentered((this.welcomePremiumDaysLeft > 0 ? xr + 156 - 56 : xr + 256 - 56),
-								"Standard subscription: @yel@" + welcomeSubscriptionDaysLeft + " @whi@days", 0xFFFFFF,
-								var1 ^ -4853, 1, var3);
-					}
-					if(this.welcomePremiumDaysLeft > 0) {
-						this.getSurface().drawColoredStringCentered((this.welcomeSubscriptionDaysLeft > 0 ? xr + 356 - 56 : xr + 256 - 56),
-								"Premium subscription: @cya@" + welcomePremiumDaysLeft + " @whi@days", 0xFFFFFF,
-								var1 ^ -4853, 1, var3);
-					}
 					var3 += 15;
 					var3 += 15;
 				}*/
@@ -7170,7 +7149,7 @@ public final class mudclient implements Runnable {
 			}
 
 			if (this.insideTutorial) {
-				var7 += 123;
+				var7 = 256;
 				var8 = 0xFFFFFF;
 				if (var6 < this.mouseX && this.mouseX < var6 + var5 && var7 - 12 < this.mouseY
 						&& this.mouseY < 4 + var7) {
@@ -7550,7 +7529,7 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			var7 += 15;
+			var7 = 290;
 
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > var7 - 12
 					&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
@@ -7657,7 +7636,7 @@ public final class mudclient implements Runnable {
 
 			// Skip Tutorial Button
 			if (this.insideTutorial) {
-				var7 += 93;
+				var7 = 255;
 				if (this.mouseX > var6 && var5 + var6 > this.mouseX && var7 - 12 < this.mouseY
 						&& this.mouseY < var7 + 4 && this.mouseButtonClick == 1) {
 					this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
@@ -10310,7 +10289,7 @@ public final class mudclient implements Runnable {
 				else if (opcode == 19) { // Server Configs
 					Properties props = new Properties();
 					String serverName;
-					int spawnAuctionNpcs, spawnIronManNpcs, spawnSubscriptionNpcs;
+					int spawnAuctionNpcs, spawnIronManNpcs;
 					int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 					int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 					int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
@@ -10326,7 +10305,6 @@ public final class mudclient implements Runnable {
 						serverName = this.getClientStream().readString();
 						spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
 						spawnIronManNpcs = this.getClientStream().getUnsignedByte();
-						spawnSubscriptionNpcs = this.getClientStream().getUnsignedByte();
 						showFloatingNametags = this.getClientStream().getUnsignedByte();
 						wantClans = this.getClientStream().getUnsignedByte();
 						wantKillFeed = this.getClientStream().getUnsignedByte();
@@ -10359,7 +10337,6 @@ public final class mudclient implements Runnable {
 						serverName = this.packetsIncoming.readString();
 						spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
 						spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
-						spawnSubscriptionNpcs = this.packetsIncoming.getUnsignedByte();
 						showFloatingNametags = this.packetsIncoming.getUnsignedByte();
 						wantClans = this.packetsIncoming.getUnsignedByte();
 						wantKillFeed = this.packetsIncoming.getUnsignedByte();
@@ -10393,7 +10370,6 @@ public final class mudclient implements Runnable {
 					props.setProperty("SERVER_NAME", serverName);
 					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
-					props.setProperty("S_SPAWN_SUBSCRIPTION_NPCS", spawnSubscriptionNpcs == 1 ? "true" : "false");
 					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
 					props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false");
 					props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
@@ -11321,10 +11297,6 @@ public final class mudclient implements Runnable {
 								.readString();
 						this.welcomeLastLoggedInDays = this.packetsIncoming
 								.getShort();
-						//this.welcomeSubscriptionDaysLeft = this.packetsIncoming
-						//		.getShort();
-						//this.welcomePremiumDaysLeft = this.packetsIncoming
-						//		.getShort();
 						//this.welcomeUnreadMessages = this.packetsIncoming
 						//		.getShort();
 						this.showDialogMessage = true;
