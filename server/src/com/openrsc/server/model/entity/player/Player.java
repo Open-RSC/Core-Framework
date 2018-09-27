@@ -1091,9 +1091,9 @@ public final class Player extends Mob {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 				return;
 			}
-			if (fatigue >= 69750) {
-				ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
-			}
+			//if (fatigue >= 69750) {
+			//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
+			//}
 			if (skill >= 3 && useFatigue) {
 				fatigue += skillXP * 4;
 				if (fatigue > this.MAX_FATIGUE) {
