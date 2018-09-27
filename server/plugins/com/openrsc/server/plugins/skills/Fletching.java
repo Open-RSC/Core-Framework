@@ -74,10 +74,11 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return false;
 		}
 
-		final int amt = amount;
-		final int xp = exp;
-		player.setBatchEvent(new BatchEvent(player, 650, Formulae
-				.getRepeatTimes(player, FLETCHING)) {
+		player.message("You attach feathers to some of your "
+				+ item.getDef().getName());
+		player.incExp(9, exp, true);
+
+		player.setBatchEvent(new BatchEvent(player, 50, 1000 + amount) {
 			@Override
 			public void action() {
 				if(owner.getInventory().countId(feathers.getID()) < 1) {
@@ -88,12 +89,9 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					interrupt();
 					return;
 				}
-				if (owner.getInventory().remove(feathers.getID(), amt) > -1
-						&& owner.getInventory().remove(item.getID(), amt) > -1) {
-					owner.message("You attach feathers to some of your "
-							+ item.getDef().getName());
-					addItem(owner, itemID, amt);
-					owner.incExp(9, xp, true);
+				if (owner.getInventory().remove(feathers.getID(), 1) > -1
+						&& owner.getInventory().remove(item.getID(), 1) > -1) {
+					addItem(owner, itemID, 1);
 				} else {
 					interrupt();
 				}
