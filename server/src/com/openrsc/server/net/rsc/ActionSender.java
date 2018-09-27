@@ -1057,9 +1057,9 @@ public class ActionSender {
 				sendInventory(p);
 				p.checkEquipment();
 
-				if (p.getLocation().inWilderness()) {
+				/*if (p.getLocation().inWilderness()) { // Not authentic
 					p.unwieldMembersItems();
-				}
+				}*/
 
 				if (p.isMod()) {
 					p.setAttribute("no-aggro", true);
