@@ -112,8 +112,19 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 650, Formulae
-				.getRepeatTimes(player, FLETCHING)) {
+		int amount = 10;
+		if (headlessArrows.getAmount() < amount) {
+			amount = headlessArrows.getAmount();
+		}
+		if (arrowHeads.getAmount() < amount) {
+			amount = arrowHeads.getAmount();
+		}
+
+		player.message("You attach "
+				+ arrowHeads.getDef().getName().toLowerCase()
+				+ " to some of your arrows");
+		player.incExp(9, headDef.getExp() * amount, true);
+		player.setBatchEvent(new BatchEvent(player, 50, 1000 + amount) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(9) < headDef.getReqLevel()) {
@@ -130,21 +141,9 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					interrupt();
 					return;
 				}
-				int amount = 10;
-				if (headlessArrows.getAmount() < amount) {
-					amount = headlessArrows.getAmount();
-				}
-				if (arrowHeads.getAmount() < amount) {
-					amount = arrowHeads.getAmount();
-				}
-				final int amt = amount;
-				if (owner.getInventory().remove(headlessArrows.getID(), amt) > -1
-						&& owner.getInventory().remove(arrowHeads.getID(), amt) > -1) {
-					owner.message("You attach "
-							+ arrowHeads.getDef().getName().toLowerCase()
-							+ " to some of your arrows");
-					owner.getInventory().add(new Item(headDef.getArrowID(), amt));
-					owner.incExp(9, headDef.getExp() * amt,	true);
+				if (owner.getInventory().remove(headlessArrows.getID(), 1) > -1
+						&& owner.getInventory().remove(arrowHeads.getID(), 1) > -1) {
+					owner.getInventory().add(new Item(headDef.getArrowID(), 1));
 				} else {
 					interrupt();
 				}
