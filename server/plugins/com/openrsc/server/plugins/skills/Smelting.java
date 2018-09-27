@@ -172,6 +172,8 @@ InvUseOnObjectExecutiveListener {
 		}
 		if (getCurrentLevel(p, SMITHING) < smelt.getRequiredLevel()) {
 			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == SILVER_BAR || smelt.getSmeltBarId() == GOLD_BAR || smelt.getSmeltBarId() == GOLD_BAR_FAMILYCREST ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
+			if (smelt.getSmeltBarId() == IRON_BAR)
+				p.message("Practice your smithing using tin and copper to make bronze");
 			return;
 		}
 		if (p.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
