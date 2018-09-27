@@ -1911,10 +1911,6 @@ public class EntityHandler {
 		sprites = new int[] { 3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1 };
 		npcs.add(new NPCDef("Auction Clerk", "There to help me make my auctions", "Auction", "Teleport", 15, 16, 12, 18, false, sprites, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16711680, 143190, 143190,15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[] { 0, 1, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16761440, 143190, 143190,15523536, 145, 230, 6, 6, 5, i++));
-		sprites = new int[] { 241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Gaia","The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
 		sprites = new int[] { 0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Iron Man","An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
@@ -3289,13 +3285,6 @@ public class EntityHandler {
 		 * After id 1289 - Scythe from real RSC.
 		 * After id 2091 - Display Tea from regular RSC as the last real RSC item in note.
 		 */
-		items.add(new ItemDef("Gold Subscription Token","A legacy gold token worth 1 month of membership, visit the Vendor in Varrock Centre", "Read", 15, 439, false, false, 0, 0, false, false, 2093, -1, 2092));
-		items.add(new ItemDef("Gold Subscription Token","Swap this note at any bank for the equivalent item.", "", 15, 438, true, false, 0, 0, false, false, -1, 2092, 2093));
-		
-		items.add(new ItemDef("Premium Subscription Token","A legacy premium token - boost subscription, can only be used with the gold token", "Read", 30, 440, false, false, 0, 0, false, false, 2095, -1, 2094));
-		items.add(new ItemDef("Premium Subscription Token","Swap this note at any bank for the equivalent item.", "", 30, 438, true, false, 0, 0, false, false, -1, 2094, 2095));
-	
-		items.add(new ItemDef("Loyalty Token","The legacy loyalty token earned from being a loyal subscriber", "Read", 100, 441, true, false, 0, 0, false, true, -1, -1, 2096));
 		items.add(new ItemDef("Pumpkin Head", "The original orange pumpkin head", "", 3, 442, false, true, 33, 0, false, true, -1, -1, 2097));
 		items.add(new ItemDef("Pumpkin Head", "A red dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 16711680, false, true, -1, -1, 2098));
 		items.add(new ItemDef("Pumpkin Head", "A yellow dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 16776960, false, true, -1, -1, 2099));
