@@ -199,7 +199,6 @@ public final class WorldPopulation {
 					+ Constants.GameServer.MYSQL_TABLE_PREFIX + "grounditems`");
 			int countGI = 0;
 			while (result.next()) {
-				if ((result.getInt("id") == 2092 || result.getInt("id") == 2094)) continue; // Subscription Coins
 				ItemLoc i = new ItemLoc(result.getInt("id"),
 						result.getInt("x"), result.getInt("y"),
 						result.getInt("amount"), result.getInt("respawn"));
