@@ -6742,9 +6742,9 @@ public final class mudclient implements Runnable {
 											this.selectedSpell = var9;
 											lastSelectedSpell = var9;
 											this.selectedItemInventoryIndex = -1;
-											if (EntityHandler.getSpellDef(var9).getSpellType() == 3 && var9 != 16) {
-												showUiTab = 1;
-											}
+											//if (EntityHandler.getSpellDef(var9).getSpellType() == 3 && var9 != 16) {
+											//	showUiTab = 1;
+											//}
 										}
 									}
 								}
