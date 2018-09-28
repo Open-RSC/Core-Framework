@@ -9,6 +9,7 @@ set GREEN=[92m
 set RED=[91m
 set NC=[0m
 
+
 :<------------Begin Admin Permission Elevation------------>
 REM  -- Check for permissions
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
@@ -79,12 +80,14 @@ echo:
 echo Choices:
 echo   %RED%1%NC% - No, install for me!
 echo   %RED%2%NC% - I'm all set, continue!
+echo   %RED%3%NC% - Just install everything this needs, I don't care.
 echo:
 
 SET /P choco=Please enter a number choice from above:
 echo:
 if /i "%choco%"=="1" goto installchoco
 if /i "%choco%"=="2" goto askjava
+if /i "%choco%"=="3" goto installeverything
 
 echo Error! %choco% is not a valid option. Press enter to try again.
 echo:
@@ -103,6 +106,18 @@ choco install -y 7zip make
 echo:
 goto askjava
 :<------------End Install------------>
+
+
+
+:<------------Start Install Everything------------>
+:installeverything
+echo:
+echo:
+echo Installing everything. This will take a while, do not close the window.
+echo:
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+choco install -y 7zip make jdk8 ant docker-toolbox docker-compose gitkraken netbeans intellijidea-community
+:<------------End Install Everything------------>
 
 
 :<------------Begin Java------------>
@@ -165,22 +180,14 @@ echo:
 echo:
 echo Installing Docker for Windows.
 echo:
-choco install -y docker-for-windows docker-compose
+echo choco install -y docker-toolbox docker-compose
+echo:
+explorer "C:\Users\Wolf\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
 echo:
 echo:
-echo Go ahead and launch Docker for Windows. The Docker whale icon will then be by the system clock.
-echo Give Docker a some time to finish starting up.
-echo:
-explorer "C:\ProgramData\Microsoft\Windows\Start Menu"
-echo:
-echo:
-echo Once started, right click on the Docker icon down by the system clock and click "Settings..."
-echo Then click the "Shared Drives" tab on the left.
-echo Check the box beside the "C:" drive so that the Docker containers can work.
-echo Click "Apply" and then allow Docker to restart itself.
-echo:
-echo:
-SET /P install="Press enter when the above steps have been completed."
+echo Double click on "Docker Quickstart Terminal" and wait until it shows a whale.
+echo That will indicate when Docker Toolbox is configured and thus ready.
+SET /P install="Then come back here and press enter to continue."
 echo:
 goto askgit
 :<------------End Docker------------>
