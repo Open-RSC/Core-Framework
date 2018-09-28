@@ -95,7 +95,8 @@ clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 
 clone-website-windows:
-	rmdir Website /s /Q
+	rmdir "Website/avatars"
+	rmdir "Website"
 	git clone https://github.com/Open-RSC/Website.git
 
 docker-toolbox-forward-windows:
@@ -112,7 +113,10 @@ pull-website-windows:
 	cd Website && git pull
 
 fix-mariadb-permissions-windows:
-	 icacls.exe etc/mariadb/innodb.cnf /GRANT:R "$($env:USERNAME):(R)"
+	icacls.exe etc/mariadb/innodb.cnf /GRANT:R "$($env:USERNAME):(R)"
+
+fix-forum-permissions-windows:
+	icacls.exe Website/board/cache /grant Everyone:F /t
 
 logs:
 	@docker-compose logs -f
