@@ -261,10 +261,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 									"So where are these bananas going to be delivered to?",
 							"That custom officer is annoying isn't she?" });
 					if (choice == 0) {
-						p.getCache().set("bananas", 0);// I was intending to
-						// remove it if u
-						// dont wanna fill
-						// it again. xD
+						p.getCache().set("bananas", 0);
 						npcTalk(p,
 								n,
 								"Yes certainly",
@@ -304,8 +301,6 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		}
 	}
 
-	// need to do wydin. ye do we really need todo him again, since he only
-	// opens door? cuz hes already
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 164) {
@@ -385,13 +380,13 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		if ((p.getY() == 548 && p.getX() >= 287 && p.getX() <= 291)
 				&& item.getID() == 211) {
 			if (p.getX() == 290 || p.getX() == 289) {
-				Npc wysin = getNearestNpc(p, 116, 20);
+				Npc wyson = getNearestNpc(p, 116, 20);
 				boolean dig = false;
-				if (wysin != null) {
-					wysin.getUpdateFlags().setChatMessage(new ChatMessage(wysin, "Hey leave off my flowers", p));
+				if (wyson != null) {
+					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
 
 					sleep(1000);
-					wysin.setChasing(p);
+					wyson.setChasing(p);
 					long start = System.currentTimeMillis();
 					while (!p.inCombat()) {
 						if (System.currentTimeMillis() - start > 2000) {
