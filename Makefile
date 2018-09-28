@@ -7,6 +7,12 @@ go:
 run:
 	`pwd`/scripts/run.sh
 
+run-game:
+	`pwd`/scripts/run.sh
+
+run-game-windows:
+	cd scripts && call START "" run.cmd
+
 hard-reset:
 	`pwd`/scripts/hard-reset.sh
 
@@ -85,18 +91,19 @@ import-game-windows:
 import-forum-windows:
 	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
 
-run-game:
-	`pwd`/scripts/run.sh
-
-run-game-windows:
-	cd scripts && call START "" run.cmd
-
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 
 clone-website-windows:
 	rmdir Website /s /Q
 	git clone https://github.com/Open-RSC/Website.git
+
+docker-toolbox-forward-windows:
+	VBoxManage controlvm "default" natpf1 "http,tcp,,80,,80";
+	VBoxManage controlvm "default" natpf1 "https,tcp,,443,,443";
+	VBoxManage controlvm "default" natpf1 "mariadb,tcp,,3306,,3306";
+	VBoxManage controlvm "default" natpf1 "phpmyadmin,tcp,,55555,,55555";
+	VBoxManage controlvm "default" natpf1 "tomcat,tcp,,8080,,8080";
 
 pull-website:
 	@cd Website && git pull
