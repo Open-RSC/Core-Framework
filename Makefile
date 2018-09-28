@@ -10,6 +10,12 @@ run:
 hard-reset:
 	`pwd`/scripts/hard-reset.sh
 
+hard-reset-game-windows:
+	git reset HEAD --hard
+
+hard-reset-website-windows:
+	cd Website && git reset HEAD --hard
+
 certbot:
 	`pwd`/scripts/certbot.sh
 
