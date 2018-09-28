@@ -154,11 +154,7 @@ etc/ghost/logs/*.log.*
 !etc/ghost/content/data/
 !etc/ghost/content/logs
 etc/ghost/content/data/\.DS_Store
-
-etc/ghost/content/themes/
-
 etc/ghost/content/logs/*.log.*
-
 etc/ghost/content/data/ghost\.db
 
 Tools/Sprite Editor/unpack/dat/
