@@ -36,7 +36,8 @@ if '%errorlevel%' NEQ '0' (
 
 :<------------Begin Start------------>
 :start
-cls
+echo:
+echo:
 echo %RED%Open RSC:%NC%
 echo An easy to use RSC private server framework.
 echo:
@@ -72,12 +73,40 @@ goto start
 :<------------Begin Install------------>
 :install
 echo:
+echo:
+echo Do you Chocolatey already installed? This is required to use the script.
+echo:
+echo Choices:
+echo   %RED%1%NC% - No, install for me!
+echo   %RED%2%NC% - I'm all set, continue!
+echo:
+
+SET /P choco=Please enter a number choice from above:
+echo:
+if /i "%choco%"=="1" goto installchoco
+if /i "%choco%"=="2" goto askjava
+
+echo Error! %choco% is not a valid option. Press enter to try again.
+echo:
+SET /P choco=""
+goto install
+
+
+:installchoco
+echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 echo:
 echo:
 echo Installing basic software needed to run the rest of this script.
 echo:
 choco install -y 7zip make
+echo:
+goto askjava
+:<------------End Install------------>
+
+
+:<------------Begin Java------------>
+:askjava
 echo:
 echo:
 echo Do you have Oracle Java JDK 8 and Apache Ant installed already? It is required for this.
@@ -95,11 +124,9 @@ if /i "%java%"=="2" goto askdocker
 echo Error! %java% is not a valid option. Press enter to try again.
 echo:
 SET /P java=""
-goto install
-:<------------End Install------------>
+goto askjava
 
 
-:<------------Begin Java------------>
 :installjava
 echo:
 echo:
@@ -141,16 +168,16 @@ echo:
 choco install -y docker-for-windows docker-compose
 echo:
 echo:
-echo Launching Docker for Windows. The Docker whale icon is by the system clock.
-echo Allow it a short bit of time to start running.
+echo Go ahead and launch Docker for Windows. The Docker whale icon will then be by the system clock.
+echo Give Docker a some time to finish starting up.
 echo:
-call START "C:\Program Files\Docker\Docker\Docker for Windows.exe"
+explorer "C:\ProgramData\Microsoft\Windows\Start Menu"
 echo:
 echo:
-echo Once started, right click on it and click "Settings..."
+echo Once started, right click on the Docker icon down by the system clock and click "Settings..."
 echo Then click the "Shared Drives" tab on the left.
 echo Check the box beside the "C:" drive so that the Docker containers can work.
-echo Click "Apply" and then press enter here so the script can continue.
+echo Click "Apply" and then allow Docker to restart itself.
 echo:
 echo:
 SET /P install="Press enter when the above steps have been completed."
@@ -172,7 +199,7 @@ echo:
 SET /P git=Please enter a number choice from above:
 echo:
 if /i "%git%"=="1" goto installgit
-if /i "%git%"=="2" goto askide
+if /i "%git%"=="2" goto edition
 
 echo Error! %git% is not a valid option. Press enter to try again.
 echo:
@@ -217,6 +244,9 @@ goto edition
 
 :<------------Begin Simple------------>
 :simple
+echo:
+echo:
+docker login
 echo:
 echo:
 echo Starting Docker containers and downloading what is needed. This may take a while the first time.
