@@ -210,7 +210,23 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public void addFriend(int playerID, long friend, String friendName) {
+	private boolean usernameToId(String username) {
+		ResultSet result = null;
+		try {
+			if (useTransactions)
+				conn.executeQuery("START TRANSACTION");
+			result = resultSetFromString(Statements.userToId, username);
+			if (useTransactions)
+				conn.executeQuery("COMMIT");
+			return result.isBeforeFirst();
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
+		return false;
+	}
+
+	public boolean addFriend(int playerID, long friend, String friendName) {
+		if (!usernameToId(friendName)) return false;
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
@@ -221,10 +237,11 @@ public class DatabasePlayerLoader {
 			prepared.executeUpdate();
 			if (useTransactions)
 				conn.executeQuery("COMMIT");
+			return true;
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
-
+		return false;
 	}
 
 	public void removeFriend(int playerID, long friend) {
@@ -242,7 +259,8 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public void addIgnore(int playerID, long friend) {
+	public boolean addIgnore(int playerID, long friend, String friendName) {
+		if (!usernameToId(friendName)) return false;
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
@@ -252,9 +270,11 @@ public class DatabasePlayerLoader {
 			prepared.executeUpdate();
 			if (useTransactions)
 				conn.executeQuery("COMMIT");
+			return true;
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
+		return false;
 	}
 
 	public void removeIgnore(int playerID, long friend) {
@@ -742,6 +762,8 @@ public class DatabasePlayerLoader {
 				+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
 
 		private static final String playerLoginData = "SELECT `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
+
+		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
 	}
 
 
