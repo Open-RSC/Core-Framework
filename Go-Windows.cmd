@@ -116,7 +116,13 @@ echo:
 echo Installing everything. This will take a while, do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make jdk8 ant docker-toolbox docker-compose gitkraken netbeans intellijidea-community
+choco install -y 7zip make jdk8 ant virtualbox docker-toolbox docker-compose gitkraken netbeans intellijidea-community
+explorer "C:\Users\Wolf\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
+echo:
+echo:
+echo Double click on "Docker Quickstart Terminal" and wait until it shows a whale.
+echo That will indicate when Docker Toolbox is configured and thus ready.
+SET /P install="Then come back here and press enter to continue."
 :<------------End Install Everything------------>
 
 
@@ -157,7 +163,7 @@ goto askdocker
 :askdocker
 echo:
 echo:
-echo Do you have Docker installed already? It is required for this.
+echo Do you have Docker, Docker-Compose, and VirtualBox installed already? These are required.
 echo:
 echo Choices:
 echo   %RED%1%NC% - No, install for me!
@@ -178,9 +184,9 @@ goto askdocker
 :installdocker
 echo:
 echo:
-echo Installing Docker for Windows.
+echo Installing Docker, Docker Compose, and VirtualBox
 echo:
-echo choco install -y docker-toolbox docker-compose
+echo choco install -y virtualbox docker-toolbox docker-compose
 echo:
 explorer "C:\Users\Wolf\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
 echo:
