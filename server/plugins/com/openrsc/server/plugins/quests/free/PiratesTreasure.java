@@ -123,7 +123,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 			message(p, "All that is in the chest is a message");
 			message(p, "You take the message from the chest");
 			message(p, "It says dig just behind the south bench in the park");
-			p.updateQuestStage(this, 2);
+			p.updateQuestStage(this, 3);
 		}
 	}
 
@@ -184,6 +184,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 					"I was one of the few to escape", "And I escaped with this");
 			message(p, "Frank hands you a key");
 			addItem(p, 382, 1);
+			p.updateQuestStage(this, 2);
 			npcTalk(p, n, "This is Hector's key",
 					"I believe it opens his chest",
 					"In his old room in the blue moon inn in Varrock",
@@ -196,8 +197,15 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 						"Apparently I'm a drunken trouble maker");
 			}
 			break;
-		case -1:
 		case 2:
+			npcTalk(p, n, "Arrrh Matey");
+			playerTalk(p, n, "I seem to have lost my chest key");
+			npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another made");
+			message(p, "Frank hands you a key");
+			addItem(p, 382, 1);
+			break;
+		case -1:
+		case 3:
 			npcTalk(p, n, "Arrrh Matey");
 			int menu1 = showMenu(p, n, new String[] { "Arrrh",
 					"Do you want to trade?"});
