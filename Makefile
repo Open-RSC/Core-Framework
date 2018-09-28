@@ -100,6 +100,9 @@ clone-website-windows:
 pull-website:
 	@cd Website && git pull
 
+pull-website-windows:
+	cd Website && git pull
+
 logs:
 	@docker-compose logs -f
 
