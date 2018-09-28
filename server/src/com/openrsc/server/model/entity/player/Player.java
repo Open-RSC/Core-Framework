@@ -707,7 +707,7 @@ public final class Player extends Mob {
 	/**
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
-	public void unwieldMembersItems() {
+	/*public void unwieldMembersItems() { // Not authentic behavior
 		if (getLocation().inWilderness() && (!getLocation().isMembersWild())) {
 			boolean found = false;
 			for (Item i : getInventory().getItems()) {
@@ -741,7 +741,7 @@ public final class Player extends Mob {
 			}
 		}
 
-	}
+	}*/
 	private int bankSize = 200;
 
 	public int getBankSize() {
