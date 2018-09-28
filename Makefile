@@ -95,6 +95,7 @@ clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 
 clone-website-windows:
+	rmdir Website /s /Q
 	git clone https://github.com/Open-RSC/Website.git
 
 pull-website:
