@@ -24,20 +24,15 @@ import com.openrsc.server.util.rsc.Formulae;
 public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 	@Override
 	public void onInvUseOnObject(GameObject object, Item item, Player owner) {
-		if (owner.getQuestStage(Constants.Quests.COOKS_ASSISTANT) != -1) {
-			Npc cook = getNearestNpc(owner, 7, 20);
-			if(cook == null) {
-				handleCooking(item, owner, object);
-				return;
-			}
-			if(cook != null) {
-				cook.face(owner);
-				owner.face(cook);
-				npcTalk(owner, cook, "Hey! Who said you could use that?");
-			}
-			return;
+		Npc cook = getNearestNpc(owner, 7, 20);
+		if(cook != null && owner.getQuestStage(Constants.Quests.COOKS_ASSISTANT) != -1
+				&& object.getID() == 119) {
+			cook.face(owner);
+			owner.face(cook);
+			npcTalk(owner, cook, "Hey! Who said you could use that?");
 		}
-		handleCooking(item, owner, object);
+		else
+			handleCooking(item, owner, object);
 		return;
 	}
 
