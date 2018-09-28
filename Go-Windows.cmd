@@ -48,7 +48,8 @@ echo   %RED%2%NC% - Update Open RSC
 echo   %RED%3%NC% - Run Open RSC
 echo   %RED%4%NC% - Manage Players
 echo   %RED%5%NC% - Perform a Hard Reset
-echo   %RED%6%NC% - Exit
+echo   %RED%6%NC% - Change Edition
+echo   %RED%7%NC% - Exit
 echo:
 SET /P action=Please enter a number choice from above:
 echo:
@@ -58,7 +59,8 @@ if /i "%action%"=="2" goto update
 if /i "%action%"=="3" goto run
 if /i "%action%"=="4" goto manage
 if /i "%action%"=="5" goto reset
-if /i "%action%"=="6" exit
+if /i "%action%"=="6" goto edition
+if /i "%action%"=="7" exit
 
 echo Error! %action% is not a valid option. Press enter to try again.
 echo:
@@ -81,14 +83,14 @@ echo:
 echo Do you have Oracle Java JDK 8 and Apache Ant installed already? It is required for this.
 echo:
 echo Choices:
-echo   %RED%1%NC% - Install for me!
+echo   %RED%1%NC% - No, install for me!
 echo   %RED%2%NC% - I'm all set, continue!
 echo:
 
 SET /P java=Please enter a number choice from above:
 echo:
-IF /i "%java%"=="1" goto installjava
-IF /i "%java%"=="2" goto askdocker
+if /i "%java%"=="1" goto installjava
+if /i "%java%"=="2" goto askdocker
 
 echo Error! %java% is not a valid option. Press enter to try again.
 echo:
@@ -114,14 +116,14 @@ echo:
 echo Do you have Docker installed already? It is required for this.
 echo:
 echo Choices:
-echo   %RED%1%NC% - Install for me!
+echo   %RED%1%NC% - No, install for me!
 echo   %RED%2%NC% - I'm all set, continue!
 echo:
 
 SET /P docker=Please enter a number choice from above:
 echo:
-IF /i "%docker%"=="1" goto installdocker
-IF /i "%docker%"=="2" goto askgit
+if /i "%docker%"=="1" goto installdocker
+if /i "%docker%"=="2" goto askgit
 
 echo Error! %docker% is not a valid option. Press enter to try again.
 echo:
@@ -159,13 +161,13 @@ echo:
 echo Do you have Git installed already? It is required for this.
 echo:
 echo Choices:
-echo   %RED%1%NC% - Install for me!
+echo   %RED%1%NC% - No, install for me!
 echo   %RED%2%NC% - I'm all set, continue!
 echo:
 SET /P git=Please enter a number choice from above:
 echo:
-IF /i "%git%"=="1" goto installgit
-IF /i "%git%"=="2" goto askide
+if /i "%git%"=="1" goto installgit
+if /i "%git%"=="2" goto askide
 
 echo Error! %git% is not a valid option. Press enter to try again.
 echo:
@@ -196,8 +198,8 @@ echo:
 SET /P edition=Please enter a number choice from above:
 echo:
 
-IF /i "%edition%"=="1" goto simple
-IF /i "%edition%"=="2" goto developer
+if /i "%edition%"=="1" goto simple
+if /i "%edition%"=="2" goto developer
 
 echo Error! %edition% is not a valid option. Press enter to try again.
 echo:
@@ -211,6 +213,7 @@ goto edition
 echo:
 echo Starting Docker containers and downloading what is needed. This may take a while the first time.
 echo:
+make stop
 make start-single-player
 echo:
 echo:
@@ -241,8 +244,8 @@ echo   %RED%2%NC% - I'm all set, continue!
 echo:
 SET /P gitkraken=Please enter a number choice from above:
 echo:
-IF /i "%gitkraken%"=="1" goto installgitkraken
-IF /i "%gitkraken%"=="2" goto askide
+if /i "%gitkraken%"=="1" goto installgitkraken
+if /i "%gitkraken%"=="2" goto askide
 
 echo Error! %gitkraken% is not a valid option. Press enter to try again.
 echo:
@@ -271,10 +274,10 @@ echo   %RED%4%NC% - I'm all set, continue!
 echo:
 SET /P git=Please enter a number choice from above:
 echo:
-IF /i "%git%"=="1" goto installnetbeans
-IF /i "%git%"=="2" goto installintellij
-IF /i "%git%"=="3" goto installeclipse
-IF /i "%git%"=="4" goto developerstart
+if /i "%git%"=="1" goto installnetbeans
+if /i "%git%"=="2" goto installintellij
+if /i "%git%"=="3" goto installeclipse
+if /i "%git%"=="4" goto developerstart
 
 echo Error! %git% is not a valid option. Press enter to try again.
 echo:
@@ -380,5 +383,7 @@ goto start
 echo:
 echo Perform a Hard Reset
 echo:
+make hard-reset-game-windows
+make hard-reset-website-windows
 goto start
 :<------------End Reset------------>
