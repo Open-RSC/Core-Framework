@@ -62,17 +62,40 @@ compile:
 	sudo ant -f client/build.xml compile
 	sudo ant -f Launcher/build.xml jar
 
+compile-windows-simple:
+	ant -f server/build.xml compile_core
+	ant -f server/build.xml compile_plugins
+	ant -f client/build.xml compile
+
+compile-windows-developer:
+	ant -f server/build.xml compile_core
+	ant -f server/build.xml compile_plugins
+	ant -f client/build.xml compile
+	ant -f Launcher/build.xml jar
+
 import-game:
 	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_game.sql
 
 import-forum:
 	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_forum.sql
 
+import-game-windows:
+	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
+
+import-forum-windows:
+	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
+
 run-game:
 	`pwd`/scripts/run.sh
 
+run-game-windows:
+	cd scripts && call START "" run.cmd
+
 clone-website:
-	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
+	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+
+clone-website-windows:
+	git clone https://github.com/Open-RSC/Website.git
 
 pull-website:
 	@cd Website && git pull
