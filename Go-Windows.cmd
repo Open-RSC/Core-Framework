@@ -195,6 +195,11 @@ echo Double click on "Docker Quickstart Terminal" and wait until it shows a whal
 echo That will indicate when Docker Toolbox is configured and thus ready.
 SET /P install="Then come back here and press enter to continue."
 echo:
+echo:
+echo Adding port forwarding rules to VirtualBox
+echo:
+make docker-toolbox-forward-windows
+echo:
 goto askgit
 :<------------End Docker------------>
 
