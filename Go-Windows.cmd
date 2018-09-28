@@ -9,11 +9,11 @@ set GREEN=[92m
 set RED=[91m
 set NC=[0m
 
-:<------------Begin Verify Administrator------------>
-REM  --> Check for permissions
+:<------------Begin Admin Permission Elevation------------>
+REM  -- Check for permissions
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 
-REM --> If error flag set, we do not have admin.
+REM -- If error flag set, we do not have admin.
 if '%errorlevel%' NEQ '0' (
     echo Requesting administrative privileges...
     goto UACPrompt
@@ -31,7 +31,7 @@ if '%errorlevel%' NEQ '0' (
 :gotAdmin
     pushd "%CD%"
     CD /D "%~dp0"
-:<------------End Verify Administrator------------>
+:<------------End Admin Permission Elevation------------>
 
 
 :<------------Begin Start------------>
@@ -43,9 +43,9 @@ echo:
 echo What would you like to do?
 echo:
 echo Choices:
-echo   %RED%1%NC% - Install Open RSC
-echo   %RED%2%NC% - Update Open RSC
-echo   %RED%3%NC% - Run Open RSC
+echo   %RED%1%NC% - Install
+echo   %RED%2%NC% - Update
+echo   %RED%3%NC% - Run
 echo   %RED%4%NC% - Manage Players
 echo   %RED%5%NC% - Perform a Hard Reset
 echo   %RED%6%NC% - Change Edition
@@ -102,6 +102,7 @@ goto install
 :<------------Begin Java------------>
 :installjava
 echo:
+echo:
 echo Installing Oracle Java JDK 8 and Apache Ant.
 echo:
 choco install -y jdk8 ant
@@ -112,6 +113,7 @@ goto askdocker
 
 :<------------Begin Docker------------>
 :askdocker
+echo:
 echo:
 echo Do you have Docker installed already? It is required for this.
 echo:
@@ -133,15 +135,17 @@ goto askdocker
 
 :installdocker
 echo:
+echo:
 echo Installing Docker for Windows.
 echo:
-choco install -y docker-for-windows
+choco install -y docker-for-windows docker-compose
 echo:
 echo:
 echo Launching Docker for Windows. The Docker whale icon is by the system clock.
 echo Allow it a short bit of time to start running.
 echo:
 call START "C:\Program Files\Docker\Docker\Docker for Windows.exe"
+echo:
 echo:
 echo Once started, right click on it and click "Settings..."
 echo Then click the "Shared Drives" tab on the left.
@@ -157,6 +161,7 @@ goto askgit
 
 :<------------Begin Git------------>
 :askgit
+echo:
 echo:
 echo Do you have Git installed already? It is required for this.
 echo:
@@ -177,6 +182,7 @@ goto askgit
 
 :installgit
 echo:
+echo:
 echo Installing Git.
 echo:
 choco install -y git
@@ -188,6 +194,7 @@ goto edition
 
 :<------------Begin Edition------------>
 :edition
+echo:
 echo:
 echo Which edition of Open RSC would you like?
 echo:
@@ -211,23 +218,21 @@ goto edition
 :<------------Begin Simple------------>
 :simple
 echo:
+echo:
 echo Starting Docker containers and downloading what is needed. This may take a while the first time.
 echo:
 make stop
 make start-single-player
 echo:
 echo:
-echo Downloading a copy of the Game repository
+echo Compiling the game client and server.
 echo:
-make clone-windows-game
+make compile-windows-simple
 echo:
 echo:
-echo Importing the game databases.
+echo Importing the game database.
 echo:
-make pull-game-windows
-echo:
-make import-windows-game
-echo:
+make import-game-windows
 echo:
 goto start
 :<------------End Simple------------>
@@ -236,7 +241,8 @@ goto start
 :<------------Start Developer------------>
 :developer
 echo:
-echo Would you like to install Git Kraken? It simplifies git usage!
+echo:
+echo Would you like to install Git Kraken? It simplifies git!
 echo:
 echo Choices:
 echo   %RED%1%NC% - Install for me!
@@ -255,6 +261,7 @@ goto developer
 
 :installgitkraken
 echo:
+echo:
 echo Installing Git Kraken.
 echo:
 choco install -y gitkraken
@@ -263,6 +270,7 @@ goto askide
 
 
 :askide
+echo:
 echo:
 echo Would you like a programming IDE installed for editing code?
 echo:
@@ -307,6 +315,16 @@ goto askide
 
 
 :developerstart
+
+echo Extracting client cache
+echo:
+md "%HOMEPATH%/OpenRSC"
+7z x "Game/client/cache.zip" -o"%HOMEPATH%/OpenRSC"
+
+
+
+
+echo:
 echo:
 echo Starting Docker containers and downloading what is needed. This may take a while the first time.
 echo:
@@ -324,9 +342,8 @@ echo Downloading a copy of the Game repository
 echo:
 make clone-windows-game
 make pull-game-windows
-echo:
-echo:
 make pull-game-windows
+echo:
 echo:
 echo Importing the game databases.
 echo:
@@ -341,6 +358,7 @@ goto start
 :<------------Begin Update------------>
 :update
 echo:
+echo:
 echo Checking for updates to the Docker-Home repository.
 echo:
 git pull
@@ -352,25 +370,18 @@ goto start
 :<------------Start Run------------>
 :run
 echo:
-echo Starting Open RSC
 echo:
+echo Starting Open RSC.
 echo:
-echo Extracting client cache
+make run-game-windows
 echo:
-md "%HOMEPATH%/OpenRSC"
-7z x "Game/client/cache.zip" -o"%HOMEPATH%/OpenRSC"
-echo:
-echo:
-SET /P singleplayer=Ready to launch "Windows_Single_Player.cmd" - Press enter when ready.
-echo:
-echo:
-Windows_Single_Player.cmd
 goto start
 :<------------End Run------------>
 
 
 :<------------Start Manage------------>
 :manage
+echo:
 echo:
 echo Manage Players
 echo:
@@ -381,7 +392,8 @@ goto start
 :<------------Start Reset------------>
 :reset
 echo:
-echo Perform a Hard Reset
+echo:
+echo Performing a hard reset.
 echo:
 make hard-reset-game-windows
 make hard-reset-website-windows
