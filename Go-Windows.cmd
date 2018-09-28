@@ -130,7 +130,9 @@ echo:
 make compile-windows-simple
 echo:
 echo:
-echo Importing the game database.
+echo Importing the game database in 10 seconds. (Gives time to start up Docker containers)
+echo:
+TIMEOUT /T 10
 echo:
 make import-game-windows
 echo:
@@ -228,10 +230,13 @@ echo:
 make clone-website-windows
 echo:
 echo:
-echo Importing the game and forum databases.
+echo Importing the game and forum databases in 10 seconds. (Gives time to start up Docker containers)
+echo:
+TIMEOUT /T 10
 echo:
 make import-game-windows
 make import-forum-windows
+make fix-forum-permissions-windows
 echo:
 echo:
 goto start
