@@ -361,8 +361,8 @@ goto askide
 
 echo Extracting client cache
 echo:
-md "%HOMEPATH%/OpenRSC"
-7z x "Game/client/cache.zip" -o"%HOMEPATH%/OpenRSC"
+echo md "%HOMEPATH%/OpenRSC"
+echo 7z x "Game/client/cache.zip" -o"%HOMEPATH%/OpenRSC"
 
 
 
@@ -381,17 +381,10 @@ make clone-windows-website
 make pull-website-windows
 echo:
 echo:
-echo Downloading a copy of the Game repository
+echo Importing the game and forum databases.
 echo:
-make clone-windows-game
-make pull-game-windows
-make pull-game-windows
-echo:
-echo:
-echo Importing the game databases.
-echo:
-make import-windows-game
-make import-windows-ghost
+make import-game-windows
+make import-forum-windows
 echo:
 echo:
 goto start
