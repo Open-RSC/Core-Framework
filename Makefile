@@ -103,6 +103,9 @@ pull-website:
 pull-website-windows:
 	cd Website && git pull
 
+fix-mariadb-permissions-windows:
+	 icacls.exe etc/mariadb/innodb.cnf /GRANT:R "$($env:USERNAME):(R)"
+
 logs:
 	@docker-compose logs -f
 
