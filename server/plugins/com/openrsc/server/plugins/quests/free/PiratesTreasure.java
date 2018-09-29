@@ -123,7 +123,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 			message(p, "All that is in the chest is a message");
 			message(p, "You take the message from the chest");
 			message(p, "It says dig just behind the south bench in the park");
-			p.updateQuestStage(this, 2);
+			p.updateQuestStage(this, 3);
 		}
 	}
 
@@ -184,6 +184,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 					"I was one of the few to escape", "And I escaped with this");
 			message(p, "Frank hands you a key");
 			addItem(p, 382, 1);
+			p.updateQuestStage(this, 2);
 			npcTalk(p, n, "This is Hector's key",
 					"I believe it opens his chest",
 					"In his old room in the blue moon inn in Varrock",
@@ -196,8 +197,15 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 						"Apparently I'm a drunken trouble maker");
 			}
 			break;
-		case -1:
 		case 2:
+			npcTalk(p, n, "Arrrh Matey");
+			playerTalk(p, n, "I seem to have lost my chest key");
+			npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another made");
+			message(p, "Frank hands you a key");
+			addItem(p, 382, 1);
+			break;
+		case -1:
+		case 3:
 			npcTalk(p, n, "Arrrh Matey");
 			int menu1 = showMenu(p, n, new String[] { "Arrrh",
 					"Do you want to trade?"});
@@ -253,10 +261,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 									"So where are these bananas going to be delivered to?",
 							"That custom officer is annoying isn't she?" });
 					if (choice == 0) {
-						p.getCache().set("bananas", 0);// I was intending to
-						// remove it if u
-						// dont wanna fill
-						// it again. xD
+						p.getCache().set("bananas", 0);
 						npcTalk(p,
 								n,
 								"Yes certainly",
@@ -296,8 +301,6 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		}
 	}
 
-	// need to do wydin. ye do we really need todo him again, since he only
-	// opens door? cuz hes already
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 164) {
@@ -377,13 +380,13 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		if ((p.getY() == 548 && p.getX() >= 287 && p.getX() <= 291)
 				&& item.getID() == 211) {
 			if (p.getX() == 290 || p.getX() == 289) {
-				Npc wysin = getNearestNpc(p, 116, 20);
+				Npc wyson = getNearestNpc(p, 116, 20);
 				boolean dig = false;
-				if (wysin != null) {
-					wysin.getUpdateFlags().setChatMessage(new ChatMessage(wysin, "Hey leave off my flowers", p));
+				if (wyson != null) {
+					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
 
 					sleep(1000);
-					wysin.setChasing(p);
+					wyson.setChasing(p);
 					long start = System.currentTimeMillis();
 					while (!p.inCombat()) {
 						if (System.currentTimeMillis() - start > 2000) {
