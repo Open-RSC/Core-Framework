@@ -1,8 +1,14 @@
 package com.openrsc.server.model.entity.npc;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
@@ -21,11 +27,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 
 public class Npc extends Mob {
+	
+	
+	/**
+	 * Logger instance
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * World instance
@@ -352,7 +365,51 @@ public class Npc extends Mob {
 		if (owner != null) {
 			ActionSender.sendSound(owner, "victory");
 			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
+			try {
+				PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
+						"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
+				statementSelect.setInt(1, id);
+				statementSelect.setInt(2, owner.getDatabaseID());
+				ResultSet selectResult = statementSelect.executeQuery();
+				int kills = -1;
+				while (selectResult.next()) {
+				    kills = selectResult.getInt("killCount");
+				}
+				if (kills == -1) {
+					PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
+							"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)");
+					statementInsert.setInt(1, id);
+					statementInsert.setInt(2, owner.getDatabaseID());
+					int insertResult = statementInsert.executeUpdate();
+					kills = 1;
+				} 
+				else {
+				    kills++;
+				}
 
+				PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
+						"UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?");
+				statementUpdate.setInt(1, kills);
+				statementUpdate.setInt(2, id);
+				statementUpdate.setInt(3, owner.getDatabaseID());
+				int updateResult = statementUpdate.executeUpdate();
+
+				if (Constants.GameServer.NPC_KILL_MESSAGES == true) {
+					PreparedStatement statementSelect2 = DatabaseConnection.getDatabase().prepareStatement(
+							"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
+					statementSelect2.setInt(1, id);
+					statementSelect2.setInt(2, owner.getDatabaseID());
+					ResultSet selectResult2 = statementSelect2.executeQuery();
+					int kills2 = -1;
+					while (selectResult2.next()) {
+						kills2 = selectResult2.getInt("killCount");
+					}
+					owner.message("Your " + EntityHandler.getNpcDef(id).getName() +" kill count is: @red@" + kills2 + "@whi@.");
+				}
+			} catch (SQLException e) {
+				LOGGER.catching(e);
+			}
+			
 			owner = handleLootAndXpDistribution((Player) mob);
 
 			ItemDropDef[] drops = def.getDrops();
