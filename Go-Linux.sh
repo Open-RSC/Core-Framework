@@ -16,7 +16,7 @@ email=`cat .email`
 #
 # Install everything with this command:
 #
-# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/scripts/clone.sh | bash
+# bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
 
 echo ""
 echo "${RED}Open RSC:${NC}
