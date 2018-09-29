@@ -33,12 +33,12 @@ ___
 
 ## Minimum Requirements <a name="requirements"></a>
 
-* Windows 10
+* Windows 7 x64
 
 * Mac OS X High Sierra
 
-* Ubuntu Linux 16.04 or more recent
+* Ubuntu Linux 16.04
 
-* 1GB RAM, 2GB preferred.
+* 1GB RAM
 
 [Return to top](#top)
