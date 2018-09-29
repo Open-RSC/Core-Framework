@@ -158,6 +158,7 @@ public final class Constants {
 		public static boolean WANT_WOODCUTTING_GUILD = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
+		public static boolean NPC_KILL_MESSAGES = false;
 
 		/**
 		 * 
@@ -225,7 +226,7 @@ public final class Constants {
 			WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
-
+			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
 			START_TIME = System.currentTimeMillis();
 
 			// Make sure config doesn't exceed max values
