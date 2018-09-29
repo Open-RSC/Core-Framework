@@ -1,5 +1,8 @@
 #!/bin/bash
 exec 0</dev/tty
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+NC=`tput sgr0` # No Color
 
 # Open RSC: A replica RSC private server framework
 
