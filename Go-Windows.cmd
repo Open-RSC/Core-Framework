@@ -79,7 +79,7 @@ echo Installing everything needed. This will take a while, please do not close t
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 choco install -y 7zip make jdk8 ant virtualbox docker-toolbox docker-compose
-explorer "C:\Users\Wolf\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
+explorer "%userprofile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
 echo:
 echo:
 echo Please double click on "Docker Quickstart Terminal" and wait until it shows a whale.
