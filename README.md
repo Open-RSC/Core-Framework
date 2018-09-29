@@ -9,7 +9,7 @@
 
 ## How to Install Open RSC <a name="install"></a>
 
-    curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh | bash
+    bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
 
 [Return to top](#top)
 ___
