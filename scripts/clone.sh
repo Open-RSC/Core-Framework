@@ -14,4 +14,5 @@ NC=`tput sgr0` # No Color
 
 sudo git clone https://github.com/Open-RSC/Game.git
 cd Game
-"./Go.sh"
+sudo chmod -R 777 .
+"./Go-Linux.sh"
