@@ -288,11 +288,11 @@ public final class Constants {
 		public static final int LEGENDS_QUEST = 49;
 	}
 
-	public static final class Skillcapes {
-		public static final int ATTACK_CAPE = 2111;
-		public static final int STRENGTH_CAPE = 2259;
-		public static final int COOKING_CAPE = 2105;
-		public static final int FISHING_CAPE = 2103;
-		public static final int SMITHING_CAPE = 2258;
-	}
+	//public static final class Skillcapes {
+	//	public static final int ATTACK_CAPE = 2111;
+	//	public static final int STRENGTH_CAPE = 2259;
+	//	public static final int COOKING_CAPE = 2105;
+	//	public static final int FISHING_CAPE = 2103;
+	//	public static final int SMITHING_CAPE = 2258;
+	//}
 }
