@@ -31,7 +31,7 @@ public class Ladders {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		}
-		if(obj.getID() == 79 && obj.getX() == 243 && obj.getY() == 95) {
+		else if(obj.getID() == 79 && obj.getX() == 243 && obj.getY() == 95) {
 			player.message("Are you sure you want to go down to this lair?");
 			int menu = showMenu(player,  "Yes I take the risk!", "No stay up here.");
 			if(menu == 0) {
@@ -44,17 +44,17 @@ public class Ladders {
 			//player.message("We are doing the decoration, please stay tuned.");
 			return;
 		}
-		if(obj.getID() == 5 && (obj.getX() == 98 && obj.getY() == 2930 || obj.getX() == 137 && obj.getY() == 2932)) {
+		else if(obj.getID() == 5 && (obj.getX() == 98 && obj.getY() == 2930 || obj.getX() == 137 && obj.getY() == 2932)) {
 			player.teleport(243, 96);
 			player.message("You climb up the ladder");
 			return;
 		}
-		if(obj.getID() == 629) {
+		else if(obj.getID() == 629) {
 			player.teleport(576, 3580);
 			player.message("You go up the stairs");
 			return;
 		}
-		if(obj.getID() == 621) {
+		else if(obj.getID() == 621) {
 			player.teleport(606, 3556);
 			player.message("You go up the stairs");
 			return;
@@ -64,7 +64,7 @@ public class Ladders {
 		if (telePoint != null) {
 			player.teleport(telePoint.getX(), telePoint.getY(), false);
 		}
-		if(obj.getID() == 487) {
+		else if(obj.getID() == 487) {
 			player.message("You pull the lever");
 			player.teleport(567, 3330);
 			sleep(600);
@@ -100,7 +100,8 @@ public class Ladders {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 			return;
-		} else if(obj.getID() == 776) {
+		}
+		else if(obj.getID() == 776) {
 			if(hasItem(player, 987)) {
 				player.message("The barman takes your ticket and allows you up to");
 				player.message("the dormitory.");
@@ -155,7 +156,8 @@ public class Ladders {
 			} else
 				player.teleport(251, 1411, false);
 			return;
-		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
+		}
+		else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
 			if (player.getSkills().getLevel(14) < 60) {
@@ -203,26 +205,27 @@ public class Ladders {
 			return;
 		}
 
-		if (obj.getID() == 1187 && obj.getX() == 446 && obj.getY() == 3367) {
+		else if (obj.getID() == 1187 && obj.getX() == 446 && obj.getY() == 3367) {
 			player.teleport(222, 110, false);
 			return;
 		}
 
-		if (obj.getID() == 331 && obj.getX() == 150 && obj.getY() == 558) {
+		else if (obj.getID() == 331 && obj.getX() == 150 && obj.getY() == 558) {
 			player.teleport(151, 1505, false);
 			return;
 		}
-		if(obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !Constants.GameServer.MEMBER_WORLD) {
+		else if(obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !Constants.GameServer.MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		}
-		if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
+		else if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
 			player.teleport(148, 563, false);
 			return;
-		} else if(obj.getID() == 630 && obj.getX() == 576 && obj.getY() == 3577) {
+		}
+		else if(obj.getID() == 630 && obj.getX() == 576 && obj.getY() == 3577) {
 			return;
 		}
-		if (command.equals("climb-up") || command.equals("climb up")
+		else if (command.equals("climb-up") || command.equals("climb up")
 				|| command.equals("go up")) {
 			int[] coords = coordModifier(player, true, obj);
 			player.teleport(coords[0], coords[1], false);
