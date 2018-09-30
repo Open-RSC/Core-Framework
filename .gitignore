@@ -192,3 +192,6 @@ Android/app/build/outputs/apk/debug/
 Android/local\.properties
 
 Android/\.idea/caches/
+
+**/.idea/workspace.xml
+**/.idea/tasks.xml
