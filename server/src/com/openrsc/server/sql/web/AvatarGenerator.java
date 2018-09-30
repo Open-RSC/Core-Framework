@@ -429,20 +429,6 @@ public final class AvatarGenerator
 					 * Add custom animation below.
 					 */
 					new AnimationDef("hatchet", 0, 0, true, false, 0), // 231 appearanceID.
-					new AnimationDef("pumpkinhead1", 0, 0, true, false, 0), // orange original
-					new AnimationDef("pumpkinhead2", 16711680, 0, true, false, 0), // red
-					new AnimationDef("pumpkinhead2", 16776960, 0, true, false, 0), // yellow
-					new AnimationDef("pumpkinhead2", 255, 0, true, false, 0), // blue
-					new AnimationDef("pumpkinhead2", 11141375, 0, true, false, 0), // purple
-					new AnimationDef("pumpkinhead2", 65280, 0, true, false, 0), // green
-					new AnimationDef("skillcape1", 0, 0, true, false, 0), // fishing.
-					new AnimationDef("skillcape2", 0, 0, true, false, 0), // cooking.
-					new AnimationDef("hood1", 0, 0, true, false, 0), // fishing hood
-					new AnimationDef("warriorcape", 0, 0, true, false, 0), // Warrior cape
-					new AnimationDef("spottedcape", 7692086, 0, true, false, 0), // Spotted cape
-					new AnimationDef("gaia", 0, 0, true, false, 0), // New NPC Gaia
-					new AnimationDef("skillcape3", 0, 0, true, false, 0), // attack.
-					new AnimationDef("easterbasket", 0, 0, true, false, 0),
 					new AnimationDef("fullhelm", 11189164, 0, true, false, 0),
 					new AnimationDef("platemailtop", 11189164, 0, true, false, 0),
 					new AnimationDef("platemaillegs", 11189164, 0, true, false, 0),
@@ -452,73 +438,6 @@ public final class AvatarGenerator
 					new AnimationDef("fullhelm", 10027084, 0, true, false, 0),
 					new AnimationDef("platemailtop", 10027084, 0, true, false, 0),
 					new AnimationDef("platemaillegs", 10027084, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmorange", 65535, 0, true, false, 0),
-
-					new AnimationDef("fullhelmblue", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmblue", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmblue", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmblue", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmblue", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmblue", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmblue", 65535, 0, true, false, 0),
-					
-					new AnimationDef("fullhelmpurple", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmpurple", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmpurple", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmpurple", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmpurple", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmpurple", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmpurple", 65535, 0, true, false, 0),
-					
-					new AnimationDef("fullhelmyellow", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmyellow", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmyellow", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmyellow", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmyellow", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmyellow", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmyellow", 65535, 0, true, false, 0),
-					
-					new AnimationDef("fullhelmgreen", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmgreen", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmgreen", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmgreen", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmgreen", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmgreen", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmgreen", 65535, 0, true, false, 0),
-					
-					new AnimationDef("fullhelmatched", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmatched", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmatched", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmatched", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmatched", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmatched", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmatched", 65535, 0, true, false, 0),
-					
-					new AnimationDef("fullhelmblack", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmblack", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmblack", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmblack", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmblack", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmblack", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmblack", 65535, 0, true, false, 0),
-					
-					new AnimationDef("fullhelmwhite", 16737817, 0, true, false, 0),
-					new AnimationDef("fullhelmwhite", 15654365, 0, true, false, 0),
-					new AnimationDef("fullhelmwhite", 15658734, 0, true, false, 0),
-					new AnimationDef("fullhelmwhite", 3158064, 0, true, false, 0),
-					new AnimationDef("fullhelmwhite", 10072780, 0, true, false, 0),
-					new AnimationDef("fullhelmwhite", 11717785, 0, true, false, 0),
-					new AnimationDef("fullhelmwhite", 65535, 0, true, false, 0),
-					
-					new AnimationDef("greatwood", 5453066, 0, true, false, 0), // New NPC Greatwood tree boss
-					new AnimationDef("skillcape4", 0, 0, true, false, 0), // smithing.
-					new AnimationDef("skillcape5", 0, 0, true, false, 0) // strength.
 			};
 
 		/// Load the sprites
