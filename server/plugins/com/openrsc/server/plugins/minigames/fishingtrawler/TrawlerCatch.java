@@ -46,39 +46,39 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 				int fishCaught = p.getCache().getInt("fishing_trawler_reward");
 				for (int fishGiven = 0; fishGiven < fishCaught; fishGiven++) {
 					if (catchFish(81, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some manta ray");
+						message(p, 1200, "..a manta ray!");
 						addItem(p, 1190, 1); // RAW MANTA RAY
 						p.incExp(Skills.FISHING, 460, false);
 					} else if (catchFish(79, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some sea turtle");
+						message(p, 1200, "..a sea turtle!");
 						addItem(p, 1192, 1); // RAW SEA TURTLE
 						p.incExp(Skills.FISHING, 420, false);
 					} else if (catchFish(76, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some shark");
+						message(p, 1200, "..a shark!");
 						addItem(p, 545, 1); // RAW SHARK
 						p.incExp(Skills.FISHING, 440, false);
 					} else if (catchFish(50, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some swordfish");
+						message(p, 1200, "..a sword fish");
 						addItem(p, 369, 1); // RAW SWORDFISH
 						p.incExp(Skills.FISHING, 400, false);
 					} else if (catchFish(40, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some lobster...");
+						message(p, 1200, "..a lobster");
 						addItem(p, 372, 1); // RAW LOBSTER
 						p.incExp(Skills.FISHING, 360, false);
 					} else if (catchFish(30, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some tuna...");
+						message(p, 1200, "..some tuna");
 						addItem(p, 366, 1); // RAW TUNA
 						p.incExp(Skills.FISHING, 320, false);
 					} else if (catchFish(15, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some anchovies...");
+						message(p, 1200, "..some anchovies");
 						addItem(p, 351, 1); // RAW ANCHOVIES
 						p.incExp(Skills.FISHING, 160, false);
 					} else if (catchFish(5, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some sardine...");
+						message(p, 1200, "..a sardine");
 						addItem(p, 354, 1); // RAW SARDINE
 						p.incExp(Skills.FISHING, 80, false);
 					} else if (catchFish(1, p.getSkills().getLevel(Skills.FISHING))) {
-						message(p, 1200, "..some shrimp...");
+						message(p, 1200, "..some shrimp");
 						addItem(p, 349, 1); // RAW SHRIMP
 						p.incExp(Skills.FISHING, 40, false);
 					} else {
@@ -94,7 +94,21 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 							p.incExp(Skills.FISHING, 40, false);
 						}
 						else {
-							message(p, 1200, "..some " + EntityHandler.getItemDef(randomJunkItem).getName().toLowerCase());
+							// Broken glass, buttons, damaged armour, ceramic remains
+							if (randomJunkItem == 1170 || randomJunkItem == 1166
+									|| randomJunkItem == 1157 || randomJunkItem == 1158
+									|| randomJunkItem == 1169) {
+								message(p, 1200, "..some " + EntityHandler.getItemDef(randomJunkItem).getName());
+							}
+							// Old boot
+							else if (randomJunkItem == 1155) {
+								message(p, 1200, "..an " + EntityHandler.getItemDef(randomJunkItem).getName());
+							}
+							// broken arrow, broken staff, Rusty sword, vase
+							else {
+								message(p, 1200, "..a " + EntityHandler.getItemDef(randomJunkItem).getName());
+							}
+
 							addItem(p, randomJunkItem, 1);
 						}
 					}
