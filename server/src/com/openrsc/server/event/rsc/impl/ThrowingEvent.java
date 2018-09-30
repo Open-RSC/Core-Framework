@@ -136,14 +136,14 @@ public class ThrowingEvent extends GameTickEvent {
 					return;
 				}
 
-				if (!getPlayerOwner().getLocation().isMembersWild()) {
+				/*if (!getPlayerOwner().getLocation().isMembersWild()) {
 					getPlayerOwner().message("Members content can only be used in wild levels: "
 							+ World.membersWildStart + " - " + World.membersWildMax);
 					getPlayerOwner().message("You can not use this type of ranged in wilderness");
 					getPlayerOwner().resetRange();
 					stop();
 					return;
-				}
+				}*/
 
 				int newAmount = rangeType.getAmount() - 1;
 				if (newAmount <= 0) {
