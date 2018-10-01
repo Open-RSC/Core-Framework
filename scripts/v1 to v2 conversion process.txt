@@ -1,0 +1,137 @@
+V1 database conversion to match the structure of of V2:
+
+RENAME TABLE `openrsc`.`rscd_players` TO `openrsc`.`openrsc_players`;
+RENAME TABLE `openrsc`.`rscd_bank` TO `openrsc`.`openrsc_bank`;
+RENAME TABLE `openrsc`.`rscd_curstats` TO `openrsc`.`openrsc_curstats`;
+RENAME TABLE `openrsc`.`rscd_experience` TO `openrsc`.`openrsc_experience`;
+RENAME TABLE `openrsc`.`rscd_friends` TO `openrsc`.`openrsc_friends`;
+RENAME TABLE `openrsc`.`rscd_invitems` TO `openrsc`.`openrsc_invitems`;
+RENAME TABLE `openrsc`.`rscd_quests` TO `openrsc`.`openrsc_quests`;
+ALTER TABLE `openrsc_players` DROP `id`;
+ALTER TABLE `openrsc_experience` DROP `attack_rank`, DROP `defense_rank`, DROP `strength_rank`, DROP `hits_rank`, DROP `ranged_rank`, DROP `magic_rank`, DROP `prayer_rank`, DROP `cooking_rank`, DROP `woodcut_rank`, DROP `fletching_rank`, DROP `fishing_rank`, DROP `firemaking_rank`, DROP `crafting_rank`, DROP `smithing_rank`, DROP `mining_rank`, DROP `herblaw_rank`, DROP `agility_rank`, DROP `thieving_rank`, DROP `runecrafting_rank`, DROP `total_xp_rank`, DROP `total_xp`;
+ALTER TABLE `openrsc_players` DROP `combat_rank`;
+ALTER TABLE `openrsc_players` DROP `skill_total_rank`;
+ALTER TABLE `openrsc_players` DROP `block_global`;
+ALTER TABLE `openrsc_players` DROP `showroof`;
+ALTER TABLE `openrsc_players` DROP `autoscreenshot`;
+ALTER TABLE `openrsc_players` DROP `combatwindow`;
+ALTER TABLE `openrsc_players` DROP `logout_date`;
+ALTER TABLE `openrsc_players` DROP `death_time`;
+ALTER TABLE `openrsc_players` DROP `deaths_rank`;
+ALTER TABLE `openrsc_players` DROP `kills_rank`;
+ALTER TABLE `openrsc_players` DROP `quests`, DROP `total_experience`;
+ALTER TABLE `openrsc_players` DROP `highscores`, DROP `killnotify`, DROP `store_employee`, DROP `draynor_hopper`, DROP `guild_hopper`, DROP `banana_job`, DROP `bananas_in_crate`, DROP `rum_in_karamja_crate`, DROP `rum_in_sarim_crate`, DROP `has_traiborn_key`, DROP `collecting_bones`, DROP `bones`, DROP `balls_of_wool`, DROP `killed_skeleton`, DROP `recieved_key_payment`, DROP `delete_date`, DROP `lever_A_down`, DROP `lever_B_down`, DROP `lever_C_down`, DROP `lever_D_down`, DROP `lever_E_down`, DROP `lever_F_down`, DROP `leela_has_key`, DROP `tutstage`, DROP `on_crandor`, DROP `lady_patches`, DROP `has_map_piece`, DROP `cannon_x`, DROP `cannon_y`, DROP `cannon_stage`, DROP `railing1`, DROP `railing2`, DROP `railing3`, DROP `railing4`, DROP `railing5`, DROP `railing6`, DROP `barrel`, DROP `axle`, DROP `shaft`, DROP `pipe`, DROP `poison`, DROP `avatar_items`, DROP `avatar`;
+ALTER TABLE `openrsc_curstats` DROP `cur_runecrafting`;
+ALTER TABLE `openrsc_experience` DROP `exp_runecrafting`;
+ALTER TABLE `openrsc_players` ADD `bank_size` INT(10) UNSIGNED NOT NULL DEFAULT '200' AFTER `quest_points`;
+ALTER TABLE `openrsc_bank` ADD `dbid` INT(10) NOT NULL AUTO_INCREMENT AFTER `slot`, ADD UNIQUE (`dbid`);
+ALTER TABLE `openrsc_players` ADD `charged` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `skulled`;
+ALTER TABLE `openrsc_players` ADD `offences` INT(11) NULL DEFAULT '0' AFTER `banned`;
+ALTER TABLE `openrsc_invitems` ADD `dbid` INT(10) NOT NULL AUTO_INCREMENT AFTER `slot`, ADD PRIMARY KEY (`dbid`);
+ALTER TABLE `openrsc_bank` CHANGE `owner` `playerID` INT(6) NOT NULL;
+ALTER TABLE `openrsc_curstats` CHANGE `user` `playerID` VARCHAR(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `openrsc_experience` CHANGE `user` `playerID` VARCHAR(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `openrsc_friends` CHANGE `id` `dbid` INT(10) NOT NULL AUTO_INCREMENT AFTER `friendName`;
+ALTER TABLE `openrsc_friends` CHANGE `user` `playerID` VARCHAR(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `openrsc_players` CHANGE `pass` `pass` CHAR(128) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL AFTER `owner`;
+ALTER TABLE `openrsc_players` CHANGE `password_salt` `salt` CHAR(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `pass`;
+ALTER TABLE `openrsc_players` CHANGE `banned` `banned` INT(1) NOT NULL DEFAULT '0' AFTER `login_ip`;
+ALTER TABLE `openrsc_players` CHANGE `muted` `muted` INT(1) NULL DEFAULT '0' AFTER `offences`;
+ALTER TABLE `openrsc_players` CHANGE `kills` `kills` SMALLINT(5) NOT NULL DEFAULT '0' AFTER `muted`;
+ALTER TABLE `openrsc_players` CHANGE `iron_man` `iron_man` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `deaths`;
+ALTER TABLE `openrsc_players` CHANGE `iron_man_restriction` `iron_man_restriction` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER `iron_man`;
+ALTER TABLE `openrsc_players` CHANGE `hc_ironman_death` `hc_ironman_death` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `iron_man_restriction`;
+ALTER TABLE `openrsc_players` CHANGE `online` `online` TINYINT(1) NOT NULL DEFAULT '0' AFTER `hc_ironman_death`;
+ALTER TABLE `openrsc_players` CHANGE `quest_points` `quest_points` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `online`;
+ALTER TABLE `openrsc_players` CHANGE `highscoreopt` `highscoreopt` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `bank_size`;
+ALTER TABLE `openrsc_players` CHANGE `forum_active` `forum_active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `highscoreopt`;
+ALTER TABLE `openrsc_curstats` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST;
+ALTER TABLE `openrsc_experience` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST;
+ALTER TABLE `openrsc_invitems` CHANGE `user` `playerID` VARCHAR(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `openrsc_players` CHANGE `user` `id` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+UPDATE `openrsc_players` SET group_id = "4" WHERE group_id = "10";
+ALTER TABLE `openrsc_players` CHANGE `id` `user` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `openrsc_players` ADD `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`id`);
+ALTER TABLE `openrsc_players` CHANGE `offences` `offences` INT(11) NULL DEFAULT '0' AFTER `banned`;
+ALTER TABLE `openrsc_players` CHANGE `muted` `muted` INT(1) NULL DEFAULT '0' AFTER `offences`;
+ALTER TABLE `openrsc_players` CHANGE `kills` `kills` SMALLINT(5) NOT NULL DEFAULT '0' AFTER `muted`;
+
+
+
+Bank:
+
+Nothing needs to be done.
+
+- Export to CSV, import in new table
+
+
+
+Curstats:
+
+SET @i=0;
+UPDATE openrsc_curstats SET playerID=10000+(@i:=@i+1);
+UPDATE openrsc_curstats SET openrsc_curstats.playerID = openrsc_curstats.id;
+
+- Export to CSV, import in new table
+
+
+
+Experience:
+
+SET @i=0;
+UPDATE openrsc_experience SET playerID=10000+(@i:=@i+1);
+UPDATE openrsc_experience SET openrsc_experience.playerID = openrsc_experience.id;
+
+- Export to CSV, import in new table
+
+
+
+Friends:
+
+SELECT B.id AS playerID, A.friend, C.username AS friendName, A.dbid FROM openrsc.openrsc_friends AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user LEFT JOIN openrsc.openrsc_players AS C ON A.friend = C.user WHERE C.username IS NOT NULL;
+
+- Export to CSV, import in new table
+
+
+
+Invitems:
+
+SELECT B.id AS playerID, A.id, A.amount, A.wielded, A.slot, A.dbid FROM openrsc.openrsc_invitems AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
+
+- Export to CSV, import in new table
+
+
+
+Quests:
+
+ALTER TABLE `openrsc_quests` DROP `quest_points`, DROP `quest_stage`;
+ALTER TABLE `openrsc_quests` CHANGE `finished` `stage` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `openrsc_quests` CHANGE `id` `dbid` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `openrsc_quests` CHANGE `user` `playerID` VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `openrsc_quests` CHANGE `quest_id` `id` INT(10) NULL DEFAULT NULL;
+UPDATE openrsc_quests SET openrsc_quests.stage = -1 WHERE openrsc_quests.stage = 1;
+SELECT A.dbid, B.owner AS playerID, A.id, A.stage FROM openrsc.openrsc_quests AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
+
+- Export to CSV, import in new table
+
+
+
+Players2:
+
+SET @i=0;
+UPDATE openrsc_players SET id=10000+(@i:=@i+1);
+UPDATE `openrsc_players` SET openrsc_players.id = openrsc_players.owner;
+ALTER TABLE `openrsc_players` CHANGE `id` `id` INT(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `openrsc_players` DROP `user`;
+UPDATE `openrsc_players` SET cameraauto = 0;
+UPDATE `openrsc_players` SET username = REPLACE(username,'_',' ');
+
+- Export to CSV, import in new table
+
+
+
+Users:
+
+Nothing needs to be done.
+
+- Export to CSV, import in new table

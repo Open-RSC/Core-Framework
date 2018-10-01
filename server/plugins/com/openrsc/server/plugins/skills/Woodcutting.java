@@ -47,7 +47,7 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message(owner.MEMBER_MESSAGE);
 			return;
 		}
-		if (owner.getFatigue() >= 7500) {
+		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.message("You are too tired to cut the tree");
 			return;
 		}
@@ -95,7 +95,7 @@ public class Woodcutting implements ObjectActionListener,
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		owner.setBatchEvent(new BatchEvent(owner, 1600, batchTimes) {
 			public void action() {
-				if (owner.getFatigue() >= 7500) {
+				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 					owner.message("You are too tired to cut the tree");
 					interrupt();
 					return;

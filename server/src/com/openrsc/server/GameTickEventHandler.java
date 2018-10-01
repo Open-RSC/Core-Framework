@@ -21,13 +21,14 @@ public class GameTickEventHandler {
 	private LinkedHashMap<String, GameTickEvent> toAdd = new LinkedHashMap<String, GameTickEvent>();
 
 	public void add(GameTickEvent event) {
+		String className = event.getClass().getSimpleName();
 		if (event.getOwner() == null) {
 			String u;
 			while (events.containsKey(u = UUID.randomUUID().toString())) {}
-			events.put(u, event);
+			toAdd.put(className + u, event);
 		}
 		else
-			events.put(String.valueOf(event.getOwner().getID()), event);
+			toAdd.put(className + String.valueOf(event.getOwner().getID()), event);
 	}
 
 	public boolean contains(GameTickEvent event) {

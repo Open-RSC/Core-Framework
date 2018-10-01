@@ -15,7 +15,8 @@ public class Config {
 	private static Properties prop = new Properties();
 
 	public static final String SERVER_NAME = "Open RSC";
-	public static final String SERVER_IP = "dev1.openrsc.com";
+	public static final String SERVER_IP = "dev1.openrsc.com"; //dev1.openrsc.com , localhost
+
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
 	public static final boolean MEMBERS_FEATURES = true;
@@ -23,7 +24,7 @@ public class Config {
 
 	public static boolean F_ANDROID_BUILD = false;
 	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-        public static String F_CACHE_DIR = "cache";
+	public static String F_CACHE_DIR = "Cache";
 
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
@@ -69,6 +70,8 @@ public class Config {
 	public static boolean S_CUSTOM_FIREMAKING = false;
 	public static boolean S_WANT_DROP_X = false;
 	public static boolean S_WANT_EXP_INFO = false;
+	public static boolean S_WANT_WOODCUTTING_GUILD = false;
+	public static boolean S_WANT_DECANTING = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
@@ -205,7 +208,7 @@ public class Config {
 	public static String getServerName() {
 		return prop.getProperty("SERVER_NAME");
 	}
-    
+
 	public static String getCommandPrefix() {
 		return prop.getProperty("COMMAND_PREFIX");
 	}

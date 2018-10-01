@@ -11,6 +11,7 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import java.util.ArrayList;
 
 public final class RegularPlayer implements CommandListener {
 	public static final World world = World.getWorld();
@@ -195,7 +196,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 		}
 		if (command.equals("fatigue")) {
-			player.setFatigue(7500);
+			player.setFatigue(player.MAX_FATIGUE);
 			player.message("Your fatigue has been updated to 100%");
 		}
 		if (command.equals("online")) {
@@ -207,6 +208,14 @@ public final class RegularPlayer implements CommandListener {
 			}
 			ActionSender.sendMessage(player, "@yel@Players Online: @whi@" + players);
 			return;
+		}
+                if (command.equals("uniqueonline")) {
+			ArrayList<String> IP_ADDRESSES = new ArrayList<String>();
+			for (Player p : World.getWorld().getPlayers()) {
+				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
+					IP_ADDRESSES.add(p.getCurrentIP());
+			}
+			player.message("There are " + IP_ADDRESSES.size() + " unique players online");
 		}
 		if (command.equals("skull")) {
 			int length = 20;

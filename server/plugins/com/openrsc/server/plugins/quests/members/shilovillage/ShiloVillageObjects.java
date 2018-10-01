@@ -125,7 +125,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		if(obj.getID() == CLIMB_CAVE_ROCKS) {
-			if(p.getFatigue() >= 7500) {
+			if(p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too fatigued to go any further.");
 				return;
 			}

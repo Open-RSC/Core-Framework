@@ -76,6 +76,8 @@ public final class Player extends Mob {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	public final int MAX_FATIGUE = 75000;
+
 	public int IRON_MAN_MODE = 0;
 	public int IRON_MAN_RESTRICTION = 1;
 	public int IRON_MAN_HC_DEATH = 0;
@@ -283,9 +285,9 @@ public final class Player extends Mob {
 	 */
 	private int drainRate = 0;
 	/**
-	 * Amount of fatigue - 0 to 7500
+	 * Amount of fatigue - 0 to 75000
 	 */
-	private int fatigue = 7500, sleepStateFatigue = 7500;
+	private int fatigue = 0, sleepStateFatigue = 0;
 
 	/**
 	 * The main accounts group is
@@ -705,7 +707,7 @@ public final class Player extends Mob {
 	/**
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
-	public void unwieldMembersItems() {
+	/*public void unwieldMembersItems() { // Not authentic behavior
 		if (getLocation().inWilderness() && (!getLocation().isMembersWild())) {
 			boolean found = false;
 			for (Item i : getInventory().getItems()) {
@@ -739,7 +741,7 @@ public final class Player extends Mob {
 			}
 		}
 
-	}
+	}*/
 	private int bankSize = 200;
 
 	public int getBankSize() {
@@ -1085,20 +1087,19 @@ public final class Player extends Mob {
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
 		if (useFatigue) {
-			if (fatigue >= 7500) {
+			if (fatigue >= this.MAX_FATIGUE) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 				return;
 			}
-			if (fatigue >= 7200) {
-				ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
-			}
+			//if (fatigue >= 69750) {
+			//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
+			//}
 			if (skill >= 3 && useFatigue) {
-				int famt = (int) ((8 * skillXP / 5) / 3);
-				fatigue += famt;
+				fatigue += skillXP * 4;
+				if (fatigue > this.MAX_FATIGUE) {
+					fatigue = this.MAX_FATIGUE;
+				}
 				ActionSender.sendFatigue(this);
-			}
-			if (fatigue > 7500) {
-				fatigue = 7500;
 			}
 		}
 		if (getLocation().onTutorialIsland()) {
@@ -1287,8 +1288,8 @@ public final class Player extends Mob {
 	}
 
 	public void message(String string) {
-		resetMenuHandler();
-		setOption(-1);
+		// resetMenuHandler();
+		// setOption(-1);
 		ActionSender.sendMessage(this, string);
 	}
 
@@ -1767,9 +1768,9 @@ public final class Player extends Mob {
 				}
 
 				if (bed) {
-					owner.sleepStateFatigue -= 2100;
+					owner.sleepStateFatigue -= 16500;
 				} else {
-					owner.sleepStateFatigue -= 431;
+					owner.sleepStateFatigue -= 4125;
 				}
 
 				if (owner.sleepStateFatigue < 0) {

@@ -65,15 +65,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message("Added bank items.");
 		}
-		if (command.equals("uniqueonline")) {
-			ArrayList<String> IP_ADDRESSES = new ArrayList<String>();
-			for (Player p : World.getWorld().getPlayers()) {
-				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
-					IP_ADDRESSES.add(p.getCurrentIP());
-			}
-			player.message("There are " + IP_ADDRESSES.size() + " unique players online");
-		}
-                /*if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
+		/*if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
 			StringBuilder sb = new StringBuilder();
                         synchronized (World.getWorld().getPlayers()) {
                                 EntityList<Player> players = World.getWorld().getPlayers();
@@ -228,6 +220,60 @@ public final class Admins implements CommandListener {
 				}
 			});
 		}
+
+		if (command.equals("fakecrystalchest")) {
+			String loot;
+			HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
+
+			int maxAttempts = Integer.parseInt(args[0]);
+
+			int percent = 0;
+
+
+			for (int i = 0; i < maxAttempts; i++) {
+				loot = "None";
+				percent = DataConversions.random(0, 100);
+	      if (percent <= 70) {
+  	      loot = "SpinachRollAnd2000Coins";
+    	  }
+	      if (percent < 60) {
+  	      loot = "SwordfishCertsAnd1000Coins";
+    	  }
+	      if (percent < 30) {
+	        loot = "Runes";
+	      }
+	      if (percent < 14) {
+	        loot = "CutRubyAndDiamond";
+	      }
+	      if (percent < 12) {
+	        loot = "30IronCerts";
+	      }
+	      if (percent < 10) {
+	        loot = "20CoalCerts";
+	      }
+	      if (percent < 9) {
+	        loot = "3RuneBars";
+	      }
+	      if (percent < 4) {
+	        if (DataConversions.random(0, 1) == 1) {
+	          loot = "LoopHalfKeyAnd750Coins";
+	        } else
+	          loot = "TeethHalfKeyAnd750Coins";
+	      }
+	      if (percent < 2) {
+	        loot = "AddySquare";
+	      }
+	      if (percent < 1) {
+	        loot = "RuneLegs";
+	      }
+				if (allLoot.get(loot) == null)
+					allLoot.put(loot, 1);
+				else
+					allLoot.put(loot, allLoot.get(loot) + 1);
+			}
+			System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
+		}
+
 		if (command.equals("simulatedrop")) {
 			int npcID = Integer.parseInt(args[0]);
 			int maxAttempts = Integer.parseInt(args[1]);
@@ -539,7 +585,7 @@ public final class Admins implements CommandListener {
                         "@lre@Player Information: %"
                         + " %"
 			+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
-                        + "@gre@Fatigue:@whi@ " + ((p.getFatigue() / 25) * 100 / 750) + " %"
+                        + "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
                         + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
                         + "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
                         + "@gre@IP:@whi@ " + p.getLastIP() + " %"

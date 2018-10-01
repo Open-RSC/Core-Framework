@@ -127,7 +127,7 @@ InvUseOnObjectExecutiveListener {
 						if(!isCompleted()) {
 							showBubble(p, item);
 						}
-						if (p.getFatigue() >= 7500) {
+						if (p.getFatigue() >= p.MAX_FATIGUE) {
 							p.message("You are too tired to smelt cannon ball");
 							interrupt();
 							return;
@@ -166,12 +166,14 @@ InvUseOnObjectExecutiveListener {
 		if (!p.withinRange(obj, 2)) {
 			return;
 		}
-		if (p.getFatigue() >= 7500) {
+		if (p.getFatigue() >= p.MAX_FATIGUE) {
 			p.message("You are too tired to smelt this ore");
 			return;
 		}
 		if (getCurrentLevel(p, SMITHING) < smelt.getRequiredLevel()) {
 			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == SILVER_BAR || smelt.getSmeltBarId() == GOLD_BAR || smelt.getSmeltBarId() == GOLD_BAR_FAMILYCREST ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
+			if (smelt.getSmeltBarId() == IRON_BAR)
+				p.message("Practice your smithing using tin and copper to make bronze");
 			return;
 		}
 		if (p.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
@@ -193,7 +195,7 @@ InvUseOnObjectExecutiveListener {
 		p.message(smeltString(smelt, item));
 		p.setBatchEvent(new BatchEvent(p, 1600, Formulae.getRepeatTimes(p, SMITHING)) {
 			public void action() {
-				if (p.getFatigue() >= 7500) {
+				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to smelt this ore");
 					interrupt();
 					return;

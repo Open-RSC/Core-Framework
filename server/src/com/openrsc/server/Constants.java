@@ -78,14 +78,6 @@ public final class Constants {
 		 */
 		public static double SKILLING_EXP_RATE = 1.0;
 		/**
-		 * standard subscriber rate for members (added to SKILLING_EXP_RATE)
-		 */
-		public static double SUBSCRIBER_EXP_RATE = 0;
-		/**
-		 * premium/ultimate subscriber rate for members (added to SKILLING_EXP_RATE)
-		 */
-		public static double PREMIUM_EXP_RATE = 0;
-		/**
 		 * Wilderness extra boost multiplier (added to SKILLING_EXP_RATE)
 		 */
 		public static double WILDERNESS_BOOST = 0;
@@ -109,7 +101,7 @@ public final class Constants {
 		/**
 		 * Avatar web directory (full path required)
 		 */
-		public static final String AVATAR_DIR = "avatars/";
+		public static final String AVATAR_DIR = "avatars/"; //located with the Server folder
 
 		public static long START_TIME = 0L;
 		/**
@@ -137,8 +129,6 @@ public final class Constants {
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
 		public static boolean SPAWN_IRON_MAN_NPCS = false;
-		public static boolean SPAWN_SUBSCRIPTION_NPCS = false;
-
 		public static boolean SHOW_FLOATING_NAMETAGS = false;
 		public static boolean WANT_CLANS = false;
 		public static boolean WANT_KILL_FEED = false;
@@ -167,6 +157,8 @@ public final class Constants {
 		public static boolean WANT_EXP_INFO = false;
 		public static boolean WANT_WOODCUTTING_GUILD = false;
 		public static boolean WANT_DECANTING = false;
+		public static boolean WANT_CERTS_TO_BANK = false;
+		public static boolean NPC_KILL_MESSAGES = false;
 
 		/**
 		 * 
@@ -198,16 +190,13 @@ public final class Constants {
 			MEMBER_WORLD = Boolean.parseBoolean(props.getProperty("member_world"));
 			COMBAT_EXP_RATE = Double.parseDouble(props.getProperty("combat_exp_rate"));
 			SKILLING_EXP_RATE = Double.parseDouble(props.getProperty("skilling_exp_rate"));
-			SUBSCRIBER_EXP_RATE = Double.parseDouble(props.getProperty("subscriber_exp_rate"));
-			PREMIUM_EXP_RATE = Double.parseDouble(props.getProperty("premium_exp_rate"));
 			WILDERNESS_BOOST = Double.parseDouble(props.getProperty("wilderness_boost"));
 			SKULL_BOOST = Double.parseDouble(props.getProperty("skull_boost"));
 			IS_DOUBLE_EXP = Boolean.parseBoolean(props.getProperty("double_exp"));
 
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
-			SPAWN_SUBSCRIPTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_subscription_npcs"));
-
+			
 			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
@@ -236,7 +225,8 @@ public final class Constants {
 			WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
 			WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
-
+			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
+			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
 			START_TIME = System.currentTimeMillis();
 
 			// Make sure config doesn't exceed max values
@@ -298,11 +288,11 @@ public final class Constants {
 		public static final int LEGENDS_QUEST = 49;
 	}
 
-	public static final class Skillcapes {
-		public static final int ATTACK_CAPE = 2111;
-		public static final int STRENGTH_CAPE = 2259;
-		public static final int COOKING_CAPE = 2105;
-		public static final int FISHING_CAPE = 2103;
-		public static final int SMITHING_CAPE = 2258;
-	}
+	//public static final class Skillcapes {
+	//	public static final int ATTACK_CAPE = 2111;
+	//	public static final int STRENGTH_CAPE = 2259;
+	//	public static final int COOKING_CAPE = 2105;
+	//	public static final int FISHING_CAPE = 2103;
+	//	public static final int SMITHING_CAPE = 2258;
+	//}
 }

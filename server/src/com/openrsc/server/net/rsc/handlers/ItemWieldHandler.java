@@ -40,8 +40,7 @@ public final class ItemWieldHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-                //Not authentic behavior
-		/*if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) {
+		/*if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) { //Not authentic behavior
 			player.message("Members objects can only be wield above the P2P Gate in wild: " + World.membersWildStart + " - "
 						+ World.membersWildMax);
 			return;
