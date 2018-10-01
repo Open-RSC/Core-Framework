@@ -154,11 +154,7 @@ etc/ghost/logs/*.log.*
 !etc/ghost/content/data/
 !etc/ghost/content/logs
 etc/ghost/content/data/\.DS_Store
-
-etc/ghost/content/themes/
-
 etc/ghost/content/logs/*.log.*
-
 etc/ghost/content/data/ghost\.db
 
 Tools/Sprite Editor/unpack/dat/
@@ -186,3 +182,16 @@ Docker\.dmg
 \.installedalready
 
 \.methodinstall
+Android/Open RSC Android Client/build/intermediates
+Android/Open RSC Android Client/build/outputs/apk/debug/
+
+*.dex
+
+Android/app/build/outputs/apk/debug/
+
+Android/local\.properties
+
+Android/\.idea/caches/
+
+**/.idea/workspace.xml
+**/.idea/tasks.xml

@@ -137,7 +137,7 @@ public final class Moderator implements CommandListener {
 				player.message("::resetq <playername>, <questid>, <stage>");
 			}
 		} 
-		/*if (command.equals("wildrule")) {
+		if (command.equals("wildrule")) {
 			if (args[0].equals("god")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
@@ -155,7 +155,7 @@ public final class Moderator implements CommandListener {
 			} else {
 				player.message("Unknown rule. Use ::wildrule <god/members> <startLevel> <endLevel>");
 			}
-		}*/
+		}
 		if(command.equals("gmute")) {
 			if (args.length != 2) {
 				player.message("Wrong syntax. ::mute <name> <time in minutes> (-1 for permanent)");
@@ -238,7 +238,7 @@ public final class Moderator implements CommandListener {
 			int fatPercentage = Integer.parseInt(args[1]);
 			Player p = world.getPlayer(PlayerHash);
 			if (p != null) {
-				p.setFatigue((fatPercentage * 100) / 750);
+				p.setFatigue(fatPercentage * 750);
 				player.message("You have set " + p.getUsername() + " fatigue to " + fatPercentage + "%.");
 				GameLogging.addQuery(new StaffLog(player, 12, p, "Fatigue percentage was set to " + fatPercentage + "%"));
 			} else {

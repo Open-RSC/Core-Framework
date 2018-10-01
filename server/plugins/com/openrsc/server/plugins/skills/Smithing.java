@@ -310,20 +310,25 @@ InvUseOnObjectExecutiveListener {
 				return;
 			}
 
-			String[] options = {"Make 1",
+			int makeCount = 1;
+			if (Constants.GameServer.BATCH_PROGRESSION) {
+				String[] options = {
+					"Make 1",
 					"Make 5",
 					"Make 10",
-			"Make All"};
+					"Make All"
+				};
 
-			int makeCount = showMenu(player, options);
+				makeCount = showMenu(player, options);
 
-			if(makeCount == -1) {
-				return;
+				if(makeCount == -1) {
+					return;
+				}
+
+				int maximumMakeCount = player.getInventory().countId(item.getID()) / def.getRequiredBars();
+
+				makeCount = makeCount != 3 ? Integer.parseInt(options[makeCount].replaceAll("Make ", "")) : maximumMakeCount;
 			}
-
-			int maximumMakeCount = player.getInventory().countId(item.getID()) / def.getRequiredBars();
-
-			makeCount = makeCount != 3 ? Integer.parseInt(options[makeCount].replaceAll("Make ", "")) : maximumMakeCount;
 
 			player.setBatchEvent(new BatchEvent(player, 650, makeCount) {
 				@Override
@@ -333,7 +338,7 @@ InvUseOnObjectExecutiveListener {
 						interrupt();
 						return;
 					}
-					if (player.getFatigue() >= 7500) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to smith");
 						interrupt();
 						return;
@@ -358,7 +363,6 @@ InvUseOnObjectExecutiveListener {
 					}
 					player.incExp(13,
 							Formulae.getSmithingExp(item.getID(), def.getRequiredBars()), true);
-					//System.out.println("Smithed xp : " + Formulae.getSmithingExp(item.getID(), def.getRequiredBars()));
 				}
 			});
 

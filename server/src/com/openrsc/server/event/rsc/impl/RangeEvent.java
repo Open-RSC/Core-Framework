@@ -138,14 +138,14 @@ public class RangeEvent extends GameTickEvent {
 
 					}
 					if (arrowID != 11 && arrowID != 190) {
-						if (!getPlayerOwner().getLocation().isMembersWild()) {
+						/*if (!getPlayerOwner().getLocation().isMembersWild()) {
 							getPlayerOwner().message("Members content can only be used in wild levels: "
 									+ World.membersWildStart + " - " + World.membersWildMax);
 							getPlayerOwner().message("You can not use this type of arrows in wilderness.");
 							getPlayerOwner().resetRange();
 							stop();
 							return;
-						}
+						}*/
 					}
 
 					int newAmount = arrow.getAmount() - 1;

@@ -373,7 +373,7 @@ public class ActionSender {
 	public static void sendFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_FATIGUE.opcode);
-		s.writeShort(player.getFatigue() / 10);
+		s.writeShort(player.getFatigue() / 750);
 		player.write(s.toPacket());
 	}
 
@@ -386,7 +386,7 @@ public class ActionSender {
 	public static void sendSleepFatigue(Player player, int fatigue) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SLEEP_FATIGUE.opcode);
-		s.writeShort(fatigue / 10);
+		s.writeShort(fatigue / 750);
 		player.write(s.toPacket());
 	}
 
@@ -478,7 +478,6 @@ public class ActionSender {
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
 		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
-		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
 		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
 		s.writeByte((byte)(Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
@@ -507,6 +506,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_DECANTING ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
 		return s;
 	}
 
@@ -563,8 +563,6 @@ public class ActionSender {
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
 		s.writeString(player.getLastIP());
 		s.writeShort(player.getDaysSinceLastLogin());
-		//s.writeShort(player.getDaysSubscriptionLeft());
-		//s.writeShort(player.premiumSubDaysLeft());
 		//s.writeShort(player.getUnreadMessages());
 		player.write(s.toPacket());
 	}
@@ -1059,9 +1057,9 @@ public class ActionSender {
 				sendInventory(p);
 				p.checkEquipment();
 
-				if (p.getLocation().inWilderness()) {
+				/*if (p.getLocation().inWilderness()) { // Not authentic
 					p.unwieldMembersItems();
-				}
+				}*/
 
 				if (p.isMod()) {
 					p.setAttribute("no-aggro", true);

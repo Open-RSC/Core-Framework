@@ -103,8 +103,8 @@ public class Yanni implements TalkToNpcListener, TalkToNpcExecutiveListener, Inv
 				break;
 			case 852:
 				npcTalk(p, npc, "Great item, here's 1000 Gold for it.");
-				removeItem(p, 961, 1);
-				addItem(p, 10, 100);
+				removeItem(p, 852, 1);
+				addItem(p, 10, 1000);
 				p.message("You sell Beads of the Dead.");
 				break;
 			default:

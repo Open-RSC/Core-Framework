@@ -1251,10 +1251,10 @@ public class DoorAction {
 		}
 		player.message("you go through the gate");
 		doGate(player, obj);
-		if(player.getY() >= 141 && obj.getID() == 347) {
-			/* Unwield so they cannot be stationary with it */
+		/*if(player.getY() >= 141 && obj.getID() == 347) { // Not authentic
+			// Unwield so they cannot be stationary with it
 			player.unwieldMembersItems();
-		}
+		}*/
 	}
 
 	private void replaceGameObject(final int newID, final boolean open,

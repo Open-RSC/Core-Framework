@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Sep 09, 2018 at 12:10 PM
--- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic
+-- Generation Time: Sep 25, 2018 at 01:20 AM
+-- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic-log
 -- PHP Version: 7.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -23,6 +23,21 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `openrsc_game` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `openrsc_game`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `openrsc_npckills`
+--
+
+DROP TABLE IF EXISTS `openrsc_npckills`;
+CREATE TABLE IF NOT EXISTS `openrsc_npckills` (
+  `ID` int(10) NOT NULL AUTO_INCREMENT,
+  `npcID` int(10) DEFAULT NULL,
+  `playerID` int(10) DEFAULT NULL,
+  `killCount` int(10) DEFAULT 0,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -161,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_chat_logs` (
   PRIMARY KEY (`id`),
   KEY `time` (`time`),
   KEY `sender` (`sender`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1257,7 +1272,6 @@ INSERT INTO `openrsc_grounditems` (`id`, `x`, `y`, `amount`, `respawn`, `idx`) V
 (1283, 256, 754, 1, 15, 980),
 (1283, 257, 761, 1, 15, 981),
 (36, 149, 454, 2, 40, 988),
-(2092, 119, 516, 1, 45, 989),
 (83, 136, 279, 1, 45, 990),
 (27, 131, 280, 1, 45, 991),
 (538, 362, 1439, 1, 30, 992),
@@ -1456,7 +1470,7 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (67, 1332, -1, 'Steel Short Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 50, 16, 4, 5, 0, 0, 13, 13, 0, 0, 325),
 (68, 1333, -1, 'Mithril Short Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 51, 16, 4, 20, 0, 0, 18, 18, 0, 0, 845),
 (69, 1334, -1, 'Adamantite Short Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 52, 16, 4, 30, 0, 0, 25, 25, 0, 0, 2080),
-(70, 1335, -1, 'Bronze Long Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 48, 16, 4, 1, 0, 0, 8, 8, 0, 0, 40),
+(70, 1335, -1, 'Bronze Long Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 48, 16, 4, 1, 0, 0, 7, 7, 0, 0, 40),
 (71, 1336, -1, 'Iron Long Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 49, 16, 4, 1, 0, 0, 10, 10, 0, 0, 140),
 (72, 1337, -1, 'Steel Long Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 50, 16, 4, 5, 0, 0, 16, 16, 0, 0, 500),
 (73, 1338, -1, 'Mithril Long Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 51, 16, 4, 20, 0, 0, 22, 22, 0, 0, 1300),
@@ -1981,7 +1995,7 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (591, 0, -1, 'Raw lava eel', 'A very strange eel', '', 0, 1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 150),
 (592, 0, -1, 'Poison Crossbow bolts', 'Good if you have a crossbow!', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 3),
 (593, 1789, -1, 'Dragon sword', 'A Razor sharp sword', '', 0, 1, 0, 0, 1, 163, 16, 4, 60, 0, 0, 71, 71, 0, 0, 100000),
-(594, 1790, -1, 'Dragon axe', 'A vicious looking axe', '', 0, 1, 0, 0, 1, 162, 16, 4, 60, 0, 0, 70, 76, 0, 0, 200000),
+(594, 1790, -1, 'Dragon axe', 'A vicious looking axe', '', 0, 1, 0, 0, 1, 162, 16, 4, 60, 0, 0, 69, 75, 0, 0, 200000),
 (595, 0, -1, 'Jail keys', 'Keys to the black knight jail', '', 0, 1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 2),
 (596, 0, -1, 'Dusty Key', 'A key given to me by Velrak', '', 0, 1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
 (597, 1791, -1, 'Charged Dragonstone Amulet', 'A very powerful amulet', 'rub', 0, 1, 0, 0, 1, 81, 1024, 8, 1, 1, 3, 10, 6, 3, 3, 17625),
@@ -3483,49 +3497,8 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (2089, -1, 1282, 'Bailing Bucket', 'Swap this note at any bank for the equivalent item.', 'bail with ', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10),
 (2090, -1, 1283, 'Plank', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (2091, -1, 1285, 'display tea', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10),
-(2092, 2093, -1, 'Gold Subscription Token', 'A legacy gold token worth 1 month of membership, visit the Vendor in Varrock Centre', 'Read', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 15),
-(2093, -1, 2092, 'Gold Subscription Token', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15),
-(2094, 2095, -1, 'Premium Subscription Token', 'A legacy premium token - boost subscription, can only be used with the gold token', 'Read', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 30),
-(2095, -1, 2094, 'Premium Subscription Token', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30),
-(2096, 0, -1, 'Loyalty Token', 'The legacy loyalty token earned from being a loyal subscriber', 'Read', 0, 0, 1, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 100),
-(2097, 0, -1, 'Pumpkin Head', 'The original orange pumpkin head', '', 0, 0, 0, 1, 1, 231, 33, 0, 1, 1, 0, 0, 0, 0, 0, 3),
-(2098, 0, -1, 'Pumpkin Head', 'A red dyed pumpkin head from Aggie the Draynor witch', '', 0, 0, 0, 1, 1, 232, 33, 0, 1, 1, 0, 0, 0, 0, 0, 3),
-(2099, 0, -1, 'Pumpkin Head', 'A yellow dyed pumpkin head from Aggie the Draynor witch', '', 0, 0, 0, 1, 1, 233, 33, 0, 1, 1, 0, 0, 0, 0, 0, 3),
-(2100, 0, -1, 'Pumpkin Head', 'A blue dyed pumpkin head from Aggie the Draynor witch', '', 0, 0, 0, 1, 1, 234, 33, 0, 1, 1, 0, 0, 0, 0, 0, 3),
-(2101, 0, -1, 'Pumpkin Head', 'A purple dyed pumpkin head from Aggie the Draynor witch', '', 0, 0, 0, 1, 1, 235, 33, 0, 1, 1, 0, 0, 0, 0, 0, 3),
-(2102, 0, -1, 'Pumpkin Head', 'A green dyed pumpkin head from Aggie the Draynor witch', '', 0, 0, 0, 1, 1, 236, 33, 0, 1, 1, 0, 0, 0, 0, 0, 3),
-(2103, 0, -1, 'Fishing cape', 'The cape worn by the best fishermen', '', 0, 0, 0, 1, 1, 237, 2048, 11, 99, 10, 0, 0, 0, 0, 0, 99000),
-(2104, 0, -1, 'Fishing hood', 'Fishing skillcape hood', '', 0, 0, 0, 1, 1, 239, 33, 0, 99, 10, 0, 0, 0, 0, 0, 99000),
-(2105, 0, -1, 'Cooking cape', 'The cape worn by the world\'s best chefs', '', 0, 0, 0, 1, 1, 238, 2048, 11, 99, 7, 0, 0, 0, 0, 0, 99000),
-(2106, 0, -1, 'Experience Elixir', 'A mysterious experience elixir once produced by hetty', 'Drink', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2250),
-(2107, 0, -1, 'Teleport Stone', 'Teleports you to any town', 'Teleport', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 150),
-(2108, 0, -1, 'Warrior cape', 'A red cape worn by warriors', '', 0, 0, 0, 0, 1, 240, 2048, 11, 1, 1, 0, 7, 0, 0, 0, 3075),
-(2109, -1, 2108, 'Warrior cape', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3075),
-(2110, 0, -1, 'Spotted cape', 'A dark brown spotted cape', '', 0, 0, 0, 1, 1, 241, 2048, 11, 1, 1, 2, 0, 0, 0, 0, 2),
-(2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 243, 2048, 11, 99, 0, 0, 0, 0, 0, 0, 99000),
-(2112, 0, -1, 'Blood egg', 'Happy Easter', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 10),
-(2113, 0, -1, 'Easter egg', 'A cracked open easter egg - Happy Easter!', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 10),
-(2114, 0, -1, 'Easter basket', 'A holiday gift from legacy', '', 0, 0, 0, 0, 1, 244, 8217, 3, 1, 1, 16, 0, 0, 0, 0, 2),
-(2115, -1, 2114, 'Easter basket', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2),
-(2116, 0, -1, 'Super Easter attack Potion', '3 doses of easter attack potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2117, 0, -1, 'Super Easter attack Potion', '2 doses of easter attack potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2118, 0, -1, 'Super Easter attack Potion', '1 dose of easter attack potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2119, 0, -1, 'Super Easter strength Potion', '3 doses of easter strength potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2120, 0, -1, 'Super Easter strength Potion', '2 doses of easter strength potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2121, 0, -1, 'Super Easter strength Potion', '1 doses of easter strength potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2122, 0, -1, 'Super Easter defense Potion', '3 doses of easter defense potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2123, 0, -1, 'Super Easter defense Potion', '2 doses of easter defense potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2124, 0, -1, 'Super Easter defense Potion', '1 doses of easter defense potion', 'Drink', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2125, 0, -1, 'Easter Air', 'The easter air-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2126, 0, -1, 'Easter Earth', 'The easter Earth-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2127, 0, -1, 'Easter Mind', 'The easter Mind-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2128, 0, -1, 'Easter Fire', 'The easter Fire-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2129, 0, -1, 'Easter Water', 'The easter Water-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2130, 0, -1, 'Easter Chaos', 'The easter Chaos-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2131, 0, -1, 'Easter Death', 'The easter Death-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2132, 0, -1, 'Easter Blood', 'The easter Blood-rune', '', 0, 0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2133, -1, 1156, 'Bunny ears', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(2134, -1, 1289, 'Scythe', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15),
+(2133, -1, 1156, 'Bunny ears', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(2134, -1, 1289, 'Scythe', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15),
 (2135, -1, -1, 'Ironman helm', 'For just a rather very independent scaper.', '', 0, 0, 0, 0, 1, 245, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
 (2136, -1, -1, 'Ironman platebody', 'Take it off and what are you?', '', 0, 0, 0, 0, 1, 246, 322, 1, 1, 1, 20, 0, 0, 0, 0, 560),
 (2137, -1, -1, 'Ironman platelegs', 'Take it off and what are you?', '', 0, 0, 0, 0, 1, 247, 644, 2, 1, 1, 10, 0, 0, 0, 0, 280),
@@ -3534,121 +3507,7 @@ INSERT INTO `openrsc_itemdef` (`id`, `bankNoteID`, `originalItemID`, `name`, `de
 (2140, -1, -1, 'Ultimate ironman platelegs', 'Take it off and what are you?', '', 0, 0, 0, 0, 1, 250, 644, 2, 1, 1, 10, 0, 0, 0, 0, 280),
 (2141, -1, -1, 'Hardcore ironman helm', 'For those who stand alone.', '', 0, 0, 0, 0, 1, 251, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
 (2142, -1, -1, 'Hardcore ironman platebody', 'Take it off and what are you?', '', 0, 0, 0, 0, 1, 252, 322, 1, 1, 1, 20, 0, 0, 0, 0, 560),
-(2143, -1, -1, 'Hardcore ironman platelegs', 'Take it off and what are you?', '', 0, 0, 0, 0, 1, 253, 644, 2, 1, 1, 10, 0, 0, 0, 0, 280),
-(2144, 2145, -1, 'Large Bronze Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 254, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2145, -1, 2144, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2146, 2147, -1, 'Large Iron Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 255, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2147, -1, 2146, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2148, 2149, -1, 'Large Steel Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 256, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2149, -1, 2148, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2150, 2151, -1, 'Large Black Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 257, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2151, -1, 2150, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2152, 2153, -1, 'Large Mithril Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 258, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2153, -1, 2152, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2154, 2155, -1, 'Large Adamantite Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 259, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2155, -1, 2154, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2156, 2157, -1, 'Large Rune Helmet', 'A full face helmet with orange feather', '', 0, 0, 0, 0, 1, 260, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2157, -1, 2156, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2158, 2159, -1, 'Large Bronze Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 261, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2159, -1, 2158, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2160, 2161, -1, 'Large Iron Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 262, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2161, -1, 2160, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2162, 2163, -1, 'Large Steel Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 263, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2163, -1, 2162, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2164, 2165, -1, 'Large Black Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 264, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2165, -1, 2164, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2166, 2167, -1, 'Large Mithril Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 265, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2167, -1, 2166, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2168, 2169, -1, 'Large Adamantite Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 266, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2169, -1, 2168, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2170, 2171, -1, 'Large Rune Helmet', 'A full face helmet with blue feather', '', 0, 0, 0, 0, 1, 267, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2171, -1, 2170, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2172, 2173, -1, 'Large Bronze Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 268, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2173, -1, 2172, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2174, 2175, -1, 'Large Iron Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 269, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2175, -1, 2174, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2176, 2177, -1, 'Large Steel Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 270, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2177, -1, 2176, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2178, 2179, -1, 'Large Black Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 271, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2179, -1, 2178, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2180, 2181, -1, 'Large Mithril Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 272, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2181, -1, 2180, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2182, 2183, -1, 'Large Adamantite Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 273, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2183, -1, 2182, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2184, 2185, -1, 'Large Rune Helmet', 'A full face helmet with purple feather', '', 0, 0, 0, 0, 1, 274, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2185, -1, 2184, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2186, 2187, -1, 'Large Bronze Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 275, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2187, -1, 2186, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2188, 2189, -1, 'Large Iron Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 276, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2189, -1, 2188, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2190, 2191, -1, 'Large Steel Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 277, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2191, -1, 2190, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2192, 2193, -1, 'Large Black Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 278, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2193, -1, 2192, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2194, 2195, -1, 'Large Mithril Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 279, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2195, -1, 2194, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2196, 2197, -1, 'Large Adamantite Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 280, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2197, -1, 2196, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2198, 2199, -1, 'Large Rune Helmet', 'A full face helmet with yellow feather', '', 0, 0, 0, 0, 1, 281, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2199, -1, 2198, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2200, 2201, -1, 'Large Bronze Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 282, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2201, -1, 2200, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2202, 2203, -1, 'Large Iron Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 283, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2203, -1, 2202, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2204, 2205, -1, 'Large Steel Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 284, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2205, -1, 2204, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2206, 2207, -1, 'Large Black Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 285, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2207, -1, 2206, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2208, 2209, -1, 'Large Mithril Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 286, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2209, -1, 2208, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2210, 2211, -1, 'Large Adamantite Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 287, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2211, -1, 2210, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2212, 2213, -1, 'Large Rune Helmet', 'A full face helmet with green feather', '', 0, 0, 0, 0, 1, 288, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2213, -1, 2212, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2214, 2215, -1, 'Large Bronze Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 289, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2215, -1, 2214, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2216, 2217, -1, 'Large Iron Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 290, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2217, -1, 2216, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2218, 2219, -1, 'Large Steel Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 291, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2219, -1, 2218, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2220, 2221, -1, 'Large Black Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 292, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2221, -1, 2220, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2222, 2223, -1, 'Large Mithril Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 293, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2223, -1, 2222, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2224, 2225, -1, 'Large Adamantite Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 294, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2225, -1, 2224, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2226, 2227, -1, 'Large Rune Helmet', 'A full face helmet with matched feather', '', 0, 0, 0, 0, 1, 295, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2227, -1, 2226, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2228, 2229, -1, 'Large Bronze Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 296, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2229, -1, 2228, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2230, 2231, -1, 'Large Iron Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 297, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2231, -1, 2230, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2232, 2233, -1, 'Large Steel Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 298, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2233, -1, 2232, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2234, 2235, -1, 'Large Black Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 299, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2235, -1, 2234, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2236, 2237, -1, 'Large Mithril Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 300, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2237, -1, 2236, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2238, 2239, -1, 'Large Adamantite Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 301, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2239, -1, 2238, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2240, 2241, -1, 'Large Rune Helmet', 'A full face helmet with black feather', '', 0, 0, 0, 0, 1, 302, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2241, -1, 2240, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2242, 2243, -1, 'Large Bronze Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 303, 33, 0, 1, 1, 4, 0, 0, 0, 0, 44),
-(2243, -1, 2242, 'Large Bronze Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44),
-(2244, 2245, -1, 'Large Iron Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 304, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154),
-(2245, -1, 2244, 'Large Iron Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 154),
-(2246, 2247, -1, 'Large Steel Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 305, 33, 0, 5, 1, 9, 0, 0, 0, 0, 550),
-(2247, -1, 2246, 'Large Steel Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 550),
-(2248, 2249, -1, 'Large Black Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 306, 33, 0, 10, 1, 12, 0, 0, 0, 0, 1056),
-(2249, -1, 2248, 'Large Black Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1056),
-(2250, 2251, -1, 'Large Mithril Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 307, 33, 0, 20, 1, 13, 0, 0, 0, 0, 1430),
-(2251, -1, 2250, 'Large Mithril Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1430),
-(2252, 2253, -1, 'Large Adamantite Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 308, 33, 0, 30, 1, 19, 0, 0, 0, 0, 3520),
-(2253, -1, 2252, 'Large Adamantite Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3520),
-(2254, 2255, -1, 'Large Rune Helmet', 'A full face helmet with white feather', '', 0, 0, 0, 0, 1, 309, 33, 0, 40, 1, 30, 0, 0, 0, 0, 35200),
-(2255, -1, 2254, 'Large Rune Helmet', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35200),
-(2256, 2257, -1, 'Soul of Greatwood', 'The soul covered in a root from greatwood', 'Bury', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
-(2257, -1, 2256, 'Soul of Greatwood', 'Swap this note at any bank for the equivalent item.', 'Bury', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+(2143, -1, -1, 'Hardcore ironman platelegs', 'Take it off and what are you?', '', 0, 0, 0, 0, 1, 253, 644, 2, 1, 1, 10, 0, 0, 0, 0, 280);
 
 -- --------------------------------------------------------
 
@@ -4550,13 +4409,9 @@ INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `comman
 (794, 793, 'Lundail', 'He sells rune stones', '', '', 15, 16, 12, 18, 15, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, 0),
 (795, 794, 'Auctioneer', 'He gives access to auction house', 'Auction', '', 15, 16, 12, 18, 15, 0, 0, 0, 30, 0, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 16761440, 2, 8409120, 13415270, 145, 230, 6, 6, 5, 0),
 (796, 795, 'Auction Clerk', 'There to help me make my auctions', 'Auction', 'Teleport', 15, 16, 12, 18, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6, 5, 0),
-(797, 796, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145, 220, 6, 6, 5, 0),
-(798, 797, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18, 15, 0, 0, 0, 30, 0, 1, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145, 230, 6, 6, 5, 0),
-(799, 798, 'Gaia', 'The earth queen with a rotten heart', '', '', 78, 79, 79, 80, 79, 0, 1, 1, 30, 241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0),
 (801, 799, 'Iron Man', 'An Iron Man', 'Armour', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, 1),
 (802, 800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 248, 249, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1),
-(803, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 45, 250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1),
-(804, 802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, 300, 0, 1, 1, 30, 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0);
+(803, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 45, 250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -4573,7 +4428,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdrops` (
   `db_index` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`db_index`),
   UNIQUE KEY `db_index` (`db_index`)
-) ENGINE=MyISAM AUTO_INCREMENT=13928 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=16063 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `openrsc_npcdrops`
@@ -6341,8 +6196,7 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (291, '20', 520, 350, 12316),
 (291, '20', 518, 350, 12317),
 (291, '1', 174, 1475, 12318),
-(291, '1', 10, 1900, 12319);
-INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`) VALUES
+(291, '1', 10, 1900, 12319),
 (291, '1', 160, 50, 12328),
 (291, '2', 42, 1000, 12329),
 (291, '10', 619, 1000, 12330),
@@ -6579,7 +6433,7 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (567, '3', 40, 600, 13313),
 (567, '2', 42, 550, 13314),
 (567, '8', 32, 750, 13315),
-(567, '1', 932, 650, 13316),
+(567, '1', 932, 450, 13316),
 (567, '1', 165, 1000, 13326),
 (321, '1', 20, 0, 13331),
 (321, '1', 10, 10, 13340),
@@ -6634,7 +6488,8 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (344, '3', 38, 500, 13596),
 (344, '30', 38, 500, 13597),
 (344, '1', 223, 1550, 13598),
-(344, '1', 373, 1550, 13602),
+(344, '1', 373, 1550, 13602);
+INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`) VALUES
 (344, '1', 171, 1550, 13603),
 (344, '1', 88, 1500, 13604),
 (344, '1', 81, 80, 13605),
@@ -7993,10 +7848,10 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (21, 279, 277, 281, 663, 662, 664, 1592),
 (192, 283, 282, 284, 663, 662, 664, 1593),
 (137, 282, 282, 284, 661, 658, 661, 1594),
-(64, 282, 282, 284, 655, 655, 657, 1595);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(64, 282, 282, 284, 655, 655, 657, 1595),
 (714, 161, 158, 166, 513, 511, 519, 1596),
-(783, 166, 158, 166, 513, 511, 519, 1597),
+(783, 166, 158, 166, 513, 511, 519, 1597);
+INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
 (31, 168, 165, 174, 500, 494, 502, 1598),
 (133, 178, 176, 181, 484, 480, 487, 1599),
 (33, 143, 141, 145, 519, 518, 521, 1600),
@@ -9203,10 +9058,10 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (489, 209, 204, 214, 748, 743, 753, 3253),
 (493, 206, 201, 211, 758, 753, 763, 3254),
 (493, 210, 205, 215, 760, 755, 765, 3255),
-(493, 211, 206, 216, 756, 751, 761, 3256);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(493, 211, 206, 216, 756, 751, 761, 3256),
 (494, 218, 213, 223, 758, 753, 763, 3257),
-(494, 220, 215, 225, 758, 753, 763, 3258),
+(494, 220, 215, 225, 758, 753, 763, 3258);
+INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
 (494, 221, 216, 226, 761, 756, 766, 3259),
 (3, 219, 214, 224, 755, 750, 760, 3260),
 (3, 218, 213, 223, 755, 750, 760, 3261),
@@ -10255,8 +10110,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (795, 90, 89, 91, 694, 693, 695, 6632),
 (795, 331, 330, 332, 553, 552, 554, 6633),
 (795, 369, 368, 370, 715, 714, 716, 6637),
-(796, 119, 117, 121, 514, 512, 516, 6643),
-(797, 120, 118, 122, 514, 512, 516, 6644),
 (499, 224, 222, 226, 738, 736, 740, 6645),
 (499, 224, 222, 226, 741, 739, 743, 6646),
 (499, 222, 220, 224, 738, 736, 740, 6647),
@@ -10269,17 +10122,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (497, 227, 225, 229, 754, 752, 756, 6654),
 (497, 229, 227, 231, 750, 748, 752, 6655),
 (497, 230, 228, 232, 757, 755, 759, 6656),
-(47, 263, 259, 267, 359, 355, 363, 6657),
-(47, 264, 261, 267, 360, 357, 363, 6658),
-(47, 256, 252, 260, 358, 354, 362, 6659),
-(47, 249, 245, 253, 360, 356, 364, 6660),
-(47, 249, 245, 253, 360, 356, 364, 6661),
-(47, 250, 246, 254, 353, 349, 357, 6662),
-(47, 249, 245, 253, 345, 341, 349, 6664),
-(47, 249, 245, 253, 345, 341, 349, 6665),
-(47, 256, 252, 260, 347, 343, 351, 6666),
-(47, 263, 259, 267, 345, 341, 349, 6667),
-(47, 263, 259, 267, 345, 341, 349, 6668),
 (199, 257, 249, 265, 345, 337, 353, 6669),
 (199, 256, 247, 265, 360, 351, 369, 6670),
 (199, 261, 252, 270, 353, 344, 362, 6671),
@@ -10288,8 +10130,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (251, 172, 168, 176, 397, 393, 401, 6674),
 (251, 169, 164, 174, 397, 392, 402, 6675),
 (251, 173, 169, 177, 395, 391, 399, 6677),
-(796, 127, 125, 129, 647, 645, 649, 6678),
-(797, 126, 124, 128, 647, 645, 649, 6679),
 (47, 109, 107, 111, 416, 414, 418, 6680),
 (47, 114, 112, 116, 416, 414, 418, 6681),
 (47, 110, 108, 112, 417, 415, 419, 6682),
@@ -10299,13 +10139,6 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (57, 312, 310, 314, 409, 407, 411, 6686),
 (60, 312, 310, 314, 414, 412, 416, 6687),
 (60, 316, 314, 318, 412, 410, 414, 6688),
-(47, 248, 246, 250, 346, 344, 348, 6689),
-(47, 251, 249, 253, 355, 353, 357, 6690),
-(47, 257, 255, 259, 348, 346, 350, 6691),
-(47, 263, 261, 265, 348, 346, 350, 6692),
-(47, 248, 246, 250, 346, 344, 348, 6693),
-(47, 249, 247, 251, 359, 357, 361, 6694),
-(47, 263, 261, 265, 358, 356, 360, 6695),
 (158, 332, 330, 334, 151, 149, 153, 6697),
 (158, 331, 329, 333, 159, 157, 161, 6698),
 (95, 73, 71, 75, 1643, 1641, 1645, 6699),
@@ -10409,8 +10242,7 @@ INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`,
 (777, 466, 465, 467, 878, 877, 879, 6840),
 (777, 466, 465, 467, 876, 875, 877, 6841),
 (775, 467, 466, 468, 877, 876, 878, 6842),
-(775, 466, 465, 467, 877, 876, 878, 6843);
-INSERT INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+(775, 466, 465, 467, 877, 876, 878, 6843),
 (777, 470, 469, 471, 870, 869, 871, 6846),
 (87, 127, 126, 128, 516, 515, 517, 6847),
 (766, 454, 453, 455, 3708, 3707, 3709, 6849),
@@ -10436,7 +10268,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_objects` (
   `d_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`d_id`),
   UNIQUE KEY `d_id` (`d_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28432 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=28434 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `openrsc_objects`

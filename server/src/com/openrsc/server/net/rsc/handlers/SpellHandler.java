@@ -446,11 +446,11 @@ public class SpellHandler implements PacketHandler {
 			finalizeSpell(player, spell);
 			break;
 		case 47: // Charge
-			if (!player.getLocation().isMembersWild()) {
+			/*if (!player.getLocation().isMembersWild()) {
 				player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - "
 						+ World.membersWildMax);
 				return;
-			}
+			}*/
 			if (!player.getLocation().inMageArena()) {
 				if ((!player.getCache().hasKey("Flames of Zamorak_casts") && !player.getCache().hasKey("Saradomin strike_casts") && !player.getCache().hasKey("Claws of Guthix_casts"))
 						|| 
@@ -929,11 +929,11 @@ public class SpellHandler implements PacketHandler {
 				default:
 					if (spell.getReqLevel() == 62 || spell.getReqLevel() == 65 || spell.getReqLevel() == 70
 					|| spell.getReqLevel() == 75) {
-						if (!player.getLocation().isMembersWild()) {
+						/*if (!player.getLocation().isMembersWild()) {
 							player.message("Members content can only be used in wild levels: " + World.membersWildStart
 									+ " - " + World.membersWildMax);
 							return;
-						}
+						}*/
 					}
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;

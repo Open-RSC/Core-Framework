@@ -242,7 +242,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
 			return;
 		}
-		if (player.getFatigue() >= 7500)
+		if (player.getFatigue() >= player.MAX_FATIGUE)
 			player.message("@gre@You are too tired to gain experience, get some rest");
 
 		player.getInventory().add(selectedLoot);
@@ -326,7 +326,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			player.message("You find nothing");
 			return;
 		}
-		if (player.getFatigue() >= 7500) {
+		if (player.getFatigue() >= player.MAX_FATIGUE) {
 			player.message("You are too tired to thieve here");
 			return;
 		}
@@ -442,7 +442,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 				}
 				boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 				if (succeededPickpocket) {
-					if (player.getFatigue() >= 7500)
+					if (player.getFatigue() >= player.MAX_FATIGUE)
 						player.message("@gre@You are too tired to gain experience, get some rest");
 
 					player.incExp(17, pickpocket.getXp(), true);
@@ -512,7 +512,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			} else {
 				player.setBusyTimer(3000);
 				player.message("you attempt to pick the lock");
-				if (player.getFatigue() >= 7500) {
+				if (player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to thieve here");
 					player.setBusyTimer(0);
 					return;
@@ -748,7 +748,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 				player.message("You manage to pick the lock");
 				doDoor(obj, player);
 				player.message("You go through the door");
-				if (player.getFatigue() >= 7500) {
+				if (player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("@gre@You are too tired to gain experience, get some rest");
 					return;
 				}
