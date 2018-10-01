@@ -17,7 +17,7 @@ public class Dummy implements ObjectActionListener, ObjectActionExecutiveListene
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		message(player, 3200, "You swing at the dummy");
-		if(player.getSkills().getMaxStat(0) > 7) {
+		if(player.getSkills().getLevel(0) > 7) {
 			player.message("There is only so much you can learn from hitting a dummy");
 		} else {
 			player.message("You hit the dummy");
