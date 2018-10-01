@@ -829,8 +829,11 @@ public final class mudclient implements Runnable {
 		private final int[] tradeConfirmItemsCount1 = new int[14];
 		private int tradeDoX_Slot;
 		private int tradeItemCount = 0;
+		private int tradeItemCountTemp = 0;
 		private final int[] tradeItemID = new int[14];
 		private final int[] tradeItemSize = new int[14];
+		private final int[] tradeItemIDTemp = new int[14];
+		private final int[] tradeItemSizeTemp = new int[14];
 		private boolean tradeRecipientAccepted = false;
 		private final int[] tradeRecipientConfirmItemCount = new int[14];
 		private final int[] tradeRecipientConfirmItems = new int[14];
@@ -11507,6 +11510,16 @@ public final class mudclient implements Runnable {
   					this.tradeRecipientItemCount[var4] = this.packetsIncoming.get32();
   				}
 
+					this.tradeItemCount = this.packetsIncoming.getUnsignedByte();
+					this.tradeItemCountTemp = this.tradeItemCount;
+
+					for (int var4 = 0; var4 < this.tradeItemCount; ++var4) {
+						this.tradeItemID[var4] = this.packetsIncoming.getShort();
+						this.tradeItemIDTemp[var4] = this.tradeItemID[var4];
+						this.tradeItemSize[var4] = this.packetsIncoming.get32();
+						this.tradeItemSizeTemp[var4] = this.tradeItemSize[var4];
+					}
+
   				this.tradeRecipientAccepted = false;
   				this.tradeAccepted = false;
   				return;
@@ -13756,21 +13769,21 @@ public final class mudclient implements Runnable {
 				int offered = 0;
 				int id = this.inventoryItemID[slot];
 
-				for (int tSlot = 0; this.tradeItemCount > tSlot; ++tSlot) {
-					if (id == this.tradeItemID[tSlot]) {
+				for (int tSlot = 0; this.tradeItemCountTemp > tSlot; ++tSlot) {
+					if (id == this.tradeItemIDTemp[tSlot]) {
 						if (EntityHandler.getItemDef(id).isStackable()) {
 							if (count >= 0) {
-								this.tradeItemSize[tSlot] += count;
-								if (this.tradeItemSize[tSlot] > this.inventoryItemSize[slot]) {
-									this.tradeItemSize[tSlot] = this.inventoryItemSize[slot];
+								this.tradeItemSizeTemp[tSlot] += count;
+								if (this.tradeItemSizeTemp[tSlot] > this.inventoryItemSize[slot]) {
+									this.tradeItemSizeTemp[tSlot] = this.inventoryItemSize[slot];
 								}
 
 								offerSuccess = true;
 							} else {
 								for (int j = 0; j < this.mouseButtonItemCountIncrement; ++j) {
 									offerSuccess = true;
-									if (this.inventoryItemSize[slot] > this.tradeItemSize[tSlot]) {
-										++this.tradeItemSize[tSlot];
+									if (this.inventoryItemSize[slot] > this.tradeItemSizeTemp[tSlot]) {
+										++this.tradeItemSizeTemp[tSlot];
 									}
 								}
 							}
@@ -13793,21 +13806,21 @@ public final class mudclient implements Runnable {
 
 				if (!offerSuccess) {
 					if (count < 0) {
-						if (this.tradeItemCount < 12) {
-							this.tradeItemID[this.tradeItemCount] = id;
-							this.tradeItemSize[this.tradeItemCount] = 1;
+						if (this.tradeItemCountTemp < 12) {
+							this.tradeItemIDTemp[this.tradeItemCountTemp] = id;
+							this.tradeItemSizeTemp[this.tradeItemCountTemp] = 1;
 							offerSuccess = true;
-							++this.tradeItemCount;
+							++this.tradeItemCountTemp;
 						}
 					} else {
-						for (int l = 0; l < count && this.tradeItemCount < 12 && invAvailable > offered; ++l) {
-							this.tradeItemID[this.tradeItemCount] = id;
-							this.tradeItemSize[this.tradeItemCount] = 1;
+						for (int l = 0; l < count && this.tradeItemCountTemp < 12 && invAvailable > offered; ++l) {
+							this.tradeItemIDTemp[this.tradeItemCountTemp] = id;
+							this.tradeItemSizeTemp[this.tradeItemCountTemp] = 1;
 							offerSuccess = true;
 							++offered;
-							++this.tradeItemCount;
+							++this.tradeItemCountTemp;
 							if (l == 0 && EntityHandler.getItemDef(id).isStackable()) {
-								this.tradeItemSize[this.tradeItemCount - 1] = count <= this.inventoryItemSize[slot] ? count
+								this.tradeItemSizeTemp[this.tradeItemCountTemp - 1] = count <= this.inventoryItemSize[slot] ? count
 										: this.inventoryItemSize[slot];
 								break;
 							}
@@ -13817,11 +13830,11 @@ public final class mudclient implements Runnable {
 
 				if (offerSuccess) {
 					this.getClientStream().newPacket(46);
-					this.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
+					this.getClientStream().writeBuffer1.putByte(this.tradeItemCountTemp);
 
-					for (int i = 0; this.tradeItemCount > i; ++i) {
-						this.getClientStream().writeBuffer1.putShort(this.tradeItemID[i]);
-						this.getClientStream().writeBuffer1.putInt(this.tradeItemSize[i]);
+					for (int i = 0; this.tradeItemCountTemp > i; ++i) {
+						this.getClientStream().writeBuffer1.putShort(this.tradeItemIDTemp[i]);
+						this.getClientStream().writeBuffer1.putInt(this.tradeItemSizeTemp[i]);
 					}
 
 					this.getClientStream().finishPacket();
@@ -13837,43 +13850,43 @@ public final class mudclient implements Runnable {
 		private final void tradeRemove(int var1, byte var2, int var3) {
 			try {
 
-				int var4 = this.tradeItemID[var3];
+				int var4 = this.tradeItemIDTemp[var3];
 				int var5 = var1 < 0 ? this.mouseButtonItemCountIncrement : var1;
 				int var6;
 				if (!EntityHandler.getItemDef(var4).isStackable()) {
 					var6 = 0;
-					for (int var7 = 0; var7 < this.tradeItemCount && var6 < var5; ++var7) {
-						if (var4 == this.tradeItemID[var7]) {
+					for (int var7 = 0; var7 < this.tradeItemCountTemp && var6 < var5; ++var7) {
+						if (var4 == this.tradeItemIDTemp[var7]) {
 							++var6;
-							--this.tradeItemCount;
+							--this.tradeItemCountTemp;
 
-							for (int var8 = var7; this.tradeItemCount > var8; ++var8) {
-								this.tradeItemID[var8] = this.tradeItemID[var8 + 1];
-								this.tradeItemSize[var8] = this.tradeItemSize[var8 + 1];
+							for (int var8 = var7; this.tradeItemCountTemp > var8; ++var8) {
+								this.tradeItemIDTemp[var8] = this.tradeItemIDTemp[var8 + 1];
+								this.tradeItemSizeTemp[var8] = this.tradeItemSizeTemp[var8 + 1];
 							}
 
 							--var7;
 						}
 					}
 				} else {
-					this.tradeItemSize[var3] -= var5;
-					if (this.tradeItemSize[var3] <= 0) {
-						--this.tradeItemCount;
+					this.tradeItemSizeTemp[var3] -= var5;
+					if (this.tradeItemSizeTemp[var3] <= 0) {
+						--this.tradeItemCountTemp;
 
-						for (var6 = var3; var6 < this.tradeItemCount; ++var6) {
-							this.tradeItemID[var6] = this.tradeItemID[1 + var6];
-							this.tradeItemSize[var6] = this.tradeItemSize[var6 + 1];
+						for (var6 = var3; var6 < this.tradeItemCountTemp; ++var6) {
+							this.tradeItemIDTemp[var6] = this.tradeItemIDTemp[1 + var6];
+							this.tradeItemSizeTemp[var6] = this.tradeItemSizeTemp[var6 + 1];
 						}
 					}
 				}
 
 				this.getClientStream().newPacket(46);
 				if (var2 > 120) {
-					this.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
+					this.getClientStream().writeBuffer1.putByte(this.tradeItemCountTemp);
 
-					for (var6 = 0; var6 < this.tradeItemCount; ++var6) {
-						this.getClientStream().writeBuffer1.putShort(this.tradeItemID[var6]);
-						this.getClientStream().writeBuffer1.putInt(this.tradeItemSize[var6]);
+					for (var6 = 0; var6 < this.tradeItemCountTemp; ++var6) {
+						this.getClientStream().writeBuffer1.putShort(this.tradeItemIDTemp[var6]);
+						this.getClientStream().writeBuffer1.putInt(this.tradeItemSizeTemp[var6]);
 					}
 
 					this.getClientStream().finishPacket();
