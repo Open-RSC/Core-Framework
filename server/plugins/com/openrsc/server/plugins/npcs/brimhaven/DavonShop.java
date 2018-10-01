@@ -14,7 +14,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(44, 0), new Item(314, 0), new Item(315, 0), new Item(316, 0), new Item(317, 0));
+	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(44, 0), new Item(314, 1), new Item(315, 0), new Item(316, 0), new Item(317, 0));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
