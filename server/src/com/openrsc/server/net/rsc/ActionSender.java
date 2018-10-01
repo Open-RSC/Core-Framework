@@ -818,11 +818,22 @@ public class ActionSender {
 		ArrayList<Item> items = with.getTrade().getTradeOffer().getItems();
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
+
+		// Other player's items first
 		s.writeByte((byte) items.size());
 		for (Item item : items) {
 			s.writeShort(item.getID());
 			s.writeInt(item.getAmount());
 		}
+
+		// Our items second
+		items = player.getTrade().getTradeOffer().getItems();
+		s.writeByte((byte) items.size());
+		for (Item item : items) {
+			s.writeShort(item.getID());
+			s.writeInt(item.getAmount());
+		}
+
 		player.write(s.toPacket());
 	}
 

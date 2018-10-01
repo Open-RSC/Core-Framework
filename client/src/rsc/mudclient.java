@@ -11507,6 +11507,13 @@ public final class mudclient implements Runnable {
   					this.tradeRecipientItemCount[var4] = this.packetsIncoming.get32();
   				}
 
+					this.tradeItemCount = this.packetsIncoming.getUnsignedByte();
+
+					for (int var4 = 0; var4 < this.tradeItemCount; ++var4) {
+						this.tradeItemID[var4] = this.packetsIncoming.getShort();
+						this.tradeItemSize[var4] = this.packetsIncoming.get32();
+					}
+
   				this.tradeRecipientAccepted = false;
   				this.tradeAccepted = false;
   				return;
