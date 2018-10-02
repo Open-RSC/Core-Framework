@@ -46,7 +46,7 @@ echo What would you like to do?
 echo:
 echo Choices:
 echo   %RED%1%NC% - Install
-echo   %RED%2%NC% - Update
+echo   %RED%2%NC% - Update and Compile
 echo   %RED%3%NC% - Run
 echo   %RED%4%NC% - Manage Players
 echo   %RED%5%NC% - Perform a Hard Reset
@@ -78,13 +78,14 @@ echo:
 echo Installing everything needed. This will take a while, please do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make jdk8 ant virtualbox docker-toolbox docker-compose
-explorer "%userprofile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
+choco install -y 7zip make jdk8 ant
+echo:
+echo: Now downloading XAMPP portable edition.
+(new-object System.Net.WebClient).DownloadFile('https://ayera.dl.sourceforge.net/project/xampp/XAMPP%20Windows/7.2.10/xampp-portable-win32-7.2.10-0-VC15-installer.exe','xampp.exe')
+START xampp.exe
 echo:
 echo:
-echo Please double click on "Docker Quickstart Terminal" and wait until it shows a whale.
-echo That will indicate when Docker Toolbox is configured and thus ready.
-SET /P install="Then come back here and press enter a few times to continue."
+SET /P install=""
 goto edition
 :<------------End Install Everything------------>
 
@@ -116,23 +117,12 @@ goto edition
 :simple
 echo:
 echo:
-docker login
-echo:
-echo:
-echo Starting Docker containers and downloading what is needed. This may take a while the first time.
-echo:
-make stop
-make start-single-player
-echo:
-echo:
 echo Compiling the game client and server.
 echo:
 make compile-windows-simple
 echo:
 echo:
-echo Importing the game database in 10 seconds. (Gives time to start up Docker containers)
-echo:
-TIMEOUT /T 10
+echo Importing the game and forum databases.
 echo:
 make import-game-windows
 echo:
@@ -219,25 +209,21 @@ goto askide
 :developerstart
 echo:
 echo:
-echo Starting Docker containers and downloading what is needed. This may take a while the first time.
-echo:
-make stop
-make start
-echo:
-echo:
 echo Downloading a copy of the Website repository
 echo:
 make clone-website-windows
 echo:
 echo:
-echo Importing the game and forum databases in 10 seconds. (Gives time to start up Docker containers)
-echo:
-TIMEOUT /T 10
+echo Importing the game and forum databases.
 echo:
 make import-game-windows
 make import-forum-windows
 make fix-forum-permissions-windows
 echo:
+echo:
+echo Compiling the game client and server.
+echo:
+make compile-windows-developer
 echo:
 goto start
 :<------------End Developer------------>
@@ -251,6 +237,11 @@ echo Checking for updates
 echo:
 git pull
 make pull-website-windows:
+echo:
+echo:
+echo Compiling the game client and server.
+echo:
+make compile-windows-developer
 echo:
 goto start
 :<------------End Update------------>
