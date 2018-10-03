@@ -49,65 +49,53 @@ public final class GameStateUpdater {
 	private final EntityList<Npc> npcs = World.getWorld().getNpcs();
 
 	public void doUpdates() throws Exception {
-		processPlayers();
-		processNpcs();
-		processMessageQueues();
-		updateClients();
-		doCleanup();
-		executeWalkToActions();
-		/*final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
-		final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
-		for (int x = 0; x < HORIZONTAL_PLANES; ++x)
-			for (int y = 0; y < VERTICAL_PLANES; ++y) {
-				Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE, y * RegionManager.REGION_SIZE);
-				if (r != null)
-					for (Iterator<Player> i = r.getPlayers().iterator(); i.hasNext();) {
-						if (i.next().isRemoved())
-							i.remove();
-					}
-			}*/
-	}
+		for (Npc n : npcs)
+			processNpc(n);
 
-	public void updateClients() {
 		for (Player p : players) {
-			sendUpdatePackets(p);
-			p.process();
+			processPlayer(p);
+			processMessageQueues(p);
+			updateClient(p);
+			doCleanupPlayer(p);
+			executeWalkToActions(p);
 		}
+
+		for (Npc n : npcs)
+			doCleanupNpc(n);
 	}
 
-	public void doCleanup() {// it can do the teleport at this time.
+	public void updateClient(Player p) {
+		sendUpdatePackets(p);
+		p.process();
+	}
+
+	public void doCleanupNpc(Npc npc) {// it can do the teleport at this time.
 		/*
 		 * Reset the update related flags and unregister npcs flagged as
 		 * unregistering
 		 */
+		npc.resetMoved();
+		npc.resetSpriteChanged();
+		npc.getUpdateFlags().reset();
+		npc.setTeleporting(false);
+	}
 
-		for (Npc npc : npcs) {
-			npc.resetMoved();
-			npc.resetSpriteChanged();
-			npc.getUpdateFlags().reset();
-			npc.setTeleporting(false);
-		}
+	public void doCleanupPlayer(Player p) {
 		/*
 		 * Reset the update related flags and unregister players that are
 		 * flagged as unregistered
 		 */
-		Iterator<Player> playerListIterator = players.iterator();
-		while (playerListIterator.hasNext()) {
-			Player player = playerListIterator.next();
-			player.setTeleporting(false);
-			player.resetSpriteChanged();
-			player.getUpdateFlags().reset();
-			player.resetMoved();
-		}
+		p.setTeleporting(false);
+		p.resetSpriteChanged();
+		p.getUpdateFlags().reset();
+		p.resetMoved();
 	}
 
-	public void executeWalkToActions() {
-		for (Player p : players) {
-			if (p.getWalkToAction() != null) {
-				if (p.getWalkToAction().shouldExecute()) {
-					p.getWalkToAction().execute();
-					p.setWalkToAction(null);
-				}
+	public void executeWalkToActions(Player p) {
+		if (p.getWalkToAction() != null) {
+			if (p.getWalkToAction().shouldExecute()) {
+				p.getWalkToAction().execute();
+				p.setWalkToAction(null);
 			}
 		}
 	}
@@ -131,48 +119,42 @@ public final class GameStateUpdater {
 		}
 	}
 
-	private void processNpcs() {
-		for (Npc n : npcs) {
-			try {
-				if (n.isUnregistering()) {
-					World.getWorld().unregisterNpc(n);
-					continue;
-				}
-				n.updatePosition();
-			} catch (Exception e) {
-				LOGGER.error(
-						"Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
-				LOGGER.catching(e);
+	private void processNpc(Npc n) {
+		try {
+			if (n.isUnregistering()) {
+				World.getWorld().unregisterNpc(n);
+				return;
 			}
+			n.updatePosition();
+		} catch (Exception e) {
+			LOGGER.error(
+					"Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
+			LOGGER.catching(e);
 		}
 	}
 
 	/**
 	 * Updates the messages queues for each player
 	 */
-	private void processMessageQueues() {
-		for (Player p : players) {
-			PrivateMessage pm = p.getNextPrivateMessage();
-			if (pm != null) {
-				Player affectedPlayer = World.getWorld().getPlayer(pm.getFriend());
-				if (affectedPlayer != null) {
-					if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
-							.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
-							&& !affectedPlayer.getSocial().isIgnoring(p.getUsernameHash()) || p.isMod()) {
-						ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage());
-						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
-					}
-
-					GameLogging.addQuery(new PMLog(p.getUsername(), pm.getMessage(),
-							DataConversions.hashToUsername(pm.getFriend())));
+	private void processMessageQueues(Player p) {
+		PrivateMessage pm = p.getNextPrivateMessage();
+		if (pm != null) {
+			Player affectedPlayer = World.getWorld().getPlayer(pm.getFriend());
+			if (affectedPlayer != null) {
+				if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
+						.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
+						&& !affectedPlayer.getSocial().isIgnoring(p.getUsernameHash()) || p.isMod()) {
+					ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage());
+					ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
 				}
+
+				GameLogging.addQuery(new PMLog(p.getUsername(), pm.getMessage(),
+						DataConversions.hashToUsername(pm.getFriend())));
 			}
 		}
-		for (Player p : players) {
-			if (p.requiresOfferUpdate()) {
-				ActionSender.sendTradeItems(p);
-				p.setRequiresOfferUpdate(false);
-			}
+		if (p.requiresOfferUpdate()) {
+			ActionSender.sendTradeItems(p);
+			p.setRequiresOfferUpdate(false);
 		}
 	}
 
@@ -180,16 +162,14 @@ public final class GameStateUpdater {
 	 * Update the position of players, and check if who (and what) they are
 	 * aware of needs updated
 	 */
-	private void processPlayers() {
-		for (Player p : players) {
-			if (p.isUnregistering()) {
-				World.getWorld().unregisterPlayer(p);
-				continue;
-			}
-			p.updatePosition();
-			if (p.getUpdateFlags().hasAppearanceChanged()) {
-				p.incAppearanceID();
-			}
+	private void processPlayer(Player p) {
+		if (p.isUnregistering()) {
+			World.getWorld().unregisterPlayer(p);
+			return;
+		}
+		p.updatePosition();
+		if (p.getUpdateFlags().hasAppearanceChanged()) {
+			p.incAppearanceID();
 		}
 	}
 
