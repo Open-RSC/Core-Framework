@@ -7,31 +7,40 @@
 3. [Minimum Requirements](#requirements)
 
 
-## How to Install Open RSC <a name="install"></a>
+## How to Install<a name="install"></a>
 
-    bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
+<b>Windows:</b>
 
-[Return to top](#top)
-___
+1. <a href="https://desktop.githubusercontent.com/releases/1.4.1-4eda7cdc/GitHubDesktopSetup.exe">Install GitHub Desktop</a>
+2. Click "Clone a repository" and specify URL: https://github.com/Open-RSC/Game.git
+<img src="https://i.imgur.com/ZMXUSr7.png"/>
+3. Click "Clone"
+4. Launch "Game/Go-Windows.cmd"
 
-## Default Credentials <a name="credentials"></a>
 
-#### Database
+<b>Linux:</b>
 
-Username: root
-
-Password: root
-
-#### Forum
-
-Username: Administrator
-
-Password: password
+```
+bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
+```
 
 [Return to top](#top)
 ___
 
-## Minimum Requirements <a name="requirements"></a>
+## Default Credentials (user / pass)<a name="credentials"></a>
+
+<b>Database:</b>
+
+root / root
+
+<b>Forum:</b>
+
+Administrator / password
+
+[Return to top](#top)
+___
+
+## Minimum Requirements<a name="requirements"></a>
 
 * Windows 7 x64
 

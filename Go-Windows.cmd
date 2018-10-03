@@ -5,9 +5,9 @@ SETLOCAL ENABLEEXTENSIONS
 :#
 :# Multi-purpose script for Open RSC
 
-set GREEN=[92m
-set RED=[91m
-set NC=[0m
+set GREEN=
+set RED=
+set NC=
 
 
 :<------------Begin Admin Permission Elevation------------>
