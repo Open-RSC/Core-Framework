@@ -83,8 +83,10 @@ echo:
 START C:\xampp\xampp-control.exe
 START C:\xampp\apache\apache_installservice.bat
 START C:\xampp\mysql\mysql_installservice.bat
-call C:\xampp\mysql\bin\mysql -u root < Databases/openrsc_game.sql
-call C:\xampp\mysql\bin\mysql -u root < Databases/openrsc_forum.sql
+START C:\xampp\mysql\bin\mysqladmin.exe -u root password root
+START C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
+START C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_forum.sql
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((Get-Content C:\xampp\phpMyAdmin\config.inc.php) | ForEach-Object { $_ -replace "['password'] = ''", "'password'] = 'root'" } | Set-Content C:\xampp\phpMyAdmin\config.inc.php)"
 echo:
 goto edition
 :<------------End Install Everything------------>
