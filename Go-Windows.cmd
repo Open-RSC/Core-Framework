@@ -78,14 +78,14 @@ echo:
 echo Installing everything needed. This will take a while, please do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make jdk8 ant
+choco install -y 7zip make jdk8 ant bitnami-xampp
 echo:
-echo: Now downloading XAMPP portable edition.
-(new-object System.Net.WebClient).DownloadFile('https://ayera.dl.sourceforge.net/project/xampp/XAMPP%20Windows/7.2.10/xampp-portable-win32-7.2.10-0-VC15-installer.exe','xampp.exe')
-START xampp.exe
+START C:\xampp\xampp-control.exe
+START C:\xampp\apache\apache_installservice.bat
+START C:\xampp\mysql\mysql_installservice.bat
+call C:\xampp\mysql\bin\mysql -u root < Databases/openrsc_game.sql
+call C:\xampp\mysql\bin\mysql -u root < Databases/openrsc_forum.sql
 echo:
-echo:
-SET /P install=""
 goto edition
 :<------------End Install Everything------------>
 
