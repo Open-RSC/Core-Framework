@@ -60,7 +60,7 @@ public class GroundItemTake implements PacketHandler {
 			public void execute() {
 				if (player.isBusy() || player.isRanging() || item == null || item.isRemoved()
 						|| getItem(id, location, player) == null || !player.canReach(item)
-						|| player.getStatus() != Action.TAKING_GITEM) {
+						|| player.getStatus() != Action.TAKING_GITEM || item.getAmount() < 1) {
 					return;
 				}
 
@@ -91,15 +91,15 @@ public class GroundItemTake implements PacketHandler {
 					return;
 				}
 				player.resetAll();
-				Item Item = new Item(item.getID(), item.getAmount());
+				Item itemFinal = new Item(item.getID(), item.getAmount());
 				if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
-					Item.setAttribute("npcdrop", true);
+					itemFinal.setAttribute("npcdrop", true);
 				}
 				if (PluginHandler.getPluginHandler().blockDefaultAction("Pickup", new Object[] { player, item })) {
 					return;
 				}
 				
-				if (!player.getInventory().canHold(Item)) {
+				if (!player.getInventory().canHold(itemFinal)) {
 					return;
 				}
 				if (item.getID() == 59 && item.getX() == 106 && item.getY() == 1476) {
@@ -112,12 +112,10 @@ public class GroundItemTake implements PacketHandler {
 				world.unregisterItem(item);
 				player.playSound("takeobject");
 
-				player.getInventory().add(Item);
+				player.getInventory().add(itemFinal);
 				GameLogging.addQuery(new GenericLog(player.getUsername() + " picked up " + item.getDef().getName() + " x"
 						+ item.getAmount() + " at " + player.getLocation().toString()));
 			}
 		});
-
 	}
-
 }

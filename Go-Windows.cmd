@@ -5,9 +5,9 @@ SETLOCAL ENABLEEXTENSIONS
 :#
 :# Multi-purpose script for Open RSC
 
-set GREEN=[92m
-set RED=[91m
-set NC=[0m
+set GREEN=
+set RED=
+set NC=
 
 
 :<------------Begin Admin Permission Elevation------------>
@@ -46,7 +46,7 @@ echo What would you like to do?
 echo:
 echo Choices:
 echo   %RED%1%NC% - Install
-echo   %RED%2%NC% - Update
+echo   %RED%2%NC% - Update and Compile
 echo   %RED%3%NC% - Run
 echo   %RED%4%NC% - Manage Players
 echo   %RED%5%NC% - Perform a Hard Reset
@@ -78,13 +78,16 @@ echo:
 echo Installing everything needed. This will take a while, please do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make jdk8 ant virtualbox docker-toolbox docker-compose
-explorer "%userprofile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Docker"
+choco install -y 7zip make grepwin jdk8 ant bitnami-xampp
 echo:
+call "scripts/xampp-install.cmd"
+
+call "C:\Program Files\grepWin\grepWin.exe" /searchpath:"C:\xampp\phpMyAdmin\config.inc.php" /searchfor:"password'] = ''" /replacewith:"password'] = 'root'" /executereplace /closedialog /k:no
+
+call C:\xampp\mysql\bin\mysqladmin.exe -uroot password root
+call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
+call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_forum.sql
 echo:
-echo Please double click on "Docker Quickstart Terminal" and wait until it shows a whale.
-echo That will indicate when Docker Toolbox is configured and thus ready.
-SET /P install="Then come back here and press enter a few times to continue."
 goto edition
 :<------------End Install Everything------------>
 
@@ -116,25 +119,10 @@ goto edition
 :simple
 echo:
 echo:
-docker login
-echo:
-echo:
-echo Starting Docker containers and downloading what is needed. This may take a while the first time.
-echo:
-make stop
-make start-single-player
-echo:
-echo:
 echo Compiling the game client and server.
 echo:
 make compile-windows-simple
 echo:
-echo:
-echo Importing the game database in 10 seconds. (Gives time to start up Docker containers)
-echo:
-TIMEOUT /T 10
-echo:
-make import-game-windows
 echo:
 goto start
 :<------------End Simple------------>
@@ -219,25 +207,17 @@ goto askide
 :developerstart
 echo:
 echo:
-echo Starting Docker containers and downloading what is needed. This may take a while the first time.
-echo:
-make stop
-make start
-echo:
-echo:
 echo Downloading a copy of the Website repository
 echo:
+make flush-website-avatars-windows
+make flush-website-windows
 make clone-website-windows
 echo:
-echo:
-echo Importing the game and forum databases in 10 seconds. (Gives time to start up Docker containers)
-echo:
-TIMEOUT /T 10
-echo:
-make import-game-windows
-make import-forum-windows
 make fix-forum-permissions-windows
 echo:
+echo Compiling the game client and server.
+echo:
+make compile-windows-developer
 echo:
 goto start
 :<------------End Developer------------>
@@ -251,6 +231,11 @@ echo Checking for updates
 echo:
 git pull
 make pull-website-windows:
+echo:
+echo:
+echo Compiling the game client and server.
+echo:
+make compile-windows-developer
 echo:
 goto start
 :<------------End Update------------>
