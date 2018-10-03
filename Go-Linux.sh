@@ -37,6 +37,7 @@ echo ""
 read action
 
 if [ "$action" == "1" ]; then
+    sudo apt install make -y
     make combined-install
 elif [ "$action" == "2" ]; then
     make get-updates
