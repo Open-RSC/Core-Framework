@@ -78,15 +78,16 @@ echo:
 echo Installing everything needed. This will take a while, please do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make jdk8 ant bitnami-xampp
+choco install -y 7zip make grepwin jdk8 ant bitnami-xampp
 echo:
-START C:\xampp\xampp-control.exe
-START C:\xampp\apache\apache_installservice.bat
-START C:\xampp\mysql\mysql_installservice.bat
-START C:\xampp\mysql\bin\mysqladmin.exe -u root password root
-START C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
-START C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_forum.sql
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((Get-Content C:\xampp\phpMyAdmin\config.inc.php) | ForEach-Object { $_ -replace "['password'] = ''", "'password'] = 'root'" } | Set-Content C:\xampp\phpMyAdmin\config.inc.php)"
+call C:\xampp\apache\apache_installservice.bat
+call C:\xampp\mysql\mysql_installservice.bat
+
+call "C:\Program Files\grepWin\grepWin.exe" /searchpath:"C:\xampp\phpMyAdmin\config.inc.php" /searchfor:"password'] = ''" /replacewith:"password'] = 'root'" /executereplace /closedialog /k:no
+
+call C:\xampp\mysql\bin\mysqladmin.exe -uroot password root
+call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
+call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_forum.sql
 echo:
 goto edition
 :<------------End Install Everything------------>
@@ -123,10 +124,6 @@ echo Compiling the game client and server.
 echo:
 make compile-windows-simple
 echo:
-echo:
-echo Importing the game and forum databases.
-echo:
-make import-game-windows
 echo:
 goto start
 :<------------End Simple------------>
@@ -213,15 +210,11 @@ echo:
 echo:
 echo Downloading a copy of the Website repository
 echo:
+make flush-website-avatars-windows
+make flush-website-windows
 make clone-website-windows
 echo:
-echo:
-echo Importing the game and forum databases.
-echo:
-make import-game-windows
-make import-forum-windows
 make fix-forum-permissions-windows
-echo:
 echo:
 echo Compiling the game client and server.
 echo:
