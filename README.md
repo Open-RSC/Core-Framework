@@ -20,6 +20,8 @@
 
 <b>Linux:</b>
 
+Paste the following in Terminal to begin the install process:
+
 ```
 bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
 ```
