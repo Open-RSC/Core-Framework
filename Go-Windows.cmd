@@ -80,8 +80,7 @@ echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 choco install -y 7zip make grepwin jdk8 ant bitnami-xampp
 echo:
-call C:\xampp\apache\apache_installservice.bat
-call C:\xampp\mysql\mysql_installservice.bat
+call "scripts/xampp-install.cmd"
 
 call "C:\Program Files\grepWin\grepWin.exe" /searchpath:"C:\xampp\phpMyAdmin\config.inc.php" /searchfor:"password'] = ''" /replacewith:"password'] = 'root'" /executereplace /closedialog /k:no
 
