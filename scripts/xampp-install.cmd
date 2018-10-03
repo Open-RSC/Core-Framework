@@ -5,4 +5,4 @@ call apache_installservice.bat
 cd C:\xampp\mysql
 call mysql_installservice.bat
 cd C:\xampp
-start xampp-control.exe
+start /min xampp-control.exe
