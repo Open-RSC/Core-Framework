@@ -94,9 +94,13 @@ import-forum-windows:
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 
-clone-website-windows:
+flush-website-avatars-windows:
 	rmdir "Website/avatars"
+
+flush-website-windows:
 	rmdir "Website"
+
+clone-website-windows:
 	git clone https://github.com/Open-RSC/Website.git
 
 docker-toolbox-forward-windows:
