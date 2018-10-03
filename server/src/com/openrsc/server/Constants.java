@@ -126,6 +126,8 @@ public final class Constants {
 		 */
 		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 2}, {13, 3}, {17, 3}, {23, 4}, {29, 4}, {35, 5}, {41, 5}, {47, 6}, {53, 6}, {59, 7}, {62, 8}, {65, 9}, {70, 10}, {75, 11}};
 
+		public static boolean AVATAR_GENERATOR = false; // Not sent to client
+
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
 		public static boolean SPAWN_IRON_MAN_NPCS = false;
@@ -184,6 +186,7 @@ public final class Constants {
 			MYSQL_HOST = props.getProperty("mysql_host");
 			HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
+			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
