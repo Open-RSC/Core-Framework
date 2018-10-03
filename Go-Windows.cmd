@@ -9,6 +9,7 @@ set GREEN=
 set RED=
 set NC=
 
+
 :<------------Begin Admin Permission Elevation------------>
 REM  -- Check for permissions
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
@@ -77,7 +78,7 @@ echo:
 echo Installing everything needed. This will take a while, please do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make jdk8 ant --version 1.10.1
+choco install -y 7zip make jdk8 ant
 echo:
 echo: Now downloading XAMPP portable edition.
 (new-object System.Net.WebClient).DownloadFile('https://ayera.dl.sourceforge.net/project/xampp/XAMPP%20Windows/7.2.10/xampp-portable-win32-7.2.10-0-VC15-installer.exe','xampp.exe')
