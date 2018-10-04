@@ -12,9 +12,12 @@
 <b>Windows:</b>
 
 1. <a href="https://desktop.githubusercontent.com/releases/1.4.1-4eda7cdc/GitHubDesktopSetup.exe">Install GitHub Desktop</a>
+
 2. Click "Clone a repository" and specify URL: https://github.com/Open-RSC/Game.git
 <img src="https://i.imgur.com/ZMXUSr7.png"/>
+
 3. Click "Clone"
+
 4. Launch "Game/Go-Windows.cmd"
 
 
