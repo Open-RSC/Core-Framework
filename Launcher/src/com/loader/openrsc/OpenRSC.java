@@ -32,7 +32,7 @@ public class OpenRSC
 		final AppFrame frame = new AppFrame();
 		frame.build();
 		OpenRSC.popup = new PopupFrame();
-		new Thread(new StatusChecker(Constants.SERVER_IP, Constants.SERVER_PORT)).start();
+		new Thread(new StatusChecker(Constants.SERVER_DOMAIN, Constants.SERVER_PORT)).start();
 		updater = new Downloader();
 		updater.init();
 		updater.doneLoading();
