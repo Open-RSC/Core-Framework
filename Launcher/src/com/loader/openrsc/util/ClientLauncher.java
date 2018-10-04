@@ -28,16 +28,15 @@ public class ClientLauncher
 	InvocationTargetException,
 	NoSuchMethodException, 
 	SecurityException {
-
 		startProcess();
 		final Applet applet = Applet.class.cast(mainClass.getConstructor()
-				.newInstance());
+		.newInstance());
 		AppFrame.get().dispose();
 		JFrame gameFrame = new JFrame("Open RSC");
-		gameFrame.setMinimumSize(new Dimension(512 + 16, 334 + 49));
+		gameFrame.setMinimumSize(new Dimension(528, 383));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.getContentPane().add(applet);
-                gameFrame.setAlwaysOnTop(false);
+		gameFrame.setAlwaysOnTop(false);
 		applet.init();
 		applet.start();
 		gameFrame.pack();
