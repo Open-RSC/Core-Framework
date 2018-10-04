@@ -195,3 +195,18 @@ Android/\.idea/caches/
 
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+
+
+client/nbproject/build-impl\.xml
+Launcher/nbproject/build-impl\.xml
+server/nbproject/build-impl\.xml
+
+client/nbproject/genfiles\.properties
+
+client/nbproject/project\.properties
+
+Launcher/nbproject/genfiles\.properties
+
+Launcher/nbproject/project\.properties
+
+server/nbproject/genfiles\.properties
