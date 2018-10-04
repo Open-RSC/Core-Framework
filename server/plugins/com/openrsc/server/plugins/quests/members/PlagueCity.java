@@ -792,13 +792,27 @@ ObjectActionExecutiveListener {
 				addItem(p, 752, 1);
 				p.message("This story is to be continued");
 				break;
-			case -1:
-				npcTalk(p, n, "Ah hello again", "And thank you again");
-				playerTalk(p, n, "No problem");
-				break;
-			}
-		}
-	}
+			case -1:                        
+                if (p.getBank().hasItemId(752) || p.getInventory().hasItemId(752)) {
+                    npcTalk(p, n, "Ah hello again",
+                            "And thank you again");
+                    playerTalk(p, n, "No problem");
+                }
+                else if (!p.getBank().hasItemId(752) || !p.getInventory().hasItemId(752)) {
+                    int noScroll = showMenu(p, "Do you have any more of those scrolls?",
+                            "No problem");
+                    if (noScroll == 0) {
+                        playerTalk(p, n, "Do you have any more of those scrolls?");
+                        npcTalk(p, n, "yes here you go");
+                        addItem(p, 752, 1);                            
+                    } else                        
+                        playerTalk(p, n, "No problem");
+                    }
+                break;
+                
+            }
+        }
+    }
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
