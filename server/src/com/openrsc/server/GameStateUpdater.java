@@ -52,12 +52,16 @@ public final class GameStateUpdater {
 		for (Npc n : npcs)
 			processNpc(n);
 
-		for (Player p : players) {
+		for (Player p : players)
 			processPlayer(p);
+
+		for (Player p : players) {
 			processMessageQueues(p);
 			updateClient(p);
-			doCleanupPlayer(p);
+		}
+		for (Player p : players) {
 			executeWalkToActions(p);
+			doCleanupPlayer(p);
 		}
 
 		for (Npc n : npcs)
