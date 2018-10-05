@@ -47,7 +47,7 @@ extends JFrame
 		msg.setForeground(Color.WHITE);
 		msg.setHorizontalAlignment(0);
 		msg.setBounds(0, 45, 300, 25);
-		msg.setFont(Utils.getFont("OpenSans-Regular.ttf", 0, 12.0F));
+		msg.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0F));
 		add(msg);
 
 		ControlButton close = new ControlButton(3, 110, 100, 75, 25);
