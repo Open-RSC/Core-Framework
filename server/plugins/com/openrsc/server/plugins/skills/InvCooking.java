@@ -21,6 +21,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 	enum CombineCooking {
 		INCOMPLETE_STEW(348, 342, 343, 0, 25, "You start to create a stew"),
 		UNCOOKED_STEW(132, 343, 345, 0, 25, "Your stew is now ready, but uncooked"),
+		UNCOOKED_CURRY(707, 345, 708, 0, 60, "You add spice to the stew and make a curry"),
 		PIE_SHELL(250, 251, 253, 0, 1, "You add the pastry dough in the dish"),
 		UNCOOKED_APPLEPIE(253, 252, 254, 0, 30,  "You create an uncoooked pie"),
 		UNCOOKED_MEATPIE(253, 132, 255, 0, 20, "You create an uncoooked pie"),
