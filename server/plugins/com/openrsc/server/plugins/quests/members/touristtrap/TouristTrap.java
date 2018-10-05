@@ -2324,13 +2324,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					p.message("The gates close behind you.");
 					Npc n = getNearestNpc(p, MERCENARY_INSIDE, 15);
 					if(n != null) {
-						if(p.getQuestStage(this) == -1) { // TODO check the real dialogue after completion
-						// todo change the coords going in and going out.
-							npcTalk(p,n, "Hey! Where do you think you're going?");
-							n.startCombat(p);
-							npcTalk(p,n, "Guards! Slave escaping!");
-							p.message("No other guards come to the rescue.");
-						} else {
+                        if(p.getQuestStage(this) == -1) { // TODO check the real dialogue after completion
+                        // todo change the coords going in and going out.
+                            npcTalk(p,n, "Move along now...we've had enough of your sort!");
+                            
+                        } else {
 							npcTalk(p,n, "Oi You with the weapon and armour, what are you doing?",
 									"You don't belong in here!");
 							p.message("More guards come to arrest you.");
@@ -2409,14 +2407,18 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 		}
 		if(obj.getID() == DESK) {
-			message(p, "You search the captains desk while he's not looking.");
-			if(!hasItem(p, CELL_DOOR_KEY)) {
-				message(p, "You find a cell door key.");
-				addItem(p, CELL_DOOR_KEY, 1);
-			} else {
-				message(p, "...but you find nothing of interest.");
-			}
-		}
+            message(p, "You search the captains desk while he's not looking.");
+            if(!hasItem(p, CELL_DOOR_KEY) && p.getQuestStage(this) != -1) {
+                message(p, "You find a cell door key.");
+                addItem(p, CELL_DOOR_KEY, 1);
+            } 
+            else if (!hasItem(p, METAL_KEY) && p.getQuestStage(this) == -1) {
+                    message(p, "You find a metal key.");
+                    addItem(p, METAL_KEY, 1);                                    
+            } else {
+                message(p, "...but you find nothing of interest.");
+            }            
+        }
 		if(obj.getID() == BOOKCASE) {
 			if(command.equals("search")) {
 				p.message("You notice several books on the subject of Sailing.");
