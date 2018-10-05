@@ -720,7 +720,7 @@ public class Functions {
 			p.playSound("opendoor");
 			replaceObject(object, newObject);
 		}
-		delayedSpawnObject(object.getLoc(), 3000);
+		delayedSpawnObject(object.getLoc(), 1200);
 
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
