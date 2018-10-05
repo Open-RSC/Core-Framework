@@ -38,6 +38,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 	private void handleCooking(final Item item, Player p,
 			final GameObject object) {
+
+		// Tutorial Meat
 		if(p.getLocation().onTutorialIsland() && item.getID() == 503 && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") >= 0  &&  p.getCache().getInt("tutorial") <= 31) {
 			p.setBusy(true);
 			showBubble(p, item);
@@ -61,6 +63,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			p.setBusy(false);
 			return;
 		}
+
+		// Poison (Hazeel Cult)
 		else if(item.getID() == 177 && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if(p.getQuestStage(Constants.Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
 				message(p, "you poor the poison into the hot pot",
@@ -71,7 +75,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("nothing interesting happens");
 			}
 		}
-		else if (item.getID() == 784) {
+		else if (item.getID() == 784) { // Uncooked swamp paste
 			cookMethod(p, 784, 785, "you warm the paste over the fire", "it thickens into a sticky goo");
 		}
 		else if (item.getID() == 622) { // Seaweed (Glass)
