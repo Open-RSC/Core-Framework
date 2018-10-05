@@ -59,14 +59,14 @@ public class WorldLoader {
 					sectorTile.groundOverlay = (byte) 2;
 				}
 				
-				int groundOverlay = sectorTile.groundOverlay & 0xFF;
+				byte groundOverlay = sectorTile.groundOverlay;
 				if (groundOverlay > 0
 						&& EntityHandler.getTileDef(groundOverlay - 1)
 								.getObjectType() != 0) {
 					tile.traversalMask |= 0x40; // 64
 				}
 				
-				int verticalWall = sectorTile.verticalWall & 0xFF;
+				byte verticalWall = sectorTile.verticalWall;
 				if (verticalWall > 0
 						&& EntityHandler.getDoorDef(verticalWall - 1)
 								.getUnknown() == 0
@@ -81,7 +81,7 @@ public class WorldLoader {
 					}
 				}
 
-				int horizontalWall = sectorTile.horizontalWall & 0xFF;
+				byte horizontalWall = sectorTile.horizontalWall;
 				if (horizontalWall > 0
 						&& EntityHandler.getDoorDef(horizontalWall - 1)
 								.getUnknown() == 0
