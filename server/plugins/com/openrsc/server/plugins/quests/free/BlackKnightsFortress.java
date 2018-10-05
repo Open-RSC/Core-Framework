@@ -53,6 +53,7 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 	private static final int IRON_CHAINMAIL = 7;
 	private static final int BRONZE_MEDIUM_HELMET = 104;
 	private static final int CABBAGE = 18;
+	private static final int CABBAGE2 = 228;
 
 	private static final Point DOOR_LOCATION = Point.location(271, 441);
 	private static final Point DOOR2_LOCATION = Point.location(275, 439);
