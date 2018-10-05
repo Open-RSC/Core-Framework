@@ -158,51 +158,31 @@ etc/ghost/content/logs/*.log.*
 etc/ghost/content/data/ghost\.db
 
 Tools/Sprite Editor/unpack/dat/
-
 Tools/Sprite Editor/unpack/img/
-
-server/core\.jar
-
-server/plugins\.jar
-
 Tools/Sprite Editor/spriteeditor\.jar
 
+server/core\.jar
+server/plugins\.jar
+
 Docker\.dmg
-
 \.domain
-
 \.pass
-
 \.port
-
 \.email
-
 \.subdomain
-
 \.installedalready
-
 \.methodinstall
+
 Android/Open RSC Android Client/build/intermediates
 Android/Open RSC Android Client/build/outputs/apk/debug/
-
 *.dex
-
 Android/app/build/outputs/apk/debug/
-
 Android/local\.properties
-
 Android/\.idea/caches/
 
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 
-
-client/nbproject/genfiles\.properties
-client/nbproject/project\.properties
-
-Launcher/nbproject/genfiles\.properties
-Launcher/nbproject/project\.properties
-server/nbproject/genfiles\.properties
 Tools/Map Generator/build/
 Tools/Map Generator/dist/
 Tools/Map Generator/map\.png
