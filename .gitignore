@@ -210,3 +210,13 @@ Launcher/nbproject/genfiles\.properties
 Launcher/nbproject/project\.properties
 
 server/nbproject/genfiles\.properties
+
+Tools/Map Generator/dist/javadoc/
+
+Tools/Map Generator/build/
+
+Tools/Map Generator/dist/
+
+Tools/Map Generator/map\.png
+
+Tools/Map Generator/spriteeditor\.jar
