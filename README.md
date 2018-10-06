@@ -60,11 +60,7 @@ ___
 
 ## Hosting Your Own Server<a name="hosting"></a>
 
-Open RSC <3 DigitalOcean.
-
-For a limited time, you can get $100 in credit that is good for 60 days added to your DigitalOcean account using this referral link: https://m.do.co/t/be6a177e6664
-
-Each referral earns $25 in credit that Open RSC can use for it's hosting costs.
+For those who want to host their own Open RSC server, you can get $100 in DigitalOcean credit that is good for 60 days: https://m.do.co/c/be6a177e6664
 
 [Return to top](#top)
 ___
