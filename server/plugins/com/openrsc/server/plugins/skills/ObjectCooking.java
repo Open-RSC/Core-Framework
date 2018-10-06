@@ -38,6 +38,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 	private void handleCooking(final Item item, Player p,
 			final GameObject object) {
+
+		// Tutorial Meat
 		if(p.getLocation().onTutorialIsland() && item.getID() == 503 && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") >= 0  &&  p.getCache().getInt("tutorial") <= 31) {
 			p.setBusy(true);
 			showBubble(p, item);
@@ -61,6 +63,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			p.setBusy(false);
 			return;
 		}
+
+		// Poison (Hazeel Cult)
 		else if(item.getID() == 177 && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if(p.getQuestStage(Constants.Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
 				message(p, "you poor the poison into the hot pot",
@@ -71,7 +75,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("nothing interesting happens");
 			}
 		}
-		else if (item.getID() == 784) {
+		else if (item.getID() == 784) { // Uncooked swamp paste
 			cookMethod(p, 784, 785, "you warm the paste over the fire", "it thickens into a sticky goo");
 		}
 		else if (item.getID() == 622) { // Seaweed (Glass)
@@ -90,6 +94,25 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			if (!p.withinRange(object, 2)) { 
 				return;
 			}
+			// Some need a RANGE not a FIRE
+			boolean needRange = false;
+			switch (object.getID()) {
+				case 137: // Bread
+				case 254: // Apple Pie
+				case 255: // Meat Pie
+				case 256: // Redberry Pie
+				case 324: // Pizza
+				case 339: // Cake
+				case 1104: // Pitta Bread
+					needRange = true;
+					break;
+				default:
+					break;
+			}
+			if (object.getID() == 97 && needRange) {
+				p.message("You need a proper oven to cook this");
+				return;
+			}
 			p.message(cookingOnMessage(p, item, object));
 			showBubble(p, item);
 			p.setBatchEvent(new BatchEvent(p, 1500, Formulae.getRepeatTimes(p, 7)) {
@@ -97,7 +120,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to cook this fish");
+						owner.message("You are too tired to cook this food");
 						interrupt();
 						return;
 					}

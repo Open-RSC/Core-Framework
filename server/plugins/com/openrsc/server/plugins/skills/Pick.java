@@ -22,12 +22,8 @@ public final class Pick implements ObjectActionExecutiveListener,
 
 	private void handleFlaxPickup(final Player owner, GameObject obj) {
 		owner.setBusyTimer(250);
-		if (!owner.getInventory().full()) {
-			owner.message("You uproot a flax plant");
-			addItem(owner, 675, 1);
-		} else {
-			owner.message("Your inventory is full!");
-		}
+		owner.message("You uproot a flax plant");
+		addItem(owner, 675, 1);
 	}
 
 	@Override
