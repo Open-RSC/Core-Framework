@@ -1312,10 +1312,15 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					"...you need a key");
 		}
 		if(obj.getID() == WATCH_TOWER_UP) {
+			if (p.getSkills().getLevel(16) >= 25) {
 			p.message("you jump up and grab hold of the platform");
 			p.teleport(710, 2364);
+			p.incExp(16, 30, true);
 			sleep(3000);
 			p.message("and pull yourself up");
+			}else {
+				p.message("You need an agility level of 25 to climb up the platform");
+			}
 		}
 		if(obj.getID() == WATCH_TOWER_DOWN) {
 			message(p, "you climb down the tower");
