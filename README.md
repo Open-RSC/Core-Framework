@@ -62,5 +62,21 @@ ___
 
 For those who want to host their own Open RSC server, you can get $100 in DigitalOcean credit that is good for 60 days: https://m.do.co/c/be6a177e6664
 
+We believe security is the most important part of running a server and suggest the following Droplet firewall configuration if you use DigitalOcean: <img src="https://i.imgur.com/Lpal89h.png"/>
+
+After you configure this, you can test to see what ports are exposed to the public internet using "nmap DOMAIN -Pn" if you are using Linux and have installed "nmap" <img src="https://i.imgur.com/BNMYuGJ.png"/>
+
+We also recommend that you use CloudFlare to proxy your web traffic. Please use the following settings to ensure you are well protected:
+
+<img src="https://i.imgur.com/W3MqU3W.png"/>
+<img src="https://i.imgur.com/dIGlpNB.png"/>
+<img src="https://i.imgur.com/dxBi00O.png"/>
+<img src="https://i.imgur.com/A5MXjgo.png"/>
+<img src="https://i.imgur.com/0J5krT9.png"/>
+<img src="https://i.imgur.com/7Z5foy0.png"/>
+<img src="https://i.imgur.com/YeKseHB.png"/>
+<img src="https://i.imgur.com/RkqfwI7.png"/>
+___
+
 [Return to top](#top)
 ___
