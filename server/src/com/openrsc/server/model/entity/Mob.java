@@ -450,6 +450,10 @@ public abstract class Mob extends Entity {
 		this.combatEvent = combatEvent2;
 	}
 
+	public void setCombatTimer(int delay) {
+		combatTimer = System.currentTimeMillis() + delay;
+	}
+
 	public void setCombatTimer() {
 		combatTimer = System.currentTimeMillis();
 	}
