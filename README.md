@@ -5,7 +5,7 @@
 1. [How to Install](#install)
 2. [Default Credentials](#credentials)
 3. [Minimum Requirements](#requirements)
-
+4. [Hosting Your Own Server](#hosting)
 
 ## How to Install<a name="install"></a>
 
@@ -56,3 +56,15 @@ ___
 * 1GB RAM
 
 [Return to top](#top)
+___
+
+## Hosting Your Own Server<a name="hosting"></a>
+
+Open RSC <3 DigitalOcean.
+
+For a limited time, you can get $100 in credit that is good for 60 days added to your DigitalOcean account using this referral link: https://m.do.co/t/be6a177e6664
+
+Each referral earns $25 in credit that Open RSC can use for it's hosting costs.
+
+[Return to top](#top)
+___
