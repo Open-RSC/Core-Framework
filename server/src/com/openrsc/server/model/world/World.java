@@ -642,7 +642,7 @@ public final class World {
 				getFishingTrawler().quitPlayer(player);
 			}*/
 			if(player.getLocation().inMageArena()) {
-				player.teleport(228, 121);
+				player.teleport(228, 109);
 			}
 			player.save();
 			player.remove();
