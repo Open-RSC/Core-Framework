@@ -29,6 +29,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 public class ShantayPassNpcs implements ShopInterface,
 TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
@@ -126,6 +127,11 @@ ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener {
 			return;
 		}
 		if (n.getID() == SHANTAY) {
+			if (DataConversions.random(0, 25) == 0) { // 1 in 25 chance to drop kebab recipe
+				GroundItem groundItem = new GroundItem(1120, n.getX(), n.getY(), 1, p);
+				World.getWorld().registerItem(groundItem);
+			}
+
 			npcTalk(p,n,"Hello Effendi, I am Shantay.");
 			if(!hasItem(p, SHANTAY_DISCLAIMER)) {
 				npcTalk(p,n, "I see you're new!",
