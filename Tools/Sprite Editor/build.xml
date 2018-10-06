@@ -1,0 +1,53 @@
+<project default="compile" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="jar" location="spriteeditor.jar" />
+	
+	<target name="compile">
+		<delete file="${jar}" />
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" debug="on" target="1.5">
+		  <classpath>
+			<pathelement location="lib/xstream.jar"/>
+			<pathelement location="lib/xpp3.jar" />
+			<pathelement location="lib/hex-string.jar" />
+			<pathelement path="${java.class.path}/"/>
+		  </classpath>
+		</javac>
+		<jar basedir="${build}" destfile="${jar}" />
+		<delete dir="${build}" />
+	</target>
+	
+	<target name="editor">
+		<java classname="spriteeditor.SpriteEditor" fork="true">
+			<classpath>
+				<pathelement location="lib/xstream.jar" />
+				<pathelement location="lib/xpp3.jar" />
+				<pathelement location="lib/hex-string.jar" />
+				<pathelement path="${jar}/" />
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="packer">
+		<java classname="spriteeditor.SpritePacker" fork="true">
+			<classpath>
+				<pathelement location="lib/xstream.jar" />
+				<pathelement location="lib/xpp3.jar" />
+				<pathelement location="lib/hex-string.jar" />
+				<pathelement path="${jar}/" />
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="unpacker">
+		<java classname="spriteeditor.SpriteUnpacker" fork="true">
+			<classpath>
+				<pathelement location="lib/xstream.jar" />
+				<pathelement location="lib/xpp3.jar" />
+				<pathelement location="lib/hex-string.jar" />
+				<pathelement path="${jar}/" />
+			</classpath>
+		</java>
+	</target>
+</project>
