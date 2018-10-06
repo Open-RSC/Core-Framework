@@ -1314,6 +1314,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		if(obj.getID() == WATCH_TOWER_UP) {
 			p.message("you jump up and grab hold of the platform");
 			p.teleport(710, 2364);
+			p.incExp(16, 30, true);
 			sleep(3000);
 			p.message("and pull yourself up");
 		}
