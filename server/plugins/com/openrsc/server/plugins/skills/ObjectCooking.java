@@ -94,6 +94,25 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			if (!p.withinRange(object, 2)) { 
 				return;
 			}
+			// Some need a RANGE not a FIRE
+			boolean needRange = false;
+			switch (object.getID()) {
+				case 137: // Bread
+				case 254: // Apple Pie
+				case 255: // Meat Pie
+				case 256: // Redberry Pie
+				case 324: // Pizza
+				case 339: // Cake
+				case 1104: // Pitta Bread
+					needRange = true;
+					break;
+				default:
+					break;
+			}
+			if (object.getID() == 97 && needRange) {
+				p.message("You need a proper oven to cook this");
+				return;
+			}
 			p.message(cookingOnMessage(p, item, object));
 			showBubble(p, item);
 			p.setBatchEvent(new BatchEvent(p, 1500, Formulae.getRepeatTimes(p, 7)) {
@@ -101,7 +120,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to cook this fish");
+						owner.message("You are too tired to cook this food");
 						interrupt();
 						return;
 					}
