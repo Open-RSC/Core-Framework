@@ -400,14 +400,14 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(2200);
 			movePlayer(p, 664, 755);
 			p.message("You skillfully swing across the stream");
-			p.incExp(AGILITY, 48, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		case GREW_ISLAND_SWING_BACK:
 			p.message("You grab the rope and try and swing across");
 			sleep(2200);
 			movePlayer(p, 666, 755);
 			p.message("You skillfully swing across the stream");
-			p.incExp(AGILITY, 48, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		case EAST_KARAMJA_LOG:
 			if (getCurrentLevel(p, AGILITY) < 32) {
