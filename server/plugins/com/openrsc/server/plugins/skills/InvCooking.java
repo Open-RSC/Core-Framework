@@ -19,14 +19,20 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	
 	enum CombineCooking {
-		INCOMPLETE_STEW(348, 342, 343, 0, 25, "You start to create a stew"),
-		UNCOOKED_STEW(132, 343, 345, 0, 25, "Your stew is now ready, but uncooked"),
+		TOMATO_MIX(320, 341, 1106, 0, 58, "You create a tomato mixture in the bowl"),
+		TOMATO_ONION_MIX(241, 1106, 1108, 0, 58, "You add the onion to the tomato mixture"),
+		ONION_MIX(241, 341, 1107, 0, 58, "You create an onion mixture in the bowl"),
+		ONION_TOMATO_MIX(320, 1107, 1108, 0, 58, "You add the tomato to the onion mixture"),
+		UGTHANKI_MIX(1103, 1108, 1109, 0, 58, "You cut up the Cooked Ugthanki Meat and put it into the mix"),
+		TASTY_UGTHANKI_KEBAB(1109, 1105, 1102, 480, 58, "You add the mixture to your Pitta Bread to make a tasty kebab"),
+		INCOMPLETE_STEW(348, 342, 343, 0, 25, "You cut up the meat and put it into the bowl"),
+		UNCOOKED_STEW(132, 343, 345, 0, 25, "You cut up the potato and put it into the stew"),
 		UNCOOKED_CURRY(707, 345, 708, 0, 60, "You add spice to the stew and make a curry"),
-		PIE_SHELL(250, 251, 253, 0, 1, "You add the pastry dough in the dish"),
-		UNCOOKED_APPLEPIE(253, 252, 254, 0, 30,  "You create an uncoooked pie"),
-		UNCOOKED_MEATPIE(253, 132, 255, 0, 20, "You create an uncoooked pie"),
-		UNCOOKED_REDBERRYPIE(253, 236, 256, 0, 10,  "You create an uncoooked pie"),
-		CHOCOLATE_CAKE(337, 330, 332, 0, 50, "You add chocolate to the cake"),
+		PIE_SHELL(250, 251, 253, 0, 1, "You put the dough in the pie dish to make a pie shell"),
+		UNCOOKED_APPLEPIE(253, 252, 254, 0, 30,  "You fill your pie with apples"),
+		UNCOOKED_MEATPIE(253, 132, 255, 0, 20, "You fill your pie with meat"),
+		UNCOOKED_REDBERRYPIE(253, 236, 256, 0, 10,  "You fill your pie with redberries"),
+		CHOCOLATE_CAKE(337, 330, 332, 0, 50, "You make a chocolate cake!"),
 		INCOMPLETE_PIZZA(321, 320, 323, 0, 35, "You add tomato to the pizza base"),
 		UNCOOKED_PIZZA(323, 319, 324, 0, 35, "You add cheese on the incomplete pizza"),
 		MEAT_PIZZA(132, 325, 326, 0, 45, "You create a meat pizza."),
@@ -65,7 +71,16 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 					&& player.getInventory().remove(new Item(338)) > -1) {
 				player.getInventory().add(new Item(135));
 				player.getInventory().add(new Item(339));
-				player.message("You create an uncooked cake");
+				player.message("You mix some milk, flour, and egg together into a cake mixture");
+				return;
+			}
+			else {
+				if (!player.getInventory().hasItemId(19))  // Egg
+					player.message("I also need an egg to make a cake");
+				else if (!player.getInventory().hasItemId(22))  // Milk
+					player.message("I also need some milk to make a cake");
+				else if (!player.getInventory().hasItemId(136)) // Flour
+					player.message("I also need some flour to make a cake");
 				return;
 			}
 		}
@@ -134,6 +149,14 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 	
 	public void handleCombineCooking(Player p, Item itemOne, Item itemTwo) {
 		CombineCooking combine = null;
+
+		// Pizza order matters!
+		if ((itemOne.getID() == 321 || itemTwo.getID() == 321)
+			&& (itemOne.getID() == 319 || itemTwo.getID() == 319)) {
+			p.message("I should add the tomato first");
+			return;
+		}
+
 		for(CombineCooking c : CombineCooking.values()) {
 			if(c.isValid(itemOne.getID(), itemTwo.getID())) {
 				combine = c;
