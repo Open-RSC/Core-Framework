@@ -19,12 +19,12 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	
 	enum CombineCooking {
-		TOMATO_MIX(320, 341, 1106, 0, 58, "You create a tomato mixture in the bowl"),
-		TOMATO_ONION_MIX(241, 1106, 1108, 0, 58, "You add the onion to the tomato mixture"),
-		ONION_MIX(241, 341, 1107, 0, 58, "You create an onion mixture in the bowl"),
-		ONION_TOMATO_MIX(320, 1107, 1108, 0, 58, "You add the tomato to the onion mixture"),
-		UGTHANKI_MIX(1103, 1108, 1109, 0, 58, "You cut up the Cooked Ugthanki Meat and put it into the mix"),
-		TASTY_UGTHANKI_KEBAB(1109, 1105, 1102, 480, 58, "You add the mixture to your Pitta Bread to make a tasty kebab"),
+		TOMATO_MIX(320, 341, 1106, 0, 58, "You cut the tomato into the bowl"),
+		TOMATO_ONION_MIX(241, 1106, 1108, 0, 58, "You cut the onion into the tomato mixture"),
+		ONION_MIX(241, 341, 1107, 0, 58, "You cut the onion into the bowl"),
+		ONION_TOMATO_MIX(320, 1107, 1108, 0, 58, "You cut the tomato into the onion mixture"),
+		UGTHANKI_MIX(1103, 1108, 1109, 0, 58, "You cut the ugthanki meat into the tomato and onion mixture"),
+		TASTY_UGTHANKI_KEBAB(1109, 1105, 1102, 480, 58, "You make a delicious ugthanki kebab"),
 		INCOMPLETE_STEW(348, 342, 343, 0, 25, "You cut up the meat and put it into the bowl"),
 		UNCOOKED_STEW(132, 343, 345, 0, 25, "You cut up the potato and put it into the stew"),
 		UNCOOKED_CURRY(707, 345, 708, 0, 60, "You add spice to the stew and make a curry"),
@@ -33,13 +33,13 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		UNCOOKED_MEATPIE(253, 132, 255, 0, 20, "You fill your pie with meat"),
 		UNCOOKED_REDBERRYPIE(253, 236, 256, 0, 10,  "You fill your pie with redberries"),
 		CHOCOLATE_CAKE(337, 330, 332, 0, 50, "You make a chocolate cake!"),
-		INCOMPLETE_PIZZA(321, 320, 323, 0, 35, "You add tomato to the pizza base"),
-		UNCOOKED_PIZZA(323, 319, 324, 0, 35, "You add cheese on the incomplete pizza"),
-		MEAT_PIZZA(132, 325, 326, 0, 45, "You create a meat pizza."),
-		ANCHOVIE_PIZZA(325, 352, 327, 0, 55, "You create a anchovie pizza."),
-		PINEAPPLERINGS_PIZZA(325, 749, 750, 0, 65, "You create a pineapple pizza."),
-		PINEAPPLECHUNCKS_PIZZA(325, 862, 750, 0, 65, "You create a pineapple pizza."),
-		FLOUR_POT(23, 135, 136, 0, 1, "You pour flour to the pot");
+		INCOMPLETE_PIZZA(321, 320, 323, 0, 35, "You add tomato to the pizza"),
+		UNCOOKED_PIZZA(323, 319, 324, 0, 35, "You add cheese to the pizza"),
+		MEAT_PIZZA(132, 325, 326, 0, 45, "You add the meat to the pizza"),
+		ANCHOVIE_PIZZA(325, 352, 327, 0, 55, "You add the anchovies to the pizza"),
+		PINEAPPLERINGS_PIZZA(325, 749, 750, 0, 65, "You add the pineapple to the pizza"),
+		PINEAPPLECHUNCKS_PIZZA(325, 862, 750, 0, 65, "You add the pineapple to the pizza"),
+		FLOUR_POT(23, 135, 136, 0, 1, "You put the flour in the pot");
 		
 		private int itemID;
 		private int itemIDOther;
@@ -166,7 +166,22 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			p.message("You need level " + combine.requiredLevel + " cooking to do this");
 			return;
 		}
+		if (combine.resultItem == 1106 || combine.resultItem == 1107 || combine.resultItem == 1108 || combine.resultItem == 1102) {
+			if (!p.getInventory().hasItemId(13)) { // No knife
+				p.message("You need a knife in order to cut this");
+				return;
+			}
+		}
+
 		if(removeItem(p, combine.itemID, 1) && removeItem(p, combine.itemIDOther, 1)) {
+
+			// Check for tasty kebab failure
+			if (combine.resultItem == 1102 && DataConversions.random(0, 31) < 1) {
+				addItem(p, 923, 1);
+				p.message("You make a dodgy looking ugthanki kebab");
+				return;
+			}
+
 			if(combine.messages.length > 1)
 				message(p, combine.messages[0]);
 			else
