@@ -490,8 +490,8 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if (getCurrentLevel(p, AGILITY) < 30) {
-				p.message("You need an agility level of 30 to climb up the wall");
+			if (getCurrentLevel(p, AGILITY) < 18) {
+				p.message("You need an agility level of 18 to climb up the wall");
 				p.setBusy(false);
 				return;
 			}

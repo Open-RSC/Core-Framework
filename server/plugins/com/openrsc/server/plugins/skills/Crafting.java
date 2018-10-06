@@ -362,7 +362,7 @@ InvUseOnObjectExecutiveListener {
 							break;
 						case 2:
 							result = new Item(620, 1);
-							reqLvl = 3;
+							reqLvl = 1;
 							exp = 70;
 							break;
 						default:
