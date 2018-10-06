@@ -18,6 +18,9 @@ public final class RegularPlayer implements CommandListener {
 
 	@Override
 	public void onCommand(String command, String[] args, Player player) {
+		if (!Constants.GameServer.PLAYER_COMMANDS)
+			return;
+
 		if(command.equalsIgnoreCase("gang")) {
 			if (player.getCache().hasKey("arrav_gang")) {
 				if (player.getCache().getInt("arrav_gang") == 0) {
