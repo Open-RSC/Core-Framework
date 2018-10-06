@@ -531,7 +531,6 @@ public abstract class Mob extends Entity {
 
 		if (this.isPlayer()) {
 			((Player) this).resetAll();
-			((Player) this).checkAndInterruptBatchEvent();
 			((Player) this).setStatus(Action.FIGHTING_MOB);
 		}
 		else if (this.isNpc() && victim.isPlayer() && this.getID() == 232) // Bandit message
@@ -559,7 +558,6 @@ public abstract class Mob extends Entity {
 				((Player) this).setSkulledOn(playerVictim);
 			}
 			playerVictim.resetAll();
-			playerVictim.checkAndInterruptBatchEvent();
 			playerVictim.setStatus(Action.FIGHTING_MOB);
 			ActionSender.sendSound(playerVictim, "underattack");
 			playerVictim.message("You are under attack!");
