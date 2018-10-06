@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import java.awt.Dimension;
+import java.util.Random;
 import javax.swing.JProgressBar;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
@@ -41,7 +42,17 @@ public class AppFrame extends JFrame
     }
     
     public void build() {
-        (this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 980, 560);
+        Random rand = new Random();
+        int value = rand.nextInt(3);
+        if (value == 0) {
+            (this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 980, 560);
+        }
+        else if (value == 1) {
+            (this.bg = new JLabel(Utils.getImage("background2.png"))).setBounds(0, 0, 980, 560);
+        }
+        else {
+            (this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 980, 560);
+        }
         
         this.add(this.bg);
         this.addLogo();
