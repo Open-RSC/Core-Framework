@@ -117,7 +117,7 @@ public final class Constants {
 		 */
 		public static final int CRUMBLE_UNDEAD_MAX = 12;
 
-		public static final int[] NPCS_THAT_DO_RETREAT = {3, 89, 114, 40, 64, 0, 34, 241, 29, 116, 23, 21, 81, 351, 367, 52, 71, 666, 359, 188, 136, 190};
+		public static final int[] NPCS_THAT_DO_RETREAT = {3, 89, 114, 40, 64, 0, 34, 241, 29, 116, 23, 21, 81, 351, 367, 52, 71, 666, 359, 188, 136, 190, 296};
 		/**
 		 * Strikes, Bolts & Blast Spells.
 		 * <p/>
