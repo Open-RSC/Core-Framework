@@ -32,14 +32,14 @@ public final class Gulluck implements ShopInterface,
 			npcTalk(p, n, "good day brave adventurer",
 					"could i interest you in my fine selection of weapons?");
 
-			int option = showMenu(p, n, "i'll take a look", "No thanks");
+			int option = showMenu(p, n, "i'll take a look", "no thanks");
 			switch (option) {
 				case 0:
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 					break;
 				case 1:
-					npcTalk(p, n, "grrr");
+					npcTalk(p, n, "grrrr");
 					break;
 
 			}
