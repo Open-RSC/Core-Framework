@@ -13000,7 +13000,7 @@ public final class mudclient implements Runnable {
 					this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
 				}
 
-				this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+				this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
 				this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
 
                 // Third view

@@ -29,4 +29,9 @@
             </classpath>
         </java>
     </target>
+
+    <target name="compile-and-run" description="all target, parallel">
+        <antcall target="compile"/>
+        <antcall target="runclient"/>
+    </target>
 </project>
