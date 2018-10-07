@@ -533,7 +533,6 @@ public abstract class Mob extends Entity {
 
 		if (this.isPlayer()) {
 			((Player) this).resetAll();
-			((Player) this).checkAndInterruptBatchEvent();
 			((Player) this).setStatus(Action.FIGHTING_MOB);
 		}
 
@@ -559,7 +558,6 @@ public abstract class Mob extends Entity {
 				((Player) this).setSkulledOn(playerVictim);
 			}
 			playerVictim.resetAll();
-			playerVictim.checkAndInterruptBatchEvent();
 			playerVictim.setStatus(Action.FIGHTING_MOB);
 			ActionSender.sendSound(playerVictim, "underattack");
 			playerVictim.message("You are under attack!");
