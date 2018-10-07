@@ -12972,7 +12972,10 @@ public final class mudclient implements Runnable {
 					this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
 				}
 
-				this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+				//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+                //Graphics g = this.getGraphics();
+                //g.setFont(new Font("Helvetica", 1, 20));
+                this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
 
                 // Second view
@@ -13000,7 +13003,8 @@ public final class mudclient implements Runnable {
 					this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
 				}
 
-				this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
+				//this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
+                this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
 
                 // Third view
@@ -13037,7 +13041,8 @@ public final class mudclient implements Runnable {
 					this.getSurface().a(8, var9, 194, 0, 16740352, getGameWidth(), 0);
 				}
 
-				this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+				//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+                this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), 200);
 			} catch (RuntimeException var10) {
 				throw GenUtil.makeThrowable(var10, "client.HC(" + var1 + ')');
