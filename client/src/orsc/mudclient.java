@@ -12940,15 +12940,15 @@ public final class mudclient implements Runnable {
                 // First view
 				byte sector_h = 0; // sector h
 				byte sector_x = 50; // sector x
-				byte sector_y = 39; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
+				byte sector_y = 50; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
 				this.world.loadSections(sector_x * 48 + 23, (int) (sector_y * 48 + 23), sector_h);
 				this.world.addLoginScreenModels(this.modelCache);
-				short slide_x = 9328;
-				short zoom_distance = 2200; // The first scene is of the scorpion filled deep wilderness trench
-				short slide_y = 8400;
+				short slide_x = 9728;
+				short zoom_distance = 1100;
+				short slide_y = 6400;
 				this.scene.fogLandscapeDistance = 10000;
 				this.scene.fogEntityDistance = 10000;
-				short rotation = 1300;
+				short rotation = 888;
 				this.scene.fogZFalloff = 1;
 				this.scene.fogSmoothingStartDistance = 10000;
 				this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
@@ -12976,14 +12976,9 @@ public final class mudclient implements Runnable {
 				this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
 
                 // Second view
-                byte sector_h = 0; // sector h
-                byte sector_x = 50; // sector x
-                byte sector_y = 50; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
-                this.world.loadSections(sector_x * 48 + 23, (int) (sector_y * 48 + 23), sector_h);
-                this.world.addLoginScreenModels(this.modelCache);
 				slide_y = 9216;
 				rotation = 888;
-				zoom_distance = 3100;
+				zoom_distance = 1100;
 				slide_x = 9216;
 				this.scene.fogLandscapeDistance = 10000;
 				this.scene.fogZFalloff = 1;
@@ -13009,7 +13004,7 @@ public final class mudclient implements Runnable {
 				this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
 
                 // Third view
-				zoom_distance = 3000;
+				zoom_distance = 500;
 				rotation = 376;
 				slide_x = 11136;
 				slide_y = 10368;
