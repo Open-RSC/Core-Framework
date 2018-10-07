@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
+
 import static com.openrsc.server.plugins.Functions.AGILITY;
 import static com.openrsc.server.plugins.Functions.THIEVING;
 import static com.openrsc.server.plugins.Functions.addItem;
@@ -20,7 +21,6 @@ import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -372,6 +372,10 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				p.message("The bridge has collapsed");
 				p.message("It seems this rock is placed here to jump from");
 			} else if(command.equalsIgnoreCase("jump over")) {
+				if (p.getSkills().getLevel(16) < 30) {
+					p.message("You need agility level of 30 to attempt this jump");
+					return;
+				}
 				if(obj.getID() == ROCK_BACK) {
 					p.teleport(646, 805);
 					playerTalk(p,null, "I'm glad that was easier on the way back!");
@@ -392,8 +396,13 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 										"Do you want to get hurt or something ?");
 							} else {
 								removeItem(p, 10, 20);
+								if (p.getFatigue() >= 7500) {
+									p.message("You are too tired to attempt this jump");
+									return;
+								}								
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
+								p.incExp(AGILITY, 50, true);
 								playerTalk(p,null, "Phew! I just made it");
 							}
 						} else if(menu == 1) {
@@ -401,8 +410,13 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.message("The guard blocks your path");
 						}
 					} else {
+						if (p.getFatigue() >= 7500) {
+							p.message("You are too tired to attempt this jump");
+							return;
+						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);
+						p.incExp(AGILITY, 50, true);
 						playerTalk(p,null, "Phew! I just made it");
 					}
 				}
