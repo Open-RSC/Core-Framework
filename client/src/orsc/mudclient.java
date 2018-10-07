@@ -12937,21 +12937,21 @@ public final class mudclient implements Runnable {
 
 		private final void renderLoginScreenViewports(int var1) {
 			try {
-
-				byte var2 = 0;
-				byte var3 = 50;
-				byte var4 = 50;
-				this.world.loadSections(var3 * 48 + 23, (int) (var4 * 48 + 23), var2);
+                // First view
+				byte sector_h = 0; // sector h
+				byte sector_x = 50; // sector x
+				byte sector_y = 50; // sector y    (h0x50y50 - Lumbridge sector) (h0x50y39 - deep wilderness sector)
+				this.world.loadSections(sector_x * 48 + 23, (int) (sector_y * 48 + 23), sector_h);
 				this.world.addLoginScreenModels(this.modelCache);
-				short var5 = 9728;
-				short var7 = 1100;
-				short var6 = 6400;
-				this.scene.fogLandscapeDistance = 4100;
-				this.scene.fogEntityDistance = 4100;
-				short var8 = 888;
+				short slide_x = 9728;
+				short zoom_distance = 1100;
+				short slide_y = 6400;
+				this.scene.fogLandscapeDistance = 10000;
+				this.scene.fogEntityDistance = 10000;
+				short rotation = 888;
 				this.scene.fogZFalloff = 1;
-				this.scene.fogSmoothingStartDistance = 4000;
-				this.scene.setCamera(var5, -this.world.getElevation(var5, var6), var6, 912, var8, (int) 0, var7 * 2);
+				this.scene.fogSmoothingStartDistance = 10000;
+				this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
 				this.scene.endScene(-124);
 				if (var1 >= -48) {
 					this.localPlayer = (ORSCharacter) null;
@@ -12974,15 +12974,17 @@ public final class mudclient implements Runnable {
 
 				this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
 				this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
-				var6 = 9216;
-				var8 = 888;
-				var7 = 1100;
-				var5 = 9216;
-				this.scene.fogLandscapeDistance = 4100;
+
+                // Second view
+				slide_y = 9216;
+				rotation = 888;
+				zoom_distance = 1100;
+				slide_x = 9216;
+				this.scene.fogLandscapeDistance = 10000;
 				this.scene.fogZFalloff = 1;
-				this.scene.fogSmoothingStartDistance = 4000;
-				this.scene.fogEntityDistance = 4100;
-				this.scene.setCamera(var5, -this.world.getElevation(var5, var6), var6, 912, var8, (int) 0, var7 * 2);
+				this.scene.fogSmoothingStartDistance = 10000;
+				this.scene.fogEntityDistance = 10000;
+				this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
 				this.scene.endScene(-114);
 				this.getSurface().fade2black(16316665);
 				this.getSurface().fade2black(16316665);
@@ -12998,12 +13000,14 @@ public final class mudclient implements Runnable {
 					this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
 				}
 
-				this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
+				this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
 				this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
-				var7 = 500;
-				var8 = 376;
-				var5 = 11136;
-				var6 = 10368;
+
+                // Third view
+				zoom_distance = 500;
+				rotation = 376;
+				slide_x = 11136;
+				slide_y = 10368;
 
 				for (var9 = 0; var9 < 64; ++var9) {
 					this.scene.removeModel(this.world.modelRoofGrid[0][var9]);
@@ -13013,11 +13017,11 @@ public final class mudclient implements Runnable {
 					this.scene.removeModel(this.world.modelRoofGrid[2][var9]);
 				}
 
-				this.scene.fogLandscapeDistance = 4100;
-				this.scene.fogSmoothingStartDistance = 4000;
+				this.scene.fogLandscapeDistance = 10000;
+				this.scene.fogSmoothingStartDistance = 10000;
 				this.scene.fogZFalloff = 1;
-				this.scene.fogEntityDistance = 4100;
-				this.scene.setCamera(var5, -this.world.getElevation(var5, var6), var6, 912, var8, (int) 0, var7 * 2);
+				this.scene.fogEntityDistance = 10000;
+				this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
 				this.scene.endScene(-111);
 				this.getSurface().fade2black(16316665);
 				this.getSurface().fade2black(16316665);

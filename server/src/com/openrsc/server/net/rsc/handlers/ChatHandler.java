@@ -18,11 +18,16 @@ public final class ChatHandler implements PacketHandler {
 			sender.message("You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
 			return;
 		}
-		
-		String message = DataConversions.getEncryptedString(p, Short.MAX_VALUE);
-		byte[] array = DataConversions.stringToByteArray(message);
-		message = DataConversions.byteToString(array, 0, array.length); 
-		
+
+		if (sender.getLocation().onTutorialIsland()) {
+			sender.message("Once you finish the tutorial, typing here sends messages to nearby players");
+			return;
+		}
+
+		String message = DataConversions.upperCaseAllFirst(
+			DataConversions.stripBadCharacters(
+				DataConversions.getEncryptedString(p, Short.MAX_VALUE)));
+
 		ChatMessage chatMessage = new ChatMessage(sender, message);
 		sender.getUpdateFlags().setChatMessage(chatMessage);
 		
