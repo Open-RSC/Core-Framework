@@ -5,16 +5,19 @@
 1. [How to Install](#install)
 2. [Default Credentials](#credentials)
 3. [Minimum Requirements](#requirements)
-
+4. [Hosting Your Own Server](#hosting)
 
 ## How to Install<a name="install"></a>
 
 <b>Windows:</b>
 
 1. <a href="https://desktop.githubusercontent.com/releases/1.4.1-4eda7cdc/GitHubDesktopSetup.exe">Install GitHub Desktop</a>
+
 2. Click "Clone a repository" and specify URL: https://github.com/Open-RSC/Game.git
 <img src="https://i.imgur.com/ZMXUSr7.png"/>
+
 3. Click "Clone"
+
 4. Launch "Game/Go-Windows.cmd"
 
 
@@ -53,3 +56,27 @@ ___
 * 1GB RAM
 
 [Return to top](#top)
+___
+
+## Hosting Your Own Server<a name="hosting"></a>
+
+For those who want to host their own Open RSC server, you can get $100 in DigitalOcean credit that is good for 60 days: https://m.do.co/c/be6a177e6664
+
+We believe security is the most important part of running a server and suggest the following Droplet firewall configuration if you use DigitalOcean: <img src="https://i.imgur.com/Lpal89h.png"/>
+
+After you configure this, you can test to see what ports are exposed to the public internet using "nmap DOMAIN -Pn" if you are using Linux and have installed "nmap" <img src="https://i.imgur.com/BNMYuGJ.png"/>
+
+We also recommend that you use CloudFlare to proxy your web traffic. Please use the following settings to ensure you are well protected:
+
+<img src="https://i.imgur.com/W3MqU3W.png"/>
+<img src="https://i.imgur.com/dIGlpNB.png"/>
+<img src="https://i.imgur.com/dxBi00O.png"/>
+<img src="https://i.imgur.com/A5MXjgo.png"/>
+<img src="https://i.imgur.com/0J5krT9.png"/>
+<img src="https://i.imgur.com/7Z5foy0.png"/>
+<img src="https://i.imgur.com/YeKseHB.png"/>
+<img src="https://i.imgur.com/RkqfwI7.png"/>
+___
+
+[Return to top](#top)
+___

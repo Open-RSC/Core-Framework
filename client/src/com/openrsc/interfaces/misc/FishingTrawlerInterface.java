@@ -3,7 +3,7 @@ package com.openrsc.interfaces.misc;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
 
-import rsc.mudclient;
+import orsc.mudclient;
 
 public class FishingTrawlerInterface extends NComponent {
 

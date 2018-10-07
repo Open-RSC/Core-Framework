@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import java.awt.Dimension;
+import java.util.Random;
 import javax.swing.JProgressBar;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
@@ -41,14 +42,24 @@ public class AppFrame extends JFrame
     }
     
     public void build() {
-        (this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 980, 560);
+        Random rand = new Random();
+        int value = rand.nextInt(3);
+        if (value == 0) {
+            (this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 980, 560);
+        }
+        else if (value == 1) {
+            (this.bg = new JLabel(Utils.getImage("background2.png"))).setBounds(0, 0, 980, 560);
+        }
+        else {
+            (this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 980, 560);
+        }
         
         this.add(this.bg);
         this.addLogo();
         this.addButtons();
         this.addNewsBox();
         (this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
-        this.postedDate.setFont(Utils.getFont("runescape_uf.ttf", 1, 10.0f));
+        this.postedDate.setFont(Utils.getFont("Exo-Regular.otf", 1, 8.0f));
         this.postedDate.setHorizontalAlignment(0);
         this.bg.add(this.postedDate);
         this.addMouseListener(new PositionListener(this));
@@ -67,14 +78,14 @@ public class AppFrame extends JFrame
     private void addLogo() {
         (this.text = new JLabel("Open RSC".toUpperCase())).setBounds(30, 24, 100, 15);
         this.text.setForeground(new Color(255, 223, 0));
-        this.text.setFont(Utils.getFont("runescape_uf.ttf", 1, 16.0f));
+        this.text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
         this.bg.add(this.text);
         (this.subText = new JLabel("Game Launcher")).setBounds(30, 35, 100, 15);
         this.subText.setForeground(new Color(200, 200, 200));
-        this.subText.setFont(Utils.getFont("runescape_uf.ttf", 1, 14.0f));
+        this.subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
         this.bg.add(this.subText);
         (this.status = new JLabel("Server Status: ---")).setForeground(Color.WHITE);
-        this.status.setFont(Utils.getFont("runescape_uf.ttf", 0, 16.0f));
+        this.status.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0f));
         this.status.setHorizontalAlignment(4);
         this.status.setBounds(625, 74, 315, 19);
         this.bg.add(this.status);
@@ -86,27 +97,17 @@ public class AppFrame extends JFrame
 
 	public void setDownloadProgress(String f, float percent) {
 		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530 , 640, 18);
-		if (percent >= 90) {
-                    this.progress.setForeground(new Color(0x009900));
-                } else if (percent >= 80 && percent < 90) {    
-                    this.progress.setForeground(new Color(0x5b9900));
-                } else if (percent >= 70 && percent < 80) {    
-                    this.progress.setForeground(new Color(0x829900));
-                } else if (percent >= 60 && percent < 70) {    
-                    this.progress.setForeground(new Color(0x999300));
-                } else if (percent >= 50 && percent < 60) {    
-                    this.progress.setForeground(new Color(0x997a00));
-                } else if (percent >= 40 && percent < 50) {    
-                    this.progress.setForeground(new Color(0x996600));
-                } else if (percent >= 30 && percent < 40) {    
-                    this.progress.setForeground(new Color(0x993f00));
-                } else if (percent >= 20 && percent < 30) {
-                    this.progress.setForeground(new Color(0x992b00));
-                } else {
-                    this.progress.setForeground(new Color(0x990000));
-                }
-                this.progress.setBackground(new Color(0x2D2E2A));
-		this.progress.setFont(Utils.getFont("runescape_uf.ttf", 1, 14.0f));
+		if (percent >= 90) this.progress.setForeground(new Color(0, 153, 0));
+        else if (percent >= 80 && percent < 90) this.progress.setForeground(new Color(91, 153, 0));
+        else if (percent >= 70 && percent < 80) this.progress.setForeground(new Color(130, 153, 0));
+        else if (percent >= 60 && percent < 70) this.progress.setForeground(new Color(153, 147, 0));
+        else if (percent >= 50 && percent < 60) this.progress.setForeground(new Color(153, 122, 0));
+        else if (percent >= 40 && percent < 50) this.progress.setForeground(new Color(153, 102, 0));
+        else if (percent >= 30 && percent < 40) this.progress.setForeground(new Color(153, 63, 0));
+        else if (percent >= 20 && percent < 30) this.progress.setForeground(new Color(153, 43, 0));
+        else this.progress.setForeground(new Color(153, 0, 0));
+        this.progress.setBackground(new Color(45, 46, 42));
+		this.progress.setFont(Utils.getFont("Exo-Regular.otf", 1, 11.0f));
 		this.progress.setOpaque(true);
 		this.progress.setStringPainted(true);
 		this.progress.setBorderPainted(false);
@@ -114,7 +115,6 @@ public class AppFrame extends JFrame
 		this.progress.setString(f + " - " + (int) percent + "%");
 		this.bg.add(this.progress);
 		this.progress.repaint();
-
 	}
 	
     

@@ -102,43 +102,48 @@ InvUseOnObjectExecutiveListener {
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[] { GOLD_BAR, SILVER_BAR, SAND, GOLD_BAR_FAMILYCREST }, item.getID())) {
-			if(item.getID() == STEEL_BAR && p.getInventory().hasItemId(CANNON_AMMO_MOULD)) {
-				if (getCurrentLevel(p, SMITHING) < 30) {
-					p.message("You need at least level 30 smithing to make cannon balls");
-					return;
-				}
-				if (p.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
-					p.message("You need to complete the dwarf cannon quest");
-					return;
-				}
-				showBubble(p, item);
-				message(p, 1300, "you heat the steel bar into a liquid state",
-						"and pour it into your cannon ball mould",
-						"you then leave it to cool for a short while");
-				p.setBatchEvent(new BatchEvent(p, 2000, Formulae.getRepeatTimes(p, SMITHING)) {
-					public void action() {
-						p.incExp(SMITHING, 50, true);
-						p.getInventory().replace(STEEL_BAR, MULTI_CANNON_BALL);
-						addItem(p, MULTI_CANNON_BALL, 1);
-						ActionSender.sendInventory(p);
-						sleep(2000);
-						p.message("it's very heavy");
-						
-						if(!isCompleted()) {
-							showBubble(p, item);
-						}
-						if (p.getFatigue() >= p.MAX_FATIGUE) {
-							p.message("You are too tired to smelt cannon ball");
-							interrupt();
-							return;
-						}
-						if (p.getInventory().countId(STEEL_BAR) < 1) {
-							p.message("You have no steel bars left");
-							interrupt();
-							return;
-						}
+			if(item.getID() == STEEL_BAR) {
+				if (p.getInventory().hasItemId(CANNON_AMMO_MOULD)) {
+					if (getCurrentLevel(p, SMITHING) < 30) {
+						p.message("You need at least level 30 smithing to make cannon balls");
+						return;
 					}
-				});
+					if (p.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
+						p.message("You need to complete the dwarf cannon quest");
+						return;
+					}
+					showBubble(p, item);
+					message(p, 1200, "you heat the steel bar into a liquid state",
+							"and pour it into your cannon ball mould",
+							"you then leave it to cool for a short while");
+					p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SMITHING)) {
+						public void action() {
+							p.incExp(SMITHING, 100, true);
+							p.getInventory().replace(STEEL_BAR, MULTI_CANNON_BALL);
+							addItem(p, MULTI_CANNON_BALL, 1);
+							ActionSender.sendInventory(p);
+							sleep(1800);
+							p.message("it's very heavy");
+
+							if(!isCompleted()) {
+								showBubble(p, item);
+							}
+							if (p.getFatigue() >= p.MAX_FATIGUE) {
+								p.message("You are too tired to smelt cannon ball");
+								interrupt();
+								return;
+							}
+							if (p.getInventory().countId(STEEL_BAR) < 1) {
+								p.message("You have no steel bars left");
+								interrupt();
+								return;
+							}
+						}
+					});
+				}
+				else { // No mould
+					p.message("You heat the steel bar");
+				}
 			} else {
 				handleRegularSmelting(item, p, obj);
 			}

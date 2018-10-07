@@ -927,7 +927,7 @@ public class DoorAction {
 
 		switch (obj.getID()) {
 		case 142: // Black Knight Big Door
-			player.message("The doors are locked");
+			player.message("the doors are locked");
 			break;
 			/* Regular Doors */
 		case 18:

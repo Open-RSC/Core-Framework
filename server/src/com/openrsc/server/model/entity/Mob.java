@@ -6,8 +6,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
@@ -533,8 +531,6 @@ public abstract class Mob extends Entity {
 			((Player) this).resetAll();
 			((Player) this).setStatus(Action.FIGHTING_MOB);
 		}
-		else if (this.isNpc() && victim.isPlayer() && this.getID() == 232) // Bandit message
-      npcTalk((Player) victim, (Npc) this, "You shall not pass");
 
 		resetPath();
 		victim.resetPath();
