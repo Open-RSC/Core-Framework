@@ -45,12 +45,12 @@ public class NewsBox extends JPanel
         this.setLayout(null);
         this.setOpaque(false);
         (this.title = new JLabel("")).setBounds(5, 49, 217, 17);
-        this.title.setFont(Utils.getFont("runescape_uf.ttf", 0, 14.0f));
+        this.title.setFont(Utils.getFont("Exo-Regular.otf", 0, 14.0f));
         this.title.setForeground(Color.WHITE);
         this.add(this.title);
         (this.textArea = new JTextPane()).setEditable(false);
         this.textArea.setBorder(new EmptyBorder(0, 0, 0, 0));
-        this.textArea.setBackground(new Color(14, 14, 14));
+        this.textArea.setBackground(new Color(255, 255, 255, 5));
         this.spane = new JScrollPane(this.textArea);
         this.spane.getHorizontalScrollBar().setUI(new CustomScrollBar());
         this.spane.getVerticalScrollBar().setUI(new CustomScrollBar());

@@ -117,7 +117,7 @@ public final class Constants {
 		 */
 		public static final int CRUMBLE_UNDEAD_MAX = 12;
 
-		public static final int[] NPCS_THAT_DO_RETREAT = {3, 89, 114, 40, 64, 0, 34, 241, 29, 116, 23, 21, 81, 351, 367, 52, 71, 666, 359, 188, 136, 190};
+		public static final int[] NPCS_THAT_DO_RETREAT = {3, 89, 114, 40, 64, 0, 34, 241, 29, 116, 23, 21, 81, 351, 367, 52, 71, 666, 359, 188, 136, 190, 296};
 		/**
 		 * Strikes, Bolts & Blast Spells.
 		 * <p/>
@@ -125,6 +125,9 @@ public final class Constants {
 		 * -1 the absolute max. Level Requirement, Max Damage
 		 */
 		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 2}, {13, 3}, {17, 3}, {23, 4}, {29, 4}, {35, 5}, {41, 5}, {47, 6}, {53, 6}, {59, 7}, {62, 8}, {65, 9}, {70, 10}, {75, 11}};
+
+		public static boolean AVATAR_GENERATOR = false; // Not sent to client.
+		public static boolean PLAYER_COMMANDS = false; // This either.
 
 		public static boolean IS_DOUBLE_EXP = false;
 		public static boolean SPAWN_AUCTION_NPCS = false;
@@ -184,6 +187,7 @@ public final class Constants {
 			MYSQL_HOST = props.getProperty("mysql_host");
 			HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
 			VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
+			AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
 
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
@@ -193,6 +197,7 @@ public final class Constants {
 			WILDERNESS_BOOST = Double.parseDouble(props.getProperty("wilderness_boost"));
 			SKULL_BOOST = Double.parseDouble(props.getProperty("skull_boost"));
 			IS_DOUBLE_EXP = Boolean.parseBoolean(props.getProperty("double_exp"));
+			PLAYER_COMMANDS = Boolean.parseBoolean(props.getProperty("player_commands"));
 
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));

@@ -400,8 +400,7 @@ public final class GameStateUpdater {
 			Projectile projectileFired = player.getUpdateFlags().getProjectile().get();
 			projectilesNeedingDisplayed.add(projectileFired);
 		}
-		if (player.getUpdateFlags().hasChatMessage() && !player.getSettings()
-				.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
+		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
 			chatMessagesNeedingDisplayed.add(chatMessage);
 		}

@@ -1,9 +1,9 @@
 package com.openrsc.interfaces.misc;
 
 
-import rsc.mudclient;
-import rsc.graphics.gui.Panel;
-import rsc.graphics.two.GraphicsController;
+import orsc.mudclient;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.two.GraphicsController;
 
 public final class IronManInterface {
 	private int x, y;

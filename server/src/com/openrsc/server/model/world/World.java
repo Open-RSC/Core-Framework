@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.ClanManager;
@@ -634,13 +635,14 @@ public final class World {
 			}
 			if (Server.getPlayerDataProcessor() != null) {
 				GameLogging.addQuery(new PlayerOnlineFlagQuery(player.getDatabaseID(), false));
-				avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
+				if (Constants.GameServer.AVATAR_GENERATOR)
+					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
 			}
 			/*if(getFishingTrawler().getPlayers().contains(player)) {
 				getFishingTrawler().quitPlayer(player);
 			}*/
 			if(player.getLocation().inMageArena()) {
-				player.teleport(228, 121);
+				player.teleport(228, 109);
 			}
 			player.save();
 			player.remove();

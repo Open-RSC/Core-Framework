@@ -9,8 +9,8 @@ import java.util.Locale;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 
-import rsc.mudclient;
-import rsc.graphics.gui.Panel;
+import orsc.mudclient;
+import orsc.graphics.gui.Panel;
 
 
 public final class LostOnDeathInterface {

@@ -3,7 +3,7 @@ package com.openrsc.interfaces.misc;
 import com.openrsc.interfaces.InputListener;
 import com.openrsc.interfaces.NComponent;
 
-import rsc.mudclient;
+import orsc.mudclient;
 
 public class BankPinInterface extends NComponent {
 	

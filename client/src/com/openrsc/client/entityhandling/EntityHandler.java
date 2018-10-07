@@ -18,7 +18,7 @@ import com.openrsc.client.entityhandling.defs.TileDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
 
-import rsc.Config;
+import orsc.Config;
 
 public class EntityHandler {
 

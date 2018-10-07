@@ -3,8 +3,8 @@ package com.openrsc.interfaces;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import rsc.mudclient;
-import rsc.graphics.two.GraphicsController;
+import orsc.mudclient;
+import orsc.graphics.two.GraphicsController;
 
 public class NComponent {
 
