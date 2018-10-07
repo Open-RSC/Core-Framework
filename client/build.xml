@@ -30,7 +30,7 @@
         </java>
     </target>
 
-    <target name="compile-and-run" description="all target, parallel">
+    <target name="compile-and-run">
         <antcall target="compile"/>
         <antcall target="runclient"/>
     </target>
