@@ -24,10 +24,10 @@ public final class ChatHandler implements PacketHandler {
 			return;
 		}
 
-		String message = DataConversions.getEncryptedString(p, Short.MAX_VALUE);
-		byte[] array = DataConversions.stringToByteArray(message);
-		message = DataConversions.byteToString(array, 0, array.length); 
-		
+		String message = DataConversions.upperCaseAllFirst(
+			DataConversions.stripBadCharacters(
+				DataConversions.getEncryptedString(p, Short.MAX_VALUE)));
+
 		ChatMessage chatMessage = new ChatMessage(sender, message);
 		sender.getUpdateFlags().setChatMessage(chatMessage);
 		

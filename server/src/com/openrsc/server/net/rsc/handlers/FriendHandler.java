@@ -74,9 +74,10 @@ public final class FriendHandler implements PacketHandler {
 				player.message("@cya@Once you finish the tutorial, this lets you send messages to your friends");
 				return;
 			}
-			String message = DataConversions.getEncryptedString(p, 32576);
+			String message = DataConversions.upperCaseAllFirst(
+				DataConversions.stripBadCharacters(
+					DataConversions.getEncryptedString(p, 32576)));
 			player.addPrivateMessage(new PrivateMessage(player, message, friend));
 		}
 	}
-
 }
