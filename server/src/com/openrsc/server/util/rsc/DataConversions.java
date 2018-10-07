@@ -69,10 +69,14 @@ public final class DataConversions {
 
 	}
 
-	private static char characters[] = { ' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c',
-			'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
-			'%', '"', '[', ']' };
+	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i',
+		'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g',
+		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
+		'5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(',
+		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
+		'%', '"', '[', ']', '{', '}', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+		'U', 'V', 'W', 'X', 'Y', 'Z'};
 
 	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
 	private static MessageDigest md5, sha1, sha512;
@@ -164,6 +168,50 @@ public final class DataConversions {
 					}
 				}
 			}
+		return s;
+	}
+
+	public static String stripBadCharacters(String value) {
+		String s = "";
+		for (int i = 0; i < value.length(); i++) {
+			if (getCharCode(value.charAt(i)) > 0) {
+				s += value.charAt(i);
+			}
+			else {
+				s += " ";
+			}
+		}
+		return s;
+	}
+
+	public static String upperCaseAllFirst(String value) {
+
+		Character[] array = value.chars().mapToObj(c -> (char)c).toArray(Character[]::new);
+
+		String s = "";
+		int i = 0;
+		while (array[i].equals(" ")) { // Skip spaces
+			i++;
+		}
+
+		// Uppercase first letter.
+		if (!Character.isUpperCase(array[i]))
+			s += String.valueOf(Character.toUpperCase(array[i]));
+		else
+			s += String.valueOf(array[i]);
+
+		i++;
+
+		// Keep uppercase all letters that follow a whitespace character, if already cap
+		for (; i < array.length; i++) {
+			if (Character.isWhitespace(array[i - 1]) && Character.isUpperCase(array[i])) {
+				s += String.valueOf(Character.toUpperCase(array[i]));
+			}
+			else {
+				s += String.valueOf(Character.toLowerCase(array[i]));
+			}
+		}
+
 		return s;
 	}
 

@@ -22,7 +22,7 @@
 		<delete dir="buildplugins" />
 	</target>
 
-	<target name="compile_core">
+    <target name="compile_core">
 		<delete file="${jar}" />
 		<delete dir="${build}" />
 		<mkdir dir="${build}"/>
@@ -88,4 +88,10 @@
 			</classpath>
 		</java>
 	</target>
+
+    <target name="compile-and-run">
+        <antcall target="compile_core"/>
+        <antcall target="compile_plugins"/>
+        <antcall target="runservermembers"/>
+    </target>
 </project>
