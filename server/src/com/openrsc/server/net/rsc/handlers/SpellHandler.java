@@ -962,7 +962,7 @@ public class SpellHandler implements PacketHandler {
 						// Deal first damage
 						Server.getServer().getGameEventHandler() .add(new ProjectileEvent(player, affectedMob, firstDamage, 1));
 						// Deal Second Damage
-						Server.getServer().getEventHandler().add(new MiniEvent(player, 650) {
+						Server.getServer().getEventHandler().add(new MiniEvent(player, 600) {
 							@Override
 							public void action() {
 								affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);

@@ -130,7 +130,7 @@ public class ItemUseOnObject implements PacketHandler {
 						player.getInventory().remove(132, 1);
 
 						Server.getServer().getEventHandler()
-						.add(new MiniEvent(player, 2000) {
+						.add(new MiniEvent(player, 1800) {
 							public void action() {
 								player.message("You burn the "
 										+ item.getDef().getName());
