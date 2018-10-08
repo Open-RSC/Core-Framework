@@ -48,7 +48,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 		owner.playSound("potato");
 		owner.setBusy(true);
 		Server.getServer().getEventHandler().add(
-				new SingleEvent(owner, 200) {
+				new SingleEvent(owner, 600) {
 					@Override
 					public void action() {
 						owner.setBusy(false);
