@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills;
 
 import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
@@ -79,7 +80,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		if (Formulae.lightLogs(player.getSkills().getLevel(11))) {
 
 			Server.getServer().getEventHandler().add(
-				new SingleEvent(null, 1000) {
+				new SingleEvent(null, 1200) {
 					@Override
 					public void action() {
 						player.message("The fire catches and the logs begin to burn");
@@ -109,7 +110,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 		}
 
 		else {
-			player.message("You fail to light a fire");
+			message(player, 1200, "You fail to light a fire");
 			player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		}
 	}
