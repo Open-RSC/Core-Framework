@@ -98,8 +98,9 @@ Android_Client/\.settings/
 server/avatars/*.png
 Launcher/Cache/
 
-client/Cache/uid\.dat
-client/Cache/client\.properties
+# We need these or the launcher will loop
+!client/Cache/uid\.dat
+!client/Cache/client\.properties
 
 # Global
 .*.swp
