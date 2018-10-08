@@ -93,7 +93,7 @@ public class Woodcutting implements ObjectActionListener,
 		final int axeID = axeId;
 		showBubble(owner, new Item(axeId));
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
-		owner.setBatchEvent(new BatchEvent(owner, 1600, batchTimes) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, batchTimes) {
 			public void action() {
 				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 					owner.message("You are too tired to cut the tree");

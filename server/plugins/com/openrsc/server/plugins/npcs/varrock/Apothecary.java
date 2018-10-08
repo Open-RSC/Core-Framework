@@ -69,7 +69,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 						"Well give me them and 5 gold and I'll make you your potion");
 
 				message(p, "Apothecary: starts brewing and fixes to a strength potion");
-				p.setBatchEvent(new BatchEvent(p, 650, 14) {
+				p.setBatchEvent(new BatchEvent(p, 600, 14) {
 					@Override
 					public void action() {
 						if (p.getInventory().countId(10) < 5) {

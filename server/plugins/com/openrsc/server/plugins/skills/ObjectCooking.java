@@ -67,9 +67,9 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getID() == 1268) {
 			if (object.getID() == 97)
-				message(p, 600, "You cook the meat on the fire...");
+				message(p, 1200, "You cook the meat on the fire...");
 			else
-				message(p, 600, "You cook the meat on the stove...");
+				message(p, 1200, "You cook the meat on the stove...");
 			removeItem(p, 1268, 1); 
 			addItem(p, 134, 1);
 			message(p, 1200, "This meat is too delicate to cook like this.");
@@ -125,9 +125,13 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("You need a proper oven to cook this");
 				return;
 			}
-			p.message(cookingOnMessage(p, item, object));
+
+			if (item.getID() == 1280)
+				p.message("You prepare to cook the Oomlie meat parcel.");
+			else
+				p.message(cookingOnMessage(p, item, object));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, 1500, Formulae.getRepeatTimes(p, 7)) {
+			p.setBatchEvent(new BatchEvent(p, 1200, Formulae.getRepeatTimes(p, 7)) {
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());

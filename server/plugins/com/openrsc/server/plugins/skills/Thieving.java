@@ -430,7 +430,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		}
 		final ArrayList<LootItem> lootTable = (ArrayList<LootItem>) pickpocket.getLootTable().clone();
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
-		player.setBatchEvent(new BatchEvent(player, 1300, Formulae.getRepeatTimes(player, THIEVING)) {
+		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
 			@Override
 			public void action() {
 
