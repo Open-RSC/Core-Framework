@@ -64,6 +64,18 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			return;
 		}
 
+		// Raw Oomlie Meat (Always burn)
+		else if (item.getID() == 1268) {
+			if (object.getID() == 97)
+				message(p, 600, "You cook the meat on the fire...");
+			else
+				message(p, 600, "You cook the meat on the stove...");
+			removeItem(p, 1268, 1); 
+			addItem(p, 134, 1);
+			message(p, 1200, "This meat is too delicate to cook like this.");
+			message(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
+		}
+
 		// Poison (Hazeel Cult)
 		else if(item.getID() == 177 && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if(p.getQuestStage(Constants.Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
@@ -147,7 +159,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		int[] ids = new int[]{ 97, 11, 119, 435, 491};
 		Arrays.sort(ids);
-		if ((item.getID() == 622 || item.getID() == 784) && Arrays.binarySearch(ids, obj.getID()) >= 0) {
+		if ((item.getID() == 1268 || item.getID() == 622 || item.getID() == 784) && Arrays.binarySearch(ids, obj.getID()) >= 0) {
 			return true;
 		}
 		if(item.getID() == 177 && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
