@@ -119,7 +119,7 @@ public class Downloader extends Observable
 	}
 
 	private final String nicename[] = { "Game Library", "Landscape",
-			"Application Icon", "Graphics", "3D Models", "Index File", 
+						"Graphics", "3D Models", "Index File",
                         "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
                         "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
                         "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
@@ -130,8 +130,8 @@ public class Downloader extends Observable
                         "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
                         "Game Sound", "Game Sound", "Game Sound", "Game Sound", 
                         "Game Sound", "Game Sound"};
-	private final String normalName[] = { "jagex.jag", "Landscape.rscd",
-			"RuneScape.png", "Sprites.rscd", "models.jag", "index.html",  
+	private final String normalName[] = { "library.orsc", "Landscape.orsc",
+						"Sprites.orsc", "models.orsc", "index.html",
                         "Advance.mp3", "Anvil.mp3", "Chisel.mp3", "Click.mp3", 
                         "Closedoor.mp3", "Coins.mp3", "Takeobject.mp3", "Victory.mp3", 
                         "Combat1a.mp3", "Combat1b.mp3", "Combat2a.mp3", "Combat2b.mp3", 

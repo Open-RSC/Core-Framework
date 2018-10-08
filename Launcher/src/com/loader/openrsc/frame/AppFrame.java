@@ -14,6 +14,7 @@ import com.loader.openrsc.frame.elements.NewsBox;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.net.xml.XMLReader;
 import com.loader.openrsc.util.Utils;
+import com.loader.openrsc.Constants;
 
 import javax.swing.JLabel;
 import javax.swing.JFrame;
@@ -35,7 +36,7 @@ public class AppFrame extends JFrame
     public AppFrame() {
         this.setPreferredSize(new Dimension(980, 560));
         this.setUndecorated(true);
-        this.setTitle("Open RSC");
+        this.setTitle(Constants.GAME_NAME);
         this.setIconImage(Utils.getImage("icon.png").getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         AppFrame.instance = this;
@@ -76,7 +77,7 @@ public class AppFrame extends JFrame
     }
     
     private void addLogo() {
-        (this.text = new JLabel("Open RSC".toUpperCase())).setBounds(30, 24, 100, 15);
+        (this.text = new JLabel(Constants.GAME_NAME.toUpperCase())).setBounds(30, 24, 100, 15);
         this.text.setForeground(new Color(255, 223, 0));
         this.text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
         this.bg.add(this.text);

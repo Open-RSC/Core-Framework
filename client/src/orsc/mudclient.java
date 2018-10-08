@@ -12935,6 +12935,19 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+        final void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
+            try {
+
+                FontMetrics metrics = getFontMetrics(var1);
+                g.setFont(var1);
+                g.drawString(str, x - metrics.stringWidth(str) / 2, y + metrics.getHeight() / 4);
+            } catch (RuntimeException var9) {
+                throw GenUtil.makeThrowable(var9,
+                        "e.LE(" + (var1 != null ? "{...}" : "null") + ',' + (str != null ? "{...}" : "null") + ',' + y + ','
+                                + true + ',' + x + ',' + (g != null ? "{...}" : "null") + ')');
+            }
+        }
+
 		private final void renderLoginScreenViewports(int var1) {
 			try {
                 // First view
@@ -12975,6 +12988,32 @@ public final class mudclient implements Runnable {
 				//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
                 //Graphics g = this.getGraphics();
                 //g.setFont(new Font("Helvetica", 1, 20));
+                Graphics g = this.getGraphics();
+                if (g != null) {
+                    g.translate(mudclient.screenOffsetX, mudclient.screenOffsetY);
+                    g.setColor(Color.black);
+                    g.fillRect(0, 0, 512, 356);
+                    g.setFont(new Font("Helvetica", 1, 16));
+                    g.setColor(Color.yellow);
+                    byte var3 = 35;
+                    g.drawString("Sorry, an error has occured whilst loading Open RSC", 30, var3);
+                    g.setColor(Color.white);
+                    int var6 = var3 + 50;
+                    g.drawString("To fix this try the following (in order):", 30, var6);
+                    g.setColor(Color.white);
+                    var6 += 50;
+                    g.setFont(new Font("Helvetica", 1, 12));
+                    g.drawString("1: Try closing ALL open web-browser windows, and reloading", 30, var6);
+                    var6 += 30;
+                    g.drawString("2: Try clearing your web-browsers cache from tools->internet options", 30, var6);
+                    var6 += 30;
+                    g.drawString("3: Try using a different game-world", 30, var6);
+                    var6 += 30;
+                    g.drawString("4: Try rebooting your computer", 30, var6);
+                    var6 += 30;
+                    g.drawString("5: Try selecting a different version of Java from the play-game menu", 30, var6);
+                }
+
                 this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
 

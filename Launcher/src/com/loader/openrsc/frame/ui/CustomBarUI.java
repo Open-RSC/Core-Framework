@@ -63,7 +63,7 @@ public class CustomBarUI extends ProgressBarUI
             g.setColor(this.backgroundColor);
             g.fillRect(1, this.borderThickness, (int)(WIDTH * percentageReady), HEIGHT - 2 * this.borderThickness);
         }
-        g.setFont(Utils.getFont("runescape_uf.tff", 0, 10.0f));
+        g.setFont(Utils.getFont("Exo-Regular.otf", 0, 10.0f));
         g.setColor(new Color(175, 175, 175));
         g.setXORMode(this.barColor);
         final FontMetrics fm = g.getFontMetrics(g.getFont());
