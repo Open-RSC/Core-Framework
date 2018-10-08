@@ -33,7 +33,7 @@ public class ClientLauncher
 		final Applet applet = Applet.class.cast(mainClass.getConstructor()
 				.newInstance());
 		AppFrame.get().dispose();
-		JFrame gameFrame = new JFrame("Open RSC");
+		JFrame gameFrame = new JFrame(Constants.GAME_NAME);
 		gameFrame.setMinimumSize(new Dimension(512 + 16, 334 + 49));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.getContentPane().add(applet);
@@ -47,7 +47,7 @@ public class ClientLauncher
 	public static void startProcess() {
 		try {
 			loader = new URLClassLoader(new URL[] { new URL(Constants.CLIENT_URL) });
-			mainClass = Class.forName("rsc.RSCFrame", true, loader);
+			mainClass = Class.forName("orsc.ORSCFrame", true, loader);
 			if (loader == null) {
 				OpenRSC.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
 				OpenRSC.getPopup().showFrame();
