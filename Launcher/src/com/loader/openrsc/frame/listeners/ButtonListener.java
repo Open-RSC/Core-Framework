@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.util.ClientLauncher;
 import com.loader.openrsc.util.Utils;
+import com.loader.openrsc.Constants;
 
 public class ButtonListener implements ActionListener
 {
@@ -15,11 +16,11 @@ public class ButtonListener implements ActionListener
         final String action = event.getActionCommand().toLowerCase();
         switch (action) {
             case "news": {
-                Utils.openWebpage("http://localhost/");
+                Utils.openWebpage(Constants.base_url+"blog");
                 return;
             }
             case "bug reports": {
-                Utils.openWebpage("http://localhost/blog/bug-reports");
+                Utils.openWebpage(Constants.base_url+"blog/bug-reports");
                 return;
             }
             case "discord": {
@@ -31,7 +32,7 @@ public class ButtonListener implements ActionListener
             	return;
             }
             case "faq": {
-                Utils.openWebpage("http://localhost/blog/faq");
+                Utils.openWebpage(Constants.base_url+"blog/faq");
                 return;
             }
             case "minimize": {
