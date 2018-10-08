@@ -18,6 +18,7 @@
 *.DS_Store
 *.lock
 *.svn
+
 server/Open_RSC_Server.jar
 html/cache/*
 !html/cache/.htaccess
@@ -66,9 +67,6 @@ client/Open_RSC_Client\.jar
 # .idea/*.iml
 # .idea/modules
 
-# CMake
-cmake-build-*/
-
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
@@ -77,26 +75,6 @@ cmake-build-*/
 
 # IntelliJ
 out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Cursive Clojure plugin
-.idea/replstate.xml
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
-
-# Editor-based Rest Client
-.idea/httpRequests
-
-#data
 
 server/objects\.dat
 server/npcs\.dat
@@ -179,9 +157,6 @@ Android/Open RSC Android Client/build/outputs/apk/debug/
 Android/app/build/outputs/apk/debug/
 Android/local\.properties
 Android/\.idea/caches/
-
-**/.idea/workspace.xml
-**/.idea/tasks.xml
 
 Tools/Map Generator/build/
 Tools/Map Generator/dist/
