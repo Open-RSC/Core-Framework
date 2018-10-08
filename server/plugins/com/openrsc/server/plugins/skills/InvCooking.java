@@ -19,7 +19,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	
 	enum CombineCooking {
-		OOMLIE_MEAT_PARCEL(1268, 1279, 1280, 0, 50, "You carefully construct a small parcel out of the palm leaf.", "You place the delicate Oomlie meat inside.", "The palm leaf should protect the meat from being burnt."),
+		OOMLIE_MEAT_PARCEL(1268, 1279, 1280, 40, 50, "You carefully construct a small parcel out of the palm leaf.", "You place the delicate Oomlie meat inside.", "The palm leaf should protect the meat from being burnt."),
 		TOMATO_MIX(320, 341, 1106, 0, 58, "You cut the tomato into the bowl"),
 		TOMATO_ONION_MIX(241, 1106, 1108, 0, 58, "You cut the onion into the tomato mixture"),
 		ONION_MIX(241, 341, 1107, 0, 58, "You cut the onion into the bowl"),
