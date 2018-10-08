@@ -79,7 +79,7 @@ InvUseOnObjectExecutiveListener {
 									public void handleReply(final int option,
 											final String reply) {
 										owner.setBatchEvent(new BatchEvent(
-												owner, 1400,
+												owner, 1200,
 												Formulae.getRepeatTimes(owner, 12)) {
 											public void action() {
 												if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5
@@ -193,7 +193,7 @@ InvUseOnObjectExecutiveListener {
 									return;
 								}
 
-								owner.setBatchEvent(new BatchEvent(owner, 1400,
+								owner.setBatchEvent(new BatchEvent(owner, 1200,
 										Formulae.getRepeatTimes(owner, 12)) {
 
 									@Override
@@ -305,7 +305,7 @@ InvUseOnObjectExecutiveListener {
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 650, Formulae.getRepeatTimes(player, 12)) {
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, 12)) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(12) < gemDef.getReqLevel()) {
@@ -483,7 +483,7 @@ InvUseOnObjectExecutiveListener {
 			return false;
 		}
 		final int newId = newID;
-		player.setBatchEvent(new BatchEvent(player, 650,
+		player.setBatchEvent(new BatchEvent(player, 600,
 				Formulae.getRepeatTimes(player,12)) {
 			@Override
 			public void action() {

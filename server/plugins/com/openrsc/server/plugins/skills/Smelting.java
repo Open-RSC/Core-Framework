@@ -198,7 +198,7 @@ InvUseOnObjectExecutiveListener {
 		}
 
 		p.message(smeltString(smelt, item));
-		p.setBatchEvent(new BatchEvent(p, 1600, Formulae.getRepeatTimes(p, SMITHING)) {
+		p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SMITHING)) {
 			public void action() {
 				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to smelt this ore");
