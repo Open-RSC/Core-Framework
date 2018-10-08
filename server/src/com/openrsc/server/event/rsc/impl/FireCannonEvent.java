@@ -11,8 +11,11 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 public class FireCannonEvent extends GameTickEvent {
 
+	protected int count;
+
 	public FireCannonEvent(Player player) {
 		super(player, 1);
+		this.count = 0;
 	}
 
 	@Override
@@ -42,6 +45,12 @@ public class FireCannonEvent extends GameTickEvent {
 		Server.getServer().getGameEventHandler().add(new ProjectileEvent(owner, target, cannonBallDamage, 5));
 		getPlayerOwner().playSound("shoot");
 		getPlayerOwner().getInventory().remove(1041, 1);
+
+		this.count += 1;
+		if (this.count >= 20) {
+			getPlayerOwner().resetCannonEvent();
+			return;
+		}
 
 		if (!getPlayerOwner().getInventory().hasItemId(1041)) {
 			getPlayerOwner().message("you're out of ammo");
