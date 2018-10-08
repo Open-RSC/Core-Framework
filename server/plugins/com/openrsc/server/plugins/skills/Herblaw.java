@@ -52,7 +52,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.message("you need a higher herblaw level");
 			return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 500, Formulae
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae
 				.getRepeatTimes(player, 15)) {
 			public void action() {
 				if (!owner.getInventory().hasItemId(item.getID())) {
@@ -258,7 +258,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		if (unfinished.getID() != def.getUnfinishedID()) {
 			return false;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1000, Formulae
+		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
 				.getRepeatTimes(player, 15)) {
 			public void action() {
 				if (owner.getSkills().getLevel(15) < def.getReqLevel()) {

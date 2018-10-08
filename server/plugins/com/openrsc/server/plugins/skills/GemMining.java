@@ -76,7 +76,7 @@ ObjectActionExecutiveListener {
 		p.playSound("mine");
 		showBubble(p, new Item(1258));
 		p.message("You have a swing at the rock!");
-		p.setBatchEvent(new BatchEvent(p, 2000, retrytimes) {
+		p.setBatchEvent(new BatchEvent(p, 1800, retrytimes) {
 			@Override
 			public void action() {
 				if (getGem(p, 40, owner.getSkills().getLevel(14), axeId) && mineLvl >= 40) { // always 40 required mining.

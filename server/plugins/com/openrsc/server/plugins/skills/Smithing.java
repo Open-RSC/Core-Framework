@@ -330,7 +330,7 @@ InvUseOnObjectExecutiveListener {
 				makeCount = makeCount != 3 ? Integer.parseInt(options[makeCount].replaceAll("Make ", "")) : maximumMakeCount;
 			}
 
-			player.setBatchEvent(new BatchEvent(player, 650, makeCount) {
+			player.setBatchEvent(new BatchEvent(player, 600, makeCount) {
 				@Override
 				public void action() {
 					if (player.getInventory().countId(item.getID()) < def.getRequiredBars()) {

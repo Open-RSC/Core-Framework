@@ -104,7 +104,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p, 650, Formulae.getRepeatTimes(p, CRAFTING)) {
+			p.setBatchEvent(new BatchEvent(p, 600, Formulae.getRepeatTimes(p, CRAFTING)) {
 				@Override
 				public void action() {
 					if (!p.getInventory().hasItemId(item.getID())) {
