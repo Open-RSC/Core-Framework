@@ -1,3 +1,6 @@
+!Launcher/src/data/*
+
+
 #ant specific
 */dist/
 */build/
