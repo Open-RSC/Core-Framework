@@ -1,13 +1,13 @@
 package orsc.graphics.three;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import orsc.MiscFunctions;
 import orsc.buffers.RSBufferUtils;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public final class RSModel {
 	private int appliedTransform;

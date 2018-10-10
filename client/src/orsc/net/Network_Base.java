@@ -1,9 +1,9 @@
 package orsc.net;
 
-import java.io.IOException;
-
 import orsc.buffers.RSBuffer_Bits;
 import orsc.util.GenUtil;
+
+import java.io.IOException;
 
 class Network_Base {
 	
