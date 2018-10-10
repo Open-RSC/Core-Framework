@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.CRAFTING;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showBubble;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Item;
@@ -12,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SpinningWheel implements InvUseOnObjectListener,
 		InvUseOnObjectExecutiveListener {

@@ -1,12 +1,8 @@
 package com.openrsc.server.util;
 
-import java.util.AbstractCollection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.openrsc.server.model.entity.Entity;
+
+import java.util.*;
  
 public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 

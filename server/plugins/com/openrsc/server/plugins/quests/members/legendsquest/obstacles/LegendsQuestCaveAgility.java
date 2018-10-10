@@ -1,15 +1,14 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.quests.members.shilovillage.ShiloVillageUtils;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActionExecutiveListener {
 

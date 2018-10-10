@@ -1,18 +1,17 @@
 package com.openrsc.server.content.market.task;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.CollectableItem;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PlayerCollectItemsTask extends MarketTask {
 	

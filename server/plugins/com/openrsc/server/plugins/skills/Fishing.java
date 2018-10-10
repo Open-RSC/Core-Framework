@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.addItem;
-
-import java.util.ArrayList;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectFishDef;
@@ -18,6 +13,11 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.ArrayList;
+
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Fishing implements ObjectActionListener, ObjectActionExecutiveListener {
 

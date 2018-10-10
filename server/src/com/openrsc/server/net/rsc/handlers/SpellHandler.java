@@ -1,9 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
@@ -38,6 +34,10 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class SpellHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {

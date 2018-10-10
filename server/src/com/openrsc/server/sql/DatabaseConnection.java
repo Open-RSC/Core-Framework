@@ -1,18 +1,12 @@
 package com.openrsc.server.sql;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.openrsc.server.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.openrsc.server.Constants;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 

@@ -1,13 +1,8 @@
 package com.openrsc.server.model.container;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
 import com.openrsc.server.model.entity.player.Player;
+
+import java.util.*;
 
 public class ItemContainer {
 

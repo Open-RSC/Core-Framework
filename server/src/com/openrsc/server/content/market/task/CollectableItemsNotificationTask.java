@@ -1,13 +1,13 @@
 package com.openrsc.server.content.market.task;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.content.market.CollectableItem;
 import com.openrsc.server.content.market.MarketDatabase;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+
+import java.util.ArrayList;
 
 public class CollectableItemsNotificationTask extends MarketTask {
 	

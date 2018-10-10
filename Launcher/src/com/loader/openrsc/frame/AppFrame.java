@@ -1,12 +1,6 @@
 package com.loader.openrsc.frame;
 
-import java.awt.Rectangle;
-import java.awt.Color;
-import java.awt.Font;
-
-import java.awt.Dimension;
-import java.util.Random;
-import javax.swing.JProgressBar;
+import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.frame.elements.LaunchButton;
 import com.loader.openrsc.frame.elements.LinkButton;
@@ -14,10 +8,10 @@ import com.loader.openrsc.frame.elements.NewsBox;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.net.xml.XMLReader;
 import com.loader.openrsc.util.Utils;
-import com.loader.openrsc.Constants;
 
-import javax.swing.JLabel;
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Random;
 
 @SuppressWarnings("serial")
 public class AppFrame extends JFrame

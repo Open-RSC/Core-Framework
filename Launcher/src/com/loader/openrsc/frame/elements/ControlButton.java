@@ -1,9 +1,9 @@
 package com.loader.openrsc.frame.elements;
 
-import javax.swing.JButton;
-
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
+
+import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class ControlButton extends JButton

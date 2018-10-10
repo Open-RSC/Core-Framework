@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
@@ -12,6 +10,8 @@ import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class StrangeBarrels implements ObjectActionListener, ObjectActionExecutiveListener {
 

@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
@@ -9,6 +7,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.addItem;
 
 public final class Pick implements ObjectActionExecutiveListener,
 		ObjectActionListener {

@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import static com.openrsc.server.plugins.Functions.AGILITY;
-import static com.openrsc.server.plugins.Functions.HITS;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.random;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
@@ -19,6 +9,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassAgilityObstacles implements ObjectActionListener, ObjectActionExecutiveListener {
 

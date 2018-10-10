@@ -1,13 +1,11 @@
 package orsc;
 
-import java.applet.Applet;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.File;
-
-import javax.swing.JFrame;
 import orsc.Config;
+
+import javax.swing.*;
+import java.applet.Applet;
+import java.awt.*;
+import java.io.File;
 
 public class ORSCFrame extends ORSCApplet {
 

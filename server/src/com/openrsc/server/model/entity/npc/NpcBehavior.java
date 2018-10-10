@@ -1,7 +1,5 @@
 package com.openrsc.server.model.entity.npc;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
@@ -10,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.npcTalk;
 
 public class NpcBehavior {
 

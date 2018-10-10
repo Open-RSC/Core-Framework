@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.openrsc.server.model.container.Bank;
-
 public final class Constants {
 
 	// new area: 582, 157

@@ -1,11 +1,11 @@
 package com.openrsc.server.content.clan;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Clan {
 	private int id;

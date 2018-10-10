@@ -1,13 +1,12 @@
 package com.openrsc.interfaces.misc;
 
-import java.util.ArrayList;
-
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import orsc.mudclient;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
+
+import java.util.ArrayList;
 
 
 public final class SkillGuideInterface {

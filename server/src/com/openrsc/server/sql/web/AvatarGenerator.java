@@ -1,5 +1,9 @@
 package com.openrsc.server.sql.web;
 
+import com.openrsc.server.Constants;
+import com.openrsc.server.model.PlayerAppearance;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -8,11 +12,6 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import javax.imageio.ImageIO;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.model.PlayerAppearance;
 
 public final class AvatarGenerator
 {

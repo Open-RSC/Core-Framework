@@ -1,12 +1,12 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class BailingBucket implements InvActionExecutiveListener, InvActionListener {
 

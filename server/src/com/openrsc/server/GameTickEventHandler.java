@@ -1,15 +1,13 @@
 package com.openrsc.server;
 
+import com.openrsc.server.event.rsc.GameTickEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.event.rsc.GameTickEvent;
 
 public class GameTickEventHandler {
 

@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.npcs;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.model.entity.GameObject;
@@ -13,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+
+import java.util.ArrayList;
 
 public class TaskPlugin implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionExecutiveListener, ObjectActionListener {
 

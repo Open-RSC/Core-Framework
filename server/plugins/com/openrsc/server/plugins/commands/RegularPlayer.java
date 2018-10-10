@@ -11,6 +11,7 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
 import java.util.ArrayList;
 
 public final class RegularPlayer implements CommandListener {

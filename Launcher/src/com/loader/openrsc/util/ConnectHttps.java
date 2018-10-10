@@ -1,18 +1,14 @@
 package com.loader.openrsc.util;
 
-import static com.loader.openrsc.Constants.base_url;
-import java.io.Reader;
-import java.net.URLConnection;
+import javax.net.ssl.*;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
+import java.net.URLConnection;
 import java.security.SecureRandom;
-import javax.net.ssl.SSLContext;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.X509TrustManager;
-import javax.net.ssl.TrustManager;
+
+import static com.loader.openrsc.Constants.base_url;
 
 public class ConnectHttps
 {

@@ -1,14 +1,10 @@
 package com.loader.openrsc.frame.ui;
 
-import java.awt.FontMetrics;
-
-import javax.swing.JProgressBar;
-import javax.swing.JComponent;
-import java.awt.Graphics;
-import java.awt.Color;
-import javax.swing.plaf.ProgressBarUI;
-
 import com.loader.openrsc.util.Utils;
+
+import javax.swing.*;
+import javax.swing.plaf.ProgressBarUI;
+import java.awt.*;
 
 public class CustomBarUI extends ProgressBarUI
 {
