@@ -17,19 +17,14 @@ import java.io.IOException;
 import java.net.URL;
 
 @SuppressWarnings("serial")
-public class NewsBox extends JPanel
-{
-    private JLabel title;
+public class NewsBox extends JPanel {
     public StyledDocument styleDoc;
     public HTMLDocument doc;
     public HTMLEditorKit editorKit;
+    private JLabel title;
     private JScrollPane spane;
     private JTextPane textArea;
-    
-    public JLabel getTitle() {
-        return this.title;
-    }
-    
+
     public NewsBox() {
         this.setLayout(null);
         this.setOpaque(false);
@@ -48,8 +43,8 @@ public class NewsBox extends JPanel
         this.spane.setBackground(new Color(14, 14, 14));
         this.textArea.setContentType("text/html");
         this.styleDoc = this.textArea.getStyledDocument();
-        this.doc = (HTMLDocument)this.styleDoc;
-        this.editorKit = (HTMLEditorKit)this.textArea.getEditorKit();
+        this.doc = (HTMLDocument) this.styleDoc;
+        this.editorKit = (HTMLEditorKit) this.textArea.getEditorKit();
         this.spane.setBounds(3, 69, 223, 260); // News textbox boundaries
         this.add(this.spane);
         this.textArea.addHyperlinkListener(new HyperlinkListener() {
@@ -61,17 +56,7 @@ public class NewsBox extends JPanel
             }
         });
     }
-    
-    public void append(String message) {
-        message = convertUrl(message);
-        try {
-            this.editorKit.insertHTML(this.doc, this.doc.getLength(), message, 0, 0, null);
-            this.textArea.setCaretPosition(this.textArea.getDocument().getLength());
-        }
-        catch (BadLocationException ex) {}
-        catch (IOException ex2) {}
-    }
-    
+
     public static String convertUrl(final String message) {
         final StringBuilder sb = new StringBuilder();
         String[] split;
@@ -80,20 +65,43 @@ public class NewsBox extends JPanel
             try {
                 final URL url = new URL(urls);
                 sb.append("<a style='color:rgb(43,54,72);text-decoration:none;' href=\"" + url.toString() + "\">" + url.toString() + "</a>").append(" ");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 sb.append(urls).append(" ");
             }
         }
         return sb.toString();
     }
-    
-    public class CustomScrollBar extends MetalScrollBarUI
-    {
+
+    public JLabel getTitle() {
+        return this.title;
+    }
+
+    public void append(String message) {
+        message = convertUrl(message);
+        try {
+            this.editorKit.insertHTML(this.doc, this.doc.getLength(), message, 0, 0, null);
+            this.textArea.setCaretPosition(this.textArea.getDocument().getLength());
+        } catch (BadLocationException ex) {
+        } catch (IOException ex2) {
+        }
+    }
+
+    private static class FauxImage {
+        public static Image create(final int w, final int h, final Color c) {
+            final BufferedImage bi = new BufferedImage(w, h, 2);
+            final Graphics2D g2d = bi.createGraphics();
+            g2d.setPaint(c);
+            g2d.fillRect(0, 0, w, h);
+            g2d.dispose();
+            return bi;
+        }
+    }
+
+    public class CustomScrollBar extends MetalScrollBarUI {
         private Image imageThumb;
         private Image imageTrack;
         private JButton b;
-        
+
         public CustomScrollBar() {
             this.b = new JButton("^") {
                 @Override
@@ -104,38 +112,26 @@ public class NewsBox extends JPanel
             this.imageThumb = FauxImage.create(5, 32, new Color(43, 54, 72));
             this.imageTrack = FauxImage.create(5, 32, new Color(10, 10, 10));
         }
-        
+
         @Override
         protected void paintThumb(final Graphics g, final JComponent c, final Rectangle r) {
             g.setColor(Color.blue);
-            ((Graphics2D)g).drawImage(this.imageThumb, r.x, r.y, r.width, r.height, null);
+            ((Graphics2D) g).drawImage(this.imageThumb, r.x, r.y, r.width, r.height, null);
         }
-        
+
         @Override
         protected void paintTrack(final Graphics g, final JComponent c, final Rectangle r) {
-            ((Graphics2D)g).drawImage(this.imageTrack, r.x, r.y, r.width, r.height, null);
+            ((Graphics2D) g).drawImage(this.imageTrack, r.x, r.y, r.width, r.height, null);
         }
-        
+
         @Override
         protected JButton createDecreaseButton(final int orientation) {
             return this.b;
         }
-        
+
         @Override
         protected JButton createIncreaseButton(final int orientation) {
             return this.b;
-        }
-    }
-    
-    private static class FauxImage
-    {
-        public static Image create(final int w, final int h, final Color c) {
-            final BufferedImage bi = new BufferedImage(w, h, 2);
-            final Graphics2D g2d = bi.createGraphics();
-            g2d.setPaint(c);
-            g2d.fillRect(0, 0, w, h);
-            g2d.dispose();
-            return bi;
         }
     }
 }
