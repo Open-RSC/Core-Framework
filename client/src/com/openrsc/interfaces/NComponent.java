@@ -1,10 +1,10 @@
 package com.openrsc.interfaces;
 
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import rsc.mudclient;
-import rsc.graphics.two.GraphicsController;
 
 public class NComponent {
 

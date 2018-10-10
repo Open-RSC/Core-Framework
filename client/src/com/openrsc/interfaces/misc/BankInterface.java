@@ -1,15 +1,12 @@
 package com.openrsc.interfaces.misc;
 
-import java.util.ArrayList;
-
 import com.openrsc.client.entityhandling.EntityHandler;
-import com.openrsc.client.entityhandling.defs.ItemDef;
+import orsc.enumerations.InputXAction;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.Panel;
+import orsc.mudclient;
 
-import rsc.Config;
-import rsc.mudclient;
-import rsc.enumerations.InputXAction;
-import rsc.graphics.gui.InputXPrompt;
-import rsc.graphics.gui.Panel;
+import java.util.ArrayList;
 
 public class BankInterface {
 	public static mudclient mc;

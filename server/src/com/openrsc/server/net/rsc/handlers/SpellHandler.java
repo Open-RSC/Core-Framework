@@ -1,9 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
@@ -38,6 +34,10 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class SpellHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
@@ -446,11 +446,11 @@ public class SpellHandler implements PacketHandler {
 			finalizeSpell(player, spell);
 			break;
 		case 47: // Charge
-			if (!player.getLocation().isMembersWild()) {
+			/*if (!player.getLocation().isMembersWild()) {
 				player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - "
 						+ World.membersWildMax);
 				return;
-			}
+			}*/
 			if (!player.getLocation().inMageArena()) {
 				if ((!player.getCache().hasKey("Flames of Zamorak_casts") && !player.getCache().hasKey("Saradomin strike_casts") && !player.getCache().hasKey("Claws of Guthix_casts"))
 						|| 
@@ -929,11 +929,11 @@ public class SpellHandler implements PacketHandler {
 				default:
 					if (spell.getReqLevel() == 62 || spell.getReqLevel() == 65 || spell.getReqLevel() == 70
 					|| spell.getReqLevel() == 75) {
-						if (!player.getLocation().isMembersWild()) {
+						/*if (!player.getLocation().isMembersWild()) {
 							player.message("Members content can only be used in wild levels: " + World.membersWildStart
 									+ " - " + World.membersWildMax);
 							return;
-						}
+						}*/
 					}
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
@@ -962,7 +962,7 @@ public class SpellHandler implements PacketHandler {
 						// Deal first damage
 						Server.getServer().getGameEventHandler() .add(new ProjectileEvent(player, affectedMob, firstDamage, 1));
 						// Deal Second Damage
-						Server.getServer().getEventHandler().add(new MiniEvent(player, 650) {
+						Server.getServer().getEventHandler().add(new MiniEvent(player, 600) {
 							@Override
 							public void action() {
 								affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);

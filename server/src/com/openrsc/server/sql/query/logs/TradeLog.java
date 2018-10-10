@@ -1,13 +1,13 @@
 package com.openrsc.server.sql.query.logs;
 
+import com.openrsc.server.Constants;
+import com.openrsc.server.model.container.Item;
+import com.openrsc.server.sql.query.Query;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.model.container.Item;
-import com.openrsc.server.sql.query.Query;
 
 /**
  * TODO: Change log to builder design (ex: new TradeLog().build())

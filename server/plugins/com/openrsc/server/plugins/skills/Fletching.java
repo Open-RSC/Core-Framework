@@ -1,23 +1,19 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.FLETCHING;
-import static com.openrsc.server.plugins.Functions.addItem;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemArrowHeadDef;
-import com.openrsc.server.external.ItemBowStringDef;
-import com.openrsc.server.external.ItemDartTipDef;
-import com.openrsc.server.external.ItemLogCutDef;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.FLETCHING;
+import static com.openrsc.server.plugins.Functions.addItem;
 
 public class Fletching implements InvUseOnItemExecutiveListener {
 
@@ -78,7 +74,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				+ item.getDef().getName());
 		player.incExp(9, exp, true);
 
-		player.setBatchEvent(new BatchEvent(player, 50, 1000 + amount) {
+		player.setBatchEvent(new BatchEvent(player, 60, 1000 + amount) {
 			@Override
 			public void action() {
 				if(owner.getInventory().countId(feathers.getID()) < 1) {
@@ -124,7 +120,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				+ arrowHeads.getDef().getName().toLowerCase()
 				+ " to some of your arrows");
 		player.incExp(9, headDef.getExp() * amount, true);
-		player.setBatchEvent(new BatchEvent(player, 50, 1000 + amount) {
+		player.setBatchEvent(new BatchEvent(player, 60, 1000 + amount) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(9) < headDef.getReqLevel()) {
@@ -164,7 +160,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 650, Formulae
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae
 				.getRepeatTimes(player, FLETCHING)) {
 			@Override
 			public void action() {
@@ -246,7 +242,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							final int requiredLvl = reqLvl;
 							final int experience = exp;
 							final String cutMessages = cutMessage;
-							player.setBatchEvent(new BatchEvent(player, 650, Formulae
+							player.setBatchEvent(new BatchEvent(player, 600, Formulae
 									.getRepeatTimes(player, FLETCHING)) {
 
 								@Override
@@ -296,7 +292,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 						final int requiredLvl = reqLvl;
 						final int experience = exp;
 						final String cutMessages = cutMessage;
-						player.setBatchEvent(new BatchEvent(player, 650, Formulae
+						player.setBatchEvent(new BatchEvent(player, 600, Formulae
 								.getRepeatTimes(player, FLETCHING)) {
 
 							@Override

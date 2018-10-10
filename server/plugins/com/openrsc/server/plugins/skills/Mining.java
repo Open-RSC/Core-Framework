@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import java.util.Arrays;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -17,6 +13,10 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.Arrays;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Mining implements ObjectActionListener,
 ObjectActionExecutiveListener {
@@ -152,16 +152,16 @@ ObjectActionExecutiveListener {
 						"You do not have a pickaxe which you have the mining level to use");
 				return;
 			}
-			owner.setBusyTimer(2000);
+			owner.setBusyTimer(1800);
 			owner.message("You swing your pick at the rock...");
-			sleep(2000);
+			sleep(1800);
 			owner.message("There is currently no ore available in this rock");
 			return;
 		}
 		if (owner.click == 1) {
-			owner.setBusyTimer(2000);
+			owner.setBusyTimer(1800);
 			owner.message("You examine the rock for ores...");
-			sleep(2000);
+			sleep(1800);
 			if (def == null || def.getRespawnTime() < 1) {
 				owner.message("There is currently no ore available in this rock");
 				return;
@@ -190,7 +190,7 @@ ObjectActionExecutiveListener {
 		owner.playSound("mine");
 		showBubble(owner, new Item(1258));
 		owner.message("You swing your pick at the rock...");
-		owner.setBatchEvent(new BatchEvent(owner, 2000, 1000 + retrytimes) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, 1000 + retrytimes) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());

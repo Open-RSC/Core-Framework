@@ -1,7 +1,5 @@
 package com.openrsc.server.model.world.region;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
@@ -11,6 +9,9 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 public class RegionManager {
 

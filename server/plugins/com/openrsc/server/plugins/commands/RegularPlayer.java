@@ -11,6 +11,7 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
 import java.util.ArrayList;
 
 public final class RegularPlayer implements CommandListener {
@@ -18,6 +19,9 @@ public final class RegularPlayer implements CommandListener {
 
 	@Override
 	public void onCommand(String command, String[] args, Player player) {
+		if (!Constants.GameServer.PLAYER_COMMANDS)
+			return;
+
 		if(command.equalsIgnoreCase("gang")) {
 			if (player.getCache().hasKey("arrav_gang")) {
 				if (player.getCache().getInt("arrav_gang") == 0) {

@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -23,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class PlagueCity implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, InvUseOnObjectListener,
@@ -792,13 +784,27 @@ ObjectActionExecutiveListener {
 				addItem(p, 752, 1);
 				p.message("This story is to be continued");
 				break;
-			case -1:
-				npcTalk(p, n, "Ah hello again", "And thank you again");
-				playerTalk(p, n, "No problem");
-				break;
-			}
-		}
-	}
+			case -1:                        
+                if (p.getBank().hasItemId(752) || p.getInventory().hasItemId(752)) {
+                    npcTalk(p, n, "Ah hello again",
+                            "And thank you again");
+                    playerTalk(p, n, "No problem");
+                }
+                else if (!p.getBank().hasItemId(752) || !p.getInventory().hasItemId(752)) {
+                    int noScroll = showMenu(p, "Do you have any more of those scrolls?",
+                            "No problem");
+                    if (noScroll == 0) {
+                        playerTalk(p, n, "Do you have any more of those scrolls?");
+                        npcTalk(p, n, "yes here you go");
+                        addItem(p, 752, 1);                            
+                    } else                        
+                        playerTalk(p, n, "No problem");
+                    }
+                break;
+                
+            }
+        }
+    }
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,

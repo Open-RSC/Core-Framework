@@ -1,13 +1,13 @@
 package com.openrsc.server.content.market.task;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class OpenMarketTask extends MarketTask {
 

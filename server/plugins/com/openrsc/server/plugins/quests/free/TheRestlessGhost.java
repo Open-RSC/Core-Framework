@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
@@ -27,6 +17,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener, PickupListener,
 		TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener,
@@ -319,9 +311,10 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 40 && player.getQuestStage(this) == 3
 				&& item.getID() == 27) {
+			spawnNpc(15, 102, 675, 30);
 			message(player, "You put the skull in the coffin");
-			removeItem(player, 27, 1);
-			Npc npc = getNearestNpc(player, 15, 20);
+			removeItem(player, 27, 1);			
+			Npc npc = getNearestNpc(player, 15, 8);
 			if (npc != null) {
 				npc.remove();
 			}
@@ -385,17 +378,20 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		Npc skeleton = getNearestNpc(p, 50, 20);
-		if (i.getX() == 218 && i.getY() == 3521 && i.getID() == 27) {
+		Npc skeleton = getNearestNpc(p, 50, 3);
+		if (i.getX() == 218 && i.getY() == 3521 && i.getID() == 27) {			
 			if(p.getQuestStage(Quests.THE_RESTLESS_GHOST) != 3 || p.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 ) {
 				playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
 				return ;
 			}
 			if (skeleton != null) {
+				spawnNpc(50, 217, 3520, 100);
 				p.message("The skeleton is guarding the skull, you need to get rid of him first");
 				skeleton.setChasing(p);
 				return;
 			}
+			Npc skeleton1 = getNearestNpc(p, 50, 20);
+			skeleton1.remove();
 			World.getWorld().unregisterItem(i);
 			addItem(p, 27, 1);
 		}

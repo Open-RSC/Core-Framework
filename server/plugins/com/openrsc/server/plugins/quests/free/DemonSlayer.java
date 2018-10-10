@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -10,17 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DemonSlayer implements QuestInterface,
 PlayerAttackNpcExecutiveListener, PlayerKilledNpcExecutiveListener,
@@ -759,11 +750,11 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		}
 	}
 
-	public void gypsyDialogue(Player p, Npc n, int converstationID) {
-		if (converstationID == -1) {
+	public void gypsyDialogue(Player p, Npc n, int conversationID) {
+		if (conversationID == -1) {
 			switch (p.getQuestStage(this)) {
 			case 0:
-				gypsyDialogue(p, n, GypsyConverstation.INTRO);
+				gypsyDialogue(p, n, GypsyConversation.INTRO);
 				break;
 			case 1:
 				npcTalk(p, n, "Greetings how goes thy quest?");
@@ -771,14 +762,14 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				npcTalk(p, n,
 						"Well if you need any advice I'm always here young one");
 				int choice = showMenu(p, n, new String[] {
-						"What is the magical incanatation?",
+						"What is the magical incanation?", // Wrong spelling on purpose.
 						"Where can I find Silverlight?",
 						"Well I'd better press on with it",
 				"Stop calling me that" });
 				if (choice == 0) {
-					gypsyDialogue(p, n, GypsyConverstation.INCANTATION);
+					gypsyDialogue(p, n, GypsyConversation.INCANTATION);
 				} else if (choice == 1) {
-					gypsyDialogue(p, n, GypsyConverstation.SILVERLIGHT);
+					gypsyDialogue(p, n, GypsyConversation.SILVERLIGHT);
 				} else if (choice == 2) {
 					npcTalk(p, n, "See you anon");
 				} else if (choice == 4) {
@@ -787,7 +778,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 							"Ok but how old are you",
 					"Oh if its in the scheme of things that's ok" });
 					if (choice2 == 0) {
-						gypsyDialogue(p, n, GypsyConverstation.HOW_OLD);
+						gypsyDialogue(p, n, GypsyConversation.HOW_OLD);
 					} else if (choice2 == 1) {
 						npcTalk(p, n, "You show wisdom for one so young");
 					}
@@ -815,13 +806,13 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				if (choice3 == 0) {
 					npcTalk(p, n, "You forget",
 							"I'm good at knowing these things");
-				} else if (choice3 == 1) {
+				} else if (choice3 == 2) {
 					npcTalk(p, n, "In the scheme of things you are very young");
 					int choice2 = showMenu(p, n, new String[] {
 							"Ok but how old are you",
 					"Oh if its in the scheme of things that's ok" });
 					if (choice2 == 0) {
-						gypsyDialogue(p, n, GypsyConverstation.HOW_OLD);
+						gypsyDialogue(p, n, GypsyConversation.HOW_OLD);
 					} else if (choice2 == 1) {
 						npcTalk(p, n, "You show wisdom for one so young");
 					}
@@ -829,16 +820,15 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				break;
 			}
 		}
-		switch (converstationID) {
-		case GypsyConverstation.INTRO:// Intro
-			npcTalk(p, n, "Hello, young one");
-			npcTalk(p, n,
+		switch (conversationID) {
+		case GypsyConversation.INTRO:// Intro
+			npcTalk(p, n, "Hello, young one",
 					"Cross my palm with silver and the future will be revealed to you");
 			int introduceMenu = showMenu(p, n, "Ok, here you go",
 					"Who are you calling young one?!",
 					"No. I don't believe in that stuff");
 			if (introduceMenu == 0) {
-				gypsyDialogue(p, n, GypsyConverstation.QUEST_START);
+				gypsyDialogue(p, n, GypsyConversation.QUEST_START);
 			} else if (introduceMenu == 1) {
 				npcTalk(p, n, "You have been on this world",
 						"A relatively short time", "At least compared to me",
@@ -847,26 +837,26 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						"No, I don't believe in that stuff",
 				"Ooh how old are you then?" });
 				if (choice == 0) {
-					gypsyDialogue(p, n, GypsyConverstation.QUEST_START);
+					gypsyDialogue(p, n, GypsyConversation.QUEST_START);
 				} else if (choice == 1) {
 					playerTalk(p, n, "No, I don't believe in that stuff");
 					npcTalk(p, n, "Ok suit yourself");
 				} else if (choice == 2) {
-					gypsyDialogue(p, n, GypsyConverstation.HOW_OLD);
+					gypsyDialogue(p, n, GypsyConversation.HOW_OLD);
 				}
 			} else if (introduceMenu == 2) {
 				playerTalk(p, n, "No, I don't believe in that stuff");
 				npcTalk(p, n, "Ok suit yourself");
 			}
 			break;
-		case GypsyConverstation.HOW_OLD:
+		case GypsyConversation.HOW_OLD:
 			npcTalk(p,
 					n,
 					"Count the number of legs of the chairs in the blue moon inn",
 					"And multiply that number by seven");
 			playerTalk(p, n, "Err yeah whatever");
 			break;
-		case GypsyConverstation.QUEST_START:// Quest Start
+		case GypsyConversation.QUEST_START:// Quest Start
 			npcTalk(p, n, "Come closer",
 					"And listen carefully to what the future holds for you",
 					"As I peer into the swirling mists of the crystal ball",
@@ -881,17 +871,19 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				npcTalk(p, n, "Aaargh its Delrith", "Delrith is coming");
 				int choice = showMenu(p, n, new String[] { "Who's Delrith?",
 				"Get a grip!" });
-				if (choice == 1) {
-					playerTalk(p, n, "Get a grip!");
+				if (choice == 0) {
+					gypsyDialogue(p, n, GypsyConversation.WHO_IS_DELRITH);
+				}
+				else if (choice == 1) {
 					npcTalk(p, n, "I didn't expect to see Delrith",
 							"I had to break away quickly in case he detected me");
+					gypsyDialogue(p, n, GypsyConversation.WHO_IS_DELRITH);
 				}
-				gypsyDialogue(p, n, GypsyConverstation.DEFEATING_DELRITH);
 				p.updateQuestStage(this, 1);
 			}
 			break;
 
-		case GypsyConverstation.WHO_IS_DELRITH:
+		case GypsyConversation.WHO_IS_DELRITH:
 			playerTalk(p, n, "Who's Delrith?");
 			npcTalk(p,
 					n,
@@ -913,31 +905,31 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			"Wally doesn't sound like a very heroic name" });
 			if (choice == 0) {
 				npcTalk(p, n, "I admit it won't be easy");
-				gypsyDialogue(p, n, GypsyConverstation.DEFEATING_DELRITH);
+				gypsyDialogue(p, n, GypsyConversation.DEFEATING_DELRITH);
 			} else if (choice == 1) {
 				npcTalk(p, n, "Well you can't just go and fight",
 						"He can't be harmed by ordinary weapons");
-				gypsyDialogue(p, n, GypsyConverstation.DEFEATING_DELRITH);
+				gypsyDialogue(p, n, GypsyConversation.DEFEATING_DELRITH);
 			} else if (choice == 2) {
-				gypsyDialogue(p, n, GypsyConverstation.WALLY);
+				gypsyDialogue(p, n, GypsyConversation.WALLY);
 			}
 			break;
-		case GypsyConverstation.DEFEATING_DELRITH:
+		case GypsyConversation.DEFEATING_DELRITH:
 			npcTalk(p,
 					n,
 					"Wally managed to arrive at the stone circle",
 					"Just as Delrith was summoned by a cult of choas druids",
 					"By reciting the correct magical incantation",
-					"and thrusting Silverlight into Delrith , while he was newly summoned",
+					"and thrusting Silverlight into Delrith, while he was newly summoned",
 					"Wally was able to imprision Delrith",
-					"In the stone block in the centre of the circle",
+					"in the stone block in the centre of the circle",
 					"Delrith will come forth from the stone circle again",
 					"I would imagine an evil sorcerer is already starting on the rituals",
 					"To summon Delrith as we speak");
-			gypsyDialogue(p, n, GypsyConverstation.INCANTATION_SILVERLIGHT_MENU);
+			gypsyDialogue(p, n, GypsyConversation.INCANTATION_SILVERLIGHT_MENU);
 			break;
 
-		case GypsyConverstation.INCANTATION:
+		case GypsyConversation.INCANTATION:
 			npcTalk(p, n, "Oh yes let me think a second");
 			message(p, "The gypsy is thinking");
 			sleep(2000);
@@ -949,13 +941,13 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Ok thanks. I'll do my best to stop the Demon",
 			"Where can I find Silverlight?" });
 			if (choice == 0) {
-				gypsyDialogue(p, n, GypsyConverstation.ILL_DO_MY_BEST);
+				gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 			} else if (choice == 1) {
-				gypsyDialogue(p, n, GypsyConverstation.SILVERLIGHT);
+				gypsyDialogue(p, n, GypsyConversation.SILVERLIGHT);
 			}
 			break;
 
-		case GypsyConverstation.INCANTATION_SILVERLIGHT_MENU:
+		case GypsyConversation.INCANTATION_SILVERLIGHT_MENU:
 			choice = showMenu(p, n, new String[] {
 					"What is the magical incantation?",
 			"Where can I find Silverlight?" });
@@ -971,9 +963,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						"Ok thanks. I'll do my best to stop the Demon",
 				"Where can I find Silverlight?" });
 				if (choice == 0) {
-					gypsyDialogue(p, n, GypsyConverstation.ILL_DO_MY_BEST);
+					gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 				} else if (choice == 1) {
-					gypsyDialogue(p, n, GypsyConverstation.SILVERLIGHT);
+					gypsyDialogue(p, n, GypsyConversation.SILVERLIGHT);
 				}
 			}
 			if (choice == 1) {
@@ -988,14 +980,14 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						"Ok thanks. I'll do my best to stop the Demon",
 				"What is the magical incantation?" });
 				if (choice == 0) {
-					gypsyDialogue(p, n, GypsyConverstation.ILL_DO_MY_BEST);
+					gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 				} else if (choice == 1) {
-					gypsyDialogue(p, n, GypsyConverstation.INCANTATION);
+					gypsyDialogue(p, n, GypsyConversation.INCANTATION);
 				}
 			}
 			break;
 
-		case GypsyConverstation.WALLY:
+		case GypsyConversation.WALLY:
 			npcTalk(p,
 					n,
 					"Yes I know. Maybe that is why history doesn't remember him",
@@ -1008,15 +1000,15 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			"Ok where is he? I'll kill him for you" });
 			if (choice == 0) {
 				npcTalk(p, n, "I admit it won't be easy");
-				gypsyDialogue(p, n, GypsyConverstation.DEFEATING_DELRITH);
+				gypsyDialogue(p, n, GypsyConversation.DEFEATING_DELRITH);
 			} else if (choice == 1) {
 				npcTalk(p, n, "Well you can't just go and fight",
 						"He can't be harmed by ordinary weapons");
-				gypsyDialogue(p, n, GypsyConverstation.DEFEATING_DELRITH);
+				gypsyDialogue(p, n, GypsyConversation.DEFEATING_DELRITH);
 			}
 			break;
 
-		case GypsyConverstation.SILVERLIGHT:
+		case GypsyConversation.SILVERLIGHT:
 			npcTalk(p,
 					n,
 					"Silverlight has been passed down through Wally's descendents",
@@ -1028,12 +1020,12 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Ok thanks. I'll do my best to stop the Demon",
 			"What is the magical incantation?" });
 			if (choice == 0) {
-				gypsyDialogue(p, n, GypsyConverstation.ILL_DO_MY_BEST);
+				gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 			} else if (choice == 1) {
-				gypsyDialogue(p, n, GypsyConverstation.INCANTATION);
+				gypsyDialogue(p, n, GypsyConversation.INCANTATION);
 			}
 			break;
-		case GypsyConverstation.ILL_DO_MY_BEST:
+		case GypsyConversation.ILL_DO_MY_BEST:
 			npcTalk(p, n, "Good luck, may Guthix be with you");
 			break;
 		}
@@ -1105,7 +1097,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 
 		return false;
 	}
-	class GypsyConverstation {
+	class GypsyConversation {
 		public static final int INTRO = 0;
 		public static final int QUEST_START = 1;
 		public static final int DEFEATING_DELRITH = 2;

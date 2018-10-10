@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.deefault;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.GameServer;
 import com.openrsc.server.Server;
@@ -12,6 +10,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * Does default action to unhandled(non-quest related) doors.
@@ -927,7 +927,7 @@ public class DoorAction {
 
 		switch (obj.getID()) {
 		case 142: // Black Knight Big Door
-			player.message("The doors are locked");
+			player.message("the doors are locked");
 			break;
 			/* Regular Doors */
 		case 18:

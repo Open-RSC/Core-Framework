@@ -5,7 +5,7 @@ import com.openrsc.server.model.entity.player.Player;
 public abstract class MiniEvent extends SingleEvent {
 
     public MiniEvent(Player owner) {
-        super(owner, 500);
+        super(owner, 600);
     }
 
     public MiniEvent(Player owner, int delay) {

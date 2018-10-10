@@ -9,6 +9,8 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import static com.openrsc.server.plugins.Functions.npcTalk;
+
 public class NpcBehavior {
 
 	protected long lastMovement;
@@ -50,17 +52,34 @@ public class NpcBehavior {
 			}
 			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
 					&& (npc.getDef().isAggressive()
-					|| (npc.getLocation().inWilderness() && npc.getID() != 342))) {
+						|| (npc.getLocation().inWilderness() && npc.getID() != 342))
+						|| (npc.getX() > 274 && npc.getX() < 283 && npc.getY() > 432 && npc.getY() < 441) // Black Knight's Fortress
+				) {
 
 				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 
-					// 5 tiles away aggro for UndeadOne, rest should be 1 tile (RSC) we are using 2 tiles.
-					if (!canAggro(p) || !p.withinRange(npc, (npc.getID() == 542 ? 5 : 1))) {
-						continue; // Can't aggro or is not in range.
+					int range = 1;
+					switch(npc.getID()) {
+						case 542: // Bandit
+							range = 5;
+							break;
+						case 66: // Black Knight
+							range = 10;
+							break;
+						default:
+							break;
 					}
+
+					if (!canAggro(p) || !p.withinRange(npc, range))
+						continue; // Can't aggro or is not in range.
+
 					state = State.AGGRO;
 					target = p;
+					if (npc.getID() == 542) // Bandit
+						npcTalk(p, npc, "You shall not pass");
+					else if (npc.getID() == 66) // Black Knight
+						npcTalk(p, npc, "Die intruder!!");
 					break;
 				}
 			}

@@ -70,6 +70,7 @@ elif [ "$installmode" == "docker" ]; then
     sudo touch Website/downloads/cache/MD5CHECKSUM && sudo chmod 777 Website/downloads/cache/MD5CHECKSUM
     md5sum Website/downloads/cache/* | sed 's/Website\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee Website/downloads/cache/MD5CHECKSUM
     sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "Website/downloads/cache/MD5CHECKSUM"
+    sudo sed -i 's/index=/#index=/g' "Website/downloads/cache/MD5CHECKSUM"
 fi
 
 # Finished

@@ -1,13 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
@@ -16,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Apothecary implements TalkToNpcExecutiveListener,
 		TalkToNpcListener {
@@ -69,7 +63,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 						"Well give me them and 5 gold and I'll make you your potion");
 
 				message(p, "Apothecary: starts brewing and fixes to a strength potion");
-				p.setBatchEvent(new BatchEvent(p, 650, 14) {
+				p.setBatchEvent(new BatchEvent(p, 600, 14) {
 					@Override
 					public void action() {
 						if (p.getInventory().countId(10) < 5) {

@@ -1,13 +1,13 @@
 package com.openrsc.server.model;
 
-import java.util.Collection;
-
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.RegionManager;
+
+import java.util.Collection;
 
 
 public class ViewArea {

@@ -1,16 +1,15 @@
 package com.loader.openrsc.net.xml;
 
-import static com.loader.openrsc.Constants.base_url;
+import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.elements.ArchiveBox;
 import com.loader.openrsc.frame.elements.NewsBox;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
-public class XMLReader
-{
+public class XMLReader {
     private static Feed news;
     private static Feed archives;
-    
+
     public static void init(final NewsBox newsBox) {
         try {
             XMLReader.news = getNews();
@@ -30,20 +29,19 @@ public class XMLReader
                 newsBox.add(new ArchiveBox(msg, new Rectangle(246, startY, 194, 39)));
                 startY += 50;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public static Feed getArchivedNews() {
-        final RSSFeedParser parser = new RSSFeedParser(base_url+"blog/rss/"); // Archived news RSS feed URL
+        final RSSFeedParser parser = new RSSFeedParser(Constants.rss_url); // Archived news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
     }
-    
+
     public static Feed getNews() {
-        final RSSFeedParser parser = new RSSFeedParser(base_url+"blog/rss/"); // Current news RSS feed URL
+        final RSSFeedParser parser = new RSSFeedParser(Constants.rss_url); // Current news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
     }

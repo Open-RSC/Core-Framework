@@ -2,7 +2,6 @@ package com.openrsc.server.login;
 
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
-
 import io.netty.channel.Channel;
 
 /**

@@ -1,11 +1,5 @@
 package com.openrsc.server.model.container;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.model.entity.GroundItem;
@@ -18,6 +12,8 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.*;
 
 public class Inventory {
 

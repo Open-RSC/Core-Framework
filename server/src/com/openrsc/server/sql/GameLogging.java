@@ -1,15 +1,14 @@
 package com.openrsc.server.sql;
 
+import com.openrsc.server.sql.query.Query;
+import com.openrsc.server.sql.query.ResultQuery;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.sql.query.Query;
-import com.openrsc.server.sql.query.ResultQuery;
 
 public final class GameLogging implements Runnable {
 	

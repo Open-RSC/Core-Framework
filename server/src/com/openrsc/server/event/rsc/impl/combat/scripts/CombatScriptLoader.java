@@ -1,13 +1,12 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.plugins.PluginHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.openrsc.server.model.entity.Mob;
-import com.openrsc.server.plugins.PluginHandler;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 
  * @author n0m

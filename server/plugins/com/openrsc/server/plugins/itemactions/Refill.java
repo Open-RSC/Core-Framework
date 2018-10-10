@@ -1,17 +1,13 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Refill implements InvUseOnObjectListener,
 		InvUseOnObjectExecutiveListener {
@@ -31,7 +27,7 @@ public class Refill implements InvUseOnObjectListener,
 			if (REFILLABLE[i] == item.getID()) {
 				final int itemID = item.getID();
 				final int refilledID = REFILLED[i];
-				player.setBatchEvent(new BatchEvent(player, 300, player.getInventory().countId(itemID)) {
+				player.setBatchEvent(new BatchEvent(player, 600, player.getInventory().countId(itemID)) {
 					@Override
 					public void action() {
 						if (removeItem(owner, itemID, 1)) {
