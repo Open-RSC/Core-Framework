@@ -1,7 +1,7 @@
 package com.loader.openrsc.core;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DecoderThreadFactory implements ThreadFactory
 {

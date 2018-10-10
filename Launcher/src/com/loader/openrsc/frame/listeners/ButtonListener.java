@@ -1,13 +1,13 @@
 package com.loader.openrsc.frame.listeners;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
-
+import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.util.ClientLauncher;
 import com.loader.openrsc.util.Utils;
-import com.loader.openrsc.Constants;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 public class ButtonListener implements ActionListener
 {

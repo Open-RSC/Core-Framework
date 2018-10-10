@@ -1,7 +1,5 @@
 package com.loader.openrsc;
 
-import java.io.File;
-
 public class Constants
 {
     public static final String SERVER_DOMAIN = "dev1.openrsc.com"; // Only used for the server status display

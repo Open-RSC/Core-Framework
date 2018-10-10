@@ -1,23 +1,18 @@
 package com.loader.openrsc.net;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import com.loader.openrsc.Constants;
+import com.loader.openrsc.OpenRSC;
+import com.loader.openrsc.frame.AppFrame;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
-
-import com.loader.openrsc.Constants;
-import com.loader.openrsc.OpenRSC;
-import com.loader.openrsc.frame.AppFrame;
 
 public class Downloader extends Observable 
 {
