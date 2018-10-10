@@ -8,10 +8,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class LinkButton extends JButton implements MouseListener
-{
+public class LinkButton extends JButton implements MouseListener {
     private static final long serialVersionUID = 3503904237989217533L;
-    
+
     public LinkButton(final String text, final Rectangle bounds) {
         super(text.toUpperCase());
         this.setIcon(Utils.getImage("button.png"));
@@ -26,25 +25,25 @@ public class LinkButton extends JButton implements MouseListener
         this.setBounds(bounds);
         this.addMouseListener(this);
     }
-    
+
     @Override
     public void mouseClicked(final MouseEvent e) {
     }
-    
+
     @Override
     public void mouseEntered(final MouseEvent e) {
         this.setCursor(Cursor.getPredefinedCursor(12));
     }
-    
+
     @Override
     public void mouseExited(final MouseEvent e) {
         this.setCursor(Cursor.getPredefinedCursor(0));
     }
-    
+
     @Override
     public void mousePressed(final MouseEvent e) {
     }
-    
+
     @Override
     public void mouseReleased(final MouseEvent e) {
     }
