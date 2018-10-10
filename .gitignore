@@ -168,3 +168,5 @@ Tools/Map Generator/build/
 Tools/Map Generator/dist/
 Tools/Map Generator/map\.png
 Tools/Map Generator/spriteeditor\.jar
+
+client/Cache/client\.properties
