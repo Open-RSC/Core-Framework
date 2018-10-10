@@ -96,6 +96,8 @@ SELECT B.id AS playerID, A.friend, C.username AS friendName, A.dbid FROM openrsc
 
 Invitems:
 
+SELECT * FROM `rscd_invitems` WHERE id >= '10000';
+UPDATE `rscd_invitems` WHERE id >= '10000' SET id = id - '10000';
 SELECT B.id AS playerID, A.id, A.amount, A.wielded, A.slot, A.dbid FROM openrsc.openrsc_invitems AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
 
 - Export to CSV, import in new table
