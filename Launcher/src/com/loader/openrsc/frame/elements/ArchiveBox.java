@@ -9,10 +9,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 @SuppressWarnings("serial")
-public class ArchiveBox extends JLabel implements MouseListener
-{
-	private String url;
-    
+public class ArchiveBox extends JLabel implements MouseListener {
+    private String url;
+
     public ArchiveBox(final FeedMessage message, final Rectangle bounds) {
         super(Utils.getImage("oldnews.png"));
         this.url = message.getLink();
@@ -31,27 +30,27 @@ public class ArchiveBox extends JLabel implements MouseListener
         this.addMouseListener(this);
         this.setBounds(bounds);
     }
-    
+
     @Override
     public void mouseClicked(final MouseEvent arg0) {
     }
-    
+
     @Override
     public void mouseEntered(final MouseEvent e) {
         this.setIcon(Utils.getImage("oldnews_hover.png"));
         this.setCursor(Cursor.getPredefinedCursor(12));
     }
-    
+
     @Override
     public void mouseExited(final MouseEvent e) {
         this.setIcon(Utils.getImage("oldnews.png"));
         this.setCursor(Cursor.getPredefinedCursor(0));
     }
-    
+
     @Override
     public void mousePressed(final MouseEvent e) {
     }
-    
+
     @Override
     public void mouseReleased(final MouseEvent e) {
         Utils.openWebpage(this.url);
