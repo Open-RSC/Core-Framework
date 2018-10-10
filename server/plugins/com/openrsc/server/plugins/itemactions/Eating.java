@@ -1,15 +1,12 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.resetGnomeCooking;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Eating implements InvActionListener, InvActionExecutiveListener {
 

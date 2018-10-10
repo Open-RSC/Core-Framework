@@ -1,13 +1,13 @@
 package com.openrsc.server.event.rsc.impl;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.ArrayList;
 
 public class FireCannonEvent extends GameTickEvent {
 

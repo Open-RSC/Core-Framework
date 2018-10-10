@@ -1,9 +1,9 @@
 package com.openrsc.server.util;
 
+import com.openrsc.server.model.entity.Entity;
+
 import java.util.Iterator;
 import java.util.Set;
-
-import com.openrsc.server.model.entity.Entity;
 
 public final class EntityListIterator<E extends Entity> implements Iterator<E> {
 

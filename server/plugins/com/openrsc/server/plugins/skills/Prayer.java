@@ -1,12 +1,12 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.sleep;
 public class Prayer implements ObjectActionExecutiveListener, ObjectActionListener {
 
 	@Override

@@ -1,11 +1,11 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import java.util.Random;
-
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+
+import java.util.Random;
 
 public class MeleeFormula {
 	/**

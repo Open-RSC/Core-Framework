@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -16,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Herblaw implements InvActionListener, InvUseOnItemListener,
 InvActionExecutiveListener, InvUseOnItemExecutiveListener {

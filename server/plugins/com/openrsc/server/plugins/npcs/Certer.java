@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.npcs;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.external.EntityHandler;
@@ -12,6 +9,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 

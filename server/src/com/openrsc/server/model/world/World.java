@@ -1,17 +1,7 @@
 package com.openrsc.server.model.world;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.event.SingleEvent;
@@ -28,7 +18,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.sql.GameLogging;
@@ -38,11 +27,13 @@ import com.openrsc.server.sql.query.logs.LoginLog;
 import com.openrsc.server.sql.web.AvatarGenerator;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.IPTracker;
-import com.openrsc.server.util.IPTrackerPredicate;
 import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
-import com.openrsc.server.util.rsc.LoginResponse;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.*;
 
 public final class World {
 

@@ -1,10 +1,5 @@
 package com.openrsc.server.content.minigame.fishingtrawler;
 
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -16,6 +11,10 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
 
 public class FishingTrawler extends DelayedEvent {
 	

@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showBubble;
-
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -12,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutiveListener {
 

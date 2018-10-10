@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,6 +7,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 

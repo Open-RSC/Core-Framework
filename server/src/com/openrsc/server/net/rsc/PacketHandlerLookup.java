@@ -1,45 +1,8 @@
 package com.openrsc.server.net.rsc;
 
-import java.util.HashMap;
+import com.openrsc.server.net.rsc.handlers.*;
 
-import com.openrsc.server.net.rsc.handlers.AttackHandler;
-import com.openrsc.server.net.rsc.handlers.BankHandler;
-import com.openrsc.server.net.rsc.handlers.BlinkHandler;
-import com.openrsc.server.net.rsc.handlers.ChatHandler;
-import com.openrsc.server.net.rsc.handlers.CommandHandler;
-import com.openrsc.server.net.rsc.handlers.FriendHandler;
-import com.openrsc.server.net.rsc.handlers.GameObjectAction;
-import com.openrsc.server.net.rsc.handlers.GameObjectWallAction;
-import com.openrsc.server.net.rsc.handlers.GameSettingHandler;
-import com.openrsc.server.net.rsc.handlers.GroundItemTake;
-import com.openrsc.server.net.rsc.handlers.InterfaceOptionHandler;
-import com.openrsc.server.net.rsc.handlers.InterfaceShopHandler;
-import com.openrsc.server.net.rsc.handlers.ItemActionHandler;
-import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
-import com.openrsc.server.net.rsc.handlers.ItemUseOnGroundItem;
-import com.openrsc.server.net.rsc.handlers.ItemUseOnItem;
-import com.openrsc.server.net.rsc.handlers.ItemUseOnNpc;
-import com.openrsc.server.net.rsc.handlers.ItemUseOnObject;
-import com.openrsc.server.net.rsc.handlers.ItemUseOnPlayer;
-import com.openrsc.server.net.rsc.handlers.ItemWieldHandler;
-import com.openrsc.server.net.rsc.handlers.Logout;
-import com.openrsc.server.net.rsc.handlers.LogoutRequest;
-import com.openrsc.server.net.rsc.handlers.MenuReplyHandler;
-import com.openrsc.server.net.rsc.handlers.NpcCommand;
-import com.openrsc.server.net.rsc.handlers.NpcTalkTo;
-import com.openrsc.server.net.rsc.handlers.Ping;
-import com.openrsc.server.net.rsc.handlers.PlayerAppearanceUpdater;
-import com.openrsc.server.net.rsc.handlers.PlayerDuelHandler;
-import com.openrsc.server.net.rsc.handlers.PlayerFollowRequest;
-import com.openrsc.server.net.rsc.handlers.PlayerTradeHandler;
-import com.openrsc.server.net.rsc.handlers.PrayerHandler;
-import com.openrsc.server.net.rsc.handlers.PrivacySettingHandler;
-import com.openrsc.server.net.rsc.handlers.ReportHandler;
-import com.openrsc.server.net.rsc.handlers.SleepHandler;
-import com.openrsc.server.net.rsc.handlers.SpellHandler;
-import com.openrsc.server.net.rsc.handlers.StyleHandler;
-import com.openrsc.server.net.rsc.handlers.TutorialHandler;
-import com.openrsc.server.net.rsc.handlers.WalkRequest;
+import java.util.HashMap;
 
 public class PacketHandlerLookup {
 

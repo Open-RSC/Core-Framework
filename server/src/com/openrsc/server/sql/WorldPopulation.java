@@ -1,29 +1,22 @@
 package com.openrsc.server.sql;
 
-import static org.apache.logging.log4j.util.Unbox.box;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.GameObjectLoc;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemDropDef;
-import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.external.NPCDef;
-import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.Formulae;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class WorldPopulation {
 

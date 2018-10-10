@@ -1,15 +1,14 @@
 package com.openrsc.server;
 
+import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.model.entity.player.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.model.entity.player.Player;
 
 public final class ServerEventHandler {
 	
