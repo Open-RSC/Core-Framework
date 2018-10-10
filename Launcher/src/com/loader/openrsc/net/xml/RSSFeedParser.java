@@ -10,8 +10,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class RSSFeedParser
-{
+public class RSSFeedParser {
     static final String TITLE = "title";
     static final String COMMENTS = "comments";
     static final String CHANNEL = "channel";
@@ -24,16 +23,15 @@ public class RSSFeedParser
     static final String GUID = "guid";
     static final String DESCRIPTION = "description";
     final URL url;
-    
+
     public RSSFeedParser(final String feedUrl) {
         try {
             this.url = new URL(feedUrl);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     public Feed readFeed() {
         Feed feed = null;
         try {
@@ -52,8 +50,8 @@ public class RSSFeedParser
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
-                	String localPart = event.asStartElement().getName().getLocalPart();
-					switch (localPart) {
+                    String localPart = event.asStartElement().getName().getLocalPart();
+                    switch (localPart) {
                         case DESCRIPTION: {
                             description = this.getCharacterData(event, eventReader);
                             continue;
@@ -95,8 +93,7 @@ public class RSSFeedParser
                             continue;
                         }
                     }
-                }
-                else {
+                } else {
                     if (!event.isEndElement() || event.asEndElement().getName().getLocalPart() != (ITEM)) {
                         continue;
                     }
@@ -111,13 +108,12 @@ public class RSSFeedParser
                     event = eventReader.nextEvent();
                 }
             }
-        }
-        catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             return null;
         }
         return feed;
     }
-    
+
     private String getCharacterData(XMLEvent event, final XMLEventReader eventReader) throws XMLStreamException {
         String result = "";
         event = eventReader.nextEvent();
@@ -126,12 +122,11 @@ public class RSSFeedParser
         }
         return result;
     }
-    
+
     private InputStream read() {
         try {
             return this.url.openStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

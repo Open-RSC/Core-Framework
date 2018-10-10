@@ -10,23 +10,22 @@ import java.security.cert.X509Certificate;
 
 import static com.loader.openrsc.Constants.base_url;
 
-public class ConnectHttps
-{
+public class ConnectHttps {
     public static void main(final String[] args) throws Exception {
-        final TrustManager[] trustAllCerts = { new X509TrustManager() {
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-                
-                @Override
-                public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
-                }
-                
-                @Override
-                public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
-                }
-            } };
+        final TrustManager[] trustAllCerts = {new X509TrustManager() {
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+            }
+        }};
         final SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -40,7 +39,7 @@ public class ConnectHttps
             if (ch == -1) {
                 break;
             }
-            System.out.print((char)ch);
+            System.out.print((char) ch);
         }
     }
 }
