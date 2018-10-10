@@ -1,16 +1,15 @@
 package com.loader.openrsc.util;
 
-import java.applet.Applet;
-import java.awt.Dimension;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import javax.swing.JFrame;
-
 import com.loader.openrsc.Constants;
 import com.loader.openrsc.OpenRSC;
 import com.loader.openrsc.frame.AppFrame;
+
+import javax.swing.*;
+import java.applet.Applet;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class ClientLauncher
 {

@@ -1,15 +1,12 @@
 package com.loader.openrsc.frame.elements;
 
-import java.awt.Cursor;
-import java.awt.event.MouseEvent;
-import java.awt.Color;
-
-import java.awt.Rectangle;
-import java.awt.event.MouseListener;
-import javax.swing.JButton;
-
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class LinkButton extends JButton implements MouseListener
 {
