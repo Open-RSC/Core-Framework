@@ -1,8 +1,8 @@
 package orsc.multiclient;
 
-import java.io.ByteArrayInputStream;
-
 import com.openrsc.client.model.Sprite;
+
+import java.io.ByteArrayInputStream;
 
 public interface ClientPort {
 

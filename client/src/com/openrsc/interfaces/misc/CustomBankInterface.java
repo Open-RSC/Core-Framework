@@ -1,16 +1,14 @@
 package com.openrsc.interfaces.misc;
 
-import java.util.ArrayList;
-
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.interfaces.misc.BankInterface;
-
 import orsc.Config;
-import orsc.mudclient;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.Panel;
+import orsc.mudclient;
+
+import java.util.ArrayList;
 
 public final class CustomBankInterface extends BankInterface {
 	private int organizeMode = 0;

@@ -1,12 +1,11 @@
 package com.openrsc.interfaces.misc;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
-
-import orsc.mudclient;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 
 public final class QuestGuideInterface {

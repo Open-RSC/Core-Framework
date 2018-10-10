@@ -1,7 +1,7 @@
 package com.openrsc.interfaces.misc;
 
-import orsc.mudclient;
 import orsc.graphics.gui.Panel;
+import orsc.mudclient;
 
 
 public final class TerritorySignupInterface {
