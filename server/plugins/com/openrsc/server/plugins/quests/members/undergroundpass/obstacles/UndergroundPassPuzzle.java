@@ -1,17 +1,13 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import static com.openrsc.server.plugins.Functions.HITS;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassPuzzle implements ObjectActionListener, ObjectActionExecutiveListener {
 

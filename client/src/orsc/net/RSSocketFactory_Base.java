@@ -1,9 +1,9 @@
 package orsc.net;
 
+import orsc.util.GenUtil;
+
 import java.io.IOException;
 import java.net.Socket;
-
-import orsc.util.GenUtil;
 
 public abstract class RSSocketFactory_Base {
 	String socketHost;

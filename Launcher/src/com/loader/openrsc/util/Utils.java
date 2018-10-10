@@ -1,16 +1,13 @@
 package com.loader.openrsc.util;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.text.SimpleDateFormat;
-import javax.swing.ImageIcon;
-import java.net.URL;
-import java.awt.Desktop;
-import java.io.IOException;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.awt.Font;
-import java.text.DateFormat;
 
 public class Utils
 {

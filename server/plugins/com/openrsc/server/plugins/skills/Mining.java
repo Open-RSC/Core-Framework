@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import java.util.Arrays;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -17,6 +13,10 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.Arrays;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Mining implements ObjectActionListener,
 ObjectActionExecutiveListener {

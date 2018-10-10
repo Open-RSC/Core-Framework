@@ -1,9 +1,9 @@
 package com.loader.openrsc.frame.threads;
 
+import com.loader.openrsc.frame.AppFrame;
+
 import java.io.IOException;
 import java.net.Socket;
-
-import com.loader.openrsc.frame.AppFrame;
 
 public class StatusChecker implements Runnable {
 

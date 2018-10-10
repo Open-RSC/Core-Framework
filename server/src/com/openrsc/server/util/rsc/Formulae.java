@@ -1,17 +1,6 @@
 package com.openrsc.server.util.rsc;
 
-import java.lang.Math;
-import java.util.ArrayList;
-
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.FiremakingDef;
-import com.openrsc.server.external.GameObjectLoc;
-import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.external.NPCLoc;
-import com.openrsc.server.external.ObjectFishDef;
-import com.openrsc.server.external.ObjectMiningDef;
-import com.openrsc.server.external.ObjectWoodcuttingDef;
-import com.openrsc.server.external.SpellDef;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Entity;
@@ -19,6 +8,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+
+import java.util.ArrayList;
 
 public final class Formulae {
 

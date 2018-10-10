@@ -1,15 +1,12 @@
 package com.loader.openrsc.frame.elements;
 
-import java.awt.Cursor;
-import java.awt.event.MouseEvent;
-import java.awt.Color;
-
-import java.awt.Rectangle;
-import java.awt.event.MouseListener;
-import javax.swing.JLabel;
-
 import com.loader.openrsc.net.xml.FeedMessage;
 import com.loader.openrsc.util.Utils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 @SuppressWarnings("serial")
 public class ArchiveBox extends JLabel implements MouseListener

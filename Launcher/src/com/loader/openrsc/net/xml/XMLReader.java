@@ -1,12 +1,10 @@
 package com.loader.openrsc.net.xml;
 
-import static com.loader.openrsc.Constants.base_url;
-
 import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.elements.ArchiveBox;
 import com.loader.openrsc.frame.elements.NewsBox;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 public class XMLReader
 {

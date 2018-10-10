@@ -1,20 +1,13 @@
 package com.loader.openrsc.frame.popup;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
-
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.util.Utils;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.*;
 
 public class PopupFrame
 extends JFrame

@@ -1,12 +1,12 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 	

@@ -1,12 +1,11 @@
 package com.loader.openrsc;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.popup.PopupFrame;
 import com.loader.openrsc.frame.threads.StatusChecker;
 import com.loader.openrsc.net.Downloader;
+
+import javax.swing.*;
 
 public class OpenRSC
 {

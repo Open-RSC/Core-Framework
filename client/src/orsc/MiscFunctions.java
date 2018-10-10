@@ -1,8 +1,8 @@
 package orsc;
 
-import java.math.BigInteger;
-
 import orsc.util.GenUtil;
+
+import java.math.BigInteger;
 
 public final class MiscFunctions {
 	public static byte[][] s_j = new byte[1000][];

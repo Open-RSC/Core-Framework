@@ -1,25 +1,5 @@
 package orsc;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.Socket;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.openrsc.client.data.DataFileDecrypter;
 import com.openrsc.client.data.DataOperations;
 import com.openrsc.client.entityhandling.EntityHandler;
@@ -30,40 +10,15 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -75,6 +30,14 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.Socket;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class mudclient implements Runnable {
 	long lastFPSUpdate = 0;
@@ -12935,19 +12898,6 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-        final void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
-            try {
-
-                FontMetrics metrics = getFontMetrics(var1);
-                g.setFont(var1);
-                g.drawString(str, x - metrics.stringWidth(str) / 2, y + metrics.getHeight() / 4);
-            } catch (RuntimeException var9) {
-                throw GenUtil.makeThrowable(var9,
-                        "e.LE(" + (var1 != null ? "{...}" : "null") + ',' + (str != null ? "{...}" : "null") + ',' + y + ','
-                                + true + ',' + x + ',' + (g != null ? "{...}" : "null") + ')');
-            }
-        }
-
 		private final void renderLoginScreenViewports(int var1) {
 			try {
                 // First view
@@ -12986,35 +12936,7 @@ public final class mudclient implements Runnable {
 				}
 
 				//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
-                //Graphics g = this.getGraphics();
-                //g.setFont(new Font("Helvetica", 1, 20));
-                Graphics g = this.getGraphics();
-                if (g != null) {
-                    g.translate(mudclient.screenOffsetX, mudclient.screenOffsetY);
-                    g.setColor(Color.black);
-                    g.fillRect(0, 0, 512, 356);
-                    g.setFont(new Font("Helvetica", 1, 16));
-                    g.setColor(Color.yellow);
-                    byte var3 = 35;
-                    g.drawString("Sorry, an error has occured whilst loading Open RSC", 30, var3);
-                    g.setColor(Color.white);
-                    int var6 = var3 + 50;
-                    g.drawString("To fix this try the following (in order):", 30, var6);
-                    g.setColor(Color.white);
-                    var6 += 50;
-                    g.setFont(new Font("Helvetica", 1, 12));
-                    g.drawString("1: Try closing ALL open web-browser windows, and reloading", 30, var6);
-                    var6 += 30;
-                    g.drawString("2: Try clearing your web-browsers cache from tools->internet options", 30, var6);
-                    var6 += 30;
-                    g.drawString("3: Try using a different game-world", 30, var6);
-                    var6 += 30;
-                    g.drawString("4: Try rebooting your computer", 30, var6);
-                    var6 += 30;
-                    g.drawString("5: Try selecting a different version of Java from the play-game menu", 30, var6);
-                }
-
-                this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
+                //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
 
                 // Second view
@@ -13043,7 +12965,7 @@ public final class mudclient implements Runnable {
 				}
 
 				//this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
-                this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
+                //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
 
                 // Third view
@@ -13081,7 +13003,7 @@ public final class mudclient implements Runnable {
 				}
 
 				//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
-                this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
+                //this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
 				this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), 200);
 			} catch (RuntimeException var10) {
 				throw GenUtil.makeThrowable(var10, "client.HC(" + var1 + ')');

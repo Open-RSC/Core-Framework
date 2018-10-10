@@ -1,8 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import java.sql.ResultSet;
-import java.util.Iterator;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
@@ -12,6 +9,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GameReport;
+
+import java.sql.ResultSet;
+import java.util.Iterator;
 
 public final class ReportHandler implements PacketHandler {
 

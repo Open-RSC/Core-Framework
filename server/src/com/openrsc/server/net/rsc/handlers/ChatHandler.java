@@ -1,7 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;

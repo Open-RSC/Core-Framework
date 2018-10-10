@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.plugins.quests.members.digsite.DigsiteExaminer;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 	public boolean blockTalkToNpc(final Player player, final Npc npc) {

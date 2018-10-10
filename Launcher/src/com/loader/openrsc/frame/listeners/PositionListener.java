@@ -1,12 +1,11 @@
 package com.loader.openrsc.frame.listeners;
 
-import java.awt.event.MouseEvent;
-import java.awt.Point;
-import java.awt.event.MouseMotionListener;
-
 import com.loader.openrsc.frame.AppFrame;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public class PositionListener implements MouseListener, MouseMotionListener
 {

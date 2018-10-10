@@ -1,10 +1,10 @@
 package com.openrsc.server.plugins.menu;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
+
+import java.util.ArrayList;
 
 /**
  * This system is for adding a new menu item on NPC under certain circumstances.

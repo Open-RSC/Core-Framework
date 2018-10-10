@@ -1,19 +1,18 @@
 package orsc.graphics.three;
 
+import com.openrsc.client.data.DataConversions;
+import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.model.Sector;
+import orsc.Config;
+import orsc.graphics.two.GraphicsController;
+import orsc.util.FastMath;
+import orsc.util.GenUtil;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import com.openrsc.client.data.DataConversions;
-import com.openrsc.client.entityhandling.EntityHandler;
-import com.openrsc.client.model.Sector;
-
-import orsc.Config;
-import orsc.graphics.two.GraphicsController;
-import orsc.util.FastMath;
-import orsc.util.GenUtil;
 
 public final class World {
 	public int baseMediaSprite = 750;

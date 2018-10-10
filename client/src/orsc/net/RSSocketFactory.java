@@ -1,22 +1,16 @@
 package orsc.net;
+
+import orsc.util.GenUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
+import java.net.*;
 import java.net.Proxy.Type;
-import java.net.ProxySelector;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
-
-import orsc.util.GenUtil;
 
 final class RSSocketFactory extends RSSocketFactory_Base {
 	private ProxySelector proxySelector;

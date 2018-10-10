@@ -1,7 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
@@ -15,6 +13,8 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.TradeLog;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.ArrayList;
 
 public class PlayerTradeHandler implements PacketHandler {
 	/**

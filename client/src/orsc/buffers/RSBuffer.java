@@ -1,9 +1,9 @@
 package orsc.buffers;
 
-import java.math.BigInteger;
-
 import orsc.MiscFunctions;
 import orsc.util.GenUtil;
+
+import java.math.BigInteger;
 
 public class RSBuffer extends RSBuffer_Base {
 	public byte[] dataBuffer;

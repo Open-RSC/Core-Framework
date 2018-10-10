@@ -1,31 +1,20 @@
 package com.loader.openrsc.frame.elements;
 
-import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import javax.swing.JComponent;
-import java.awt.Graphics;
-import javax.swing.JButton;
-import java.awt.Image;
-import javax.swing.plaf.metal.MetalScrollBarUI;
-import java.net.URL;
-import java.io.IOException;
-import javax.swing.text.BadLocationException;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import java.awt.Dimension;
-import javax.swing.border.EmptyBorder;
-import java.awt.Color;
-import javax.swing.JTextPane;
-import javax.swing.JScrollPane;
-import javax.swing.text.html.HTMLEditorKit;
-
 import com.loader.openrsc.util.Utils;
 
-import javax.swing.text.html.HTMLDocument;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.plaf.metal.MetalScrollBarUI;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
 @SuppressWarnings("serial")
 public class NewsBox extends JPanel

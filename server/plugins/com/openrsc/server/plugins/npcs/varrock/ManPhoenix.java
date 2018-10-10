@@ -1,14 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_GANG;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -18,6 +9,9 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.plugins.quests.free.ShieldOfArrav;
+
+import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_GANG;
 
 public class ManPhoenix implements TalkToNpcExecutiveListener,
 TalkToNpcListener {
