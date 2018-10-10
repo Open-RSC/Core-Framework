@@ -1,16 +1,13 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestMapJungle implements InvActionListener, InvActionExecutiveListener {
 	

@@ -1,9 +1,9 @@
 package com.openrsc.server.net;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ISAACContainer;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ConnectionAttachment {
 	

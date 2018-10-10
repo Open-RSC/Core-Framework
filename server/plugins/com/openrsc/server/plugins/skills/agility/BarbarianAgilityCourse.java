@@ -1,19 +1,13 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import static com.openrsc.server.plugins.Functions.AGILITY;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.movePlayer;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.random;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BarbarianAgilityCourse implements WallObjectActionListener,
 		WallObjectActionExecutiveListener, ObjectActionListener,

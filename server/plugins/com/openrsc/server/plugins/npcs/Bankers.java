@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.npcs;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -11,6 +9,8 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 

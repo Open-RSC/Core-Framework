@@ -1,9 +1,9 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.model.entity.Mob;
+
 import java.util.Deque;
 import java.util.LinkedList;
-
-import com.openrsc.server.model.entity.Mob;
 
 public class Path {
 	

@@ -1,11 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -19,6 +13,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener, ObjectActionListener,

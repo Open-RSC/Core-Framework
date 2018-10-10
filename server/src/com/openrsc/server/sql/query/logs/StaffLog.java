@@ -1,12 +1,12 @@
 package com.openrsc.server.sql.query.logs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.query.Query;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * staff username|action int|affected player username|time in epoch|staff x|staff y|affected x|affected y|staff ip|affected ip

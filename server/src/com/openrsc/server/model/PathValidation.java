@@ -1,10 +1,10 @@
 package com.openrsc.server.model;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
+
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * 

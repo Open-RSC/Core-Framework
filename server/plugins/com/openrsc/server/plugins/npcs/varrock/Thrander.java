@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,6 +7,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 

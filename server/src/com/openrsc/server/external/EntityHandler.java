@@ -1,11 +1,11 @@
 package com.openrsc.server.external;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class handles the loading of entities from the conf files, and provides

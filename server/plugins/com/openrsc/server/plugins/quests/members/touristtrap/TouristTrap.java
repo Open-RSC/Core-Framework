@@ -1,29 +1,15 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TouristTrap implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener,NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {

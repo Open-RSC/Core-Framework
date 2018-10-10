@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -13,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.npcs.shilo.JungleForester;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestGujuo;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecutiveListener {
 

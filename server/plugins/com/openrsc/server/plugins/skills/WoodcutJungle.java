@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,6 +12,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements ObjectActionListener,
 ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {

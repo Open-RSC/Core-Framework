@@ -1,14 +1,14 @@
 package com.openrsc.server.model.world.region;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 public class Region {
 	/**

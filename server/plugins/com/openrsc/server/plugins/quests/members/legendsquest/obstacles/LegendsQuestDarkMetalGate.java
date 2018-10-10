@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,6 +9,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageObjectListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerMageObjectExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestDarkMetalGate implements ObjectActionListener, ObjectActionExecutiveListener, PlayerMageObjectListener, PlayerMageObjectExecutiveListener {
 

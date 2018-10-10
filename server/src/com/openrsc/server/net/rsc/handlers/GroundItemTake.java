@@ -16,7 +16,6 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.GenericLog;
-import com.openrsc.server.util.rsc.DataConversions;
 
 public class GroundItemTake implements PacketHandler {
 	/**

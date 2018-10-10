@@ -1,11 +1,5 @@
 package com.openrsc.server.plugins.npcs.draynor;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
@@ -15,6 +9,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener {
 

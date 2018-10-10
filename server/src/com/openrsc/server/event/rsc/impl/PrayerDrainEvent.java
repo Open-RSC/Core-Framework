@@ -1,13 +1,13 @@
 package com.openrsc.server.event.rsc.impl;
 
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.player.Player;
+
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PrayerDrainEvent extends GameTickEvent {
 	

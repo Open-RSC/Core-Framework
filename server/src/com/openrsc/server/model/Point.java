@@ -1,11 +1,11 @@
 package com.openrsc.server.model;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.model.entity.WildernessLocation;
 import com.openrsc.server.model.entity.WildernessLocation.WildState;
 import com.openrsc.server.model.world.Area;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.ArrayList;
 
 public class Point {
 	

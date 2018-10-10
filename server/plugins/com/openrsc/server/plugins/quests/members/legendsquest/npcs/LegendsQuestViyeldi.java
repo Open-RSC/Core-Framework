@@ -1,21 +1,13 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
 

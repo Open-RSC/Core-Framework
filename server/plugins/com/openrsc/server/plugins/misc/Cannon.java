@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.FireCannonEvent;
@@ -15,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Cannon implements ObjectActionListener,
 		ObjectActionExecutiveListener, InvActionListener,

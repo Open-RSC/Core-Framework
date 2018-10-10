@@ -1,18 +1,17 @@
 package com.openrsc.server.io;
 
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.util.rsc.DataConversions;
 
 public class WorldLoader {
 	/**
