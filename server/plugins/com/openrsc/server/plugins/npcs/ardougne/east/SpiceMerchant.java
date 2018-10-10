@@ -1,11 +1,5 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
-import java.time.Instant;
-
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,6 +8,10 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import java.time.Instant;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 

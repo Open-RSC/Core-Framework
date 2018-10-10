@@ -16,10 +16,10 @@ email=`cat .email`
 #
 # Install everything with this command:
 #
-# curl -sSL https://raw.githubusercontent.com/Open-RSC/Game/master/scripts/clone.sh | bash
+# bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
 
 echo ""
-echo "${RED}Open RSC:${NC}
+echo "${RED}Open RSC${NC}
 An easy to use RSC private server framework.
 
 What would you like to do?
@@ -37,6 +37,7 @@ echo ""
 read action
 
 if [ "$action" == "1" ]; then
+    sudo apt install make -y
     make combined-install
 elif [ "$action" == "2" ]; then
     make get-updates

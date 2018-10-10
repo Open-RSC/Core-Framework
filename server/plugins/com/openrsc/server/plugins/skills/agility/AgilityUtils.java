@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import static com.openrsc.server.plugins.Functions.AGILITY;
-
 import com.openrsc.server.model.entity.player.Player;
+
+import static com.openrsc.server.plugins.Functions.AGILITY;
 
 public class AgilityUtils {
 	

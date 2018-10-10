@@ -1,25 +1,14 @@
 package com.openrsc.server.net.rsc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
-import com.openrsc.server.content.achievement.Achievement;
-import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -28,15 +17,20 @@ import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.util.IPTrackerPredicate;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -818,11 +812,22 @@ public class ActionSender {
 		ArrayList<Item> items = with.getTrade().getTradeOffer().getItems();
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
+
+		// Other player's items first
 		s.writeByte((byte) items.size());
 		for (Item item : items) {
 			s.writeShort(item.getID());
 			s.writeInt(item.getAmount());
 		}
+
+		// Our items second
+		items = player.getTrade().getTradeOffer().getItems();
+		s.writeByte((byte) items.size());
+		for (Item item : items) {
+			s.writeShort(item.getID());
+			s.writeInt(item.getAmount());
+		}
+
 		player.write(s.toPacket());
 	}
 

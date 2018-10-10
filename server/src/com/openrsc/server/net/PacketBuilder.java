@@ -1,7 +1,6 @@
 package com.openrsc.server.net;
 
 import com.openrsc.server.util.rsc.DataConversions;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

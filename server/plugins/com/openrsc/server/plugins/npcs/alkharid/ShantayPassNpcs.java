@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
@@ -29,6 +19,9 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ShantayPassNpcs implements ShopInterface,
 TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
@@ -126,6 +119,11 @@ ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener {
 			return;
 		}
 		if (n.getID() == SHANTAY) {
+			if (DataConversions.random(0, 25) == 0) { // 1 in 25 chance to drop kebab recipe
+				GroundItem groundItem = new GroundItem(1120, n.getX(), n.getY(), 1, p);
+				World.getWorld().registerItem(groundItem);
+			}
+
 			npcTalk(p,n,"Hello Effendi, I am Shantay.");
 			if(!hasItem(p, SHANTAY_DISCLAIMER)) {
 				npcTalk(p,n, "I see you're new!",

@@ -1,14 +1,6 @@
 package com.openrsc.server.content.achievement;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.openrsc.server.Constants;
-import com.openrsc.server.content.achievement.Achievement.AchievementType;
 import com.openrsc.server.content.achievement.Achievement.TaskReward;
 import com.openrsc.server.content.achievement.Achievement.TaskType;
 import com.openrsc.server.external.EntityHandler;
@@ -19,13 +11,13 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.util.rsc.Formulae;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class AchievementSystem {
 

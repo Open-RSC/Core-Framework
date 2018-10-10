@@ -1,3 +1,6 @@
+!Launcher/src/data/*
+
+
 #ant specific
 */dist/
 */build/
@@ -18,6 +21,7 @@
 *.DS_Store
 *.lock
 *.svn
+
 server/Open_RSC_Server.jar
 html/cache/*
 !html/cache/.htaccess
@@ -44,6 +48,8 @@ client/Open_RSC_Client\.jar
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+*/.idea/workspace.xml
+*/.idea/tasks.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
@@ -66,9 +72,6 @@ client/Open_RSC_Client\.jar
 # .idea/*.iml
 # .idea/modules
 
-# CMake
-cmake-build-*/
-
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
@@ -77,26 +80,6 @@ cmake-build-*/
 
 # IntelliJ
 out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Cursive Clojure plugin
-.idea/replstate.xml
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
-
-# Editor-based Rest Client
-.idea/httpRequests
-
-#data
 
 server/objects\.dat
 server/npcs\.dat
@@ -115,8 +98,9 @@ Android_Client/\.settings/
 server/avatars/*.png
 Launcher/Cache/
 
-client/Cache/uid\.dat
-client/Cache/client\.properties
+# We need these or the launcher will loop
+!client/Cache/uid\.dat
+!client/Cache/client\.properties
 
 # Global
 .*.swp
@@ -158,37 +142,31 @@ etc/ghost/content/logs/*.log.*
 etc/ghost/content/data/ghost\.db
 
 Tools/Sprite Editor/unpack/dat/
-
 Tools/Sprite Editor/unpack/img/
-
-server/core\.jar
-
-server/plugins\.jar
-
 Tools/Sprite Editor/spriteeditor\.jar
 
+server/core\.jar
+server/plugins\.jar
+
 Docker\.dmg
-
 \.domain
-
 \.pass
-
 \.port
-
 \.email
-
 \.subdomain
-
 \.installedalready
-
 \.methodinstall
+
 Android/Open RSC Android Client/build/intermediates
 Android/Open RSC Android Client/build/outputs/apk/debug/
-
 *.dex
-
 Android/app/build/outputs/apk/debug/
-
 Android/local\.properties
-
 Android/\.idea/caches/
+
+Tools/Map Generator/build/
+Tools/Map Generator/dist/
+Tools/Map Generator/map\.png
+Tools/Map Generator/spriteeditor\.jar
+
+client/Cache/client\.properties

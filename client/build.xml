@@ -17,16 +17,21 @@
         </javac>
         <jar basedir="${build}" destfile="${jar}">
           <manifest>
-            <attribute name="Main-Class" value="rsc.RSCFrame"/>
+            <attribute name="Main-Class" value="orsc.ORSCFrame"/>
           </manifest>
         </jar>
     </target>
 
     <target name="runclient">
-        <java classname="rsc.RSCFrame" fork="true">
+        <java classname="orsc.ORSCFrame" fork="true">
             <classpath>
               <pathelement path="${jar}/" />
             </classpath>
         </java>
+    </target>
+
+    <target name="compile-and-run">
+        <antcall target="compile"/>
+        <antcall target="runclient"/>
     </target>
 </project>

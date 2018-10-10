@@ -35,10 +35,10 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) {
+		/*if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) {
 			player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - " + World.membersWildMax);
 			return;
-		}
+		}*/
 		
 		if (item.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");

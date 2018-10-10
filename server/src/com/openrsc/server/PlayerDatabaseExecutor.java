@@ -1,20 +1,19 @@
 package com.openrsc.server;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.LoginTask;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.DatabasePlayerLoader;
 import com.openrsc.server.util.NamedThreadFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerDatabaseExecutor implements Runnable  {
 	

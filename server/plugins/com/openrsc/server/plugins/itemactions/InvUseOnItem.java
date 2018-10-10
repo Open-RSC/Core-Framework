@@ -159,7 +159,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 						if (player.getInventory().remove(new Item(item1.getID())) > -1 && player.getInventory().remove(new Item(item2.getID())) > -1) {
 							player.message("You dye the Cape");
 							player.getInventory().add(new Item(newCapes[i]));
-							
+							player.incExp(12, 10, true);
 							return;
 						}
 					}
@@ -171,7 +171,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 						if (player.getInventory().remove(new Item(item1.getID())) > -1 && player.getInventory().remove(new Item(item2.getID())) > -1) {
 							player.message("You dye the Cape");
 							player.getInventory().add(new Item(newCapes[i]));
-							
+							player.incExp(12, 10, true);
 							return;
 						}
 					}

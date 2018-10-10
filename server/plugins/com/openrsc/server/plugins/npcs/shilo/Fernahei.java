@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -10,6 +8,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Fernahei implements ShopInterface,
 TalkToNpcExecutiveListener, TalkToNpcListener {

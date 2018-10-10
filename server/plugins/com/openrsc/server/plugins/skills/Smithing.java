@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -15,8 +13,9 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Smithing implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
@@ -330,7 +329,7 @@ InvUseOnObjectExecutiveListener {
 				makeCount = makeCount != 3 ? Integer.parseInt(options[makeCount].replaceAll("Make ", "")) : maximumMakeCount;
 			}
 
-			player.setBatchEvent(new BatchEvent(player, 650, makeCount) {
+			player.setBatchEvent(new BatchEvent(player, 600, makeCount) {
 				@Override
 				public void action() {
 					if (player.getInventory().countId(item.getID()) < def.getRequiredBars()) {

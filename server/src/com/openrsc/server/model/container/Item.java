@@ -1,13 +1,9 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.external.*;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemCookingDef;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemSmeltingDef;
-import com.openrsc.server.external.ItemUnIdentHerbDef;
 
 public class Item implements Comparable<Item> {
 

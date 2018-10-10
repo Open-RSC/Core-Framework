@@ -1,10 +1,5 @@
 package com.openrsc.server.sql.query.logs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Iterator;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -12,6 +7,11 @@ import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.sql.query.Query;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 public final class GameReport extends Query {
 	private final String reported;

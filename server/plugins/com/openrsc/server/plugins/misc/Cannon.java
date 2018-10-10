@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.FireCannonEvent;
@@ -15,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Cannon implements ObjectActionListener,
 		ObjectActionExecutiveListener, InvActionListener,
@@ -215,27 +215,29 @@ public class Cannon implements ObjectActionListener,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 			Player player) {
-		if (obj.getID() == 946) {
-			return true;
-		}
-		if (obj.getID() == 947) {
-			return true;
-		}
-		if (obj.getID() == 948) {
-			return true;
-		}
 		if (obj.getID() == 943 && !command.equalsIgnoreCase("fire")) {
 			return true;
 		}
-		if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
+		else if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
 			return true;
 		}
+		else if (obj.getID() == 946) {
+			return true;
+		}
+		else if (obj.getID() == 947) {
+			return true;
+		}
+		else if (obj.getID() == 948) {
+			return true;
+		}
+		
 		return false;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (inArray(obj.getID(), 946, 947, 948, 943) && !obj.getOwner().equals(player.getUsername())) {
+		if (inArray(obj.getID(), 946, 947, 948, 943) 
+			&& !obj.getOwner().equals(player.getUsername())) {
 			if (!command.equalsIgnoreCase("fire")) {
 				player.message("you can't pick that up, the owners still around");
 			} else {
@@ -245,21 +247,18 @@ public class Cannon implements ObjectActionListener,
 			}
 			return;
 		}
-		if (obj.getID() == 946) {
+		else if (!command.equalsIgnoreCase("fire") && player.getFatigue() >= player.MAX_FATIGUE)
+			player.message("you arms are too tired to pick it up");
+		else if (obj.getID() == 946)
 			pickupBase(player, obj);
-		}
-		if (obj.getID() == 947) {
+		else if (obj.getID() == 947)
 			pickupStand(player, obj);
-		}
-		if (obj.getID() == 948) {
+		else if (obj.getID() == 948)
 			pickupBarrels(player, obj);
-		}
-		if (obj.getID() == 943 && !command.equalsIgnoreCase("fire")) {
+		else if (obj.getID() == 943 && !command.equalsIgnoreCase("fire"))
 			pickupCannon(player, obj);
-		}
-		if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
+		else if (obj.getID() == 943 && command.equalsIgnoreCase("fire"))
 			handleFire(player);
-		}
 	}
 
 	@Override

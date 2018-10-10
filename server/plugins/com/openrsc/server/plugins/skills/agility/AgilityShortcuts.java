@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,6 +8,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class AgilityShortcuts implements ObjectActionListener,
 ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -400,14 +400,14 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			sleep(2200);
 			movePlayer(p, 664, 755);
 			p.message("You skillfully swing across the stream");
-			p.incExp(AGILITY, 48, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		case GREW_ISLAND_SWING_BACK:
 			p.message("You grab the rope and try and swing across");
 			sleep(2200);
 			movePlayer(p, 666, 755);
 			p.message("You skillfully swing across the stream");
-			p.incExp(AGILITY, 48, true);
+			p.incExp(AGILITY, 50, true);
 			break;
 		case EAST_KARAMJA_LOG:
 			if (getCurrentLevel(p, AGILITY) < 32) {
@@ -490,8 +490,8 @@ ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 				p.setBusy(false);
 				return;
 			}
-			if (getCurrentLevel(p, AGILITY) < 30) {
-				p.message("You need an agility level of 30 to climb up the wall");
+			if (getCurrentLevel(p, AGILITY) < 18) {
+				p.message("You need an agility level of 18 to climb up the wall");
 				p.setBusy(false);
 				return;
 			}

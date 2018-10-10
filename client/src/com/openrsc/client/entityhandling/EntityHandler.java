@@ -1,24 +1,12 @@
 package com.openrsc.client.entityhandling;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import com.openrsc.client.entityhandling.defs.DoorDef;
-import com.openrsc.client.entityhandling.defs.ElevationDef;
-import com.openrsc.client.entityhandling.defs.GameObjectDef;
-import com.openrsc.client.entityhandling.defs.ItemDef;
-import com.openrsc.client.entityhandling.defs.NPCDef;
-import com.openrsc.client.entityhandling.defs.PrayerDef;
-import com.openrsc.client.entityhandling.defs.SpellDef;
-import com.openrsc.client.entityhandling.defs.TileDef;
+import com.openrsc.client.entityhandling.defs.*;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
+import orsc.Config;
 
-import rsc.Config;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class EntityHandler {
 
@@ -1910,16 +1898,12 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Auctioneer", "He gives access to auction house", "Auction", 0, 0, 3, 0, false, sprites, 16761440, 2, 8409120, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[] { 3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1 };
 		npcs.add(new NPCDef("Auction Clerk", "There to help me make my auctions", "Auction", "Teleport", 15, 16, 12, 18, false, sprites, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[] { 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Gaia","The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
 		sprites = new int[] { 0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Iron Man","An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 248, 249, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Ultimate Iron Man","An Ultimate Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Hardcore Iron Man","A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[] { 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Greatwood","A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
 		
 		/*try {
 			PrintWriter printWriter = new PrintWriter(new FileOutputStream("NpcType.txt"), true);
@@ -3285,50 +3269,6 @@ public class EntityHandler {
 		 * After id 1289 - Scythe from real RSC.
 		 * After id 2091 - Display Tea from regular RSC as the last real RSC item in note.
 		 */
-		items.add(new ItemDef("Pumpkin Head", "The original orange pumpkin head", "", 3, 442, false, true, 33, 0, false, true, -1, -1, 2097));
-		items.add(new ItemDef("Pumpkin Head", "A red dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 16711680, false, true, -1, -1, 2098));
-		items.add(new ItemDef("Pumpkin Head", "A yellow dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 16776960, false, true, -1, -1, 2099));
-		items.add(new ItemDef("Pumpkin Head", "A blue dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 255, false, true, -1, -1, 2100));
-		items.add(new ItemDef("Pumpkin Head", "A purple dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 11141375, false, true, -1, -1, 2101));
-		items.add(new ItemDef("Pumpkin Head", "A green dyed pumpkin head from Aggie the Draynor witch", "", 3, 443, false, true, 33, 65280, false, true, -1, -1, 2102));
-	
-		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "", 99000, 444, false, true, 2048, 0, false, true, -1, -1, 2103));
-		items.add(new ItemDef("Fishing hood", "Fishing skillcape hood", "", 99000, 444, false, true, 33, 0, false, true, -1, -1, 2104));
-		items.add(new ItemDef("Cooking cape", "The cape worn by the world's best chefs", "", 99000, 445, false, true, 2048, 0, false, true, -1, -1, 2105));
-		
-		items.add(new ItemDef("Experience Elixir", "A mysterious experience elixir produced by the Apothecary", "Drink", 2250, 446, true, false, 0, 0, false, true, -1, -1, 2106));
-		items.add(new ItemDef("Teleport Stone", "Teleports you to any town", "Teleport", 150, 447, true, false, 0, 0, false, true, -1, -1, 2107));
-
-		items.add(new ItemDef("Warrior cape","A red cape worn by warriors", "", 3075, 448, false, true, 2048, 0, false, false, 2109, -1, 2108));
-		items.add(new ItemDef("Warrior cape","Swap this note at any bank for the equivalent item.", "", 3075, 438, true, false, 0, 0, false, false, -1, 2108, 2109));
-		
-		items.add(new ItemDef("Spotted cape","A dark brown spotted cape", "", 2, 449, false, true, 2048, 7692086, false, true, -1, -1, 2110));
-		items.add(new ItemDef("Attack cape", "The cape worn by masters of attack", "", 99000, 445, false, true, 2048, 0, false, true, -1, -1, 2111));
-		items.add(new ItemDef("Blood egg", "Happy Easter!", "eat", 10, 450, false, false, 0, 0, false, false, -1, -1, 2112));
-		items.add(new ItemDef("Easter egg", "A cracked open easter egg - Happy Easter!", "eat", 10, 451, false, false, 0, 0, false, false, -1, -1, 2113));
-		items.add(new ItemDef("Easter basket", "A holiday gift from legacy", "", 2, 452, false, true, 8217, 0, false, false, 2115, -1, 2114));
-
-		items.add(new ItemDef("Easter basket","Swap this note at any bank for the equivalent item.", "", 2, 438, true, false, 0, 0, false, false, -1, 2114, 2115));
-		items.add(new ItemDef("Super Easter attack Potion","3 doses of easter attack potion", "Drink", 1, 453, false, false, 0, 3158254, true, false, -1, -1, 2116));
-		items.add(new ItemDef("Super Easter attack Potion","2 doses of easter attack potion", "Drink", 1, 453, false, false, 0, 3158254, true, false, -1, -1, 2117));
-		items.add(new ItemDef("Super Easter attack Potion","1 dose of easter attack potion", "Drink", 1, 453, false, false, 0, 3158254, true, false, -1, -1, 2118));
-	
-		items.add(new ItemDef("Super Easter strength Potion","3 doses of easter strength potion", "Drink", 1, 453, false, false, 0, 15658734, true, false, -1, -1, 2119));
-		items.add(new ItemDef("Super Easter strength Potion","2 doses of easter strength potion", "Drink", 1, 453, false, false, 0, 15658734, true, false, -1, -1, 2120));
-		items.add(new ItemDef("Super Easter strength Potion","1 dose of easter strength potion", "Drink", 1, 453, false, false, 0, 15658734, true, false, -1, -1, 2121));
-		
-		items.add(new ItemDef("Super Easter defense Potion","3 doses of easter defense potion", "Drink", 1, 453, false, false, 0, 15644208, true, false, -1, -1, 2122));
-		items.add(new ItemDef("Super Easter defense Potion","2 doses of easter defense potion", "Drink", 1, 453, false, false, 0, 15644208, true, false, -1, -1, 2123));
-		items.add(new ItemDef("Super Easter defense Potion","1 dose of easter defense potion", "Drink", 1, 453, false, false, 0, 15644208, true, false, -1, -1, 2124));
-		
-		items.add(new ItemDef("Easter Air", "The easter air-rune", "", 4, 454, true, false, 0, 15658734, false, false, -1, -1, 2125));
-		items.add(new ItemDef("Easter Earth", "The easter earth-rune", "", 4, 454, true, false, 0, 6697728, false, false, -1, -1, 2126));
-		items.add(new ItemDef("Easter Mind", "The easter mind-rune", "", 4, 454, true, false, 0, 16737894, false, false, -1, -1, 2127));
-		items.add(new ItemDef("Easter Fire", "The easter fire-rune", "", 4, 454, true, false, 0, 16619031, false, false, -1, -1, 2128));
-		items.add(new ItemDef("Easter Water", "The easter water-rune", "", 4, 454, true, false, 0, 3355647, false, false, -1, -1, 2129));
-		items.add(new ItemDef("Easter Chaos", "The easter chaos-rune", "", 4, 454, true, false, 0, 16764108, false, false, -1, -1, 2130));
-		items.add(new ItemDef("Easter Death", "The easter death-rune", "", 4, 454, true, false, 0, 723723, false, false, -1, -1, 2131));
-		items.add(new ItemDef("Easter Blood", "The easter blood-rune", "", 4, 454, true, false, 0, 6684672, false, false, -1, -1, 2132));
 	
 		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 2, 438, true, false, 0, 0, false, false, -1, 1156, 2133));
 		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 15, 438, true, false, 0, 0, false, false, -1, 1289, 2134));
@@ -3344,134 +3284,6 @@ public class EntityHandler {
 		items.add(new ItemDef("Hardcore ironman helm","For those who stand alone.", "", 154, 6, false, true, 33, 10027084, false, true, -1, -1, 2141));
 		items.add(new ItemDef("Hardcore ironman platebody","Take it off and what are you?", "", 560, 8, false, true, 322, 10027084, false, true, -1, -1, 2142));
 		items.add(new ItemDef("Hardcore ironman platelegs","Take it off and what are you?", "", 280, 9, false, true, 644, 10027084, false, true, -1, -1, 2143));
-	
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with orange feather", "", 44, 455, false, true, 33, 16737817, false, false, 2145, -1, 2144));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2144, 2145));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with orange feather", "", 154, 455, false, true, 33, 15654365, false, false, 2147, -1, 2146));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2146, 2147));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with orange feather", "", 550, 455, false, true, 33, 15658734, false, false, 2149, -1, 2148));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2148, 2149));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with orange feather", "", 1056, 455, false, true, 33, 4210752, false, false, 2151, -1, 2150));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2150, 2151));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with orange feather", "", 1430, 455, false, true, 33, 10072780, false, false, 2153, -1, 2152));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2152, 2153));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with orange feather", "", 3520, 455, false, true, 33, 11717785, false, false, 2155, -1, 2154));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2154, 2155));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with orange feather", "", 35200, 455, false, true, 33, 65535, false, false, 2157, -1, 2156));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2156, 2157));
-		
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with blue feather", "", 44, 456, false, true, 33, 16737817, false, false, 2159, -1, 2158));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2158, 2159));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with blue feather", "", 154, 456, false, true, 33, 15654365, false, false, 2161, -1, 2160));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2160, 2161));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with blue feather", "", 550, 456, false, true, 33, 15658734, false, false, 2163, -1, 2162));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2162, 2163));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with blue feather", "", 1056, 456, false, true, 33, 4210752, false, false, 2165, -1, 2164));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2164, 2165));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with blue feather", "", 1430, 456, false, true, 33, 10072780, false, false, 2167, -1, 2166));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2166, 2167));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with blue feather", "", 3520, 456, false, true, 33, 11717785, false, false, 2169, -1, 2168));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2168, 2169));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with blue feather", "", 35200, 456, false, true, 33, 65535, false, false, 2171, -1, 2170));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2170, 2171));
-		
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with purple feather", "", 44, 457, false, true, 33, 16737817, false, false, 2173, -1, 2172));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2172, 2173));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with purple feather", "", 154, 457, false, true, 33, 15654365, false, false, 2175, -1, 2174));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2174, 2175));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with purple feather", "", 550, 457, false, true, 33, 15658734, false, false, 2177, -1, 2176));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2176, 2177));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with purple feather", "", 1056, 457, false, true, 33, 4210752, false, false, 2179, -1, 2178));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2178, 2179));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with purple feather", "", 1430, 457, false, true, 33, 10072780, false, false, 2181, -1, 2180));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2180, 2181));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with purple feather", "", 3520, 457, false, true, 33, 11717785, false, false, 2183, -1, 2182));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2182, 2183));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with purple feather", "", 35200, 457, false, true, 33, 65535, false, false, 2185, -1, 2184));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2184, 2185));
-	
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with yellow feather", "", 44, 458, false, true, 33, 16737817, false, false, 2187, -1, 2186));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2186, 2187));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with yellow feather", "", 154, 458, false, true, 33, 15654365, false, false, 2189, -1, 2188));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2188, 2189));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with yellow feather", "", 550, 458, false, true, 33, 15658734, false, false, 2191, -1, 2190));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2190, 2191));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with yellow feather", "", 1056, 458, false, true, 33, 4210752, false, false, 2193, -1, 2192));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2192, 2193));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with yellow feather", "", 1430, 458, false, true, 33, 10072780, false, false, 2195, -1, 2194));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2194, 2195));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with yellow feather", "", 3520, 458, false, true, 33, 11717785, false, false, 2197, -1, 2196));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2196, 2197));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with yellow feather", "", 35200, 458, false, true, 33, 65535, false, false, 2199, -1, 2198));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2198, 2199));
-	
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with green feather", "", 44, 459, false, true, 33, 16737817, false, false, 2201, -1, 2200));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2200, 2201));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with green feather", "", 154, 459, false, true, 33, 15654365, false, false, 2203, -1, 2202));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2202, 2203));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with green feather", "", 550, 459, false, true, 33, 15658734, false, false, 2205, -1, 2204));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2204, 2205));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with green feather", "", 1056, 459, false, true, 33, 4210752, false, false, 2207, -1, 2206));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2206, 2207));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with green feather", "", 1430, 459, false, true, 33, 10072780, false, false, 2209, -1, 2208));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2208, 2209));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with green feather", "", 3520, 459, false, true, 33, 11717785, false, false, 2211, -1, 2210));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2210, 2211));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with green feather", "", 35200, 459, false, true, 33, 65535, false, false, 2213, -1, 2212));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2212, 2213));
-	
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with matched feather", "", 44, 460, false, true, 33, 16737817, false, false, 2215, -1, 2214));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2214, 2215));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with matched feather", "", 154, 460, false, true, 33, 15654365, false, false, 2217, -1, 2216));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2216, 2217));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with matched feather", "", 550, 460, false, true, 33, 15658734, false, false, 2219, -1, 2218));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2218, 2219));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with matched feather", "", 1056, 460, false, true, 33, 4210752, false, false, 2221, -1, 2220));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2220, 2221));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with matched feather", "", 1430, 460, false, true, 33, 10072780, false, false, 2223, -1, 2222));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2222, 2223));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with matched feather", "", 3520, 460, false, true, 33, 11717785, false, false, 2225, -1, 2224));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2224, 2225));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with matched feather", "", 35200, 460, false, true, 33, 65535, false, false, 2227, -1, 2226));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2226, 2227));
-	
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with black feather", "", 44, 461, false, true, 33, 16737817, false, false, 2229, -1, 2228));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2228, 2229));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with black feather", "", 154, 461, false, true, 33, 15654365, false, false, 2231, -1, 2230));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2230, 2231));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with black feather", "", 550, 461, false, true, 33, 15658734, false, false, 2233, -1, 2232));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2232, 2233));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with black feather", "", 1056, 461, false, true, 33, 4210752, false, false, 2235, -1, 2234));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2234, 2235));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with black feather", "", 1430, 461, false, true, 33, 10072780, false, false, 2237, -1, 2236));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2236, 2237));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with black feather", "", 3520, 461, false, true, 33, 11717785, false, false, 2239, -1, 2238));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2238, 2239));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with black feather", "", 35200, 461, false, true, 33, 65535, false, false, 2241, -1, 2240));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2240, 2241));
-	
-		items.add(new ItemDef("Large Bronze Helmet","A full face helmet with white feather", "", 44, 462, false, true, 33, 16737817, false, false, 2243, -1, 2242));
-		items.add(new ItemDef("Large Bronze Helmet","Swap this note at any bank for the equivalent item.", "", 44, 438, true, false, 0, 0, false, false, -1, 2242, 2243));
-		items.add(new ItemDef("Large Iron Helmet","A full face helmet with white feather", "", 154, 462, false, true, 33, 15654365, false, false, 2245, -1, 2244));
-		items.add(new ItemDef("Large Iron Helmet","Swap this note at any bank for the equivalent item.", "", 154, 438, true, false, 0, 0, false, false, -1, 2244, 2245));
-		items.add(new ItemDef("Large Steel Helmet","A full face helmet with white feather", "", 550, 462, false, true, 33, 15658734, false, false, 2247, -1, 2246));
-		items.add(new ItemDef("Large Steel Helmet","Swap this note at any bank for the equivalent item.", "", 550, 438, true, false, 0, 0, false, false, -1, 2246, 2247));
-		items.add(new ItemDef("Large Black Helmet","A full face helmet with white feather", "", 1056, 462, false, true, 33, 4210752, false, false, 2249, -1, 2248));
-		items.add(new ItemDef("Large Black Helmet","Swap this note at any bank for the equivalent item.", "", 1056, 438, true, false, 0, 0, false, false, -1, 2248, 2249));
-		items.add(new ItemDef("Large Mithril Helmet","A full face helmet with white feather", "", 1430, 462, false, true, 33, 10072780, false, false, 2251, -1, 2250));
-		items.add(new ItemDef("Large Mithril Helmet","Swap this note at any bank for the equivalent item.", "", 1430, 438, true, false, 0, 0, false, false, -1, 2250, 2251));
-		items.add(new ItemDef("Large Adamantite Helmet","A full face helmet with white feather", "", 3520, 462, false, true, 33, 11717785, false, false, 2253, -1, 2252));
-		items.add(new ItemDef("Large Adamantite Helmet","Swap this note at any bank for the equivalent item.", "", 3520, 438, true, false, 0, 0, false, false, -1, 2252, 2253));
-		items.add(new ItemDef("Large Rune Helmet","A full face helmet with white feather", "", 35200, 462, false, true, 33, 65535, false, false, 2255, -1, 2254));
-		items.add(new ItemDef("Large Rune Helmet","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2254, 2255));
-		
-		items.add(new ItemDef("Soul of Greatwood", "The soul covered in a root from greatwood", "Bury", 1, 463, false, false, 0, 0, false, false, -1, -1, 2256));
-		items.add(new ItemDef("Soul of Greatwood","Swap this note at any bank for the equivalent item.", "", 35200, 438, true, false, 0, 0, false, false, -1, 2256, 2257));
-		
-		//items.add(new ItemDef("Smithing cape", "The cape worn by master smiths.", "", 99000, 464, false, true, 2048, 0, false, true, -1, -1, 2258));
-		//items.add(new ItemDef("Strength cape", "The cape only worn by the strongest people.", "", 99000, 465, false, true, 2048, 0, false, true, -1, -1, 2259));
-		//items.add(new ItemDef("Hitpoints cape", "The cape worn by the healthiest adventurers.", "", 99000, 467, false, true, 2048, 0, false, true, -1, -1, 2260));
-		
 	}
 	
 	private static void loadNoteDefinitions() {
@@ -4514,20 +4326,6 @@ public class EntityHandler {
 		 * Add custom animation below.
 		 */
 		animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 231 appearanceID.
-		animations.add(new AnimationDef("pumpkinhead1", 0, 0, true, false, 0)); // orange original
-		animations.add(new AnimationDef("pumpkinhead2", 16711680, 0, true, false, 0)); // red
-		animations.add(new AnimationDef("pumpkinhead2", 16776960, 0, true, false, 0)); // yellow
-		animations.add(new AnimationDef("pumpkinhead2", 255, 0, true, false, 0)); // blue
-		animations.add(new AnimationDef("pumpkinhead2", 11141375, 0, true, false, 0)); // purple
-		animations.add(new AnimationDef("pumpkinhead2", 65280, 0, true, false, 0)); // green
-		animations.add(new AnimationDef("skillcape1", 0, 0, true, false, 0)); // fishing.
-		animations.add(new AnimationDef("skillcape2", 0, 0, true, false, 0)); // cooking.
-		animations.add(new AnimationDef("hood1", 0, 0, true, false, 0)); // fishing hood
-		animations.add(new AnimationDef("warriorcape", 0, 0, true, false, 0)); // Warrior cape
-		animations.add(new AnimationDef("spottedcape", 7692086, 0, true, false, 0)); // Spotted cape
-		animations.add(new AnimationDef("gaia", 0, 0, true, false, 0)); // New NPC Gaia
-		animations.add(new AnimationDef("skillcape3", 0, 0, true, false, 0)); // attack.
-		animations.add(new AnimationDef("easterbasket", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
 		animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0));
 		animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0));
@@ -4537,74 +4335,6 @@ public class EntityHandler {
 		animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0));
 		animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0));
 		animations.add(new AnimationDef("platemaillegs", 10027084, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmorange", 65535, 0, true, false, 0));
-
-		animations.add(new AnimationDef("fullhelmblue", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblue", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblue", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblue", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblue", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblue", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblue", 65535, 0, true, false, 0));
-		
-		animations.add(new AnimationDef("fullhelmpurple", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmpurple", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmpurple", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmpurple", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmpurple", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmpurple", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmpurple", 65535, 0, true, false, 0));
-		
-		animations.add(new AnimationDef("fullhelmyellow", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmyellow", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmyellow", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmyellow", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmyellow", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmyellow", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmyellow", 65535, 0, true, false, 0));
-		
-		animations.add(new AnimationDef("fullhelmgreen", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmgreen", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmgreen", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmgreen", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmgreen", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmgreen", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmgreen", 65535, 0, true, false, 0));
-		
-		animations.add(new AnimationDef("fullhelmatched", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmatched", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmatched", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmatched", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmatched", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmatched", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmatched", 65535, 0, true, false, 0));
-		
-		animations.add(new AnimationDef("fullhelmblack", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblack", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblack", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblack", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblack", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblack", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmblack", 65535, 0, true, false, 0));
-		
-		animations.add(new AnimationDef("fullhelmwhite", 16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmwhite", 15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmwhite", 15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmwhite", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmwhite", 10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmwhite", 11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelmwhite", 65535, 0, true, false, 0));
-		//8338176
-		animations.add(new AnimationDef("greatwood", 5453066, 0, true, false, 0)); // New NPC Greatwood tree boss
-		//animations.add(new AnimationDef("skillcape4", 0, 0, true, false, 0)); // smithing.
-		//animations.add(new AnimationDef("skillcape5", 0, 0, true, false, 0)); // strength.
-		//animations.add(new AnimationDef("skillcape6", 0, 0, true, false, 0)); // hits.
 	}
 	
 	@SuppressWarnings("unchecked")

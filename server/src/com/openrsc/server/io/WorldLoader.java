@@ -1,18 +1,17 @@
 package com.openrsc.server.io;
 
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.util.rsc.DataConversions;
 
 public class WorldLoader {
 	/**
@@ -59,14 +58,14 @@ public class WorldLoader {
 					sectorTile.groundOverlay = (byte) 2;
 				}
 				
-				int groundOverlay = sectorTile.groundOverlay & 0xFF;
+				byte groundOverlay = sectorTile.groundOverlay;
 				if (groundOverlay > 0
 						&& EntityHandler.getTileDef(groundOverlay - 1)
 								.getObjectType() != 0) {
 					tile.traversalMask |= 0x40; // 64
 				}
 				
-				int verticalWall = sectorTile.verticalWall & 0xFF;
+				byte verticalWall = sectorTile.verticalWall;
 				if (verticalWall > 0
 						&& EntityHandler.getDoorDef(verticalWall - 1)
 								.getUnknown() == 0
@@ -81,7 +80,7 @@ public class WorldLoader {
 					}
 				}
 
-				int horizontalWall = sectorTile.horizontalWall & 0xFF;
+				byte horizontalWall = sectorTile.horizontalWall;
 				if (horizontalWall > 0
 						&& EntityHandler.getDoorDef(horizontalWall - 1)
 								.getUnknown() == 0

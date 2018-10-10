@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-
-import java.util.Arrays;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCookingDef;
@@ -20,6 +10,10 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.Arrays;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 	@Override
@@ -38,6 +32,8 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 	private void handleCooking(final Item item, Player p,
 			final GameObject object) {
+
+		// Tutorial Meat
 		if(p.getLocation().onTutorialIsland() && item.getID() == 503 && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") >= 0  &&  p.getCache().getInt("tutorial") <= 31) {
 			p.setBusy(true);
 			showBubble(p, item);
@@ -61,6 +57,20 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			p.setBusy(false);
 			return;
 		}
+
+		// Raw Oomlie Meat (Always burn)
+		else if (item.getID() == 1268) {
+			if (object.getID() == 97)
+				message(p, 1200, "You cook the meat on the fire...");
+			else
+				message(p, 1200, "You cook the meat on the stove...");
+			removeItem(p, 1268, 1); 
+			addItem(p, 134, 1);
+			message(p, 1200, "This meat is too delicate to cook like this.");
+			message(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
+		}
+
+		// Poison (Hazeel Cult)
 		else if(item.getID() == 177 && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if(p.getQuestStage(Constants.Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
 				message(p, "you poor the poison into the hot pot",
@@ -71,7 +81,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.message("nothing interesting happens");
 			}
 		}
-		else if (item.getID() == 784) {
+		else if (item.getID() == 784) { // Uncooked swamp paste
 			cookMethod(p, 784, 785, "you warm the paste over the fire", "it thickens into a sticky goo");
 		}
 		else if (item.getID() == 622) { // Seaweed (Glass)
@@ -90,14 +100,37 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			if (!p.withinRange(object, 2)) { 
 				return;
 			}
-			p.message(cookingOnMessage(p, item, object));
+			// Some need a RANGE not a FIRE
+			boolean needRange = false;
+			switch (object.getID()) {
+				case 137: // Bread
+				case 254: // Apple Pie
+				case 255: // Meat Pie
+				case 256: // Redberry Pie
+				case 324: // Pizza
+				case 339: // Cake
+				case 1104: // Pitta Bread
+					needRange = true;
+					break;
+				default:
+					break;
+			}
+			if (object.getID() == 97 && needRange) {
+				p.message("You need a proper oven to cook this");
+				return;
+			}
+
+			if (item.getID() == 1280)
+				p.message("You prepare to cook the Oomlie meat parcel.");
+			else
+				p.message(cookingOnMessage(p, item, object));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, 1500, Formulae.getRepeatTimes(p, 7)) {
+			p.setBatchEvent(new BatchEvent(p, 1200, Formulae.getRepeatTimes(p, 7)) {
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to cook this fish");
+						owner.message("You are too tired to cook this food");
 						interrupt();
 						return;
 					}
@@ -124,7 +157,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		int[] ids = new int[]{ 97, 11, 119, 435, 491};
 		Arrays.sort(ids);
-		if ((item.getID() == 622 || item.getID() == 784) && Arrays.binarySearch(ids, obj.getID()) >= 0) {
+		if ((item.getID() == 1268 || item.getID() == 622 || item.getID() == 784) && Arrays.binarySearch(ids, obj.getID()) >= 0) {
 			return true;
 		}
 		if(item.getID() == 177 && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {

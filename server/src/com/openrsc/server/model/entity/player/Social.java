@@ -1,13 +1,13 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.Server;
+import com.openrsc.server.net.rsc.ActionSender;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-import com.openrsc.server.Server;
-import com.openrsc.server.net.rsc.ActionSender;
 
 public class Social {
 
