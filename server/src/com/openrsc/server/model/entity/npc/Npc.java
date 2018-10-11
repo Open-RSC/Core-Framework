@@ -5,12 +5,10 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemDropDef;
-import com.openrsc.server.external.NPCDef;
-import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -30,6 +28,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.openrsc.server.Constants.GameServer.*;
 
 public class Npc extends Mob {
 	
@@ -366,36 +366,35 @@ public class Npc extends Mob {
 			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
 			try {
 				PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
-						"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
+						"SELECT * FROM `" + MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
 				statementSelect.setInt(1, id);
 				statementSelect.setInt(2, owner.getDatabaseID());
 				ResultSet selectResult = statementSelect.executeQuery();
 				int kills = -1;
 				while (selectResult.next()) {
-				    kills = selectResult.getInt("killCount");
+					kills = selectResult.getInt("killCount");
 				}
 				if (kills == -1) {
 					PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
-							"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)");
+							"INSERT INTO `" + MYSQL_TABLE_PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)");
 					statementInsert.setInt(1, id);
 					statementInsert.setInt(2, owner.getDatabaseID());
 					int insertResult = statementInsert.executeUpdate();
 					kills = 1;
-				} 
-				else {
-				    kills++;
+				} else {
+					kills++;
 				}
 
 				PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
-						"UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?");
+						"UPDATE `" + MYSQL_TABLE_PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?");
 				statementUpdate.setInt(1, kills);
 				statementUpdate.setInt(2, id);
 				statementUpdate.setInt(3, owner.getDatabaseID());
 				int updateResult = statementUpdate.executeUpdate();
 
-				if (Constants.GameServer.NPC_KILL_MESSAGES == true) {
+				if (NPC_KILL_MESSAGES) {
 					PreparedStatement statementSelect2 = DatabaseConnection.getDatabase().prepareStatement(
-							"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
+							"SELECT * FROM `" + MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
 					statementSelect2.setInt(1, id);
 					statementSelect2.setInt(2, owner.getDatabaseID());
 					ResultSet selectResult2 = statementSelect2.executeQuery();
@@ -403,12 +402,12 @@ public class Npc extends Mob {
 					while (selectResult2.next()) {
 						kills2 = selectResult2.getInt("killCount");
 					}
-					owner.message("Your " + EntityHandler.getNpcDef(id).getName() +" kill count is: @red@" + kills2 + "@whi@.");
+					owner.message("Your " + EntityHandler.getNpcDef(id).getName() + " kill count is: @red@" + kills2 + "@whi@.");
 				}
 			} catch (SQLException e) {
 				LOGGER.catching(e);
 			}
-			
+
 			owner = handleLootAndXpDistribution((Player) mob);
 
 			ItemDropDef[] drops = def.getDrops();
@@ -420,7 +419,7 @@ public class Npc extends Mob {
 
 			int hit = DataConversions.random(0, total);
 			total = 0;
-			
+
 			for (ItemDropDef drop : drops) {
 				if (drop == null) {
 					continue;
@@ -441,13 +440,13 @@ public class Npc extends Mob {
 
 						if (!EntityHandler.getItemDef(drop.getID()).isStackable()) {
 
-							int dropID  = drop.getID();
+							int dropID = drop.getID();
 							int dropAmt = drop.getAmount();
 
 							// Gold Drops
 							if (drop.getID() == 10) {
 								dropAmt = Formulae.calculateGoldDrop(
-									GoldDrops.drops.getOrDefault(this.getID(), new int[] {1})
+										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 								);
 							}
 
@@ -460,9 +459,7 @@ public class Npc extends Mob {
 							else if (drop.getID() == 160) {
 								dropID = Formulae.calculateRareDrop();
 								dropAmt = 1;
-							}
-
-							else {
+							} else {
 
 							}
 
@@ -481,10 +478,70 @@ public class Npc extends Mob {
 				}
 				total += drop.getWeight();
 			}
-		}
-		remove();
-	}
+		int newTotal = 0;
+			for (ItemDropDef drop : drops) {
+				Item temp = new Item();
+				temp.setID(drop.getID());
+				//We don't want currentRatio to be 0 since some drop weights might be 0.
+				double currentRatio = -1;
+				if (drop == null) {
+					continue;
+				}
+				currentRatio = (double) drop.getWeight() / (double) total;
+				if (currentRatio > VALUABLE_DROP_RATIO) {
+					if (hit >= newTotal && hit < (newTotal + drop.getWeight())) {
+						if (drop.getID() != -1) {
+							if (EntityHandler.getItemDef(drop.getID()).isMembersOnly()
+									&& !Constants.GameServer.MEMBER_WORLD) {
+								continue;
+							}
+							try {
+								PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
+										"SELECT * FROM `" + MYSQL_TABLE_PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?");
+								statementSelect.setInt(1, drop.getID());
+								statementSelect.setInt(2, owner.getDatabaseID());
+								ResultSet selectResult = statementSelect.executeQuery();
+								int dropAmount = -1;
+								while (selectResult.next()) {
+									dropAmount = selectResult.getInt("dropAmount");
+								}
+								if (dropAmount == -1) {
+									PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
+											"INSERT INTO `" + MYSQL_TABLE_PREFIX + "droplogs`(itemID, playerID) VALUES (?, ?)");
+									statementInsert.setInt(1, drop.getID());
+									statementInsert.setInt(2, owner.getDatabaseID());
+									int insertResult = statementInsert.executeUpdate();
+									dropAmount = drop.getAmount();
+								} else {
+									dropAmount += drop.getAmount();
+								}
 
+								PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
+										"UPDATE `" + MYSQL_TABLE_PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?");
+								statementUpdate.setInt(1, dropAmount);
+								statementUpdate.setInt(2, drop.getID());
+								statementUpdate.setInt(3, owner.getDatabaseID());
+								int updateResult = statementUpdate.executeUpdate();
+							} catch (SQLException e) {
+								LOGGER.catching(e);
+							}
+							if (VALUABLE_DROP_MESSAGES) {
+								if (drop.getAmount() > 1) {
+									owner.message("@red@Valuable drop: " + drop.getAmount() + " x " + temp.getDef().getName() + " (" +
+											(temp.getDef().getDefaultPrice() * drop.getAmount()) + " coins)");
+								} else {
+									owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
+											(temp.getDef().getDefaultPrice()) + " coins)");
+								}
+							}
+						}
+					}
+				}
+				newTotal += drop.getWeight();
+			}
+			remove();
+		}
+	}
 	public void remove() {
 		if (getCombatEvent() != null) {
 			getCombatEvent().resetCombat();

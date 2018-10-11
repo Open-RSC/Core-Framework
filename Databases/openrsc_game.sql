@@ -27,6 +27,22 @@ USE `openrsc_game`;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `openrsc_droplogs`
+--
+
+DROP TABLE IF EXISTS `openrsc_droplogs`;
+CREATE TABLE IF NOT EXISTS `openrsc_droplogs` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `itemID` int(10) DEFAULT NULL,
+  `playerID` int(10) DEFAULT NULL,
+  `dropAmount` int(10) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `openrsc_npckills`
 --
 
