@@ -160,6 +160,8 @@ public final class Constants {
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
 		public static boolean NPC_KILL_MESSAGES = false;
+		public static boolean VALUABLE_DROP_MESSAGES = false;
+		public static double VALUABLE_DROP_RATIO = 0;
 
 		/**
 		 * 
@@ -230,6 +232,8 @@ public final class Constants {
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
+			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
+			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			START_TIME = System.currentTimeMillis();
 
 			// Make sure config doesn't exceed max values
