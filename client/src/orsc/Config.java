@@ -13,12 +13,18 @@ public class Config {
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
+	public static final int CACHE_VERSION = 2;
 	public static final boolean MEMBERS_FEATURES = true;
+	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
+	public static final boolean CACHE_APPEND_VERSION = false;
+	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
+
 
 
 	public static boolean F_ANDROID_BUILD = false;
 	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-        public static String F_CACHE_DIR = "Cache";
+    public static String F_CACHE_DIR = "";
+
 
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
@@ -94,6 +100,22 @@ public class Config {
 
 	public static void initConfig() {
 		try {
+			if (CUSTOM_CACHE_DIR_ENABLED) {
+				if (CACHE_APPEND_VERSION) {
+					F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
+				}
+				else {
+					F_CACHE_DIR = CUSTOM_CACHE_DIR;
+				}
+			}
+			else {
+				if (CACHE_APPEND_VERSION) {
+					F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
+				}
+				else {
+					F_CACHE_DIR = "Cache";
+				}
+			}
 			File file = new File(F_CACHE_DIR + File.separator + "client.properties");
 			if (!file.exists()) {
 				file.createNewFile();
