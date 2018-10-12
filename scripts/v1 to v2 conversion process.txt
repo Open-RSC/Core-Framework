@@ -140,11 +140,16 @@ Nothing needs to be done.
 
 
 RemoveKlanks:
-START TRANSACTION;
-  DELETE FROM openrsc_invitems
-  WHERE id = 1006;
+1. Use the game DB
+2. Start a transaction
+3. Delete records from bank table where players haven't finished Underground Pass.
+4. Delete records from invitems table where players haven't finished Underground Pass.
+5. Commit changes.
 
-  DELETE FROM openrsc_bank
-  WHERE id = 1006;
-COMMIT;
+DragonSwordRemoval:
+1. Use the game DB
+2. Remove all swords and noted swords from banks and inventories.
 
+PowerAmuletRemoval:
+1. Use the game DB
+2. Remove all amulets and noted amulets from banks and inventories.
