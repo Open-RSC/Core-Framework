@@ -54,7 +54,7 @@ compile:
 	sudo ant -f ../server/build.xml compile_core
 	sudo ant -f ../server/build.xml compile_plugins
 	sudo ant -f ../client/build.xml compile
-	sudo ant -f ../Launcher/build.xml jar
+	sudo ant -f ../Launcher/build.xml compile
 
 import-game:
 	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql
