@@ -124,3 +124,25 @@ Tools/Map Generator/map\.png
 Tools/Map Generator/spriteeditor\.jar
 
 client/Cache/client\.properties
+
+Server/gradle/
+
+server/gradlew\.bat
+
+server/gradlew
+
+Launcher/gradlew
+
+Launcher/gradlew\.bat
+
+Launcher/gradle/
+
+Client/gradle/
+
+client/gradlew\.bat
+
+client/nbbuild\.xml
+
+Launcher/nbbuild\.xml
+
+server/nbbuild\.xml
