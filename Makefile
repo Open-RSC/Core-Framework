@@ -66,7 +66,7 @@ compile:
 	sudo ant -f server/build.xml compile_core
 	sudo ant -f server/build.xml compile_plugins
 	sudo ant -f client/build.xml compile
-	sudo ant -f Launcher/build.xml jar
+	sudo ant -f Launcher/build.xml compile
 
 compile-windows-simple:
 	ant -f server/build.xml compile_core
@@ -77,7 +77,7 @@ compile-windows-developer:
 	ant -f server/build.xml compile_core
 	ant -f server/build.xml compile_plugins
 	ant -f client/build.xml compile
-	ant -f Launcher/build.xml jar
+	ant -f Launcher/build.xml compile
 
 import-game:
 	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_game.sql
