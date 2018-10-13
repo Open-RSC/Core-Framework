@@ -1,5 +1,7 @@
 package com.openrsc.server.util.rsc;
 
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
@@ -925,10 +927,10 @@ public final class Formulae {
 			regular = 9;
 		else if (maxStat <= 89)
 			regular = 10;
-		else if (maxStat <= 99)
+		else if (maxStat <= PLAYER_LEVEL_LIMIT)
 			regular = 11;*/
 
-		int regular = (maxStat / 10) + 1 + (maxStat == 99 ? 1 : 0);
+		int regular = (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
 
 		return regular;
 	}

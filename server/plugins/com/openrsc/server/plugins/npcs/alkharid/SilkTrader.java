@@ -18,14 +18,35 @@ public class SilkTrader implements TalkToNpcListener,
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Do you want to buy any fine silks?");
-		int option = showMenu(p, n, "How much are they?",
+		int option1 = showMenu(p, n, "How much are they?",
 				"No. Silk doesn't suit me");
-		if (option == 0) {
+		if (option1 == 0) {
 			npcTalk(p, n, "3 Coins");
-			int sub_opt = showMenu(p, n, "No. That's too much for me",
+
+			int option2 = showMenu(p, n, "No. That's too much for me",
 					"OK, that sounds good");
-			if (sub_opt == 0) {
-			} else if (sub_opt == 1) {
+			if (option2 == 0) {
+				npcTalk(p, n, "Two coins and that's as low as I'll go",
+						"I'm not selling it for any less",
+						"You'll probably go and sell it in Varrock for a profit anyway"
+				);
+
+				int option3 = showMenu(p, n, "Two coins sounds good",
+						"No, really. I don't want it"
+				);
+				if (option3 == 0) {
+					p.message("You buy some silk for 2 coins");
+					if (p.getInventory().remove(10, 2) > -1) {
+						addItem(p, 200, 1);
+					} else {
+						playerTalk(p, n, "Oh dear. I don't have enough money");
+					}
+				}
+				else if (option3 == 1) {
+					npcTalk(p, n, "OK, but that's the best price you're going to get");
+				}
+				
+			} else if (option2 == 1) {
 				if (p.getInventory().remove(10, 3) > -1) {
 					addItem(p, 200, 1);
 					p.message("You buy some silk for 3 coins");
