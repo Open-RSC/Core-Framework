@@ -1345,10 +1345,14 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final String... options) {
-		return showMenu(player, null, options);
+		return showMenu(player, null, true, options);
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final String... options) {
+		return showMenu(player, npc, true, options);
+	}
+
+	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
 		final long start = System.currentTimeMillis();
 		if (npc != null) {
 			if(npc.isRemoved()) {
@@ -1373,7 +1377,8 @@ public class Functions {
 			if (player.getOption() != -1) {
 				if (npc != null && options[player.getOption()] != null) {
 					npc.setBusy(false);
-					playerTalk(player, npc, options[player.getOption()]);
+					if (sendToClient)
+						playerTalk(player, npc, options[player.getOption()]);
 				}
 				return player.getOption();
 			}
