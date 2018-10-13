@@ -640,7 +640,7 @@ public final class Admins implements CommandListener {
 			int stat = Formulae.getStatIndex(args[0]);
 			int lvl = Integer.parseInt(args[1]);
 
-			if (lvl < 0 || lvl > 99) {
+			if (lvl < 0 || lvl > Constants.GameServer.PLAYER_LEVEL_LIMIT) {
 				player.message("Invalid " + Formulae.statArray[stat] + " level.");
 				return;
 			}

@@ -68,6 +68,10 @@ public final class Constants {
 		 */
 		public static String HMAC_PRIVATE_KEY = "";
 		/**
+		 * Player Skill Level Limit
+		 */
+		public static int PLAYER_LEVEL_LIMIT = 99;
+		/**
 		 * the combat experience rate
 		 */
 		public static double COMBAT_EXP_RATE = 1.0;
@@ -192,6 +196,7 @@ public final class Constants {
 			// Game confs
 			WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
 			MEMBER_WORLD = Boolean.parseBoolean(props.getProperty("member_world"));
+			PLAYER_LEVEL_LIMIT = Integer.parseInt(props.getProperty("player_level_limit"));
 			COMBAT_EXP_RATE = Double.parseDouble(props.getProperty("combat_exp_rate"));
 			SKILLING_EXP_RATE = Double.parseDouble(props.getProperty("skilling_exp_rate"));
 			WILDERNESS_BOOST = Double.parseDouble(props.getProperty("wilderness_boost"));
