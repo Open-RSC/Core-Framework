@@ -1,5 +1,7 @@
 package com.openrsc.server.model;
 
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -9,7 +11,8 @@ import com.openrsc.server.util.rsc.Formulae;
 
 public class Skills {
 
-	private static final int LEVEL_LIMIT = 1000;
+	// Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
+	private static final int GLOBAL_LEVEL_LIMIT = 1000;
 	public static int[] experienceArray;
 
 	public static final int SKILL_COUNT = 18;
@@ -168,7 +171,7 @@ public class Skills {
 				if (newLevel >= 90 && newLevel <= 98) {
 					GameLogging.addQuery(new LiveFeedLog(player,
 							"has achieved level-" + newLevel + " in " + SKILL_NAME[skill] + "!"));
-				} else if (newLevel == 99) {
+				} else if (newLevel == PLAYER_LEVEL_LIMIT) {
 					GameLogging.addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
 							+ " in " + SKILL_NAME[skill] + ", congratulations!"));
 				}
@@ -204,7 +207,7 @@ public class Skills {
 	}
 
 	public int getMaxStat(int skill) {
-		return getLevelForExperience(getExperience(skill), mob instanceof Player ? 99 : LEVEL_LIMIT);
+		return getLevelForExperience(getExperience(skill), mob instanceof Player ? PLAYER_LEVEL_LIMIT : GLOBAL_LEVEL_LIMIT);
 	}
 
 	public void normalize() {
@@ -239,8 +242,8 @@ public class Skills {
 
 	static {
 		int i = 0;
-		experienceArray = new int[LEVEL_LIMIT + 5];
-		for (int j = 0; j < LEVEL_LIMIT + 5; j++) {
+		experienceArray = new int[GLOBAL_LEVEL_LIMIT + 5];
+		for (int j = 0; j < GLOBAL_LEVEL_LIMIT + 5; j++) {
 			int k = j + 1;
 			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
 			i += i1;
