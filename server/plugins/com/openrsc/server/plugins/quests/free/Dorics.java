@@ -41,22 +41,23 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 			if (choice == 0) {
 				npcTalk(p, n, "My anvils get enough work with my own use",
 						"I make amulets, it takes a lot of work.",
-						"If you could get me some more materials i could let you use them");
-				int choice2 = showMenu(p, n, new String[] {
+						"If you could get me some more materials I could let you use them");
+				int choice2 = showMenu(p, n, false, new String[] { // Do not send to client
 						"Yes I will get you materials",
 						"No, hitting rocks is for the boring people, sorry." });
 				if (choice2 == 0) {
+					playerTalk(p, n, "Yes I will get you materials");
 					npcTalk(p,
 							n,
-							"Well, clay is what i use more than anything, i make casts",
+							"Well, clay is what I use more than anything. I make casts",
 							"Could you get me 6 clay, and 4 copper ore, and 2 iron ore please?",
 							"I could pay a little, and let you use my anvils");
 					playerTalk(p, n,
-							"Certainly, i will get them for you. Goodbye");
+							"Certainly, I will get them for you. goodbye");
 					p.updateQuestStage(getQuestId(), 1);
 				} else if (choice2 == 1) {
-					npcTalk(p, n,
-							"That is your choice, nice to meet you anyway");
+					playerTalk(p, n, "No, hitting rocks is for the boring people, sorry");
+					npcTalk(p, n, "That is your choice, nice to meet you anyway");
 				}
 
 			} else if (choice == 1) {
@@ -69,7 +70,7 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 						"Please enjoy your travels. And do visit my friends in their mine");
 			} else if (choice == 3) {
 				npcTalk(p, n,
-						"I make amulets. I am the best maker of them in runescape");
+						"I make amulets. I am the best maker of them in Runescape");
 				playerTalk(p, n, "Do you have any to sell?");
 				npcTalk(p, n, "Not at the moment, sorry. Try again later");
 			}
@@ -99,9 +100,9 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 				p.updateQuestStage(getQuestId(), -1);
 
 			} else {
-				playerTalk(p, n, "Sorry, i don't have them all yet");
+				playerTalk(p, n, "Sorry, I don't have them all yet");
 				npcTalk(p, n, "Not to worry, stick at it",
-						"Remember i need 6 clay, 4 copper ore and 2 iron ore");
+						"Remember I need 6 Clay, 4 Copper ore and 2 Iron ore");
 			}
 			break;
 		case -1:
