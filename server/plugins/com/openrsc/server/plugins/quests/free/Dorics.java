@@ -106,8 +106,9 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 			}
 			break;
 		case -1:
-			npcTalk(p, n, "Be sure to use my anvils at anytime friend!");
-			playerTalk(p, n, "I will do that, thanks.");
+			npcTalk(p, n, "Hello traveller, how is your Metalworking coming along?");
+			playerTalk(p, n, "Not too bad thanks Doric");
+			npcTalk(p, n, "Good, the love of metal is a thing close to my heart");
 			break;
 		}
 	}
