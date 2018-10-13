@@ -97,31 +97,34 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 
 		else if (option == 1) { // Buy Rope
 			npcTalk(p, n, "Well, I can sell you some rope for 15 coins",
-					"Or i can be making you some if you gets me 4 balls of wool",
-					"I strands them together i does, makes em strong"
+					"Or I can be making you some if you gets me 4 balls of wool",
+					"I strands them together I does, makes em strong"
 			);
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n, false, new String[] {
 				"Okay, please sell me some Rope",
 				"Thats a little more than I want to pay",
 				"I will go and get some wool"
 			});
 			if (choice == 0) {
 				if (p.getInventory().countId(10) <= 15) {
-					p.message("You don't have enough coins to buy the rope");
+					p.message("You Don't have enough coins to buy any rope!");
 				} else {
+					playerTalk(p, n, "Okay, please sell me some Rope");
 					p.message("You hand Ned 15 coins");
-					npcTalk(p, n, "There you go, finest rope in runescape");
+					npcTalk(p, n, "There you go, finest rope in Runescape");
 					p.getInventory().add(new Item(237, 1));
 					p.getInventory().remove(10, 15);
-					p.message("Ned hands you a coil of rope");
+					p.message("Ned gives you a coil of rope");
 				}
 			}
 			else if (choice == 1) {
-				npcTalk(p, n, "Well, if you ever need some rope. Thats the price. Sorry",
+				playerTalk(p, n, "Thats a little more than I want to pay");
+				npcTalk(p, n, "Well, if you ever need some rope. thats the price. sorry",
 						"An old sailor needs money for a little drop o rum."
 				);
 			}
 			else if (choice == 2) {
+				playerTalk(p, n, "I will go and get some wool");
 				npcTalk(p, n, "Aye, you do that",
 						"Remember, it takes 4 balls of wool to make strong rope");
 			}
