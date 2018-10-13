@@ -404,7 +404,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 				p.message("You just went through a secret door");
 				doDoor(obj, p, 11);
 			} else {
-				p.message("Nothing interesting happens");
+				p.message("nothing interesting happens");
 			}
 		}
 		else if (obj.getID() == 59) {
