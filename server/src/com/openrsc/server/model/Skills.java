@@ -17,7 +17,7 @@ public class Skills {
 
 	public static final int SKILL_COUNT = 18;
 
-	public static final int MAXIMUM_EXP = 200000000;
+	public static final int MAXIMUM_EXP = 2000000000;
 
 	public static final String[] SKILL_NAME = { "attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 			"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
