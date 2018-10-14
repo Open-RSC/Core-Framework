@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.custom.HourlyEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
@@ -57,13 +58,13 @@ public final class Admins implements CommandListener {
 		if (!player.isAdmin()) {
 			return;
 		}
-		if (command.equals("addbank")) {
+		else if (command.equals("addbank")) {
 			for (int i = 0; i < 180; i++) {
 				player.getBank().add(new Item(i, 1));
 			}
 			player.message("Added bank items.");
 		}
-		/*if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
+		/*else if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
 			StringBuilder sb = new StringBuilder();
                         synchronized (World.getWorld().getPlayers()) {
                                 EntityList<Player> players = World.getWorld().getPlayers();
@@ -75,7 +76,7 @@ public final class Admins implements CommandListener {
                         }
                         ActionSender.sendBox(player, sb.toString(), true);
 		}*/
-		if (command.equals("events")) {
+		else if (command.equals("events")) {
 			player.message("Total amount of events running: " + Server.getServer().getGameEventHandler().getEvents().size());
 			HashMap<String, Integer> events = new HashMap<String, Integer>();
 			for (Iterator<Entry<String, GameTickEvent>> event = Server.getServer().getGameEventHandler().getEvents().entrySet().iterator(); event.hasNext();) {
@@ -97,11 +98,11 @@ public final class Admins implements CommandListener {
 			}
 			ActionSender.sendBox(player, s, true);
 		}
-		if (command.equals("toggleaggro")) {
+		else if (command.equals("toggleaggro")) {
 			player.setAttribute("no-aggro", !player.getAttribute("no-aggro", false));
 			player.message("Aggressive: " + player.getAttribute("no-aggro", false));
 		}
-		if (command.equals("unban")) {
+		else if (command.equals("unban")) {
 			if (args.length != 1) {
 				return;
 			}
@@ -109,7 +110,7 @@ public final class Admins implements CommandListener {
 			player.message(Server.getPlayerDataProcessor().getDatabase().banPlayer(DataConversions.hashToUsername(user), 0));
 			GameLogging.addQuery(new StaffLog(player, 19, "Unbanned: " + args[0]));
 		}
-		if (command.equals("ban")) {
+		else if (command.equals("ban")) {
 			if (args.length != 1) {
 				return;
 			}
@@ -121,11 +122,11 @@ public final class Admins implements CommandListener {
 				bannedPlayer.unregister(true, "Banned by " + player.getUsername() + " permanently");
 			}
 		}
-		if(command.equals("fish")) {
+		else if(command.equals("fish")) {
 			player.getCache().remove("fishing_trawler_reward");
 			player.getCache().set("fishing_trawler_reward", 37);
 		}
-		if (command.equals("cleannpcs")) {
+		else if (command.equals("cleannpcs")) {
 			Server.getServer().submitTask(new Runnable() {
 				@Override
 				public void run() {
@@ -142,10 +143,10 @@ public final class Admins implements CommandListener {
 			});
 			player.message("cleaned " + count + " player references.");
 		}
-		if (command.equals("cancelshutdown")) {
+		else if (command.equals("cancelshutdown")) {
 			Server.getServer().saveAndShutdown();
 		}
-		if(command.equals("saveall")) {
+		else if(command.equals("saveall")) {
 			int count = 0;
 			for(Player p : World.getWorld().getPlayers()) {
 				p.save();
@@ -153,7 +154,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message("Saved " + count + " players on server!");
 		}
-		if (command.equals("cleanregions")) {
+		else if (command.equals("cleanregions")) {
 			Server.getServer().submitTask(new Runnable() {
 				@Override
 				public void run() {
@@ -173,25 +174,28 @@ public final class Admins implements CommandListener {
 			});
 			player.message("Done");
 		}
-		if (command.equals("holidaydrop")) {
-			if (args.length < 1) {
-				player.message("You only need to supply one or more item ids. (::globaldrop <itemid>)");
+		else if (command.equals("holidaydrop")) {
+			if (args.length < 2) {
+				player.message("You need to supply how many times you want the function to run");
+				player.message("and one or more item ids. (::globaldrop <count> <itemid>)");
 				return;
 			}
 
+			final int executionCount = Integer.parseInt(args[0]);
 			final ArrayList<Integer> items = new ArrayList<Integer>();
-			for (int i = 0; i < args.length; i++)
+			for (int i = 1; i < args.length; i++)
 				items.add(Integer.parseInt(args[i]));
 
 			if (holidayDropEvent != null) {
 				player.message("There is already a holiday drop running");
 				return;
 			}
-			player.message("Starting global holiday drop...");
+
+			player.message("Starting holiday drop...");
 			final Player p = player;
-			PluginHandler.getPluginHandler().getExecutor().submit(new Runnable() {
+			holidayDropEvent = new HourlyEvent(executionCount) {
 				@Override
-				public void run() {
+				public void action() {
 					int totalItemsDropped = 0;
 					ViewArea view = p.getViewArea(); // Has static functions for objects/ground items.
 
@@ -208,7 +212,7 @@ public final class Admins implements CommandListener {
 								boolean isBlocking = (
 									(traversal & 16) != 0 || // diagonal wall \
 									(traversal & 32) != 0 || // diagonal wall /
-									(traversal & 64) != 0    // water / black / etc.
+									(traversal & 64) != 0    // water or black,  etc.
 								);
 					      if (!containsObject && !isBlocking) { // Nothing in the way.
 									world.registerItem(new GroundItem(items.get(DataConversions.random(0, items.size() - 1)), x, y, 1, null));
@@ -224,11 +228,12 @@ public final class Admins implements CommandListener {
 					for (Integer z: items)
 						p.playerServerMessage(MessageType.QUEST, ""+z);
 				}
-			});
-			GameLogging.addQuery(new StaffLog(player, 21, "Started a globaldrop"));
+			};
+			Server.getServer().getEventHandler().add(holidayDropEvent);
+			GameLogging.addQuery(new StaffLog(player, 21, "Started a holidaydrop"));
 
 		}
-		if (command.equals("globaldrop")) {
+		else if (command.equals("globaldrop")) {
 			if (args.length != 3) {
 				player.message("globaldrop, id of item, amount to be dropped, show locations (yes/no)");
 				return;
@@ -274,7 +279,7 @@ public final class Admins implements CommandListener {
 			});
 		}
 
-		if (command.equals("fakecrystalchest")) {
+		else if (command.equals("fakecrystalchest")) {
 			String loot;
 			HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
 
@@ -327,7 +332,7 @@ public final class Admins implements CommandListener {
 			System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
 		}
 
-		if (command.equals("simulatedrop")) {
+		else if (command.equals("simulatedrop")) {
 			int npcID = Integer.parseInt(args[0]);
 			int maxAttempts = Integer.parseInt(args[1]);
 			int dropID = -1;
@@ -410,7 +415,7 @@ public final class Admins implements CommandListener {
 			}
 			System.out.println(Arrays.toString(hmap.entrySet().toArray()));
 		}
-		if (command.equals("reloaddrops")) {
+		else if (command.equals("reloaddrops")) {
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
 						"SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
@@ -437,7 +442,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message("might have reloaded drops..idk.");
 		}
-		if (command.equals("gi")) {
+		else if (command.equals("gi")) {
 			if (args.length != 3) {
 				player.message("Invalid args. Syntax: gitem <id> <amount> <respawnTime>");
 				return;
@@ -469,22 +474,22 @@ public final class Admins implements CommandListener {
 				player.message("Removed item from database.");
 			}
 		}
-		if (command.equals("reloadland")) {
+		else if (command.equals("reloadland")) {
 			World.getWorld().wl.loadWorld(World.getWorld());
 		}
-		if (command.equals("summonall")) {
+		else if (command.equals("summonall")) {
 			for (Player p : world.getPlayers()) {
 				p.teleport(player.getX() + player.getRandom().nextInt(10),
 						player.getY() + player.getRandom().nextInt(10), true);
 			}
 			return;
 		}
-		if (command.equals("tile")) {
+		else if (command.equals("tile")) {
 			TileValue tv = World.getWorld().getTile(player.getLocation());
 			player.message("travelsal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
 					+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff));
 		}
-		if (command.equals("debugregion")) {
+		else if (command.equals("debugregion")) {
 			boolean debugPlayers = Integer.parseInt(args[0]) == 1;
 			boolean debugNpcs = Integer.parseInt(args[1]) == 1;
 			boolean debugItems = Integer.parseInt(args[2]) == 1;
@@ -493,7 +498,7 @@ public final class Admins implements CommandListener {
 			ActionSender.sendBox(player, player.getRegion().toString(debugPlayers, debugNpcs, debugItems, debugObjects)
 					.replaceAll("\n", "%"), true);
 		}
-		if (command.equals("storecache")) {
+		else if (command.equals("storecache")) {
 			final Player scrn = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 			if (scrn != null) {
 				if (scrn.getCache().hasKey(args[1])) {
@@ -506,7 +511,7 @@ public final class Admins implements CommandListener {
 				player.message("User not found.");
 			}
 		}
-		if (command.equals("deletecache")) {
+		else if (command.equals("deletecache")) {
 			final Player scrn = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 			if (scrn != null) {
 				if (!scrn.getCache().hasKey(args[1])) {
@@ -518,15 +523,15 @@ public final class Admins implements CommandListener {
 				player.message("User not found.");
 			}
 		}
-		if (command.equals("addcache")) {
+		else if (command.equals("addcache")) {
 			player.getCache().store(args[0], args[1]);
 		}
-		if (command.equals("questcom")) {
+		else if (command.equals("questcom")) {
 			int q = Integer.parseInt(args[0]);
 			player.sendQuestComplete(q);
 		}
-                if (command.equals("shutdown")) {
-                        String reason = "";
+		else if (command.equals("shutdown")) {
+			String reason = "";
 			int seconds = 0;
 			if (Server.getServer().shutdownForUpdate(seconds)) {
 				for (Player p : world.getPlayers()) {
@@ -534,7 +539,7 @@ public final class Admins implements CommandListener {
 				}
 			}
                 }
-		if (command.equals("update")) {
+		else if (command.equals("update")) {
 			String reason = "";
 			int seconds = 60;
 			if (args.length > 0) {
@@ -567,15 +572,15 @@ public final class Admins implements CommandListener {
 			// Services.lookup(DatabaseManager.class).addQuery(new
 			// StaffLog(player, 7));
 		}
-		if (command.equals("appearance")) {
+		else if (command.equals("appearance")) {
 			player.setChangingAppearance(true);
 			ActionSender.sendAppearanceScreen(player);
 		}
-		if (command.equals("dropall")) {
+		else if (command.equals("dropall")) {
 			player.getInventory().getItems().clear();
 			ActionSender.sendInventory(player);
 		}
-		if (command.equals("sysmsg")) {
+		else if (command.equals("sysmsg")) {
 			StringBuilder sb = new StringBuilder("SYSTEM MESSAGE: @whi@");
 
 			for (int i = 0; i < args.length; i++) {
@@ -587,7 +592,7 @@ public final class Admins implements CommandListener {
 			world.sendWorldMessage("@gre@" + sb.toString());
 			world.sendWorldMessage("@cya@" + sb.toString());
 		}
-		if (command.equals("system")) {
+		else if (command.equals("system")) {
 			StringBuilder sb = new StringBuilder("@yel@System message: @whi@");
 
 			for (int i = 0; i < args.length; i++) {
@@ -598,99 +603,97 @@ public final class Admins implements CommandListener {
 				ActionSender.sendBox(p, sb.toString(), false);
 			}
 		}
-                if (command.equals("item")) {
-                        if (args.length < 1 || args.length > 2) {
-                                ActionSender.sendMessage(player, "Invalid args. Syntax: ITEM id [amount]");
-                                return;
-                        }
-                        int id = Integer.parseInt(args[0]);
-                        if (EntityHandler.getItemDef(id) != null) {
-                                int amount = 1;
-                                if (args.length == 2) {
-                                        amount = Integer.parseInt(args[1]);
-                                }
-                                if (EntityHandler.getItemDef(id).isStackable())
-                                        player.getInventory().add(new Item(id, amount));
-                                else {
-                                        for (int i = 0; i < amount; i++) {
-                                                if (amount > 30) { // Prevents too many un-stackable items from being spawned and crashing clients in the local area.
-                                                        ActionSender.sendMessage(player, "Invalid amount specified. Please spawn 30 or less of that item.");
-                                                        return;
-                                                }
-                                                player.getInventory().add(new Item(id, 1));
-                                        }
-                                }
-                        } 
-                        else {
-                                ActionSender.sendMessage(player, "Invalid id");
-                        }
-                        return;
-                }
-                if (command.equalsIgnoreCase("about")) {
-                        Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-                        p.updateTotalPlayed();
-			long timePlayed = p.getCache().getLong("total_played");
-                        long timeMoved = System.currentTimeMillis() - p.getLastMoved();
-                        long timeOnline = System.currentTimeMillis() - p.getCurrentLogin();
-                        if(p != null) {
-                        
-                        ActionSender.sendBox(player, 
-                        "@lre@Player Information: %"
-                        + " %"
-			+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
-                        + "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
-                        + "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
-                        + "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
-                        + "@gre@IP:@whi@ " + p.getLastIP() + " %"
-			+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
-                        + "@gre@Coordinates:@whi@ " + p.getStatus() + " at " + p.getLocation().toString() + " %"
-                        + "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
-                        + "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
-			+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-                        , true);
+		else if (command.equals("item")) {
+			if (args.length < 1 || args.length > 2) {
+				ActionSender.sendMessage(player, "Invalid args. Syntax: ITEM id [amount]");
+				return;
+			}
+			int id = Integer.parseInt(args[0]);
+			if (EntityHandler.getItemDef(id) != null) {
+				int amount = 1;
+				if (args.length == 2) {
+					amount = Integer.parseInt(args[1]);
+				}
+				if (EntityHandler.getItemDef(id).isStackable())
+					player.getInventory().add(new Item(id, amount));
+				else {
+					for (int i = 0; i < amount; i++) {
+						if (amount > 30) { // Prevents too many un-stackable items from being spawned and crashing clients in the local area.
+							ActionSender.sendMessage(player, "Invalid amount specified. Please spawn 30 or less of that item.");
+							return;
+						}
+						player.getInventory().add(new Item(id, 1));
+					}
+				}
+			} 
+			else {
+				ActionSender.sendMessage(player, "Invalid id");
+			}
 			return;
-                        
-                        }
-                        else
-                                ActionSender.sendMessage(player, "Invalid name");
-                }
-                if (command.equalsIgnoreCase("inventory")) {
-                        Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-                        if(p != null) {
-                                ArrayList<Item> inventory = p.getInventory().getItems();
-                                ArrayList<String> itemStrings = new ArrayList<String>();
-                                for(Item invItem : inventory) itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
+		}
+    else if (command.equalsIgnoreCase("about")) {
+			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			p.updateTotalPlayed();
+			long timePlayed = p.getCache().getLong("total_played");
+			long timeMoved = System.currentTimeMillis() - p.getLastMoved();
+			long timeOnline = System.currentTimeMillis() - p.getCurrentLogin();
+			if (p != null) {
+				ActionSender.sendBox(player, 
+					"@lre@Player Information: %"
+          + " %"
+					+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
+					+ "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
+					+ "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
+					+ "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
+					+ "@gre@IP:@whi@ " + p.getLastIP() + " %"
+					+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
+					+ "@gre@Coordinates:@whi@ " + p.getStatus() + " at " + p.getLocation().toString() + " %"
+					+ "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
+					+ "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
+					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
+          , true);
+				return;
+			}
+			else
+				ActionSender.sendMessage(player, "Invalid name");
+		}
+		else if (command.equalsIgnoreCase("inventory")) {
+			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			if (p != null) {
+				ArrayList<Item> inventory = p.getInventory().getItems();
+				ArrayList<String> itemStrings = new ArrayList<String>();
+				for (Item invItem : inventory)
+					itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
                                 
-                                ActionSender.sendBox(player, 
-                                "@lre@Inventory of " + p.getUsername() + ":%" 
-                                + "@whi@" + StringUtils.join(itemStrings, ", "), true);
-                                return;
-                        }
-                        else
-                                ActionSender.sendMessage(player, "Invalid name");
-                }
-                if (command.equalsIgnoreCase("bank")) {
-                        Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-                        if(p != null) {
-                                // Show bank screen to yourself
-                                if(p.getUsernameHash() == player.getUsernameHash()) {
-                                        player.setAccessingBank(true);
-                                        ActionSender.showBank(player);
-                                }
-                                else {
-                                        ArrayList<Item> inventory = p.getBank().getItems();
-                                        ArrayList<String> itemStrings = new ArrayList<String>();
-                                        for(Item bankItem : inventory) itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
-                                        ActionSender.sendBox(player, 
-                                        "@lre@Bank of " + p.getUsername() + ":%" 
-                                        + "@whi@" + StringUtils.join(itemStrings, ", "), true);
-                                        return;
-                                }
-                        }
-                        else
-                                ActionSender.sendMessage(player, "Invalid name");
-                }
-		if (command.equals("set")) {
+				ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%" 
+					+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
+				return;
+			}
+			else
+				ActionSender.sendMessage(player, "Invalid name");
+		}
+		if (command.equalsIgnoreCase("bank")) {
+			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			if (p != null) {
+				// Show bank screen to yourself
+				if (p.getUsernameHash() == player.getUsernameHash()) {
+					player.setAccessingBank(true);
+					ActionSender.showBank(player);
+				}
+				else {
+					ArrayList<Item> inventory = p.getBank().getItems();
+					ArrayList<String> itemStrings = new ArrayList<String>();
+					for (Item bankItem : inventory)
+						itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
+					ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%" 
+						+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
+					return;
+				}
+			}
+			else
+				ActionSender.sendMessage(player, "Invalid name");
+		}
+		else if (command.equals("set")) {
 			if (args.length < 2) {
 				player.message("INVALID USE - EXAMPLE setstat attack 99");
 				return;
