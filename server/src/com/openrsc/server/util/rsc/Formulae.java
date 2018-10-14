@@ -802,7 +802,7 @@ public final class Formulae {
 	 * Should the fire light or fail?
 	 */
 	public static boolean lightLogs(int firemakingLvl) {
-		int chance = (int)(35 * Math.pow(firemakingLvl, (1 / 4)));
+		int chance = (int)(35 * Math.pow(firemakingLvl, (1 / 4.0)));
 		return chance > DataConversions.random(0, 100);
 	}
 
