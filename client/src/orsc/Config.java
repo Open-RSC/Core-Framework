@@ -57,6 +57,7 @@ public class Config {
 	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = false;
 
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
+	public static int S_PLAYER_LEVEL_LIMIT = 99;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;

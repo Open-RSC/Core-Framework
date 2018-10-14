@@ -519,7 +519,7 @@ public final class mudclient implements Runnable {
 		private boolean errorLoadingCoadebase = false;
 		private boolean errorLoadingData = false;
 		private boolean errorLoadingMemory = false;
-		private final int[] experienceArray = new int[99];
+		private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
 		private int fatigueSleeping = 0;
 		private boolean fogOfWar = false;
 		private int gameHeight = 334;
@@ -5347,7 +5347,7 @@ public final class mudclient implements Runnable {
 				//this.getSurface().drawBoxBorder(x, width, 0, 20, 0x000000);
 
 				int tilLvl = 0, baseTilLvl = 0, progressWidth = 0; double progress = 0;
-				if (playerStatBase[skill] != 99) {
+				if (playerStatBase[skill] != Config.S_PLAYER_LEVEL_LIMIT) {
 					tilLvl = this.experienceArray[playerStatBase[skill] - 1] - this.playerExperience[skill];
 					baseTilLvl = this.experienceArray[playerStatBase[skill]] - this.experienceArray[playerStatBase[skill] - 1];
 					progress = ((double) tilLvl) / ((double) baseTilLvl) / 0.9;
@@ -5390,7 +5390,7 @@ public final class mudclient implements Runnable {
 					//this.getSurface().drawBoxBorder(x, width, 19, 61, 0x000000);
 
 					if (textColor == 0xFFFFFF) {
-						if (playerStatBase[skill] == 99) {
+						if (playerStatBase[skill] == Config.S_PLAYER_LEVEL_LIMIT) {
 							this.getSurface().drawShadowText("Gained: " + this.playerStatXpGained[skill], x + 3, 63, textColor, 2, false);
 							this.getSurface().drawShadowText("Xp/hr:     " + (int) xpPerHour, x + 3, 78, textColor, 2, false);
 						} else {
@@ -5400,7 +5400,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawShadowText("Xp/hr:     " + (int) xpPerHour, x + 3, 78, textColor, 2, false);
 						}
 					} else {
-						if (playerStatBase[skill] == 99) {
+						if (playerStatBase[skill] == Config.S_PLAYER_LEVEL_LIMIT) {
 							this.getSurface().drawString("Gained: " + this.playerStatXpGained[skill], x + 3, 63, textColor, 2);
 							this.getSurface().drawString("Xp/hr:     " + (int) xpPerHour, x + 3, 78, textColor, 2);
 						} else {
@@ -8007,7 +8007,7 @@ public final class mudclient implements Runnable {
 						heightMargin += 12;
 						int nextLevelExp = this.experienceArray[0];
 
-						for (int currLevel = 0; currLevel < 98; ++currLevel) {
+						for (int currLevel = 0; currLevel < Config.S_PLAYER_LEVEL_LIMIT - 1; ++currLevel) {
 							if (this.experienceArray[currLevel] <= this.playerExperience[currentlyHoveredSkill]) {
 								nextLevelExp = this.experienceArray[currLevel + 1];
 							}
@@ -10240,7 +10240,7 @@ public final class mudclient implements Runnable {
 				else if (opcode == 19) { // Server Configs
 					Properties props = new Properties();
 					String serverName;
-					int spawnAuctionNpcs, spawnIronManNpcs;
+					int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 					int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 					int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 					int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
@@ -10254,6 +10254,7 @@ public final class mudclient implements Runnable {
 
 					if (!this.gotInitialConfigs) {
 						serverName = this.getClientStream().readString();
+						playerLevelLimit = this.getClientStream().getUnsignedByte();
 						spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
 						spawnIronManNpcs = this.getClientStream().getUnsignedByte();
 						showFloatingNametags = this.getClientStream().getUnsignedByte();
@@ -10287,6 +10288,7 @@ public final class mudclient implements Runnable {
 						wantCertsToBank = this.getClientStream().getUnsignedByte();
 					} else {
 						serverName = this.packetsIncoming.readString();
+						playerLevelLimit = this.packetsIncoming.getUnsignedByte();
 						spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
 						spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
 						showFloatingNametags = this.packetsIncoming.getUnsignedByte();
@@ -10321,6 +10323,7 @@ public final class mudclient implements Runnable {
 					}
 
 					props.setProperty("SERVER_NAME", serverName);
+					props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit));
 					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
 					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
@@ -10365,7 +10368,10 @@ public final class mudclient implements Runnable {
 							|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
 							|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 
+
 					if (!gotInitialConfigs) {
+						this.experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
+						this.setExperienceArray();
 						gotInitialConfigs = true;
 						continueStartGame((byte) -92);
 					}
@@ -13477,15 +13483,7 @@ public final class mudclient implements Runnable {
 					this.errorLoadingData = true;
 				} else {
 					RSBufferUtils.setStringEncryptor(RSBufferUtils.encryption);
-					int experience = 0;
-
-					for (int i = 0; i < 99; ++i) {
-						int experienceFactor = 1 + i;
-						int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
-						experience += experienceIncrease;
-						this.experienceArray[i] = (int)((experience & 0xffffffc) / 4);
-					}
-
+					this.setExperienceArray();
 					MiscFunctions.maxReadTries = 1000;
 					// We get the server config before continuing.
 					System.out.println("Getting server configs...");
@@ -13495,6 +13493,16 @@ public final class mudclient implements Runnable {
       catch (RuntimeException var9) {
         throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');
       }
+		}
+
+		final void setExperienceArray() {
+			int experience = 0;
+			for (int i = 0; i < Config.S_PLAYER_LEVEL_LIMIT; ++i) {
+				int experienceFactor = 1 + i;
+				int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
+				experience += experienceIncrease;
+				this.experienceArray[i] = (int)((experience & 0xfffffffc) / 4);
+			}
 		}
 
 		final void getServerConfig() {
