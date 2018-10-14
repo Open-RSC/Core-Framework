@@ -7,7 +7,9 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.ViewArea;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -21,6 +23,7 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
+import com.openrsc.server.util.rsc.MessageType;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -45,6 +48,7 @@ public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final World world = World.getWorld();
+	private DelayedEvent holidayDropEvent;
 	private DelayedEvent globalDropEvent;
 	private int count = 0;
         
@@ -168,6 +172,61 @@ public final class Admins implements CommandListener {
 				}
 			});
 			player.message("Done");
+		}
+		if (command.equals("holidaydrop")) {
+			if (args.length < 1) {
+				player.message("You only need to supply one or more item ids. (::globaldrop <itemid>)");
+				return;
+			}
+
+			final ArrayList<Integer> items = new ArrayList<Integer>();
+			for (int i = 0; i < args.length; i++)
+				items.add(Integer.parseInt(args[i]));
+
+			if (holidayDropEvent != null) {
+				player.message("There is already a holiday drop running");
+				return;
+			}
+			player.message("Starting global holiday drop...");
+			final Player p = player;
+			PluginHandler.getPluginHandler().getExecutor().submit(new Runnable() {
+				@Override
+				public void run() {
+					int totalItemsDropped = 0;
+					ViewArea view = p.getViewArea(); // Has static functions for objects/ground items.
+
+					for (int y = 96; y < 870;) { // Highest Y is 867 currently.
+						for (int x = 1; x < 770;) { // Highest X is 766 currently.
+
+							// Check for item dropped right beside this
+							if (view.getGroundItem(Point.location(x, y-1)) == null &&
+									view.getGroundItem(Point.location(x-1, y-1)) == null &&
+									view.getGroundItem(Point.location(x+1, y-1)) == null) {
+
+								boolean containsObject = view.getGameObject(Point.location(x, y)) != null;
+								int traversal = world.getTile(x, y).traversalMask;
+								boolean isBlocking = (
+									(traversal & 16) != 0 || // diagonal wall \
+									(traversal & 32) != 0 || // diagonal wall /
+									(traversal & 64) != 0    // water / black / etc.
+								);
+					      if (!containsObject && !isBlocking) { // Nothing in the way.
+									world.registerItem(new GroundItem(items.get(DataConversions.random(0, items.size() - 1)), x, y, 1, null));
+									totalItemsDropped++;
+								}
+							}
+							x += DataConversions.random(20, 27); // How much space between each along X axis
+						}
+						y += DataConversions.random(1, 2);
+					}
+
+					p.playerServerMessage(MessageType.QUEST, "Dropped " + totalItemsDropped + " of item IDs:");
+					for (Integer z: items)
+						p.playerServerMessage(MessageType.QUEST, ""+z);
+				}
+			});
+			GameLogging.addQuery(new StaffLog(player, 21, "Started a globaldrop"));
+
 		}
 		if (command.equals("globaldrop")) {
 			if (args.length != 3) {
