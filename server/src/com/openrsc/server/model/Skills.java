@@ -168,7 +168,7 @@ public class Skills {
 			// TODO: Maybe a level up listener?
 			if (mob.isPlayer()) {
 				Player player = (Player) mob;
-				if (newLevel >= 90 && newLevel <= 98) {
+				if (newLevel >= PLAYER_LEVEL_LIMIT - 5 && newLevel <= PLAYER_LEVEL_LIMIT - 1) {
 					GameLogging.addQuery(new LiveFeedLog(player,
 							"has achieved level-" + newLevel + " in " + SKILL_NAME[skill] + "!"));
 				} else if (newLevel == PLAYER_LEVEL_LIMIT) {
@@ -247,7 +247,7 @@ public class Skills {
 			int k = j + 1;
 			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
 			i += i1;
-			experienceArray[j] = (i & 0xffffffc);
+			experienceArray[j] = (i & 0xfffffffc);
 		}
 	}
 }
