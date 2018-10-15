@@ -7,13 +7,14 @@ echo ""
 echo "${RED}Open RSC Configuration:${NC}
 An easy to use RSC private server framework.
 
-Note: the player must exist and be offline for changes to take effect.
+Note: the player must be offline for changes to take effect.
 
 Choices:
-  ${RED}1${NC} - Make a player an administrator in-game
-  ${RED}2${NC} - Make a player a moderator in-game
-  ${RED}3${NC} - Make a player a standard player in-game
-  ${RED}4${NC} - Ban a player in-game
+  ${RED}1${NC} - Make a player an administrator
+  ${RED}2${NC} - Make a player a moderator
+  ${RED}3${NC} - Make a player a standard player
+  ${RED}4${NC} - Ban a player
+  ${RED}4${NC} - Unban a player
   ${RED}5${NC} - Return to the main menu"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
@@ -25,6 +26,9 @@ if [ "$rank" == "5" ]; then
 else
 
     player=$(whiptail --inputbox "Please enter the player name." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+
+    export user=$(whiptail --passwordbox "Please enter your MySQL username." 8 50 ${user} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export pass=$(whiptail --passwordbox "Please enter your MySQL password." 8 50 ${pass} --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
 
     # Docker or native install mode?
     echo ""
@@ -42,25 +46,32 @@ else
     read installmode
 
     if [ "$installmode" == "direct" ]; then
-        if [ "$rank" == "3" ]; then
-            sudo mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '4' WHERE username = '$player';"
-        elif [ "$rank" == "1" ]; then
-            sudo mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '1' WHERE username = '$player';"
+        if [ "$rank" == "1" ]; then
+            sudo mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '1' WHERE username = '$player';"
         elif [ "$rank" == "2" ]; then
-            sudo mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '2' WHERE username = '$player';"
+            sudo mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '2' WHERE username = '$player';"
+        elif [ "$rank" == "3" ]; then
+            sudo mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '4' WHERE username = '$player';"
         elif [ "$rank" == "4" ]; then
-            sudo mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET banned = '-1' WHERE username = '$player';"
+            sudo mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET banned = '-1' WHERE username = '$player';"
+        elif [ "$rank" == "5" ]; then
+            sudo mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET banned = '0' WHERE username = '$player';"
         fi
 
     elif [ "$installmode" == "docker" ]; then
-        if [ "$rank" == "3" ]; then
-            docker exec -i mysql mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '4' WHERE username = '$player';"
-        elif [ "$rank" == "1" ]; then
-            docker exec -i mysql mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '1' WHERE username = '$player';"
+        if [ "$rank" == "1" ]; then
+            docker exec -i mysql mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '1' WHERE username = '$player';"
         elif [ "$rank" == "2" ]; then
-            docker exec -i mysql mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '2' WHERE username = '$player';"
+            docker exec -i mysql mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '2' WHERE username = '$player';"
+        elif [ "$rank" == "3" ]; then
+            docker exec -i mysql mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET group_id = '4' WHERE username = '$player';"
         elif [ "$rank" == "4" ]; then
-            docker exec -i mysql mysql -uopenrsc -p$pass -Bse "UPDATE openrsc_game.openrsc_players SET banned = '-1' WHERE username = '$player';"
+            docker exec -i mysql mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET banned = '-1' WHERE username = '$player';"
+        elif [ "$rank" == "5" ]; then
+            docker exec -i mysql mysql -u${user} -p${pass} -Bse "UPDATE openrsc_game.openrsc_players SET banned = '0' WHERE username = '$player';"
         fi
     fi
+
+    echo "Done!"
+    make go
 fi
