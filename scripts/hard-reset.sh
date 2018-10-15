@@ -20,6 +20,19 @@ read reset
 if [ "$reset" == "2" ]; then
     make go
 else
+
+    # Docker or native install mode?
+    echo ""
+    echo "Which are you using?
+
+    Choices:
+      ${RED}1${NC} - Docker Containers
+      ${RED}2${NC} - Native Installation"
+    echo ""
+    echo "Which of the above do you wish to do? Type the choice number and press enter."
+    echo ""
+    read installmode
+
     if [ "$installmode" == "direct" ]; then
         #sudo service nginx stop
         #sudo apt-get purge "nginx*" -y
