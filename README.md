@@ -1,5 +1,5 @@
-# Open RSC Game
-###### [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=2.0.0)](https://travis-ci.org/Open-RSC/Game) 2.0.0
+# Open RSC
+###### [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=2.0.0)](https://travis-ci.org/Open-RSC/Game)
 
 # Table of contents <a name="top"></a>
 1. [How to Install](#install)
@@ -21,7 +21,7 @@
 4. Launch "Game/Go-Windows.cmd"
 
 
-<b>Linux:</b>
+<b>Linux / Mac:</b>
 
 Paste the following in Terminal to begin the install process:
 
