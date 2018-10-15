@@ -3,8 +3,23 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
+# Docker or native install mode?
+echo ""
+echo "${RED}Open RSC:${NC}
+An easy to use RSC private server framework.
 
-if [[ "$installedalready" != "true" ]]; then
+Which method of installation do you wish to use?
+
+Choices:
+  ${RED}1${NC} - Use Docker virtual containers (recommended)
+  ${RED}2${NC} - Direct installation (Ubuntu Linux only)
+  ${RED}3${NC} - Return to main menu"
+echo ""
+echo "Which of the above do you wish to do? Type the choice number and press enter."
+read installmode
+
+
+if [[ "$installmode" != "3" ]]; then
     # Ubuntu Linux
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # Basics
@@ -41,9 +56,6 @@ if [[ "$installedalready" != "true" ]]; then
         sudo sed -i 's/DEFAULT_FORWARD_POLICY="DENY"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
         sudo ufw reload
         sudo ufw --force enable
-        export installedalready=true
-        echo "$installedalready" > .installedalready
-
 
     # Apple MacOS
     elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -56,37 +68,13 @@ if [[ "$installedalready" != "true" ]]; then
         fi
         brew tap AdoptOpenJDK/openjdk && brew install gnu-sed git newt unzip wget git curl zip screen adoptopenjdk-openjdk8 ant openjfx
         PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-        export installedalready=true
-        echo "$installedalready" > .installedalready
     fi
 fi
 
-if [ "$installmode" == "docker" ]; then
+if [ "$installmode" == "1" ]; then
     make docker-install
-elif [ "$installmode" == "direct" ]; then
+elif [ "$installmode" == "2" ]; then
     make direct-install
-else
-    # Installation selection
-    echo ""
-    echo "${RED}Open RSC:${NC}
-    An easy to use RSC private server framework.
-
-    Which method of installation do you wish to use?
-
-    Choices:
-      ${RED}1${NC} - Use Docker virtual containers (recommended)
-      ${RED}2${NC} - Direct installation (Ubuntu Linux only)
-      ${RED}3${NC} - Return to main menu"
-    echo ""
-    echo "Which of the above do you wish to do? Type the choice number and press enter."
-    echo ""
-    read install
-
-    if [ "$install" == "1" ]; then
-        make docker-install
-    elif [ "$install" == "2" ]; then
-        make direct-install
-    elif [ "$install" == "3" ]; then
-        make go
-    fi
+elif [ "$install" == "3" ]; then
+    make go
 fi
