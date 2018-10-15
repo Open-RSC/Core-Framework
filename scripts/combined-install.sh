@@ -18,11 +18,12 @@ echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
 read installmode
 
+if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Direct) have been picked)
 
-if [[ "$installmode" != "3" ]]; then
     # Ubuntu Linux
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Basics
+
+        # Basic software
         echo ""
         echo ""
         echo "Installing Certbot, Screen, Zip, Fail2Ban, Unzip, Git, Build-Essential, Software-Properties-Common, APT-Transport-HTTPS, CA-Certificates, Curl, and configuring the system timezone."
@@ -34,7 +35,7 @@ if [[ "$installmode" != "3" ]]; then
         sudo apt-get install certbot screen zip fail2ban unzip git build-essential apt-transport-https ca-certificates curl -y
         sudo dpkg-reconfigure tzdata
 
-        # Java
+        # Java related
         echo ""
         echo ""
         echo "Installing Oracle Java JDK 8, OpenJFX, and Apache ant. Please wait."
@@ -47,15 +48,21 @@ if [[ "$installmode" != "3" ]]; then
         sudo apt-get install -y oracle-java8-installer
         sudo apt install oracle-java8-set-default
 
-        # UFW Firewall
+        # UFW Firewall configuration
         echo ""
         echo ""
         echo "Setting Ubuntu Firewall permissions."
         echo ""
-        sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 8080/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 53595/tcp && sudo ufw deny 3306/tcp
+        sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 53595/tcp && sudo ufw deny 3306/tcp
         sudo sed -i 's/DEFAULT_FORWARD_POLICY="DENY"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
         sudo ufw reload
         sudo ufw --force enable
+
+        # Configures and secures SSH access
+        sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 720/g' /etc/ssh/sshd_config
+        sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 720/g' /etc/ssh/sshd_config
+        sudo sed -i 's/#MaxAuthTries/MaxAuthTries/g' /etc/ssh/sshd_config
+        sudo service ssh restart
 
     # Apple MacOS
     elif [[ "$OSTYPE" == "darwin"* ]]; then

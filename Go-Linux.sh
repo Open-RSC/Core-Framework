@@ -20,7 +20,7 @@ What would you like to do?
 
 Choices:
   ${RED}1${NC} - Install
-  ${RED}2${NC} - Update/Compile
+  ${RED}2${NC} - Update & Compile Changes
   ${RED}3${NC} - Run Server
   ${RED}4${NC} - Perform a Hard Reset
   ${RED}5${NC} - Exit"
