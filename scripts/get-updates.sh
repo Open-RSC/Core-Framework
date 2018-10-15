@@ -29,8 +29,20 @@ echo ""
 echo ""
 make compile
 
-if [ "$installmode" == "direct" ]; then
-    sudo chmod 644 /var/www/html/board/config.php
+# Docker or native install mode?
+echo ""
+echo "Which are you using?
+
+Choices:
+  ${RED}1${NC} - Docker Containers
+  ${RED}2${NC} - Native Installation"
+echo ""
+echo "Which of the above do you wish to do? Type the choice number and press enter."
+echo ""
+read installmode
+
+if [ "$installmode" == "2" ]; then
+    sudo chmod 644 /var/www/html/elite/board/config.php
 
     # Client
     yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
@@ -49,9 +61,9 @@ if [ "$installmode" == "direct" ]; then
     md5sum /var/www/html/downloads/cache/* | sed 's/\/var\/www\/html\/downloads\/cache\///g' |  grep ^[a-zA-Z0-9]* | awk '{print $2"="$1}' | tee /var/www/html/downloads/cache/MD5CHECKSUM
     sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "/var/www/html/downloads/cache/MD5CHECKSUM"
 
-elif [ "$installmode" == "docker" ]; then
+elif [ "$installmode" == "1" ]; then
     sudo chmod 644 etc/mariadb/innodb.cnf
-    sudo chmod 644 Website/board/config.php
+    sudo chmod 644 Website/elite/board/config.php
     sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
     # Client
