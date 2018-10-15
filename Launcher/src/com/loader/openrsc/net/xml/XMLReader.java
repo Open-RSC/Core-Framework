@@ -11,7 +11,7 @@ public class XMLReader {
     private static Feed archives;
 
     public static void init(final NewsBox newsBox) {
-        try {
+        /*try {
             XMLReader.news = getNews();
             XMLReader.archives = getArchivedNews();
             newsBox.getTitle().setText((XMLReader.news == null) ? "No news available" : XMLReader.news.getMessages().get(0).getTitle());
@@ -31,10 +31,10 @@ public class XMLReader {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
-    public static Feed getArchivedNews() {
+    /*public static Feed getArchivedNews() {
         final RSSFeedParser parser = new RSSFeedParser(Constants.rss_url); // Archived news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
@@ -44,5 +44,5 @@ public class XMLReader {
         final RSSFeedParser parser = new RSSFeedParser(Constants.rss_url); // Current news RSS feed URL
         final Feed feed = parser.readFeed();
         return feed;
-    }
+    }*/
 }
