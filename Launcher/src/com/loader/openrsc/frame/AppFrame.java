@@ -53,11 +53,11 @@ public class AppFrame extends JFrame {
         this.add(this.bg);
         this.addLogo();
         this.addButtons();
-        this.addNewsBox();
+        /*this.addNewsBox();
         (this.postedDate = new JLabel(XMLReader.getNews().getMessages().get(0).getSplitDate())).setBounds(131, 116, 128, 8);
         this.postedDate.setFont(Utils.getFont("Exo-Regular.otf", 1, 8.0f));
         this.postedDate.setHorizontalAlignment(0);
-        this.bg.add(this.postedDate);
+        this.bg.add(this.postedDate);*/
         this.addMouseListener(new PositionListener(this));
         this.addMouseMotionListener(new PositionListener(this));
         this.pack();
