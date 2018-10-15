@@ -4,7 +4,6 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 export installmode=docker
-echo "$installmode" > .methodinstall
 
 # Ubuntu Linux Docker installation
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -80,7 +79,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Start Docker and pull containers
     sudo make start
 
-
 # Apple MacOS Docker installation
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Apple MacOS detected."
@@ -103,7 +101,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     read
 fi
 
-
 # Database imports
 echo ""
 echo "Waiting 10 seconds then importing the game and forum databases."
@@ -112,11 +109,9 @@ sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
 sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
 sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
-sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
-
+#sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
 
 # Website clone
 sudo make clone-website
-
 
 make file-edits

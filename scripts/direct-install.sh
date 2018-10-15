@@ -3,7 +3,6 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 export installmode=direct
-echo "$installmode" > .methodinstall
 
 phases=(
 'Uninstalling previous conflicting software' #0
@@ -29,12 +28,9 @@ for i in $(seq 1 100); do
 
     i=1
     echo -e "XXX\n$i\n${phases[0]}\nXXX"
-    # Uninstall previous conflicting software
+    # Uninstalls previous conflicting software if exists
     sudo apt remove nano htop screen ant mariadb-server mariadb-client nginx oracle-java8-installer php php-cgi php-common php-pear php-mbstring php-fpm php7.2-fpm php-mysql php-gettext phpmyadmin -y &>/dev/null
     sudo apt autoremove -y &>/dev/null
-    sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 720/g' /etc/ssh/sshd_config
-    sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 720/g' /etc/ssh/sshd_config
-    sudo service ssh restart
 
     i=5
     echo -e "XXX\n$i\n${phases[1]}\nXXX"
@@ -125,6 +121,5 @@ for i in $(seq 1 100); do
         echo $i
     fi
 done | whiptail --title 'Open RSC Direct Installation' --gauge "${phases[0]}" 7 70 0
-
 
 make file-edits
