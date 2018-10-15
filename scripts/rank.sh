@@ -3,7 +3,6 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
-
 echo ""
 echo "${RED}Open RSC Configuration:${NC}
 An easy to use RSC private server framework.
@@ -26,6 +25,21 @@ if [ "$rank" == "5" ]; then
 else
 
     player=$(whiptail --inputbox "Please enter the player name." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+
+    # Docker or native install mode?
+    echo ""
+    echo "${RED}Open RSC:${NC}
+    An easy to use RSC private server framework.
+
+    Which method of installation do you wish to use?
+
+    Choices:
+      ${RED}1${NC} - Use Docker virtual containers (recommended)
+      ${RED}2${NC} - Direct installation (Ubuntu Linux only)
+      ${RED}3${NC} - Return to main menu"
+    echo ""
+    echo "Which of the above do you wish to do? Type the choice number and press enter."
+    read installmode
 
     if [ "$installmode" == "direct" ]; then
         if [ "$rank" == "3" ]; then

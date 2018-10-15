@@ -7,4 +7,5 @@ echo "CTRL + A + D to detach the screen so this continues in the background."
 echo ""
 echo "Console output is being saved to gameserver.log"
 echo ""
-ant runservermembers | tee -a ../../gameserver.log
+touch ../gameserver.log && chmod 777 ../gameserver.log &>/dev/null
+ant runservermembers | tee -a ../gameserver.log
