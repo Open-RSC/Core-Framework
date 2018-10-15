@@ -76,7 +76,7 @@ public class AppFrame extends JFrame {
         this.text.setForeground(new Color(255, 223, 0));
         this.text.setFont(Utils.getFont("Exo-Regular.otf", 1, 14.0f));
         this.bg.add(this.text);
-        (this.subText = new JLabel("Game Launcher")).setBounds(30, 35, 100, 15);
+        (this.subText = new JLabel("Game Launcher v." + Constants.VERSION_NUMBER)).setBounds(30, 35, 210, 15);
         this.subText.setForeground(new Color(200, 200, 200));
         this.subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
         this.bg.add(this.subText);
