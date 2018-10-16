@@ -398,6 +398,7 @@ public class BankInterface {
 	}
 
 	public void bankClose() {
+		this.mc.setShowDialogBank(false);
 		mc.getClientStream().newPacket(212);
 		mc.getClientStream().finishPacket();
 	}
