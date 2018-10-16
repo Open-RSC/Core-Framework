@@ -89,6 +89,7 @@ UPDATE openrsc_experience SET openrsc_experience.playerID = openrsc_experience.i
 Friends:
 
 SELECT B.id AS playerID, A.friend, C.username AS friendName, A.dbid FROM openrsc.openrsc_friends AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user LEFT JOIN openrsc.openrsc_players AS C ON A.friend = C.user WHERE C.username IS NOT NULL;
+UPDATE `openrsc_friends` SET friendName = REPLACE(friendName,'_',' ');
 
 - Export to CSV, import in new table
 
@@ -98,8 +99,6 @@ Invitems:
 
 UPDATE `openrsc_invitems` SET id = id - '10000' WHERE id >= '10000';
 SELECT B.id AS playerID, A.id, A.amount, A.wielded, A.slot, A.dbid FROM openrsc.openrsc_invitems AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
-
-edit playerID structure to be VARCHAR(40) and de-select "unsigned"
 
 - Export to CSV, import in new table
 
