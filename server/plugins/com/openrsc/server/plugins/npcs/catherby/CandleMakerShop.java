@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
@@ -43,6 +44,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 			npcTalk(p,n, "Have you got any wax yet?");
 			if(p.getInventory().hasItemId(605)) {
 				playerTalk(p,n, "Yes I have some now");
+				removeItem(p, 605, 1);
 				p.message("You exchange the wax with the candle maker for a black candle");
 				addItem(p, 600, 1);
 				p.getCache().remove("candlemaker");
