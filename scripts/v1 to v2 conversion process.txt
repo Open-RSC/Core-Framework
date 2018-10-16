@@ -1,5 +1,3 @@
-V1 database conversion to match the structure of of V2:
-
 RENAME TABLE `openrsc`.`rscd_players` TO `openrsc`.`openrsc_players`;
 RENAME TABLE `openrsc`.`rscd_bank` TO `openrsc`.`openrsc_bank`;
 RENAME TABLE `openrsc`.`rscd_curstats` TO `openrsc`.`openrsc_curstats`;
@@ -60,7 +58,7 @@ ALTER TABLE `openrsc_players` CHANGE `kills` `kills` SMALLINT(5) NOT NULL DEFAUL
 
 Bank:
 
-Nothing needs to be done.
+SELECT B.id AS playerID, A.id, A.amount, A.slot, A.dbid FROM openrsc.openrsc_bank AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.owner ORDER BY playerID
 
 - Export to CSV, import in new table
 
@@ -68,9 +66,7 @@ Nothing needs to be done.
 
 Curstats:
 
-SET @i=0;
-UPDATE openrsc_curstats SET playerID=10000+(@i:=@i+1);
-UPDATE openrsc_curstats SET openrsc_curstats.playerID = openrsc_curstats.id;
+SELECT B.id AS id, B.id AS playerID, A.cur_attack, A.cur_defense, A.cur_strength, A.cur_hits, A.cur_ranged, A.cur_prayer, A.cur_magic, A.cur_cooking, A.cur_woodcut, A.cur_fletching, A.cur_fishing, A.cur_firemaking, A.cur_crafting, A.cur_smithing, A.cur_mining, A.cur_herblaw, A.cur_agility, A.cur_thieving FROM openrsc.openrsc_curstats AS A LEFT JOIN openrsc.openrsc_players AS B ON A.id = B.owner ORDER BY id
 
 - Export to CSV, import in new table
 
@@ -78,9 +74,7 @@ UPDATE openrsc_curstats SET openrsc_curstats.playerID = openrsc_curstats.id;
 
 Experience:
 
-SET @i=0;
-UPDATE openrsc_experience SET playerID=10000+(@i:=@i+1);
-UPDATE openrsc_experience SET openrsc_experience.playerID = openrsc_experience.id;
+SELECT B.id AS id, B.id AS playerID, A.exp_attack, A.exp_defense, A.exp_strength, A.exp_hits, A.exp_ranged, A.exp_prayer, A.exp_magic, A.exp_cooking, A.exp_woodcut, A.exp_fletching, A.exp_fishing, A.exp_firemaking, A.exp_crafting, A.exp_smithing, A.exp_mining, A.exp_herblaw, A.exp_agility, A.exp_thieving FROM openrsc.openrsc_experience AS A LEFT JOIN openrsc.openrsc_players AS B ON A.id = B.owner ORDER BY id
 
 - Export to CSV, import in new table
 
@@ -92,12 +86,14 @@ SELECT B.id AS playerID, A.friend, C.username AS friendName, A.dbid FROM openrsc
 
 - Export to CSV, import in new table
 
+After import:
+UPDATE `openrsc_friends` SET friendName = REPLACE(friendName,'_',' ');
+
 
 
 Invitems:
 
-SELECT * FROM `rscd_invitems` WHERE id >= '10000';
-UPDATE `rscd_invitems` WHERE id >= '10000' SET id = id - '10000';
+UPDATE `openrsc_invitems` SET id = id - '10000' WHERE id >= '10000';
 SELECT B.id AS playerID, A.id, A.amount, A.wielded, A.slot, A.dbid FROM openrsc.openrsc_invitems AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
 
 - Export to CSV, import in new table
@@ -112,7 +108,7 @@ ALTER TABLE `openrsc_quests` CHANGE `id` `dbid` INT(10) UNSIGNED NOT NULL AUTO_I
 ALTER TABLE `openrsc_quests` CHANGE `user` `playerID` VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ALTER TABLE `openrsc_quests` CHANGE `quest_id` `id` INT(10) NULL DEFAULT NULL;
 UPDATE openrsc_quests SET openrsc_quests.stage = -1 WHERE openrsc_quests.stage = 1;
-SELECT A.dbid, B.owner AS playerID, A.id, A.stage FROM openrsc.openrsc_quests AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
+SELECT A.dbid, B.id AS playerID, A.id, A.stage FROM openrsc.openrsc_quests AS A LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.user;
 
 - Export to CSV, import in new table
 
@@ -120,10 +116,6 @@ SELECT A.dbid, B.owner AS playerID, A.id, A.stage FROM openrsc.openrsc_quests AS
 
 Players2:
 
-SET @i=0;
-UPDATE openrsc_players SET id=10000+(@i:=@i+1);
-UPDATE `openrsc_players` SET openrsc_players.id = openrsc_players.owner;
-ALTER TABLE `openrsc_players` CHANGE `id` `id` INT(10) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `openrsc_players` DROP `user`;
 UPDATE `openrsc_players` SET cameraauto = 0;
 UPDATE `openrsc_players` SET username = REPLACE(username,'_',' ');
@@ -153,3 +145,10 @@ DragonSwordRemoval:
 PowerAmuletRemoval:
 1. Use the game DB
 2. Remove all amulets and noted amulets from banks and inventories.
+
+
+
+
+
+See most money in bank:
+SELECT B.username AS username, A.playerID, A.amount FROM openrsc.openrsc_bank AS A  LEFT JOIN openrsc.openrsc_players AS B ON A.playerID = B.owner WHERE A.id = 10 AND A.amount >= 1000000 ORDER BY A.amount DESC
