@@ -2,7 +2,9 @@ package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import java.util.ArrayList;
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -28,6 +30,12 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class TouristTrap implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener,NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
 
+	/** Player isArmed? **/
+	public static final int[] restricted = { 0, 1, 3, 4, 5, 6, 7, 9 };
+	public static final int[] allow = { 1019, 1020, 1021, 1022};		
+	 ArrayList<Integer> wieldPos = new ArrayList<>();
+     ArrayList<Integer> allowed = new ArrayList<>();
+	
 	/** Quest Items **/
 	public static int METAL_KEY = 1021;
 	public static int CELL_DOOR_KEY = 1098;
@@ -2329,6 +2337,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
                             npcTalk(p,n, "Move along now...we've had enough of your sort!");
                             
                         } else {
+                        	if (playerArmed(p)) {                       		
 							npcTalk(p,n, "Oi You with the weapon and armour, what are you doing?",
 									"You don't belong in here!");
 							p.message("More guards come to arrest you.");
@@ -2337,6 +2346,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							message(p, "You're outnumbered by all the guards.",
 									"They man-handle you into a cell.");
 							p.teleport(89, 801);
+                        	}
 						}
 					}
 				}
@@ -2785,4 +2795,21 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;
 		}
 	}
+	private boolean playerArmed(Player p) {
+        for (Item item : p.getInventory().getItems()) {
+        for (int robes : allow) {
+            allowed.add(robes);
+        for (int pos : restricted) {
+            wieldPos.add(pos);
+        if (item.isWielded() && item.getDef().getWieldPosition() > 5 && item.getID() == robes)  {
+                return false;
+                }
+        if (item.isWielded() && item.getDef().getWieldPosition() == pos) {
+                return true; 
+                }
+            }
+        }
+    }
+    return false;
+    }
 }
