@@ -21,7 +21,7 @@ public final class ServerEventHandler {
 	private LinkedHashMap<String, DelayedEvent> toAdd = new LinkedHashMap<String, DelayedEvent>();
 
 	public void add(DelayedEvent event) {
-		String className = event.getClass().getSimpleName();
+		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) {
 			String u;
 			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {}
