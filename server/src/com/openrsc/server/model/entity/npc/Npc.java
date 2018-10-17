@@ -329,7 +329,7 @@ public class Npc extends Mob {
 				playerWithMostDamage = p;
 				currentHighestDamage = dmgDoneByPlayer;
 			}
-			newXP = (totalCombatXP / this.getDef().hits) * dmgDoneByPlayer;
+			newXP = (int)(((double)(totalCombatXP) / (double)(this.getDef().hits)) * (double)(dmgDoneByPlayer));
 			p.incExp(4, newXP * 4, true);
 			ActionSender.sendStat(p, 4);
 		}
