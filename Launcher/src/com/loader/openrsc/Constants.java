@@ -1,6 +1,7 @@
 package com.loader.openrsc;
 
 public class Constants {
+		public static Double VERSION_NUMBER = 20181015.190000;
     public static final String SERVER_DOMAIN = "dev1.openrsc.com"; // Only used for the server status display
     public static final int SERVER_PORT = 43594;
     public static final String GAME_NAME = "Open RSC";

@@ -23,11 +23,13 @@ public class OpenRSC {
         } catch (IllegalAccessException e) {
             OpenRSC.getPopup().setMessage("" + e);
         }
+        updater = new Downloader();
+				updater.updateJar();
+
         final AppFrame frame = new AppFrame();
         frame.build();
         OpenRSC.popup = new PopupFrame();
         new Thread(new StatusChecker(Constants.SERVER_DOMAIN, Constants.SERVER_PORT)).start();
-        updater = new Downloader();
         updater.init();
         updater.doneLoading();
     }

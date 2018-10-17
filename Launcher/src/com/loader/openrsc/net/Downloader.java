@@ -7,6 +7,7 @@ import com.loader.openrsc.frame.AppFrame;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -99,6 +100,73 @@ public class Downloader extends Observable {
         downloadNew(old.keySet(), new1.keySet());
         while (!verifyDownloads(new1.entrySet())) ; //Verify and re-download until its all good.
     }
+
+  	public boolean updateJar() {
+    	boolean success = true;
+			try {
+				if (checkVersionNumber()) // Check if version is the same
+					return false; // and return false if it is.
+
+				URL url = new URL("https://openrsc.com/downloads/Open_RSC_Launcher.jar");
+
+				// Open connection
+				URLConnection connection = url.openConnection();
+				connection.setConnectTimeout(3000);
+				connection.setReadTimeout(3000);
+
+				int size = connection.getContentLength();
+				int offset = 0;
+				byte[] data = new byte[size];
+
+				InputStream input = url.openStream();
+
+				int readSize;
+				while ((readSize = input.read(data, offset, size - offset)) != -1) {
+					offset += readSize;
+				}
+
+				if (offset != size) {
+					success = false;
+				} else {
+					File file = new File("./Open_RSC_Launcher.jar");
+					FileOutputStream output = new FileOutputStream(file);
+					output.write(data);
+					output.close();
+				}
+			} catch (Exception e) {
+				success = false;
+			}
+
+			return success;
+		}
+
+		public static boolean checkVersionNumber() {
+			try {
+				Double currentVersion = 0.0;
+				URL updateURL =
+					new URL("https://raw.githubusercontent.com/Christofosho/Game/2.0.0/Launcher/src/com/loader/openrsc/Constants.java");
+
+				// Open connection
+				URLConnection connection = updateURL.openConnection();
+				connection.setConnectTimeout(3000);
+				connection.setReadTimeout(3000);
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String line;
+				while ((line = in.readLine()) != null) {
+					if (line.contains("VERSION_NUMBER")) {
+						currentVersion =
+							Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
+						break;
+					}
+				}
+
+				// Close connection
+				in.close();
+				return currentVersion == Constants.VERSION_NUMBER;
+			} catch (Exception e) {
+				return false;
+			}
+		}
 
     private boolean verifyDownloads(Set<Entry<Object, Object>> set) {
         boolean verified = true;
