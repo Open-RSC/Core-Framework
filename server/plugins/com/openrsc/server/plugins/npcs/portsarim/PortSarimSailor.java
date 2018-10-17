@@ -44,7 +44,7 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 		else if (option == 1) {
 			if (p.getInventory().remove(10, 30) > -1) {
 				message(p, "You pay 30 gold", "You board the ship");
-				p.teleport(467, 651, false);
+				p.teleport(324, 713, false);
 				sleep(1000);
 				message(p, "The ship arrives at Karamja");
 			} else {

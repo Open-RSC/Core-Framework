@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.npcs.draynor;
+package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
