@@ -19,7 +19,7 @@ public class GameTickEventHandler {
 	private LinkedHashMap<String, GameTickEvent> toAdd = new LinkedHashMap<String, GameTickEvent>();
 
 	public void add(GameTickEvent event) {
-		String className = event.getClass().getSimpleName();
+		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) {
 			String u;
 			while (events.containsKey(u = UUID.randomUUID().toString())) {}
