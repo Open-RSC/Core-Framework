@@ -452,6 +452,12 @@ public final class World {
 			LOGGER.error("Broken Npc: <id>" + npc.id + "</id><startX>" + npc.startX + "</startX><startY>"
 					+ npc.startY + "</startY>");
 		}
+
+		/**
+  	 * Unique ID for event tracking.
+		 */
+		n.setUUID(UUID.randomUUID().toString());
+
 		npcs.add(n);
 		return n;
 	}
@@ -465,6 +471,8 @@ public final class World {
 	public boolean registerPlayer(Player player) {
 		
 		if (!players.contains(player)) {
+			player.setUUID(UUID.randomUUID().toString());
+
 			players.add(player);
 			player.updateRegion();
 			if (Server.getPlayerDataProcessor() != null) {
