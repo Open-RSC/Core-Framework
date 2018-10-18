@@ -247,7 +247,7 @@ public class Skills {
 			int k = j + 1;
 			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
 			i += i1;
-			experienceArray[j] = (i & 0xfffffffc);
+			experienceArray[j] = (i & 0xffffffc);
 		}
 	}
 }
