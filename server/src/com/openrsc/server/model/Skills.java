@@ -24,8 +24,8 @@ public class Skills {
 			"agility", "thieving" };
 
 	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITPOINTS = 3, RANGE = 4, PRAYER = 5, MAGIC = 6,
-			COOKING = 7, WOODCUTTING = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-			MINING = 14, HERBLORE = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20;
+			COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
+			MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20;
 
 	private Mob mob;
 
@@ -247,7 +247,7 @@ public class Skills {
 			int k = j + 1;
 			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
 			i += i1;
-			experienceArray[j] = (i & 0xfffffffc);
+			experienceArray[j] = (i & 0xffffffc);
 		}
 	}
 }
