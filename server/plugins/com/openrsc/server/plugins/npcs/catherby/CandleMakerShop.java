@@ -41,6 +41,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 			npcTalk(p,n, "Have you got any wax yet?");
 			if(p.getInventory().hasItemId(605)) {
 				playerTalk(p,n, "Yes I have some now");
+				removeItem(p, 605, 1);
 				p.message("You exchange the wax with the candle maker for a black candle");
 				addItem(p, 600, 1);
 				p.getCache().remove("candlemaker");
