@@ -18,7 +18,7 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 		WallObjectActionExecutiveListener, InvActionListener,
 		InvActionExecutiveListener, PlayerKilledNpcExecutiveListener,
 		PlayerKilledNpcListener, PickupListener, PickupExecutiveListener,
-		ObjectActionListener, ObjectActionExecutiveListener {
+		ObjectActionListener, ObjectActionExecutiveListener, TeleportExecutiveListener {
 	/**
 	 * @author Davve
 	 * 
@@ -418,6 +418,17 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 			return true;
 		}
 		return false;
+	}
+	@Override	
+	public boolean blockTeleport(Player p) {
+		if (p.getLocation().inBounds(388, 4, 427, 40)) {
+			message(p, " A mysterious force blocks your teleport spell!",
+					"You can't use teleport after level 20 wilderness",
+					"A mysterious force blocks your teleport!",
+					"You can't use this teleport after level 30 wilderness");
+				return true;
+			}
+			return false;	
 	}
 
 	@Override
