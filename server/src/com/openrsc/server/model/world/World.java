@@ -530,8 +530,10 @@ public final class World {
 	}
 
 	public void sendWorldAnnouncement(String msg) {
-		for (Player p : getPlayers()) {
-			p.playerServerMessage(MessageType.QUEST, "@gre@[Global] @whi@" + msg);
+		if (Constants.GameServer.WANT_GLOBAL_CHAT) {
+			for (Player p : getPlayers()) {
+				p.playerServerMessage(MessageType.QUEST, "@gre@[Global] @whi@" + msg);
+			}
 		}
 	}
 
