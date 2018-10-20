@@ -45,7 +45,8 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 				return;
 			}
 			if(p.getInventory().countId(1039) > 0) {
-				p.message("You can't teleport with ana in the barrel in your inventory.");
+				message(p, "You can't teleport while holding Ana,", 
+						"It's just too difficult to concentrate.");
 				return;
 			}
 			if(p.getInventory().hasItemId(812)) {
