@@ -11,7 +11,7 @@ An easy to use RSC private server framework.
 Which method of installation do you wish to use?
 
 Choices:
-  ${RED}1${NC} - Use Docker virtual containers (recommended)
+  ${RED}1${NC} - Use Docker virtual containers
   ${RED}2${NC} - Direct installation (Ubuntu Linux only)
   ${RED}3${NC} - Return to main menu"
 echo ""

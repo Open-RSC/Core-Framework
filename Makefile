@@ -22,8 +22,11 @@ hard-reset-game-windows:
 hard-reset-website-windows:
 	cd Website && git reset HEAD --hard
 
-certbot:
-	`pwd`/scripts/certbot.sh
+certbot-native:
+	`pwd`/scripts/certbot-native.sh
+
+certbot-docker:
+	`pwd`/scripts/certbot-docker.sh
 
 rank:
 	`pwd`/scripts/rank.sh
