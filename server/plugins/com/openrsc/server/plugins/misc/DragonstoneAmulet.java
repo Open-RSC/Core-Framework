@@ -55,6 +55,14 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 					p.getInventory().remove(new Item(812));
 				}
 			}
+			if (p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
+			|| p.getLocation().inBounds(411, 976, 519, 984)
+			|| p.getLocation().inBounds(411, 1920, 518, 1925)
+			|| p.getLocation().inBounds(511, 976, 519, 984)
+			|| p.getLocation().inBounds(511, 1920, 518, 1925)){
+                message(p, "A mysterious force blocks your teleport!",
+                        "You can't use this teleport after level 30 wilderness!");
+            }
 			if(menu != -1) {
 				if(menu == 0) { // Edgeville
 					p.teleport(226, 447, true);
