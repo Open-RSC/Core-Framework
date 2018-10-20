@@ -434,8 +434,8 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			@Override
 			public void action() {
 
-				player.setBusyTimer(1300);
-				npc.setBusyTimer(1300 * 2);
+				player.setBusyTimer(1200);
+				npc.setBusyTimer(1200 * 2);
 				if (npc.inCombat()) {
 					interrupt();
 					return;
@@ -476,7 +476,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					player.face(npc);
 					player.setBusyTimer(0);
 					npc.setBusyTimer(0);
-					setDelay(650);
+					setDelay(600);
 					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 					npc.getUpdateFlags()
 					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
