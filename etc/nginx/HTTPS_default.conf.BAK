@@ -54,7 +54,7 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
-        try_files $uri $uri/ /elite/index.php$is_args$args /board/app.php$is_args$args;
+        try_files $uri $uri/ /elite/index.php$is_args$args /elite/board/app.php$is_args$args;
     }
 
     ####### PHPBB Forum #######
@@ -64,7 +64,7 @@ server {
     }
 
     location @rewriteapp {
-        rewrite ^(.*)$ /board/app.php/$1 last;
+        rewrite ^(.*)$ /elite/board/app.php/$1 last;
     }
 
     location /elite/ {
@@ -80,7 +80,7 @@ server {
     }
 
 	 	location @rewrite_installapp {
-	 	    rewrite ^(.*)$ /board/install/app.php/$1 last;
+	 	    rewrite ^(.*)$ /elite/board/install/app.php/$1 last;
 	 	}
 
     location ~ \.php(/|$) {
@@ -89,7 +89,7 @@ server {
 	 	    fastcgi_param PATH_INFO $fastcgi_path_info;
 	 	    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
 	 	    fastcgi_param DOCUMENT_ROOT $realpath_root;
-	 	    try_files $uri $uri/ /elite/index.php$is_args$args /board/install/app.php$is_args$args;
+	 	    try_files $uri $uri/ /elite/index.php$is_args$args /elite/board/install/app.php$is_args$args;
 	 	    fastcgi_pass php;
 	 	}
 

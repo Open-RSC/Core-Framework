@@ -125,7 +125,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			else
 				p.message(cookingOnMessage(p, item, object));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, 1200, Formulae.getRepeatTimes(p, 7)) {
+			p.setBatchEvent(new BatchEvent(p, 3000, Formulae.getRepeatTimes(p, 7)) {
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
