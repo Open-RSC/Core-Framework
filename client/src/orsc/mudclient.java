@@ -13501,7 +13501,7 @@ public final class mudclient implements Runnable {
 				int experienceFactor = 1 + i;
 				int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
 				experience += experienceIncrease;
-				this.experienceArray[i] = (int)((experience & 0xfffffffc) / 4);
+				this.experienceArray[i] = (int)((experience & 0xffffffc) / 4);
 			}
 		}
 
