@@ -268,9 +268,12 @@ public class ItemUseOnObject implements PacketHandler {
 											+ result.getDef().getName()
 											+ " cracks in the oven, you throw it away.");
 								} else {
+									owner.message("the "
+										+ result.getDef().getName()
+										+ "hardens in the oven");
 									owner.message("You remove a "
-											+ result.getDef().getName()
-											+ "from the oven");
+										+ result.getDef().getName()
+										+ "from the oven");
 									owner.getInventory().add(result);
 									owner.incExp(12, exp, true);
 								}
