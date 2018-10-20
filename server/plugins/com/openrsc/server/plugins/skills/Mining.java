@@ -129,7 +129,7 @@ ObjectActionExecutiveListener {
 			retrytimes = 2;
 			break;
 		case 1259:
-			retrytimes = 3;
+			retrytimes = 4;
 			reqlvl = 6;
 			break;
 		case 1260:
