@@ -114,8 +114,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			@Override
 			public void action() {
 				npcTalk(p, n, "Under what grounds?");
-				new Menu().addOptions(new Option(
-						"Repeated failure on mortgage payments") {
+				new Menu().addOptions(new Option("Repeated failure on mortgage payments") {
 					@Override
 					public void action() {
 						npcTalk(p, n, "I don't have a mortgage",
