@@ -58,9 +58,9 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			public void action() {
 				npcTalk(p,
 						n,
-						"Surely you have heard of the God Saradomin?",
+						"Surely you have heard of the God, Saradomin?",
 						"He who creates the forces of goodness and purity in this world?",
-						"I cannot belive your ignorance!",
+						"I cannot believe your ignorance!",
 						"This is the God with more followers than any other!",
 						"At least in theses parts!",
 						"He who along with his brothers Guthix and Zamorak created this world");
