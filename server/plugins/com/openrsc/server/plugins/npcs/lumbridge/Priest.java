@@ -14,6 +14,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {// that could work
+		npcTalk(p, n, "Welcome to the church of holy Saradomin");
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1) {
 			playerTalk(p, n, "I can't find father Urhney at the moment");
 			npcTalk(p,
