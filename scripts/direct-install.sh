@@ -106,8 +106,8 @@ for i in $(seq 1 100); do
 
     i=99
     echo -e "XXX\n$i\n${phases[16]}\nXXX"
-    # Create Website downloads folder
-    sudo mkdir /var/www/html/downloads
+    # Clean website folder
+    sudo rm /var/www/html/*.*
 
     i=100
     echo -e "XXX\n$i\n${phases[17]}\nXXX"
@@ -121,5 +121,7 @@ for i in $(seq 1 100); do
         echo $i
     fi
 done | whiptail --title 'Open RSC Direct Installation' --gauge "${phases[0]}" 7 70 0
+
+make clone-website
 
 make file-edits

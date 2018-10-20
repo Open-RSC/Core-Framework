@@ -401,11 +401,15 @@ public final class Formulae {
 	/**
 	 * Calculate how much experience a Mob gives
 	 */
-	public static int combatExperience(Mob mob) {
+	public static int combatExperience(Mob mob) { //"OPEN RSC FORMULA
 		return ((mob.getCombatLevel() * 2) + 20);
 	}
+	/*public static int combatExperience(Mob mob) { //"WOW" EXP FORMULA
+		double exp = Math.pow(mob.getCombatLevel(), 2) * 1.5D;
+		return (int) (mob instanceof Player ? (exp / 4D) : exp);
+	}*/
 
-	/*
+	/**
 	 * Should the pot crack?
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {
