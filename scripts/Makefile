@@ -10,8 +10,11 @@ run:
 hard-reset:
 	`pwd`/hard-reset.sh
 
-certbot:
-	`pwd`/certbot.sh
+certbot-native:
+	`pwd`/certbot-native.sh
+
+certbot-docker:
+	`pwd`/certbot-docker.sh
 
 rank:
 	`pwd`/rank.sh
@@ -66,7 +69,7 @@ run-game:
 	`pwd`/run.sh
 
 clone-website:
-	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
+	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 
 pull-website:
 	@cd ../Website && git pull
