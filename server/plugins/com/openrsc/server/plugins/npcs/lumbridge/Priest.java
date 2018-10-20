@@ -73,7 +73,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					@Override
 					public void action() {
 						npcTalk(p, n, "That's strange",
-								"I tought things not from this world were all slime and tenticles");
+								"I thought things not from this world were all slime and tenticles");
 						new Menu()
 								.addOptions(
 										new Option(
