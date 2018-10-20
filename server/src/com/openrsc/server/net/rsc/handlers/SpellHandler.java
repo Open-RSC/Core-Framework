@@ -641,6 +641,10 @@ public class SpellHandler implements PacketHandler {
 					if (affectedItem.getID() == 980) {
 						return;
 					}
+					if (affectedItem.getID() == 723) { // Ice Arrows
+						player.message("I can't use telekinetic grab on this object");
+						return;
+					}
 
 					if(World.WORLD_TELEGRAB_TOGGLE) {
 						player.message("Telegrab has been disabled due to an running global event, please try again later");
