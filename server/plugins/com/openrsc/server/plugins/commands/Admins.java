@@ -29,8 +29,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,11 +40,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public final class Admins implements CommandListener {
-
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final World world = World.getWorld();
 	private DelayedEvent holidayDropEvent;
@@ -438,7 +431,7 @@ public final class Admins implements CommandListener {
 					def.drops = drops.toArray(new ItemDropDef[] {});
 				}
 			} catch (SQLException e) {
-				LOGGER.catching(e);
+				System.out.println(e);
 			}
 			player.message("might have reloaded drops..idk.");
 		}
