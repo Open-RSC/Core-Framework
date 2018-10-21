@@ -428,7 +428,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			player.message("I can't get close enough");
 			return;
 		}
-		final ArrayList<LootItem> lootTable = (ArrayList<LootItem>) pickpocket.getLootTable().clone();
+		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
 			@Override
