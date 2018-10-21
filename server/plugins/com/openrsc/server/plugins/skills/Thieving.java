@@ -449,16 +449,17 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 	public void doPickpocket(final Player player, final Npc npc, final Pickpocket pickpocket) {
 		player.face(npc);
-		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
-			player.message("Your theiving ability is not high enough to thieve the " + npc.getDef().getName());
-			return;
-		}
 		if (npc.inCombat()) {
 			player.message("I can't get close enough");
 			return;
 		}
 		final ArrayList<LootItem> lootTable = (ArrayList<LootItem>) pickpocket.getLootTable().clone();
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
+			sleep(1800);
+			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+			return;
+		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
 			@Override
 			public void action() {
