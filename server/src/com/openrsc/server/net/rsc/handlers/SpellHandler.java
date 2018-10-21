@@ -39,6 +39,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import static com.openrsc.server.plugins.Functions.message;
+
 public class SpellHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
@@ -1017,7 +1019,8 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		if (player.getInventory().countId(1039) > 0) {
-			player.message("You can't use teleport spells with ana in the barrel in your inventory.");
+			message(player, "You can't teleport while holding Ana,", 
+                    "It's just too difficult to concentrate.");
 			return;
 		}
 		if(!player.getCache().hasKey("watchtower_scroll") && id == 31) {
