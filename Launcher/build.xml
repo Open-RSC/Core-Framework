@@ -1,41 +1,50 @@
 <project default="compile" basedir=".">
 
-<property name="src" location="src" />
-<property name="data" location="data" />
-<property name="build" location="build" />
-<property name="jar" location="Open_RSC_Launcher.jar" />
-<property name="javac.source" value="1.8"/>
-<property name="javac.target" value="1.8"/>
+	<property name="src" location="src"/>
+	<property name="data" location="data"/>
+	<property name="build" location="build"/>
+	<property name="lib" location="../lib"/>
+	<property name="jar" location="Open_RSC_Launcher.jar"/>
+	<property name="javac.source" value="11"/>
+	<property name="javac.target" value="11"/>
 
-<target name="compile">
-    <delete file="${jar}" />
-    <delete dir="${build}" />
-    <mkdir dir="${build}"/>
-    <copy todir="${build}/data">
-        <fileset dir="src/data"/>
-    </copy>
-    <javac srcdir="${src}" destdir="${build}" debug="on" target="1.8" source="1.8" includeantruntime="false">
-        <classpath>
-            <pathelement path="${java.class.path}/"/>
-        </classpath>
-    </javac>
-    <jar basedir="${build}" destfile="${jar}">
-        <manifest>
-            <attribute name="Main-Class" value="com.loader.openrsc.OpenRSC"/>
-        </manifest>
-    </jar>
-</target>
+	<target name="compile">
+		<delete file="${jar}"/>
+		<delete dir="${build}"/>
+		<mkdir dir="${build}"/>
+		<copy todir="${build}/data">
+			<fileset dir="${src}/data"/>
+		</copy>
+		<javac srcdir="${src}" destdir="${build}" debug="on" target="${javac.source}" source="${javac.target}" includeantruntime="false">
+			<classpath>
+				<pathelement path="${java.class.path}/"/>
+				<fileset dir="${lib}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+		<unzip dest="${build}">
+			<fileset dir="${lib}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</unzip>
+		<jar basedir="${build}" destfile="${jar}">
+			<manifest>
+				<attribute name="Main-Class" value="com.loader.openrsc.OpenRSC"/>
+			</manifest>
+		</jar>
+	</target>
 
-<target name="runlauncher">
-    <java classname="com.loader.openrsc.OpenRSC" fork="true">
-        <classpath>
-            <pathelement path="${jar}/" />
-        </classpath>
-    </java>
-</target>
+	<target name="runlauncher">
+		<java classname="com.loader.openrsc.OpenRSC" fork="true">
+			<classpath>
+				<pathelement path="${jar}/"/>
+			</classpath>
+		</java>
+	</target>
 
-<target name="compile-and-run">
-    <antcall target="compile"/>
-    <antcall target="runlauncher"/>
-</target>
+	<target name="compile-and-run">
+		<antcall target="compile"/>
+		<antcall target="runlauncher"/>
+	</target>
 </project>
