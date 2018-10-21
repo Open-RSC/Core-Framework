@@ -224,6 +224,9 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			player.message("You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 		sleep(800);
 		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" :  objectName.replaceAll("stall", "").trim();
+		if(!failNoun.endsWith("s")) {
+			failNoun += "s";
+		}
 		if (player.getSkills().getLevel(17) < stall.getRequiredLevel()) {
 			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
@@ -274,8 +277,8 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			player.message("@gre@You are too tired to gain experience, get some rest");
 
 		player.getInventory().add(selectedLoot);
-		String article = stall.equals(Stall.GEMS_STALL) ? "an " : "a ";
-		player.message("You steal " + article + stall.getLootPrefix() + selectedLoot.getDef().getName().toLowerCase());
+		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
+		player.message("You steal a " + stall.getLootPrefix() + loot);
 
 		player.incExp(17, stall.getXp(), true);
 
