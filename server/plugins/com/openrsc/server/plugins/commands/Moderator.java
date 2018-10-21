@@ -15,8 +15,6 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,11 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Moderator implements CommandListener {
-
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final World world = World.getWorld();
 
@@ -389,7 +382,7 @@ public final class Moderator implements CommandListener {
 						}
 				}
 			} catch (Exception e) {
-				LOGGER.catching(e);
+				System.out.println(e);
 			}
 		}
 		if (command.equals("check")) {
