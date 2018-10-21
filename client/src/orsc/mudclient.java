@@ -7675,9 +7675,9 @@ public final class mudclient implements Runnable {
 
       // Sound Effects
       if (this.optionSoundDisabled) {
-        this.getSurface().drawString("@whi@Sound Effects - @red@<off>", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Sound Effects - @red@off", 3 + var3, var7, 0, 1);
       } else {
-				this.getSurface().drawString("@whi@Sound Effects - @gre@<on>", 3 + var3, var7, 0, 1);
+				this.getSurface().drawString("@whi@Sound Effects - @gre@on", 3 + var3, var7, 0, 1);
       }
 
 			var7 += 15;
