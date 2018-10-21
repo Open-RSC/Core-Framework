@@ -456,7 +456,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			player.message("I can't get close enough");
 			return;
 		}
-		final ArrayList<LootItem> lootTable = (ArrayList<LootItem>) pickpocket.getLootTable().clone();
+		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
