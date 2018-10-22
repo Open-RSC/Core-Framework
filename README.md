@@ -2,10 +2,36 @@
 ###### [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=2.0.0)](https://travis-ci.org/Open-RSC/Game)
 
 # Table of contents <a name="top"></a>
-1. [How to Install](#install)
-2. [Default Credentials](#credentials)
-3. [Minimum Requirements](#requirements)
-4. [Hosting Your Own Server](#hosting)
+1. [Enable High DPI Scaling For High Res Monitors](#dpi)
+2. [How to Install](#install)
+3. [Default Credentials](#credentials)
+4. [Minimum Requirements](#requirements)
+5. [Hosting Your Own Server](#hosting)
+
+## Enable high DPI Scaling For High Res Monitors<a name="dpi"></a>
+
+<b>Windows:</b>
+
+Note: This requires Java 9 or newer to be installed. Java 8 does not support DPI scaling.
+
+1. Launch the Open RSC game client
+
+2. Open task manager (CTRL + ALT + DEL)
+
+3. Right click the process "Java(TM) Platform SE binary"
+
+4. Click "Open file location"
+
+5. Right click on "javaw.exe" and click "Properties"
+
+6. Click on the "Compatibility" tab
+
+7. Set this: <img src="https://i.imgur.com/5gJqSMr.png"/>
+
+8. Re-launch the Open RSC game client
+
+[Return to top](#top)
+___
 
 ## How to Install<a name="install"></a>
 
