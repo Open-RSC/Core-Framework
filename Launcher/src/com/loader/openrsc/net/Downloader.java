@@ -107,7 +107,9 @@ public class Downloader extends Observable {
 				if (checkVersionNumber()) // Check if version is the same
 					return false; // and return false if it is.
 
-				URL url = new URL("https://openrsc.com/downloads/Open_RSC_Launcher.jar");
+
+
+				URL url = new URL(Constants.UPDATE_JAR_URL);
 
 				// Open connection
 				URLConnection connection = url.openConnection();
@@ -128,7 +130,7 @@ public class Downloader extends Observable {
 				if (offset != size) {
 					success = false;
 				} else {
-					File file = new File("./Open_RSC_Launcher.jar");
+					File file = new File("./" + Constants.JAR_FILENAME);
 					FileOutputStream output = new FileOutputStream(file);
 					output.write(data);
 					output.close();
@@ -144,7 +146,7 @@ public class Downloader extends Observable {
 			try {
 				Double currentVersion = 0.0;
 				URL updateURL =
-					new URL("https://raw.githubusercontent.com/Christofosho/Game/2.0.0/Launcher/src/com/loader/openrsc/Constants.java");
+					new URL(Constants.VERSION_UPDATE_URL);
 
 				// Open connection
 				URLConnection connection = updateURL.openConnection();
