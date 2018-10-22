@@ -29,7 +29,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Unique ID for event tracking.
 	 */
-	private static String uuid;
+	private String uuid;
 
 	/**
 	 * The asynchronous logger.
