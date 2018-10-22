@@ -25,7 +25,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private static final long serialVersionUID = 1L;
 
-	Font copyrightFont = new Font("Helvetica", 1, 13);
+	Font createdbyFont = new Font("Helvetica", 1, 13);
 	Font copyrightFont2 = new Font("Helvetica", 0, 12);
 	Font loadingFont = new Font("TimesRoman", 0, 15);
 
@@ -123,9 +123,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
 				if (!this.m_hb) {
-					this.drawCenteredString(this.copyrightFont, "Powered by Open RSC", 30 + y, true,
+					this.drawCenteredString(this.createdbyFont, "Powered by Open RSC", 30 + y, true,
 							x + 138, this.loadingGraphics);
-					this.drawCenteredString(this.copyrightFont, "We support open source development.", y + 44, true, x + 138,
+					this.drawCenteredString(this.createdbyFont, "We support open source development.", y + 44, true, x + 138,
 							this.loadingGraphics);
 				} else {
 					this.loadingGraphics.setColor(new Color(132, 132, 152));
@@ -135,7 +135,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 				if (null != this.m_p) {
 					this.loadingGraphics.setColor(Color.white);
-					this.drawCenteredString(this.copyrightFont, this.m_p, y - 120, true, x + 138, this.loadingGraphics);
+					this.drawCenteredString(this.createdbyFont, this.m_p, y - 120, true, x + 138, this.loadingGraphics);
 				}
 			} catch (Exception var6) {
 				;
