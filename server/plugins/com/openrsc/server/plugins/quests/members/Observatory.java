@@ -64,6 +64,15 @@ InvUseOnObjectExecutiveListener {
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 662) {
 			switch (p.getQuestStage(this)) {
+			case 0:
+				npcTalk(p, n, "Hello friend", "This is my poorly telescope",
+						"It's been tampered with and is not working", "If your good at crafting",
+						"I would appreciate your help!", "Come to the reception if you can");
+				break;
+			case 1: case 2: case 3: case 4: case 5:
+				npcTalk(p, n, "Hello friend", "I hope you get all the parts soon",
+						"Return to the reception", "When you have the things I need");
+				break;
 			case 6:
 				npcTalk(p, n, "Hello friend", "It's time to use the telescope");
 				break;
@@ -548,7 +557,7 @@ InvUseOnObjectExecutiveListener {
 				Npc professor = getNearestNpc(p, 662, 10);
 				if(professor != null) {
 					p.message("You look through the telescope");
-					constellation(p);
+					constellation(p, p.getQuestStage(getQuestId()));
 					int completedQuest = showMenu(p, professor,
 							"I can see a constellation through the telescope",
 							"I see something, but I don't know what it is");
@@ -562,13 +571,13 @@ InvUseOnObjectExecutiveListener {
 				}
 				return;
 			}
-			if (p.getQuestStage(getQuestId()) == 6) {
+			else if (p.getQuestStage(getQuestId()) == 6) {
 				Npc professor = getNearestNpc(p, 662, 10);
 				if(professor != null) {
 					npcTalk(p, professor, "Well done, well done!!",
 							"Let's see what the stars have in store for us today");
 					p.message("You look through the telescope");
-					constellation(p);
+					constellation(p, p.getQuestStage(getQuestId()));
 					int telescop = showMenu(p, professor,
 							"I can see a constellation", "What am I looking at ?");
 					if (telescop == 0) {
@@ -602,6 +611,10 @@ InvUseOnObjectExecutiveListener {
 					}
 				}
 			}
+			else {
+				p.message("It seems that the telescope is not operational");
+				constellation(p, p.getQuestStage(getQuestId()));
+			}
 		}
 	}
 
@@ -610,64 +623,71 @@ InvUseOnObjectExecutiveListener {
 	private void constellationNameAndReward(Player p, Npc n) {
 		if(selectedNumber == 0) {
 			npcTalk(p, n, "Virgo the virtuous",
-					"you are granted an increase in defense");
+					"The strong and peaceful nature of virgo boosts your defence");
 			p.incQuestExp(1, p.getSkills().getMaxStat(1) * 100 + 500);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
 					"The scales of justice award you with Law Runes");
 			addItem(p, 42, 3);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 2) {
 			npcTalk(p, n, "Gemini the twins",
 					"The double nature of Gemini awards you a two-handed weapon");
 			addItem(p, 426, 1);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 3) {
-			npcTalk(p, n, "Pisces the fish");
+			npcTalk(p, n, "Pisces the fish",
+					"The gods rain food from the sea on you");
 			addItem(p, 367, 3);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 4) {
-			npcTalk(p, n, "Taurus the bull");
+			npcTalk(p, n, "Taurus the bull",
+					"You are given the strength of a bull");
 			addItem(p, 492, 1);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 5) {
-			npcTalk(p, n, "Aquarius the water-bearer");
+			npcTalk(p, n, "Aquarius the water-bearer",
+					"the Gods of water award you with water runes");
 			addItem(p, 32, 25);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 6) {
 			npcTalk(p, n, "Scorpio the scorpion",
 					"The scorpion gives you poison from it's sting");
 			addItem(p, 572, 1);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
-					"you are granted an increase in attack");
+					"The ram's strength improves your attack abilities");
 			p.incQuestExp(0, p.getSkills().getMaxStat(0) * 100 + 500);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 8) {
-			npcTalk(p, n, "Sagittarius the Centaur");
+			npcTalk(p, n, "Sagittarius the Centaur",
+					"The Gods award you a maple longbow");
 			addItem(p, 652, 1);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
-					"you are granted an increase in hits");
+					"The power of the lion has increased your hitpoints");
 			p.incQuestExp(3, p.getSkills().getMaxStat(3) * 100 + 500);
-			addItem(p, 160, 1);
 		}  else if(selectedNumber == 10) {
 			npcTalk(p, n, "Capricorn the goat",
 					"you are granted an increase in strength");
 			p.incQuestExp(2, p.getSkills().getMaxStat(2) * 100 + 500);
-			addItem(p, 160, 1);
 		} else if(selectedNumber == 11) {
-			npcTalk(p, n, "Cancer the crab");
+			npcTalk(p, n, "Cancer the crab",
+					"The armoured crab gives you an amulet of protection");
 			addItem(p, 315, 1);
-			addItem(p, 160, 1);
 		}
+		// all constellations give uncut sapphire
+		addItem(p, 160, 1);
 	}
 
-	private void constellation(Player p) {
+	private void constellation(Player p, int stage) {
 		selectedNumber = 0;
+		
+		// quest completed, always show scorpion
+		if(stage == -1) {
+			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                 *                                                                                                                               *                                                                                                      *                                                                                                                     *                    *                                                                                                                                                                                                                                                     *                                                                                         *                                                                                                                                                                                                                                *              *                                                                                                    *                    *                                                                                                   *        *                                                                           ", true);
+			return;
+		} 
+		// show no image on telescope at this stage
+		else if(stage < 6) {
+			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ", true);
+			return;
+		}
+		
 		int random = DataConversions.random(0, 11);
 		if(random == 0) { // 
 			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                    *                                                                                               *                                                                                                                             *                                   *                                                                                                               *                  *                                                                     *         *                                                                                                                                                 *     *                                                                                  *                          *                                                                                                                    *                                                                                                    *                                                                                                                                 *                                                          ", true);
