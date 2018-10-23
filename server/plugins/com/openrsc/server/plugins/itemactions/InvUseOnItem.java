@@ -19,7 +19,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		/**
 		 * Dye the wig with yellow dye and get blonde wig for Prince Ali rescue Quest
 		 */
-		if(item1.getID() == 245 && item2.getID() == 239) {
+		if(compareItemsIds(item1, item2, 245, 239)) {
 			if(player.getInventory().remove(new Item(239)) > -1 && player.getInventory().remove(new Item(245)) > -1) {
 				player.message("You dye the wig blond");
 				player.getInventory().add(new Item(244));
@@ -27,7 +27,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if(item1.getID() == 136 && item2.getID() == 783 || item1.getID() == 783 && item2.getID() == 136) {
+		else if(compareItemsIds(item1, item2, 136, 783)) {
 			if(player.getInventory().remove(new Item(136)) > -1 && player.getInventory().remove(new Item(783)) > -1) {
 				player.message("you mix the flour with the swamp tar");
 				player.message("it mixes into a paste");
@@ -36,7 +36,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if(item1.getID() == 166 && item2.getID() == 600 || item1.getID() == 600 && item2.getID() == 166) {
+		else if(compareItemsIds(item1, item2, 166, 600)) {
 			if(player.getInventory().remove(new Item(600)) > -1) {
 				player.message("You light the candle");
 				player.getInventory().add(new Item(602));
@@ -44,7 +44,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if(item1.getID() == 166 && item2.getID() == 599|| item1.getID() == 599 && item2.getID() == 166) {
+		else if(compareItemsIds(item1, item2, 166, 599)) {
 			if(player.getInventory().remove(new Item(599)) > -1) {
 				player.message("You light the candle");
 				player.getInventory().add(new Item(601));
@@ -52,7 +52,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if(item1.getID() == 587 && item2.getID() == 457 || item1.getID() == 457 && item2.getID() == 587) {
+		else if(compareItemsIds(item1, item2, 587, 457)) {
 			if(player.getInventory().remove(new Item(457)) > -1 && player.getInventory().remove(new Item(587)) > -1) {
 				if(player.getSkills().getMaxStat(15) >= 25) {
 					player.message("You mix the slime into your potion");
@@ -64,7 +64,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			}
 			return;
 		}
-		if(item1.getID() == 588 && item2.getID() == 377 || item1.getID() == 377 && item2.getID() == 588) {
+		else if(compareItemsIds(item1, item2, 588, 377)) {
 			if(player.getInventory().remove(new Item(588)) > -1 && player.getInventory().remove(new Item(377)) > -1) {
 				player.message("You rub the oil onto the fishing rod");
 				player.getInventory().add(new Item(589));
@@ -72,7 +72,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			} 
 			return;
 		}
-		if(item1.getID() == 778 && item2.getID() == 776 || item1.getID() == 776 && item2.getID() == 778) {
+		else if(compareItemsIds(item1, item2, 778, 776)) {
 			if(player.getInventory().remove(new Item(776)) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
@@ -87,7 +87,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if(item1.getID() == 22 && item2.getID() == 772 || item1.getID() == 772 && item2.getID() == 22) {
+		else if(compareItemsIds(item1, item2, 22, 772)) {
 			if(player.getInventory().remove(new Item(22)) > -1 && player.getInventory().remove(new Item(772)) > -1) {
 				player.message("You mix the chocolate into the bucket");
 				player.getInventory().add(new Item(770));
@@ -95,7 +95,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			}
 			return;
 		}
-		if(item1.getID() == 770 && item2.getID() == 469 || item1.getID() == 469 && item2.getID() == 770) {
+		else if(compareItemsIds(item1, item2, 770, 469)) {
 			if(player.getInventory().remove(new Item(770)) > -1 && player.getInventory().remove(new Item(469)) > -1) {
 				player.message("You mix the snape grass into the bucket");
 				player.getInventory().add(new Item(771));
@@ -110,7 +110,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		 * Wine and combine Dyes
 		 */
 
-		if(item1.getID() == 143 && item2.getID() == 141) { // wine
+		else if(compareItemsIds(item1, item2, 143, 141)) { // wine
 			if (player.getInventory().remove(new Item(143)) > -1 && player.getInventory().remove(new Item(141)) > -1) {
 				player.message("You combine the grapes and water to make wine");
 				player.getInventory().add(new Item(142));
@@ -118,7 +118,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if (item1.getID() == 238 && item2.getID() == 239 || item1.getID() == 239 && item2.getID() == 238) {
+		else if(compareItemsIds(item1, item2, 238, 239)) {
 			if (player.getInventory().remove(new Item(239)) > -1 && player.getInventory().remove(new Item(238)) > -1) {
 				player.getInventory().add(new Item(282));
 				player.message("You mix the Dyes");
@@ -126,7 +126,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if (item1.getID() == 238 && item2.getID() == 272 || item1.getID() == 272 && item2.getID() == 238) {
+		else if(compareItemsIds(item1, item2, 238, 272)) {
 			if (player.getInventory().remove(new Item(272)) > -1 && player.getInventory().remove(new Item(238)) > -1) {
 				player.getInventory().add(new Item(516));
 				player.message("You mix the Dyes");
@@ -134,7 +134,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if (item1.getID() == 239 && item2.getID() == 272 || item1.getID() == 272 && item2.getID() == 239) {
+		else if(compareItemsIds(item1, item2, 239, 272)) {
 			if (player.getInventory().remove(new Item(272)) > -1 && player.getInventory().remove(new Item(239)) > -1) {
 				player.getInventory().add(new Item(515));
 				player.message("You mix the Dyes");
@@ -196,7 +196,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				}
 			}
 		}
-		if (item1.getID() == 273 && item2.getID() == 282 || item1.getID() == 282 && item2.getID() == 273) {
+		if(compareItemsIds(item1, item2, 273, 282)) {
 			if (player.getInventory().remove(new Item(282)) > -1 && player.getInventory().remove(new Item(273)) > -1) {
 				player.getInventory().add(new Item(274));
 				player.message("You dye the goblin armor");
@@ -204,7 +204,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if (item1.getID() == 273 && item2.getID() == 272 || item1.getID() == 272 && item2.getID() == 273) {
+		else if(compareItemsIds(item1, item2, 273, 272)) {
 			if (player.getInventory().remove(new Item(272)) > -1 && player.getInventory().remove(new Item(273)) > -1) {
 				player.getInventory().add(new Item(275));
 				player.message("You dye the goblin armor");
@@ -212,64 +212,117 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		else if (item1.getID() == 526 && combineKeys(player, item1, item2)) {
+		else if (compareItemsIds(item1, item2, 1276, 1277)) {
+			//non-kosher message: hinting to use the anvil (if kosher message is found, replace)
+			player.message("You need an anvil and a hammer to repair the shield");
+			
+			// joining directly is non-kosher mechanic
+			//if (player.getInventory().remove(new Item(1276)) > -1 && player.getInventory().remove(new Item(1277)) > -1) {
+			//	player.message("You join the two halves of the shield together");
+			//	player.getInventory().add(new Item(1278));
+			//	
+			//	return;
+			//}
+			
 			return;
-		} 
-		else if (item2.getID() == 526 && combineKeys(player, item2, item1)) {
-			return;
+		}
+		else if (compareItemsIds(item1, item2, 526, 527)) {
+			if (player.getInventory().remove(item1) > -1 && player.getInventory().remove(item2) > -1) {
+				player.message("You join the two halves of the key together");
+				player.getInventory().add(new Item(525, 1));
+				return;
+			}
+		}
+		
+		else if(isMapPiece(item1) && isMapPiece(item2)) {
+			int[] pieces = {416, 417, 418};
+			if(player.getInventory().countId(pieces[0]) < 1 || player.getInventory().countId(pieces[1]) < 1 ||
+					player.getInventory().countId(pieces[2]) < 1) {
+				player.message("You still need one more piece of map");
+				return;
+			}
+			else {
+				player.message("You put all the pieces of map together");
+				player.getInventory().remove(pieces[0], 1);
+				player.getInventory().remove(pieces[1], 1);
+				player.getInventory().remove(pieces[2], 1);
+				player.getInventory().add(new Item(415, 1));
+				return;
+			}
+		}
+		
+		else if(isCrestFragment(item1) && isCrestFragment(item2)) {
+			int[] fragments = {695, 696, 697};
+			if(player.getInventory().countId(fragments[0]) < 1 || player.getInventory().countId(fragments[1]) < 1 ||
+					player.getInventory().countId(fragments[2]) < 1) {
+				player.message("You still need one more piece of the crest");
+				return;
+			}
+			else {
+				player.message("You put all the pieces of the crest together");
+				player.getInventory().remove(fragments[0], 1);
+				player.getInventory().remove(fragments[1], 1);
+				player.getInventory().remove(fragments[2], 1);
+				player.getInventory().add(new Item(694, 1));
+				return;
+			}
 		}
 	}
-
-	private boolean combineKeys(Player player, final Item firstHalf, final Item secondHalf) {
-		if (secondHalf.getID() != 527) {
-			return false;
-		}
-		if (player.getInventory().remove(firstHalf) > -1 && player.getInventory().remove(secondHalf) > -1) {
-			player.message("You combine the key halves to make a crystal key.");
-			player.getInventory().add(new Item(525, 1));
-			
-		}
-		return true;
+	
+	private boolean isMapPiece(Item item) {
+		return item.getID() == 416 || item.getID() == 417 || item.getID() == 418;
+	}
+	
+	private boolean isCrestFragment(Item item) {
+		return item.getID() == 695 || item.getID() == 696 || item.getID() == 697;
 	}
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if(item1.getID() == 1276 && item2.getID() == 1277)
+		if(compareItemsIds(item1, item2, 238, 239))
 			return true;
-		if(item1.getID() == 238 && item2.getID() == 239 || item1.getID() == 239 && item2.getID() == 238)
+		else if(compareItemsIds(item1, item2, 238, 272))
 			return true;
-		if(item1.getID() == 238 && item2.getID() == 272 || item1.getID() == 272 && item2.getID() == 238)
+		else if(compareItemsIds(item1, item2, 239, 272))
 			return true;
-		if(item1.getID() == 239 && item2.getID() == 272 || item1.getID() == 272 && item2.getID() == 239)
+		else if(compareItemsIds(item1, item2, 273, 282))
 			return true;
-		if(item1.getID() == 273 && item2.getID() == 282 || item1.getID() == 282 && item2.getID() == 273)
+		else if(compareItemsIds(item1, item2, 273, 272))
 			return true;
-		if(item1.getID() == 273 && item2.getID() == 272 || item1.getID() == 272 && item2.getID() == 273)
+		else if(compareItemsIds(item1, item2, 136, 783))
 			return true;
-		if(item1.getID() == 136 && item2.getID() == 783 || item1.getID() == 783 && item2.getID() == 136)
+		else if(compareItemsIds(item1, item2, 166, 600))
 			return true;
-		if(item1.getID() == 166 && item2.getID() == 600 || item1.getID() == 600 && item2.getID() == 166) 
+		else if(compareItemsIds(item1, item2, 166, 599))
 			return true;
-		if(item1.getID() == 166 && item2.getID() == 599 || item1.getID() == 599 && item2.getID() == 166) 
+		else if(compareItemsIds(item1, item2, 587, 457))
 			return true;
-		if(item1.getID() == 587 && item2.getID() == 457 || item1.getID() == 457 && item2.getID() == 587) 
+		else if(compareItemsIds(item1, item2, 588, 377))
 			return true;
-		if(item1.getID() == 588 && item2.getID() == 377 || item1.getID() == 377 && item2.getID() == 588) 
+		else if(compareItemsIds(item1, item2, 778, 776))
 			return true;
-		if(item1.getID() == 778 && item2.getID() == 776 || item1.getID() == 776 && item2.getID() == 778)
+		else if(compareItemsIds(item1, item2, 22, 772))
 			return true;
-		if(item1.getID() == 22 && item2.getID() == 772 || item1.getID() == 772 && item2.getID() == 22)
-			return true;
-		if(item1.getID() == 770 && item2.getID() == 469 || item1.getID() == 469 && item2.getID() == 770) 
+		else if(compareItemsIds(item1, item2, 770, 469))
 			return true;
 		/**
 		 * prince ali rescue dye wig and yellow die to blond wig
 		 */
-		if(item1.getID() == 245 && item2.getID() == 239 || item1.getID() == 239 && item2.getID() == 245)
+		else if(compareItemsIds(item1, item2, 245, 239))
 			return true;
-		if(item1.getID() == 526)
+		/**
+		 * assembles: key halves, map pieces, and crest fragments
+		 * cannot be assembled directly: dragon square shield halves, however does hint player
+		 **/
+		else if(compareItemsIds(item1, item2, 526, 527))
 			return true;
-		if(item1.getID() == 143 && item2.getID() == 141)
+		else if(compareItemsIds(item1, item2, 416, 417) || compareItemsIds(item1, item2, 416, 418) || compareItemsIds(item1, item2, 417, 418))
+			return true;
+		else if(compareItemsIds(item1, item2, 695, 696) || compareItemsIds(item1, item2, 695, 697) || compareItemsIds(item1, item2, 696, 697))
+			return true;
+		else if(compareItemsIds(item1, item2, 1276, 1277))
+			return true;
+		else if(compareItemsIds(item1, item2, 143, 141))
 			return true;
 
 		for(int il : capes) {
@@ -285,5 +338,9 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			}
 		}
 		return false;
+	}
+	
+	public boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
+		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
 	}
 }
