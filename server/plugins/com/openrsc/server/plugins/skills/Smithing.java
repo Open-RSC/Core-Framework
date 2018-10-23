@@ -45,7 +45,8 @@ InvUseOnObjectExecutiveListener {
 				player.message("To forge items use the metal you wish to work with the anvil");
 				return;
 			}
-			if (minSmithingLevel < 0) {
+			// skip special case of dragon shield repair
+			if (minSmithingLevel < 0 && item.getID() != 1276 && item.getID() != 1277) {
 				player.message("Nothing interesting happens");
 				return;
 			}
@@ -58,6 +59,33 @@ InvUseOnObjectExecutiveListener {
 				player.message("You need a hammer to work the metal with.");
 				return;
 			}
+			
+			if(item.getID() == 1276 || item.getID() == 1277) {
+				if(player.getSkills().getLevel(13) < 60) {
+					player.message("You need a smithing ability of at least 60 to complete this task.");
+					return;
+				}
+				// non-kosher this message
+				else if(player.getInventory().countId(1276) < 1 || player.getInventory().countId(1277) < 1) {
+					player.message("You need the two shield halves to repair the shield.");
+					return;
+				}
+				else {
+					player.message("You set to work trying to fix the ancient shield.");
+					sleep(1200);
+					player.message("You hammer long and hard and use all of your skill.");
+					sleep(1200);
+					player.message("Eventually, it is ready...");
+					sleep(1200);
+					player.message("You have repaired the Dragon Square Shield.");
+					player.getInventory().remove(1276, 1);
+					player.getInventory().remove(1277, 1);
+					player.getInventory().add(new Item(1278, 1));
+					player.incExp(13, 300, true);
+					return;
+				}
+			}
+			
 			/*if(item.getID() == 172 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) <= 2) {
 				player.message("You're not quite sure what to make from the gold..");
 				return;

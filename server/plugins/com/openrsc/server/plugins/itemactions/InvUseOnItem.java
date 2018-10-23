@@ -118,14 +118,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		if (item1.getID() == 1276 && item2.getID() == 1277) {
-			if (player.getInventory().remove(new Item(1276)) > -1 && player.getInventory().remove(new Item(1277)) > -1) {
-				player.message("You combine the two parts.");
-				player.getInventory().add(new Item(1278));
-				
-				return;
-			}
-		}
 		if (item1.getID() == 238 && item2.getID() == 239 || item1.getID() == 239 && item2.getID() == 238) {
 			if (player.getInventory().remove(new Item(239)) > -1 && player.getInventory().remove(new Item(238)) > -1) {
 				player.getInventory().add(new Item(282));
