@@ -45,9 +45,9 @@ if [ "$installmode" == "2" ]; then
     sudo chmod 644 /var/www/html/elite/board/config.php
 
     # Client
-    yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads"
-    sudo chmod +x "/var/www/html/downloads/Open_RSC_Client.jar"
-    sudo chmod 777 "/var/www/html/downloads/Open_RSC_Client.jar"
+    yes | sudo cp -rf "client/Open_RSC_Client.jar" "/var/www/html/downloads/cache"
+    sudo chmod +x "/var/www/html/downloads/cache/Open_RSC_Client.jar"
+    sudo chmod 777 "/var/www/html/downloads/cache/Open_RSC_Client.jar"
 
     # Launcher
     yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
@@ -67,9 +67,9 @@ elif [ "$installmode" == "1" ]; then
     sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
     # Client
-    yes | sudo cp -rf "client/Open_RSC_Client.jar" "Website/downloads/"
-    sudo chmod +x "Website/downloads/Open_RSC_Client.jar"
-    sudo chmod 777 "Website/downloads/Open_RSC_Client.jar"
+    yes | sudo cp -rf "client/Open_RSC_Client.jar" "Website/downloads/cache/"
+    sudo chmod +x "Website/downloads/cache/Open_RSC_Client.jar"
+    sudo chmod 777 "Website/downloads/cache/Open_RSC_Client.jar"
 
     # Launcher
     yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "Website/downloads/"
