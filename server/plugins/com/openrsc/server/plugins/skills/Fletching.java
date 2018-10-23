@@ -35,9 +35,9 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return true;
 		} else if (item2.getID() == 13 && doLogCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 167 && doPearlCut(player, item1, item2)) {
+		} else if (item1.getID() == 167 && (item2.getID() == 779 || item2.getID() == 792) && doPearlCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 167 && doPearlCut(player, item2, item1)) {
+		} else if (item2.getID() == 167 && (item1.getID() == 779 || item1.getID() == 792) && doPearlCut(player, item2, item1)) {
 			return true;
     } else if (item1.getID() == 790 && doBoltMake(player, item2, item1)) {
 			return true;
