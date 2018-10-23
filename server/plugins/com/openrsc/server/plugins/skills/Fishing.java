@@ -49,7 +49,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (owner.getSkills().getLevel(10) < def.getReqLevel()) {
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
 					+ fishingRequirementString(object, command) + " "
-					+ (def.getFishDefs().length > 1 ? "these fish"
+					+ (!command.contains("cage") ? "these fish"
 							: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 							.substring(4) + "s"));
 			return;
@@ -62,8 +62,8 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							.getItemDef(
 									netId)
 							.getName().toLowerCase()
-							+ " to " + (def.getBaitId() > 0 ? "bait" : "catch") + " "
-							+ (def.getFishDefs().length > 1 ? "these fish"
+							+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
+							+ (!command.contains("cage") ? "these fish"
 									: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 									.substring(4) + "s"));
 			return;
@@ -153,7 +153,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 	private String fishingRequirementString(GameObject obj, String command) {
 		String name = "";
 		if (command.equals("bait")) {
-			name = "to bait";
+			name = "fishing to bait";
 		} else if (command.equals("lure")) {
 			name = "fishing to lure";
 		} else if (command.equals("net")) {
