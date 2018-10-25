@@ -35,7 +35,10 @@ import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -640,10 +643,31 @@ public class SpellHandler implements PacketHandler {
 				player.resetAllExceptDueling();
 				switch (id) {
 				case 16: // Telekinetic grab
+					// fluffs gets its own message
+					int[] ungrabbableArr = {
+							//orbs
+							991, 992, 993, 994,
+							//god capes
+							1213, 1214, 1215,
+							//holy grail
+							746,
+							//staff of armadyl,
+							725,
+							//ice arrows
+							723,
+							//Firebird Feather
+							557,
+							//skull of restless ghost
+							27
+					};
+					List<Integer> ungrabbables = new ArrayList<Integer>();
+					for (int item : ungrabbableArr) {
+						ungrabbables.add(item);
+					}
 					if (affectedItem.getID() == 980) {
 						return;
 					}
-					if (affectedItem.getID() == 723) { // Ice Arrows
+					else if(ungrabbables.contains(affectedItem.getID())) { // list of ungrabbable items sharing this message
 						player.message("I can't use telekinetic grab on this object");
 						return;
 					}
@@ -652,11 +676,7 @@ public class SpellHandler implements PacketHandler {
 						player.message("Telegrab has been disabled due to an running global event, please try again later");
 						return;
 					}
-					/**
-					 * ITEM 745 = HOLY GRAIL THROPY - PREVENTION FROM TELEGRAB
-					 * IT ON FIRST ISLAND
-					 **/
-					if (affectedItem.getID() == 575 || affectedItem.getID() == 746 || affectedItem.getID() == 2115
+					if (affectedItem.getID() == 575 || affectedItem.getID() == 2115
 							|| affectedItem.getID() == 2116 || affectedItem.getID() == 2117
 							|| affectedItem.getID() == 2118 || affectedItem.getID() == 2119) {
 						player.message("You may not telegrab this item");
