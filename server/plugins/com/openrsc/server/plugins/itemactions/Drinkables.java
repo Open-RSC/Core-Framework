@@ -171,10 +171,40 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			}
 			player.getSkills().setLevel(0, player.getSkills().getLevel(0) - 3);
 			break;
+		case 770: //chocolaty milk
+			showBubble(player, item);
+			player.message("You drink the " + item.getDef().getName().toLowerCase());
+			player.getInventory().remove(item);
+			player.getInventory().add(new Item(21));
+			if (player.getSkills().getLevel(3) < player.getSkills().getMaxStat(3)) {
+				int newHp = player.getSkills().getLevel(3) + 4;
+				if (newHp > player.getSkills().getMaxStat(3)) {
+					newHp = player.getSkills().getMaxStat(3);
+				}
+				player.getSkills().setLevel(3, newHp);
+			}
+			break;
 		case 739: // Tea
 			showBubble(player, item);
 			player.message("You drink the " + item.getDef().getName().toLowerCase());
 			player.getInventory().remove(item);
+			int changeHp = (player.getSkills().getMaxStat(3) > 55 ? 3 : 2);
+			if (player.getSkills().getLevel(3) < player.getSkills().getMaxStat(3)) {
+				int newHp = player.getSkills().getLevel(3) + changeHp;
+				if (newHp > player.getSkills().getMaxStat(3)) {
+					newHp = player.getSkills().getMaxStat(3);
+				}
+				player.getSkills().setLevel(3, newHp);
+			}
+			int changeAtt = (player.getSkills().getMaxStat(0) > 55 ? 3 : 2);
+			int maxWithTea = (player.getSkills().getMaxStat(0) + changeAtt);
+			if (maxWithTea - player.getSkills().getLevel(0) < changeAtt) {
+				changeAtt = maxWithTea - player.getSkills().getLevel(0);
+			}
+			if (player.getSkills().getLevel(
+					0) <= (player.getSkills().getMaxStat(0) + (player.getSkills().getMaxStat(0) > 55 ? 3 : 2))) {
+				player.getSkills().setLevel(0, player.getSkills().getLevel(0) + changeAtt);
+			}
 			break;
 		case 193: // Beer
 			showBubble(player, item);

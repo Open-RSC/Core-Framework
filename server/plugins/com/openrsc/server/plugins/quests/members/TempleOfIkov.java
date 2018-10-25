@@ -674,9 +674,18 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
 		if(n.getID() == EDGE_LUCIEN && (p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2 || !p.getInventory().wielding(726))) {
 			return true;
-		}
-		if(n.getID() == WARRIOR_OF_LESARKUS && (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2 || !hasItem(p, 723))) {
+		}		
+		if(n.getID() == WARRIOR_OF_LESARKUS && (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2 )) {
 			return true;
+			}
+			else { 
+				if ((n.getID() == WARRIOR_OF_LESARKUS && p.getInventory().hasItemId(723) || p.getCache().hasKey("shot_ice"))) {			
+				p.getCache().store("shot_ice", true);
+				return false;
+			}
+		}
+		if(n.getID() == WARRIOR_OF_LESARKUS && !p.getCache().hasKey("shot_ice")) {					
+			return true;			
 		}
 		return false;
 	}
@@ -693,16 +702,15 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				return;
 			}
 		}
-		if(n.getID() == WARRIOR_OF_LESARKUS) {
+		if(n.getID() == WARRIOR_OF_LESARKUS) {			
 			if((p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Constants.Quests.TEMPLE_OF_IKOV) == -2)) {
 				p.message("You have already killed the fire warrior");
 				return;
 			}
-			if(!hasItem(p, 723)) {
+			if(!p.getCache().hasKey("shot_ice")) {
 				p.message("You need to kill the fire warrior with ice arrows");
 				return;
 			}
 		}
 	}
 }
-
