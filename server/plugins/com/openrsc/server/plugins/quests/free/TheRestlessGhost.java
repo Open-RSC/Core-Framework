@@ -61,6 +61,8 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 								"I'm pretty sure it's somewhere in the tower south west from here",
 								"There's a lot of levels to the tower, though",
 								"I suppose it might take a little while to find");
+						// kosher: this condition made player need to restart skull process incl. skeleton fight
+						p.getCache().remove("tried_grab_skull");
 					} else if (hasItem(p, 27)) {
 						playerTalk(p, n, "I have found it");
 						npcTalk(p,
@@ -380,7 +382,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		Npc skeleton = getNearestNpc(p, 50, 3);
+		Npc skeleton = getNearestNpc(p, 50, 10);
 		if(i.getID() == 27) {
 			// spawn-place
 			if (i.getX() == 218 && i.getY() == 3521) {
@@ -393,9 +395,10 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 					World.getWorld().unregisterItem(i);
 					addItem(p, 27, 1);
 					if(skeleton == null) {
+						//spawn skeleton and give message
+						p.message("Out of nowhere a skeleton appears");
 						skeleton = spawnNpc(50, 217, 3520, 100);
 						skeleton.setChasing(p);
-						skeleton.remove();
 					}
 					else {
 						skeleton.setChasing(p);
