@@ -24,8 +24,8 @@ public class BenignProjectileEvent extends SingleTickEvent {
 		this.damage = damage;
 		this.type = type;
 		if (caster.isPlayer() && opponent.isPlayer()) {
-			caster.setAttribute("projectile", this);
-			opponent.setAttribute("projectile", this);
+			caster.setAttribute("benignprojectile", this);
+			opponent.setAttribute("benignprojectile", this);
 		}
 		sendProjectile(caster, opponent);
 	}
@@ -38,8 +38,8 @@ public class BenignProjectileEvent extends SingleTickEvent {
 	@Override
 	public void action() {
 		if (caster.isPlayer() && opponent.isPlayer()) {
-			caster.removeAttribute("projectile");
-			opponent.removeAttribute("projectile");
+			caster.removeAttribute("benignprojectile");
+			opponent.removeAttribute("benignprojectile");
 		}
 	}
 
