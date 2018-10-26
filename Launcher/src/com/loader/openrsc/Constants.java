@@ -17,6 +17,6 @@ public class Constants {
     // Launcher version checking
     public static final Double VERSION_NUMBER = 20181025.220000; //YYYYMMDD.HHMMSS format
     public static final String VERSION_UPDATE_URL = "https://raw.githubusercontent.com/open-rsc/Game/2.0.0/Launcher/src/com/loader/openrsc/Constants.java";
-    public static final String UPDATE_JAR_URL = "https://openrsc.com/downloads/Open_RSC_Launcher.jar";
-    public static final String JAR_FILENAME = "Open_RSC_Launcher.jar";
+    public static final String UPDATE_JAR_URL = "https://openrsc.com/downloads/OpenRSC.jar";
+    public static final String JAR_FILENAME = "OpenRSC.jar";
 }
