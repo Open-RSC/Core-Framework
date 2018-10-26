@@ -61,7 +61,7 @@ public class NpcBehavior {
 
 					int range = 1;
 					switch(npc.getID()) {
-						case 542: // Bandit
+						case 232: // Bandit
 							range = 5;
 							break;
 						case 66: // Black Knight
@@ -76,7 +76,7 @@ public class NpcBehavior {
 
 					state = State.AGGRO;
 					target = p;
-					if (npc.getID() == 542) // Bandit
+					if (npc.getID() == 232) // Bandit
 						npcTalk(p, npc, "You shall not pass");
 					else if (npc.getID() == 66) // Black Knight
 						npcTalk(p, npc, "Die intruder!!");
