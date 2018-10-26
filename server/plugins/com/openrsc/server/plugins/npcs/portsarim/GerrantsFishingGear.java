@@ -66,7 +66,8 @@ public final class GerrantsFishingGear implements
 					"You'll also need a lava proof fishing line",
 					"The method for this would be take an ordinary fishing rod",
 					"And cover it with fire proof blamish oil");
-			if (!hasItem(p, 587)) {
+			// check no Blaimish snail slime, oil and rod to re-issue
+			if (!hasItem(p, 587) && !hasItem(p, 588) && !hasItem(p, 589)) {
 				npcTalk(p, n, "Now I may have a jar of Blamish snail slime",
 						"I wonder where I put it");
 				p.message("Gerrant searches about a bit");

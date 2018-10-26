@@ -16,7 +16,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		npcTalk(p, n, "Go away, I'm meditating");
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, 24)) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 1 && !hasItem(p, 24)) {
 			defaultMenu.addOption(new Option(
 					"Father Aereck sent me to talk to you") {
 				@Override
