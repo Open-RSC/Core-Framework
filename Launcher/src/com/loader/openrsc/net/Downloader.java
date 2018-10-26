@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 
 public class Downloader extends Observable {
-    private final String nicename[] = {"Game Client, Game Library", "Landscape",
+    private final String nicename[] = {"Game Client", "Game Library", "Landscape",
             "Graphics", "3D Models",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
