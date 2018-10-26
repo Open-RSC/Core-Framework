@@ -667,33 +667,31 @@ public final class World {
 		}
 
 	}
-	private static void shutdownCheck() 
-    {
-        Server.getServer().getEventHandler().add(new SingleEvent(null, 60000)
-        {
-            public void action() 
-            {
-                if ((System.currentTimeMillis() - Constants.GameServer.START_TIME) > Constants.GameServer.RESTART_TIME) 
-                          //180000 3mins, 300000 5mins,  10 min 600000, 15 hours 54000000
-                {
-                        int seconds = (int)Constants.GameServer.RESTART_DELAY;
-                        int minutes = seconds / 60;
-                        int remainder = seconds % 60;
+	private static void shutdownCheck() {
+		Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
+			public void action() {
+				int currSecond = (int)(System.currentTimeMillis() / 1000.0 - (4 * 3600));
 
-                        if (Server.getServer().restart(seconds)) {
-                            String message = "The server will be restarting in... "
-                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");
-                            for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.sendBox(p, message, false);
-                                ActionSender.startShutdown(p, seconds);
-                            }
-                        }
-                    }
-                    shutdownCheck();
-                }
-        });
-    }
+				// EST -4 right now - this is terrible, might end up using a library.
+				if ((int)((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR
+						&& (int)((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE) {
+					int seconds = Constants.GameServer.RESTART_DELAY;
+					int minutes = seconds / 60;
+					int remainder = seconds % 60;
+					if (Server.getServer().restart(seconds)) {
+						String message = "The server will be restarting in... "
+							+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
+							+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");
+						for (Player p : World.getWorld().getPlayers()) {
+							ActionSender.sendBox(p, message, false);
+							ActionSender.startShutdown(p, seconds);
+						}
+					}
+				}
+				shutdownCheck();
+			}
+		});
+  }
 
 	public void unregisterQuest(QuestInterface quest) {
 		if (quests.contains(quest)) {
