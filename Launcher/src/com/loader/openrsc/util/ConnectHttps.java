@@ -8,7 +8,7 @@ import java.net.URLConnection;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
-import static com.loader.openrsc.Constants.base_url;
+import static com.loader.openrsc.Constants.BASE_URL;
 
 public class ConnectHttps {
     public static void main(final String[] args) throws Exception {
@@ -31,7 +31,7 @@ public class ConnectHttps {
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         final HostnameVerifier allHostsValid = (hostname, session) -> true;
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        final URL url = new URL(base_url);
+        final URL url = new URL(BASE_URL);
         final URLConnection con = url.openConnection();
         final Reader reader = new InputStreamReader(con.getInputStream());
         while (true) {

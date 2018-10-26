@@ -14,12 +14,16 @@ public class ButtonListener implements ActionListener {
     public void actionPerformed(final ActionEvent event) {
         final String action = event.getActionCommand().toLowerCase();
         switch (action) {
-            case "news": {
-                Utils.openWebpage(Constants.base_url + "blog");
+            case "forum": {
+                Utils.openWebpage(Constants.BASE_URL + "/elite/board");
                 return;
             }
             case "bug reports": {
-                Utils.openWebpage(Constants.base_url + "blog/bug-reports");
+                Utils.openWebpage("https://goo.gl/forms/nnhSln7S81l4I26t2");
+                return;
+            }
+            case "report bots": {
+                Utils.openWebpage("https://goo.gl/forms/AkBzpOzgAmzWiZ8H2");
                 return;
             }
             case "discord": {
@@ -28,10 +32,6 @@ public class ButtonListener implements ActionListener {
             }
             case "github": {
                 Utils.openWebpage("https://github.com/Open-RSC/Game");
-                return;
-            }
-            case "faq": {
-                Utils.openWebpage(Constants.base_url + "blog/faq");
                 return;
             }
             case "minimize": {
