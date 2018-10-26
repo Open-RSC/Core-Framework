@@ -75,9 +75,9 @@ public class MeleeFormula {
 
 		double finalAccuracy = 0;
 		if (acc > def)
-			finalAccuracy = (1 - ((def+2) / (2 * (acc + 1)))) * 10000;
+			finalAccuracy = (int)((1.0 - ((def + 2.0) / (2.0 * (acc + 1.0)))) * 10000.0);
 		else
-			finalAccuracy = (acc / (2 * (def + 1))) * 10000;
+			finalAccuracy = (int)((acc / (2.0 * (def + 1.0))) * 10000.0);
 
 		/*
 		 * This modifier is used to absorb some damage out of the hit.

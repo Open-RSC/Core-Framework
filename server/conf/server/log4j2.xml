@@ -7,7 +7,7 @@
             <PatternLayout pattern="[%d{dd MMM yyyy HH:mm:ss}] [%t] [%logger{36}] %level: %msg%n" />
         </Console>
          <File name="WK" fileName="logs/gameserver.log">
-        	<PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        	<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     	 </File>
     </Appenders>
     <Loggers>
