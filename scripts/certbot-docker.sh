@@ -19,11 +19,12 @@ sudo certbot certonly \
 --standalone \
 --preferred-challenges http \
 --agree-tos -n \
---config-dir ./etc/letsencrypt \
+--config-dir ../etc/letsencrypt \
 --pre-hook 'sudo docker stop nginx' \
 --post-hook 'sudo docker start nginx' \
 -d ${domain} -d ${subdomain} --expand \
--m ${email}
+-m ${email} \
+--force-renewal
 echo ""
 echo "Done!"
 echo ""
