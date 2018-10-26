@@ -71,9 +71,10 @@ public final class Constants {
 		 */
 		public static String HMAC_PRIVATE_KEY = "";
 		/**
-        * AutoRestart time in milliseconds
-        */
-		public static int RESTART_TIME;
+		 *  AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
+		 */
+		public static int RESTART_HOUR;
+		public static int RESTART_MINUTE;
 		/**
 		 * AutoRestart Delay in seconds, alert players
 		 */
@@ -251,8 +252,9 @@ public final class Constants {
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			START_TIME = System.currentTimeMillis();
-			RESTART_TIME = Integer.parseInt(props.getProperty("restart_time"));
-            RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
+			RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
+			RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
+			RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)

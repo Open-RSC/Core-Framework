@@ -6,7 +6,8 @@
 #cd Game/server
 
 # Kills all java processes - needed for server auto restart process.
-pkill -f 'java -jar'
+# pkill -f 'java -jar'
+killall java
 
 echo ""
 echo "Launching the game server in a new screen."
