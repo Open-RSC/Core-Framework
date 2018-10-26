@@ -52,7 +52,7 @@ public class NpcBehavior {
 			}
 			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
 					&& (npc.getDef().isAggressive()
-						|| (npc.getLocation().inWilderness() && npc.getID() != 342 && npc.getID() != 233 && npc.getID() != 235))
+						|| (npc.getLocation().inWilderness() && npc.getID() != 342 && npc.getID() != 233 && npc.getID() != 234 && npc.getID() != 235))
 						|| (npc.getX() > 274 && npc.getX() < 283 && npc.getY() > 432 && npc.getY() < 441) // Black Knight's Fortress
 				) {
 
