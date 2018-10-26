@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 
 public class Downloader extends Observable {
-    private final String nicename[] = {"Game Library", "Landscape",
+    private final String nicename[] = {"Game Client, Game Library", "Landscape",
             "Graphics", "3D Models",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
@@ -28,7 +28,7 @@ public class Downloader extends Observable {
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
             "Game Sound", "Game Sound"};
-    private final String normalName[] = {"library.orsc", "Landscape.orsc",
+    private final String normalName[] = {"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc",
             "Sprites.orsc", "models.orsc",
             "Advance.mp3", "Anvil.mp3", "Chisel.mp3", "Click.mp3",
             "Closedoor.mp3", "Coins.mp3", "Takeobject.mp3", "Victory.mp3",
