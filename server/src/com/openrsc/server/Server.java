@@ -279,26 +279,26 @@ public final class Server implements Runnable {
 		return true;
 	}
 	public void saveAndRestart() {
-        //ClanManager.saveClans();
-        LOGGER.info("Saving players...");
-        for (Player p : World.getWorld().getPlayers()) {
-            p.unregister(true, "Server shutting down.");
-            LOGGER.info("Players saved...");
-        }
+		//ClanManager.saveClans();
+		LOGGER.info("Saving players...");
+		for (Player p : World.getWorld().getPlayers()) {
+			p.unregister(true, "Server shutting down.");
+			LOGGER.info("Players saved...");
+		}
 
-        SingleEvent up = new SingleEvent(null, 6000) {
-            public void action() {
-                LOGGER.info("Trying to run restart script...");
-                try {
-                    //new ProcessBuilder("scripts/autorestart.sh").start();
-                    Runtime.getRuntime().exec("scripts/autorestart.sh");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Server.getServer().getEventHandler().add(up);
-    }
+		SingleEvent up = new SingleEvent(null, 6000) {
+			public void action() {
+				LOGGER.info("Trying to run restart script...");
+				try {
+					//new ProcessBuilder("scripts/autorestart.sh").start();
+					Runtime.getRuntime().exec("./run_server.sh");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		Server.getServer().getEventHandler().add(up);
+	}
 
 	public void start() {
 		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
