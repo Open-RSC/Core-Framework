@@ -50,9 +50,9 @@ if [ "$installmode" == "2" ]; then
     sudo chmod 777 "/var/www/html/downloads/cache/Open_RSC_Client.jar"
 
     # Launcher
-    yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "/var/www/html/downloads/"
-    sudo chmod +x "/var/www/html/downloads/Open_RSC_Launcher.jar"
-    sudo chmod 777 "/var/www/html/downloads/Open_RSC_Launcher.jar"
+    yes | sudo cp -rf "Launcher/dist/OpenRSC.jar" "/var/www/html/downloads/"
+    sudo chmod +x "/var/www/html/downloads/OpenRSC.jar"
+    sudo chmod 777 "/var/www/html/downloads/OpenRSC.jar"
 
     # Cache
     yes | sudo cp -a -rf "client/Cache/." "/var/www/html/downloads/cache/"
@@ -72,9 +72,9 @@ elif [ "$installmode" == "1" ]; then
     sudo chmod 777 "Website/downloads/cache/Open_RSC_Client.jar"
 
     # Launcher
-    yes | sudo cp -rf "Launcher/dist/Open_RSC_Launcher.jar" "Website/downloads/"
-    sudo chmod +x "Website/downloads/Open_RSC_Launcher.jar"
-    sudo chmod 777 "Website/downloads/Open_RSC_Launcher.jar"
+    yes | sudo cp -rf "Launcher/dist/OpenRSC.jar" "Website/downloads/"
+    sudo chmod +x "Website/downloads/OpenRSC.jar"
+    sudo chmod 777 "Website/downloads/OpenRSC.jar"
 
     # Cache
     yes | sudo cp -a -rf "client/Cache/." "Website/downloads/cache/"
