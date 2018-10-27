@@ -16,9 +16,9 @@ public final class BettysMagicEmporium  implements
 		ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 6000, 100, 75, 2, new Item(31,
-			500), new Item(32, 500), new Item(33, 500), new Item(34,
-			500), new Item(35, 500), new Item(36, 500), new Item(270,
-			500), new Item(185, 1), new Item(199, 1));
+			30), new Item(32, 30), new Item(33, 30), new Item(34,
+			30), new Item(35, 30), new Item(36, 30), new Item(270,
+			30), new Item(185, 1), new Item(199, 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
