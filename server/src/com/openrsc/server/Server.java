@@ -291,7 +291,7 @@ public final class Server implements Runnable {
 				LOGGER.info("Trying to run restart script...");
 				try {
 					//new ProcessBuilder("run_server.sh").start();
-					Runtime.getRuntime().exec("run_server.sh");
+					Runtime.getRuntime().exec("`pwd`/run_server.sh");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
