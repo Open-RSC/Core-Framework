@@ -35,10 +35,10 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			sleep(600);
 			p.message("Where would you like to teleport to?");
 			int menu = showMenu(p, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Seers", "Yanille", "Nowhere");
-			if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
-				p.message("You need to stay out of combat for 10 seconds before using a teleport.");
-				return;
-			}
+			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
+			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
+			//	return;
+			//}
 			if (p.getLocation().wildernessLevel() >= 30 || (p.getLocation().inModRoom() && !p.isAdmin())) {
 				p.message("A mysterious force blocks your teleport!");
 				p.message("You can't use this teleport after level 30 wilderness");
