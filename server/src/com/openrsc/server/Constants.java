@@ -71,17 +71,17 @@ public final class Constants {
 		 */
 		public static String HMAC_PRIVATE_KEY = "";
 		/**
-		 *  AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
+		 *  AutoRestart hour of the day 1 - 12
 		 */
-		public static int RESTART_HOUR1;
-		public static int RESTART_MINUTE1;
-		public static int RESTART_HOUR2;
-		public static int RESTART_MINUTE2;
+		public static int RESTART_HOUR;
+		/** 
+		 * AutoRestart minute 0 - 59
+		 */
+		public static int RESTART_MINUTE;
 		/**
 		 * AutoRestart Delay in seconds, alert players
 		 */
-		public static int RESTART_DELAY1;
-        public static int RESTART_DELAY2;
+		public static int RESTART_DELAY;     
 		/**
 		 * Player Skill Level Limit
 		 */
@@ -255,12 +255,9 @@ public final class Constants {
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			START_TIME = System.currentTimeMillis();
-			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
-            RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
-			RESTART_MINUTE1 = Integer.parseInt(props.getProperty("restart_minute1"));
-            RESTART_MINUTE2 = Integer.parseInt(props.getProperty("restart_minute2"));
-			RESTART_DELAY1 = Integer.parseInt(props.getProperty("restart_delay1"));
-            RESTART_DELAY2 = Integer.parseInt(props.getProperty("restart_delay2"));
+			RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
+			RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
+			RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
