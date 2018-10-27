@@ -49,15 +49,3 @@ services:
         volumes:
             - "./data/db/mysql:/var/lib/mysql"
             - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro"
-
-    myadmin:
-        image: phpmyadmin/phpmyadmin:latest
-        container_name: phpmyadmin
-        ports:
-            - "55555:80"
-        environment:
-            - PMA_ARBITRARY=1
-            - PMA_HOST=mysql
-        restart: always
-        depends_on:
-            - mysqldb
