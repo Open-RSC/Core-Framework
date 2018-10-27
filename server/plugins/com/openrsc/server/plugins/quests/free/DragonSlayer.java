@@ -108,10 +108,10 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 				npcTalk(p, n, "Aye tiz a fair day my friend");
 				int menu2 = showMenu(p, n,
 						"I'm not your friend", "Yes it's a very nice day");
-				if (menu2 == 1) {
+				if (menu2 == 0) {
 					npcTalk(p, n,
 							"I'd be suprised if your anyone's friend with that sort of manners");
-				} else if (menu2 == 2) {
+				} else if (menu2 == 1) {
 					npcTalk(p, n, "Aye may the Gods walk by your side");
 				} 
 				break;

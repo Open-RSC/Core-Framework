@@ -1382,7 +1382,7 @@ public class Functions {
 				}
 				return player.getOption();
 			}
-			else if (System.currentTimeMillis() - start > 19500 || player.getMenuHandler() == null) {
+			else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
 				player.setOption(-1);
 				player.resetMenuHandler();
 				if (npc != null) {
