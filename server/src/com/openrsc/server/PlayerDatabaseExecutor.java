@@ -49,12 +49,12 @@ public class PlayerDatabaseExecutor implements Runnable  {
 					});
 				
 				}
-				LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
+				//LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
 			}
 			Player playerToSave = null;
 			while((playerToSave = saveRequests.poll()) != null) {
 				getDatabase().savePlayer(playerToSave);
-				LOGGER.info("Saved player " + playerToSave.getUsername() + "");
+				//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
 			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
