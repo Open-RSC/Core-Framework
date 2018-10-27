@@ -12,9 +12,6 @@ import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.*;
@@ -30,6 +27,8 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import jaco.mp3.player.MP3Player;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -667,8 +666,7 @@ public final class mudclient implements Runnable {
 		private Panel panelQuestInfo;
 		//private Panel panelPlayerTaskInfo;
 		private Panel panelSettings;
-		public HashMap<String, Media> soundCache = new HashMap<String, Media>();
-		final JFXPanel fxPanel = new JFXPanel();
+		public HashMap<String, File> soundCache = new HashMap<String, File>();
 		private boolean authenticSettings = !(
 						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
             || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
@@ -2691,7 +2689,7 @@ public final class mudclient implements Runnable {
 						while (this.optionsMenuCount > var2) {
 							int var3 = '\uffff';
 							if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2])
-									&& this.mouseY > var2 * 12 && this.mouseY < var2 * 12 + 12) {
+									&& this.mouseY > 5 + var2 * 12 && this.mouseY < 5 + var2 * 12 + 12) {
 								var3 = 0xFF0000;
 							}
 
@@ -2703,7 +2701,7 @@ public final class mudclient implements Runnable {
 					} else {
 						for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
 							if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) > this.mouseX
-									&& var2 * 12 < this.mouseY && 12 + var2 * 12 > this.mouseY) {
+									&& 5 + var2 * 12 < this.mouseY && 5 + 12 + var2 * 12 > this.mouseY) {
 								this.getClientStream().newPacket(116);
 								this.getClientStream().writeBuffer1.putByte(var2);
 								this.getClientStream().finishPacket();
@@ -12431,8 +12429,7 @@ public final class mudclient implements Runnable {
 
 				for (int i = 0; i < listOfFiles.length; i++)
 					if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
-						Media mp3 = new Media(listOfFiles[i].toURI().toString());
-						soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
+						soundCache.put(listOfFiles[i].getName().toLowerCase(), listOfFiles[i]);
 					}
 
 			} catch (Exception ex) {
@@ -12811,17 +12808,12 @@ public final class mudclient implements Runnable {
 		private final void playSoundFile(String key) {
 			try {
 				if (!optionSoundDisabled) {
-					Media sound = soundCache.get(key + ".mp3");
+					File sound = soundCache.get(key + ".mp3");
 					if (sound == null)
 						return;
 					try {
-						MediaPlayer mp = new MediaPlayer(sound);
-						mp.setOnReady(() -> {
-							mp.play();
-							mp.setOnEndOfMedia(() -> {
-								mp.dispose();
-							});
-						});
+						MP3Player mp = new MP3Player(sound);
+						mp.play();
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

@@ -1034,10 +1034,10 @@ public class SpellHandler implements PacketHandler {
 			player.message("You can't use teleport after level 20 wilderness");
 			return;
 		}
-		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < 10000) {
-			player.message("You need to stay out of combat for 10 seconds before using a teleport.");
-			return;
-		}
+		// if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < 10000) {
+		//	player.message("You need to stay out of combat for 10 seconds before using a teleport.");
+		//	return;
+		//}
 		if (player.getInventory().countId(1039) > 0) {
 			message(player, "You can't teleport while holding Ana,", 
                     "It's just too difficult to concentrate.");
