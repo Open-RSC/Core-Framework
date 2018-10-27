@@ -74,6 +74,7 @@ public class RegionManager {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
 		for (Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext();) {
 			for (Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext();) {
+				if (o == null) continue;
 				GameObject gameObject = o.next();
 				if (gameObject.getLocation().withinGridRange(entity.getLocation(), Constants.GameServer.VIEW_DISTANCE)) {
 					localObjects.add(gameObject);
