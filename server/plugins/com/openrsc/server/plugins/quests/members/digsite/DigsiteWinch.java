@@ -27,64 +27,49 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(inArray(obj.getID(), WINCH)) {
-			switch(p.getQuestStage(Constants.Quests.DIGSITE)) {
-			case -1:
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-				if(obj.getID() == WINCH[0]) {
-					if(p.getCache().hasKey("winch_rope_1")) {
-						p.message("You try to climb down the rope");
-						message(p, "You lower yourself into the shaft");
-						p.teleport(26, 3346);
-						p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
-					}
-				}
-				if(obj.getID() == WINCH[1]) {
-					if(p.getQuestStage(Constants.Quests.DIGSITE) == -1) {
-						p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
-						p.teleport(19, 3385);
-						return;
-					}
-					if(p.getCache().hasKey("winch_rope_2")) {
-						p.message("You try to climb down the rope");
-						message(p, "You lower yourself into the shaft");
-						if(p.getQuestStage(Constants.Quests.DIGSITE) >= 6) {
-							p.teleport(19, 3385);
+		if (inArray(obj.getID(), WINCH)) {
+			switch (p.getQuestStage(Constants.Quests.DIGSITE)) {
+				case -1:
+					p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
+					p.teleport(19, 3385);
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+					if (obj.getID() == WINCH[0]) {
+						if(!p.getCache().hasKey("digsite_winshaft")) {
+							this.handleCantUseWinch(p, obj);
+						} else if (!p.getCache().hasKey("winch_rope_1")) {
+							p.playerServerMessage(MessageType.QUEST, "You operate the winch");
+							p.message("The bucket descends, but does not reach the bottom");
+							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							p.teleport(19, 3337);
+							p.message("You try to climb down the rope");
+							message(p, "You lower yourself into the shaft");
+							p.teleport(26, 3346);
+							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
-						p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
+
+
 					}
-				}
-				if(p.getCache().hasKey("digsite_winshaft")) {
-					p.playerServerMessage(MessageType.QUEST, "You operate the winch");
-					p.message("The bucket descends, but does not reach the bottom");
-					playerTalk(p, null, "Hey I think I could fit down here...",
-							"I need something to help me get all the way down");
-				} else {
-					Npc workman = getNearestNpc(p, 722, 5);
-					if(workman == null) {
-						workman = spawnNpc(722, p.getX(), p.getY(), 60000);
-					} else {
-						workman.resetPath();
-						workman.teleport(p.getX(), p.getY());
+
+					if (obj.getID() == WINCH[1]) {
+						if(!p.getCache().hasKey("digsite_winshaft")) {
+							this.handleCantUseWinch(p, obj);
+						} else if (!p.getCache().hasKey("winch_rope_2")) {
+							p.playerServerMessage(MessageType.QUEST, "You operate the winch");
+							p.message("The bucket descends, but does not reach the bottom");
+							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
+						} else {
+							p.message("You try to climb down the rope");
+							message(p, "You lower yourself into the shaft");
+							p.teleport(19, 3337);
+							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
+						}
 					}
-					npcTalk(p, workman, "Sorry, this area is private");
-					workman.teleport(p.getX() + (obj.getID() == WINCH[0] ? +1 : -1), p.getY());
-					npcTalk(p, workman, "The only way you'll get to use these",
-							"Is by impressing the expert",
-							"Up at the centre",
-							"Find something worthwhile...",
-							"And he might let you use the winches",
-							"Until then, get lost !");
-				}
-				break;
 			}
 		}
 	}
@@ -105,6 +90,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 					if(!p.getCache().hasKey("winch_rope_1")) {
 						p.message("You tie the rope to the bucket");
 						p.getCache().store("winch_rope_1", true);
+						p.getInventory().remove(237, 1);
 					} else {
 						p.message("There is already a rope tied to this bucket");
 					}
@@ -117,6 +103,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 					if(!p.getCache().hasKey("winch_rope_2")) {
 						p.message("You tie the rope to the bucket");
 						p.getCache().store("winch_rope_2", true);
+						p.getInventory().remove(237, 1);
 					} else {
 						p.message("There is already a rope tied to this bucket");
 					}
@@ -124,6 +111,31 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 					playerTalk(p, null, "Err... I have no idea why I am doing this !");
 				}
 			}
+		}
+	}
+
+	private void handleCantUseWinch(Player p, GameObject obj) {
+		boolean workmanWasSpawned;
+
+		Npc workman = getNearestNpc(p, 722, 5);
+		if(workman == null) {
+			workman = spawnNpc(722, p.getX(), p.getY(), 60000);
+			workmanWasSpawned = true;
+		} else {
+			workmanWasSpawned = false;
+			workman.resetPath();
+			workman.teleport(p.getX(), p.getY());
+		}
+		npcTalk(p, workman, "Sorry, this area is private");
+		workman.teleport(p.getX() + (obj.getID() == WINCH[0] ? +1 : -1), p.getY());
+		npcTalk(p, workman, "The only way you'll get to use these",
+				"Is by impressing the expert",
+				"Up at the centre",
+				"Find something worthwhile...",
+				"And he might let you use the winches",
+				"Until then, get lost !");
+		if(workmanWasSpawned) {
+			workman.remove();
 		}
 	}
 }
