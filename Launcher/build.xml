@@ -9,7 +9,7 @@
 	<property name="javac.target" value="1.8"/>
 
 	<target name="compile">
-		<delete file="${jar}"/>
+		<!--<delete file="${jar}"/>-->
 		<delete dir="${build}"/>
 		<mkdir dir="${build}"/>
 		<copy todir="${build}/data">
@@ -18,16 +18,16 @@
 		<javac srcdir="${src}" destdir="${build}" debug="on" target="${javac.source}" source="${javac.target}" includeantruntime="false">
 			<classpath>
 				<pathelement path="${java.class.path}/"/>
-				<fileset dir="${lib}">
+				<!--<fileset dir="${lib}">
 					<include name="*.jar"/>
-				</fileset>
+				</fileset>-->
 			</classpath>
 		</javac>
-		<unzip dest="${build}">
+		<!--<unzip dest="${build}">
 			<fileset dir="${lib}">
 				<include name="**/*.jar"/>
 			</fileset>
-		</unzip>
+		</unzip>-->
 		<jar basedir="${build}" destfile="${jar}">
 			<manifest>
 				<attribute name="Main-Class" value="com.loader.openrsc.OpenRSC"/>
