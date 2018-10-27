@@ -70,7 +70,8 @@ public class LoginPacketHandler {
 				channel.close();
 				return;
 			}
-			if (Server.getServer().timeTillShutdown() > 0) {
+			int i = Server.getServer().timeTillShutdown();
+			if ( i > 0 && i < 30000) {
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS).toPacket());
 				channel.close();
 				return;
