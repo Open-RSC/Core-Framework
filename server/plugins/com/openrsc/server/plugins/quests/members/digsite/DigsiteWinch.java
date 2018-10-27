@@ -66,7 +66,11 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 						} else {
 							p.message("You try to climb down the rope");
 							message(p, "You lower yourself into the shaft");
-							p.teleport(19, 3337);
+							if(p.getQuestStage(Constants.Quests.DIGSITE) >= 6) {
+								p.teleport(19, 3385);
+							} else {
+								p.teleport(19, 3337);
+							}
 							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
 					}
