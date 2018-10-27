@@ -12658,8 +12658,8 @@ public final class mudclient implements Runnable {
 																						} else if (var11 != 23) {
 																							if (var11 == 24) {
 																								this.showLoginScreenStatus(
-																										"This world does not accept new players.",
-																										"Please see the launch page for help");
+																										"Server is currently restarting.",
+																										"Please try again in a minute.");
 																							} else if (var11 != 25) {
 																								this.showLoginScreenStatus(
 																										"Error unable to login.",
