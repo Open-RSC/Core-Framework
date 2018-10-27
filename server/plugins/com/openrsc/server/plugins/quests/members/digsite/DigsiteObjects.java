@@ -110,10 +110,10 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		if(obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
 			p.message("You climb the ladder");
-			if(obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE) {
+			if(obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
+				p.teleport(25, 515);
+			} else if(obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE) {
 				p.teleport(14, 506);
-			} else {
-				p.teleport(24, 515);
 			}
 		}
 		if(obj.getID() == TENT_LOCKED_CHEST) {
