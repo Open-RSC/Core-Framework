@@ -59,6 +59,10 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 					interrupt();
 					return;
 				}
+				if (owner.inCombat()) {
+					interrupt();
+					return;
+				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
 				Item newItem = new Item(herb.getNewId());
 				owner.getInventory().remove(item);
