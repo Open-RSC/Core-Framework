@@ -114,6 +114,5 @@ sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/phpmyadmin.sql
 
 # Website clone
 sudo make clone-website
-sudo chmod 644 Website/sql/config.inc.php
 
 make file-edits

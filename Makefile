@@ -83,10 +83,13 @@ compile-windows-developer:
 	ant -f Launcher/build.xml compile
 
 import-game:
-	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_game.sql
+	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game.sql
 
 import-forum:
-	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_forum.sql
+	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_forum.sql
+
+create-pma:
+	docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
 
 import-game-windows:
 	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
@@ -96,6 +99,7 @@ import-forum-windows:
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+	sudo chmod 644 Website/sql/config.inc.php
 
 flush-website-avatars-windows:
 	rmdir "Website/avatars"
