@@ -9,7 +9,7 @@ echo ""
 echo ""
 sudo mv "etc/nginx/default.conf" "etc/nginx/default.conf.BAK"
 sudo mv "etc/nginx/HTTPS_default.conf.BAK" "etc/nginx/default.conf"
-sudo sed -i 's/live\/openrsc.com/live\/'"$domain"'/g' etc/nginx/default.conf
+sudo sed -i 's/live\/openrsc.com/live\/'${domain}'/g' "etc/nginx/default.conf"
 
 echo ""
 echo ""
