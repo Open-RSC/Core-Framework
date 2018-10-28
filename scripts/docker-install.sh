@@ -20,13 +20,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
       ca-certificates \
       curl \
       software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository \
-      "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) \
-      test"
-    sudo apt update
-    sudo apt install docker-ce docker-compose -y
+    sudo apt install docker docker-compose -y
     # Adds instance user to docker group so it can execute commands.
     sudo usermod -a -G docker ubuntu
     # Permits instance user to execute Docker commands without sudo
