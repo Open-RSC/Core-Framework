@@ -95,13 +95,6 @@ public final class World {
     public static int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
 
     public static boolean WORLD_TELEGRAB_TOGGLE = false;
-    /**
-     * AutoRestart settings
-     */
-    public static Calendar now = Calendar.getInstance();
-    public static TimeZone tz = TimeZone.getTimeZone("America/Toronto");
-    public static int hour = now.get(Calendar.HOUR_OF_DAY);
-    public static int mins = now.get(Calendar.MINUTE);
 
     public static synchronized World getWorld() {
         if (worldInstance == null) {
@@ -675,14 +668,16 @@ public final class World {
             LOGGER.catching(e);
         }
 
-    }   
+    }
+
     private static void shutdownCheck() {
-    	now.setTimeZone(tz);
         Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
             public void action() {
-                if ((World.hour == Constants.GameServer.RESTART_HOUR 
-                        && World.mins >= Constants.GameServer.RESTART_MINUTE)) {
-                    int seconds = Constants.GameServer.RESTART_DELAY;
+                int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
+
+                if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR1
+                        && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE1) {
+                    int seconds = Constants.GameServer.RESTART_DELAY1;
                     int minutes = seconds / 60;
                     int remainder = seconds % 60;
                     if (Server.getServer().restart(seconds)) {
@@ -693,7 +688,21 @@ public final class World {
                             ActionSender.sendBox(p, message, false);
                             ActionSender.startShutdown(p, seconds);
                         }
-                    }              
+                    }
+                } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR2
+                        && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE2) {
+                    int seconds = Constants.GameServer.RESTART_DELAY2;
+                    int minutes = seconds / 60;
+                    int remainder = seconds % 60;
+                    if (Server.getServer().restart(seconds)) {
+                        String message = "The server will be restarting in... "
+                                + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
+                                + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");
+                        for (Player p : World.getWorld().getPlayers()) {
+                            ActionSender.sendBox(p, message, false);
+                            ActionSender.startShutdown(p, seconds);
+                        }
+                    }
                 }
                 shutdownCheck();
             }
