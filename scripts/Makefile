@@ -60,16 +60,20 @@ compile:
 	sudo ant -f ../Launcher/build.xml compile
 
 import-game:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql
+	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_game.sql
 
 import-forum:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_forum.sql
+	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_forum.sql
+
+create-pma:
+	docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
 
 run-game:
 	`pwd`/run.sh
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+	sudo chmod 644 Website/sql/config.inc.php
 
 pull-website:
 	@cd ../Website && git pull
