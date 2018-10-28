@@ -107,10 +107,10 @@ echo "Waiting 10 seconds then importing the databases."
 echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
-sudo make import-mysql
 sudo make import-phpmyadmin
 sudo make import-game
 sudo make import-forum
+sudo make import-mysql
 
 #sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
 
