@@ -214,6 +214,8 @@ NC=`tput sgr0` # No Color
         sudo sed -i 's/game.openrsc.com/'${subdomain}'/g' Website/elite/index.php
         sudo sed -i 's/43594/'${port}'/g"' Website/elite/index.php
 
+        sudo chmod 644 Website/sql/config.inc.php
+      	sudo chmod 644 Website/elite/board/config.php
         sudo make certbot-docker
 
 
