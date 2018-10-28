@@ -24,6 +24,7 @@ sudo certbot certonly \
 --post-hook 'sudo service nginx start' \
 -d ${domain} -d ${subdomain} --expand \
 -m ${email}
+#--force-renewal
 echo ""
 echo "Done!"
 echo ""
