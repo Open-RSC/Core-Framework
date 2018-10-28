@@ -3,16 +3,6 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
-
-if (whiptail --title "Open RSC Configuration" --yesno "Do you wish to configure Open RSC?" 7 70); then
-    configure=true
-else
-    make go
-fi
-
-
-if [ "$configure" == "true" ]; then
-
     export pass=$(whiptail --passwordbox "Please enter your desired MySQL password." 8 50 $pass --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     export domain=$(whiptail --inputbox "Please enter your server's domain name. (No http:// or www. needed)" 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     export subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
@@ -51,7 +41,7 @@ if [ "$configure" == "true" ]; then
     Which method of installation do you wish to use?
 
     Choices:
-      ${RED}1${NC} - Use Docker virtual containers
+      ${RED}1${NC} - Docker virtual containers
       ${RED}2${NC} - Direct installation (Ubuntu Linux only)
       ${RED}3${NC} - Return to main menu"
     echo ""
@@ -84,12 +74,14 @@ if [ "$configure" == "true" ]; then
         # Database configuration
         sudo chmod 644 etc/mariadb/innodb.cnf
         export dbuser=root
-        sudo docker exec -i mysql mysql -u${dbuser} -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
-        sudo docker exec -i mysql mysql -u${dbuser} -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
+        sudo docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
+
+        sudo make create-pma
+
         export dbuser=openrsc
-        sudo docker exec -i mysql mysql -u${dbuser} -p${pass} -Bse "
-            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
-            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='user';
+        sudo docker exec -i mysql mysql -uroot -proot -Bse "
+            DELETE FROM mysql.user WHERE User='root';
+            DELETE FROM mysql.user WHERE User='user';
             DELETE FROM mysql.user WHERE User='';
             DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
             FLUSH PRIVILEGES;"
@@ -114,4 +106,3 @@ if [ "$configure" == "true" ]; then
     fi
 
     make get-updates
-fi
