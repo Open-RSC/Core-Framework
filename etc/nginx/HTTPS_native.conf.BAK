@@ -26,6 +26,7 @@ server {
     error_log                               /var/log/nginx/error.log;
     access_log                              /var/log/nginx/access.log;
 
+    client_max_body_size                    25m;
     add_header                              Strict-Transport-Security "max-age=31536000" always;
     ssl_session_cache                       shared:SSL:20m;
     ssl_session_timeout                     10m;
