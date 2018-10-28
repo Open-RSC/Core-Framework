@@ -77,17 +77,17 @@ if [ "$configure" == "true" ]; then
         sudo sed -i 's/game.opeenrsc.com/'${subdomain}'/g' /var/www/html/elite/index.php
         sudo sed -i 's/43594/'${port}'/g' /var/www/html/elite/index.php
 
-        make certbot-native
+        sudo make certbot-native
 
 
     elif [ "$installmode" == "1" ]; then
         # Database configuration
         sudo chmod 644 etc/mariadb/innodb.cnf
         export dbuser=root
-        docker exec -i mysql mysql -u${dbuser} -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
-        docker exec -i mysql mysql -u${dbuser} -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
+        sudo docker exec -i mysql mysql -u${dbuser} -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
+        sudo docker exec -i mysql mysql -u${dbuser} -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
         export dbuser=openrsc
-        docker exec -i mysql mysql -u${dbuser} -p${pass} -Bse "
+        sudo docker exec -i mysql mysql -u${dbuser} -p${pass} -Bse "
             UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
             UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='user';
             DELETE FROM mysql.user WHERE User='';
@@ -106,7 +106,7 @@ if [ "$configure" == "true" ]; then
         sudo sed -i 's/game.openrsc.com/'${subdomain}'/g' Website/elite/index.php
         sudo sed -i 's/43594/'${port}'/g"' Website/elite/index.php
 
-        make certbot-docker
+        sudo make certbot-docker
 
 
     elif [ "$installmode" == "3" ]; then

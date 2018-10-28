@@ -23,8 +23,8 @@ sudo certbot certonly \
 --pre-hook 'sudo docker stop nginx' \
 --post-hook 'sudo docker start nginx' \
 -d ${domain} -d ${subdomain} --expand \
--m ${email} \
---force-renewal
+-m ${email}
+#--force-renewal
 echo ""
 echo "Done!"
 echo ""
