@@ -187,8 +187,8 @@ NC=`tput sgr0` # No Color
         sudo mysql -u${dbuser} -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'localhost';FLUSH PRIVILEGES;"
 
         # Website
-        sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' /var/www/html/elite/board/config.php
-        sudo sed -i 's/dbpasswd = 'root'/dbpasswd = '${pass}'/g' /var/www/html/elite/board/config.php
+        sudo sed -i 's/dbuser = '\'root\''/dbroot = '\'openrsc\''/g' /var/www/html/elite/board/config.php
+        sudo sed -i 's/dbpasswd = '\'root\''/dbpasswd = '\'${pass}\''/g' /var/www/html/elite/board/config.php
         sudo sed -i 's/game.opeenrsc.com/'${subdomain}'/g' /var/www/html/elite/index.php
         sudo sed -i 's/43594/'${port}'/g' /var/www/html/elite/index.php
 
@@ -218,8 +218,8 @@ NC=`tput sgr0` # No Color
         sudo make stop && sudo make start
 
         # Website
-        sudo sed -i 's/dbuser = 'root'/dbuser = 'openrsc'/g' Website/elite/board/config.php
-        sudo sed -i 's/dbpasswd = 'root'/dbpasswd = '${pass}'/g' Website/elite/board/config.php
+        sudo sed -i 's/dbuser = '\'root\''/dbroot = '\'openrsc\''/g' Website/elite/board/config.php
+        sudo sed -i 's/dbpasswd = '\'root\''/dbpasswd = '\'${pass}\''/g' Website/elite/board/config.php
         sudo sed -i 's/game.openrsc.com/'${subdomain}'/g' Website/elite/index.php
         sudo sed -i 's/43594/'${port}'/g"' Website/elite/index.php
 
