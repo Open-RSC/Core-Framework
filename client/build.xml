@@ -9,25 +9,25 @@
 
 	<target name="compile">
 		<echo message="Using Java version ${ant.java.version}."/>
-		<delete file="${jar}"/>
+		<!--<delete file="${jar}"/>-->
 		<delete dir="${build}"/>
 		<mkdir dir="${build}"/>
 		<javac srcdir="${src}" destdir="${build}" debug="on" target="${javac.target}" source="${javac.source}" includeantruntime="false">
 			<classpath>
 				<pathelement path="${java.class.path}/"/>
-				<fileset dir="${lib}">
+				<!--<fileset dir="${lib}">
 					<include name="*.jar"/>
-				</fileset>
+				</fileset>-->
 			</classpath>
 			<compilerarg line="-Xlint:unchecked"/>
 		</javac>
-		<unzip dest="${build}">
+		<!--<unzip dest="${build}">
 			<fileset dir="${lib}">
 				<include name="**/*.jar"/>
 				<exclude name="javafx.controls.jar"/>
 				<exclude name="javafx.fxml.jar"/>
 			</fileset>
-		</unzip>
+		</unzip>-->
 		<jar basedir="${build}" destfile="${jar}">
 			<manifest>
 				<attribute name="Main-Class" value="orsc.ORSCFrame"/>
