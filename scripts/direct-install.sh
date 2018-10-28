@@ -91,7 +91,7 @@ for i in $(seq 1 100); do
     echo -e "XXX\n$i\n${phases[13]}\nXXX"
     sudo phpenmod mbstring
     sudo rm "/etc/nginx/sites-available/default"
-    sudo cat "etc/nginx/simplified.conf" > "/etc/nginx/sites-available/default"
+    sudo cat "etc/nginx/native.conf.BAK" > "/etc/nginx/sites-available/default"
 
     i=80
     echo -e "XXX\n$i\n${phases[14]}\nXXX"
