@@ -175,16 +175,11 @@ NC=`tput sgr0` # No Color
 
     if [ "$installmode" == "2" ]; then
         # Database configuration
-        export dbuser=root
-        sudo mysql -u${dbuser} -proot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
+        sudo mysql -uroot -proot -Bse "CREATE USER 'openrsc'@'localhost' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'localhost';FLUSH PRIVILEGES;"
         export dbuser=openrsc
-        sudo mysql -u${dbuser} -p${pass} -Bse "
-            UPDATE mysql.user SET Password=PASSWORD('$pass') WHERE User='root';
+        sudo mysql -uopenrsc -p${pass} -Bse "
             DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-            DELETE FROM mysql.user WHERE User='';
-            DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
             FLUSH PRIVILEGES;"
-        sudo mysql -u${dbuser} -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'localhost';FLUSH PRIVILEGES;"
 
         # Website
         sudo sed -i 's/dbuser = '\'root\''/dbroot = '\'openrsc\''/g' /var/www/html/elite/board/config.php
@@ -198,17 +193,13 @@ NC=`tput sgr0` # No Color
     elif [ "$installmode" == "1" ]; then
         # Database configuration
         sudo chmod 644 etc/mariadb/innodb.cnf
+
         export dbuser=root
         sudo docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass';GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%';FLUSH PRIVILEGES;"
 
-        sudo make create-pma
-
         export dbuser=openrsc
-        sudo docker exec -i mysql mysql -uroot -proot -Bse "
+        sudo docker exec -i mysql mysql -uopenrsc -p${pass} -Bse "
             DELETE FROM mysql.user WHERE User='root';
-            DELETE FROM mysql.user WHERE User='user';
-            DELETE FROM mysql.user WHERE User='';
-            DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
             FLUSH PRIVILEGES;"
 
         # .env
