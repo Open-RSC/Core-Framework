@@ -101,6 +101,8 @@ for i in $(seq 1 100); do
     echo -e "XXX\n$i\n${phases[15]}\nXXX"
     sleep 1
     # Database configuration and imports
+    sudo mysql -u"root" -p"root" < "Databases/mysql.sql"
+    sudo mysql -u"root" -p"root" < "Databases/phpmyadmin.sql"
     sudo mysql -u"root" -p"root" < "Databases/openrsc_game.sql"
     sudo mysql -u"root" -p"root" < "Databases/openrsc_forum.sql"
 
