@@ -12805,15 +12805,22 @@ public final class mudclient implements Runnable {
 			return var4;
 		}
 
+		private class ORSCSound extends Thread {
+			private void run(String key) {
+				File sound = soundCache.get(key + ".mp3");
+				if (sound == null)
+					return;
+				MP3Player mp = new MP3Player(sound);
+				mp.play();
+			}
+		}
+
 		private final void playSoundFile(String key) {
 			try {
 				if (!optionSoundDisabled) {
-					File sound = soundCache.get(key + ".mp3");
-					if (sound == null)
-						return;
 					try {
-						MP3Player mp = new MP3Player(sound);
-						mp.play();
+						ORSCSound o = new ORSCSound();
+						o.run(key);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
