@@ -77,6 +77,7 @@ run-game:
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 	sudo chmod 644 Website/sql/config.inc.php
+	sudo chmod 644 Website/elite/board/config.php
 
 pull-website:
 	@cd ../Website && git pull
