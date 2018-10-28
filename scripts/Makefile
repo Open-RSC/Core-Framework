@@ -65,8 +65,11 @@ import-game:
 import-forum:
 	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_forum.sql
 
-create-pma:
-	docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
+import-mysql:
+	docker exec -i mysql mysql -uroot -proot < ../Databases/mysql.sql
+
+import-phpmyadmin:
+	docker exec -i mysql mysql -uroot -proot < ../Databases/phpmyadmin.sql
 
 run-game:
 	`pwd`/run.sh

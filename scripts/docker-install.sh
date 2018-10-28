@@ -24,9 +24,9 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo add-apt-repository \
       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
       $(lsb_release -cs) \
-      stable"
+      test"
     sudo apt update
-    sudo apt install docker docker-compose -y
+    sudo apt install docker-ce docker-compose -y
     # Adds instance user to docker group so it can execute commands.
     sudo usermod -a -G docker ubuntu
     # Permits instance user to execute Docker commands without sudo
@@ -103,13 +103,15 @@ fi
 
 # Database imports
 echo ""
-echo "Waiting 10 seconds then importing the game and forum databases."
+echo "Waiting 10 seconds then importing the databases."
 echo ""
 sleep 10
 sudo chmod 644 etc/mariadb/innodb.cnf
-sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
-sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
-sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/phpmyadmin.sql
+sudo make import-mysql
+sudo make import-phpmyadmin
+sudo make import-game
+sudo make import-forum
+
 #sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
 
 # Website clone

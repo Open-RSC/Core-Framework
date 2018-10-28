@@ -88,8 +88,11 @@ import-game:
 import-forum:
 	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_forum.sql
 
-create-pma:
-	docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'pma'@'localhost' IDENTIFIED BY '$pass';GRANT USAGE ON * . * TO 'pma'@'%';FLUSH PRIVILEGES;"
+import-mysql:
+	docker exec -i mysql mysql -uroot -proot < Databases/mysql.sql
+
+import-phpmyadmin:
+	docker exec -i mysql mysql -uroot -proot < Databases/phpmyadmin.sql
 
 import-game-windows:
 	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
@@ -109,13 +112,6 @@ flush-website-windows:
 
 clone-website-windows:
 	git clone https://github.com/Open-RSC/Website.git
-
-docker-toolbox-forward-windows:
-	VBoxManage controlvm "default" natpf1 "http,tcp,,80,,80";
-	VBoxManage controlvm "default" natpf1 "https,tcp,,443,,443";
-	VBoxManage controlvm "default" natpf1 "mariadb,tcp,,3306,,3306";
-	VBoxManage controlvm "default" natpf1 "phpmyadmin,tcp,,55555,,55555";
-	VBoxManage controlvm "default" natpf1 "tomcat,tcp,,8080,,8080";
 
 pull-website:
 	@cd Website && git pull
