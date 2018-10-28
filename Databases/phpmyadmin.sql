@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql:3306
--- Generation Time: Oct 28, 2018 at 03:26 PM
--- Server version: 10.3.9-MariaDB-1:10.3.9+maria~bionic-log
+-- Generation Time: Oct 28, 2018 at 04:16 PM
+-- Server version: 10.3.10-MariaDB-1:10.3.10+maria~bionic-log
 -- PHP Version: 7.2.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `pma__history` (
   `sqlquery` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`,`db`,`table`,`timevalue`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='SQL history for phpMyAdmin';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='SQL history for phpMyAdmin';
 
 --
 -- Dumping data for table `pma__history`
@@ -170,7 +170,9 @@ INSERT INTO `pma__history` (`id`, `username`, `db`, `table`, `timevalue`, `sqlqu
 (20, 'openrsc', '', '', '2018-10-27 16:17:49', 'CREATE USER \'wolf\'@\'localhost\' IDENTIFIED VIA mysql_native_password USING \'***\';GRANT ALL PRIVILEGES ON *.* TO \'wolf\'@\'localhost\' REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;'),
 (21, 'openrsc', '', '', '2018-10-27 16:19:31', 'CREATE USER \'wolf\'@\'%\' IDENTIFIED VIA mysql_native_password USING \'***\';GRANT ALL PRIVILEGES ON *.* TO \'wolf\'@\'%\' REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;'),
 (22, 'wolf', '', '', '2018-10-27 16:21:40', 'CREATE USER \'kenix\'@\'%\' IDENTIFIED VIA mysql_native_password USING \'***\';GRANT ALL PRIVILEGES ON *.* TO \'kenix\'@\'%\' REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;'),
-(23, 'wolf', '', '', '2018-10-27 16:22:00', 'CREATE USER \'chris\'@\'%\' IDENTIFIED VIA mysql_native_password USING \'***\';GRANT ALL PRIVILEGES ON *.* TO \'chris\'@\'%\' REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;');
+(23, 'wolf', '', '', '2018-10-27 16:22:00', 'CREATE USER \'chris\'@\'%\' IDENTIFIED VIA mysql_native_password USING \'***\';GRANT ALL PRIVILEGES ON *.* TO \'chris\'@\'%\' REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;'),
+(24, 'openrsc', 'phpmyadmin', 'pma__users', '2018-10-28 16:15:16', 'SELECT * FROM `pma__users`'),
+(25, 'openrsc', 'phpmyadmin', 'pma__userconfig', '2018-10-28 16:15:19', 'SELECT * FROM `pma__userconfig`');
 
 -- --------------------------------------------------------
 
@@ -221,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `pma__recent` (
 --
 
 INSERT INTO `pma__recent` (`username`, `tables`) VALUES
-('openrsc', '[{\"db\":\"openrsc_game\",\"table\":\"openrsc_players\"},{\"db\":\"openrsc_game\",\"table\":\"openrsc_bank\"},{\"db\":\"openrsc_game\",\"table\":\"openrsc_invitems\"}]');
+('openrsc', '[{\"db\":\"phpmyadmin\",\"table\":\"pma__userconfig\"},{\"db\":\"phpmyadmin\",\"table\":\"pma__users\"},{\"db\":\"openrsc_game\",\"table\":\"openrsc_players\"},{\"db\":\"openrsc_game\",\"table\":\"openrsc_bank\"},{\"db\":\"openrsc_game\",\"table\":\"openrsc_invitems\"}]');
 
 -- --------------------------------------------------------
 
@@ -352,8 +354,7 @@ CREATE TABLE IF NOT EXISTS `pma__userconfig` (
 --
 
 INSERT INTO `pma__userconfig` (`username`, `timevalue`, `config_data`) VALUES
-('openrsc', '2018-10-27 16:18:58', '{\"2fa\":{\"backend\":\"application\",\"settings\":{\"secret\":\"EXRV5BCABFVBBOUW\"}},\"Console\\/Mode\":\"collapse\"}'),
-('wolf', '2018-10-28 15:26:23', '{\"Console\\/Mode\":\"collapse\",\"2fa\":{\"backend\":\"application\",\"settings\":{\"secret\":\"V5CQQXNNTBC3TNVQ\"}},\"Export\\/file_template_server\":\"@SERVER@ 20181027\"}');
+('openrsc', '2018-10-28 16:15:44', '{\"Console\\/Mode\":\"collapse\"}');
 
 -- --------------------------------------------------------
 
