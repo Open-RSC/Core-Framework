@@ -60,16 +60,24 @@ compile:
 	sudo ant -f ../Launcher/build.xml compile
 
 import-game:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql
+	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_game.sql
 
 import-forum:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_forum.sql
+	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_forum.sql
+
+import-mysql:
+	docker exec -i mysql mysql -uroot -proot < ../Databases/mysql.sql
+
+import-phpmyadmin:
+	docker exec -i mysql mysql -uroot -proot < ../Databases/phpmyadmin.sql
 
 run-game:
 	`pwd`/run.sh
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+	sudo chmod 644 Website/sql/config.inc.php
+	sudo chmod 644 Website/elite/board/config.php
 
 pull-website:
 	@cd ../Website && git pull

@@ -12,6 +12,9 @@ import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.*;
@@ -27,8 +30,6 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
-
-import jaco.mp3.player.MP3Player;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -666,7 +667,8 @@ public final class mudclient implements Runnable {
 		private Panel panelQuestInfo;
 		//private Panel panelPlayerTaskInfo;
 		private Panel panelSettings;
-		public HashMap<String, File> soundCache = new HashMap<String, File>();
+		public HashMap<String, Media> soundCache = new HashMap<String, Media>();
+		final JFXPanel fxPanel = new JFXPanel();
 		private boolean authenticSettings = !(
 						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
             || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
@@ -1347,11 +1349,11 @@ public final class mudclient implements Runnable {
 				byte var2 = 40;
 				if(Config.isAndroid())
 					var2 = -125;
-				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to Open RSC", 4, true);
+				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to " + Config.SERVER_NAME, 6, true);
 				String var3 = null;
-				var3 = "You need to create an account on openrsc.com to use this server";
+				var3 = "Join our Discord for the latest updates.";
 				if (null != var3) {
-					this.panelLoginWelcome.addCenteredText(256, 205 + var2, var3, 4, true);
+					this.panelLoginWelcome.addCenteredText(256, 210 + var2, var3, 1, true);
 				}
 				//
 				// this.panelLoginWelcome.addButtonBackground(256, var2 + 250, 200,
@@ -3449,7 +3451,7 @@ public final class mudclient implements Runnable {
 				int var3 = yr;
 				this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
 				var3 += 20;
-				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to Open RSC " + this.localPlayer.accountName,
+				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.SERVER_NAME + " " + this.localPlayer.accountName,
 						0xFFFF00, 0, 4, var3);
 				var3 += 30;
 				String var4;
@@ -11791,7 +11793,7 @@ public final class mudclient implements Runnable {
 					var3 += 15;
 					var3 += 10;
 					this.getSurface().drawColoredStringCentered(256,
-							"Click on the most suitable option from the Rules of Open RSC.", 0xFFFF00, 0, 1, var3);
+							"Click on the most suitable option from the Rules of "+ Config.SERVER_NAME +".", 0xFFFF00, 0, 1, var3);
 					var3 += 15;
 					this.getSurface().drawColoredStringCentered(256,
 							"This will send a report to our Player Support team for investigation.", 0xFFFF00, 0, 1, var3);
@@ -12429,7 +12431,8 @@ public final class mudclient implements Runnable {
 
 				for (int i = 0; i < listOfFiles.length; i++)
 					if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
-						soundCache.put(listOfFiles[i].getName().toLowerCase(), listOfFiles[i]);
+						Media mp3 = new Media(listOfFiles[i].toURI().toString());
+						soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
 					}
 
 			} catch (Exception ex) {
@@ -12708,7 +12711,7 @@ public final class mudclient implements Runnable {
 															}
 														} else {
 															this.showLoginScreenStatus("Error unable to login.",
-																	"Under 13 accounts cannot access Open RSC");
+																	"Under 13 accounts cannot access " + Config.SERVER_NAME);
 														}
 													} else {
 														this.showLoginScreenStatus("Error unable to login.",
@@ -12808,12 +12811,17 @@ public final class mudclient implements Runnable {
 		private final void playSoundFile(String key) {
 			try {
 				if (!optionSoundDisabled) {
-					File sound = soundCache.get(key + ".mp3");
+					Media sound = soundCache.get(key + ".mp3");
 					if (sound == null)
 						return;
 					try {
-						MP3Player mp = new MP3Player(sound);
-						mp.play();
+						MediaPlayer mp = new MediaPlayer(sound);
+						mp.setOnReady(() -> {
+							mp.play();
+							mp.setOnEndOfMedia(() -> {
+								mp.dispose();
+							});
+						});
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

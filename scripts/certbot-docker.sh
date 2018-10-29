@@ -7,9 +7,9 @@ export email=$(whiptail --inputbox "Please enter your email for Lets Encrypt reg
 
 echo ""
 echo ""
-sudo mv etc/nginx/default.conf etc/nginx/default.conf.BAK
-sudo mv etc/nginx/HTTPS_default.conf.BAK etc/nginx/default.conf
-sudo sed -i 's/live\/openrsc.com/live\/'"$domain"'/g' etc/nginx/default.conf
+sudo mv "etc/nginx/default.conf" "etc/nginx/default.conf.BAK"
+sudo cp "etc/nginx/HTTPS_default.conf.BAK" "etc/nginx/default.conf"
+sudo sed -i 's/live\/openrsc.com/live\/'${domain}'/g' "etc/nginx/default.conf"
 
 echo ""
 echo ""
@@ -19,12 +19,14 @@ sudo certbot certonly \
 --standalone \
 --preferred-challenges http \
 --agree-tos -n \
---config-dir ../etc/letsencrypt \
+--config-dir ./etc/letsencrypt \
 --pre-hook 'sudo docker stop nginx' \
 --post-hook 'sudo docker start nginx' \
 -d ${domain} -d ${subdomain} --expand \
--m ${email} \
---force-renewal
+-m ${email}
+#--force-renewal
 echo ""
 echo "Done!"
 echo ""
+sudo chmod 644 Website/sql/config.inc.php
+sudo chmod 644 Website/elite/board/config.php
