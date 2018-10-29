@@ -169,8 +169,8 @@ public final class Admins implements CommandListener {
 		}
 		else if (command.equals("holidaydrop")) {
 			if (args.length < 2) {
-				player.message("You need to supply how many times you want the function to run");
-				player.message("and one or more item ids. (::globaldrop <count> <itemid>)");
+				player.message("You need to supply how many hours you want the function to run");
+				player.message("and one or more item ids. (::holidaydrop <hours> <itemid>)");
 				return;
 			}
 
@@ -184,7 +184,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			player.message("Starting holiday drop...");
+			player.message("Starting holiday drop!");
 			final Player p = player;
 			holidayDropEvent = new HourlyEvent(executionCount) {
 				@Override
