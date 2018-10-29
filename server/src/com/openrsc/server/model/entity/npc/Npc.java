@@ -380,6 +380,13 @@ public class Npc extends Mob {
 			for (ItemDropDef drop : drops) {
 				total += drop.getWeight();
 				weightTotal += drop.getWeight();
+				if (drop.getWeight() == 0 && drop.getID() != -1) {
+					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+					groundItem.setAttribute("npcdrop", true);
+					world.registerItem(groundItem);
+					continue;
+				}
+
 			}
 
 			int hit = DataConversions.random(0, total);
@@ -388,8 +395,8 @@ public class Npc extends Mob {
 			for (ItemDropDef drop : drops) {
 				Item temp = new Item();
 				temp.setID(drop.getID());
-				//We don't want currentRatio to be 0 since some drop weights might be 0.
-				double currentRatio = -1;
+
+
 				if (drop == null) {
 					continue;
 				}
@@ -398,13 +405,7 @@ public class Npc extends Mob {
 				int amount = drop.getAmount();
 				int weight = drop.getWeight();
 
-				currentRatio = (double) weight / (double) total;
-				if (weight == 0 && dropID != -1) {
-					GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
-					groundItem.setAttribute("npcdrop", true);
-					world.registerItem(groundItem);
-					continue;
-				}
+				double currentRatio = (double) weight / (double) weightTotal;
 				if (hit >= total && hit < (total + weight)) {
 					if (dropID != -1) {
 						if (EntityHandler.getItemDef(dropID).isMembersOnly()
@@ -466,6 +467,7 @@ public class Npc extends Mob {
 							}
 						}
 					}
+					break;
 				}
 				total += weight;
 			}
