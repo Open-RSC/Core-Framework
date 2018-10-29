@@ -106,9 +106,5 @@ sudo make import-game
 sudo make import-forum
 sudo make import-mysql
 
-#sudo docker exec -i mysql mysqldump --all-databases -u"root" -p"root" --all-databases | sudo zip > data/`date "+%Y%m%d-%H%M-%Z"`.zip
-
-# Website clone
 sudo make clone-website
-
-make file-edits
+sudo make file-edits

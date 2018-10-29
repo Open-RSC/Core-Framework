@@ -11,8 +11,8 @@ An easy to use RSC private server framework.
 Which method of installation do you wish to use?
 
 Choices:
-  ${RED}1${NC} - Docker virtual containers
-  ${RED}2${NC} - Direct installation (Ubuntu Linux only)
+  ${RED}1${NC} - Docker containers
+  ${RED}2${NC} - Directly installed
   ${RED}3${NC} - Return to main menu"
 echo ""
 echo "Which of the above do you wish to do? Type the choice number and press enter."
@@ -28,25 +28,24 @@ if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Di
         echo ""
         echo "Installing Certbot, Screen, Zip, Fail2Ban, Unzip, Git, Build-Essential, Software-Properties-Common, APT-Transport-HTTPS, CA-Certificates, Curl, and configuring the system timezone."
         echo ""
-        sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
-        sudo apt-get install software-properties-common -y
-        sudo add-apt-repository ppa:certbot/certbot -y
-        sudo apt-get update
-        sudo apt-get install certbot screen zip fail2ban unzip git build-essential apt-transport-https ca-certificates curl -y
+        sudo apt update && sudo make apt upgrade -y && sudo apt autoremove -y
+        sudo apt install git htop nano unzip zip fail2ban git build-essential apt-transport-https ca-certificates software-properties-common curl screen ack certbot mariadb-server mariadb-client nginx libswt-gtk-4-java gtk3-nocsd -y
         sudo dpkg-reconfigure tzdata
 
         # Java related
         echo ""
         echo ""
-        echo "Installing Oracle Java JDK 8, OpenJFX, and Apache ant. Please wait."
+        echo "Installing OpenJDK, OpenJFX, and Apache ant. Please wait."
         echo ""
-        sudo apt-get remove -y openjdk-6-jre default-jre default-jre-headless
-        sudo add-apt-repository -y ppa:webupd8team/java
-        sudo apt update
-        sudo apt install -y openjfx ant
-        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-        sudo apt-get install -y oracle-java8-installer
-        sudo apt install oracle-java8-set-default
+        sudo apt install default-jdk ant -y
+        export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+        wget http://download2.gluonhq.com/openjfx/11/openjfx-11_linux-x64_bin-sdk.zip
+        unzip openjfx-11_linux-x64_bin-sdk.zip
+        rm unzip openjfx-11_linux-x64_bin-sdk.zip
+        mv javafx-sdk-11 /usr/lib/jvm/
+        export PATH_TO_FX=/usr/lib/jvm/javafx-sdk-11/lib
+        source ~/.bashrc
+        source /etc/profile
 
         # UFW Firewall configuration
         echo ""
