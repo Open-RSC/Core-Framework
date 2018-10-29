@@ -23,8 +23,6 @@ server {
 
     index index.php index.html index.htm;
 
-    client_max_body_size                    100M;
-
     ####### Proxies #######
     # PHP proxy
     location ~ \.php$ {
