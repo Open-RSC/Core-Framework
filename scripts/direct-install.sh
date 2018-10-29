@@ -3,7 +3,7 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0` # No Color
 
-sudo apt-get install php php-cgi php-common php-pear php-mbstring php-fpm php7.2-fpm php-mysql -y
+sudo apt-get install mariadb-server nginx mariadb-client php php-cgi php-common php-pear php-mbstring php-fpm php7.2-fpm php-mysql -y
 
 sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/internal/skip-preseed boolean true"
 sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect"
