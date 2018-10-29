@@ -14,9 +14,9 @@ public final class Constants {
 	// upstairs: 576, 1097
 
 	public static final class GameServer {
-		/** 
+		/**
 		 * RSC GAME TICK.
-		 */	    	
+		 */
 		public static int GAME_TICK = 600;
 		/**
 		 * the servers name
@@ -71,20 +71,17 @@ public final class Constants {
 		 */
 		public static String HMAC_PRIVATE_KEY = "";
 		/**
-		 *  AutoRestart hour of the day 1 - 23
+		 *  AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
 		 */
-		public static int RESTART_HOUR1;		
+		public static int RESTART_HOUR1;
+		public static int RESTART_MINUTE1;
 		public static int RESTART_HOUR2;
-		/** 
-		 * AutoRestart minute 0 - 59
-		 */
-		public static int RESTART_MINUTE;
-
+		public static int RESTART_MINUTE2;
 		/**
 		 * AutoRestart Delay in seconds, alert players
 		 */
 		public static int RESTART_DELAY1;
-        public static int RESTART_DELAY2;
+		public static int RESTART_DELAY2;
 		/**
 		 * Player Skill Level Limit
 		 */
@@ -171,7 +168,7 @@ public final class Constants {
 		public static boolean WANT_GLOBAL_CHAT = false;
 		public static boolean WANT_SKILL_MENUS = false;
 		public static boolean WANT_QUEST_MENUS = false;
-		public static boolean WANT_EXPERIENCE_ELIXIRS = false;	
+		public static boolean WANT_EXPERIENCE_ELIXIRS = false;
 		public static boolean WANT_KEYBOARD_SHORTCUTS = false;
 		public static boolean WANT_CUSTOM_BANKS = false;
 		public static boolean WANT_BANK_PINS = false;
@@ -186,7 +183,7 @@ public final class Constants {
 		public static double VALUABLE_DROP_RATIO = 0;
 
 		/**
-		 * 
+		 *
 		 * @param file
 		 * @throws IOException
 		 * Config file for server configurations.
@@ -224,7 +221,7 @@ public final class Constants {
 
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
-			
+
 			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
@@ -260,8 +257,10 @@ public final class Constants {
 			START_TIME = System.currentTimeMillis();
 			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
 			RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
-			RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
-			RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
+			RESTART_MINUTE1 = Integer.parseInt(props.getProperty("restart_minute1"));
+			RESTART_MINUTE2 = Integer.parseInt(props.getProperty("restart_minute2"));
+			RESTART_DELAY1 = Integer.parseInt(props.getProperty("restart_delay1"));
+			RESTART_DELAY2 = Integer.parseInt(props.getProperty("restart_delay2"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
@@ -350,7 +349,7 @@ public final class Constants {
 			put(FAMILY_CREST, new int[] {1, -1, 0, 0});
 			put(TRIBAL_TOTEM, new int[] {1, Skills.THIEVING, 800, 300});
 			put(FISHING_CONTEST, new int[] {1, Skills.FISHING, 0, 300}); // Base XP Handled in Fishing Contest files
-			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 0, 500}); 
+			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 0, 500});
 			put(TEMPLE_OF_IKOV, new int[] {1, -1, 2000, 1000}); // Skill ID Handled in Ikov files
 			put(CLOCK_TOWER, new int[] {1, -1, 0, 0});
 			put(THE_HOLY_GRAIL, new int[] {2, -1, 0, 0}); // XP Handled in Grail files
