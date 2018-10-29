@@ -70,7 +70,7 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxAlpha(x, y + 21, width, 309, colour, 160);
 		mc.getSurface().drawBoxBorder(x, width, y, 331, 0x000000);
 
-		drawString("The Bank of Open RSC", x + 196, y + 15, 1, 0xFFFFFF);
+		drawString("The Bank of " + Config.SERVER_NAME, x + 196, y + 15, 1, 0xFFFFFF);
 
 		int j3 = 0xFFFFFF;
 		if (mc.getMouseX() > x + 415 && mc.getMouseY() >= y && mc.getMouseX() < x + width && mc.getMouseY() < y + 12 + 9) {
