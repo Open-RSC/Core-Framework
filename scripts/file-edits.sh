@@ -8,8 +8,9 @@ NC=`tput sgr0` # No Color
     export subdomain=$(whiptail --inputbox "Please set your server's private subdomain if one exists or press enter." 8 50 $domain --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     export port=$(whiptail --inputbox "What port should the game use?" 8 50 43594 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     export tick=$(whiptail --inputbox "What speed should the game run? (600 is the default and 300 is twice as fast)" 8 50 600 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
-    export tick=$(whiptail --inputbox "What speed should the game run? (600 is the default and 300 is twice as fast)" 8 50 600 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
     export gamename=$(whiptail --inputbox "Please enter the name of your game." 8 50 --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export clientname=$(whiptail --inputbox "Please enter your client's filename. It must not contain spaces. (No .jar needed)" 8 50 Open_RSC_Client --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
+    export launchername=$(whiptail --inputbox "Please enter your launcher's filename. It must not contain spaces. (No .jar needed)" 8 50 OpenRSC --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
 
     # Server configuration edits
     sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/free.conf
@@ -20,18 +21,26 @@ NC=`tput sgr0` # No Color
     sudo sed -i 's/game_tick">620/game_tick">'${tick}'/g' server/members.conf
     sudo sed -i 's/43594/'${port}'/g' server/free.conf
     sudo sed -i 's/43594/'${port}'/g' server/members.conf
-    sudo sed -i 's/server_name">Open RSC/server_name">"'${gamename}'"/g' server/free.conf
-    sudo sed -i 's/server_name">Open RSC/server_name">"'${gamename}'"/g' server/members.conf
+    sudo sed -i 's/Open RSC/'"${gamename}"'/g' server/free.conf
+    sudo sed -i 's/Open RSC/'"${gamename}"'/g' server/members.conf
 
     #Client configuration edits
-    sudo sed -i 's/SERVER_NAME = "Open RSC"/SERVER_NAME = "'${gamename}'"/g' client/src/orsc/Config.java
-    sudo sed -i 's/SERVER_IP = "localhost"/SERVER_IP = "'${subdomain}'"/g' client/src/orsc/Config.java
+    sudo sed -i 's/Open RSC/'"${gamename}"'/g' client/src/orsc/Config.java
+    sudo sed -i 's/localhost/'"${subdomain}"'/g' client/src/orsc/Config.java
     sudo sed -i 's/43594/'${port}'/g' client/src/orsc/Config.java
+    sudo sed -i 's/OpenRSC/'${launchername}'/g' client/src/orsc/Config.java
+    sudo sed -i 's/Open_RSC_Client.jar/'"${clientname}"'.jar/g' client/build.xml
 
     #Launcher configuration edits
-    sudo sed -i 's/frameTitle = "Open RSC"/frameTitle = "'${gamename}'"/g' Launcher/src/com/loader/openrsc/Constants.java
-    sudo sed -i 's/localhost/'${domain}'/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/Open RSC/'"${gamename}"'/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/game.openrsc.com/'"${subdomain}"'/g' Launcher/src/com/loader/openrsc/Constants.java
     sudo sed -i 's/43594/'${port}'/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/Open_RSC_Client.jar/'"${clientname}"'.jar/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/OpenRSC.jar/'"${launchername}"'.jar/g' Launcher/src/com/loader/openrsc/Constants.java
+    sudo sed -i 's/OpenRSC.jar/'"${launchername}"'.jar/g' Launcher/build.xml
+
+    #Website configuration edits
+    sudo sed -i 's/OpenRSC.jar/'"${launchername}"'.jar/g' Website/elite/index.php
 
     # Docker or native install mode?
     echo ""
