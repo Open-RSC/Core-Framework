@@ -29,7 +29,7 @@ if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Di
         echo "Installing Certbot, Screen, Zip, Fail2Ban, Unzip, Git, Build-Essential, Software-Properties-Common, APT-Transport-HTTPS, CA-Certificates, Curl, and configuring the system timezone."
         echo ""
         sudo apt update && sudo make apt upgrade -y && sudo apt autoremove -y
-        sudo apt install git htop nano unzip zip fail2ban git build-essential apt-transport-https ca-certificates software-properties-common curl screen ack certbot mariadb-server mariadb-client nginx libswt-gtk-4-java gtk3-nocsd -y
+        sudo apt install git htop nano unzip zip fail2ban git build-essential apt-transport-https ca-certificates software-properties-common curl screen ack certbot mariadb-client libswt-gtk-4-java gtk3-nocsd -y
         sudo dpkg-reconfigure tzdata
 
         # Java related
