@@ -1349,9 +1349,9 @@ public final class mudclient implements Runnable {
 				byte var2 = 40;
 				if(Config.isAndroid())
 					var2 = -125;
-				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to Open RSC", 4, true);
+				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to + "Config.SERVER_NAME, 4, true);
 				String var3 = null;
-				var3 = "You need to create an account on openrsc.com to use this server";
+				var3 = "You need to create an account on " + Config.SERVER_IP + " to use this server";
 				if (null != var3) {
 					this.panelLoginWelcome.addCenteredText(256, 205 + var2, var3, 4, true);
 				}
@@ -3451,7 +3451,7 @@ public final class mudclient implements Runnable {
 				int var3 = yr;
 				this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
 				var3 += 20;
-				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to Open RSC " + this.localPlayer.accountName,
+				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to "Config.SERVER_NAME + " " + this.localPlayer.accountName,
 						0xFFFF00, 0, 4, var3);
 				var3 += 30;
 				String var4;
@@ -11793,7 +11793,7 @@ public final class mudclient implements Runnable {
 					var3 += 15;
 					var3 += 10;
 					this.getSurface().drawColoredStringCentered(256,
-							"Click on the most suitable option from the Rules of Open RSC.", 0xFFFF00, 0, 1, var3);
+							"Click on the most suitable option from the Rules of "+ Config.SERVER_NAME +".", 0xFFFF00, 0, 1, var3);
 					var3 += 15;
 					this.getSurface().drawColoredStringCentered(256,
 							"This will send a report to our Player Support team for investigation.", 0xFFFF00, 0, 1, var3);
@@ -12711,7 +12711,7 @@ public final class mudclient implements Runnable {
 															}
 														} else {
 															this.showLoginScreenStatus("Error unable to login.",
-																	"Under 13 accounts cannot access Open RSC");
+																	"Under 13 accounts cannot access " + Config.SERVER_NAME);
 														}
 													} else {
 														this.showLoginScreenStatus("Error unable to login.",

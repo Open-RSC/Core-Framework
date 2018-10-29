@@ -52,7 +52,7 @@ if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Di
         echo ""
         echo "Setting Ubuntu Firewall permissions."
         echo ""
-        sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 53595/tcp && sudo ufw deny 3306/tcp
+        sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 43594/tcp && sudo ufw allow 53594/tcp && sudo ufw allow 53595/tcp && sudo ufw deny 3306/tcp
         sudo sed -i 's/DEFAULT_FORWARD_POLICY="DENY"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
         sudo ufw reload
         sudo ufw --force enable
