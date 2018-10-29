@@ -405,8 +405,6 @@ public class Npc extends Mob {
 				int amount = drop.getAmount();
 				int weight = drop.getWeight();
 
-System.out.println(dropID + " " + weight);
-
 				double currentRatio = (double) weight / (double) weightTotal;
 				if (hit >= total && hit < (total + weight)) {
 					if (dropID != -1) {
