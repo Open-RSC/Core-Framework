@@ -37,12 +37,12 @@ if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Di
         echo ""
         echo "Installing OpenJDK, OpenJFX, and Apache ant. Please wait."
         echo ""
-        sudo apt install default-jdk ant -y
+        sudo apt install openjdk-11-jdk ant -y
         export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-        wget http://download2.gluonhq.com/openjfx/11/openjfx-11_linux-x64_bin-sdk.zip
-        unzip openjfx-11_linux-x64_bin-sdk.zip
-        rm unzip openjfx-11_linux-x64_bin-sdk.zip
-        mv javafx-sdk-11 /usr/lib/jvm/
+        sudo wget http://download2.gluonhq.com/openjfx/11/openjfx-11_linux-x64_bin-sdk.zip
+        sudo unzip openjfx-11_linux-x64_bin-sdk.zip
+        sudo rm openjfx-11_linux-x64_bin-sdk.zip
+        sudo mv javafx-sdk-11 /usr/lib/jvm/
         export PATH_TO_FX=/usr/lib/jvm/javafx-sdk-11/lib
         source ~/.bashrc
         source /etc/profile
