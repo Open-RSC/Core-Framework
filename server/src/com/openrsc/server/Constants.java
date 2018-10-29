@@ -262,7 +262,7 @@ public final class Constants {
 			RESTART_DELAY1 = Integer.parseInt(props.getProperty("restart_delay1"));
             RESTART_DELAY2 = Integer.parseInt(props.getProperty("restart_delay2"));
 
-			// Make sure config doesn't exceed max values
+			// Make sure config doesn't exceed max values 
 			if (VIEW_DISTANCE > 4)
 				VIEW_DISTANCE = 4;
 		}
