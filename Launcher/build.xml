@@ -3,7 +3,7 @@
     <property name="src" location="src"/>
     <property name="data" location="data"/>
     <property name="build" location="build"/>
-    <property name="jar" location="Open_RSC_Launcher.jar"/>
+    <property name="jar" location="OpenRSC.jar"/>
     <property name="javac.source" value="1.8"/>
     <property name="javac.target" value="1.8"/>
 
