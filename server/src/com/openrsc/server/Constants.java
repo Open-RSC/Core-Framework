@@ -79,10 +79,12 @@ public final class Constants {
 		 * AutoRestart minute 0 - 59
 		 */
 		public static int RESTART_MINUTE;
+
 		/**
 		 * AutoRestart Delay in seconds, alert players
 		 */
-		public static int RESTART_DELAY;     
+		public static int RESTART_DELAY1;
+        public static int RESTART_DELAY2;
 		/**
 		 * Player Skill Level Limit
 		 */

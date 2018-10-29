@@ -10,13 +10,13 @@ import java.io.File;
 public class ORSCFrame extends ORSCApplet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public String getCacheLocation() {
 		return Config.F_CACHE_DIR + File.separator;
-	}	  	
+	}
 
 	public static void main(String[] args) {
-		JFrame jframe = new JFrame("Open RSC");
+		JFrame jframe = new JFrame(Config.SERVER_NAME);
 
 		final Applet applet = new ORSCFrame();
 		applet.setPreferredSize(new Dimension(512, 334 + 12));
