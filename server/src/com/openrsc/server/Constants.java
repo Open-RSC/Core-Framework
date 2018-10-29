@@ -71,9 +71,10 @@ public final class Constants {
 		 */
 		public static String HMAC_PRIVATE_KEY = "";
 		/**
-		 *  AutoRestart hour of the day 1 - 12
+		 *  AutoRestart hour of the day 1 - 23
 		 */
-		public static int RESTART_HOUR;
+		public static int RESTART_HOUR1;		
+		public static int RESTART_HOUR2;
 		/** 
 		 * AutoRestart minute 0 - 59
 		 */
@@ -255,7 +256,8 @@ public final class Constants {
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			START_TIME = System.currentTimeMillis();
-			RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
+			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
+			RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
 			RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
 			RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
 
