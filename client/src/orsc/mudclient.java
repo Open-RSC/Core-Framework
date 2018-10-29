@@ -1349,11 +1349,11 @@ public final class mudclient implements Runnable {
 				byte var2 = 40;
 				if(Config.isAndroid())
 					var2 = -125;
-				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to + "Config.SERVER_NAME, 4, true);
+				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to " + Config.SERVER_NAME, 6, true);
 				String var3 = null;
-				var3 = "You need to create an account on " + Config.SERVER_IP + " to use this server";
+				var3 = "Join our Discord for the latest updates.";
 				if (null != var3) {
-					this.panelLoginWelcome.addCenteredText(256, 205 + var2, var3, 4, true);
+					this.panelLoginWelcome.addCenteredText(256, 210 + var2, var3, 1, true);
 				}
 				//
 				// this.panelLoginWelcome.addButtonBackground(256, var2 + 250, 200,
@@ -3451,7 +3451,7 @@ public final class mudclient implements Runnable {
 				int var3 = yr;
 				this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
 				var3 += 20;
-				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to "Config.SERVER_NAME + " " + this.localPlayer.accountName,
+				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.SERVER_NAME + " " + this.localPlayer.accountName,
 						0xFFFF00, 0, 4, var3);
 				var3 += 30;
 				String var4;
