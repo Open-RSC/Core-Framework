@@ -19,7 +19,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		ImageObserver, ClientPort, ImageProducer {
 
 	static mudclient mudclient;
-	
+
 	public static int globalLoadingPercent = 0;
 	public static String globalLoadingState = "";
 
@@ -47,7 +47,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	void addMouseClick(int button, int x, int y) {
 		try {
-			
+
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "e.Q(" + x + ',' + "dummy" + ',' + button + ',' + y + ')');
 		}
@@ -55,7 +55,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	final void drawCenteredString(Font var1, String str, int y, boolean var4, int x, Graphics g) {
 		try {
-			
+
 			FontMetrics metrics = getFontMetrics(var1);
 			g.setFont(var1);
 			g.drawString(str, x - metrics.stringWidth(str) / 2, y + metrics.getHeight() / 4);
@@ -68,7 +68,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	public final boolean drawLoading(int var1) {
 		try {
-			
+
 			Graphics var2 = this.getGraphics();
 			if (var2 != null) {
 				this.loadingGraphics = var2.create();
@@ -141,7 +141,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				;
 			}
 
-			
+
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
 					"e.FE(" + (state != null ? "{...}" : "null") + ',' + percent + ',' + var3 + ')');
@@ -151,7 +151,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void keyPressed(KeyEvent var1) {
 		try {
-			
+
 			this.updateControlShiftState((InputEvent) var1);
 			char keyChar = var1.getKeyChar();
 			int keyCode = var1.getKeyCode();
@@ -252,7 +252,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final synchronized void keyReleased(KeyEvent var1) {
 		try {
 			updateControlShiftState((InputEvent) var1);
-			
+
 			char c = var1.getKeyChar();
 			int keyCode = var1.getKeyCode();
 			if ((char) c != 32) {
@@ -307,7 +307,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void keyTyped(KeyEvent var1) {
 		try {
-			
+
 			updateControlShiftState((InputEvent) var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.keyTyped(" + (var1 != null ? "{...}" : "null") + ')');
@@ -317,7 +317,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void mouseClicked(MouseEvent var1) {
 		try {
-			
+
 			updateControlShiftState((InputEvent) var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseClicked(" + (var1 != null ? "{...}" : "null") + ')');
@@ -328,8 +328,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final synchronized void mouseDragged(MouseEvent var1) {
 		try {
 			updateControlShiftState((InputEvent) var1);
-			
-			
+
+
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 			if (SwingUtilities.isRightMouseButton(var1)) {
@@ -347,7 +347,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final void mouseEntered(MouseEvent var1) {
 		try {
 			updateControlShiftState((InputEvent) var1);
-			
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseEntered(" + (var1 != null ? "{...}" : "null") + ')');
 		}
@@ -356,7 +356,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void mouseExited(MouseEvent var1) {
 		try {
-			
+
 			updateControlShiftState((InputEvent) var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.mouseExited(" + (var1 != null ? "{...}" : "null") + ')');
@@ -367,7 +367,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final synchronized void mouseMoved(MouseEvent var1) {
 		try {
 			updateControlShiftState((InputEvent) var1);
-			
+
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 			mudclient.lastMouseAction = 0;
@@ -379,10 +379,10 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public final synchronized void mousePressed(MouseEvent var1) {
-		
+
 		try {
 			updateControlShiftState((InputEvent) var1);
-			
+
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
 			if (!SwingUtilities.isRightMouseButton(var1)) {
@@ -402,7 +402,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mouseReleased(MouseEvent var1) {
 		try {
-			
+
 			updateControlShiftState((InputEvent) var1);
 			mudclient.mouseX = var1.getX() - mudclient.screenOffsetX;
 			mudclient.mouseY = var1.getY() - mudclient.screenOffsetY;
@@ -411,7 +411,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			throw GenUtil.makeThrowable(var3, "e.mouseReleased(" + (var1 != null ? "{...}" : "null") + ')');
 		}
 	}
-	
+
 	@Override
 	public final void mouseWheelMoved(MouseWheelEvent var1) {
 			updateControlShiftState((InputEvent) var1);
@@ -422,12 +422,12 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final void paint(Graphics var1) {
 		try {
 
-			
+
 			if (mudclient != null) {
 				mudclient.rendering = true;
 				if (mudclient.getGameState() == 2 && this.loadingLogo != null) {
 					this.drawLoadingScreen(this.loadingState, this.loadingPercent, 126);
-				} 
+				}
 			}
 
 		} catch (RuntimeException var3) {
@@ -441,7 +441,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	public final void showLoadingProgress(int percent, String state) {
 		try {
-			
+
 
 			try {
 				int x = (this.width - 281) / 2;
@@ -495,11 +495,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	final void startApplet(int width, int height, int clientversion, int var4) {
 		try {
-			
+
 			System.out.println("Started applet");
 			this.width = width;
 			this.height = height;
-			
+
 			mudclient.startMainThread();
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12, "e.OE(" + height + ',' + clientversion + ',' + var4 + ',' + width + ')');
@@ -509,8 +509,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void stop() {
 		try {
-			
-			
+
+
 			try {
 				mudclient.clientBaseThread.join();
 			} catch (InterruptedException e) {
@@ -518,7 +518,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			} finally {
 				System.exit(0);
 			}
-			
+
 		} catch (RuntimeException var2) {
 			throw GenUtil.makeThrowable(var2, "e.stop()");
 		}
@@ -527,7 +527,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final void update(Graphics var1) {
 		try {
-			
+
 			this.paint(var1);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "e.update(" + (var1 != null ? "{...}" : "null") + ')');
@@ -536,7 +536,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private final void updateControlShiftState(InputEvent var1) {
 		try {
-			
+
 			int mod = var1.getModifiers();
 			if (mudclient == null)
 				return;
@@ -546,10 +546,10 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			throw GenUtil.makeThrowable(var4, "e.SE(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
 	}
-	
+
 	public final void start() {
 		try {
-			
+
 			if (mudclient.threadState >= 0) {
 				mudclient.threadState = 0;
 			}
@@ -558,7 +558,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			throw GenUtil.makeThrowable(var2, "e.start()");
 		}
 	}
-	
+
 	@Override
 	public void componentShown(ComponentEvent e) {
 	}
@@ -596,7 +596,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.setFont(new Font("Helvetica", 1, 16));
 			g.setColor(Color.yellow);
 			byte var3 = 35;
-			g.drawString("Sorry, an error has occured whilst loading Open RSC", 30, var3);
+			g.drawString("Sorry, an error has occured whilst loading " + Config.SERVER_NAME, 30, var3);
 			g.setColor(Color.white);
 			int var6 = var3 + 50;
 			g.drawString("To fix this try the following (in order):", 30, var6);
@@ -627,7 +627,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.drawString("Error - out of memory!", 50, 50);
 			g.drawString("Close ALL unnecessary programs", 50, 100);
 			g.drawString("and windows before loading the game", 50, 150);
-			g.drawString("Open RSC needs about 48meg of spare RAM", 50, 200);
+			g.drawString(Config.SERVER_NAME + " needs about 48meg of spare RAM", 50, 200);
 		}
 	}
 
@@ -669,7 +669,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	private final synchronized void commitToImage(boolean var1) {
 		try {
-			
+
 			if (null != this.imageProducer) {
 				this.imageProducer.setPixels(0, 0, mudclient.getSurface().width2, mudclient.getSurface().height2,
 						this.imageModel, mudclient.getSurface().pixelData, 0, mudclient.getSurface().width2);
@@ -684,7 +684,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public void addConsumer(ImageConsumer arg0) {
 		try {
 			this.imageProducer = arg0;
-			
+
 			arg0.setDimensions(mudclient.getSurface().width2, mudclient.getSurface().height2);
 			arg0.setProperties(null);
 			arg0.setColorModel(this.imageModel);
@@ -709,7 +709,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public void requestTopDownLeftRightResend(ImageConsumer arg0) {
 		try {
-			
+
 			System.out.println("TDLR");
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3,
@@ -775,11 +775,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void drawKeyboard() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
