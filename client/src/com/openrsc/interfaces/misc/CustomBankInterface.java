@@ -223,7 +223,7 @@ public final class CustomBankInterface extends BankInterface {
 			bank.hide(bankScroll);
 		}
 
-		// Drawing items
+		// Drawing bank-specific items
 		for (int verticalSlots = 0; verticalSlots < 4; verticalSlots++) {
 			for (int horizonalSlots = 0; horizonalSlots < 10; horizonalSlots++) {
 
@@ -305,7 +305,7 @@ public final class CustomBankInterface extends BankInterface {
 					// Drawing item name
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY && mc.getMouseY() < drawY + 34) {
 						if (bankItems.get(bankItem.bankID).itemID != -1) {
-							drawString(EntityHandler.getItemDef(bankItems.get(bankItem.bankID).itemID).getName(), x + 7, y + 15, 0, 0xFFFFFF);
+							drawString(EntityHandler.getItemDef(bankItems.get(bankItem.bankID).itemID).getName(), x + 7, y + 15, 1, 0xFFFFFF);
 						}
 						
 					}
@@ -313,7 +313,7 @@ public final class CustomBankInterface extends BankInterface {
 							(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
 						drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 0, 0xFFFFFF);
 						mc.getSurface().drawLineVert(x + 9 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
-						drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 0, 0xFFFFFF);
+						drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
 					}
 					
 					bankSlotStart++;
@@ -332,39 +332,38 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxAlpha(x + 6, settingsY - 1, 75, 16, 0x5A5A55, 192);
 		mc.getSurface().drawBoxBorder(x + 6, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 7, 73, settingsY, 14, 0x706452);
-		drawString("Deposit All", x + 12, settingsY + 11, 2, 0xffffff);
+		drawString("Deposit All", x + 12, settingsY + 11, 1, 0xffffff);
 
-		drawString("Rearrange mode:", x + 190, settingsY - 3, 2, 0xF89922);
+		drawString("Rearrange mode:", x + 190, settingsY - 3, 1, 0xF89922);
 
 		mc.getSurface().drawBoxAlpha(x + 112, settingsY - 1, 75, 16, (organizeMode == 1 ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 112, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 113, 73, settingsY, 14, 0x706452);
-		drawString("Swap", x + 22 + 112, settingsY + 11, 2, 0xffffff);
+		drawString("Swap", x + 22 + 112, settingsY + 11, 1, 0xffffff);
 
 		mc.getSurface().drawBoxAlpha(x + 186, settingsY - 1, 75, 16, (organizeMode == 2 ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 186, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 187, 73, settingsY, 14, 0x706452);
-		drawString("Insert", x + 22 + 186, settingsY + 11, 2, 0xffffff);
+		drawString("Insert", x + 22 + 186, settingsY + 11, 1, 0xffffff);
 
 		mc.getSurface().drawBoxAlpha(x + 260, settingsY - 1, 75, 16, (organizeMode == 0 ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 260, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 261, 73, settingsY, 14, 0x706452);
-		drawString("None", x + 22 + 261, settingsY + 11, 2, 0xffffff);
+		drawString("None", x + 22 + 261, settingsY + 11, 1, 0xffffff);
 
-		drawString("Withdraw as:", x + 378 + 14, settingsY - 3, 2, 0xF89922);
+		drawString("Withdraw as:", x + 378 + 14, settingsY - 3, 1, 0xF89922);
 
 		mc.getSurface().drawBoxAlpha(x + 423 - 75, settingsY - 1, 75, 16, (!swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 423 - 75, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 424 - 75, 73, settingsY, 14, 0x706452);
-		drawString("Item", x + 26 + 423 - 75, settingsY + 11, 2, 0xffffff);
+		drawString("Item", x + 26 + 423 - 75, settingsY + 11, 1, 0xffffff);
 
 		mc.getSurface().drawBoxAlpha(x + 422, settingsY - 1, 75, 16, (swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 422, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 423, 73, settingsY, 14, 0x706452);
-		drawString("Note", x + 26 + 422, settingsY + 11, 2, 0xffffff);
+		drawString("Note", x + 26 + 422, settingsY + 11, 1, 0xffffff);
 
-		//mc.getSurface().drawLineHoriz(x + 8, y + 220, width - 19, 0x2E2C23);
-
+		// Inventory Items Loop
 		for (int verticalSlots = 0; verticalSlots < 3; verticalSlots++) {
 			for (int horizonalSlots = 0; horizonalSlots < 10; horizonalSlots++) {
 
@@ -407,7 +406,7 @@ public final class CustomBankInterface extends BankInterface {
 
 				if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY
 						&& mc.getMouseY() < drawY + 34 && !rightClickMenu && mc.inputX_Action == InputXAction.ACT_0) {
-					// Right-click Bank Item (Menu)
+					// Right-click Inventory Item (Menu)
 					if (mc.getMouseClick() == 2) {
 						if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY
 								&& mc.getMouseY() < drawY + 34 && inventorySlot < mc.getInventoryItemCount()
@@ -419,7 +418,7 @@ public final class CustomBankInterface extends BankInterface {
 							mc.setMouseClick(0);
 						}
 
-					// Right-click Bank Item (Organizing)
+					// Right-click Inventory Item (Organizing)
 					} else if (organizeMode > 0 && !rightClickMenu && mc.inputX_Action == InputXAction.ACT_0) {
 						if (mc.getMouseButtonDownTime() > 0 && mc.getMouseButtonDown() == 1) {
 							if (mc.getMouseButtonDownTime() < 2
@@ -452,9 +451,9 @@ public final class CustomBankInterface extends BankInterface {
 				// Bank size hover
 				else if (mc.getMouseX() <= x + 6 || mc.getMouseX() >= x + 496 || mc.getMouseY() <= y + 57 ||
 							(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
-					drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 0, 0xFFFFFF);
+					drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 1, 0xFFFFFF);
 					mc.getSurface().drawLineVert(x + 9 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
-					drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 0, 0xFFFFFF);
+					drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
 				}
 				
 				inventorySlot++;
