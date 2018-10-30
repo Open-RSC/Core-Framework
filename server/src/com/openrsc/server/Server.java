@@ -65,13 +65,13 @@ public final class Server implements Runnable {
 	}
 
 	public static void main(String[] args) throws IOException {
-		LOGGER.info("Launching Open RSC Game Server...");
+		LOGGER.info("Launching Game Server...");
 		if (args.length == 0) {
 			Constants.GameServer.initConfig("members.conf");
 			LOGGER.info("Server Configuration file not provided. Default: members.conf");
 		} else {
 			Constants.GameServer.initConfig(args[0]);
-			LOGGER.info("Server Configuration file: " + args[0]);
+			/*LOGGER.info("Server Configuration file: " + args[0]);
 			LOGGER.info("\t Game Tick Cycle: {}", box(Constants.GameServer.GAME_TICK));
 			LOGGER.info("\t Client Version: {}", box(Constants.GameServer.CLIENT_VERSION));
 			LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
@@ -80,7 +80,7 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
 			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST)); 
 			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled")); 
-			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));
+			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));*/
 		}
 		if(server == null) {
 			server = new Server();
@@ -290,8 +290,7 @@ public final class Server implements Runnable {
 			public void action() {
 				LOGGER.info("Trying to run restart script...");
 				try {
-					//new ProcessBuilder("run_server.sh").start();
-					Runtime.getRuntime().exec("`pwd`/run_server.sh");
+					Runtime.getRuntime().exec("./run_server.sh");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
