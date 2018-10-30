@@ -178,6 +178,7 @@ public final class Constants {
 		public static boolean WANT_WOODCUTTING_GUILD = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
+        public static boolean AUTO_SERVER_RESTART = true;
 		public static boolean NPC_KILL_MESSAGES = false;
 		public static boolean VALUABLE_DROP_MESSAGES = false;
 		public static double VALUABLE_DROP_RATIO = 0;
@@ -255,6 +256,7 @@ public final class Constants {
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			START_TIME = System.currentTimeMillis();
+            AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
 			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
 			RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
 			RESTART_MINUTE1 = Integer.parseInt(props.getProperty("restart_minute1"));
