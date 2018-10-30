@@ -38089,7 +38089,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `online` tinyint(1) UNSIGNED ZEROFILL DEFAULT 0,
   `quest_points` int(5) DEFAULT NULL,
-  `bank_size` int(10) UNSIGNED NOT NULL DEFAULT 200,
+  `bank_size` int(10) UNSIGNED NOT NULL DEFAULT 1290,
   `highscoreopt` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `forum_active` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
