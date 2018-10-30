@@ -62,15 +62,18 @@ public class BankInterface {
 			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
 			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
 			if (selectedX >= 0 && selectedY >= 12 && selectedX < 408 && selectedY < 280) {
-				selectSlot(selectedX, selectedY); // Set the slot we clicked on
+				if (mc.inputX_Action == InputXAction.ACT_0) {
+					selectSlot(selectedX, selectedY); // Set the slot we clicked on
 
-				selectedX = mc.getGameWidth() / 2 - width / 2;
-				selectedY = mc.getGameHeight() / 2 - height / 2 + 20;
+					selectedX = mc.getGameWidth() / 2 - width / 2;
+					selectedY = mc.getGameHeight() / 2 - height / 2 + 20;
+				}
 
 				// Check for a transaction
 				int itemID, amount;
-				if (selectedBankSlot > -1)
+				if (this.selectedBankSlot > -1) {
 					checkTransaction(currMouseX, currMouseY, selectedX, selectedY);
+				}
 
 			// Select bank page
 			} else if (currentBankIDs.size() > 48 && selectedX >= 50 && selectedX <= 115 &&
@@ -93,38 +96,7 @@ public class BankInterface {
 		}
 
 		// Draw the top header
-    int relativeX = mc.getGameWidth() / 2 - width / 2; // WAS 256
-    int relativeY = mc.getGameHeight() / 2 - height / 2 + 20; // WAS 170
-    mc.getSurface().drawBox(relativeX, relativeY, 408, 12, 192);
-    int backgroundColour = 0x989898;
-    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 12, 408, 17, backgroundColour, 160);
-    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 29, 8, 204, backgroundColour, 160);
-    mc.getSurface().drawBoxAlpha(relativeX + 399, relativeY + 29, 9, 204, backgroundColour, 160);
-    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 233, 408, 47, backgroundColour, 160);
-    drawString("Bank", relativeX + 1, relativeY + 10, 1, 0xffffff);
-
-		// Draw Bank Page Buttons
-		drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
-
-		// Draw Top Descriptions & Close Button
-		int closeButtonColour = 0xffffff;
-		if (currMouseX > relativeX + 320 && currMouseY >= relativeY && currMouseX < relativeX + 408 && currMouseY < relativeY + 12)
-			closeButtonColour = 0xff0000;
-		drawString("Close window", relativeX + 326, relativeY + 10, 1, closeButtonColour);
-		drawString("Number in bank in green", relativeX + 7, relativeY + 24, 1, 65280);
-		drawString("Number held in blue", relativeX + 289, relativeY + 24, 1, 65535);
-
-
-		// Draw the items in the bank.
-		drawBankItems(relativeX, relativeY);
-
-		// Line between Withdraw & Deposit
-    mc.getSurface().drawLineHoriz(relativeX + 5, relativeY + 256, width - 8, 0);
-
-		// Draw the Quantity Buttons
-    if (selectedBankSlot != -1) {
-			drawQuantityButtons(currMouseX, currMouseY, relativeX, relativeY);
-		}
+		drawBankComponents(currMouseX, currMouseY);
 		return true;
 	}
 
@@ -145,7 +117,7 @@ public class BankInterface {
 						if (currentBankCounts.get(selectedItemSlot) > 0 ||
 								mc.getInventoryCount(currentBankIDs.get(selectedItemSlot)) > 0) {
 							selectedBankSlotItemID = currentBankIDs.get(selectedItemSlot);
-							selectedBankSlot = selectedItemSlot;
+							this.selectedBankSlot = selectedItemSlot;
 						}
 						return;
 					}
@@ -157,7 +129,7 @@ public class BankInterface {
 
 	public void checkTransaction(int currMouseX, int currMouseY, int selectedX, int selectedY) {
 		int itemID = selectedBankSlotItemID;
-		int amount = currentBankCounts.get(selectedBankSlot);
+		int amount = currentBankCounts.get(this.selectedBankSlot);
 
 		// Incremental Withdraw or Deposit
 		if (currMouseX >= selectedX + 220 && currMouseY >= selectedY + 238 && currMouseX < selectedX + 250 && currMouseY <= selectedY + 249) {
@@ -223,6 +195,41 @@ public class BankInterface {
 		}
 	}
 
+	private void drawBankComponents(int currMouseX, int currMouseY) {
+    int relativeX = mc.getGameWidth() / 2 - width / 2; // WAS 256
+    int relativeY = mc.getGameHeight() / 2 - height / 2 + 20; // WAS 170
+    mc.getSurface().drawBox(relativeX, relativeY, 408, 12, 192);
+    int backgroundColour = 0x989898;
+    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 12, 408, 17, backgroundColour, 160);
+    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 29, 8, 204, backgroundColour, 160);
+    mc.getSurface().drawBoxAlpha(relativeX + 399, relativeY + 29, 9, 204, backgroundColour, 160);
+    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 233, 408, 47, backgroundColour, 160);
+    drawString("Bank", relativeX + 1, relativeY + 10, 1, 0xffffff);
+
+		// Draw Bank Page Buttons
+		drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
+
+		// Draw Top Descriptions & Close Button
+		int closeButtonColour = 0xffffff;
+		if (currMouseX > relativeX + 320 && currMouseY >= relativeY && currMouseX < relativeX + 408 && currMouseY < relativeY + 12)
+			closeButtonColour = 0xff0000;
+		drawString("Close window", relativeX + 326, relativeY + 10, 1, closeButtonColour);
+		drawString("Number in bank in green", relativeX + 7, relativeY + 24, 1, 65280);
+		drawString("Number held in blue", relativeX + 289, relativeY + 24, 1, 65535);
+
+
+		// Draw the items in the bank.
+		drawBankItems(relativeX, relativeY);
+
+		// Line between Withdraw & Deposit
+    mc.getSurface().drawLineHoriz(relativeX + 5, relativeY + 256, width - 8, 0);
+
+		// Draw the Quantity Buttons
+    if (this.selectedBankSlot != -1) {
+			drawQuantityButtons(currMouseX, currMouseY, relativeX, relativeY);
+		}
+	}
+
 	private void drawPageButtons(int currMouseX, int currMouseY, int relativeX, int relativeY) {
     int pageButtonMargin = 50;
     if (currentBankIDs.size() > 48) {
@@ -269,7 +276,7 @@ public class BankInterface {
 				int slotY = relativeY + 28 + verticalSlots * 34;
 
 				// Background Colour of Bank Tile
-				if (selectedBankSlot == inventorySlot) { // Selected
+				if (this.selectedBankSlot == inventorySlot) { // Selected
 					mc.getSurface().drawBoxAlpha(slotX, slotY, 49, 34, 0xff0000, 160);
         } else { // Not Selected
           mc.getSurface().drawBoxAlpha(slotX, slotY, 49, 34, 0xd0d0d0, 160);
@@ -298,7 +305,7 @@ public class BankInterface {
 
 	private void drawQuantityButtons(int currMouseX, int currMouseY, int relativeX, int relativeY) {
 		int itemID = selectedBankSlotItemID;
-		int amount = currentBankCounts.get(selectedBankSlot);
+		int amount = currentBankCounts.get(this.selectedBankSlot);
 
 		int quantityColour = 0xffffff;
 		if (amount > 0) {
@@ -404,7 +411,7 @@ public class BankInterface {
 	}
 
 	public void sendDeposit(int i) {
-		int itemID = currentBankIDs.get(selectedBankSlot);
+		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		mc.getClientStream().newPacket(23);
 		mc.getClientStream().writeBuffer1.putShort(itemID);
 		if (i > mc.getInventoryCount(itemID)) {
@@ -417,12 +424,12 @@ public class BankInterface {
 			mc.setMouseClick(0);
 			mc.setMouseButtonDown(0);
 		}
-		if (mc.getInventoryCount(itemID) < 1) selectedBankSlot = -1;
+		if (mc.getInventoryCount(itemID) - i < 1) this.selectedBankSlot = -1;
 	}
 
 	public void sendWithdraw(int i) {
-		int itemID = currentBankIDs.get(selectedBankSlot);
-		int amt = currentBankCounts.get(selectedBankSlot);
+		int itemID = currentBankIDs.get(this.selectedBankSlot);
+		int amt = currentBankCounts.get(this.selectedBankSlot);
 		mc.getClientStream().newPacket(22);
 		mc.getClientStream().writeBuffer1.putShort(itemID);
 		if (i > amt) {
@@ -435,7 +442,7 @@ public class BankInterface {
 			mc.setMouseClick(0);
 			mc.setMouseButtonDown(0);
 		}
-		if (amt < 1) selectedBankSlot = -1;
+		if (amt - i < 1) this.selectedBankSlot = -1;
 	}
 
 	public void drawString(String str, int x, int y, int font, int color) {
