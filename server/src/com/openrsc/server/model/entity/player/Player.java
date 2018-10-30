@@ -719,7 +719,7 @@ public final class Player extends Mob {
 		}
 
 	}*/
-	private int bankSize = 200;
+	private int bankSize = 1290; //Maximum bank items allowed
 
 	public int getBankSize() {
 		return bankSize;
