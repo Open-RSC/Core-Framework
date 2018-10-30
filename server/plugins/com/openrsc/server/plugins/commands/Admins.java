@@ -52,10 +52,16 @@ public final class Admins implements CommandListener {
 			return;
 		}
 		else if (command.equals("addbank")) {
-			for (int i = 0; i < 180; i++) {
-				player.getBank().add(new Item(i, 1));
+			for (int i = 0; i < 1290; i++) {
+				player.getBank().add(new Item(i, 50));
 			}
 			player.message("Added bank items.");
+		}
+		else if (command.equals("removebank")) {
+			for (int i = 0; i < 1289; i++) {
+				player.getBank().remove(new Item(i, 50));
+			}
+			player.message("Removed bank items.");
 		}
 		/*else if (command.equals("online")) { // Only shows box with total number, doesn't list online players at this time.
 			StringBuilder sb = new StringBuilder();
@@ -136,9 +142,9 @@ public final class Admins implements CommandListener {
 			});
 			player.message("cleaned " + count + " player references.");
 		}
-		else if (command.equals("cancelshutdown")) {
+		/*else if (command.equals("cancelshutdown")) {
 			Server.getServer().saveAndShutdown();
-		}
+		}*/
 		else if(command.equals("saveall")) {
 			int count = 0;
 			for(Player p : World.getWorld().getPlayers()) {
@@ -169,8 +175,8 @@ public final class Admins implements CommandListener {
 		}
 		else if (command.equals("holidaydrop")) {
 			if (args.length < 2) {
-				player.message("You need to supply how many times you want the function to run");
-				player.message("and one or more item ids. (::globaldrop <count> <itemid>)");
+				player.message("You need to supply how many hours you want the function to run");
+				player.message("and one or more item ids. (::holidaydrop <hours> <itemid>)");
 				return;
 			}
 
@@ -184,7 +190,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			player.message("Starting holiday drop...");
+			player.message("Starting holiday drop!");
 			final Player p = player;
 			holidayDropEvent = new HourlyEvent(executionCount) {
 				@Override
@@ -223,10 +229,10 @@ public final class Admins implements CommandListener {
 				}
 			};
 			Server.getServer().getEventHandler().add(holidayDropEvent);
-			GameLogging.addQuery(new StaffLog(player, 21, "Started a holidaydrop"));
+			GameLogging.addQuery(new StaffLog(player, 21, "Started a holiday drop"));
 
 		}
-		else if (command.equals("globaldrop")) {
+		/*else if (command.equals("globaldrop")) {
 			if (args.length != 3) {
 				player.message("globaldrop, id of item, amount to be dropped, show locations (yes/no)");
 				return;
@@ -270,7 +276,7 @@ public final class Admins implements CommandListener {
 					World.WORLD_TELEGRAB_TOGGLE = false;
 				}
 			});
-		}
+		}*/
 
 		else if (command.equals("fakecrystalchest")) {
 			String loot;
