@@ -7137,19 +7137,19 @@ public final class mudclient implements Runnable {
 			// Mouse Buttons
 			if (this.optionMouseButtonOne) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Mouse Buttons - @red@One", 1, (String) null, (String) null);
+						"@whi@Mouse buttons - @red@One", 1, (String) null, (String) null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Mouse Buttons - @gre@Two", 1, (String) null, (String) null);
+						"@whi@Mouse buttons - @gre@Two", 1, (String) null, (String) null);
 			}
 
 			// Sound Effects
 			if (this.optionSoundDisabled) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Sound Effects - @red@Off", 2, (String) null, (String) null);
+						"@whi@Sound effects - @red@off", 2, (String) null, (String) null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Sound Effects - @gre@On", 2, (String) null, (String) null);
+						"@whi@Sound effects - @gre@on", 2, (String) null, (String) null);
 			}
 
 			// Batch Progress Bar
@@ -7666,18 +7666,18 @@ public final class mudclient implements Runnable {
 
       // Mouse Buttons
       if (this.optionMouseButtonOne) {
-        this.getSurface().drawString("@whi@Mouse Buttons - @red@One", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Mouse buttons - @red@One", 3 + var3, var7, 0, 1);
       } else {
-        this.getSurface().drawString("@whi@Mouse Buttons - @gre@Two", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Mouse buttons - @gre@Two", 3 + var3, var7, 0, 1);
       }
 
 			var7 += 15;
 
       // Sound Effects
       if (this.optionSoundDisabled) {
-        this.getSurface().drawString("@whi@Sound Effects - @red@off", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + var3, var7, 0, 1);
       } else {
-				this.getSurface().drawString("@whi@Sound Effects - @gre@on", 3 + var3, var7, 0, 1);
+				this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + var3, var7, 0, 1);
       }
 
 			var7 += 15;
