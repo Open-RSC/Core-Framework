@@ -71,11 +71,10 @@ public class Npc extends Mob {
 
 	private int weaponAimPoints = 1;
 	private int weaponPowerPoints = 1;
-	/**
-	 * Add any valuable drops here that won't hit the valuable drop ratio.
-	 */
+
+
 	private static final List<String> valuableDrops = Arrays.asList(
-			new String[] {"Half of a key", "Half Dragon Square Shield"}
+			VALUABLE_DROP_ITEMS.split(",")
 	);
 
 
@@ -369,7 +368,21 @@ public class Npc extends Mob {
 		if (owner != null) {
 			ActionSender.sendSound(owner, "victory");
 			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
-			Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, NPC_KILL_MESSAGES);
+
+			//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
+			//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
+			if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
+				if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
+					Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, true);
+				}
+				else {
+					Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, false);
+				}
+			}
+			else {
+				Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, NPC_KILL_MESSAGES);
+			}
+
 
 			owner = handleLootAndXpDistribution((Player) mob);
 
@@ -457,7 +470,7 @@ public class Npc extends Mob {
 						}
 
 						// Check if we have a "valuable drop" (configurable)
-						if (dropID != -1 && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || valuableDrops.contains(temp.getDef().getName()))) {
+						if (dropID != -1 && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
 							if (amount > 1) {
 								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
 										(temp.getDef().getDefaultPrice() * amount) + " coins)");
