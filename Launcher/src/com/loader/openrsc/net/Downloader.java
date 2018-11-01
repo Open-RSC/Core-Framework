@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 
 public class Downloader extends Observable {
-    private final String nicename[] = {"Game Client", "Game Library", "Landscape",
+    private final String nicename[] = {"Client", "Library", "Landscape",
             "Graphics", "3D Models",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
             "Game Sound", "Game Sound", "Game Sound", "Game Sound",
@@ -30,16 +30,16 @@ public class Downloader extends Observable {
             "Game Sound", "Game Sound"};
     private final String normalName[] = {"Open_RSC_Client.jar", "library.orsc", "Landscape.orsc",
             "Sprites.orsc", "models.orsc",
-            "Advance.mp3", "Anvil.mp3", "Chisel.mp3", "Click.mp3",
-            "Closedoor.mp3", "Coins.mp3", "Takeobject.mp3", "Victory.mp3",
-            "Combat1a.mp3", "Combat1b.mp3", "Combat2a.mp3", "Combat2b.mp3",
-            "Combat3a.mp3", "Combat3b.mp3", "Cooking.mp3", "Death.mp3",
-            "Dropobject.mp3", "Eat.mp3", "Filljug.mp3", "Fish.mp3",
-            "Foundgem.mp3", "Recharge.mp3", "Underattack.mp3",
-            "Mechanical.mp3", "Mine.mp3", "Mix.mp3", "Spellok.mp3",
-            "opendoor.mp3", "Out_of_ammo.mp3", "Potato.mp3", "Spellfail.mp3",
-            "Prayeroff.mp3", "Prayeron.mp3", "Prospect.mp3", "Shoot.mp3",
-            "Retreat.mp3", "Secretdoor.mp3"};
+            "advance.wav", "anvil.wav", "chisel.wav", "click.wav",
+            "closedoor.wav", "coins.wav", "takeobject.wav", "victory.wav",
+            "combat1a.wav", "combat1b.wav", "combat2a.wav", "combat2b.wav",
+            "combat3a.wav", "combat3b.wav", "cooking.wav", "death.wav",
+            "dropobject.wav", "eat.wav", "filljug.wav", "fish.wav",
+            "foundgem.wav", "recharge.wav", "underattack.wav",
+            "mechanical.wav", "mine.wav", "mix.wav", "spellok.wav",
+            "opendoor.wav", "out_of_ammo.wav", "potato.wav", "spellfail.wav",
+            "prayeroff.wav", "prayeron.wav", "prospect.wav", "shoot.wav",
+            "retreat.wav", "secretdoor.wav"};
 
     public static byte[] createChecksum(File file) throws Exception {
         InputStream fis = new FileInputStream(file);
@@ -69,6 +69,34 @@ public class Downloader extends Observable {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
         }
         return result;
+    }
+
+    public static boolean checkVersionNumber() {
+        try {
+            Double currentVersion = 0.0;
+            URL updateURL =
+                    new URL(Constants.VERSION_UPDATE_URL);
+
+            // Open connection
+            URLConnection connection = updateURL.openConnection();
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                if (line.contains("VERSION_NUMBER")) {
+                    currentVersion =
+                            Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
+                    break;
+                }
+            }
+
+            // Close connection
+            in.close();
+            return currentVersion == Constants.VERSION_NUMBER;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void init() {
@@ -101,74 +129,45 @@ public class Downloader extends Observable {
         while (!verifyDownloads(new1.entrySet())) ; //Verify and re-download until its all good.
     }
 
-  	public boolean updateJar() {
-    	boolean success = true;
-			try {
-				if (checkVersionNumber()) // Check if version is the same
-					return false; // and return false if it is.
+    public boolean updateJar() {
+        boolean success = true;
+        try {
+            if (checkVersionNumber()) // Check if version is the same
+                return false; // and return false if it is.
 
 
+            URL url = new URL(Constants.UPDATE_JAR_URL);
 
-				URL url = new URL(Constants.UPDATE_JAR_URL);
+            // Open connection
+            URLConnection connection = url.openConnection();
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
 
-				// Open connection
-				URLConnection connection = url.openConnection();
-				connection.setConnectTimeout(3000);
-				connection.setReadTimeout(3000);
+            int size = connection.getContentLength();
+            int offset = 0;
+            byte[] data = new byte[size];
 
-				int size = connection.getContentLength();
-				int offset = 0;
-				byte[] data = new byte[size];
+            InputStream input = url.openStream();
 
-				InputStream input = url.openStream();
+            int readSize;
+            while ((readSize = input.read(data, offset, size - offset)) != -1) {
+                offset += readSize;
+            }
 
-				int readSize;
-				while ((readSize = input.read(data, offset, size - offset)) != -1) {
-					offset += readSize;
-				}
+            if (offset != size) {
+                success = false;
+            } else {
+                File file = new File("./" + Constants.JAR_FILENAME);
+                FileOutputStream output = new FileOutputStream(file);
+                output.write(data);
+                output.close();
+            }
+        } catch (Exception e) {
+            success = false;
+        }
 
-				if (offset != size) {
-					success = false;
-				} else {
-					File file = new File("./" + Constants.JAR_FILENAME);
-					FileOutputStream output = new FileOutputStream(file);
-					output.write(data);
-					output.close();
-				}
-			} catch (Exception e) {
-				success = false;
-			}
-
-			return success;
-		}
-
-		public static boolean checkVersionNumber() {
-			try {
-				Double currentVersion = 0.0;
-				URL updateURL =
-					new URL(Constants.VERSION_UPDATE_URL);
-
-				// Open connection
-				URLConnection connection = updateURL.openConnection();
-				connection.setConnectTimeout(3000);
-				connection.setReadTimeout(3000);
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line;
-				while ((line = in.readLine()) != null) {
-					if (line.contains("VERSION_NUMBER")) {
-						currentVersion =
-							Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
-						break;
-					}
-				}
-
-				// Close connection
-				in.close();
-				return currentVersion == Constants.VERSION_NUMBER;
-			} catch (Exception e) {
-				return false;
-			}
-		}
+        return success;
+    }
 
     private boolean verifyDownloads(Set<Entry<Object, Object>> set) {
         boolean verified = true;

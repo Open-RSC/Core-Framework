@@ -12,11 +12,10 @@ public class Constants {
     public static final String CONF_DIR = "Cache";
     public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
     public static final String CACHE_URL = BASE_URL + "downloads/cache/";
-    public static final String CLIENT_URL = CACHE_URL + CLIENT_FILENAME;
 
     // Launcher version checking
-    public static final Double VERSION_NUMBER = 20181026.090000; //YYYYMMDD.HHMMSS format
-    public static final String VERSION_UPDATE_URL = "https://raw.githubusercontent.com/open-rsc/Game/2.0.0/Launcher/src/com/loader/openrsc/Constants.java";
+    public static final Double VERSION_NUMBER = 20181101.180000; //YYYYMMDD.HHMMSS format
+    public static final String VERSION_UPDATE_URL = "https://raw.githubusercontent.com/marwolf/Game/2.0.0/Launcher/src/com/loader/openrsc/Constants.java";
     public static final String UPDATE_JAR_URL = "https://game.openrsc.com/downloads/OpenRSC.jar";
     public static final String JAR_FILENAME = "OpenRSC.jar";
 }
