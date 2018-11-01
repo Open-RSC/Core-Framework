@@ -44,7 +44,7 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 				if (hasItem(p, 231) && hasItem(p, 232) && hasItem(p, 233)
 						&& hasItem(p, 234)) {
 					playerTalk(p, n, "I've got all four beads",
-							"It was a hard work I can tell you");
+							"It was hard work I can tell you");
 					npcTalk(p, n, "Give them here and I'll sort out a reward");
 					message(p, "You give four coloured beads to Wizard Mizgog");
 					removeItem(p, 231, 1);
@@ -67,7 +67,7 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 
 				return;
 			}
-			if (p.getQuestStage(this) == 0) {
+			else if (p.getQuestStage(this) == 0) {
 				npcTalk(p, n, "Hello there");
 				int choice = showMenu(p, n, new String[] { "Give me a quest!",
 						"Most of your friends are pretty quiet aren't they?" });
@@ -88,7 +88,7 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 								"These imps stole all sorts of my things",
 								"Most of these things I don't really care about",
 								"They're just eggs and balls of string and things",
-								"but they stole my 4 magical beads",
+								"But they stole my 4 magical beads",
 								"There was a red one, a yellow one, a black one and a white one",
 								"These imps have now spread out all over the kingdom",
 								"Could you get my beads back for me");
@@ -106,6 +106,19 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 							"Yes they've mostly got their heads in the clouds",
 							"Thinking about magic");
 				}
+			}
+			else if (p.getQuestStage(this) == -1) { // Complete
+				playerTalk(p, n, "Most of your friends are pretty quiet aren't they?");
+				npcTalk(p, n, "Yes they've mostly got their heads in the clouds",
+					"Thinking about magic");
+				int choice = showMenu(p, n, new String[] {
+					"Got any more quests?",
+					"Most of your friends are pretty quiet aren't they?"});
+				if (choice == 0)
+					npcTalk(p, n, "No Everything is good with the world today");
+				else if (choice == 1)
+					npcTalk(p, n, "Yes they've mostly got their heads in the clouds",
+						"Thinking about magic");
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package com.openrsc.server.util.rsc;
 
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
@@ -399,11 +401,15 @@ public final class Formulae {
 	/**
 	 * Calculate how much experience a Mob gives
 	 */
-	public static int combatExperience(Mob mob) {
+	public static int combatExperience(Mob mob) { //"OPEN RSC FORMULA
 		return ((mob.getCombatLevel() * 2) + 20);
 	}
+	/*public static int combatExperience(Mob mob) { //"WOW" EXP FORMULA
+		double exp = Math.pow(mob.getCombatLevel(), 2) * 1.5D;
+		return (int) (mob instanceof Player ? (exp / 4D) : exp);
+	}*/
 
-	/*
+	/**
 	 * Should the pot crack?
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {
@@ -800,7 +806,7 @@ public final class Formulae {
 	 * Should the fire light or fail?
 	 */
 	public static boolean lightLogs(int firemakingLvl) {
-		int chance = (int)(35 * Math.pow(firemakingLvl, (1 / 4)));
+		int chance = (int)(35 * Math.pow(firemakingLvl, (1 / 4.0)));
 		return chance > DataConversions.random(0, 100);
 	}
 
@@ -925,10 +931,10 @@ public final class Formulae {
 			regular = 9;
 		else if (maxStat <= 89)
 			regular = 10;
-		else if (maxStat <= 99)
+		else if (maxStat <= PLAYER_LEVEL_LIMIT)
 			regular = 11;*/
 
-		int regular = (maxStat / 10) + 1 + (maxStat == 99 ? 1 : 0);
+		int regular = (maxStat / 10) + 1 + (maxStat == PLAYER_LEVEL_LIMIT ? 1 : 0);
 
 		return regular;
 	}
@@ -969,11 +975,11 @@ public final class Formulae {
 		if (goldValues.length == 2) weights = new int[] {67, 33};
     else if (goldValues.length == 3) weights = new int[] {45, 33, 22};
 		else if (goldValues.length == 4) weights = new int[] {33, 27, 22, 18};
-		else if (goldValues.length == 5) weights = new int[] {33, 26, 19, 13, 9};
-		else if (goldValues.length == 6) weights = new int[] {30, 24, 19, 14, 8, 5};
-		else if (goldValues.length == 7) weights = new int[] {28, 24, 18, 13, 9, 6, 2};
-		else if (goldValues.length == 8) weights = new int[] {27, 23, 18, 13, 9, 7, 2, 1};
-		else if (goldValues.length == 9) weights = new int[] {27, 23, 17, 12, 8, 6, 4, 2, 1};
+		else if (goldValues.length == 5) weights = new int[] {26, 33, 19, 13, 9};
+		else if (goldValues.length == 6) weights = new int[] {24, 30, 19, 14, 8, 5};
+		else if (goldValues.length == 7) weights = new int[] {18, 28, 24, 13, 9, 6, 2};
+		else if (goldValues.length == 8) weights = new int[] {18, 23, 27, 13, 9, 7, 2, 1};
+		else if (goldValues.length == 9) weights = new int[] {12, 17, 27, 23, 8, 6, 4, 2, 1};
 		
 
 		return weightedRandomChoice(goldValues, weights, goldValues[0]);

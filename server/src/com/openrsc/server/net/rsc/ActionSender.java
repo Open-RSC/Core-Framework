@@ -470,6 +470,7 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
+		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT);
 		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names

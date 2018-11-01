@@ -16,7 +16,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		npcTalk(p, n, "Go away, I'm meditating");
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, 24)) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 1 && !hasItem(p, 24)) {
 			defaultMenu.addOption(new Option(
 					"Father Aereck sent me to talk to you") {
 				@Override
@@ -114,22 +114,18 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			@Override
 			public void action() {
 				npcTalk(p, n, "Under what grounds?");
-				new Menu().addOptions(new Option(
-						"Repeated failure on mortgage payments") {
+				new Menu().addOptions(new Option("Repeated failure on mortgage payments") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "I don't have a mortgage",
-								"I built this house myself");
-						playerTalk(p, n,
-								"Sorry I must have got the wrong address",
-								"All the houses look the same around here");
+						npcTalk(p, n, "I don't have a mortgage", "I built this house myself");
+						playerTalk(p, n, "Sorry I must have got the wrong address", "All the houses look the same around here");
 					}
 				}, new Option("I don't know, I just wanted this house") {
 					@Override
 					public void action() {
 						npcTalk(p, n, "Oh go away and stop wasting my time");
 					}
-				});
+				}).showMenu(p);
 			}
 		});
 		defaultMenu.showMenu(p);

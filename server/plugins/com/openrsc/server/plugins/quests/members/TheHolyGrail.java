@@ -18,7 +18,7 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 		WallObjectActionExecutiveListener, InvActionListener,
 		InvActionExecutiveListener, PlayerKilledNpcExecutiveListener,
 		PlayerKilledNpcListener, PickupListener, PickupExecutiveListener,
-		ObjectActionListener, ObjectActionExecutiveListener {
+		ObjectActionListener, ObjectActionExecutiveListener, TeleportExecutiveListener {
 	/**
 	 * @author Davve
 	 * 
@@ -353,19 +353,34 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 				p.message("Somehow you are now inside the castle");
 				p.teleport(420, 35, false);
 			}
-		}
-		if (item.getID() == 745) { // GOLDEN FEATHER SHOULD SAY SOUTH, NORTH,
-									// WEST, EAST ALL THE WAY FROM CAMELOT TO
-									// GOBLIN VILLAGE PROD SACK
-			if (p.getQuestStage(this) == -1) {
-				p.message("nothing intersting happens");
-			} else {
-				// TODO gotta do this one later.
-				p.message("The feather points north");
-			}
-		}
-	}
-
+		} //Prod sack = 328, 446
+		if (item.getID() == 745) {
+	           	int x = p.getLocation().getX();
+	           	int y = p.getLocation().getY();
+	           	int sX = 328;
+	           	int sY = 446;
+	           	int pX = x - sX;
+	           	int pY = y - sY;
+	            if (p.getQuestStage(this) == -1) {
+	                p.message("nothing interesting happens");
+	            }
+	            else if (Math.abs(pY) > Math.abs(pX) && y <= sY) {
+	                p.message("the feather points south");
+	            }
+	            else if (Math.abs(pX) > Math.abs(pY) && x > sX) { 
+	                p.message("the feather points east");	               
+	            }
+	            else if (x < sX)  {
+	                p.message("the feather points west");
+	            }
+	            else if (Math.abs(pY) > Math.abs(pX) && y >= sY) { 
+	                p.message("the feather points north");
+	            }
+	                else {
+	                // TODO we may or may not need this.
+	            }
+	        }
+	    }
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == 401) {
@@ -418,6 +433,19 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 			return true;
 		}
 		return false;
+	}
+	@Override
+	public boolean blockTeleport(Player p) {
+		if (p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
+				|| p.getLocation().inBounds(411, 976, 519, 984)
+				|| p.getLocation().inBounds(411, 1920, 518, 1925)
+				|| p.getLocation().inBounds(511, 976, 519, 984)
+				|| p.getLocation().inBounds(511, 1920, 518, 1925)){
+			message(p, " A mysterious force blocks your teleport spell!",
+					"You can't use teleport after level 20 wilderness");
+				return true;
+			}
+			return false;	
 	}
 
 	@Override

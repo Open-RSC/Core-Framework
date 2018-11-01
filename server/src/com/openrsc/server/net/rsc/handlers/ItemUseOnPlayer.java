@@ -32,9 +32,14 @@ public class ItemUseOnPlayer implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+
+		int radius = 1;
+		if (item.getID() == 981)
+			radius = 10;
+
 		player.setFollowing(affectedPlayer);
 		player.setStatus(Action.USING_Item_ON_PLAYER);
-		player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, 1) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, radius) {
 			public void execute() {
 				player.resetPath();
 				player.resetFollowing();

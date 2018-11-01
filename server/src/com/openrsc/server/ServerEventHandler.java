@@ -21,14 +21,18 @@ public final class ServerEventHandler {
 	private LinkedHashMap<String, DelayedEvent> toAdd = new LinkedHashMap<String, DelayedEvent>();
 
 	public void add(DelayedEvent event) {
-		String className = event.getClass().getSimpleName();
+		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) {
 			String u;
 			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {}
 			toAdd.put(className + u, event);
 		}
-		else
-			toAdd.put(className + String.valueOf(event.getOwner().getID()), event);
+		else {
+			if (event.getOwner().isPlayer())
+				toAdd.put(className + event.getOwner().getUUID() + "p", event);
+			else
+				toAdd.put(className + event.getOwner().getUUID() + "n", event);
+		}
 	}
 
 	public boolean contains(DelayedEvent event) {

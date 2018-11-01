@@ -2,7 +2,7 @@ include .env
 MYSQL_DUMPS_DIR=./data
 
 go:
-	`pwd`/Go.sh
+	`pwd`/Go-Linux.sh
 
 run:
 	`pwd`/scripts/run.sh
@@ -22,8 +22,11 @@ hard-reset-game-windows:
 hard-reset-website-windows:
 	cd Website && git reset HEAD --hard
 
-certbot:
-	`pwd`/scripts/certbot.sh
+certbot-native:
+	`pwd`/scripts/certbot-native.sh
+
+certbot-docker:
+	`pwd`/scripts/certbot-docker.sh
 
 rank:
 	`pwd`/scripts/rank.sh
@@ -66,7 +69,7 @@ compile:
 	sudo ant -f server/build.xml compile_core
 	sudo ant -f server/build.xml compile_plugins
 	sudo ant -f client/build.xml compile
-	sudo ant -f Launcher/build.xml jar
+	sudo ant -f Launcher/build.xml compile
 
 compile-windows-simple:
 	ant -f server/build.xml compile_core
@@ -77,13 +80,19 @@ compile-windows-developer:
 	ant -f server/build.xml compile_core
 	ant -f server/build.xml compile_plugins
 	ant -f client/build.xml compile
-	ant -f Launcher/build.xml jar
+	ant -f Launcher/build.xml compile
 
 import-game:
-	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_game.sql
+	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game.sql
 
 import-forum:
-	docker exec -i $(shell sudo docker-compose ps -q mysqldb) mysql -u$(dbuser) -p$(pass) < Databases/openrsc_forum.sql
+	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_forum.sql
+
+import-mysql:
+	docker exec -i mysql mysql -uroot -proot < Databases/mysql.sql
+
+import-phpmyadmin:
+	docker exec -i mysql mysql -uroot -proot < Databases/phpmyadmin.sql
 
 import-game-windows:
 	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
@@ -93,6 +102,8 @@ import-forum-windows:
 
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+	sudo chmod 644 Website/sql/config.inc.php
+	sudo chmod 644 Website/elite/board/config.php
 
 flush-website-avatars-windows:
 	rmdir "Website/avatars"
@@ -102,13 +113,6 @@ flush-website-windows:
 
 clone-website-windows:
 	git clone https://github.com/Open-RSC/Website.git
-
-docker-toolbox-forward-windows:
-	VBoxManage controlvm "default" natpf1 "http,tcp,,80,,80";
-	VBoxManage controlvm "default" natpf1 "https,tcp,,443,,443";
-	VBoxManage controlvm "default" natpf1 "mariadb,tcp,,3306,,3306";
-	VBoxManage controlvm "default" natpf1 "phpmyadmin,tcp,,55555,,55555";
-	VBoxManage controlvm "default" natpf1 "tomcat,tcp,,8080,,8080";
 
 pull-website:
 	@cd Website && git pull

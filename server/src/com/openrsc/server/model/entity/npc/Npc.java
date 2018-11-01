@@ -329,7 +329,7 @@ public class Npc extends Mob {
 				playerWithMostDamage = p;
 				currentHighestDamage = dmgDoneByPlayer;
 			}
-			newXP = (totalCombatXP / this.getDef().hits) * dmgDoneByPlayer;
+			newXP = (int)(((double)(totalCombatXP) / (double)(this.getDef().hits)) * (double)(dmgDoneByPlayer));
 			p.incExp(4, newXP * 4, true);
 			ActionSender.sendStat(p, 4);
 		}
@@ -369,49 +369,7 @@ public class Npc extends Mob {
 		if (owner != null) {
 			ActionSender.sendSound(owner, "victory");
 			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
-			try {
-				PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
-						"SELECT * FROM `" + MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
-				statementSelect.setInt(1, id);
-				statementSelect.setInt(2, owner.getDatabaseID());
-				ResultSet selectResult = statementSelect.executeQuery();
-				int kills = -1;
-				while (selectResult.next()) {
-					kills = selectResult.getInt("killCount");
-				}
-				if (kills == -1) {
-					PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
-							"INSERT INTO `" + MYSQL_TABLE_PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)");
-					statementInsert.setInt(1, id);
-					statementInsert.setInt(2, owner.getDatabaseID());
-					int insertResult = statementInsert.executeUpdate();
-					kills = 1;
-				} else {
-					kills++;
-				}
-
-				PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
-						"UPDATE `" + MYSQL_TABLE_PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?");
-				statementUpdate.setInt(1, kills);
-				statementUpdate.setInt(2, id);
-				statementUpdate.setInt(3, owner.getDatabaseID());
-				int updateResult = statementUpdate.executeUpdate();
-
-				if (NPC_KILL_MESSAGES) {
-					PreparedStatement statementSelect2 = DatabaseConnection.getDatabase().prepareStatement(
-							"SELECT * FROM `" + MYSQL_TABLE_PREFIX + "npckills` WHERE npcID = ? AND playerID = ?");
-					statementSelect2.setInt(1, id);
-					statementSelect2.setInt(2, owner.getDatabaseID());
-					ResultSet selectResult2 = statementSelect2.executeQuery();
-					int kills2 = -1;
-					while (selectResult2.next()) {
-						kills2 = selectResult2.getInt("killCount");
-					}
-					owner.message("Your " + EntityHandler.getNpcDef(id).getName() + " kill count is: @red@" + kills2 + "@whi@.");
-				}
-			} catch (SQLException e) {
-				LOGGER.catching(e);
-			}
+			Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, NPC_KILL_MESSAGES);
 
 			owner = handleLootAndXpDistribution((Player) mob);
 
@@ -422,6 +380,13 @@ public class Npc extends Mob {
 			for (ItemDropDef drop : drops) {
 				total += drop.getWeight();
 				weightTotal += drop.getWeight();
+				if (drop.getWeight() == 0 && drop.getID() != -1) {
+					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
+					groundItem.setAttribute("npcdrop", true);
+					world.registerItem(groundItem);
+					continue;
+				}
+
 			}
 
 			int hit = DataConversions.random(0, total);
@@ -430,106 +395,86 @@ public class Npc extends Mob {
 			for (ItemDropDef drop : drops) {
 				Item temp = new Item();
 				temp.setID(drop.getID());
-				//We don't want currentRatio to be 0 since some drop weights might be 0.
-				double currentRatio = -1;
+
+
 				if (drop == null) {
 					continue;
 				}
-				currentRatio = (double) drop.getWeight() / (double) total;
-				if (drop.getWeight() == 0 && drop.getID() != -1) {
-					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
-					groundItem.setAttribute("npcdrop", true);
-					world.registerItem(groundItem);
-					continue;
-				}
-				if (hit >= total && hit < (total + drop.getWeight())) {
-					if (drop.getID() != -1) {
-						if (EntityHandler.getItemDef(drop.getID()).isMembersOnly()
+
+				int dropID = drop.getID();
+				int amount = drop.getAmount();
+				int weight = drop.getWeight();
+
+				double currentRatio = (double) weight / (double) weightTotal;
+				if (hit >= total && hit < (total + weight)) {
+					if (dropID != -1) {
+						if (EntityHandler.getItemDef(dropID).isMembersOnly()
 								&& !Constants.GameServer.MEMBER_WORLD) {
 							continue;
 						}
-						try {
-							PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
-									"SELECT * FROM `" + MYSQL_TABLE_PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?");
-							statementSelect.setInt(1, drop.getID());
-							statementSelect.setInt(2, owner.getDatabaseID());
-							ResultSet selectResult = statementSelect.executeQuery();
-							int dropAmount = -1;
-							while (selectResult.next()) {
-								dropAmount = selectResult.getInt("dropAmount");
-							}
-							if (dropAmount == -1) {
-								PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
-										"INSERT INTO `" + MYSQL_TABLE_PREFIX + "droplogs`(itemID, playerID) VALUES (?, ?)");
-								statementInsert.setInt(1, drop.getID());
-								statementInsert.setInt(2, owner.getDatabaseID());
-								int insertResult = statementInsert.executeUpdate();
-								dropAmount = drop.getAmount();
-							} else {
-								dropAmount += drop.getAmount();
-							}
 
-							PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
-									"UPDATE `" + MYSQL_TABLE_PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?");
-							statementUpdate.setInt(1, dropAmount);
-							statementUpdate.setInt(2, drop.getID());
-							statementUpdate.setInt(3, owner.getDatabaseID());
-							int updateResult = statementUpdate.executeUpdate();
-						} catch (SQLException e) {
-							LOGGER.catching(e);
-						}
-						if (!EntityHandler.getItemDef(drop.getID()).isStackable()) {
+						
+						if (!EntityHandler.getItemDef(dropID).isStackable()) {
 
-							int dropID = drop.getID();
-							int dropAmt = drop.getAmount();
-
-							// Gold Drops
-							if (drop.getID() == 10) {
-								dropAmt = Formulae.calculateGoldDrop(
-										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-								);
-							}
 
 							// Herb Drop Table
-							else if (drop.getID() == 165) {
+							if (drop.getID() == 165) {
 								dropID = Formulae.calculateHerbDrop();
 							}
 
 							// Rare Drop Table
 							else if (drop.getID() == 160) {
 								dropID = Formulae.calculateRareDrop();
-								dropAmt = 1;
+								amount = 1;
 							} else {
 
 							}
 
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
 							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
 							groundItem.setAttribute("npcdrop", true);
-							for (int count = 0; count < dropAmt; count++)
+
+							// We need to drop multiple counts of "1" item if it's not a stack
+							for (int count = 0; count < amount; count++)
 								world.registerItem(groundItem);
+
 						} else {
-							int amount = drop.getAmount();
-							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), amount, owner);
+
+							// Gold Drops
+							if (drop.getID() == 10) {
+								amount = Formulae.calculateGoldDrop(
+										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+								);
+							}
+
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
 							groundItem.setAttribute("npcdrop", true);
 
 							world.registerItem(groundItem);
 						}
-						if (drop.getID() != -1 && drop.getAmount() > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || valuableDrops.contains(temp.getDef().getName()))) {
-							if (drop.getAmount() > 1) {
-								owner.message("@red@Valuable drop: " + drop.getAmount() + " x " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice() * drop.getAmount()) + " coins)");
+
+						// Check if we have a "valuable drop" (configurable)
+						if (dropID != -1 && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || valuableDrops.contains(temp.getDef().getName()))) {
+							if (amount > 1) {
+								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
+										(temp.getDef().getDefaultPrice() * amount) + " coins)");
 							} else {
 								owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
 										(temp.getDef().getDefaultPrice()) + " coins)");
 							}
 						}
 					}
+					break;
 				}
-				total += drop.getWeight();
+				total += weight;
 			}
 			remove();
 		}
 	}
+
 	public void remove() {
 		if (getCombatEvent() != null) {
 			getCombatEvent().resetCombat();

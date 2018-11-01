@@ -1,37 +1,50 @@
 <project default="compile" basedir=".">
 
-    <property name="src" location="src" />
-    <property name="build" location="build" />
-    <property name="jar" location="Open_RSC_Client.jar" />
-    <property name="javac.source" value="1.8"/>
-    <property name="javac.target" value="1.8"/>
+	<property name="src" location="src"/>
+	<property name="build" location="build"/>
+	<property name="jar" location="Open_RSC_Client.jar"/>
+	<property name="lib" location="../lib"/>
+	<property name="javac.source" value="1.8"/>
+	<property name="javac.target" value="1.8"/>
 
-    <target name="compile">
-        <delete file="${jar}" />
-        <delete dir="${build}" />
-        <mkdir dir="${build}"/>
-        <javac srcdir="${src}" destdir="${build}" debug="on" target="1.8" source="1.8" includeantruntime="false">
-          <classpath>
-            <pathelement path="${java.class.path}/"/>
-          </classpath>
-        </javac>
-        <jar basedir="${build}" destfile="${jar}">
-          <manifest>
-            <attribute name="Main-Class" value="orsc.ORSCFrame"/>
-          </manifest>
-        </jar>
-    </target>
+	<target name="compile">
+		<echo message="Using Java version ${ant.java.version}."/>
+		<delete file="${jar}"/>
+		<delete dir="${build}"/>
+		<mkdir dir="${build}"/>
+		<javac srcdir="${src}" destdir="${build}" debug="on" target="${javac.target}" source="${javac.source}" includeantruntime="false">
+			<classpath>
+				<pathelement path="${java.class.path}/"/>
+				<fileset dir="${lib}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+			<compilerarg line="-Xlint:unchecked"/>
+		</javac>
+		<!--<unzip dest="${build}">
+			<fileset dir="${lib}">
+				<include name="**/*.jar"/>
+				<exclude name="javafx.controls.jar"/>
+				<exclude name="javafx.fxml.jar"/>
+			</fileset>
+		</unzip>-->
+		<jar basedir="${build}" destfile="${jar}">
+			<manifest>
+				<attribute name="Main-Class" value="orsc.ORSCFrame"/>
+			</manifest>
+		</jar>
+	</target>
 
-    <target name="runclient">
-        <java classname="orsc.ORSCFrame" fork="true">
-            <classpath>
-              <pathelement path="${jar}/" />
-            </classpath>
-        </java>
-    </target>
+	<target name="runclient">
+		<java classname="orsc.ORSCFrame" fork="true">
+			<classpath>
+				<pathelement path="${jar}/"/>
+			</classpath>
+		</java>
+	</target>
 
-    <target name="compile-and-run">
-        <antcall target="compile"/>
-        <antcall target="runclient"/>
-    </target>
+	<target name="compile-and-run">
+		<antcall target="compile"/>
+		<antcall target="runclient"/>
+	</target>
 </project>

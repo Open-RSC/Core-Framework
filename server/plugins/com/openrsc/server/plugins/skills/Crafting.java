@@ -309,9 +309,10 @@ InvUseOnObjectExecutiveListener {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(12) < gemDef.getReqLevel()) {
+					boolean pluralize = gemDef.getGemID() <= 542;
 					owner.message(
-							"You need a crafting level of " + gemDef.getReqLevel()
-							+ " to cut " + gem.getDef().getName().toLowerCase().replace("uncut ", "") + "s");
+							"you need a crafting level of " + gemDef.getReqLevel()
+							+ " to cut " + (gem.getDef().getName().contains("ruby") ? "rubies" : gem.getDef().getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
 					return;
 				}
@@ -349,21 +350,26 @@ InvUseOnObjectExecutiveListener {
 					public void handleReply(final int option, final String reply) {
 						Item result;
 						int reqLvl, exp;
+						String resultGen;
 						switch (option) {
 						case 0:
 							result = new Item(465, 1);
 							reqLvl = 33;
 							exp = 140;
+							resultGen = "vials";
 							break;
 						case 1:
 							result = new Item(611, 1);
 							reqLvl = 46;
 							exp = 210;
+							resultGen = "orbs";
 							break;
 						case 2:
 							result = new Item(620, 1);
 							reqLvl = 1;
 							exp = 70;
+							// should not use this, as beer glass is made at level 1
+							resultGen = "beer glasses";
 							break;
 						default:
 							return;
@@ -371,8 +377,8 @@ InvUseOnObjectExecutiveListener {
 						if (owner.getSkills().getLevel(12) < reqLvl) {
 							owner.message(
 									"You need a crafting level of " + reqLvl
-									+ " to make a "
-									+ result.getDef().getName() + ".");
+									+ " to make "
+									+ resultGen);
 							return;
 						}
 						if (owner.getInventory().remove(glass) > -1) {
@@ -431,9 +437,9 @@ InvUseOnObjectExecutiveListener {
 						}
 						if (owner.getSkills().getLevel(12) < reqLvl) {
 							owner.message(
-									"You need a crafting level of " + reqLvl
-									+ " to make "
-									+ result.getDef().getName() + ".");
+									"You need to have a crafting of level " + reqLvl
+									+ " or higher to make "
+									+ result.getDef().getName());
 							return;
 						}
 						if (owner.getInventory().remove(leather) > -1) {

@@ -65,13 +65,13 @@ public final class Server implements Runnable {
 	}
 
 	public static void main(String[] args) throws IOException {
-		LOGGER.info("Launching Open RSC Game Server...");
+		LOGGER.info("Launching Game Server...");
 		if (args.length == 0) {
 			Constants.GameServer.initConfig("members.conf");
 			LOGGER.info("Server Configuration file not provided. Default: members.conf");
 		} else {
 			Constants.GameServer.initConfig(args[0]);
-			LOGGER.info("Server Configuration file: " + args[0]);
+			/*LOGGER.info("Server Configuration file: " + args[0]);
 			LOGGER.info("\t Game Tick Cycle: {}", box(Constants.GameServer.GAME_TICK));
 			LOGGER.info("\t Client Version: {}", box(Constants.GameServer.CLIENT_VERSION));
 			LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
@@ -80,7 +80,7 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
 			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST)); 
 			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled")); 
-			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));
+			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));*/
 		}
 		if(server == null) {
 			server = new Server();
@@ -150,7 +150,7 @@ public final class Server implements Runnable {
 			{
 				PluginHandler.getPluginHandler().handleAction("Startup", new Object[] {});
 				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
-				LOGGER.info("Open RSC world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
+				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			} 
@@ -242,7 +242,7 @@ public final class Server implements Runnable {
 				if (timeLate >= Constants.GameServer.GAME_TICK) {
 					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
 					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
-					LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+					//LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
 				}
 			}
 		} catch (Exception e) {
@@ -264,6 +264,39 @@ public final class Server implements Runnable {
 
 	public void submitTask(Runnable r) {
 		scheduledExecutor.submit(r);
+	}
+	public boolean restart(int seconds) {
+		if (updateEvent != null) {
+			return false;
+		}
+		updateEvent = new SingleEvent(null, (seconds - 1) * 1000) {
+			public void action() {
+				//unbind();
+				saveAndRestart();
+			}
+		};
+		Server.getServer().getEventHandler().add(updateEvent);
+		return true;
+	}
+	public void saveAndRestart() {
+		//ClanManager.saveClans();
+		LOGGER.info("Saving players...");
+		for (Player p : World.getWorld().getPlayers()) {
+			p.unregister(true, "Server shutting down.");
+			LOGGER.info("Players saved...");
+		}
+
+		SingleEvent up = new SingleEvent(null, 6000) {
+			public void action() {
+				LOGGER.info("Trying to run restart script...");
+				try {
+					Runtime.getRuntime().exec("./run_server.sh");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		Server.getServer().getEventHandler().add(up);
 	}
 
 	public void start() {
