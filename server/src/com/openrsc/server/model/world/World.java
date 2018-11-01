@@ -96,6 +96,7 @@ public final class World {
     public static int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
 
     public static boolean WORLD_TELEGRAB_TOGGLE = false;
+
     /**
      * AutoRestart settings
      */
@@ -105,7 +106,7 @@ public final class World {
     public static int H2 = Constants.GameServer.RESTART_HOUR2;
     public static int M1 = Constants.GameServer.RESTART_MINUTE;
     public static int COUNTDOWN = Constants.GameServer.RESTART_DELAY;
-   
+
     public static synchronized World getWorld() {
         if (worldInstance == null) {
             worldInstance = new World();
@@ -680,6 +681,7 @@ public final class World {
         }
 
     }
+
     private void shutdownCheck() {    	
         Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
             public void action() {
@@ -694,7 +696,21 @@ public final class World {
                             //ActionSender.sendBox(p, message, false);
                             ActionSender.startShutdown(p, seconds);                        	
                         }
-                    }              
+                    }
+                } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR2
+                        && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE2) {
+                    int seconds = Constants.GameServer.RESTART_DELAY2;
+                    int minutes = seconds / 60;
+                    int remainder = seconds % 60;
+                    if (Server.getServer().restart(seconds)) {
+                        String message = "The server will be restarting in... "
+                                + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
+                                + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");
+                        for (Player p : World.getWorld().getPlayers()) {
+                            ActionSender.sendBox(p, message, false);
+                            ActionSender.startShutdown(p, seconds);
+                        }
+                    }
                 }
                 shutdownCheck();                
             }

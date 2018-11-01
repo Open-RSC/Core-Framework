@@ -34,33 +34,20 @@ else
     read installmode
 
     if [ "$installmode" == "direct" ]; then
-        #sudo service nginx stop
-        #sudo apt-get purge "nginx*" -y
-        #sudo rm -rf /var/www/http
-        #sudo service mariadb stop
-        #sudo apt-get purge "mariadb*" -y
-        #sudo rm -rf /etc/mysql/
+        sudo service nginx stop
+        sudo rm -rf /var/www/http
+        sudo service mariadb stop
+        sudo rm -rf /etc/mysql/
         sudo git reset HEAD --hard
         sudo git pull
-        #export dbuser=root
-        #export pass=root
-        #export email=""
-        #export installmode=""
-        #export installedalready=""
         echo "Done!"
         make go
     else
-        #sudo make stop
-        #sudo rm -rf Website
-        #sudo rm -rf data/db/mysql
-        #sudo rm -rf etc/letsencrypt/live
+        sudo make stop
+        sudo rm -rf Website
+        sudo rm -rf data/db/mysql
         sudo git reset HEAD --hard
         sudo git pull
-        #export dbuser=root
-        #export pass=root
-        #export email=""
-        #export installmode=""
-        #export installedalready=""
         echo "Done!"
         make go
     fi
