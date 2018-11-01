@@ -102,6 +102,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			}
 			// Some need a RANGE not a FIRE
 			boolean needRange = false;
+			int timeToCook = 1800;
 			switch (object.getID()) {
 				case 137: // Bread
 				case 254: // Apple Pie
@@ -111,6 +112,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				case 339: // Cake
 				case 1104: // Pitta Bread
 					needRange = true;
+					timeToCook = 3000;
 					break;
 				default:
 					break;
@@ -125,7 +127,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			else
 				p.message(cookingOnMessage(p, item, object));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p, 1200, Formulae.getRepeatTimes(p, 7)) {
+			p.setBatchEvent(new BatchEvent(p, timeToCook, Formulae.getRepeatTimes(p, 7)) {
 				@Override
 				public void action() {
 					Item cookedFood = new Item(cookingDef.getCookedId());
@@ -180,7 +182,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 	
 	private String cookingOnMessage(Player p, Item item, GameObject object) {
-		String message = "You cook the " + item.getDef().getName().toLowerCase().substring(4) + " on the " + (object.getID() == 97 ? "fire" : "stove");
+		String message = "You cook the " + item.getDef().getName().toLowerCase() + " on the " + (object.getID() == 97 ? "fire" : "stove");
 		if(item.getID() == 504) {
 			message = "You cook the meat on the stove...";
 		}

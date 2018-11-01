@@ -221,7 +221,7 @@ public final class PluginHandler {
 							if (clz.getName().equalsIgnoreCase(
 									c.getClass().getName())) {
 								go = true;
-								LOGGER.info("Executing with : " + clz.getName());
+								//LOGGER.info("Executing with : " + clz.getName());
 								break;
 							}
 						}

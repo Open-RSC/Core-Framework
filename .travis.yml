@@ -9,8 +9,6 @@ services:
 
 jdk:
   - oraclejdk8
-  - oraclejdk9
-  - oraclejdk10
 
 before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -26,6 +24,6 @@ script:
   - sudo ant -f server/build.xml compile_core
   - sudo ant -f server/build.xml compile_plugins
   - sudo ant -f client/build.xml compile
-  - sudo ant -f Launcher/nbbuild.xml jar
+  - sudo ant -f Launcher/build.xml compile
   - sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
   - sudo docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql

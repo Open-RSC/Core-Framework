@@ -121,36 +121,42 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			return xp;
 		}
 	}
+	
+	static final String piece_of = "piece of ";
 
 	enum Stall {
+		TEA_STALL(780, 5, 64, 780, 5000,
+				"", new LootItem(739, 1, 100)),
 		BAKERS_STALL(325, 5, 64, 325, 5000,
-				new LootItem(330, 1, 100)),
+				"", new LootItem(330, 1, 100)),
 		SILK_STALL(326, 20, 96, 326, 8000,
-				new LootItem(200, 1, 100)),
+				piece_of, new LootItem(200, 1, 100)),
 		FUR_STALL(327, 35, 144, 327, 15000,
-				new LootItem(541, 1, 10),
+				piece_of, new LootItem(541, 1, 10),
 				new LootItem(146, 1, 100)),
 		SILVER_STALL(328, 50, 216, 328, 30000,
-				new LootItem(383, 1, 100)),
+				piece_of, new LootItem(383, 1, 100)),
 		SPICES_STALL(329, 65, 324, 329, 80000,
-				new LootItem(707, 1, 100)),
+				"pot of ", new LootItem(707, 1, 100)),
 		GEMS_STALL(330, 75, 640, 330, 180000,
-				new LootItem(160, 1, 65),
+				"", new LootItem(160, 1, 65),
 				new LootItem(159, 1, 20),
 				new LootItem(158, 1, 10),
 				new LootItem(157, 1, 5));
 
+		private String lootPrefix;
 		ArrayList<LootItem> lootTable;
 		private int xp;
 		private int requiredLevel;
 		private int respawnTime;
 		private int ownerID;
 
-		Stall(int ownerID, int req, int xp, int ownerNpc, int respawnTime, LootItem... loot) {
+		Stall(int ownerID, int req, int xp, int ownerNpc, int respawnTime, String lootPrefix, LootItem... loot) {
 			this.ownerID = ownerID;
 			this.setXp(xp);
 			this.setRespawnTime(respawnTime);
 			this.setRequiredLevel(req);
+			this.setLootPrefix(lootPrefix);
 			lootTable = new ArrayList<LootItem>();
 			for (LootItem lootItem : loot) {
 				lootTable.add(lootItem);
@@ -185,6 +191,14 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		public int getOwnerID() {
 			return ownerID;
 		}
+		
+		public void setLootPrefix(String lootPrefix) {
+			this.lootPrefix = lootPrefix;
+		}
+		
+		public String getLootPrefix() {
+			return lootPrefix;
+		}
 	}
 
 	public void stallThieving(Player player, GameObject object, Stall stall) {
@@ -192,12 +206,29 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		String objectName = object.getGameObjectDef().getName().toLowerCase();
 
 		if (stall.equals(Stall.BAKERS_STALL))
-			player.message("You attempt to steal cake from the " + objectName);
+			player.message("You attempt to steal some cake from the " + objectName);
+		else if(stall.equals(Stall.TEA_STALL)) {
+			int chance_player_caught = 60;
+			Npc teaseller = Functions.getNearestNpc(player, stall.getOwnerID(), 8);
+			boolean caught = (chance_player_caught > DataConversions.random(0, 100)) && !teaseller.isBusy();
+			if(caught) {
+				npcTalk(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
+				return;
+			}
+			else
+				player.message("You attempt to steal a cup of tea...");
+		}
+		else if(stall.equals(Stall.GEMS_STALL))
+			player.message("You attempt to steal gem from the " + objectName);
 		else
-			player.message("You attempt to steal " + objectName.replaceAll("stall", "") + " from the " + objectName);
+			player.message("You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 		sleep(800);
+		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" :  objectName.replaceAll("stall", "").trim();
+		if(!failNoun.endsWith("s")) {
+			failNoun += "s";
+		}
 		if (player.getSkills().getLevel(17) < stall.getRequiredLevel()) {
-			player.message("Your theiving ability is not high enough to thieve from stall.");
+			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
 		}
 
@@ -211,7 +242,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		} else if (stall.equals(Stall.GEMS_STALL)) {
 			guard = getMultipleNpcsInArea(player, 5, 65, 322, 324);
 		}
-
+		
 		if (shopkeeper != null) {
 			if (canBeSeen(shopkeeper.getX(), shopkeeper.getY(), player.getX(), player.getY())) {
 				Functions.npcYell(player, shopkeeper, "Hey thats mine");
@@ -246,7 +277,8 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			player.message("@gre@You are too tired to gain experience, get some rest");
 
 		player.getInventory().add(selectedLoot);
-		player.message("You steal " + selectedLoot.getDef().getName().toLowerCase() + " from the stall");
+		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef().getName().toLowerCase();
+		player.message("You steal a " + stall.getLootPrefix() + loot);
 
 		player.incExp(17, stall.getXp(), true);
 
@@ -367,7 +399,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		String formattedName = obj.getGameObjectDef().getName().toUpperCase().replaceAll(" ", "_");
 
-		if (formattedName.contains("STALL") && !formattedName.equals("TEA_STALL")) {
+		if (formattedName.contains("STALL")) {
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
 				return false;
 			}
@@ -420,22 +452,23 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 	public void doPickpocket(final Player player, final Npc npc, final Pickpocket pickpocket) {
 		player.face(npc);
-		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
-			player.message("Your theiving ability is not high enough to thieve the " + npc.getDef().getName());
-			return;
-		}
 		if (npc.inCombat()) {
 			player.message("I can't get close enough");
 			return;
 		}
-		final ArrayList<LootItem> lootTable = (ArrayList<LootItem>) pickpocket.getLootTable().clone();
+		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
+			sleep(1800);
+			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+			return;
+		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
 			@Override
 			public void action() {
 
-				player.setBusyTimer(1300);
-				npc.setBusyTimer(1300 * 2);
+				player.setBusyTimer(1200);
+				npc.setBusyTimer(1200 * 2);
 				if (npc.inCombat()) {
 					interrupt();
 					return;
@@ -476,7 +509,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					player.face(npc);
 					player.setBusyTimer(0);
 					npc.setBusyTimer(0);
-					setDelay(650);
+					setDelay(600);
 					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
 					npc.getUpdateFlags()
 					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));

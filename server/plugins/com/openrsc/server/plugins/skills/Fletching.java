@@ -35,6 +35,14 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			return true;
 		} else if (item2.getID() == 13 && doLogCut(player, item2, item1)) {
 			return true;
+		} else if (item1.getID() == 167 && (item2.getID() == 779 || item2.getID() == 792) && doPearlCut(player, item1, item2)) {
+			return true;
+		} else if (item2.getID() == 167 && (item1.getID() == 779 || item1.getID() == 792) && doPearlCut(player, item2, item1)) {
+			return true;
+    } else if (item1.getID() == 790 && doBoltMake(player, item2, item1)) {
+			return true;
+		} else if (item2.getID() == 790 && doBoltMake(player, item1, item2)) {
+			return true;
 		}
 		return false;
 	}
@@ -58,23 +66,21 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 		// Determine EXP based on amount + item
 		final int itemID;
-		int exp;
+		int experience = 1;
 		ItemDartTipDef tipDef = null;
 		if (item.getID() == 280) { // Arrow Shafts
 			itemID = 637; // Headless Arrows
-			exp = amount;
 		} else if ((tipDef = EntityHandler.getItemDartTipDef(item.getID())) != null) {
 			itemID = tipDef.getDartID(); // Dart ID
-			exp = (int) (tipDef.getExp() * amount);
+			experience = (int) (tipDef.getExp());
 		} else {
 			return false;
 		}
 
 		player.message("You attach feathers to some of your "
 				+ item.getDef().getName());
-		player.incExp(9, exp, true);
-
-		player.setBatchEvent(new BatchEvent(player, 60, 1000 + amount) {
+		final int exp = experience;
+		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount) {
 			@Override
 			public void action() {
 				if(owner.getInventory().countId(feathers.getID()) < 1) {
@@ -87,6 +93,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (owner.getInventory().remove(feathers.getID(), 1) > -1
 						&& owner.getInventory().remove(item.getID(), 1) > -1) {
+					owner.incExp(9, exp, true);
 					addItem(owner, itemID, 1);
 				} else {
 					interrupt();
@@ -119,8 +126,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		player.message("You attach "
 				+ arrowHeads.getDef().getName().toLowerCase()
 				+ " to some of your arrows");
-		player.incExp(9, headDef.getExp() * amount, true);
-		player.setBatchEvent(new BatchEvent(player, 60, 1000 + amount) {
+		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(9) < headDef.getReqLevel()) {
@@ -139,6 +145,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 				}
 				if (owner.getInventory().remove(headlessArrows.getID(), 1) > -1
 						&& owner.getInventory().remove(arrowHeads.getID(), 1) > -1) {
+					owner.incExp(9, headDef.getExp(), true);
 					owner.getInventory().add(new Item(headDef.getArrowID(), 1));
 				} else {
 					interrupt();
@@ -314,6 +321,94 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 					}
 				});
 				ActionSender.sendMenu(owner, options);
+			}
+		});
+		return true;
+	}
+
+	private boolean doPearlCut(final Player player, final Item chisel, final Item pearl) {
+		if (!Constants.GameServer.MEMBER_WORLD) {
+			player.sendMemberErrorMessage();
+			return true;
+		}
+
+		int amount;
+		if (pearl.getID() == 779) { // Quest Pearl
+			amount = 25;
+		}
+		else if (pearl.getID() == 792) { // Regular Pearl
+			amount = 2;
+		}
+		else {
+			player.message("Nothing interesting happens");
+			return false;
+		}
+
+		final int amt = amount;
+		final int exp = 25;
+		final int pearlID = pearl.getID();
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae
+			.getRepeatTimes(player, FLETCHING)) {
+			@Override
+			public void action() {
+				if (owner.getSkills().getLevel(9) < 34) {
+					owner.message("You need a skill level of 34 to do that");
+					interrupt();
+					return;
+				}
+				if (owner.getInventory().remove(pearlID, 1) > -1) {
+					owner.message("");
+					owner.incExp(9, exp, true);
+					addItem(owner, 790, amt);
+				}
+				else interrupt();
+			}
+		});
+		return true;
+	}
+
+	private boolean doBoltMake(final Player player, final Item bolts, final Item tips) {
+    if (!Constants.GameServer.MEMBER_WORLD) {
+      player.sendMemberErrorMessage();
+      return true;
+    }
+
+		if (tips.getID() != 790) { // not pearl tips
+			player.message("Nothing interesting happens");
+			return false;
+		}
+
+		int bolt = bolts.getID();
+		int tip = tips.getID();
+		int amount = 10;
+		if (player.getInventory().countId(bolt) < amount)
+			amount = player.getInventory().countId(bolt);
+		if (player.getInventory().countId(tip) < amount)
+			amount = player.getInventory().countId(tip);
+
+		player.setBatchEvent(new BatchEvent(player, 40, 1000 + amount) {
+      @Override
+      public void action() {
+        if (owner.getSkills().getLevel(9) < 34) {
+					owner.message("You need a skill level of 34 to do that");
+					interrupt();
+					return;
+				}
+				if (owner.getInventory().countId(bolt) < 1) {
+					interrupt();
+					return;
+				}
+				if (owner.getInventory().countId(tip) < 1) {
+					interrupt();
+					return;
+				}
+				if (owner.getInventory().remove(bolt, 1) > -1
+					&& owner.getInventory().remove(tip, 1) > -1) {
+					owner.message("");
+					owner.incExp(9, 25, true);
+					addItem(owner, 786, 1);
+				}
+				else interrupt();
 			}
 		});
 		return true;

@@ -19,14 +19,18 @@ public class GameTickEventHandler {
 	private LinkedHashMap<String, GameTickEvent> toAdd = new LinkedHashMap<String, GameTickEvent>();
 
 	public void add(GameTickEvent event) {
-		String className = event.getClass().getSimpleName();
-		if (event.getOwner() == null) {
+		String className = String.valueOf(event.getClass());
+		if (event.getOwner() == null) { // Server events, no owner.
 			String u;
 			while (events.containsKey(u = UUID.randomUUID().toString())) {}
 			toAdd.put(className + u, event);
 		}
-		else
-			toAdd.put(className + String.valueOf(event.getOwner().getID()), event);
+		else {
+			if (event.getOwner().isPlayer())
+				toAdd.put(className + event.getOwner().getUUID() + "p", event);
+			else
+				toAdd.put(className + event.getOwner().getUUID() + "n", event);
+		}
 	}
 
 	public boolean contains(GameTickEvent event) {

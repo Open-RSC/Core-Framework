@@ -16,7 +16,8 @@
 			<pathelement location="${lib}/log4j-core-2.8.jar" />
 			<pathelement location="${lib}/disruptor-3.3.5.jar" />
 			<pathelement location="${lib}/commons-lang-2.6.jar" />
-		  </classpath>
+		</classpath>
+		<compilerarg line="-Xlint:unchecked" />
 		</javac>
 		<jar basedir="buildplugins" destfile="plugins.jar" />
 		<delete dir="buildplugins" />

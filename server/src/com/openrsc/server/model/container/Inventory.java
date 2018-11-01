@@ -363,14 +363,16 @@ public class Inventory {
 
 		int requiredLevel = item.getDef().getRequiredLevel();
 		int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
+		boolean ableToWield = true;
 		if (player.getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
 			player.message("You are not a high enough level to use this item");
 			player.message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
-			return;
+			ableToWield = false;
 		}
 		if (item.getDef().isFemaleOnly() && player.isMale()) {
-			player.message("This piece of armor is for a female only.");
-			return;
+			player.message("It doesn't fit!");
+			player.message("Perhaps I should get someone to adjust it for me");
+			ableToWield = false;
 		}
 		if ((item.getID() == 401 || item.getID() == 407)
 				&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
@@ -378,74 +380,81 @@ public class Inventory {
 			player.message("you need to complete the dragon slayer quest");
 			return;
 		}
-		if (item.getID() == 593 && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
+		else if (item.getID() == 593 && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return;
 		}
-		if (item.getID() == 594 && (player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1 || player.getQuestPoints() < 56)) {
+		else if (item.getID() == 594 && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
+			return;
+		}
+		else if(item.getID() == 1278 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+			player.message("you have not earned the right to wear this yet");
+			player.message("you need to complete the legend's guild quest");
 			return;
 		}
 		/*
 		 * Hacky but works for god staffs and god capes.
 		 */
-		if(item.getID() == 1217 && (wielding(1213) || wielding(1214))) { // try to wear guthix staff
+		else if(item.getID() == 1217 && (wielding(1213) || wielding(1214))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
 		}
-		if(item.getID() == 1218 && (wielding(1213) || wielding(1215))) { // try to wear sara staff
+		else if(item.getID() == 1218 && (wielding(1213) || wielding(1215))) { // try to wear sara staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
 		}
-		if(item.getID() == 1216 && (wielding(1214) || wielding(1215))) { // try to wear zamorak staff
+		else if(item.getID() == 1216 && (wielding(1214) || wielding(1215))) { // try to wear zamorak staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
 		}
-		if(item.getID() == 1215 && (wielding(1216) || wielding(1218))) { // try to wear guthix cape
+		else if(item.getID() == 1215 && (wielding(1216) || wielding(1218))) { // try to wear guthix cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
 		}
-		if(item.getID() == 1214 && (wielding(1216) || wielding(1217))) { // try to wear sara cape
+		else if(item.getID() == 1214 && (wielding(1216) || wielding(1217))) { // try to wear sara cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
 		}
-		if(item.getID() == 1213 && (wielding(1217) || wielding(1218))) { // try to wear zamorak cape
+		else if(item.getID() == 1213 && (wielding(1217) || wielding(1218))) { // try to wear zamorak cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
 		}
 		/** Quest cape 112QP TODO item id **/
 		/*
-		if (item.getID() == 2145 && player.getQuestPoints() < 112) {
+		else if (item.getID() == 2145 && player.getQuestPoints() < 112) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete all the available quests");
 			return;
 		}*/
 		/** Max skill total cape TODO item id **/
-		/*if (item.getID() == 2146 && player.getSkills().getTotalLevel() < 1782) {
+		/*else if (item.getID() == 2146 && player.getSkills().getTotalLevel() < 1782) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to be level 99 in all skills");
 			return;
 		}*/
 		/** iron men armours **/
-		if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
+		else if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
 			player.message("You need to be an Iron Man to wear this");
 			return;
 		}
-		if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
+		else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
 			return;
 		}
-		if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
+		else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return;
 		}
-		if(item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		else if(item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
 			return;
 		}
+		if(!ableToWield)
+			return;
 		
 		ArrayList<Item> items = getItems();
 

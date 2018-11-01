@@ -35,9 +35,14 @@ import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
+import static com.openrsc.server.plugins.Functions.message;
 
 public class SpellHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
@@ -489,7 +494,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(314));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted sapphire amulets");
 			}
 			break;
 		case 10: // Low level alchemy
@@ -515,7 +520,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(315));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted emerald amulets");
 			}
 			break;
 		case 21: // Superheat item
@@ -572,7 +577,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(316));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted ruby amulets");
 			}
 			break;
 		case 28: // High level alchemy
@@ -599,7 +604,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(317));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted diamond amulets");
 			}
 			break;
 		case 42: // Enchant lvl-5 dragonstone amulet
@@ -611,7 +616,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(522));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted dragonstone amulets");
 			}
 			break;
 
@@ -638,7 +643,40 @@ public class SpellHandler implements PacketHandler {
 				player.resetAllExceptDueling();
 				switch (id) {
 				case 16: // Telekinetic grab
+					// fluffs gets its own message
+					int[] ungrabbableArr = {
+							//scythe
+							1289,
+							//bunny ears
+							1156,
+							//orbs
+							991, 992, 993, 994,
+							//god capes
+							1213, 1214, 1215,
+							//holy grail
+							746,
+							//large cogs
+							727, 728, 729, 730,
+							//staff of armadyl,
+							725,
+							//ice arrows
+							723,
+							//Firebird Feather
+							557,
+							//Ball of Witch's House
+							539,
+							//skull of restless ghost
+							27
+					};
+					List<Integer> ungrabbables = new ArrayList<Integer>();
+					for (int item : ungrabbableArr) {
+						ungrabbables.add(item);
+					}
 					if (affectedItem.getID() == 980) {
+						return;
+					}
+					else if(ungrabbables.contains(affectedItem.getID())) { // list of ungrabbable items sharing this message
+						player.message("I can't use telekinetic grab on this object");
 						return;
 					}
 
@@ -646,11 +684,7 @@ public class SpellHandler implements PacketHandler {
 						player.message("Telegrab has been disabled due to an running global event, please try again later");
 						return;
 					}
-					/**
-					 * ITEM 745 = HOLY GRAIL THROPY - PREVENTION FROM TELEGRAB
-					 * IT ON FIRST ISLAND
-					 **/
-					if (affectedItem.getID() == 575 || affectedItem.getID() == 746 || affectedItem.getID() == 2115
+					if (affectedItem.getID() == 575 || affectedItem.getID() == 2115
 							|| affectedItem.getID() == 2116 || affectedItem.getID() == 2117
 							|| affectedItem.getID() == 2118 || affectedItem.getID() == 2119) {
 						player.message("You may not telegrab this item");
@@ -1008,12 +1042,13 @@ public class SpellHandler implements PacketHandler {
 			player.message("You can't use teleport after level 20 wilderness");
 			return;
 		}
-		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < 10000) {
-			player.message("You need to stay out of combat for 10 seconds before using a teleport.");
-			return;
-		}
+		// if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < 10000) {
+		//	player.message("You need to stay out of combat for 10 seconds before using a teleport.");
+		//	return;
+		//}
 		if (player.getInventory().countId(1039) > 0) {
-			player.message("You can't use teleport spells with ana in the barrel in your inventory.");
+			message(player, "You can't teleport while holding Ana,", 
+                    "It's just too difficult to concentrate.");
 			return;
 		}
 		if(!player.getCache().hasKey("watchtower_scroll") && id == 31) {

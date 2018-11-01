@@ -27,6 +27,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class Mob extends Entity {
 
 	/**
+	 * Unique ID for event tracking.
+	 */
+	private String uuid;
+
+	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -300,6 +305,14 @@ public abstract class Mob extends Entity {
 
 	public boolean finishedPath() {
 		return getWalkingQueue().finished();
+	}
+
+	public String getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(String u) {
+		this.uuid = u;
 	}
 
 	public abstract int getArmourPoints();

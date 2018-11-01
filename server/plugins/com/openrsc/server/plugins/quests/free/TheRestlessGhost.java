@@ -61,6 +61,8 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 								"I'm pretty sure it's somewhere in the tower south west from here",
 								"There's a lot of levels to the tower, though",
 								"I suppose it might take a little while to find");
+						// kosher: this condition made player need to restart skull process incl. skeleton fight
+						p.getCache().remove("tried_grab_skull");
 					} else if (hasItem(p, 27)) {
 						playerTalk(p, n, "I have found it");
 						npcTalk(p,
@@ -313,7 +315,9 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 				&& item.getID() == 27) {
 			spawnNpc(15, 102, 675, 30);
 			message(player, "You put the skull in the coffin");
-			removeItem(player, 27, 1);			
+			removeItem(player, 27, 1);
+			//on completion cache key no longer needed
+			player.getCache().remove("tried_grab_skull");
 			Npc npc = getNearestNpc(player, 15, 8);
 			if (npc != null) {
 				npc.remove();
@@ -370,7 +374,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getX() == 218 && i.getY() == 3521 && i.getID() == 27) {
+		if (i.getID() == 27) {
 			return true;
 		}
 		return false;
@@ -378,22 +382,45 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		Npc skeleton = getNearestNpc(p, 50, 3);
-		if (i.getX() == 218 && i.getY() == 3521 && i.getID() == 27) {			
-			if(p.getQuestStage(Quests.THE_RESTLESS_GHOST) != 3 || p.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 ) {
+		Npc skeleton = getNearestNpc(p, 50, 10);
+		if(i.getID() == 27) {
+			// spawn-place
+			if (i.getX() == 218 && i.getY() == 3521) {
+				if(p.getQuestStage(Quests.THE_RESTLESS_GHOST) != 3) {
+					playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
+					return ;
+				}
+				else if(!p.getCache().hasKey("tried_grab_skull")) {
+					p.getCache().store("tried_grab_skull", true);
+					World.getWorld().unregisterItem(i);
+					addItem(p, 27, 1);
+					if(skeleton == null) {
+						//spawn skeleton and give message
+						p.message("Out of nowhere a skeleton appears");
+						skeleton = spawnNpc(50, 217, 3520, 100);
+						skeleton.setChasing(p);
+					}
+					else {
+						skeleton.setChasing(p);
+					}
+					
+				}
+				// allow if player had at least one time tried grab skull
+				else {
+					World.getWorld().unregisterItem(i);
+					addItem(p, 27, 1);
+				}
+				
+			}
+			// allow wild if post-quest
+			else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 && i.getY() <= 425) {
+				World.getWorld().unregisterItem(i);
+				addItem(p, 27, 1);
+			}
+			else {
 				playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
 				return ;
 			}
-			if (skeleton != null) {
-				spawnNpc(50, 217, 3520, 100);
-				p.message("The skeleton is guarding the skull, you need to get rid of him first");
-				skeleton.setChasing(p);
-				return;
-			}
-			Npc skeleton1 = getNearestNpc(p, 50, 20);
-			skeleton1.remove();
-			World.getWorld().unregisterItem(i);
-			addItem(p, 27, 1);
 		}
 	}
 }

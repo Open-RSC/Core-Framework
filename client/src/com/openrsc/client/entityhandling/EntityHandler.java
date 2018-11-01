@@ -814,7 +814,7 @@ public class EntityHandler {
 		int i = npcs.size() - 1;
 
 		/* Configurable NPC Data */
-		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : "";
+		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null;
 
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Grubor","A rough looking thief", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 15523536, 150, 220, 6, 6, 5, i++));

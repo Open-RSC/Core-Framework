@@ -519,7 +519,7 @@ public final class mudclient implements Runnable {
 		private boolean errorLoadingCoadebase = false;
 		private boolean errorLoadingData = false;
 		private boolean errorLoadingMemory = false;
-		private final int[] experienceArray = new int[99];
+		private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
 		private int fatigueSleeping = 0;
 		private boolean fogOfWar = false;
 		private int gameHeight = 334;
@@ -1349,11 +1349,11 @@ public final class mudclient implements Runnable {
 				byte var2 = 40;
 				if(Config.isAndroid())
 					var2 = -125;
-				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to Open RSC", 4, true);
+				this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to " + Config.SERVER_NAME, 6, true);
 				String var3 = null;
-				var3 = "You need to create an account on openrsc.com to use this server";
+				var3 = "Join our Discord for the latest updates.";
 				if (null != var3) {
-					this.panelLoginWelcome.addCenteredText(256, 205 + var2, var3, 4, true);
+					this.panelLoginWelcome.addCenteredText(256, 210 + var2, var3, 1, true);
 				}
 				//
 				// this.panelLoginWelcome.addButtonBackground(256, var2 + 250, 200,
@@ -2691,7 +2691,7 @@ public final class mudclient implements Runnable {
 						while (this.optionsMenuCount > var2) {
 							int var3 = '\uffff';
 							if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2])
-									&& this.mouseY > var2 * 12 && this.mouseY < var2 * 12 + 12) {
+									&& this.mouseY > 5 + var2 * 12 && this.mouseY < 5 + var2 * 12 + 12) {
 								var3 = 0xFF0000;
 							}
 
@@ -2703,7 +2703,7 @@ public final class mudclient implements Runnable {
 					} else {
 						for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
 							if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) > this.mouseX
-									&& var2 * 12 < this.mouseY && 12 + var2 * 12 > this.mouseY) {
+									&& 5 + var2 * 12 < this.mouseY && 5 + 12 + var2 * 12 > this.mouseY) {
 								this.getClientStream().newPacket(116);
 								this.getClientStream().writeBuffer1.putByte(var2);
 								this.getClientStream().finishPacket();
@@ -3451,7 +3451,7 @@ public final class mudclient implements Runnable {
 				int var3 = yr;
 				this.getSurface().drawBoxBorder(xr, 400, yr, var2, 0xFFFFFF);
 				var3 += 20;
-				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to Open RSC " + this.localPlayer.accountName,
+				this.getSurface().drawColoredStringCentered(xr + 256 - 56, "Welcome to " + Config.SERVER_NAME + " " + this.localPlayer.accountName,
 						0xFFFF00, 0, 4, var3);
 				var3 += 30;
 				String var4;
@@ -3932,11 +3932,11 @@ public final class mudclient implements Runnable {
 							centerX %= 60;
 							if (centerX < 10) {
 								this.getSurface().drawColoredStringCentered(256,
-										"System update in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
+										"Automatic server restart in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 							} else {
 								this.getSurface().drawColoredStringCentered(256,
-										"System update in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
+										"Automatic server restart in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 							}
 						}
@@ -5347,7 +5347,7 @@ public final class mudclient implements Runnable {
 				//this.getSurface().drawBoxBorder(x, width, 0, 20, 0x000000);
 
 				int tilLvl = 0, baseTilLvl = 0, progressWidth = 0; double progress = 0;
-				if (playerStatBase[skill] != 99) {
+				if (playerStatBase[skill] != Config.S_PLAYER_LEVEL_LIMIT) {
 					tilLvl = this.experienceArray[playerStatBase[skill] - 1] - this.playerExperience[skill];
 					baseTilLvl = this.experienceArray[playerStatBase[skill]] - this.experienceArray[playerStatBase[skill] - 1];
 					progress = ((double) tilLvl) / ((double) baseTilLvl) / 0.9;
@@ -5390,7 +5390,7 @@ public final class mudclient implements Runnable {
 					//this.getSurface().drawBoxBorder(x, width, 19, 61, 0x000000);
 
 					if (textColor == 0xFFFFFF) {
-						if (playerStatBase[skill] == 99) {
+						if (playerStatBase[skill] == Config.S_PLAYER_LEVEL_LIMIT) {
 							this.getSurface().drawShadowText("Gained: " + this.playerStatXpGained[skill], x + 3, 63, textColor, 2, false);
 							this.getSurface().drawShadowText("Xp/hr:     " + (int) xpPerHour, x + 3, 78, textColor, 2, false);
 						} else {
@@ -5400,7 +5400,7 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawShadowText("Xp/hr:     " + (int) xpPerHour, x + 3, 78, textColor, 2, false);
 						}
 					} else {
-						if (playerStatBase[skill] == 99) {
+						if (playerStatBase[skill] == Config.S_PLAYER_LEVEL_LIMIT) {
 							this.getSurface().drawString("Gained: " + this.playerStatXpGained[skill], x + 3, 63, textColor, 2);
 							this.getSurface().drawString("Xp/hr:     " + (int) xpPerHour, x + 3, 78, textColor, 2);
 						} else {
@@ -7137,19 +7137,19 @@ public final class mudclient implements Runnable {
 			// Mouse Buttons
 			if (this.optionMouseButtonOne) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Mouse Buttons - @red@One", 1, (String) null, (String) null);
+						"@whi@Mouse buttons - @red@One", 1, (String) null, (String) null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Mouse Buttons - @gre@Two", 1, (String) null, (String) null);
+						"@whi@Mouse buttons - @gre@Two", 1, (String) null, (String) null);
 			}
 
 			// Sound Effects
 			if (this.optionSoundDisabled) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Sound Effects - @red@Off", 2, (String) null, (String) null);
+						"@whi@Sound effects - @red@off", 2, (String) null, (String) null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-						"@whi@Sound Effects - @gre@On", 2, (String) null, (String) null);
+						"@whi@Sound effects - @gre@on", 2, (String) null, (String) null);
 			}
 
 			// Batch Progress Bar
@@ -7666,18 +7666,18 @@ public final class mudclient implements Runnable {
 
       // Mouse Buttons
       if (this.optionMouseButtonOne) {
-        this.getSurface().drawString("@whi@Mouse Buttons - @red@One", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Mouse buttons - @red@One", 3 + var3, var7, 0, 1);
       } else {
-        this.getSurface().drawString("@whi@Mouse Buttons - @gre@Two", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Mouse buttons - @gre@Two", 3 + var3, var7, 0, 1);
       }
 
 			var7 += 15;
 
       // Sound Effects
       if (this.optionSoundDisabled) {
-        this.getSurface().drawString("@whi@Sound Effects - @red@<off>", 3 + var3, var7, 0, 1);
+        this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + var3, var7, 0, 1);
       } else {
-				this.getSurface().drawString("@whi@Sound Effects - @gre@<on>", 3 + var3, var7, 0, 1);
+				this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + var3, var7, 0, 1);
       }
 
 			var7 += 15;
@@ -8007,7 +8007,7 @@ public final class mudclient implements Runnable {
 						heightMargin += 12;
 						int nextLevelExp = this.experienceArray[0];
 
-						for (int currLevel = 0; currLevel < 98; ++currLevel) {
+						for (int currLevel = 0; currLevel < Config.S_PLAYER_LEVEL_LIMIT - 1; ++currLevel) {
 							if (this.experienceArray[currLevel] <= this.playerExperience[currentlyHoveredSkill]) {
 								nextLevelExp = this.experienceArray[currLevel + 1];
 							}
@@ -8032,7 +8032,7 @@ public final class mudclient implements Runnable {
 					for (questNum = 0; questNum < 50; ++questNum) {
 						if (this.questNames[questNum] != null) {
 							this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
-									(questStages[questNum] == 0 ? "@red@" : "@gre@")//questStages[questNum] > 0 ? "@yel@" : "@gre@")
+									(questStages[questNum] == -1 ? "@gre@" : "@red@")//questStages[questNum] > 0 ? "@yel@" : "@gre@")
 									+ this.questNames[questNum],
 									0, (String) null, (String) null);
 						}
@@ -10240,7 +10240,7 @@ public final class mudclient implements Runnable {
 				else if (opcode == 19) { // Server Configs
 					Properties props = new Properties();
 					String serverName;
-					int spawnAuctionNpcs, spawnIronManNpcs;
+					int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
 					int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
 					int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 					int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
@@ -10254,6 +10254,7 @@ public final class mudclient implements Runnable {
 
 					if (!this.gotInitialConfigs) {
 						serverName = this.getClientStream().readString();
+						playerLevelLimit = this.getClientStream().getUnsignedByte();
 						spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
 						spawnIronManNpcs = this.getClientStream().getUnsignedByte();
 						showFloatingNametags = this.getClientStream().getUnsignedByte();
@@ -10287,6 +10288,7 @@ public final class mudclient implements Runnable {
 						wantCertsToBank = this.getClientStream().getUnsignedByte();
 					} else {
 						serverName = this.packetsIncoming.readString();
+						playerLevelLimit = this.packetsIncoming.getUnsignedByte();
 						spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
 						spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
 						showFloatingNametags = this.packetsIncoming.getUnsignedByte();
@@ -10321,6 +10323,7 @@ public final class mudclient implements Runnable {
 					}
 
 					props.setProperty("SERVER_NAME", serverName);
+					props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit));
 					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
 					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
 					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
@@ -10365,7 +10368,10 @@ public final class mudclient implements Runnable {
 							|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
 							|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 
+
 					if (!gotInitialConfigs) {
+						this.experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
+						this.setExperienceArray();
 						gotInitialConfigs = true;
 						continueStartGame((byte) -92);
 					}
@@ -11787,7 +11793,7 @@ public final class mudclient implements Runnable {
 					var3 += 15;
 					var3 += 10;
 					this.getSurface().drawColoredStringCentered(256,
-							"Click on the most suitable option from the Rules of Open RSC.", 0xFFFF00, 0, 1, var3);
+							"Click on the most suitable option from the Rules of "+ Config.SERVER_NAME +".", 0xFFFF00, 0, 1, var3);
 					var3 += 15;
 					this.getSurface().drawColoredStringCentered(256,
 							"This will send a report to our Player Support team for investigation.", 0xFFFF00, 0, 1, var3);
@@ -12652,8 +12658,8 @@ public final class mudclient implements Runnable {
 																						} else if (var11 != 23) {
 																							if (var11 == 24) {
 																								this.showLoginScreenStatus(
-																										"This world does not accept new players.",
-																										"Please see the launch page for help");
+																										"Server is currently restarting.",
+																										"Please try again in a minute.");
 																							} else if (var11 != 25) {
 																								this.showLoginScreenStatus(
 																										"Error unable to login.",
@@ -12705,7 +12711,7 @@ public final class mudclient implements Runnable {
 															}
 														} else {
 															this.showLoginScreenStatus("Error unable to login.",
-																	"Under 13 accounts cannot access Open RSC");
+																	"Under 13 accounts cannot access " + Config.SERVER_NAME);
 														}
 													} else {
 														this.showLoginScreenStatus("Error unable to login.",
@@ -13477,15 +13483,7 @@ public final class mudclient implements Runnable {
 					this.errorLoadingData = true;
 				} else {
 					RSBufferUtils.setStringEncryptor(RSBufferUtils.encryption);
-					int experience = 0;
-
-					for (int i = 0; i < 99; ++i) {
-						int experienceFactor = 1 + i;
-						int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
-						experience += experienceIncrease;
-						this.experienceArray[i] = (int)((experience & 0xffffffc) / 4);
-					}
-
+					this.setExperienceArray();
 					MiscFunctions.maxReadTries = 1000;
 					// We get the server config before continuing.
 					System.out.println("Getting server configs...");
@@ -13495,6 +13493,16 @@ public final class mudclient implements Runnable {
       catch (RuntimeException var9) {
         throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');
       }
+		}
+
+		final void setExperienceArray() {
+			int experience = 0;
+			for (int i = 0; i < Config.S_PLAYER_LEVEL_LIMIT; ++i) {
+				int experienceFactor = 1 + i;
+				int experienceIncrease = (int) (300D * Math.pow(2.0D, experienceFactor / 7D) + experienceFactor);
+				experience += experienceIncrease;
+				this.experienceArray[i] = (int)((experience & 0xffffffc) / 4);
+			}
 		}
 
 		final void getServerConfig() {

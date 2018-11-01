@@ -4,6 +4,7 @@ import com.loader.openrsc.Constants;
 import com.loader.openrsc.OpenRSC;
 import com.loader.openrsc.frame.AppFrame;
 
+import java.io.*;
 import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
@@ -42,16 +43,16 @@ public class ClientLauncher {
         gameFrame.setVisible(true);
     }
 
+    public static void exit() {
+        System.exit(0);
+    }
+
     public static void startProcess() {
         try {
-            loader = new URLClassLoader(new URL[]{new URL(Constants.CLIENT_URL)});
-            mainClass = Class.forName("orsc.ORSCFrame", true, loader);
-            if (loader == null) {
-                OpenRSC.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
-                OpenRSC.getPopup().showFrame();
-                AppFrame.get().getLaunch().setEnabled(true);
-                return;
-            }
+            File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
+            ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath() );
+            Process p = pb.start();
+            exit();
         } catch (Exception e) {
             OpenRSC.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
             OpenRSC.getPopup().showFrame();
