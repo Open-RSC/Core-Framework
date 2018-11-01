@@ -186,8 +186,12 @@ public final class Constants {
 		public static boolean WANT_CERTS_TO_BANK = false;
         public static boolean AUTO_SERVER_RESTART = true;
 		public static boolean NPC_KILL_MESSAGES = false;
+		public static boolean NPC_KILL_MESSAGES_FILTER = false;
+		public static String NPC_KILL_MESSAGES_NPCs = "";
 		public static boolean VALUABLE_DROP_MESSAGES = false;
 		public static double VALUABLE_DROP_RATIO = 0;
+		public static boolean VALUABLE_DROP_EXTRAS = false;
+		public static String VALUABLE_DROP_ITEMS = "";
 
 		/**
 		 *
@@ -259,8 +263,13 @@ public final class Constants {
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
+        	NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
+			NPC_KILL_MESSAGES_NPCs = props.getProperty("npc_kill_messages_npcs");
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
+			VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(props.getProperty("valuable_drop_extras"));
+			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
+
 			START_TIME = System.currentTimeMillis();
             AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
 			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
