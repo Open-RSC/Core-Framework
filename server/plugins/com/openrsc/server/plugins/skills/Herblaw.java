@@ -39,10 +39,6 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.sendMemberErrorMessage();
 			return false;
 		}
-		if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
-			player.message("You need to complete Druidic ritual quest first");
-			return false;
-		}
 		ItemUnIdentHerbDef herb = item.getUnIdentHerbDef();
 		if (herb == null) {
 			return false;
@@ -50,6 +46,10 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		if (player.getSkills().getLevel(15) < herb.getLevelRequired()) {
 			player.message("You cannot identify this herb");
 			player.message("you need a higher herblaw level");
+			return false;
+		}
+		if (player.getQuestStage(Constants.Quests.DRUIDIC_RITUAL) != -1) {
+			player.message("You need to complete Druidic ritual quest first");
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae

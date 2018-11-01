@@ -494,7 +494,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(314));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted sapphire amulets");
 			}
 			break;
 		case 10: // Low level alchemy
@@ -520,7 +520,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(315));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted emerald amulets");
 			}
 			break;
 		case 21: // Superheat item
@@ -577,7 +577,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(316));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted ruby amulets");
 			}
 			break;
 		case 28: // High level alchemy
@@ -604,7 +604,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(317));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted diamond amulets");
 			}
 			break;
 		case 42: // Enchant lvl-5 dragonstone amulet
@@ -616,7 +616,7 @@ public class SpellHandler implements PacketHandler {
 				player.getInventory().add(new Item(522));
 				finalizeSpell(player, spell);
 			} else {
-				player.message("This spell cannot be used on this kind of item");
+				player.message("This spell can only be used on unenchanted dragonstone amulets");
 			}
 			break;
 
@@ -645,18 +645,26 @@ public class SpellHandler implements PacketHandler {
 				case 16: // Telekinetic grab
 					// fluffs gets its own message
 					int[] ungrabbableArr = {
+							//scythe
+							1289,
+							//bunny ears
+							1156,
 							//orbs
 							991, 992, 993, 994,
 							//god capes
 							1213, 1214, 1215,
 							//holy grail
 							746,
+							//large cogs
+							727, 728, 729, 730,
 							//staff of armadyl,
 							725,
 							//ice arrows
 							723,
 							//Firebird Feather
 							557,
+							//Ball of Witch's House
+							539,
 							//skull of restless ghost
 							27
 					};
