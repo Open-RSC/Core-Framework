@@ -150,7 +150,7 @@ public final class Server implements Runnable {
 			{
 				PluginHandler.getPluginHandler().handleAction("Startup", new Object[] {});
 				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
-				LOGGER.info("Open RSC world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
+				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			} 
@@ -242,7 +242,7 @@ public final class Server implements Runnable {
 				if (timeLate >= Constants.GameServer.GAME_TICK) {
 					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
 					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
-					LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+					//LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
 				}
 			}
 		} catch (Exception e) {
