@@ -9,7 +9,7 @@ echo ""
 echo ""
 
 sudo mv etc/nginx/HTTPS_native.conf.BAK /etc/nginx/sites-available/default
-sudo sed -i 's/live\/openrsc.com/live\/'"$domain"'/g' /etc/nginx/sites-available/default
+sudo sed -i 's/live\/openrsc.com/live\/'${domain}'/g' /etc/nginx/sites-available/default
 
 echo ""
 echo ""
@@ -24,6 +24,7 @@ sudo certbot certonly \
 --post-hook 'sudo service nginx start' \
 -d ${domain} -d ${subdomain} --expand \
 -m ${email}
+#--force-renewal
 echo ""
 echo "Done!"
 echo ""
