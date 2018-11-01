@@ -362,7 +362,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (p.getQuestStage(this) != 2)
+		if (p.getQuestStage(this) != 3)
 			return;
 		if (p.isBusy())
 			return;
@@ -373,7 +373,6 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 				boolean dig = false;
 				if (wyson != null) {
 					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
-
 					sleep(1000);
 					wyson.setChasing(p);
 					long start = System.currentTimeMillis();
