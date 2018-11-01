@@ -683,11 +683,11 @@ public final class World {
                         int minutes = seconds / 60;
                         int remainder = seconds % 60;
                         if (Server.getServer().restart(seconds)) {
-                            String message = "The server will be restarting in... "
+                            /*String message = "The server will be restarting in... "
                                     + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");
+                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
                             for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.sendBox(p, message, false);
+                                //ActionSender.sendBox(p, message, false);
                                 ActionSender.startShutdown(p, seconds);
                             }
                         }
@@ -697,11 +697,39 @@ public final class World {
                         int minutes = seconds / 60;
                         int remainder = seconds % 60;
                         if (Server.getServer().restart(seconds)) {
-                            String message = "The server will be restarting in... "
+                            /*String message = "The server will be restarting in... "
                                     + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");
+                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
                             for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.sendBox(p, message, false);
+                                //ActionSender.sendBox(p, message, false);
+                                ActionSender.startShutdown(p, seconds);
+                            }
+                        }
+                    } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR3
+                            && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE3) {
+                        int seconds = Constants.GameServer.RESTART_DELAY3;
+                        int minutes = seconds / 60;
+                        int remainder = seconds % 60;
+                        if (Server.getServer().restart(seconds)) {
+                            /*String message = "The server will be restarting in... "
+                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
+                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
+                            for (Player p : World.getWorld().getPlayers()) {
+                                //ActionSender.sendBox(p, message, false);
+                                ActionSender.startShutdown(p, seconds);
+                            }
+                        }
+                    } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR4
+                            && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE4) {
+                        int seconds = Constants.GameServer.RESTART_DELAY4;
+                        int minutes = seconds / 60;
+                        int remainder = seconds % 60;
+                        if (Server.getServer().restart(seconds)) {
+                            /*String message = "The server will be restarting in... "
+                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
+                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
+                            for (Player p : World.getWorld().getPlayers()) {
+                                //ActionSender.sendBox(p, message, false);
                                 ActionSender.startShutdown(p, seconds);
                             }
                         }
