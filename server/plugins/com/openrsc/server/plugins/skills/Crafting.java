@@ -225,19 +225,25 @@ InvUseOnObjectExecutiveListener {
 					}
 				});
 				return;
-			} else if (item.getID() == 625) { // Sand (Glass)
+			} else if (item.getID() == 624 || item.getID() == 625) { // Soda Ash or Sand (Glass)
 				if (owner.getInventory().countId(624) < 1) {
 					owner.message(
 							"You need some soda ash to make glass");
 					return;
 				}
+				else if(owner.getInventory().countId(625) < 1) {
+					owner.message(
+							"You need some sand to make glass");
+					return;
+				}
 				owner.setBusy(true);
 				showBubble(owner, item);
+				int otherItem = item.getID() == 625 ? 624 : 625;
 				owner.message("you heat the sand and soda ash in the furnace to make glass");
 				Server.getServer().getEventHandler()
 				.add(new ShortEvent(owner) {
 					public void action() {
-						if (owner.getInventory().remove(624, 1) > -1
+						if (owner.getInventory().remove(otherItem, 1) > -1
 								&& owner.getInventory().remove(item) > -1) {
 							owner.getInventory().add(
 									new Item(623, 1));
@@ -295,6 +301,8 @@ InvUseOnObjectExecutiveListener {
 			}
 			return;
 		}
+		player.message(
+				"Nothing interesting happens");
 		return;
 	}
 
@@ -566,8 +574,7 @@ InvUseOnObjectExecutiveListener {
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 			Player player) {
 		if ((obj.getID() == 118 || obj.getID() == 813)
-				&& (item.getID() == 384 || item.getID() == 172 || item.getID() == 625)
-				|| item.getID() == 691) {
+				&& DataConversions.inArray(new int[] {384, 172, 624, 625, 691}, item.getID())) {
 			return true;
 		}
 		return false;
