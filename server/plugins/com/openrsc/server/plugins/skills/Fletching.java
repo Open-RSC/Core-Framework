@@ -255,7 +255,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 								@Override
 								public void action() {
 									if (owner.getSkills().getLevel(9) < requiredLvl) {
-										owner.message("You need a skill level of "
+										owner.message("You need a fletching skill of "
 												+ requiredLvl + " or above to do that");
 										interrupt();
 										return;
@@ -305,7 +305,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							@Override
 							public void action() {
 								if (owner.getSkills().getLevel(9) < requiredLvl) {
-									owner.message("You need a skill level of "
+									owner.message("You need a fletching skill of "
 											+ requiredLvl + " or above to do that");
 									interrupt();
 									return;
@@ -352,7 +352,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(9) < 34) {
-					owner.message("You need a skill level of 34 to do that");
+					owner.message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
 				}
@@ -390,7 +390,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
       @Override
       public void action() {
         if (owner.getSkills().getLevel(9) < 34) {
-					owner.message("You need a skill level of 34 to do that");
+					owner.message("You need a fletching skill of 34 to do that");
 					interrupt();
 					return;
 				}
