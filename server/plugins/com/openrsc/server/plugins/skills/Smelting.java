@@ -88,6 +88,7 @@ InvUseOnObjectExecutiveListener {
 	public static final int RUNE_BAR = 408;
 	public static final int GOLD_BAR = 172;
 	public static final int SILVER_BAR = 384;
+	public static final int SODA_ASH = 624;
 	public static final int SAND = 625;
 	public static final int GOLD_BAR_FAMILYCREST = 691;
 	public static final int GAUNTLETS_OF_GOLDSMITHING = 699;
@@ -268,7 +269,7 @@ InvUseOnObjectExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[] { GOLD_BAR, SILVER_BAR, SAND, GOLD_BAR_FAMILYCREST }, item.getID())) {
+		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[] { GOLD_BAR, SILVER_BAR, SODA_ASH, SAND, GOLD_BAR_FAMILYCREST }, item.getID())) {
 			return true;
 		}
 		return false;
