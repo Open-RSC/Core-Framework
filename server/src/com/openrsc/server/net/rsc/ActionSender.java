@@ -1072,7 +1072,9 @@ public class ActionSender {
 				}
 
 				if(!p.getLocation().inWilderness()) {
-					Market.getInstance().addCollectableItemsNotificationTask(p);
+                    if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
+                        Market.getInstance().addCollectableItemsNotificationTask(p);
+                    }
 				}
 
 				p.setBusy(false);
