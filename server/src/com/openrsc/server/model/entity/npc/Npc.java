@@ -406,6 +406,10 @@ public class Npc extends Mob {
 			total = 0;
 
 			for (ItemDropDef drop : drops) {
+				if (drop.getID() == 1026 && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+					continue;
+				}
+
 				Item temp = new Item();
 				temp.setID(drop.getID());
 
