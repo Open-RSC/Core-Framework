@@ -163,8 +163,15 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 
 	@Override
 	public void handleReward(final Player p) {
-		message(p, "The chancellor pays you 700 coins");
-		addItem(p, 10, 700);
+		if (p.getCache().hasKey("pre_paid")) {
+			message(p, "The chancellor pays you 620 coins");
+			addItem(p, 10, 620);
+			p.getCache().remove("pre_paid");
+		}
+		else {
+			message(p, "The chancellor pays you 700 coins");
+			addItem(p, 10, 700);
+		}
 		p.incQuestPoints(3);
 		p.message("You have completed the quest of the Prince of Al Kharid");
 		p.message("@gre@You haved gained 3 quest points!");
@@ -196,31 +203,60 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			} else if (choice == 2) {
 				npcTalk(p,
 						n,
-						"You are welcome. They are not expensive",
+						"You are welcome. They are not expensive.",
 						"We have them here to stop the elite guard being bothered",
 						"They are a little harder to kill.");
 			}
 			break;
 		case 1:
-			npcTalk(p, n, "Have you found the spymaster, osman, yet?",
+			npcTalk(p, n, "Have you found the spymaster, Osman, Yet?",
 					"You cannot proceed in your task without reporting to him");
 			break;
 		case 2:
-			npcTalk(p, n, "I understand the spymaster has hired you",
-					"I will pay the reward only when the prince is rescued",
-					"I can pay some expenses once the spymaster approves of it");
+			if(!p.getCache().hasKey("key_made")) {
+				npcTalk(p, n, "I understand the spymaster has hired you",
+						"I will pay the reward only when the Prince is rescued",
+						"I can pay some expenses once the spymaster approves it");
+			}
+			else {
+				if(!p.getCache().hasKey("pre_paid")) {
+					npcTalk(p, n, "You have proved your services useful to us",
+							"Here is 80 coins for the work you have already done");
+					message(p, "The chancellor hands you 80 coins");
+					addItem(p, 10, 80);
+					p.getCache().store("pre_paid", true);
+					
+				}
+				else {
+					npcTalk(p, n, "Hello again adventurer",
+							"You have received payment for your tasks so far",
+							"No more will be paid until the Prince is rescued");
+				}
+			}
 			break;
 
 		case 3:
-			npcTalk(p,
-					n,
-					"You have the eternal gratitude of the Emir for rescuing his son",
-					"I am authorised to pay you 700 coins");
+			if (p.getCache().hasKey("key_made")) {
+				p.getCache().remove("key_made");
+			}
+			if (p.getCache().hasKey("pre_paid")) {
+				npcTalk(p,
+						n,
+						"You have the eternal gratitude of the Emir for rescuing his son",
+						"I am authorised to pay you 700 coins",
+						"80 was put aside for the key. that leaves 620");
+			}
+			else {
+				npcTalk(p,
+						n,
+						"You have the eternal gratitude of the Emir for rescuing his son",
+						"I am authorised to pay you 700 coins");
+			}
 			p.sendQuestComplete(getQuestId());
 			break;
 		case -1:
-			npcTalk(p, n, "You are a friend of the town of al kharid",
-					"If we have more tasks to complete we will ask you",
+			npcTalk(p, n, "You are a friend of the town of Al Kharid",
+					"If we have more tasks to complete, we will ask you.",
 					"Please, keep in contact. Good employees are not easy to find");
 			break;
 		}
@@ -233,21 +269,21 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 
 	private void jailGuardDialogue(final Player p, final Npc n) {
 		playerTalk(p, n, "Hi, who are you guarding here?");
-		npcTalk(p, n, "Cant say, all very secret. You should get out of here",
+		npcTalk(p, n, "Can't say, all very secret. you should get out of here",
 				"I am not supposed to talk while I guard");
 		final int choice = showMenu(p, n, new String[] {
-				"I had better leave, I don't want trouble",
-				"Hey, chill out, I won't cause you trouble" });
+				"Hey, chill out, I won't cause you trouble",
+				"I had better leave, I don't want trouble" });
 		if (choice == 0) {
+			playerTalk(p, n, "I was just wondering what you do to relax");
+			npcTalk(p, n,
+					"You never relax with these people, but its a good career for a young man");
+		} else if (choice == 1) {
 			npcTalk(p,
 					n,
 					"Thanks I appreciate that",
-					"Talking on duty can be punishable by having you mouth stitched up",
+					"Talking on duty can be punishable by having your mouth stitched up",
 					"These are tough people, no mistake");
-		} else if (choice == 1) {
-			playerTalk(p, n, "I was just wondering what you do to relax'");
-			npcTalk(p, n,
-					"You never relax with these people, but its a good career for a young man");
 		}
 	}
 
@@ -259,7 +295,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				playerTalk(p, n, "Hi, who are you guarding here?");
 				npcTalk(p,
 						n,
-						"Can't say, all very secret, you should get out of here",
+						"Can't say, all very secret. you should get out of here",
 						"I am not supposed to talk while I guard");
 				final int choice = showMenu(p, n, new String[] {
 						"Hey, chill out, I won't cause you trouble",
@@ -327,18 +363,18 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 				playerTalk(p, n,
-						"Of course, it might be tough being here without a drink", "Oh dear seems like I don't have any beer");
+						"Of course, it must be tough being here without a drink", "Oh dear seems like I don't have any beer");
 			
 			} else if ((p.getInventory().countId(BEER) >= 1 && p.getInventory().countId(BEER) <= 2)) {
 				npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 				playerTalk(p, n,
-						"Of course, it might be tough being here without a drink");
+						"Of course, it must be tough being here without a drink");
 				message(p,
 						"You hand a beer to the guard, he drinks it in seconds");
 				removeItem(p, BEER, 1); 
 
-				npcTalk(p, n, "That was perfect, I can't thank you enough");
+				npcTalk(p, n, "Thas was perfect, i cant thank you enough");
 				playerTalk(p, n, "How are you? still ok. Not too drunk?");
 				npcTalk(p, n, "No, I don't get drunk with only one drink",
 						"You would need a few to do that, but thanks for the beer");
@@ -350,7 +386,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				message(p,
 						"You hand a beer to the guard, he drinks it in seconds");
 				removeItem(p, BEER, 3); // if all beers he takes all.
-				npcTalk(p, n, "That was perfect, I can't thank you enough");
+				npcTalk(p, n, "Thas was perfect, i cant thank you enough");
 				playerTalk(p, n, "Would you care for another, my friend?");
 				npcTalk(p, n, "I better not, I don't want to be drunk on duty");
 				playerTalk(p, n,
@@ -360,7 +396,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				npcTalk(p,
 						n,
 						"Franksh, that wash just what I need to shtay on guard",
-						"No more beersh, I don't want to get drunk");
+						"No more beersh, i don't want to get drunk");
 				p.message("The guard is drunk, and no longer a problem");
 				p.getCache().store("joe_is_drunk", true);
 			}
@@ -391,7 +427,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			npcTalk(p,
 					n,
 					"Really, after working here, theres only time for a drink or three",
-					"All us guards go to the same bar. And drink ourselves stupid",
+					"All us guards go to the same bar, And drink ourselves stupid",
 					"Its what I enjoy these days, that fade into unconciousness",
 					"I can't resist the sight of a really cold beer");
 			final int choice1 = showMenu(p, n, new String[] {
@@ -407,13 +443,13 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			}
 			break;
 		case Joe.MOREMONEY:
-			npcTalk(p, n, "What! Are you trying to bribe me?",
-					"I may not be a great guard, but i am loyal",
-					"How dare you try to bribe me!",
-					"No, no, you got the wrong idea, totally");
+			npcTalk(p, n, "WHAT! are you trying to bribe me?",
+					"I may not be a great guard, but I am loyal",
+					"How DARE you try to bribe me!");
 			playerTalk(p, n,
+					"No,no, you got the wrong idea, totally",
 					"I just wondered if you wanted some part-time bodyguard work");
-			npcTalk(p, n, "Oh. Sorry. No, i don't need money",
+			npcTalk(p, n, "Oh. sorry. no, I don't need money",
 					"As long as you were not offering me a bribe");
 			final int choice11 = showMenu(p, n, new String[] {
 					"Tell me about the life of a guard",
@@ -494,7 +530,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 								"Heard of you? you are famous in Runescape!",
 								"I have heard a little, but I think Katrine is tougher",
 								"I have heard rumours that you kill people",
-								"No I have never really  heard of you" });
+								"No I have never really heard of you" });
 				if (choice == 0) {
 					keliDialogue(p, n, Keli.FAMOUS);
 				} else if (choice == 1) {
@@ -552,7 +588,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"I can expect a high reward to be paid very soon for this guy",
 					"I can't tell you who he is, but he is a lot colder now");
 			final int choice2 = showMenu(p, n, new String[] {
-					"Ah, I see. You must have been very skillful",
+					"Ah, I see. You must have been very skilful",
 					"Thats great, are you sure they will pay?",
 					"Can you be sure they will not try to get him out?",
 					"I should not disturb someone as tough as you" });
@@ -569,7 +605,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case Keli.SKILLFUL:
 			npcTalk(p,
 					n,
-					"Yes. I did most of the work, we had to grab the Pr...",
+					"Yes, I did most of the work, we had to grab the Pr...",
 					"er, we had to grab him under cover of ten of his bodyguards",
 					"It was a stronke of genius");
 			final int choice3 = showMenu(p, n, new String[] {
@@ -590,10 +626,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			playerTalk(p, n,
 					"Don't you think that something tougher, maybe cut his finger off?");
 			npcTalk(p, n,
-					"Thats a good idea. I could use talented people like you",
+					"Thats a good idea, I could use talented people like you",
 					"I may call on you if I need work doing");
 			final int choice4 = showMenu(p, n, new String[] {
-					"You must have been very skillful",
+					"You must have been very skilful",
 					"Can you be sure they will not try to get him out?",
 					"I should not disturb someone as tough as you" });
 			if (choice4 == 0) {
@@ -629,8 +665,8 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			npcTalk(p, n, "As you put it that way, I am sure you can see it",
 					"You cannot steal the key, it is on an Adamantite chain",
 					"I cannot see the harm");
-			p.message("Keli shows you a small key on a strong looking chain");
-			if (p.getQuestStage(this) == 2) {
+			p.message("Keli shows you a small key on a stronglooking chain");
+			if (p.getQuestStage(this) == 2 && hasItem(p, 243)) {
 				final int menu1 = showMenu(p, n, new String[] {
 						"Could I touch the key for a moment please",
 						"I should not disturb someone as tough as you" });
@@ -649,7 +685,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					keliDialogue(p, n, Keli.NOT_DISTURB);
 				}
 			}
-			npcTalk(p, n, "There, run along now, i am very busy");
+			else {
+				npcTalk(p, n, "There, run along now, I am very busy");
+			}
 			break;
 		case Keli.SECRETS:
 			npcTalk(p, n, "It is the best way I know", "Dead men tell no tales");
@@ -673,8 +711,8 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case Keli.KILLPEOPLE:
 			npcTalk(p,
 					n,
-					"Theres always someone ready yo spread rumors",
-					"I heard a rumor the other day, that some men are wearing skirts",
+					"Theres always someone ready to spread rumours",
+					"I heard a rumour the other day, that some men are wearing skirts",
 					"If one of my men wore a skirt, he would wish he hadn't");
 			final int choice7 = showMenu(p, n, new String[] {
 					"I think Katrine is still tougher",
@@ -723,7 +761,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				npcTalk(p, n, "You should, you really should",
 						"I am wealthy enough to place a bounty on your head",
 						"Or just remove your head myself",
-						"Now go, i am busy, too busy to fight a would-be hoodlum");
+						"Now go, I am busy, too busy to fight a would-be hoodlum");
 			} else if (choice9 == 1) {
 				keliDialogue(p, n, Keli.TRAINED);
 			} else if (choice9 == 2) {
@@ -731,8 +769,8 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			}
 			break;
 		case Keli.OFCOURSE:
-			npcTalk(p,
-					n,
+			playerTalk(p, n, "You are famous in Runescape!");
+			npcTalk(p, n,
 					"Thats very kind of you to say. Reputations are not easily earnt",
 					"I have managed to succeed where many fail");
 			final int menu = showMenu(p, n, new String[] {
@@ -776,10 +814,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					npcTalk(p, n, "Good, you have all the basic equipment",
 							"What are your plans to stop the guard interfering?");
 					final int chose = showMenu(p, n, new String[] {
-							"haven't spoken to him yet",
-							"was going to attack him",
-							"hoped to get him drunk",
-							"Maybe could bribe him to leave" });
+							"I haven't spoken to him yet",
+							"I was going to attack him",
+							"I hoped to get him drunk",
+							"Maybe I could bribe him to leave" });
 					if (chose == 0) {
 						leelaDialogue(p, n, Leela.HAVENT_SPOKE);
 					} else if (chose == 1) {
@@ -791,13 +829,13 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					}
 					return;// need to do this quest on rsc.
 				}
-				playerTalk(p, n, "I am here to help free the Prince");
+				playerTalk(p, n, "I am here to help you free the Prince");
 				npcTalk(p, n, "Your employment is known to me.",
 						"Now, do you know all that we need to make the break?");
 				final int choice = showMenu(p, n, new String[] {
 						"I must make a disguise. What do you suggest?",
 						"I need to get the key made",
-						"What can I do with the guards?",
+						"What can i do with the guards?",
 						"I will go and get the rest of the escape equipment" });
 				if (choice == 0) {
 					leelaDialogue(p, n, Leela.DISGUISE);
@@ -812,9 +850,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			case -1:
 				npcTalk(p,
 						n,
-						"Thankyou, al kharid will forever owe you for your help",
+						"Thankyou, Al Kharid will forever owe you for your help",
 						"I think that if there is ever anything that needs to be done,",
-						"You will be someone they can rely on");
+						"you will be someone they can rely on");
 				break;
 			}
 		}
@@ -835,10 +873,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case Leela.DRUNK:
 			npcTalk(p,
 					n,
-					"Well thats possible. These guards do like a drink",
+					"Well, thats possible. These guards do like a drink",
 					"I would think it will take at least 3 beers to do it well",
 					"You would probably have to do it all at the same time too",
-					"The effects of the local beer wear off quickly",
+					"The effects of the local beer wear of quickly",
 					"Good luck with the guard. When the guard is out you can tie up Keli");
 			break;
 		case Leela.BRIBE:
@@ -860,7 +898,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				npcTalk(p,
 						n,
 						"You need a wig, maybe made from wool",
-						"If you can find someone who can work with wool, ask them about it",
+						"If you find someone who can work with wool, ask them about it",
 						"Then the old witch may be able to help you dye it");
 			} else {
 				npcTalk(p, n, "The wig you have got, well done");
@@ -868,33 +906,37 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 
 			npcTalk(p,
 					n,
-					!hasItem(p, SKIRT) ? "You will need to get a pink skirt, same as keli's"
+					!hasItem(p, SKIRT) ? "You will need to get a pink skirt, same as Keli's"
 							: "You have got the skirt, good");
 
 			if (!hasItem(p, PASTE)) {
 				npcTalk(p,
 						n,
-						"We still need something to colour the Princes skin lighter",
+						"we still need something to colour the Princes skin lighter",
 						"Theres an old witch close to here, she knows about many things",
 						"She may know some way to make the skin lighter");
 			} else {
-				npcTalk(p, n, "You have got the skin paint, well done");
+				npcTalk(p, n, "You have the skin paint, well done",
+						"I thought you would struggle to make that");
+			}
+			if(hasItem(p, WIG) && hasItem(p, SKIRT) && hasItem(p, PASTE)) {
+				npcTalk(p, n, "You do have everything for the disguise");
 			}
 
 			if (!hasItem(p, ROPE)) {
 				npcTalk(p,
 						n,
-						"You will still need some rope to tie up keli, of course",
+						"You will still need some rope to tie up Keli, of course",
 						"I heard that there was a good ropemaker around here");
 			} else {
-				npcTalk(p, n, "You have rope i see, tie up keli",
-						"That will be the most dangerous part of the plan");
+				npcTalk(p, n, "You have rope I see, tie up Keli",
+						"that will be the most dangerous part of the plan");
 
 			}
 
 			final int choice = showMenu(p, n, new String[] {
 					"I need to get the key made",
-					"What can I do with the guards?",
+					"What can i do with the guards?",
 					"I will go and get the rest of the escape equipment" });
 			if (choice == 0) {
 				leelaDialogue(p, n, Leela.KEYMADE);
@@ -910,15 +952,15 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					n,
 					"Yes, that is most important",
 					"There is no way you can get the real key.",
-					"It is on a chain around keli's neck. Almost impossible to steal",
-					"Get some soft clay, and get her to show you the key somehow",
-					"Then take the print, with bronze, to my father");
+					"It is on a chain around Keli's neck. almost impossible to steal",
+					"get some soft clay, and get her to show you the key somehow",
+					"then take the print, with bronze, to my father");
 			break;
 		case Leela.GUARDS:
 			npcTalk(p,
 					n,
 					"Most of the guards will be easy",
-					"the disguise will get past them",
+					"The disguise will get past them",
 					"The only guard who will be a problem will be the one at the door",
 					"He is talkative, try to find a weakness in him",
 					"We can discuss this more when you have the rest of the escape kit");
@@ -935,7 +977,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			}
 			break;
 		case Leela.ESCAPE:
-			npcTalk(p, n, "Good, i shall await your return with everything");
+			npcTalk(p, n, "Good, I shall await your return with everything");
 			break;
 		}
 	}
@@ -969,14 +1011,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case 180: // Al-Kharid Gate
 			// is aggie and ned done? only ned and i dont know if it will work
 			// check it.
-			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 2) {
-				p.message("You need to talk to the border guard");
-				return;
-			}
-			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == 3) {
-				p.message("You need to talk to the border guard");
-				return;
-			}
+			p.message("You need to talk to the border guard");
 			break;
 		}
 	}
@@ -1049,21 +1084,21 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "Hello, I am osman",
-						"What can I assist you with?");
+				npcTalk(p, n, "Hello, I am Osman",
+						"What can I assist you with");
 				final int choice = showMenu(p, n, new String[] {
-						"You didn't seem very tough. Who are you?",
+						"You don't seem very tough. Who are you?",
 						"I hear wild rumours about a Prince",
 						"I am just being nosy." });
 				if (choice == 0) {
-					npcTalk(p, n, "I am in the employ of the emir",
+					npcTalk(p, n, "I am in the employ of the Emir",
 							"That is all you need to know");
 				} else if (choice == 1) {
-					npcTalk(p, n, "The prince is not here. He is... Away",
-							"If you can be trusted, speak to the chancellor, hassan");
+					npcTalk(p, n, "The prince is not here. He is... away",
+							"If you can be trusted, speak to the chancellor, Hassan");
 				} else if (choice == 2) {
 					npcTalk(p, n, "That bothers me not",
-							"The secrets of al kharid protect themselves");
+							"The secrets of Al Kharid protect themselves");
 				}
 				break;
 			case 1:
@@ -1091,10 +1126,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					removeItem(p, 247, 1);
 					removeItem(p, 169, 1);
 					p.getCache().store("key_sent", true);
+					p.getCache().store("key_made", true);
 					npcTalk(p, n, "Pick the key up from Leela.",
 							"I will let you get 80 coins from the chancellor for getting this key");
 					final int wutwut = showMenu(p, n, new String[] {
-							"Thankyou. I will try to find the other items",
+							"Thankyou, I will try to find the other items",
 							"Can you tell me what I still need to get?" });
 					if (wutwut == 0) {
 
@@ -1107,7 +1143,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				break;
 			case 3:
 				npcTalk(p, n,
-						"The prince is safe, and on his way home with leela");
+						"The prince is safe, and on his way home with Leela");
 				npcTalk(p, n,
 						"You can pick up your payment from the chancellor");
 				break;
@@ -1134,7 +1170,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			final int firstMenu = showMenu(p, n, new String[] {
 					"Explain the first thing again", "What is needed second?",
 					"And the final thing you need?",
-					"Okay. I better go find some things" });
+					"Okay, I better go find some things" });
 			if (firstMenu == 0) {
 				osmanDialogue(p, n, Osman.FIRST);
 			} else if (firstMenu == 1) {
@@ -1157,7 +1193,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"What is first thing I must do?",
 					"What exactly is needed second?",
 					"And the final thing you need?",
-					"Okay. I better go find some things" });
+					"Okay, I better go find some things" });
 			if (choice == 0) {
 				osmanDialogue(p, n, Osman.FIRST);
 			} else if (choice == 1) {
@@ -1173,7 +1209,7 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"Find out if he has any weaknesses, and use them");
 			final int finalChoice = showMenu(p, n, new String[] {
 					"What is first thing I must do?", "What is needed second?",
-					"Okay. I better go find some things" });
+					"Okay, I better go find some things" });
 			if (finalChoice == 0) {
 				osmanDialogue(p, n, Osman.FIRST);
 			} else if (finalChoice == 1) {
@@ -1191,29 +1227,29 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			npcTalk(p, n, "Let me check. You need:");
 			if (!hasItem(p, BRONZE_KEY)) {
 				npcTalk(p, n,
-						"A print of the key in soft clay and a bronze bar");
-				npcTalk(p, n, "Then collect the key from leela");
+						"A print of the key in soft clay, and a bronze bar");
+				npcTalk(p, n, "Then collect the key from Leela");
 			} else {
 				npcTalk(p, n, "You have the key, good");
 			}
 			npcTalk(p,
 					n,
-					!hasItem(p, WIG) ? "You need to make a blonde wig somehow. Leela may help"
+					!hasItem(p, WIG) ? "You need to make a Blonde Wig somehow. Leela may help"
 							: "The wig you have got, well done");
-			npcTalk(p, n, !hasItem(p, SKIRT) ? "A skirt the same as keli's"
-					: "You have got the skirt, good");
-			npcTalk(p, n, !hasItem(p, ROPE) ? "Rope to tie keli up with"
-					: "Yes, you have the rope");
+			npcTalk(p, n, !hasItem(p, SKIRT) ? "A skirt the same as Keli's,"
+					: "You have the skirt, good");
 			npcTalk(p,
 					n,
-					!hasItem(p, PASTE) ? "Something to colour the princes skin lighter"
-							: "You have got the skin paint, well done",
+					!hasItem(p, PASTE) ? "Something to colour the Princes skin lighter"
+							: "You have the skin paint, well done",
 					"I thought you would struggle to make that");
+			npcTalk(p, n, !hasItem(p, ROPE) ? "Rope to tie Keli up with"
+					: "Yes, you have the rope.");
 			npcTalk(p, n,
 					"You still need some way to stop the guard from interfering");
 
-			npcTalk(p, n, "Once you have everything, go to leela",
-					"She must be ready to get the prince away");
+			npcTalk(p, n, "Once you have everything, Go to Leela",
+					"she must be ready to get the prince away");
 			break;
 
 		}

@@ -28,8 +28,12 @@ public class Market implements Runnable {
 	private static Market instance;
 
 	public static Market getInstance() {
+		if (!Constants.GameServer.SPAWN_AUCTION_NPCS) return null;
 		if (instance == null) {
 			instance = new Market();
+
+			instance.scheduledExecutor = Executors
+					.newSingleThreadScheduledExecutor(new NamedThreadFactory("AuctionHouseService"));
 			instance.start();
 		}
 		return instance;
@@ -43,8 +47,7 @@ public class Market implements Runnable {
 	
 	private LinkedBlockingQueue<OpenMarketTask> refreshRequestTasks = new LinkedBlockingQueue<OpenMarketTask>();
 
-	private final ScheduledExecutorService scheduledExecutor = Executors
-			.newSingleThreadScheduledExecutor(new NamedThreadFactory("AuctionHouseService"));
+	private ScheduledExecutorService scheduledExecutor;
 
 	public void addBuyAuctionItemTask(final Player player, int auctionID, int amount) {
 		auctionTaskQueue.add(new BuyMarketItemTask(player, auctionID, amount));

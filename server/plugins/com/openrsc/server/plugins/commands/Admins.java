@@ -45,7 +45,7 @@ public final class Admins implements CommandListener {
 	private DelayedEvent holidayDropEvent;
 	private DelayedEvent globalDropEvent;
 	private int count = 0;
-        
+
         @Override
 	public void onCommand(String command, String[] args, final Player player) {
 		if (!player.isAdmin()) {
@@ -414,6 +414,9 @@ public final class Admins implements CommandListener {
 			}
 			System.out.println(Arrays.toString(hmap.entrySet().toArray()));
 		}
+		else if (command.equals("restart")) {
+            World.restartCommand();
+		}
 		else if (command.equals("reloaddrops")) {
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
@@ -624,7 +627,7 @@ public final class Admins implements CommandListener {
 						player.getInventory().add(new Item(id, 1));
 					}
 				}
-			} 
+			}
 			else {
 				ActionSender.sendMessage(player, "Invalid id");
 			}
@@ -637,12 +640,12 @@ public final class Admins implements CommandListener {
 			long timeMoved = System.currentTimeMillis() - p.getLastMoved();
 			long timeOnline = System.currentTimeMillis() - p.getCurrentLogin();
 			if (p != null) {
-				ActionSender.sendBox(player, 
+				ActionSender.sendBox(player,
 					"@lre@Player Information: %"
           + " %"
-					+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %" 
+					+ "@gre@Name:@whi@ " + p.getUsername() + "@lre@ %"
 					+ "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
-					+ "@gre@Group ID:@whi@ " + p.getGroupID() + " %"                        
+					+ "@gre@Group ID:@whi@ " + p.getGroupID() + " %"
 					+ "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
 					+ "@gre@IP:@whi@ " + p.getLastIP() + " %"
 					+ "@gre@Last Login:@whi@ " + p.getDaysSinceLastLogin() + " days ago %"
@@ -663,8 +666,8 @@ public final class Admins implements CommandListener {
 				ArrayList<String> itemStrings = new ArrayList<String>();
 				for (Item invItem : inventory)
 					itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef().getName());
-                                
-				ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%" 
+
+				ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%"
 					+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
 				return;
 			}
@@ -684,7 +687,7 @@ public final class Admins implements CommandListener {
 					ArrayList<String> itemStrings = new ArrayList<String>();
 					for (Item bankItem : inventory)
 						itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef().getName());
-					ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%" 
+					ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%"
 						+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
 					return;
 				}
