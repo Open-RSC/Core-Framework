@@ -21,13 +21,6 @@
 			</classpath>
 			<compilerarg line="-Xlint:unchecked"/>
 		</javac>
-		<!--<unzip dest="${build}">
-			<fileset dir="${lib}">
-				<include name="**/*.jar"/>
-				<exclude name="javafx.controls.jar"/>
-				<exclude name="javafx.fxml.jar"/>
-			</fileset>
-		</unzip>-->
 		<jar basedir="${build}" destfile="${jar}">
 			<manifest>
 				<attribute name="Main-Class" value="orsc.ORSCFrame"/>

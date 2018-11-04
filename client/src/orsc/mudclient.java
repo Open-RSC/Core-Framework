@@ -12,9 +12,6 @@ import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.*;
@@ -38,6 +35,8 @@ import java.net.Socket;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
+
+import javax.sound.sampled.*;
 
 public final class mudclient implements Runnable {
 	long lastFPSUpdate = 0;
@@ -667,8 +666,7 @@ public final class mudclient implements Runnable {
 		private Panel panelQuestInfo;
 		//private Panel panelPlayerTaskInfo;
 		private Panel panelSettings;
-		public HashMap<String, Media> soundCache = new HashMap<String, Media>();
-		final JFXPanel fxPanel = new JFXPanel();
+        public HashMap<String, File> soundCache = new HashMap<String, File>();
 		private boolean authenticSettings = !(
 						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
             || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
@@ -6718,7 +6716,7 @@ public final class mudclient implements Runnable {
 										this.getClientStream().writeBuffer1.putByte(var9);
 										this.getClientStream().finishPacket();
 										this.prayerOn[var9] = true;
-										this.playSoundFile((String) "prayeron");
+                                        this.playSoundFile((String) "prayeron");
 									} else {
 										this.getClientStream().newPacket(254);
 										this.getClientStream().writeBuffer1.putByte(var9);
@@ -12430,9 +12428,8 @@ public final class mudclient implements Runnable {
 				File[] listOfFiles = folder.listFiles();
 
 				for (int i = 0; i < listOfFiles.length; i++)
-					if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".mp3")) {
-						Media mp3 = new Media(listOfFiles[i].toURI().toString());
-						soundCache.put(listOfFiles[i].getName().toLowerCase(), mp3);
+					if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".wav")) {
+                        soundCache.put(listOfFiles[i].getName().toLowerCase(), listOfFiles[i]);
 					}
 
 			} catch (Exception ex) {
@@ -12811,17 +12808,13 @@ public final class mudclient implements Runnable {
 		private final void playSoundFile(String key) {
 			try {
 				if (!optionSoundDisabled) {
-					Media sound = soundCache.get(key + ".mp3");
+					File sound = soundCache.get(key + ".wav");
 					if (sound == null)
 						return;
 					try {
-						MediaPlayer mp = new MediaPlayer(sound);
-						mp.setOnReady(() -> {
-							mp.play();
-							mp.setOnEndOfMedia(() -> {
-								mp.dispose();
-							});
-						});
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(AudioSystem.getAudioInputStream(sound));
+                        clip.start();
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

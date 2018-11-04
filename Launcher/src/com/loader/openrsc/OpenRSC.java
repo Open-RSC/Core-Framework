@@ -9,22 +9,15 @@ import javax.swing.*;
 
 public class OpenRSC {
     private static PopupFrame popup;
-    private static Downloader updater;
 
     public static void main(final String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (UnsupportedLookAndFeelException e) {
-            OpenRSC.getPopup().setMessage("" + e);
-        } catch (ClassNotFoundException e) {
-            OpenRSC.getPopup().setMessage("" + e);
-        } catch (InstantiationException e) {
-            OpenRSC.getPopup().setMessage("" + e);
-        } catch (IllegalAccessException e) {
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             OpenRSC.getPopup().setMessage("" + e);
         }
-        updater = new Downloader();
-				updater.updateJar();
+        Downloader updater = new Downloader();
+        updater.updateJar();
 
         final AppFrame frame = new AppFrame();
         frame.build();
