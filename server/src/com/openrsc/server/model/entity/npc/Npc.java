@@ -372,7 +372,7 @@ public class Npc extends Mob {
 			//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 			//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
 			//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
-			if (!NPC_KILL_LOGGING) {
+			if (NPC_KILL_LOGGING) {
 				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
 					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
 						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, true);
