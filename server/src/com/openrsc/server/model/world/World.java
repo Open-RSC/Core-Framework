@@ -671,7 +671,7 @@ public final class World {
     }
 
     private static void shutdownCheck() {
-        Server.getServer().getEventHandler().add(new SingleEvent(null, 60000) {
+        Server.getServer().getEventHandler().add(new SingleEvent(null, 1000) {
             public void action() {
                 int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
 
@@ -683,11 +683,7 @@ public final class World {
                         int minutes = seconds / 60;
                         int remainder = seconds % 60;
                         if (Server.getServer().restart(seconds)) {
-                            /*String message = "The server will be restarting in... "
-                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
                             for (Player p : World.getWorld().getPlayers()) {
-                                //ActionSender.sendBox(p, message, false);
                                 ActionSender.startShutdown(p, seconds);
                             }
                         }
@@ -697,11 +693,7 @@ public final class World {
                         int minutes = seconds / 60;
                         int remainder = seconds % 60;
                         if (Server.getServer().restart(seconds)) {
-                            /*String message = "The server will be restarting in... "
-                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
                             for (Player p : World.getWorld().getPlayers()) {
-                                //ActionSender.sendBox(p, message, false);
                                 ActionSender.startShutdown(p, seconds);
                             }
                         }
@@ -711,11 +703,7 @@ public final class World {
                         int minutes = seconds / 60;
                         int remainder = seconds % 60;
                         if (Server.getServer().restart(seconds)) {
-                            /*String message = "The server will be restarting in... "
-                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
                             for (Player p : World.getWorld().getPlayers()) {
-                                //ActionSender.sendBox(p, message, false);
                                 ActionSender.startShutdown(p, seconds);
                             }
                         }
@@ -725,17 +713,30 @@ public final class World {
                         int minutes = seconds / 60;
                         int remainder = seconds % 60;
                         if (Server.getServer().restart(seconds)) {
-                            /*String message = "The server will be restarting in... "
-                                    + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-                                    + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "");*/
                             for (Player p : World.getWorld().getPlayers()) {
-                                //ActionSender.sendBox(p, message, false);
                                 ActionSender.startShutdown(p, seconds);
                             }
                         }
                     }
                 }
                 shutdownCheck();
+            }
+        });
+    }
+
+    public static void restartCommand() {
+        Server.getServer().getEventHandler().add(new SingleEvent(null, 1000) {
+            public void action() {
+                int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
+                        int seconds = 10;
+                        int minutes = seconds / 60;
+                        int remainder = seconds % 60;
+                        if (Server.getServer().restart(seconds)) {
+                            for (Player p : World.getWorld().getPlayers()) {
+                                ActionSender.startShutdown(p, seconds);
+                            }
+                        }
+                restartCommand();
             }
         });
     }
