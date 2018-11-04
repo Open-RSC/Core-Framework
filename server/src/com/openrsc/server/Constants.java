@@ -184,10 +184,11 @@ public final class Constants {
 		public static boolean WANT_WOODCUTTING_GUILD = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
-        public static boolean AUTO_SERVER_RESTART = true;
+                public static boolean AUTO_SERVER_RESTART = true;
 		public static boolean NPC_KILL_MESSAGES = false;
 		public static boolean NPC_KILL_MESSAGES_FILTER = false;
 		public static String NPC_KILL_MESSAGES_NPCs = "";
+		public static boolean NPC_KILL_LOGGING = false;
 		public static boolean VALUABLE_DROP_MESSAGES = false;
 		public static double VALUABLE_DROP_RATIO = 0;
 		public static boolean VALUABLE_DROP_EXTRAS = false;
@@ -263,27 +264,28 @@ public final class Constants {
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
-        	NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
+        	        NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
 			NPC_KILL_MESSAGES_NPCs = props.getProperty("npc_kill_messages_npcs");
+			NPC_KILL_LOGGING = Boolean.parseBoolean(props.getProperty("npc_kill_logging"));
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(props.getProperty("valuable_drop_extras"));
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 
 			START_TIME = System.currentTimeMillis();
-            AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
+                        AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
 			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
 			RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
-            RESTART_HOUR3 = Integer.parseInt(props.getProperty("restart_hour3"));
-            RESTART_HOUR4 = Integer.parseInt(props.getProperty("restart_hour4"));
+                        RESTART_HOUR3 = Integer.parseInt(props.getProperty("restart_hour3"));
+                        RESTART_HOUR4 = Integer.parseInt(props.getProperty("restart_hour4"));
 			RESTART_MINUTE1 = Integer.parseInt(props.getProperty("restart_minute1"));
 			RESTART_MINUTE2 = Integer.parseInt(props.getProperty("restart_minute2"));
-            RESTART_MINUTE3 = Integer.parseInt(props.getProperty("restart_minute3"));
-            RESTART_MINUTE4 = Integer.parseInt(props.getProperty("restart_minute4"));
+                        RESTART_MINUTE3 = Integer.parseInt(props.getProperty("restart_minute3"));
+                        RESTART_MINUTE4 = Integer.parseInt(props.getProperty("restart_minute4"));
 			RESTART_DELAY1 = Integer.parseInt(props.getProperty("restart_delay1"));
 			RESTART_DELAY2 = Integer.parseInt(props.getProperty("restart_delay2"));
-            RESTART_DELAY3 = Integer.parseInt(props.getProperty("restart_delay3"));
-            RESTART_DELAY4 = Integer.parseInt(props.getProperty("restart_delay4"));
+                        RESTART_DELAY3 = Integer.parseInt(props.getProperty("restart_delay3"));
+                        RESTART_DELAY4 = Integer.parseInt(props.getProperty("restart_delay4"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
