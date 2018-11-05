@@ -185,7 +185,10 @@ public class DwarfCannon
 						GameObject cannon = RegionManager.getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY);
 						// does not exist or the object there is not a cannon.
 						if (cannon == null || !DataConversions.inArray(Cannon.cannonObjectIDs, cannon.getID())) {
-							npcTalk(p, n, "here you go");
+							message(p, "the dwarf gives you a new cannon");
+							npcTalk(p, n, "keep that quite or i'll be in real trouble");
+							playerTalk(p, n, "thanks alot");
+							npcTalk(p, n, "no worries");
 							int cannonStage = p.getCache().getInt("cannon_stage");
 
 							switch (cannonStage) {
@@ -213,7 +216,12 @@ public class DwarfCannon
 							p.getCache().remove("cannon_y");
 							p.getCache().remove("has_cannon");
 						}
+						else {
+							npcTalk(p, n, "oh dear, i'm only allowed to replace cannons...",
+									"...that were stolen in action", "i'm sorry but you'll have to buy a new set");
+						}
 					} else {
+						npcTalk(p, n, "that's unfortunate...but don't worry, i can sort you out");
 						npcTalk(p, n, "oh dear, i'm only allowed to replace cannons...",
 								"...that were stolen in action", "i'm sorry but you'll have to buy a new set");
 					}

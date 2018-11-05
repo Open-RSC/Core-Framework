@@ -28,8 +28,10 @@ public final class CaptainBarnaby implements ObjectActionListener,
 			menu = new String[] { // Crandor option is not needed.
 				"Yes please", "No thankyou"
 			};
-    	int choice = showMenu(p, n, menu);
-			travel(p, n, choice + 1);
+			int choice = showMenu(p, n, menu);
+			if(choice >= 0) {
+				travel(p, n, choice + 1);
+			}
 		}
 		else {
 			int choice = showMenu(p, n, menu);

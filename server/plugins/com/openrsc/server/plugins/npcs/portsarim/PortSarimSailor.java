@@ -28,7 +28,9 @@ public final class PortSarimSailor implements ObjectActionExecutiveListener, Obj
 				"Yes please", "No thankyou"
 			};
 			int choice = showMenu(p, n, menu);
-			travel(p, n, choice + 1);
+			if(choice >= 0) {
+				travel(p, n, choice + 1);
+			}
 		}
 		else {
 			int choice = showMenu(p, n, menu);
