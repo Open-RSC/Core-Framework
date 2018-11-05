@@ -24,11 +24,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
 import android.widget.Toast;
-import rsc.Config;
 
 public class ApplicationUpdater extends Activity {
 
-	public static final String ANDROID_CACHE_URL = "http://dev1.openrsc.com:8080/downloads/cache/";
+	public static final String ANDROID_CACHE_URL = "https://game.openrsc.com/downloads/cache/";
 
 	private TextProgressBar progressBar;
 	private TextView tv1;

@@ -16,9 +16,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 
-import rsc.multiclient.ClientPort;
-import rsc.mudclient;
-import rsc.Config;
+import orsc.multiclient.ClientPort;
+import orsc.mudclient;
+import orsc.Config;
 
 public class GameActivity extends Activity implements ClientPort {
 

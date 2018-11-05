@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import rsc.enumerations.MessageType;
-import rsc.graphics.gui.Panel;
-import rsc.graphics.two.GraphicsController;
-import rsc.mudclient;
+import orsc.enumerations.MessageType;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
 
 public final class AuctionHouse {
 	private int x, y;
