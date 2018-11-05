@@ -13,6 +13,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class RegularPlayer implements CommandListener {
 	public static final World world = World.getWorld();
@@ -234,7 +235,14 @@ public final class RegularPlayer implements CommandListener {
 			return;
 		}
 		if (command.equals("onlinelist")) {
-			ActionSender.sendOnlineList(player);
+			List<Player> onlinePlayers = ActionSender.sendOnlineList(player);
+			String boxTextPlayerNames = "";
+			for(Player p : onlinePlayers) {
+				boxTextPlayerNames += p.getUsername() + "%";
+			}
+			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames,true);
+
+
 			return;
 		}
 		if(command.equals("commands")) {
