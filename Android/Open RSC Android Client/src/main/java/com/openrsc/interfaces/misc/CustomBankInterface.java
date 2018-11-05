@@ -5,10 +5,10 @@ import com.openrsc.client.entityhandling.defs.ItemDef;
 
 import java.util.ArrayList;
 
-import rsc.Config;
-import rsc.enumerations.InputXAction;
-import rsc.graphics.gui.InputXPrompt;
-import rsc.mudclient;
+import orsc.Config;
+import orsc.enumerations.InputXAction;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.mudclient;
 
 public final class CustomBankInterface extends BankInterface {
 	private int organizeMode = 0;

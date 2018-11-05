@@ -3,7 +3,8 @@ package com.openrsc.interfaces.misc;
 import com.openrsc.interfaces.InputListener;
 import com.openrsc.interfaces.NComponent;
 
-import rsc.mudclient;
+import orsc.Config;
+import orsc.mudclient;
 
 public class BankPinInterface extends NComponent {
 	
@@ -86,7 +87,7 @@ public class BankPinInterface extends NComponent {
 		alternativeBox.addComponent(resetPin);
 		
 		NComponent titleText = new NComponent(client);
-		titleText.setText("Bank of RuneScape");
+		titleText.setText("Bank of " + Config.SERVER_NAME);
 		titleText.setFontColor(0x9B0907, 0x9B0907);
 		titleText.setTextSize(3);
 		titleText.setLocation(3, 2); 

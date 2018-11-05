@@ -1,6 +1,6 @@
 package com.openrsc.interfaces.misc.clan;
 
-import rsc.mudclient;
+import orsc.mudclient;
 
 public class Clan {
 	private boolean inClan;

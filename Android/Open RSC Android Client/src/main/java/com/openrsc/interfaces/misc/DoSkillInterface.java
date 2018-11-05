@@ -5,8 +5,8 @@ import com.openrsc.client.entityhandling.defs.ItemDef;
 
 import java.util.ArrayList;
 
-import rsc.graphics.gui.Panel;
-import rsc.mudclient;
+import orsc.graphics.gui.Panel;
+import orsc.mudclient;
 
 
 public final class DoSkillInterface {
