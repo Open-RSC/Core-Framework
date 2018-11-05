@@ -28,8 +28,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
-import rsc.multiclient.ClientPort;
-import rsc.Config;
+import orsc.multiclient.ClientPort;
+import orsc.Config;
 
 public class RSCBitmapSurfaceView extends SurfaceView implements SurfaceHolder.Callback, ClientPort {
 

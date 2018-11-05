@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
-import rsc.graphics.two.Fonts;
-import rsc.Config;
-import rsc.mudclient;
+import orsc.graphics.two.Fonts;
+import orsc.Config;
+import orsc.mudclient;
 
 public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListener {
 

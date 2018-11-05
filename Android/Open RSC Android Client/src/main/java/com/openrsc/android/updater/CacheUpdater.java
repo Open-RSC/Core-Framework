@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 public class CacheUpdater extends Activity {
 
-	public static final String CACHE_URL = "http://dev1.openrsc.com:8080/downloads/cache/";
+	public static final String CACHE_URL = "https://game.openrsc.com/downloads/cache/";
 	private TextProgressBar progressBar;
 
 	private TextView tv1;
@@ -238,8 +238,8 @@ public class CacheUpdater extends Activity {
 		}
 	}
 
-	private final String nicename[] = { "Checksum", "3D models", "Application Icon", "Graphics", "Sound effects", "Landscape", "Jagex library" };
-	private final String normalName[] = { "MD5CHECKSUM", "models.jag", "RuneScape.png", "Sprites.rscd", "sounds.mem", "Landscape.rscd", "jagex.jag" };
+	private final String nicename[] = { "Checksum", "3D models", "Application Icon", "Graphics", "Landscape", "library" };
+	private final String normalName[] = { "MD5CHECKSUM", "models.orsc", "RuneScape.png", "Sprites.orsc", "Landscape.orsc", "library.orsc" };
 
 	public String getNiceName(String s) {
 		for (int i = 0; i < normalName.length; i++) {

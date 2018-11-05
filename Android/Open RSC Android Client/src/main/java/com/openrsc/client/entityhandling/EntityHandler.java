@@ -1,9 +1,5 @@
 package com.openrsc.client.entityhandling;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -18,7 +14,7 @@ import com.openrsc.client.entityhandling.defs.TileDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
 
-import rsc.Config;
+import orsc.Config;
 
 public class EntityHandler {
 
