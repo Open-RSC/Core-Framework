@@ -4,15 +4,19 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.plugins.misc.Cannon;
@@ -21,7 +25,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DwarfCannon
-		implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, WallObjectActionListener,
+		implements QuestInterface,PickupExecutiveListener, PickupListener,
+		TalkToNpcListener, TalkToNpcExecutiveListener, WallObjectActionListener,
 		WallObjectActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(1032, 3), new Item(1033, 3), new Item(1034, 3),
@@ -79,6 +84,7 @@ public class DwarfCannon
 				message(p, "the Cannon engineer gives you some notes and a mould");
 				addItem(p, 1056, 1);
 				addItem(p, 1057, 1);
+				p.getCache().store("spoken_nulodion", true);
 				p.updateQuestStage(getQuestId(), 6);
 				break;
 			case 6:
@@ -100,6 +106,7 @@ public class DwarfCannon
 				npcTalk(p, n, "if you can get those items to him it'll help");
 				break;
 			case -1:
+				playerTalk(p, n, "hello");
 				npcTalk(p, n, "hello traveller, how's things?");
 				playerTalk(p, n, "not bad thanks, yourself?");
 				npcTalk(p, n, "i'm good, just working hard as usual");
@@ -264,25 +271,41 @@ public class DwarfCannon
 				} else {
 					npcTalk(p, n, "the goblins are still getting in", "so there must still be some broken railings");
 					playerTalk(p, n, "don't worry, i'll find them soon enough");
+					if(!hasItem(p, 1042)) {
+						playerTalk(p, n, "but i'm out of railings");
+						npcTalk(p, n, "ok, we've got plenty");
+						message(p, "the Dwarf commander gives you another railing");
+						addItem(p, 1042, 1);
+					}
 				}
 				break;
 			case 2:
 				playerTalk(p, n, "hello");
-				if (hasItem(p, 1046)) {
+				// this could be just by going up the ladder maybe?
+				if(p.getCache().hasKey("grabed_dwarf_remains")) {
 					npcTalk(p, n, "have you been to the watch tower yet?");
 					playerTalk(p, n, "yes, i went up but there was no one");
 					npcTalk(p, n, "that's strange, gilob never leaves his post");
-					playerTalk(p, n, "i may have some bad news for you commander");
-					message(p, "you show the Dwarf commander the remains");
-					npcTalk(p, n, "what's this?, oh no , it can't be!");
-					playerTalk(p, n, "i'm sorry, it looks like the goblins got him");
-					npcTalk(p, n, "noooo... those..those animals", "but where's gilobs son?, he was also there");
-					playerTalk(p, n, "the goblins must have taken him");
-					npcTalk(p, n, "please traveller, seek out the goblins base..", "...and return the lad to us",
-							"they must sleep somewhere!");
-					playerTalk(p, n, "ok, i'll see if i can find their hide out");
-					p.updateQuestStage(getQuestId(), 3);
-				} else {
+					if (hasItem(p, 1046)) {
+						playerTalk(p, n, "i may have some bad news for you commander");
+						message(p, "you show the Dwarf commander the remains");
+						npcTalk(p, n, "what's this?, oh no , it can't be!");
+						playerTalk(p, n, "i'm sorry, it looks like the goblins got him");
+						npcTalk(p, n, "noooo... those..those animals", "but where's gilobs son?, he was also there");
+						playerTalk(p, n, "the goblins must have taken him");
+						npcTalk(p, n, "please traveller, seek out the goblins base..", "...and return the lad to us",
+								"they must sleep somewhere!");
+						playerTalk(p, n, "ok, i'll see if i can find their hide out");
+						removeItem(p, 1046, 1);
+						p.updateQuestStage(getQuestId(), 3);
+						p.getCache().remove("grabed_dwarf_remains");
+					} else {
+						npcTalk(p, n, "his son was also with him, its too strange",
+								"can you return and look for clues?");
+						playerTalk(p, n, "ok then");
+					}
+				}
+				else {
 					npcTalk(p, n, "hello, any news from the watch man?");
 					playerTalk(p, n, "not yet");
 					npcTalk(p, n, "well, as quick as you can then");
@@ -308,6 +331,7 @@ public class DwarfCannon
 						addItem(p, 1055, 1);
 						npcTalk(p, n, "let me know how you get on");
 						p.updateQuestStage(getQuestId(), 4);
+						p.getCache().remove("savedlollk");
 					} else if (gobMenu == 1) {
 						npcTalk(p, n, " fair enough, take care traveller");
 					}
@@ -364,7 +388,7 @@ public class DwarfCannon
 				break;
 			case 5:
 			case 6:
-				if (hasItem(p, 1056) && hasItem(p, 1057)) {
+				if (p.getCache().hasKey("spoken_nulodion") && hasItem(p, 1056) && hasItem(p, 1057)) {
 					playerTalk(p, n, "hi");
 					npcTalk(p, n, "hello traveller, any word from the Cannon engineer?");
 					playerTalk(p, n, "yes, i have spoken to him", "he gave me these to give to you");
@@ -381,8 +405,17 @@ public class DwarfCannon
 					playerTalk(p, n, "hmmm, sounds interesting");
 					npcTalk(p, n, "take care of yourself traveller, and thanks again");
 					playerTalk(p, n, "you take care too");
+					p.getCache().remove("spoken_nulodion");
 					p.sendQuestComplete(Constants.Quests.DWARF_CANNON);
-				} else {
+				} else if(p.getCache().hasKey("spoken_nulodion")) {
+					playerTalk(p, n, "hi");
+					npcTalk(p, n, "hello traveller, any word from the Cannon engineer?");
+					playerTalk(p, n, "yes, i have spoken to him", "he gave me some items to give you...",
+							"but i seem to have lost something");
+					npcTalk(p, n, "if you could go back and get another, i'd appreciate it");
+					playerTalk(p, n, "ok then");
+				}
+				else {
 					playerTalk(p, n, "hi again");
 					npcTalk(p, n, "hello traveller", "any word from the Cannon engineer?");
 					playerTalk(p, n, "not yet");
@@ -428,7 +461,8 @@ public class DwarfCannon
 		if (railMenu == 0) {
 			if (failToReplace()) {
 				message(p, "you attempt to replace the missing railing", "but you fail and cut yourself trying");
-				p.damage(10);
+				int dmg = DataConversions.random(2, 3);
+				p.damage(dmg);
 			} else {
 				message(p, "you attempt to replace the missing railing", "you replace the railing with no problems");
 				p.getInventory().remove(1042, 1);
@@ -548,7 +582,10 @@ public class DwarfCannon
 		if (obj.getID() == 983) {
 			return true;
 		}
-		if (obj.getID() == 987) {
+		if (obj.getID() == 986) { //crates containing nothing
+			return true;
+		}
+		if (obj.getID() == 987) { //crate of lollk
 			return true;
 		}
 		return false;
@@ -571,19 +608,28 @@ public class DwarfCannon
 			player.teleport(578, 521, false);
 
 		}
+		if (obj.getID() == 986) {
+			message(player, "you search the crate", "but it's empty");
+		}
 		if (obj.getID() == 987) {
-			message(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
-			Npc lollk = spawnNpc(695, 619, 3314, 60000);
-			lollk.face(player);
-			player.face(lollk);
-			npcTalk(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
-			playerTalk(player, lollk, "are you ok?");
-			npcTalk(player, lollk, "i think so, i'd better run of home");
-			playerTalk(player, lollk, "that's right , you get going, i'll catch up");
-			npcTalk(player, lollk, "thanks again brave adventurer");
-			message(player, "the dwarf child runs off into the caverns");
-			player.getCache().store("savedlollk", true);
-			lollk.remove();
+			// only allow at quest stage and before being rescued
+			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
+				message(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
+				Npc lollk = spawnNpc(695, 619, 3314, 60000);
+				lollk.face(player);
+				player.face(lollk);
+				npcTalk(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
+				playerTalk(player, lollk, "are you ok?");
+				npcTalk(player, lollk, "i think so, i'd better run of home");
+				playerTalk(player, lollk, "that's right , you get going, i'll catch up");
+				npcTalk(player, lollk, "thanks again brave adventurer");
+				message(player, "the dwarf child runs off into the caverns");
+				player.getCache().store("savedlollk", true);
+				lollk.remove();
+			}
+			else {
+				message(player, "you search the crate", "but it's empty");
+			}
 		}
 		if (obj.getID() == 994) {
 			if (player.getCache().hasKey("cannon_complete")) {
@@ -668,6 +714,25 @@ public class DwarfCannon
 			}
 		}
 
+	}
+	
+	@Override
+	public boolean blockPickup(Player p, GroundItem i) {
+		if (i.getID() == 1046) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void onPickup(Player p, GroundItem i) {
+		if(i.getID() == 1046 && p.getQuestStage(this) == 2) {
+			if(!p.getCache().hasKey("grabed_dwarf_remains")) {
+				p.getCache().store("grabed_dwarf_remains", true);
+			}
+		}
+		World.getWorld().unregisterItem(i);
+		addItem(p, 1046, 1);
 	}
 
 }
