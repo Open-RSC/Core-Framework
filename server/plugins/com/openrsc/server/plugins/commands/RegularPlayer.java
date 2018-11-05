@@ -13,15 +13,23 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class RegularPlayer implements CommandListener {
 	public static final World world = World.getWorld();
 
 	@Override
 	public void onCommand(String command, String[] args, Player player) {
-		if (!Constants.GameServer.PLAYER_COMMANDS)
-			return;
+		if(!Constants.GameServer.PLAYER_COMMANDS && player.isMod() || !Constants.GameServer.PLAYER_COMMANDS && player.isAdmin()) {
+		    this.handleCommand(command, player, args);
+        } else if(!Constants.GameServer.PLAYER_COMMANDS) {
+		    return;
+        } else {
+            this.handleCommand(command, player, args);
+        }
+	}
 
+	private void handleCommand(String command, Player player, String[] args) {
 		if(command.equalsIgnoreCase("gang")) {
 			if (player.getCache().hasKey("arrav_gang")) {
 				if (player.getCache().getInt("arrav_gang") == 0) {
@@ -55,11 +63,11 @@ public final class RegularPlayer implements CommandListener {
 					EDGE_DUNGEON++;
 				}
 			}
-			
+
 			ActionSender.sendBox(player, "There are currently @red@" + TOTAL_PLAYERS_IN_WILDERNESS + " @whi@player"+(TOTAL_PLAYERS_IN_WILDERNESS == 1 ? "" : "s") + " in wilderness % %"
-					+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player"+(PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
-					+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player"+(PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
-					+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player"+(EDGE_DUNGEON == 1 ? "" : "s") + " %"
+							+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player"+(PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
+							+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player"+(PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
+							+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player"+(EDGE_DUNGEON == 1 ? "" : "s") + " %"
 					, false);
 		}
 		if (command.equalsIgnoreCase("c") && Constants.GameServer.WANT_CLANS) {
@@ -108,12 +116,12 @@ public final class RegularPlayer implements CommandListener {
 			player.updateTotalPlayed();
 			long timePlayed = player.getCache().getLong("total_played");
 
-			ActionSender.sendBox(player, 
-			"@lre@Player Information: %"
-                        + " %"
-                        + "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
-			+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-                        , true);
+			ActionSender.sendBox(player,
+					"@lre@Player Information: %"
+							+ " %"
+							+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
+							+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
+					, true);
 			return;
 		}
 		if (command.equalsIgnoreCase("event")) {
@@ -153,7 +161,7 @@ public final class RegularPlayer implements CommandListener {
 
 			long waitTime = 15000;
 
-                        if(player.isMod()) {
+			if(player.isMod()) {
 				waitTime = 0;
 			}
 
@@ -213,7 +221,7 @@ public final class RegularPlayer implements CommandListener {
 			ActionSender.sendMessage(player, "@yel@Players Online: @whi@" + players);
 			return;
 		}
-                if (command.equals("uniqueonline")) {
+		if (command.equals("uniqueonline")) {
 			ArrayList<String> IP_ADDRESSES = new ArrayList<String>();
 			for (Player p : World.getWorld().getPlayers()) {
 				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
@@ -227,7 +235,14 @@ public final class RegularPlayer implements CommandListener {
 			return;
 		}
 		if (command.equals("onlinelist")) {
-			ActionSender.sendOnlineList(player);
+			List<Player> onlinePlayers = ActionSender.sendOnlineList(player);
+			String boxTextPlayerNames = "";
+			for(Player p : onlinePlayers) {
+				boxTextPlayerNames += p.getUsername() + "%";
+			}
+			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames,true);
+
+
 			return;
 		}
 		if(command.equals("commands")) {
