@@ -1,6 +1,6 @@
 package com.openrsc.interfaces;
 
-import rsc.mudclient;
+import orsc.mudclient;
 
 public abstract class NCustomComponent extends NComponent {
 

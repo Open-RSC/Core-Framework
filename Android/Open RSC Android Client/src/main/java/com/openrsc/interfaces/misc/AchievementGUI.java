@@ -1,9 +1,9 @@
 package com.openrsc.interfaces.misc;
 
-import rsc.Config;
-import rsc.graphics.gui.Panel;
-import rsc.graphics.two.GraphicsController;
-import rsc.mudclient;
+import orsc.Config;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
 
 public final class AchievementGUI {
 	private int x, y;

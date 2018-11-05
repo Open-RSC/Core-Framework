@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-import rsc.graphics.gui.Panel;
-import rsc.mudclient;
+import orsc.graphics.gui.Panel;
+import orsc.mudclient;
 
 
 public final class LostOnDeathInterface {
