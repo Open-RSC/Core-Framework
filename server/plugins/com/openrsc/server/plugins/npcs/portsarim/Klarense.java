@@ -31,15 +31,14 @@ public class Klarense implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			npcTalk(p, n, "No not me, I'm frightened of dragons");
 		}
 		else if (choice == 1) {
-			playerTalk(p, n, "So what needs fixing on this ship?");
 			npcTalk(p, n,
-					" Well the big gaping hole in the hold is the main problem");
-			npcTalk(p, n, " you'll need a few planks");
-			npcTalk(p, n, " Hammered in with steel nails");
+					"Well the big gaping hole in the hold is the main problem");
+			npcTalk(p, n, "you'll need a few planks");
+			npcTalk(p, n, "Hammered in with steel nails");
 		}
 		else if (choice == 2) {
-			npcTalk(p, n, " Oh I'll be fine");
-			npcTalk(p, n, " I've got work as Port Sarim's first life guard");
+			npcTalk(p, n, "Oh I'll be fine");
+			npcTalk(p, n, "I've got work as Port Sarim's first life guard");
 		}
 	}
 
@@ -49,13 +48,13 @@ public class Klarense implements TalkToNpcExecutiveListener, TalkToNpcListener {
 		npcTalk(p, n,
 				"I admit she looks fine, but she isn't seaworthy right now");
 		String[] menu = new String[] {
-			"Do you know when she will be seaworthy?",
+			"Do you know when she will be seaworthy",
 			"Ah well, nevermind"
 		};
 
 		if (p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
 			menu = new String[] {
-				"Do you know when she will be seaworthy?",
+				"Do you know when she will be seaworthy",
 				"Would you take me to Crandor Isle when it's ready?",
 				"I don't suppose I could buy it",
 				"Ah well, nevermind"
@@ -96,9 +95,12 @@ public class Klarense implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			if (choice == 0) {
 				if (p.getInventory().countId(10) >= 2000) {
 					npcTalk(p, n,
-							"Ok, she's all yours.");
+							"Ok she's all yours");
 					p.getCache().store("owns_ship", true);
 					p.getInventory().remove(10,	2000);
+				}
+				else {
+					playerTalk(p, n, "Except I don't have that much money on me");
 				}
 			}
 			else if (choice == 1) {
