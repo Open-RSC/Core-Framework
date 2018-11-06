@@ -454,6 +454,7 @@ public class ActionSender {
 	}
 
 	public static void sendInitialServerConfigs(Channel channel) throws Exception {
+		LOGGER.info("Sending initial configs to: " + channel.remoteAddress());
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
 		channel.attr(RSCConnectionHandler.attachment).set(attachment);
