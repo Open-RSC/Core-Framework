@@ -56,7 +56,7 @@ public class PlayerDatabaseExecutor implements Runnable  {
 				getDatabase().savePlayer(playerToSave);
 				//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			LOGGER.catching(e);
 		}
 	}
