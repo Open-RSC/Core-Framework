@@ -221,7 +221,6 @@ public final class PluginHandler {
 							if (clz.getName().equalsIgnoreCase(
 									c.getClass().getName())) {
 								go = true;
-								//LOGGER.info("Executing with : " + clz.getName());
 								break;
 							}
 						}
@@ -235,6 +234,7 @@ public final class PluginHandler {
 									@Override
 									public Integer call() throws Exception {
 										try {
+											LOGGER.info("Executing with : " + m.getName());
 											m.invoke(c, data);
 										} catch (Exception cme) {
 											LOGGER.catching(cme);
