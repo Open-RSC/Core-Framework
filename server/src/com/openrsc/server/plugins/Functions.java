@@ -24,12 +24,20 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * 
  * @author n0m
  *
  */
 public class Functions {
+
+  /**
+   * The asynchronous logger.
+   */
+  private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 			COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
@@ -1503,7 +1511,12 @@ public class Functions {
 		Server.getServer().getEventHandler().add(new PluginsUseThisEvent() {
 			@Override
 			public void action() {
-				r.run();
+				try {
+					r.run();
+				}
+				catch (Throwable e) {
+					LOGGER.catching(e);
+				}
 			}
 		});
 	}
