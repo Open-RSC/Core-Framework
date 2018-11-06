@@ -52,8 +52,9 @@ if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Di
         echo ""
         echo "Setting Ubuntu Firewall permissions."
         echo ""
-        sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 43594/tcp && sudo ufw allow 53594/tcp && sudo ufw allow 53595/tcp && sudo ufw deny 3306/tcp
+        sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 43594/tcp && sudo ufw deny 3306/tcp
         sudo sed -i 's/DEFAULT_FORWARD_POLICY="DENY"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
+
         sudo ufw reload
         sudo ufw --force enable
 
@@ -61,7 +62,30 @@ if [[ "$installmode" != "3" ]]; then # Follows this if choices 1(Docker) or 2(Di
         sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 720/g' /etc/ssh/sshd_config
         sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 720/g' /etc/ssh/sshd_config
         sudo sed -i 's/#MaxAuthTries/MaxAuthTries/g' /etc/ssh/sshd_config
+        sudo sed -i 's/#PubkeyAuthentication/PubkeyAuthentication/g' /etc/ssh/sshd_config
+        sudo sed -i 's/#Port 22/Port 55555/g' /etc/ssh/sshd_config
         sudo service ssh restart
+        systemctl restart sshd
+
+        # Configures Fail2Ban
+        sudo echo '[sshd]
+enabled = true
+banaction = iptables-multiport
+maxretry = 10
+findtime = 43200
+bantime = 86400
+
+[sshlongterm]
+port      = ssh
+logpath   = %(sshd_log)s
+banaction = iptables-multiport
+maxretry  = 35
+findtime  = 259200
+bantime   = 608400
+enabled   = true
+filter    = sshd' | sudo tee /etc/fail2ban/jail.local
+      sudo systemctl enable fail2ban
+      sudo systemctl restart fail2ban
 
     # Apple MacOS
     elif [[ "$OSTYPE" == "darwin"* ]]; then
