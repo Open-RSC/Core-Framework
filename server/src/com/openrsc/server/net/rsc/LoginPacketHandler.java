@@ -58,6 +58,8 @@ public class LoginPacketHandler {
 	public void processLogin(Packet p, Channel channel) throws Exception {
 		String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
 		switch (p.getID()) {
+
+		/* Logging in */
 		case 0:
 			boolean reconnecting = p.readByte() == 1;
 			int clientVersion = p.readInt();
@@ -113,6 +115,7 @@ public class LoginPacketHandler {
 			Server.getPlayerDataProcessor().addLoginRequest(request);
 			break;
 
+		/* Registering */
 		case 78:
 			LOGGER.info("Registration attempt from: " + IP);
 
