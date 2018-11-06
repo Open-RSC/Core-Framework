@@ -26,6 +26,8 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.handlers.Ping;
+import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -1346,6 +1348,9 @@ public final class Player extends Mob {
 				PacketHandler ph = PacketHandlerLookup.get(p.getValue().getID());
 				if (ph != null && p.getValue().getBuffer().readableBytes() >= 0) {
 					try {
+						if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
+							LOGGER.info("Handling Packet (CLASS: " + ph + "): "
+									+ this.username + " (ID: " + this.owner + ")");
 						ph.handlePacket(p.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
