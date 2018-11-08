@@ -1084,7 +1084,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				return true;
 			case 4:
 				if (!p.getInventory().wielding(52)) {
-					playerTalk(p, null, "Maybe Id better wield silverlight first");
+					playerTalk(p, null, "Maybe I'd better wield silverlight first");
 					return true;
 				} else {
 					n.getSkills().setLevel(3, n.getDef().getHits());
@@ -1095,7 +1095,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				}
 				break;
 			case -1:
-				p.message("You've already done that quest.");
+				p.message("You've already done that quest");
 				return true;
 			}
 		}
