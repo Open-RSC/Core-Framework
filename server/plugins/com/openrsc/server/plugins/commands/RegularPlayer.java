@@ -235,9 +235,8 @@ public final class RegularPlayer implements CommandListener {
 			return;
 		}
 		if (command.equals("onlinelist")) {
-			List<Player> onlinePlayers = ActionSender.sendOnlineList(player);
 			String boxTextPlayerNames = "";
-			for(Player p : onlinePlayers) {
+			for(Player p : World.getWorld().getPlayers()) {
 				boxTextPlayerNames += p.getUsername() + "%";
 			}
 			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames,true);
