@@ -1094,18 +1094,15 @@ public class ActionSender {
 		}
 	}
 
-	public static List<Player> sendOnlineList(Player player) {
-		List<Player> onlinePlayers = new ArrayList<Player>();
+	public static void sendOnlineList(Player player) {
 		PacketBuilder pb = new PacketBuilder(134);
 		pb.writeByte(5);
 		pb.writeShort(World.getWorld().getPlayers().size());
 		for (Player p : World.getWorld().getPlayers()) {
 			pb.writeString(p.getUsername());
 			pb.writeByte(p.getIcon());
-			onlinePlayers.add(p);
 		}
 		player.write(pb.toPacket());
-		return onlinePlayers;
 	}
 
 	public static void showFishingTrawlerInterface(Player p) {
