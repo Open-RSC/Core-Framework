@@ -43,7 +43,7 @@ ObjectActionExecutiveListener {
 							owner.teleport(425, 438);
 						}
 					} else {
-						owner.message("you need a level of 50 mining to clear the rockslide");
+						owner.message("You need a mining level of 50 to clear the rockslide");
 					}
 				} else {
 					owner.message("you need a pickaxe to clear the rockslide");
@@ -70,7 +70,7 @@ ObjectActionExecutiveListener {
 						return;
 					}
 					if(owner.getSkills().getMaxStat(14) < 40) {
-						owner.message("you need a level of 40 mining to mine this crystal out");
+						owner.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
 					if(hasItem(owner, 1154)) {
@@ -78,6 +78,9 @@ ObjectActionExecutiveListener {
 								"There is no benefit to getting another");
 						return;
 					}
+					owner.playSound("mine");
+					// special bronze pick bubble for rock of dalgroth - see wiki
+					showBubble(owner, new Item(156));
 					owner.message("You have a swing at the rock!");
 					message(owner, "You swing your pick at the rock...");
 					owner.message("A crack appears in the rock and you prize a crystal out");
@@ -87,6 +90,7 @@ ObjectActionExecutiveListener {
 						"Perhaps it is linked with the shaman some way ?");
 				}
 			} else if (command.equalsIgnoreCase("prospect")) {
+				owner.playSound("prospect");
 				message(owner, "You examine the rock for ores...");
 				owner.message("This rock contains a crystal!");
 			}
@@ -159,6 +163,7 @@ ObjectActionExecutiveListener {
 			return;
 		}
 		if (owner.click == 1) {
+			owner.playSound("prospect");
 			owner.setBusyTimer(1800);
 			owner.message("You examine the rock for ores...");
 			sleep(1800);
