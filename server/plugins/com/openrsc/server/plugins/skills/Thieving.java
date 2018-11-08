@@ -367,8 +367,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		sleep(1200);
 		player.message("You disable the trap");
 
-		openChest(obj);
-		replaceObject(obj, new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType()));
+		replaceObjectDelayed(obj, respawnTime, 339);
 
 		message(player, "You open the chest");
 		int random = DataConversions.random(1, 100);
@@ -380,7 +379,6 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		}
 		player.incExp(17, xp, true);
 		message(player, "You find treasure inside!");
-		World.getWorld().delayedSpawnObject(obj.getLoc(), respawnTime);
 		if (teleLoc != null) {
 			message(player, "suddenly a second magical trap triggers");
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
