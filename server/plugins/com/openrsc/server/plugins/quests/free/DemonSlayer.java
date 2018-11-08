@@ -142,28 +142,30 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 
 	private void captainRovinDialogue(Player p, Npc n, int cID) {
 		int questStage = p.getQuestStage(this);
-		npcTalk(p, n, "What are you doing up here?",
-				"Only palace guards are allowed up here");
-		String[] choices = new String[] {
-				"I am one of the palace guards",
-				"What about the king?"
-		};
-		if (questStage == 2)
-			choices = new String[] {"I am one of the palace guards",
-					"What about the king?",
-					"Yes I know but this important"
+		if (cID == -1) {
+			npcTalk(p, n, "What are you doing up here?",
+					"Only palace guards are allowed up here");
+			String[] choices = new String[] {
+					"I am one of the palace guards",
+					"What about the king?"
 			};
+			if (questStage == 2)
+				choices = new String[] {"I am one of the palace guards",
+						"What about the king?",
+						"Yes I know but this important"
+				};
 
-		int choice = showMenu(p, n, false, choices); // Do not send choice to client
-		if (choice == 0) {
-			playerTalk(p, n, "I am one of the palace guard");
-			captainRovinDialogue(p, n, CaptainRovin.PALACE);
-		} else if (choice == 1) {
-			playerTalk(p, n, "What about the king?");
-			captainRovinDialogue(p, n, CaptainRovin.KING);
-		} else if (choice == 2 && questStage > 1) {
-			playerTalk(p, n, "Yes I know but this important");
-			captainRovinDialogue(p, n, CaptainRovin.IMPORTANT);
+			int choice = showMenu(p, n, false, choices); // Do not send choice to client
+			if (choice == 0) {
+				playerTalk(p, n, "I am one of the palace guard");
+				captainRovinDialogue(p, n, CaptainRovin.PALACE);
+			} else if (choice == 1) {
+				playerTalk(p, n, "What about the king?");
+				captainRovinDialogue(p, n, CaptainRovin.KING);
+			} else if (choice == 2 && questStage > 1) {
+				playerTalk(p, n, "Yes I know but this important");
+				captainRovinDialogue(p, n, CaptainRovin.IMPORTANT);
+			}
 		}
 
 		switch (cID) {
@@ -194,7 +196,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			break;
 		case CaptainRovin.IMPORTANT:
 			npcTalk(p, n, "Ok, I'm listening", "Tell me what's so important");
-			choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n, new String[] {
 					"There's a demon who wants to invade this city",
 					"Erm I forgot",
 			"The castle has just received it's ale delivery" });
@@ -957,7 +959,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			npcTalk(p,
 					n,
 					"Wally managed to arrive at the stone circle",
-					"Just as Delrith was summoned by a cult of choas druids",
+					"Just as Delrith was summoned by a cult of chaos druids",
 					"By reciting the correct magical incantation",
 					"and thrusting Silverlight into Delrith, while he was newly summoned",
 					"Wally was able to imprison Delrith",
