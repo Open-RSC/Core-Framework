@@ -219,7 +219,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						"No, I'm having second thoughts.");
 				if(menu == 0) {
 					if(getCurrentLevel(p, STRENGTH) < 50) {
-						p.message("You are not that strong yet, you need at least level 50 in strength");
+						p.message("You need a Strength of at least 50 to affect these gates.");
 						return;
 					}
 					message(p, 1300, "You ripple your muscles...preparing too exert yourself...");
@@ -252,7 +252,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		if(inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (hasItem(p, Mining.getAxe(p))) {
 				if(getCurrentLevel(p, MINING) < 52) {
-					p.message("You need a mining level of 52 to smash the boulder");
+					p.message("You need a mining ability of at least 52 to affect these boulders.");
 					return;
 				}
 				if(Formulae.failCalculation(p, MINING, 50)) {
