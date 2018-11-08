@@ -103,6 +103,12 @@ public class ItemActionHandler implements PacketHandler {
 			case 387: // Disk of Returning
 				player.message("The disk doesn't seem to work here.");
 				break;
+			case 260: // burntpie
+				if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
+					player.message("You clean out the ruined pie");
+					player.getInventory().replace(item.getID(), 251);
+				}
+				break;
 			default:
 				player.message("Nothing interesting happens");
 				return;
