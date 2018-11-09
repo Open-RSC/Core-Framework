@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,8 +19,11 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListen
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
+
+import java.util.HashMap;
 
 public class SheepHerder implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, ObjectActionListener,
@@ -41,6 +45,8 @@ InvUseOnObjectExecutiveListener {
 	
 	public static final int GATE = 443;
 	public static final int CATTLE_FURNACE = 444;
+	
+	public static final HashMap<Npc, RestartableDelayedEvent> npcEventMap = new HashMap<Npc, RestartableDelayedEvent>();
 
 	@Override
 	public int getQuestId() {
@@ -101,9 +107,11 @@ InvUseOnObjectExecutiveListener {
 			case 0:
 				playerTalk(p, n, "how are you?");
 				npcTalk(p, n, "I've been better");
-				int menu = showMenu(p, n, "What's wrong?",
+				// do not send over
+				int menu = showMenu(p, n, false, "What's wrong?",
 						"That's life for you");
 				if (menu == 0) {
+					playerTalk(p, n, "What's wrong?");
 					npcTalk(p, n, "a plague has spread over west ardounge",
 							"apparently it's reasonably contained",
 							"but four infected sheep have escaped",
@@ -113,9 +121,10 @@ InvUseOnObjectExecutiveListener {
 							"herd them into a safe enclosure",
 							"then kill the sheep",
 							"their remains will also need to be disposed of safely in a furnace");
-					int menu2 = showMenu(p, n, "I can do that for you",
+					int menu2 = showMenu(p, n, false, "I can do that for you",
 							"That's not a job for me");
 					if (menu2 == 0) {
+						playerTalk(p, n, "i can do that for you");
 						npcTalk(p,
 								n,
 								"good, the enclosure is to the north of the city",
@@ -135,9 +144,13 @@ InvUseOnObjectExecutiveListener {
 						addItem(p, POISON, 1);
 						p.updateQuestStage(getQuestId(), 1);
 					} else if (menu2 == 1) {
+						playerTalk(p, n, "that's not a job for me");
 						npcTalk(p, n, "fair enough, it's not nice work");
 					}
-				} 
+				}
+				else if (menu == 1) {
+					playerTalk(p, n, "that's life for you");
+				}
 				break;
 			case 1:
 				npcTalk(p, n,
@@ -145,7 +158,7 @@ InvUseOnObjectExecutiveListener {
 						"every second counts");
 				if (!hasItem(p, POISON)) {
 					playerTalk(p, n, "Some more sheep poison might be useful");
-					message(p, "The councillor gives you some sheep poison");
+					message(p, "The councillor gives you some more sheep poison");
 					addItem(p, POISON, 1);
 				}
 				break;
@@ -253,6 +266,33 @@ InvUseOnObjectExecutiveListener {
 						return;
 					}
 					p.message("you nudge the sheep forward");
+					
+					RestartableDelayedEvent npcEvent = npcEventMap.get(plagueSheep);
+					//nudging outside of pen resets the timer
+					if(npcEvent == null) {
+						npcEvent = new RestartableDelayedEvent(p, 1000) {
+							int timesRan = 0;
+							@Override
+							public void run() {
+								if (timesRan > 60) {
+									plagueSheep.remove();
+									stop();
+									npcEventMap.remove(plagueSheep);
+								}
+								timesRan++;
+							}
+							@Override
+							public void reset() {
+								timesRan = 0;
+							}
+						};
+						npcEventMap.put(plagueSheep, npcEvent);
+						Server.getServer().getEventHandler().add(npcEvent);
+					}
+					else {
+						npcEvent.reset();
+					}
+					
 					switch(plagueSheep.getID()) {
 					case PLAGUE_SHEEP_1ST:
 						if (p.getY() >= 563) {
@@ -266,18 +306,6 @@ InvUseOnObjectExecutiveListener {
 							sheepYell(p);
 							p.message("the sheep jumps the gate into the enclosure");
 							teleport(plagueSheep, 590, 546);
-							Server.getServer().getEventHandler().add(
-									new DelayedEvent(p, 1000) {
-										int timesRan = 0;
-										@Override
-										public void run() {
-											if (timesRan > 60) {
-												plagueSheep.remove();
-												stop();
-											}
-											timesRan++;
-										}
-									});
 							return;
 						}
 						p.message("the sheep runs to the north");
@@ -301,18 +329,6 @@ InvUseOnObjectExecutiveListener {
 							sheepYell(p);
 							p.message("the sheep jumps the gate into the enclosure");
 							teleport(plagueSheep, 590, 546);
-							Server.getServer().getEventHandler().add(
-									new DelayedEvent(p, 1000) {
-										int timesRan = 0;
-										@Override
-										public void run() {
-											if (timesRan > 60) {
-												plagueSheep.remove();
-												stop();
-											}
-											timesRan++;
-										}
-									});
 							return;
 						}
 						p.message("the sheep runs to the north");
@@ -342,18 +358,6 @@ InvUseOnObjectExecutiveListener {
 							sheepYell(p);
 							p.message("the sheep jumps the gate into the enclosure");
 							teleport(plagueSheep, 590, 546);
-							Server.getServer().getEventHandler().add(
-									new DelayedEvent(p, 1000) {
-										int timesRan = 0;
-										@Override
-										public void run() {
-											if (timesRan > 60) {
-												plagueSheep.remove();
-												stop();
-											}
-											timesRan++;
-										}
-									});
 							return;
 						}
 						sheepYell(p);
@@ -381,7 +385,7 @@ InvUseOnObjectExecutiveListener {
 						} else if (plagueSheep.getY() > 575
 								&& plagueSheep.getY() < 585) {
 							p.message("the sheep runs to the north");
-							teleport(plagueSheep, 588, 572);
+							teleport(plagueSheep, 588, 570);
 							walkMob(plagueSheep, new Point(594, 578), new Point(595, 578));
 						} else if (plagueSheep.getY() > 567
 								&& plagueSheep.getY() < 576) {
@@ -402,22 +406,10 @@ InvUseOnObjectExecutiveListener {
 							p.message("the sheep runs to the northeast");
 							teleport(plagueSheep, 586, 539);
 							walkMob(plagueSheep, new Point(588, 549));
-						} else if (plagueSheep.getY() < 547) {
+						} else if (plagueSheep.getY() <= 548) {
 							sheepYell(p);
 							p.message("the sheep jumps the gate into the enclosure");
 							teleport(plagueSheep, 590, 546);
-							Server.getServer().getEventHandler().add(
-									new DelayedEvent(p, 1000) {
-										int timesRan = 0;
-										@Override
-										public void run() {
-											if (timesRan > 60) {
-												plagueSheep.remove();
-												stop();
-											}
-											timesRan++;
-										}
-									});
 							return;
 						}
 						sheepYell(p);
@@ -483,32 +475,47 @@ InvUseOnObjectExecutiveListener {
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == CATTLE_FURNACE) {
-			if (item.getID() == 758) {
-				removeItem(p, 758, 1);
-				if(!p.getCache().hasKey("plagueremain1st")) {
-					p.getCache().store("plagueremain1st", true);
+			if(DataConversions.inArray(new int[] {758, 762, 763, 764}, item.getID())) {
+				if(p.getQuestStage(this) != -1) {
+					if (item.getID() == 758) {
+						if(!p.getCache().hasKey("plagueremain1st")) {
+							p.getCache().store("plagueremain1st", true);
+							removeItem(p, 758, 1);
+						} else {
+							message(p, "You need to kill this sheep yourself");
+						}
+					}
+					else if (item.getID() == 762) {
+						if(!p.getCache().hasKey("plagueremain2nd")) {
+							p.getCache().store("plagueremain2nd", true);
+							removeItem(p, 762, 1);
+						} else {
+							message(p, "You need to kill this sheep yourself");
+						}
+					}
+					else if (item.getID() == 763) {
+						if(!p.getCache().hasKey("plagueremain3th")) {
+							p.getCache().store("plagueremain3th", true);
+							removeItem(p, 763, 1);
+						} else {
+							message(p, "You need to kill this sheep yourself");
+						}
+					}
+					else if (item.getID() == 764) {
+						if(!p.getCache().hasKey("plagueremain4th")) {
+							p.getCache().store("plagueremain4th", true);
+							removeItem(p, 764, 1);
+						} else {
+							message(p, "You need to kill this sheep yourself");
+						}
+					}
+					message(p, "you put the sheep remains in the furnace",
+							"the remains burn to dust");
+				}
+				else {
+					message(p, "You have already completed this quest");
 				}
 			}
-			if (item.getID() == 762) {
-				removeItem(p, 762, 1);
-				if(!p.getCache().hasKey("plagueremain2nd")) {
-					p.getCache().store("plagueremain2nd", true);
-				}
-			}
-			if (item.getID() == 763) {
-				removeItem(p, 763, 1);
-				if(!p.getCache().hasKey("plagueremain3th")) {
-					p.getCache().store("plagueremain3th", true);
-				}
-			}
-			if (item.getID() == 764) {
-				removeItem(p, 764, 1);
-				if(!p.getCache().hasKey("plagueremain4th")) {
-					p.getCache().store("plagueremain4th", true);
-				}
-			}
-			message(p, "you put the sheep remains in the furnace",
-					"the remains burn to dust");
 		}
 	}
 
