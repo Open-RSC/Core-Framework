@@ -413,9 +413,6 @@ InvUseOnObjectExecutiveListener {
 					"You need some thread to make anything out of leather");
 			return true;
 		}
-		if (DataConversions.random(0, 5) == 0) {
-			player.getInventory().remove(43, 1);
-		}
 		Server.getServer().getEventHandler().add(new MiniEvent(player) {
 			public void action() {
 				String[] options = new String[] { "Armour", "Gloves", "Boots",
@@ -456,6 +453,19 @@ InvUseOnObjectExecutiveListener {
 											+ result.getDef().getName());
 							owner.getInventory().add(result);
 							owner.incExp(12, exp, true);
+							//a reel of thread accounts for 5 uses
+							if(!owner.getCache().hasKey("part_reel_thread")) {
+								owner.getCache().set("part_reel_thread", 1);	
+							} else {
+								int parts = owner.getCache().getInt("part_reel_thread");	
+								if(parts >= 4) {
+									owner.message("You use up one of your reels of thread");
+									owner.getInventory().remove(43, 1);
+									owner.getCache().remove("part_reel_thread");
+								} else {
+									owner.getCache().put("part_reel_thread", parts + 1);
+								}
+							}
 						}
 					}
 				});
