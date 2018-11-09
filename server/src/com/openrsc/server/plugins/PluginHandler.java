@@ -118,7 +118,8 @@ public final class PluginHandler {
 
 	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
 	private Map<String, Set<Object>> executivePlugins = new HashMap<String, Set<Object>>();
-	private ExecutorService executor = Executors.newFixedThreadPool(2);
+	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+	// private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	private List<Class<?>> knownInterfaces = new ArrayList<Class<?>>();
 
@@ -389,7 +390,7 @@ public final class PluginHandler {
 
 		actionPlugins = new HashMap<String, Set<Object>>();
 		executivePlugins = new HashMap<String, Set<Object>>();
-		executor = Executors.newFixedThreadPool(2);
+		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 		knownInterfaces = new ArrayList<Class<?>>();
 		queue = new ConcurrentHashMap<String, Class<?>>();
 		defaultHandler = null;
