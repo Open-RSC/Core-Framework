@@ -60,6 +60,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				break;
 			case 2:
 			case 3:
+			case 4:
+			case -1:
+			//even post-quest was the same thing
 				if (item.getID() == 50) {
 					message(player,
 							"You pour the liquid down the drain");
@@ -110,10 +113,20 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				break;
 			case 2:
 			case 3:
+			case 4:
 				message(player, "This is the drainpipe",
 						"Running from the kitchen sink to the sewer",
 						"I can see a key just inside the drain",
 						"That must be the key Sir Prysin dropped",
+						"I don't seem to be able to quite reach it",
+						"It's stuck part way down",
+						"I wonder if I can dislodge it somehow",
+						"And knock it down into the sewers");
+				break;
+			case -1:
+				message(player, "This is the drainpipe",
+						"Running from the kitchen sink to the sewer",
+						"I can see a key just inside the drain",
 						"I don't seem to be able to quite reach it",
 						"It's stuck part way down",
 						"I wonder if I can dislodge it somehow",
@@ -149,7 +162,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"I am one of the palace guards",
 					"What about the king?"
 			};
-			if (questStage == 2)
+			if (questStage >= 2)
 				choices = new String[] {"I am one of the palace guards",
 						"What about the king?",
 						"Yes I know but this important"
@@ -276,50 +289,75 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					traibornTheWizDialogue(p, n, Traiborn.TEACHME);
 				}
 				break;
-			case 3:
-				npcTalk(p, n, "How are you doing finding bones?");
-				if (p.getInventory().countId(20) <= 0) {
-					playerTalk(p, n, "I haven't got any at the moment");
-					npcTalk(p, n, "Never mind. Keep working on it");
-					return;
+			//stage of not having obtained silverlight and having obtained it
+			case 3: case 4:
+				//key obtained, present in inventory
+				if(p.getInventory().hasItemId(25)) {
+					npcTalk(p, n, "Ello young thingummywut");
+					int choice3 = showMenu(p, n, new String[] {
+							"Whats a thingummywut?",
+							"Teach me to be a mighty and powerful wizard" });
+					if (choice3 == 0) {
+						traibornTheWizDialogue(p, n, Traiborn.THINGWUT);
+					} else if (choice3 == 1) {
+						traibornTheWizDialogue(p, n, Traiborn.TEACHME);
+					}
 				}
-				playerTalk(p, n, "I have some bones");
-				npcTalk(p, n, "Give 'em here then");
-				int boneCount = 0;
-				if (!p.getCache().hasKey("traiborn_bones"))
-					p.getCache().set("traiborn_bones", boneCount);
-				else
-					boneCount = p.getCache().getInt("traiborn_bones");
+				//cache of bone task done
+				else if(p.getCache().hasKey("done_bone_task")) {
+					playerTalk(p, n, "I've lost the key you gave me");
+					npcTalk(p, n, "Yes I know", "It was returned to me", 
+							"If you want it back",
+							"you're going to have to collect another 25 sets of bones");
+					//player needs to redo bone task
+					p.getCache().remove("done_bone_task");
+				}
+				else {
+					npcTalk(p, n, "How are you doing finding bones?");
+					if (p.getInventory().countId(20) <= 0) {
+						playerTalk(p, n, "I haven't got any at the moment");
+						npcTalk(p, n, "Never mind. Keep working on it");
+						return;
+					}
+					playerTalk(p, n, "I have some bones");
+					npcTalk(p, n, "Give 'em here then");
+					int boneCount = 0;
+					if (!p.getCache().hasKey("traiborn_bones"))
+						p.getCache().set("traiborn_bones", boneCount);
+					else
+						boneCount = p.getCache().getInt("traiborn_bones");
 
-				while (p.getInventory().countId(20) > 0) {
-					p.getInventory().remove(new Item(20));
-					p.message("You give Traiborn a set of bones");
-					boneCount++;
-					sleep(600);
-					if (boneCount >= 25)
-						break;
-				}
-				p.getCache().set("traiborn_bones", boneCount);
-				if (boneCount >= 25) {
-					npcTalk(p, n, "Hurrah! That's all 25 sets of bones");
-					message(p,
-							"Traiborn places the bones in a circle on the floor",
-							"Traiborn waves his arms about");
-					npcTalk(p, n, "Wings of dark and colour too",
-							"Spreading in the morning dew");
-					message(p, "The wizard waves his arms some more");
-					npcTalk(p, n, "Locked away I have a key",
-							"Return it now unto me");
-					message(p, "Traiborn smiles",
-							"Traiborn hands you a key");
-					p.getInventory().add(new Item(25, 1));
-					playerTalk(p, n, "Thank you very much");
-					npcTalk(p, n,
-							"Not a problem for a friend of sir what's-his-face");
-					p.getCache().remove("traiborn_bones");
-				} else {
-					npcTalk(p, n, "I still need more");
-					playerTalk(p, n, "Ok,  i'll look for some more");
+					while (p.getInventory().countId(20) > 0) {
+						p.getInventory().remove(new Item(20));
+						p.message("You give Traiborn a set of bones");
+						boneCount++;
+						sleep(600);
+						if (boneCount >= 25)
+							break;
+					}
+					p.getCache().set("traiborn_bones", boneCount);
+					if (boneCount >= 25) {
+						npcTalk(p, n, "Hurrah! That's all 25 sets of bones");
+						message(p,
+								"Traiborn places the bones in a circle on the floor",
+								"Traiborn waves his arms about");
+						npcTalk(p, n, "Wings of dark and colour too",
+								"Spreading in the morning dew");
+						message(p, "The wizard waves his arms some more");
+						npcTalk(p, n, "Locked away I have a key",
+								"Return it now unto me");
+						message(p, "Traiborn smiles",
+								"Traiborn hands you a key");
+						p.getInventory().add(new Item(25, 1));
+						p.getCache().store("done_bone_task", true);
+						playerTalk(p, n, "Thank you very much");
+						npcTalk(p, n,
+								"Not a problem for a friend of sir what's-his-face");
+						p.getCache().remove("traiborn_bones");
+					} else {
+						npcTalk(p, n, "I still need more");
+						playerTalk(p, n, "Ok,  i'll look for some more");
+					}
 				}
 				break;
 			case 2:
@@ -510,54 +548,61 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				}
 				break;
 			case 2:
-			case 3:
-				npcTalk(p, n, "So how are you doing with getting the keys?");
-				if (p.getInventory().hasItemId(26)
-						&& p.getInventory().hasItemId(25)
-						&& p.getInventory().hasItemId(51)) {
-					playerTalk(p, n, "I've got them all");
-					sirPrysinDialogue(p, n, SirPrysin.GOT_THEM);
-					return;
-				} else if (!p.getInventory().hasItemId(26)
-						&& !p.getInventory().hasItemId(25)
-						&& !p.getInventory().hasItemId(51)) {
-					playerTalk(p, n, "I've not found any of them yet");
-				}
-				if (p.getInventory().hasItemId(26)) {
-					playerTalk(p, n, "I've got the key off wizard traiborn");
-				}
-				if (p.getInventory().hasItemId(25)) {
-					playerTalk(p, n, "I've got the key off captain rovin");
-				}
-				if (p.getInventory().hasItemId(51)) {
-					playerTalk(p, n,
-							"I've got the key you dropped down the drain");
-				}
-				choice = showMenu(p, n, new String[] {
-						"Can you remind me where all the keys were again?",
-				"I'm still looking" });
-				if (choice == 0) {
-					npcTalk(p, n, "Sure, which one do you wantto know about?");
-					choice = showMenu(p, n, new String[] {
-							"Can you give me your key?",
-							"Where can I find Captain Rovin?",
-					"Where does the wizard live?" });
-					if (choice == 0) {
-						sirPrysinDialogue(p, n, SirPrysin.YOUR_KEY);
-					} else if (choice == 1) {
-						sirPrysinDialogue(p, n, SirPrysin.ROVIN);
-					} else if (choice == 2) {
-						sirPrysinDialogue(p, n, SirPrysin.WIZARD);
+			case 3: case 4:
+				//if silverlight is lost, player needs to regain keys
+				if(!p.getInventory().hasItemId(52)) {
+					npcTalk(p, n, "So how are you doing with getting the keys?");
+					if (p.getInventory().hasItemId(26)
+							&& p.getInventory().hasItemId(25)
+							&& p.getInventory().hasItemId(51)) {
+						playerTalk(p, n, "I've got them all");
+						sirPrysinDialogue(p, n, SirPrysin.GOT_THEM);
+						return;
+					} else if (!p.getInventory().hasItemId(26)
+							&& !p.getInventory().hasItemId(25)
+							&& !p.getInventory().hasItemId(51)) {
+						playerTalk(p, n, "I've not found any of them yet");
 					}
-				} else if (choice == 1) {
-					npcTalk(p, n, "Ok, tell me when you've got them all");
+					if (p.getInventory().hasItemId(26)) {
+						playerTalk(p, n, "I've got the key off wizard traiborn");
+					}
+					if (p.getInventory().hasItemId(25)) {
+						playerTalk(p, n, "I've got the key off captain rovin");
+					}
+					if (p.getInventory().hasItemId(51)) {
+						playerTalk(p, n,
+								"I've got the key you dropped down the drain");
+					}
+					choice = showMenu(p, n, false, new String[] {
+							"Can you remind me where all the keys were again?",
+					"I'm still looking" });
+					if (choice == 0) {
+						playerTalk(p, n, "Can you remind me where all the keys were again");
+						npcTalk(p, n, "I kept one of the keys", "I gave the other two", 
+								"To other people for safe keeping", "One I gave to Rovin", 
+								"who is captain of the palace guard", "I gave the other to the wizard Traiborn");
+						choice = showMenu(p, n, new String[] {
+								"Can you give me your key?",
+								"Where can I find Captain Rovin?",
+						"Where does the wizard live?" });
+						if (choice == 0) {
+							sirPrysinDialogue(p, n, SirPrysin.YOUR_KEY);
+						} else if (choice == 1) {
+							sirPrysinDialogue(p, n, SirPrysin.ROVIN);
+						} else if (choice == 2) {
+							sirPrysinDialogue(p, n, SirPrysin.WIZARD);
+						}
+					} else if (choice == 1) {
+						playerTalk(p, n, "I'm still looking");
+						npcTalk(p, n, "Ok, tell me when you've got them all");
+					}
 				}
-				break;
-			case 4:
-				npcTalk(p, n, "You sorted that demon yet?");
-				playerTalk(p, n, "No, not yet");
-				npcTalk(p, n, "Well get on with it",
-						"He'll be powerful when he gets to full strength");
+				else {
+					npcTalk(p, n, "You sorted that demon yet?");
+					playerTalk(p, n, "No, not yet");
+					npcTalk(p, n, "Well get on with it",
+							"He'll be powerful when he gets to full strength");
+				}
 				break;
 			case -1:
 				npcTalk(p, n,
@@ -1096,6 +1141,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						n.killedBy(p);
 						n.remove();
 						if(p.getQuestStage(Constants.Quests.DEMON_SLAYER) != -1) {
+							//remove flags in case they are present with drop trick
+							p.getCache().remove("done_bone_task");
+							p.getCache().remove("traiborn_bones");
 							p.sendQuestComplete(getQuestId());
 						}
 					} else {
@@ -1116,6 +1164,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 
 		return false;
 	}
+	
 	class GypsyConversation {
 		public static final int INTRO = 0;
 		public static final int QUEST_START = 1;
