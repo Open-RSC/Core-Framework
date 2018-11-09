@@ -157,7 +157,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		int questStage = p.getQuestStage(this);
 		if (cID == -1) {
 			npcTalk(p, n, "What are you doing up here?",
-					"Only palace guards are allowed up here");
+					"Only the palace guards are allowed up here");
 			String[] choices = new String[] {
 					"I am one of the palace guards",
 					"What about the king?"
@@ -185,7 +185,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		case CaptainRovin.PALACE:
 			npcTalk(p, n, "No, you're not. I know all the palace guard");
 			int choice2 = showMenu(p, n, new String[] { "I'm a new recruit",
-			"I have had extensive plastic surgery" });
+			"I've had extensive plastic surgery" });
 			if (choice2 == 0) {
 				captainRovinDialogue(p, n, CaptainRovin.RECRUIT);
 			} else if (choice2 == 1) {
@@ -250,7 +250,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		case CaptainRovin.RECRUIT:
 			npcTalk(p, n, "I interview all the new recruits",
 					"I'd know if you were one of them");
-			playerTalk(p, n, "That blows that story out the window then");
+			playerTalk(p, n, "That blows that story out of the window then");
 			npcTalk(p, n, "Get out of my sight");
 			break;
 		}
@@ -355,8 +355,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 								"Not a problem for a friend of sir what's-his-face");
 						p.getCache().remove("traiborn_bones");
 					} else {
+						playerTalk(p, n, "That's all of them");
 						npcTalk(p, n, "I still need more");
-						playerTalk(p, n, "Ok,  i'll look for some more");
+						playerTalk(p, n, "Ok, I'll look for some more");
 					}
 				}
 				break;
@@ -451,7 +452,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"So aren't you a wizard?",
 			"Oh I'd better stop talking to you then" }); // Don't send to client
 			if (choice4 == 0) {
-				playerTalk(p, n, "So you aren't a wizard");
+				playerTalk(p, n, "So aren't you a wizard");
 				npcTalk(p, n, "How dare you?", "Of course I'm a wizard",
 						"Now don't be so cheeky or I'll turn you into a frog");
 			} else if (choice4 == 1) {
@@ -511,7 +512,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			}
 			break;
 		case Traiborn.BONES:
-			npcTalk(p, n, "Ooh that would be very good of you");
+			npcTalk(p, n, "Ooh that would very good of you");
 			playerTalk(p, n, "Ok I'll speak to you when I've got some bones");
 			p.updateQuestStage(this, 3);
 			break;
@@ -563,15 +564,18 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 							&& !p.getInventory().hasItemId(51)) {
 						playerTalk(p, n, "I've not found any of them yet");
 					}
+					else {
+						playerTalk(p, n, "I've made a start");
+					}
 					if (p.getInventory().hasItemId(26)) {
-						playerTalk(p, n, "I've got the key off wizard traiborn");
+						playerTalk(p, n, "I've got the key off Wizard Traiborn");
 					}
 					if (p.getInventory().hasItemId(25)) {
-						playerTalk(p, n, "I've got the key off captain rovin");
+						playerTalk(p, n, "I've got the key off Captain Rovin");
 					}
 					if (p.getInventory().hasItemId(51)) {
 						playerTalk(p, n,
-								"I've got the key you dropped down the drain");
+								"I've got the key You dropped down the drain");
 					}
 					choice = showMenu(p, n, false, new String[] {
 							"Can you remind me where all the keys were again?",
@@ -601,7 +605,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					npcTalk(p, n, "You sorted that demon yet?");
 					playerTalk(p, n, "No, not yet");
 					npcTalk(p, n, "Well get on with it",
-							"He'll be powerful when he gets to full strength");
+							"He'll be pretty powerful when he gets to full strength");
 				}
 				break;
 			case -1:
@@ -797,18 +801,19 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				}
 				break;
 			case 2:
-			case 3:
+			case 3: case 4:
 				npcTalk(p, n, "How goes the quest?");
-				playerTalk(p, n,
-						"I found sir prysin. Unfortunately, i haven't got the sword yet");
-				playerTalk(p, n, "He's made it complicated for me!");
-				npcTalk(p, n, "Ok, hurry, we haven't much time");
-				break;
-			case 4:
-				npcTalk(p, n, "How goes the quest?");
-				playerTalk(p, n,
-						"I have the sword, now. I just need to kill the demon I think");
-				npcTalk(p, n, "Yep, that's right");
+				if(!p.getInventory().hasItemId(52)) {
+					playerTalk(p, n,
+							"I found Sir Prysin. Unfortunately, I haven't got the sword yet");
+					playerTalk(p, n, "He's made it complicated for me!");
+					npcTalk(p, n, "Ok, hurry, we haven't much time");
+				}
+				else {
+					playerTalk(p, n,
+							"I have the sword, now. I just need to kill the demon I think");
+					npcTalk(p, n, "Yep, that's right");
+				}
 				break;
 			case -1:
 				npcTalk(p, n, "Greetings young one", "You're a hero now",
@@ -937,7 +942,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					gypsyDialogue(p, n, GypsyConversation.WHO_IS_DELRITH);
 				}
 				else if (choice == 1) {
-					npcTalk(p, n, "I didn't expect to see Delrith",
+					npcTalk(p, n, "Sorry. I didn't expect to see Delrith",
 							"I had to break away quickly in case he detected me");
 					playerTalk(p, n, "Who's Delrith?");
 					gypsyDialogue(p, n, GypsyConversation.WHO_IS_DELRITH);
@@ -1053,7 +1058,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			npcTalk(p,
 					n,
 					"Yes I know. Maybe that is why history doesn't remember him",
-					"However he was a very great hero",
+					"However he was a very great hero.",
 					"Who knows how much pain and suffering",
 					"Delrith would have brought forth without Wally to stop him",
 					"It looks like you are going to need to perform similar heroics");
