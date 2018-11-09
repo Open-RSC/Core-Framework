@@ -105,7 +105,7 @@ public class ItemActionHandler implements PacketHandler {
 				break;
 			case 260: // burntpie
 				if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
-					player.message("You clean out the ruined pie");
+					player.message("you remove the burnt pie from the pie dish");
 					player.getInventory().replace(item.getID(), 251);
 				}
 				break;
