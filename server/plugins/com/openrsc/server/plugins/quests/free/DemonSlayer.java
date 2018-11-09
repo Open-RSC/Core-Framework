@@ -321,6 +321,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					npcTalk(p, n, "I still need more");
 					playerTalk(p, n, "Ok,  i'll look for some more");
 				}
+				break;
 			case 2:
 				npcTalk(p, n, "Ello young thingummywut");
 				int choice4;
@@ -559,36 +560,11 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						"He'll be powerful when he gets to full strength");
 				break;
 			case -1:
-				if (p.getBank().contains(new Item(52))
-						|| p.getInventory().contains(new Item(52))) {
-					npcTalk(p, n,
-							"Hello. I've heard you stopped the demon well done");
-					playerTalk(p, n, "Yes, that's right");
-					npcTalk(p, n, "A good job well done then");
-					playerTalk(p, n, "Thank you");
-
-				} else {
-					npcTalk(p, n, "Hello it appears you lost your Silverlight",
-							"Would you like to purchase a new one?");
-					int menu = showMenu(p, n, "Yes, I would like to purchase one", "No thank you");
-					if(menu == 0) {
-						npcTalk(p, n, "It will cost you 500 coins");
-						int secondaryMenu = showMenu(p, n, "Ok", "I changed my mind");
-						if(secondaryMenu == 0) {
-							if(hasItem(p, 10, 500)) { // do we have 500gp in inventory?
-								message(p, "You give the gold to Sir Prysin");
-								removeItem(p, 10, 500);
-								p.message("Sir prysin gives you the Silverlight");
-								addItem(p, 52, 1);
-								npcTalk(p, n, "Here you go! Take care of it this time");
-							} else {
-								playerTalk(p, n, "Sorry, I don't have enough gold");
-							}
-						}
-					} else if(menu == 1) {
-						npcTalk(p, n, "Farewell");
-					}
-				}
+				npcTalk(p, n,
+						"Hello. I've heard you stopped the demon well done");
+				playerTalk(p, n, "Yes, that's right");
+				npcTalk(p, n, "A good job well done then");
+				playerTalk(p, n, "Thank you");
 				break;
 			}
 		}
