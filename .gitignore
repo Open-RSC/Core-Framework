@@ -1,152 +1,37 @@
-!Launcher/src/data/*
 
-#ant specific
-*/dist/
-*/build/
+\.DS_Store
+.idea/
 
-#java specific
-*.class
+client/\.idea/
+client/\.gradle/
+client/build/
+client/*.jar
+client/out/
 
-#general swap/backup files
-*.so
-*.log
-*.out
-*~
-*.swp
-*.DS_Store
-*.lock
-*.svn
-
-server/Open_RSC_Server.jar
-html/cache/*
-!html/cache/.htaccess
-/Tools/RSC Map Generator/build/
-/Tools/RSC Map Generator/dist/
-/Tools/Sprite Editor/build/
-/Tools/Sprite Editor/dist/
-
-client/Open_RSC_Client\.jar
-
-# IntelliJ
-out/
-
-server/objects\.dat
-server/npcs\.dat
-server/items\.dat
-
-Tools/RSC Map Generator/map\.png
-
-*/.gradle/*
-
-Tools/Sprite Editor/unpack/*.spr
-Tools/Sprite Editor/unpack/*.png
-/Launcher/`/private/
-/Client/nbproject/private/
-Android_Client/\.settings/
-
-server/avatars/*.png
 Launcher/Cache/
+Launcher/.idea/
+Launcher/*.jar
+Launcher/out/
 
-# We need these or the launcher will loop
-!client/Cache/uid\.dat
-!client/Cache/client\.properties
+server/avatars/
+server/*.jar
+server/.gradle/
+server/.idea/
+server/build/
+server/out/
 
-# Global
-.*.swp
-.DS_Store
+db/
 
-nbproject/
-\.idea/
-*.svn-base
-\.svn/
+Tools/RSC Map Generator/dist/
+Tools/Sprite Editor/unpack/
+Tools/Sprite Editor/spriteeditor.jar
+Tools/Sprite Editor/nbproject/
+Tools/RSC Map Generator/map.png
 
-# Website
-Website
+build/
+Website/
 
-# Wiki
-Wiki
+etc/nginx/logs/*.log
+gameserver.log
 
-# Database
-data/
-
-# SSL Certs
-etc/ssl/
-
-get-docker\.sh
-
-etc/nginx/logs/*
-!etc/nginx/logs/empty
-
-Splunk/opt-splunk-etc/*
-!Splunk/opt-splunk-etc/empty
-
-Splunk/opt-splunk-var/*
-!Splunk/opt-splunk-var/empty
-
-*.log
-
-etc/logs/nginx/*.log
-etc/logs/letsencrypt/*
-etc/ghost/logs/*.log
-etc/ghost/logs/*.log.*
-!etc/ghost/content/data/
-!etc/ghost/content/logs
-etc/ghost/content/data/\.DS_Store
-etc/ghost/content/logs/*.log.*
-etc/ghost/content/data/ghost\.db
-
-Tools/Sprite Editor/unpack/dat/
-Tools/Sprite Editor/unpack/img/
-Tools/Sprite Editor/spriteeditor\.jar
-
-server/core\.jar
-server/plugins\.jar
-
-Docker\.dmg
-\.domain
-\.pass
-\.port
-\.email
-\.subdomain
-\.installedalready
-\.methodinstall
-
-Android/Open RSC Android Client/build/intermediates
-Android/Open RSC Android Client/build/outputs/apk/debug/
-*.dex
-Android/app/build/outputs/apk/debug/
-Android/local\.properties
-Android/\.idea/caches/
-
-Tools/Map Generator/build/
-Tools/Map Generator/dist/
-Tools/Map Generator/map\.png
-Tools/Map Generator/spriteeditor\.jar
-
-client/Cache/client\.properties
-
-Server/gradle/
-
-server/gradlew\.bat
-
-server/gradlew
-
-Launcher/gradlew
-
-Launcher/gradlew\.bat
-
-Launcher/gradle/
-
-Client/gradle/
-
-client/gradlew\.bat
-
-client/nbbuild\.xml
-
-Launcher/nbbuild\.xml
-
-server/nbbuild\.xml
-
-Launcher/Open_RSC_Launcher\.jar
-
-Launcher/OpenRSC\.jar
+Client/Cache/client\.properties

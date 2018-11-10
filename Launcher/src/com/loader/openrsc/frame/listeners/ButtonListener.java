@@ -15,7 +15,7 @@ public class ButtonListener implements ActionListener {
         final String action = event.getActionCommand().toLowerCase();
         switch (action) {
             case "forum": {
-                Utils.openWebpage(Constants.BASE_URL + "/elite/board");
+                Utils.openWebpage(Constants.BASE_URL + "board");
                 return;
             }
             case "bug reports": {
@@ -27,7 +27,7 @@ public class ButtonListener implements ActionListener {
                 return;
             }
             case "discord": {
-                Utils.openWebpage("https://discord.gg/atX3Ruy");
+                Utils.openWebpage("https://discord.gg/94vVKND");
                 return;
             }
             case "github": {
