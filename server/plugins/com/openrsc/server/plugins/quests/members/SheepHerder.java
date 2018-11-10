@@ -68,7 +68,6 @@ InvUseOnObjectExecutiveListener {
 		p.message("well done, you have completed the Plaguesheep quest");
 		p.incQuestPoints(4);
 		p.message("@gre@You haved gained 4 quest points!");
-		addItem(p, 10, 3100);
 	}
 
 	@Override
@@ -179,6 +178,11 @@ InvUseOnObjectExecutiveListener {
 					p.getCache().remove("plagueremain3th");
 					p.getCache().remove("plagueremain4th");
 					p.sendQuestComplete(Constants.Quests.SHEEP_HERDER);
+					addItem(p, 10, 3100);
+					npcTalk(p, n, "here take one hundred coins to cover the price of your protective clothing");
+					message(p, "halgrive gives you 100 coins");
+					npcTalk(p, n, "and another three thousand for your efforts");
+					message(p, "halgrive gives you another 3000 coins");
 				} else {
 					playerTalk(p, n, "erm not quite");
 					npcTalk(p, n, "not quite's not good enough",
