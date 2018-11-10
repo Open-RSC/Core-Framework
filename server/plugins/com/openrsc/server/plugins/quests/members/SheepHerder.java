@@ -483,6 +483,7 @@ InvUseOnObjectExecutiveListener {
 							removeItem(p, 758, 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
+							return;
 						}
 					}
 					else if (item.getID() == 762) {
@@ -491,6 +492,7 @@ InvUseOnObjectExecutiveListener {
 							removeItem(p, 762, 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
+							return;
 						}
 					}
 					else if (item.getID() == 763) {
@@ -499,6 +501,7 @@ InvUseOnObjectExecutiveListener {
 							removeItem(p, 763, 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
+							return;
 						}
 					}
 					else if (item.getID() == 764) {
@@ -507,6 +510,7 @@ InvUseOnObjectExecutiveListener {
 							removeItem(p, 764, 1);
 						} else {
 							message(p, "You need to kill this sheep yourself");
+							return;
 						}
 					}
 					message(p, "you put the sheep remains in the furnace",
@@ -515,6 +519,8 @@ InvUseOnObjectExecutiveListener {
 				else {
 					message(p, "You have already completed this quest");
 				}
+			} else {
+				message(p, "Nothing interesting happens");
 			}
 		}
 	}
