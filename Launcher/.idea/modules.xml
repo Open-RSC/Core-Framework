@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Launcher.iml" filepath="$PROJECT_DIR$/.idea/modules/Launcher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/OpenRSC - Launcher.iml" filepath="$PROJECT_DIR$/OpenRSC - Launcher.iml" />
     </modules>
   </component>
 </project>
