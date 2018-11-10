@@ -484,15 +484,19 @@ InvUseOnObjectExecutiveListener {
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		Cache c = p.getCache();// you created a new cache w hen u needed to
-		// refer this one to the players cache.hahaa
+		Cache c = p.getCache();
 		switch (obj.getID()) {
 		case 35:
-			p.message("The door is locked.");
+			if (p.getX() == 211 && p.getY() == 545) {
+				doDoor(obj, p);
+				p.message("You go through the door");
+			}
+			else {
+				p.message("The door is locked.");
+			}
 			break;
 		case 36:
 			if (p.getY() >= 553) {
-				/* Might be the reason why Rubber Tube was disappearing. */
 				doDoor(obj, p);
 				sleep(3000);
 				p.message("The door slams behind you!");
