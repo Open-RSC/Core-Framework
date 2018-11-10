@@ -437,27 +437,27 @@ public class Npc extends Mob {
 						if (!EntityHandler.getItemDef(dropID).isStackable()) {
 
 
-							// Herb Drop Table
-							if (drop.getID() == 165) {
-								dropID = Formulae.calculateHerbDrop();
-							}
 
 							// Rare Drop Table
-							else if (drop.getID() == 160) {
+							if (drop.getID() == 160) {
 								dropID = Formulae.calculateRareDrop();
 								amount = 1;
-							} else {
-
 							}
 
 							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
 								owner, this, dropID, amount);
-							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-							groundItem.setAttribute("npcdrop", true);
+							GroundItem groundItem;
 
 							// We need to drop multiple counts of "1" item if it's not a stack
-							for (int count = 0; count < amount; count++)
+							for (int count = 0; count < amount; count++) {
+								// Herb Drop Table
+								if (drop.getID() == 165) {
+									dropID = Formulae.calculateHerbDrop();
+								}
+								groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+								groundItem.setAttribute("npcdrop", true);
 								world.registerItem(groundItem);
+							}
 
 						} else {
 
