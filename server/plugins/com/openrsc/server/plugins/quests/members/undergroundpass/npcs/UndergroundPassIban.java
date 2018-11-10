@@ -13,10 +13,11 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 
 	public static int PIT_OF_THE_DAMNED = 913;
 	public static int IBAN = 649;
+	public static int IBAN_DOLL = 1004;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if(obj.getID() == PIT_OF_THE_DAMNED) {
+		if(obj.getID() == PIT_OF_THE_DAMNED && item.getID() == IBAN_DOLL) {
 			return true;
 		}
 		return false;
@@ -31,6 +32,7 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 					&& p.getCache().hasKey("shadow_on_doll")) {
 				Npc iban = getNearestNpc(p, IBAN, 10);
 				message(p, "you throw the doll of iban into the pit");
+				removeItem(p, new Item(IBAN_DOLL, 1));
 				if(iban != null) {
 					p.setAttribute("iban_bubble_show", true);
 					npcTalk(p,iban, "what's happening?, it's dark here...so dark",
