@@ -611,7 +611,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			int choice = showMenu(p, n, new String[] {
 					"I need to find Silverlight", "Yes, she is still alive" });
 			if (choice == 0) {}
-			if (choice == 1) {
+			else if (choice == 1) {
 				npcTalk(p, n,
 						"I would have thought she would have died by now",
 						"She was pretty old, when I was a lad",
