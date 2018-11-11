@@ -22,6 +22,10 @@ public final class Constants {
 		 * the servers name
 		 */
 		public static String SERVER_NAME = "Open RSC";
+        /**
+         * Server prefix for messages
+         */
+        public static String MESSAGE_PREFIX = "@gre@OpenRSC:@whi@ ";
 		/**
 		 * whether or not this is a members world
 		 */

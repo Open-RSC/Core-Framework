@@ -149,6 +149,16 @@ public final class Player extends Mob {
 	public void incAppearanceID() {
 		appearanceID++;
 	}
+    
+    private long lastCommand;
+    
+	public void setLastCommand(long newTime) {
+		this.lastCommand = newTime;
+	}
+	
+	public long getLastCommand() {
+		return lastCommand;
+	}
 
 	public boolean requiresAppearanceUpdateFor(Player p) {
 		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
