@@ -2688,7 +2688,7 @@ public final class mudclient implements Runnable {
 						var2 = 0;
 						while (this.optionsMenuCount > var2) {
 							int var3 = '\uffff';
-							if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2])
+							if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9
 									&& this.mouseY > 5 + var2 * 12 && this.mouseY < 5 + var2 * 12 + 12) {
 								var3 = 0xFF0000;
 							}
@@ -2700,7 +2700,7 @@ public final class mudclient implements Runnable {
 						}
 					} else {
 						for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
-							if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) > this.mouseX
+							if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9 > this.mouseX
 									&& 5 + var2 * 12 < this.mouseY && 5 + 12 + var2 * 12 > this.mouseY) {
 								this.getClientStream().newPacket(116);
 								this.getClientStream().writeBuffer1.putByte(var2);
@@ -8030,7 +8030,7 @@ public final class mudclient implements Runnable {
 					for (questNum = 0; questNum < 50; ++questNum) {
 						if (this.questNames[questNum] != null) {
 							this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
-									(questStages[questNum] == -1 ? "@gre@" : "@red@")//questStages[questNum] > 0 ? "@yel@" : "@gre@")
+									(questStages[questNum] < 0 ? "@gre@" : "@red@")//questStages[questNum] > 0 ? "@yel@" : "@gre@")
 									+ this.questNames[questNum],
 									0, (String) null, (String) null);
 						}
