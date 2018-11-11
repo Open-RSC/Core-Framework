@@ -90,9 +90,30 @@
 		</java>
 	</target>
 
-    <target name="compile-and-run">
-        <antcall target="compile_core"/>
-        <antcall target="compile_plugins"/>
-        <antcall target="runservermembers"/>
-    </target>
+	<target name="runserverslothscape">
+		<java classname="com.openrsc.server.Server" fork="true">
+			<arg value="slothscape.conf" />
+			<jvmarg line="-XX:+AggressiveOpts -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+			<classpath>
+				<pathelement location="${lib}/netty-all-4.1.8.Final.jar" />
+				<pathelement location="${lib}/disruptor-3.3.0.jar" />
+				<pathelement location="${lib}/log4j-api-2.8.jar" />
+				<pathelement location="${lib}/log4j-core-2.8.jar" />
+				<pathelement location="${lib}/xpp3_min-1.1.4c.jar" />
+				<pathelement location="${lib}/xpp3-1.1.4c.jar" />
+				<pathelement location="${lib}/xstream-1.4.9.jar"/>
+				<pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar" />
+				<pathelement location="${lib}/disruptor-3.3.5.jar" />
+				<pathelement location="${lib}/commons-lang-2.6.jar" />
+				<pathelement location="${lib}/*" />
+				<pathelement path="${jar}/" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="compile-and-run">
+	        <antcall target="compile_core"/>
+	        <antcall target="compile_plugins"/>
+        	<antcall target="runservermembers"/>
+	</target>
 </project>
