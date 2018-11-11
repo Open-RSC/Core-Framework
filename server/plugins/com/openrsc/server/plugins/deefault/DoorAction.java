@@ -819,21 +819,24 @@ public class DoorAction {
 	 */
 
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if(obj.getID() == 23 && item.getID() == 99) {
-			player.message("You unlock the door and go through it");
-			doDoor(obj, player);
-			return;
-		}
 		int keyItem = -1;
 		boolean remove = false;
+		boolean showsBubble = false;
 		switch (obj.getID()) {
+		//Brass key
+		case 23:
+			keyItem = 99;
+			showsBubble = true;
+			break;
 		/* Ernest the Chicken */
 		case 35:
 			keyItem = 212;
+			showsBubble = true;
 			break;
 			/* Shield of Arrav - Phoenix Door */
 		case 20:
 			keyItem = 48;
+			showsBubble = true;
 			break;
 			/* End of shield of arrav */
 
@@ -842,56 +845,76 @@ public class DoorAction {
 			if(player.getCache().hasKey("witch_spawned")) {
 				player.getCache().remove("witch_spawned");
 			}
+			showsBubble = false;
 			break;
+		//Jail door in Taverley Dungeon
 		case 83:
 			keyItem = 595;
+			showsBubble = true;
 			break;
+		//Dusty key
 		case 84:
 			keyItem = 596;
+			showsBubble = true;
 			break;
 
 			/* Dragon Slayer maze doors */
 		case 48: /* Red door */
 			keyItem = 390;
 			remove = true;
+			showsBubble = false;
 			break;
 		case 49: /* Orange door */
 			keyItem = 391;
 			remove = true;
+			showsBubble = false;
 			break;
 		case 50: /* Yellow door */
 			keyItem = 392;
 			remove = true;
+			showsBubble = false;
 			break;
 		case 51: /* Blue door */
 			keyItem = 393;
 			remove = true;
+			showsBubble = false;
 			break;
 		case 53: /* Magenta door */
 			keyItem = 394;
 			remove = true;
+			showsBubble = false;
 			break;
 		case 52: /* Black door */
 			keyItem = 395;
 			remove = true;
+			showsBubble = false;
 			break;
 		case 60: /* Maze entrace */
 			keyItem = 421;
 			remove = false;
+			showsBubble = false;
 			break;
+			/* End of dragon slayer maze */
+		// Temple of Ikov
 		case 110:
 			keyItem = 732;
 			remove = false;
+			showsBubble = true;
 			break;
-			/* End of dragon slayer maze */
 		}
 		if (player.getInventory().hasItemId(keyItem) && item.getID() == keyItem) {
-			showBubble(player, item);
+			if(showsBubble) {
+				showBubble(player, item);
+			}
 			player.message("you unlock the door");
 			doDoor(obj, player);
 			player.message("you go through the door");
 			if (remove) {
+				player.message("Your " + item.getDef().getName().toLowerCase() + " has gone!");
 				player.getInventory().remove(keyItem, 1);
+				if(obj.getID() == 52) {
+					player.getCache().store("melzar_unlocked", true);
+				}
 			}
 		} else {
 			player.message("Nothing interesting happens");

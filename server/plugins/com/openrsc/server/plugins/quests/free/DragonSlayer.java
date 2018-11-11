@@ -290,17 +290,23 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 		case 230:
-			if (!hasItem(p, 418, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+			//kosher: could not "drop trick" easy, had to re-enter the door for another piece
+			if (!hasItem(p, 418, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2 
+				&& p.getCache().hasKey("dwarven_unlocked")) {
 				addItem(p, 418, 1);
 				p.message("You find a piece of map in the chest");
+				p.getCache().remove("dwarven_unlocked");
 			} else {
 				p.message("You find nothing in the chest");
 			}
 			break;
 		case 228:
-			if (!hasItem(p, 417, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+			//kosher: could not "drop trick" easy, had to re-enter the door for another piece
+			if (!hasItem(p, 417, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2 
+				&& p.getCache().hasKey("melzar_unlocked")) {
 				addItem(p, 417, 1);
 				p.message("You find a piece of map in the chest");
+				p.getCache().remove("melzar_unlocked");
 			} else {
 				p.message("You find nothing in the chest");
 			}
@@ -392,6 +398,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 57) {
+			//special door dwarven mine
 			if (p.getX() >= 259 && hasItem(p, 268, 1) && hasItem(p, 200, 1) && hasItem(p, 375, 1) && hasItem(p, 340)) {
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
@@ -400,6 +407,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 					removeItem(p, 200, 1);
 					removeItem(p, 375, 1);
 					removeItem(p, 340, 1);
+					p.getCache().store("dwarven_unlocked", true);
 				} 
 			} 
 			else if(p.getX() <= 258) {

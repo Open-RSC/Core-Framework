@@ -66,6 +66,12 @@ public final class NedInShip implements TalkToNpcExecutiveListener,
 				p.getCache().remove("ship_fixed");
 				npcTalk(p, n, "Aha we've arrived");
 				p.updateQuestStage(Quests.DRAGON_SLAYER, 3);
+				if(p.getCache().hasKey("dwarven_unlocked")) {
+					p.getCache().remove("dwarven_unlocked");
+				}
+				if(p.getCache().hasKey("melzar_unlocked")) {
+					p.getCache().remove("melzar_unlocked");
+				}
 			}
 		} else if (opt == 1) {
 			npcTalk(p, n, "Well I am a tad rusty",
