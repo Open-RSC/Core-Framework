@@ -259,21 +259,25 @@ public final class PluginHandler {
 		ArrayList<Class<?>> loadedClassFiles = new ArrayList<Class<?>>();
 
 		String pathToJar = "./plugins.jar";
-		JarFile jarFile = new JarFile(pathToJar);
-		URL[] urls = { new URL("jar:file:" + pathToJar + "!/") };
-		urlClassLoader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
+        boolean jarExists   = new File(pathToJar).isFile();
+        if(jarExists)
+        {
+            JarFile jarFile = new JarFile(pathToJar);
+            URL[] urls = { new URL("jar:file:" + pathToJar + "!/") };
+            urlClassLoader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
 
-		Enumeration<JarEntry> enumeration = jarFile.entries();
-		while(enumeration.hasMoreElements()) {
-			JarEntry je = enumeration.nextElement();
-			if (je.getName().endsWith(".class") && !je.getName().contains("$")) {
-				String className = je.getName().substring(0,
-						je.getName().length() - 6).replace('/', '.');
-				Class<?> c = urlClassLoader.loadClass(className);
-				loadedClassFiles.add(c);
-			}
-		}
-		jarFile.close();
+            Enumeration<JarEntry> enumeration = jarFile.entries();
+            while(enumeration.hasMoreElements()) {
+                JarEntry je = enumeration.nextElement();
+                if (je.getName().endsWith(".class") && !je.getName().contains("$")) {
+                    String className = je.getName().substring(0,
+                            je.getName().length() - 6).replace('/', '.');
+                    Class<?> c = urlClassLoader.loadClass(className);
+                    loadedClassFiles.add(c);
+                }
+            }
+            jarFile.close();
+        }
 
 		for (final Class<?> interfce : loadInterfaces("com.openrsc.server.plugins.listeners.action")) {
 			final String interfceName = interfce.getName().substring(interfce.getName().lastIndexOf(".") + 1);
