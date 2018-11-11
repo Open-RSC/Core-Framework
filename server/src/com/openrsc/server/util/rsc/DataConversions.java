@@ -1,26 +1,24 @@
 package com.openrsc.server.util.rsc;
 
+import com.openrsc.server.model.Point;
+import com.openrsc.server.net.Packet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.model.Point;
-import com.openrsc.server.net.Packet;
-import java.security.SecureRandom;
 
 
 public final class DataConversions {
@@ -69,10 +67,14 @@ public final class DataConversions {
 
 	}
 
-	private static char characters[] = { ' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c',
-			'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
-			'%', '"', '[', ']' };
+	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i',
+		'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g',
+		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
+		'5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(',
+		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
+		'%', '"', '[', ']', '{', '}', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+		'U', 'V', 'W', 'X', 'Y', 'Z'};
 
 	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
 	private static MessageDigest md5, sha1, sha512;
@@ -164,6 +166,50 @@ public final class DataConversions {
 					}
 				}
 			}
+		return s;
+	}
+
+	public static String stripBadCharacters(String value) {
+		String s = "";
+		for (int i = 0; i < value.length(); i++) {
+			if (getCharCode(value.charAt(i)) > 0) {
+				s += value.charAt(i);
+			}
+			else {
+				s += " ";
+			}
+		}
+		return s;
+	}
+
+	public static String upperCaseAllFirst(String value) {
+
+		Character[] array = value.chars().mapToObj(c -> (char)c).toArray(Character[]::new);
+
+		String s = "";
+		int i = 0;
+		while (array[i].equals(" ")) { // Skip spaces
+			i++;
+		}
+
+		// Uppercase first letter.
+		if (!Character.isUpperCase(array[i]))
+			s += String.valueOf(Character.toUpperCase(array[i]));
+		else
+			s += String.valueOf(array[i]);
+
+		i++;
+
+		// Keep uppercase all letters that follow a whitespace character, if already cap
+		for (; i < array.length; i++) {
+			if (Character.isWhitespace(array[i - 1]) && Character.isUpperCase(array[i])) {
+				s += String.valueOf(Character.toUpperCase(array[i]));
+			}
+			else {
+				s += String.valueOf(Character.toLowerCase(array[i]));
+			}
+		}
+
 		return s;
 	}
 
@@ -311,7 +357,7 @@ public final class DataConversions {
 	private static byte getMobCoordOffset(int coord1, int coord2) {
 		byte offset = (byte) (coord1 - coord2);
 		if (offset < 0) {
-			offset += 32;
+			offset += 64;
 		}
 		return offset;
 	}

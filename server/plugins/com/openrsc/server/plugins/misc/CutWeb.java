@@ -1,15 +1,13 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeObject;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class CutWeb implements InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
 

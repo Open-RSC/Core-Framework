@@ -1,17 +1,7 @@
 package com.openrsc.server.plugins.commands;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
@@ -26,12 +16,13 @@ import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-public final class Moderator implements CommandListener {
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
+public final class Moderator implements CommandListener {
 
 	public static final World world = World.getWorld();
 
@@ -137,7 +128,7 @@ public final class Moderator implements CommandListener {
 				player.message("::resetq <playername>, <questid>, <stage>");
 			}
 		} 
-		/*if (command.equals("wildrule")) {
+		if (command.equals("wildrule")) {
 			if (args[0].equals("god")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
@@ -155,7 +146,7 @@ public final class Moderator implements CommandListener {
 			} else {
 				player.message("Unknown rule. Use ::wildrule <god/members> <startLevel> <endLevel>");
 			}
-		}*/
+		}
 		if(command.equals("gmute")) {
 			if (args.length != 2) {
 				player.message("Wrong syntax. ::mute <name> <time in minutes> (-1 for permanent)");
@@ -238,7 +229,7 @@ public final class Moderator implements CommandListener {
 			int fatPercentage = Integer.parseInt(args[1]);
 			Player p = world.getPlayer(PlayerHash);
 			if (p != null) {
-				p.setFatigue((fatPercentage * 100) / 750);
+				p.setFatigue(fatPercentage * 750);
 				player.message("You have set " + p.getUsername() + " fatigue to " + fatPercentage + "%.");
 				GameLogging.addQuery(new StaffLog(player, 12, p, "Fatigue percentage was set to " + fatPercentage + "%"));
 			} else {
@@ -391,7 +382,7 @@ public final class Moderator implements CommandListener {
 						}
 				}
 			} catch (Exception e) {
-				LOGGER.catching(e);
+				System.out.println(e);
 			}
 		}
 		if (command.equals("check")) {

@@ -1,30 +1,41 @@
 package com.openrsc.server.model.entity.npc;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.external.ItemDropDef;
-import com.openrsc.server.external.NPCDef;
-import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.GoldDrops;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
+import static com.openrsc.server.Constants.GameServer.*;
 
 public class Npc extends Mob {
+	
+	
+	/**
+	 * Logger instance
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * World instance
@@ -60,6 +71,12 @@ public class Npc extends Mob {
 
 	private int weaponAimPoints = 1;
 	private int weaponPowerPoints = 1;
+
+
+	private static final List<String> valuableDrops = Arrays.asList(
+			VALUABLE_DROP_ITEMS.split(",")
+	);
+
 
 	public Npc(int id, int x, int y) {
 		this(new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -311,7 +328,7 @@ public class Npc extends Mob {
 				playerWithMostDamage = p;
 				currentHighestDamage = dmgDoneByPlayer;
 			}
-			newXP = (totalCombatXP / this.getDef().hits) * dmgDoneByPlayer;
+			newXP = (int)(((double)(totalCombatXP) / (double)(this.getDef().hits)) * (double)(dmgDoneByPlayer));
 			p.incExp(4, newXP * 4, true);
 			ActionSender.sendStat(p, 4);
 		}
@@ -352,73 +369,130 @@ public class Npc extends Mob {
 			ActionSender.sendSound(owner, "victory");
 			AchievementSystem.checkAndIncSlayNpcTasks(owner, this);
 
+			//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
+			//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
+			//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
+			if (NPC_KILL_LOGGING) {
+				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
+					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
+						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, true);
+					}
+					else {
+						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, false);
+					}
+				}
+				else {
+					Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, NPC_KILL_MESSAGES);
+				}
+			}
+
+
 			owner = handleLootAndXpDistribution((Player) mob);
 
 			ItemDropDef[] drops = def.getDrops();
 
 			int total = 0;
+			int weightTotal = 0;
 			for (ItemDropDef drop : drops) {
 				total += drop.getWeight();
-			}
-
-			int hit = DataConversions.random(0, total);
-			total = 0;
-			
-			for (ItemDropDef drop : drops) {
-				if (drop == null) {
-					continue;
-				}
+				weightTotal += drop.getWeight();
 				if (drop.getWeight() == 0 && drop.getID() != -1) {
 					GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), drop.getAmount(), owner);
 					groundItem.setAttribute("npcdrop", true);
 					world.registerItem(groundItem);
 					continue;
 				}
-				if (hit >= total && hit < (total + drop.getWeight())) {
 
-					if (drop.getID() != -1) {
-						if (EntityHandler.getItemDef(drop.getID()).isMembersOnly()
+			}
+
+			int hit = DataConversions.random(0, total);
+			total = 0;
+
+			for (ItemDropDef drop : drops) {
+				if (drop.getID() == 1026 && owner.getQuestStage(Constants.Quests.OBSERVATORY_QUEST) > -1) {
+					continue;
+				}
+
+				Item temp = new Item();
+				temp.setID(drop.getID());
+
+
+				if (drop == null) {
+					continue;
+				}
+
+				int dropID = drop.getID();
+				int amount = drop.getAmount();
+				int weight = drop.getWeight();
+
+				double currentRatio = (double) weight / (double) weightTotal;
+				if (hit >= total && hit < (total + weight)) {
+					if (dropID != -1) {
+						if (EntityHandler.getItemDef(dropID).isMembersOnly()
 								&& !Constants.GameServer.MEMBER_WORLD) {
 							continue;
 						}
 
-						if (!EntityHandler.getItemDef(drop.getID()).isStackable()) {
+						
+						if (!EntityHandler.getItemDef(dropID).isStackable()) {
 
-							int dropID  = drop.getID();
-							int dropAmt = drop.getAmount();
+
 
 							// Rare Drop Table
 							if (drop.getID() == 160) {
 								dropID = Formulae.calculateRareDrop();
-								dropAmt = 1;
+								amount = 1;
 							}
 
-							// Herb Drop Table
-							else if (drop.getID() == 165) {
-								dropID = Formulae.calculateHerbDrop();
-							}
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem;
 
-							else {
-
-							}
-
-							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
-							groundItem.setAttribute("npcdrop", true);
-							for (int count = 0; count < dropAmt; count++)
+							// We need to drop multiple counts of "1" item if it's not a stack
+							for (int count = 0; count < amount; count++) {
+								// Herb Drop Table
+								if (drop.getID() == 165) {
+									dropID = Formulae.calculateHerbDrop();
+								}
+								groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
+								groundItem.setAttribute("npcdrop", true);
 								world.registerItem(groundItem);
+							}
+
 						} else {
-							int amount = drop.getAmount();
-							GroundItem groundItem = new GroundItem(drop.getID(), getX(), getY(), amount, owner);
+
+							// Gold Drops
+							if (drop.getID() == 10) {
+								amount = Formulae.calculateGoldDrop(
+										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+								);
+							}
+
+							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
+								owner, this, dropID, amount);
+							GroundItem groundItem = new GroundItem(dropID, getX(), getY(), amount, owner);
 							groundItem.setAttribute("npcdrop", true);
 
 							world.registerItem(groundItem);
 						}
+
+						// Check if we have a "valuable drop" (configurable)
+						if (dropID != -1 && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
+							if (amount > 1) {
+								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
+										(temp.getDef().getDefaultPrice() * amount) + " coins)");
+							} else {
+								owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
+										(temp.getDef().getDefaultPrice()) + " coins)");
+							}
+						}
 					}
+					break;
 				}
-				total += drop.getWeight();
+				total += weight;
 			}
+			remove();
 		}
-		remove();
 	}
 
 	public void remove() {

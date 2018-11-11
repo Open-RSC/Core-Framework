@@ -1,19 +1,5 @@
 package com.openrsc.server.plugins.quests.members.grandtree;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.movePlayer;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.npcYell;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,18 +7,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -109,8 +89,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	public void handleReward(Player p) {
 		p.message("well done you have completed the grand tree quest");
 		p.incQuestExp(16, (1200 * p.getSkills().getMaxStat(16)) + 1600); // AGILITY
-		p.incQuestExp(6, (200 * p.getSkills().getMaxStat(6)) + 600); // MAGIC
 		p.incQuestExp(0, (1200 * p.getSkills().getMaxStat(0)) + 1600); // ATTACK
+		p.incQuestExp(6, (200 * p.getSkills().getMaxStat(6)) + 600); // MAGIC
 		p.message("@gre@You haved gained 5 quest points!");
 		p.incQuestPoints(5);
 	}
@@ -1312,10 +1292,15 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					"...you need a key");
 		}
 		if(obj.getID() == WATCH_TOWER_UP) {
+			if (p.getSkills().getLevel(16) >= 25) {
 			p.message("you jump up and grab hold of the platform");
 			p.teleport(710, 2364);
+			p.incExp(16, 30, true);
 			sleep(3000);
 			p.message("and pull yourself up");
+			}else {
+				p.message("You need an agility level of 25 to climb up the platform");
+			}
 		}
 		if(obj.getID() == WATCH_TOWER_DOWN) {
 			message(p, "you climb down the tower");

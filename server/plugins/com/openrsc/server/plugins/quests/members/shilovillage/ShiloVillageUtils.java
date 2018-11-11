@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -16,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageUtils implements DropListener, DropExecutiveListener, InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener, PickupExecutiveListener {
 

@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,6 +7,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class MonkOfEntrana implements TalkToNpcExecutiveListener,
 		TalkToNpcListener {

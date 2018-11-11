@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class SalarinTheTwistedMageAI implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
 	

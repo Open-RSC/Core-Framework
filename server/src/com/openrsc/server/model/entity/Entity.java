@@ -1,15 +1,15 @@
 package com.openrsc.server.model.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Entity {
 
@@ -100,7 +100,7 @@ public abstract class Entity {
 	}
 
 	public void setLocation(Point p) {
-		if (this.isPlayer() && location != null) {
+		/*if (this.isPlayer() && location != null) { // No need to unwield the wilderness items, that is not authentic
 			Player pl = (Player) this;
 			if (pl != null && getX() > 0 && getY() > 0) {
 				if (!Point.inWilderness(getX(), getY()) && Point.inWilderness(p.getX(), p.getY())
@@ -109,7 +109,7 @@ public abstract class Entity {
 				}
 			}
 			
-		}
+		}*/
 		location.set(p);
 		updateRegion();
 	}

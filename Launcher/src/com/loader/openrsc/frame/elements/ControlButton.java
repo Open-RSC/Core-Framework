@@ -1,13 +1,12 @@
 package com.loader.openrsc.frame.elements;
 
-import javax.swing.JButton;
-
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
 
+import javax.swing.*;
+
 @SuppressWarnings("serial")
-public class ControlButton extends JButton
-{
+public class ControlButton extends JButton {
     public ControlButton(final int buttonType, final int x, final int y, final int width, final int height) {
         final String image = (buttonType == 1) ? "minimize" : "close";
         if (buttonType != 3) {

@@ -1,25 +1,14 @@
 package com.openrsc.server.net.rsc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.GameStateUpdater;
 import com.openrsc.server.Server;
-import com.openrsc.server.content.achievement.Achievement;
-import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -28,15 +17,20 @@ import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.util.IPTrackerPredicate;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -373,7 +367,7 @@ public class ActionSender {
 	public static void sendFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_FATIGUE.opcode);
-		s.writeShort(player.getFatigue() / 10);
+		s.writeShort(player.getFatigue() / 750);
 		player.write(s.toPacket());
 	}
 
@@ -386,7 +380,7 @@ public class ActionSender {
 	public static void sendSleepFatigue(Player player, int fatigue) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SLEEP_FATIGUE.opcode);
-		s.writeShort(fatigue / 10);
+		s.writeShort(fatigue / 750);
 		player.write(s.toPacket());
 	}
 
@@ -460,6 +454,7 @@ public class ActionSender {
 	}
 
 	public static void sendInitialServerConfigs(Channel channel) throws Exception {
+		LOGGER.info("Sending initial configs to: " + channel.remoteAddress());
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs();
 		ConnectionAttachment attachment = new ConnectionAttachment();
 		channel.attr(RSCConnectionHandler.attachment).set(attachment);
@@ -476,9 +471,9 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
+		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT);
 		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
-		s.writeByte((byte)(Constants.GameServer.SPAWN_SUBSCRIPTION_NPCS ? 1 : 0)); // Subscription NPC Spawns
 		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
 		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
 		s.writeByte((byte)(Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
@@ -505,6 +500,9 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_DROP_X ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_DECANTING ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
 		return s;
 	}
 
@@ -561,8 +559,6 @@ public class ActionSender {
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
 		s.writeString(player.getLastIP());
 		s.writeShort(player.getDaysSinceLastLogin());
-		//s.writeShort(player.getDaysSubscriptionLeft());
-		//s.writeShort(player.premiumSubDaysLeft());
 		//s.writeShort(player.getUnreadMessages());
 		player.write(s.toPacket());
 	}
@@ -818,11 +814,22 @@ public class ActionSender {
 		ArrayList<Item> items = with.getTrade().getTradeOffer().getItems();
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
+
+		// Other player's items first
 		s.writeByte((byte) items.size());
 		for (Item item : items) {
 			s.writeShort(item.getID());
 			s.writeInt(item.getAmount());
 		}
+
+		// Our items second
+		items = player.getTrade().getTradeOffer().getItems();
+		s.writeByte((byte) items.size());
+		for (Item item : items) {
+			s.writeShort(item.getID());
+			s.writeInt(item.getAmount());
+		}
+
 		player.write(s.toPacket());
 	}
 
@@ -1044,14 +1051,6 @@ public class ActionSender {
 					sendBox(p, "@gre@Welcome to the RuneScape tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				if (!p.isMod()) {
-					if (p.getDaysSubscriptionLeft() > 0) {
-						p.setGroupID(6);
-					} else if (p.getDaysSubscriptionLeft() <= 0) {
-						p.setGroupID(4);
-					}
-				}
-
 				sendGameSettings(p);
 				sendPrivacySettings(p);
 
@@ -1065,16 +1064,18 @@ public class ActionSender {
 				sendInventory(p);
 				p.checkEquipment();
 
-				if (p.getLocation().inWilderness()) {
+				/*if (p.getLocation().inWilderness()) { // Not authentic
 					p.unwieldMembersItems();
-				}
+				}*/
 
 				if (p.isMod()) {
 					p.setAttribute("no-aggro", true);
 				}
 
 				if(!p.getLocation().inWilderness()) {
-					Market.getInstance().addCollectableItemsNotificationTask(p);
+                    if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
+                        Market.getInstance().addCollectableItemsNotificationTask(p);
+                    }
 				}
 
 				p.setBusy(false);

@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,6 +8,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class BorderGuard implements TalkToNpcExecutiveListener,
 		TalkToNpcListener, ObjectActionExecutiveListener, ObjectActionListener {
@@ -32,16 +30,19 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 		}
 		playerTalk(p, n, "Can I come through this gate?");
 		npcTalk(p, n, "You must pay a toll of 10 gold coins to pass");
-		int option = showMenu(p, n, "No thankyou, I'll walk round",
+		int option = showMenu(p, n, false, "No thankyou, I'll walk round",
 				"Who does my money go to?", "yes ok");
 		switch (option) {
 		case 0: // no thanks
+			playerTalk(p, n, "No thankyou");
 			npcTalk(p, n, "Ok suit yourself");
 			break;
 		case 1: // who does money go to
+			playerTalk(p, n, "Who does my money go to?");
 			npcTalk(p, n, "The money goes to the city of Al Kharid");
 			break;
 		case 2:
+			playerTalk(p, n, "Yes ok");
 			if (p.getInventory().remove(10, 10) > -1) {
 				p.message("You pay the guard");
 				npcTalk(p, n, "You may pass");

@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
@@ -17,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -27,6 +16,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 		ObjectActionListener, ObjectActionExecutiveListener,
@@ -53,6 +44,7 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 	private static final int IRON_CHAINMAIL = 7;
 	private static final int BRONZE_MEDIUM_HELMET = 104;
 	private static final int CABBAGE = 18;
+	private static final int CABBAGE2 = 228;
 
 	private static final Point DOOR_LOCATION = Point.location(271, 441);
 	private static final Point DOOR2_LOCATION = Point.location(275, 439);
@@ -80,34 +72,36 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 	private void handleSirAmikVarze(final Player p, final Npc n) {
 		switch (p.getQuestStage(this)) {
 		case 0:
-			npcTalk(p, n, "I am the leader of the white knights of falador",
+			npcTalk(p, n, "I am the leader of the white knights of Falador",
 					"Why do you seek my audience?");
 			int menu = showMenu(p, n, "I seek a quest",
 					"I don't I'm just looking around");
 			if (menu == 0) {
+				if (p.getQuestPoints() < 12) {
+					npcTalk(p, n,
+						"Well I do have a task, but it is very dangerous",
+						"and it's critical to us that no mistakes are made",
+						"I couldn't possibly let an unexperienced quester like yourself go");
+					p.message("You need 12 quest points to start this quest");
+					return;
+				}
 				npcTalk(p, n, "Well I need some spy work doing",
 						"It's quite dangerous",
 						"You will need to go into the Black Knight's fortress");
 				int sub_menu = showMenu(p, n, "I laugh in the face of danger",
 						"I go and cower in a corner at the first sign of danger");
 				if (sub_menu == 0) {
-					if (p.getQuestPoints() < 12) {
-						p.message("You need 12 quest points to start this quest");
-						return;
-					}
-					npcTalk(p,
-							n,
+					npcTalk(p, n,
 							"Well that's good",
 							"Don't get too overconfident though",
 							"You've come along just right actually",
 							"All of my knights are known to the black knights already",
 							"Subtlety isn't exactly our strong point");
 					playerTalk(p, n, "So, what needs doing?");
-					npcTalk(p,
-							n,
+					npcTalk(p, n,
 							"Well the black knights have started making strange threats to us",
 							"Demanding large amounts of money and land",
-							"And threatening to invade Falador if we don't pay",
+							"And threataning to invade Falador if we don't pay",
 							"Now normally this wouldn't be a problem",
 							"But they claim to have a powerful new secret weapon",
 							"What I want you to do is get inside their fortress",
@@ -124,11 +118,10 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 
 					if (sub == 0) {
 						playerTalk(p, n, "So, what needs doing?");
-						npcTalk(p,
-								n,
+						npcTalk(p, n,
 								"Well the black knights have started making strange threats to us",
 								"Demanding large amounts of money and land",
-								"And threatening to invade Falador if we don't pay",
+								"And threataning to invade Falador if we don't pay",
 								"Now normally this wouldn't be a problem",
 								"But they claim to have a powerful new secret weapon",
 								"What I want you to do is get inside their fortress",
@@ -146,47 +139,26 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 		case 1:
 			npcTalk(p, n, "How's the mission going?");
 			playerTalk(p, n,
-					"I haven't managed to find out what the secret weapon is yet");
+					"I haven't managed to find what the secret weapon is yet.");
 			break;
 		case 2:
 			npcTalk(p, n, "How's the mission going?");
 
-			playerTalk(
-					p,
-					n,
+			playerTalk(p, n,
 					"I have found out what the Black Knights' secret weapon is.",
 					"It's a potion of invincibility.");
 
-			npcTalk(p, n, "A potion of invincibility?",
-					"That is grave news indeed.",
-					"If you can sabotage it somehow, you will be very well paid.");
-
-			playerTalk(
-					p,
-					n,
-					"So when i finish this mission for you can I be a white knight?",
-					"Can I wear your armour too?");
-
-			npcTalk(p,
-					n,
-					"I am afraid I cannot authorize you to become a white knight",
-					"unless under a situation of dire circumstance.",
-					"Assisting us on a freelance basis will be well worth your time",
-					"however and you will have my personal gratitude.");
-
-			playerTalk(p, n,
-					"I can't buy stuff with personal gratitude though...");
 			npcTalk(p, n,
-					"There is of course also the financial recompense as I said.");
-			playerTalk(p, n, "OK! I'll get on to sabotaging that potion.");
+					"That is bad news.",
+					"If you can sabotage it somehow, you will be paid well.");
+
 			break;
 		case 3:
 			playerTalk(p, n,
-					"I have ruined the black knight's invincibility potion",
+					"I have ruined the black knight's invincibility potion.",
 					"That should put a stop to your problem.");
 
-			npcTalk(p,
-					n,
+			npcTalk(p, n,
 					"Yes we have just recieved a message from the black knights.",
 					"Saying they withdraw their demands.",
 					"Which confirms your story");
@@ -210,14 +182,23 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 			if (item.getID() == CABBAGE && player.getQuestStage(this) == 2) {
 				if(removeItem(player, CABBAGE, 1)) {
 					message(player,
-							"You drop a cabbage down the hole",
-							"The cabbage lands in the cauldron below",
-							"The mixture in the cauldron starts to froth and bubble",
-							"You hear the witch groan in dismay");
+							"You drop a cabbage down the hole.",
+							"The cabbage lands in the cauldron below.",
+							"The mixture in the cauldron starts to froth and bubble.",
+							"You hear the witch groan in dismay.");
 					playerTalk(player, null,
 							"Right I think that's successfully sabotaged the secret weapon.");
 					player.updateQuestStage(this, 3);
 				}
+			}
+			else if (item.getID() == CABBAGE2 && player.getQuestStage(this) == 2) {
+				message(player,
+					"This is the wrong sort of cabbage!",
+					"You are meant to be hindering the witch.",
+					"Not helping her.");
+			}
+			else {
+				playerTalk(player, null, "Why would I want to do that?");
 			}
 			break;
 		}
@@ -277,7 +258,7 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 						"The invincibility potion is almost ready",
 						"It's taken me five years but it's almost ready",
 						"Greldo the Goblin here",
-						"Is jus going to fetch the last ingredient for me",
+						"Is just going to fetch the last ingredient for me",
 						"It's a specially grown cabbage",
 						"Grown by my cousin Helda who lives in Draynor Manor",
 						"The soil there is slightly magical",
@@ -289,7 +270,7 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 				npcTalk(player, greldo, "Yeth Mithreth");
 				player.updateQuestStage(this, 2);
 			} else {
-				player.message("Nothing interesting happens");
+				player.message("I can't hear much right now");
 			}
 			break;
 		}
@@ -370,38 +351,18 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 					guard.face(player);
 					player.face(guard);
 					npcTalk(player, guard,
-							"I wouldnt go in there if I was you",
+							"I wouldn't go in there if I woz you",
 							"Those black knights are in an important meeting",
 							"They said they'd kill anyone who went in there");
 					int option = showMenu(player, guard, "Ok I won't", "I don't care I'm going in anyway");
 					if (option == 1) {
-						if (player.getX() <= 274) {
-							player.setBusyTimer(0);
-							doDoor(obj, player);
-							sleep(1200);
-							Npc knight = getNearestNpc(player, 66, 5);
-							if (knight != null) {
-								knight.getUpdateFlags().setChatMessage(new ChatMessage(knight, "DIE INTRUDER!!", player));
-								knight.setChasing(player);
-							}
-						}
+						doDoor(obj, player);
 					}
 				}
 			} else if (obj.getLocation().equals(DOOR2_LOCATION) && player.getX() <= 275) {
 				doDoor(obj, player);
 			} else if (obj.getLocation().equals(DOOR3_LOCATION)) {
-				if (player.getY() <= 442) {
-					Npc knight = getNearestNpc(player, 66, 4);
-					if (knight != null) {
-						knight.setChasing(player);
-						npcTalk(player, knight, "DIE INTRUDER!!");
-					}
-					if (!player.inCombat()) {
-						doDoor(obj, player);
-					}
-				} else {
-					doDoor(obj, player);
-				}
+				doDoor(obj, player);
 			}
 			break;
 		}

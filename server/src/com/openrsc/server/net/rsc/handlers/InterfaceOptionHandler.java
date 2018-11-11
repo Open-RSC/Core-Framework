@@ -2,11 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.content.clan.Clan;
-import com.openrsc.server.content.clan.ClanInvite;
-import com.openrsc.server.content.clan.ClanManager;
-import com.openrsc.server.content.clan.ClanPlayer;
-import com.openrsc.server.content.clan.ClanRank;
+import com.openrsc.server.content.clan.*;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;

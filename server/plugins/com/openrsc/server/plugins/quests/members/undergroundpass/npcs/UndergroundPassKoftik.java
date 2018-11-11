@@ -1,19 +1,13 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
-import static com.openrsc.server.plugins.Functions.AGILITY;
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 TalkToNpcExecutiveListener {
@@ -47,9 +41,9 @@ TalkToNpcExecutiveListener {
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 5 quest points!");
 		p.incQuestPoints(5);
-		p.message("you have completed the underground pass quest");
-		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 200 + 1000);
 		p.incQuestExp(AGILITY, (p.getSkills().getMaxStat(AGILITY) * 200) + 2000);
+		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 200 + 1000);
+		p.message("you have completed the underground pass quest");
 		p.getCache().set("Iban blast_casts", 25);
 	}
 

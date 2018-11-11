@@ -1,27 +1,28 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.time.Instant;
+
+import static com.openrsc.server.plugins.Functions.*;
+
 public class SilkMerchant implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(p.getCache().hasKey("silkStolen")) {
+		if(p.getCache().hasKey("silkStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("silkStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
 					"That you have just stolen from me",
 					"guards guards");
-			//Hero = 324, Knight = 322, Guard = 65, Paladin = 323.
-			//attacker.setChasing(p);
+
+			Npc attacker = getNearestNpc(p, 321, 5); // Guard
+
+			if (attacker != null)
+				attacker.setChasing(p);
+
 		} 
 		else if(hasItem(p, 200)) {
 			playerTalk(p, n, "Hello I have some fine silk from Al Kharid to sell to you");

@@ -1,44 +1,42 @@
 package com.loader.openrsc.frame.listeners;
 
-import java.awt.event.MouseEvent;
-import java.awt.Point;
-import java.awt.event.MouseMotionListener;
-
 import com.loader.openrsc.frame.AppFrame;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class PositionListener implements MouseListener, MouseMotionListener
-{
-    private AppFrame frame;
+public class PositionListener implements MouseListener, MouseMotionListener {
     private static Point initialClick;
-    
+    private AppFrame frame;
+
     public PositionListener(final AppFrame frame) {
         this.frame = frame;
     }
-    
+
     @Override
     public void mouseClicked(final MouseEvent arg0) {
     }
-    
+
     @Override
     public void mouseEntered(final MouseEvent arg0) {
     }
-    
+
     @Override
     public void mouseExited(final MouseEvent arg0) {
     }
-    
+
     @Override
     public void mousePressed(final MouseEvent e) {
         PositionListener.initialClick = e.getPoint();
         this.frame.getComponentAt(PositionListener.initialClick);
     }
-    
+
     @Override
     public void mouseReleased(final MouseEvent arg0) {
     }
-    
+
     @Override
     public void mouseDragged(final MouseEvent e) {
         final int iX = PositionListener.initialClick.x;
@@ -53,7 +51,7 @@ public class PositionListener implements MouseListener, MouseMotionListener
             this.frame.setLocation(X, Y);
         }
     }
-    
+
     @Override
     public void mouseMoved(final MouseEvent arg0) {
     }

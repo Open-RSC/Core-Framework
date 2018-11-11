@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -11,6 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SheepShearer implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener {
@@ -169,11 +167,11 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
+		player.getInventory().add(new Item(10, 60));
+		player.message("Well done you have completed the sheep shearer quest");
 		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 100 + 500);
 		player.incQuestPoints(1);
-		player.message("Well done you have completed the sheep shearer quest");
 		player.message("@gre@You haved gained 1 quest point!");
-		player.getInventory().add(new Item(10, 60));
 	}
 
 	@Override

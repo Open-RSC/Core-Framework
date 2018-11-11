@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.CRAFTING;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,6 +9,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -38,17 +35,18 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			sleep(600);
 			p.message("Where would you like to teleport to?");
 			int menu = showMenu(p, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Seers", "Yanille", "Nowhere");
-			if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
-				p.message("You need to stay out of combat for 10 seconds before using a teleport.");
-				return;
-			}
+			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
+			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
+			//	return;
+			//}
 			if (p.getLocation().wildernessLevel() >= 30 || (p.getLocation().inModRoom() && !p.isAdmin())) {
 				p.message("A mysterious force blocks your teleport!");
 				p.message("You can't use this teleport after level 30 wilderness");
 				return;
 			}
 			if(p.getInventory().countId(1039) > 0) {
-				p.message("You can't teleport with ana in the barrel in your inventory.");
+				message(p, "You can't teleport while holding Ana,", 
+						"It's just too difficult to concentrate.");
 				return;
 			}
 			if(p.getInventory().hasItemId(812)) {
@@ -58,6 +56,14 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 					p.getInventory().remove(new Item(812));
 				}
 			}
+			if (p.getLocation().inBounds(388, 4, 427, 40) || p.getLocation().inBounds(484, 4, 523, 40)
+			|| p.getLocation().inBounds(411, 976, 519, 984)
+			|| p.getLocation().inBounds(411, 1920, 518, 1925)
+			|| p.getLocation().inBounds(511, 976, 519, 984)
+			|| p.getLocation().inBounds(511, 1920, 518, 1925)){
+                message(p, "A mysterious force blocks your teleport!",
+                        "You can't use this teleport after level 30 wilderness!");
+            }
 			if(menu != -1) {
 				if(menu == 0) { // Edgeville
 					p.teleport(226, 447, true);
@@ -104,7 +110,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p, 650, Formulae.getRepeatTimes(p, CRAFTING)) {
+			p.setBatchEvent(new BatchEvent(p, 600, Formulae.getRepeatTimes(p, CRAFTING)) {
 				@Override
 				public void action() {
 					if (!p.getInventory().hasItemId(item.getID())) {

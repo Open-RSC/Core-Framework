@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -110,10 +110,10 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		if(obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
 			p.message("You climb the ladder");
-			if(obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE) {
+			if(obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
+				p.teleport(25, 515);
+			} else if(obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE) {
 				p.teleport(14, 506);
-			} else {
-				p.teleport(24, 515);
 			}
 		}
 		if(obj.getID() == TENT_LOCKED_CHEST) {

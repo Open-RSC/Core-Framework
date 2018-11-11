@@ -1,13 +1,13 @@
 package com.openrsc.server;
 
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
+import com.openrsc.server.event.rsc.GameTickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.openrsc.server.event.rsc.GameTickEvent;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class GameTickEventHandler {
 
@@ -15,29 +15,40 @@ public class GameTickEventHandler {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	private Queue<GameTickEvent> events = new ConcurrentLinkedQueue<GameTickEvent>();
-	private Queue<GameTickEvent> toAdd = new ConcurrentLinkedQueue<GameTickEvent>();
+	private LinkedHashMap<String, GameTickEvent> events = new LinkedHashMap<String, GameTickEvent>();
+	private LinkedHashMap<String, GameTickEvent> toAdd = new LinkedHashMap<String, GameTickEvent>();
 
 	public void add(GameTickEvent event) {
-		if (!events.contains(event)) {
-			events.add(event);
+		String className = String.valueOf(event.getClass());
+		if (event.getOwner() == null) { // Server events, no owner.
+			String u;
+			while (events.containsKey(u = UUID.randomUUID().toString())) {}
+			toAdd.put(className + u, event);
+		}
+		else {
+			if (event.getOwner().isPlayer())
+				toAdd.put(className + event.getOwner().getUUID() + "p", event);
+			else
+				toAdd.put(className + event.getOwner().getUUID() + "n", event);
 		}
 	}
 
 	public boolean contains(GameTickEvent event) {
-		return events.contains(event);
+		if (event.getOwner() != null)
+			return events.containsKey(String.valueOf(event.getOwner().getID()));
+		return false;
 	}
 
 	public void doGameEvents() {
 		if (toAdd.size() > 0) {
-			events.addAll(toAdd);
+			for (Map.Entry<String, GameTickEvent> e : toAdd.entrySet())
+				events.put(e.getKey(), e.getValue());
 			toAdd.clear();
 		}
-		Iterator<GameTickEvent> iterator = events.iterator();
-		while (iterator.hasNext()) {
-			GameTickEvent event = iterator.next();
+		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext();) {
+			GameTickEvent event = it.next().getValue();
 			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
-				iterator.remove();
+				it.remove();
 				continue;
 			}
 			try {
@@ -51,12 +62,12 @@ public class GameTickEventHandler {
 				event.stop();
 			}
 			if (event.shouldRemove()) {
-				iterator.remove();
+				it.remove();
 			}
 		}
 	}
 
-	public Queue<GameTickEvent> getEvents() {
+	public LinkedHashMap<String, GameTickEvent> getEvents() {
 		return events;
 	}
 

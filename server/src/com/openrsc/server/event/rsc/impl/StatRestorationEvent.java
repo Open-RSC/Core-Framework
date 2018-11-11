@@ -1,14 +1,14 @@
 package com.openrsc.server.event.rsc.impl;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -17,7 +17,8 @@ import com.openrsc.server.model.entity.player.Prayers;
  */
 public class StatRestorationEvent extends GameTickEvent {
 
-	private HashMap<Integer, Long> restoringStats = new HashMap<Integer, Long>();
+	private HashMap<Integer, Integer> restoringStats = new HashMap<Integer, Integer>();
+	private long lastRestoration = System.currentTimeMillis();
 
 	public StatRestorationEvent(Mob mob) {
 		super(mob, 1);
@@ -26,20 +27,23 @@ public class StatRestorationEvent extends GameTickEvent {
 	@Override
 	public void run() {
 
+		boolean restored = false;
+
+		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < 18; skillIndex++) {
 			if (skillIndex != Skills.PRAYER) {
-				checkAndStartRestoration(skillIndex, owner.getSkills().getLevel(skillIndex));
+				checkAndStartRestoration(skillIndex);
 			}
 		}
 
-		Iterator<Entry<Integer, Long>> it = restoringStats.entrySet().iterator();
+		// Tick each skill.
+		Iterator<Entry<Integer, Integer>> it = restoringStats.entrySet().iterator();
 		while (it.hasNext()) {
 
-			Entry<Integer, Long> set = it.next();
+			Entry<Integer, Integer> set = it.next();
 			int stat = set.getKey();
-			long lastRestoration = set.getValue();
 
-			long delay = 60000;
+			long delay = 60000; // 60 seconds
 			if (owner.isPlayer()) {
 				Player player = (Player) owner;
 				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_HEAL) && stat == 3) {
@@ -48,11 +52,10 @@ public class StatRestorationEvent extends GameTickEvent {
 					delay = 30000;
 				}
 			}
-			if (System.currentTimeMillis() - lastRestoration > delay) {
-				if (normalizeLevel(stat)) {
-					set.setValue(System.currentTimeMillis());
-				}
-				if (owner.getSkills().getLevel(stat) == owner.getSkills().getMaxStat(stat)) {
+			if (System.currentTimeMillis() - this.lastRestoration > delay) {
+				normalizeLevel(stat);
+				restored = true;
+				if (restoringStats.get(stat) == 0) {
 					it.remove();
 					if (owner.isPlayer() && stat != 3) {
 						Player p = (Player) owner;
@@ -61,6 +64,9 @@ public class StatRestorationEvent extends GameTickEvent {
 				}
 			}
 		}
+		if (restored)
+			this.lastRestoration = System.currentTimeMillis();
+			owner.getSkills().sendUpdateAll();
 	}
 
 	/**
@@ -69,30 +75,28 @@ public class StatRestorationEvent extends GameTickEvent {
 	 * @param skill
 	 * @return true if action done, false if skill is already normal
 	 */
-	public boolean normalizeLevel(int skill) {
+	public void normalizeLevel(int skill) {
 		int cur = owner.getSkills().getLevel(skill);
 		int norm = owner.getSkills().getMaxStat(skill);
 
-		if (owner.getSkills().getLevel(skill) > norm) {
+		if (cur > norm) {
 			owner.getSkills().setLevel(skill, cur - 1);
-			owner.getSkills().sendUpdate(skill);
-			return true;
-		} else if (owner.getSkills().getLevel(skill) < norm) {
+		} else if (cur < norm) {
 			owner.getSkills().setLevel(skill, cur + 1);
-			owner.getSkills().sendUpdate(skill);
-			return true;
 		}
-		return false;
+
+		if (cur == norm)
+			restoringStats.put(skill, 0);
 	}
 
-	public void checkAndStartRestoration(int id, int lvl) {
+	public void checkAndStartRestoration(int id) {
 		int curStat = owner.getSkills().getLevel(id);
 		int maxStat = owner.getSkills().getMaxStat(id);
 		if (restoringStats.containsKey(id)) {
 			return;
 		}
 		if (curStat > maxStat || curStat < maxStat) {
-			restoringStats.put(id, System.currentTimeMillis());
+			restoringStats.put(id, 1);
 		}
 	}
 }

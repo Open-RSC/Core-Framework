@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import java.util.Arrays;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -17,6 +13,10 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.Arrays;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Mining implements ObjectActionListener,
 ObjectActionExecutiveListener {
@@ -43,7 +43,7 @@ ObjectActionExecutiveListener {
 							owner.teleport(425, 438);
 						}
 					} else {
-						owner.message("you need a level of 50 mining to clear the rockslide");
+						owner.message("You need a mining level of 50 to clear the rockslide");
 					}
 				} else {
 					owner.message("you need a pickaxe to clear the rockslide");
@@ -70,7 +70,7 @@ ObjectActionExecutiveListener {
 						return;
 					}
 					if(owner.getSkills().getMaxStat(14) < 40) {
-						owner.message("you need a level of 40 mining to mine this crystal out");
+						owner.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
 					if(hasItem(owner, 1154)) {
@@ -78,6 +78,9 @@ ObjectActionExecutiveListener {
 								"There is no benefit to getting another");
 						return;
 					}
+					owner.playSound("mine");
+					// special bronze pick bubble for rock of dalgroth - see wiki
+					showBubble(owner, new Item(156));
 					owner.message("You have a swing at the rock!");
 					message(owner, "You swing your pick at the rock...");
 					owner.message("A crack appears in the rock and you prize a crystal out");
@@ -87,6 +90,7 @@ ObjectActionExecutiveListener {
 						"Perhaps it is linked with the shaman some way ?");
 				}
 			} else if (command.equalsIgnoreCase("prospect")) {
+				owner.playSound("prospect");
 				message(owner, "You examine the rock for ores...");
 				owner.message("This rock contains a crystal!");
 			}
@@ -129,15 +133,15 @@ ObjectActionExecutiveListener {
 			retrytimes = 2;
 			break;
 		case 1259:
-			retrytimes = 3;
+			retrytimes = 4;
 			reqlvl = 6;
 			break;
 		case 1260:
-			retrytimes = 5;
+			retrytimes = 6;
 			reqlvl = 21;
 			break;
 		case 1261:
-			retrytimes = 8;
+			retrytimes = 9;
 			reqlvl = 31;
 			break;
 		case 1262:
@@ -146,27 +150,23 @@ ObjectActionExecutiveListener {
 			break;
 		}
 		
-		if(owner.isPremiumSubscriber())
-			retrytimes *= 2.0;
-		else if(owner.isSubscriber() && !owner.isPremiumSubscriber())
-			retrytimes *= 1.5;
-		
 		if (def == null || def.getRespawnTime() < 1 || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6)) {
 			if (axeId < 0 || reqlvl > mineLvl) {
 				message(owner, "You need a pickaxe to mine this rock",
 						"You do not have a pickaxe which you have the mining level to use");
 				return;
 			}
-			owner.setBusyTimer(2000);
+			owner.setBusyTimer(1800);
 			owner.message("You swing your pick at the rock...");
-			sleep(2000);
+			sleep(1800);
 			owner.message("There is currently no ore available in this rock");
 			return;
 		}
 		if (owner.click == 1) {
-			owner.setBusyTimer(2000);
+			owner.playSound("prospect");
+			owner.setBusyTimer(1800);
 			owner.message("You examine the rock for ores...");
-			sleep(2000);
+			sleep(1800);
 			if (def == null || def.getRespawnTime() < 1) {
 				owner.message("There is currently no ore available in this rock");
 				return;
@@ -188,14 +188,14 @@ ObjectActionExecutiveListener {
 					"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
-		if (owner.getFatigue() >= 7500) {
+		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.message("You are too tired to mine this rock");
 			return;
 		}
 		owner.playSound("mine");
 		showBubble(owner, new Item(1258));
 		owner.message("You swing your pick at the rock...");
-		owner.setBatchEvent(new BatchEvent(owner, 2000, 1000 + retrytimes) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, 1000 + retrytimes) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());

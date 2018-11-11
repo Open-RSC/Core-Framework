@@ -1,13 +1,12 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.movePlayer;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.movePlayer;
 
 public class MagicalPool implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -26,6 +25,7 @@ public class MagicalPool implements ObjectActionListener, ObjectActionExecutiveL
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		if (obj.getID() == 1155) {
+			/*
 			if (!player.canUsePool()) {
 				player.message("You have just died, you must wait for "
 										+ player.secondsUntillPool()
@@ -69,10 +69,15 @@ public class MagicalPool implements ObjectActionListener, ObjectActionExecutiveL
 			} else if(option == 9) {
 				player.teleport(143, 173);
 			} else if(option == 10) {
+			*/
+			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
 				movePlayer(player, 471, 3385);
 				player.message("you are teleported further under ground");
 			}
-
+			else {
+				message(player, 1200, "you step into the pool");
+				message(player, 1200, "you wet your boots");
+			}
 		}
 		if (obj.getID() == 1166) {
 			message(player, 1200, "you step into the sparkling water");

@@ -1,6 +1,5 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -8,7 +7,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.util.rsc.Formulae;
 
 /**
  * <p>

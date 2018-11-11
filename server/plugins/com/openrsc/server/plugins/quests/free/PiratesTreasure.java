@@ -1,14 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,15 +12,15 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.*;
+
+import static com.openrsc.server.plugins.Functions.*;
+
 
 public class PiratesTreasure implements QuestInterface,InvActionListener,
 InvActionExecutiveListener, TalkToNpcListener, ObjectActionListener,
 ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
-InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListener {
 
 	class Frank {
 		public static final int TREASURE = 0;
@@ -121,7 +112,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 			message(p, "All that is in the chest is a message");
 			message(p, "You take the message from the chest");
 			message(p, "It says dig just behind the south bench in the park");
-			p.updateQuestStage(this, 2);
+			p.updateQuestStage(this, 3);
 		}
 	}
 
@@ -182,6 +173,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 					"I was one of the few to escape", "And I escaped with this");
 			message(p, "Frank hands you a key");
 			addItem(p, 382, 1);
+			p.updateQuestStage(this, 2);
 			npcTalk(p, n, "This is Hector's key",
 					"I believe it opens his chest",
 					"In his old room in the blue moon inn in Varrock",
@@ -194,8 +186,15 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 						"Apparently I'm a drunken trouble maker");
 			}
 			break;
-		case -1:
 		case 2:
+			npcTalk(p, n, "Arrrh Matey");
+			playerTalk(p, n, "I seem to have lost my chest key");
+			npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another made");
+			message(p, "Frank hands you a key");
+			addItem(p, 382, 1);
+			break;
+		case -1:
+		case 3:
 			npcTalk(p, n, "Arrrh Matey");
 			int menu1 = showMenu(p, n, new String[] { "Arrrh",
 					"Do you want to trade?"});
@@ -251,10 +250,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 									"So where are these bananas going to be delivered to?",
 							"That custom officer is annoying isn't she?" });
 					if (choice == 0) {
-						p.getCache().set("bananas", 0);// I was intending to
-						// remove it if u
-						// dont wanna fill
-						// it again. xD
+						p.getCache().set("bananas", 0);
 						npcTalk(p,
 								n,
 								"Yes certainly",
@@ -294,8 +290,6 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 		}
 	}
 
-	// need to do wydin. ye do we really need todo him again, since he only
-	// opens door? cuz hes already
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 164) {
@@ -351,29 +345,36 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 		}
 
 	}
-
+	
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
 		return (p.getY() == 548 && p.getX() > 287 && p.getX() < 291)
 				&& item.getID() == 211;
 	}
+	
+	@Override	
+	public boolean blockTeleport(Player p) {
+		if (p.getInventory().hasItemId(318) && (p.getLocation().inKaramja())) {		
+			p.getInventory().remove(318);										
+			}
+		return false;
+	}
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (p.getQuestStage(this) != 2)
+		if (p.getQuestStage(this) != 3)
 			return;
 		if (p.isBusy())
 			return;
 		if ((p.getY() == 548 && p.getX() >= 287 && p.getX() <= 291)
 				&& item.getID() == 211) {
 			if (p.getX() == 290 || p.getX() == 289) {
-				Npc wysin = getNearestNpc(p, 116, 20);
+				Npc wyson = getNearestNpc(p, 116, 20);
 				boolean dig = false;
-				if (wysin != null) {
-					wysin.getUpdateFlags().setChatMessage(new ChatMessage(wysin, "Hey leave off my flowers", p));
-
+				if (wyson != null) {
+					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
 					sleep(1000);
-					wysin.setChasing(p);
+					wyson.setChasing(p);
 					long start = System.currentTimeMillis();
 					while (!p.inCombat()) {
 						if (System.currentTimeMillis() - start > 2000) {
@@ -393,5 +394,4 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 			}
 		}
 	}
-
 }

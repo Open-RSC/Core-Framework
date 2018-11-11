@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import static com.openrsc.server.plugins.Functions.*;
-
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -9,6 +8,8 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 
@@ -40,17 +41,19 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				player.message("As an Iron Man, you cannot use the Auction.");
 				return;
 			}
-			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-				String pin = getBankPinInput(player);
-				if (pin == null) {
-					return;
+			if (Constants.GameServer.WANT_BANK_PINS) {
+				if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
+					String pin = getBankPinInput(player);
+					if (pin == null) {
+						return;
+					}
+					if (!player.getCache().getString("bank_pin").equals(pin)) {
+						ActionSender.sendBox(player, "Incorrect bank pin", false);
+						return;
+					}
+					player.setAttribute("bankpin", true);
+					ActionSender.sendBox(player, "Bank pin correct", false);
 				}
-				if (!player.getCache().getString("bank_pin").equals(pin)) {
-					ActionSender.sendBox(player, "Incorrect bank pin", false);
-					return;
-				}
-				player.setAttribute("bankpin", true);
-				ActionSender.sendBox(player, "Bank pin correct", false);
 			}
 			npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 			player.setAttribute("auctionhouse", true);

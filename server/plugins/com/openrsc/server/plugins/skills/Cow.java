@@ -1,12 +1,12 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener{
 

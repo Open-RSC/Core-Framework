@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -15,6 +11,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class CandleMakerShop  implements ShopInterface,
 TalkToNpcListener, TalkToNpcExecutiveListener {
@@ -43,6 +41,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 			npcTalk(p,n, "Have you got any wax yet?");
 			if(p.getInventory().hasItemId(605)) {
 				playerTalk(p,n, "Yes I have some now");
+				removeItem(p, 605, 1);				
 				p.message("You exchange the wax with the candle maker for a black candle");
 				addItem(p, 600, 1);
 				p.getCache().remove("candlemaker");

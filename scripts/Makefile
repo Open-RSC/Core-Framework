@@ -2,7 +2,7 @@ include ../.env
 MYSQL_DUMPS_DIR=../data
 
 go:
-	cd ../ && `pwd`/Go.sh
+	cd ../ && `pwd`/Go-Linux.sh
 
 run:
 	`pwd`/run.sh
@@ -10,8 +10,11 @@ run:
 hard-reset:
 	`pwd`/hard-reset.sh
 
-certbot:
-	`pwd`/certbot.sh
+certbot-native:
+	`pwd`/certbot-native.sh
+
+certbot-docker:
+	`pwd`/certbot-docker.sh
 
 rank:
 	`pwd`/rank.sh
@@ -54,19 +57,27 @@ compile:
 	sudo ant -f ../server/build.xml compile_core
 	sudo ant -f ../server/build.xml compile_plugins
 	sudo ant -f ../client/build.xml compile
-	sudo ant -f ../Launcher/build.xml jar
+	sudo ant -f ../Launcher/build.xml compile
 
 import-game:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_game.sql
+	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_game.sql
 
 import-forum:
-	docker exec -i mysql mysql -u$(dbuser) -p$(pass) < ../Databases/openrsc_forum.sql
+	docker exec -i mysql mysql -uroot -proot < ../Databases/openrsc_forum.sql
+
+import-mysql:
+	docker exec -i mysql mysql -uroot -proot < ../Databases/mysql.sql
+
+import-phpmyadmin:
+	docker exec -i mysql mysql -uroot -proot < ../Databases/phpmyadmin.sql
 
 run-game:
 	`pwd`/run.sh
 
 clone-website:
-	@$(shell sudo rm -rf Website && git clone -b 2.0.0 https://github.com/Open-RSC/Website.git)
+	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
+	sudo chmod 644 Website/sql/config.inc.php
+	sudo chmod 644 Website/elite/board/config.php
 
 pull-website:
 	@cd ../Website && git pull

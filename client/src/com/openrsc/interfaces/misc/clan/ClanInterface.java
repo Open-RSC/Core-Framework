@@ -1,20 +1,20 @@
 package com.openrsc.interfaces.misc.clan;
 
 
+import orsc.Config;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-
-import rsc.Config;
-import rsc.mudclient;
-import rsc.enumerations.InputXAction;
-import rsc.enumerations.MenuItemAction;
-import rsc.graphics.gui.InputXPrompt;
-import rsc.graphics.gui.Menu;
-import rsc.graphics.gui.Panel;
-import rsc.graphics.gui.SocialLists;
-import rsc.graphics.two.GraphicsController;
 
 public final class ClanInterface {
 	private mudclient mc;

@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -12,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -125,7 +125,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		if(obj.getID() == CLIMB_CAVE_ROCKS) {
-			if(p.getFatigue() >= 7500) {
+			if(p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too fatigued to go any further.");
 				return;
 			}

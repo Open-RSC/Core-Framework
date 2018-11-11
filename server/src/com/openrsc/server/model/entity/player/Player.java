@@ -1,44 +1,16 @@
 package com.openrsc.server.model.entity.player;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementSystem;
-import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.Cache;
-import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
@@ -54,17 +26,25 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.handlers.Ping;
+import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
-import com.openrsc.server.util.IPTrackerPredicate;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
 import io.netty.channel.Channel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.InetSocketAddress;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A single player.
@@ -74,6 +54,8 @@ public final class Player extends Mob {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	public final int MAX_FATIGUE = 75000;
 
 	public int IRON_MAN_MODE = 0;
 	public int IRON_MAN_RESTRICTION = 1;
@@ -145,6 +127,16 @@ public final class Player extends Mob {
 	public void setConsumeTimer(long l) {
 		consumeTimer = System.currentTimeMillis() + l;
 	}
+        
+        public long getLastSaveTime() {
+		return lastSaveTime;
+        }
+        
+        public void setLastSaveTime(long save) {
+		lastSaveTime = save;
+        }
+        
+        private long lastSaveTime = System.currentTimeMillis();
 
 	private int appearanceID;
 
@@ -282,9 +274,9 @@ public final class Player extends Mob {
 	 */
 	private int drainRate = 0;
 	/**
-	 * Amount of fatigue - 0 to 7500
+	 * Amount of fatigue - 0 to 75000
 	 */
-	private int fatigue = 7500, sleepStateFatigue = 7500;
+	private int fatigue = 0, sleepStateFatigue = 0;
 
 	/**
 	 * The main accounts group is
@@ -367,7 +359,7 @@ public final class Player extends Mob {
 	/**
 	 * Received packets from this player yet to be processed.
 	 */
-	private final ArrayList<Packet> incomingPackets = new ArrayList<Packet>();
+	private final LinkedHashMap<Integer, Packet> incomingPackets = new LinkedHashMap<Integer, Packet>();
 	private final Object incomingPacketLock = new Object();
 
 	/**
@@ -416,7 +408,7 @@ public final class Player extends Mob {
 
 	private boolean sleeping = false;
 	/**
-	 * Players sleepword
+	 * Player sleep word
 	 */
 	private String sleepword;
 	/**
@@ -424,14 +416,9 @@ public final class Player extends Mob {
 	 */
 	private Action status = Action.IDLE;
 	/**
-	 * When the users subscription expires (or 0 if they don't have one)
-	 */
-	private long subscriptionExpires = 0;
-	/**
-	 * If the player has been sending suscicious packets
+	 * If the player has been sending suspicious packets
 	 */
 	private boolean suspiciousPlayer;
-
 	/**
 	 * The player's username
 	 */
@@ -709,7 +696,7 @@ public final class Player extends Mob {
 	/**
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
-	public void unwieldMembersItems() {
+	/*public void unwieldMembersItems() { // Not authentic behavior
 		if (getLocation().inWilderness() && (!getLocation().isMembersWild())) {
 			boolean found = false;
 			for (Item i : getInventory().getItems()) {
@@ -743,8 +730,8 @@ public final class Player extends Mob {
 			}
 		}
 
-	}
-	private int bankSize = 200;
+	}*/
+	private int bankSize = 192; //Maximum bank items allowed
 
 	public int getBankSize() {
 		return bankSize;
@@ -790,18 +777,6 @@ public final class Player extends Mob {
 	public int getDaysSinceLastLogin() {
 		long now = Calendar.getInstance().getTimeInMillis() / 1000;
 		return (int) ((now - lastLogin) / 86400);
-	}
-
-	public int getDaysSubscriptionLeft() {
-		long now = (System.currentTimeMillis() / 1000);
-		if (subscriptionExpires == 0 || now >= subscriptionExpires) {
-			return 0;
-		}
-		double days = (double) (subscriptionExpires - now) / (double) 86400;
-		if (days > 0.0 && days < 1.0) {
-			return 1;
-		}
-		return (int) Math.round(days);
 	}
 
 	public PrayerDrainEvent getDrainer() {
@@ -992,10 +967,6 @@ public final class Player extends Mob {
 		return status;
 	}
 
-	public long getSubscriptionExpires() {
-		return subscriptionExpires;
-	}
-
 	public String getUsername() {
 
 		return username;
@@ -1061,12 +1032,6 @@ public final class Player extends Mob {
 		 **/
 		if (skill >= 4 && skill <= 17) {
 			multiplier = Constants.GameServer.SKILLING_EXP_RATE;
-			if (isSubscriber()) {
-				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;
-			}
-			if (isPremiumSubscriber()) {
-				multiplier += Constants.GameServer.PREMIUM_EXP_RATE;
-			}
 			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;
 				if (isSkulled()) {
@@ -1079,12 +1044,6 @@ public final class Player extends Mob {
 		 **/
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
 			multiplier = Constants.GameServer.COMBAT_EXP_RATE;
-			if(isSubscriber()) {
-				multiplier += Constants.GameServer.SUBSCRIBER_EXP_RATE;
-			}
-			if (isPremiumSubscriber()) {
-				multiplier += Constants.GameServer.PREMIUM_EXP_RATE;
-			}
 			if (getLocation().inWilderness()) {
 				multiplier += Constants.GameServer.WILDERNESS_BOOST;
 				if (isSkulled()) {
@@ -1117,23 +1076,19 @@ public final class Player extends Mob {
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
 		if (useFatigue) {
-			if (fatigue >= 7500) {
+			if (fatigue >= this.MAX_FATIGUE) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 				return;
 			}
-			if (fatigue >= 7200) {
-				ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
-			}
+			//if (fatigue >= 69750) {
+			//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
+			//}
 			if (skill >= 3 && useFatigue) {
-				int famt = (int) ((8 * skillXP / 5) / 3);
-				if (isSubscriber()) {
-					famt = famt / 2;
+				fatigue += skillXP * 4;
+				if (fatigue > this.MAX_FATIGUE) {
+					fatigue = this.MAX_FATIGUE;
 				}
-				fatigue += famt;
 				ActionSender.sendFatigue(this);
-			}
-			if (fatigue > 7500) {
-				fatigue = 7500;
 			}
 		}
 		if (getLocation().onTutorialIsland()) {
@@ -1232,16 +1187,6 @@ public final class Player extends Mob {
 		return sleeping;
 	}
 
-	public boolean isSubscriber() {
-		if (isMod() || isAdmin())
-			return false;
-
-		if (getDaysSubscriptionLeft() == 0) {
-			return false;
-		}
-		return groupID == 6;
-	}
-
 	public boolean isSuspiciousPlayer() {
 		return suspiciousPlayer;
 	}
@@ -1302,7 +1247,7 @@ public final class Player extends Mob {
 		removeSkull(); // destroy
 		resetCombatEvent();
 		world.registerItem(new GroundItem(20, getX(), getY(), 1, player));
-		if((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y")) || getDaysSubscriptionLeft() <= 0) {
+		if((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(122, 647), true);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
@@ -1332,8 +1277,8 @@ public final class Player extends Mob {
 	}
 
 	public void message(String string) {
-		resetMenuHandler();
-		setOption(-1);
+		// resetMenuHandler();
+		// setOption(-1);
 		ActionSender.sendMessage(this, string);
 	}
 
@@ -1358,7 +1303,8 @@ public final class Player extends Mob {
 	public void addToPacketQueue(Packet e) {
 		ping();
 		synchronized (incomingPacketLock) {
-			incomingPackets.add(e);
+			if (!incomingPackets.containsKey(e.getID()))
+				incomingPackets.put(e.getID(), e);
 		}
 	}
 
@@ -1408,11 +1354,14 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (incomingPacketLock) {
-			for (Packet p : incomingPackets) {
-				PacketHandler ph = PacketHandlerLookup.get(p.getID());
-				if (ph != null && p.getBuffer().readableBytes() >= 0) {
+			for (Map.Entry<Integer, Packet> p : incomingPackets.entrySet()) {
+				PacketHandler ph = PacketHandlerLookup.get(p.getValue().getID());
+				if (ph != null && p.getValue().getBuffer().readableBytes() >= 0) {
 					try {
-						ph.handlePacket(p, this);
+						if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
+							LOGGER.info("Handling Packet (CLASS: " + ph + "): "
+									+ this.username + " (ID: " + this.owner + ")");
+						ph.handlePacket(p.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
@@ -1784,10 +1733,6 @@ public final class Player extends Mob {
 		status = a;
 	}
 
-	public void setSubscriptionExpires(long expires) {
-		subscriptionExpires = expires;
-	}
-
 	public void setSuspiciousPlayer(boolean suspicious) {
 		suspiciousPlayer = suspicious;
 	}
@@ -1815,9 +1760,9 @@ public final class Player extends Mob {
 				}
 
 				if (bed) {
-					owner.sleepStateFatigue -= 2100;
+					owner.sleepStateFatigue -= 16500;
 				} else {
-					owner.sleepStateFatigue -= 431;
+					owner.sleepStateFatigue -= 4125;
 				}
 
 				if (owner.sleepStateFatigue < 0) {
@@ -1951,33 +1896,8 @@ public final class Player extends Mob {
 		return walkToAction;
 	}
 
-	private long premiumSubscriptionExpires;
-
 	private Trade trade;
 
-	public int premiumSubDaysLeft() {
-		long now = (System.currentTimeMillis() / 1000);
-		if (premiumSubscriptionExpires == 0 || now >= premiumSubscriptionExpires) {
-			return 0;
-		}
-		double days = (double) (premiumSubscriptionExpires - now) / (double) 86400;
-		if (days > 0.0 && days < 1.0) {
-			return 1;
-		}
-		return (int) Math.round(days);
-	}
-
-	public boolean isPremiumSubscriber() {
-		return premiumSubDaysLeft() > 0;
-	}
-
-	public long getPremiumExpires() {
-		return premiumSubscriptionExpires;
-	}
-
-	public void setPremiumExpires(long long1) {
-		this.premiumSubscriptionExpires = long1;
-	}
 	public int getElixir() {
 		if (getCache().hasKey("elixir_time")) {
 			int now = (int) (System.currentTimeMillis() / 1000);

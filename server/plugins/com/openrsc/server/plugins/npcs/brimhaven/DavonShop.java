@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,9 +9,12 @@ import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.showMenu;
+
 public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(44, 0), new Item(314, 0), new Item(315, 0), new Item(316, 0), new Item(317, 0));
+	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(44, 0), new Item(314, 1), new Item(315, 0), new Item(316, 0), new Item(317, 0));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {

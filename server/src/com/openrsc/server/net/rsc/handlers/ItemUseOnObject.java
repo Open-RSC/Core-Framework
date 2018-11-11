@@ -130,7 +130,7 @@ public class ItemUseOnObject implements PacketHandler {
 						player.getInventory().remove(132, 1);
 
 						Server.getServer().getEventHandler()
-						.add(new MiniEvent(player, 2000) {
+						.add(new MiniEvent(player, 1800) {
 							public void action() {
 								player.message("You burn the "
 										+ item.getDef().getName());
@@ -182,6 +182,7 @@ public class ItemUseOnObject implements PacketHandler {
 							}
 							int reqLvl, exp;
 							Item result;
+							String msg = "";
 							switch (option) {
 							case 0:
 								result = new Item(279, 1);
@@ -191,12 +192,14 @@ public class ItemUseOnObject implements PacketHandler {
 							case 1:
 								result = new Item(278, 1);
 								reqLvl = 4;
-								exp = 50;
+								exp = 60;
+								msg = "you need to have a crafting of level 4 or higher to make pie dishes";
 								break;
 							case 2:
 								result = new Item(340, 1);
 								reqLvl = 7;
-								exp = 50;
+								exp = 40;
+								msg = "You need to have a crafting of level 7 or higher to make a bowl";
 								break;
 							default:
 								owner.message("Nothing interesting happens");
@@ -209,7 +212,7 @@ public class ItemUseOnObject implements PacketHandler {
 							}
 							if (owner.getInventory().remove(item) > -1) {
 								showBubble();
-								owner.message("You make a "
+								owner.message("You make the clay into a "
 										+ result.getDef().getName());
 								owner.getInventory().add(result);
 								owner.incExp(12, exp, true);
@@ -220,9 +223,8 @@ public class ItemUseOnObject implements PacketHandler {
 					break;
 
 				case 178: // Potters Oven & Unfired Clay
-					int reqLvl,
-					xp,
-					resultID;
+					int reqLvl, xp, resultID;
+					String msg = "";
 					switch (item.getID()) {
 					case 279: // Pot
 						resultID = 135;
@@ -232,20 +234,21 @@ public class ItemUseOnObject implements PacketHandler {
 					case 278: // Pie Dish
 						resultID = 251;
 						reqLvl = 4;
-						xp = 50;
+						xp = 40;
+						msg = "you need to have a crafting of level 4 or higher to make pie dishes";
 						break;
 					case 340: // Bowl
 						resultID = 341;
 						reqLvl = 7;
-						xp = 50;
+						xp = 60;
+						msg = "You need to have a crafting of level 7 or higher to make a bowl";
 						break;
 					default:
 						player.message("Nothing interesting happens");
 						return;
 					}
 					if (player.getSkills().getLevel(12) < reqLvl) {
-						player.message("You need a crafting level of " + reqLvl
-								+ " to make this");
+						player.message(msg);
 						return;
 					}
 					final Item result = new Item(resultID, 1);
@@ -253,7 +256,7 @@ public class ItemUseOnObject implements PacketHandler {
 					final boolean fail = Formulae.crackPot(reqLvl,
 							player.getSkills().getLevel(12));
 					showBubble();
-					player.message("You place the " + item.getDef().getName()
+					player.message("You put the " + item.getDef().getName()
 							+ " in the oven");
 					player.setBusy(true);
 					Server.getServer().getEventHandler()
@@ -261,12 +264,16 @@ public class ItemUseOnObject implements PacketHandler {
 						public void action() {
 							if (owner.getInventory().remove(item) > -1) {
 								if (fail) {
-									owner.message("The "
+									owner.message("The " // TODO: Check if legit
 											+ result.getDef().getName()
 											+ " cracks in the oven, you throw it away.");
 								} else {
-									owner.message("You take out the "
-											+ result.getDef().getName());
+									owner.message("the "
+										+ result.getDef().getName()
+										+ "hardens in the oven");
+									owner.message("You remove a "
+										+ result.getDef().getName()
+										+ "from the oven");
 									owner.getInventory().add(result);
 									owner.incExp(12, exp, true);
 								}

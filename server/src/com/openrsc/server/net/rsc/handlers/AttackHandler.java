@@ -65,7 +65,10 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
-			if (n.getX() == 0 && n.getY() == 0) {
+			if (n.getX() == 0 && n.getY() == 0)
+				return;
+			if (n.getID() == 525 && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
+				player.message("these ogres are for range combat training only");
 				return;
 			}
 		}

@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showBubble;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +9,9 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class GemMining implements ObjectActionListener,
 ObjectActionExecutiveListener {
@@ -45,15 +45,15 @@ ObjectActionExecutiveListener {
 			retrytimes = 2;
 			break;
 		case 1259:
-			retrytimes = 3;
+			retrytimes = 4;
 			reqlvl = 6;
 			break;
 		case 1260:
-			retrytimes = 5;
+			retrytimes = 6;
 			reqlvl = 21;
 			break;
 		case 1261:
-			retrytimes = 8;
+			retrytimes = 9;
 			reqlvl = 31;
 			break;
 		case 1262:
@@ -62,18 +62,13 @@ ObjectActionExecutiveListener {
 			break;
 		}
 
-		if(p.isPremiumSubscriber())
-			retrytimes *= 2.0;
-		else if(p.isSubscriber() && !p.isPremiumSubscriber())
-			retrytimes *= 1.5;
-
 		if (axeId < 0 || reqlvl > mineLvl) {
 			message(p, "You need a pickaxe to mine this rock",
 					"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
 
-		if (p.getFatigue() >= 7500) {
+		if (p.getFatigue() >= p.MAX_FATIGUE) {
 			p.message("You are too tired to mine this rock");
 			return;
 		}
@@ -81,7 +76,7 @@ ObjectActionExecutiveListener {
 		p.playSound("mine");
 		showBubble(p, new Item(1258));
 		p.message("You have a swing at the rock!");
-		p.setBatchEvent(new BatchEvent(p, 2000, retrytimes) {
+		p.setBatchEvent(new BatchEvent(p, 1800, 1000 + retrytimes) {
 			@Override
 			public void action() {
 				if (getGem(p, 40, owner.getSkills().getLevel(14), axeId) && mineLvl >= 40) { // always 40 required mining.

@@ -28,21 +28,21 @@ public class RangeEvent extends GameTickEvent {
 	private Mob target;
 
 	public int[][] allowedArrows = { { 189, 11, 638, 639 }, // Shortbow
-			{ 188, 11, 638, 639 }, // Longbow
-			{ 649, 11, 638, 639 }, // Oak Shortbow
-			{ 648, 11, 638, 639, 640, 641 }, // Oak Longbow
-			{ 651, 11, 638, 639, 640, 641 }, // Willow Shortbow
-			{ 650, 11, 638, 639, 640, 641, 642, 643 }, // Willow Longbow
-			{ 653, 11, 638, 639, 640, 641, 642, 643 }, // Maple Shortbow
-			{ 652, 11, 638, 639, 640, 641, 642, 643, 644, 645 }, // Maple
+			{ 188, 11, 574, 638, 639 }, // Longbow
+			{ 649, 11, 574, 638, 639 }, // Oak Shortbow
+			{ 648, 11, 574, 638, 639, 640, 641 }, // Oak Longbow
+			{ 651, 11, 574, 638, 639, 640, 641 }, // Willow Shortbow
+			{ 650, 11, 574, 638, 639, 640, 641, 642, 643 }, // Willow Longbow
+			{ 653, 11, 574, 638, 639, 640, 641, 642, 643 }, // Maple Shortbow
+			{ 652, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645 }, // Maple
 																	// Longbow
-			{ 655, 11, 638, 639, 640, 641, 642, 643, 644, 645, 723 }, // Yew
+			{ 655, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 723 }, // Yew
 																		// Shortbow
-			{ 654, 11, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 }, // Yew
+			{ 654, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 }, // Yew
 																				// Longbow
-			{ 657, 11, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 }, // Magic
+			{ 657, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 }, // Magic
 																				// Shortbow
-			{ 656, 11, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 } // Magic
+			{ 656, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 } // Magic
 																				// Longbow
 	};
 
@@ -138,14 +138,14 @@ public class RangeEvent extends GameTickEvent {
 
 					}
 					if (arrowID != 11 && arrowID != 190) {
-						if (!getPlayerOwner().getLocation().isMembersWild()) {
+						/*if (!getPlayerOwner().getLocation().isMembersWild()) {
 							getPlayerOwner().message("Members content can only be used in wild levels: "
 									+ World.membersWildStart + " - " + World.membersWildMax);
 							getPlayerOwner().message("You can not use this type of arrows in wilderness.");
 							getPlayerOwner().resetRange();
 							stop();
 							return;
-						}
+						}*/
 					}
 
 					int newAmount = arrow.getAmount() - 1;

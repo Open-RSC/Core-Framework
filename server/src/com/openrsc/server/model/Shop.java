@@ -1,11 +1,11 @@
 package com.openrsc.server.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public final class Shop {
 

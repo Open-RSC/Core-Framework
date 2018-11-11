@@ -1,12 +1,12 @@
 package com.openrsc.server.sql.query.logs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.sql.query.Query;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class LiveFeedLog extends Query {
 	private String feedText;

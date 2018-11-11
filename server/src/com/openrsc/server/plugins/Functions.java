@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -23,12 +24,20 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * 
  * @author n0m
  *
  */
 public class Functions {
+
+  /**
+   * The asynchronous logger.
+   */
+  private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 			COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
@@ -719,7 +728,7 @@ public class Functions {
 			p.playSound("opendoor");
 			replaceObject(object, newObject);
 		}
-		delayedSpawnObject(object.getLoc(), 3000);
+		delayedSpawnObject(object.getLoc(), 1200);
 
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
@@ -1344,10 +1353,14 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final String... options) {
-		return showMenu(player, null, options);
+		return showMenu(player, null, true, options);
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final String... options) {
+		return showMenu(player, npc, true, options);
+	}
+
+	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
 		final long start = System.currentTimeMillis();
 		if (npc != null) {
 			if(npc.isRemoved()) {
@@ -1372,11 +1385,12 @@ public class Functions {
 			if (player.getOption() != -1) {
 				if (npc != null && options[player.getOption()] != null) {
 					npc.setBusy(false);
-					playerTalk(player, npc, options[player.getOption()]);
+					if (sendToClient)
+						playerTalk(player, npc, options[player.getOption()]);
 				}
 				return player.getOption();
 			}
-			else if (System.currentTimeMillis() - start > 19500 || player.getMenuHandler() == null) {
+			else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
 				player.setOption(-1);
 				player.resetMenuHandler();
 				if (npc != null) {
@@ -1439,7 +1453,7 @@ public class Functions {
 			if (Thread.currentThread().getName().toLowerCase().contains("gameengine"))
 				return;
 
-			Thread.sleep(650);
+			Thread.sleep(Constants.GameServer.GAME_TICK);
 		} catch (final InterruptedException e) {
 		}
 	}
@@ -1497,7 +1511,12 @@ public class Functions {
 		Server.getServer().getEventHandler().add(new PluginsUseThisEvent() {
 			@Override
 			public void action() {
-				r.run();
+				try {
+					r.run();
+				}
+				catch (Throwable e) {
+					LOGGER.catching(e);
+				}
 			}
 		});
 	}
