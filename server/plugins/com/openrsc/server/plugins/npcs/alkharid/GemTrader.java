@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class GemTrader implements ShopInterface,
@@ -47,17 +48,21 @@ public final class GemTrader implements ShopInterface,
 			final String[] options;
 			if (p.getQuestStage(Quests.FAMILY_CREST) <= 2
 					|| p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
-				options = new String[] { "Yes please", "No thanks" };
+				options = new String[] { "Yes please", "No thankyou" };
 			} else {
-				options = new String[] { "Yes please", "No thanks",
+				options = new String[] { "Yes please", "No thankyou",
 						"I'm in search of a man named adam fitzharmon" };
 			}
-			int option = showMenu(p, n, options);
+			int option = showMenu(p, n, false, options);
 
 			if (option == 0) {
+				playerTalk(p, n, "Yes please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
+			} else if (option == 1) {
+				playerTalk(p, n, "No thankyou");
 			} else if (option == 2) {
+				playerTalk(p, n, "I'm in search of a man named Adam Fitzharmon");
 				npcTalk(p,
 						n,
 						"Fitzharmon eh?",

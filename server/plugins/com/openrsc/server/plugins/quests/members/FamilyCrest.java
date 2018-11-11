@@ -63,11 +63,13 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 			case 0:
 				npcTalk(p, n, "Hello, my name is Dimintheis",
 						"Of the noble family of Fitzharmon");
-				int menu = showMenu(p, n,
+				//do not send over
+				int menu = showMenu(p, n, false,
 						"Why would a nobleman live in a little hut like this?",
 						"You're rich then?, can I have some money?",
 						"Hi, I am bold adventurer");
 				if (menu == 0) {
+					playerTalk(p, n, "Why would a nobleman live in a little hut like this?");
 					npcTalk(p, n, "The king has taken my estate from me",
 							"Until I can show him my family crest");
 					int first = showMenu(p, n, "Why would he do that?",
@@ -78,11 +80,13 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 						dimintheisDialogue(p, n, Dimintheis.THREE_SONS);
 					}
 				} else if (menu == 1) {
+					playerTalk(p, n, "You're rich then?", "Can I have some money?");
 					npcTalk(p, n, "Lousy beggar",
 							"There's to many of your sort about these days",
 							"If I gave money to each of you who asked",
 							"I'd be living on the streets myself");
 				} else if (menu == 2) {
+					playerTalk(p, n, "Hi, I am a bold adventurer");
 					npcTalk(p, n, "An adventurer hmm?",
 							"I may have an adventure for you",
 							"I desperatly need my family crest returning to me");
@@ -111,12 +115,22 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 			case 6:
 			case 7:
 			case 8:
-				if (hasItem(p, 695) && hasItem(p, 696) && hasItem(p, 697)) {
+				boolean gave_crest = false;
+				if (hasItem(p, 694, 1)) {
 					playerTalk(p, n, "I have retrieved your crest");
 					p.message("You give the crest to Dimintheis");
+					removeItem(p, 694, 1);
+					gave_crest = true;
+				}
+				else if(hasItem(p, 695) && hasItem(p, 696) && hasItem(p, 697)) {
+					playerTalk(p, n, "I have retrieved your crest");
+					p.message("You give the parts of the crest to Dimintheis");
 					removeItem(p, 695, 1);
 					removeItem(p, 696, 1);
 					removeItem(p, 697, 1);
+					gave_crest = true;
+				}
+				if(gave_crest) {
 					p.getCache().remove("north_leverA");
 					p.getCache().remove("south_lever");
 					p.getCache().remove("north_leverB");
@@ -133,9 +147,9 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 					addItem(p, 698, 1);
 					npcTalk(p,
 							n,
-							"These gauntlets can be granted extra powers",
+							"These gautlets can be granted extra powers",
 							"Take them to one of my boys, they can each do something to them",
-							"Though they can only receieve one of the tree powers");
+							"Though they can only receive one of the three powers");
 
 					return;
 				}
@@ -202,8 +216,40 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 		if (n.getID() == 309) {
 			dimintheisDialogue(p, n, -1);
 		}
-		if (n.getID() == 307) {
-			if (p.getQuestStage(this) == 4) {
+		//avan
+		else if (n.getID() == 307) {
+			switch(p.getQuestStage(this)) {
+			case -1:
+				npcTalk(p, n, "I have heard word from my father",
+						"Thankyou for helping to restore our family honour");
+				if (hasItem(p, 698)) {
+					playerTalk(p, n,
+							"Your father said that you could improve these Gauntlets in some way for me");
+					npcTalk(p,
+							n,
+							"Indeed I can",
+							"In my quest to find the perfect gold I learned a lot",
+							"I can make it so when you're wearing these");
+					npcTalk(p, n, "You gain more experience when smithing gold");
+					int menu = showMenu(p, n,
+							"That sounds good, improve them for me",
+							"I think I'll check my other options with your brothers");
+					if (menu == 0) {
+						message(p, "Avan takes out a little hammer",
+								"He starts pounding on the gauntlets",
+								"Avan hands the gauntlets to you");
+						p.getInventory().replace(698, 699);
+						
+					} else if (menu == 1) {
+						npcTalk(p, n,
+								"Ok if you insist on getting help from the likes of them");
+					}
+				}
+				break;
+			case 0: case 1: case 2: case 3:
+				npcTalk(p, n, "Can't you see I'm busy?");
+				break;
+			case 4:
 				int menu = showMenu(p, n,
 						"Why are you hanging around in a scorpion pit?",
 						"I'm looking for a man named Avan");
@@ -236,14 +282,16 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 					playerTalk(p, n, "Ok I will try to get what you are after");
 					p.updateQuestStage(this, 5);
 				}
-			} else if (p.getQuestStage(this) == 5) {
+				break;
+			case 5:
 				npcTalk(p, n, "So how are you doing getting the jewellry?");
 				playerTalk(p, n, "I'm still after that perfect gold");
 				npcTalk(p, n,
 						"Well I have been looking for such gold for a while",
 						"My latest lead was a dwarf named Boot",
 						"Though he has gone back to his home in the mountain now");
-			} else if (p.getQuestStage(this) == 6) {
+				break;
+			case 6:
 				npcTalk(p, n, "So how are you doing getting the jewellry?");
 				if (hasItem(p, 692) && hasItem(p, 693)) {
 					playerTalk(p, n, "I have it");
@@ -271,7 +319,8 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 							"Remember I want a gold ring with a red stone in",
 							"And a necklace to match");
 				}
-			} else if (p.getQuestStage(this) == 7) {
+				break;
+			case 7:
 				playerTalk(p, n,
 						"Where did you say I could find Johnathon again?");
 				npcTalk(p, n,
@@ -280,37 +329,29 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 						"But he's not doing a very good job of it",
 						"He spends most his time recovering in an inn",
 						"on the edge of the wilderness");
-			} else if (p.getQuestStage(this) == -1) {
-				npcTalk(p, n, "I have heard word from my father",
-						"Thankyou for helping to restore our family honour");
-				if (hasItem(p, 698)) {
-					playerTalk(p, n,
-							"Your father said that you could improve these Gauntlets in some way for me");
-					npcTalk(p,
-							n,
-							"Indeed I can",
-							"In my quest to find the perfect gold I learned a lot",
-							"I can make it so when you're wearing these");
-					npcTalk(p, n, "You gain more experience when smithing gold");
-					int menu = showMenu(p, n,
-							"That sounds good, improve them for me",
-							"I think I'll check my other options with your brothers");
-					if (menu == 0) {
-						message(p, "Avan takes out a little hammer",
-								"He starts pounding on the gauntlets",
-								"Avan hands the gauntlets to you");
-						p.getInventory().replace(698, 699);
-						
-					} else if (menu == 1) {
-						npcTalk(p, n,
-								"Ok if you insist on getting help from the likes of them");
+				break;
+			case 8:
+				npcTalk(p,n, "How are you doing getting the rest of the crest?");
+				if(!hasItem(p, 696)) {
+					int menu2 = showMenu(p, n,
+							"I am still working on it",
+							"I have lost the piece you gave me");
+					if (menu2 == 0) {
+						npcTalk(p,n, "Well good luck in your quest");
+					} else if(menu2 == 1) {
+						npcTalk(p, n, "Ah well here is another one");
+						addItem(p, 696, 1);
 					}
 				}
-			} else {
-				npcTalk(p, n, "Can't you see I'm busy?");
+				else {
+					playerTalk(p,n, "I am still working on it");
+					npcTalk(p,n, "Well good luck in your quest");
+				}
+				break;
 			}
 		}
-		if (n.getID() == 314) {
+		//johnathon
+		else if (n.getID() == 314) {
 			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 7 ) {
 				npcTalk(p, n, "I am so very tired, leave me to rest");
 			} else if (p.getQuestStage(this) == 7) {
@@ -335,8 +376,7 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "Good luck");
 				}
 			} else if (p.getQuestStage(this) == -1) {
-				npcTalk(p, n, "Hello again",
-						"My family now considers you a hero");
+				npcTalk(p, n, "Hello again");
 				if (hasItem(p, 698)) {
 					playerTalk(p, n,
 							"Your father tells me, you can improve these gauntlets a bit");
@@ -357,6 +397,8 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 						npcTalk(p, n,
 								"Boring crafting and cooking enhacements knowing them");
 					}
+				} else {
+					npcTalk(p, n, "My family now considers you a hero");
 				}
 			}
 		}

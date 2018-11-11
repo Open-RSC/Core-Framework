@@ -133,11 +133,11 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			int menu = showMenu(p, "Yes. I'd like to try.", "No, not just yet.");
 			if(menu == 0) {
 				if(p.getSkills().getMaxStat(SMITHING) < 20) {
-					p.message("you need level 20 of smithing to make dart tip.");
+					p.message("You need level 20 smithing to make the dart tip.");
 					return;
 				}
 				if(!hasItem(p, 168)) {
-					p.message("you need a hammer.");
+					p.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
 				message(p, "You begin experimenting in forging the weapon...",
@@ -164,11 +164,11 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 	private void attachFeathersToPrototype(Player p, Item i, Item i2) {
 		if(i.getID() == 381 && i2.getID() == 1071 || i.getID() == 1071 && i2.getID() == 381) {
 			if(!hasItem(p, 381, 10)) {
-				p.message("you need 10 feathers to attach the feathers to the dart tip.");
+				p.message("You need 10 feathers to attach the feathers to the dart tip.");
 				return;
 			}
 			if(p.getSkills().getMaxStat(FLETCHING) < 10) {
-				p.message("you need at least level 10 of fletching.");
+				p.message("You need at least level 10 fletching to complete the dart.");
 				return;
 			}
 			message(p, "You try to attach feathers to the bronze dart tip.",
