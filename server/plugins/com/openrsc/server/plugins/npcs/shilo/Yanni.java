@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,6 +7,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Yanni implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
@@ -103,8 +103,8 @@ public class Yanni implements TalkToNpcListener, TalkToNpcExecutiveListener, Inv
 				break;
 			case 852:
 				npcTalk(p, npc, "Great item, here's 1000 Gold for it.");
-				removeItem(p, 961, 1);
-				addItem(p, 10, 100);
+				removeItem(p, 852, 1);
+				addItem(p, 10, 1000);
 				p.message("You sell Beads of the Dead.");
 				break;
 			default:

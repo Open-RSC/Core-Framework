@@ -1,11 +1,11 @@
 package com.openrsc.server.content.minigame.fishingtrawler;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.Area;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class WaitingShip {
 

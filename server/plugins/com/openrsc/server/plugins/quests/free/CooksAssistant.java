@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,17 +7,15 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public class CooksAssistant implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener {
-	/**
-	 * Quest: Cook's assistant - fully working made by Fate 2013-09-10. COOKS
-	 * RANGE, COOK, DIALOGUES, COOKING FOOD, AFTER DIALOGUES - 100% Replicated.
-	 * 
-	 * EDIT: 2107-03-15 
-	 * -Cooks range is handled in the objectcooking class.
-	 * -Cooks range are used in Gnome stronhold area for Blurberry & Gnome restaurant minigames.
-	 */
 
+	/*
+	 * Original Author: Fate 2013-09-10
+	*/
+	
 	class Cook {
 		public static final int TERRIBLE_MESS = 0;
 	}
@@ -64,25 +57,7 @@ TalkToNpcExecutiveListener {
 					} else if (choice2 == 1) {
 						npcTalk(p, n, "No, that's the worst thing I could do - I'd get in terrible trouble");
 						playerTalk(p, n, "What's wrong?");
-						npcTalk(p,
-								n,
-								"Ooh dear i'm in a terrible mess",
-								"It's the duke's birthday today",
-								"I'm meant to be making him a big cake for this evening",
-								"Unfortunately, i've forgotten to buy some of the ingredients",
-								"I'll never get them in time now",
-								"I don't suppose you could help me?");
-						int choice3 = showMenu(p, n,
-								"Yes, I'll help you",
-								"No, I don't feel like it. Maybe later");
-						if (choice3 == 0) {
-							npcTalk(p, n, "Oh thank you, thank you",
-									"I need milk, eggs and flour",
-									"I'd be very grateful if you can get them to me");
-							p.updateQuestStage(getQuestId(), 1);
-						} else if (choice3 == 1) {
-							npcTalk(p, n, "OK, suit yourself");
-						}
+						cookDialogue(p, n, Cook.TERRIBLE_MESS);
 					}
 				} else if (choice == 3) {
 					npcTalk(p, n, "Err thank you -it's a pretty ordinary cooks hat really");
@@ -98,13 +73,39 @@ TalkToNpcExecutiveListener {
 							"Milk, flour, and an egg!");
 					npcTalk(p, n, "I am saved thankyou!");
 					message(p, "You give some milk, an egg and some flour to the cook");
+					p.getInventory().remove(19, 1);
+					p.getInventory().remove(136, 1);
+					p.getInventory().remove(22, 1);
 					p.sendQuestComplete(Constants.Quests.COOKS_ASSISTANT);
 					p.updateQuestStage(getQuestId(), -1);
+
+				} else if (p.getInventory().hasItemId(19)
+						|| p.getInventory().hasItemId(136)
+						|| p.getInventory().hasItemId(22)) {
+
+					playerTalk(p, n, "I have found some of the things you asked for:");
+					if (p.getInventory().hasItemId(22))
+						playerTalk(p, n, "I have some milk");
+					if (p.getInventory().hasItemId(136))
+						playerTalk(p, n, "I have some flour");
+					if (p.getInventory().hasItemId(19))
+						playerTalk(p, n, "I have an egg");
+
+					npcTalk(p, n, "You still need to find");
+					if (!p.getInventory().hasItemId(22))
+						npcTalk(p, n, "Some milk");
+					if (!p.getInventory().hasItemId(136))
+						npcTalk(p, n, "Some flour");
+					if (!p.getInventory().hasItemId(19))
+						npcTalk(p, n, "An egg");
+
+					playerTalk(p, n, "OK I'll try and find that for you");
+
 				} else {
-					playerTalk(p, n, "I'm afraid i don't have any yet!");
+					playerTalk(p, n, "I'm afraid I don't have any yet!");
 					npcTalk(p, n, "Oh dear oh dear!",
 							"I need flour, eggs, and milk",
-							"Without them i am doomed!");
+							"Without them I am doomed!");
 				}
 				break;
 			case -1:
@@ -127,14 +128,13 @@ TalkToNpcExecutiveListener {
 				break;
 			}
 		}
-		switch (cID) {
-		case Cook.TERRIBLE_MESS:
+		else if (cID == Cook.TERRIBLE_MESS) {
 			npcTalk(p,
 					n,
-					"Ooh dear i'm in a terrible mess",
+					"Ooh dear I'm in a terrible mess",
 					"It's the duke's birthday today",
 					"I'm meant to be making him a big cake for this evening",
-					"Unfortunately, i've forgotten to buy some of the ingredients",
+					"Unfortunately, I've forgotten to buy some of the ingredients",
 					"I'll never get them in time now",
 					"I don't suppose you could help me?");
 			int choice = showMenu(p, n, "Yes, I'll help you",
@@ -147,7 +147,6 @@ TalkToNpcExecutiveListener {
 			} else if (choice == 1) {
 				npcTalk(p, n, "OK, suit yourself");
 			}
-			break;
 		}
 	}
 
@@ -172,9 +171,6 @@ TalkToNpcExecutiveListener {
 		player.incQuestExp(7, player.getSkills().getMaxStat(7) * 200 + 1000);
 		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
-		player.getInventory().remove(19, 1);
-		player.getInventory().remove(136, 1);
-		player.getInventory().remove(22, 1);
 	}
 
 	@Override

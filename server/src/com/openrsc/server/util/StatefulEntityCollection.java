@@ -1,13 +1,8 @@
 package com.openrsc.server.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-
 import com.openrsc.server.model.entity.Entity;
+
+import java.util.*;
 
 
 /**

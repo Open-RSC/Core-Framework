@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Panning implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
@@ -110,10 +110,10 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 					}
 				}
 			}
-			if(item.getID() == FULL_PANNING_TRAY) {
+			else if(item.getID() == FULL_PANNING_TRAY) {
 				p.playerServerMessage(MessageType.QUEST, "This panning tray already contains something");
 			}
-			if(item.getID() == GOLD_NUGGET_TRAY) {
+			else if(item.getID() == GOLD_NUGGET_TRAY) {
 				p.playerServerMessage(MessageType.QUEST, "This panning tray already contains gold");
 			}
 		}
@@ -180,7 +180,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
 			playerTalk(p, null, "Err, why am I searching an empty tray ?");
 		}
-		if(item.getID() == FULL_PANNING_TRAY) {
+		else if(item.getID() == FULL_PANNING_TRAY) {
 			p.setBusy(true);
 			message(p, "You search the contents of the tray...");
 			sleep(1500);
@@ -200,7 +200,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			} else if(randomNumber >= 70 && randomNumber < 80) { // 10%
 				addItem = ORANGE_ROCK_SAMPLE;
 			} else if(randomNumber >= 80 && randomNumber < 90) { // 10%
-				addItem = GOLD_NUGGET_TRAY;
+				addItem = GOLD_NUGGET;
 			} else if(randomNumber >= 90 && randomNumber < 100) { // 10%
 				addItem = UNCUT_SAPPHIRE;
 			}
@@ -221,7 +221,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			}
 			p.setBusy(false);
 		}
-		if(item.getID() == GOLD_NUGGET_TRAY) {
+		else if(item.getID() == GOLD_NUGGET_TRAY) {
 			p.getInventory().replace(GOLD_NUGGET_TRAY, PANNING_TRAY);
 			addItem(p, GOLD_NUGGET, 1);
 			p.message("You take the gold form the panning tray");

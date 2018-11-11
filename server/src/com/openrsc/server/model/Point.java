@@ -1,11 +1,11 @@
 package com.openrsc.server.model;
 
-import java.util.ArrayList;
-
 import com.openrsc.server.model.entity.WildernessLocation;
 import com.openrsc.server.model.entity.WildernessLocation.WildState;
 import com.openrsc.server.model.world.Area;
 import com.openrsc.server.util.rsc.Formulae;
+
+import java.util.ArrayList;
 
 public class Point {
 	
@@ -78,6 +78,14 @@ public class Point {
 
 		return xDiff <= radius && xDiff >= -radius && yDiff <= radius
 				&& yDiff >= -radius;
+	}
+
+	public final boolean withinGridRange(Point p, int radius) {
+		// Snap coordinates to an 8x8 grid
+		// radius is compared in multiples of 8
+		final int xDiff = (this.x >> 3) - (p.x >> 3);
+		final int yDiff = (this.y >> 3) - (p.y >> 3);
+		return xDiff <= radius && xDiff >= -radius && yDiff <= radius && yDiff >= -radius;
 	}
 
 	public final int getX() {

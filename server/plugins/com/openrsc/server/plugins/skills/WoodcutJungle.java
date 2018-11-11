@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,6 +12,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements ObjectActionListener,
 ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
@@ -47,28 +46,37 @@ ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecuti
 	}
 
 	private void handleJungleWoodcut(GameObject obj, Player p) {
-		boolean canCut = true;
-		if (p.getFatigue() >= 7050) {
-			if(p.getFatigue() < 7500) {
-				p.message("You are getting very tired, you may get stuck if you continue into the jungle.");
-			} else if(p.getFatigue() >= 7500) {
-				p.message("You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+		if(p.getFatigue() >= p.MAX_FATIGUE) {
+			p.message("You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+
+			// Shilo side of the jungle
+			if(p.getY() < 866) {
+				return;
 			}
-			canCut = false;
-		} 
-		if(!hasItem(p, 1172)) { // machete.
-			message(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
-			canCut = false;
+
+			else if (p.getY() >= 866) { // Khazari side, force out.
+				p.message("It takes you some time, but you eventually make your way");
+				p.message("out of the Khazari jungle.");
+				cutJungle(0, obj, p, true);
+				return;
+			}
 		}
-		if(!hasItem(p, 1163) && !hasItem(p, 1233) && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) { // the radimus scrolls.
-			message(p, 1900, "This jungle is far too thick, you'll need a special map to go further.");
-			canCut = false;
-		}
-		/* TODO 50 requirement for woodcutting? */
+		
+		//if(!hasItem(p, 1163) && !hasItem(p, 1233) && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) { // the radimus scrolls.
+		//	message(p, 1900, "This jungle is far too thick, you'll need a special map to go further.");
+		//	return;
+		//}
+
 		if(p.getSkills().getMaxStat(WOODCUT) < 50) {
 			p.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}
+
+		if(!hasItem(p, 1172)) { // machete.
+			message(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
+			return;
+		}
+
 		int axeId = -1;
 		if(obj.getID() != JUNGLE_VINE) {
 			for (final int a : Formulae.woodcuttingAxeIDs) {
@@ -84,43 +92,55 @@ ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecuti
 		} else {
 			axeId = 1172;
 		}
-		if(canCut) {
-			p.setBusy(true);
-			showBubble(p, new Item(axeId));
-			message(p, 1300, "You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
-			if (getLog(50, p.getSkills().getLevel(8), axeId)) {
-				GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
-				if(jungleObject != null && jungleObject.getID() == obj.getID()) {
-					if(obj.getID() == JUNGLE_VINE) {
-						p.incExp(8, 20, true);
-						World.getWorld().unregisterGameObject(jungleObject);
-						World.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
-						message(p, 1200, "You hack your way through the jungle.");
-					} else {
-						p.incExp(8, 20, true);
-						World.getWorld().replaceGameObject(obj, new GameObject(obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
-						World.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
-					}
-				}
-				if(DataConversions.random(0, 10) == 8) {
-					final Item log = new Item(14);
-					if(!p.getInventory().full()) 
-						p.getInventory().add(log);
-					else 
-						World.getWorld().registerItem(new GroundItem(log.getID(), p.getX(), p.getY(), log.getAmount(), p));
-					p.message("You get some wood");
-				}
-				p.teleport(obj.getX(), obj.getY());
-				if(p.getY() > 871) {
-					if(obj.getID() == JUNGLE_VINE) 
-						sleep(4000);
-					p.message("You manage to hack your way into the Kharazi Jungle.");
-				}
-			} else {
-				p.message("You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+
+		boolean canCut = true;
+		p.setBusy(true);
+		showBubble(p, new Item(axeId));
+		message(p, 1300, "You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
+		if (p.getFatigue() >= 74920) {
+			if(p.getFatigue() < p.MAX_FATIGUE) {
+				p.message("You are getting very tired, you may get stuck if you continue into the jungle.");
 			}
-			p.setBusy(false);
+		} 
+
+		cutJungle(axeId, obj, p, false);
+	}
+
+	private void cutJungle(int axeId, GameObject obj, Player p, boolean force) {
+		if (force || getLog(50, p.getSkills().getLevel(8), axeId)) {
+			GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+			if(jungleObject != null && jungleObject.getID() == obj.getID()) {
+				if(obj.getID() == JUNGLE_VINE) {
+					World.getWorld().unregisterGameObject(jungleObject);
+					World.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
+					if (!force)
+						message(p, 1200, "You hack your way through the jungle.");
+				} else {
+					World.getWorld().replaceGameObject(obj, new GameObject(obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
+					World.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
+				}
+
+				if (!force)
+					p.incExp(8, 20, true);
+			}
+			if(DataConversions.random(0, 10) == 8) {
+				final Item log = new Item(14);
+				if(!p.getInventory().full()) 
+					p.getInventory().add(log);
+				else 
+					World.getWorld().registerItem(new GroundItem(log.getID(), p.getX(), p.getY(), log.getAmount(), p));
+				p.message("You get some wood");
+			}
+			p.teleport(obj.getX(), obj.getY());
+			if(p.getY() > 871) {
+				if(obj.getID() == JUNGLE_VINE) 
+					sleep(4000);
+				p.message("You manage to hack your way into the Kharazi Jungle.");
+			}
+		} else {
+			p.message("You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 		}
+		p.setBusy(false);
 	}
 
 	private boolean getLog(int reqlevel, int woodcutLevel, int axeId) {

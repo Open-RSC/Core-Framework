@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.npcs.grandtree;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,6 +8,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Gulluck implements ShopInterface,
 		TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -32,14 +30,14 @@ public final class Gulluck implements ShopInterface,
 			npcTalk(p, n, "good day brave adventurer",
 					"could i interest you in my fine selection of weapons?");
 
-			int option = showMenu(p, n, "i'll take a look", "No thanks");
+			int option = showMenu(p, n, "i'll take a look", "no thanks");
 			switch (option) {
 				case 0:
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 					break;
 				case 1:
-					npcTalk(p, n, "grrr");
+					npcTalk(p, n, "grrrr");
 					break;
 
 			}

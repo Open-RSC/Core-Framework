@@ -1,13 +1,13 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.Server;
+import com.openrsc.server.net.rsc.ActionSender;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-import com.openrsc.server.Server;
-import com.openrsc.server.net.rsc.ActionSender;
 
 public class Social {
 
@@ -27,14 +27,18 @@ public class Social {
 	 */
 	private ArrayList<Long> ignoreList = new ArrayList<Long>();
 
-	public void addFriend(long id, int world, String friendName) {
-		friendList.put(id, world);
-		Server.getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
+	public boolean addFriend(long id, int world, String friendName) {
+		boolean added = Server.getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
+		if (added)
+			friendList.put(id, world);
+		return added;
 	}
 
-	public void addIgnore(long id, int i) {
-		ignoreList.add(id);
-		Server.getPlayerDataProcessor().getDatabase().addIgnore(player.getDatabaseID(), id);
+	public boolean addIgnore(long id, int i, String friendName) {
+		boolean added = Server.getPlayerDataProcessor().getDatabase().addIgnore(player.getDatabaseID(), id, friendName);
+		if (added)
+			ignoreList.add(id);
+		return added;
 	}
 	
 	public void removeFriend(long id) {

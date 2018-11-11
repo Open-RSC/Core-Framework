@@ -1,11 +1,12 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.addItem;
 
 public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
@@ -25,6 +26,13 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+
+		// No Decanting without the config set to true!
+		if (!Constants.GameServer.WANT_DECANTING) {
+			p.message("Nothing interesting happens");
+			return;
+		}
+
 		/** Regular Strength Potions **/
 		// 1 dose on 2 dose str = 3 dose
 		if (item1.getID() == 224 && item2.getID() == 223 || item1.getID() == 223 && item2.getID() == 224) {

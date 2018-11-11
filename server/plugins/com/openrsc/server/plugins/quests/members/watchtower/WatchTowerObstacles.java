@@ -1,26 +1,7 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
-import static com.openrsc.server.plugins.Functions.AGILITY;
-import static com.openrsc.server.plugins.Functions.THIEVING;
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.coordModifier;
-import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.openChest;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObject;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 import com.openrsc.server.Constants;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -29,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * 
@@ -183,6 +166,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				if(wizard != null) {
 					p.incQuestPoints(4);
 					p.message("@gre@You haved gained 4 quest points!");
+					p.incQuestExp(6, (p.getSkills().getMaxStat(6) + 1) * 1000);
 					npcTalk(p, wizard, "Marvellous! it works!",
 							"The town will now be safe",
 							"Your help was invaluable",
@@ -192,7 +176,6 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 					npcTalk(p, wizard, "Also, let me improve your magic level for you");
 					p.message("The wizard lays his hands on you...");
 					p.message("You feel magic power increasing");
-					p.incQuestExp(6, (p.getSkills().getMaxStat(6) + 1) * 1000);
 					npcTalk(p, wizard, "Here is a special item for you...");
 					addItem(p, 1181, 1);
 					npcTalk(p, wizard, "It's a new spell",
@@ -372,6 +355,10 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				p.message("The bridge has collapsed");
 				p.message("It seems this rock is placed here to jump from");
 			} else if(command.equalsIgnoreCase("jump over")) {
+				if (p.getSkills().getLevel(16) < 30) {
+					p.message("You need agility level of 30 to attempt this jump");
+					return;
+				}
 				if(obj.getID() == ROCK_BACK) {
 					p.teleport(646, 805);
 					playerTalk(p,null, "I'm glad that was easier on the way back!");
@@ -392,8 +379,13 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 										"Do you want to get hurt or something ?");
 							} else {
 								removeItem(p, 10, 20);
+								if (p.getFatigue() >= 7500) {
+									p.message("You are too tired to attempt this jump");
+									return;
+								}								
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
+								p.incExp(AGILITY, 50, true);
 								playerTalk(p,null, "Phew! I just made it");
 							}
 						} else if(menu == 1) {
@@ -401,8 +393,13 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.message("The guard blocks your path");
 						}
 					} else {
+						if (p.getFatigue() >= 7500) {
+							p.message("You are too tired to attempt this jump");
+							return;
+						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);
+						p.incExp(AGILITY, 50, true);
 						playerTalk(p,null, "Phew! I just made it");
 					}
 				}

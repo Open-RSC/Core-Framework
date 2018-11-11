@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -14,6 +9,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class GerrantsFishingGear implements
 		ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -69,7 +66,8 @@ public final class GerrantsFishingGear implements
 					"You'll also need a lava proof fishing line",
 					"The method for this would be take an ordinary fishing rod",
 					"And cover it with fire proof blamish oil");
-			if (!hasItem(p, 587)) {
+			// check no Blaimish snail slime, oil and rod to re-issue
+			if (!hasItem(p, 587) && !hasItem(p, 588) && !hasItem(p, 589)) {
 				npcTalk(p, n, "Now I may have a jar of Blamish snail slime",
 						"I wonder where I put it");
 				p.message("Gerrant searches about a bit");

@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.message;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
@@ -23,6 +20,9 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Crafting implements InvUseOnItemListener,
 InvUseOnItemExecutiveListener, InvUseOnObjectListener,
@@ -79,7 +79,7 @@ InvUseOnObjectExecutiveListener {
 									public void handleReply(final int option,
 											final String reply) {
 										owner.setBatchEvent(new BatchEvent(
-												owner, 1400,
+												owner, 1200,
 												Formulae.getRepeatTimes(owner, 12)) {
 											public void action() {
 												if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5
@@ -87,7 +87,7 @@ InvUseOnObjectExecutiveListener {
 													owner.checkAndInterruptBatchEvent();
 													return;
 												}
-												if (owner.getFatigue() >= 7500) {
+												if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 													owner.message("You are too tired to craft");
 													interrupt();
 													return;
@@ -193,7 +193,7 @@ InvUseOnObjectExecutiveListener {
 									return;
 								}
 
-								owner.setBatchEvent(new BatchEvent(owner, 1400,
+								owner.setBatchEvent(new BatchEvent(owner, 1200,
 										Formulae.getRepeatTimes(owner, 12)) {
 
 									@Override
@@ -225,19 +225,25 @@ InvUseOnObjectExecutiveListener {
 					}
 				});
 				return;
-			} else if (item.getID() == 625) { // Sand (Glass)
+			} else if (item.getID() == 624 || item.getID() == 625) { // Soda Ash or Sand (Glass)
 				if (owner.getInventory().countId(624) < 1) {
 					owner.message(
 							"You need some soda ash to make glass");
 					return;
 				}
+				else if(owner.getInventory().countId(625) < 1) {
+					owner.message(
+							"You need some sand to make glass");
+					return;
+				}
 				owner.setBusy(true);
 				showBubble(owner, item);
+				int otherItem = item.getID() == 625 ? 624 : 625;
 				owner.message("you heat the sand and soda ash in the furnace to make glass");
 				Server.getServer().getEventHandler()
 				.add(new ShortEvent(owner) {
 					public void action() {
-						if (owner.getInventory().remove(624, 1) > -1
+						if (owner.getInventory().remove(otherItem, 1) > -1
 								&& owner.getInventory().remove(item) > -1) {
 							owner.getInventory().add(
 									new Item(623, 1));
@@ -295,6 +301,8 @@ InvUseOnObjectExecutiveListener {
 			}
 			return;
 		}
+		player.message(
+				"Nothing interesting happens");
 		return;
 	}
 
@@ -305,13 +313,14 @@ InvUseOnObjectExecutiveListener {
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player, 650, Formulae.getRepeatTimes(player, 12)) {
+		player.setBatchEvent(new BatchEvent(player, 600, Formulae.getRepeatTimes(player, 12)) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(12) < gemDef.getReqLevel()) {
+					boolean pluralize = gemDef.getGemID() <= 542;
 					owner.message(
-							"You need a crafting level of " + gemDef.getReqLevel()
-							+ " to cut " + gem.getDef().getName().toLowerCase().replace("uncut ", "") + "s");
+							"you need a crafting level of " + gemDef.getReqLevel()
+							+ " to cut " + (gem.getDef().getName().contains("ruby") ? "rubies" : gem.getDef().getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
 					return;
 				}
@@ -349,21 +358,26 @@ InvUseOnObjectExecutiveListener {
 					public void handleReply(final int option, final String reply) {
 						Item result;
 						int reqLvl, exp;
+						String resultGen;
 						switch (option) {
 						case 0:
 							result = new Item(465, 1);
 							reqLvl = 33;
 							exp = 140;
+							resultGen = "vials";
 							break;
 						case 1:
 							result = new Item(611, 1);
 							reqLvl = 46;
 							exp = 210;
+							resultGen = "orbs";
 							break;
 						case 2:
 							result = new Item(620, 1);
-							reqLvl = 3;
+							reqLvl = 1;
 							exp = 70;
+							// should not use this, as beer glass is made at level 1
+							resultGen = "beer glasses";
 							break;
 						default:
 							return;
@@ -371,8 +385,8 @@ InvUseOnObjectExecutiveListener {
 						if (owner.getSkills().getLevel(12) < reqLvl) {
 							owner.message(
 									"You need a crafting level of " + reqLvl
-									+ " to make a "
-									+ result.getDef().getName() + ".");
+									+ " to make "
+									+ resultGen);
 							return;
 						}
 						if (owner.getInventory().remove(glass) > -1) {
@@ -398,9 +412,6 @@ InvUseOnObjectExecutiveListener {
 			player.message(
 					"You need some thread to make anything out of leather");
 			return true;
-		}
-		if (DataConversions.random(0, 5) == 0) {
-			player.getInventory().remove(43, 1);
 		}
 		Server.getServer().getEventHandler().add(new MiniEvent(player) {
 			public void action() {
@@ -431,9 +442,9 @@ InvUseOnObjectExecutiveListener {
 						}
 						if (owner.getSkills().getLevel(12) < reqLvl) {
 							owner.message(
-									"You need a crafting level of " + reqLvl
-									+ " to make "
-									+ result.getDef().getName() + ".");
+									"You need to have a crafting of level " + reqLvl
+									+ " or higher to make "
+									+ result.getDef().getName());
 							return;
 						}
 						if (owner.getInventory().remove(leather) > -1) {
@@ -442,6 +453,19 @@ InvUseOnObjectExecutiveListener {
 											+ result.getDef().getName());
 							owner.getInventory().add(result);
 							owner.incExp(12, exp, true);
+							//a reel of thread accounts for 5 uses
+							if(!owner.getCache().hasKey("part_reel_thread")) {
+								owner.getCache().set("part_reel_thread", 1);	
+							} else {
+								int parts = owner.getCache().getInt("part_reel_thread");	
+								if(parts >= 4) {
+									owner.message("You use up one of your reels of thread");
+									owner.getInventory().remove(43, 1);
+									owner.getCache().remove("part_reel_thread");
+								} else {
+									owner.getCache().put("part_reel_thread", parts + 1);
+								}
+							}
 						}
 					}
 				});
@@ -483,7 +507,7 @@ InvUseOnObjectExecutiveListener {
 			return false;
 		}
 		final int newId = newID;
-		player.setBatchEvent(new BatchEvent(player, 650,
+		player.setBatchEvent(new BatchEvent(player, 600,
 				Formulae.getRepeatTimes(player,12)) {
 			@Override
 			public void action() {
@@ -560,8 +584,7 @@ InvUseOnObjectExecutiveListener {
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 			Player player) {
 		if ((obj.getID() == 118 || obj.getID() == 813)
-				&& (item.getID() == 384 || item.getID() == 172 || item.getID() == 625)
-				|| item.getID() == 691) {
+				&& DataConversions.inArray(new int[] {384, 172, 624, 625, 691}, item.getID())) {
 			return true;
 		}
 		return false;

@@ -1,15 +1,14 @@
 package com.openrsc.server.content.market;
 
+import com.openrsc.server.Constants;
+import com.openrsc.server.sql.DatabaseConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.sql.DatabaseConnection;
 
 public class MarketDatabase {
 	

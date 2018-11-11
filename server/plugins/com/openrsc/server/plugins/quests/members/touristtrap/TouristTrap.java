@@ -1,33 +1,28 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
+
+import java.util.ArrayList;
 
 public class TouristTrap implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener,NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
 
+	/** Player isWielding **/
+	public static final int[] restricted = { 0, 1, 3, 4, 5, 6, 7, 9 };
+	public static final int[] allow = { 1019, 1020, 1021, 1022};		
+	ArrayList<Integer> wieldPos = new ArrayList<>();
+    ArrayList<Integer> allowed = new ArrayList<>();
+     	
 	/** Quest Items **/
 	public static int METAL_KEY = 1021;
 	public static int CELL_DOOR_KEY = 1098;
@@ -2324,13 +2319,12 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					p.message("The gates close behind you.");
 					Npc n = getNearestNpc(p, MERCENARY_INSIDE, 15);
 					if(n != null) {
-						if(p.getQuestStage(this) == -1) { // TODO check the real dialogue after completion
-						// todo change the coords going in and going out.
-							npcTalk(p,n, "Hey! Where do you think you're going?");
-							n.startCombat(p);
-							npcTalk(p,n, "Guards! Slave escaping!");
-							p.message("No other guards come to the rescue.");
-						} else {
+                        if(p.getQuestStage(this) == -1) { // TODO check the real dialogue after completion
+                        // todo change the coords going in and going out.
+                            npcTalk(p,n, "Move along now...we've had enough of your sort!");
+                            
+                        } else {
+                        	if (playerArmed(p)) {
 							npcTalk(p,n, "Oi You with the weapon and armour, what are you doing?",
 									"You don't belong in here!");
 							p.message("More guards come to arrest you.");
@@ -2339,6 +2333,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							message(p, "You're outnumbered by all the guards.",
 									"They man-handle you into a cell.");
 							p.teleport(89, 801);
+                        	}
 						}
 					}
 				}
@@ -2409,14 +2404,18 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 		}
 		if(obj.getID() == DESK) {
-			message(p, "You search the captains desk while he's not looking.");
-			if(!hasItem(p, CELL_DOOR_KEY)) {
-				message(p, "You find a cell door key.");
-				addItem(p, CELL_DOOR_KEY, 1);
-			} else {
-				message(p, "...but you find nothing of interest.");
-			}
-		}
+            message(p, "You search the captains desk while he's not looking.");
+            if(!hasItem(p, CELL_DOOR_KEY) && p.getQuestStage(this) != -1) {
+                message(p, "You find a cell door key.");
+                addItem(p, CELL_DOOR_KEY, 1);
+            } 
+            else if (!hasItem(p, METAL_KEY) && p.getQuestStage(this) == -1) {
+                    message(p, "You find a metal key.");
+                    addItem(p, METAL_KEY, 1);                                    
+            } else {
+                message(p, "...but you find nothing of interest.");
+            }            
+        }
 		if(obj.getID() == BOOKCASE) {
 			if(command.equals("search")) {
 				p.message("You notice several books on the subject of Sailing.");
@@ -2783,4 +2782,22 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;
 		}
 	}
+	private boolean playerArmed(Player p) {
+        for (int robes : allow) {
+                    allowed.add(robes);
+        }
+         for (int pos : restricted) {
+                    wieldPos.add(pos);
+        }
+                for (Item item : p.getInventory().getItems()) {
+                if (item.isWielded() && item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID()))  {
+                        return false;
+                        }
+                if (item.isWielded() && wieldPos.contains(item.getDef().getWieldPosition())) {
+                        return true; 
+                        }
+                    }
+                return false;
+                }
 }
+

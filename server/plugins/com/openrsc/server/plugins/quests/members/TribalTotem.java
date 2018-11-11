@@ -1,14 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -25,6 +16,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TribalTotem implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener, ObjectActionListener,
@@ -51,8 +44,8 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.incQuestPoints(1);
 		p.message("Well done you have completed the tribal totem quest");
-		p.message("@gre@You haved gained 1 quest point!");
 		p.incQuestExp(17, (300 * p.getSkills().getMaxStat(17)) + 800); // THIEVING XP.
+		p.message("@gre@You haved gained 1 quest point!");
 
 	}
 

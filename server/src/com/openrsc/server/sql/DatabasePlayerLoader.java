@@ -1,30 +1,26 @@
 package com.openrsc.server.sql;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.sql.web.AvatarGenerator;
-import com.openrsc.server.util.IPTrackerPredicate;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.LoginResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class DatabasePlayerLoader {
 
@@ -210,7 +206,23 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public void addFriend(int playerID, long friend, String friendName) {
+	private boolean usernameToId(String username) {
+		ResultSet result = null;
+		try {
+			if (useTransactions)
+				conn.executeQuery("START TRANSACTION");
+			result = resultSetFromString(Statements.userToId, username);
+			if (useTransactions)
+				conn.executeQuery("COMMIT");
+			return result.isBeforeFirst();
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
+		return false;
+	}
+
+	public boolean addFriend(int playerID, long friend, String friendName) {
+		if (!usernameToId(friendName)) return false;
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
@@ -221,10 +233,11 @@ public class DatabasePlayerLoader {
 			prepared.executeUpdate();
 			if (useTransactions)
 				conn.executeQuery("COMMIT");
+			return true;
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
-
+		return false;
 	}
 
 	public void removeFriend(int playerID, long friend) {
@@ -242,7 +255,8 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public void addIgnore(int playerID, long friend) {
+	public boolean addIgnore(int playerID, long friend, String friendName) {
+		if (!usernameToId(friendName)) return false;
 		try {
 			if (useTransactions)
 				conn.executeQuery("START TRANSACTION");
@@ -252,9 +266,11 @@ public class DatabasePlayerLoader {
 			prepared.executeUpdate();
 			if (useTransactions)
 				conn.executeQuery("COMMIT");
+			return true;
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
+		return false;
 	}
 
 	public void removeIgnore(int playerID, long friend) {
@@ -286,6 +302,76 @@ public class DatabasePlayerLoader {
 
 	public void duelBlock(int on, long user) {
 		updateIntsLongs(Statements.duelBlock, new int[] { on }, new long[] { user });
+	}
+
+	public void addNpcKill(Player player, Npc npc, boolean wantMessage) {
+		try {
+			// Find an existing entry for this NPC/Player combo
+			PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
+				Statements.npcKillSelect);
+			statementSelect.setInt(1, npc.getID());
+			statementSelect.setInt(2, player.getDatabaseID());
+			ResultSet selectResult = statementSelect.executeQuery();
+			int kills = -1;
+			while (selectResult.next()) {
+				kills = selectResult.getInt("killCount");
+			}
+			if (kills == -1) {
+				PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
+					Statements.npcKillInsert);
+				statementInsert.setInt(1, npc.getID());
+				statementInsert.setInt(2, player.getDatabaseID());
+				int insertResult = statementInsert.executeUpdate();
+				kills = 1;
+			} else {
+				kills++;
+			}
+
+			PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
+				Statements.npcKillUpdate);
+			statementUpdate.setInt(1, kills);
+			statementUpdate.setInt(2, npc.getID());
+			statementUpdate.setInt(3, player.getDatabaseID());
+			int updateResult = statementUpdate.executeUpdate();
+			if (wantMessage) {
+				player.message("Your " + npc.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
+			}
+		} catch (SQLException e) {
+			LOGGER.catching(e);
+		}
+	}
+
+	public void addNpcDrop(Player player, Npc npc, int dropId, int dropAmount) {
+		try {
+			PreparedStatement statementSelect = DatabaseConnection.getDatabase().prepareStatement(
+				Statements.npcDropSelect);
+			statementSelect.setInt(1, dropId);
+			statementSelect.setInt(2, player.getDatabaseID());
+			ResultSet selectResult = statementSelect.executeQuery();
+			int dropTotal = -1;
+			while (selectResult.next()) {
+				dropAmount = selectResult.getInt("dropAmount");
+			}
+			if (dropTotal == -1) {
+				PreparedStatement statementInsert = DatabaseConnection.getDatabase().prepareStatement(
+					Statements.npcDropInsert);
+				statementInsert.setInt(1, dropId);
+				statementInsert.setInt(2, player.getDatabaseID());
+				int insertResult = statementInsert.executeUpdate();
+				dropTotal = dropAmount;
+			} else {
+				dropTotal += dropAmount;
+			}
+
+			PreparedStatement statementUpdate = DatabaseConnection.getDatabase().prepareStatement(
+				Statements.npcDropUpdate);
+			statementUpdate.setInt(1, dropAmount);
+			statementUpdate.setInt(2, dropId);
+			statementUpdate.setInt(3, player.getDatabaseID());
+			int updateResult = statementUpdate.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.catching(e);
+		}
 	}
 
 	public boolean playerExists(int user) {
@@ -326,8 +412,6 @@ public class DatabasePlayerLoader {
 			save.setOwner(result.getInt("owner"));
 			save.setDatabaseID(result.getInt("id"));
 			save.setGroupID(result.getInt("group_id"));
-			save.setSubscriptionExpires(result.getLong("sub_expires"));
-			save.setPremiumExpires(result.getLong("platinum_expires"));
 			save.setCombatStyle((byte) result.getInt("combatstyle"));
 			save.setLastLogin(result.getLong("login_date"));
 			save.setLastIP(result.getString("login_ip"));
@@ -667,7 +751,7 @@ public class DatabasePlayerLoader {
 
 		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
 
-		private static final String playerData = "SELECT `owner`, `id`, `group_id`, `sub_expires`, `platinum_expires`,"
+		private static final String playerData = "SELECT `owner`, `id`, `group_id`, "
 				+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`, `kills`,"
 				+ "`deaths`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
 				+ "`block_trade`, `block_duel`, `cameraauto`,"
@@ -744,6 +828,16 @@ public class DatabasePlayerLoader {
 				+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
 
 		private static final String playerLoginData = "SELECT `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
+
+		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
+
+		private static final String npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
+		private static final String npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)";
+		private static final String npcKillUpdate = "UPDATE `" + PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?";
+
+		private static final String npcDropSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
+		private static final String npcDropInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID) VALUES (?, ?)";
+		private static final String npcDropUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
 	}
 
 

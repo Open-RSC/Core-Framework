@@ -1,14 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -24,6 +15,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SeaSlug implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener,
@@ -48,8 +41,8 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.incQuestPoints(1);
-		p.incQuestExp(10, 700 + 800 * p.getSkills().getMaxStat(10));
 		p.message("@gre@You haved gained 1 quest point!");
+		p.incQuestExp(10, 700 + 800 * p.getSkills().getMaxStat(10));
 		p.message("well done, you have completed the sea slug quest");
 	}
 

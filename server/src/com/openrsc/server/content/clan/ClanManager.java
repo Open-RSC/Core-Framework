@@ -1,18 +1,17 @@
 package com.openrsc.server.content.clan;
 
+import com.openrsc.server.Constants;
+import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.sql.DatabaseConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.Constants;
-import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.sql.DatabaseConnection;
 
 
 

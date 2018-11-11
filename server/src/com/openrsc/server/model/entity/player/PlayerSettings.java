@@ -1,10 +1,10 @@
 package com.openrsc.server.model.entity.player;
 
-import java.util.HashMap;
-
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+
+import java.util.HashMap;
 
 public class PlayerSettings {
 

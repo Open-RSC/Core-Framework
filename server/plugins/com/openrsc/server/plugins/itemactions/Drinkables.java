@@ -1,12 +1,5 @@
 package com.openrsc.server.plugins.itemactions;
 
-import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
@@ -15,6 +8,8 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Drinkables implements InvActionListener, InvActionExecutiveListener {
 
@@ -176,10 +171,40 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			}
 			player.getSkills().setLevel(0, player.getSkills().getLevel(0) - 3);
 			break;
+		case 770: //chocolaty milk
+			showBubble(player, item);
+			player.message("You drink the " + item.getDef().getName().toLowerCase());
+			player.getInventory().remove(item);
+			player.getInventory().add(new Item(21));
+			if (player.getSkills().getLevel(3) < player.getSkills().getMaxStat(3)) {
+				int newHp = player.getSkills().getLevel(3) + 4;
+				if (newHp > player.getSkills().getMaxStat(3)) {
+					newHp = player.getSkills().getMaxStat(3);
+				}
+				player.getSkills().setLevel(3, newHp);
+			}
+			break;
 		case 739: // Tea
 			showBubble(player, item);
 			player.message("You drink the " + item.getDef().getName().toLowerCase());
 			player.getInventory().remove(item);
+			int changeHp = (player.getSkills().getMaxStat(3) > 55 ? 3 : 2);
+			if (player.getSkills().getLevel(3) < player.getSkills().getMaxStat(3)) {
+				int newHp = player.getSkills().getLevel(3) + changeHp;
+				if (newHp > player.getSkills().getMaxStat(3)) {
+					newHp = player.getSkills().getMaxStat(3);
+				}
+				player.getSkills().setLevel(3, newHp);
+			}
+			int changeAtt = (player.getSkills().getMaxStat(0) > 55 ? 3 : 2);
+			int maxWithTea = (player.getSkills().getMaxStat(0) + changeAtt);
+			if (maxWithTea - player.getSkills().getLevel(0) < changeAtt) {
+				changeAtt = maxWithTea - player.getSkills().getLevel(0);
+			}
+			if (player.getSkills().getLevel(
+					0) <= (player.getSkills().getMaxStat(0) + (player.getSkills().getMaxStat(0) > 55 ? 3 : 2))) {
+				player.getSkills().setLevel(0, player.getSkills().getLevel(0) + changeAtt);
+			}
 			break;
 		case 193: // Beer
 			showBubble(player, item);
@@ -270,6 +295,86 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			}
 			break;
 
+		case 737: // Poison chalice
+			player.getInventory().remove(item);
+			int chance = DataConversions.random(0, 5);
+			int needs;
+			switch (chance) {
+				case 0: // Hits -1 or -3
+					int c = DataConversions.random(0, 1);
+					int hp = player.getSkills().getLevel(player.getSkills().HITPOINTS);
+					player.getSkills().setLevel(player.getSkills().HITPOINTS, c == 0 ? hp - 1 : hp - 3);
+					player.message("That tasted a bit dodgy. You feel a bit ill");
+					break;
+				case 1: // Hits + 7
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().HITPOINTS)
+						- player.getSkills().getLevel(player.getSkills().HITPOINTS));
+					needs = needs < 7 ? needs : 7;
+					player.getSkills().setLevel(player.getSkills().HITPOINTS,
+						player.getSkills().getLevel(player.getSkills().HITPOINTS) + needs);
+					player.message("It heals some health");
+					break;
+				case 2: // Crafting +1 Attack & Defence -1
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().CRAFTING) + 1
+						- player.getSkills().getLevel(player.getSkills().CRAFTING));
+					needs = needs < 4 ? needs : 4;
+					player.getSkills().setLevel(player.getSkills().CRAFTING,
+						player.getSkills().getLevel(player.getSkills().CRAFTING) + needs);
+					player.getSkills().setLevel(player.getSkills().ATTACK,
+						player.getSkills().getLevel(player.getSkills().ATTACK) - 1);
+					player.getSkills().setLevel(player.getSkills().DEFENCE,
+						player.getSkills().getLevel(player.getSkills().DEFENCE) - 1);
+					player.message("You feel a little strange");
+					break;
+				case 3: // Hits +? Thieving + 1
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().HITPOINTS)
+						- player.getSkills().getLevel(player.getSkills().HITPOINTS));
+					needs = needs < 30 ? needs : 30;
+					player.getSkills().setLevel(player.getSkills().HITPOINTS,
+						player.getSkills().getLevel(player.getSkills().HITPOINTS) + needs);
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().THIEVING) + 1
+						- player.getSkills().getLevel(player.getSkills().THIEVING));
+					needs = needs < 1 ? needs : 1;
+					player.getSkills().setLevel(player.getSkills().THIEVING,
+						player.getSkills().getLevel(player.getSkills().THIEVING) + needs);
+					player.message("You feel a lot better");
+					break;
+				case 4: // Hits +? Attack, Defence, Strength +4
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().HITPOINTS)
+						- player.getSkills().getLevel(player.getSkills().HITPOINTS));
+					needs = needs < 30 ? needs : 30;
+					player.getSkills().setLevel(player.getSkills().HITPOINTS,
+						player.getSkills().getLevel(player.getSkills().HITPOINTS) + needs);
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().ATTACK) + 4
+						- player.getSkills().getLevel(player.getSkills().ATTACK));
+					needs = needs < 4 ? needs : 4;
+					player.getSkills().setLevel(player.getSkills().ATTACK,
+						player.getSkills().getLevel(player.getSkills().ATTACK) + needs);
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().STRENGTH) + 4
+						- player.getSkills().getLevel(player.getSkills().STRENGTH));
+					needs = needs < 4 ? needs : 4;
+					player.getSkills().setLevel(player.getSkills().STRENGTH,
+						player.getSkills().getLevel(player.getSkills().STRENGTH) + needs);
+					needs = (
+						player.getSkills().getMaxStat(player.getSkills().DEFENCE) + 4
+						- player.getSkills().getLevel(player.getSkills().DEFENCE));
+					needs = needs < 4 ? needs : 4;
+					player.getSkills().setLevel(player.getSkills().DEFENCE,
+						player.getSkills().getLevel(player.getSkills().DEFENCE) + needs);
+					player.message("Wow that was an amazing!! You feel really invigorated");
+					break;
+				case 5: // No effect
+					player.message("It has a slight taste of apricot");
+					break;
+			}
+			break;
 		case 221: // Strength Potion - 4 dose
 			useNormalPotion(player, item, 2, 10, 2, 222, 3);
 			break;

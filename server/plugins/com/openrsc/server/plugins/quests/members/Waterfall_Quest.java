@@ -1,15 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.doGate;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -19,19 +9,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Waterfall_Quest implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener, ObjectActionListener,
@@ -70,8 +52,8 @@ public class Waterfall_Quest implements QuestInterface,TalkToNpcListener,
 		addItem(p, 796, 40);
 		addItem(p, 172, 2);
 		addItem(p, 161, 2);
-		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 900 + 1000);
 		p.incQuestExp(2, p.getSkills().getMaxStat(2) * 900 + 1000);
+		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 900 + 1000);
 		p.incQuestPoints(1);
 	}
 
@@ -161,15 +143,20 @@ public class Waterfall_Quest implements QuestInterface,TalkToNpcListener,
 				message(p, "mixed with the junk on the floor",
 						"you find glarials pebble");
 				addItem(p, 787, 1);
-
 				playerTalk(p, n, "could i take this old pebble?");
 				npcTalk(p, n, " oh that, yes have it");
 				npcTalk(p, n, " it's just some old elven junk i believe");
+				removeItem(p, 789, 1);
 				message(p, "you give golrie the key");
 				npcTalk(p, n, " well thanks again for the key");
 				npcTalk(p, n,
 						" i think i'll wait in here until those goblins get bored and leave");
 				playerTalk(p, n, "okay, take care golrie");
+				p.getCache().store("golrie_key", true);
+				if (!p.getCache().hasKey("golrie_key")) {
+					p.getCache().store("golrie_key", true);
+				}
+									
 			} else {
 				playerTalk(p, n, "is your name golrie?");
 				npcTalk(p, n, " that's me");
@@ -179,12 +166,16 @@ public class Waterfall_Quest implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, " my grandad gave me all sorts of old junk");
 				playerTalk(p, n, "do you mind if i have a look?");
 				npcTalk(p, n, " no, of course not");
+				removeItem(p, 789, 1);
 				message(p, "you find nothing of interest",
 						"you give golrie the key");
 				npcTalk(p, n, " thanks a lot for the key traveller");
 				npcTalk(p, n,
 						" i think i'll wait in here until those goblins get bored and leave");
 				playerTalk(p, n, "okay, take care golrie");
+				if (!p.getCache().hasKey("golrie_key")) {
+					p.getCache().store("golrie_key", true);
+				}
 			}
 		}
 	}
@@ -247,17 +238,47 @@ public class Waterfall_Quest implements QuestInterface,TalkToNpcListener,
 				p.message("but find nothing");
 			}
 		} else if (obj.getID() == 480) {
-			Npc n = World.getWorld().getNpc(475, 663, 668, 3520, 3529);
-			if (n != null) {
-				playerTalk(p, n, "are you ok?");
-				npcTalk(p, n, "it's just those blasted hobgoblins",
-						"i locked myself in here for protection",
-						"but i've left the key somewhere",
-						"and now i'm stuck");
-				playerTalk(p, n, "i found a key");
-				npcTalk(p, n, "well don't wait all day",
-						"give it a try");
+			Npc n = World.getWorld().getNpc(475, 663, 668, 3520, 3529);		
+			if (p.getQuestStage(this) == 0) {
+				npcTalk(p, n, "what are you doing down here",
+				"leave before you get yourself into trouble");
+				return;
+				}
+			else if (p.getLocation().getY() <= 3529) {
+				doGate(p, obj);				
+				return;
 			}
+					
+			else if (p.getLocation().getY() >= 3530 && p.getCache().hasKey("golrie_key") || p.getQuestStage(this) == -1) {
+				p.message("golrie has locked himself in");		
+				return;
+				}
+			
+			if (p.getLocation().getY() >= 3530 && !p.getInventory().hasItemId(789)) {					
+						if (n != null) {
+							playerTalk(p, n, "are you ok?");
+							npcTalk(p, n, "it's just those blasted hobgoblins",
+									"i locked myself in here for protection",
+									"but i've left the key somewhere",
+									"and now i'm stuck");
+							playerTalk(p, n, "okay, i'll have a look for a key");
+							return;
+							}
+					}
+					else if (p.getLocation().getY() >= 3530 && p.getInventory().hasItemId(789)) {			
+									if (n != null) {
+									playerTalk(p, n, "are you ok?");
+									npcTalk(p, n, "it's just those blasted hobgoblins",
+											"i locked myself in here for protection",
+											"but i've left the key somewhere",
+											"and now i'm stuck");
+									playerTalk(p, n, "i found a key");
+									npcTalk(p, n, "well don't wait all day",
+											"give it a try");	
+									return;
+							}			
+			}		
+		
 		} else if (obj.getID() == 479) {
 			message(p, "the grave is covered in elven script",
 					"some of the writing is in common tongue, it reads",

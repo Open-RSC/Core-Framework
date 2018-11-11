@@ -1,14 +1,11 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.CRAFTING;
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BattlestaffCrafting implements InvUseOnItemListener,
 		InvUseOnItemExecutiveListener {
@@ -58,7 +55,7 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 			}
 		}
 		if (p.getSkills().getLevel(CRAFTING) < combine.requiredLevel) {
-			p.message("You need level " + combine.requiredLevel + " crafting to do this");
+			p.message("You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
 		if(removeItem(p, combine.itemID, 1) && removeItem(p, combine.itemIDOther, 1)) {
@@ -78,5 +75,28 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
 		return canCraft(item1, item2);
+	}
+	
+	public String resultItemString(Battlestaff combinedItem) {
+		String name = "";
+		switch(combinedItem) {
+		case WATER_BATTLESTAFF:
+			name = "a water battlestaff";
+			break;
+		case EARTH_BATTLESTAFF:
+			// kosher: didn't say "an earth"
+			name = "a earth battlestaff";
+			break;
+		case FIRE_BATTLESTAFF:
+			name = "a fire battlestaff";
+			break;
+		case AIR_BATTLESTAFF:
+			name = "an air battlestaff";
+			break;
+		default:
+			// unimplemented battlestaff or not known
+			name = "this";
+		}
+		return name;
 	}
 }

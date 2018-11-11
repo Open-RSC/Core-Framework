@@ -1,17 +1,5 @@
 package com.openrsc.server.net.rsc;
 
-import java.math.BigInteger;
-import java.net.InetSocketAddress;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.regex.Pattern;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.login.LoginRequest;
@@ -25,10 +13,17 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
-
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.InetSocketAddress;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -63,6 +58,8 @@ public class LoginPacketHandler {
 	public void processLogin(Packet p, Channel channel) throws Exception {
 		String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
 		switch (p.getID()) {
+
+		/* Logging in */
 		case 0:
 			boolean reconnecting = p.readByte() == 1;
 			int clientVersion = p.readInt();
@@ -75,7 +72,8 @@ public class LoginPacketHandler {
 				channel.close();
 				return;
 			}
-			if (Server.getServer().timeTillShutdown() > 0) {
+			int i = Server.getServer().timeTillShutdown();
+			if ( i > 0 && i < 30000) {
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS).toPacket());
 				channel.close();
 				return;
@@ -117,6 +115,7 @@ public class LoginPacketHandler {
 			Server.getPlayerDataProcessor().addLoginRequest(request);
 			break;
 
+		/* Registering */
 		case 78:
 			LOGGER.info("Registration attempt from: " + IP);
 

@@ -1,16 +1,5 @@
 package com.openrsc.server;
 
-import static org.apache.logging.log4j.util.Unbox.box;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
@@ -24,16 +13,21 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.util.NamedThreadFactory;
-
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class Server implements Runnable {
 
@@ -71,23 +65,22 @@ public final class Server implements Runnable {
 	}
 
 	public static void main(String[] args) throws IOException {
-		LOGGER.info("Launching Open RSC Game Server...");
+		LOGGER.info("Launching Game Server...");
 		if (args.length == 0) {
 			Constants.GameServer.initConfig("members.conf");
-			LOGGER.info("Server Configuration file not provided. Default: free.conf");
+			LOGGER.info("Server Configuration file not provided. Default: members.conf");
 		} else {
 			Constants.GameServer.initConfig(args[0]);
-			LOGGER.info("Server Configuration file: " + args[0]);
+			/*LOGGER.info("Server Configuration file: " + args[0]);
 			LOGGER.info("\t Game Tick Cycle: {}", box(Constants.GameServer.GAME_TICK));
 			LOGGER.info("\t Client Version: {}", box(Constants.GameServer.CLIENT_VERSION));
 			LOGGER.info("\t Server type: " + (Constants.GameServer.MEMBER_WORLD ? "MEMBER" : "FREE" + " world."));
 			LOGGER.info("\t Combat Experience Rate: {}", box(Constants.GameServer.COMBAT_EXP_RATE));
 			LOGGER.info("\t Skilling Experience Rate: {}", box(Constants.GameServer.SKILLING_EXP_RATE));
-			LOGGER.info("\t Standard Subscription Rate: {}", box(Constants.GameServer.SUBSCRIBER_EXP_RATE));
-			LOGGER.info("\t Premium Subscription Rate: {}", box(Constants.GameServer.PREMIUM_EXP_RATE));
 			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
 			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST)); 
 			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled")); 
+			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));*/
 		}
 		if(server == null) {
 			server = new Server();
@@ -157,7 +150,7 @@ public final class Server implements Runnable {
 			{
 				PluginHandler.getPluginHandler().handleAction("Startup", new Object[] {});
 				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
-				LOGGER.info("Open RSC channel is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
+				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			} 
@@ -166,6 +159,8 @@ public final class Server implements Runnable {
 			LOGGER.catching(e);
 			System.exit(1);
 		}
+
+		lastClientUpdate = System.currentTimeMillis();
 	}
 	private ChannelFuture serverChannel;
 
@@ -237,10 +232,18 @@ public final class Server implements Runnable {
 		}
 		getEventHandler().doEvents();
 		try {
-			if (System.currentTimeMillis() - lastClientUpdate >= Constants.GameServer.GAME_TICK) {
-				lastClientUpdate = System.currentTimeMillis();
+			long timeLate = System.currentTimeMillis() - lastClientUpdate - Constants.GameServer.GAME_TICK;
+			if (timeLate >= 0) {
+				lastClientUpdate += Constants.GameServer.GAME_TICK;
 				tickEventHandler.doGameEvents();
 				gameUpdater.doUpdates();
+
+				// Server fell behind, skip ticks
+				if (timeLate >= Constants.GameServer.GAME_TICK) {
+					long ticksLate = timeLate / Constants.GameServer.GAME_TICK;
+					lastClientUpdate += ticksLate * Constants.GameServer.GAME_TICK;
+					//LOGGER.warn("Can't keep up, we are " + timeLate + "ms behind; Skipping " + ticksLate + " ticks");
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
@@ -261,6 +264,39 @@ public final class Server implements Runnable {
 
 	public void submitTask(Runnable r) {
 		scheduledExecutor.submit(r);
+	}
+	public boolean restart(int seconds) {
+		if (updateEvent != null) {
+			return false;
+		}
+		updateEvent = new SingleEvent(null, (seconds - 1) * 1000) {
+			public void action() {
+				//unbind();
+				saveAndRestart();
+			}
+		};
+		Server.getServer().getEventHandler().add(updateEvent);
+		return true;
+	}
+	public void saveAndRestart() {
+		//ClanManager.saveClans();
+		LOGGER.info("Saving players...");
+		for (Player p : World.getWorld().getPlayers()) {
+			p.unregister(true, "Server shutting down.");
+			LOGGER.info("Players saved...");
+		}
+
+		SingleEvent up = new SingleEvent(null, 6000) {
+			public void action() {
+				LOGGER.info("Trying to run restart script...");
+				try {
+					Runtime.getRuntime().exec("./run_server.sh");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		Server.getServer().getEventHandler().add(up);
 	}
 
 	public void start() {

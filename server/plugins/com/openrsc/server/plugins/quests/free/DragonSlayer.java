@@ -1,14 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -17,17 +10,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * 
@@ -79,7 +65,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 			case 2:
-				npcTalk(p, n, "So how is thy quest going");
+				npcTalk(p, n, "So how is thy quest going?");
 				int map = showMenu(p, n, new String[] {
 						"So where can I find this dragon?",
 						"Where can I get an antidragon shield?" });
@@ -95,7 +81,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 						"Can you sell me some rune plate mail?",
 						"I'm not your friend", "Yes it's a very nice day");
 				if (menu == 0) {
-					npcTalk(p, n, "Soo how does thee know I'ave some?");
+					npcTalk(p, n, "Soo how does thee know I 'ave some?");
 					int sub_menu = showMenu(p, n,
 							"The guildmaster of the champion guild told me",
 							"I am a master detective");
@@ -122,12 +108,11 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 			case 0:
 				npcTalk(p, n, "Aye tiz a fair day my friend");
 				int menu2 = showMenu(p, n,
-						"Can you sell me some rune plate mail?",
 						"I'm not your friend", "Yes it's a very nice day");
-				if (menu2 == 1) {
+				if (menu2 == 0) {
 					npcTalk(p, n,
 							"I'd be suprised if your anyone's friend with that sort of manners");
-				} else if (menu2 == 2) {
+				} else if (menu2 == 1) {
 					npcTalk(p, n, "Aye may the Gods walk by your side");
 				} 
 				break;
@@ -172,25 +157,25 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 					"So you'll need to prove to me that you're a hero before you can buy some");
 			int sub_menu2 = showMenu(p, n, "So how am I meant to prove that?",
 					"That's a pity, I'm not a hero");
-			if (sub_menu2 == 0) {
+			if (sub_menu2 == 0)
 				oziachDialogue(p, n, Oziach.PROVE_THAT);
-			} else if (sub_menu2 == 1) {
-				// TODO: Possibly missing dialogue.
-			}
 			break;
 		case Oziach.PROVE_THAT:
 			npcTalk(p, n, "Well if you want to prove yourself",
 					"You could try and defeat Elvarg the dragon of the Isle of Crandor");
-			int sub_menu3 = showMenu(p, n, "A dragon, that sounds like fun",
-					"And will I need anything to defeat this dragon",
+			int sub_menu3 = showMenu(p, n, false, "A dragon, that sounds like fun",
+					"And will i need anything to defeat this dragon",
 					"I may be a champion, but I don't think I'm up to dragon killing yet");
 			if (sub_menu3 == 0) {
+				playerTalk(p, n, "A dragon, that sounds like fun");
 				oziachDialogue(p, n, Oziach.DRAGON_FUN);
 			} else if (sub_menu3 == 1) {
-				npcTalk(p, n, "It's funny you should say that");
+				playerTalk(p, n, "And will I need anything to defeat this dragon?");
+				npcTalk(p, n, "It's funny you shoud say that");
 				oziachDialogue(p, n, Oziach.DRAGON_FUN);
 			} else if (sub_menu3 == 2) {
-				// TODO: Possibly missing dialogue.
+				playerTalk(p, n, "I may be a champion, but I don't think I'm up to dragon killing yet");
+				npcTalk(p, n, "Yes I can understand that");
 			}
 			break;
 		case Oziach.FIND_DRAGON:
@@ -200,7 +185,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 					"No one knows where the Isle of Crandor is located",
 					"There was a map",
 					"But it was torn up into three pieces",
-					"Which are scattered across Asgarnia",
+					"Which are now scattered across Asgarnia",
 					"You'll also struggle to find someone bold enough to take a ship to Crandor Island");
 			int map = showMenu(p, n, "Where is the first piece of map?",
 					"Where is the second piece of map?",
@@ -305,21 +290,28 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 		case 230:
-			if (!hasItem(p, 418, 1)) {
+			//kosher: could not "drop trick" easy, had to re-enter the door for another piece
+			if (!hasItem(p, 418, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2 
+				&& p.getCache().hasKey("dwarven_unlocked")) {
 				addItem(p, 418, 1);
-				p.message("You find a piece of map in the chest.");
+				p.message("You find a piece of map in the chest");
+				p.getCache().remove("dwarven_unlocked");
 			} else {
 				p.message("You find nothing in the chest");
 			}
 			break;
 		case 228:
-			if (!hasItem(p, 417, 1)) {
+			//kosher: could not "drop trick" easy, had to re-enter the door for another piece
+			if (!hasItem(p, 417, 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2 
+				&& p.getCache().hasKey("melzar_unlocked")) {
 				addItem(p, 417, 1);
-				p.message("You find a piece of map in the chest.");
+				p.message("You find a piece of map in the chest");
+				p.getCache().remove("melzar_unlocked");
 			} else {
 				p.message("You find nothing in the chest");
 			}
 			break;
+		//clicking boat triggers klarense if available
 		case 224:
 		case 225:
 			if (p.getCache().hasKey("owns_ship")) {
@@ -331,7 +323,12 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 					p.teleport(259, 3472, false);
 				}
 			} else {
-				p.message("You must talk to the owner about this.");
+				Npc klarense = getNearestNpc(p, 193, 15);
+				if(klarense != null) {
+					klarense.initializeTalkScript(p);
+				} else {
+					p.message("You must talk to the owner about this.");
+				}
 			}
 			break;
 		case 227:
@@ -386,8 +383,8 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	@Override
 	public void handleReward(Player p) {
 		p.teleport(411, 3480, false);
-		p.message("@gre@You haved gained 2 quest points!");
 		p.message("Well done you have completed the dragon slayer quest!");
+		p.message("@gre@You haved gained 2 quest points!");
 		p.incQuestExp(2, p.getSkills().getMaxStat(2) * 1200 + 2600);
 		p.incQuestExp(1, p.getSkills().getMaxStat(1) * 1200 + 2600);
 		p.incQuestPoints(2);
@@ -395,12 +392,13 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		return obj.getID() == 57 || obj.getID() == 58 || obj.getID() == 59;
+		return obj.getID() == 57 || obj.getID() == 58 || obj.getID() == 59 || obj.getID() == 60;
 	}
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 57) {
+			//special door dwarven mine
 			if (p.getX() >= 259 && hasItem(p, 268, 1) && hasItem(p, 200, 1) && hasItem(p, 375, 1) && hasItem(p, 340)) {
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
@@ -409,29 +407,42 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 					removeItem(p, 200, 1);
 					removeItem(p, 375, 1);
 					removeItem(p, 340, 1);
+					p.getCache().store("dwarven_unlocked", true);
 				} 
 			} 
 			else if(p.getX() <= 258) {
 				doDoor(obj, p);
 			}
 			else {
-				p.message("Nothing interesting happens");
+				p.message("the door is locked");
 			}
 		}
 		else if(obj.getID() == 58) {
-			if (p.getQuestStage(this) == -1) {
+			//from side of crandor
+			if(p.getY() <= 3517) {
 				p.message("You just went through a secret door");
+				if(!p.getCache().hasKey("crandor_shortcut")) {
+					p.message("You remember where the door is for future use");
+					p.getCache().store("crandor_shortcut", true);
+				}
 				doDoor(obj, p, 11);
-			} else {
-				p.message("Nothing interesting happens");
+			}
+			else {
+				if(p.getCache().hasKey("crandor_shortcut")) {
+					p.message("You just went through a secret door");
+					doDoor(obj, p, 11);
+				}
+				else {
+					p.message("nothing interesting happens");
+				}
 			}
 		}
+		//??
 		else if (obj.getID() == 59) {
-			if(p.getQuestStage(this) != -1) {
-				doDoor(obj, p);
-			} else {
-				p.message("Door is locked");
-			}
+			doDoor(obj, p);
+		}
+		else if (obj.getID() == 60) {
+			p.message("Nothing interesting happens");
 		}
 	}
 
@@ -469,7 +480,11 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 226 && item.getID() == 410) {
-			if (!p.getCache().hasKey("ship_repair") && hasItem(p, 419, 4)
+			if(p.getCache().hasKey("crandor_shortcut")) {
+				p.message("You don't need to mess about with broken ships");
+				p.message("Now you have found that secret passage from Karamja");
+			}
+			else if (!p.getCache().hasKey("ship_repair") && hasItem(p, 419, 4)
 					&& hasItem(p, 410, 1)) {
 				p.message("You hammer the plank over the hole");
 				p.message("You still need more planks to close the hole completely");
@@ -484,14 +499,23 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 				if (planks_added + 1 == 3) {
 					p.getCache().remove("ship_repair");
 					p.getCache().store("ship_fixed", true);
+					p.message("You board up the hole in the ship");
 					p.teleport(258, 3493, false);
 				} else {
 					p.getCache().set("ship_repair", planks_added + 1);
 					p.message("You still need more planks to close the hole completely");
 				}
+			} else if(!hasItem(p, 419, 4)) {
+				p.message("You need 4 steel nails to attach the plank with");
+			} else if(!hasItem(p, 168, 1)) {
+				p.message("You need a hammer to hammer the nails in with");
 			} else {
 				p.message("Nothing interesting happens");
 			}
+		} 
+		//only accept planks used
+		else if(obj.getID() == 226) {
+			p.message("Nothing interesting happens");
 		}
 	}
 }

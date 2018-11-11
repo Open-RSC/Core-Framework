@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.misc;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class TeleportStone implements InvActionListener, InvActionExecutiveListener {
 
@@ -36,7 +36,8 @@ public class TeleportStone implements InvActionListener, InvActionExecutiveListe
 				return;
 			}
 			if(p.getInventory().countId(1039) > 0) {
-				p.message("You can't teleport with ana in the barrel in your inventory.");
+				message(p, "You can't teleport while holding Ana,", 
+						"It's just too difficult to concentrate.");
 				return;
 			}
 			if(p.getInventory().hasItemId(812)) {

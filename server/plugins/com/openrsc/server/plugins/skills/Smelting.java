@@ -1,14 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.SMITHING;
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.sleep;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -20,6 +11,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Smelting implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener { 
@@ -95,6 +88,7 @@ InvUseOnObjectExecutiveListener {
 	public static final int RUNE_BAR = 408;
 	public static final int GOLD_BAR = 172;
 	public static final int SILVER_BAR = 384;
+	public static final int SODA_ASH = 624;
 	public static final int SAND = 625;
 	public static final int GOLD_BAR_FAMILYCREST = 691;
 	public static final int GAUNTLETS_OF_GOLDSMITHING = 699;
@@ -102,43 +96,48 @@ InvUseOnObjectExecutiveListener {
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[] { GOLD_BAR, SILVER_BAR, SAND, GOLD_BAR_FAMILYCREST }, item.getID())) {
-			if(item.getID() == STEEL_BAR && p.getInventory().hasItemId(CANNON_AMMO_MOULD)) {
-				if (getCurrentLevel(p, SMITHING) < 30) {
-					p.message("You need at least level 30 smithing to make cannon balls");
-					return;
-				}
-				if (p.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
-					p.message("You need to complete the dwarf cannon quest");
-					return;
-				}
-				showBubble(p, item);
-				message(p, 1300, "you heat the steel bar into a liquid state",
-						"and pour it into your cannon ball mould",
-						"you then leave it to cool for a short while");
-				p.setBatchEvent(new BatchEvent(p, 2000, Formulae.getRepeatTimes(p, SMITHING)) {
-					public void action() {
-						p.incExp(SMITHING, 50, true);
-						p.getInventory().replace(STEEL_BAR, MULTI_CANNON_BALL);
-						addItem(p, MULTI_CANNON_BALL, 1);
-						ActionSender.sendInventory(p);
-						sleep(2000);
-						p.message("it's very heavy");
-						
-						if(!isCompleted()) {
-							showBubble(p, item);
-						}
-						if (p.getFatigue() >= 7500) {
-							p.message("You are too tired to smelt cannon ball");
-							interrupt();
-							return;
-						}
-						if (p.getInventory().countId(STEEL_BAR) < 1) {
-							p.message("You have no steel bars left");
-							interrupt();
-							return;
-						}
+			if(item.getID() == STEEL_BAR) {
+				if (p.getInventory().hasItemId(CANNON_AMMO_MOULD)) {
+					if (getCurrentLevel(p, SMITHING) < 30) {
+						p.message("You need at least level 30 smithing to make cannon balls");
+						return;
 					}
-				});
+					if (p.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
+						p.message("You need to complete the dwarf cannon quest");
+						return;
+					}
+					showBubble(p, item);
+					message(p, 1200, "you heat the steel bar into a liquid state",
+							"and pour it into your cannon ball mould",
+							"you then leave it to cool for a short while");
+					p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SMITHING)) {
+						public void action() {
+							p.incExp(SMITHING, 100, true);
+							p.getInventory().replace(STEEL_BAR, MULTI_CANNON_BALL);
+							addItem(p, MULTI_CANNON_BALL, 1);
+							ActionSender.sendInventory(p);
+							sleep(1800);
+							p.message("it's very heavy");
+
+							if(!isCompleted()) {
+								showBubble(p, item);
+							}
+							if (p.getFatigue() >= p.MAX_FATIGUE) {
+								p.message("You are too tired to smelt cannon ball");
+								interrupt();
+								return;
+							}
+							if (p.getInventory().countId(STEEL_BAR) < 1) {
+								p.message("You have no steel bars left");
+								interrupt();
+								return;
+							}
+						}
+					});
+				}
+				else { // No mould
+					p.message("You heat the steel bar");
+				}
 			} else {
 				handleRegularSmelting(item, p, obj);
 			}
@@ -166,12 +165,14 @@ InvUseOnObjectExecutiveListener {
 		if (!p.withinRange(obj, 2)) {
 			return;
 		}
-		if (p.getFatigue() >= 7500) {
+		if (p.getFatigue() >= p.MAX_FATIGUE) {
 			p.message("You are too tired to smelt this ore");
 			return;
 		}
 		if (getCurrentLevel(p, SMITHING) < smelt.getRequiredLevel()) {
 			p.message("You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == SILVER_BAR || smelt.getSmeltBarId() == GOLD_BAR || smelt.getSmeltBarId() == GOLD_BAR_FAMILYCREST ? "work " : "smelt ") + EntityHandler.getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
+			if (smelt.getSmeltBarId() == IRON_BAR)
+				p.message("Practice your smithing using tin and copper to make bronze");
 			return;
 		}
 		if (p.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
@@ -191,9 +192,9 @@ InvUseOnObjectExecutiveListener {
 		}
 
 		p.message(smeltString(smelt, item));
-		p.setBatchEvent(new BatchEvent(p, 1600, Formulae.getRepeatTimes(p, SMITHING)) {
+		p.setBatchEvent(new BatchEvent(p, 1800, Formulae.getRepeatTimes(p, SMITHING)) {
 			public void action() {
-				if (p.getFatigue() >= 7500) {
+				if (p.getFatigue() >= p.MAX_FATIGUE) {
 					p.message("You are too tired to smelt this ore");
 					interrupt();
 					return;
@@ -268,7 +269,7 @@ InvUseOnObjectExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[] { GOLD_BAR, SILVER_BAR, SAND, GOLD_BAR_FAMILYCREST }, item.getID())) {
+		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[] { GOLD_BAR, SILVER_BAR, SODA_ASH, SAND, GOLD_BAR_FAMILYCREST }, item.getID())) {
 			return true;
 		}
 		return false;

@@ -33,7 +33,7 @@ public class ItemLogCutDef {
     }
 
     public int getShaftExp() {
-        return shaftAmount;
+        return shaftAmount * 2; // 0.5 exp per shaft means 2 * amt
     }
 
     public int getShaftLvl() {

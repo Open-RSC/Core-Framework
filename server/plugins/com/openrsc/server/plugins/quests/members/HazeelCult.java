@@ -1,16 +1,5 @@
 package com.openrsc.server.plugins.quests.members;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -26,6 +15,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -1069,19 +1060,19 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	public void handleReward(Player p) {
 		if(p.getCache().hasKey("good_side")) {
 			p.message("Well done you have completed the Hazeel cult quest");
-			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			//THIEVING LEVEL
 			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
+			p.message("@gre@You haved gained 1 quest point!");
+			p.incQuestPoints(1);
 			p.message("ceril gives you 2000 gold coins");
 			addItem(p, 10, 2000);
 		} else if(p.getCache().hasKey("evil_side")) {
 			p.message("Hazeel gives you some coins");
 			addItem(p, 10, 2000);
-			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			// THIEVING LEVEL
 			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
+			p.message("@gre@You haved gained 1 quest point!");
+			p.incQuestPoints(1);
 			p.message("you have completed the hazeel cult quest");
 		}
 	}

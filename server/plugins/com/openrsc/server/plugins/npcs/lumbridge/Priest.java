@@ -1,9 +1,5 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,10 +8,13 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {// that could work
+		npcTalk(p, n, "Welcome to the church of holy Saradomin");
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1) {
 			playerTalk(p, n, "I can't find father Urhney at the moment");
 			npcTalk(p,
@@ -59,9 +58,9 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			public void action() {
 				npcTalk(p,
 						n,
-						"Surely you have heard of the God Saradomin?",
+						"Surely you have heard of the God, Saradomin?",
 						"He who creates the forces of goodness and purity in this world?",
-						"I cannot belive your ignorance!",
+						"I cannot believe your ignorance!",
 						"This is the God with more followers than any other!",
 						"At least in theses parts!",
 						"He who along with his brothers Guthix and Zamorak created this world");
@@ -74,7 +73,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					@Override
 					public void action() {
 						npcTalk(p, n, "That's strange",
-								"I tought things not from this world were all slime and tenticles");
+								"I thought things not from this world were all slime and tenticles");
 						new Menu()
 								.addOptions(
 										new Option(

@@ -35,10 +35,10 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) {
+		/*if (!player.getLocation().isMembersWild() && item.getDef().isMembersOnly()) {
 			player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - " + World.membersWildMax);
 			return;
-		}
+		}*/
 		
 		if (item.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
@@ -102,6 +102,12 @@ public class ItemActionHandler implements PacketHandler {
 			switch (item.getID()) {
 			case 387: // Disk of Returning
 				player.message("The disk doesn't seem to work here.");
+				break;
+			case 260: // burntpie
+				if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
+					player.message("you remove the burnt pie from the pie dish");
+					player.getInventory().replace(item.getID(), 251);
+				}
 				break;
 			default:
 				player.message("Nothing interesting happens");

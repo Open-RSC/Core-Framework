@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,6 +8,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener {
@@ -155,13 +152,11 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 60 + 500);
 		player.incQuestPoints(5);
+		player.message("@gre@You haved gained 5 quest points!");
+		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 60 + 500);
+		player.message("General Wartface gives you a gold bar as thanks");
 		player.getInventory().add(new Item(172, 1));
-		player.message(
-				"@gre@You haved gained 5 quest points!");
-		player.message(
-				"General Wartface gives you a gold bar as thanks");
 	}
 
 	@Override

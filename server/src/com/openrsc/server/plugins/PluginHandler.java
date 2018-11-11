@@ -1,6 +1,12 @@
 package com.openrsc.server.plugins;
 
-import static org.apache.logging.log4j.util.Unbox.box;
+import com.openrsc.server.Server;
+import com.openrsc.server.event.custom.ShopRestockEvent;
+import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,31 +16,12 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.openrsc.server.Server;
-import com.openrsc.server.event.custom.ShopRestockEvent;
-import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
+import static org.apache.logging.log4j.util.Unbox.box;
 
 /**
  * Initiates plug-ins that implements some listeners
@@ -131,7 +118,8 @@ public final class PluginHandler {
 
 	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
 	private Map<String, Set<Object>> executivePlugins = new HashMap<String, Set<Object>>();
-	private ExecutorService executor = Executors.newCachedThreadPool();
+	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+	// private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	private List<Class<?>> knownInterfaces = new ArrayList<Class<?>>();
 
@@ -234,7 +222,6 @@ public final class PluginHandler {
 							if (clz.getName().equalsIgnoreCase(
 									c.getClass().getName())) {
 								go = true;
-								LOGGER.info("Executing with : " + clz.getName());
 								break;
 							}
 						}
@@ -248,6 +235,7 @@ public final class PluginHandler {
 									@Override
 									public Integer call() throws Exception {
 										try {
+											LOGGER.info("Executing with : " + m.getName());
 											m.invoke(c, data);
 										} catch (Exception cme) {
 											LOGGER.catching(cme);
@@ -402,11 +390,10 @@ public final class PluginHandler {
 
 		actionPlugins = new HashMap<String, Set<Object>>();
 		executivePlugins = new HashMap<String, Set<Object>>();
-		executor = Executors.newCachedThreadPool();
+		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 		knownInterfaces = new ArrayList<Class<?>>();
 		queue = new ConcurrentHashMap<String, Class<?>>();
 		defaultHandler = null;
-		System.gc();
 	}
 
 	public void reload() throws Exception {

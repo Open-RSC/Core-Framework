@@ -1,22 +1,13 @@
 package com.openrsc.server.model.entity;
 
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
-import com.openrsc.server.model.Path;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.ViewArea;
-import com.openrsc.server.model.WalkingQueue;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
@@ -27,8 +18,18 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Mob extends Entity {
+
+	/**
+	 * Unique ID for event tracking.
+	 */
+	private String uuid;
 
 	/**
 	 * The asynchronous logger.
@@ -306,6 +307,14 @@ public abstract class Mob extends Entity {
 		return getWalkingQueue().finished();
 	}
 
+	public String getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(String u) {
+		this.uuid = u;
+	}
+
 	public abstract int getArmourPoints();
 
 	public CombatEvent getCombatEvent() {
@@ -449,6 +458,10 @@ public abstract class Mob extends Entity {
 		this.combatEvent = combatEvent2;
 	}
 
+	public void setCombatTimer(int delay) {
+		combatTimer = System.currentTimeMillis() + delay;
+	}
+
 	public void setCombatTimer() {
 		combatTimer = System.currentTimeMillis();
 	}
@@ -528,7 +541,6 @@ public abstract class Mob extends Entity {
 
 		if (this.isPlayer()) {
 			((Player) this).resetAll();
-			((Player) this).checkAndInterruptBatchEvent();
 			((Player) this).setStatus(Action.FIGHTING_MOB);
 		}
 
@@ -554,7 +566,6 @@ public abstract class Mob extends Entity {
 				((Player) this).setSkulledOn(playerVictim);
 			}
 			playerVictim.resetAll();
-			playerVictim.checkAndInterruptBatchEvent();
 			playerVictim.setStatus(Action.FIGHTING_MOB);
 			ActionSender.sendSound(playerVictim, "underattack");
 			playerVictim.message("You are under attack!");
@@ -653,9 +664,14 @@ public abstract class Mob extends Entity {
 
 	public boolean withinRange(Entity e) {
 		if (e != null) {
-			int xDiff = getLocation().getX() - e.getLocation().getX();
-			int yDiff = getLocation().getY() - e.getLocation().getY();
-			return xDiff <= 15 && xDiff >= -15 && yDiff <= 15 && yDiff >= -15;
+			return getLocation().withinRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE * 8);
+		}
+		return false;
+	}
+
+	public boolean withinGridRange(Entity e) {
+		if (e != null) {
+			return getLocation().withinGridRange(e.getLocation(), Constants.GameServer.VIEW_DISTANCE);
 		}
 		return false;
 	}

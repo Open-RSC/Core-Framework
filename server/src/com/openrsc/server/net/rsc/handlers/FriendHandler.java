@@ -36,16 +36,18 @@ public final class FriendHandler implements PacketHandler {
 				ActionSender.sendFriendList(player);
 				return;
 			}
-//			loginSender.addFriend(user, friend);
-			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
-			ActionSender.sendFriendUpdate(player, friend, 0);
-			if(affectedPlayer != null && affectedPlayer.loggedIn()) {
-				if(affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), 99);
-					ActionSender.sendFriendUpdate(player, friend, 99);
-				}
-				else if(!affectedPlayer.getSettings().getPrivacySetting(1)) {
-					ActionSender.sendFriendUpdate(player, friend, 99);
+			
+			boolean added = player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
+			if (added) {
+				ActionSender.sendFriendUpdate(player, friend, 0);
+				if(affectedPlayer != null && affectedPlayer.loggedIn()) {
+					if(affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), 99);
+						ActionSender.sendFriendUpdate(player, friend, 99);
+					}
+					else if(!affectedPlayer.getSettings().getPrivacySetting(1)) {
+						ActionSender.sendFriendUpdate(player, friend, 99);
+					}
 				}
 			}
 		} else if (pID == packetTwo) { // Remove friend
@@ -62,14 +64,20 @@ public final class FriendHandler implements PacketHandler {
 				player.message("Ignore list full");
 				return;
 			}
-			player.getSocial().addIgnore(friend, 0);
-			ActionSender.sendIgnoreList(player);
+			boolean added = player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
+			if (added)
+				ActionSender.sendIgnoreList(player);
 		} else if (pID == packetFour) { // Remove ignore
 			player.getSocial().removeIgnore(friend);
 		} else if (pID == packetFive) { // Send PM
-			String message = DataConversions.getEncryptedString(p, 32576);
+			if (player.getLocation().onTutorialIsland()) {
+				player.message("@cya@Once you finish the tutorial, this lets you send messages to your friends");
+				return;
+			}
+			String message = DataConversions.upperCaseAllFirst(
+				DataConversions.stripBadCharacters(
+					DataConversions.getEncryptedString(p, 32576)));
 			player.addPrivateMessage(new PrivateMessage(player, message, friend));
 		}
 	}
-
 }

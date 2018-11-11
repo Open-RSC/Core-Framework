@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.removeItem;
 
 public class UndergroundPassSmearDollOfIban implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 

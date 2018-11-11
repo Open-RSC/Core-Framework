@@ -1,5 +1,7 @@
 package com.openrsc.server.external;
 
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
 /**
  * The definition wrapper for fishing spots
  */
@@ -31,7 +33,7 @@ public class ObjectFishingDef {
     }
 
     public int getReqLevel() {
-        int requiredLevel = 99;
+        int requiredLevel = PLAYER_LEVEL_LIMIT;
         for (ObjectFishDef def : defs) {
             if (def.getReqLevel() < requiredLevel) {
                 requiredLevel = def.getReqLevel();

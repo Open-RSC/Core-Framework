@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
@@ -15,8 +13,9 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Smithing implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
@@ -46,7 +45,8 @@ InvUseOnObjectExecutiveListener {
 				player.message("To forge items use the metal you wish to work with the anvil");
 				return;
 			}
-			if (minSmithingLevel < 0) {
+			// skip special case of dragon shield repair
+			if (minSmithingLevel < 0 && item.getID() != 1276 && item.getID() != 1277) {
 				player.message("Nothing interesting happens");
 				return;
 			}
@@ -59,6 +59,33 @@ InvUseOnObjectExecutiveListener {
 				player.message("You need a hammer to work the metal with.");
 				return;
 			}
+			
+			if(item.getID() == 1276 || item.getID() == 1277) {
+				if(player.getSkills().getLevel(13) < 60) {
+					player.message("You need a smithing ability of at least 60 to complete this task.");
+					return;
+				}
+				// non-kosher this message
+				else if(player.getInventory().countId(1276) < 1 || player.getInventory().countId(1277) < 1) {
+					player.message("You need the two shield halves to repair the shield.");
+					return;
+				}
+				else {
+					player.message("You set to work trying to fix the ancient shield.");
+					sleep(1200);
+					player.message("You hammer long and hard and use all of your skill.");
+					sleep(1200);
+					player.message("Eventually, it is ready...");
+					sleep(1200);
+					player.message("You have repaired the Dragon Square Shield.");
+					player.getInventory().remove(1276, 1);
+					player.getInventory().remove(1277, 1);
+					player.getInventory().add(new Item(1278, 1));
+					player.incExp(13, 300, true);
+					return;
+				}
+			}
+			
 			/*if(item.getID() == 172 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) <= 2) {
 				player.message("You're not quite sure what to make from the gold..");
 				return;
@@ -310,22 +337,27 @@ InvUseOnObjectExecutiveListener {
 				return;
 			}
 
-			String[] options = {"Make 1",
+			int makeCount = 1;
+			if (Constants.GameServer.BATCH_PROGRESSION) {
+				String[] options = {
+					"Make 1",
 					"Make 5",
 					"Make 10",
-			"Make All"};
+					"Make All"
+				};
 
-			int makeCount = showMenu(player, options);
+				makeCount = showMenu(player, options);
 
-			if(makeCount == -1) {
-				return;
+				if(makeCount == -1) {
+					return;
+				}
+
+				int maximumMakeCount = player.getInventory().countId(item.getID()) / def.getRequiredBars();
+
+				makeCount = makeCount != 3 ? Integer.parseInt(options[makeCount].replaceAll("Make ", "")) : maximumMakeCount;
 			}
 
-			int maximumMakeCount = player.getInventory().countId(item.getID()) / def.getRequiredBars();
-
-			makeCount = makeCount != 3 ? Integer.parseInt(options[makeCount].replaceAll("Make ", "")) : maximumMakeCount;
-
-			player.setBatchEvent(new BatchEvent(player, 650, makeCount) {
+			player.setBatchEvent(new BatchEvent(player, 600, makeCount) {
 				@Override
 				public void action() {
 					if (player.getInventory().countId(item.getID()) < def.getRequiredBars()) {
@@ -333,7 +365,7 @@ InvUseOnObjectExecutiveListener {
 						interrupt();
 						return;
 					}
-					if (player.getFatigue() >= 7500) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to smith");
 						interrupt();
 						return;
@@ -358,7 +390,6 @@ InvUseOnObjectExecutiveListener {
 					}
 					player.incExp(13,
 							Formulae.getSmithingExp(item.getID(), def.getRequiredBars()), true);
-					//System.out.println("Smithed xp : " + Formulae.getSmithingExp(item.getID(), def.getRequiredBars()));
 				}
 			});
 

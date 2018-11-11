@@ -1,16 +1,5 @@
 package com.openrsc.server.plugins.quests.free;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -19,22 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 //no i didnt where its handled....
 public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
@@ -101,7 +78,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done, you have completed the shield of Arrav quest");
-		p.message("@gre@You haved gained 1 quest point!");
+		p.message("@gre@You have gained 1 quest point!");
 		p.incQuestPoints(1);
 		addItem(p, 10, 600);
 	}
@@ -158,21 +135,29 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 					|| player.getInventory().contains(new Item(54))) {
 				message(player, "You search the chest", "You find nothing.");
 				return;
-			}
+			} else if (!player.getCache().hasKey("b_arm")) {
 			message(player, "You search the chest",
 					"You find half a shield which you take");
 			addItem(player, 54, 1);
+			}
+			else {
+				message(player, "You search the chest", "You find nothing.");
+			}
 			break;
 		case 85:
 			if (player.getBank().contains(new Item(53))
 					|| player.getInventory().contains(new Item(53))) {
 				message(player, "You search the cupboard", "You find nothing.");
 				return;
-			}
+			} else if (player.getCache().hasKey("b_arm")) {
 			message(player, "You search the cupboard",
 					"You find half a shield which you take");
 			addItem(player, 53, 1);
-			break;
+			}
+			else {
+				message(player, "You search the cupboard", "You find nothing.");
+			}
+			break;			
 		}
 	}
 
@@ -424,6 +409,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 						"You'll find the phoenix gang's weapon stash just next to a temple",
 						"Due east of here.");
 				p.getCache().set("arrav_gang", BLACK_ARM);
+				p.getCache().store("b_arm", true);
 				p.updateQuestStage(this, 4);
 			} else if (choice3 == 1) {
 				npcTalk(p, n, "If you're not up to a little bit of danger",
@@ -518,12 +504,10 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 		} else if (obj.getID() == 19 && obj.getY() == 3370) {
 			Npc man = getNearestNpc(p, 24, 20);
 			if (p.getCache().hasKey("arrav_gang")) {
-				if (p.getCache().getInt("arrav_gang") == PHOENIX_GANG) { // I
-					// fixed
-					// this.
-					if (p.getQuestStage(this) != 5) {
+				if (p.getCache().getInt("arrav_gang") == PHOENIX_GANG) { // I					
+					if (p.getQuestStage(this) != 5 && !p.getCache().hasKey("b_arm")) {
 						if (man != null) {
-							man.initializeTalkScript(p);// brb need to take dogs out okii
+							man.initializeTalkScript(p);
 						}
 					} else {
 						if (p.getY() <= 3369) {
@@ -534,23 +518,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 							p.teleport(p.getX(), p.getY() - 1, false);
 						}
 					}
-				} else if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {// well,
-					// u
-					// see,
-					// the
-					// problem
-					// with
-					// this
-					// is
-					// that
-					// its
-					// gonna
-					// throw
-					// exception
-					// if
-					// it
-					// doesnt
-					// exist
+				} else if (p.getCache().hasKey("b_arm")) {				
 					if (man != null) {
 						npcTalk(p, man, "hey get away from there",
 								"Black arm dog");

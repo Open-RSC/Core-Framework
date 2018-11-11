@@ -1,19 +1,21 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-public final class ThessaliasClothes implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public final class ThessaliasClothes implements PickupListener, PickupExecutiveListener,
+		ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 3, new Item(182,
 			3), new Item(15, 12), new Item(16, 10), new Item(17, 10),
@@ -38,25 +40,100 @@ public final class ThessaliasClothes implements ShopInterface,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello", "Do you want to buy any fine clothes?");
+		playerTalk(p, n, "Hello");
+		npcTalk(p, n, "Do you want to buy any fine clothes?");
 
-		/**
-		 * I have lost my scythe can I get another please? Ohh you poor dear, I
-		 * have another here 'Thessalia gives you a new scythe' I have lost my
-		 * bunny ears can I get some more please? Ohh you poor dear, I have
-		 * another here 'Thessalia gives you some new bunny ears'
-		 * 
-		 */
-		final String[] options = new String[] { "What have you got?",
-				"No, thank you" };
-		int option = showMenu(p,n, options);
-		switch (option) {
-		case 0:
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-			break;
+		String[] options;
+		int extraOptions = 0;
+		boolean ears = p.getInventory().hasItemId(1156) || p.getBank().countId(1156) > 0;
+		boolean scythe = p.getInventory().hasItemId(1289) || p.getBank().countId(1289) > 0;
+		if (p.getCache().hasKey("bunny_ears") && p.getCache().hasKey("scythe") && !scythe && !ears) {
+			options = new String[] {
+				"I have lost my scythe can I get another one please?",
+				"I have lost my bunny ears can I get some more please?",
+				"What have you got?",
+				"No, thank you"
+			};
+			extraOptions = 3;
 		}
+		else if (p.getCache().hasKey("scythe") && !scythe) {
+			options = new String[] {
+				"I have lost my scythe can I get another one please?",
+				"What have you got?",
+				"No, thank you"
+			};
+			extraOptions = 2;
+		}
+		else if (p.getCache().hasKey("bunny_ears") && !ears) {
+			options = new String[] {
+				"I have lost my bunny ears can I get some more please?",
+				"What have you got?",
+				"No, thank you"
+			};
+			extraOptions = 1;
+		}
+		else {
+			options = new String[] {
+				"What have you got?",
+				"No, thank you"
+			};
+		}
+		int option = showMenu(p,n, options);
+		if (extraOptions > 0) {
+			int item = 0;
+			switch(extraOptions) {
+				case 0:
+					break;
+				case 1: // Bunny Ears
+					item = 1;
+					break;
+				case 2: // Scythe
+					item = 2;
+					break;
+				case 3:
+					if (option == 0) item = 2; // Scythe
+					else if (option == 1) item = 1; // Ears
+					break;
 
+			}
+			if (item == 1) {
+				npcTalk(p, n, "Ohh you poor dear, I have some more here");
+				p.message("Thessalia gives you some new bunny ears");
+				addItem(p, 1156, 1);
+			}
+			else if (item == 2) {
+				npcTalk(p, n, "Ohh you poor dear, I have another here");
+				p.message("Thessalia gives you a new scythe");
+				addItem(p, 1289, 1);
+			}
+
+		}
+		else {
+			if (option == 0) {
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+			}
+		}
 	}
 
+	@Override
+	public void onPickup(Player p, GroundItem i) {
+		if (i.getID() == 1156 && !p.getCache().hasKey("bunny_ears"))
+			p.getCache().put("bunny_ears", 1);
+		else if (i.getID() == 1289 && !p.getCache().hasKey("scythe"))
+			p.getCache().put("scythe", 1);
+	}
+
+	@Override
+	public boolean blockPickup(Player p, GroundItem i) {
+		if (i.getID() == 1156) { // Bunny Ears
+			if (p.getInventory().hasItemId(1156) || p.getBank().countId(1156) > 0)
+				return true;
+		}
+		else if (i.getID() == 1289) { // Scythe
+			if (p.getInventory().hasItemId(1289) || p.getBank().countId(1289) > 0)
+				return true;
+		}
+		return false;
+	}
 }

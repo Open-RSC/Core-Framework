@@ -1,20 +1,21 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+import static com.openrsc.server.plugins.Functions.*;
 
+public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
+		TalkToNpcListener, ObjectActionListener, ObjectActionExecutiveListener {
+
+	public static final int OFFICER = 317;
+	
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "You need to be searched before you can board");
@@ -67,4 +68,26 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 		return n.getID() == 317;
 	}
 
+
+	@Override
+	public void onObjectAction(GameObject obj, String command, Player p) {
+		if(obj.getID() == 320 || (obj.getID() == 321))  {
+			if(command.equals("board")) {
+				if(p.getX() != 467 ) {
+					return;
+			}
+			Npc official = getNearestNpc(p, OFFICER, 5);
+				if(official != null) {		
+					official.initializeTalkScript(p);
+					} else {
+						p.message("I need to speak to the customs official before boarding the ship.");
+				}
+			}
+		}		
+	}
+	@Override
+	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
+		return (arg0.getID() == 320 && arg0.getLocation().equals(Point.location(468, 651)))
+				|| (arg0.getID() == 321 && arg0.getLocation().equals(Point.location(468, 646)));
+	}
 }

@@ -1,10 +1,5 @@
 package com.openrsc.server.plugins.skills;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.addItem;
-
-import java.util.ArrayList;
-
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectFishDef;
@@ -18,6 +13,11 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.ArrayList;
+
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Fishing implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -42,14 +42,14 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (def == null) { // This shouldn't happen
 			return;
 		}
-		if (owner.getFatigue() >= 7500) {
+		if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 			owner.playerServerMessage(MessageType.QUEST, "@gre@You are too tired to catch this fish");
 			return;
 		}
 		if (owner.getSkills().getLevel(10) < def.getReqLevel()) {
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
 					+ fishingRequirementString(object, command) + " "
-					+ (def.getFishDefs().length > 1 ? "these fish"
+					+ (!command.contains("cage") ? "these fish"
 							: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 							.substring(4) + "s"));
 			return;
@@ -62,8 +62,8 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							.getItemDef(
 									netId)
 							.getName().toLowerCase()
-							+ " to " + (def.getBaitId() > 0 ? "bait" : "catch") + " "
-							+ (def.getFishDefs().length > 1 ? "these fish"
+							+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
+							+ (!command.contains("cage") ? "these fish"
 									: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 									.substring(4) + "s"));
 			return;
@@ -78,7 +78,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		owner.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		showBubble(owner, new Item(netId));
-		owner.setBatchEvent(new BatchEvent(owner, 1900, Formulae.getRepeatTimes(owner, 10)) {
+		owner.setBatchEvent(new BatchEvent(owner, 1800, Formulae.getRepeatTimes(owner, 10)) {
 			@Override
 			public void action() {
 				showBubble(owner, new Item(netId));
@@ -90,7 +90,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						return;
 					}
 				}
-				if (owner.getFatigue() >= 7500) {
+				if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 					owner.playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
 					interrupt();
 					return;
@@ -153,7 +153,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 	private String fishingRequirementString(GameObject obj, String command) {
 		String name = "";
 		if (command.equals("bait")) {
-			name = "to bait";
+			name = "fishing to bait";
 		} else if (command.equals("lure")) {
 			name = "fishing to lure";
 		} else if (command.equals("net")) {

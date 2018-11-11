@@ -1,10 +1,10 @@
 package com.openrsc.server.sql.query;
 
+import com.openrsc.server.Constants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import com.openrsc.server.Constants;
 
 public class PlayerOnlineFlagQuery extends Query {
 
