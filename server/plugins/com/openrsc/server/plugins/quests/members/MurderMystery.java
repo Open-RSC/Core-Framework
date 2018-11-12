@@ -73,7 +73,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 	public void handleReward(Player p) {
 		p.incQuestPoints(3);
 		p.message("@gre@You haved gained 3 quest points!");
-		p.incQuestExp(12, p.getSkills().getMaxStat(12) * 150 + 770);
+		p.incQuestExp(12, p.getSkills().getMaxStat(12) * 150 + 750);
 		p.message("You have completed the Murder Mystery Quest");
 
 	}
@@ -169,10 +169,18 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 							"on the east wing of the ground floor, the door was found locked,",
 							"from the inside, and he seemed to have been stabbed",
 							"but there was an odd smell in the room. Frankly, I'm stumped");
-				} else if(opt == 2)
-					if(!p.getCache().hasKey("thread")) {
+				} else if(opt == 2) {
+					/*
+					 * Cases
+					 * 3 pieces - completes quest
+					 * 2 pieces - menu dialogue
+					 * 1 piece - jump straight away
+					 * 0 - guesses
+					 */
+					//0 pieces
+					if(!p.getCache().hasKey("thread") && !p.getCache().hasKey("evidence") && !p.getCache().hasKey("culprit")) {
 						npcTalk(p, n, "Really? That was quick work! Who?");
-						int variableD = showMenu(p, n, "it was an intruder!", "the butler did it!", "It was one of the servants", "It was one of his family");
+						int variableD = showMenu(p, n, "It was an intruder!", "the butler did it!", "It was one of the servants", "It was one of his family");
 						if(variableD == 0) {
 							npcTalk(p,n, "Thats what we were thinking too.",
 									"That someone broke in, to steal something",
@@ -237,129 +245,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								}
 							}
 						}
-					}				
-				//int opt1 = showMenu(p,n,
-					//"What should I be doing to help again?",
-					//"How did Lord Sinclair die?",
-					//"I know who did it!");
-				if (opt == 2) { 
-					if (p.getCache().hasKey("thread") && !p.getCache().hasKey("evidence") && !p.getCache().hasKey("culprit")) {						 											
-						playerTalk(p, n, "I have proof that it wasn't any of the servants");
-						p.message("you show the guard the thread you found on the window");
-						playerTalk(p, n, "All the servants dress in black so",
-								"it couldn't have been one of them");
-						npcTalk(p,n, "Thats some good work there. I guess it wasn't a servant.",
-								"You still havent proved who did do it though");
-						return;
 					}
-				///opt == 2 &&     && p.getCache().hasKey("p_anna2")) {
-				if (opt == 2 && p.getCache().hasKey("thread") && p.getCache().hasKey("evidence")) {
-						int subopt = showMenu(p,
-								"I have proof that it wasn't any of the servants",
-								"I have proof one of the family lied about the poison");
-							if(subopt == 0) {
-									playerTalk(p, n, "I have proof that it wasn't any of the servants");
-									p.message("you show the guard the thread you found on the window");
-									playerTalk(p, n, "All the servants dress in black so",
-											"it couldn't have been one of them");
-									npcTalk(p,n, "Thats some good work there. I guess it wasn't a servant.",
-											"You still havent proved who did do it though");
-									return;						
-								}
-							if (subopt == 1) {
-								if(p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("evidence")&& p.getCache().hasKey("p_anna2")) {
-									playerTalk(p,n,"I have proof that Anna is lying about the poison");
-									npcTalk(p,n,"Oh really? How did you get that?");
-									p.message("you tell the guard about the compost heap");
-									npcTalk(p,n, "Hmm. thats some good detective work there.",
-											"We need more evidence before we can close the case though",
-											"Keep up the good work");
-								} else if(p.getCache().hasKey("p_carol2")) {
-									playerTalk(p,n,"I have proof that Carol is lying about the poison");
-									npcTalk(p,n,"Oh really? How did you get that?");
-									p.message("you tell the guard about the drain");
-									npcTalk(p,n, "Hmm. thats some good detective work there.",
-											"We need more evidence before we can close the case though",
-											"Keep up the good work");
-								} else if(p.getCache().hasKey("p_eliza2")) {
-									playerTalk(p,n,"I have proof that Elizabeth is lying about the poison");
-									npcTalk(p,n,"Oh really? How did you get that?");
-									p.message("you tell the guard about the mosquitos at the fountain");
-									npcTalk(p,n, "Hmm. thats some good detective work there.",
-											"We need more evidence before we can close the case though",
-											"Keep up the good work");
-								} else if(p.getCache().hasKey("p_bob2")) {
-									playerTalk(p,n,"I have proof that Bob is lying about the poison");
-									npcTalk(p,n,"Oh really? How did you get that?");
-									p.message("you tell the guard about the beehive");
-									npcTalk(p,n, "Hmm. thats some good detective work there.",
-											"We need more evidence before we can close the case though",
-											"Keep up the good work");
-								} else if(p.getCache().hasKey("p_frank2")) {
-									playerTalk(p,n,"I have proof that Frank is lying about the poison");
-									npcTalk(p,n,"Oh really? How did you get that?");
-									p.message("you tell the guard about the tarnished family crest");
-									npcTalk(p,n, "Hmm. thats some good detective work there.",
-											"We need more evidence before we can close the case though",
-											"Keep up the good work");
-								} else if(p.getCache().hasKey("p_david2")) {
-									playerTalk(p,n,"I have proof that David is lying about the poison");
-									npcTalk(p,n,"Oh really? How did you get that?");
-									p.message("you tell the guard about the spiders nest");
-									npcTalk(p,n, "Hmm. thats some good detective work there.",
-											"We need more evidence before we can close the case though",
-											"Keep up the good work");
-									}
-								}
-								return;							
-							}					
-					if (opt == 2 && p.getCache().hasKey("culprit") && p.getCache().hasKey("thread")) {
-						if(!p.getCache().hasKey("evidence")) {
-						int subopt2 = showMenu(p,
-								"I have proof that it wasn't any of the servants",
-								"I have the fingerprints of the culprit");
-						if(subopt2 == 0 && p.getCache().hasKey("thread")) {
-								playerTalk(p, n, "I have proof that it wasn't any of the servants");
-								p.message("you show the guard the thread you found on the window");
-								playerTalk(p, n, "All the servants dress in black so",
-										"it couldn't have been one of them");
-								npcTalk(p,n, "Thats some good work there. I guess it wasn't a servant.",
-										"You still havent proved who did do it though");						
-						}
-						else if(subopt2 == 1 && p.getCache().hasKey("murder_david")) {
-						
-							playerTalk(p,n, "I have Davids' Fingerprints here.");
-							removeItem(p, 1210, 1);
-						} else if(p.getCache().hasKey("murder_bob")) {
-							playerTalk(p,n, "I have Bobs' Fingerprints here.");
-							removeItem(p, 1208, 1);
-						} else if(p.getCache().hasKey("murder_anna")) {
-							playerTalk(p,n, "I have Annas' Fingerprints here.");
-							removeItem(p, 1207, 1);
-						} else if(p.getCache().hasKey("murder_eliz")) {
-							playerTalk(p,n, "I have Elizabeths' Fingerprints here.");
-							removeItem(p, 1211, 1);
-						} else if(p.getCache().hasKey("murder_frank")) {
-							playerTalk(p,n, "I have Franks' Fingerprints here.");
-							removeItem(p, 1212, 1);
-						} else if(p.getCache().hasKey("murder_carol")) {
-							playerTalk(p,n, "I have Carols' Fingerprints here.");
-							removeItem(p, 1209, 1);
-						}
-						playerTalk(p,n, "You can see for yourself they match the",
-								"Fingerprints on the murder weapon exactly");
-						p.message("You show the guard the finger prints evidence");
-						npcTalk(p,n, "...");
-						npcTalk(p,n, "I'm impressed. How on earth did you think",
-								"of something like that? I've never heard",
-								"of such a technique for finding criminals before",
-								"This will come in very handy in the future",
-								"But we can't arrest someone on just this.",
-								"I'm afraid you'll still need to find more evidence",
-								"Before we can close this case completely");
-						}
-						return;
-					} else if(p.getCache().hasKey("culprit") && p.getCache().hasKey("evidence")) {			
+					//3 pieces
+					else if(p.getCache().hasKey("thread") && p.getCache().hasKey("evidence") && p.getCache().hasKey("culprit")) {
 						p.getCache().remove("poison_opt");
 						playerTalk(p,n, "I have conclusive Proof who the killer was");
 						npcTalk(p,n, "You do? thats excellent work. Lets hear it then");
@@ -392,7 +280,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						} else if(p.getCache().hasKey("murder_carol")) {
 							p.message("You prove to the guard Carol did not use poison on the drain");
 						} else if(p.getCache().hasKey("murder_bob")) {
-							p.message("You prove to the guard Bob did not use poison on the beehieve");
+							p.message("You prove to the guard Bob did not use poison on the beehive");
 						} else if(p.getCache().hasKey("murder_frank")) {
 							p.message("You prove to the guard Frank did not use poison on the Sinclair Crest");
 						} else if(p.getCache().hasKey("murder_eliz")) {
@@ -416,31 +304,38 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.message("Found in the body of Lord Sinclair");
 						npcTalk(p,n, "...",
 								"Yes. theres no doubt about it.");
+						String objPronoun = "";
 						if(p.getCache().hasKey("murder_david") && (p.getCache().hasKey("p_david2"))) {
 							npcTalk(p, n, "It must have been David who killed his father");
 							p.getCache().remove("murder_david");
+							objPronoun = "him";
 						} else if(p.getCache().hasKey("murder_anna")  && (p.getCache().hasKey("p_anna2"))) {
-							npcTalk(p, n, "It must have been Anna who killed his father");
+							npcTalk(p, n, "It must have been Anna who killed her father");
 							p.getCache().remove("murder_anna");
+							objPronoun = "her";
 						} else if(p.getCache().hasKey("murder_carol")  && (p.getCache().hasKey("p_carol2"))) {
-							npcTalk(p, n, "It must have been Carol who killed his father");
+							npcTalk(p, n, "It must have been Carol who killed her father");
 							p.getCache().remove("murder_carol");
+							objPronoun = "her";
 						} else if(p.getCache().hasKey("murder_bob")  && (p.getCache().hasKey("p_bob2"))) {
 							npcTalk(p, n, "It must have been Bob who killed his father");
 							p.getCache().remove("murder_bob");
+							objPronoun = "him";
 						} else if(p.getCache().hasKey("murder_frank")  && (p.getCache().hasKey("p_frank2"))) {
 							npcTalk(p, n, "It must have been Frank who killed his father");
 							p.getCache().remove("murder_frank");
+							objPronoun = "him";
 						} else if(p.getCache().hasKey("murder_eliz")  && (p.getCache().hasKey("p_eliza2"))) {
-							npcTalk(p, n, "It must have been Elizabeth who killed his father");
+							npcTalk(p, n, "It must have been Elizabeth who killed her father");
 							p.getCache().remove("murder_eliz");
+							objPronoun = "her";
 						}
 						npcTalk(p, n, "All of the guards must congratulate you on your",
 								"Excellent work in helping us to solve this case",
 								"We don't have many murders here in RuneScape",
 								"And i'm afraid we wouldn't have been able to solve it",
-								"by ourselves. We will hold him here under house arrest",
-								"Until such time as we can bring him to trial",
+								"by ourselves. We will hold " + objPronoun + " here under house arrest",
+								"Until such time as we can bring " + objPronoun + " to trial",
 								"You have our gratitude, and I'm sure the rest of the",
 								"families as well, in helping to apprehend the murderer",
 								"I'll just take the evidence from you now");
@@ -457,14 +352,60 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().remove("evidence", "culprit", "p_anna", "p_bob", "p_carol", "p_eliza", "p_david", "p_frank");
 						p.getCache().remove("murder_anna", "murder_bob", "murder_frank", "murder_eliz", "murder_david");
 						p.getCache().remove("thread", "poison_opt");
-					
-						///return;
-					} ///else {
-					else {
-						return;
 					}
-					
-			}
+					//1 piece
+					else if((p.getCache().hasKey("thread") ^ p.getCache().hasKey("evidence") ^ p.getCache().hasKey("culprit")) 
+							^ (p.getCache().hasKey("thread") && p.getCache().hasKey("evidence") && p.getCache().hasKey("culprit"))) {
+						if(p.getCache().hasKey("thread")) {
+							threadDialogue(p, n);
+							return;
+						} else if(p.getCache().hasKey("evidence")) {
+							evidenceDialogue(p, n);
+							return;
+						} else if(p.getCache().hasKey("culprit")) {
+							fingerprintDialogue(p, n);
+							return;
+						}
+					}
+					//2 pieces
+					else {
+						if (p.getCache().hasKey("thread") && p.getCache().hasKey("evidence")) {
+							//do not send over
+							int subopt = showMenu(p, n, false,
+									"I have proof that it wasn't any of the servants",
+									"I have proof one of the family lied about the poison");
+							if(subopt == 0) {
+								threadDialogue(p, n);
+								return;
+							} else if(subopt == 1) {
+								evidenceDialogue(p, n);
+								return;
+							}
+						} else if (p.getCache().hasKey("thread") && p.getCache().hasKey("culprit")) {
+							int subopt = showMenu(p, n, false,
+									"I have proof that it wasn't any of the servants",
+									"I have the fingerprints of the culprit");
+							if(subopt == 0) {
+								threadDialogue(p, n);
+								return;
+							} else if(subopt == 1) {
+								fingerprintDialogue(p, n);
+								return;
+							}
+						} else {
+							int subopt = showMenu(p, n, false,
+									"I have proof one of the family lied about the poison",
+									"I have the fingerprints of the culprit");
+							if(subopt == 0) {
+								evidenceDialogue(p, n);
+								return;
+							} else if(subopt == 1) {
+								fingerprintDialogue(p, n);
+								return;
+							}
+						}
+					}
+				}
 		
 				break;
 			case -1:
@@ -504,7 +445,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				npcTalk(p,n, "This is private property! Please leave!");
 			} 
 			else if(p.getQuestStage(this) == -1) {
-				npcTalk(p,n, " Thank you for all your help in solving the murder");
+				npcTalk(p,n, "Thank you for all your help in solving the murder");
 			}
 			else {
 				otherSuspectDialogue(p, n);
@@ -515,7 +456,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				npcTalk(p,n, "I'm far too upset to talk to random people right now");
 			} 
 			else if(p.getQuestStage(this) == -1) {
-				npcTalk(p,n, " Thank you for all your help in solving the murder");
+				npcTalk(p,n, "Thank you for all your help in solving the murder");
 			}
 			else {
 				otherSuspectDialogue(p, n);
@@ -526,7 +467,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				npcTalk(p,n, "Have you no shame? we are all grieving at the moment");
 			} 
 			else if(p.getQuestStage(this) == -1) {
-				npcTalk(p,n, " Thank you for all your help in solving the murder");
+				npcTalk(p,n, "Thank you for all your help in solving the murder");
 			}
 			else {
 				otherSuspectDialogue(p, n);
@@ -537,7 +478,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				npcTalk(p,n, "The Guards told me not to talk to anyone");
 			} 
 			else if(p.getQuestStage(this) == -1) {
-				npcTalk(p,n, " Thank you for all your help in solving the murder");
+				npcTalk(p,n, "Thank you for all your help in solving the murder");
 			}
 			else {
 				otherSuspectDialogue(p, n);
@@ -625,7 +566,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								"Tell me about Elizabeth");
 						if(menu4 == 0) {
 							npcTalk(p,n, "Anna... ah yes...",
-									"Anna has 2 great loves",
+									"Anna has 2 great loves:",
 									"Sewing and Gardening. But one thing",
 									"she has kept secret is that she once had",
 									"an affair with Stanford the gardener",
@@ -677,11 +618,46 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 							"to Old Lord Sinclair is beyond question");
 				} else if(menu == 4) {
 					playerTalk(p,n, "think you could give me any hints?");
-					npcTalk(p,n, "My father used to be in the guard.",
-							"He always wrote himself notes on a piece of paper",
-							"so he could keep track of information easily.",
-							"Maybe you should try that?",
-							"Don't forget to thank me if I help you solve the case!");
+					int hint = DataConversions.random(0, 4);
+					switch(hint) {
+					case 0:
+						npcTalk(p,n, "well, I dont know if its related",
+								"But I heard from that Poison Salesman in town",
+								"That he sold some poison to one of the family the other day",
+								"I don't think he has any stock left now though...");
+						break;
+					case 1:
+						npcTalk(p,n, "Well I don't know how much help this is",
+								"but I heard that their guard dog will bark loudly at anyone",
+								"it doesn't recognise",
+								"maybe you should find out if anyone heard anything suspicious?");
+						break;
+					case 2:
+						npcTalk(p,n, "Well, this might be of some help to you",
+								"My father was in the guards when he was younger",
+								"and he always said that there isn't a crime that can't be",
+								"solved through careful examination of the crime scene",
+								"and all surrounding areas");
+						break;
+					case 3:
+						npcTalk(p,n, "I don't know how much help this is to you",
+								"but my dad was in the guard once",
+								"and he told me that the marks on your hands",
+								"Are totally unique. He called them 'finger prints'",
+								"He said you can find them easily on any shiny metallic surface",
+								"By using a fine powder to mark out where the marks are",
+								"and then using some sticky paper to lift the print from the object",
+								"I bet if you could find a way to get everyones 'finger prints'",
+								"you could solve the crime pretty easily");
+						break;
+					case 4:
+						npcTalk(p,n, "My father used to be in the guard.",
+								"He always wrote himself notes on a piece of paper",
+								"so he could keep track of information easily.",
+								"Maybe you should try that?",
+								"Don't forget to thank me if I help you solve the case!");
+						break;
+					}
 				}
 			}
 		}
@@ -690,7 +666,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				npcTalk(p,n, "I have no interest in talking to gawkers");
 			} 
 			else if(p.getQuestStage(this) == -1) {
-				npcTalk(p,n, " Thank you for all your help in solving the murder");
+				npcTalk(p,n, "Thank you for all your help in solving the murder");
 			}
 			else {
 				otherSuspectDialogue(p, n);
@@ -701,7 +677,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				p.message("she is ignoring you");
 			} 
 			else if(p.getQuestStage(this) == -1) {
-				npcTalk(p,n, " Thank you for all your help in solving the murder");
+				npcTalk(p,n, "Thank you for all your help in solving the murder");
 			}
 			else {
 				otherSuspectDialogue(p, n);
@@ -1117,7 +1093,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				npcTalk(p,n, "Its some thread. great clue. No, really.");
 			} else if(n.getID() == BOB && p.getInventory().hasItemId(RED)) {
 				p.message("you show him the thread you discovered");
-				npcTalk(p,n, "Its some red thread. I suppose you think ",
+				npcTalk(p,n, "Its some red thread. I suppose you think",
 						"thats some kind of clue? It looks like",
 						"the material my trousers are made of");
 				
@@ -1127,9 +1103,8 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			} else if(n.getID() == DAVID && p.getInventory().hasItemId(GREEN)) {
 				p.message("You show him the thread you found on the study window");
 				npcTalk(p,n, "Its some Green thread, like my trousers are made of.",
-						"Are you finished?",
-						"I'm not sure which I dislike more about you,",
-						"your face or your general bad odour");						
+						"Are you finished? I'm not sure which I dislike more",
+						"about you, your face or your general bad odour");						
 			}
 		} else if(menu == 3 || menu == 2 && !p.getCache().hasKey("thread")) {
 			if(n.getID() == CAROL) {
@@ -1196,6 +1171,80 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			}
 		}
 	}
+	
+	public void threadDialogue(Player p, Npc n) {
+		playerTalk(p, n, "I have proof that it wasn't any of the servants");
+		p.message("you show the guard the thread you found on the window");
+		playerTalk(p, n, "All the servants dress in black so",
+				"it couldn't have been one of them");
+		npcTalk(p,n, "Thats some good work there. I guess it wasn't a servant.",
+				"You still havent proved who did do it though");
+	}
+	
+	public void evidenceDialogue(Player p, Npc n) {
+		if(p.getCache().hasKey("p_anna2")) {
+			playerTalk(p,n,"I have proof that Anna is lying about the poison");
+			npcTalk(p,n,"Oh really? How did you get that?");
+			p.message("you tell the guard about the compost heap");
+		} else if(p.getCache().hasKey("p_carol2")) {
+			playerTalk(p,n,"I have proof that Carol is lying about the poison");
+			npcTalk(p,n,"Oh really? How did you get that?");
+			p.message("you tell the guard about the drain");
+		} else if(p.getCache().hasKey("p_eliza2")) {
+			playerTalk(p,n,"I have proof that Elizabeth is lying about the poison");
+			npcTalk(p,n,"Oh really? How did you get that?");
+			p.message("you tell the guard about the mosquitos at the fountain");
+		} else if(p.getCache().hasKey("p_bob2")) {
+			playerTalk(p,n,"I have proof that Bob is lying about the poison");
+			npcTalk(p,n,"Oh really? How did you get that?");
+			p.message("you tell the guard about the beehive");
+		} else if(p.getCache().hasKey("p_frank2")) {
+			playerTalk(p,n,"I have proof that Frank is lying about the poison");
+			npcTalk(p,n,"Oh really? How did you get that?");
+			p.message("you tell the guard about the tarnished family crest");
+		} else if(p.getCache().hasKey("p_david2")) {
+			playerTalk(p,n,"I have proof that David is lying about the poison");
+			npcTalk(p,n,"Oh really? How did you get that?");
+			p.message("you tell the guard about the spiders nest");
+		}
+		npcTalk(p,n, "Hmm. thats some good detective work there.",
+				"We need more evidence before we can close the case though",
+				"Keep up the good work");
+	}
+	
+	public void fingerprintDialogue(Player p, Npc n) {
+		playerTalk(p, n, "I have the fingerprints of the culprit");
+		if(p.getCache().hasKey("murder_david")) {	
+			playerTalk(p,n, "I have Davids' Fingerprints here.");
+			removeItem(p, 1210, 1);
+		} else if(p.getCache().hasKey("murder_bob")) {
+			playerTalk(p,n, "I have Bobs' Fingerprints here.");
+			removeItem(p, 1208, 1);
+		} else if(p.getCache().hasKey("murder_anna")) {
+			playerTalk(p,n, "I have Annas' Fingerprints here.");
+			removeItem(p, 1207, 1);
+		} else if(p.getCache().hasKey("murder_eliz")) {
+			playerTalk(p,n, "I have Elizabeths' Fingerprints here.");
+			removeItem(p, 1211, 1);
+		} else if(p.getCache().hasKey("murder_frank")) {
+			playerTalk(p,n, "I have Franks' Fingerprints here.");
+			removeItem(p, 1212, 1);
+		} else if(p.getCache().hasKey("murder_carol")) {
+			playerTalk(p,n, "I have Carols' Fingerprints here.");
+			removeItem(p, 1209, 1);
+		}
+		playerTalk(p,n, "You can see for yourself they match the",
+				"Fingerprints on the murder weapon exactly");
+		p.message("You show the guard the finger prints evidence");
+		npcTalk(p,n, "...");
+		npcTalk(p,n, "I'm impressed. How on earth did you think",
+				"of something like that? I've never heard",
+				"of such a technique for finding criminals before",
+				"This will come in very handy in the future",
+				"But we can't arrest someone on just this.",
+				"I'm afraid you'll still need to find more evidence",
+				"Before we can close this case completely");
+	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
@@ -1210,8 +1259,6 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 		if(i.getID() == 1205) { /** Silver Dagger **/
 			switch (p.getQuestStage(this)) {
 			case 0:
-				p.message("You need the guards permission to do that");
-				break;
 			case 1:
 				p.message("This knife doesn't seem sturdy enough to have killed Lord Sinclair");
 				if(!hasItem(p, 1205)) {
@@ -1229,8 +1276,6 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 		if(i.getID() == 1204) { /** Murder Scene Pot **/
 			switch (p.getQuestStage(this)) {
 			case 0:
-				p.message("You need the guards permission to do that");
-				break;
 			case 1:
 				p.message("It seems like Lord Sinclair was drinking from this before he died");
 				if(!hasItem(p, 1204)) {
@@ -1264,11 +1309,11 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			case -1:
 				p.message("You need the guards permission to do that");
 				break;
-			case 1:				
+			case 1:
+				message(p, "Some thread seems to have been caught",
+						"on a loose nail on the window");
 				if(!p.getCache().hasKey("thread") && !p.getInventory().hasItemId(GREEN) 
-						&& !p.getInventory().hasItemId(RED) && !p.getInventory().hasItemId(BLUE)) {
-					message(p, "Some thread seems to have been caught",
-							"on a loose nail on the window");							
+						&& !p.getInventory().hasItemId(RED) && !p.getInventory().hasItemId(BLUE)) {							
 					if (p.getCache().hasKey("murder_david")) {
 						addItem(p, GREEN, 1);						
 					}
@@ -1286,14 +1331,15 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 					}
 					else if	(p.getCache().hasKey("murder_bob")) {
 						addItem(p, RED, 1);
-					}													
+					}
+					message(p, "You take the thread");
 					p.getCache().store("thread", true);
 					if(!p.getCache().hasKey("thread")) { 
 						p.getCache().store("thread", true);
 					}
 					return;
 				}
-				if (p.getCache().hasKey("thread") && !p.getInventory().hasItemId(GREEN) 
+				else if (p.getCache().hasKey("thread") && !p.getInventory().hasItemId(GREEN) 
 						&& !p.getInventory().hasItemId(RED) && !p.getInventory().hasItemId(BLUE)) { 										
 						if (p.getCache().hasKey("murder_david")) {
 							addItem(p, GREEN, 1);						
@@ -1522,10 +1568,10 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 					}
 					else if(obj.getID() == 1128 && (p.getCache().hasKey("poison_opt2") && (!p.getCache().hasKey("murder_carol")))) {
 							message(p, "The drain seems to have been recently cleaned",
-									"You can still smell the faint aroma of poison ");
+									"You can still smell the faint aroma of poison");
 					}
 					else {				
-						p.message("Its the drains from the kitchen ");
+						p.message("Its the drains from the kitchen");
 					}
 					
 				}
@@ -1536,13 +1582,16 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 				}
 				else if(obj.getID() == 1138) {
 					p.message("A barrel full of finely sifted flour");
-					if(!hasItem(p, 135)) {
+					if(!hasItem(p, 135) && !hasItem(p, 1204)) {
 						p.message("You need something to put the flour in");
-					} else {
+					} else if(hasItem(p, 135)) {
 						p.message("You take some flour from the barrel");
 						p.getInventory().replace(135, 136);
 						
 						p.message("Theres still plenty of flour left");
+					} else if(hasItem(p, 1204)) {
+						message(p, "You probably shouldn't use evidence from a crime",
+								"scene to keep flour in...");
 					}
 				} 
 				else if(obj.getID() == 1131) {
