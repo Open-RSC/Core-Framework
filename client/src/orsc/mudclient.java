@@ -86,7 +86,7 @@ public final class mudclient implements Runnable {
 	public boolean shiftPressed = false;
 	public boolean adminRights;
 	public boolean rendering;
-	private ClientPort clientPort;
+	private static ClientPort clientPort;
 	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
 
 	public mudclient(ClientPort handler) {
@@ -463,7 +463,6 @@ public final class mudclient implements Runnable {
 		private final int[] characterHealthX = new int[150];
 		private final int[] characterHealthY = new int[150];
 		private String chatMessageTarget;
-		private Network_Socket clientStream;
 		private int frameCounter = 0;
 		private int combatStyle = 0;
 		private int combatTimeout = 0;
@@ -572,13 +571,13 @@ public final class mudclient implements Runnable {
 		private boolean allowDebugCommands = !runningAsApplet || true;
 		private int optionsMenuCount = 0;
 		private String m_ig = "";
-		private int m_ii = 0;
+		private int questPoints = 0;
 		private int m_Ji = 0;
 		private int settingTab = 0;
 		private int m_Jj;
 		private int m_Kj;
 		private int m_ld = 2;
-		private final int[] m_Le = new int[5000];
+		private final int[] groundItemHeight = new int[5000];
 		private int characterBottomColour = 14;
 		private int m_Mj;
 		private int m_nj = -1;
@@ -651,7 +650,7 @@ public final class mudclient implements Runnable {
 		private boolean optionMouseButtonOne = false;
 		private boolean optionSoundDisabled = true;
 		private boolean clanInviteBlockSetting = false;
-		private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
+
 		private Panel panelAppearance;
 		private Panel panelLogin;
 		private Panel panelLoginWelcome;
@@ -667,7 +666,7 @@ public final class mudclient implements Runnable {
 		//private Panel panelPlayerTaskInfo;
 		private Panel panelSettings;
         public HashMap<String, File> soundCache = new HashMap<String, File>();
-		private boolean authenticSettings = !(
+		public boolean authenticSettings = !(
 						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
             || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
             || Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
@@ -873,9 +872,9 @@ public final class mudclient implements Runnable {
 						}
 
 						if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
-							this.getClientStream().newPacket(195);
-							this.getClientStream().writeBuffer1.putString(player);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(195);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(player);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 						} else {
 							this.showMessage(false, (String) null, "You can\'t add yourself to your own friend list.",
 									MessageType.GAME, 0, (String) null, (String) null);
@@ -930,9 +929,9 @@ public final class mudclient implements Runnable {
 						}
 
 						if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
-							this.getClientStream().newPacket(132);
-							this.getClientStream().writeBuffer1.putString(player);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(132);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(player);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 						} else {
 							this.showMessage(false, (String) null, "You can\'t add yourself to your ignore list",
 									MessageType.GAME, 0, (String) null, (String) null);
@@ -1185,7 +1184,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void cantLogout(byte var1) {
+		public final void cantLogout(byte var1) {
 			try {
 				if (var1 >= -19) {
 					this.drawMenu();
@@ -1204,25 +1203,25 @@ public final class mudclient implements Runnable {
 			try {
 
 				long var2 = GenUtil.currentTimeMillis();
-				if (this.getClientStream().hasFinishedPackets()) {
+				if (this.clientPort.packetHandler.getClientStream().hasFinishedPackets()) {
 					this.lastWrite = var2;
 				}
 
 				if (-5001L > ~(var2 + -this.lastWrite)) {
 					this.lastWrite = var2;
-					this.getClientStream().newPacket(67);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(67);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 				}
 
 				try {
-					this.getClientStream().flush(0, true);
+					this.clientPort.packetHandler.getClientStream().flush(0, true);
 				} catch (IOException var5) {
 					this.lostConnection(123);
 					return;
 				}
-				int len = this.getClientStream().readIncomingPacket(this.packetsIncoming);
+
 				if (len > 0) {
-					this.handlePacket1(this.packetsIncoming.getUnsignedByte(), len);
+
 				}
 			} catch (RuntimeException var6) {
 				throw GenUtil.makeThrowable(var6, "client.SB(" + "dummy" + ')');
@@ -1249,13 +1248,13 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void closeConnection(boolean sendPacket) {
+		public final void closeConnection(boolean sendPacket) {
 			try {
 
-				if (sendPacket && null != this.getClientStream()) {
+				if (sendPacket && null != this.clientPort.packetHandler.getClientStream()) {
 					try {
-						this.getClientStream().newPacket(31);
-						this.getClientStream().finishPacketAndFlush();
+						this.clientPort.packetHandler.getClientStream().newPacket(31);
+						this.clientPort.packetHandler.getClientStream().finishPacketAndFlush();
 					} catch (IOException var4) {
 						;
 					}
@@ -1487,7 +1486,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final ORSCharacter createNpc(int sprite, int type, int x, int y, int serverIndex) {
+		public final ORSCharacter createNpc(int sprite, int type, int x, int y, int serverIndex) {
 			try {
 				if (null == this.npcsServer[serverIndex]) {
 					this.npcsServer[serverIndex] = new ORSCharacter();
@@ -1537,19 +1536,24 @@ public final class mudclient implements Runnable {
 
 		private final void createPacket64(int v1, int v2, int v3, int v4) {
 			try {
-				this.getClientStream().newPacket(64);
+				this.clientPort.packetHandler.getClientStream().newPacket(64);
 
-				this.getClientStream().writeBuffer1.putByte(v1);
-				this.getClientStream().writeBuffer1.putByte(v2);
-				this.getClientStream().writeBuffer1.putByte(v3);
-				this.getClientStream().writeBuffer1.putByte(v4);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(v1);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(v2);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(v3);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(v4);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			} catch (RuntimeException var7) {
 				throw GenUtil.makeThrowable(var7, "client.L(" + v3 + ',' + v2 + ',' + v1 + ',' + "dummy" + ',' + v4 + ')');
 			}
 		}
 
-		private final ORSCharacter createPlayer(int var1, int serverIndex, int var3, int var4, ORSCharacterDirection var5) {
+		public void setM_Zc(int i) { this.m_Zc = i; }
+		public int getM_Zc() { return this.m_Zc; }
+		public void setM_rc(int i) { this.m_rc = i; }
+		public int getM_rc() { return this.m_rc; }
+
+		public final ORSCharacter createPlayer(int var1, int serverIndex, int var3, int var4, ORSCharacterDirection var5) {
 			try {
 				if (null == this.playerServer[serverIndex]) {
 					this.playerServer[serverIndex] = new ORSCharacter();
@@ -1706,10 +1710,10 @@ public final class mudclient implements Runnable {
 						if (!this.optionMouseButtonOne && this.mouseButtonClick == 1
 								|| this.optionMouseButtonOne && this.mouseButtonClick == 1 && var3 == 1) {
 							if (this.controlPressed && this.shiftPressed && this.menuVisible) {
-								this.getClientStream().newPacket(59);
-								this.getClientStream().writeBuffer1.putShort(this.m_rf);
-								this.getClientStream().writeBuffer1.putShort(this.m_Cg);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().newPacket(59);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.m_rf);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.m_Cg);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 							} else {
 								this.handleMenuItemClicked(false, (int) 0);
 							}
@@ -1747,7 +1751,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final RSModel createWallObjectModel(int x, int y, int type, int dir, int index) {
+		public final RSModel createWallObjectModel(int x, int y, int type, int dir, int index) {
 			// this.createWallObjectModel(true, y, id, x, direction,
 			// this.wallObjectInstanceCount);
 			int x1 = x;
@@ -2049,9 +2053,9 @@ public final class mudclient implements Runnable {
 								&& row * 20 + sy + 20 > this.mouseY) {
 							this.mouseButtonClick = 0;
 							this.combatStyle = row - 1;
-							this.getClientStream().newPacket(29);
-							this.getClientStream().writeBuffer1.putByte(this.combatStyle);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(29);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.combatStyle);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							break;
 						}
 					}
@@ -2192,26 +2196,26 @@ public final class mudclient implements Runnable {
 							}
 
 							if (settingsChanged) {
-								this.getClientStream().newPacket(8);
-								this.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
-								this.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
-								this.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
-								this.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().newPacket(8);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 								this.duelOffsetOpponentAccepted = false;
 								this.duelOfferAccepted = false;
 							}
 
 							if (mouseX_Local >= 217 && mouseY_Local >= 238 && mouseX_Local <= 286 && mouseY_Local <= 259) {
 								this.duelOfferAccepted = true;
-								this.getClientStream().newPacket(176);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().newPacket(176);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 							}
 
 							if (mouseX_Local >= 394 && mouseY_Local >= 238 && mouseX_Local < 463 && mouseY_Local < 259) {
 								this.showDialogDuel = false;
-								this.getClientStream().newPacket(197);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().newPacket(197);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 							}
 
 							this.mouseButtonItemCountIncrement = 0;
@@ -2339,8 +2343,8 @@ public final class mudclient implements Runnable {
 						}
 					} else if (this.mouseButtonClick != 0) {
 						this.showDialogDuel = false;
-						this.getClientStream().newPacket(197);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(197);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 				}
 
@@ -2602,22 +2606,22 @@ public final class mudclient implements Runnable {
 				if (this.mouseButtonClick == 1) {
 					if (xr > this.mouseX || this.mouseY < yr || xr + 468 < this.mouseX || this.mouseY > 262 + yr) {
 						this.showDialogDuelConfirm = false;
-						this.getClientStream().newPacket(230);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(230);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 
 					if (118 + xr - 35 <= this.mouseX && this.mouseX <= xr + 118 + 70 && yr + 238 <= this.mouseY
 							&& 238 + yr + 21 >= this.mouseY) {
 						this.duelConfirmed = true;
-						this.getClientStream().newPacket(77);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(77);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 
 					if (352 + (xr - 35) <= this.mouseX && 353 + xr + 70 >= this.mouseX && yr + 238 <= this.mouseY
 							&& 259 + yr >= this.mouseY) {
 						this.showDialogDuelConfirm = false;
-						this.getClientStream().newPacket(197);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(197);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 
 					this.mouseButtonClick = 0;
@@ -2661,9 +2665,9 @@ public final class mudclient implements Runnable {
 						for (int i = 0; i < optionsMenuCount; i++) {
 							if (mouseX > startX && mouseX < startX + highest && mouseY > startY + i * spread - 15
 									&& mouseY < startY + i * spread) {
-								this.getClientStream().newPacket(116);
-								this.getClientStream().writeBuffer1.putByte(i);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().newPacket(116);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(i);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 								break;
 							}
 						}
@@ -2702,9 +2706,9 @@ public final class mudclient implements Runnable {
 						for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
 							if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9 > this.mouseX
 									&& 5 + var2 * 12 < this.mouseY && 5 + 12 + var2 * 12 > this.mouseY) {
-								this.getClientStream().newPacket(116);
-								this.getClientStream().writeBuffer1.putByte(var2);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().newPacket(116);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(var2);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 								break;
 							}
 						}
@@ -2773,8 +2777,8 @@ public final class mudclient implements Runnable {
 					int mlx = this.mouseX - (getGameWidth() - 408) / 2;
 					int mly = this.mouseY - (getGameHeight() - 246) / 2;
 					if (mlx < 0 || mly < 12 || mlx >= 408 || mly >= 246) {
-						this.getClientStream().newPacket(166);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(166);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 						this.showDialogShop = false;
 						return;
 					}
@@ -2821,12 +2825,12 @@ public final class mudclient implements Runnable {
 								}
 
 								if (btnCount > 0) {
-									this.getClientStream().newPacket(236);
-									this.getClientStream().writeBuffer1
+									this.clientPort.packetHandler.getClientStream().newPacket(236);
+									this.clientPort.packetHandler.getClientStream().writeBuffer1
 									.putShort(this.shopItemID[this.shopSelectedItemIndex]);
-									this.getClientStream().writeBuffer1.putShort(count);
-									this.getClientStream().writeBuffer1.putShort(btnCount);
-									this.getClientStream().finishPacket();
+									this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(count);
+									this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(btnCount);
+									this.clientPort.packetHandler.getClientStream().finishPacket();
 								}
 							}
 
@@ -2854,12 +2858,12 @@ public final class mudclient implements Runnable {
 								}
 
 								if (btnCount > 0) {
-									this.getClientStream().newPacket(221);
-									this.getClientStream().writeBuffer1
+									this.clientPort.packetHandler.getClientStream().newPacket(221);
+									this.clientPort.packetHandler.getClientStream().writeBuffer1
 									.putShort(this.shopItemID[this.shopSelectedItemIndex]);
-									this.getClientStream().writeBuffer1.putShort(count);
-									this.getClientStream().writeBuffer1.putShort(btnCount);
-									this.getClientStream().finishPacket();
+									this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(count);
+									this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(btnCount);
+									this.clientPort.packetHandler.getClientStream().finishPacket();
 								}
 							}
 						}
@@ -3083,14 +3087,14 @@ public final class mudclient implements Runnable {
 
 								if (mouseLX >= 217 && mouseLY >= 238 && mouseLX <= 286 && mouseLY <= 259) {
 									this.tradeAccepted = true;
-									this.getClientStream().newPacket(55);
-									this.getClientStream().finishPacket();
+									this.clientPort.packetHandler.getClientStream().newPacket(55);
+									this.clientPort.packetHandler.getClientStream().finishPacket();
 								}
 
 								if (mouseLX >= 394 && mouseLY >= 238 && mouseLX < 463 && mouseLY < 259) {
 									this.showDialogTrade = false;
-									this.getClientStream().newPacket(230);
-									this.getClientStream().finishPacket();
+									this.clientPort.packetHandler.getClientStream().newPacket(230);
+									this.clientPort.packetHandler.getClientStream().finishPacket();
 								}
 
 								this.mouseButtonItemCountIncrement = 0;
@@ -3219,8 +3223,8 @@ public final class mudclient implements Runnable {
 							}
 						} else if (this.mouseButtonClick != 0) {
 							this.showDialogTrade = false;
-							this.getClientStream().newPacket(230);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(230);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 						}
 					}
 				} else {
@@ -3821,7 +3825,7 @@ public final class mudclient implements Runnable {
 								centerZ = this.groundItemX[centerX] * this.tileSize + 64;
 								int var4 = this.tileSize * this.groundItemZ[centerX] + 64;
 								this.scene.drawSprite('\u9c40' + this.groundItemID[centerX], var4, centerX + 20000, centerZ,
-										-this.world.getElevation(centerZ, var4) - this.m_Le[centerX], 96, 64, (byte) 109);
+										-this.world.getElevation(centerZ, var4) - this.groundItemHeight[centerX], 96, 64, (byte) 109);
 								++this.spriteCount;
 							}
 						}
@@ -4299,12 +4303,12 @@ public final class mudclient implements Runnable {
 								if(intOverflowCheck < Integer.MAX_VALUE) {
 									var4 = Integer.parseInt(str);
 								}
-								this.getClientStream().newPacket(236);
-								this.getClientStream().writeBuffer1.putShort(id);
-								this.getClientStream().writeBuffer1
+								this.clientPort.packetHandler.getClientStream().newPacket(236);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(id);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1
 								.putShort(this.shopItemCount[this.shopSelectedItemIndex]);
-								this.getClientStream().writeBuffer1.putShort(var4);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(var4);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 							}
 						} catch (NumberFormatException var10) {
 							System.out.println("Shop buy X number format exception: " + var10);
@@ -4321,12 +4325,12 @@ public final class mudclient implements Runnable {
 								if(intOverflowCheck < Integer.MAX_VALUE) {
 									var4 = Integer.parseInt(str);
 								}
-								this.getClientStream().newPacket(221);
-								this.getClientStream().writeBuffer1.putShort(this.shopItemID[this.shopSelectedItemIndex]);
-								this.getClientStream().writeBuffer1
+								this.clientPort.packetHandler.getClientStream().newPacket(221);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.shopItemID[this.shopSelectedItemIndex]);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1
 								.putShort(this.shopItemCount[this.shopSelectedItemIndex]);
-								this.getClientStream().writeBuffer1.putShort(var4);
-								this.getClientStream().finishPacket();
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(var4);
+								this.clientPort.packetHandler.getClientStream().finishPacket();
 							}
 						} catch (NumberFormatException var13) {
 							System.out.println("Shop sell X number format exception: " + var13);
@@ -4360,8 +4364,8 @@ public final class mudclient implements Runnable {
 							System.out.println("Stake remove X number format exception: " + var11);
 						}
 					} else if (this.inputX_Action == InputXAction.SKIP_TUTORIAL) {
-						this.getClientStream().newPacket(84);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(84);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					} else if (this.inputX_Action == InputXAction.DROP_X) {
 						try {
 							if (str.length() > 10) {
@@ -4372,33 +4376,33 @@ public final class mudclient implements Runnable {
 							if(intOverflowCheck < Integer.MAX_VALUE) {
 								var4 = Integer.parseInt(str);
 							}
-							this.getClientStream().newPacket(246);
-							this.getClientStream().writeBuffer1.putShort(dropInventorySlot);
-							this.getClientStream().writeBuffer1.putInt(var4);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(246);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(var4);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							dropInventorySlot = -1;
 						} catch (NumberFormatException var13) {
 							System.out.println("Drop X number format exception: " + var13);
 						}
 					} else if (this.inputX_Action == InputXAction.INVITE_CLAN_PLAYER) {
-						this.getClientStream().newPacket(199);
-						this.getClientStream().writeBuffer1.putByte(11);
-						this.getClientStream().writeBuffer1.putByte(2);
-						this.getClientStream().writeBuffer1.putString(str);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(199);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(11);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(2);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(str);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}  else if (this.inputX_Action == InputXAction.KICK_CLAN_PLAYER) {
-						this.getClientStream().newPacket(199);
-						this.getClientStream().writeBuffer1.putByte(11);
-						this.getClientStream().writeBuffer1.putByte(5);
-						this.getClientStream().writeBuffer1.putString(clanKickPlayer);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(199);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(11);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(5);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(clanKickPlayer);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					} else if (this.inputX_Action == InputXAction.CLAN_DELEGATE_LEADERSHIP) {
-						this.getClientStream().newPacket(199);
-						this.getClientStream().writeBuffer1.putByte(11);
-						this.getClientStream().writeBuffer1.putByte(6);
-						this.getClientStream().writeBuffer1.putString(clanKickPlayer);
-						this.getClientStream().writeBuffer1.putByte(1);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(199);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(11);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(6);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(clanKickPlayer);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(1);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					} else if (this.inputX_Action == InputXAction.CLAN_LEAVE) {
 						clan.getClanInterface().sendClanLeave();
 					}
@@ -5247,22 +5251,22 @@ public final class mudclient implements Runnable {
 				if (this.mouseButtonClick == 1) {
 					if (this.mouseX < var2 || this.mouseY < var3 || this.mouseX > 468 + var2 || this.mouseY > var3 + 262) {
 						this.showDialogTradeConfirm = false;
-						this.getClientStream().newPacket(230);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(230);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 
 					if (this.mouseX >= var2 + 118 - 35 && this.mouseX <= var2 + 118 + 70 && this.mouseY >= var3 + 238
 							&& this.mouseY <= 238 + var3 + 21) {
 						this.tradeConfirmAccepted = true;
-						this.getClientStream().newPacket(104);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(104);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 
 					if (352 + var2 - 35 <= this.mouseX && this.mouseX <= var2 + 423 && this.mouseY >= var3 + 238
 							&& this.mouseY <= 238 + var3 + 21) {
 						this.showDialogTradeConfirm = false;
-						this.getClientStream().newPacket(230);
-						this.getClientStream().finishPacket();
+						this.clientPort.packetHandler.getClientStream().newPacket(230);
+						this.clientPort.packetHandler.getClientStream().finishPacket();
 					}
 
 					this.mouseButtonClick = 0;
@@ -6712,15 +6716,15 @@ public final class mudclient implements Runnable {
 												"You have run out of prayer points. Return to a church to recharge",
 												MessageType.GAME, 0, (String) null, (String) null);
 									} else if (!this.prayerOn[var9]) {
-										this.getClientStream().newPacket(60);
-										this.getClientStream().writeBuffer1.putByte(var9);
-										this.getClientStream().finishPacket();
+										this.clientPort.packetHandler.getClientStream().newPacket(60);
+										this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(var9);
+										this.clientPort.packetHandler.getClientStream().finishPacket();
 										this.prayerOn[var9] = true;
                                         this.playSoundFile((String) "prayeron");
 									} else {
-										this.getClientStream().newPacket(254);
-										this.getClientStream().writeBuffer1.putByte(var9);
-										this.getClientStream().finishPacket();
+										this.clientPort.packetHandler.getClientStream().newPacket(254);
+										this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(var9);
+										this.clientPort.packetHandler.getClientStream().finishPacket();
 										this.prayerOn[var9] = false;
 										this.playSoundFile((String) "prayeroff");
 									}
@@ -7348,29 +7352,29 @@ public final class mudclient implements Runnable {
 			// Camera Mode
 			if (settingIndex == 0 && this.mouseButtonClick == 1) {
 				this.optionCameraModeAuto = !this.optionCameraModeAuto;
-				this.getClientStream().newPacket(111);
-				this.getClientStream().writeBuffer1.putByte(0);
-				this.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().newPacket(111);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(0);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			}
 
 			// One or Two Mouse Button(s)
 			if (settingIndex == 1 && this.mouseButtonClick == 1) {
 				this.optionMouseButtonOne = !this.optionMouseButtonOne;
-				this.getClientStream().newPacket(111);
-				this.getClientStream().writeBuffer1.putByte(1);
-				this.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().newPacket(111);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(1);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 
 			}
 
 			// Sound On/Off
 			if (settingIndex == 2 && this.mouseButtonClick == 1) {
 				this.optionSoundDisabled = !this.optionSoundDisabled;
-				this.getClientStream().newPacket(111);
-				this.getClientStream().writeBuffer1.putByte(2);
-				this.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().newPacket(111);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(2);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			}
 
 			// Batch Progress Bar
@@ -7440,9 +7444,9 @@ public final class mudclient implements Runnable {
 				if (this.combatStyle == 4) {
 					this.combatStyle = 0;
 				}
-				this.getClientStream().newPacket(29);
-				this.getClientStream().writeBuffer1.putByte(this.combatStyle);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().newPacket(29);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.combatStyle);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			}
 
 			// Fightmode Selector
@@ -7517,10 +7521,10 @@ public final class mudclient implements Runnable {
 						this.settingsBlockGlobal = 0;
 					}
 					this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
-					this.getClientStream().newPacket(111);
-					this.getClientStream().writeBuffer1.putByte(9);
-					this.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(111);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(9);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 				}
 
 				var7 += 15;
@@ -7567,10 +7571,10 @@ public final class mudclient implements Runnable {
 				if (this.mouseX > var6 && var6 + var5 > this.mouseX && var7 - 12 < this.mouseY
 						&& 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
 					this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
-					this.getClientStream().newPacket(111);
-					this.getClientStream().writeBuffer1.putByte(11);
-					this.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(111);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(11);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 1 : 0);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 				}
 
 				// Report Abuse
@@ -7754,10 +7758,10 @@ public final class mudclient implements Runnable {
       if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
           && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
         this.optionCameraModeAuto = !this.optionCameraModeAuto;
-        this.getClientStream().newPacket(111);
-        this.getClientStream().writeBuffer1.putByte(0);
-        this.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
-        this.getClientStream().finishPacket();
+        this.clientPort.packetHandler.getClientStream().newPacket(111);
+        this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(0);
+        this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
+        this.clientPort.packetHandler.getClientStream().finishPacket();
       }
 
 			var7 += 15;
@@ -7766,10 +7770,10 @@ public final class mudclient implements Runnable {
       if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
           && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
         this.optionMouseButtonOne = !this.optionMouseButtonOne;
-        this.getClientStream().newPacket(111);
-        this.getClientStream().writeBuffer1.putByte(1);
-        this.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
-        this.getClientStream().finishPacket();
+        this.clientPort.packetHandler.getClientStream().newPacket(111);
+        this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(1);
+        this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
+        this.clientPort.packetHandler.getClientStream().finishPacket();
 
       }
 
@@ -7779,10 +7783,10 @@ public final class mudclient implements Runnable {
       if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > var7 - 12
           && 4 + var7 > this.mouseY && this.mouseButtonClick == 1) {
         this.optionSoundDisabled = !this.optionSoundDisabled;
-        this.getClientStream().newPacket(111);
-        this.getClientStream().writeBuffer1.putByte(2);
-        this.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
-        this.getClientStream().finishPacket();
+        this.clientPort.packetHandler.getClientStream().newPacket(111);
+        this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(2);
+        this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
+        this.clientPort.packetHandler.getClientStream().finishPacket();
       }
 
 			var7 += 7 * 15 + 5;
@@ -7959,7 +7963,7 @@ public final class mudclient implements Runnable {
 						heightMargin += 13;
 					}
 
-					this.getSurface().drawString("Quest Points:@yel@" + this.m_ii, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
+					this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, x - 5 + width / 2, heightMargin - 13, 0xFFFFFF, 1);
 					heightMargin += 12;
 					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", 5 + x, heightMargin - 13,
 							0xFFFFFF, 1);
@@ -8113,15 +8117,15 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				this.getClientStream().newPacket(33);
-				this.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+				this.clientPort.packetHandler.getClientStream().newPacket(33);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
 
 				for (int i = 0; this.duelOfferItemCount > i; ++i) {
-					this.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-					this.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
 				}
 
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 				this.duelOfferAccepted = false;
 				this.duelOffsetOpponentAccepted = false;
 			} catch (RuntimeException var9) {
@@ -8199,15 +8203,15 @@ public final class mudclient implements Runnable {
 				}
 
 				if (andStakeSuccess) {
-					this.getClientStream().newPacket(33);
-					this.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+					this.clientPort.packetHandler.getClientStream().newPacket(33);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
 
 					for (int i = 0; this.duelOfferItemCount > i; ++i) {
-						this.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-						this.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
 					}
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.duelOffsetOpponentAccepted = false;
 					this.duelOfferAccepted = false;
 				}
@@ -8411,16 +8415,16 @@ public final class mudclient implements Runnable {
 				}
 
 				if (this.panelAppearance.isClicked(this.m_Eg)) {
-					this.getClientStream().newPacket(235);
-					this.getClientStream().writeBuffer1.putByte(this.appearanceHeadGender);
-					this.getClientStream().writeBuffer1.putByte(this.appearanceHeadType);
-					this.getClientStream().writeBuffer1.putByte(this.m_dk);
-					this.getClientStream().writeBuffer1.putByte(this.character2Colour);
-					this.getClientStream().writeBuffer1.putByte(this.m_ld);
-					this.getClientStream().writeBuffer1.putByte(this.m_Wg);
-					this.getClientStream().writeBuffer1.putByte(this.characterBottomColour);
-					this.getClientStream().writeBuffer1.putByte(this.m_hh);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(235);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHeadGender);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHeadType);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.m_dk);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.character2Colour);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.m_ld);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.m_Wg);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.characterBottomColour);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.m_hh);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.getSurface().blackScreen(true);
 					this.showAppearanceChange = false;
 				}
@@ -9002,16 +9006,16 @@ public final class mudclient implements Runnable {
 
 					} else {
 						if (this.inputTextFinal.length() > 0) {
-							this.getClientStream().newPacket(45);
+							this.clientPort.packetHandler.getClientStream().newPacket(45);
 							if (this.sleepWordDelay) {
-								this.getClientStream().writeBuffer1.putByte(1);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(1);
 							} else {
-								this.getClientStream().writeBuffer1.putByte(0);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(0);
 								this.sleepWordDelay = true;
 							}
 
-							this.getClientStream().writeBuffer1.putNullThenString(this.inputTextFinal, 116);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putNullThenString(this.inputTextFinal, 116);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							this.inputTextCurrent = "";
 							this.sleepingStatusText = "Please wait...";
 							this.inputTextFinal = "";
@@ -9019,16 +9023,16 @@ public final class mudclient implements Runnable {
 
 						if (this.lastMouseButtonDown == 1 && this.mouseY > 275 - (Config.isAndroid() ? 110 : 0) && this.mouseY < 310 - (Config.isAndroid() ? 110 : 0) && this.mouseX > 56
 								&& this.mouseX < 456) {
-							this.getClientStream().newPacket(45);
+							this.clientPort.packetHandler.getClientStream().newPacket(45);
 							if (!this.sleepWordDelay) {
-								this.getClientStream().writeBuffer1.putByte(0);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(0);
 								this.sleepWordDelay = true;
 							} else {
-								this.getClientStream().writeBuffer1.putByte(1);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(1);
 							}
 
-							this.getClientStream().writeBuffer1.putNullThenString("-null-", -74);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putNullThenString("-null-", -74);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							this.sleepingStatusText = "Please wait...";
 							this.inputTextFinal = "";
 							this.inputTextCurrent = "";
@@ -9092,9 +9096,9 @@ public final class mudclient implements Runnable {
 							try {
 								int option = Integer.parseInt("" + (char) key) - 1;
 								if (option >= 0 && option < optionsMenuCount) {
-									this.getClientStream().newPacket(116);
-									this.getClientStream().writeBuffer1.putByte(option);
-									this.getClientStream().finishPacket();
+									this.clientPort.packetHandler.getClientStream().newPacket(116);
+									this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(option);
+									this.clientPort.packetHandler.getClientStream().finishPacket();
 									mouseButtonClick = 0;
 									optionsMenuShow = false;
 									return;
@@ -9253,16 +9257,16 @@ public final class mudclient implements Runnable {
 				return;
 			}
 			try {
-				this.setClientStream(new Network_Socket(this.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this));
-				this.getClientStream().m_d = MiscFunctions.maxReadTries;
+				this.clientPort.packetHandler.setClientStream(new Network_Socket(this.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this));
+				this.clientPort.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 
-				getClientStream().newPacket(78);
-				getClientStream().writeBuffer1.putString(user);
-				getClientStream().writeBuffer1.putString(pass);
-				getClientStream().writeBuffer1.putString(email);
-				getClientStream().finishPacketAndFlush();
+				this.clientPort.packetHandler.getClientStream().newPacket(78);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(user);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(pass);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(email);
+				this.clientPort.packetHandler.getClientStream().finishPacketAndFlush();
 
-				int registerResponse = getClientStream().read();
+				int registerResponse = this.clientPort.packetHandler.getClientStream().read();
 
 				System.out.println("Registration response:" + registerResponse);
 				if (registerResponse == 0) {
@@ -9348,35 +9352,35 @@ public final class mudclient implements Runnable {
 				switch (var3) {
 				case GROUND_ITEM_CAST_SPELL: {
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
-					this.getClientStream().newPacket(249);
-					this.getClientStream().writeBuffer1.putShort(tileID); // spell
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.getClientStream().writeBuffer1.putShort(dir);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(249);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(tileID); // spell
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(dir);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
 				case GROUND_ITEM_USE_ITEM: {
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
-					this.getClientStream().newPacket(53);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.getClientStream().writeBuffer1.putShort(dir);
-					this.getClientStream().writeBuffer1.putShort(tileID); // inventory
+					this.clientPort.packetHandler.getClientStream().newPacket(53);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(dir);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(tileID); // inventory
 					// item
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
 				case GROUND_ITEM_TAKE: {
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
-					this.getClientStream().newPacket(247);
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.getClientStream().writeBuffer1.putShort(dir);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(247);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(dir);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case GROUND_ITEM_EXAMINE: {
@@ -9398,43 +9402,43 @@ public final class mudclient implements Runnable {
 				}
 				case WALL_CAST_SPELL: {
 					this.walkToWall(indexOrX, idOrZ, dir);
-					this.getClientStream().newPacket(180);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.getClientStream().writeBuffer1.putByte(dir);
-					this.getClientStream().writeBuffer1.putShort(tileID);
+					this.clientPort.packetHandler.getClientStream().newPacket(180);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
 				case WALL_USE_ITEM: {
 					this.walkToWall(indexOrX, idOrZ, dir);
-					this.getClientStream().newPacket(161);
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.getClientStream().writeBuffer1.putByte(dir);
-					this.getClientStream().writeBuffer1.putShort(tileID);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(161);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
 				case WALL_COMMAND1: {
 					this.walkToWall(indexOrX, idOrZ, dir);
-					this.getClientStream().newPacket(14);
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.getClientStream().writeBuffer1.putByte(dir);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(14);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case WALL_COMMAND2: {
 					this.walkToWall(indexOrX, idOrZ, dir);
-					this.getClientStream().newPacket(127);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.getClientStream().writeBuffer1.putByte(dir);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(127);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case WALL_EXAMINE: {
@@ -9444,39 +9448,39 @@ public final class mudclient implements Runnable {
 				}
 				case OBJECT_CAST_SPELL: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
-					this.getClientStream().newPacket(99);
-					this.getClientStream().writeBuffer1.putShort(var8);
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.clientPort.packetHandler.getClientStream().newPacket(99);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(var8);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
 				case OBJECT_USE_ITEM: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
-					this.getClientStream().newPacket(115);
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.getClientStream().writeBuffer1.putShort(var8);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(115);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(var8);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
 				case OBJECT_COMMAND1: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
-					this.getClientStream().newPacket(136);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(136);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case OBJECT_COMMAND2: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
-					this.getClientStream().newPacket(79);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(79);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case OBJECT_EXAMINE: {
@@ -9485,10 +9489,10 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_CAST_SPELL: {
-					this.getClientStream().newPacket(4);
-					this.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(4);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					if (selectedSpell != 16) {
 						showUiTab = 4;
 					}
@@ -9496,29 +9500,29 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_USE_ITEM: {
-					this.getClientStream().newPacket(91);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(91);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
 				case ITEM_REMOVE_EQUIPPED: {
-					this.getClientStream().newPacket(170);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(170);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_EQUIP: {
-					this.getClientStream().newPacket(169);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(169);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_COMMAND: {
-					this.getClientStream().newPacket(90);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(90);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_USE: {
@@ -9529,13 +9533,13 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_DROP: {
-					this.getClientStream().newPacket(246);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().newPacket(246);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 					int amount = 1;
 					if (EntityHandler.getItemDef(inventoryItemID[indexOrX]).isStackable())
 						amount = getInventoryCount(this.inventoryItemID[indexOrX]);
-					this.getClientStream().writeBuffer1.putInt(amount);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					if (!Config.isAndroid())
 						this.showUiTab = 0;
 					this.selectedItemInventoryIndex = -1;
@@ -9557,11 +9561,11 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(50);
-					this.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().newPacket(50);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
@@ -9573,10 +9577,10 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(135);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(135);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
@@ -9588,9 +9592,9 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(153);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(153);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case NPC_COMMAND1: {
@@ -9601,9 +9605,9 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(202);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(202);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case NPC_COMMAND2: {
@@ -9614,9 +9618,9 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(203);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(203);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case NPC_ATTACK2:
@@ -9628,9 +9632,9 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(190);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(190);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case NPC_EXAMINE: {
@@ -9646,11 +9650,11 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(229);
-					this.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().newPacket(229);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
@@ -9662,10 +9666,10 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(113);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(113);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
@@ -9678,27 +9682,27 @@ public final class mudclient implements Runnable {
 					cTileX = (character.currentX - 64) / this.tileSize;
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, (int) cTileZ, true);
-					this.getClientStream().newPacket(171);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(171);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_DUEL: {
-					this.getClientStream().newPacket(103);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(103);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_TRADE: {
-					this.getClientStream().newPacket(142);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(142);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_FOLLOW: {
-					this.getClientStream().newPacket(165);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(165);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case REPORT_ABUSE: {
@@ -9726,12 +9730,12 @@ public final class mudclient implements Runnable {
 				}
 				case LANDSCAPE_CAST_SPELL: {
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, (int) idOrZ, true);
-					this.getClientStream().newPacket(158);
-					this.getClientStream().writeBuffer1.putShort(dir);
-					this.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.clientPort.packetHandler.getClientStream().newPacket(158);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(dir);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
@@ -9743,9 +9747,9 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case SELF_CAST_SPELL: {
-					this.getClientStream().newPacket(137);
-					this.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(137);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
 				}
@@ -9832,1871 +9836,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void handlePacket1(int opcode, int length) {
-			try {//System.out.println("opcode1: " + opcode);
 
-				if (opcode == 88) { // Create NPC
-					int id = packetsIncoming.getShort();
-
-					String name = packetsIncoming.readString();
-					String description = packetsIncoming.readString();
-
-					String optionCommand = "";
-					int commandLength = packetsIncoming.getByte() & 0xff;
-					if (commandLength > 0) {
-						optionCommand = packetsIncoming.readString();
-					}
-
-					int attack = packetsIncoming.getByte() & 0xff;
-					int strength = packetsIncoming.getByte() & 0xff;
-					int defense = packetsIncoming.getByte() & 0xff;
-					int hits = packetsIncoming.getByte() & 0xff;
-					boolean attackable = packetsIncoming.getByte() == 1;
-
-					int spriteCount = packetsIncoming.getByte() & 0xff;
-					int[] sprites = new int[spriteCount];
-					for (int i35 = 0; i35 < spriteCount; i35++) {
-						sprites[i35] = packetsIncoming.get32();
-					}
-					for (int l37 = spriteCount; l37 < 12; l37++)
-						sprites[l37] = 0;
-
-					int hairColour = packetsIncoming.get32();
-					int topColour = packetsIncoming.get32();
-					int bottomColour = packetsIncoming.get32();
-					int skinColour = packetsIncoming.get32();
-
-					int camera1 = packetsIncoming.getShort();
-					int camera2 = packetsIncoming.getShort();
-
-					int walkModel = packetsIncoming.getByte() & 0xff;
-					int combatModel = packetsIncoming.getByte() & 0xff;
-					int combatSprite = packetsIncoming.getByte() & 0xff;
-					NPCDef newNpc = new NPCDef(name, description, optionCommand, attack, strength, hits, defense,
-							attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2,
-							walkModel, combatModel, combatSprite, id);
-					EntityHandler.npcs.set(id, newNpc);
-					return;
-				}
-				else if (opcode == 134) {
-					if (!Config.S_BATCH_PROGRESSION) return;
-					int interfaceID = packetsIncoming.getByte();
-					switch (interfaceID) {
-					case 0: // Progress Bar Updates
-						if (!Config.C_BATCH_PROGRESS_BAR) {
-							batchProgressBar.hide();
-							return;
-						}
-						/* Progress bar */
-						int actionType = packetsIncoming.getByte() & 0xff;
-						if (actionType == 1) {
-							int delay = packetsIncoming.getShort();
-							int repeatFor = packetsIncoming.getByte() & 0xff;
-							batchProgressBar.initVariables(repeatFor, delay);
-							batchProgressBar.show();
-						}
-						if (actionType == 2) {
-							batchProgressBar.resetProgressBar();
-						}
-						if (actionType == 3) {
-							int repeat = packetsIncoming.getByte() & 0xff;
-							batchProgressBar.updateProgress(repeat);
-						}
-						break;
-					case 1: // Bank Pin
-						int action = packetsIncoming.getByte();
-						if (action == 0) {
-							bankPinInterface.show();
-						} else if (action == 1) {
-							bankPinInterface.hide();
-						}
-						break;
-					case 2: // Ironman Check
-						int iAction = packetsIncoming.getByte();
-						if (iAction == 0) {
-							ironmanInterface.setIronManMode(packetsIncoming.getByte());
-							ironmanInterface.setIronManRestriction(packetsIncoming.getByte());
-						} else if (iAction == 1) {
-							ironmanInterface.setVisible(true);
-						} else if (iAction == 2) {
-							ironmanInterface.setVisible(false);
-						}
-						break;
-
-					case 3: // Auction House
-						int packetType = packetsIncoming.getByte() & 0xff;
-						if (packetType == 0) { // start receiving items
-							auctionHouse.resetAuctionItems();
-						} else if (packetType == 1) { // read items
-							int auctionItemCount = packetsIncoming.getShort();
-							for (int i = 0; i < auctionItemCount; i++) {
-								int auctionID = packetsIncoming.get32();
-								int itemID = packetsIncoming.get32();
-								int amount = packetsIncoming.get32();
-								int price = packetsIncoming.get32();
-								String seller = "";
-								boolean isMyItem = packetsIncoming.getByte() == 1;
-								if (isMyItem) {
-									seller = localPlayer.displayName;
-								} else {
-									seller = packetsIncoming.readString();
-								}
-								int hoursLeft = packetsIncoming.getByte();
-								auctionHouse.addAuction(auctionID, itemID, amount, price, seller, hoursLeft);
-							}
-							auctionHouse.setVisible(true);
-						}
-						break;
-					case 5: // Online List
-						onlineList.reset();
-						int onlinePlayerCount = packetsIncoming.getShort();
-						for (int i = 0; i < onlinePlayerCount; i++) {
-							onlineList.addOnlineUser(packetsIncoming.readString(), packetsIncoming.getByte());
-						}
-						onlineList.setVisible(true);
-						break;
-					case 6: // Fishing Trawler
-						action = packetsIncoming.getByte();
-						switch (action) {
-						case 0:
-							fishingTrawlerInterface.show();
-							break;
-						case 1:
-							fishingTrawlerInterface.setVariables(packetsIncoming.getShort(), packetsIncoming.getShort(),
-									packetsIncoming.getByte(), packetsIncoming.getByte() == 1);
-							break;
-						case 2:
-							fishingTrawlerInterface.hide();
-							break;
-						}
-						break;
-					case 7: // Clans
-						actionType = packetsIncoming.getByte();
-						switch (actionType) {
-						case 0: // send clan
-							clan.setClanName(packetsIncoming.readString());
-							clan.setClanTag(packetsIncoming.readString());
-							clan.setClanLeaderUsername(packetsIncoming.readString());
-							boolean isLeader = packetsIncoming.getByte() == 1;
-							clan.setClanLeader(isLeader);
-							SocialLists.clanListCount = packetsIncoming.getByte();
-							for (int id = 0; id < SocialLists.clanListCount; id++) {
-								clan.username[id] = packetsIncoming.readString();
-								clan.clanRank[id] = packetsIncoming.getByte();
-								clan.onlineClanMember[id] = packetsIncoming.getByte();
-							}
-							clan.putClan(true);
-							break;
-						case 1:// leave clan
-							clan.putClan(false);
-							clan.update();
-							// UPDATE GUI?
-							break;
-						case 2:// SENT INVITATION
-							clan.getClanInterface().initializeInvite(packetsIncoming.readString(), packetsIncoming.readString());
-							break;
-						case 3: // SETTINGs
-							clan.setClanSetting(0, packetsIncoming.getByte());
-							clan.setClanSetting(1, packetsIncoming.getByte());
-							clan.setClanSetting(2, packetsIncoming.getByte());
-							clan.allowed[0] = packetsIncoming.getByte() == 1;
-							clan.allowed[1] = packetsIncoming.getByte() == 1;
-							break;
-						case 4: // clan search visuallity
-							clan.getClanInterface().resetClans();
-							int clanCount = packetsIncoming.getShort();
-							for (int i = 0; i < clanCount; i++) {
-								int clanID = packetsIncoming.getShort();
-								String clanName = packetsIncoming.readString();
-								String clanTag = packetsIncoming.readString();
-								int members = packetsIncoming.getByte();
-								int canJoin = packetsIncoming.getByte();
-								int clanPoints = packetsIncoming.get32();
-								int clanRank = packetsIncoming.getShort();
-								clan.getClanInterface().addClan(clanID, clanName, clanTag, members, canJoin, clanPoints, clanRank);
-							}
-							break;
-						}
-						break;
-					}
-					return;
-				}
-				/*if(opcode == 50) { // Achievements
-					int achievementStatus = this.packetsIncoming.getByte();
-					if (achievementStatus == 1) {
-						totalAchievements = this.packetsIncoming.getShort();
-						for (int i = 0; i < totalAchievements; i++) {
-							int achievementID = this.packetsIncoming.get32();
-							byte progress = this.packetsIncoming.getByte();
-
-							String achievementName = this.packetsIncoming.readString();
-							String achievementTitle = this.packetsIncoming.readString();
-							String achievementDesc = this.packetsIncoming.readString();
-
-							achievementNames[achievementID] = achievementName;
-							achievementTitles[achievementID] = achievementTitle;
-							achievementDescs[achievementID] = achievementDesc;
-							achievementProgress[achievementID] = progress;
-						}
-					} else if (achievementStatus == 2) {
-						int achievementID = this.packetsIncoming.get32();
-						byte progress = this.packetsIncoming.getByte();
-
-						achievementProgress[achievementID] = progress;
-					}
-					return;
-				}*/
-				else if(opcode == 135) { // Kill Announcements
-					if (!Config.S_WANT_KILL_FEED) return;
-					String killed = this.packetsIncoming.readString();
-					String killer = this.packetsIncoming.readString();
-					int killType = this.packetsIncoming.get32();
-					killQueue.addKill(new KillAnnouncer(killer, killed, killType));
-					return;
-				}
-				// opcode = this.clientStream.decodeIncomingOpcode(opcode);
-				else if (opcode == 131) { // Send Message
-					int crown = this.packetsIncoming.getUnsignedByte();
-					MessageType type = MessageType.lookup(this.packetsIncoming.getUnsignedByte());
-					int var5 = this.packetsIncoming.getUnsignedByte();
-					String message = this.packetsIncoming.readString();
-					String sender = null;
-					String clan = null;
-					String color = null;
-					if ((var5 & 1) != 0) {
-						sender = this.packetsIncoming.readString();
-					}
-
-					if ((1 & var5) != 0) {
-						clan = this.packetsIncoming.readString();
-					}
-
-					if ((var5 & 2) != 0) {
-						color = this.packetsIncoming.readString();
-					}
-
-					this.showMessage(false, sender, message, type, crown, clan, color);
-
-				} else if (opcode == 4) { // ???
-					this.closeConnection(true);
-
-				} else if (opcode == 183) { // ???
-					this.cantLogout((byte) -65);
-
-				} else if (opcode == 165) { // ???
-					this.closeConnection(false);
-
-				} else if (opcode == 149) { // Log In/Out Message
-					String currentName = this.packetsIncoming.readString();
-					String formerName = this.packetsIncoming.readString();
-					int arg = this.packetsIncoming.getUnsignedByte();
-					boolean rename = (arg & 1) != 0;
-					boolean online = (4 & arg) != 0;
-					String var9 = null;
-					if (online) {
-						var9 = this.packetsIncoming.readString();
-					}
-					for (int i = 0; i < SocialLists.friendListCount; ++i) {
-						if (!rename) {
-							if (SocialLists.friendList[i].equals(currentName)) {
-								if (SocialLists.friendListArgS[i] == null && online) {
-									this.showMessage(false, (String) null, currentName + " has logged in",
-											MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
-								}
-
-								if (null != SocialLists.friendListArgS[i] && !online) {
-									this.showMessage(false, (String) null, currentName + " has logged out",
-											MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
-								}
-
-								SocialLists.friendListOld[i] = formerName;
-								SocialLists.friendListArgS[i] = var9;
-								SocialLists.friendListArg[i] = arg;
-								this.sortOnlineFriendsList();
-								return;
-							}
-						} else if (SocialLists.friendList[i].equals(formerName)) {
-							if (SocialLists.friendListArgS[i] == null && online) {
-								this.showMessage(false, (String) null, currentName + " has logged in",
-										MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
-							}
-
-							if (SocialLists.friendListArgS[i] != null && !online) {
-								this.showMessage(false, (String) null, currentName + " has logged out",
-										MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
-							}
-
-							SocialLists.friendList[i] = currentName;
-							SocialLists.friendListOld[i] = formerName;
-							SocialLists.friendListArgS[i] = var9;
-							SocialLists.friendListArg[i] = arg;
-							this.sortOnlineFriendsList();
-							return;
-						}
-					}
-
-					if (rename) {
-						System.out.println("Error: friend display name change packet received, but old name \'" + formerName
-								+ "\' is not on friend list");
-						return;
-					}
-
-					SocialLists.friendList[SocialLists.friendListCount] = currentName;
-					SocialLists.friendListOld[SocialLists.friendListCount] = formerName;
-					SocialLists.friendListArgS[SocialLists.friendListCount] = var9;
-					SocialLists.friendListArg[SocialLists.friendListCount] = arg;
-					++SocialLists.friendListCount;
-					this.sortOnlineFriendsList();
-
-				} else if (opcode == 237) { // Ignore List Rename
-					String arg0 = this.packetsIncoming.readString();
-					String replace = this.packetsIncoming.readString();
-					if (replace.length() == 0) {
-						replace = arg0;
-					}
-
-					String arg1 = this.packetsIncoming.readString();
-					String find = this.packetsIncoming.readString();
-					if (find.length() == 0) {
-						find = arg0;
-					}
-
-					boolean rename = this.packetsIncoming.getUnsignedByte() == 1;
-
-					for (int j = 0; j < SocialLists.ignoreListCount; ++j) {
-						if (rename) {
-							if (SocialLists.ignoreList[j].equals(find)) {
-								SocialLists.ignoreListArg0[j] = arg0;
-								SocialLists.ignoreList[j] = replace;
-								SocialLists.ignoreListArg1[j] = arg1;
-								SocialLists.ignoreListOld[j] = find;
-								return;
-							}
-						} else if (SocialLists.ignoreList[j].equals(replace)) {
-							return;
-						}
-					}
-
-					if (rename) {
-						System.out.println("Error: ignore display name change packet received, but old name \'" + find
-								+ "\' is not on ignore list");
-						return;
-					}
-
-					SocialLists.ignoreListArg0[SocialLists.ignoreListCount] = arg0;
-					SocialLists.ignoreList[SocialLists.ignoreListCount] = replace;
-					SocialLists.ignoreListArg1[SocialLists.ignoreListCount] = arg1;
-					SocialLists.ignoreListOld[SocialLists.ignoreListCount] = find;
-					++SocialLists.ignoreListCount;
-
-				} else if (opcode == 109) { // Ignore List ___ ?
-					SocialLists.ignoreListCount = this.packetsIncoming.getUnsignedByte();
-
-					for (int var4 = 0; var4 < SocialLists.ignoreListCount; ++var4) {
-						SocialLists.ignoreListArg0[var4] = this.packetsIncoming.readString();
-						SocialLists.ignoreList[var4] = this.packetsIncoming.readString();
-						SocialLists.ignoreListArg1[var4] = this.packetsIncoming.readString();
-						SocialLists.ignoreListOld[var4] = this.packetsIncoming.readString();
-					}
-				} else if (opcode == 158) { // Chat Blocking Settings
-					this.settingsBlockChat = this.packetsIncoming.getUnsignedByte();
-					this.settingsBlockPrivate = this.packetsIncoming.getUnsignedByte();
-					this.settingsBlockTrade = this.packetsIncoming.getUnsignedByte();
-					this.settingsBlockDuel = this.packetsIncoming.getUnsignedByte();
-
-				} else if (opcode == 120) { // Recieve Private Message
-					String sender = this.packetsIncoming.readString();
-					String formerName = this.packetsIncoming.readString();
-					int icon = this.packetsIncoming.getUnsignedByte();
-					// long var17 = this.packetsIncoming.getLong(0);
-					String message = RSBufferUtils.getEncryptedString(this.packetsIncoming);
-
-					// for (int var10 = 0; var10 < 100; ++var10) {
-					// if (~var17 == ~this.m_Zd[var10]) {
-					// return;
-					// }
-					// }
-					//
-					// this.m_Zd[this.m_Ag] = var17;
-					// this.m_Ag = (this.m_Ag + 1) % 100;
-					this.showMessage(icon == 2, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName,
-							(String) null);
-
-				} else if (opcode == 87) { // Send Private Message
-					String var13 = this.packetsIncoming.readString();
-					String var14 = RSBufferUtils.getEncryptedString(this.packetsIncoming);
-					this.showMessage(false, var13, var14, MessageType.PRIVATE_SEND, 0, var13, (String) null);
-				}
-			  /*
-				 * else if (opcode == 189) { // ???
-				 * this.packetsIncoming.curPointerPosition += 28; // if
-				 * (this.packetsIncoming.isCRCValid()) { //
-				 * GenUtil.seedRandomFile((RSBuffer) this.packetsIncoming, //
-				 * this.packetsIncoming.curPointerPosition - 28); // } }
-				 */
-
-				else if (opcode == 19) { // Server Configs
-					Properties props = new Properties();
-					String serverName;
-					int playerLevelLimit, spawnAuctionNpcs, spawnIronManNpcs;
-					int showFloatingNametags, wantClans, wantKillFeed, fogToggle;
-					int groundItemToggle, autoMessageSwitchToggle, batchProgression;
-					int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
-					int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
-					int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle;
-					int wantGlobalChat, wantSkillMenus, wantQuestMenus;
-					int wantExperienceElixirs, wantKeyboardShortcuts;
-					int wantCustomBanks, wantBankPins, customFiremaking;
-					int wantDropX, wantExpInfo, wantWoodcuttingGuild;
-					int wantDecanting, wantCertsToBank;
-
-					if (!this.gotInitialConfigs) {
-						serverName = this.getClientStream().readString();
-						playerLevelLimit = this.getClientStream().getUnsignedByte();
-						spawnAuctionNpcs = this.getClientStream().getUnsignedByte();
-						spawnIronManNpcs = this.getClientStream().getUnsignedByte();
-						showFloatingNametags = this.getClientStream().getUnsignedByte();
-						wantClans = this.getClientStream().getUnsignedByte();
-						wantKillFeed = this.getClientStream().getUnsignedByte();
-						fogToggle = this.getClientStream().getUnsignedByte();
-						groundItemToggle = this.getClientStream().getUnsignedByte();
-						autoMessageSwitchToggle = this.getClientStream().getUnsignedByte();
-						batchProgression = this.getClientStream().getUnsignedByte();
-						sideMenuToggle = this.getClientStream().getUnsignedByte();
-						inventoryCountToggle = this.getClientStream().getUnsignedByte();
-						zoomViewToggle = this.getClientStream().getUnsignedByte();
-						menuCombatStyleToggle = this.getClientStream().getUnsignedByte();
-						fightmodeSelectorToggle = this.getClientStream().getUnsignedByte();
-						experienceCounterToggle = this.getClientStream().getUnsignedByte();
-						experienceDropsToggle = this.getClientStream().getUnsignedByte();
-						itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
-						showRoofToggle = this.getClientStream().getUnsignedByte();
-						wantGlobalChat = this.getClientStream().getUnsignedByte();
-						wantSkillMenus = this.getClientStream().getUnsignedByte();
-						wantQuestMenus = this.getClientStream().getUnsignedByte();
-						wantExperienceElixirs = this.getClientStream().getUnsignedByte();
-						wantKeyboardShortcuts = this.getClientStream().getUnsignedByte();
-						wantCustomBanks = this.getClientStream().getUnsignedByte();
-						wantBankPins = this.getClientStream().getUnsignedByte();
-						customFiremaking = this.getClientStream().getUnsignedByte();
-						wantDropX = this.getClientStream().getUnsignedByte();
-						wantExpInfo = this.getClientStream().getUnsignedByte();
-						wantWoodcuttingGuild = this.getClientStream().getUnsignedByte();
-						wantDecanting = this.getClientStream().getUnsignedByte();
-						wantCertsToBank = this.getClientStream().getUnsignedByte();
-					} else {
-						serverName = this.packetsIncoming.readString();
-						playerLevelLimit = this.packetsIncoming.getUnsignedByte();
-						spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
-						spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
-						showFloatingNametags = this.packetsIncoming.getUnsignedByte();
-						wantClans = this.packetsIncoming.getUnsignedByte();
-						wantKillFeed = this.packetsIncoming.getUnsignedByte();
-						fogToggle = this.packetsIncoming.getUnsignedByte();
-						groundItemToggle = this.packetsIncoming.getUnsignedByte();
-						autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
-						batchProgression = this.packetsIncoming.getUnsignedByte();
-						sideMenuToggle = this.packetsIncoming.getUnsignedByte();
-						inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
-						zoomViewToggle = this.packetsIncoming.getUnsignedByte();
-						menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
-						fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
-						experienceCounterToggle = this.packetsIncoming.getUnsignedByte();
-						experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
-						itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
-						showRoofToggle = this.packetsIncoming.getUnsignedByte();
-						wantGlobalChat = this.packetsIncoming.getUnsignedByte();
-						wantSkillMenus = this.packetsIncoming.getUnsignedByte();
-						wantQuestMenus = this.packetsIncoming.getUnsignedByte();
-						wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
-						wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
-						wantCustomBanks = this.packetsIncoming.getUnsignedByte();
-						wantBankPins = this.packetsIncoming.getUnsignedByte();
-						customFiremaking = this.packetsIncoming.getUnsignedByte();
-						wantDropX = this.packetsIncoming.getUnsignedByte();
-						wantExpInfo = this.packetsIncoming.getUnsignedByte();
-						wantWoodcuttingGuild = this.packetsIncoming.getUnsignedByte();
-						wantDecanting = this.packetsIncoming.getUnsignedByte();
-						wantCertsToBank = this.packetsIncoming.getUnsignedByte();
-					}
-
-					props.setProperty("SERVER_NAME", serverName);
-					props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit));
-					props.setProperty("S_SPAWN_AUCTION_NPCS", spawnAuctionNpcs == 1 ? "true" : "false");
-					props.setProperty("S_SPAWN_IRON_MAN_NPCS", spawnIronManNpcs == 1 ? "true" : "false");
-					props.setProperty("S_SHOW_FLOATING_NAMETAGS", showFloatingNametags == 1 ? "true" : "false");
-					props.setProperty("S_WANT_CLANS", wantClans == 1 ? "true" : "false");
-					props.setProperty("S_WANT_KILL_FEED", wantKillFeed == 1 ? "true" : "false");
-					props.setProperty("S_FOG_TOGGLE", fogToggle == 1 ? "true" : "false");
-					props.setProperty("S_GROUND_ITEM_TOGGLE", groundItemToggle == 1 ? "true" : "false");
-					props.setProperty("S_AUTO_MESSAGE_SWITCH_TOGGLE", autoMessageSwitchToggle == 1 ? "true" : "false");
-					props.setProperty("S_BATCH_PROGRESSION", batchProgression == 1 ? "true" : "false");
-					props.setProperty("S_SIDE_MENU_TOGGLE", sideMenuToggle == 1 ? "true" : "false");
-					props.setProperty("S_INVENTORY_COUNT_TOGGLE", inventoryCountToggle == 1 ? "true" : "false");
-					props.setProperty("S_ZOOM_VIEW_TOGGLE", zoomViewToggle == 1 ? "true" : "false");
-					props.setProperty("S_MENU_COMBAT_STYLE_TOGGLE", menuCombatStyleToggle == 1 ? "true" : "false");
-					props.setProperty("S_FIGHTMODE_SELECTOR_TOGGLE", fightmodeSelectorToggle == 1 ? "true" : "false");
-          props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
-          props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
-					props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
-					props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
-					props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
-					props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
-					props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
-					props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false");
-					props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
-					props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
-					props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
-					props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
-					props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false");
-					props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false");
-					props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false");
-					props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false");
-					props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
-
-					Config.updateServerConfiguration(props);
-
-					authenticSettings = !(
-							Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-							|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-							|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-							|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-							|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
-							|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-							|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-							|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
-
-
-					if (!gotInitialConfigs) {
-						this.experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
-						this.setExperienceArray();
-						gotInitialConfigs = true;
-						continueStartGame((byte) -92);
-					}
-				}
-				else {
-					 this.handlePacket2(opcode, length);
-				 }
-			} catch (RuntimeException var11) {
-				throw GenUtil.makeThrowable(var11, "client.LD(" + "dummy" + ',' + length + ',' + opcode + ')');
-			}
-		}
-
-		private final void handlePacket2(int opcode, int length) {
-			try {
-				if (opcode == 191) { // Show Other Players
-					this.knownPlayerCount = this.playerCount;
-
-					for (int i = 0; this.knownPlayerCount > i; ++i) {
-						this.knownPlayers[i] = this.players[i];
-					}
-
-					this.packetsIncoming.startBitAccess();
-					this.playerLocalX = this.packetsIncoming.getBitMask(11);
-					this.playerLocalZ = this.packetsIncoming.getBitMask(13);
-					int direction = this.packetsIncoming.getBitMask(4);
-					boolean var24 = this.loadNextRegion(this.playerLocalZ, this.playerLocalX, false);
-					this.playerLocalX -= this.midRegionBaseX;
-					this.playerLocalZ -= this.midRegionBaseZ;
-					int var6 = 64 + this.playerLocalX * this.tileSize;
-					int var7 = this.playerLocalZ * this.tileSize + 64;
-					this.playerCount = 0;
-					if (var24) {
-						this.localPlayer.movingStep = 0;
-						this.localPlayer.waypointCurrent = 0;
-						this.localPlayer.currentX = this.localPlayer.waypointsX[0] = var6;
-						this.localPlayer.currentZ = this.localPlayer.waypointsZ[0] = var7;
-					}
-
-					this.localPlayer = this.createPlayer(var7, this.m_Zc, var6, 1,
-							ORSCharacterDirection.lookup(direction));
-					int dir = this.packetsIncoming.getBitMask(8);
-
-					for (int var9 = 0; dir > var9; ++var9) {
-						ORSCharacter var34 = this.knownPlayers[var9 + 1];
-						int needsUpdate = this.packetsIncoming.getBitMask(1);
-						if (needsUpdate != 0) {
-							int updateType = this.packetsIncoming.getBitMask(1);
-							if (updateType != 0) {
-								int needsNextSprite = this.packetsIncoming.getBitMask(2);
-								if (needsNextSprite == 3) {
-									continue;
-								}
-								var34.animationNext = this.packetsIncoming.getBitMask(2) + (needsNextSprite << 2);
-							} else {
-								int modelIndex = this.packetsIncoming.getBitMask(3);
-								int var33 = var34.waypointCurrent;
-								int var15 = var34.waypointsX[var33];
-								int var16 = var34.waypointsZ[var33];
-								if (modelIndex == 2 || modelIndex == 1 || modelIndex == 3) {
-									var15 += this.tileSize;
-								}
-
-								if (modelIndex == 6 || modelIndex == 5 || modelIndex == 7) {
-									var15 -= this.tileSize;
-								}
-
-								if (modelIndex == 4 || modelIndex == 3 || modelIndex == 5) {
-									var16 += this.tileSize;
-								}
-								var34.animationNext = modelIndex;
-								if (modelIndex == 0 || modelIndex == 1 || modelIndex == 7) {
-									var16 -= this.tileSize;
-								}
-								var34.waypointCurrent = var33 = (1 + var33) % 10;
-								var34.waypointsX[var33] = var15;
-								var34.waypointsZ[var33] = var16;
-							}
-						}
-
-						this.players[this.playerCount++] = var34;
-					}
-
-					while (length * 8 > this.packetsIncoming.getBitHead() + 24) {
-						int var9 = this.packetsIncoming.getBitMask(11);
-						int var10 = this.packetsIncoming.getBitMask(6);
-						if (var10 > 31) {
-							var10 -= 64;
-						}
-
-						int var11 = this.packetsIncoming.getBitMask(6);
-						if (var11 > 31) {
-							var11 -= 64;
-						}
-
-						direction = this.packetsIncoming.getBitMask(4);
-						var7 = (this.playerLocalZ + var11) * this.tileSize + 64;
-						var6 = (this.playerLocalX + var10) * this.tileSize + 64;
-						this.createPlayer(var7, var9, var6, 1, ORSCharacterDirection.lookup(direction));
-					}
-
-					this.packetsIncoming.endBitAccess();
-					return;
-				}
-
-				else if (opcode == 48) { // Show Game Objects
-					while (length > this.packetsIncoming.packetEnd) {
-						if (this.packetsIncoming.getUnsignedByte() != 255) {
-							--this.packetsIncoming.packetEnd;
-							int id = this.packetsIncoming.getShort();
-							int xTile = this.playerLocalX + this.packetsIncoming.getByte();
-							int zTile = this.playerLocalZ + this.packetsIncoming.getByte();
-							int dir = packetsIncoming.getByte();
-							int count = 0;
-
-							for (int i = 0; i < this.gameObjectInstanceCount; ++i) {
-								if (this.gameObjectInstanceX[i] == xTile && zTile == this.gameObjectInstanceZ[i]) {
-									this.scene.removeModel(this.gameObjectInstanceModel[i]);
-									this.world.removeGameObject_CollisonFlags(this.gameObjectInstanceID[i],
-											this.gameObjectInstanceX[i], this.gameObjectInstanceZ[i]);
-								} else {
-									if (count != i) {
-										this.gameObjectInstanceModel[count] = this.gameObjectInstanceModel[i];
-										this.gameObjectInstanceModel[count].key = count;
-										this.gameObjectInstanceX[count] = this.gameObjectInstanceX[i];
-										this.gameObjectInstanceZ[count] = this.gameObjectInstanceZ[i];
-										this.gameObjectInstanceID[count] = this.gameObjectInstanceID[i];
-										this.gameObjectInstanceDir[count] = this.gameObjectInstanceDir[i];
-									}
-
-									++count;
-								}
-							}
-
-							this.gameObjectInstanceCount = count;
-
-							world.registerObjectDir(xTile, zTile, dir);
-							if (id != 60000) {
-								int xSize, zSize;
-								if (dir != 0 && dir != 4) {
-									xSize = EntityHandler.getObjectDef(id).getHeight();// EntityHandler.getObjectDef(id).getHeight();
-									zSize = EntityHandler.getObjectDef(id).getWidth();// EntityHandler.getObjectDef(id).getWidth();
-								} else {
-									zSize = EntityHandler.getObjectDef(id).getHeight();// EntityHandler.getObjectDef(id).getHeight();
-									xSize = EntityHandler.getObjectDef(id).getWidth();// EntityHandler.getObjectDef(id).getWidth();
-								}
-
-								int xWorld = (xTile * 2 + xSize) * this.tileSize / 2;
-								int zWorld = (zTile * 2 + zSize) * this.tileSize / 2;
-								int modelIndex = EntityHandler.getObjectDef(id).modelID;// CacheValues.gameObjectModelIndex[id];
-								RSModel m = this.modelCache[modelIndex].clone();
-								this.scene.addModel(m);
-								m.key = this.gameObjectInstanceCount;
-								m.addRotation(0, dir * 32, 0);
-								m.translate2(xWorld, -this.world.getElevation(xWorld, zWorld), zWorld);
-								m.setDiffuseLightAndColor(-50, -10, -50, 48, 48, true, 117);
-								this.world.addGameObject_UpdateCollisionMap(xTile, zTile, id, false);
-								if (id == 74) {
-									m.translate2(0, -480, 0);
-								}
-
-								this.gameObjectInstanceX[this.gameObjectInstanceCount] = xTile;
-								this.gameObjectInstanceZ[this.gameObjectInstanceCount] = zTile;
-								this.gameObjectInstanceID[this.gameObjectInstanceCount] = id;
-								this.gameObjectInstanceDir[this.gameObjectInstanceCount] = dir;
-								this.gameObjectInstanceModel[this.gameObjectInstanceCount++] = m;
-							}
-						} else {
-							int id = 0;
-							int xTile = this.playerLocalX + this.packetsIncoming.getByte() >> 3;
-							int zTile = this.playerLocalZ + this.packetsIncoming.getByte() >> 3;
-
-						for (int localIndex = 0; this.gameObjectInstanceCount > localIndex; ++localIndex) {
-							int dxTile = (this.gameObjectInstanceX[localIndex] >> 3) - xTile;
-							int dzTile = (this.gameObjectInstanceZ[localIndex] >> 3) - zTile;
-							if (dxTile == 0 && dzTile == 0) {
-								this.scene.removeModel(this.gameObjectInstanceModel[localIndex]);
-								this.world.removeGameObject_CollisonFlags(this.gameObjectInstanceID[localIndex],
-										this.gameObjectInstanceX[localIndex],
-										this.gameObjectInstanceZ[localIndex]);
-							} else {
-								if (localIndex != id) {
-									this.gameObjectInstanceModel[id] = this.gameObjectInstanceModel[localIndex];
-									this.gameObjectInstanceModel[id].key = id;
-									this.gameObjectInstanceX[id] = this.gameObjectInstanceX[localIndex];
-									this.gameObjectInstanceZ[id] = this.gameObjectInstanceZ[localIndex];
-									this.gameObjectInstanceID[id] = this.gameObjectInstanceID[localIndex];
-									this.gameObjectInstanceDir[id] = this.gameObjectInstanceDir[localIndex];
-								}
-								++id;
-							}
-						}
-						this.gameObjectInstanceCount = id;
-						}
-					}
-					return;
-				}
-
-				else if (opcode == 53) { // Inventory items
-					// this.inventoryItemCount =
-					// this.packetsIncoming.getUnsignedByte();
-					// for (int i = 0; i < this.inventoryItemCount; ++i)
-					// {
-					// int var19 = this.packetsIncoming.getShort();
-					// this.inventoryItemID[i] =
-					// FastMath.bitwiseAnd(var19, 0x7FFF);
-					// this.inventoryItemEquipped[i] = var19 >> 15;// /
-					// // 0x8000;
-					// if (EntityHandler.getItemDef(0x7FFF &
-					// var19).isStackable()) {
-					// this.inventoryItemSize[i] =
-					// this.packetsIncoming.getSmart16_32();
-					// } else {
-					// this.inventoryItemSize[i] = 1;
-					// }
-					// }
-					this.inventoryItemCount = this.packetsIncoming.getUnsignedByte();
-					for (int i = 0; i < this.inventoryItemCount; ++i) {
-						int itemID = this.packetsIncoming.getShort();
-						this.inventoryItemID[i] = itemID;
-						this.inventoryItemEquipped[i] = packetsIncoming.getByte();
-						if (EntityHandler.getItemDef(itemID).isStackable()) {
-							this.inventoryItemSize[i] = this.packetsIncoming.get32();
-						} else {
-							this.inventoryItemSize[i] = 1;
-						}
-					}
-					return;
-				}
-
-				else if (opcode == 91) { // Show Walls
-					while (true) {
-						while (length > this.packetsIncoming.packetEnd) {
-							if (this.packetsIncoming.getUnsignedByte() == 255) {
-								int var4 = 0;
-								int var19 = this.playerLocalX + this.packetsIncoming.getByte() >> 3;
-								int var6 = this.playerLocalZ + this.packetsIncoming.getByte() >> 3;
-
-								for (int var7 = 0; this.wallObjectInstanceCount > var7; ++var7) {
-									int dir = (this.wallObjectInstanceX[var7] >> 3) - var19;
-									int var9 = (this.wallObjectInstanceZ[var7] >> 3) - var6;
-									if (dir == 0 && var9 == 0) {
-										this.scene.removeModel(this.wallObjectInstanceModel[var7]);
-										this.world.removeWallObject_CollisionFlags(true,
-												this.wallObjectInstanceDir[var7],
-												this.wallObjectInstanceZ[var7],
-												this.wallObjectInstanceX[var7],
-												this.wallObjectInstanceID[var7]);
-									} else {
-										if (var4 != var7) {
-											this.wallObjectInstanceModel[var4] = this.wallObjectInstanceModel[var7];
-											this.wallObjectInstanceModel[var4].key = var4 + 10000;
-											this.wallObjectInstanceX[var4] = this.wallObjectInstanceX[var7];
-											this.wallObjectInstanceZ[var4] = this.wallObjectInstanceZ[var7];
-											this.wallObjectInstanceDir[var4] = this.wallObjectInstanceDir[var7];
-											this.wallObjectInstanceID[var4] = this.wallObjectInstanceID[var7];
-										}
-
-										++var4;
-									}
-								}
-
-								this.wallObjectInstanceCount = var4;
-							} else {
-								--this.packetsIncoming.packetEnd;
-								int id = this.packetsIncoming.getShort();
-								int x = this.playerLocalX + this.packetsIncoming.getByte();
-								int y = this.playerLocalZ + this.packetsIncoming.getByte();
-								byte direction = this.packetsIncoming.getByte();
-								int localIndex = 0;
-
-								for (int var9 = 0; var9 < this.wallObjectInstanceCount; ++var9) {
-									if (this.wallObjectInstanceX[var9] == x
-											&& this.wallObjectInstanceZ[var9] == y
-											&& direction == this.wallObjectInstanceDir[var9]) {
-										this.scene.removeModel(this.wallObjectInstanceModel[var9]);
-										this.world.removeWallObject_CollisionFlags(true,
-												this.wallObjectInstanceDir[var9],
-												this.wallObjectInstanceZ[var9],
-												this.wallObjectInstanceX[var9],
-												this.wallObjectInstanceID[var9]);
-									} else {
-										if (var9 != localIndex) {
-											this.wallObjectInstanceModel[localIndex] = this.wallObjectInstanceModel[var9];
-											this.wallObjectInstanceModel[localIndex].key = localIndex
-													+ 10000;
-											this.wallObjectInstanceX[localIndex] = this.wallObjectInstanceX[var9];
-											this.wallObjectInstanceZ[localIndex] = this.wallObjectInstanceZ[var9];
-											this.wallObjectInstanceDir[localIndex] = this.wallObjectInstanceDir[var9];
-											this.wallObjectInstanceID[localIndex] = this.wallObjectInstanceID[var9];
-										}
-
-										++localIndex;
-									}
-								}
-
-								this.wallObjectInstanceCount = localIndex;
-								if (id != 60000) {
-									this.world.applyWallToCollisionFlags(id, x, y, direction);
-									RSModel model = this.createWallObjectModel(x, y, id, direction,
-											this.wallObjectInstanceCount);
-									this.wallObjectInstanceModel[this.wallObjectInstanceCount] = model;
-									this.wallObjectInstanceX[this.wallObjectInstanceCount] = x;
-									this.wallObjectInstanceZ[this.wallObjectInstanceCount] = y;
-									this.wallObjectInstanceID[this.wallObjectInstanceCount] = id;
-									this.wallObjectInstanceDir[this.wallObjectInstanceCount++] = direction;
-								}
-							}
-						}
-
-						return;
-					}
-				}
-
-				else if (opcode == 79) { // Show NPCs
-					this.npcCacheCount = this.npcCount;
-					this.npcCount = 0;
-
-					for (int i = 0; i < this.npcCacheCount; ++i) {
-						this.npcsCache[i] = this.npcs[i];
-					}
-
-					this.packetsIncoming.startBitAccess();
-					int count = this.packetsIncoming.getBitMask(8);
-
-					int var10, var9, var11, dir, var19;
-					for (var19 = 0; count > var19; ++var19) {
-						ORSCharacter var28 = this.npcsCache[var19];
-						int var7 = this.packetsIncoming.getBitMask(1);
-						if (var7 != 0) {
-							dir = this.packetsIncoming.getBitMask(1);
-							if (dir != 0) {
-								int nextSpriteOffset = packetsIncoming.getBitMask(2);
-								if (nextSpriteOffset == 3) {
-									continue;
-								}
-								var28.animationNext = (nextSpriteOffset << 2)
-										+ this.packetsIncoming.getBitMask(2);
-							} else {
-								var9 = this.packetsIncoming.getBitMask(3);
-								var10 = var28.waypointCurrent;
-								var11 = var28.waypointsX[var10];
-								if (var9 == 2 || var9 == 1 || var9 == 3) {
-									var11 += this.tileSize;
-								}
-
-								int var31 = var28.waypointsZ[var10];
-								if (var9 == 6 || var9 == 5 || var9 == 7) {
-									var11 -= this.tileSize;
-								}
-
-								if (var9 == 4 || var9 == 3 || var9 == 5) {
-									var31 += this.tileSize;
-								}
-
-								if (var9 == 0 || var9 == 1 || var9 == 7) {
-									var31 -= this.tileSize;
-								}
-
-								var28.waypointCurrent = var10 = (var10 - -1) % 10;
-								var28.animationNext = var9;
-								var28.waypointsX[var10] = var11;
-								var28.waypointsZ[var10] = var31;
-							}
-						}
-
-						this.npcs[this.npcCount++] = var28;
-					}
-
-					while (length * 8 > this.packetsIncoming.getBitHead() + 34) {
-						var19 = this.packetsIncoming.getBitMask(12);
-						int var6 = this.packetsIncoming.getBitMask(6);
-						if (var6 > 31) {
-							var6 -= 64;
-						}
-						int var7 = this.packetsIncoming.getBitMask(6);
-						if (var7 > 31) {
-							var7 -= 64;
-						}
-						dir = this.packetsIncoming.getBitMask(4);
-						var9  = (var6 + this.playerLocalX) * this.tileSize + 64;
-						var10 = (var7 + this.playerLocalZ) * this.tileSize + 64;
-						var11 = this.packetsIncoming.getBitMask(10);
-						this.createNpc(dir, var11, var9, var10, var19);
-					}
-
-					this.packetsIncoming.endBitAccess();
-					return;
-				}
-
-				else if (opcode == 104) { // NPC Quest Message
-					int var4 = this.packetsIncoming.getShort();
-
-					for (int var19 = 0; var4 > var19; ++var19) {
-						int var6 = this.packetsIncoming.getShort();
-						ORSCharacter var22 = this.npcsServer[var6];
-						int updateType = this.packetsIncoming.getUnsignedByte();
-						if (updateType == 1) {
-							int var9 = this.packetsIncoming.getShort();
-							if (var22 != null) {
-								String message = packetsIncoming.readString();
-								var22.messageTimeout = 150;
-								var22.message = message;
-								if (this.localPlayer.serverIndex == var9) {
-									this.showMessage(false, (String) null,
-											EntityHandler.getNpcDef(var22.npcId).getName() + ": "
-													+ var22.message,
-													MessageType.QUEST, 0, (String) null, "@yel@");
-								}
-							}
-						} else if (updateType == 2) {
-							int var9 = this.packetsIncoming.getUnsignedByte();
-							int var10 = this.packetsIncoming.getUnsignedByte();
-							int var11 = this.packetsIncoming.getUnsignedByte();
-
-							if (null != var22) {
-								var22.damageTaken = var9;
-								var22.healthMax = var11;
-								var22.combatTimeout = 200;
-								var22.healthCurrent = var10;
-							}
-						}
-					}
-					return;
-				}
-
-				else if (opcode == 245) { // Show Options Menu
-					this.optionsMenuShow = true;
-					int count = this.packetsIncoming.getUnsignedByte();
-					this.optionsMenuCount = count;
-					for (int i = 0; count > i; ++i) {
-						this.optionsMenuText[i] = this.packetsIncoming.readString();
-					}
-					return;
-				}
-
-				else if (opcode == 25) { // Load Area
-					this.loadingArea = true;
-					this.m_Zc = this.packetsIncoming.getShort();
-					this.worldOffsetX = this.packetsIncoming.getShort();
-					this.worldOffsetZ = this.packetsIncoming.getShort();
-					this.requestedPlane = this.packetsIncoming.getShort();
-					this.m_rc = this.packetsIncoming.getShort();
-					this.worldOffsetZ -= this.requestedPlane * this.m_rc;
-					return;
-				}
-
-				else if (opcode == 156) { // Load Stats and Experience
-					for (int var4 = 0; var4 < 18; ++var4) {
-						this.playerStatCurrent[var4] = this.packetsIncoming.getUnsignedByte();
-					}
-
-					for (int var4 = 0; var4 < 18; ++var4) {
-						this.playerStatBase[var4] = this.packetsIncoming.getUnsignedByte();
-					}
-
-					for (int var4 = 0; var4 < 18; ++var4) {
-						this.playerExperience[var4] = (int)(this.packetsIncoming.get32()/4);
-					}
-
-					this.m_ii = this.packetsIncoming.getUnsignedByte();
-					return;
-				}
-
-				else if (opcode == 83) { // Set Death Screen Timeout
-					this.deathScreenTimeout = 250;
-					return;
-				}
-
-				else if (opcode == 211) { // Generate Object/Ground Items/Walls Counts
-					int packets = (length - 1) / 4;
-					for (int i = 0; packets > i; ++i) {
-						int x = this.playerLocalX + this.packetsIncoming.get16_V2() >> 3;
-						int z = this.playerLocalZ + this.packetsIncoming.get16_V2() >> 3;
-
-						int count = 0;
-						for (int j = 0; j < this.groundItemCount; ++j) {
-							int var10 = (this.groundItemX[j] >> 3) - x;
-							int var11 = (this.groundItemZ[j] >> 3) - z;
-							if (var10 != 0 || var11 != 0) {
-								if (count != j) {
-									this.groundItemX[count] = this.groundItemX[j];
-									this.groundItemZ[count] = this.groundItemZ[j];
-									this.groundItemID[count] = this.groundItemID[j];
-									this.m_Le[count] = this.m_Le[j];
-								}
-
-								++count;
-							}
-						}
-
-						this.groundItemCount = count;
-						count = 0;
-
-						for (int j = 0; j < this.gameObjectInstanceCount; ++j) {
-							int var10 = (this.gameObjectInstanceX[j] >> 3) - x;
-							int var11 = (this.gameObjectInstanceZ[j] >> 3) - z;
-							if (var10 == 0 && var11 == 0) {
-								this.scene.removeModel(this.gameObjectInstanceModel[j]);
-								this.world.removeGameObject_CollisonFlags(
-									this.gameObjectInstanceID[j],
-									(int) this.gameObjectInstanceX[j],
-									(int) this.gameObjectInstanceZ[j]);
-							} else {
-								if (j != count) {
-									this.gameObjectInstanceModel[count] = this.gameObjectInstanceModel[j];
-									this.gameObjectInstanceModel[count].key = count;
-									this.gameObjectInstanceX[count] = this.gameObjectInstanceX[j];
-									this.gameObjectInstanceZ[count] = this.gameObjectInstanceZ[j];
-									this.gameObjectInstanceID[count] = this.gameObjectInstanceID[j];
-									this.gameObjectInstanceDir[count] = this.gameObjectInstanceDir[j];
-								}
-
-								++count;
-							}
-						}
-
-						this.gameObjectInstanceCount = count;
-						count = 0;
-
-						for (int var9 = 0; this.wallObjectInstanceCount > var9; ++var9) {
-							int var10 = (this.wallObjectInstanceX[var9] >> 3) - x;
-							int var11 = (this.wallObjectInstanceZ[var9] >> 3) - z;
-							if (var10 == 0 && var11 == 0) {
-								this.scene.removeModel(this.wallObjectInstanceModel[var9]);
-								this.world.removeWallObject_CollisionFlags(true,
-									this.wallObjectInstanceDir[var9],
-									this.wallObjectInstanceZ[var9],
-									this.wallObjectInstanceX[var9],
-									this.wallObjectInstanceID[var9]);
-							} else {
-								if (var9 != count) {
-									this.wallObjectInstanceModel[count] = this.wallObjectInstanceModel[var9];
-									this.wallObjectInstanceModel[count].key = count + 10000;
-									this.wallObjectInstanceX[count] = this.wallObjectInstanceX[var9];
-									this.wallObjectInstanceZ[count] = this.wallObjectInstanceZ[var9];
-									this.wallObjectInstanceDir[count] = this.wallObjectInstanceDir[var9];
-									this.wallObjectInstanceID[count] = this.wallObjectInstanceID[var9];
-								}
-
-								++count;
-							}
-						}
-
-						this.wallObjectInstanceCount = count;
-					}
-
-					return;
-				}
-
-				else if (opcode == 59) { // Appearance Change Menu
-					this.showAppearanceChange = true;
-					return;
-				}
-
-				else if (opcode == 92) { // Trade Request
-					int serverIndex = this.packetsIncoming.getShort();
-					if (this.playerServer[serverIndex] != null) {
-						this.tradeRecipientName = this.playerServer[serverIndex].displayName;
-					}
-
-					this.showDialogTrade = true;
-					this.tradeRecipientItemsCount = 0;
-					this.tradeItemCount = 0;
-					this.tradeAccepted = false;
-					this.tradeRecipientAccepted = false;
-					return;
-				}
-
-				else if (opcode == 128) { // Trade Confirm Menu
-					this.showDialogTradeConfirm = false;
-					this.showDialogTrade = false;
-					return;
-				}
-
-				else if (opcode == 162) { // Trade Accept or Decline (Other)
-					int accepted = this.packetsIncoming.getUnsignedByte();
-					if (accepted != 1) {
-						this.tradeRecipientAccepted = false;
-					} else {
-						this.tradeRecipientAccepted = true;
-					}
-
-					return;
-				}
-
-				else if (opcode == 137) { // Close Shop Dialog
-					this.showDialogShop = false;
-					return;
-				}
-
-				else if (opcode == 15) { // Trade Accept or Decline (Self)
-					byte accepted = this.packetsIncoming.getByte();
-					if (accepted != 1) {
-						this.tradeAccepted = false;
-					} else {
-						this.tradeAccepted = true;
-					}
-
-					return;
-				}
-
-				else if (opcode == 240) { // Server Settings
-					this.adminRights = this.packetsIncoming.getUnsignedByte() == 1;
-					this.optionCameraModeAuto = this.packetsIncoming.getUnsignedByte() == 1;
-					this.optionMouseButtonOne = this.packetsIncoming.getUnsignedByte() == 1;
-					this.optionSoundDisabled = this.packetsIncoming.getUnsignedByte() == 1;
-					this.combatStyle = this.packetsIncoming.getUnsignedByte();
-					this.settingsBlockGlobal = packetsIncoming.getUnsignedByte();
-					this.clanInviteBlockSetting = this.packetsIncoming.getUnsignedByte() == 1;
-					return;
-				}
-
-				else if (opcode == 206) { // Prayer Toggle
-					for (int i = 0; length - 1 > i; ++i) {
-						boolean enabled = this.packetsIncoming.getByte() == 1;
-						if (!this.prayerOn[i] && enabled) {
-							this.playSoundFile((String) "prayeron");
-						}
-						if (this.prayerOn[i] && !enabled) {
-							this.playSoundFile((String) "prayeroff");
-						}
-
-						this.prayerOn[i] = enabled;
-					}
-
-					return;
-				}
-
-				else if (opcode == 5) { // Quest Stage Update
-					int updateQuestType = this.packetsIncoming.getByte();
-					if (updateQuestType == 0) {
-						int questCount = this.packetsIncoming.getByte();
-						for (int i = 0; i < questCount; i++) {
-							int questId = this.packetsIncoming.get32();
-							int questStage = this.packetsIncoming.get32();
-
-							String questName = this.packetsIncoming.readString();
-
-							questNames[questId] = questName;
-							questStages[questId] = questStage;
-						}
-					} else if (updateQuestType == 1) {
-						int questID = this.packetsIncoming.get32();
-						int stage = this.packetsIncoming.get32();
-
-						questStages[questID] = stage;
-					}
-					return;
-				}
-
-				else if (opcode == 42) { // Show Bank
-					this.setShowDialogBank(true);
-					this.newBankItemCount = this.packetsIncoming.getShort();
-					this.bankItemsMax = this.packetsIncoming.getShort();
-					bank.resetBank();
-					for (int var4 = 0; var4 < this.newBankItemCount; ++var4) {
-						//this.newBankItems[var4] = this.packetsIncoming.getShort();
-						//this.newBankItemsCount[var4] = this.packetsIncoming.get32();
-						bank.addBank(var4, this.packetsIncoming.getShort(), this.packetsIncoming.get32());
-					}
-
-					//this.updateBankItems(108);
-					return;
-				}
-
-				else if (opcode == 33) { // Update Experience
-					int skill = this.packetsIncoming.getUnsignedByte();
-					this.playerExperience[skill] = (int)(this.packetsIncoming.get32()/4);
-					return;
-				}
-
-				else if (opcode == 225) { // Show Duel Dialog
-					this.showDialogDuel = false;
-					this.showDialogDuelConfirm = false;
-					return;
-				}
-
-				else if (opcode == 20) { // Confirm Trade
-					this.showDialogTrade = false;
-					this.showDialogTradeConfirm = true;
-					this.tradeConfirmAccepted = false;
-					this.tradeRecipientConfirmName = this.packetsIncoming
-							.readString();
-					this.tradeRecipientConfirmItemsCount = this.packetsIncoming
-							.getUnsignedByte();
-
-					for (int var4 = 0; this.tradeRecipientConfirmItemsCount > var4; ++var4) {
-						this.tradeRecipientConfirmItems[var4] = this.packetsIncoming
-								.getShort();
-						this.tradeRecipientConfirmItemCount[var4] = this.packetsIncoming
-								.get32();
-					}
-
-					this.tradeConfirmItemsCount = this.packetsIncoming
-							.getUnsignedByte();
-
-					for (int var4 = 0; var4 < this.tradeConfirmItemsCount; ++var4) {
-						this.tradeConfirmItems[var4] = this.packetsIncoming
-								.getShort();
-						this.tradeConfirmItemsCount1[var4] = this.packetsIncoming
-								.get32();
-					}
-
-					return;
-				}
-
-				else if (opcode == 6) { // Show Duel Items
-					this.duelOffsetOpponentItemCount = this.packetsIncoming
-							.getUnsignedByte();
-
-					for (int var4 = 0; this.duelOffsetOpponentItemCount > var4; ++var4) {
-						this.duelOpponentItemId[var4] = this.packetsIncoming
-								.getShort();
-						this.duelOpponentItemCount[var4] = this.packetsIncoming
-								.get32();
-					}
-
-					this.duelOfferAccepted = false;
-					this.duelOffsetOpponentAccepted = false;
-					return;
-				}
-
-				else if (opcode == 30) { // Toggle Duel Setting
-					if (this.packetsIncoming.getUnsignedByte() == 1) {
-						this.duelSettingsRetreat = true;
-					} else {
-						this.duelSettingsRetreat = false;
-					}
-
-					if (this.packetsIncoming.getUnsignedByte() != 1) {
-						this.duelSettingsMagic = false;
-					} else {
-						this.duelSettingsMagic = true;
-					}
-
-					if (this.packetsIncoming.getUnsignedByte() != 1) {
-						this.duelSettingsPrayer = false;
-					} else {
-						this.duelSettingsPrayer = true;
-					}
-
-					if (this.packetsIncoming.getUnsignedByte() != 1) {
-						this.duelSettingsWeapons = false;
-					} else {
-						this.duelSettingsWeapons = true;
-					}
-
-					this.duelOfferAccepted = false;
-					this.duelOffsetOpponentAccepted = false;
-					return;
-				}
-
-				else if (opcode == 249) { // Update Bank
-					int slot = this.packetsIncoming.getUnsignedByte();
-					int item = this.packetsIncoming.getShort();
-					int itemCount = this.packetsIncoming.get32();
-
-					/*if (itemCount == 0) {
-						--this.newBankItemCount;
-
-						for (int var7 = slot; this.newBankItemCount > var7; ++var7) {
-							this.newBankItems[var7] = this.newBankItems[1 + var7];
-							this.newBankItemsCount[var7] = this.newBankItemsCount[var7
-								                                                      + 1];
-						}
-					} else {
-						this.newBankItems[slot] = item;
-						this.newBankItemsCount[slot] = itemCount;
-						if (this.newBankItemCount <= slot) {
-							this.newBankItemCount = slot + 1;
-						}
-					}*/
-
-					//this.updateBankItems(-103);
-					bank.updateBank(slot, item, itemCount);
-					return;
-				}
-
-				else if (opcode == 90) { // Update Inventory
-					int slot = this.packetsIncoming.getUnsignedByte();
-					int itemID = this.packetsIncoming.getShort();
-					int stackSize = 1;
-					if (EntityHandler.getItemDef(itemID & 32767).isStackable()) {
-						stackSize = this.packetsIncoming.get32();
-					}
-					this.inventoryItemID[slot] = FastMath.bitwiseAnd(itemID, 32767);
-					this.inventoryItemEquipped[slot] = itemID / '\u8000';
-					this.inventoryItemSize[slot] = stackSize;
-					if (slot >= this.inventoryItemCount) {
-						this.inventoryItemCount = 1 + slot;
-					}
-
-					return;
-				}
-
-				else if (opcode == 159) { // Experience Updates & Notification
-					int skill = this.packetsIncoming.getUnsignedByte();
-					recentSkill = skill;
-					int oldXp = playerExperience[skill];
-					int oldLvl = playerStatBase[skill];
-					this.playerStatCurrent[skill] = this.packetsIncoming.getUnsignedByte();
-					this.playerStatBase[skill] = this.packetsIncoming.getUnsignedByte();
-					this.playerExperience[skill] = (int)(this.packetsIncoming.get32()/4);
-
-					int receivedXp = playerExperience[skill] - oldXp;
-					receivedXp = receivedXp < 0 ? 0 : receivedXp;
-					this.playerStatXpGained[skill] += receivedXp;
-					if (this.xpGainedStartTime[skill] == 0) {
-						this.xpGainedStartTime[skill] = System.currentTimeMillis();
-					}
-					this.playerXpGainedTotal += receivedXp;
-					if (this.totalXpGainedStartTime == 0) {
-						this.totalXpGainedStartTime = System.currentTimeMillis();
-					}
-
-					if(Config.S_EXPERIENCE_DROPS_TOGGLE && Config.C_EXPERIENCE_DROPS) {
-						if (receivedXp > 0) {
-							xpNotifications.add(new XPNotification(skill, receivedXp, false));
-						}
-						if (oldLvl < this.playerStatBase[skill]) {
-							xpNotifications.add(new XPNotification(skill, 1, true));
-						}
-					}
-					return;
-				}
-
-				else if (opcode == 210) { // Duel Accept / Decline
-					byte accepted = this.packetsIncoming.getByte();
-					if (accepted != 1) {
-						this.duelOfferAccepted = false;
-					} else {
-						this.duelOfferAccepted = true;
-					}
-
-					return;
-				}
-
-				else if (opcode == 172) { // Show Duel Confirm Dialog
-					this.duelConfirmed = false;
-					this.showDialogDuelConfirm = true;
-					this.showDialogDuel = false;
-					this.duelOpponentName = this.packetsIncoming
-							.readString();
-					this.duelOpponentItemsCount = this.packetsIncoming
-							.getUnsignedByte();
-					for (int var4 = 0; var4 < this.duelOpponentItemsCount; ++var4) {
-						this.duelOpponentItems[var4] = this.packetsIncoming
-								.getShort();
-						this.duelOpponentItemCounts[var4] = this.packetsIncoming
-								.get32();
-					}
-
-					this.duelItemsCount = this.packetsIncoming
-							.getUnsignedByte();
-
-					for (int var4 = 0; this.duelItemsCount > var4; ++var4) {
-						this.duelItems[var4] = this.packetsIncoming
-								.getShort();
-						this.duelItemCounts[var4] = this.packetsIncoming
-								.get32();
-					}
-
-					this.duelOptionRetreat = this.packetsIncoming
-							.getUnsignedByte();
-					this.duelOptionMagic = this.packetsIncoming
-							.getUnsignedByte();
-					this.duelOptionPrayer = this.packetsIncoming
-							.getUnsignedByte();
-					this.duelOptionWeapons = this.packetsIncoming
-							.getUnsignedByte();
-					return;
-				}
-
-				else if (opcode == 204) { // Play Sound
-					String filename = this.packetsIncoming.readString();
-					this.playSoundFile((String) filename);
-					return;
-				}
-
-				else if (opcode == 182) { // Show Log In Dialog
-					if (!this.welcomeScreenShown) {
-						this.welcomeLastLoggedInIp = this.packetsIncoming
-								.readString();
-						this.welcomeLastLoggedInDays = this.packetsIncoming
-								.getShort();
-						//this.welcomeUnreadMessages = this.packetsIncoming
-						//		.getShort();
-						this.showDialogMessage = true;
-						this.welcomeLastLoggedInHost = null;
-						this.welcomeScreenShown = true;
-					}
-
-					return;
-				}
-
-				else if (opcode == 222) { // Show Server Message Dialog
-					this.serverMessage = this.packetsIncoming
-							.readString();
-					this.showDialogServerMessage = true;
-					this.serverMessageBoxTop = true;
-					return;
-				}
-
-				else if (opcode == 117) { // Show Sleep Screen
-					if (!this.isSleeping) {
-						this.fatigueSleeping = this.statFatigue;
-					}
-
-					this.inputTextCurrent = "";
-					this.isSleeping = true;
-					this.inputTextFinal = "";
-					Sprite sprite = clientPort
-							.getSpriteFromByteArray(
-									new ByteArrayInputStream(
-											packetsIncoming.dataBuffer,
-											1, length));
-
-					this.surface.createCaptchaSprite(
-							mudclient.spriteLogo + 2, sprite);
-
-					this.sleepingStatusText = null;
-					return;
-				}
-
-				else if (opcode == 84) { // Not Sleeping
-					this.isSleeping = false;
-					return;
-				}
-
-				else if (opcode == 194) { // Wrong Sleep Word
-					this.sleepingStatusText = "Incorrect - Please wait...";
-					return;
-				}
-
-				else if (opcode == 52) { // System Update Timer
-					this.systemUpdate = this.packetsIncoming
-							.getShort() * 32;
-					return;
-				}
-
-				else if (opcode == 54 && Config.S_WANT_EXPERIENCE_ELIXIRS) { // Elixir Timer
-					this.elixirTimer = this.packetsIncoming
-							.getShort() * 32;
-					return;
-				}
-
-        else if (opcode == 244) { // Sleeping Menu Fatigue
-  				this.fatigueSleeping = this.packetsIncoming.getShort();
-  				return;
-        }
-
-        else if (opcode == 114) { // Total Fatigue
-  				this.statFatigue = this.packetsIncoming.getShort();
-  				return;
-        }
-
-        else if (opcode == 89) { // Server Message
-  				this.serverMessage = this.packetsIncoming.readString();
-  				this.showDialogServerMessage = true;
-  				this.serverMessageBoxTop = false;
-  				return;
-        }
-
-        else if (opcode == 36) { // Teleport Bubbles
-  				if (this.teleportBubbleCount < 50) {
-  					int type = this.packetsIncoming.getUnsignedByte();
-  					int x = this.packetsIncoming.getByte()
-  							+ this.playerLocalX;
-  					int z = this.packetsIncoming.getByte()
-  							+ this.playerLocalZ;
-  					this.teleportBubbleType[this.teleportBubbleCount] = type;
-  					this.teleportBubbleTime[this.teleportBubbleCount] = 0;
-  					this.teleportBubbleX[this.teleportBubbleCount] = x;
-  					this.teleportBubbleZ[this.teleportBubbleCount] = z;
-  					++this.teleportBubbleCount;
-  				}
-
-  				return;
-        }
-
-        else if (opcode == 253) { // Duel Acceptance
-  				byte accepted = this.packetsIncoming.getByte();
-  				if (accepted != 1) {
-  					this.duelOffsetOpponentAccepted = false;
-  				} else {
-  					this.duelOffsetOpponentAccepted = true;
-  				}
-
-  				return;
-        }
-
-        else if (opcode == 123) { // Item Dropped
-  				int slot = this.packetsIncoming.getUnsignedByte();
-  				--this.inventoryItemCount;
-
-  				for (int index = slot; this.inventoryItemCount > index; ++index) {
-  					this.inventoryItemID[index] = this.inventoryItemID[index + 1];
-  					this.inventoryItemSize[index] = this.inventoryItemSize[index
-  					                                                       + 1];
-  					this.inventoryItemEquipped[index] = this.inventoryItemEquipped[index
-  					                                                               + 1];
-  				}
-
-  				return;
-        }
-
-        else if (opcode == 176) { // Duel Initial Dialog
-  				int var4 = this.packetsIncoming.getShort();
-  				if (null != this.playerServer[var4]) {
-  					this.duelConfirmOpponentName = this.playerServer[var4].displayName;
-  				}
-
-  				this.duelOfferAccepted = false;
-  				this.duelSettingsPrayer = false;
-  				this.duelOffsetOpponentAccepted = false;
-  				this.duelSettingsWeapons = false;
-  				this.duelSettingsRetreat = false;
-  				this.showDialogDuel = true;
-  				this.duelSettingsMagic = false;
-  				this.duelOffsetOpponentItemCount = 0;
-  				this.duelOfferItemCount = 0;
-  				return;
-        }
-
-        else if (opcode == 203) { // Bank Dialog
-				  this.setShowDialogBank(false);
-				  return;
-        }
-
-        else if (opcode == 101) { // Shop Dialog
-  				this.showDialogShop = true;
-  				int shopItemCount = this.packetsIncoming.getUnsignedByte();
-  				byte shopType = this.packetsIncoming.getByte();
-  				this.shopSellPriceMod = this.packetsIncoming.getUnsignedByte();
-  				this.shopBuyPriceMod = this.packetsIncoming.getUnsignedByte();
-  				this.shopPriceMultiplier = this.packetsIncoming.getUnsignedByte();
-
-  				for (int i = 0; i < 40; ++i) {
-  					this.shopItemID[i] = -1;
-  				}
-
-  				for (int i = 0; shopItemCount > i; ++i) {
-  					this.shopItemID[i] = this.packetsIncoming.getShort();
-  					this.shopItemCount[i] = this.packetsIncoming.getShort();
-  					this.shopItemPrice[i] = this.packetsIncoming.getShort();
-  				}
-
-  				if (shopType == 1) {
-  					int var6 = 39;
-
-  					for (int inventoryIndex = 0; inventoryIndex < this.inventoryItemCount
-  							&& shopItemCount <= var6; ++inventoryIndex) {
-  						boolean var25 = false;
-
-  						for (int var9 = 0; var9 < 40; ++var9) {
-  							if (this.inventoryItemID[inventoryIndex] == this.shopItemID[var9]) {
-  								var25 = true;
-  								break;
-  							}
-  						}
-
-  						if (this.inventoryItemID[inventoryIndex] == 10) {
-  							var25 = true;
-  						}
-
-  						if (!var25) {
-  							this.shopItemID[var6] = FastMath.bitwiseAnd(32767,
-  									this.inventoryItemID[inventoryIndex]);
-  							this.shopItemCount[var6] = 0;
-  							this.shopItemPrice[var6] = 0;
-  							--var6;
-  						}
-  					}
-  				}
-
-  				if (this.shopSelectedItemIndex >= 0 && 40 > this.shopSelectedItemIndex
-  						&& this.shopSelectedItemType != this.shopItemID[this.shopSelectedItemIndex]) {
-  					this.shopSelectedItemIndex = -1;
-  					this.shopSelectedItemType = -2;
-  				}
-
-  				return;
-        }
-
-        else if (opcode == 97) { // Trade Dialog Update
-  				this.tradeRecipientItemsCount = this.packetsIncoming.getUnsignedByte();
-
-  				for (int var4 = 0; var4 < this.tradeRecipientItemsCount; ++var4) {
-  					this.tradeRecipientItem[var4] = this.packetsIncoming.getShort();
-  					this.tradeRecipientItemCount[var4] = this.packetsIncoming.get32();
-  				}
-
-					this.tradeItemCount = this.packetsIncoming.getUnsignedByte();
-
-					for (int var4 = 0; var4 < this.tradeItemCount; ++var4) {
-						this.tradeItemID[var4] = this.packetsIncoming.getShort();
-						this.tradeItemSize[var4] = this.packetsIncoming.get32();
-					}
-
-  				this.tradeRecipientAccepted = false;
-  				this.tradeAccepted = false;
-  				return;
-        }
-
-        else if (opcode == 153) { // Equipment Stats
-  				for (int eq = 0; eq < 5; ++eq) {
-  					this.playerStatEquipment[eq] = this.packetsIncoming.getUnsignedByte();
-  				}
-
-  				return;
-        }
-
-        else if (opcode == 252) { // Options Menu Hide
-  				this.optionsMenuShow = false;
-  				return;
-        }
-
-        else if (opcode == 234) { // Draw Players Nearby
-  				int playerCount = this.packetsIncoming.getShort();
-
-  				for (int pp = 0; playerCount > pp; ++pp) {
-  					int playerServerIndex = this.packetsIncoming.getShort();
-					ORSCharacter player = this.playerServer[playerServerIndex];
-  					byte updateType = this.packetsIncoming.getByte();
-  					if (updateType == 0) {
-  						int itemType = this.packetsIncoming.getShort();
-  						if (null != player) {
-  							player.bubbleTimeout = 150;
-  							player.bubbleItem = itemType;
-  						}
-  					} else if (updateType == 1) {
-  						if (null != player) {
-  							int crownID = this.packetsIncoming.getUnsignedByte();
-  							String message = packetsIncoming.readString();
-  							boolean var29 = false;
-  							String displayName = StringUtil.displayNameToKey(player.accountName);
-  							if (null != displayName) {
-  								for (int modelIndex = 0; modelIndex < SocialLists.ignoreListCount; ++modelIndex) {
-  									if (displayName.equals(
-  											StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
-  										var29 = true;
-  										break;
-  									}
-  								}
-  							}
-
-  							if (!var29) {
-  								player.messageTimeout = 150;
-  								player.message = message;
-  								this.showMessage(crownID == 2, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.displayName : player.displayName), player.message,
-  										MessageType.CHAT, crownID, player.accountName, (String) null);
-  							}
-  						}
-  					} else if (updateType == 2) {
-  						int damage = this.packetsIncoming.getUnsignedByte();
-  						int curhp = this.packetsIncoming.getUnsignedByte();
-  						int maxhp = this.packetsIncoming.getUnsignedByte();
-  						if (player != null) {
-  							player.healthMax = maxhp;
-  							player.healthCurrent = curhp;
-  							player.damageTaken = damage;
-  							if (this.localPlayer == player) {
-  								this.playerStatCurrent[3] = curhp;
-  								this.playerStatBase[3] = maxhp;
-  								this.showDialogServerMessage = false;
-  								this.showDialogMessage = false;
-  							}
-  							player.combatTimeout = 200;
-  						}
-  					} else if (updateType == 3) {
-  						int sprite = this.packetsIncoming.getShort();
-  						int shooterServerIndex = this.packetsIncoming.getShort();
-  						if (null != player) {
-  							player.attackingNpcServerIndex = shooterServerIndex;
-  							player.projectileRange = this.projectileMaxRange;
-  							player.attackingPlayerServerIndex = -1;
-  							player.incomingProjectileSprite = sprite;
-  						}
-  					} else if (updateType == 4) {
-  						int sprite = this.packetsIncoming.getShort();
-  						int shooterServerIndex = this.packetsIncoming.getShort();
-  						if (player != null) {
-  							player.projectileRange = this.projectileMaxRange;
-  							player.attackingNpcServerIndex = -1;
-  							player.attackingPlayerServerIndex = shooterServerIndex;
-  							player.incomingProjectileSprite = sprite;
-  						}
-  					}
-  					else if (updateType == 6 && player != null) {
-  						String message = packetsIncoming.readString();
-
-  						player.message = message;
-  						player.messageTimeout = 150;
-  						if (this.localPlayer == player) {
-  							this.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.displayName : player.displayName), player.message, MessageType.QUEST, 0,
-  									player.accountName, (String) null);
-  						}
-  					} else if (updateType == 5) {
-  						if (player == null) {
-  							this.packetsIncoming.getShort();
-  							this.packetsIncoming.readString();
-  							this.packetsIncoming.readString();
-  							int vtmp = this.packetsIncoming.getUnsignedByte();
-  							this.packetsIncoming.packetEnd += 6 + vtmp;
-  						} else {
-  							this.packetsIncoming.getShort();
-  							player.displayName = this.packetsIncoming.readString();
-  							player.accountName = this.packetsIncoming.readString();
-  							int itemCount = this.packetsIncoming.getUnsignedByte();
-
-  							for (int i = 0; i < itemCount; ++i) {
-  								player.layerAnimation[i] = this.packetsIncoming.getShort();
-  							}
-
-  							for (int i = itemCount; i < 12; ++i) {
-  								player.layerAnimation[i] = 0;
-  							}
-
-  							player.colourHair = this.packetsIncoming.getUnsignedByte();
-  							player.colourTop = this.packetsIncoming.getUnsignedByte();
-  							player.colourBottom = this.packetsIncoming.getUnsignedByte();
-  							player.colourSkin = this.packetsIncoming.getUnsignedByte();
-  							player.level = this.packetsIncoming.getUnsignedByte();
-  							player.skullVisible = this.packetsIncoming.getUnsignedByte();
-  							if (packetsIncoming.getByte() == 1) {
-  								player.clanTag = this.packetsIncoming.readString();
-  							} else {
-  								player.clanTag = null;
-  							}
-  						}
-  					}
-  				}
-					return;
-        }
-
-        else if (opcode == 111) { // Inside Tutorial Check
-          this.insideTutorial = this.packetsIncoming.getUnsignedByte() != 0;
-          return;
-        }
-
-        else if (opcode == 99) { // Draw Ground Items
-					while (length > this.packetsIncoming.packetEnd) {
- 						if (this.packetsIncoming.getUnsignedByte() != 255) {
- 							--this.packetsIncoming.packetEnd;
- 							int groundItemID = this.packetsIncoming.getShort();
- 							int var19 = this.playerLocalX + this.packetsIncoming.getByte();
- 							int var6 = this.playerLocalZ + this.packetsIncoming.getByte();
- 							if ((groundItemID & 32768) != 0) {
- 								groundItemID &= 32767;
- 								int var7 = 0;
-
- 								for (int dir = 0; dir < this.groundItemCount; ++dir) {
- 									if (this.groundItemX[dir] == var19 && this.groundItemZ[dir] == var6
- 											&& this.groundItemID[dir] == groundItemID) {
- 										groundItemID = -123;
- 									} else {
- 										if (var7 != dir) {
- 											this.groundItemX[var7] = this.groundItemX[dir];
- 											this.groundItemZ[var7] = this.groundItemZ[dir];
- 											this.groundItemID[var7] = this.groundItemID[dir];
- 											this.m_Le[var7] = this.m_Le[dir];
- 										}
-
- 										++var7;
- 									}
- 								}
-
- 								this.groundItemCount = var7;
-
- 							} else {
- 								this.groundItemX[this.groundItemCount] = var19;
- 								this.groundItemZ[this.groundItemCount] = var6;
- 								this.groundItemID[this.groundItemCount] = groundItemID;
- 								this.m_Le[this.groundItemCount] = 0;
-
- 								for (int var7 = 0; this.gameObjectInstanceCount > var7; ++var7) {
- 									if (this.gameObjectInstanceX[var7] == var19
- 											&& this.gameObjectInstanceZ[var7] == var6) {
- 										this.m_Le[this.groundItemCount] = EntityHandler
- 												.getObjectDef(this.gameObjectInstanceID[var7]).getGroundItemVar();
- 										break;
- 									}
- 								}
-
- 								++this.groundItemCount;
-
- 							}
- 						} else {
- 							int var4 = 0;
- 							int offsetX = this.playerLocalX + this.packetsIncoming.getByte() >> 3;
- 							int offsetY = this.playerLocalZ + this.packetsIncoming.getByte() >> 3;
-
- 							for (int index = 0; this.groundItemCount > index; ++index) {
- 								int tileX = (this.groundItemX[index] >> 3) - offsetX;
- 								int tileY = (this.groundItemZ[index] >> 3) - offsetY;
- 								if (tileX != 0 || tileY != 0) {
- 									if (var4 != index) {
- 										this.groundItemX[var4] = this.groundItemX[index];
- 										this.groundItemZ[var4] = this.groundItemZ[index];
- 										this.groundItemID[var4] = this.groundItemID[index];
- 										this.m_Le[var4] = this.m_Le[index];
- 									}
- 									++var4;
- 								}
- 							}
-
- 							this.groundItemCount = var4;
-
- 						}
- 					}
-
- 					return;
- 				}
-			}
-		  catch (RuntimeException var17) {
-				String var5 = "T2 - " + opcode + " - " + length + " rx:" + this.playerLocalX + " ry:" + this.playerLocalZ
-						+ " num3l:" + this.gameObjectInstanceCount + " - ";
-
-				for (int var6 = 0; length > var6 && var6 < 50; ++var6) {
-					var5 = var5 + this.packetsIncoming.dataBuffer[var6] + ",";
-				}
-				var17.printStackTrace();
-				this.closeConnection(true);
-				return;
-			}
-			this.closeConnection(true);
-		}
 
 		private final void handleReportAbuseClick() {
 			try {
@@ -11753,11 +9893,11 @@ public final class mudclient implements Runnable {
 				}
 
 				if (this.mouseButtonClick != 0 && this.reportAbuse_AbuseType != 0) {
-					this.getClientStream().newPacket(206);
-					this.getClientStream().writeBuffer1.putString(this.reportAbuse_Name);
-					this.getClientStream().writeBuffer1.putByte(this.reportAbuse_AbuseType);
-					this.getClientStream().writeBuffer1.putByte(this.m_ue ? 1 : 0);
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().newPacket(206);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(this.reportAbuse_Name);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.reportAbuse_AbuseType);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.m_ue ? 1 : 0);
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.reportAbuse_State = 0;
 					this.inputTextFinal = "";
 					this.inputTextCurrent = "";
@@ -12293,7 +10433,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final boolean loadNextRegion(int wantZ, int wantX, boolean var3) {
+		public final boolean loadNextRegion(int wantZ, int wantX, boolean var3) {
 			try {
 
 				if (this.deathScreenTimeout != 0) {
@@ -12551,27 +10691,27 @@ public final class mudclient implements Runnable {
 										"Connection lost! Please wait...");
 							}
 
-							this.setClientStream(
+							this.clientPort.packetHandler.setClientStream(
 									new Network_Socket(this.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this));
-							this.getClientStream().m_d = MiscFunctions.maxReadTries;
+							this.clientPort.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 
 							Math.random();
 							Math.random();
 							Math.random();
 							Math.random();
 
-							this.getClientStream().newPacket(0);
+							this.clientPort.packetHandler.getClientStream().newPacket(0);
 							if (reconnecting) {
-								this.getClientStream().writeBuffer1.putByte(1);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(1);
 							} else {
-								this.getClientStream().writeBuffer1.putByte(0);
+								this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(0);
 							}
-							this.getClientStream().writeBuffer1.putInt(Config.CLIENT_VERSION);
-							this.getClientStream().writeBuffer1.putString(getUsername());
-							this.getClientStream().writeBuffer1.putString(password);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(Config.CLIENT_VERSION);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(getUsername());
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(password);
 
-							this.getClientStream().writeBuffer1.putLong(getUID());
-							this.getClientStream().writeBuffer1.putString(getMacAddress());
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
 							/*
 							 * RSBuffer rsaBuffer = new RSBuffer(500);
 							 * rsaBuffer.putByte(10);
@@ -12598,9 +10738,9 @@ public final class mudclient implements Runnable {
 							 * clientStream.writeBuffer1.curPointerPosition -
 							 * oldSize);
 							 */
-							this.getClientStream().finishPacketAndFlush();
+							this.clientPort.packetHandler.getClientStream().finishPacketAndFlush();
 							// this.clientStream.seedIsaac(isaacSeed);
-							int var11 = this.getClientStream().read();
+							int var11 = this.clientPort.packetHandler.getClientStream().read();
 
 							System.out.println("login response:" + var11);
 							if (var11 == 0) {
@@ -12805,7 +10945,7 @@ public final class mudclient implements Runnable {
 			return var4;
 		}
 
-		private final void playSoundFile(String key) {
+		public final void playSoundFile(String key) {
 			try {
 				if (!optionSoundDisabled) {
 					File sound = soundCache.get(key + ".wav");
@@ -12827,11 +10967,11 @@ public final class mudclient implements Runnable {
 
 		private final void putStringPair(String str1, String str2) {
 			try {
-				this.getClientStream().newPacket(218);
+				this.clientPort.packetHandler.getClientStream().newPacket(218);
 
-				this.getClientStream().writeBuffer1.putString(str1);
-				RSBufferUtils.putEncryptedString(this.getClientStream().writeBuffer1, str2);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(str1);
+				RSBufferUtils.putEncryptedString(this.clientPort.packetHandler.getClientStream().writeBuffer1, str2);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			} catch (RuntimeException var5) {
 				throw GenUtil.makeThrowable(var5, "client.KB(" + "dummy" + ',' + (str1 != null ? "{...}" : "null") + ','
 						+ (str2 != null ? "{...}" : "null") + ')');
@@ -12855,9 +10995,9 @@ public final class mudclient implements Runnable {
 								SocialLists.friendListArg[var5] = SocialLists.friendListArg[var5 + 1];
 							}
 
-							this.getClientStream().newPacket(167);
-							this.getClientStream().writeBuffer1.putNullThenString(var1, 110);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(167);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putNullThenString(var1, 110);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							break;
 						}
 					}
@@ -12884,9 +11024,9 @@ public final class mudclient implements Runnable {
 								SocialLists.ignoreListOld[i] = SocialLists.ignoreListOld[i];
 							}
 
-							this.getClientStream().newPacket(241);
-							this.getClientStream().writeBuffer1.putNullThenString(name, -78);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(241);
+							this.clientPort.packetHandler.getClientStream().writeBuffer1.putNullThenString(name, -78);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							break;
 						}
 					}
@@ -12897,7 +11037,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void renderLoginScreenViewports(int var1) {
+		private void renderLoginScreenViewports(int var1) {
 			try {
                 // First view
 				byte sector_h = 0; // sector h
@@ -13009,7 +11149,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void resetGame(int var1) {
+		private void resetGame(int var1) {
 			try {
 				this.systemUpdate = 0;
 				this.elixirTimer = 0;
@@ -13098,7 +11238,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void resetLoginScreenVariables(byte var1) {
+		private void resetLoginScreenVariables(byte var1) {
 			try {
 				this.npcCount = 0;
 				this.playerCount = 0;
@@ -13120,9 +11260,9 @@ public final class mudclient implements Runnable {
 		// confusing.
 		private final void sendChatMessage(String var1) {
 			try {
-				this.getClientStream().newPacket(216);
-				RSBufferUtils.putEncryptedString(this.getClientStream().writeBuffer1, var1);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().newPacket(216);
+				RSBufferUtils.putEncryptedString(this.clientPort.packetHandler.getClientStream().writeBuffer1, var1);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			} catch (RuntimeException var4) {
 				throw GenUtil.makeThrowable(var4, "client.AA(" + (var1 != null ? "{...}" : "null") + ')');
 			}
@@ -13130,10 +11270,10 @@ public final class mudclient implements Runnable {
 
 		public final void sendCommandString(String var1) {
 			try {
-				this.getClientStream().newPacket(38);
+				this.clientPort.packetHandler.getClientStream().newPacket(38);
 
-				this.getClientStream().writeBuffer1.putString(var1);
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putString(var1);
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 			} catch (RuntimeException var4) {
 				throw GenUtil.makeThrowable(var4, "client.UC(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
 			}
@@ -13148,8 +11288,8 @@ public final class mudclient implements Runnable {
 							this.showMessage(false, (String) null, "You can\'t logout for 10 seconds after combat",
 									MessageType.GAME, 0, (String) null, "@cya@");
 						} else {
-							this.getClientStream().newPacket(102);
-							this.getClientStream().finishPacket();
+							this.clientPort.packetHandler.getClientStream().newPacket(102);
+							this.clientPort.packetHandler.getClientStream().finishPacket();
 							this.logoutTimeout = 1000;
 						}
 					} else {
@@ -13174,24 +11314,24 @@ public final class mudclient implements Runnable {
 					startX = this.pathX[var10];
 					startZ = this.pathZ[var10];
 					if (!var9) {
-						this.getClientStream().newPacket(187);
+						this.clientPort.packetHandler.getClientStream().newPacket(187);
 					} else {
-						this.getClientStream().newPacket(16);
+						this.clientPort.packetHandler.getClientStream().newPacket(16);
 					}
 
 					--var10;
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
-					this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
 					if (var9 && var10 == -1 && (this.midRegionBaseX + startX) % 5 == 0) {
 						var10 = 0;
 					}
 
 					for (int var11 = var10; var11 >= 0 && var10 - 25 < var11; --var11) {
-						this.getClientStream().writeBuffer1.putByte(this.pathX[var11] - startX);
-						this.getClientStream().writeBuffer1.putByte(this.pathZ[var11] - startZ);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[var11] - startX);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[var11] - startZ);
 					}
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.mouseWalkX = this.mouseX;
 					this.mouseWalkY = this.mouseY;
 					this.mouseClickXStep = -24;
@@ -13410,7 +11550,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		private final void sortOnlineFriendsList() {
+		public final void sortOnlineFriendsList() {
 			try {
 
 				boolean loopModified = true;
@@ -13488,7 +11628,867 @@ public final class mudclient implements Runnable {
       }
 		}
 
-		final void setExperienceArray() {
+		public void setExperienceArray(int[] a) {
+			this.experienceArray = a;
+		}
+
+		public final void hideBatchProgressBar() {
+			batchProgressBar.hide();
+		}
+
+		public final void showBatchProgressBar() {
+			batchProgressBar.show();
+		}
+
+		public final void updateBatchProgressBar(int repeat) {
+			batchProgressBar.updateProgress(repeat);
+		}
+
+		public final void resetBatchProgressBar() {
+			batchProgressBar.resetProgressBar();
+		}
+
+		public final void initializeBatchProgressVariables(int repeatFor, int delay) {
+			batchProgressBar.initVariables(repeatFor, delay);
+		}
+
+		public void showBankPinInterface() {
+			bankPinInterface.show();
+		}
+
+		public void hideBankPinInterface() {
+			bankPinInterface.hide();
+		}
+
+		public IronManInterface getIronmanInterface() {
+			return ironmanInterface;
+		}
+
+		public AuctionHouse getAuctionHouse() {
+			return auctionHouse;
+		}
+
+		public OnlineListInterface getOnlineList() {
+			return onlineList;
+		}
+
+		public FishingTrawlerInterface getFishingTrawlerInterface() {
+			return fishingTrawlerInterface;
+		}
+
+		public void setBlockChat(int status) {
+			this.settingsBlockChat = status;
+		}
+
+		public void setBlockPrivate(int status) {
+			this.settingsBlockPrivate = status;
+		}
+
+		public void setBlockTrade(int status) {
+			this.settingsBlockTrade = status;
+		}
+
+		public void setBlockDuel(int status) {
+			this.settingsBlockDuel = status;
+		}
+
+		public void setPlayerCount(int i) {
+			this.playerCount = i;
+		}
+
+		public int getPlayerCount() {
+			return this.playerCount;
+		}
+
+		public void setKnownPlayerCount(int i) {
+			this.knownPlayerCount = i;
+		}
+
+		public ORSCharacter getKnownPlayer(int i) {
+			return this.knownPlayers[i];
+		}
+
+		public int getKnownPlayerCount() {
+			return this.knownPlayerCount;
+		}
+
+		public void setKnownPlayer(int i, ORSCharacter p) {
+			this.knownPlayers[i] = p;
+		}
+
+		public void setPlayer(int i, ORSCharacter p) {
+			this.players[i] = p;
+		}
+
+		public ORSCharacter getPlayer(int i) {
+			return this.players[i];
+		}
+
+		public int getLocalPlayerX() {
+			return this.playerLocalX;
+		}
+
+		public void setLocalPlayerX(int i) {
+			this.playerLocalX = i;
+		}
+
+		public int getLocalPlayerZ() {
+			return this.playerLocalZ;
+		}
+
+		public void setLocalPlayerZ(int i) {
+			this.playerLocalZ = i;
+		}
+
+		public int getMidRegionBaseX() {
+			return this.midRegionBaseX;
+		}
+
+		public int getMidRegionBaseZ() {
+			return this.midRegionBaseZ;
+		}
+
+		public int getTileSize() {
+			return this.tileSize;
+		}
+
+		public void setGameObjectInstanceCount(int i) {
+			this.gameObjectInstanceCount = i;
+		}
+
+		public int getGameObjectInstanceCount() {
+			return gameObjectInstanceCount;
+		}
+
+		public void setInventoryItemCount(int i) {
+			this.inventoryItemCount = i;
+		}
+
+		public void setGameObjectInstanceX(int i, int n) {
+			this.gameObjectInstanceX[i] = n;
+		}
+
+		public int getGameObjectInstanceX(int i) {
+			return this.gameObjectInstanceX[i];
+		}
+
+		public void setGameObjectInstanceZ(int i, int n) {
+			this.gameObjectInstanceZ[i] = n;
+		}
+
+		public int getGameObjectInstanceZ(int i) {
+			return this.gameObjectInstanceZ[i];
+		}
+
+		public void setGameObjectInstanceModel(int i, RSModel m) {
+			this.gameObjectInstanceModel[i] = m;
+			this.gameObjectInstanceModel[i].key = i;
+		}
+
+		public RSModel getGameObjectInstanceModel(int i) {
+			return this.gameObjectInstanceModel[i];
+		}
+
+		public void setGameObjectInstanceID(int i, int n) {
+			this.gameObjectInstanceID[i] = n;
+		}
+
+		public int getGameObjectInstanceID(int i) {
+			return this.gameObjectInstanceID[i];
+		}
+
+		public void setGameObjectInstanceDir(int i, int n) {
+			this.gameObjectInstanceDir[i] = n;
+		}
+
+		public int getGameObjectInstanceDir(int i) {
+			return this.gameObjectInstanceDir[i];
+		}
+
+		public int getWallObjectInstanceCount() {
+			return this.wallObjectInstanceCount;
+		}
+
+		public void setWallObjectInstanceX(int i, int n) {
+			this.wallObjectInstanceX[i] = n;
+		}
+
+		public int getWallObjectInstanceX(int i) {
+			return this.wallObjectInstanceX[i];
+		}
+
+		public void setWallObjectInstanceZ(int i, int n) {
+			this.wallObjectInstanceZ[i] = n;
+		}
+
+		public int getWallObjectInstanceZ(int i) {
+			return this.wallObjectInstanceZ[i];
+		}
+
+		public void setWallObjectInstanceModel(int i, RSModel n) {
+			this.wallObjectInstanceModel[i] = n;
+			this.wallObjectInstanceModel[i].key = i + 10000;
+		}
+
+		public RSModel getWallObjectInstanceModel(int i) {
+			return this.wallObjectInstanceModel[i];
+		}
+
+		public void setWallObjectInstanceDir(int i, int n) {
+			this.wallObjectInstanceDir[i] = n;
+		}
+
+		public int getWallObjectInstanceDir(int i) {
+			return this.wallObjectInstanceDir[i];
+		}
+
+		public void setWallObjectInstanceID(int i, int n) {
+			this.wallObjectInstanceID[i] = n;
+		}
+
+		public int getWallObjectInstanceID(int i) {
+			return this.wallObjectInstanceID[i];
+		}
+
+		public void setWallObjectInstanceCount(int i) {
+			this.wallObjectInstanceCount = i;
+		}
+
+		public Scene getScene() {
+			return this.scene;
+		}
+
+		public RSModel getModelCacheItem(int i) {
+			return this.modelCache[i];
+		}
+
+		public void setInventoryItemID(int i, int n) {
+			this.inventoryItemID[i] = n;
+		}
+
+		public int getInventoryItemID(int i) {
+			return this.inventoryItemID[i];
+		}
+
+		public void setInventoryItemEquipped(int i, int n) {
+			this.inventoryItemEquipped[i] = n;
+		}
+
+		public void setInventoryItemSize(int i, int n) {
+			this.inventoryItemSize[i] = n;
+		}
+
+		public int getInventoryItemSize(int i) {
+			return this.inventoryItemSize[i];
+		}
+
+		public void setNpcCount(int i) {
+			this.npcCount = i;
+		}
+
+		public int getNpcCount() {
+			return this.npcCount;
+		}
+
+		public void setNpcCacheCount(int i) {
+			this.npcCacheCount = i;
+		}
+
+		public int getNpcCacheCount() {
+			return this.npcCacheCount;
+		}
+
+		public void setNpcFromCache(int i, ORSCharacter n) {
+			this.npcsCache[i] = n;
+		}
+
+		public ORSCharacter getNpcFromCache(int i) {
+			return this.npcsCache[i];
+		}
+
+		public void setNpc(int i, ORSCharacter n) {
+			this.npcs[i] = n;
+		}
+
+		public ORSCharacter getNpc(int i) {
+			return this.npcs[i];
+		}
+
+		public ORSCharacter getNpcFromServer(int i) {
+			return this.npcsServer[i];
+		}
+
+		public void setOptionsMenuShow(boolean show) {
+			this.optionsMenuShow = show;
+		}
+
+		public void setOptionsMenuCount(int i) {
+			this.optionsMenuCount = i;
+		}
+
+		public void setOptionsMenuText(int i, String t) {
+			this.optionsMenuText[i] = t;
+		}
+
+		public void setLoadingArea(boolean loading) {
+			this.loadingArea = loading;
+		}
+
+		public void setWorldOffsetX(int i) {
+			this.worldOffsetX = i;
+		}
+
+		public void setWorldOffsetZ(int i) {
+			this.worldOffsetZ = i;
+		}
+
+		public int getWorldOffsetZ() {
+			return this.worldOffsetZ;
+		}
+
+		public void setRequestedPlane(int i) {
+			this.requestedPlane = i;
+		}
+
+		public int getRequestedPlane() {
+			return this.requestedPlane;
+		}
+
+		public void set() {}
+
+		public void setPlayerStatCurrent(int stat, int level) {
+			this.playerStatCurrent[stat] = level;
+		}
+
+		public void setPlayerStatBase(int stat, int level) {
+			this.playerStatBase[stat] = level;
+		}
+
+		public int getPlayerStatBase(int stat) {
+			return this.playerStatBase[stat];
+		}
+
+		public void setPlayerExperience(int stat, int experience) {
+			this.playerExperience[stat] = experience;
+		}
+
+		public int getPlayerExperience(int stat) {
+			return this.playerExperience[stat];
+		}
+
+		public void setQuestPoints(int p) {
+			this.questPoints = p;
+		}
+
+		public void setDeathScreenTimeout(int i) {
+			this.deathScreenTimeout = i;
+		}
+
+		public int getGroundItemCount() {
+			return this.groundItemCount;
+		}
+
+		public void setGroundItemX(int i, int n) {
+			this.groundItemX[i] = n;
+		}
+
+		public int getGroundItemX(int i) {
+			return this.groundItemX[i];
+		}
+
+		public void setGroundItemZ(int i, int n) {
+			this.groundItemZ[i] = n;
+		}
+
+		public int getGroundItemZ(int i) {
+			return this.groundItemZ[i];
+		}
+
+		public void setGroundItemID(int i, int n) {
+			this.groundItemID[i] = n;
+		}
+
+		public int getGroundItemID(int i) {
+			return this.groundItemID[i];
+		}
+
+		public void setGroundItemHeight(int i, int n) {
+			this.groundItemHeight[i] = n;
+		}
+
+		public int getGroundItemHeight(int i) {
+			return this.groundItemHeight[i];
+		}
+
+		public void setGroundItemCount(int i) {
+			this.groundItemCount = i;
+		}
+
+		public ORSCharacter getPlayerFromServer(int i) {
+			return this.playerServer[i];
+		}
+
+		public void setTradeRecipientName(String n) {
+			this.tradeRecipientName = n;
+		}
+
+		public void setShowDialogTrade(boolean show) {
+			this.showDialogTrade = show;
+		}
+
+		public void setTradeRecipientItemsCount(int i) {
+			this.tradeRecipientItemsCount = i;
+		}
+
+		public int getTradeRecipientItemsCount() {
+			return this.tradeRecipientItemsCount;
+		}
+
+		public void setTradeRecipientItem(int i, int n) {
+			this.tradeRecipientItem[i] = n;
+		}
+
+		public void setTradeRecipientItemCount(int i, int n) {
+			this.tradeRecipientItemCount[i] = n;
+		}
+
+		public void setTradeItemCount(int i) {
+			this.tradeItemCount = i;
+		}
+
+		public int getTradeItemCount() {
+			return this.tradeItemCount;
+		}
+
+		public void setTradeItemID(int i, int n) {
+			this.tradeItemID[i] = n;
+		}
+
+		public void setTradeItemSize(int i, int n) {
+			this.tradeItemSize[i] = n;
+		}
+
+		public void setTradeAccepted(boolean accepted) {
+			this.tradeAccepted = accepted;
+		}
+
+		public void setTradeRecipientAccepted(boolean accepted) {
+			this.tradeRecipientAccepted = accepted;
+		}
+
+		public void setShowDialogTradeConfirm(boolean confirm) {
+			this.showDialogTradeConfirm = confirm;
+		}
+
+		public void setTradeConfirmAccepted(boolean confirm) {
+			this.tradeConfirmAccepted = confirm;
+		}
+
+		public void setTradeRecipientConfirmName(String n) {
+			this.tradeRecipientConfirmName = n;
+		}
+
+		public void setTradeRecipientConfirmItemsCount(int n) {
+			this.tradeRecipientConfirmItemsCount = n;
+		}
+
+		public int getTradeRecipientConfirmItemsCount() {
+			return this.tradeRecipientConfirmItemsCount;
+		}
+
+		public void setTradeRecipientConfirmItems(int i, int n) {
+			this.tradeRecipientConfirmItems[i] = n;
+		}
+
+		public void setTradeRecipientConfirmItemCount(int i, int n) {
+			this.tradeRecipientConfirmItemCount[i] = n;
+		}
+
+		public void setTradeConfirmItemsCount(int i) {
+			this.tradeConfirmItemsCount = i;
+		}
+
+		public int getTradeConfirmItemsCount() {
+			return this.tradeConfirmItemsCount;
+		}
+
+		public void setTradeConfirmItems(int i, int n) {
+			this.tradeConfirmItems[i] = n;
+		}
+
+		public void setTradeConfirmItemsCount1(int i, int n) {
+			this.tradeConfirmItemsCount1[i] = n;
+		}
+
+		public void setShowAppearanceChange(boolean show) {
+			this.showAppearanceChange = show;
+		}
+
+		public void setShowDialogShop(boolean show) {
+			this.showDialogShop = show;
+		}
+
+		public void setAdminRights(boolean admin) {
+			this.adminRights = admin;
+		}
+
+		public void setOptionCameraModeAuto(boolean auto) {
+			this.optionCameraModeAuto = auto;
+		}
+
+		public void setOptionMouseButtonOne(boolean button) {
+			this.optionMouseButtonOne = button;
+		}
+
+		public void setOptionSoundDisabled(boolean disabled) {
+			this.optionSoundDisabled = disabled;
+		}
+
+		public void setCombatStyle(int style) {
+			this.combatStyle = style;
+		}
+
+		public void setSettingsBlockGlobal(int block) {
+			this.settingsBlockGlobal = block;
+		}
+
+		public void setClanInviteBlockSetting(boolean block) {
+			this.clanInviteBlockSetting = block;
+		}
+
+		public boolean checkPrayerOn(int i) {
+			return this.prayerOn[i];
+		}
+
+		public void togglePrayer(int i, boolean toggle) {
+			this.prayerOn[i] = toggle;
+		}
+
+		public void setQuestName(int i, String s) {
+			this.questNames[i] = s;
+		}
+
+		public void setQuestStage(int i, int n) {
+			this.questStages[i] = n;
+		}
+
+		public CustomBankInterface getBank() {
+			return this.bank;
+		}
+
+		public void setNewBankItemCount(int i) {
+			this.newBankItemCount = i;
+		}
+
+		public int getNewBankItemCount() {
+			return this.newBankItemCount;
+		}
+
+		public void setBankItemsMax(int i) {
+			this.bankItemsMax = i;
+		}
+
+		public void setShowDialogDuel(boolean show) {
+			this.showDialogDuel = show;
+		}
+
+		public void setShowDialogDuelConfirm(boolean show) {
+			this.showDialogDuelConfirm = show;
+		}
+
+		public void setDuelOffsetOpponentItemCount(int i) {
+			this.duelOffsetOpponentItemCount = i;
+		}
+
+		public int getDuelOffsetOpponentItemCount() {
+			return this.duelOffsetOpponentItemCount;
+		}
+
+		public void setDuelOpponentItemId(int i, int n) {
+			this.duelOpponentItemId[i] = n;
+		}
+
+		public void setDuelOpponentItemCount(int i, int n) {
+			this.duelOpponentItemCount[i] = n;
+		}
+
+		public void setDuelOfferAccepted(boolean accepted) {
+			this.duelOfferAccepted = accepted;
+		}
+
+		public void setDuelOffsetOpponentAccepted(boolean accepted) {
+			this.duelOffsetOpponentAccepted = accepted;
+		}
+
+		public void setDuelSettingsRetreat(boolean retreat) {
+			this.duelSettingsRetreat = retreat;
+		}
+
+		public void setDuelOptionRetreat(int retreat) {
+			this.duelOptionRetreat = retreat;
+		}
+
+		public void setDuelSettingsMagic(boolean magic) {
+			this.duelSettingsMagic = magic;
+		}
+
+		public void setDuelOptionMagic(int magic) {
+			this.duelOptionMagic = magic;
+		}
+
+		public void setDuelSettingsPrayer(boolean prayer) {
+			this.duelSettingsPrayer = prayer;
+		}
+
+		public void setDuelOptionPrayer(int prayer) {
+			this.duelOptionPrayer = prayer;
+		}
+
+		public void setDuelSettingsWeapons(boolean weapons) {
+			this.duelSettingsWeapons = weapons;
+		}
+
+		public void setDuelOptionWeapons(int weapons) {
+			this.duelOptionWeapons = weapons;
+		}
+
+		public void setDuelConfirmed(boolean confirmed) {
+			this.duelConfirmed = confirmed;
+		}
+
+		public void setDuelOpponentName(String n) {
+			this.duelOpponentName = n;
+		}
+
+		public void setDuelOpponentItemsCount(int n) {
+			this.duelOpponentItemsCount = n;
+		}
+
+		public void setDuelOpponentItems(int i, int n) {
+			this.duelOpponentItems[i] = n;
+		}
+
+		public void setDuelOpponentItemCounts(int i, int n) {
+			this.duelOpponentItemCounts[i] = n;
+		}
+
+		public void setDuelItemsCount(int i) {
+			this.duelItemsCount = i;
+		}
+
+		public int getDuelItemsCount() {
+			return this.duelItemsCount;
+		}
+
+		public void setDuelItems(int i, int n) {
+			this.duelItems[i] = n;
+		}
+
+		public void setDuelItemCounts(int i, int n) {
+			this.duelItemCounts[i] = n;
+		}
+
+		public void setDuelOfferItemCount(int i) {
+			this.duelOfferItemCount = i;
+		}
+
+		public void setDuelConfirmOpponentName(String s) {
+			this.duelConfirmOpponentName = s;
+		}
+
+		public void setRecentSkill(int stat) {
+			this.recentSkill = stat;
+		}
+
+		public void setPlayerStatXpGained(int stat, int exp) {
+			this.playerStatXpGained[stat] = exp;
+		}
+
+		public int getPlayerStatXpGained(int stat) {
+			return this.playerStatXpGained[stat];
+		}
+
+		public void setXpGainedStartTime(int i, int n) {
+			this.xpGainedStartTime[i] = n;
+		}
+
+		public long getXpGainedStartTime(int stat) {
+			return this.xpGainedStartTime[stat];
+		}
+
+		public void setPlayerXpGainedTotal(int exp) {
+			this.playerXpGainedTotal = exp;
+		}
+
+		public long getPlayerXpGainedTotal() {
+			return this.playerXpGainedTotal;
+		}
+
+		public ArrayList getXpNotifications() {
+			return xpNotifications;
+		}
+
+		public boolean getWelcomeScreenShown() {
+			return this.welcomeScreenShown;
+		}
+
+		public void setWelcomeLastLoggedInIp(String i) {
+			this.welcomeLastLoggedInIp = i;
+		}
+
+		public void setWelcomeLastLoggedInDays(int i) {
+			this.welcomeLastLoggedInDays = i;
+		}
+
+		public void setShowDialogMessage(boolean show) {
+			this.showDialogMessage = show;
+		}
+
+		public void setWelcomeLastLoggedInHost(String i) {
+			this.welcomeLastLoggedInHost = i;
+		}
+
+		public void setWelcomeScreenShown(boolean show) {
+			this.welcomeScreenShown = show;
+		}
+
+		public void setServerMessage(String i) {
+			this.serverMessage = i;
+		}
+
+		public void setShowDialogServerMessage(boolean show) {
+			this.showDialogServerMessage = show;
+		}
+
+		public void setServerMessageBoxTop(boolean boxTop) {
+			this.serverMessageBoxTop = boxTop;
+		}
+
+		public void setIsSleeping(boolean sleeping) {
+			this.isSleeping = sleeping;
+		}
+
+		public boolean getIsSleeping() {
+			return this.isSleeping;
+		}
+
+		public void setFatigueSleeping(int fatigue) {
+			this.fatigueSleeping = fatigue;
+		}
+
+		public int getStatFatigue() {
+			return this.statFatigue;
+		}
+
+		public void setInputTextCurrent(String s) {
+			this.inputTextCurrent = s;
+		}
+
+		public void setInputTextFinal(String s) {
+			this.inputTextFinal = s;
+		}
+
+		public Sprite makeSleepSprite(ByteArrayInputStream x) {
+			return this.clientPort.getSpriteFromByteArray(x);
+		}
+
+		public void setSleepingStatusText(String s) {
+			this.sleepingStatusText = s;
+		}
+
+		public void setSystemUpdate(int i) {
+			this.systemUpdate = i;
+		}
+
+		public void setElixirTimer(int i) {
+			this.elixirTimer = i;
+		}
+
+		public void setStatFatigue(int fatigue) {
+			this.statFatigue = fatigue;
+		}
+
+		public int getTeleportBubbleCount() {
+			return this.teleportBubbleCount;
+		}
+
+		public void setTeleportBubbleType(int i, int n) {
+			this.teleportBubbleType[i] = n;
+		}
+
+		public void setTeleportBubbleTime(int i, int n) {
+			this.teleportBubbleTime[i] = n;
+		}
+
+		public void setTeleportBubbleX(int i, int x) {
+			this.teleportBubbleX[i] = x;
+		}
+
+		public void setTeleportBubbleZ(int i, int z) {
+			this.teleportBubbleZ[i] = z;
+		}
+
+		public void setTeleportBubbleCount(int count) {
+			this.teleportBubbleCount = count;
+		}
+
+		public void setShopSellPriceMod(int i) {
+			this.shopSellPriceMod = i;
+		}
+
+		public void setShopBuyPriceMod(int i) {
+			this.shopBuyPriceMod = i;
+		}
+
+		public void setShopPriceMultiplier(int i) {
+			this.shopPriceMultiplier = i;
+		}
+
+		public void setShopItemID(int i, int n) {
+			this.shopItemID[i] = n;
+		}
+
+		public int getShopItemID(int i) {
+			return this.shopItemID[i];
+		}
+
+		public void setShopItemCount(int i, int n) {
+			this.shopItemCount[i] = n;
+		}
+
+		public void setShopItemPrice(int i, int n) {
+			this.shopItemPrice[i] = n;
+		}
+
+		public void setShopSelectedItemIndex(int i) {
+			this.shopSelectedItemIndex = i;
+		}
+
+		public int getShopSelectedItemIndex() {
+			return this.shopSelectedItemIndex;
+		}
+
+		public void setShopSelectedItemType(int i) {
+			this.shopSelectedItemType = i;
+		}
+
+		public int getShopSelectedItemType() {
+			return this.shopSelectedItemType;
+		}
+
+		public void setPlayerStatEquipment(int i, int n) {
+			this.playerStatEquipment[i] = n;
+		}
+
+		public int getProjectileMaxRange() {
+			return this.projectileMaxRange;
+		}
+
+		public void setInsideTutorial(boolean i) {
+			this.insideTutorial = i;
+		}
+
+		void setExperienceArray() {
 			int experience = 0;
 			for (int i = 0; i < Config.S_PLAYER_LEVEL_LIMIT; ++i) {
 				int experienceFactor = 1 + i;
@@ -13500,12 +12500,12 @@ public final class mudclient implements Runnable {
 
 		final void getServerConfig() {
 			try {
-				this.setClientStream(new Network_Socket(this.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this));
-				this.getClientStream().newPacket(19);
-				this.getClientStream().finishPacketAndFlush();
-				this.getClientStream().getUnsignedByte();
-				int len = this.getClientStream().getUnsignedByte();
-				handlePacket1(this.getClientStream().getUnsignedByte(), len);
+				this.clientPort.packetHandler.setClientStream(new Network_Socket(this.openSocket(Config.SERVER_PORT, Config.SERVER_IP), this));
+				this.clientPort.packetHandler.getClientStream().newPacket(19);
+				this.clientPort.packetHandler.getClientStream().finishPacketAndFlush();
+				this.clientPort.packetHandler.getClientStream().getUnsignedByte();
+				int len = this.clientPort.packetHandler.getClientStream().getUnsignedByte();
+				this.clientPort.packetHandler.handlePacket1(this.clientPort.packetHandler.getClientStream().getUnsignedByte(), len);
 			}
       catch (IOException var9) {
         throw GenUtil.makeThrowable(var9, "client.KC()");
@@ -13782,15 +12782,15 @@ public final class mudclient implements Runnable {
 				}
 
 				if (offerSuccess) {
-					this.getClientStream().newPacket(46);
-					this.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
+					this.clientPort.packetHandler.getClientStream().newPacket(46);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
 
 					for (int i = 0; this.tradeItemCount > i; ++i) {
-						this.getClientStream().writeBuffer1.putShort(this.tradeItemID[i]);
-						this.getClientStream().writeBuffer1.putInt(this.tradeItemSize[i]);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.tradeItemID[i]);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(this.tradeItemSize[i]);
 					}
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.tradeRecipientAccepted = false;
 					this.tradeAccepted = false;
 				}
@@ -13833,16 +12833,16 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				this.getClientStream().newPacket(46);
+				this.clientPort.packetHandler.getClientStream().newPacket(46);
 				if (var2 > 120) {
-					this.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
 
 					for (var6 = 0; var6 < this.tradeItemCount; ++var6) {
-						this.getClientStream().writeBuffer1.putShort(this.tradeItemID[var6]);
-						this.getClientStream().writeBuffer1.putInt(this.tradeItemSize[var6]);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.tradeItemID[var6]);
+						this.clientPort.packetHandler.getClientStream().writeBuffer1.putInt(this.tradeItemSize[var6]);
 					}
 
-					this.getClientStream().finishPacket();
+					this.clientPort.packetHandler.getClientStream().finishPacket();
 					this.tradeAccepted = false;
 					this.tradeRecipientAccepted = false;
 				}
@@ -14005,23 +13005,23 @@ public final class mudclient implements Runnable {
 				startX = this.pathX[count];
 				--count;
 				if (!var2) {
-					this.getClientStream().newPacket(187);
+					this.clientPort.packetHandler.getClientStream().newPacket(187);
 				} else {
-					this.getClientStream().newPacket(16);
+					this.clientPort.packetHandler.getClientStream().newPacket(16);
 				}
 
-				this.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
-				this.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
+				this.clientPort.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
 				if (var2 && count == -1 && (startX + this.midRegionBaseX) % 5 == 0) {
 					count = 0;
 				}
 
 				for (int i = count; i >= 0 && i > count - 25; --i) {
-					this.getClientStream().writeBuffer1.putByte(this.pathX[i] - startX);
-					this.getClientStream().writeBuffer1.putByte(this.pathZ[i] - startZ);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[i] - startX);
+					this.clientPort.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[i] - startZ);
 				}
 
-				this.getClientStream().finishPacket();
+				this.clientPort.packetHandler.getClientStream().finishPacket();
 				this.mouseWalkY = this.mouseY;
 				this.mouseWalkX = this.mouseX;
 				this.mouseClickXStep = -24;
@@ -14149,6 +13149,8 @@ public final class mudclient implements Runnable {
 			return localPlayer;
 		}
 
+		public void setLocalPlayer(ORSCharacter p) { this.localPlayer = p; }
+
 		public int getMouseX() {
 			return mouseX;
 		}
@@ -14187,6 +13189,10 @@ public final class mudclient implements Runnable {
 
 		public int[] getInventoryItemEquipped() {
 			return inventoryItemEquipped;
+		}
+
+		public int getInventoryItemEquippedID(int i) {
+			return inventoryItemEquipped[i];
 		}
 
 		public int[] getInventoryItems() {
@@ -14231,14 +13237,6 @@ public final class mudclient implements Runnable {
 
 		public int getLastMouseDown() {
 			return lastMouseButtonDown;
-		}
-
-		public Network_Socket getClientStream() {
-			return clientStream;
-		}
-
-		public void setClientStream(Network_Socket clientStream) {
-			this.clientStream = clientStream;
 		}
 
 		public String[] getSkillNames() {
