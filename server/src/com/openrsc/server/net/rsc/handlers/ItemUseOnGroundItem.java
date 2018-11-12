@@ -83,8 +83,6 @@ public class ItemUseOnGroundItem implements PacketHandler {
 						if (player.getInventory().remove(myItem) < 0)
 							return;
 						player.message("You put the flour in the pot");
-						Bubble bubble = new Bubble(player, 135);
-						player.getUpdateFlags().setActionBubble(bubble);
 						world.unregisterItem(item);
 						player.getInventory().add(new Item(136));
 						return;
