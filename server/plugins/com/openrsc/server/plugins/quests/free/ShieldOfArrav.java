@@ -16,8 +16,8 @@ import static com.openrsc.server.plugins.Functions.*;
 //no i didnt where its handled....
 public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 		InvUseOnWallObjectExecutiveListener, PlayerKilledNpcListener,
-		PlayerKilledNpcExecutiveListener, PickupExecutiveListener, PickupListener,
-		InvActionListener, InvActionExecutiveListener, TalkToNpcListener,
+		PlayerKilledNpcExecutiveListener, InvActionListener,
+		InvActionExecutiveListener, TalkToNpcListener,
 		ObjectActionListener, ObjectActionExecutiveListener,
 		TalkToNpcExecutiveListener, InvUseOnObjectListener,
 		InvUseOnObjectExecutiveListener, WallObjectActionExecutiveListener,
@@ -54,9 +54,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 		// 123,523
 		public static final int KING = 42; // ID: 42 king- coords: 126,474
 		public static final int CURATOR = 39; // ID: 39 Curator- coords: 101,488
-		public static final int TRAMP = 28; // ID: 28 Tramp- coords 132, 527
-		public static final int WEAPONMASTER = 37; // ID: 37 weaponsmaster-
-		// coords: 105,1477
+		public static final int TRAMP = 28; // ID: 28 Tramp- coords 132, 527	
 		public static final int THIEF = 64; // ID: 64 Thief- coords: 110,3375 (4
 		// in phoenix gang building)
 		public static final int KATRINE = 27; // ID: 27 Katrine- coords: 149,534
@@ -101,6 +99,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == QuestNpcs.KATRINE;
+		
 	}
 
 	@Override
@@ -160,16 +159,14 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			break;			
 		}
 	}
-
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		switch (n.getID()) {
 		case QuestNpcs.KATRINE:
 			katrineDialogue(p, n, -1);
-			break;
+			break;				
 		}
 	}
-
 	public void katrineDialogue(Player p, Npc n, int cID) {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
@@ -431,21 +428,6 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
-		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476) {
-			if (p.getCache().hasKey("arrav_gang")) {
-				if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {
-					Npc weaponMaster = getNearestNpc(p, QuestNpcs.WEAPONMASTER, 20);
-					if (weaponMaster != null) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}// lets take a look at it later
-
-	@Override
 	public void onInvAction(Item item, Player player) {
 		switch (item.getID()) {
 		case QuestItems.BOOK:
@@ -592,20 +574,5 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			return true;
 
 		return false;
-	}
-
-	@Override
-	public void onPickup(Player p, GroundItem i) {
-		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476) {
-			if (p.getCache().hasKey("arrav_gang")) {
-				if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {
-					Npc weaponMaster = getNearestNpc(p, QuestNpcs.WEAPONMASTER, 20);
-					if (weaponMaster != null) {
-						npcTalk(p, weaponMaster, "Hey Thief!");
-						weaponMaster.setChasing(p);
-					}
-				}
-			}
-		}
-	}
+	}	
 }
