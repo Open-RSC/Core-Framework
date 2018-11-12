@@ -392,7 +392,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								fingerprintDialogue(p, n);
 								return;
 							}
-						} else {
+						} else if (p.getCache().hasKey("evidence") && p.getCache().hasKey("culprit")) {
 							int subopt = showMenu(p, n, false,
 									"I have proof one of the family lied about the poison",
 									"I have the fingerprints of the culprit");

@@ -79,8 +79,6 @@ public class GroundItemTake implements PacketHandler {
 				if (item.getID() == 23) {
 					if(player.getInventory().hasItemId(135)) {
 						player.message("You put the flour in the pot");
-						Bubble bubble = new Bubble(player, 135);
-						player.getUpdateFlags().setActionBubble(bubble);
 						world.unregisterItem(item);
 						player.getInventory().replace(135, 136);
 					} else {
