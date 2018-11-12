@@ -5,6 +5,7 @@ import orsc.Config;
 import orsc.graphics.two.Fonts;
 import orsc.mudclient;
 import orsc.multiclient.ClientPort;
+import orsc.PacketHandler;
 import orsc.util.GenUtil;
 
 import javax.imageio.ImageIO;
@@ -19,6 +20,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		ImageObserver, ClientPort, ImageProducer {
 
 	static mudclient mudclient;
+	static PacketHandler packetHandler;
 
 	public static int globalLoadingPercent = 0;
 	public static String globalLoadingState = "";
@@ -478,6 +480,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final void init() {
 		try {
 			mudclient = new mudclient(this);
+			packetHandler = new PacketHandler(mudclient);
 			loadLogo();
 			this.addMouseListener(this);
 			this.addMouseMotionListener(this);
