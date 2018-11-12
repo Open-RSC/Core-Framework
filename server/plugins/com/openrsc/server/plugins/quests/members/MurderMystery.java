@@ -192,9 +192,8 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						} else if(variableD == 1) {
 							npcTalk(p,n, "I hope you have proof to that effect.",
 									"we have to arrest someone for this and it seems to me that",
-									"only the actual murderer would gain by falsely accusing someone",
-									"although having said that",
-									"the butler is kind of shifty looking...");
+									"only the actual murderer would gain by falsely accusing someone");
+							//kosher: small pause to continue dialogue
 							sleep(1500);
 							npcTalk(p,n, "although having said that",
 									"the butler is kind of shifty looking...");
@@ -228,8 +227,10 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 									playerTalk(p, n, "the butler did it!");
 									npcTalk(p,n, "I hope you have proof to that effect.",
 											"we have to arrest someone for this and it seems to me that",
-											"only the actual murderer would gain by falsely accusing someone",
-											"although having said that",
+											"only the actual murderer would gain by falsely accusing someone");
+									//kosher: small pause to continue dialogue
+									sleep(1500);
+									npcTalk(p,n, "although having said that",
 											"the butler is kind of shifty looking...");
 								}
 							}
@@ -320,27 +321,27 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						npcTalk(p,n, "...",
 								"Yes. theres no doubt about it.");
 						String objPronoun = "";
-						if(p.getCache().hasKey("murder_david") && (p.getCache().hasKey("p_david2"))) {
+						if(p.getCache().hasKey("murder_david") && p.getCache().hasKey("p_david2")) {
 							npcTalk(p, n, "It must have been David who killed his father");
 							p.getCache().remove("murder_david");
 							objPronoun = "him";
-						} else if(p.getCache().hasKey("murder_anna")  && (p.getCache().hasKey("p_anna2"))) {
+						} else if(p.getCache().hasKey("murder_anna")  && p.getCache().hasKey("p_anna2")) {
 							npcTalk(p, n, "It must have been Anna who killed her father");
 							p.getCache().remove("murder_anna");
 							objPronoun = "her";
-						} else if(p.getCache().hasKey("murder_carol")  && (p.getCache().hasKey("p_carol2"))) {
+						} else if(p.getCache().hasKey("murder_carol")  && p.getCache().hasKey("p_carol2")) {
 							npcTalk(p, n, "It must have been Carol who killed her father");
 							p.getCache().remove("murder_carol");
 							objPronoun = "her";
-						} else if(p.getCache().hasKey("murder_bob")  && (p.getCache().hasKey("p_bob2"))) {
+						} else if(p.getCache().hasKey("murder_bob")  && p.getCache().hasKey("p_bob2")) {
 							npcTalk(p, n, "It must have been Bob who killed his father");
 							p.getCache().remove("murder_bob");
 							objPronoun = "him";
-						} else if(p.getCache().hasKey("murder_frank")  && (p.getCache().hasKey("p_frank2"))) {
+						} else if(p.getCache().hasKey("murder_frank")  && p.getCache().hasKey("p_frank2")) {
 							npcTalk(p, n, "It must have been Frank who killed his father");
 							p.getCache().remove("murder_frank");
 							objPronoun = "him";
-						} else if(p.getCache().hasKey("murder_eliz")  && (p.getCache().hasKey("p_eliza2"))) {
+						} else if(p.getCache().hasKey("murder_eliz")  && p.getCache().hasKey("p_eliza2")) {
 							npcTalk(p, n, "It must have been Elizabeth who killed her father");
 							p.getCache().remove("murder_eliz");
 							objPronoun = "her";
@@ -374,8 +375,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.message("You received 2000 gold!");
 						addItem(p, 10, 2000);
 						p.getCache().remove("evidence", "culprit", "p_anna", "p_bob", "p_carol", "p_eliza", "p_david", "p_frank");
+						p.getCache().remove("p_anna2", "p_bob2", "p_carol2", "p_eliza2", "p_david2", "p_frank2");
 						p.getCache().remove("murder_anna", "murder_bob", "murder_frank", "murder_eliz", "murder_david");
-						p.getCache().remove("thread", "poison_opt");
+						p.getCache().remove("thread", "poison_opt", "poison_opt2");
 					}
 					//1 piece
 					else if((p.getCache().hasKey("thread") ^ p.getCache().hasKey("evidence") ^ p.getCache().hasKey("culprit")) 
@@ -1001,9 +1003,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 					"do than be interrogated by halfwits all day");
 		}
 		int menu;
-		if(p.getCache().hasKey("poison_opt") && (p.getCache().hasKey("thread"))) {
+		if(p.getCache().hasKey("poison_opt") && p.getCache().hasKey("thread")) {
             menu = showMenu(p, n, "Who do you think was responsible?", "Where were you when the murder happened?", "Do you recognise this thread?", "Why did you buy poison the other day?");
-        } else if(p.getCache().hasKey("poison_opt") && (!p.getCache().hasKey("thread"))) {
+        } else if(p.getCache().hasKey("poison_opt") && !p.getCache().hasKey("thread")) {
             menu = showMenu(p, n, "Who do you think was responsible?", "Where were you when the murder happened?", "Why did you buy poison the other day?");
         }
         else if(p.getCache().hasKey("thread")) {
@@ -1070,7 +1072,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						"to stand there irritating me with your",
 						"idiotic questions all day?");
 			}
-		} else if(menu == 2) {
+		} else if(menu == 2 && p.getCache().hasKey("thread")) {
 			if(n.getID() == CAROL && !p.getInventory().hasItemId(RED)) {
 				p.message("you show Carol the thread found at the crime scene");
 				npcTalk(p,n, "Its some thread. Sorry, do you have a point here?",
@@ -1533,7 +1535,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().store("evidence", true);
 						p.getCache().store("p_anna2", true);
 					}
-					if(p.getCache().hasKey("poison_opt2") && (!p.getCache().hasKey("murder_anna"))) {						
+					else if(p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_anna")) {						
 							message(p, "There is a faint smell of poison behind the smell of the compost");				
 					}
 					else {				
@@ -1550,7 +1552,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().store("evidence", true);
 						p.getCache().store("p_eliza2", true);
 					}
-					if(obj.getID() == 1130 && p.getCache().hasKey("poison_opt2") && (!p.getCache().hasKey("murder_eliz"))) {
+					else if(p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_eliz")) {
 							message(p, "There are a lot of dead mosquitos around",
 									"the base of the fountain. A faint smell of",
 									"poison is in the air, but the water seems clean");
@@ -1567,7 +1569,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().store("evidence", true);
 						p.getCache().store("p_bob2", true);
 					}
-					else if(obj.getID() == 1127 && p.getCache().hasKey("poison_opt") && (!p.getCache().hasKey("murder_bob"))) {
+					else if(p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_bob")) {
 						message(p, "The hive is empty. There are a few dead bees and",
 							"a faint smell of poison");
 					}
@@ -1584,7 +1586,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().store("evidence", true);
 						p.getCache().store("p_carol2", true);
 					}
-					else if(obj.getID() == 1128 && (p.getCache().hasKey("poison_opt2") && (!p.getCache().hasKey("murder_carol")))) {
+					else if(p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_carol")) {
 							message(p, "The drain seems to have been recently cleaned",
 									"You can still smell the faint aroma of poison");
 					}
@@ -1621,7 +1623,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().store("evidence", true);
 						p.getCache().store("p_frank2", true);									
 					}
-					else if(obj.getID() == 1131 && (p.getCache().hasKey("poison_opt2") && (!p.getCache().hasKey("murder_frank")))) {
+					else if(p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_frank")) {
 							message(p, "The sinclair family crest",
 							"its shiny and freshly polished",
 							"And has a slight smell of poison");
@@ -1639,7 +1641,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						p.getCache().store("evidence", true);
 						p.getCache().store("p_david2", true);
 					}
-					else if(obj.getID() == 1129 && (p.getCache().hasKey("poison_opt2") && (!p.getCache().hasKey("murder_david")))) {
+					else if(p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_david")) {
 							message(p, "A faint smell of poison and a few dead spiders",
 								"is all that remains of the spiders nest");
 					}
@@ -1823,18 +1825,12 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			
 		}
 		if((item1.getID() == 1223 && item2.getID() >= 1207 && item2.getID() <= 1212) || (item1.getID() >= 1207 && item1.getID() <= 1212 && item2.getID() == 1223)) {
-			if(p.getCache().hasKey("culprit")) {
-				p.message("Nothing interesting happens");
-				return;
-			}
-			if(item1.getID() == 1210 || item2.getID() == 2010) {
+			if(item1.getID() == 1210 || item2.getID() == 1210) {
 				if(p.getCache().hasKey("murder_david")) {
 					p.message("The fingerprints are an exact match to Davids");
-					p.getInventory().replace(1230, 1206);
-					
-					p.getCache().store("culprit", true);
-					p.getCache().remove("thread");
-					removeItem(p, 1223, 1);
+					p.getInventory().replace(1223, 1206);
+					if(!p.getCache().hasKey("culprit"))
+						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
 					removeItem(p, 1210, 1);
@@ -1846,12 +1842,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			else if(item1.getID() == 1208 || item2.getID() == 1208) {
 				if(p.getCache().hasKey("murder_bob")) {
 					p.message("The fingerprints are an exact match to Bobs");
-					p.getInventory().replace(1230, 1206);
-					
-					p.getCache().store("culprit", true);
-					p.getCache().remove("thread");
-					removeItem(p, 1223, 1);
-
+					p.getInventory().replace(1223, 1206);
+					if(!p.getCache().hasKey("culprit"))
+						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
 					removeItem(p, 1208, 1);
@@ -1862,11 +1855,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			} else if(item1.getID() == 1211 || item2.getID() == 1211) {
 				if(p.getCache().hasKey("murder_eliz")) {
 					p.message("The fingerprints are an exact match to Elizabeths");
-					p.getInventory().replace(1230, 1206);
-					
-					p.getCache().store("culprit", true);
-					p.getCache().remove("thread");
-					removeItem(p, 1223, 1);
+					p.getInventory().replace(1223, 1206);
+					if(!p.getCache().hasKey("culprit"))
+						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
 					removeItem(p, 1211, 1);
@@ -1877,11 +1868,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			} else if(item1.getID() == 1207 || item2.getID() == 1207) {
 				if(p.getCache().hasKey("murder_anna")) {
 					p.message("The fingerprints are an exact match to Annas");
-					p.getInventory().replace(1230, 1206);
-					
-					p.getCache().store("culprit", true);
-					p.getCache().remove("thread");
-					removeItem(p, 1223, 1);
+					p.getInventory().replace(1223, 1206);
+					if(!p.getCache().hasKey("culprit"))
+						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
 					removeItem(p, 1207, 1);
@@ -1892,11 +1881,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 			} else if(item1.getID() == 1209 || item2.getID() == 1209) {
 				if(p.getCache().hasKey("murder_carol")) {
 					p.message("The fingerprints are an exact match to Carols");
-					p.getInventory().replace(1230, 1206);
-					
-					p.getCache().store("culprit", true);
-					p.getCache().remove("thread");
-					removeItem(p, 1223, 1);
+					p.getInventory().replace(1223, 1206);
+					if(!p.getCache().hasKey("culprit"))
+						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
 					removeItem(p, 1209, 1);
@@ -1904,14 +1891,12 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 					sleep(800);
 					p.message("You destroy the useless fingerprint");
 				}
-			} else if(item1.getID() == 1212 ||item2.getID() == 1212) {
+			} else if(item1.getID() == 1212 || item2.getID() == 1212) {
 				if(p.getCache().hasKey("murder_frank")) {
 					p.message("The fingerprints are an exact match to Franks");
-					p.getInventory().replace(1230, 1206);
-					
-					p.getCache().store("culprit", true);
-					p.getCache().remove("thread");
-					removeItem(p, 1223, 1);
+					p.getInventory().replace(1223, 1206);
+					if(!p.getCache().hasKey("culprit"))
+						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
 					removeItem(p, 1212, 1);
