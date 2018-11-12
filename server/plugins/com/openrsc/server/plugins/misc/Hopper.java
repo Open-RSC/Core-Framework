@@ -38,16 +38,24 @@ public class Hopper implements InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		message(player, 500, "You operate the hopper");
+		player.playSound("mechanical");
 		int contains = obj.getAttribute("contains_item", (int) -1);
 		if(contains != 29 || contains == -1) {
 			player.message("Nothing interesting happens");
 			return;
 		}
 		player.message("The grain slides down the chute");
+		
+		int offY = 0;
+		/* Chute in Chef's guild has offsetY -2 from calculated */
+		if(obj.getX() == 179 && obj.getY() == 2371) {
+			offY = -2;
+		}
+		
 		if(obj.getID() == 246) {
 			createGroundItem(23, 1, 162, 3533);
 		} else {
-			createGroundItem(23, 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false), false));
+			createGroundItem(23, 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false) + offY, false));
 		}
 		obj.removeAttribute("contains_item");
 	}
