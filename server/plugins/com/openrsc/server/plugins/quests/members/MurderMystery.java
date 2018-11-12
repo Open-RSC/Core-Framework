@@ -192,7 +192,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						} else if(variableD == 1) {
 							npcTalk(p,n, "I hope you have proof to that effect.",
 									"we have to arrest someone for this and it seems to me that",
-									"only the actual murderer would gain by falsely accusing someone");
+									"only the actual murderer would gain by falsely accusing someone",
+									"although having said that",
+									"the butler is kind of shifty looking...");
 							sleep(1500);
 							npcTalk(p,n, "although having said that",
 									"the butler is kind of shifty looking...");
@@ -203,7 +205,8 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 									"It was one of the men");
 							if(variableA == 0) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int variableB = showMenu(p,
+								//do not send over
+								int variableB = showMenu(p, n, false,
 										"it was so obviously Louisa The Cook",
 										"It must have been Mary The Maid");
 								if(variableB >= 0) {
@@ -211,13 +214,23 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								}
 							} else if(variableA == 1) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int variableC = showMenu(p,
+								//do not send over
+								int variableC = showMenu(p, n, false,
 										"it can only be Donovan the Handyman",
 										"Pierre the Dog Handler. No question.",
 										"Hobbes the Butler. the butler *always* did it",
 										"you must know it was Stanford The Gardener");
-								if(variableC >= 0) {
+								if(variableC >= 0 && variableC != 2) {
 									whoYouSuspect(p, n);
+								}
+								//butler has the same dialogue
+								else if(variableC == 2) {
+									playerTalk(p, n, "the butler did it!");
+									npcTalk(p,n, "I hope you have proof to that effect.",
+											"we have to arrest someone for this and it seems to me that",
+											"only the actual murderer would gain by falsely accusing someone",
+											"although having said that",
+											"the butler is kind of shifty looking...");
 								}
 							}
 						} else if(variableD == 3) {
@@ -227,7 +240,8 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 									"It was one of the men");
 							if(family == 0) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int variableI = showMenu(p,n,
+								//do not send over
+								int variableI = showMenu(p,n, false,
 										"I know it was Anna",
 										"I am so sure it was Carol",
 										"Ill bet you anything it was Elizabeth");
@@ -236,7 +250,8 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								}
 							} else if(family == 1) {
 								npcTalk(p,n, "Oh really? Which one?");
-								int variableE = showMenu(p,n,
+								//do not send over
+								int variableE = showMenu(p,n, false,
 										"I'm certain it was Bob",
 										"It was David. No doubt about it.",
 										"If it wasn't Frank I'll eat my shoes");
@@ -340,11 +355,20 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								"families as well, in helping to apprehend the murderer",
 								"I'll just take the evidence from you now");
 						p.message("You hand over all the evidence");
-						removeItem(p, GREEN, 1);
-						removeItem(p, BLUE, 1);
-						removeItem(p, RED, 1);
-						removeItem(p, 1204, 1);
-						removeItem(p, 1205, 1);
+						//remove murder mystery related items:
+						int itemIds[] = {GREEN, BLUE, RED, 
+								//threads + fingerprints + scene items
+								1204, 1205, 1206, 1207, 1208, 1209, 1210, 1211, 1212, 1223,
+								//original family items
+								1194, 1195, 1196, 1197, 1198, 1199,
+								//coated with flour
+								1224, 1225, 1226, 1227, 1228, 1229};
+						int amt;
+						//removes all
+						for(int itemId : itemIds) {
+							amt = Math.max(p.getInventory().countId(itemId), 0);
+							removeItem(p, itemId, amt);
+						}
 						p.sendQuestComplete(Constants.Quests.MURDER_MYSTERY);
 						npcTalk(p,n, "Please accept this reward from the family!");
 						p.message("You received 2000 gold!");
@@ -392,7 +416,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 								fingerprintDialogue(p, n);
 								return;
 							}
-						} else {
+						} else if (p.getCache().hasKey("evidence") && p.getCache().hasKey("culprit")) {
 							int subopt = showMenu(p, n, false,
 									"I have proof one of the family lied about the poison",
 									"I have the fingerprints of the culprit");
@@ -1216,22 +1240,16 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 		playerTalk(p, n, "I have the fingerprints of the culprit");
 		if(p.getCache().hasKey("murder_david")) {	
 			playerTalk(p,n, "I have Davids' Fingerprints here.");
-			removeItem(p, 1210, 1);
 		} else if(p.getCache().hasKey("murder_bob")) {
 			playerTalk(p,n, "I have Bobs' Fingerprints here.");
-			removeItem(p, 1208, 1);
 		} else if(p.getCache().hasKey("murder_anna")) {
 			playerTalk(p,n, "I have Annas' Fingerprints here.");
-			removeItem(p, 1207, 1);
 		} else if(p.getCache().hasKey("murder_eliz")) {
 			playerTalk(p,n, "I have Elizabeths' Fingerprints here.");
-			removeItem(p, 1211, 1);
 		} else if(p.getCache().hasKey("murder_frank")) {
 			playerTalk(p,n, "I have Franks' Fingerprints here.");
-			removeItem(p, 1212, 1);
 		} else if(p.getCache().hasKey("murder_carol")) {
 			playerTalk(p,n, "I have Carols' Fingerprints here.");
-			removeItem(p, 1209, 1);
 		}
 		playerTalk(p,n, "You can see for yourself they match the",
 				"Fingerprints on the murder weapon exactly");
