@@ -55,7 +55,7 @@ public class Hopper implements InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 		if(obj.getID() == 246) {
 			createGroundItem(23, 1, 162, 3533);
 		} else {
-			createGroundItem(23, 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false) + offY, false));
+			createGroundItem(23, 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false), false) + offY);
 		}
 		obj.removeAttribute("contains_item");
 	}
