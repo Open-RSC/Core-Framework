@@ -104,10 +104,11 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		} else if(usedWith.getID() == 1074 && (item.getID() == 1051 || item.getID() == 444)) {
 			makeLiquid(player, usedWith, item, true);
 		} else if(usedWith.getID() == 1161 && item.getID() == 1160 || usedWith.getID() == 1160 && item.getID() == 1161) {
-			if (player.getSkills().getLevel(15) < 6) {
-				player.message("You need to have a herblaw level of 6 or over to mix this liquid");
+			if (player.getSkills().getLevel(15) < 10) {
+				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
+			player.incExp(15, 20, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
 			showBubble(player, new Item(1160));
@@ -118,6 +119,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
+			player.incExp(15, 25, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
 			showBubble(player, new Item(1179));
@@ -128,7 +130,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
 			}
-			player.incExp(15, 75, true);
+			player.incExp(15, 30, true);
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
 			showBubble(player, new Item(1284));
@@ -140,6 +142,12 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
 				return;
 			}
+			//player needs to have learned secret from gujuo
+			if(player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) < 7) {
+				player.message("You're not quite sure what effect this will have.");
+				player.message("You decide against experimenting.");
+				return;
+			}
 			player.message("You add the Ardrigal to the Snakesweed Solution.");
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
 			player.getInventory().remove(818, 1);
@@ -147,6 +155,12 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		} else if(usedWith.getID() == 1252 && item.getID() == 816 || usedWith.getID() == 816 && item.getID() == 1252) {
 			if (player.getSkills().getLevel(15) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
+				return;
+			}
+			//player needs to have learned secret from gujuo
+			if(player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) < 7) {
+				player.message("You're not quite sure what effect this will have.");
+				player.message("You decide against experimenting.");
 				return;
 			}
 			player.message("You add the Snake Weed to the Ardrigal solution.");
