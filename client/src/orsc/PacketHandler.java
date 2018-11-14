@@ -967,8 +967,8 @@ public class PacketHandler {
 				}
 			}
 
-			mc.setPlayerCount(mc.getPlayerCount() + 1);
 			mc.setPlayer(mc.getPlayerCount(), var34);
+			mc.setPlayerCount(mc.getPlayerCount() + 1);
 		}
 
 		while (length * 8 > packetsIncoming.getBitHead() + 24) {
