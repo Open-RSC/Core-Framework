@@ -10949,7 +10949,7 @@ public final class mudclient implements Runnable {
 			try {
 				this.packetHandler.getClientStream().newPacket(218);
 				this.packetHandler.getClientStream().writeBuffer1.putString(str1);
-				this.packetHandler.getClientStream().writeBuffer1.putString(str2);
+				RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().writeBuffer1, str2);
 				this.packetHandler.getClientStream().finishPacket();
 			} catch (RuntimeException var5) {
 				throw GenUtil.makeThrowable(var5, "client.KB(" + "dummy" + ',' + (str1 != null ? "{...}" : "null") + ','
@@ -11238,7 +11238,7 @@ public final class mudclient implements Runnable {
 		private final void sendChatMessage(String var1) {
 			try {
 				this.packetHandler.getClientStream().newPacket(216);
-				this.packetHandler.getClientStream().writeBuffer1.putString(var1);
+				RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().writeBuffer1, var1);
 				this.packetHandler.getClientStream().finishPacket();
 			} catch (RuntimeException var4) {
 				throw GenUtil.makeThrowable(var4, "client.AA(" + (var1 != null ? "{...}" : "null") + ')');
