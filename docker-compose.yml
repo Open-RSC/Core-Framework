@@ -35,7 +35,7 @@ services:
         env_file:
             - ".env"
         command: [
-            '--wait_timeout=360000',
+            '--wait_timeout=360000', '--log-bin=/var/log/mysql/bin.log', '--log-bin-index=/var/log/mysql/bin-log.index', '--max_binlog_size=100M', '--binlog-format=MIXED', '--slow-query-log', '--general_log=1',
             ]
         environment:
             - MYSQL_DATABASE=mysql
@@ -49,3 +49,4 @@ services:
         volumes:
             - "./data/db/mysql:/var/lib/mysql"
             - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro"
+            - "./etc/logs/mariadb:/var/log/mysql"
