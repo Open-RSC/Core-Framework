@@ -412,19 +412,19 @@ public class BankInterface {
 
 	public void bankClose() {
 		this.mc.setShowDialogBank(false);
-		mc.getClientStream().newPacket(212);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(212);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	public void sendDeposit(int i) {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
-		mc.getClientStream().newPacket(23);
-		mc.getClientStream().writeBuffer1.putShort(itemID);
+		mc.packetHandler.getClientStream().newPacket(23);
+		mc.packetHandler.getClientStream().writeBuffer1.putShort(itemID);
 		if (i > mc.getInventoryCount(itemID)) {
 			i = mc.getInventoryCount(itemID);
 		}
-		mc.getClientStream().writeBuffer1.putInt(i);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+		mc.packetHandler.getClientStream().finishPacket();
 		rightClickMenu = false;
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
@@ -436,13 +436,13 @@ public class BankInterface {
 	public void sendWithdraw(int i) {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		int amt = currentBankCounts.get(this.selectedBankSlot);
-		mc.getClientStream().newPacket(22);
-		mc.getClientStream().writeBuffer1.putShort(itemID);
+		mc.packetHandler.getClientStream().newPacket(22);
+		mc.packetHandler.getClientStream().writeBuffer1.putShort(itemID);
 		if (i > amt) {
 			i = amt;
 		}
-		mc.getClientStream().writeBuffer1.putInt(i);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+		mc.packetHandler.getClientStream().finishPacket();
 		rightClickMenu = false;
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
