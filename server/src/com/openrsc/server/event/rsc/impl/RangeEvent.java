@@ -177,7 +177,11 @@ public class RangeEvent extends GameTickEvent {
 					break;
 				}
 				if (arrowID < 0) {
-					getPlayerOwner().message("You have run out of " + (xbow ? "bolts" : "arrows"));
+					getPlayerOwner().message("I've run out of ammo!");
+					if(getPlayerOwner().getCache().hasKey("shot_ice")) {
+						getPlayerOwner().getCache().remove("shot_ice");
+					}
+					ActionSender.sendSound(getPlayerOwner(), "outofammo");
 					getPlayerOwner().resetRange();
 					return;
 				}

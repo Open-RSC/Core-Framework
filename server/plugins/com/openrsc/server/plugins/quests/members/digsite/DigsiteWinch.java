@@ -47,6 +47,11 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.message("The bucket descends, but does not reach the bottom");
 							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
+							if (getCurrentLevel(p, AGILITY) < 10) {
+								p.message("You need an agility level of 10 to do this");
+								p.setBusy(false);
+								return;
+							}
 							p.message("You try to climb down the rope");
 							message(p, "You lower yourself into the shaft");
 							p.teleport(26, 3346);
@@ -64,6 +69,11 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.message("The bucket descends, but does not reach the bottom");
 							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
+							if (getCurrentLevel(p, AGILITY) < 10) {
+								p.message("You need an agility level of 10 to do this");
+								p.setBusy(false);
+								return;
+							}
 							p.message("You try to climb down the rope");
 							message(p, "You lower yourself into the shaft");
 							if(p.getQuestStage(Constants.Quests.DIGSITE) >= 6) {

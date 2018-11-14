@@ -361,10 +361,15 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 		}
 		if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				message(p, "You find a trap in the stairs",
-						"You make a note of the trap's location",
-						"Ready for next time you go up the stairs");
-				p.getCache().store("trapy", true);
+				if(getCurrentLevel(p, THIEVING) < 21) {
+					message(p, "You don't find anything interesting");
+				}
+				else {
+					message(p, "You find a trap in the stairs",
+							"You make a note of the trap's location",
+							"Ready for next time you go up the stairs");
+					p.getCache().store("trapy", true);
+				}
 			} else if (command.equalsIgnoreCase("Go up")) {
 				if (p.getCache().hasKey("trapy")) {
 					p.message("You go up the stairs");

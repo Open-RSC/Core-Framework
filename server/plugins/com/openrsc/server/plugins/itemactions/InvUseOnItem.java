@@ -52,18 +52,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		else if(compareItemsIds(item1, item2, 587, 457)) {
-			if(player.getInventory().remove(new Item(457)) > -1 && player.getInventory().remove(new Item(587)) > -1) {
-				if(player.getSkills().getMaxStat(15) >= 25) {
-					player.message("You mix the slime into your potion");
-					player.getInventory().add(new Item(588));
-					
-				} else {
-					player.message("You need a level of 25 herblaw to mix this potion");
-				}
-			}
-			return;
-		}
 		else if(compareItemsIds(item1, item2, 588, 377)) {
 			if(player.getInventory().remove(new Item(588)) > -1 && player.getInventory().remove(new Item(377)) > -1) {
 				player.message("You rub the oil onto the fishing rod");
@@ -294,8 +282,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		else if(compareItemsIds(item1, item2, 166, 600))
 			return true;
 		else if(compareItemsIds(item1, item2, 166, 599))
-			return true;
-		else if(compareItemsIds(item1, item2, 587, 457))
 			return true;
 		else if(compareItemsIds(item1, item2, 588, 377))
 			return true;
