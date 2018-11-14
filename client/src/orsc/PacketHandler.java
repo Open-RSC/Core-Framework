@@ -705,14 +705,14 @@ public class PacketHandler {
 		String sender = packetsIncoming.readString();
 		String formerName = packetsIncoming.readString();
 		int icon = packetsIncoming.getUnsignedByte();
-		String message = packetsIncoming.readString();
+		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
 		mc.showMessage(icon == 2, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName,
 						(String) null);
 	}
 
 	private void sendPrivateMessage() {
 		String var13 = packetsIncoming.readString();
-		String var14 = packetsIncoming.readString();
+		String var14 = RSBufferUtils.getEncryptedString(packetsIncoming);
 		mc.showMessage(false, var13, var14, MessageType.PRIVATE_SEND, 0, var13, (String) null);
 	}
 
@@ -1334,8 +1334,8 @@ public class PacketHandler {
 
 		// Ground Item Counts
 		for (int i = 0; packets > i; ++i) {
-			int x = mc.getLocalPlayerX() + packetsIncoming.getShort() >> 3;
-			int z = mc.getLocalPlayerZ() + packetsIncoming.getShort() >> 3;
+			int x = mc.getLocalPlayerX() + packetsIncoming.get16_V2() >> 3;
+			int z = mc.getLocalPlayerZ() + packetsIncoming.get16_V2() >> 3;
 
 			int count = 0;
 			for (int j = 0; j < mc.getGroundItemCount(); ++j) {
