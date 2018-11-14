@@ -679,7 +679,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;
 			}
 			else { 
-				if ((n.getID() == WARRIOR_OF_LESARKUS && p.getInventory().hasItemId(723) || p.getCache().hasKey("shot_ice"))) {			
+				if (n.getID() == WARRIOR_OF_LESARKUS && ((p.getInventory().hasItemId(723) && hasGoodBow(p)) || p.getCache().hasKey("shot_ice"))) {			
 				p.getCache().store("shot_ice", true);
 				return false;
 			}
@@ -688,6 +688,18 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;			
 		}
 		return false;
+	}
+	
+	public boolean hasGoodBow(Player p) {
+		
+		int[] allowedBowsIce = {654, 655, 656, 657};
+		boolean hasGoodBow = false;
+		
+		for(int bow : allowedBowsIce) {
+			hasGoodBow |= (p.getInventory().hasItemId(bow) && p.getInventory().wielding(bow));
+		}
+		
+		return hasGoodBow;
 	}
 
 	@Override

@@ -445,10 +445,14 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			}
 		}
 		if(item1.getID() == 167 && item2.getID() == 973 || item1.getID() == 973 && item2.getID() == 167) {
+			if(getCurrentLevel(p, CRAFTING) < 20) {
+				p.message("You need a level of 20 Crafting to craft this.");
+				return;
+			}
 			message(p, "You prepare the ivory pommel and the chisel to start crafting...",
 					"You successfully craft some of the ivory into beads.");
 			p.message("They may look good as part of a necklace.");
-			p.incExp(CRAFTING, 36, true);
+			p.incExp(CRAFTING, 35, true);
 			p.getInventory().replace(973, 976);
 		}
 	}
