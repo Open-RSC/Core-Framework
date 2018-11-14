@@ -360,6 +360,13 @@ public class SpellHandler implements PacketHandler {
 		return items;
 	}
 
+	private void finalizeSpellNoMessage(Player player, SpellDef spell) {
+		player.lastCast = System.currentTimeMillis();
+		player.playSound("spellok");
+		player.incExp(6, spell.getExp(), true);
+		player.setCastTimer();
+	}
+	
 	private void finalizeSpell(Player player, SpellDef spell) {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
@@ -499,17 +506,25 @@ public class SpellHandler implements PacketHandler {
 			break;
 		case 10: // Low level alchemy
 			if (affectedItem.getID() == 10) {
-				player.message("You cannot alchemy that");
+				player.message("That's already made of gold!");
 				return;
 			}
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
-			if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
-				int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.4D);
-				player.getInventory().add(new Item(10, value)); // 40%
+			// ana in barrel kept but xp allowed
+			if (affectedItem.getID() == 1039) {
+				player.message("@gre@Ana: Don't you start casting spells on me!");
+				finalizeSpellNoMessage(player, spell);
 			}
-			finalizeSpell(player, spell);
+			else {
+				if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
+					int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.4D);
+					player.getInventory().add(new Item(10, value)); // 40%
+				}
+				finalizeSpell(player, spell);
+			}
+			
 			break;
 		case 13: // Enchant lvl-2 emerald amulet
 			if (affectedItem.getID() == 303) {
@@ -581,19 +596,25 @@ public class SpellHandler implements PacketHandler {
 			}
 			break;
 		case 28: // High level alchemy
-			if (affectedItem.getID() == 10 || affectedItem.getID() == 1262) {
-				player.message("You cannot alchemy that");
+			if (affectedItem.getID() == 10) {
+				player.message("That's already made of gold!");
 				return;
 			}
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
-			if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
-				int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.6D);
-				player.getInventory().add(new Item(10, value)); // 40%
-
+			// ana in barrel kept but xp allowed
+			if (affectedItem.getID() == 1039) {
+				player.message("@gre@Ana: Don't you start casting spells on me!");
+				finalizeSpellNoMessage(player, spell);
 			}
-			finalizeSpell(player, spell);
+			else {
+				if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
+					int value = (int) (affectedItem.getDef().getDefaultPrice() * 0.6D);
+					player.getInventory().add(new Item(10, value)); // 60%
+				}
+				finalizeSpell(player, spell);
+			}
 			break;
 		case 30: // Enchant lvl-4 diamond amulet
 			if (affectedItem.getID() == 305) {
@@ -695,7 +716,7 @@ public class SpellHandler implements PacketHandler {
 						return;
 					}
 					if (affectedItem.getID() == 1039) {
-						player.message("I can't use telekinetic grab on Anna");
+						player.message("I can't use telekinetic grab on Ana");
 						return;
 					}
 					if (affectedItem.getLocation().inBounds(97, 1428, 106, 1440)) {
