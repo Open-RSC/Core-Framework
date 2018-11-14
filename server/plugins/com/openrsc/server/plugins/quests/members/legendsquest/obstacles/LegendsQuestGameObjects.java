@@ -305,7 +305,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
 					if(getCurrentLevel(p, THIEVING) < 50) {
-						p.message("You are not a high enough level to pick this lock");
+						p.message("You need a thieving level of at least 50 to attempt this.");
 						return;
 					}
 					if(hasItem(p, 714)) {
@@ -734,6 +734,10 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			if(getCurrentLevel(p, WOODCUT) < 50) {
 				p.message("You need an woodcut level of 50 to");
 				p.message("fell the tree once it is grown.");
+				return;
+			}
+			if(getCurrentLevel(p, HERBLAW) < 45) {
+				p.message("You need a herblaw skill of at least 45 to complete this task.");
 				return;
 			}
 			// 1112, 1107
