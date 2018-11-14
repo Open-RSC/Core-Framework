@@ -694,6 +694,10 @@ public class SpellHandler implements PacketHandler {
 						player.message("I can't use telekinetic grab on the cat");
 						return;
 					}
+					if (affectedItem.getID() == 1039) {
+						player.message("I can't use telekinetic grab on Anna");
+						return;
+					}
 					if (affectedItem.getLocation().inBounds(97, 1428, 106, 1440)) {
 						player.message("Telekinetic grab cannot be used in here");
 						return;
