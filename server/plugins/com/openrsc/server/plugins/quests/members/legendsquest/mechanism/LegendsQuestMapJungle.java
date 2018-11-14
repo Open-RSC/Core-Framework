@@ -87,7 +87,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 					message(p, 1200, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
-				} 
+				}
 				if(!hasItem(p, 982) && !hasItem(p, 983)) { // no charcoal or papyrus
 					message(p, 1200, "You'll need some papyrus and charcoal to complete this map.");
 					canMap = false;
@@ -97,6 +97,11 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				} else if(!hasItem(p, 982) && hasItem(p, 983)) { // has charcoal but no papyrus
 					message(p, 1200, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
+				}
+				if(getCurrentLevel(p, CRAFTING) < 50) {
+					//message possibly non kosher
+					p.message("You need a crafting ability of at least 50 to complete this task.");
+					return;
 				}
 				if(canMap) {
 					mapArea(p);
