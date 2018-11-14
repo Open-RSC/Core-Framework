@@ -152,11 +152,11 @@ public final class IronManInterface {
 			drawClickBox(graphics, drawBoxX + 5, drawBoxY + 26, drawBoxWidth, 340, drawBoxheight, getIronManTitleByID(modeID), titleY, getIronManDescByID(modeID), descX, descY, new ButtonHandler() {
 				@Override
 				void handle() {
-					mc.getClientStream().newPacket(199);
-					mc.getClientStream().writeBuffer1.putByte(7);
-					mc.getClientStream().writeBuffer1.putByte(0);
-					mc.getClientStream().writeBuffer1.putByte(selectMode[modeID]);
-					mc.getClientStream().finishPacket();
+					mc.packetHandler.getClientStream().newPacket(199);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(7);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(selectMode[modeID]);
+					mc.packetHandler.getClientStream().finishPacket();
 				}
 			});
 			
@@ -207,11 +207,11 @@ public final class IronManInterface {
 				@Override
 				void handle() {
 					
-					mc.getClientStream().newPacket(199);
-					mc.getClientStream().writeBuffer1.putByte(7);
-					mc.getClientStream().writeBuffer1.putByte(1);
-					mc.getClientStream().writeBuffer1.putByte(restrictionID);
-					mc.getClientStream().finishPacket();
+					mc.packetHandler.getClientStream().newPacket(199);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(7);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(restrictionID);
+					mc.packetHandler.getClientStream().finishPacket();
 				}
 			});
 			graphics.drawCircle(drawBoxX + 8 + 5, circleY, 8, 0x3A3026, 255, 0);
@@ -250,10 +250,10 @@ public final class IronManInterface {
 		if(i > 1 || i < 0) {
 			i = 0;
 		}
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(8);
-		mc.getClientStream().writeBuffer1.putByte(i);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(8);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(i);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	public boolean isVisible() {

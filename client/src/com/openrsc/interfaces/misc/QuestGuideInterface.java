@@ -73,8 +73,8 @@ public final class QuestGuideInterface {
 		this.drawButton(x + 394, y + 6, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.getClientStream().newPacket(212);
-				mc.getClientStream().finishPacket();
+				mc.packetHandler.getClientStream().newPacket(212);
+				mc.packetHandler.getClientStream().finishPacket();
 				questGuide.resetScrollIndex(questGuideScroll);
 				setVisible(false);
 			}

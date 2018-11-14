@@ -116,10 +116,10 @@ public final class AuctionHouse {
 		drawTextHit(graphics, x + 405, y - 1, 81, 12, "Close window", false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.getClientStream().newPacket(199);
-				mc.getClientStream().writeBuffer1.putByte(10);
-				mc.getClientStream().writeBuffer1.putByte(4);
-				mc.getClientStream().finishPacket();
+				mc.packetHandler.getClientStream().newPacket(199);
+				mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+				mc.packetHandler.getClientStream().writeBuffer1.putByte(4);
+				mc.packetHandler.getClientStream().finishPacket();
 				resetAllVariables();
 				setVisible(false);
 			}
@@ -164,10 +164,10 @@ public final class AuctionHouse {
 	};
 
 	private void sendRefreshList() {
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(10);
-		mc.getClientStream().writeBuffer1.putByte(3);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(3);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void drawMyAuctions(GraphicsController graphics) {
@@ -408,11 +408,11 @@ public final class AuctionHouse {
 	}
 
 	private void sendCancelAuction(int auctionID) {
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(10);
-		mc.getClientStream().writeBuffer1.putByte(2);
-		mc.getClientStream().writeBuffer1.putInt(auctionID);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(2);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(auctionID);
+		mc.packetHandler.getClientStream().finishPacket();
 		selectedCancelAuction = -1;
 	}
 
@@ -424,13 +424,13 @@ public final class AuctionHouse {
 			if (newAuctionItem.getPrice() <= 0) {
 				newAuctionItem.setPrice(1);
 			}
-			mc.getClientStream().newPacket(199);
-			mc.getClientStream().writeBuffer1.putByte(10);
-			mc.getClientStream().writeBuffer1.putByte(1);
-			mc.getClientStream().writeBuffer1.putInt(newAuctionItem.getItemID());
-			mc.getClientStream().writeBuffer1.putInt(newAuctionItem.getAmount());
-			mc.getClientStream().writeBuffer1.putInt(newAuctionItem.getPrice());
-			mc.getClientStream().finishPacket();
+			mc.packetHandler.getClientStream().newPacket(199);
+			mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+			mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(newAuctionItem.getItemID());
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(newAuctionItem.getAmount());
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(newAuctionItem.getPrice());
+			mc.packetHandler.getClientStream().finishPacket();
 
 			myAuctions.setText(textField_amount, "");
 			myAuctions.setText(textField_price, "");
@@ -940,21 +940,21 @@ public final class AuctionHouse {
 
 	private void sendModCancelAuction(int auctionID) {
 		selectedAuction = -1;
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(10);
-		mc.getClientStream().writeBuffer1.putByte(5);
-		mc.getClientStream().writeBuffer1.putInt(auctionID);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(5);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(auctionID);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendAuctionBuy(AuctionItem ahItem) {
 		int t = Integer.parseInt(auctionMenu.getControlText(textField_buyAmount));
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(10);
-		mc.getClientStream().writeBuffer1.putByte(0);
-		mc.getClientStream().writeBuffer1.putInt(ahItem.getAuctionID());
-		mc.getClientStream().writeBuffer1.putInt(t);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(ahItem.getAuctionID());
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(t);
+		mc.packetHandler.getClientStream().finishPacket();
 		if(t >= ahItem.getAmount() || ahItem.getAmount() <= 1 || ahItem.getSeller() == mc.getLocalPlayer().displayName) {
 			selectedAuction = -1;
 		}

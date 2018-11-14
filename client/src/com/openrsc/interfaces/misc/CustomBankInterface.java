@@ -710,18 +710,18 @@ public final class CustomBankInterface extends BankInterface {
 	}
 
 	private void sendNoteMode() {
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(1);
-		mc.getClientStream().writeBuffer1.putByte(swapNoteMode ? 1 : 0);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(swapNoteMode ? 1 : 0);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendInventoryOrganize(int draggingInventoryID2, int inventorySlot) {
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(organizeMode == 1 ? 4 : 5);
-		mc.getClientStream().writeBuffer1.putInt(draggingInventoryID2);
-		mc.getClientStream().writeBuffer1.putInt(inventorySlot);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(organizeMode == 1 ? 4 : 5);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(draggingInventoryID2);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(inventorySlot);
+		mc.packetHandler.getClientStream().finishPacket();
 		mc.setMouseClick(0);
 	}
 
@@ -729,23 +729,23 @@ public final class CustomBankInterface extends BankInterface {
 		if(!bank.getControlText(bankSearch).isEmpty()) {
 			return;
 		}
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte((organizeMode == 1 ? 2 : 3));
-		mc.getClientStream().writeBuffer1.putInt(draggingBankSlot2);
-		mc.getClientStream().writeBuffer1.putInt(currentSlot);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte((organizeMode == 1 ? 2 : 3));
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(draggingBankSlot2);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(currentSlot);
+		mc.packetHandler.getClientStream().finishPacket();
 		mc.setMouseClick(0);
 	}
 
   public void sendDeposit(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
-			mc.getClientStream().newPacket(23);
-			mc.getClientStream().writeBuffer1.putShort(mc.getInventoryItems()[selectedInventorySlot]);
+			mc.packetHandler.getClientStream().newPacket(23);
+			mc.packetHandler.getClientStream().writeBuffer1.putShort(mc.getInventoryItems()[selectedInventorySlot]);
 			if (i > mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot])) {
 				i = mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot]);
 			}
-			mc.getClientStream().writeBuffer1.putInt(i);
-			mc.getClientStream().finishPacket();
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+			mc.packetHandler.getClientStream().finishPacket();
 			rightClickMenu = false;
 			mc.setMouseClick(0);
 			mc.setMouseButtonDown(0);
@@ -768,13 +768,13 @@ public final class CustomBankInterface extends BankInterface {
 
   public void sendWithdraw(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
-			mc.getClientStream().newPacket(22);
-			mc.getClientStream().writeBuffer1.putShort(bankItems.get(selectedBankSlot).itemID);
+			mc.packetHandler.getClientStream().newPacket(22);
+			mc.packetHandler.getClientStream().writeBuffer1.putShort(bankItems.get(selectedBankSlot).itemID);
 			if (i > bankItems.get(selectedBankSlot).amount) {
 				i = bankItems.get(selectedBankSlot).amount;
 			}
-			mc.getClientStream().writeBuffer1.putInt(i);
-			mc.getClientStream().finishPacket();
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+			mc.packetHandler.getClientStream().finishPacket();
 			rightClickMenu = false;
 			selectedBankSlot = -1;
 			mc.setMouseClick(0);
