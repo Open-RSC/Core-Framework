@@ -42,7 +42,8 @@ services:
             '--binlog-format=MIXED', 
             '--slow-query-log', 
             '--general_log=1', 
-            '--expire_logs_days=10'
+            '--expire_logs_days=10',
+            '--sync_binlog=1'
             ]
         environment:
             - MYSQL_DATABASE=mysql
