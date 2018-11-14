@@ -1,6 +1,9 @@
 package orsc;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Properties;
 
 import com.openrsc.interfaces.misc.clan.Clan;
@@ -37,15 +40,52 @@ public class PacketHandler {
 		this.clientStream = clientStream;
 	}
 
-	public final void handlePacket() {
-		int len = this.getClientStream().readIncomingPacket(packetsIncoming);
-		if (len > 0)
-			handlePacket1(packetsIncoming.getUnsignedByte(), len);
-	}
-
-	private final void handlePacket1(int opcode, int length) {
+	public void startThread(int andStart, Runnable proc) {
 		try {
 
+			Thread var3 = new Thread(proc);
+			if (andStart == 1) {
+				var3.setDaemon(true);
+				var3.start();
+			}
+		} catch (RuntimeException var4) {
+			throw GenUtil.makeThrowable(var4, "e.S(" + andStart + ',' + (proc != null ? "{...}" : "null") + ')');
+		}
+	}
+
+	public final Socket openSocket(int port, String host) throws IOException {
+		Socket s = new Socket(InetAddress.getByName(host), port);
+		//s.setSendBufferSize(25000);
+		//s.setReceiveBufferSize(25000);
+		s.setSoTimeout(30000);
+		s.setTcpNoDelay(true);
+		return s;
+	}
+
+	public RSBuffer_Bits getPacketsIncoming() {
+		return packetsIncoming;
+	}
+
+	public final void handlePacket(int opcode, int length) {
+		if (length > 0)
+			handlePacket1(opcode, length);
+	}
+
+	private void handlePacket1(int opcode, int length) {
+		try {
+			System.out.println("Opcode: " + opcode + " Length: " + length);
+
+			// Unhandled Opcodes Received...
+			/*if (opcode == 9 || opcode == 34 || opcode == 16
+					|| opcode == 39 || opcode == 98 || opcode == 32
+					|| opcode == 55 || opcode == 94 || opcode == 7
+					|| opcode == 23 || opcode == 71 || opcode == 119
+					|| opcode == 49 || opcode == 0 || opcode == 28
+					|| opcode == 95 || opcode == 157 || opcode == 21
+					|| opcode == 29 || opcode == 255 || opcode == 246
+					|| opcode == 8 || opcode == 37) return;
+
+			else */
 			if (opcode == 88) createNPC();
 
 			else if (opcode == 134) { // Batch Progression
@@ -138,7 +178,7 @@ public class PacketHandler {
 		}
 	}
 
-	private final void handlePacket2(int opcode, int length) {
+	public final void handlePacket2(int opcode, int length) {
 		try {
 
 			// Show Other Players
@@ -234,10 +274,10 @@ public class PacketHandler {
 			else if (opcode == 210) duelDecision();
 
 			// Show Duel Confirm Dialog
-			else if (opcode == 172) { showDuelConfirmDialog();
+			else if (opcode == 172) showDuelConfirmDialog();
 
 			// Play Sound
-			} else if (opcode == 204) playSound();
+			else if (opcode == 204) playSound();
 
 			// Show Log In Dialog
 			else if (opcode == 182) showLoginDialog();
@@ -308,18 +348,18 @@ public class PacketHandler {
 			// Draw Ground Items
 			else if (opcode == 99) drawGroundItems(length);
 
+			else mc.closeConnection(true);
+
 		} catch (RuntimeException var17) {
 			String var5 = "T2 - " + opcode + " - " + length + " rx:" + mc.getLocalPlayerX() + " ry:" + mc.getLocalPlayerZ()
 							+ " num3l:" + mc.getGameObjectInstanceCount() + " - ";
 
 			for (int var6 = 0; length > var6 && var6 < 50; ++var6) {
-				var5 = var5 + packetsIncoming.dataBuffer[var6] + ",";
+				var5 = var5 + packetsIncoming.getByte() + ",";
 			}
 			var17.printStackTrace();
 			mc.closeConnection(true);
-			return;
 		}
-		this.closeConnection(true);
 	}
 
 	private void createNPC() {
@@ -342,11 +382,11 @@ public class PacketHandler {
 
 		int spriteCount = packetsIncoming.getByte() & 0xff;
 		int[] sprites = new int[spriteCount];
-		for (int i35 = 0; i35 < spriteCount; i35++) {
-			sprites[i35] = packetsIncoming.get32();
+		for (int c = 0; c < spriteCount; c++) {
+			sprites[c] = packetsIncoming.get32();
 		}
-		for (int l37 = spriteCount; l37 < 12; l37++)
-			sprites[l37] = 0;
+		for (int c = spriteCount; c < 12; c++)
+			sprites[c] = 0;
 
 		int hairColour = packetsIncoming.get32();
 		int topColour = packetsIncoming.get32();
@@ -402,9 +442,9 @@ public class PacketHandler {
 			mc.getIronmanInterface().setIronManMode(packetsIncoming.getByte());
 			mc.getIronmanInterface().setIronManRestriction(packetsIncoming.getByte());
 		} else if (iAction == 1) {
-			mc.getIronmanInterface().setIronmanVisibility(true);
+			mc.getIronmanInterface().setVisible(true);
 		} else if (iAction == 2) {
-			mc.getIronmanInterface().setIronmanVisibility(false);
+			mc.getIronmanInterface().setVisible(false);
 		}
 	}
 
@@ -429,7 +469,7 @@ public class PacketHandler {
 				int hoursLeft = packetsIncoming.getByte();
 				mc.getAuctionHouse().addAuction(auctionID, itemID, amount, price, seller, hoursLeft);
 			}
-			mc.getAuctionHouse().setAuctionPanelVisibility(true);
+			mc.getAuctionHouse().setVisible(true);
 		}
 	}
 
@@ -665,14 +705,14 @@ public class PacketHandler {
 		String sender = packetsIncoming.readString();
 		String formerName = packetsIncoming.readString();
 		int icon = packetsIncoming.getUnsignedByte();
-		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
+		String message = packetsIncoming.readString();
 		mc.showMessage(icon == 2, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName,
 						(String) null);
 	}
 
 	private void sendPrivateMessage() {
 		String var13 = packetsIncoming.readString();
-		String var14 = RSBufferUtils.getEncryptedString(this.packetsIncoming);
+		String var14 = packetsIncoming.readString();
 		mc.showMessage(false, var13, var14, MessageType.PRIVATE_SEND, 0, var13, (String) null);
 	}
 
@@ -726,39 +766,77 @@ public class PacketHandler {
 			wantDecanting = this.getClientStream().getUnsignedByte();
 			wantCertsToBank = this.getClientStream().getUnsignedByte();
 		} else {
-			serverName = this.packetsIncoming.readString();
-			playerLevelLimit = this.packetsIncoming.getUnsignedByte();
-			spawnAuctionNpcs = this.packetsIncoming.getUnsignedByte();
-			spawnIronManNpcs = this.packetsIncoming.getUnsignedByte();
-			showFloatingNametags = this.packetsIncoming.getUnsignedByte();
-			wantClans = this.packetsIncoming.getUnsignedByte();
-			wantKillFeed = this.packetsIncoming.getUnsignedByte();
-			fogToggle = this.packetsIncoming.getUnsignedByte();
-			groundItemToggle = this.packetsIncoming.getUnsignedByte();
-			autoMessageSwitchToggle = this.packetsIncoming.getUnsignedByte();
-			batchProgression = this.packetsIncoming.getUnsignedByte();
-			sideMenuToggle = this.packetsIncoming.getUnsignedByte();
-			inventoryCountToggle = this.packetsIncoming.getUnsignedByte();
-			zoomViewToggle = this.packetsIncoming.getUnsignedByte();
-			menuCombatStyleToggle = this.packetsIncoming.getUnsignedByte();
-			fightmodeSelectorToggle = this.packetsIncoming.getUnsignedByte();
-			experienceCounterToggle = this.packetsIncoming.getUnsignedByte();
-			experienceDropsToggle = this.packetsIncoming.getUnsignedByte();
-			itemsOnDeathMenu = this.packetsIncoming.getUnsignedByte();
-			showRoofToggle = this.packetsIncoming.getUnsignedByte();
-			wantGlobalChat = this.packetsIncoming.getUnsignedByte();
-			wantSkillMenus = this.packetsIncoming.getUnsignedByte();
-			wantQuestMenus = this.packetsIncoming.getUnsignedByte();
-			wantExperienceElixirs = this.packetsIncoming.getUnsignedByte();
-			wantKeyboardShortcuts = this.packetsIncoming.getUnsignedByte();
-			wantCustomBanks = this.packetsIncoming.getUnsignedByte();
-			wantBankPins = this.packetsIncoming.getUnsignedByte();
-			customFiremaking = this.packetsIncoming.getUnsignedByte();
-			wantDropX = this.packetsIncoming.getUnsignedByte();
-			wantExpInfo = this.packetsIncoming.getUnsignedByte();
-			wantWoodcuttingGuild = this.packetsIncoming.getUnsignedByte();
-			wantDecanting = this.packetsIncoming.getUnsignedByte();
-			wantCertsToBank = this.packetsIncoming.getUnsignedByte();
+			serverName = packetsIncoming.readString();
+			playerLevelLimit = packetsIncoming.getUnsignedByte();
+			spawnAuctionNpcs = packetsIncoming.getUnsignedByte();
+			spawnIronManNpcs = packetsIncoming.getUnsignedByte();
+			showFloatingNametags = packetsIncoming.getUnsignedByte();
+			wantClans = packetsIncoming.getUnsignedByte();
+			wantKillFeed = packetsIncoming.getUnsignedByte();
+			fogToggle = packetsIncoming.getUnsignedByte();
+			groundItemToggle = packetsIncoming.getUnsignedByte();
+			autoMessageSwitchToggle = packetsIncoming.getUnsignedByte();
+			batchProgression = packetsIncoming.getUnsignedByte();
+			sideMenuToggle = packetsIncoming.getUnsignedByte();
+			inventoryCountToggle = packetsIncoming.getUnsignedByte();
+			zoomViewToggle = packetsIncoming.getUnsignedByte();
+			menuCombatStyleToggle = packetsIncoming.getUnsignedByte();
+			fightmodeSelectorToggle = packetsIncoming.getUnsignedByte();
+			experienceCounterToggle = packetsIncoming.getUnsignedByte();
+			experienceDropsToggle = packetsIncoming.getUnsignedByte();
+			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
+			showRoofToggle = packetsIncoming.getUnsignedByte();
+			wantGlobalChat = packetsIncoming.getUnsignedByte();
+			wantSkillMenus = packetsIncoming.getUnsignedByte();
+			wantQuestMenus = packetsIncoming.getUnsignedByte();
+			wantExperienceElixirs = packetsIncoming.getUnsignedByte();
+			wantKeyboardShortcuts = packetsIncoming.getUnsignedByte();
+			wantCustomBanks = packetsIncoming.getUnsignedByte();
+			wantBankPins = packetsIncoming.getUnsignedByte();
+			customFiremaking = packetsIncoming.getUnsignedByte();
+			wantDropX = packetsIncoming.getUnsignedByte();
+			wantExpInfo = packetsIncoming.getUnsignedByte();
+			wantWoodcuttingGuild = packetsIncoming.getUnsignedByte();
+			wantDecanting = packetsIncoming.getUnsignedByte();
+			wantCertsToBank = packetsIncoming.getUnsignedByte();
+		}
+
+		if (mc.DEBUG) {
+			System.out.println(
+				"SERVER_NAME " + serverName +
+				"\nS_PLAYER_LEVEL_LIMIT " + Integer.toString(playerLevelLimit) +
+				"\nS_SPAWN_AUCTION_NPCS " + spawnAuctionNpcs +
+				"\nS_SPAWN_IRON_MAN_NPCS " + spawnIronManNpcs +
+				"\nS_SHOW_FLOATING_NAMETAGS " + showFloatingNametags +
+				"\nS_WANT_CLANS " + wantClans +
+				"\nS_WANT_KILL_FEED " + wantKillFeed +
+				"\nS_FOG_TOGGLE " + fogToggle +
+				"\nS_GROUND_ITEM_TOGGLE " + groundItemToggle +
+				"\nS_AUTO_MESSAGE_SWITCH_TOGGLE " + autoMessageSwitchToggle +
+				"\nS_BATCH_PROGRESSION " + batchProgression +
+				"\nS_SIDE_MENU_TOGGLE " + sideMenuToggle +
+				"\nS_INVENTORY_COUNT_TOGGLE " + inventoryCountToggle +
+				"\nS_ZOOM_VIEW_TOGGLE " + zoomViewToggle +
+				"\nS_MENU_COMBAT_STYLE_TOGGLE " + menuCombatStyleToggle +
+				"\nS_FIGHTMODE_SELECTOR_TOGGLE " + fightmodeSelectorToggle +
+				"\nS_EXPERIENCE_COUNTER_TOGGLE " + experienceCounterToggle +
+				"\nS_EXPERIENCE_DROPS_TOGGLE " + experienceDropsToggle +
+				"\nS_ITEMS_ON_DEATH_MENU " + itemsOnDeathMenu +
+				"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle +
+				"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat +
+				"\nS_WANT_SKILL_MENUS " + wantSkillMenus +
+				"\nS_WANT_QUEST_MENUS " + wantQuestMenus +
+				"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs +
+				"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts +
+				"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks +
+				"\nS_WANT_BANK_PINS " + wantBankPins +
+				"\nS_CUSTOM_FIREMAKING " + customFiremaking +
+				"\nS_WANT_DROP_X " + wantDropX +
+				"\nS_WANT_EXP_INFO " + wantExpInfo +
+				"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild +
+				"\nS_WANT_DECANTING " + wantDecanting +
+				"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank
+			);
 		}
 
 		props.setProperty("SERVER_NAME", serverName);
@@ -911,7 +989,7 @@ public class PacketHandler {
 			mc.createPlayer(currentZ, var9, currentX, 1, ORSCharacterDirection.lookup(direction));
 		}
 
-		this.packetsIncoming.endBitAccess();
+		packetsIncoming.endBitAccess();
 	}
 
 	private void showGameObjects(int length) {
@@ -1058,7 +1136,7 @@ public class PacketHandler {
 				int id = packetsIncoming.getShort();
 				int x = mc.getLocalPlayerX() + packetsIncoming.getByte();
 				int y = mc.getLocalPlayerZ() + packetsIncoming.getByte();
-				byte direction = packetsIncoming.getByte();
+				int direction = packetsIncoming.getByte();
 				int localIndex = 0;
 
 				for (int var9 = 0; var9 < mc.getWallObjectInstanceCount(); ++var9) {
@@ -1191,7 +1269,7 @@ public class PacketHandler {
 					var22.messageTimeout = 150;
 					var22.message = message;
 					if (mc.getLocalPlayer().serverIndex == var9) {
-						this.showMessage(false, (String) null,
+						mc.showMessage(false, (String) null,
 										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(var22.npcId).getName() + ": "
 														+ var22.message,
 										MessageType.QUEST, 0, (String) null, "@yel@");
@@ -1256,8 +1334,8 @@ public class PacketHandler {
 
 		// Ground Item Counts
 		for (int i = 0; packets > i; ++i) {
-			int x = mc.getLocalPlayerX() + packetsIncoming.get16_V2() >> 3;
-			int z = mc.getLocalPlayerZ() + packetsIncoming.get16_V2() >> 3;
+			int x = mc.getLocalPlayerX() + packetsIncoming.getShort() >> 3;
+			int z = mc.getLocalPlayerZ() + packetsIncoming.getShort() >> 3;
 
 			int count = 0;
 			for (int j = 0; j < mc.getGroundItemCount(); ++j) {
@@ -1360,7 +1438,7 @@ public class PacketHandler {
 	}
 
 	private void tradeSelfDecision() {
-		byte accepted = packetsIncoming.getByte();
+		int accepted = packetsIncoming.getByte();
 		if (accepted != 1) {
 			mc.setTradeAccepted(false);
 		} else {
@@ -1528,27 +1606,27 @@ public class PacketHandler {
 
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
 		receivedXp = receivedXp < 0 ? 0 : receivedXp;
-		mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained() + receivedXp);
+		mc.setPlayerStatXpGained(skill, (long)mc.getPlayerStatXpGained(skill) + receivedXp);
 		if (mc.getXpGainedStartTime(skill) == 0) {
 			mc.setXpGainedStartTime(skill, System.currentTimeMillis());
 		}
-		mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + receivedXp);
+		mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long)receivedXp);
 		if (mc.totalXpGainedStartTime == 0) {
 			mc.totalXpGainedStartTime = System.currentTimeMillis();
 		}
 
 		if (Config.S_EXPERIENCE_DROPS_TOGGLE && Config.C_EXPERIENCE_DROPS) {
 			if (receivedXp > 0) {
-				mc.getXpNotifications().add(new mc.XPNotification(skill, receivedXp, false));
+				mc.addXpNotification(skill, receivedXp, false);
 			}
 			if (oldLvl < mc.getPlayerStatBase(skill)) {
-				mc.getXpNotifications().add(new mc.XPNotification(skill, 1, true));
+				mc.addXpNotification(skill, 1, true);
 			}
 		}
 	}
 
 	private void duelDecision() {
-		byte accepted = packetsIncoming.getByte();
+		int accepted = packetsIncoming.getByte();
 		if (accepted != 1) {
 			mc.setDuelOfferAccepted(false);
 		} else {
@@ -1562,7 +1640,7 @@ public class PacketHandler {
 		mc.setShowDialogDuel(false);
 		mc.setDuelOpponentName(packetsIncoming.readString());
 		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
-		for (int var4 = 0; var4 < mc.setDuelOpponentItemsCount(); ++var4) {
+		for (int var4 = 0; var4 < mc.getDuelOpponentItemsCount(); ++var4) {
 			mc.setDuelOpponentItems(var4, packetsIncoming.getShort());
 			mc.setDuelOpponentItemCounts(var4, packetsIncoming.get32());
 		}
@@ -1636,7 +1714,7 @@ public class PacketHandler {
 	}
 
 	private void duelOpponentDecision() {
-		byte accepted = packetsIncoming.getByte();
+		int accepted = packetsIncoming.getByte();
 		if (accepted != 1) {
 			mc.setDuelOffsetOpponentAccepted(false);
 		} else {
@@ -1675,7 +1753,7 @@ public class PacketHandler {
 	private void showShopDialog() {
 		mc.setShowDialogShop(true);
 		int shopItemCount = packetsIncoming.getUnsignedByte();
-		byte shopType = packetsIncoming.getByte();
+		int shopType = packetsIncoming.getByte();
 		mc.setShopSellPriceMod(packetsIncoming.getUnsignedByte());
 		mc.setShopBuyPriceMod(packetsIncoming.getUnsignedByte());
 		mc.setShopPriceMultiplier(packetsIncoming.getUnsignedByte());
@@ -1755,7 +1833,7 @@ public class PacketHandler {
 		for (int pp = 0; playerCount > pp; ++pp) {
 			int playerServerIndex = packetsIncoming.getShort();
 			ORSCharacter player = mc.getPlayerFromServer(playerServerIndex);
-			byte updateType = packetsIncoming.getByte();
+			int updateType = packetsIncoming.getByte();
 			if (updateType == 0) {
 				int itemType = packetsIncoming.getShort();
 				if (null != player) {
@@ -1811,8 +1889,8 @@ public class PacketHandler {
 					player.incomingProjectileSprite = sprite;
 				}
 			} else if (updateType == 4) {
-				int sprite = this.packetsIncoming.getShort();
-				int shooterServerIndex = this.packetsIncoming.getShort();
+				int sprite = packetsIncoming.getShort();
+				int shooterServerIndex = packetsIncoming.getShort();
 				if (player != null) {
 					player.projectileRange = mc.getProjectileMaxRange();
 					player.attackingNpcServerIndex = -1;
@@ -1842,7 +1920,7 @@ public class PacketHandler {
 					int itemCount = packetsIncoming.getUnsignedByte();
 
 					for (int i = 0; i < itemCount; ++i) {
-						player.layerAnimation[i] = this.packetsIncoming.getShort();
+						player.layerAnimation[i] = packetsIncoming.getShort();
 					}
 
 					for (int i = itemCount; i < 12; ++i) {

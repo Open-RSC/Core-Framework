@@ -126,9 +126,9 @@ public class ProgressBarInterface {
 	}
 
 	protected void sendCancelBatch() {
-		getComponent().getClient().getClientStream().newPacket(199);
-		getComponent().getClient().getClientStream().writeBuffer1.putByte(6);
-		getComponent().getClient().getClientStream().finishPacket();
+		getComponent().getClient().packetHandler.getClientStream().newPacket(199);
+		getComponent().getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
+		getComponent().getClient().packetHandler.getClientStream().finishPacket();
 		
 	}
 

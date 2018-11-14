@@ -480,7 +480,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public final void init() {
 		try {
 			mudclient = new mudclient(this);
-			packetHandler = new PacketHandler(mudclient);
+			mudclient.packetHandler = new PacketHandler(mudclient);
 			loadLogo();
 			this.addMouseListener(this);
 			this.addMouseMotionListener(this);
@@ -537,7 +537,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 	}
 
-	private final void updateControlShiftState(InputEvent var1) {
+	private void updateControlShiftState(InputEvent var1) {
 		try {
 
 			int mod = var1.getModifiers();

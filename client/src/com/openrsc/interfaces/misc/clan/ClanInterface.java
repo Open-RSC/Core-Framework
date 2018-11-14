@@ -743,64 +743,64 @@ public final class ClanInterface {
 	}
 
 	protected void sendCreateClan(String name, String tag) {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(0);
-		getClient().getClientStream().writeBuffer1.putString(name);
-		getClient().getClientStream().writeBuffer1.putString(tag);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(0);
+		getClient().packetHandler.getClientStream().writeBuffer1.putString(name);
+		getClient().packetHandler.getClientStream().writeBuffer1.putString(tag);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAfterCreation();
 	}
 	public void sendClanLeave() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(1);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(1);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
 	}
 	protected void sendClanAccept() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(3);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(3);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
 	}
 
 	protected void sendClanDecline() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(4);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(4);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
 	}
 
 	protected void sendClanRank(String playerName, int rank) {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(6);
-		getClient().getClientStream().writeBuffer1.putString(playerName);
-		getClient().getClientStream().writeBuffer1.putByte(rank);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
+		getClient().packetHandler.getClientStream().writeBuffer1.putString(playerName);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(rank);
+		getClient().packetHandler.getClientStream().finishPacket();
 	}
 	
 	protected void sendClanSettings(int settingMode, int state) {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(7);
-		getClient().getClientStream().writeBuffer1.putByte(settingMode);
-		getClient().getClientStream().writeBuffer1.putByte(state);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(7);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(settingMode);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(state);
+		getClient().packetHandler.getClientStream().finishPacket();
 	}
 	
 	public void sendClanSearch() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(8);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(8);
+		getClient().packetHandler.getClientStream().finishPacket();
 	}
 
 	public void initializeInvite(String byPlayer, String byClan) {
