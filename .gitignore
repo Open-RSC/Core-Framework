@@ -1,4 +1,3 @@
-
 \.DS_Store
 .idea/
 
@@ -32,6 +31,8 @@ build/
 Website/
 
 etc/nginx/logs/*.log
+etc/logs/mariadb/*
+!etc/logs/mariadb/.gitsave
 gameserver.log
 
 Client/Cache/client\.properties
