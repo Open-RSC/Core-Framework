@@ -875,6 +875,19 @@ public final class Player extends Mob {
 		return questPoints;
 	}
 
+	public int calculateQuestPoints() {
+		questPoints = 0;
+		for (Map.Entry<Integer, int[]> quest : Constants.Quests.questData.entrySet()) {
+			Integer q = quest.getKey();
+			int[] data = quest.getValue();
+			if (this.getQuestStage(q) < 0) {
+				questPoints += data[0];
+			}
+		}
+		this.setQuestPoints(questPoints);
+		return questPoints;
+	}
+
 	public int getQuestStage(int id) {
 		if (getQuestStages().containsKey(id)) {
 			return getQuestStages().get(id);

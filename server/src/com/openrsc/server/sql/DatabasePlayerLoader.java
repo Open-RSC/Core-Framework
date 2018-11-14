@@ -163,7 +163,7 @@ public class DatabasePlayerLoader {
 			statement.setInt(8, s.getIronMan());
 			statement.setInt(9, s.getIronManRestriction());
 			statement.setInt(10, s.getHCIronmanDeath());
-			statement.setInt(11, s.getQuestPoints());
+			statement.setInt(11, s.calculateQuestPoints());
 			statement.setInt(12, s.getSettings().getAppearance().getHairColour());
 			statement.setInt(13, s.getSettings().getAppearance().getTopColour());
 			statement.setInt(14, s.getSettings().getAppearance().getTrouserColour());
@@ -489,6 +489,8 @@ public class DatabasePlayerLoader {
 			while (result.next()) {
 				save.setQuestStage(result.getInt("id"), result.getInt("stage"));
 			}
+
+			save.setQuestPoints(save.calculateQuestPoints());
 
 			/*result = resultSetFromInteger(Statements.playerAchievements, save.getDatabaseID());
 			while (result.next()) {
