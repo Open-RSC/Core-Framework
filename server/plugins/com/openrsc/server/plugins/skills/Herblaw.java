@@ -137,6 +137,15 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.getInventory().remove(1284, 1);
 			player.getInventory().replace(1180, 1176);
 			playerTalk(player, null, "Excellent this looks just right");
+		} else if(usedWith.getID() == 457 && item.getID() == 587 || usedWith.getID() == 587 && item.getID() == 457) {
+			if (player.getSkills().getLevel(15) < 25) {
+				player.message("You need a level of 25 herblaw to mix this potion");
+				return;
+			}
+			player.incExp(15, 320, true);
+			player.message("You mix the slime into your potion");
+			player.getInventory().remove(457, 1);
+			player.getInventory().replace(587, 588);
 		} else if(usedWith.getID() == 1251 && item.getID() == 818 || usedWith.getID() == 818 && item.getID() == 1251) {
 			if (player.getSkills().getLevel(15) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
@@ -192,6 +201,8 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		} else if(usedWith.getID() == 1179 && item.getID() == 1178 || usedWith.getID() == 1178 && item.getID() == 1179) {
 			return true;
 		} else if(usedWith.getID() == 1284 && item.getID() == 1180 || usedWith.getID() == 1180 && item.getID() == 1284) {
+			return true;
+		} else if(usedWith.getID() == 457 && item.getID() == 587 || usedWith.getID() == 587 && item.getID() == 457) {
 			return true;
 		} else if(usedWith.getID() == 1251 && item.getID() == 818 || usedWith.getID() == 818 && item.getID() == 1251) {
 			return true;
