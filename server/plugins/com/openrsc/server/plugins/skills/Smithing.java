@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemSmithingDef;
@@ -86,10 +87,10 @@ InvUseOnObjectExecutiveListener {
 				}
 			}
 			
-			/*if(item.getID() == 172 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) <= 2) {
+			if(item.getID() == 172 && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
 				player.message("You're not quite sure what to make from the gold..");
 				return;
-			}*/
+			}
 			player.message("What would you like to make?");
 			if(item.getID() == 172) {
 				int goldOption = showMenu(player, "Golden bowl.", "Cancel");
