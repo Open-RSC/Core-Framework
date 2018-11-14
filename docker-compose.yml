@@ -35,7 +35,14 @@ services:
         env_file:
             - ".env"
         command: [
-            '--wait_timeout=360000', '--log-bin=bin.log', '--log-bin-index=bin-log.index', '--max_binlog_size=100M', '--binlog-format=MIXED', '--slow-query-log', '--general_log=1',
+            '--wait_timeout=360000', 
+            '--log-bin=bin.log', 
+            '--log-bin-index=bin-log.index', 
+            '--max_binlog_size=100M', 
+            '--binlog-format=MIXED', 
+            '--slow-query-log', 
+            '--general_log=1', 
+            '--expire_logs_days=10'
             ]
         environment:
             - MYSQL_DATABASE=mysql
