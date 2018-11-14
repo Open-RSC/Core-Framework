@@ -71,6 +71,36 @@ public class RSBufferUtils {
 		}
 	}
 
+	public static final String getEncryptedString(RSBuffer buffer) {
+		try {
+
+			return getEncryptedString(buffer, 32767);
+		} catch (RuntimeException var3) {
+			throw GenUtil.makeThrowable(var3, "ia.C(" + (buffer != null ? "{...}" : "null") + ',' + false + ')');
+		}
+	}
+	public static final String getEncryptedString(RSBuffer src, int limit) {
+		try {
+
+			try {
+				int count = src.getSmart08_16();
+				if (count > limit) {
+					count = limit;
+				}
+				byte[] dest = new byte[count];
+				src.packetEnd += RSBufferUtils.stringEncryption.decryptString(src.dataBuffer, dest, 0,
+								src.packetEnd, -1, count);
+				String str = getStringFromBytes(dest, 0, count);
+				return str;
+			} catch (Exception var6) {
+				return "Cabbage";
+			}
+		} catch (RuntimeException var7) {
+			throw GenUtil.makeThrowable(var7,
+							"client.CD(" + 0 + ',' + (src != null ? "{...}" : "null") + ',' + limit + ')');
+		}
+	}
+
 	public static final String getStringFromBytes(byte[] src, int offset, int count) {
 		try {
 			

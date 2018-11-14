@@ -692,7 +692,7 @@ public class ActionSender {
 		s.writeString(sender.getUsername());// former name?
 		s.writeByte(sender.getIcon());
 		// s.writeLong(5);// the duck is this
-		s.writeString(message);
+		s.writeRSCString(message);
 		player.write(s.toPacket());
 	}
 
@@ -700,7 +700,7 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE_SENT.opcode);
 		s.writeString(DataConversions.hashToUsername(usernameHash));
-		s.writeString(message);
+		s.writeRSCString(message);
 		player.write(s.toPacket());
 	}
 
