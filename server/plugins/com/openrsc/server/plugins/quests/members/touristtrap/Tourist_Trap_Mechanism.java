@@ -869,28 +869,48 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				removeItem(p, 1039, 1);
 				return;
 			}
-			addItem(p, 1039, 1); // HIJACK
 			p.message("Are you sure you want to drop this?");
 			int menu = showMenu(p,
 					"Yes, I'm sure.",
 					"Erm, no I've had second thoughts.");
 			if(menu == 0) {
+				if(outsideCamp(p)) {
+					message(p, "@gre@Ana: You can't drop me here!",
+							"@gre@Ana: I'll die in the desert on my own!",
+							"@gre@Ana: Take me back to the Shantay pass.");
+					return;
+				}
+				int diffX = 0;
+				//inside mining prison cell
+				if((p.getX() >= 72 && p.getX() <= 77) && (p.getY() >= 3613 && p.getY() <= 3631)) {
+					//mercenary does not get placed in jail if player is there
+					diffX = -8;
+				}
 				message(p, "You drop the barrel to the floor and Ana gets out.");
 				removeItem(p, 1039, 1);
 				Npc Ana = spawnNpc(ANA, p.getX(), p.getY(), 20000);
 				sleep(650);
 				npcTalk(p,Ana, "How dare you put me in that barrel you barbarian!");
 				message(p, "Ana's outburst attracts the guards, they come running over.");
-				Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 30000);
+				Npc guard = getNearestNpc(p, MERCENARY, 15);
+				if(guard == null || guard.inCombat()) {
+					guard = spawnNpc(MERCENARY, p.getX() + diffX, p.getY(), 30000);
+				}
 				sleep(650);
 				npcTalk(p,guard, "Hey! What's going on here then?");
-				guard.startCombat(p);
+				if(diffX == 0)
+					guard.startCombat(p);
 				message(p, "The guards drag Ana away and then throw you into a cell.");
 				p.teleport(75, 3626);
 			} else if(menu == 1) {
 				message(p, "You think twice about dropping the barrel to the floor.");
 			}
 		}
+	}
+	
+	public boolean outsideCamp(Player p) {
+		return (p.getY() < 795) || (p.getX() >= 92 && (p.getY() >= 795 && p.getY() <= 814))
+				|| (p.getX() <= 78 && (p.getY() >= 795 && p.getY() <= 814));
 	}
 
 	@Override
