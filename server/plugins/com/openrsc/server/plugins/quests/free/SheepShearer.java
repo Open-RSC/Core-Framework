@@ -169,7 +169,7 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.getInventory().add(new Item(10, 60));
 		player.message("Well done you have completed the sheep shearer quest");
-		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 100 + 500);
+		player.incQuestExp(CRAFTING, player.getSkills().getMaxStat(CRAFTING) * 100 + 500);
 		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
 	}

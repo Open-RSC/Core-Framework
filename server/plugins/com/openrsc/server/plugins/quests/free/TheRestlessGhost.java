@@ -361,7 +361,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the restless ghost quest");
-		player.incQuestExp(5, player.getSkills().getMaxStat(5) * 250 + 2000);
+		player.incQuestExp(PRAYER, player.getSkills().getMaxStat(PRAYER) * 250 + 2000);
 		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
 

@@ -34,7 +34,7 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the monks friend quest");
-		p.incQuestExp(8, (p.getSkills().getMaxStat(8) + 1) * 500);
+		p.incQuestExp(WOODCUT, (p.getSkills().getMaxStat(WOODCUT) + 1) * 500);
 		p.incQuestPoints(1);
 		p.message("@gre@You haved gained 1 quest point!");
 

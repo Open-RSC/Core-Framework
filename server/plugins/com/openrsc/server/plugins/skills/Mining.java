@@ -35,7 +35,7 @@ ObjectActionExecutiveListener {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (hasItem(owner, getAxe(owner))) {
-					if(owner.getSkills().getMaxStat(14) >= 50) {
+					if(getCurrentLevel(owner, MINING) >= 50) {
 						owner.message("you manage to dig a way through the rockslide");
 						if (owner.getX() <= 425) {
 							owner.teleport(428, 438);
@@ -69,7 +69,7 @@ ObjectActionExecutiveListener {
 						owner.message("You need a pickaxe to mine the rock");
 						return;
 					}
-					if(owner.getSkills().getMaxStat(14) < 40) {
+					if(getCurrentLevel(owner, MINING) < 40) {
 						owner.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
