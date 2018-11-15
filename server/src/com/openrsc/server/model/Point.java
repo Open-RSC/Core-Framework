@@ -199,6 +199,10 @@ public class Point {
 		return inBounds(384, 431, 815, 860);
 	}
 
+	public boolean isInSeersPartyHall() {
+		return inBounds(490, 464, 500, 471) || inBounds(490, 1408, 500, 1415);
+	}
+
 	public int wildernessLevel() {
 		int wild = 2203 - (y + (1776 - (944 * Formulae.getHeight(this))));
 		if (x + 2304 >= 2640) {

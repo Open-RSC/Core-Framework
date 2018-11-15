@@ -705,6 +705,10 @@ public class SpellHandler implements PacketHandler {
 						player.message("Telegrab has been disabled due to an running global event, please try again later");
 						return;
 					}
+					if (affectedItem.getLocation().isInSeersPartyHall()) {
+						player.message("Telekinetic grab cannot be used in here");
+						return;
+					}
 					if (affectedItem.getID() == 575 || affectedItem.getID() == 2115
 							|| affectedItem.getID() == 2116 || affectedItem.getID() == 2117
 							|| affectedItem.getID() == 2118 || affectedItem.getID() == 2119) {
