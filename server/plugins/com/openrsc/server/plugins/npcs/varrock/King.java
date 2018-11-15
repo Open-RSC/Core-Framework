@@ -7,6 +7,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
 
 public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -27,8 +28,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					"Go get the authenticity of the shield verified",
 					"By the curator at the museum",
 					"And I will grant you your reward");
-			return;// Can u test it from beginning to end? sure thing btw, need
-					// todo the door.. :/ which one
+			return;
 		} else if (hasItem(p, 61)
 				&& p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
 			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
@@ -43,6 +43,8 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					"The king gives you 600 coins");
 			removeItem(p, 61, 1);
 			p.sendQuestComplete(Constants.Quests.SHIELD_OF_ARRAV);
+			if (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
+				p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, -2);
 			return;
 		}
 		playerTalk(p, n, "Greetings your majesty");

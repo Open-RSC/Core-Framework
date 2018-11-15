@@ -12,6 +12,9 @@ import com.openrsc.server.plugins.quests.free.ShieldOfArrav;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_GANG;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_COMPLETE;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM_COMPLETE;
 
 public class ManPhoenix implements TalkToNpcExecutiveListener,
 TalkToNpcListener {
@@ -19,14 +22,16 @@ TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Npc man = getNearestNpc(p, 24, 20);
-		if (p.getCache().hasKey("b_arm")) {
+		if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {
 			if (man != null) {
 				npcTalk(p, man, "hey get away from there",
 						"Black arm dog");
 				man.setChasing(p);
 			}
 		}		
-		else if(p.getCache().hasKey("arrav_gang") && p.getQuestStage(Quests.HEROS_QUEST) >= 1 && p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
+		else if(p.getQuestStage(Quests.HEROS_QUEST) >= 1 && (
+				(p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
+						|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE)) {
 			if(hasItem(p, 585)) {
 				playerTalk(p,n, "I have retrieved a candlestick");
 				npcTalk(p,n, "Hmm not a bad job",
@@ -41,7 +46,7 @@ TalkToNpcListener {
 				return;
 			}
 			npcTalk(p, n, "How would i go about getting a master thieves armband?",
-			"Ooh tricky stuff, took me years to get that rank",
+					"Ooh tricky stuff, took me years to get that rank",
 					"Well what some of aspiring thieves in our gang are working on right now",
 					"Is to steal some very valuable rare candlesticks",
 					"From scarface Pete - the pirate leader on Karamja",
@@ -51,9 +56,10 @@ TalkToNpcListener {
 					"Use the secret word gherkin to show you're one of us");
 			p.getCache().store("pheonix_mission", true);
 			p.getCache().store("pheonix_alf", true);
-			return;
 		}
-		if (!hasItem(p, 48) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 && !p.getCache().hasKey("b_arm")) {
+		else if (!hasItem(p, 48) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
+				&& p.getCache().hasKey("arrav_gang")
+				&& p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
 			npcTalk(p, n, "Greetings fellow gang member");
 			playerTalk(p, n, "I have lost the key you gave me");
 			npcTalk(p, n, "You need to be more careful",
@@ -62,12 +68,11 @@ TalkToNpcListener {
 			message(p, "Straven hands you a key");
 			addItem(p, 48, 1);
 			npcTalk(p, n, "Have this spare");
-			return;
 		}
-		if (p.getInventory().hasItemId(49)
-				&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && !p.getCache().hasKey("b_arm")) { // isnt this
-			// going to
-			// be 4?ya
+		else if (p.getInventory().hasItemId(49)
+				&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4
+				&& p.getCache().hasKey("arrav_gang")
+				&& p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
 			npcTalk(p, n, "Hows your little mission going?");
 			playerTalk(p, n, "I have the intelligence report");
 			npcTalk(p, n, "Lets see it then");
@@ -83,30 +88,28 @@ TalkToNpcListener {
 			npcTalk(p, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
 			p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
-			return;
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && !p.getCache().hasKey("b_arm")) {
+		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4
+				&& p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
 			npcTalk(p, n, "Hows your little mission going?");
 			playerTalk(p, n, "I haven't managed to find the report yet");
 			npcTalk(p,
 					n,
 					"You need to kill jonny the beard, who should be in the blue moon inn.",
 					"...I would guess. Not being a member of the phoenix gang and all.");
-					return;
 		}
-		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
+		else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
 			defaultConverstation(p, n);
-			return;
 		}
-		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
-				|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == -1 || p.getQuestStage(Quests.HEROS_QUEST) == -1) {
-			memberOfPhoenixConverstation(p, n);
-			return;
+		else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
+				|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0 || p.getQuestStage(Quests.HEROS_QUEST) == -1) {
+			memberOfPhoenixConversation(p, n);
 		}	
-	} // what is incomplete? the task the guy gives. = stage 4,= missing
+	}
 
-	private void memberOfPhoenixConverstation(final Player p, final Npc n) {
+	private void memberOfPhoenixConversation(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
-		if (!p.getCache().hasKey("b_arm")) {
+		if ((p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
+				|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE) {
 		npcTalk(p, n, "Greetings fellow gang member");
 		defaultMenu.addOption(new Option(
 				"I've heard you've got some cool treasures in this place") {
@@ -207,8 +210,7 @@ TalkToNpcListener {
 											"By the south entrance to this city",
 											"The name of the contact is Johnny the beard",
 											"Kill him and bring back his intelligence report");
-									p.getCache().set("arrav_gang",
-											ShieldOfArrav.PHOENIX_GANG);
+									p.getCache().set("arrav_gang", PHOENIX_GANG);
 									p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 4);
 									playerTalk(p, n, "Ok, I'll get on it");
 								}
