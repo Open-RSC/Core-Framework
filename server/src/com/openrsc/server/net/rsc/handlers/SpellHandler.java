@@ -712,7 +712,7 @@ public class SpellHandler implements PacketHandler {
 					if (affectedItem.getID() == 575 || affectedItem.getID() == 2115
 							|| affectedItem.getID() == 2116 || affectedItem.getID() == 2117
 							|| affectedItem.getID() == 2118 || affectedItem.getID() == 2119) {
-						player.message("You may not telegrab this item");
+						player.message("You can't cast this spell within the vicinity of the party hall");
 						return;
 					}
 					if (affectedItem.getID() == 1093) {
