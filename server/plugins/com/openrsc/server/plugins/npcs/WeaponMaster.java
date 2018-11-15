@@ -11,15 +11,14 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_GANG;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
 
 
 public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListener,
 	PickupExecutiveListener, PickupListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener {
-	
-	public static final int PHOENIX_GANG = 1;
-	public static final int WEAPONMASTER = 37; 
-	// ID: 37 weaponsmaster
-	// coords: 105,1477
+
+	public static final int WEAPONMASTER = 37;
 	
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -50,20 +49,19 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 	public void onPickup(Player p, GroundItem i) {
 		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476) {
 			if (!p.getCache().hasKey("arrav_gang") 
-					|| p.getCache().hasKey("b_arm")){				
-					Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
-					if (weaponMaster != null) {
-						npcTalk(p, weaponMaster, "Hey Thief!");
-						weaponMaster.setChasing(p);
-					}
-				}			
-				else if (p.getCache().hasKey("arrav_gang")) {
-					if(!p.getCache().hasKey("b_arm")) {
+					|| p.getCache().getInt("arrav_gang") == BLACK_ARM){
+				Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
+				if (weaponMaster != null) {
+					npcTalk(p, weaponMaster, "Hey Thief!");
+					weaponMaster.setChasing(p);
+				}
+			}
+			else if (p.getCache().hasKey("arrav_gang")) {
+				if(p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
 					Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
 					if (weaponMaster != null) {
 						npcTalk(p, weaponMaster, "Hey, that's Straven's",
-								"He won't like you messing with that");
-					return;
+							"He won't like you messing with that");
 					}
 				}				
 			}
@@ -72,7 +70,7 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (!p.getCache().hasKey("arrav_gang") 
-				|| p.getCache().hasKey("b_arm")){								
+				|| p.getCache().getInt("arrav_gang") == BLACK_ARM){
 			playerTalk(p, n, "Hello");
 			npcTalk(p, n, "Hey I don't know you",
 				"You're not meant to be here");
@@ -86,13 +84,11 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 					"I'm looking for treasure");
 			if (menu == 0) {
 				npcTalk(p, n, "Sure have a look around");
-				return;
 			}
-			if (menu == 1) {
+			else if (menu == 1) {
 				npcTalk(p, n, "We've not got any up here",
 						"Go mug someone somewhere",
 						"If you want some treasure");
-				return;
 			}										
 		}		
 	}	
