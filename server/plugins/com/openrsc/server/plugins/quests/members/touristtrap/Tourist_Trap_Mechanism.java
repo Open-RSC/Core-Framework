@@ -176,7 +176,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					"You succesfully attach the feathers to the dart tip.");
 			p.getInventory().replace(1071, 1014);
 			removeItem(p, 381, 10);
-			p.incExp(FLETCHING, 20, true);
+			//kosher: dependent on fletching level!
+			p.incExp(FLETCHING, getMaxLevel(p, FLETCHING) * 50, true);
 		}
 	}
 
@@ -809,7 +810,10 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			if(hasItem(p, 1071)) {
 				p.message("You have already made the prototype dart tip.");
 				p.message("You don't need to make another one.");
-			} else {
+			} else if(hasItem(p, 1014)) {
+				p.message("You have already made the prototype dart.");
+				p.message("You don't need to make another one.");
+			} else {	
 				makeDartTip(p, obj);
 			}
 		}

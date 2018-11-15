@@ -438,7 +438,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 						"you start to craft the bone.");
 				p.message("You succesfully make a key out of the bone shard.");
 				p.getInventory().replace(974, 835);
-				p.incExp(CRAFTING, 32, true);
+				p.incExp(CRAFTING, 35, true);
 			} else {
 				message(p, "You're not quite sure what to make with this.");
 				p.message("Perhaps it will come to you as you discover more about Rashiliyia?");
