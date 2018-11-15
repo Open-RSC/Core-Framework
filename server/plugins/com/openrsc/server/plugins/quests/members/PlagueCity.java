@@ -39,7 +39,7 @@ ObjectActionExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the plague city quest");
-		p.incQuestExp(14, (300 * p.getSkills().getMaxStat(14)) + 700);
+		p.incQuestExp(MINING, (300 * p.getSkills().getMaxStat(MINING)) + 700);
 		p.incQuestPoints(1);
 		p.message("@gre@You haved gained 1 quest point!");
 

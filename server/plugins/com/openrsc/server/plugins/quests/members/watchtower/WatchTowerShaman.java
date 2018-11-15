@@ -52,7 +52,7 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
 		if(n.getID() == OGRE_SHAMAN && item.getID() == MAGIC_OGRE_POTION) {
 			p.setBusy(true);
-			if(p.getSkills().getMaxStat(6) < 14) {
+			if(getCurrentLevel(p, MAGIC) < 14) {
 				p.message("You need a level of 14 magic first");
 				p.setBusy(false);
 				return;
