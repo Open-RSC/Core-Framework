@@ -227,7 +227,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the vampire slayer quest");
-		player.incQuestExp(0, player.getSkills().getMaxStat(0) * 600 + 1300);
+		player.incQuestExp(ATTACK, player.getSkills().getMaxStat(ATTACK) * 600 + 1300);
 		player.incQuestPoints(3);
 		player.message("@gre@You haved gained 3 quest points!");
 

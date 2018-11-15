@@ -168,7 +168,7 @@ TalkToNpcExecutiveListener {
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done. You have completed the cook's assistant quest");
-		player.incQuestExp(7, player.getSkills().getMaxStat(7) * 200 + 1000);
+		player.incQuestExp(COOKING, player.getSkills().getMaxStat(COOKING) * 200 + 1000);
 		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
 	}

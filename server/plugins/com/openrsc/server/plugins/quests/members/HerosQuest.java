@@ -41,18 +41,18 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 		player.getCache().remove("talked_grubor");
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
-		player.incQuestExp(2, (player.getSkills().getMaxStat(2) * 200) + 300);//STRENGTH
-		player.incQuestExp(1, (player.getSkills().getMaxStat(1) * 200) + 300);//DEFENSE
-		player.incQuestExp(3, (player.getSkills().getMaxStat(3) * 200) + 300);//HITS
-		player.incQuestExp(0, (player.getSkills().getMaxStat(0) * 200) + 300);//ATTACK
-		player.incQuestExp(4, (player.getSkills().getMaxStat(4) * 200) + 300);//RANGED
-		player.incQuestExp(15, (player.getSkills().getMaxStat(15) * 200) + 300);//HERBLAW
-		player.incQuestExp(10, (player.getSkills().getMaxStat(10) * 200) + 300);//FISHING
-		player.incQuestExp(7, (player.getSkills().getMaxStat(7) * 200) + 300);//COOKING
-		player.incQuestExp(11, (player.getSkills().getMaxStat(11) * 200) + 300);//FIREMAKING
-		player.incQuestExp(8, (player.getSkills().getMaxStat(8) * 200) + 300);//WOODCUT
-		player.incQuestExp(14, (player.getSkills().getMaxStat(14) * 200) + 300);//MINING
-		player.incQuestExp(13, (player.getSkills().getMaxStat(13) * 200) + 300);//SMITHING
+		player.incQuestExp(STRENGTH, (player.getSkills().getMaxStat(STRENGTH) * 200) + 300);//STRENGTH
+		player.incQuestExp(DEFENCE, (player.getSkills().getMaxStat(DEFENCE) * 200) + 300);//DEFENSE
+		player.incQuestExp(HITS, (player.getSkills().getMaxStat(HITS) * 200) + 300);//HITS
+		player.incQuestExp(ATTACK, (player.getSkills().getMaxStat(ATTACK) * 200) + 300);//ATTACK
+		player.incQuestExp(RANGED, (player.getSkills().getMaxStat(RANGED) * 200) + 300);//RANGED
+		player.incQuestExp(HERBLAW, (player.getSkills().getMaxStat(HERBLAW) * 200) + 300);//HERBLAW
+		player.incQuestExp(FISHING, (player.getSkills().getMaxStat(FISHING) * 200) + 300);//FISHING
+		player.incQuestExp(COOKING, (player.getSkills().getMaxStat(COOKING) * 200) + 300);//COOKING
+		player.incQuestExp(FIREMAKING, (player.getSkills().getMaxStat(FIREMAKING) * 200) + 300);//FIREMAKING
+		player.incQuestExp(WOODCUT, (player.getSkills().getMaxStat(WOODCUT) * 200) + 300);//WOODCUT
+		player.incQuestExp(MINING, (player.getSkills().getMaxStat(MINING) * 200) + 300);//MINING
+		player.incQuestExp(SMITHING, (player.getSkills().getMaxStat(SMITHING) * 200) + 300);//SMITHING
 		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
 
@@ -245,7 +245,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 						"Good for the foremost hero's of the land");
 				if(opt == 0) {
 					if((p.getQuestStage(Constants.Quests.LOST_CITY) == -1 && 
-							p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) < 0 &&
+							p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == -1 && 
 							p.getQuestStage(Constants.Quests.MERLINS_CRYSTAL) == -1 && 
 							p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == -1) // probably bluffing.
 							&& p.getQuestPoints() >= 55) {				

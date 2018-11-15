@@ -154,7 +154,7 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.incQuestPoints(5);
 		player.message("@gre@You haved gained 5 quest points!");
-		player.incQuestExp(12, player.getSkills().getMaxStat(12) * 60 + 500);
+		player.incQuestExp(CRAFTING, player.getSkills().getMaxStat(CRAFTING) * 60 + 500);
 		player.message("General Wartface gives you a gold bar as thanks");
 		player.getInventory().add(new Item(172, 1));
 	}
