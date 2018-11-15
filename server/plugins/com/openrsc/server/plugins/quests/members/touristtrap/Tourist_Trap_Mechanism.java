@@ -132,7 +132,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			message(p,"Do you want to follow the technical plans?");
 			int menu = showMenu(p, "Yes. I'd like to try.", "No, not just yet.");
 			if(menu == 0) {
-				if(p.getSkills().getMaxStat(SMITHING) < 20) {
+				if(getCurrentLevel(p, SMITHING) < 20) {
 					p.message("You need level 20 smithing to make the dart tip.");
 					return;
 				}
@@ -167,7 +167,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				p.message("You need 10 feathers to attach the feathers to the dart tip.");
 				return;
 			}
-			if(p.getSkills().getMaxStat(FLETCHING) < 10) {
+			if(getCurrentLevel(p, FLETCHING) < 10) {
 				p.message("You need at least level 10 fletching to complete the dart.");
 				return;
 			}

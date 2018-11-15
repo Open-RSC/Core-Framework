@@ -42,7 +42,7 @@ TalkToNpcExecutiveListener {
 		p.message("@gre@You haved gained 5 quest points!");
 		p.incQuestPoints(5);
 		p.incQuestExp(AGILITY, (p.getSkills().getMaxStat(AGILITY) * 200) + 2000);
-		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 200 + 1000);
+		p.incQuestExp(ATTACK, p.getSkills().getMaxStat(ATTACK) * 200 + 1000);
 		p.message("you have completed the underground pass quest");
 		p.getCache().set("Iban blast_casts", 25);
 	}

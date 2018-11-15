@@ -231,7 +231,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		}
 		else if (item.getID() == 777) {
 			p.message("you rub together the dry sticks");
-			if (p.getSkills().getMaxStat(11) < 30) {
+			if (getCurrentLevel(p, FIREMAKING) < 30) {
 				p.message("you need a firemaking level of 30 or above");
 				p.message("the sticks smoke momentarily then die out");
 				return;

@@ -67,7 +67,7 @@ ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecuti
 		//	return;
 		//}
 
-		if(p.getSkills().getMaxStat(WOODCUT) < 50) {
+		if(getCurrentLevel(p, WOODCUT) < 50) {
 			p.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}

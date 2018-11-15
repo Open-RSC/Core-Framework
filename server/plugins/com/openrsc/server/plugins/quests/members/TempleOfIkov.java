@@ -503,7 +503,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				}
 			} else if(command.equals("searchfortraps")) {
 				p.message("You search the lever for traps");
-				if(p.getSkills().getMaxStat(17) < 42) {
+				if(getCurrentLevel(p, THIEVING) < 42) {
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}
