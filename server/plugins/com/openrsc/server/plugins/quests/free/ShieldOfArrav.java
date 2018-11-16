@@ -207,10 +207,10 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 				break;
 			case 5:
 			case -1:
-				if (p.getCache().hasKey("arrav_gang") || p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) < 0) {
-					if ((p.getCache().getInt("arrav_gang") == BLACK_ARM
-							|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE)
-							&& p.getQuestStage(Constants.Quests.HEROS_QUEST) >= 1) {
+			case -2:
+				if ((p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
+							|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE) {
+					if (p.getQuestStage(Constants.Quests.HEROS_QUEST) > 0) {
 						playerTalk(p, n, "Hey");
 						npcTalk(p, n, "Hey");
 						if (hasItem(p, 585)) {
@@ -226,8 +226,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 								npcTalk(p, n, "Wow is it really it?");
 								p.message("Katrine takes hold of the candlestick and examines it");
 								removeItem(p, 585, 1);
-								npcTalk(p,
-										n,
+								npcTalk(p, n,
 										"This really is a fine bit of thievery",
 										"Thieves have been trying to get hold of this 1 for a while",
 										"You wanted to be ranked as master thief didn't you?",
@@ -238,24 +237,19 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 							}
 							return;
 						}
-						int choice2 = showMenu(
-								p,
-								n,
+						int choice2 = showMenu(p, n,
 								"Who are all those people in there?",
 								"Is there anyway I can get the rank of master thief?");
 						if (choice2 == 0) {
-							npcTalk(p, n,
-									"They're just various rogues and thieves");
+							npcTalk(p, n, "They're just various rogues and thieves");
 							playerTalk(p, n, "They don't say a lot");
 							npcTalk(p, n, "Nope");
 						} else if (choice2 == 1) {
-							npcTalk(p,
-									n,
+							npcTalk(p, n,
 									"Master thief? We are the ambitious one aren't we?",
 									"Well you're going to have do something pretty amazing");
 							playerTalk(p, n, "Anything you can suggest?");
-							npcTalk(p,
-									n,
+							npcTalk(p, n,
 									"Well some of the most coveted prizes in thiefdom right now",
 									"Are in the  pirate town of Brimhaven on Karamja",
 									"The pirate leader Scarface Pete",
@@ -269,29 +263,27 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 								p.getCache().store("blackarm_mission", true);
 							}
 						}
-					} else if ((p.getCache().getInt("arrav_gang") == BLACK_ARM
-							|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE)
-							&& p.getQuestStage(Constants.Quests.HEROS_QUEST) == -1) {
+					} else if (p.getQuestStage(Constants.Quests.HEROS_QUEST) == -1) {
 						playerTalk(p, n, "Hey");
 						npcTalk(p, n, "Hey");
 						int choice1 = showMenu(p, n,
-								"Who are all those people in there?",
-								"Teach me to be a top class criminal");
+										"Who are all those people in there?",
+										"Teach me to be a top class criminal");
 						if (choice1 == 0) {
 							npcTalk(p, n,
-									"They're just various rogues and thieves");
+											"They're just various rogues and thieves");
 							playerTalk(p, n, "They don't say a lot");
 							npcTalk(p, n, "Nope");
 						} else if (choice1 == 1) {
 							npcTalk(p, n, "Teach yourself");
 						}
-					} else {
-						npcTalk(p, n, "You've got some guts coming here",
-								"Phoenix guy");
-						p.message("Katrine Spits");
-						npcTalk(p, n, "Now go away",
-								"Or I'll make sure you 'aven't got those guts anymore");
 					}
+				} else {
+					npcTalk(p, n, "You've got some guts coming here",
+							"Phoenix guy");
+					p.message("Katrine Spits");
+					npcTalk(p, n, "Now go away",
+							"Or I'll make sure you 'aven't got those guts anymore");
 				}
 				break;
 			}
@@ -331,8 +323,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			if (choice1 == 0) {
 				katrineDialogue(p, n, Katrine.MEMBER);
 			} else if (choice1 == 1) {
-				npcTalk(p,
-						n,
+				npcTalk(p, n,
 						"Well, I'm sorry luv, I'm not giving away any of my secrets.",
 						"Not to people who ain't black arm members anyway");
 			} else if (choice1 == 2) {
@@ -341,8 +332,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			}
 			break;
 		case Katrine.MEMBER:
-			npcTalk(p,
-					n,
+			npcTalk(p, n,
 					"How unusual.",
 					"Normally we recruit for our gang by watching local thugs and thieves in action.",
 					"People don't normally waltz in here saying 'hello, can i play'.",
@@ -360,8 +350,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			katrineDialogue(p, n, Katrine.GIVETRY);
 			break;
 		case Katrine.GIVETRY:
-			npcTalk(p,
-					n,
+			npcTalk(p, n,
 					"Thinking about it... I may have a solution actually.",
 					"Our rival gang - the phoenix gang - has a weapons stash a little east of here.",
 					"We're fresh out of crossbows",
@@ -383,8 +372,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 					"Leaving us as the only thieves gang in varrock! Brillant, eh?");
 			playerTalk(p, n,
 					"Yeah, brillant. So who are you planning to murder?");
-			npcTalk(p,
-					n,
+			npcTalk(p, n,
 					"I haven't decided yet, but it'll need to be somebody important.",
 					"Say, why you being so nosey?",
 					"You aren't with the law are you?");
@@ -396,8 +384,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			int choice3 = showMenu(p, n, "Ok, no problem.",
 					"Sounds a little tricky. Got anything easier?");
 			if (choice3 == 0) {
-				npcTalk(p,
-						n,
+				npcTalk(p, n,
 						"Great!",
 						"You'll find the phoenix gang's weapon stash just next to a temple",
 						"Due east of here.");
@@ -452,11 +439,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (p.getQuestStage(this) == 4) {
 			World.getWorld().registerItem(
-					new GroundItem(QuestItems.SCROLL, n.getX(), n.getY(), 1, p));// brb
-			// shop
-			// alright
-			// bro
-			// :)
+					new GroundItem(QuestItems.SCROLL, n.getX(), n.getY(), 1, p));
 			n.killedBy(p);
 		} else {
 			n.killedBy(p);
@@ -477,7 +460,6 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			} else {
 				p.message("The door is securely locked");
 			}
-			return;
 		} else if (obj.getID() == 19 && obj.getY() == 3370) {
 			Npc man = getNearestNpc(p, 24, 20);
 			if (p.getCache().hasKey("arrav_gang")) {
@@ -507,7 +489,6 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 					man.initializeTalkScript(p);
 				}
 			}
-			return;
 		} else if (obj.getID() == 20 && obj.getY() == 532) {
 			if (p.getY() <= 531 || p.getY() >= 531) {
 				if (p.getInventory().hasItemId(48)) {
@@ -517,7 +498,6 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 				}
 				p.message("The door is locked");
 			}
-			return;
 		}
 	}
 
