@@ -1313,9 +1313,7 @@ public class Functions {
 			public void run() {
 				final Item item = new Item(id, 1);
 				if (!item.getDef().isStackable()) {
-					for (int i = 0; i < amt; i++) {
-						p.getInventory().remove(new Item(id, 1));
-					}
+					p.getInventory().remove(new Item(id, 1));
 				} else {
 					p.getInventory().remove(new Item(id, amt));
 				}
