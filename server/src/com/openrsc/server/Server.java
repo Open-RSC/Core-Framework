@@ -55,8 +55,8 @@ public final class Server implements Runnable {
 		try {
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml"); 
 			/* Enables asynchronous, garbage-free logging. */
-			System.setProperty("Log4jContextSelector", 
-					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+			//System.setProperty("Log4jContextSelector",
+			//		"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 			LOGGER = LogManager.getLogger();
 		} catch (Exception e) {
