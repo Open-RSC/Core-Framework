@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -39,10 +40,8 @@ ObjectActionExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the plague city quest");
-		p.incQuestExp(MINING, (300 * p.getSkills().getMaxStat(MINING)) + 700);
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.PLAGUE_CITY), true);
 		p.message("@gre@You haved gained 1 quest point!");
-
 	}
 
 	@Override

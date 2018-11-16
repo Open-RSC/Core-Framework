@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -72,10 +73,14 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		p.getCache().remove("openSpiderDoor");
 		p.getCache().remove("completeLever");
 		p.getCache().remove("killedLesarkus");
-		p.incQuestExp(RANGED, (p.getSkills().getMaxStat(RANGED) * 1000) + 2000);
-		p.incQuestExp(FLETCHING, (p.getSkills().getMaxStat(FLETCHING) * 1000) + 2000);
+		int[] questData = Quests.questData.get(Quests.TEMPLE_OF_IKOV);
+		//keep order kosher
+		int[] skillIDs = {RANGED, FLETCHING};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 		p.message("@gre@You haved gained 1 quest point!");
-		p.incQuestPoints(1);
 		p.message("Well done you have completed the temple of Ikov quest");
 	}
 

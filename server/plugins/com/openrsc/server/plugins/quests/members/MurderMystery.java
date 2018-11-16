@@ -4,6 +4,7 @@ package com.openrsc.server.plugins.quests.members;
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -71,11 +72,9 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestPoints(3);
 		p.message("@gre@You haved gained 3 quest points!");
-		p.incQuestExp(CRAFTING, p.getSkills().getMaxStat(CRAFTING) * 150 + 750);
+		incQuestReward(p, Quests.questData.get(Quests.MURDER_MYSTERY), true);
 		p.message("You have completed the Murder Mystery Quest");
-
 	}
 	private void whoYouSuspect(Player p, Npc n) {
 		p.message("You tell the guard who you suspect of the crime");

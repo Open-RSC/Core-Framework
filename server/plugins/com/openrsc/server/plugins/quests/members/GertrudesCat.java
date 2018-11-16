@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -47,8 +48,7 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 
 	@Override
 	public void handleReward(final Player p) {
-		p.incQuestExp(COOKING, p.getSkills().getMaxStat(COOKING) * 180 + 700);
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.GERTRUDES_CAT), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.message("well done, you have completed gertrudes cat quest");
 	}

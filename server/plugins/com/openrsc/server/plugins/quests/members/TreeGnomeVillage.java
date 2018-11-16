@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,11 +42,9 @@ PlayerKilledNpcExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the treequest");
-		p.incQuestPoints(2);
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestExp(ATTACK, 800 + 900 * p.getSkills().getMaxStat(ATTACK));
+		incQuestReward(p, Quests.questData.get(Quests.TREE_GNOME_VILLAGE), true);
 		addItem(p, 744, 1);
-
 	}
 
 	@Override

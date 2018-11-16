@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -55,8 +56,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		addItem(p, 283, 1);
 		addItem(p, 163, 1);
 		addItem(p, 10, 450);
-		p.incQuestPoints(2);
 		p.message("Well done you have completed the pirate treasure quest");
+		incQuestReward(p, Quests.questData.get(Quests.PIRATES_TREASURE), true);
 		p.message("@gre@You haved gained 2 quest points!");
 		p.updateQuestStage(this, -1);
 	}

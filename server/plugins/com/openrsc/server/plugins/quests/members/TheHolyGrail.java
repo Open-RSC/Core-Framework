@@ -41,10 +41,18 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the holy grail quest");
-		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(PRAYER, (player.getSkills().getMaxStat(PRAYER) + 1) * 1000);
-		player.incQuestExp(DEFENCE, (player.getSkills().getMaxStat(DEFENCE) + 1) * 1200);
+		int[] questData = Quests.questData.get(Quests.THE_HOLY_GRAIL);
+		//keep order kosher
+		int[] skillIDs = {PRAYER, DEFENCE};
+		//1000 for prayer, 1200 for defense
+		int[] amounts = {1000, 1200};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			questData[Quests.MAPIDX_BASE] = amounts[i];
+			questData[Quests.MAPIDX_VAR] = amounts[i];
+			incQuestReward(player, questData, i==(skillIDs.length-1));
+		}
 	}
 
 	/**

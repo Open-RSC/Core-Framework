@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -48,9 +49,8 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the Witches house quest");
-		p.incQuestPoints(4);
 		p.message("@gre@You haved gained 4 quest points!");
-		p.incQuestExp(HITS, p.getSkills().getMaxStat(HITS) * 600 + 1300);
+		incQuestReward(p, Quests.questData.get(Quests.WITCHS_HOUSE), true);
 		p.getCache().remove("witch_gone");
 		p.getCache().remove("shapeshifter");
 	}

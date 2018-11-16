@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -151,9 +152,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		sleep(650);
 		p.message("@gre@***********************************************************");
 		sleep(650);
+		incQuestReward(p, Quests.questData.get(Quests.TOURIST_TRAP), true);
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestPoints(2);
-
 	}
 
 	@Override
@@ -359,34 +359,39 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		} 
 	}
 	private void lastRewardMenu(Player p, Npc n) {
+		int[] questData = Quests.questData.get(Quests.TOURIST_TRAP);
 		int lastRewardMenu = showMenu(p, n, 
 				"Fletching.",
 				"Agility.",
 				"Smithing.",
 				"Thieving");
 		if(lastRewardMenu == 0) {
-			p.incQuestExp(FLETCHING, 600 * (p.getSkills().getMaxStat(FLETCHING) + 1));
+			questData[Quests.MAPIDX_SKILL] = FLETCHING;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Fletching.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
 			if(p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
 		} else if(lastRewardMenu == 1) {
-			p.incQuestExp(AGILITY, 600 * (p.getSkills().getMaxStat(AGILITY) + 1));
+			questData[Quests.MAPIDX_SKILL] = AGILITY;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Agility.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
 			if(p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
 		} else if(lastRewardMenu == 2) {
-			p.incQuestExp(SMITHING, 600 * (p.getSkills().getMaxStat(SMITHING) + 1));
+			questData[Quests.MAPIDX_SKILL] = SMITHING;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Smithing.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
 			if(p.getCache().hasKey("advanced1")) {
 				p.getCache().remove("advanced1");
 			}
 		} else if(lastRewardMenu == 3) {
-			p.incQuestExp(THIEVING, 600 * (p.getSkills().getMaxStat(THIEVING) + 1));
+			questData[Quests.MAPIDX_SKILL] = THIEVING;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Thieving.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
 			if(p.getCache().hasKey("advanced1")) {
@@ -399,13 +404,15 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				"I'm really very grateful...",
 				"I would like to reward you for your bravery and daring.",
 				"I can offer you increased knowledge in two of the following areas.");
+		int[] questData = Quests.questData.get(Quests.TOURIST_TRAP);
 		int rewardMenu = showMenu(p,n,
 				"Fletching.",
 				"Agility.",
 				"Smithing.",
 				"Thieving");
 		if(rewardMenu == 0) {
-			p.incQuestExp(FLETCHING, 600 * (p.getSkills().getMaxStat(FLETCHING) + 1));
+			questData[Quests.MAPIDX_SKILL] = FLETCHING;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Fletching.",
 					"Ok, now choose your second skil.");
 			if(!p.getCache().hasKey("advanced1")) {
@@ -413,7 +420,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 			lastRewardMenu(p, n);
 		} else if(rewardMenu == 1) {
-			p.incQuestExp(AGILITY, 600 * (p.getSkills().getMaxStat(AGILITY) + 1));
+			questData[Quests.MAPIDX_SKILL] = AGILITY;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Agility.",
 					"Ok, now choose your second skil.");
 			if(!p.getCache().hasKey("advanced1")) {
@@ -421,7 +429,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 			lastRewardMenu(p, n);
 		} else if(rewardMenu == 2) {
-			p.incQuestExp(SMITHING, 600 * (p.getSkills().getMaxStat(SMITHING) + 1));
+			questData[Quests.MAPIDX_SKILL] = SMITHING;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Smithing.",
 					"Ok, now choose your second skil.");
 			if(!p.getCache().hasKey("advanced1")) {
@@ -429,7 +438,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 			lastRewardMenu(p, n);
 		} else if(rewardMenu == 3) {
-			p.incQuestExp(THIEVING, 600 * (p.getSkills().getMaxStat(THIEVING) + 1));
+			questData[Quests.MAPIDX_SKILL] = THIEVING;
+			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Thieving.",
 					"Ok, now choose your second skil.");
 			if(!p.getCache().hasKey("advanced1")) {

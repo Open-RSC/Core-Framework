@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -43,9 +44,9 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestPoints(6);
 		player.getCache().remove("magic_words");
 		player.message("Well done you have completed the Merlin's crystal quest");
+		incQuestReward(player, Quests.questData.get(Quests.MERLINS_CRYSTAL), true);
 		player.message("You haved gained 6 quest points!");
 	}
 

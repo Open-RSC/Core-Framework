@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -42,11 +43,9 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestPoints(1);
 		p.message("Well done you have completed the tribal totem quest");
-		p.incQuestExp(THIEVING, (300 * p.getSkills().getMaxStat(THIEVING)) + 800); // THIEVING XP.
+		incQuestReward(p, Quests.questData.get(Quests.TRIBAL_TOTEM), true);
 		p.message("@gre@You haved gained 1 quest point!");
-
 	}
 
 	@Override

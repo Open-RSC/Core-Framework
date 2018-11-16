@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -208,10 +209,8 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the witches potion quest");
-		player.incQuestExp(MAGIC, 900 + 200 * player.getSkills().getMaxStat(MAGIC));
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.WITCHS_POTION), true);
 		player.message("@gre@You haved gained 1 quest point!");
-
 	}
 
 	@Override

@@ -348,6 +348,11 @@ public final class Constants {
 		public static final int DIGSITE = 47;
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
+		
+		public static final int MAPIDX_QP = 0;
+		public static final int MAPIDX_SKILL = 1;
+		public static final int MAPIDX_BASE = 2;
+		public static final int MAPIDX_VAR = 3;
 
 		public static final HashMap<Integer, int[]> questData = new HashMap<Integer, int[]>()
 		{{
@@ -368,7 +373,7 @@ public final class Constants {
 			put(THE_KNIGHTS_SWORD, new int[] {1, Skills.SMITHING, 1400, 1500});
 			put(VAMPIRE_SLAYER, new int[] {3, Skills.ATTACK, 1300, 600});
 			put(WITCHS_POTION, new int[] {1, Skills.MAGIC, 900, 200});
-			put(DRAGON_SLAYER, new int[] {2, -1, 0, 0}); // XP Handled in Dragon Slayer files
+			put(DRAGON_SLAYER, new int[] {2, -1, 2600, 1200}); // Skill ID in Dragon Slayer files
 			put(WITCHS_HOUSE, new int[] {4, Skills.HITPOINTS, 1300, 600});
 			put(LOST_CITY, new int[] {3, -1, 0, 0});
 			put(HEROS_QUEST, new int[] {1, -1, 300, 200}); // Skill ID Handled in Heros files
@@ -378,7 +383,7 @@ public final class Constants {
 			put(FAMILY_CREST, new int[] {1, -1, 0, 0});
 			put(TRIBAL_TOTEM, new int[] {1, Skills.THIEVING, 800, 300});
 			put(FISHING_CONTEST, new int[] {1, Skills.FISHING, 0, 300}); // Base XP Handled in Fishing Contest files
-			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 0, 500});
+			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 500, 500});
 			put(TEMPLE_OF_IKOV, new int[] {1, -1, 2000, 1000}); // Skill ID Handled in Ikov files
 			put(CLOCK_TOWER, new int[] {1, -1, 0, 0});
 			put(THE_HOLY_GRAIL, new int[] {2, -1, 0, 0}); // XP Handled in Grail files
@@ -392,16 +397,16 @@ public final class Constants {
 			put(BIOHAZARD, new int[] {3, Skills.THIEVING, 2000, 200});
 			put(JUNGLE_POTION, new int[] {1, Skills.HERBLAW, 1600, 500});
 			put(GRAND_TREE, new int[] {5, -1, 0, 0}); // XP Handled in Grade Tree files
-			put(SHILO_VILLAGE, new int[] {2, Skills.CRAFTING, 500, 0});
+			put(SHILO_VILLAGE, new int[] {2, Skills.CRAFTING, 500, 500});
 			put(UNDERGROUND_PASS, new int[] {5, -1, 2000, 200}); // Skill ID Handled in Pass files
-			put(OBSERVATORY_QUEST, new int[] {2, -1, 500, 100}); // Skill ID Handled in Observatory files
-			put(TOURIST_TRAP, new int[] {2, -1, 0, 600}); // Skill ID Handled in Trap files
-			put(WATCHTOWER, new int[] {4, Skills.MAGIC, 0, 1000});
+			put(OBSERVATORY_QUEST, new int[] {2, -1, 1000, 400}); // Skill ID and adjustments Handled in Observatory files
+			put(TOURIST_TRAP, new int[] {2, -1, 600, 600}); // Skill ID Handled in Trap files
+			put(WATCHTOWER, new int[] {4, Skills.MAGIC, 1000, 1000});
 			put(DWARF_CANNON, new int[] {1, Skills.CRAFTING, 1000, 200});
 			put(MURDER_MYSTERY, new int[] {3, Skills.CRAFTING, 750, 150});
 			put(DIGSITE, new int[] {2, -1, 0, 0}); // XP Handled in Digsite files
 			put(GERTRUDES_CAT, new int[] {1, Skills.COOKING, 700, 180});
-			put(LEGENDS_QUEST, new int[] {4, -1, 0, 0}); // XP Handled in Legends files
+			put(LEGENDS_QUEST, new int[] {4, -1, 600, 600}); // Skill ID Handled in Legends files
 		}};
 	}
 
