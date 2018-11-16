@@ -187,6 +187,14 @@ public class Ladders {
 				paladinGuard.setChasing(player);
 				return;
 			}
+			else {
+				int[] coords = coordModifier(player, true, obj);
+				player.teleport(coords[0], coords[1], false);
+				player.message(
+						"You " + command.replace("-", " ") + " the "
+								+ obj.getGameObjectDef().getName().toLowerCase());
+				return;
+			}
 		}
 
 		else if (obj.getID() == 249 && obj.getX() == 98 && obj.getY() == 3537) { // lost city (Zanaris) ladder
