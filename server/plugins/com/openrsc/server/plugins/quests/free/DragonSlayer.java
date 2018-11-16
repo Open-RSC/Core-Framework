@@ -385,9 +385,13 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 		p.teleport(411, 3480, false);
 		p.message("Well done you have completed the dragon slayer quest!");
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestExp(STRENGTH, p.getSkills().getMaxStat(STRENGTH) * 1200 + 2600);
-		p.incQuestExp(DEFENCE, p.getSkills().getMaxStat(DEFENCE) * 1200 + 2600);
-		p.incQuestPoints(2);
+		int[] questData = Quests.questData.get(Quests.DRAGON_SLAYER);
+		//keep order kosher
+		int[] skillIDs = {STRENGTH, DEFENCE};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 	}
 
 	@Override

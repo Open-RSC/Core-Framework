@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -32,8 +33,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("You have completed the demonslayer quest");
+		incQuestReward(p, Quests.questData.get(Quests.DEMON_SLAYER), true);
 		p.message("@gre@You haved gained 3 quest points!");
-		p.incQuestPoints(3);
 	}
 
 	@Override

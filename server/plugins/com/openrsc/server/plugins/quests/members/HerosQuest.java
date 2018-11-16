@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -41,19 +42,14 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 		player.getCache().remove("talked_grubor");
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
-		player.incQuestExp(STRENGTH, (player.getSkills().getMaxStat(STRENGTH) * 200) + 300);//STRENGTH
-		player.incQuestExp(DEFENCE, (player.getSkills().getMaxStat(DEFENCE) * 200) + 300);//DEFENSE
-		player.incQuestExp(HITS, (player.getSkills().getMaxStat(HITS) * 200) + 300);//HITS
-		player.incQuestExp(ATTACK, (player.getSkills().getMaxStat(ATTACK) * 200) + 300);//ATTACK
-		player.incQuestExp(RANGED, (player.getSkills().getMaxStat(RANGED) * 200) + 300);//RANGED
-		player.incQuestExp(HERBLAW, (player.getSkills().getMaxStat(HERBLAW) * 200) + 300);//HERBLAW
-		player.incQuestExp(FISHING, (player.getSkills().getMaxStat(FISHING) * 200) + 300);//FISHING
-		player.incQuestExp(COOKING, (player.getSkills().getMaxStat(COOKING) * 200) + 300);//COOKING
-		player.incQuestExp(FIREMAKING, (player.getSkills().getMaxStat(FIREMAKING) * 200) + 300);//FIREMAKING
-		player.incQuestExp(WOODCUT, (player.getSkills().getMaxStat(WOODCUT) * 200) + 300);//WOODCUT
-		player.incQuestExp(MINING, (player.getSkills().getMaxStat(MINING) * 200) + 300);//MINING
-		player.incQuestExp(SMITHING, (player.getSkills().getMaxStat(SMITHING) * 200) + 300);//SMITHING
-		player.incQuestPoints(1);
+		int[] questData = Quests.questData.get(Quests.HEROS_QUEST);
+		//keep order kosher
+		int[] skillIDs = {STRENGTH, DEFENCE, HITS, ATTACK, RANGED, HERBLAW,
+				FISHING, COOKING, FIREMAKING, WOODCUT, MINING, SMITHING};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(player, questData, i==(skillIDs.length-1));
+		}
 		player.message("@gre@You haved gained 1 quest point!");
 
 	}

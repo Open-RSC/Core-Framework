@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Cache;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -99,8 +100,8 @@ InvUseOnObjectExecutiveListener {
 	public void handleReward(Player p) {
 		p.getInventory().add(new Item(10, 300));
 		p.message("Well done. You have completed the Ernest the chicken quest");
+		incQuestReward(p, Quests.questData.get(Quests.ERNEST_THE_CHICKEN), true);
 		p.message("@gre@You haved gained 4 quest points!");
-		p.incQuestPoints(4);
 	}
 
 	@Override

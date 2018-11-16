@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -92,10 +93,18 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 	@Override
 	public void handleReward(Player player) {
 		player.message("Congratulations, you have finished the digsite quest");
-		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(MINING, 1200 * (player.getSkills().getLevel(MINING) + 1));
-		player.incQuestExp(HERBLAW, 500 * (player.getSkills().getLevel(HERBLAW) + 1));
+		int[] questData = Quests.questData.get(Quests.DIGSITE);
+		//keep order kosher
+		int[] skillIDs = {MINING, HERBLAW};
+		//1200 for mining, 500 for herblaw
+		int[] amounts = {1200, 500};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			questData[Quests.MAPIDX_BASE] = amounts[i];
+			questData[Quests.MAPIDX_VAR] = amounts[i];
+			incQuestReward(player, questData, i==(skillIDs.length-1));
+		}
 		player.getCache().remove("winch_rope_2");
 		player.getCache().remove("winch_rope_1");
 		player.getCache().remove("digsite_winshaft");

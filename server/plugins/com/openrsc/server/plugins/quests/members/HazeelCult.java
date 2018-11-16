@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -1060,19 +1061,15 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	public void handleReward(Player p) {
 		if(p.getCache().hasKey("good_side")) {
 			p.message("Well done you have completed the Hazeel cult quest");
-			//THIEVING LEVEL
-			p.incQuestExp(THIEVING, p.getSkills().getMaxStat(THIEVING) * 200 + 2000);
+			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
 			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			p.message("ceril gives you 2000 gold coins");
 			addItem(p, 10, 2000);
 		} else if(p.getCache().hasKey("evil_side")) {
 			p.message("Hazeel gives you some coins");
 			addItem(p, 10, 2000);
-			// THIEVING LEVEL
-			p.incQuestExp(THIEVING, p.getSkills().getMaxStat(THIEVING) * 200 + 2000);
+			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
 			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			p.message("you have completed the hazeel cult quest");
 		}
 	}

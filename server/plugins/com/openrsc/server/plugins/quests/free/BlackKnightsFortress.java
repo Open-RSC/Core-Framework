@@ -226,7 +226,7 @@ public class BlackKnightsFortress implements QuestInterface,TalkToNpcListener,
 		p.message("Sir Amik hands you 2500 coins");
 		addItem(p, 10, 2500);
 		p.message("Well done. You have completed the Black Knights Fortress quest");
-		p.incQuestPoints(3);
+		incQuestReward(p, Quests.questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
 

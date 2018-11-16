@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -131,8 +132,7 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed Dorics quest");
-		player.incQuestExp(MINING, (player.getSkills().getMaxStat(MINING) + 1) * 300 + 700);
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.DORICS_QUEST), true);
 		player.message("@gre@You haved gained 1 quest points!");
 	}
 

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -34,10 +35,8 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the monks friend quest");
-		p.incQuestExp(WOODCUT, (p.getSkills().getMaxStat(WOODCUT) + 1) * 500);
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.MONKS_FRIEND), true);
 		p.message("@gre@You haved gained 1 quest point!");
-
 	}
 
 	@Override

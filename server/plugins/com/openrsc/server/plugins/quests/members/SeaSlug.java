@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -40,9 +41,8 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestPoints(1);
 		p.message("@gre@You haved gained 1 quest point!");
-		p.incQuestExp(FISHING, 700 + 800 * p.getSkills().getMaxStat(FISHING));
+		incQuestReward(p, Quests.questData.get(Quests.SEA_SLUG), true);
 		p.message("well done, you have completed the sea slug quest");
 	}
 

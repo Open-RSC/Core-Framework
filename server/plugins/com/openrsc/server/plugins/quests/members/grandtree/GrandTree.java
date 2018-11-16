@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.grandtree;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -88,11 +89,20 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	@Override
 	public void handleReward(Player p) {
 		p.message("well done you have completed the grand tree quest");
-		p.incQuestExp(AGILITY, (1200 * p.getSkills().getMaxStat(AGILITY)) + 1600); // AGILITY
-		p.incQuestExp(ATTACK, (1200 * p.getSkills().getMaxStat(ATTACK)) + 1600); // ATTACK
-		p.incQuestExp(MAGIC, (200 * p.getSkills().getMaxStat(MAGIC)) + 600); // MAGIC
+		int[] questData = Quests.questData.get(Quests.THE_HOLY_GRAIL);
+		//keep order kosher
+		int[] skillIDs = {AGILITY, ATTACK, MAGIC};
+		//1600 for agility, 1600 for attack, 600 for magic
+		int[] baseAmounts = {1600, 1600, 600};
+		//1200 for agility, 1200 for attack, 200 for magic
+		int[] varAmounts = {1200, 1200, 200};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			questData[Quests.MAPIDX_BASE] = baseAmounts[i];
+			questData[Quests.MAPIDX_VAR] = varAmounts[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 		p.message("@gre@You haved gained 5 quest points!");
-		p.incQuestPoints(5);
 	}
 
 	@Override

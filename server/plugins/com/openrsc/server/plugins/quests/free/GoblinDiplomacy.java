@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -152,9 +153,8 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestPoints(5);
 		player.message("@gre@You haved gained 5 quest points!");
-		player.incQuestExp(CRAFTING, player.getSkills().getMaxStat(CRAFTING) * 60 + 500);
+		incQuestReward(player, Quests.questData.get(Quests.GOBLIN_DIPLOMACY), true);
 		player.message("General Wartface gives you a gold bar as thanks");
 		player.getInventory().add(new Item(172, 1));
 	}

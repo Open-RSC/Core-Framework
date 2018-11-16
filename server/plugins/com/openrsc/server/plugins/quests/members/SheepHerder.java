@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.model.Point;
@@ -66,7 +67,7 @@ InvUseOnObjectExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("well done, you have completed the Plaguesheep quest");
-		p.incQuestPoints(4);
+		incQuestReward(p, Quests.questData.get(Quests.SHEEP_HERDER), true);
 		p.message("@gre@You haved gained 4 quest points!");
 	}
 

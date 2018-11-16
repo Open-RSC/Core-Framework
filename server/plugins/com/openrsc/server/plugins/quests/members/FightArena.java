@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,10 +42,14 @@ PlayerKilledNpcExecutiveListener {
 				"Lady Servil gives you 1000 gold coins",
 				"you gain two quest points");
 		addItem(p, 10, 1000);
-		p.incQuestPoints(2);
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestExp(ATTACK, p.getSkills().getMaxStat(ATTACK) * 800 + 700);
-		p.incQuestExp(THIEVING, p.getSkills().getMaxStat(THIEVING) * 800 + 700);
+		int[] questData = Quests.questData.get(Quests.FIGHT_ARENA);
+		//keep order kosher
+		int[] skillIDs = {ATTACK, THIEVING};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 		p.getCache().remove("freed_servil");
 		p.getCache().remove("killed_ogre");
 	}

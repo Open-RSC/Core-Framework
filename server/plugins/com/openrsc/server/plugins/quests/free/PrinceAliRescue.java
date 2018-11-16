@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -172,8 +173,8 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			message(p, "The chancellor pays you 700 coins");
 			addItem(p, 10, 700);
 		}
-		p.incQuestPoints(3);
 		p.message("You have completed the quest of the Prince of Al Kharid");
+		incQuestReward(p, Quests.questData.get(Quests.PRINCE_ALI_RESCUE), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
 

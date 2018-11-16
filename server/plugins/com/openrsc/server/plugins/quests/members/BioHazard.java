@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -88,8 +89,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 3 quest points!");
-		p.incQuestPoints(3);
-		p.incQuestExp(THIEVING, (p.getSkills().getMaxStat(THIEVING) * 200) + 2000);
+		incQuestReward(p, Quests.questData.get(Quests.BIOHAZARD), true);
 		p.message("you have completed the biohazard quest");
 	}
 

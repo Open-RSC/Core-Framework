@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -58,10 +59,8 @@ WallObjectActionExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the scorpion catcher quest");
-		p.incQuestPoints(1);
 		p.message("@gre@You haved gained 1 quest point!");
-		p.incQuestExp(STRENGTH, p.getSkills().getMaxStat(STRENGTH) * 500 + 1500);
-
+		incQuestReward(p, Quests.questData.get(Quests.SCORPION_CATCHER), true);
 	}
 
 	class SEER_NPC {

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -169,8 +170,7 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 	public void handleReward(Player player) {
 		player.getInventory().add(new Item(10, 60));
 		player.message("Well done you have completed the sheep shearer quest");
-		player.incQuestExp(CRAFTING, player.getSkills().getMaxStat(CRAFTING) * 100 + 500);
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.SHEEP_SHEARER), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 

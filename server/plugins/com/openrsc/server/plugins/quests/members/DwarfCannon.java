@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -49,11 +50,9 @@ public class DwarfCannon
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestExp(CRAFTING, p.getSkills().getMaxStat(CRAFTING) * 200 + 1000);
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.DWARF_CANNON), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		message(p, "well done", "you have completed the dwarf cannon quest");
-
 	}
 
 	@Override
