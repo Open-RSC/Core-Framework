@@ -7,7 +7,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -43,7 +43,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					"The king gives you 600 coins");
 			removeItem(p, 61, 1);
 			p.sendQuestComplete(Constants.Quests.SHIELD_OF_ARRAV);
-			if (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
+			if (isBlackArmGang(p))
 				p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, -2);
 			return;
 		}
