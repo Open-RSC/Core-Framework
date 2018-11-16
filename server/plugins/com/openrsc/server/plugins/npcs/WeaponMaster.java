@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,8 +12,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_GANG;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
 
 public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListener,
@@ -48,36 +49,31 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476) {
-			if (!p.getCache().hasKey("arrav_gang") 
-					|| p.getCache().getInt("arrav_gang") == BLACK_ARM){
+			if (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p)) {
 				Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
 				if (weaponMaster != null) {
 					npcTalk(p, weaponMaster, "Hey Thief!");
 					weaponMaster.setChasing(p);
 				}
 			}
-			else if (p.getCache().hasKey("arrav_gang")) {
-				if(p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
-					Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
-					if (weaponMaster != null) {
-						npcTalk(p, weaponMaster, "Hey, that's Straven's",
-							"He won't like you messing with that");
-					}
-				}				
+			else if (isPhoenixGang(p)) {
+				Npc weaponMaster = getNearestNpc(p, WEAPONMASTER, 20);
+				if (weaponMaster != null) {
+					npcTalk(p, weaponMaster, "Hey, that's Straven's",
+						"He won't like you messing with that");
+				}
 			}
 		}
 	}
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (!p.getCache().hasKey("arrav_gang") 
-				|| p.getCache().getInt("arrav_gang") == BLACK_ARM){
+		if (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p)){
 			playerTalk(p, n, "Hello");
 			npcTalk(p, n, "Hey I don't know you",
 				"You're not meant to be here");
 			n.setChasing(p);
 		}
-		else if (p.getCache().hasKey("arrav_gang") 
-				&& p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {			
+		else if (isPhoenixGang(p)) {
 			npcTalk(p, n, "Hello Fellow phoenix",
 					"What are you after?");
 			int menu = showMenu(p,n, "I'm after a weapon or two", 

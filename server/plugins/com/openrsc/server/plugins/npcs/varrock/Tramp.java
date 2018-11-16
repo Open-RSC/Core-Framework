@@ -7,7 +7,9 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
-import com.openrsc.server.plugins.quests.free.ShieldOfArrav;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
+
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
@@ -75,20 +77,16 @@ public class Tramp implements TalkToNpcExecutiveListener, TalkToNpcListener {
 						}
 					}, new Option("Do you think they would let me join?") {
 						public void action() {
-							if (p.getCache().hasKey("arrav_gang")) {
-								if (p.getCache().getInt("arrav_gang") == ShieldOfArrav.BLACK_ARM) {
+							if (isBlackArmGang(p)) {
 									npcTalk(p, n,
 											"I was under the impression you were already a member");
-								} else if (p.getCache().getInt("arrav_gang") == ShieldOfArrav.PHOENIX_GANG) {
-									npcTalk(p,
-											n,
-											"No",
-											"You're a collaborator with the phoenix gang",
-											"There's no way they'll let you join");
-								}
+							} else if (isPhoenixGang(p)) {
+								npcTalk(p, n,
+										"No",
+										"You're a collaborator with the phoenix gang",
+										"There's no way they'll let you join");
 							} else {
-								npcTalk(p,
-										n,
+								npcTalk(p, n,
 										"You never know",
 										"You'll find a lady down there called katrine",
 										"Speak to her",
