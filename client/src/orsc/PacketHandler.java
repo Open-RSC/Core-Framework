@@ -73,7 +73,8 @@ public class PacketHandler {
 
 	private void handlePacket1(int opcode, int length) {
 		try {
-			System.out.println("Opcode: " + opcode + " Length: " + length);
+			if (mc.DEBUG)
+				System.out.println("Opcode: " + opcode + " Length: " + length);
 
 			// Unhandled Opcodes Received...
 			/*if (opcode == 9 || opcode == 34 || opcode == 16
