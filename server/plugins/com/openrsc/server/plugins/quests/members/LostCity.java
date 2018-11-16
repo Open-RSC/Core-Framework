@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants.Quests;
+
 /**
  * Rewritten in Java.
  * 
@@ -52,7 +54,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestPoints(3);
+		incQuestReward(player, Quests.questData.get(Quests.LOST_CITY), true);
 		player.message("@gre@You haved gained 3 quest points!");
 		player.message("Well done you have completed the Lost City of Zanaris quest");
 	}

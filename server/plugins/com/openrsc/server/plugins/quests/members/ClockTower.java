@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -39,7 +40,7 @@ PickupExecutiveListener {
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.CLOCK_TOWER), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.getCache().remove("rats_dead");
 		p.getCache().remove("1st_cog");

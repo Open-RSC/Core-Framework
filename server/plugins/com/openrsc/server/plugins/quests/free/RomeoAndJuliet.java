@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -274,9 +275,8 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the quest of Romeo and Juliet");
-		player.incQuestPoints(5);
+		incQuestReward(player, Quests.questData.get(Quests.ROMEO_N_JULIET), true);
 		player.message("@gre@You haved gained 5 quest points!");
-
 	}
 
 	@Override

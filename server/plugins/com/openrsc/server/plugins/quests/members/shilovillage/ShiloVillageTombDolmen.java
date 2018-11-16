@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -59,9 +60,8 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 		player.message("Well Done!");
 		player.message("You have completed the Shilo Village Quest.");
 		player.message("You gain some experience in crafting.");
-		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(CRAFTING, (player.getSkills().getMaxStat(CRAFTING) + 1) * 500);
+		incQuestReward(player, Quests.questData.get(Quests.SHILO_VILLAGE), true);
 	}
 
 	@Override

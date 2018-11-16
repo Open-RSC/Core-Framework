@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -134,10 +135,8 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done. You have completed the Imp catcher quest");
-		p.incQuestExp(MAGIC, p.getSkills().getMaxStat(MAGIC) * 400 + 1500);
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.IMP_CATCHER), true);
 		p.message("@gre@You haved gained 1 quest point!");
-
 	}
 
 	@Override

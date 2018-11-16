@@ -47,10 +47,9 @@ public class FamilyCrest implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.FAMILY_CREST), true);
 		player.message("@gre@You haved gained 1 quest point!");
 		player.message("Well done you have completed the family crest quest");
-
 	}
 
 	/**

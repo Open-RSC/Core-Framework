@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -60,7 +61,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@Well done - you have completed the Legends Guild Quest!");
-		p.incQuestPoints(4);
+		incQuestReward(p, Quests.questData.get(Quests.LEGENDS_QUEST), true);
 		message(p, "@gre@You haved gained 4 quest points!");
 		/** REMOVE QUEST CACHES **/
 		String[] caches = 
@@ -227,7 +228,9 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	private void skillReward(Player p, Npc n, int skill) {
-		p.incQuestExp(skill, (p.getSkills().getLevel(skill) + 1) * 600);
+		int[] questData = Quests.questData.get(Quests.LEGENDS_QUEST);
+		questData[Quests.MAPIDX_SKILL] = skill;
+		incQuestReward(p, questData, false);
 		updateRewardClaimCount(p);
 		p.message("You receive some training and increase experience to your " + Skills.SKILL_NAME[skill] + ".");
 		if(getRewardClaimCount(p) == 0) {

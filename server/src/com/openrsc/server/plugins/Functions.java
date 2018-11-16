@@ -161,6 +161,25 @@ public class Functions {
 		p.getSkills().setLevel(skill, level);
 		ActionSender.sendStat(p, skill);
 	}
+	
+	/**
+	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
+	 * @param p - the player
+	 * @param questData - the data, if skill id is < 0 means no exp is applied
+	 * @param applyQP - apply the quest point increase
+	 */
+	public static void incQuestReward(Player p, int[] questData, boolean applyQP) {
+		int qp = questData[0];
+		int skillId = questData[1];
+		int baseXP = questData[2];
+		int varXP = questData[3];
+		if(skillId >= 0 && baseXP > 0 && varXP >= 0) {
+			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
+		}
+		if(applyQP) {
+			p.incQuestPoints(qp);
+		}
+	}
 
 	public static void movePlayer(Player p, int x, int y) {
 		movePlayer(p, x, y, false);

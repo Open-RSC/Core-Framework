@@ -352,11 +352,13 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 		p.updateQuestStage(Constants.Quests.FISHING_CONTEST, -1);
 		p.message("Well done you have completed the fishing competition quest");
 		p.message("@gre@You haved gained 1 quest point!");
-		p.incQuestPoints(1);
+		int[] questData = Quests.questData.get(Quests.FISHING_CONTEST);
 		if(p.getSkills().getMaxStat(FISHING) <= 23) {
-			p.incQuestExp(FISHING, (p.getSkills().getMaxStat(FISHING) - 10) * 300 + 3900);
+			questData[Quests.MAPIDX_BASE] = 900;
+			incQuestReward(p, questData, true);
 		} else if(p.getSkills().getMaxStat(FISHING) >= 24) {
-			p.incQuestExp(FISHING, (p.getSkills().getMaxStat(FISHING) - 24) * 300 + 8900);
+			questData[Quests.MAPIDX_BASE] = 1700;
+			incQuestReward(p, questData, true);
 		}
 	}
 

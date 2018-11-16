@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -168,8 +169,7 @@ TalkToNpcExecutiveListener {
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done. You have completed the cook's assistant quest");
-		player.incQuestExp(COOKING, player.getSkills().getMaxStat(COOKING) * 200 + 1000);
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.COOKS_ASSISTANT), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 

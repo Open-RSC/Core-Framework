@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.watchtower;
 
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -164,9 +165,8 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				removeItem(p, 1154, 1);
 				Npc wizard = getNearestNpc(p, 672, 6);
 				if(wizard != null) {
-					p.incQuestPoints(4);
 					p.message("@gre@You haved gained 4 quest points!");
-					p.incQuestExp(MAGIC, (p.getSkills().getMaxStat(MAGIC) + 1) * 1000);
+					incQuestReward(p, Quests.questData.get(Quests.WATCHTOWER), true);
 					npcTalk(p, wizard, "Marvellous! it works!",
 							"The town will now be safe",
 							"Your help was invaluable",
