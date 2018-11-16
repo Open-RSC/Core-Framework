@@ -89,7 +89,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	@Override
 	public void handleReward(Player p) {
 		p.message("well done you have completed the grand tree quest");
-		int[] questData = Quests.questData.get(Quests.THE_HOLY_GRAIL);
+		int[] questData = Quests.questData.get(Quests.GRAND_TREE);
 		//keep order kosher
 		int[] skillIDs = {AGILITY, ATTACK, MAGIC};
 		//1600 for agility, 1600 for attack, 600 for magic
