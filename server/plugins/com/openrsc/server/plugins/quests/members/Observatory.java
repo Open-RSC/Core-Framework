@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -41,8 +42,9 @@ InvUseOnObjectExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestPoints(2);
-		p.incQuestExp(CRAFTING, (p.getSkills().getMaxStat(CRAFTING) * 400) + 1000);
+		int[] questData = Quests.questData.get(Quests.OBSERVATORY_QUEST);
+		questData[Quests.MAPIDX_SKILL] = CRAFTING;
+		incQuestReward(p, questData, true);
 		p.getCache().remove("keep_key_gate");
 	}
 
@@ -621,10 +623,16 @@ InvUseOnObjectExecutiveListener {
 	private int selectedNumber = 0;
 
 	private void constellationNameAndReward(Player p, Npc n) {
+		int baseReductor = 2;
+		int varReductor = 4;
+		int[] questData = Quests.questData.get(Quests.OBSERVATORY_QUEST);
+		questData[Quests.MAPIDX_BASE] /= baseReductor;
+		questData[Quests.MAPIDX_VAR] /= varReductor;
 		if(selectedNumber == 0) {
 			npcTalk(p, n, "Virgo the virtuous",
 					"The strong and peaceful nature of virgo boosts your defence");
-			p.incQuestExp(DEFENCE, p.getSkills().getMaxStat(DEFENCE) * 100 + 500);
+			questData[Quests.MAPIDX_SKILL] = DEFENCE;
+			incQuestReward(p, questData, false);
 		} else if(selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
 					"The scales of justice award you with Law Runes");
@@ -652,7 +660,8 @@ InvUseOnObjectExecutiveListener {
 		} else if(selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
 					"The ram's strength improves your attack abilities");
-			p.incQuestExp(ATTACK, p.getSkills().getMaxStat(ATTACK) * 100 + 500);
+			questData[Quests.MAPIDX_SKILL] = ATTACK;
+			incQuestReward(p, questData, false);
 		} else if(selectedNumber == 8) {
 			npcTalk(p, n, "Sagittarius the Centaur",
 					"The Gods award you a maple longbow");
@@ -660,11 +669,13 @@ InvUseOnObjectExecutiveListener {
 		} else if(selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
 					"The power of the lion has increased your hitpoints");
-			p.incQuestExp(HITS, p.getSkills().getMaxStat(HITS) * 100 + 500);
+			questData[Quests.MAPIDX_SKILL] = HITS;
+			incQuestReward(p, questData, false);
 		}  else if(selectedNumber == 10) {
 			npcTalk(p, n, "Capricorn the goat",
 					"you are granted an increase in strength");
-			p.incQuestExp(STRENGTH, p.getSkills().getMaxStat(STRENGTH) * 100 + 500);
+			questData[Quests.MAPIDX_SKILL] = STRENGTH;
+			incQuestReward(p, questData, false);
 		} else if(selectedNumber == 11) {
 			npcTalk(p, n, "Cancer the crab",
 					"The armoured crab gives you an amulet of protection");

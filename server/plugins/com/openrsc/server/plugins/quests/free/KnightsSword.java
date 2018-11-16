@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +17,6 @@ import static com.openrsc.server.plugins.Functions.*;
 public class KnightsSword implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener, ObjectActionListener,
 		ObjectActionExecutiveListener {
-	private static final int QUEST_POINTS = 1;
 	private static final int NPC_SQUIRE = 132;
 	private static final int NPC_DWARF = 134;
 	private static final int NPC_VYVIN = 138;
@@ -46,8 +46,7 @@ public class KnightsSword implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the knight's sword quest");
-		player.incQuestExp(SMITHING, player.getSkills().getMaxStat(SMITHING) * 1500 + 1400);
-		player.incQuestPoints(QUEST_POINTS);
+		incQuestReward(player, Quests.questData.get(Quests.THE_KNIGHTS_SWORD), true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 

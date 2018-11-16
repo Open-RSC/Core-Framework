@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -39,9 +40,8 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the druidic ritual quest");
-		p.incQuestPoints(4);
 		p.message("@gre@You haved gained 4 quest points!");
-		p.incQuestExp(15, 1000);
+		incQuestReward(p, Quests.questData.get(Quests.DRUIDIC_RITUAL), true);
 	}
 
 	@Override

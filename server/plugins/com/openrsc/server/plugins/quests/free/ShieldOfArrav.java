@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -74,8 +75,8 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done, you have completed the shield of Arrav quest");
+		incQuestReward(p, Quests.questData.get(Quests.SHIELD_OF_ARRAV), true);
 		p.message("@gre@You have gained 1 quest point!");
-		p.incQuestPoints(1);
 		addItem(p, 10, 600);
 	}
 
