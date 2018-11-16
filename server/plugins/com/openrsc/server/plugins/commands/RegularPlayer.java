@@ -12,6 +12,9 @@ import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +34,10 @@ public final class RegularPlayer implements CommandListener {
 
 	private void handleCommand(String command, Player player, String[] args) {
 		if(command.equalsIgnoreCase("gang")) {
-			if (player.getCache().hasKey("arrav_gang")) {
-				if (player.getCache().getInt("arrav_gang") == 0) {
-					player.message("You are a member of the Black Arm Gang");
-				} else {
-					player.message("You are a member of the Phoenix Gang");
-				}
+			if (isBlackArmGang(player)) {
+				player.message("You are a member of the Black Arm Gang");
+			} else if (isPhoenixGang(player)) {
+				player.message("You are a member of the Phoenix Gang");
 			} else {
 				player.message("You are not in a gang - you need to start the shield of arrav quest");
 			}

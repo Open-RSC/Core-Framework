@@ -133,7 +133,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 					|| player.getInventory().contains(new Item(54))) {
 				message(player, "You search the chest", "You find nothing.");
 				return;
-			} else if (player.getCache().hasKey("arrav_gang") && player.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
+			} else if (isPhoenixGang(player)) {
 			message(player, "You search the chest",
 					"You find half a shield which you take");
 			addItem(player, 54, 1);
@@ -147,7 +147,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 					|| player.getInventory().contains(new Item(53))) {
 				message(player, "You search the cupboard", "You find nothing.");
 				return;
-			} else if (player.getCache().hasKey("arrav_gang") && player.getCache().getInt("arrav_gang") == BLACK_ARM) {
+			} else if (isBlackArmGang(player)) {
 			message(player, "You search the cupboard",
 					"You find half a shield which you take");
 			addItem(player, 53, 1);
@@ -209,8 +209,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			case 5:
 			case -1:
 			case -2:
-				if ((p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
-							|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE) {
+				if (isBlackArmGang(p)) {
 					if (p.getQuestStage(Constants.Quests.HEROS_QUEST) > 0) {
 						playerTalk(p, n, "Hey");
 						npcTalk(p, n, "Hey");
@@ -450,7 +449,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 21 && obj.getY() == 533) {
-			if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {
+			if (isBlackArmGang(p)) {
 				if (p.getY() >= 533) {
 					doDoor(obj, p);
 					p.teleport(148, 532, false);
@@ -463,27 +462,25 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			}
 		} else if (obj.getID() == 19 && obj.getY() == 3370) {
 			Npc man = getNearestNpc(p, 24, 20);
-			if (p.getCache().hasKey("arrav_gang")) {
-				if (p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
-					if (p.getQuestStage(this) != 5) {
-						if (man != null) {
-							man.initializeTalkScript(p);
-						}
-					} else {
-						if (p.getY() <= 3369) {
-							doDoor(obj, p);
-							p.teleport(p.getX(), p.getY() + 1, false);
-						} else {
-							doDoor(obj, p);
-							p.teleport(p.getX(), p.getY() - 1, false);
-						}
-					}
-				} else if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {
+			if (isPhoenixGang(p)) {
+				if (p.getQuestStage(this) != 5) {
 					if (man != null) {
-						npcTalk(p, man, "hey get away from there",
-								"Black arm dog");
-						man.setChasing(p);
+						man.initializeTalkScript(p);
 					}
+				} else {
+					if (p.getY() <= 3369) {
+						doDoor(obj, p);
+						p.teleport(p.getX(), p.getY() + 1, false);
+					} else {
+						doDoor(obj, p);
+						p.teleport(p.getX(), p.getY() - 1, false);
+					}
+				}
+			} else if (isBlackArmGang(p)) {
+				if (man != null) {
+					npcTalk(p, man, "hey get away from there",
+							"Black arm dog");
+					man.setChasing(p);
 				}
 			} else {
 				if(man != null) {
@@ -508,8 +505,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 		if (obj.getID() == 19 && obj.getY() == 3370) {
 			return true;
 		}
-		if (obj.getID() == 21 && player.getCache().hasKey("arrav_gang")
-				&& player.getCache().getInt("arrav_gang") == BLACK_ARM) {
+		if (obj.getID() == 21 && isBlackArmGang(player)) {
 			return true;
 		}
 		if (obj.getID() == 20 && obj.getY() == 532) {
@@ -550,5 +546,15 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			return true;
 
 		return false;
-	}	
+	}
+
+	public static boolean isBlackArmGang(Player p) {
+		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
+					|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE;
+	}
+
+	public static boolean isPhoenixGang(Player p) {
+		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
+						|| p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE;
+	}
 }
