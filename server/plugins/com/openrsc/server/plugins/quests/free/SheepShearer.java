@@ -89,6 +89,7 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 						if (choice2 == 0) {
 							npcTalk(p, n,
 									"Ok I'll see you when you have some wool");
+							p.getCache().store("sheep_shearer_wool_count", 0);
 							p.updateQuestStage(getQuestId(), 1);
 						} else if (choice2 == 1) {
 							npcTalk(p,
@@ -108,18 +109,48 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 				break;
 			case 1:
 				npcTalk(p, n, "How are you doing getting those balls of wool?");
-				if (p.getInventory().hasItemId(207)
-						&& p.getInventory().countId(207) >= 20) {
+				int totalWool = 0;
+				int woolCount = p.getInventory().countId(207);
+				if (p.getCache().hasKey("sheep_shearer_wool_count")) {
+					totalWool = p.getCache().getInt("sheep_shearer_wool_count");
+					if (totalWool + woolCount > 20) {
+						woolCount = 20 - totalWool;
+						totalWool = 20;
+					}
+					else {
+						totalWool = woolCount + totalWool;
+					}
+				}
+				else {
+					p.getCache().store("sheep_shearer_wool_count", 0);
+					if (woolCount > 20) {
+						woolCount = 20;
+						totalWool = 20;
+					}
+					else if (woolCount < 0){
+						woolCount = 0;
+					}
+					else {
+						totalWool = woolCount;
+					}
+				}
+
+				if (woolCount > 0) {
 					playerTalk(p, n, "I have some");
 					npcTalk(p, n, "Give em here then");
-					p.message("You give Fred 20 balls of wool");
-					for (int i = 0; i < 20; i++)
-						p.getInventory().remove(207, 1);
-					playerTalk(p, n, "Thats all of them");
-					npcTalk(p, n, "I guess I'd better pay you then");
-					p.message("The farmer hands you some coins");
-					p.sendQuestComplete(Constants.Quests.SHEEP_SHEARER);
-					p.updateQuestStage(getQuestId(), -1);
+					p.message("You give Fred " + woolCount + " balls of wool");
+					p.getInventory().remove(207, woolCount);
+					if (totalWool >= 20) {
+						playerTalk(p, n, "Thats all of them");
+						npcTalk(p, n, "I guess I'd better pay you then");
+						p.message("The farmer hands you some coins");
+						p.sendQuestComplete(Constants.Quests.SHEEP_SHEARER);
+						p.updateQuestStage(getQuestId(), -1);
+						p.getCache().remove("sheep_shearer_wool_count");
+					}
+					else {
+						p.getCache().set("sheep_shearer_wool_count", totalWool);
+					}
 				} else {
 					playerTalk(p, n, "I haven't got any at the moment");
 					npcTalk(p, n, "Ah well at least you haven't been eaten");
