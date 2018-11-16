@@ -12,7 +12,7 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class HerosQuest implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener  {
@@ -418,7 +418,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 			}
 			if(garv != null) {
 				npcTalk(p,garv, "Where do you think you're going?");
-				if(p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM) {
+				if(isBlackArmGang(p)) {
 					playerTalk(p,garv, "Hi, I'm Hartigen",
 							"I've come to work here");
 					if(p.getInventory().wielding(248) && p.getInventory().wielding(230) && p.getInventory().wielding(196)) {

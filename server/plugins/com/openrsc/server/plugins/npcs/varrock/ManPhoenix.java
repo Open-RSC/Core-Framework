@@ -8,13 +8,11 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
-import com.openrsc.server.plugins.quests.free.ShieldOfArrav;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_GANG;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.PHOENIX_COMPLETE;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM_COMPLETE;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
 public class ManPhoenix implements TalkToNpcExecutiveListener,
 TalkToNpcListener {
@@ -22,16 +20,14 @@ TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Npc man = getNearestNpc(p, 24, 20);
-		if (p.getCache().getInt("arrav_gang") == BLACK_ARM) {
+		if (isBlackArmGang(p)) {
 			if (man != null) {
 				npcTalk(p, man, "hey get away from there",
 						"Black arm dog");
 				man.setChasing(p);
 			}
 		}		
-		else if(p.getQuestStage(Quests.HEROS_QUEST) >= 1 && (
-				(p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
-						|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE)) {
+		else if(p.getQuestStage(Quests.HEROS_QUEST) >= 1 && isPhoenixGang(p)) {
 			if(hasItem(p, 585)) {
 				playerTalk(p,n, "I have retrieved a candlestick");
 				npcTalk(p,n, "Hmm not a bad job",
@@ -57,9 +53,7 @@ TalkToNpcListener {
 			p.getCache().store("pheonix_mission", true);
 			p.getCache().store("pheonix_alf", true);
 		}
-		else if (!hasItem(p, 48) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
-				&& p.getCache().hasKey("arrav_gang")
-				&& p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
+		else if (!hasItem(p, 48) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 && isPhoenixGang(p)) {
 			npcTalk(p, n, "Greetings fellow gang member");
 			playerTalk(p, n, "I have lost the key you gave me");
 			npcTalk(p, n, "You need to be more careful",
@@ -69,10 +63,8 @@ TalkToNpcListener {
 			addItem(p, 48, 1);
 			npcTalk(p, n, "Have this spare");
 		}
-		else if (p.getInventory().hasItemId(49)
-				&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4
-				&& p.getCache().hasKey("arrav_gang")
-				&& p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
+		else if (p.getInventory().hasItemId(49) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4
+				&& isPhoenixGang(p)) {
 			npcTalk(p, n, "Hows your little mission going?");
 			playerTalk(p, n, "I have the intelligence report");
 			npcTalk(p, n, "Lets see it then");
@@ -88,8 +80,7 @@ TalkToNpcListener {
 			npcTalk(p, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
 			p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4
-				&& p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG) {
+		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p)) {
 			npcTalk(p, n, "Hows your little mission going?");
 			playerTalk(p, n, "I haven't managed to find the report yet");
 			npcTalk(p,
@@ -108,19 +99,18 @@ TalkToNpcListener {
 
 	private void memberOfPhoenixConversation(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
-		if ((p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == PHOENIX_GANG)
-				|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE) {
-		npcTalk(p, n, "Greetings fellow gang member");
-		defaultMenu.addOption(new Option(
+		if (isPhoenixGang(p)) {
+			npcTalk(p, n, "Greetings fellow gang member");
+			defaultMenu.addOption(new Option(
 				"I've heard you've got some cool treasures in this place") {
-			public void action() {
-				npcTalk(p, n,
+				public void action() {
+					npcTalk(p, n,
 						"Oh yeah, we've stolen some cool stuff in our time",
 						"The candlesticks down here",
 						"Were quite a challenge to get out the palace");
-				playerTalk(p, n, "And the shield of arrav",
+					playerTalk(p, n, "And the shield of arrav",
 						"I heard you got that");
-				npcTalk(p, n, "Hmm", "That was a while ago",
+					npcTalk(p, n, "Hmm", "That was a while ago",
 						"We don't even have the shield anymore",
 						"About 5 years ago",
 						"We had a massive fight in our gang",
@@ -132,19 +122,19 @@ TalkToNpcListener {
 						"They looted what treasure they could from us",
 						"Which included one of the halves of the shield",
 						"We've been rivals with the black arms ever since");
-			}
-		});
-		defaultMenu.addOption(new Option(
+				}
+			});
+			defaultMenu.addOption(new Option(
 				"Any suggestions for where I can go thieving?") {
-			public void action() {
-				npcTalk(p, n, "You can always try he market",
+				public void action() {
+					npcTalk(p, n, "You can always try he market",
 						"Lots of opportunity there");
-			}
-		});
-		defaultMenu.addOption(new Option("Where's the Blackarm gang hideout?") {
-			public void action() {
-				playerTalk(p, n, "I wanna go sabotage em");
-				npcTalk(p, n, "That would be a little tricky",
+				}
+			});
+			defaultMenu.addOption(new Option("Where's the Blackarm gang hideout?") {
+				public void action() {
+					playerTalk(p, n, "I wanna go sabotage em");
+					npcTalk(p, n, "That would be a little tricky",
 						"Their security is pretty good",
 						"Not as good as ours obviously", "But still good",
 						"If you really want to go there",
@@ -153,10 +143,10 @@ TalkToNpcListener {
 						"One of our operatives is often near the alley",
 						"A red haired tramp",
 						"He may be able to give you some ideas");
-				playerTalk(p, n, "Thanks for your help");
-			}
-		});
-		defaultMenu.showMenu(p);
+					playerTalk(p, n, "Thanks for your help");
+				}
+			});
+			defaultMenu.showMenu(p);
 		}
 	}
 	private void defaultConverstation(final Player p, final Npc n) {
