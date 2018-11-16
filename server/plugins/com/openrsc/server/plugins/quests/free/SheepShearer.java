@@ -31,8 +31,8 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 	}
 
 	class Fred {
-		public static final int KILL = 0;
-		public static final int LOST = 1;
+		static final int KILL = 0;
+		static final int LOST = 1;
 	}
 
 	private void fredDialogue(Player p, Npc n, int cID) {
@@ -44,9 +44,9 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 						"What are you doing on my land?",
 						"You're not the one who keeps leaving all my gates open?",
 						"And letting out all my sheep?");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"I'm looking for a quest",
-						"I'm looking for something to kill", "I'm lost" });
+						"I'm looking for something to kill", "I'm lost");
 				if (choice == 0) {
 					npcTalk(p,
 							n,
@@ -58,10 +58,10 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 							"Yes, that's it. Bring me 20 balls of wool",
 							"And I'm sure I could sort out some sort of payment",
 							"Of course, there's the small matter of the thing");
-					int choice1 = showMenu(p, n, new String[] {
+					int choice1 = showMenu(p, n,
 							"Yes okay. I can do that",
 							"That doesn't sound a very exciting quest",
-							"What do you mean, the thing?" });
+							"What do you mean, the thing?");
 					if (choice1 == 0) {
 						npcTalk(p, n, "Ok I'll see you when you have some wool");
 						p.updateQuestStage(getQuestId(), 1);
@@ -70,9 +70,9 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 								n,
 								"Well what do you expect if you ask a farmer for a quest?",
 								"Now are you going to help me or not?");
-						int choice2 = showMenu(p, n, new String[] {
+						int choice2 = showMenu(p, n,
 								"Yes okay. I can do that",
-								"No I'll give it a miss" });
+								"No I'll give it a miss");
 						if (choice2 == 0) {
 							npcTalk(p, n,
 									"Ok I'll see you when you have some wool");
@@ -83,9 +83,9 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 								"Something ate all the previous shearers",
 								"They probably got unlucky",
 								"So are you going to help me?");
-						int choice2 = showMenu(p, n, new String[] {
+						int choice2 = showMenu(p, n,
 								"Yes okay. I can do that",
-								"Erm I'm a bit worried about this thing" });
+								"Erm I'm a bit worried about this thing");
 						if (choice2 == 0) {
 							npcTalk(p, n,
 									"Ok I'll see you when you have some wool");
@@ -138,8 +138,10 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 				if (woolCount > 0) {
 					playerTalk(p, n, "I have some");
 					npcTalk(p, n, "Give em here then");
-					p.message("You give Fred " + woolCount + " balls of wool");
-					p.getInventory().remove(207, woolCount);
+					for (int i = 0; i < woolCount; ++i) {
+						p.getInventory().remove(207, 1);
+						message(p, 600,"You give Fred a ball of wool");
+					}
 					if (totalWool >= 20) {
 						playerTalk(p, n, "Thats all of them");
 						npcTalk(p, n, "I guess I'd better pay you then");
@@ -149,7 +151,10 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 						p.getCache().remove("sheep_shearer_wool_count");
 					}
 					else {
+						playerTalk(p, n, "That's all I've got so far");
 						p.getCache().set("sheep_shearer_wool_count", totalWool);
+						npcTalk(p, n, "I need more before I can pay you");
+						playerTalk(p, n, "Ok I'll work on it");
 					}
 				} else {
 					playerTalk(p, n, "I haven't got any at the moment");
@@ -158,8 +163,8 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 				break;
 			case -1:
 				npcTalk(p, n, "What are you doing on my land?");
-				int choice3 = showMenu(p, n, new String[] {
-						"I'm looking for something to kill", "I'm lost" });
+				int choice3 = showMenu(p, n,
+						"I'm looking for something to kill", "I'm lost");
 				if (choice3 == 0) {
 					fredDialogue(p, n, Fred.KILL);
 				} else if (choice3 == 1) {
@@ -191,10 +196,7 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == 77) {
-			return true;
-		}
-		return false;
+		return n.getID() == 77;
 	}
 
 	@Override
