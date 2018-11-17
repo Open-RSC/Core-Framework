@@ -66,9 +66,9 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 			switch (p.getQuestStage(this)) {
 			case 2:
 				npcTalk(p, n, "So how is thy quest going?");
-				int map = showMenu(p, n, new String[] {
+				int map = showMenu(p, n,
 						"So where can I find this dragon?",
-						"Where can I get an antidragon shield?" });
+						"Where can I get an antidragon shield?");
 				if (map == 0) {
 					oziachDialogue(p, n, Oziach.FIND_DRAGON);
 				} else if (map == 1) {

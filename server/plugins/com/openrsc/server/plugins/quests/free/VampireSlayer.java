@@ -41,9 +41,9 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 					"Our little village has been dreadfully ravaged by an evil vampire",
 					"There's hardly any of us left",
 					"We need someone to get rid of him once and for good");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 					"No. vampires are scary", "Ok I'm up for an adventure",
-					"I tried fighting him. He wouldn't die" });
+					"I tried fighting him. He wouldn't die");
 			if (choice == 0) {
 				npcTalk(p, n, "I don't blame you");
 			} else if (choice == 1) {
@@ -123,8 +123,8 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						"He wanted me to ask you how I should go about stoping it");
 				npcTalk(p, n,
 						"Buy me a beer then I will teash you what you need to know");
-				int choice2 = showMenu(p, n, new String[] { "Ok mate",
-						"But this is your friend Morgan we're talking about" });
+				int choice2 = showMenu(p, n, "Ok mate",
+						"But this is your friend Morgan we're talking about");
 				if (choice2 == 0) {
 					if (p.getInventory().hasItemId(193)) {
 						p.message("You give a beer to Dr Harlow");
