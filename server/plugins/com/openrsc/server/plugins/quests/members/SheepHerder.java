@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.Constants.Quests;
-import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;

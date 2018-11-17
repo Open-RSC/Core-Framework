@@ -677,9 +677,36 @@ public class DoorAction {
 			}
 			doDoor(obj, p);
 			break;
-
-		case 67: // Lost City Market Door (117, 3539), (116, 3537)
-			Npc n = World.getWorld().getNpcById(221);
+			
+		case 67: // Lost City Market Door (117, 3539), (116, 3537) NPC: 221
+			if (p.getLocation().getX() == 115 || p.getLocation().getY() == 3539)  {
+				Npc n = World.getWorld().getNpc(221, 105, 116, 3536, 3547);
+				if (n != null) {
+					npcTalk(p, n,
+							"You cannot go through this door without paying the trading tax");
+					playerTalk(p, n, "What do I need to pay?");
+					npcTalk(p, n, "One diamond");
+					int m = showMenu(p, n, "Okay", "A diamond, are you crazy?",
+							"I haven't brought my diamonds with me");
+					if (m == 0) {
+						if (!hasItem(p, 161)) {
+							playerTalk(p, n,
+									"I haven't brought my diamonds with me");
+						} else {
+							p.message("You give the doorman a diamond");
+							removeItem(p, 161, 1);
+							doDoor(obj, p);
+						}
+					}
+					else if (m == 1) {
+						npcTalk(p, n, "Nope those are the rules");						
+						}
+				}
+				break;	
+			}	
+			if (p.getLocation().getX() == 116 || p.getLocation().getY() == 3538) {						
+				Npc n = World.getWorld().getNpc(221, 117, 125, 3531, 3538);
+			
 			if (n != null) {
 				npcTalk(p, n,
 						"You cannot go through this door without paying the trading tax");
@@ -698,7 +725,8 @@ public class DoorAction {
 					}
 				}
 				else if (m == 1) {
-					npcTalk(p, n, "Nope those are the rules");
+					npcTalk(p, n, "Nope those are the rules");				
+					}
 				}
 			}
 			break;
