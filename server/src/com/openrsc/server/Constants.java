@@ -182,13 +182,14 @@ public final class Constants {
 		public static boolean WANT_KEYBOARD_SHORTCUTS = false;
 		public static boolean WANT_CUSTOM_BANKS = false;
 		public static boolean WANT_BANK_PINS = false;
+		public static boolean WANT_BANK_NOTES = false;
 		public static boolean CUSTOM_FIREMAKING = false;
 		public static boolean WANT_DROP_X = false;
 		public static boolean WANT_EXP_INFO = false;
 		public static boolean WANT_WOODCUTTING_GUILD = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
-                public static boolean AUTO_SERVER_RESTART = true;
+		public static boolean AUTO_SERVER_RESTART = true;
 		public static boolean NPC_KILL_MESSAGES = false;
 		public static boolean NPC_KILL_MESSAGES_FILTER = false;
 		public static String NPC_KILL_MESSAGES_NPCs = "";
@@ -261,6 +262,7 @@ public final class Constants {
 			WANT_KEYBOARD_SHORTCUTS = Boolean.parseBoolean(props.getProperty("want_keyboard_shortcuts"));
 			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
 			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
+			WANT_BANK_NOTES = Boolean.parseBoolean(props.getProperty("want_bank_notes"));
 			CUSTOM_FIREMAKING = Boolean.parseBoolean(props.getProperty("custom_firemaking"));
 			WANT_DROP_X = Boolean.parseBoolean(props.getProperty("want_drop_x"));
 			WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
@@ -268,7 +270,7 @@ public final class Constants {
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
-        	        NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
+			NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
 			NPC_KILL_MESSAGES_NPCs = props.getProperty("npc_kill_messages_npcs");
 			NPC_KILL_LOGGING = Boolean.parseBoolean(props.getProperty("npc_kill_logging"));
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
@@ -277,19 +279,19 @@ public final class Constants {
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 
 			START_TIME = System.currentTimeMillis();
-                        AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
+			AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
 			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
 			RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
-                        RESTART_HOUR3 = Integer.parseInt(props.getProperty("restart_hour3"));
-                        RESTART_HOUR4 = Integer.parseInt(props.getProperty("restart_hour4"));
+			RESTART_HOUR3 = Integer.parseInt(props.getProperty("restart_hour3"));
+			RESTART_HOUR4 = Integer.parseInt(props.getProperty("restart_hour4"));
 			RESTART_MINUTE1 = Integer.parseInt(props.getProperty("restart_minute1"));
 			RESTART_MINUTE2 = Integer.parseInt(props.getProperty("restart_minute2"));
-                        RESTART_MINUTE3 = Integer.parseInt(props.getProperty("restart_minute3"));
-                        RESTART_MINUTE4 = Integer.parseInt(props.getProperty("restart_minute4"));
+			RESTART_MINUTE3 = Integer.parseInt(props.getProperty("restart_minute3"));
+			RESTART_MINUTE4 = Integer.parseInt(props.getProperty("restart_minute4"));
 			RESTART_DELAY1 = Integer.parseInt(props.getProperty("restart_delay1"));
 			RESTART_DELAY2 = Integer.parseInt(props.getProperty("restart_delay2"));
-                        RESTART_DELAY3 = Integer.parseInt(props.getProperty("restart_delay3"));
-                        RESTART_DELAY4 = Integer.parseInt(props.getProperty("restart_delay4"));
+			RESTART_DELAY3 = Integer.parseInt(props.getProperty("restart_delay3"));
+			RESTART_DELAY4 = Integer.parseInt(props.getProperty("restart_delay4"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
