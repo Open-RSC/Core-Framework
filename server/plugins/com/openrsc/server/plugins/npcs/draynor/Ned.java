@@ -143,7 +143,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					message(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 					);
-					removeItem(p, 207, 3);
+					p.getInventory().remove(207, 3);
 					npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
 					p.message("Ned gives you a pretty good wig");
 					addItem(p, 245, 1);
