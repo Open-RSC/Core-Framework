@@ -2976,7 +2976,7 @@ public final class mudclient implements Runnable {
 							int sellCost = GenUtil.computeItemCost(EntityHandler.getItemDef(id).getBasePrice(),
 									this.shopItemPrice[this.shopSelectedItemIndex], this.shopSellPriceMod, -30910, false, 1,
 									count, this.shopPriceMultiplier);
-							if (EntityHandler.getItemDef(id).getNotedFormOf() >= 0) {
+							/*if (EntityHandler.getItemDef(id).getNotedFormOf() >= 0) {
 
 								int originalItemID = EntityHandler.getItemDef(id).getNotedFormOf();
 								int originalItemPrice = 0;
@@ -2997,7 +2997,7 @@ public final class mudclient implements Runnable {
 								sellCost = GenUtil.computeItemCost(EntityHandler.getItemDef(originalItemID).getBasePrice(),
 										originalItemPrice, this.shopSellPriceMod, -30910, false, 1, originalItemCount,
 										this.shopPriceMultiplier);
-							}
+							}*/
 							this.getSurface().drawString(
 									EntityHandler.getItemDef(id).getName() + ": sell for " + sellCost + "gp each", 2 + xr,
 									yr + 239, 0xFFFF00, 1);
