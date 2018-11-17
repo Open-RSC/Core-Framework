@@ -1,6 +1,7 @@
 package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.entityhandling.defs.ItemDef;
 
 import orsc.Config;
 import orsc.enumerations.InputXAction;
@@ -308,11 +309,20 @@ public class BankInterface {
 				// Draw Item Sprite From Bank
 				if (inventorySlot < currentBankIDs.size() && currentBankIDs.get(inventorySlot) != -1
 						&& (currentBankCounts.get(inventorySlot) > 0 || mc.getInventoryCount(currentBankIDs.get(inventorySlot)) > 0)) {
+
+					ItemDef def = EntityHandler.getItemDef(currentBankIDs.get(inventorySlot));
 					mc.getSurface().drawSpriteClipping(
-							mc.spriteItem + EntityHandler.getItemDef(currentBankIDs.get(inventorySlot)).getSprite(),
-							slotX, slotY, 48, 32,
-							EntityHandler.getItemDef(currentBankIDs.get(inventorySlot)).getPictureMask(),
-							0, false, 0, 1);
+									mc.spriteItem + def.getSprite(),
+									slotX, slotY, 48, 32,
+									def.getPictureMask(),
+									0, false, 0, 1);
+					if (def.getNotedFormOf() >= 0) { // Noted items
+						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
+						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(),
+										slotX + 7, slotY + 5, 29, 19, originalDef.getPictureMask(), 0, false,
+										0, 1);
+					}
+
 					drawString(""+currentBankCounts.get(inventorySlot), slotX + 1, slotY + 10, 1, 65280); // Amount in bank (green)
 
 					inventoryCount = mc.getInventoryCount(currentBankIDs.get(inventorySlot));
