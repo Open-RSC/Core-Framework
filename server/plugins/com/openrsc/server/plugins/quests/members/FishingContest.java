@@ -6,8 +6,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -131,9 +129,10 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 				
 				npcTalk(p, n, "so how are you doing so far?");
 				if (hasCarp) {
-					final int contestStartedMenu = showMenu(p, n, false, new String[] {
+					//do not send over
+					final int contestStartedMenu = showMenu(p, n, false,
 							"I have this big fish,is it enough to win?",
-							"I think I might still be able to find a bigger fish" });
+							"I think I might still be able to find a bigger fish");
 					if (contestStartedMenu == 0) {
 						playerTalk(p, n, "I have this big fish", "Is it enough to win?");
 						npcTalk(p, n, "Well we'll just wait till time is up");
@@ -141,7 +140,8 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 						sleep(2000);
 						bonzoTimesUpDialogue(p, n);
 					} else if (contestStartedMenu == 1) {
-						npcTalk(p, n, " Ok, good luck");
+						playerTalk(p, n, "I think I might still be able to find a bigger fish");
+						npcTalk(p, n, "Ok, good luck");
 					}
 				}
 				else {
@@ -169,9 +169,9 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "Hey you need to pay to join the competition first",
 							"only 5gp entrance fee");
 				}
-				final int first = showMenu(p, n, new String[] {
+				final int first = showMenu(p, n,
 						"I'll give that a go then",
-						"No thanks, I'll just watch the fun" });
+						"No thanks, I'll just watch the fun");
 				if (first == 0) {
 					npcTalk(p, n, "Marvelous");
 					if (p.getInventory().countId(10) >= 5) {
@@ -271,10 +271,10 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 			npcTalk(p, n, "Hello young man", "Come to visit old Grandpa Jack?",
 					"I can tell ye stories for sure",
 					"I used to be the best fisherman these parts have seen");
-			int first = showMenu(p, n, new String[] {
+			int first = showMenu(p, n,
 					"Tell me a story then",
 					"Are you entering the fishing competition?",
-					"Sorry I don't have time now" });
+					"Sorry I don't have time now");
 			if (first == 0) {
 				npcTalk(p,
 						n,
@@ -295,10 +295,12 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 						"I know all about that",
 						"I won that four years straight",
 						"I'm to old for that lark now though");
-				final int second = showMenu(p, n, new String[] {
+				//do not send over
+				final int second = showMenu(p, n, false,
 						"I don't suppose you could give me any hints?",
-						"That's less competition for me then" });
+						"That's less competition for me then");
 				if (second == 0) {
+					playerTalk(p, n, "I don't suppose you could give me any hints?");
 					npcTalk(p,
 							n,
 							"Well you sometimes get these really big fish",
@@ -312,7 +314,7 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 						p.updateQuestStage(getQuestId(), 2);
 					}
 				} else if (second == 1) {
-					// NOTHING
+					playerTalk(p, n, "That's less competition for me then\"");
 				}
 			} else if (first == 2) {
 				npcTalk(p, n, "sigh", "Young people - always in such a rush");
@@ -322,9 +324,9 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 			npcTalk(p, n, "Hello young man", "Come to visit old Grandpa Jack?",
 					"I can tell ye stories for sure",
 					"I used to be the best fisherman these parts have seen");
-			first = showMenu(p, n, new String[] {
+			first = showMenu(p, n,
 					"Tell me a story then",
-					"Sorry I don't have time now" });
+					"Sorry I don't have time now");
 			if (first == 0) {
 				npcTalk(p,
 						n,
@@ -377,42 +379,54 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 		case 0:
 			npcTalk(p, n, "hmmph what do you want");
 
-			final int first = showMenu(p, n, new String[] {
+			//do not send over
+			final int first = showMenu(p, n, false,
 					"I was wondering what was down those stairs?",
-					"I was just stopping to say hello" });
+					"I was just stopping to say hello");
 
 			if (first == 0) {
+				playerTalk(p, n, "I was just wondering what was down those stairs?");
 				npcTalk(p, n, "You can't go down there");
-				final int second = showMenu(p, n, new String[] {
+				//do not send over
+				final int second = showMenu(p, n, false,
 						"I didn't want to anyway", "Why not?",
-						"I'm bigger than you let me by" });
+						"I'm bigger than you let me by");
 				if (second == 0) {
+					playerTalk(p, n, "I didn't want to anyway");
 					npcTalk(p, n, "Good");
 				} else if (second == 1) {
+					playerTalk(p, n, "Why not?");
 					npcTalk(p, n, "This is the home of the mountain dwarves",
 							"How would you like it if I wanted to take a short cut through your home");
-					final int third = showMenu(p, n, new String[] {
+					//do not send over
+					final int third = showMenu(p, n, false,
 							"Ooh is this a short cut to somewhere",
 							"Oh sorry I hadn't realised it was private",
-							"If you were my friend I wouldn't mind it" });
+							"If you were my friend I wouldn't mind it");
 					if (third == 0) {
+						playerTalk(p, n, "Ooh is this a short cut to somewhere?");
 						npcTalk(p, n, "Well it is easier to go this way",
 								"Than through passes full of wolves");
 					} else if (third == 1) {
-						// NOTHING
+						playerTalk(p, n, "Oh sorry I hadn't realised it was private");
 					} else if (third == 2) {
+						playerTalk(p, n, "If you were my friend I wouldn't mind");
 						npcTalk(p, n, "Yes, but I don't even know you");
-						final int fourth = showMenu(p, n, new String[] {
+						//do not send over
+						final int fourth = showMenu(p, n, false,
 								"Well lets be friends",
-								"You're a grumpy little man aren't you?" });
+								"You're a grumpy little man aren't you?");
 						if (fourth == 0) {
+							playerTalk(p, n, "Well lets be friends");
 							npcTalk(p, n, "I don't make friends easily",
 									"People need to earn my trust first");
 
-							final int fifth = showMenu(p, n, new String[] {
+							//do not send over
+							final int fifth = showMenu(p, n, false,
 									"And how am I meant to do that?",
-									"You're a grumpy little man aren't you?" });
+									"You're a grumpy little man aren't you?");
 							if (fifth == 0) {
+								playerTalk(p, n, "And how am I meant to do that?");
 								npcTalk(p,
 										n,
 										"My we are the persistant one aren't we",
@@ -421,10 +435,12 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 										"This artifact is the first prize at the hemenster fishing competition",
 										"Fortunately we have acquired a pass to enter that competition",
 										"Unfortunately Dwarves don't make good fishermen");
-								final int six = showMenu(p, n, new String[] {
+								//do not send over
+								final int six = showMenu(p, n, false,
 										"Fortunately I'm alright at fishing",
-										"I'm not much of a fisherman either" });
+										"I'm not much of a fisherman either");
 								if (six == 0) {
+									playerTalk(p, n, "fortunately I'm alright at fishing");
 									npcTalk(p,
 											n,
 											"Okay I entrust you with our competition pass",
@@ -432,21 +448,26 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 									addItem(p, 719, 1);
 									p.updateQuestStage(getQuestId(), 1);
 								} else if (six == 1) {
+									playerTalk(p, n, "I'm not much of a fisherman either");
 									npcTalk(p, n, "what good are you?");
 								}
 							} else if (fifth == 1) {
+								playerTalk(p, n, "You're a grumpy little man aren't you");
 								npcTalk(p, n, " Don't you know it");
 							}
 
 						} else if (fourth == 1) {
+							playerTalk(p, n, "You're a grumpy little man aren't you");
 							npcTalk(p, n, " Don't you know it");
 						}
 					}
 				} else if (second == 2) {
+					playerTalk(p, n, "I'm bigger than you", "Let me by");
 					npcTalk(p, n, "Go away",
 							"You're not going to bully your way in here");
 				}
 			} else if (first == 1) {
+				playerTalk(p, n, "I was just stopping to say hello");
 				npcTalk(p, n, "Hello then");
 			}
 
@@ -455,14 +476,17 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 		case 2:
 			npcTalk(p, n, "Have you won yet?");
 			if(!hasItemAtAll(p, 719)) {
-				final int opts = showMenu(p, n, new String[] {
+				//do not send over
+				final int opts = showMenu(p, n, false,
 						"No I need another competition pass",
-						"No it takes preparation to win fishing competitions" });
+						"No it takes preparation to win fishing competitions");
 				if(opts == 0) {
+					playerTalk(p, n, "I need another competition pass");
 					npcTalk(p, n, "Hmm its a good job they sent us spares",
 							"there you go");
 					addItem(p, 719, 1);
 				} else if(opts == 1) {
+					playerTalk(p, n, "No it takes preparation to win fishing competitions");
 					npcTalk(p, n, "Maybe that's where we are going wrong when we try fishing");
 				}
 			}
@@ -715,37 +739,45 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 			case 1:
 			case 2:
 				npcTalk(p, n, "..");
-				final int first = showMenu(p, n, new String[] { "..?",
-						"Who are you?", "so you like fishing?" });
+				//do not send over
+				final int first = showMenu(p, n, false, "..?",
+						"Who are you?", "so you like fishing?");
 				if (first == 0) {
+					playerTalk(p, n, "..?");
 					npcTalk(p, n, " ...");
 				} else if (first == 1) {
+					playerTalk(p, n, "Who are you?");
 					npcTalk(p, n, "My name is Vlad",
 							"I come from far avay, vere the sun is not so bright");
-					final int second = showMenu(p, n, new String[] {
+					final int second = showMenu(p, n,
 							"You're a vampire aren't you?",
-							"Is it nice there?" });
+							"Is it nice there?");
 					if (second == 0) {
 						sinisterDialogue(p, n, SINISTER.VAMPIRE);
 					} else if (second == 1) {
 						npcTalk(p, n, "It is vonderful",
 								"the vomen are beautiful",
 								"and the nights are long");
-						final int third = showMenu(p, n, new String[] {
+						//do not send over
+						final int third = showMenu(p, n, false,
 								"You're a vampire aren't you?",
 								"So you like fishing?",
-								"Well good luck with the fishing" });
+								"Well good luck with the fishing");
 						if (third == 0) {
+							playerTalk(p, n, "You're a vampire aren't you?");
 							sinisterDialogue(p, n, SINISTER.VAMPIRE);
 						} else if(third == 1) {
+							playerTalk(p, n, "So you like fishing");
 							sinisterDialogue(p, n, SINISTER.FISHING);
 						} else if(third == 2) {
+							playerTalk(p, n, "Well good luck with the fishing");
 							npcTalk(p, n, "Luck has nothing to do vith it",
 									"It is all in the technique");
 						}
 					}
 
 				} else if (first == 2) {
+					playerTalk(p, n, "So you like fishing");
 					sinisterDialogue(p, n, SINISTER.FISHING);
 				}
 				break;
@@ -760,16 +792,20 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 		case SINISTER.FISHING:
 			npcTalk(p, n, "My doctor told be to take up a velaxing hobby",
 					"vhen I am stressed I tend to get a little..", "..thirsty");
-			final int third = showMenu(p, n, new String[] {
+			//do not send over
+			final int third = showMenu(p, n, false,
 					"You're a vampire aren't you?", 
 					"If you get thirsty you should drink something",
-					"Well good look with the fishing" });
+					"Well good look with the fishing");
 			if (third == 0) {
+				playerTalk(p, n, "You're a vampire aren't you?");
 				sinisterDialogue(p, n, SINISTER.VAMPIRE);
 			}
 			else if (third == 1) {
+				playerTalk(p, n, "If you get thirsty", "You should drink something");
 				npcTalk(p, n, "I think I may do that soon");
 			} else if (third == 2) {
+				playerTalk(p, n, "Well good luck with the fishing");
 				npcTalk(p, n, "Luck has nothing to do vith it",
 						"It is all in the technique");
 			}
