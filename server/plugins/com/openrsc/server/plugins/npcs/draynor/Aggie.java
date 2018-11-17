@@ -108,7 +108,7 @@ public final class Aggie implements TalkToNpcListener,
 							"She tips it into a cauldron and mutters some words");
 					removeItem(p, 181, 1);
 					removeItem(p, 136, 1);
-					removeItem(p, 141, 1);// Is it done i believe so :O
+					removeItem(p, 141, 1);
 					removeItem(p, 236, 1);
 					npcTalk(p, n,
 							"Tourniquet, Fenderbaum, Tottenham, MonsterMunch, MarbleArch");
@@ -184,7 +184,7 @@ public final class Aggie implements TalkToNpcListener,
 					playerTalk(p, n, "Oh dear. I don't have any money");
 				} else {
 					message(p, "You hand the onions and payment to Aggie");
-					removeItem(p, 241, 2);
+					p.getInventory().remove(241, 2);
 					removeItem(p, 10, 5);
 					message(p,
 							"she takes a yellow bottle from nowhere and hands it to you");
@@ -198,10 +198,10 @@ public final class Aggie implements TalkToNpcListener,
 			break;
 		case Aggie.RED_DYE:
 			npcTalk(p, n, "3 Lots of red berries, and 5 coins, to you");
-			int menu3 = showMenu(p, n, new String[] {
+			int menu3 = showMenu(p, n,
 					"Okay, make me some red dye please",
 					"I don't think I have all the ingredients yet",
-					"I can do without dye at that price" });
+					"I can do without dye at that price");
 			if (menu3 == 0) {
 				if (!hasItem(p, 236, 3)) {
 					message(p,
@@ -210,7 +210,7 @@ public final class Aggie implements TalkToNpcListener,
 					message(p, "Oh dear. I don't have any money");
 				} else {
 					message(p, "You hand the berries and payment to Aggie");
-					removeItem(p, 236, 3);
+					p.getInventory().remove(236, 3);
 					removeItem(p, 10, 5);
 					message(p,
 							"she takes a red bottle from nowhere and hands it to you");
@@ -224,10 +224,10 @@ public final class Aggie implements TalkToNpcListener,
 			break;
 		case Aggie.BLUE_DYE:
 			npcTalk(p, n, "2 woad leaves, and 5 coins, to you");
-			int menu6 = showMenu(p, n, new String[] {
+			int menu6 = showMenu(p, n,
 					"Okay, make me some blue dye please",
 					"I don't think I have all the ingredients yet",
-					"I can do without dye at that price" });
+					"I can do without dye at that price");
 			if (menu6 == 0) {
 				if (!hasItem(p, 281, 2) && hasItem(p, 10, 5)) {
 					message(p,
@@ -235,7 +235,7 @@ public final class Aggie implements TalkToNpcListener,
 					playerTalk(p, n, "Oh dear. I don't have any money");
 				} else {
 					message(p, "You hand the woad leaves and payment to Aggie");
-					removeItem(p, 281, 2);
+					p.getInventory().remove(281, 2);
 					removeItem(p, 10, 5);
 					message(p,
 							"she takes a blue bottle from nowhere and hands it to you");
