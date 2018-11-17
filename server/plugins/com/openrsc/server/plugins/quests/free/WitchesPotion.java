@@ -42,16 +42,16 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 			case 0:
 				npcTalk(p, n, "Greetings traveller",
 						"What could you want with an old woman like me");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"I am in search of a quest",
-						"I've heard that you are a witch" });
+						"I've heard that you are a witch");
 				if (choice == 0) {
 					npcTalk(p, n, "Hmm maybe i can think of something for you",
 							"Would you like to become more proficient in the dark arts?");
-					int choice2 = showMenu(p, n, new String[] {
+					int choice2 = showMenu(p, n,
 							"Yes help me become one with my darker side",
 							"No I have my principles and honour",
-							"What, you mean improve my magic?" });
+							"What, you mean improve my magic?");
 					if (choice2 == 0) {
 						hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
 
@@ -60,10 +60,10 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 					} else if (choice2 == 2) {
 						npcTalk(p, n, "Yes improve your magic",
 								"Do you have no sense of drama");
-						int choice4 = showMenu(p, n, new String[] {
+						int choice4 = showMenu(p, n,
 								"Yes I'd like to improve my magic",
 								"No I'm not interested",
-								"Show me the mysteries of the dark arts" });
+								"Show me the mysteries of the dark arts");
 						if (choice4 == 0) {
 							hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
 						} else if (choice4 == 1) {
@@ -124,8 +124,7 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 					"So that you can perform acts of dark magic with greater ease");
 			playerTalk(p, n, "Dark magic?");
 			npcTalk(p, n, "It's not as ominous as it sounds, trust me");
-			int choice3 = showMenu(p, n, new String[] {
-					"No, I don't like the sound of it", "Well, alright..." });
+			int choice3 = showMenu(p, n, "No, I don't like the sound of it", "Well, alright...");
 			if (choice3 == 0) {
 				npcTalk(p, n, "Fine, suit yourself",
 						"But I sense a great deal of dark power within you",

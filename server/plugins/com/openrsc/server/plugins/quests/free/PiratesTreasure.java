@@ -132,9 +132,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		switch (p.getQuestStage(this)) {
 		case 0:
 			npcTalk(p, n, "Arrrh Matey");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 					"I'm in search of treasure", "Arrrh",
-					"Do you want to trade?" });
+					"Do you want to trade?");
 			if (choice == 0) {
 				npcTalk(p, n, "Arrrh treasure you be after eh?",
 						"Well I might be able to tell you where to find some.",
@@ -179,9 +179,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 					"I believe it opens his chest",
 					"In his old room in the blue moon inn in Varrock",
 					"With any luck his treasure will be in there");
-			int menu = showMenu(p, n, new String[] {
+			int menu = showMenu(p, n,
 					"Ok thanks, I'll go and get it",
-			"So why didn't you ever get it?" });
+			"So why didn't you ever get it?");
 			if (menu == 1) {
 				npcTalk(p, n, "I'm not allowed in the blue moon inn",
 						"Apparently I'm a drunken trouble maker");
@@ -197,8 +197,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		case -1:
 		case 3:
 			npcTalk(p, n, "Arrrh Matey");
-			int menu1 = showMenu(p, n, new String[] { "Arrrh",
-					"Do you want to trade?"});
+			int menu1 = showMenu(p, n, "Arrrh",
+					"Do you want to trade?");
 			if (menu1 == 0) {
 				npcTalk(p, n, "Arrrh");
 			} else if (menu1 == 1) {
@@ -213,9 +213,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 			if (!p.getCache().hasKey("bananas")) {
 				npcTalk(p, n,
 						"Hello I'm Luthas, I run the banana plantation here");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"Could you offer me employment on your plantation?",
-				"That customs officer is annoying isn't she?" });
+				"That customs officer is annoying isn't she?");
 				if (choice == 0) {
 					npcTalk(p,
 							n,
@@ -245,11 +245,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 					int choice = showMenu(
 							p,
 							n,
-							new String[] {
 									"Will you pay me for another crate full?",
 									"Thankyou, I'll be on my way",
 									"So where are these bananas going to be delivered to?",
-							"That custom officer is annoying isn't she?" });
+							"That custom officer is annoying isn't she?");
 					if (choice == 0) {
 						p.getCache().set("bananas", 0);
 						npcTalk(p,
@@ -266,9 +265,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 					return;
 				}
 				npcTalk(p, n, "Have you completed your task yet?");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"What did I have to do again?",
-				"No, the crate isn't full yet" });
+				"No, the crate isn't full yet");
 				if (choice == 0) {
 					npcTalk(p,
 							n,

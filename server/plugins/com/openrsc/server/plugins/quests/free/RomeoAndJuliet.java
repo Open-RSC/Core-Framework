@@ -33,16 +33,16 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 			npcTalk(p, n, "Juliet, Juliet, Juliet! Wherefore Art thou?",
 					"Kind friend, Have you seen Juliet?",
 					"Her and her Father seem to have disappeared");
-			int choice = showMenu(p, n, new String[] { "Yes, I have seen her",
+			int choice = showMenu(p, n, "Yes, I have seen her",
 					"No, but that's girls for you ",
-					"Can I help find her for you?" });
+					"Can I help find her for you?");
 			if (choice == 0) {
 				playerTalk(p, n, "I think it was her. Blond, stressed");
 				npcTalk(p, n, "Yes, that sounds like her",
 						"Please tell her I long to be with her");
-				int choice2 = showMenu(p, n, new String[] {
+				int choice2 = showMenu(p, n,
 						"Yes, I will tell her",
-						"Sorry I am too busy. Maybe later?" });
+						"Sorry I am too busy. Maybe later?");
 				if (choice2 == 0) {
 					npcTalk(p, n, "You are the saviour of my heart, thank you");
 					playerTalk(p,n, "Err, yes. Ok. Thats... nice.");
@@ -55,9 +55,9 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "Not my dear Juliet.",
 						"Could you find her for me?",
 						"Please tell her I long to be with her");
-				int choice3 = showMenu(p, n, new String[] {
+				int choice3 = showMenu(p, n,
 						"Yes, I will tell her how you feel",
-						"I can't, it sounds like work for me" });
+						"I can't, it sounds like work for me");
 				if (choice3 == 0) {
 					npcTalk(p, n, "You are the saviour of my heard, thank you");
 					playerTalk(p,n, "Err, yes. Ok. Thats... nice.");
@@ -118,9 +118,9 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 			npcTalk(p, n, "Romeo, Romeo, wherefore art thou Romeo",
 					"Bold adventurer, have you seen Romeo on your travels?",
 					"Skinyy guy, a bit wishy washy, head full of poetry");
-			int choice = showMenu(p, n, new String[] { "yes, I have met him",
+			int choice = showMenu(p, n, "yes, I have met him",
 					"No, I think I would have remembered if i had",
-					"I guess i could find him", "I think you could do better" });
+					"I guess i could find him", "I think you could do better");
 			if (choice == 0) {
 				npcTalk(p, n, "He has his good points",
 						"He dosen't spend all day on the internet, at least");
@@ -192,10 +192,10 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 		switch (p.getQuestStage(this)) {
 		case 0:
 			npcTalk(p, n, "Hello adventurer, do you seek a quest");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 					"I'm always looking for a quest",
 					"No, I prefer just to kill things",
-					"Can you recommend a good bar" });
+					"Can you recommend a good bar");
 			if (choice == 0) {
 				npcTalk(p,
 						n,
