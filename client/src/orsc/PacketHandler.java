@@ -728,7 +728,7 @@ public class PacketHandler {
 		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle;
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
 		int wantExperienceElixirs, wantKeyboardShortcuts;
-		int wantCustomBanks, wantBankPins, customFiremaking;
+		int wantCustomBanks, wantBankPins, wantBankNotes, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild;
 		int wantDecanting, wantCertsToBank;
 
@@ -760,6 +760,7 @@ public class PacketHandler {
 			wantKeyboardShortcuts = this.getClientStream().getUnsignedByte();
 			wantCustomBanks = this.getClientStream().getUnsignedByte();
 			wantBankPins = this.getClientStream().getUnsignedByte();
+			wantBankNotes = this.getClientStream().getUnsignedByte();
 			customFiremaking = this.getClientStream().getUnsignedByte();
 			wantDropX = this.getClientStream().getUnsignedByte();
 			wantExpInfo = this.getClientStream().getUnsignedByte();
@@ -794,6 +795,7 @@ public class PacketHandler {
 			wantKeyboardShortcuts = packetsIncoming.getUnsignedByte();
 			wantCustomBanks = packetsIncoming.getUnsignedByte();
 			wantBankPins = packetsIncoming.getUnsignedByte();
+			wantBankNotes = packetsIncoming.getUnsignedByte();
 			customFiremaking = packetsIncoming.getUnsignedByte();
 			wantDropX = packetsIncoming.getUnsignedByte();
 			wantExpInfo = packetsIncoming.getUnsignedByte();
@@ -867,6 +869,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", wantKeyboardShortcuts == 1 ? "true" : "false");
 		props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false");
 		props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false");
+		props.setProperty("S_WANT_BANK_NOTES", wantBankNotes == 1 ? "true" : "false");
 		props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false");
 		props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false");
 		props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false");

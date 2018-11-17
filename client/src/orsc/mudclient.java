@@ -2679,11 +2679,12 @@ public final class mudclient implements Runnable {
 				} else {
 					int var2;
 					if (this.mouseButtonClick == 0) {
+						// Draw
 						var2 = 0;
 						while (this.optionsMenuCount > var2) {
 							int var3 = '\uffff';
 							if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9
-									&& this.mouseY > 5 + var2 * 12 && this.mouseY < 5 + var2 * 12 + 12) {
+									&& this.mouseY > 2 + var2 * 12 && this.mouseY < 2 + var2 * 12 + 12) {
 								var3 = 0xFF0000;
 							}
 
@@ -2693,9 +2694,10 @@ public final class mudclient implements Runnable {
 							++var2;
 						}
 					} else {
+						// Click
 						for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
 							if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9 > this.mouseX
-									&& 5 + var2 * 12 < this.mouseY && 5 + 12 + var2 * 12 > this.mouseY) {
+									&& 2 + var2 * 12 < this.mouseY && 2 + 12 + var2 * 12 > this.mouseY) {
 								this.packetHandler.getClientStream().newPacket(116);
 								this.packetHandler.getClientStream().writeBuffer1.putByte(var2);
 								this.packetHandler.getClientStream().finishPacket();
