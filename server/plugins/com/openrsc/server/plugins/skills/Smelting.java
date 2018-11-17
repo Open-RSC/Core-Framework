@@ -222,11 +222,11 @@ InvUseOnObjectExecutiveListener {
 					if(item.getID() == GOLD_BAR_FAMILYCREST - 1) 
 						removeItem(p, GOLD_BAR_FAMILYCREST - 1, 1);
 					else 
-						removeItem(p, smelt.getID(), smelt.getOreAmount());
+						p.getInventory().remove(smelt.getID(), smelt.getOreAmount());
 
-					for (int i = 0; i < smelt.getReqOreAmount(); i++) {	
-						p.getInventory().remove(new Item(smelt.getReqOreId()));
-					}
+					if (smelt.getReqOreAmount() > 0)
+						p.getInventory().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
+
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
 						p.message("The ore is too impure and you fail to refine it");
 					} else {
