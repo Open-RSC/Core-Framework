@@ -295,8 +295,8 @@ InvUseOnObjectExecutiveListener {
 			case 0:
 				npcTalk(p, n, "Be careful in here",
 						"Lots of dangerous equipment in here");
-				int choice = showMenu(p, n, new String[] {
-						"What do this machine do?", "Is this your house?" });
+				int choice = showMenu(p, n,
+						"What do this machine do?", "Is this your house?");
 				if (choice == 0) {
 					oddensteinDialogue(p, n, Oddenstein.MACHINE);
 				} else if (choice == 1) {
@@ -304,9 +304,9 @@ InvUseOnObjectExecutiveListener {
 				}
 				break;
 			case 1:
-				int s1Menu = showMenu(p, n, new String[] {
+				int s1Menu = showMenu(p, n,
 						"I'm looking for a guy called Ernest",
-						"What do this machine do?", "Is this your house?" });
+						"What do this machine do?", "Is this your house?");
 				if (s1Menu == 0) {
 					oddensteinDialogue(p, n, Oddenstein.LOOKING_FOR_ERNEST);
 				} else if (s1Menu == 1) {
@@ -383,9 +383,8 @@ InvUseOnObjectExecutiveListener {
 			int choices = showMenu(
 					p,
 					n,
-					new String[] {
-							"I'm glad Veronica didn't actually get engaged to a chicken",
-					"Change him back this instant" });
+					"I'm glad Veronica didn't actually get engaged to a chicken",
+					"Change him back this instant");
 			if (choices == 0) {
 				npcTalk(p, n, "Who's Veronica?");
 				playerTalk(p, n, "Ernest's fiancee",
@@ -421,9 +420,9 @@ InvUseOnObjectExecutiveListener {
 			case 0:
 				npcTalk(p, n, "Can you please help me?",
 						"I'm in a terrible spot of trouble");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"Aha, sounds like a quest. I'll help",
-				"No, I'm looking for something to kill" });
+				"No, I'm looking for something to kill");
 				if (choice == 0) {
 					npcTalk(p, n, "Yes yes I suppose it is a quest",
 							"My fiance Ernest and I came upon this house here",

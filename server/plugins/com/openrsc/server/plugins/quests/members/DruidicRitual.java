@@ -66,18 +66,17 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 			switch (p.getQuestStage(this)) {
 			case 0:
 				npcTalk(p, n, "What brings you to our holy Monument");
-				int first = showMenu(p, n, new String[] { "Who are you?",
-						"I'm in search of a quest", "Did you build this?" });
+				int first = showMenu(p, n, "Who are you?",
+						"I'm in search of a quest", "Did you build this?");
 				if (first == 0) {
 					npcTalk(p, n, "We are the druids of Guthix",
 							"We worship our God at our famous stone circles");
 					int third = showMenu(
 							p,
 							n,
-							new String[] {
 									"What about the stone circle full of dark wizards?",
 									"So whats so good about Guthix",
-									"Well I'll be on my way now" });
+									"Well I'll be on my way now");
 					if (third == 0) {
 						kaqemeexDialogue(p, n, kaqemeex.STONE_CIRCLE);
 					} else if (third == 1) {
@@ -100,10 +99,9 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 					int second = showMenu(
 							p,
 							n,
-							new String[] {
 									"What about the stone circle full of dark wizards?",
 									"I'm in search of a quest",
-									"Well I'll be on my way now" });
+									"Well I'll be on my way now");
 					if (second == 0) {
 						kaqemeexDialogue(p, n, kaqemeex.STONE_CIRCLE);
 					} else if (second == 1) {
@@ -239,7 +237,7 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 					playerTalk(p, n, "no not yet");
 					int menu = showMenu(p, n,
 							"What was I meant to be doing again?",
-							"I'll get on with it" );
+							"I'll get on with it");
 					if (menu == 0) {
 						npcTalk(p, n,
 								"I need the raw meat from 4 different animals",
@@ -266,9 +264,8 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 				int finalMenu = showMenu(
 						p,
 						n,
-						new String[] {
 								"Have you any more work for me, to help reclaim the circle?",
-								"Actually I don't need to speak to you" });
+								"Actually I don't need to speak to you");
 				if (finalMenu == 0) {
 					npcTalk(p, n, "Not at the moment",
 							"I need to make some more preparations myself now");

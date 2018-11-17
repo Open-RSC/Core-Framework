@@ -70,14 +70,14 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 			}
 			else if (p.getQuestStage(this) == 0) {
 				npcTalk(p, n, "Hello there");
-				int choice = showMenu(p, n, new String[] { "Give me a quest!",
-						"Most of your friends are pretty quiet aren't they?" });
+				int choice = showMenu(p, n, "Give me a quest!",
+						"Most of your friends are pretty quiet aren't they?");
 				if (choice == 0) {
 					npcTalk(p, n, "Give me a quest what?");
-					int choice2 = showMenu(p, n, new String[] {
+					int choice2 = showMenu(p, n,
 							"Give me a quest please",
 							"Give me a quest or else",
-							"Just stop messing around and give me a quest" });
+							"Just stop messing around and give me a quest");
 					if (choice2 == 0) {
 						npcTalk(p,
 								n,
@@ -112,9 +112,9 @@ public class ImpCatcher implements QuestInterface,TalkToNpcListener,
 				playerTalk(p, n, "Most of your friends are pretty quiet aren't they?");
 				npcTalk(p, n, "Yes they've mostly got their heads in the clouds",
 					"Thinking about magic");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 					"Got any more quests?",
-					"Most of your friends are pretty quiet aren't they?"});
+					"Most of your friends are pretty quiet aren't they?");
 				if (choice == 0)
 					npcTalk(p, n, "No Everything is good with the world today");
 				else if (choice == 1)

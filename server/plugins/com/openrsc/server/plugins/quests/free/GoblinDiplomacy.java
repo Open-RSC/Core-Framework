@@ -52,10 +52,10 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "Go away human, we busy");
 				}
 
-				int option = showMenu(p, n, new String[] {
+				int option = showMenu(p, n,
 						"Why are you arguing about the colour of your armour?",
 						"Wouldn't you prefer peace?",
-						"Do you want me to pick an armour colour for you" });
+						"Do you want me to pick an armour colour for you");
 				switch (option) {
 				case 0: // yes
 					npcTalk(p, n, "We decide to celevrate goblin new century",
