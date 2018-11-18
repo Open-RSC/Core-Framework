@@ -149,7 +149,12 @@ ObjectActionExecutiveListener {
 			reqlvl = 41;
 			break;
 		}
-		
+
+		if (object.getID() == 98) {
+			owner.message("Nothing interesting happens");
+			return;
+		}
+
 		if (def == null || def.getRespawnTime() < 1 || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6)) {
 			if (axeId < 0 || reqlvl > mineLvl) {
 				message(owner, "You need a pickaxe to mine this rock",
