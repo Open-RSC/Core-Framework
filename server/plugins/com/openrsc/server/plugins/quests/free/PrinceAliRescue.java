@@ -385,14 +385,15 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 						"Of course, it might be tough being here without a drink");
 				message(p,
 						"You hand a beer to the guard, he drinks it in seconds");
-				removeItem(p, BEER, 3); // if all beers he takes all.
+				removeItem(p, BEER, 1); //takes 2 more after dialogue
 				npcTalk(p, n, "Thas was perfect, i cant thank you enough");
 				playerTalk(p, n, "Would you care for another, my friend?");
 				npcTalk(p, n, "I better not, I don't want to be drunk on duty");
 				playerTalk(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
-				message(p, "You hand two more beers to the guard",
-						"he takes a sip of one, and then he drinks them both");
+				message(p, "You hand two more beers to the guard");
+				p.getInventory().remove(BEER, 2);
+				message(p, "he takes a sip of one, and then he drinks them both");
 				npcTalk(p,
 						n,
 						"Franksh, that wash just what I need to shtay on guard",

@@ -392,7 +392,17 @@ PickupExecutiveListener {
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == 728) {
-			if (hasItem(p, 50)) {
+			if(p.getInventory().hasItemId(556) && p.getInventory().wielding(556)) {
+				message(p, "The ice gloves cool down the cog",
+						"You can carry it now");
+				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
+						|| hasItem(p, 729)) {
+					p.message("You can only carry one");
+				} else {
+					p.message("You take the cog");
+					addItem(p, 728, 1);
+				}
+			} else if (hasItem(p, 50)) {
 				message(p, "You pour water over the cog",
 						"The cog quickly cools down");
 				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)

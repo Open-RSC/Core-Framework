@@ -200,7 +200,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 				} else {
 					npcTalk(p, n, "Have you got those crossbows for me yet?");
 					playerTalk(p, n, "Yes I have");
-					removeItem(p, 59, 2);
+					p.getInventory().remove(59, 2);
 					npcTalk(p, n,
 							"Ok. You can join our gang now. Feel free to enter");
 					p.updateQuestStage(this, 5);
