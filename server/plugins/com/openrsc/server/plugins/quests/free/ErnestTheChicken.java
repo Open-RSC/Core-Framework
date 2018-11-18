@@ -25,6 +25,7 @@ TalkToNpcExecutiveListener, InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
 
 	final class QuestItems {
+		public static final int FISHFOOD = 176;// fish food-
 		public static final int POISON_FISHFOOD = 178;// poison fish food-
 		// coords: 212, 1497
 		public static final int PRESSURE_GAUGE = 175;
@@ -125,20 +126,28 @@ InvUseOnObjectExecutiveListener {
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == QuestObjects.FOUNTAIN
 				&& item.getID() == QuestItems.POISON_FISHFOOD) {
-			if (p.getCache().hasKey("poisoned_fountain")) {
-				p.message("You have already poisoned this fountain.");
-				return;
-			} else {
-				message(p, "You pour the poisoned fish food into the fountain",
-						"You see piranhas eating the food",
-						"The piranhas drop dead and float to the surface");
+			message(p, "You pour the poisoned fish food into the fountain",
+					"You see the pirhanas eating the food",
+					"The pirhanas drop dead and float to the surface");
+			removeItem(p, QuestItems.POISON_FISHFOOD, 1);
+			if (!p.getCache().hasKey("poisoned_fountain")) {
 				p.getCache().store("poisoned_fountain", true);
-				removeItem(p, QuestItems.POISON_FISHFOOD, 1);
 			}
+		}
+		else if (obj.getID() == QuestObjects.FOUNTAIN
+				&& item.getID() == QuestItems.FISHFOOD) {
+			message(p, "You pour the fish food into the fountain",
+					"You see the pirhanas eating the food",
+					"The pirhanas seem hungrier than ever");
+			removeItem(p, QuestItems.FISHFOOD, 1);
+		}
+		//nothing happens every other item
+		else if (obj.getID() == QuestObjects.FOUNTAIN) {
+			message(p, "Nothing interesting happens");
 		}
 		if (obj.getID() == QuestObjects.COMPOST
 				&& item.getID() == QuestItems.SPADE) {
-			if (!hasItem(p, 212) && p.getQuestStage(this) == 2) {
+			if (!hasItem(p, 212) && p.getQuestStage(this) > 0) {
 				message(p, "You dig through the compost heap",
 						"You find a small key");
 				addItem(p, 212, 1);
@@ -271,9 +280,14 @@ InvUseOnObjectExecutiveListener {
 			leverName = "LeverF";
 		}
 		p.getCache().store(leverName, !p.getCache().getBoolean(leverName));
-		p.message("You pull " + leverName + " "
+		p.message("You pull " + nameToMsg(leverName) + " "
 				+ (p.getCache().getBoolean(leverName) ? "down" : "up"));
 		p.message("you hear a clunk");
+	}
+	
+	public String nameToMsg(String leverName) {
+		int length = leverName.length();
+		return leverName.substring(0, length-2).toLowerCase() + " " + leverName.substring(length-1);
 	}
 
 	@Override
@@ -295,42 +309,51 @@ InvUseOnObjectExecutiveListener {
 			case 0:
 				npcTalk(p, n, "Be careful in here",
 						"Lots of dangerous equipment in here");
-				int choice = showMenu(p, n,
-						"What do this machine do?", "Is this your house?");
+				int choice = showMenu(p, n, false, //do not send over
+						"What does this machine do?", "Is this your house?");
 				if (choice == 0) {
+					playerTalk(p, n, "What does this machine do?");
 					oddensteinDialogue(p, n, Oddenstein.MACHINE);
 				} else if (choice == 1) {
+					playerTalk(p, n, "Is this your house?");
 					oddensteinDialogue(p, n, Oddenstein.HOUSE);
 				}
 				break;
 			case 1:
-				int s1Menu = showMenu(p, n,
+				int s1Menu = showMenu(p, n, false, //do not send over
 						"I'm looking for a guy called Ernest",
 						"What do this machine do?", "Is this your house?");
 				if (s1Menu == 0) {
+					playerTalk(p, n, "I'm looking for a guy called Ernest");
 					oddensteinDialogue(p, n, Oddenstein.LOOKING_FOR_ERNEST);
 				} else if (s1Menu == 1) {
+					playerTalk(p, n, "What does this machine do?");
 					oddensteinDialogue(p, n, Oddenstein.MACHINE);
 				} else if (s1Menu == 2) {
+					playerTalk(p, n, "Is this your house?");
 					oddensteinDialogue(p, n, Oddenstein.HOUSE);
 				}
 				break;
 			case 2:
 				npcTalk(p, n, "Have you found anything yet?");
 
+				// no items
 				if (!hasItem(p, QuestItems.RUBBER_TUBE)
 						&& !hasItem(p, QuestItems.PRESSURE_GAUGE)
 						&& !hasItem(p, QuestItems.OIL_CAN)) {
 					playerTalk(p, n, "I'm afraid I don't have any yet!");
 					npcTalk(p, n,
-							"I need a rubber tube, a pressure gauge and a can of oil");
-				} else if (hasItem(p, QuestItems.RUBBER_TUBE)
+							"I need a rubber tube, a pressure gauge and a can of oil",
+							"Then your friend can stop being a chicken");
+				}
+				// all items
+				else if (hasItem(p, QuestItems.RUBBER_TUBE)
 						&& hasItem(p, QuestItems.PRESSURE_GAUGE)
 						&& hasItem(p, QuestItems.OIL_CAN)) {
 					playerTalk(p, n, "I have everything");
 					npcTalk(p, n, "Give em here then");
 					message(p,
-							"You give a rubber tube, a pressure gauge and a can of oil to the Professor",
+							"You give a rubber tube, a pressure gauge and a can of oil to the Professer",
 							"Oddenstein starts up the machine",
 							"The machine hums and shakes",
 							"Suddenly a ray shoots out of the machine at the chicken");
@@ -341,7 +364,8 @@ InvUseOnObjectExecutiveListener {
 						removeItem(p, QuestItems.OIL_CAN, 1);
 						Npc ernest = transform(chicken, 92, false);
 						npcTalk(p, ernest, "Thank you sir",
-								"It was dreadfully irritating being a chicken");
+								"It was dreadfully irritating being a chicken",
+								"How can I ever thank you?");
 						playerTalk(p, ernest,
 								"Well a cash reward is always nice");
 						npcTalk(p, ernest, "Of course, of course");
@@ -350,6 +374,24 @@ InvUseOnObjectExecutiveListener {
 						ernest.remove();
 						p.sendQuestComplete(getQuestId());
 					}
+				}
+				// some items
+				else {
+					playerTalk(p, n, "I have found some of the things you need:");
+					if (p.getInventory().hasItemId(QuestItems.OIL_CAN))
+						playerTalk(p, n, "I have a can of oil");
+					if (p.getInventory().hasItemId(QuestItems.PRESSURE_GAUGE))
+						playerTalk(p, n, "I have a pressure gauge");
+					if (p.getInventory().hasItemId(QuestItems.RUBBER_TUBE))
+						playerTalk(p, n, "I have a rubber tube");
+
+					npcTalk(p, n, "Well that's a start", "You still need to find");
+					if (!p.getInventory().hasItemId(QuestItems.OIL_CAN))
+						npcTalk(p, n, "A can of oil");
+					if (!p.getInventory().hasItemId(QuestItems.RUBBER_TUBE))
+						npcTalk(p, n, "A rubber tube");
+					if (!p.getInventory().hasItemId(QuestItems.PRESSURE_GAUGE))
+						npcTalk(p, n, "A Pressure Gauge");
 				}
 				break;
 			}
@@ -420,10 +462,11 @@ InvUseOnObjectExecutiveListener {
 			case 0:
 				npcTalk(p, n, "Can you please help me?",
 						"I'm in a terrible spot of trouble");
-				int choice = showMenu(p, n,
+				int choice = showMenu(p, n, false, //do not send over
 						"Aha, sounds like a quest. I'll help",
 				"No, I'm looking for something to kill");
 				if (choice == 0) {
+					playerTalk(p, n, "Aha, sounds like a quest", "I'll help");
 					npcTalk(p, n, "Yes yes I suppose it is a quest",
 							"My fiance Ernest and I came upon this house here",
 							"Seeing as we were a little lost",
@@ -435,25 +478,26 @@ InvUseOnObjectExecutiveListener {
 					npcTalk(p, n, "Thank you, thank you", "I'm very grateful");
 					p.updateQuestStage(this, 1);
 				} else if (choice == 1) {
+					playerTalk(p, n, "No, I'm looking for something to kill");
 					npcTalk(p, n, "Oooh you violent person you");
 				}
 				break;
 			case 1:
 				npcTalk(p, n, "Have you found my sweetheart yet?");
-				playerTalk(p, n, "No not yet");
+				playerTalk(p, n, "No, not yet");
 				break;
 			case 2:
 				npcTalk(p, n, "Have you found my sweetheart yet?");
-				playerTalk(p, n, "Ya he's a chicken");
+				playerTalk(p, n, "Yes, he's a chicken");
 				npcTalk(p, n, "I know he's not exactly brave",
 						"But I think you're being a little harsh");
 				playerTalk(p, n,
 						"No no he's been turned into an actual chicken",
 						"By a mad scientist");
-				message(p, "Veronica lets out an ear piercing shreek");
+				message(p, "Veronica lets out an ear piecing shreek");
 				npcTalk(p, n, "Eeeeek", "My poor darling",
 						"Why must these things happen to us?");
-				playerTalk(p, n, "Well i'm doing my best to turn him back");
+				playerTalk(p, n, "Well I'm doing my best to turn him back");
 				npcTalk(p, n, "Well be quick",
 						"I'm sure being a chicken can't be good for him");
 				break;
@@ -487,12 +531,13 @@ InvUseOnObjectExecutiveListener {
 		Cache c = p.getCache();
 		switch (obj.getID()) {
 		case 35:
-			if (p.getX() == 211 && p.getY() == 545) {
+			//only allow is player is stuck, otherwise promote using key
+			if (p.getX() == 211 && p.getY() == 545 && !hasItem(p, QuestItems.CLOSET_KEY)) {
 				doDoor(obj, p);
 				p.message("You go through the door");
 			}
 			else {
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			}
 			break;
 		case 36:
@@ -501,7 +546,7 @@ InvUseOnObjectExecutiveListener {
 				sleep(3000);
 				p.message("The door slams behind you!");
 			} else {
-				p.message("The door won't open.");
+				p.message("The door won't open");
 			}
 			break;
 		case 29:
@@ -519,13 +564,13 @@ InvUseOnObjectExecutiveListener {
 					&& c.getBoolean("LeverF")) {
 				doDoor(obj, p);
 			} else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		case 28:
 			if (c.hasKey("LeverD") && c.getBoolean("LeverD"))
 				doDoor(obj, p);
 			else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		case 25:
 			if (c.hasKey("LeverA") 
@@ -556,7 +601,7 @@ InvUseOnObjectExecutiveListener {
 					&& c.getBoolean("LeverF")) {
 				doDoor(obj, p);
 			} else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		case 26:
 			if (c.hasKey("LeverF")
@@ -567,7 +612,7 @@ InvUseOnObjectExecutiveListener {
 					&& !c.getBoolean("LeverB"))
 				doDoor(obj, p);
 			else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		case 27:
 			if (c.hasKey("LeverA")
@@ -578,7 +623,7 @@ InvUseOnObjectExecutiveListener {
 					&& c.getBoolean("LeverD"))
 				doDoor(obj, p);
 			else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		case 31:// Need to make Lever work xD haha brb
 			if (c.hasKey("LeverD")
@@ -589,7 +634,7 @@ InvUseOnObjectExecutiveListener {
 					&& !c.getBoolean("LeverF")) // easiet
 				doDoor(obj, p);
 			else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 
 			break;
 		case 32:// first door on the right
@@ -607,7 +652,7 @@ InvUseOnObjectExecutiveListener {
 					&& !c.getBoolean("LeverF")) {
 				doDoor(obj, p);
 			} else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		case 33:// second door from the right
 			if (c.hasKey("LeverC")
@@ -630,7 +675,7 @@ InvUseOnObjectExecutiveListener {
 					&& c.getBoolean("LeverF")) {
 				doDoor(obj, p);
 			} else
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			break;
 		}
 		if(obj.getID() == 30 && obj.getX() == 226 && obj.getY() == 3378) {
@@ -640,7 +685,7 @@ InvUseOnObjectExecutiveListener {
 					&& !c.getBoolean("LeverE")) {
 				doDoor(obj, p);
 			} else {
-				p.message("The door is locked.");
+				p.message("The door is locked");
 			}
 		}
 	}
@@ -658,7 +703,7 @@ InvUseOnObjectExecutiveListener {
 			removeItem(player, 176, 1);
 			removeItem(player, 177, 1);
 			addItem(player, 178, 1);
-			player.message("You poisoned the fishfood");
+			player.message("You poison the fish food");
 		}
 	}
 
@@ -675,7 +720,7 @@ InvUseOnObjectExecutiveListener {
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
 		if (item.getID() == 212 && obj.getID() == 35) {
 			doDoor(obj, player);
-			player.message("You unlocked the door");
+			player.message("You unlock the door");
 			player.message("You go through the door");
 			showBubble(player, item);
 		}
