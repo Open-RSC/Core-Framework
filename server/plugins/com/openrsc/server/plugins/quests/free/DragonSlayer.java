@@ -31,6 +31,9 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	 * 
 	 * Crandor: -409, 638
 	 */
+	
+	public static final int PORT_SARIM = 0;
+	public static final int CRANDOR = 1;
 
 	private class QuestItems {
 		public static final int RED_KEY = 390;
@@ -315,12 +318,21 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 		case 224:
 		case 225:
 			if (p.getCache().hasKey("owns_ship")) {
-				if (p.getCache().hasKey("ship_fixed") || p.getQuestStage(this) == -1) {
-					p.teleport(258, 3493, false);
-				} else if (p.getQuestStage(this) == 2
-						|| p.getQuestStage(this) == 3
-						&& !p.getCache().hasKey("ship_fixed")) {
+				//cases: a) ship not repaired and ned not hired -> teleport 259,3472 (first case when bought)
+				//or player has enabled the crandor shortcut
+				//b)ship repaired and ned not hired -> teleport 259,3493
+				//c)ned hired and ship not repaired -> teleport 281,3472 (case when player is getting back)
+				//location in c shared by location of arrival to crandor
+				//d)ned hired and ship repaired -> teleport 281,3493
+				p.getCache().set("lumb_lady", PORT_SARIM);
+				if((!p.getCache().hasKey("ship_fixed") && !p.getCache().hasKey("ned_hired")) || p.getCache().hasKey("crandor_shortcut")) {
 					p.teleport(259, 3472, false);
+				} else if(p.getCache().hasKey("ship_fixed") && !p.getCache().hasKey("ned_hired")) {
+					p.teleport(259, 3493, false);
+				} else if(!p.getCache().hasKey("ship_fixed") && p.getCache().hasKey("ned_hired")) {
+					p.teleport(281, 3472, false);
+				} else if(p.getCache().hasKey("ship_fixed") && p.getCache().hasKey("ned_hired")) {
+					p.teleport(281, 3493, false);
 				}
 			} else {
 				Npc klarense = getNearestNpc(p, 193, 15);
@@ -332,12 +344,12 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 			}
 			break;
 		case 227:
-			if (obj.getX() == 281 && obj.getY() == 3473) {
+			if(p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
 				p.teleport(409, 638, false);
-				p.message("You leave the ship");
-				return;
 			}
-			p.teleport(259, 641, false);
+			else {
+				p.teleport(259, 641, false);
+			}
 			p.message("You leave the ship");
 			break;
 		}
@@ -475,7 +487,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 			Player player) {
-		if (obj.getID() == 226) {
+		if (obj.getID() == 226 || obj.getID() == 232) {
 			return true;
 		}
 		return false;
@@ -483,42 +495,47 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 226 && item.getID() == 410) {
-			if(p.getCache().hasKey("crandor_shortcut")) {
-				p.message("You don't need to mess about with broken ships");
-				p.message("Now you have found that secret passage from Karamja");
+		if ((obj.getID() == 226 || obj.getID() == 232) && item.getID() == 410) {
+			if(p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
+				p.message("The ship doesn't seem easily repairable at the moment");
 			}
-			else if (!p.getCache().hasKey("ship_repair") && hasItem(p, 419, 4)
-					&& hasItem(p, 410, 1)) {
-				p.message("You hammer the plank over the hole");
-				p.message("You still need more planks to close the hole completely");
-				p.getInventory().remove(419, 4);
-				p.getInventory().remove(410, 1);
-				p.getCache().set("ship_repair", 1);
-			} else if (hasItem(p, 419, 4) && hasItem(p, 410, 1)) {
-				int planks_added = p.getCache().getInt("ship_repair");
-				p.message("You hammer the plank over the hole");
-				p.getInventory().remove(419, 4);
-				p.getInventory().remove(410, 1);
-				if (planks_added + 1 == 3) {
-					p.getCache().remove("ship_repair");
-					p.getCache().store("ship_fixed", true);
-					p.message("You board up the hole in the ship");
-					p.teleport(258, 3493, false);
-				} else {
-					p.getCache().set("ship_repair", planks_added + 1);
-					p.message("You still need more planks to close the hole completely");
+			else {
+				if(p.getCache().hasKey("crandor_shortcut")) {
+					p.message("You don't need to mess about with broken ships");
+					p.message("Now you have found that secret passage from Karamja");
 				}
-			} else if(!hasItem(p, 419, 4)) {
-				p.message("You need 4 steel nails to attach the plank with");
-			} else if(!hasItem(p, 168, 1)) {
-				p.message("You need a hammer to hammer the nails in with");
-			} else {
-				p.message("Nothing interesting happens");
+				else if (!p.getCache().hasKey("ship_repair") && hasItem(p, 419, 4)
+						&& hasItem(p, 410, 1)) {
+					p.message("You hammer the plank over the hole");
+					p.message("You still need more planks to close the hole completely");
+					p.getInventory().remove(419, 4);
+					p.getInventory().remove(410, 1);
+					p.getCache().set("ship_repair", 1);
+				} else if (hasItem(p, 419, 4) && hasItem(p, 410, 1)) {
+					int planks_added = p.getCache().getInt("ship_repair");
+					p.message("You hammer the plank over the hole");
+					p.getInventory().remove(419, 4);
+					p.getInventory().remove(410, 1);
+					if (planks_added + 1 == 3) {
+						p.getCache().remove("ship_repair");
+						p.getCache().store("ship_fixed", true);
+						p.message("You board up the hole in the ship");
+						p.teleport(281, 3493, false);
+					} else {
+						p.getCache().set("ship_repair", planks_added + 1);
+						p.message("You still need more planks to close the hole completely");
+					}
+				} else if(!hasItem(p, 419, 4)) {
+					p.message("You need 4 steel nails to attach the plank with");
+				} else if(!hasItem(p, 168, 1)) {
+					p.message("You need a hammer to hammer the nails in with");
+				} else {
+					p.message("Nothing interesting happens");
+				}
 			}
 		} 
 		//only accept planks used
-		else if(obj.getID() == 226) {
+		else if(obj.getID() == 226 || obj.getID() == 232) {
 			p.message("Nothing interesting happens");
 		}
 	}

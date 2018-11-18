@@ -367,7 +367,7 @@ TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectA
 						//removes all
 						for(int itemId : itemIds) {
 							amt = Math.max(p.getInventory().countId(itemId), 0);
-							removeItem(p, itemId, amt);
+							p.getInventory().remove(itemId, amt);
 						}
 						p.sendQuestComplete(Constants.Quests.MURDER_MYSTERY);
 						npcTalk(p,n, "Please accept this reward from the family!");
