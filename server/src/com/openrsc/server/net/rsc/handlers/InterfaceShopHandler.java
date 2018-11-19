@@ -122,14 +122,14 @@ public final class InterfaceShopHandler implements PacketHandler {
             }
             for (int i = 0; i < amount; i++) {
                 /* If no noted version can be removed */
-                if (player.getInventory().remove(def.getNoteID(), 1) == -1) {
-                    /* Try removing with original item ID */
-                    if (player.getInventory().remove(itemID, 1) == -1) {
-                        /* Break, player doesn't have anything. */
-                        player.message("You don't have that many items");
-                        break;
-                    }
+                //if (player.getInventory().remove(def.getNoteID(), 1) == -1) { // commented out to prevent selling notes to specialty shops if a non-noted item is in inventory too
+                /* Try removing with original item ID */
+                if (player.getInventory().remove(itemID, 1) == -1) {
+                    /* Break, player doesn't have anything. */
+                    player.message("You don't have that many items");
+                    break;
                 }
+                //}
 
                 totalSold++;
                 /* if we are selling noted item, calculate price from the original item */
