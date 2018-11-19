@@ -1,6 +1,8 @@
 \.DS_Store
 .idea/
 
+out/production/
+
 client/\.idea/
 client/\.gradle/
 client/build/
