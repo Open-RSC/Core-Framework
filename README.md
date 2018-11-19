@@ -2,11 +2,19 @@
 ###### [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=2.0.0)](https://travis-ci.org/Open-RSC/Game)
 
 # Table of contents <a name="top"></a>
-1. [Enable High DPI Scaling For High Res Monitors](#dpi)
-2. [How to Install](#install)
-3. [Default Credentials](#credentials)
-4. [Minimum Requirements](#requirements)
-5. [Hosting Your Own Server](#hosting)
+1. [General Information](#general)
+2. [Enable High DPI Scaling For High Res Monitors](#dpi)
+3. [How to Install](#install)
+4. [Default Credentials](#credentials)
+5. [Minimum Requirements](#requirements)
+6. [Hosting Your Own Server](#hosting)
+
+## General Information<a name="general"></a>
+
+The first priority of our development is ensuring the authentic content found in the original Runescape Classic game is replicated to its full extent. We are in no way associated or affiliated with JaGex, Runescape Classic, or any other similar companies or products. Our goal is to program and play Runescape Classic, and have fun doing it!
+
+You can obtain a sample of the running client from:
+https://openrsc.com
 
 ## Enable high DPI Scaling For High Res Monitors<a name="dpi"></a>
 
