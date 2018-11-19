@@ -79,18 +79,18 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 			if (p.getCache().hasKey("bananas")) {
 				if (p.getCache().getInt("bananas") >= 10) {
 					p.message(
-							"The crate is full of bananas");
+							"the crate is already full");
 					return;
 				}
 				if (p.getInventory().remove(item) > -1) {
 					p.message(
-							"You put a banana in the crate");
+							"you put a banana in the crate");
 
 					p.getCache().set("bananas",
 							p.getCache().getInt("bananas") + 1);
 				}
 			} else {
-				p.message("I have no reason to do that.");
+				p.message("I have no reason to do that");
 			}
 		} else if (item.getID() == 318 && obj.getID() == 182
 				&& p.getQuestStage(this) > 0) {
@@ -143,14 +143,14 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 
 				npcTalk(p, n,
 						"Well for example if you can get me a bottle of rum",
-						"Not jus any rum mind",
+						"Not just any rum mind",
 						"I'd like some rum brewed on Karamja island",
 						"There's no rum like Karamja rum");
 				p.updateQuestStage(this, 1);
 			} else if (choice == 1) {
 				npcTalk(p, n, "Arrrh");
 			} else if (choice == 2) {
-				npcTalk(p, n, "No I've got nothing to trade");
+				npcTalk(p, n, "No, I've got nothing to trade");
 			} 
 			break;
 		case 1:
@@ -168,7 +168,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 					n,
 					"Now a deals a deal, I'll tell ye about the treasure",
 					"I used to serve under a pirate captain called One Eyed Hector",
-					"Hector was a very successful pirate and became very rich",
+					"Hector was a very succesful pirate and became very rich",
 					"but about a year ago we were boarded by the Royal Asgarnian Navy",
 					"Hector was killed along with many of the crew",
 					"I was one of the few to escape", "And I escaped with this");
@@ -190,8 +190,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		case 2:
 			npcTalk(p, n, "Arrrh Matey");
 			playerTalk(p, n, "I seem to have lost my chest key");
-			npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another made");
-			message(p, "Frank hands you a key");
+			npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
+			message(p, "Frank hands you a chest key");
 			addItem(p, 382, 1);
 			break;
 		case -1:
@@ -222,7 +222,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 							"Yes, I can sort something out",
 							"Yes there's a crate outside ready for loading up on the ship",
 							"If you could fill it up with bananas",
-							"I'll pay you 30 gp");
+							"I'll pay you 30 gold");
 					p.getCache().set("bananas", 0);
 				} else if (choice == 1) {
 					luthasDialogue(p, n, Luthas.ANNOYING);
@@ -237,7 +237,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 						p.getCache().remove("bananas");
 					}
 					if (p.getCache().hasKey("rum_in_crate")) {
-						p.getCache().remove("rum_in_crate"); // this erhm wait
+						p.getCache().remove("rum_in_crate");
 					}
 					if (!p.getCache().hasKey("rum_delivered")) {
 						p.getCache().store("rum_delivered", true);
@@ -248,7 +248,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 									"Will you pay me for another crate full?",
 									"Thankyou, I'll be on my way",
 									"So where are these bananas going to be delivered to?",
-							"That custom officer is annoying isn't she?");
+							"That customs officer is annoying isn't she?");
 					if (choice == 0) {
 						p.getCache().set("bananas", 0);
 						npcTalk(p,
@@ -273,7 +273,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 							n,
 							"There's a crate outside ready for loading up on the ship",
 							"If you could fill it up with bananas",
-							"I'll pay you 30 gp");
+							"I'll pay you 30 gold");
 				} else if (choice == 1) {
 					npcTalk(p, n, "Well come back when it is");
 				}
@@ -284,7 +284,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		case Luthas.ANNOYING:
 			npcTalk(p, n, "Well I know her pretty well",
 					"She doesn't cause me any trouble any more",
-					"She doesn't search my export crates any more",
+					"She doesn't even search my export crates any more",
 					"She knows they only contain bananas");
 			break;
 		}
@@ -318,7 +318,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 				else if (b < 10)
 					s = "the crate is partially full of bananas";
 				else
-					s = "the crate is full of bananas";
+					s = "The crate is full of bananas";
 
 			} else {
 				s = "The crate is completely empty";
@@ -328,13 +328,14 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListen
 		case 185:
 			if (p.getCache().hasKey("rum_delivered")) {
 				if (p.getCache().getBoolean("rum_delivered")) {
-					message(p, "There are a lot of bananas in this crate",
-							"You find your bottle of rum amoungst the bananas");
+					message(p, "There are a lot of bananas in the crate",
+							"You find your bottle of rum in amoungst the bananas");
 					p.getInventory().add(new Item(318));
 					//
 					p.getCache().remove("rum_delivered");
 				}
 			} else {
+				message(p, "Do you want to take a banana?");
 				int wantabanana = showMenu(p, "Yes", "No");
 				if (wantabanana == 0) {
 					p.getInventory().add(new Item(249));
