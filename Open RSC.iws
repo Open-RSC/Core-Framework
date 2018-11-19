@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Website/inc/database_config.php" beforeDir="false" afterPath="$PROJECT_DIR$/Website/inc/database_config.php" afterDir="false" />
-    </list>
+    <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,10 +9,30 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="246326222">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="4" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.15" value="1" />
+          <entry key="project.opened" value="4" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="47" />
     <option name="y" value="23" />
     <option name="width" value="1633" />
@@ -26,14 +44,18 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="project.structure.last.edited" value="Problems" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="go.gopath.indexing.explicitly.defined" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/client/build.xml" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="xpath.settings" />
@@ -52,7 +74,7 @@
   </component>
   <component name="RunManager" selected="Ant Target.client">
     <configuration name="client" type="AntRunConfiguration" factoryName="Ant Target">
-      <antsettings antfile="file://$PROJECT_DIR$/Client/build.xml" target="compile-and-run" />
+      <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -64,7 +86,7 @@
       </method>
     </configuration>
     <configuration name="server" type="AntRunConfiguration" factoryName="Ant Target">
-      <antsettings antfile="file://$PROJECT_DIR$/Server/build.xml" target="compile-and-run" />
+      <antsettings antfile="file://$PROJECT_DIR$/server/build.xml" target="compile-and-run" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -85,19 +107,27 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1542641570466</updated>
+      <workItem from="1542656001341" duration="1118000" />
+      <workItem from="1542657251488" duration="25000" />
+      <workItem from="1542657317963" duration="155000" />
+      <workItem from="1542659209624" duration="911000" />
     </task>
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="2209000" />
+  </component>
   <component name="ToolWindowManager">
-    <frame x="47" y="23" width="1633" height="1027" extended-state="0" />
+    <frame x="-3" y="0" width="1926" height="1083" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25267127" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22358592" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info id="JRebel" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -108,16 +138,25 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="10" visible="true" weight="0.32834226" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.32738718" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="bottom" id="JRebel Console" order="13" side_tool="true" />
+      <window_info anchor="bottom" id="JRebel Executor" order="14" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.2495286" />
+      <window_info anchor="right" id="Ant Build" order="1" visible="true" weight="0.24919957" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="right" id="Maven Projects" order="7" />
+      <window_info anchor="right" id="Database" order="8" />
+      <window_info anchor="right" id="SciView" order="9" />
     </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -125,15 +164,6 @@
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
-    <buildFile url="file://$PROJECT_DIR$/Client/build.xml">
-      <targetFilters>
-        <filter targetName="compile" isVisible="false" />
-        <filter targetName="runclient" isVisible="false" />
-        <filter targetName="compile-and-run" isVisible="false" />
-      </targetFilters>
-      <treeView value="false" />
-      <expanded value="true" />
-    </buildFile>
     <buildFile url="file://$PROJECT_DIR$/Launcher/build.xml">
       <targetFilters>
         <filter targetName="compile" isVisible="false" />
@@ -143,24 +173,90 @@
       <treeView value="false" />
       <expanded value="true" />
     </buildFile>
-    <buildFile url="file://$PROJECT_DIR$/Server/build.xml">
-      <targetFilters>
-        <filter targetName="compile_plugins" isVisible="false" />
-        <filter targetName="compile_core" isVisible="false" />
-        <filter targetName="runserverfree" isVisible="false" />
-        <filter targetName="runservermembers" isVisible="false" />
-        <filter targetName="runserverslothscape" isVisible="false" />
-        <filter targetName="compile-and-run" isVisible="false" />
-      </targetFilters>
-      <treeView value="false" />
+    <buildFile url="file://$PROJECT_DIR$/server/build.xml">
+      <expanded value="true" />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/client/build.xml">
       <expanded value="true" />
     </buildFile>
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>client</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>11</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>0</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

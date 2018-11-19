@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AntConfiguration">
-    <buildFile url="file://$PROJECT_DIR$/Client/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/Launcher/build.xml" />
-    <buildFile url="file://$PROJECT_DIR$/Server/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/client/build.xml" />
   </component>
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
@@ -13,12 +13,12 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Client/Client.iml" filepath="$PROJECT_DIR$/Client/Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
@@ -89,7 +89,7 @@
     </library>
     <library name="gradle-wrapper">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Server/gradle/wrapper/gradle-wrapper.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -131,15 +131,15 @@
     </library>
     <library name="lib">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Server/lib/log4j-core-2.8.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/mysql-connector-java-5.1.40.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/disruptor-3.3.5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/xpp3-1.1.4c.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/xstream-1.4.9.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/log4j-api-2.8.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/xpp3_min-1.1.4c.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/commons-lang-2.6.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/lib/netty-all-4.1.8.Final.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/log4j-core-2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/mysql-connector-java-5.1.40.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/disruptor-3.3.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xpp3-1.1.4c.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xstream-1.4.9.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/log4j-api-2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xpp3_min-1.1.4c.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/commons-lang-2.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/netty-all-4.1.8.Final.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -182,7 +182,7 @@
     </library>
     <library name="Open_RSC_Client">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Client/Open_RSC_Client.jar!/" />
+        <root url="jar://$PROJECT_DIR$/client/Open_RSC_Client.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -228,8 +228,8 @@
     </library>
     <library name="Server">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Server/core.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Server/plugins.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/core.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/plugins.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
