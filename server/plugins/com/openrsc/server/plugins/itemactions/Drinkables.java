@@ -255,10 +255,11 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		case 269: // Dwarven Stout
 			showBubble(player, item);
 			player.message("You drink the " + item.getDef().getName() + ".");
+			player.message("It tastes foul.");
 			player.getInventory().remove(item);
 			player.getInventory().add(new Item(620));
-			sleep(1200);
-			player.message("It tastes foul.");
+			sleep(1600);
+			player.message("It tastes pretty strong too");
 			for (int stat = 0; stat < 3; stat++) {
 				player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
 			}
@@ -268,6 +269,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			if (player.getSkills().getLevel(14) <= player.getSkills().getMaxStat(14)) {
 				player.getSkills().setLevel(14, player.getSkills().getLevel(14) + 1);
 			}
+
 			break;
 		case 267: // Asgarnian Ale
 			player.message("You drink the " + item.getDef().getName() + ".");
