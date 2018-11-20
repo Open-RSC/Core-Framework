@@ -59,7 +59,9 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				"No thanks Ned, I don't need any"
 			};
 			int choice = showMenu(p, n, menu);
-			makeChoice(p, n, choice + 1);
+			if(choice >= 0) {
+				makeChoice(p, n, choice + 1);
+			}
 		}
 		else {
 			int choice = showMenu(p, n, menu);

@@ -57,38 +57,38 @@ TalkToNpcListener {
 			npcTalk(p, n, "Greetings fellow gang member");
 			playerTalk(p, n, "I have lost the key you gave me");
 			npcTalk(p, n, "You need to be more careful",
-					"We dont want that key falling into the wrong hands",
-					"Ah well");
-			message(p, "Straven hands you a key");
+					"We don't want that key falling into the wrong hands",
+					"Ah well",
+					"Have this spare");
 			addItem(p, 48, 1);
-			npcTalk(p, n, "Have this spare");
-		}
-		else if (p.getInventory().hasItemId(49) && p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4
-				&& isPhoenixGang(p)) {
-			npcTalk(p, n, "Hows your little mission going?");
-			playerTalk(p, n, "I have the intelligence report");
-			npcTalk(p, n, "Lets see it then");
-			message(p, "You hand over the report");
-			removeItem(p, 49, 1);
-			npcTalk(p, n, "Yes this is very good",
-					"Ok you can join the phoenix gang",
-					"I am Straven, one of the gang leaders");
-			playerTalk(p, n, "Nice to meet you");
-			npcTalk(p, n, "Here is a key");
 			message(p, "Straven hands you a key");
-			addItem(p, 48, 1);
-			npcTalk(p, n, "It will let you enter our weapon supply area",
-					"Round the front of this building");
-			p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p)) {
-			npcTalk(p, n, "Hows your little mission going?");
-			playerTalk(p, n, "I haven't managed to find the report yet");
-			npcTalk(p,
-					n,
-					"You need to kill jonny the beard, who should be in the blue moon inn.",
-					"...I would guess. Not being a member of the phoenix gang and all.");
 		}
-		else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
+		else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p)) {
+			npcTalk(p, n, "Hows your little mission going?");
+			if(p.getInventory().hasItemId(49)) {
+				playerTalk(p, n, "I have the intelligence report");
+				npcTalk(p, n, "Lets see it then");
+				message(p, "You hand over the report");
+				removeItem(p, 49, 1);
+				npcTalk(p, n, "Yes this is very good",
+						"Ok you can join the phoenix gang",
+						"I am Straven, one of the gang leaders");
+				playerTalk(p, n, "Nice to meet you");
+				npcTalk(p, n, "Here is a key");
+				message(p, "Straven hands you a key");
+				addItem(p, 48, 1);
+				npcTalk(p, n, "It will let you enter our weapon supply area",
+						"Round the front of this building");
+				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
+			}
+			else {
+				playerTalk(p, n, "I haven't managed to find the report yet");
+				npcTalk(p, n,
+						"You need to kill Jonny the beard",
+						"Who should be in the blue moon inn");
+			}
+			
+		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
 			defaultConverstation(p, n);
 		}
 		else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
@@ -105,13 +105,13 @@ TalkToNpcListener {
 				"I've heard you've got some cool treasures in this place") {
 				public void action() {
 					npcTalk(p, n,
-						"Oh yeah, we've stolen some cool stuff in our time",
+						"Oh yeah, we've all stolen some stuff in our time",
 						"The candlesticks down here",
 						"Were quite a challenge to get out the palace");
-					playerTalk(p, n, "And the shield of arrav",
+					playerTalk(p, n, "And the shield of Arrav",
 						"I heard you got that");
-					npcTalk(p, n, "Hmm", "That was a while ago",
-						"We don't even have the shield anymore",
+					npcTalk(p, n, "hmm", "That was a while ago",
+						"We don't even have all the shield anymore",
 						"About 5 years ago",
 						"We had a massive fight in our gang",
 						"The shield got broken in half during the fight",
@@ -119,7 +119,7 @@ TalkToNpcListener {
 						"They didn't want to be part of our gang anymore",
 						"So they split off to form their own gang",
 						"The black arm gang", "On their way out",
-						"They looted what treasure they could from us",
+						"They looted what treasures they could from us",
 						"Which included one of the halves of the shield",
 						"We've been rivals with the black arms ever since");
 				}
@@ -127,7 +127,7 @@ TalkToNpcListener {
 			defaultMenu.addOption(new Option(
 				"Any suggestions for where I can go thieving?") {
 				public void action() {
-					npcTalk(p, n, "You can always try he market",
+					npcTalk(p, n, "You can always try the market",
 						"Lots of opportunity there");
 				}
 			});
@@ -143,7 +143,7 @@ TalkToNpcListener {
 						"One of our operatives is often near the alley",
 						"A red haired tramp",
 						"He may be able to give you some ideas");
-					playerTalk(p, n, "Thanks for your help");
+					playerTalk(p, n, "Thanks for the help");
 				}
 			});
 			defaultMenu.showMenu(p);
@@ -157,7 +157,7 @@ TalkToNpcListener {
 				"Heh you can't go in there",
 				"Only authorised personnel of the VTAM corporation are allowed beyond this point");
 		defaultMenu.addOption(new Option(
-				"How do I get a job with the VTAM Corporation?") {
+				"How do I get a job with the VTAM corporation?") {
 			public void action() {
 				npcTalk(p, n, "Get a copy of the Varrock Herald",
 						"If we have any positions right now",
@@ -175,7 +175,7 @@ TalkToNpcListener {
 					npcTalk(p, n, "I see", "Carry on");
 					playerTalk(p, n,
 							"This is the headquarters of the Phoenix Gang",
-							"The most powerful crime gang this city  has seen");
+							"The most powerful crime gang this city has seen");
 					npcTalk(p, n, "And supposing we were this crime gang",
 							"What would you want with us?");
 					new Menu().addOptions(
@@ -198,15 +198,16 @@ TalkToNpcListener {
 											"Is meant to be meeting their contact from Port Sarim today",
 											"In the blue moon inn",
 											"By the south entrance to this city",
-											"The name of the contact is Johnny the beard",
+											"The name of the contact is Jonny the beard",
 											"Kill him and bring back his intelligence report");
 									p.getCache().set("arrav_gang", PHOENIX_GANG);
 									p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 4);
+									p.getCache().remove("spoken_tramp");
 									playerTalk(p, n, "Ok, I'll get on it");
 								}
 							},
 							new Option(
-									"I want nothing, I was just making sure you were them") {
+									"I want nothing. I was just making sure you were them") {
 								@Override
 								public void action() {
 									npcTalk(p, n, "Well stop wasting my time");
