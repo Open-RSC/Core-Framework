@@ -27,7 +27,7 @@ public final class Reldo implements TalkToNpcListener,
 		Menu defaultMenu = new Menu();
 		if (p.getCache().hasKey("read_arrav")
 				&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
-			playerTalk(p, n, "Ok I've read the book",
+			playerTalk(p, n, "OK I've read the book",
 					"Do you know where I can find the Phoenix Gang");
 			npcTalk(p, n, "No I don't",
 					"I think I know someone who will though",
@@ -40,7 +40,7 @@ public final class Reldo implements TalkToNpcListener,
 		playerTalk(p, n, "Hello");
 		npcTalk(p, n, "Hello stranger");
 		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 0) {
-			defaultMenu.addOption(new Option("I'm in search of quest.") {
+			defaultMenu.addOption(new Option("I'm in search of a quest") {
 				@Override
 				public void action() {
 					npcTalk(p, n, "I don't think there's any here");
