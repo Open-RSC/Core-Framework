@@ -269,7 +269,6 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			if (player.getSkills().getLevel(14) <= player.getSkills().getMaxStat(14)) {
 				player.getSkills().setLevel(14, player.getSkills().getLevel(14) + 1);
 			}
-
 			break;
 		case 267: // Asgarnian Ale
 			player.message("You drink the " + item.getDef().getName() + ".");
