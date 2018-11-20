@@ -24,7 +24,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome to the museum of varrock");
+		npcTalk(p, n, "Welcome to the museum of Varrock");
 		if (p.getInventory().hasItemId(53) && p.getInventory().hasItemId(54)) {
 			if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
 				playerTalk(p, n,
@@ -62,7 +62,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 		defaultMenu.addOption(new Option("Have you any interesting news?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "No, i'm only interested in old stuff");
+				npcTalk(p, n, "No, I'm only interested in old stuff");
 			}
 		});
 		defaultMenu.addOption(new Option(
