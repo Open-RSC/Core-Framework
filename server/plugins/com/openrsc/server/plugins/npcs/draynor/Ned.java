@@ -98,11 +98,20 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					"Or I can be making you some if you gets me 4 balls of wool",
 					"I strands them together I does, makes em strong"
 			);
-			int choice = showMenu(p, n, false, new String[] {
-				"Okay, please sell me some Rope",
-				"Thats a little more than I want to pay",
-				"I will go and get some wool"
-			});
+			int choice;
+			if(!hasItem(p, 207, 4)) {
+				choice = showMenu(p, n, false, //do not send over
+							"Okay, please sell me some Rope",
+							"Thats a little more than I want to pay",
+							"I will go and get some wool"
+						);
+			} else {
+				choice = showMenu(p, n, false, //do not send over
+						"Okay, please sell me some Rope",
+						"Thats a little more than I want to pay",
+						"I have some balls of wool. could you make me some Rope?"
+						);
+			}
 			if (choice == 0) {
 				if (p.getInventory().countId(10) <= 15) {
 					p.message("You Don't have enough coins to buy any rope!");
@@ -117,45 +126,69 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 			}
 			else if (choice == 1) {
 				playerTalk(p, n, "Thats a little more than I want to pay");
-				npcTalk(p, n, "Well, if you ever need some rope. thats the price. sorry",
+				npcTalk(p, n, "Well, if you ever need rope. thats the price. sorry",
 						"An old sailor needs money for a little drop o rum."
 				);
 			}
 			else if (choice == 2) {
-				playerTalk(p, n, "I will go and get some wool");
-				npcTalk(p, n, "Aye, you do that",
-						"Remember, it takes 4 balls of wool to make strong rope");
+				if(!hasItem(p, 207, 4)) {
+					playerTalk(p, n, "I will go and get some wool");
+					npcTalk(p, n, "Aye, you do that",
+							"Remember, it takes 4 balls of wool to make strong rope");
+				}
+				else {
+					playerTalk(p, n, "I have some balls of wool. could you make me some Rope?");
+					npcTalk(p, n, "Sure I can.");
+					p.getInventory().add(new Item(237, 1));
+					p.getInventory().remove(207, 4);
+				}
 			}
 		}
 
 		else if (option == 2) { // Prince Ali's Rescue
-			npcTalk(p, n, "Well... Thats an interesting thought",
-					"yes, I think I could do something",
-					"Give me 3 balls of wool and I might be able to do it"
-			);
-			if (p.getInventory().countId(207) >= 3) {
-				int choice = showMenu(p, n, new String[] {
-					"I have that now. Please, make me a wig",
-					"I will come back when I need you to make one"
-				});
-				if (choice == 0) {
-					npcTalk(p, n, "Okay. I will have a go.");
-					message(p, "You hand Ned 3 balls of wool",
-							"Ned works with the wool. His hands move with a speed you couldn't imagine"
+			npcTalk(p, n, "I am sure I can. What are you thinking of?");
+			int wool_menu = showMenu(p, n, "Could you knit me a sweater?",
+					"How about some sort of a wig?",
+					"Could you repair the arrow holes in the back of my shirt?");
+			if (wool_menu == 0) {
+				npcTalk(p, n, "Do I look like a member of a sewing circle?",
+						"Be off wi' you, I have fought monsters that would turn your hair blue",
+						"I don't need to be laughed at just 'cos I am getting a bit old");
+			} else if (wool_menu == 1) {
+				npcTalk(p, n, "Well... Thats an interesting thought",
+						"yes, I think I could do something",
+						"Give me 3 balls of wool and I might be able to do it"
+				);
+				if (p.getInventory().countId(207) >= 3) {
+					int choice = showMenu(p, n,
+						"I have that now. Please, make me a wig",
+						"I will come back when I need you to make me one"
 					);
-					p.getInventory().remove(207, 3);
-					npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
-					p.message("Ned gives you a pretty good wig");
-					addItem(p, 245, 1);
-					playerTalk(p, n, "Thanks Ned, theres more to you than meets the eye");
+					if (choice == 0) {
+						npcTalk(p, n, "Okay, I will have a go.");
+						message(p, "You hand Ned 3 balls of wool",
+								"Ned works with the wool. His hands move with a speed you couldn't imagine"
+						);
+						p.getInventory().remove(207, 3);
+						npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
+						p.message("Ned gives you a pretty good wig");
+						addItem(p, 245, 1);
+						playerTalk(p, n, "Thanks Ned, theres more to you than meets the eye");
+					}
+					else if (choice == 1) {
+						npcTalk(p, n, "Well, it sounds like a challenge",
+								"come to me if you need one"
+						);
+					}
+				} else {
+					playerTalk(p, n, "great, I will get some. I think a wig would be useful");
 				}
-				else if (choice == 1) {
-					npcTalk(p, n, "Well, it sounds like a challenge",
-							"Come to me if you need one"
-					);
-				}
-			} else {
-				playerTalk(p, n, "great, I will get some. I think a wig would be useful");
+			} else if (wool_menu == 2) {
+				npcTalk(p, n, "Ah yes, its a tough world these days",
+						"Theres a few brave enough to attack from 10 metres away");
+				p.message("Ned pulls out a needle and attacks your shirt");
+				npcTalk(p, n, "There you go, good as new");
+				playerTalk(p, n, "Thanks Ned, maybe next time they will attack me face to face");
 			}
 		}
 

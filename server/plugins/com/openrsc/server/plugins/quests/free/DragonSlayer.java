@@ -284,6 +284,7 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 	public boolean blockObjectAction(GameObject obj, String command,
 			Player player) {
 		return (obj.getY() == 643 && (obj.getID() == 224 || obj.getID() == 225))
+				|| (obj.getY() == 641 && (obj.getID() == 233 || obj.getID() == 234))
 				|| obj.getID() == 227
 				|| ((obj.getY() == 3458 || obj.getY() == 3331)
 						&& obj.getID() == 228 || obj.getID() == 230);
@@ -351,6 +352,15 @@ public class DragonSlayer implements QuestInterface,InvUseOnObjectListener,
 				p.teleport(259, 641, false);
 			}
 			p.message("You leave the ship");
+			break;
+		case 233:
+		case 234:
+			p.getCache().set("lumb_lady", CRANDOR);
+			if(p.getCache().hasKey("crandor_shortcut")) {
+				p.teleport(259, 3472, false);
+			} else {
+				p.teleport(281, 3472, false);
+			}
 			break;
 		}
 	}
