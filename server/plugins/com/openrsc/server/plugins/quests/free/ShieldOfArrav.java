@@ -212,29 +212,37 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 				}
 				break;
 			case 4:
-				if (hasItem(p, QuestItems.PHOENIX_CROSSBOW, 2)) {
-					npcTalk(p, n, "Have you got those crossbows for me yet?");
-					playerTalk(p, n, "Yes I have");
-					p.message("You give the crossbows to katrine");
-					p.getInventory().remove(59, 2);
-					npcTalk(p, n,
-							"Ok you can join our gang now",
-							"Feel free to enter any the rooms of the ganghouse");
-					p.updateQuestStage(this, 5);
-				} else if (hasItem(p, QuestItems.PHOENIX_CROSSBOW, 1))  {
-					npcTalk(p, n, "Have you got those crossbows for me yet?");
-					playerTalk(p, n, "I have one");
-					npcTalk(p, n, "I need two",
-							"Come back when you have them");
+				if (isBlackArmGang(p)) {
+					if (hasItem(p, QuestItems.PHOENIX_CROSSBOW, 2)) {
+						npcTalk(p, n, "Have you got those crossbows for me yet?");
+						playerTalk(p, n, "Yes I have");
+						p.message("You give the crossbows to katrine");
+						p.getInventory().remove(59, 2);
+						npcTalk(p, n,
+								"Ok you can join our gang now",
+								"Feel free to enter any the rooms of the ganghouse");
+						p.updateQuestStage(this, 5);
+					} else if (hasItem(p, QuestItems.PHOENIX_CROSSBOW, 1))  {
+						npcTalk(p, n, "Have you got those crossbows for me yet?");
+						playerTalk(p, n, "I have one");
+						npcTalk(p, n, "I need two",
+								"Come back when you have them");
+					} else {
+						npcTalk(p, n, "Have you got those crossbows for me yet?");
+						playerTalk(p, n, "No I haven't found them yet");
+						npcTalk(p,
+								n,
+								"I need two crossbows",
+								"Stolen from the phoenix gang weapons stash",
+								"which if you head east for a bit",
+								"Is a building on the south side of the road");
+					}
 				} else {
-					npcTalk(p, n, "Have you got those crossbows for me yet?");
-					playerTalk(p, n, "No I haven't found them yet");
-					npcTalk(p,
-							n,
-							"I need two crossbows",
-							"Stolen from the phoenix gang weapons stash",
-							"which if you head east for a bit",
-							"Is a building on the south side of the road");
+					npcTalk(p, n, "You've got some guts coming here",
+							"Phoenix guy");
+					p.message("Katrine Spits");
+					npcTalk(p, n, "Now go away",
+							"Or I'll make sure you 'aven't got those guts anymore");
 				}
 				break;
 			case 5:
