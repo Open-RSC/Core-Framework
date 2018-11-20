@@ -97,7 +97,6 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 									"I'm sure it's nothing to worry about",
 									"It's possible the other shearers aren't dead at all",
 									"And are just hiding in the woods or something");
-
 							playerTalk(p, n, "I'm not convinced");
 						}
 					}
@@ -156,6 +155,11 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 						npcTalk(p, n, "I need more before I can pay you");
 						playerTalk(p, n, "Ok I'll work on it");
 					}
+				} else if(hasItem(p, 145)) {
+					playerTalk(p, n, "Well I've got some wool",
+							"I've not managed to make it into a ball though");
+					npcTalk(p, n, "Well go find a spinning wheel then",
+							"And get spinning");
 				} else {
 					playerTalk(p, n, "I haven't got any at the moment");
 					npcTalk(p, n, "Ah well at least you haven't been eaten");
