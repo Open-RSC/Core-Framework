@@ -51,7 +51,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						n,
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
-						"Called Dr Hallow",
+						"Called Dr Harlow",
 						"He may be able to give you some tips",
 						"He can normally be found in the Jolly boar inn these days",
 						"He's a bit of an old soak",
@@ -65,7 +65,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						"Maybe you're not going about it right",
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
-						"Called Dr Hallow",
+						"Called Dr Harlow",
 						"He may be able to give you some tips",
 						"He can normally be found in the Jolly boar inn these days",
 						"He's a bit of an old soak",
@@ -94,10 +94,11 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 	private void harlowDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
 		case -1:
+		case 0:
 		case 1:
 		case 2:
 			String[] options;
-			npcTalk(p, n, "Buy me a drink pleassh");
+			npcTalk(p, n, "Buy me a drrink pleassh");
 			if (!hasItem(p, 217)
 					&& p.getQuestStage(Constants.Quests.VAMPIRE_SLAYER) != -1) {
 				options = new String[] { "No you've had enough", "Ok mate",
@@ -120,9 +121,9 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "Morgan you shhay?");
 				playerTalk(p, n,
 						"His village is being terrorised by a vampire",
-						"He wanted me to ask you how I should go about stoping it");
+						"He wanted me to ask you how i should go about stopping it");
 				npcTalk(p, n,
-						"Buy me a beer then I will teash you what you need to know");
+						"Buy me a beer then i'll teash you what you need to know");
 				int choice2 = showMenu(p, n, "Ok mate",
 						"But this is your friend Morgan we're talking about");
 				if (choice2 == 0) {
@@ -154,7 +155,6 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						p.updateQuestStage(getQuestId(), 2);
 					} else {
 						playerTalk(p, n, "I'll just go and buy one");
-
 					}
 				} else if (choice2 == 1) {
 					npcTalk(p, n, "Buy ush a drink anyway");
@@ -201,7 +201,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 			
 			final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
 			n.setShouldRespawn(false);
-			player.message("A vampire jumps out off the coffin");
+			player.message("A vampire jumps out of the coffin");
 			return;
 		}
 	}
