@@ -36,7 +36,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 											"Sigh",
 											"Well I can't go back and exorcise it",
 											"I vowed not to leave this place",
-											"Until I had a full two years of prayer and meditation",
+											"Until I had done a full two years of prayer and meditation",
 											"Tell you what I can do though",
 											"Take this amulet");
 									message(p,
