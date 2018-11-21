@@ -336,7 +336,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		case 337:
 			// blood Chest
 			req = 59;
-			xp = 600;
+			xp = 1000;
 			respawnTime = 250000;
 			loot = getLootAsList(new LootItem(10, 500, 100), new LootItem(619, 2, 100));
 			teleLoc = Point.location(614, 568);
