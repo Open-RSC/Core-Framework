@@ -46,7 +46,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 	private void ghostDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == 15) {
 			if(p.getQuestStage(this) == -1) {
-				p.message("the ghost doesn't appear interested in talking");
+				p.message("The ghost doesn't appear interested in talking");
 				return;
 			}
 			if (cID == -1) {
@@ -67,7 +67,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 						playerTalk(p, n, "I have found it");
 						npcTalk(p,
 								n,
-								"Hurrah now i can stop being a ghost",
+								"Hurrah now I can stop being a ghost",
 								"You just need to put it in my coffin over there",
 								"And I will be free");
 					}
@@ -76,7 +76,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 				if (p.getQuestStage(this) == 0
 						|| !p.getInventory().wielding(24)) {
 					playerTalk(p, n, "Hello ghost, how are you?");
-					npcTalk(p, n, "Wooo woooo wooooo");
+					npcTalk(p, n, "Wooo wooo wooooo");
 					int choice = showMenu(p, n,
 							"Sorry I don't speak ghost",
 							"Ooh that's interesting",
@@ -84,7 +84,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 					if (choice == 0) {
 						ghostDialogue(p, n, Ghost.DONTSPEAK);
 					} else if (choice == 1) {
-						npcTalk(p, n, "Woo wooo", "Wooooooooooooooo");
+						npcTalk(p, n, "Woo wooo", "Woooooooooooooooooo");
 						int choice2 = showMenu(p, n,
 								"Did he really?", "Yeah that's what I thought");
 						if (choice2 == 0) {
@@ -93,17 +93,17 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 									"My brother had exactly the same problem",
 									"Goodbye. Thanks for the chat");
 							if (choice3 == 0) {
-								npcTalk(p, n, "Woo wooooo",
-										"Wooooo woo woo woo");
+								npcTalk(p, n, "Woo Wooooo",
+										"Wooooo Woo woo woo");
 								int choice4 = showMenu(
 										p,
 										n,
 												"Goodbye. Thanks for the chat",
-												"You'll have to give me the recipe sometime");
+												"You'll have to give me the recipe some time");
 								if (choice4 == 0) {
 									ghostDialogue(p, n, Ghost.GOODBYE);
 								} else if (choice4 == 1) {
-									npcTalk(p, n, "Woooooooo woo woooooooo");
+									npcTalk(p, n, "Wooooooo woo woooooooo");
 									int choice6 = showMenu(p, n,
 											"Goodbye. Thanks for the chat",
 											"Hmm I'm not sure about that");
@@ -126,7 +126,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 								}
 							}
 						} else if (choice2 == 1) {
-							npcTalk(p, n, "Wooo woooooooooooooooo");
+							npcTalk(p, n, "Wooo woooooooooooooo");
 							int choice5 = showMenu(p, n,
 									"Goodbye. Thanks for the chat",
 									"Hmm I'm not sure about that");
@@ -137,14 +137,16 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 							}
 						}
 					} else if (choice == 2) {
-						npcTalk(p, n, "Wooooooooo woo!");
-						int choice8 = showMenu(p, n,
+						npcTalk(p, n, "Wooooooo woo!");
+						int choice8 = showMenu(p, n, false, //do not send over
 								"Sorry I don't speak ghost",
-								"Thank you. You've beeen very helpful");
+								"Thank you. You've been very helpful");
 						if (choice8 == 0) {
+							playerTalk(p, n, "Sorry I don't speak ghost");
 							ghostDialogue(p, n, Ghost.DONTSPEAK);
 						} else if (choice8 == 1) {
-							npcTalk(p, n, "Wooooooooo");
+							playerTalk(p, n, "Thank you. You've been very helpfull");
+							npcTalk(p, n, "Wooooooo");
 						}
 					}
 				} else {
@@ -152,15 +154,14 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 					npcTalk(p, n, "Not very good actually");
 					playerTalk(p, n, "What's the problem then?");
 					npcTalk(p, n, "Did you just understand what I said?");
-					int choice = showMenu(
-							p,
-							n,
+					int choice = showMenu(p, n, false, //do not send over
 									"Yep, now tell me what the problem is",
 									"No, you sound like you're speaking nonsense to me",
 									"Wow, this amulet works");
 					if (choice == 0) {
+						playerTalk(p, n, "Yep, now tell me what the problem is");
 						npcTalk(p, n,
-								"Wow this is incredible, i didn't expect anyone to understand me again");
+								"Wow this is incredible, I didn't expect any one to understand me again");
 						playerTalk(p, n, "Yes, yes I can understand you",
 								"But have you any idea why you're doomed to be a ghost?");
 						npcTalk(p, n, "I'm not sure");
@@ -170,7 +171,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 								"I've been told a certain task may need to be completed",
 								"So you can rest in peace");
 						npcTalk(p, n, "I should think it is probably because ",
-								"a warlock has come along and stolen my skull",
+								"A warlock has come along and stolen my skull",
 								"If you look inside my coffin there",
 								"you'll find my corpse without a head on it");
 						playerTalk(p, n,
@@ -187,6 +188,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 								"It is so dull being a ghost");
 						p.updateQuestStage(Constants.Quests.THE_RESTLESS_GHOST, 3);
 					} else if (choice == 1) {
+						playerTalk(p, n, "No");
 						npcTalk(p, n,
 								"Oh that's a pity. You got my hopes up there");
 						playerTalk(p, n, "Yeah, it is pity. Sorry");
@@ -197,7 +199,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 									"I don't know, the first person I can speak to in ages is a moron");
 						} else if (choice2 == 1) {
 							npcTalk(p, n, "I'm impressed",
-									"You must be very powerful",
+									"You must be very powerfull",
 									"I don't suppose you can stop me being a ghost?");
 							int choice3 = showMenu(p, n,
 									"Yes, Ok. Do you know why you're a ghost?",
@@ -209,6 +211,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 							}
 						}
 					} else if (choice == 2) {
+						playerTalk(p, n, "Wow, this amulet works");
 						npcTalk(p,
 								n,
 								"Oh its your amulet that's doing it. I did wonder",
@@ -229,7 +232,7 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 			case Ghost.DONTSPEAK:
 				npcTalk(p, n, "Woo woo?");
 				playerTalk(p, n, "Nope still don't understand you");
-				npcTalk(p, n, "Wooooooo");
+				npcTalk(p, n, "Woooooooo");
 				playerTalk(p, n, "Never mind");
 				break;
 			case Ghost.GOODBYE:
@@ -294,10 +297,10 @@ public class TheRestlessGhost implements QuestInterface,PickupExecutiveListener,
 		}
 		if (command.equals("search") && obj.getID() == 40) {
 			if (player.getQuestStage(this) > 0) {
-				player.message("Theres a skeleton without a skull in here");
+				player.message("There's a skeleton without a skull in here");
 			}
 			else if(player.getQuestStage(this) == -1) {
-				player.message("Theres a nice and complete skeleton in here");
+				player.message("Theres a nice and complete skeleton in here!");
 			} else {
 				player.message("You search the coffin and find some human remains");
 			}
