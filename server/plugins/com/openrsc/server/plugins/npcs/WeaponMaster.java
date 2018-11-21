@@ -27,8 +27,13 @@ public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListen
 	}
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
-		playerTalk(p, affectedmob, "Nope, I'm not going to attack a fellow gang member");
-		return;		
+		if (isPhoenixGang(p)) {
+			playerTalk(p, affectedmob, "Nope, I'm not going to attack a fellow gang member");
+			return;
+		}
+		else {
+			p.startCombat(affectedmob);
+		}		
 	}
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
