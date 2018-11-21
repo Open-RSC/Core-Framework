@@ -362,7 +362,7 @@ public final class Constants {
 			put(BLACK_KNIGHTS_FORTRESS, new int[] {3, -1, 0, 0});
 			put(COOKS_ASSISTANT, new int[] {1, Skills.COOKING, 1000, 200});
 			put(DEMON_SLAYER, new int[] {3, -1, 0, 0});
-			put(DORICS_QUEST, new int[] {1, Skills.SMITHING, 700, 300});
+			put(DORICS_QUEST, new int[] {1, Skills.MINING, 700, 300});
 			put(THE_RESTLESS_GHOST, new int[] {1, Skills.PRAYER, 2000, 250});
 			put(GOBLIN_DIPLOMACY, new int[] {5, Skills.CRAFTING, 500, 60});
 			put(ERNEST_THE_CHICKEN, new int[] {4, -1, 0, 0});
