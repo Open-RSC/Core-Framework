@@ -10645,8 +10645,7 @@ public final class mudclient implements Runnable {
 					while (this.autoLoginTimeout > 0) {
 						try {
 							this.setUsername(user);
-                            this.password = DataOperations.addCharacters(pass, 20); // TODO: This strips special chars to udnerscore. We may want to in the future allow special chars.
-							//this.password = pass;
+							this.password = pass;
 							//MiscFunctions.netbase_a(20, (byte) -5, pass);
 							if (this.getUsername().trim().length() == 0) {
 								this.showLoginScreenStatus("You must enter both a username",
@@ -10677,7 +10676,8 @@ public final class mudclient implements Runnable {
 							}
 							this.packetHandler.getClientStream().writeBuffer1.putInt(Config.CLIENT_VERSION);
 							this.packetHandler.getClientStream().writeBuffer1.putString(getUsername());
-							this.packetHandler.getClientStream().writeBuffer1.putString(password);
+							// TODO: This strips special chars to udnerscore. We may want to in the future allow special chars.
+							this.packetHandler.getClientStream().writeBuffer1.putString(DataOperations.addCharacters(password, 20));
 
 							this.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
 							this.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
