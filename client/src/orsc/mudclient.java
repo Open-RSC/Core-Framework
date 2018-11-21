@@ -10676,7 +10676,7 @@ public final class mudclient implements Runnable {
 							}
 							this.packetHandler.getClientStream().writeBuffer1.putInt(Config.CLIENT_VERSION);
 							this.packetHandler.getClientStream().writeBuffer1.putString(getUsername());
-							// TODO: This strips special chars to udnerscore. We may want to in the future allow special chars.
+							// TODO: This strips special chars to underscore. We may want to in the future allow special chars.
 							this.packetHandler.getClientStream().writeBuffer1.putString(DataOperations.addCharacters(password, 20));
 
 							this.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
