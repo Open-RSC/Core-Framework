@@ -1426,12 +1426,12 @@ public final class mudclient implements Runnable {
 						false);
 				menuNewUserUsername = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 12, 40, 4, false, false);
 				i += 62;
-				menuNewUser.addCenteredText(250, i - 19, "@whi@Password must be at least between 4 and 16 characters long", 1, false);
+				menuNewUser.addCenteredText(250, i - 19, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
 				menuNewUser.addCenteredText(250, i - 19 + 11, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
 				menuNewUser.addButtonBackground(250, i + 17, 420, 34);
 				menuNewUser.addCenteredText(250, i + 8, "Choose a Password (You will require this to login)", 4, false);
-				menuNewUserPassword = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 12, 40, 4, true, false);
+				menuNewUserPassword = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 64, 40, 4, true, false);
 				i += 54;
 
 				menuNewUser.addCenteredText(250, i - 11, "@whi@It's recommended to use a valid email adress", 1, false);
