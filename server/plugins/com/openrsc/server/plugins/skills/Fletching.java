@@ -66,7 +66,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 
 		// Determine EXP based on amount + item
 		final int itemID;
-		int experience = 1;
+		int experience = 4;
 		ItemDartTipDef tipDef = null;
 		if (item.getID() == 280) { // Arrow Shafts
 			itemID = 637; // Headless Arrows
