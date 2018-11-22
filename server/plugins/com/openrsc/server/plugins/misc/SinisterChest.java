@@ -54,12 +54,14 @@ public class SinisterChest implements ObjectActionListener, ObjectActionExecutiv
 
 			removeItem(p, 932, 1); // remove the sinister key.
 			// ADD 9 HERB ITEMS FROM CHEST.
-			int[] RandomHerbs = { 435, 436, 437, 438, 439, 440, 441, 442, 443 };
-			for (int i = 0; i < 8; i++) {
-				int choosenHerbs = (int) (Math.random() * RandomHerbs.length);
-				p.getInventory().add(new Item(RandomHerbs[choosenHerbs]));
-			}
-			// one of the herbs is garanteed torstol.
+			// they are always the same rewarded herbs (see replay, there's also a rsc vid of
+			// someone looting it)
+			// 2 harr, 3 ranarr, 1 irit, 1 avantoe, 1 kwuarm, 1 torstol
+			addItem(p, 437, 2);
+			addItem(p, 438, 3);
+			addItem(p, 439, 1);
+			addItem(p, 440, 1);
+			addItem(p, 441, 1);
 			addItem(p, 933, 1);
 			// Poison player with damage 6.
 			p.startPoisonEvent();
