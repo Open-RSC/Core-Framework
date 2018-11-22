@@ -75,6 +75,13 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 				new LootItem(34, 1, 15), 
 				new LootItem(895, 1, 15), 
 				new LootItem(897, 1, 20)),
+		GNOME_TRAINER(75, 792, "Get your hands off my valuables human",
+				new LootItem(10, 200, 22), 
+				new LootItem(10, 400, 18), 
+				new LootItem(152, 1, 10),
+				new LootItem(34, 1, 15), 
+				new LootItem(895, 1, 15), 
+				new LootItem(897, 1, 20)),
 		BLURBERRY_BARMAN(75, 792, "Get your hands off my valuables human",
 				new LootItem(10, 200, 22), 
 				new LootItem(10, 400, 18), 
@@ -455,10 +462,13 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			return;
 		}
 		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
-		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+		String thievedMobName = npc.getDef().getName().toLowerCase();
+		//gnome local, child, trainer and barman all known as gnome for the thiev messages
+		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" : thievedMobName;
+		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
-			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
@@ -499,7 +509,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 						}
 						total += loot.getChance();
 					}
-					player.message("You pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+					player.message("You pick the " + thievedMobSt + "'s pocket");
 					if (selectedLoot != null) {
 						player.getInventory().add(selectedLoot);
 					} 
@@ -508,7 +518,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					player.setBusyTimer(0);
 					npc.setBusyTimer(0);
 					setDelay(600);
-					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
 					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
 					interrupt();
