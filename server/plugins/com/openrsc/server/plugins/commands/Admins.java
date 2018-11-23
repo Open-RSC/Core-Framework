@@ -378,7 +378,7 @@ public final class Admins implements CommandListener {
                                 }
                             } else {
                                 if (dropID == 160)
-                                    dropID = Formulae.calculateRareDrop();
+                                    dropID = Formulae.calculateGemDrop();
                                 else if (dropID == 165)
                                     dropID = Formulae.calculateHerbDrop();
                                 ItemDefinition def = EntityHandler.getItemDef(dropID);
