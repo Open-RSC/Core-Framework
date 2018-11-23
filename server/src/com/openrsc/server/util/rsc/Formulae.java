@@ -25,7 +25,7 @@ public final class Formulae {
 	public static final int[] miningAxeIDs = { 1262, 1261, 1260, 1259, 1258, 156 };
 	public static final int[] miningAxeLvls = { 41, 31, 21, 6, 1, 1 };
 	public static final int[] gemDropIDs = { 160, 159, 158, 157 };
-	public static final int[] gemDropWeights = { 100, 70, 50, 35 };
+	public static final int[] gemDropWeights = { 100, 70, 45, 15 };
 	public static final int[] throwingIDs = { 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1013, 1015, 
 			1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1070, 1069, 
 			1068, 1024, 827, 1088, 1089, 1090, 1091, 1092, 1135, 1136, 1137, 1138, 1139, 1140 };
