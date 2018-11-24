@@ -89,9 +89,25 @@ server {
 
     index index.php index.html index.htm;
 
+    error_page 404 /index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
     ####### Proxies #######
     # PHP proxy
-    location ~ \.php$ {
+        location ~ \.php$ {
+        root /var/www/html;
+        fastcgi_cache laravel;
+        fastcgi_cache_valid 200 204 1m;
+        fastcgi_no_cache $http_authorization $cookie_laravel_session;
+        fastcgi_cache_lock on;
+        fastcgi_cache_lock_timeout 10s;
+        add_header X-Proxy-Cache $upstream_cache_status;
+        fastcgi_no_cache $no_cache;
+        fastcgi_cache_use_stale updating error timeout invalid_header http_500;
+        fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass php:9000;
         fastcgi_index index.php;
@@ -101,6 +117,28 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
         try_files $uri $uri/ /index.php$is_args$args /board/app.php$is_args$args;
     }
+
+    # Cache everything by default
+    set $no_cache 0;
+    # Don't cache POST requests
+    if ($request_method = POST) {
+        set $no_cache 1;
+    }
+    # Don't cache if the URL contains a query string
+    if ($query_string != "") {
+        set $no_cache 1;
+    }
+    # Don't cache the following URLs
+    if ($request_uri ~* "/(cp/)") {
+        set $no_cache 1;
+    }
+    # Don't cache if there is a cookie called PHPSESSID
+    if ($http_cookie = "PHPSESSID") {
+        set $no_cache 1;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
 
     ####### PHPBB Forum #######
     location /board {
