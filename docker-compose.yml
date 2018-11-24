@@ -2,7 +2,9 @@ version: '3.1'
 services:
 
     nginx:
-        image: nginx:1.15.3-alpine-perl
+        build:
+            context: .
+            dockerfile: etc/php/Dockerfile
         container_name: nginx
         volumes:
             - "./etc/nginx:/etc/nginx/conf.d"
@@ -10,6 +12,7 @@ services:
             - "./server/avatars:/var/www/html/avatars"
             - "./etc/nginx/logs:/var/log/nginx"
             - "./etc/letsencrypt:/etc/letsencrypt"
+            - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
         ports:
             - "80:80"
             - "443:443"
@@ -35,13 +38,13 @@ services:
         env_file:
             - ".env"
         command: [
-            '--wait_timeout=360000', 
-            '--log-bin=bin.log', 
-            '--log-bin-index=bin-log.index', 
-            '--max_binlog_size=100M', 
-            '--binlog-format=MIXED', 
-            '--slow-query-log', 
-            '--general_log=1', 
+            '--wait_timeout=360000',
+            '--log-bin=bin.log',
+            '--log-bin-index=bin-log.index',
+            '--max_binlog_size=100M',
+            '--binlog-format=MIXED',
+            '--slow-query-log',
+            '--general_log=1',
             '--expire_logs_days=10',
             '--sync_binlog=1'
             ]
