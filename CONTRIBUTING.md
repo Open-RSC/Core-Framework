@@ -15,19 +15,19 @@ today! Here are the guidelines we'd like you to follow:
 
 ## <a name="coc"></a> Code of Conduct
 
-Help us keep Open RSC both open and inclusive. Please read and follow our [Code of Conduct][coc].
+Help us keep Open RSC both open and inclusive. Please read and follow our [Code of Conduct](https://github.com/open-rsc/Game/blob/2.0.0/CODE_OF_CONDUCT.md).
 
-### <a name="issue"></a> Found an Issue or Bug?
+## <a name="issue"></a> Found an Issue or Bug?
 
 If you find a bug in the source code, you can help us by submitting an issue to our
-[GitHub Repository][github]. Even better, you can submit a Pull Request with a fix.
+[GitHub Repository](https://github.com/open-rsc/Game). Even better, you can submit a Pull Request with a fix.
 
 **Please see the [Submission Guidelines](#submit) below.**
 
 ## <a name="submit"></a> Issue Submission Guidelines
 Before you submit your issue search the archive, maybe your question or bug report was already answered.
 
-The "[new issue][github-new-issue]" form contains a number of prompts that you should fill out to
+The "[new issue](https://github.com/open-rsc/Game/issues/new/choose)" form contains a number of prompts that you should fill out to
 make it easier to understand and categorize the issue.
 
 In general, providing the following information will increase the chances of your issue being dealt
@@ -45,7 +45,7 @@ Before you submit your pull request consider the following guidelines:
 
 * Search [GitHub](https://github.com/open-rsc/game/pulls) for an open or closed Pull Request
   that relates to your submission. You don't want to duplicate effort.
-* Create the [development environment][developers.setup]
+* Create the [development environment](#install)
 * Make your changes in a new git branch:
 
     ```shell
@@ -140,7 +140,7 @@ If you choose to install everything manually and not use the set up scripts, the
 2. Clone the Game repo and set up as you wish: https://github.com/Open-RSC/Game
 3. Download any replays you need: https://github.com/Open-RSC/RSC-Plus-Replays
 
-## <a name="standardss"></a> Code Standards:
+## <a name="standards"></a> Code Standards:
 
 - Use single TABs, coupled with <tabspace>
 - Claim or make tickets before working on features
