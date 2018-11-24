@@ -149,4 +149,4 @@ If you choose to install everything manually and not use the set up scripts, the
 
 ## <a name="manual"></a> Manual Install Script for Ubuntu Linux by Christofosho:
 
-https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/Installing-ORSC.txt
+[Installing-ORSC.txt](https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/Installing-ORSC.txt)
