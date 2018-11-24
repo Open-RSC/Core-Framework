@@ -2,9 +2,7 @@ version: '3.1'
 services:
 
     nginx:
-        build:
-            context: .
-            dockerfile: etc/php/Dockerfile
+        image: nginx:latest
         container_name: nginx
         volumes:
             - "./etc/nginx:/etc/nginx/conf.d"
@@ -12,7 +10,6 @@ services:
             - "./server/avatars:/var/www/html/avatars"
             - "./etc/nginx/logs:/var/log/nginx"
             - "./etc/letsencrypt:/etc/letsencrypt"
-            - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
         ports:
             - "80:80"
             - "443:443"
@@ -23,13 +20,17 @@ services:
             - mysqldb
 
     php:
-        image: nanoninja/php-fpm
+        build:
+            context: .
+            dockerfile: etc/php/Dockerfile
         container_name: php
         ports:
             - "127.0.0.1:9000:9000"
         volumes:
             - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
             - "./Website:/var/www/html"
+        environment:
+            - XDEBUG=true
 
     mysqldb:
         image: mariadb:latest
