@@ -106,10 +106,29 @@ server {
         fastcgi_pass php:9000;
         fastcgi_index index.php;
         include fastcgi_params;
-        fastcgi_read_timeout 3000;
+        fastcgi_read_timeout 900s;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
         try_files $uri $uri/ /index.php$is_args$args /board/app.php$is_args$args;
+    }
+
+    # Cache everything by default
+    set $no_cache 0;
+    # Don't cache POST requests
+    if ($request_method = POST) {
+        set $no_cache 1;
+    }
+    # Don't cache if the URL contains a query string
+    if ($query_string != "") {
+        set $no_cache 1;
+    }
+    # Don't cache the following URLs
+    if ($request_uri ~* "/(cp/)") {
+        set $no_cache 1;
+    }
+    # Don't cache if there is a cookie called PHPSESSID
+    if ($http_cookie = "PHPSESSID") {
+        set $no_cache 1;
     }
 
     ####### PHPBB Forum #######
