@@ -166,7 +166,7 @@ public class NpcBehavior {
 
 		boolean revenantsTarget = false;
 		return closeEnough && shouldAttack && !p.getAttribute("no-aggro", false) && !outOfBounds && !playerOccupied
-				&& !playerCombatTimeout && !p.warnedToMove() && !revenantsTarget;
+				&& !playerCombatTimeout && !revenantsTarget;
 	}
 
 	public State getBehaviorState() {
