@@ -13,7 +13,7 @@ sudo apt install phpmyadmin php-mbstring php-gettext -y
 sudo ln -s /usr/share/phpmyadmin /var/www/html
 sudo phpenmod mbstring
 
-sudo apt install oracle-java11-installer openjfx ant -y
+sudo apt install openjdk-11-jdk ant -y
 sudo apt update
 sudo apt upgrade
 sudo apt autoremove
