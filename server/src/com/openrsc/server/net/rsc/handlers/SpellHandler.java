@@ -720,12 +720,21 @@ public class SpellHandler implements PacketHandler {
                             player.message("You can't cast this spell within the vicinity of the party hall");
                             return;
                         }
+                        if (affectedItem.getID() == 1264) {
+                        	player.message("The spell fizzles as the magical hat resists your spell.");
+                            return;
+                        }
                         if (affectedItem.getID() == 1093) {
                             player.message("I can't use telekinetic grab on the cat");
                             return;
                         }
                         if (affectedItem.getID() == 1039) {
                             player.message("I can't use telekinetic grab on Ana");
+                            return;
+                        }
+                        //coin respawn in Rashiliyia's Tomb can't be telegrabbed
+                        if (affectedItem.getID() == 10 && affectedItem.getLocation().equals(new Point(358, 3626))) {
+                            player.message("The coins turn to dust in your inventory...");
                             return;
                         }
                         if (affectedItem.getLocation().inBounds(97, 1428, 106, 1440)) {
