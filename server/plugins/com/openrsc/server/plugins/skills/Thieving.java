@@ -464,7 +464,9 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
 		String thievedMobName = npc.getDef().getName().toLowerCase();
 		//gnome local, child, trainer and barman all known as gnome for the thiev messages
-		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" : thievedMobName;
+		//yanille watchman known simply as watchman
+		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" : 
+			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
