@@ -239,6 +239,7 @@ public final class Player extends Mob {
 	 * Players cache is used to store various objects into database
 	 */
 	private final Cache cache = new Cache();
+	private final Cache killCache = new Cache();
 
 	/**
 	 * Controls if were allowed to accept appearance updates
@@ -748,6 +749,7 @@ public final class Player extends Mob {
 	public Cache getCache() {
 		return cache;
 	}
+	public Cache getKillCache() { return killCache; }
 
 	public long getCastTimer() {
 		return lastSpellCast;
@@ -2041,6 +2043,20 @@ public final class Player extends Mob {
 	}
 	public boolean canUsePool() {
 		return System.currentTimeMillis() - (getCache().hasKey("last_death") ? getCache().getLong("last_death") : 0) > 90000;
+	}
+
+	public void addNpcKill(Npc n, boolean sendUpdate) {
+		int kills = 0;
+		String n_id = String.valueOf(n.getID());
+		if (getKillCache().hasKey(n_id)) {
+			getKillCache().put(n_id, getKillCache().getInt(n_id) + 1);
+		}
+		else {
+			getKillCache().set(n_id, 1);
+		}
+		if (sendUpdate) {
+			message("Your " + n.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
+		}
 	}
 
 }
