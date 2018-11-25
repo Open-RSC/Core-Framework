@@ -89,11 +89,11 @@ public class CombatEvent extends GameTickEvent {
 			target.setLastCombatState(CombatState.ERROR);
 			resetCombat();
 		} else {
-			if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
+			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
 				inflictDamage(hitter, target, MeleeFormula.getDamage(hitter, target));
-			} else {
-				inflictDamage(hitter, target, PVPCombatFormula.calcFightHit(hitter, target));
-			}
+			//} else {
+			//	inflictDamage(hitter, target, PVPCombatFormula.calcFightHit(hitter, target));
+			//}
 		}
 	}
 
