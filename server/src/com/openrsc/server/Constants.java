@@ -151,7 +151,7 @@ public final class Constants {
 		 * Remember, 30+ Magic damage gives you +1 damage, so these damages are
 		 * -1 the absolute max. Level Requirement, Max Damage
 		 */
-		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 2}, {13, 3}, {17, 3}, {23, 4}, {29, 4}, {35, 5}, {41, 5}, {47, 6}, {53, 6}, {59, 7}, {62, 8}, {65, 9}, {70, 10}, {75, 11}};
+		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 3}, {13, 4}, {17, 5}, {23, 6}, {29, 7}, {35, 8}, {41, 9}, {47, 10}, {53, 11}, {59, 12}, {62, 13}, {65, 14}, {70, 15}, {75, 16}};
 
 		public static boolean AVATAR_GENERATOR = false; // Not sent to client.
 		public static boolean PLAYER_COMMANDS = false; // This either.
