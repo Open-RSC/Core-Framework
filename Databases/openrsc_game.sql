@@ -247,6 +247,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_droplogs` (
   `itemID` int(10) DEFAULT NULL,
   `playerID` int(10) DEFAULT NULL,
   `dropAmount` int(10) DEFAULT NULL,
+  `npcId` int(10) DEFAULT NULL,
+  `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

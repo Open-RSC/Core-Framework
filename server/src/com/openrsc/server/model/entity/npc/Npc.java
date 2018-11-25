@@ -375,14 +375,14 @@ public class Npc extends Mob {
 			if (NPC_KILL_LOGGING) {
 				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
 					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
-						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, true);
+						owner.addNpcKill(this, true);
 					}
 					else {
-						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, false);
+						owner.addNpcKill(this, false);
 					}
 				}
 				else {
-					Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, NPC_KILL_MESSAGES);
+					owner.addNpcKill(this, NPC_KILL_MESSAGES);
 				}
 			}
 
