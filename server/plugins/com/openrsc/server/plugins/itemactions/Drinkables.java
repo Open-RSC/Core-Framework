@@ -160,7 +160,14 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			player.playerServerMessage(MessageType.QUEST, "You drink the wine");
 			player.playerServerMessage(MessageType.QUEST, "It makes you feel a bit dizzy");
 			player.getInventory().remove(item);
-			player.getInventory().add(new Item(140));
+			//half-wine set to 1/25k chance
+			int rand = DataConversions.random(0, 25000);
+			if(item.getID() == 142 && rand == 0) {
+				player.getInventory().add(new Item(246));
+			}
+			else {
+				player.getInventory().add(new Item(140));
+			}
 			if (player.getSkills().getLevel(3) < player.getSkills().getMaxStat(3)) {
 				int newStat = player.getSkills().getLevel(3) + 11;
 				if (newStat > player.getSkills().getMaxStat(3)) {
