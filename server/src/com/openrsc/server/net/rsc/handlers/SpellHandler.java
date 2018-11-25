@@ -721,7 +721,7 @@ public class SpellHandler implements PacketHandler {
                             return;
                         }
                         if (affectedItem.getID() == 1264) {
-                        	player.message("The spell fizzles as the magical hat resists your spell.");
+                            player.message("The spell fizzles as the magical hat resists your spell.");
                             return;
                         }
                         if (affectedItem.getID() == 1093) {

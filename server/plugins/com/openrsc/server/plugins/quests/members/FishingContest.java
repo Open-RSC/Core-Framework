@@ -7,9 +7,11 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
@@ -20,7 +22,8 @@ import static com.openrsc.server.plugins.Functions.*;
 public class FishingContest implements QuestInterface,TalkToNpcListener,
 		TalkToNpcExecutiveListener, ObjectActionListener,
 		ObjectActionExecutiveListener, InvUseOnObjectListener,
-		InvUseOnObjectExecutiveListener {
+		InvUseOnObjectExecutiveListener, InvUseOnNpcListener,
+		InvUseOnNpcExecutiveListener {
 
 	class SINISTER {
 		private static final int FISHING = 0;
@@ -527,10 +530,14 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 			addItem(player, 715, 1);
 		}
 		if (obj.getID() == 350 && item.getID() == 218) {
-			if (!player.getCache().hasKey("garlic_activated") && !player.getCache().hasKey("paid_contest_fee")) {
+			//stashing garlics in pipes should not check if other
+			//garlics have been stashed
+			if (!player.getCache().hasKey("paid_contest_fee")) {
 				message(player, "You stash the garlic in the pipe");
 				player.getInventory().remove(218, 1);
-				player.getCache().store("garlic_activated", true);
+				if(!player.getCache().hasKey("garlic_activated")) {
+					player.getCache().store("garlic_activated", true);
+				}
 			} else {
 				player.message("Nothing interesting happens");
 			}
@@ -810,6 +817,24 @@ public class FishingContest implements QuestInterface,TalkToNpcListener,
 						"It is all in the technique");
 			}
 			break;
+		}
+	}
+
+	@Override
+	public boolean blockInvUseOnNpc(Player p, Npc n, Item i) {
+		//garlic on sinister stranger
+		if(n.getID() == 346 && i.getID() == 218) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onInvUseOnNpc(Player p, Npc n, Item i) {
+		if(n.getID() == 346 && i.getID() == 218) {
+			npcTalk(p, n, "urrggh get zat horrible ving avay from me",
+					"How do people like to eat that stuff",
+					"I can't stand even to be near it for ten seconds");
 		}
 	}
 }
