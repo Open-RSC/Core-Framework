@@ -26,7 +26,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	public void onInvAction(Item item, Player p) {
 		if (item.getID() == 793) {
 			p.message("you open the oyster shell");
-			if (DataConversions.random(0, 1) == 1) {
+			if (DataConversions.random(0, 10) == 1) {
 				p.getInventory().replace(793, 792);
 			} else {
 				p.getInventory().replace(793, 791);
@@ -255,13 +255,38 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 					"fnales add 5cme snape gras5",
 					"you guess it really says something slightly different");
 		}
+		// magic scroll
 		else if (item.getID() == 752) {
-			message(p, "You memorise what is written on the scroll",
-					"You can now cast the Ardougne teleport spell",
-					"Provided you have the required runes and magic level",
-					"The scroll crumbles to dust");
+			if (p.getCache().hasKey("ardougne_scroll") && p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+				message(p, "The scroll crumbles to dust");
+			}
+			else {
+				message(p, "You memorise what is written on the scroll",
+						"You can now cast the Ardougne teleport spell",
+						"Provided you have the required runes and magic level",
+						"The scroll crumbles to dust");
+			}			
 			removeItem(p, 752, 1);
+			if (!p.getCache().hasKey("ardougne_scroll")) {
+				p.getCache().store("ardougne_scroll", true);
+			}
 		}
+		// spell scroll
+		else if (item.getID() == 1181) {
+			if (p.getCache().hasKey("watchtower_scroll") && p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				message(p, "The scroll crumbles to dust");
+			}
+			else {
+				message(p, "You memorise what is written on the scroll",
+						"You can now cast the Watchtower teleport spell",
+						"Provided you have the required runes and magic level",
+						"The scroll crumbles to dust");
+			}
+			removeItem(p, 1181, 1);
+			if (!p.getCache().hasKey("watchtower_scroll")) {
+				p.getCache().store("watchtower_scroll", true);
+			}
+		} 
 		/** TOURIST GUIDE BOOK - REMAKE THIS CODE LATER **/
 		else if (item.getID() == 706) {
 			message(p, "You read the guide");
@@ -405,19 +430,6 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		else if (item.getID() == 1087) {
 			p.message("You search the robe");
 			p.message("You find nothing");
-		} 
-		else if (item.getID() == 1181) {
-			if (p.getCache().hasKey("watchtower_scroll") && p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
-				return;
-			}
-			message(p, "You memorise what is written on the scroll");
-			p.message("You can now cast the Watchtower teleport spell");
-			p.message("Provided you have the required runes and magic level");
-			p.message("The scroll crumbles to dust");
-			removeItem(p, 1181, 1);
-			if (!p.getCache().hasKey("watchtower_scroll")) {
-				p.getCache().store("watchtower_scroll", true);
-			}
 		} 
 		else if (item.getID() == 1141) {
 			ActionSender.sendBox(p, 
