@@ -26,7 +26,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	public void onInvAction(Item item, Player p) {
 		if (item.getID() == 793) {
 			p.message("you open the oyster shell");
-			if (DataConversions.random(0, 1) == 1) {
+			if (DataConversions.random(0, 10) == 1) {
 				p.getInventory().replace(793, 792);
 			} else {
 				p.getInventory().replace(793, 791);
