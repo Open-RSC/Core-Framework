@@ -74,13 +74,6 @@ public class SpellHandler implements PacketHandler {
             player.resetPath();
             return;
         }
-        if (spell.getName().equalsIgnoreCase("Ardougne teleport")
-                && player.getQuestStage(Constants.Quests.PLAGUE_CITY) != -1) {
-            player.message("You don't know how to cast this spell yet");
-            player.message("You need to do the plague city quest");
-            player.resetPath();
-            return;
-        }
 
         // Services.lookup(DatabaseManager.class).addQuery(new
         // GenericLog(player.getUsername() + " tried to cast spell 49 at " +
@@ -1092,6 +1085,11 @@ public class SpellHandler implements PacketHandler {
         if (player.getInventory().countId(1039) > 0) {
             message(player, "You can't teleport while holding Ana,",
                     "It's just too difficult to concentrate.");
+            return;
+        }
+        if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {
+            player.message("You don't know how to cast this spell yet");
+            player.message("You need to do the plague city quest");
             return;
         }
         if (!player.getCache().hasKey("watchtower_scroll") && id == 31) {
