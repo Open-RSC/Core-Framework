@@ -9,7 +9,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class MagicGuildPortals implements WallObjectActionListener, WallObjectActionExecutiveListener {
 
-	public static int[] MAGIC_PORTALS = { 147, 148, 149 };
+	private static int[] MAGIC_PORTALS = {147, 148, 149};
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
@@ -18,13 +18,13 @@ public class MagicGuildPortals implements WallObjectActionListener, WallObjectAc
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		if(inArray(obj.getID(), MAGIC_PORTALS)) {
+		if (inArray(obj.getID(), MAGIC_PORTALS)) {
 			p.message("you enter the magic portal");
-			if(obj.getID() == MAGIC_PORTALS[0]) {
+			if (obj.getID() == MAGIC_PORTALS[0]) {
 				p.teleport(212, 695);
-			} else if(obj.getID() == MAGIC_PORTALS[1]) {
+			} else if (obj.getID() == MAGIC_PORTALS[1]) {
 				p.teleport(511, 1452);
-			} else if(obj.getID() == MAGIC_PORTALS[2]) {
+			} else if (obj.getID() == MAGIC_PORTALS[2]) {
 				p.teleport(362, 1515);
 			}
 			sleep(600);
