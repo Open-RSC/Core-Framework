@@ -52,7 +52,7 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 				else
 					p.teleport(93, 649, false);
 			} else {
-				npcTalk(p, n,
+				playerTalk(p, n,
 						"Oh dear I don't actually seem to have enough money");
 			}
 			break;
