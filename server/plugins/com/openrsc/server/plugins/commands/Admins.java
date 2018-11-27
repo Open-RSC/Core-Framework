@@ -641,6 +641,12 @@ public final class Admins implements CommandListener {
             p.getCache().store("bank_pin", bankPin);
             ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
         }
+
+        if (command.equalsIgnoreCase("auction")) {
+			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			ActionSender.sendOpenAuctionHouse(p);
+		}
+
         if (command.equalsIgnoreCase("bank")) {
             Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
             if (p != null) {

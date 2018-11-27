@@ -18,8 +18,7 @@ public class OpenMarketTask extends MarketTask {
 	}
 
 	public void doTask() throws Exception {
-		PacketBuilder pb = new PacketBuilder(134);
-		pb.writeByte(3);
+		PacketBuilder pb = new PacketBuilder(132);
 		pb.writeByte(0);
 		owner.write(pb.toPacket());
 
@@ -54,8 +53,7 @@ public class OpenMarketTask extends MarketTask {
 
 		public AuctionPacketChunk() {
 			builder = new PacketBuilder();
-			builder.setID(134);
-			builder.writeByte(3);
+			builder.setID(132);
 			builder.writeByte(1);
 		}
 
@@ -63,8 +61,7 @@ public class OpenMarketTask extends MarketTask {
 			setFinished(false);
 			items.clear();
 			builder = new PacketBuilder();
-			builder.setID(134);
-			builder.writeByte(3);
+			builder.setID(132);
 			builder.writeByte(1);
 		}
 
