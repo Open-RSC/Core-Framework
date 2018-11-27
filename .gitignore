@@ -99,6 +99,7 @@ Launcher/out/
 server/avatars/
 server/*.jar
 server/out/
+server/local.conf
 
 db/
 

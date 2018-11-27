@@ -43,7 +43,7 @@ public final class Server implements Runnable {
 	private static PlayerDatabaseExecutor playerDataProcessor;
 
 	private long lastClientUpdate;
-	
+
 	private static Server server = null;
 
 	/**
@@ -53,7 +53,7 @@ public final class Server implements Runnable {
 
 	static {
 		try {
-			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml"); 
+			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
 			/* Enables asynchronous, garbage-free logging. */
 			//System.setProperty("Log4jContextSelector",
 			//		"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
@@ -67,8 +67,8 @@ public final class Server implements Runnable {
 	public static void main(String[] args) throws IOException {
 		LOGGER.info("Launching Game Server...");
 		if (args.length == 0) {
-			Constants.GameServer.initConfig("members.conf");
-			LOGGER.info("Server Configuration file not provided. Default: members.conf");
+			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
+			Constants.GameServer.initConfig("default.conf");
 		} else {
 			Constants.GameServer.initConfig(args[0]);
 			/*LOGGER.info("Server Configuration file: " + args[0]);
@@ -78,8 +78,8 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Combat Experience Rate: {}", box(Constants.GameServer.COMBAT_EXP_RATE));
 			LOGGER.info("\t Skilling Experience Rate: {}", box(Constants.GameServer.SKILLING_EXP_RATE));
 			LOGGER.info("\t Wilderness Experience Boost: {}", box(Constants.GameServer.WILDERNESS_BOOST));
-			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST)); 
-			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled")); 
+			LOGGER.info("\t Skull Experience Boost: {}", box(Constants.GameServer.SKULL_BOOST));
+			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
 			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));*/
 		}
 		if(server == null) {
@@ -115,15 +115,15 @@ public final class Server implements Runnable {
 			LOGGER.info("Loading Combat Scripts...");
 			CombatScriptLoader.init();
 			LOGGER.info("\t Combat Scripts Completed");
-			
+
 			LOGGER.info("Loading World...");
 			World.getWorld().load();
 			LOGGER.info("\t World Completed");
-			
+
 			LOGGER.info("Starting database loader...");
 			playerDataProcessor.start();
 			LOGGER.info("\t Database Loader Completed");
-			
+
 			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 			final EventLoopGroup bossGroup = new NioEventLoopGroup();
 			final EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -153,7 +153,7 @@ public final class Server implements Runnable {
 				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
-			} 
+			}
 
 		} catch (Exception e) {
 			LOGGER.catching(e);
@@ -194,7 +194,7 @@ public final class Server implements Runnable {
 		for (Player p : World.getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}
-		
+
 		SingleEvent up = new SingleEvent(null, 6000) {
 			public void action() {
 				kill();

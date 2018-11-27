@@ -8,4 +8,4 @@ echo ""
 echo "Console output is being saved to gameserver.log"
 echo ""
 touch ../gameserver.log && chmod 777 ../gameserver.log &>/dev/null
-ant runservermembers | tee -a ../gameserver.log
+ant runserver | tee -a ../gameserver.log
