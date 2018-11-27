@@ -430,9 +430,9 @@ public class PacketHandler {
 
 	private void displayBankPin() {
 		int action = packetsIncoming.getByte();
-		if (action == 0) {
+		if (action == 1) {
 			mc.showBankPinInterface();
-		} else if (action == 1) {
+		} else if (action == 0) {
 			mc.hideBankPinInterface();
 		}
 	}
