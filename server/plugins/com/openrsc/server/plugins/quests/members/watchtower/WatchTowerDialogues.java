@@ -659,22 +659,35 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 			if(cID == -1) {
 				switch(p.getQuestStage(this)) {
 				case -1:
-					// TODO dialogue for when learned the spell.
-					npcTalk(p, n, "Hello again adventurer",
-							"Thanks again for your help in keeping us safe");
-					int finish = showMenu(p, n,
-							"I lost the scroll you gave me",
-							"That's okay");
-					if(finish == 0) {
-						if(hasItem(p, 1181)) {
-							npcTalk(p, n, "Ho ho ho! a comedian to the finish!",
-									"There it is, in your backpack!");
-						} else {
-							npcTalk(p, n, "Never mind, have another...");
-							addItem(p, 1181, 1);
+					if (p.getCache().hasKey("watchtower_scroll")) {
+						npcTalk(p, n, "Greetings friend",
+								"I trust all is well with you ?",
+								"Yanilee is safe at last!");
+					}
+					else {
+						npcTalk(p, n, "Hello again adventurer",
+								"Thanks again for your help in keeping us safe");
+						int finish = showMenu(p, n,
+								"I lost the scroll you gave me",
+								"That's okay");
+						if(finish == 0) {
+							if(!p.getBank().hasItemId(1181) && !p.getInventory().hasItemId(1181)) {
+								npcTalk(p, n, "Never mind, have another...");
+								addItem(p, 1181, 1);
+							}
+							else if(p.getBank().hasItemId(1181)) {
+								//maybe non-kosher message though it was also bank restricted
+								npcTalk(p, n, "Ho ho ho! a comedian to the finish!",
+										"There it is, in your bank!");
+							}
+							else {
+								npcTalk(p, n, "Ho ho ho! a comedian to the finish!",
+										"There it is, in your backpack!");
+							}
 						}
-					} else if(finish == 1) {
-						npcTalk(p, n, "We are always in your debt...");
+						else if(finish == 1) {
+							npcTalk(p, n, "We are always in your debt...");
+						}
 					}
 					break;
 				case 0:
