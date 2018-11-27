@@ -784,21 +784,21 @@ ObjectActionExecutiveListener {
 				p.message("This story is to be continued");
 				break;
 			case -1:                        
-                if (p.getBank().hasItemId(752) || p.getInventory().hasItemId(752)) {
+                if (p.getBank().hasItemId(752) || p.getInventory().hasItemId(752) || p.getCache().hasKey("ardougne_scroll")) {
                     npcTalk(p, n, "Ah hello again",
                             "And thank you again");
                     playerTalk(p, n, "No problem");
                 }
-                else if (!p.getBank().hasItemId(752) || !p.getInventory().hasItemId(752)) {
-                    int noScroll = showMenu(p, "Do you have any more of those scrolls?",
+                else if (!p.getBank().hasItemId(752) && !p.getInventory().hasItemId(752) && !p.getCache().hasKey("ardougne_scroll")) {
+                    int noScroll = showMenu(p, n, "Do you have any more of those scrolls?",
                             "No problem");
                     if (noScroll == 0) {
-                        playerTalk(p, n, "Do you have any more of those scrolls?");
                         npcTalk(p, n, "yes here you go");
                         addItem(p, 752, 1);                            
-                    } else                        
-                        playerTalk(p, n, "No problem");
+                    } else {
+                    	// nothing
                     }
+                }
                 break;
                 
             }
