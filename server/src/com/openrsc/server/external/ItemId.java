@@ -1,4 +1,4 @@
-package com.openrsc.server;
+package com.openrsc.server.external;
 
 public enum ItemId {
 	IRON_MACE(0),
