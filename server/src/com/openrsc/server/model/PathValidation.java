@@ -1,13 +1,15 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.content.market.CollectableItem;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.util.rsc.CollisionFlag;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * 
+ *
  * @author Graham
  *
  */
@@ -42,69 +44,71 @@ public class PathValidation {
 		/* Loop through the path and check for blocking walls */
 
 		Point nextPoint = null;
+		boolean check = true;
 		while ((nextPoint = path.poll()) != null) {
-			int[] coords = { curPoint.getX(), curPoint.getY() };
-			int startX = curPoint.getX();
-			int startY = curPoint.getY();
-			int destX = nextPoint.getX();
-			int destY = nextPoint.getY();
-			boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
-			if (startX > destX) {
-				myXBlocked = isBlocking(startX - 1, startY, 8);
-				coords[0] = startX - 1;
-			} else if (startX < destX) {
-				myXBlocked = isBlocking(startX + 1, startY, 2);
-				coords[0] = startX + 1;
-			}
-
-			if (startY > destY) {
-				myYBlocked = isBlocking(startX, startY - 1, 4);
-				coords[1] = startY - 1;
-			} else if (startY < destY) {
-				myYBlocked = isBlocking(startX, startY + 1, 1);
-				coords[1] = startY + 1;
-			}
-
-			if ((myXBlocked && myYBlocked) || (myXBlocked && startY == destY)
-					|| (myYBlocked && startX == destX)) {
-				return false;
-			}
-
-			if (coords[0] > startX) {
-				newXBlocked = isBlocking(coords[0], coords[1], 2);
-			} else if (coords[0] < startX) {
-				newXBlocked = isBlocking(coords[0], coords[1], 8);
-			}
-
-			if (coords[1] > startY) {
-				newYBlocked = isBlocking(coords[0], coords[1], 1);
-			} else if (coords[1] < startY) {
-				newYBlocked = isBlocking(coords[0], coords[1], 4);
-			}
-			
-			if ((newXBlocked && newYBlocked)
-					|| (newXBlocked && startY == coords[1])
-					|| (myYBlocked && startX == coords[0])) {
-				return false;
-			}
-			if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) {
-				return false;
-			}
+			if (!checkAdjacent(curPoint, nextPoint)) return false;
 			curPoint.x = nextPoint.x;
 			curPoint.y = nextPoint.y;
 		}
 		return true;
 	}
-	
+
+	public static boolean checkAdjacent(Point curPoint, Point nextPoint) {
+		int[] coords = { curPoint.getX(), curPoint.getY() };
+		int startX = curPoint.getX();
+		int startY = curPoint.getY();
+		int destX = nextPoint.getX();
+		int destY = nextPoint.getY();
+		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
+
+		if (startX > destX) {
+			// Check for wall on east edge of current square,
+			myXBlocked = isBlocking(startX, startY, CollisionFlag.WALL_EAST);
+			// Or on west edge of square we are travelling toward.
+			newXBlocked = isBlocking(startX - 1, startY, CollisionFlag.WALL_WEST);
+			coords[0] = startX - 1;
+		} else if (startX < destX) {
+			// Check for wall on west edge of current square,
+			myXBlocked = isBlocking(startX, startY, CollisionFlag.WALL_WEST);
+			// Or on east edge of square we are travelling toward.
+			newXBlocked = isBlocking(startX + 1, startY, CollisionFlag.WALL_EAST);
+			coords[0] = startX + 1;
+		}
+
+		if (startY > destY) {
+			// Check for wall on north edge of current square,
+			myYBlocked = isBlocking(startX, startY, CollisionFlag.WALL_NORTH);
+			// Or on south edge of square we are travelling toward.
+			newYBlocked = isBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH);
+			coords[1] = startY - 1;
+
+		} else if (startY < destY) {
+			// Check for wall on south edge of current square,
+			myYBlocked = isBlocking(startX, startY, CollisionFlag.WALL_SOUTH);
+			// Or on north edge of square we are travelling toward.
+			newYBlocked = isBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH);
+			coords[1] = startX + 1;
+		}
+
+		if (myXBlocked && myYBlocked) return false;
+		if (myXBlocked && startY == destY) return false;
+		if (myYBlocked && startX == destX) return false;
+		if (newXBlocked && newYBlocked) return false;
+		if (newXBlocked && startY == coords[1]) return false;
+		if (myYBlocked && startX == coords[0]) return false;
+		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) return false;
+		return true;
+	}
+
 	private static boolean isBlocking(int x, int y, int bit) {
 		TileValue t = World.getWorld().getTile(x, y);
 		if(t.projectileAllowed) {
 			return false;
 		}
-		
+
 		return isBlocking(t.traversalMask, (byte) bit);
 	}
-	
+
 	private static boolean isBlocking(int objectValue, byte bit) {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
