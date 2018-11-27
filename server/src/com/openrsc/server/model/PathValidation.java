@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * 
+ *
  * @author Graham
  *
  */
@@ -81,7 +81,7 @@ public class PathValidation {
 			} else if (coords[1] < startY) {
 				newYBlocked = isBlocking(coords[0], coords[1], 4);
 			}
-			
+
 			if ((newXBlocked && newYBlocked)
 					|| (newXBlocked && startY == coords[1])
 					|| (myYBlocked && startX == coords[0])) {
@@ -95,16 +95,16 @@ public class PathValidation {
 		}
 		return true;
 	}
-	
-	private static boolean isBlocking(int x, int y, int bit) {
+
+	public static boolean isBlocking(int x, int y, int bit) {
 		TileValue t = World.getWorld().getTile(x, y);
 		if(t.projectileAllowed) {
 			return false;
 		}
-		
+
 		return isBlocking(t.traversalMask, (byte) bit);
 	}
-	
+
 	private static boolean isBlocking(int objectValue, byte bit) {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
