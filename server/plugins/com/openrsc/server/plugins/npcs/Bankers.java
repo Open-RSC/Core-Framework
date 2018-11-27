@@ -107,7 +107,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
                     }
                     String changeTo = getBankPinInput(player);
                     player.getCache().store("bank_pin", changeTo);
-                    ActionSender.sendBox(player, "Your new bank pin is " + bankPin, false);
+                    ActionSender.sendBox(player, "Your new bank pin is " + changeTo, false);
                 } else {
                     player.message("You don't have a bank pin");
                 }
