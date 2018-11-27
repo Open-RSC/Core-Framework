@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -14,7 +15,7 @@ ObjectActionListener {
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if(obj.getID() == 183) {
 			p.message("you pick a banana");
-			addItem(p, 249, 1);
+			addItem(p, ItemId.BANANA.id(), 1);
 			if(!p.getCache().hasKey("banana_pick")) {
 				p.getCache().set("banana_pick", 1);
 			} else {
@@ -27,6 +28,7 @@ ObjectActionListener {
 			}
 
 		}
+
 		if(obj.getID() == 184) {
 			p.message("there are no bananas left on the tree");
 		}
@@ -36,5 +38,4 @@ ObjectActionListener {
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
 		return obj.getID() == 183 || obj.getID() == 184;
 	}
-
 }

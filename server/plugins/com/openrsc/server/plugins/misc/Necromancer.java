@@ -11,10 +11,9 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+
 /**
- * 
  * @author Fate
- * 
  */
 public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcExecutiveListener, PlayerKilledNpcListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
 
@@ -22,42 +21,42 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		return n.getID() == 358;
 	}
-	
+
 	private void necromancerFightSpawnMethod(Player p, Npc necromancer) {
-		if(necromancer.getID() == 358) {
+		if (necromancer.getID() == 358) {
 			Npc zombie = getNearestNpc(p, 359, 10);
-			if(!p.getCache().hasKey("necroSpawn") || (p.getCache().hasKey("necroSpawn") && p.getCache().getInt("necroSpawn") < 7) || (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0 && zombie == null)) {
+			if (!p.getCache().hasKey("necroSpawn") || (p.getCache().hasKey("necroSpawn") && p.getCache().getInt("necroSpawn") < 7) || (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0 && zombie == null)) {
 				npcTalk(p, necromancer, "I summon the undead to smite you down");
 				p.setBusyTimer(3000);
 				zombie = World.getWorld().registerNpc(new Npc(359, necromancer.getX(), necromancer.getY()));
 				zombie.setShouldRespawn(false);
 				sleep(1600);
-				if(!p.inCombat()) {
+				if (!p.inCombat()) {
 					zombie.startCombat(p);
 				}
-				if(!p.getCache().hasKey("necroSpawn")) {
+				if (!p.getCache().hasKey("necroSpawn")) {
 					p.getCache().set("necroSpawn", 1);
 				} else {
 					int spawn = p.getCache().getInt("necroSpawn");
-					if(spawn < 7) {
+					if (spawn < 7) {
 						p.getCache().set("necroSpawn", spawn + 1);
 					}
 				}
-				if(!p.getCache().hasKey("killedZomb")) {
+				if (!p.getCache().hasKey("killedZomb")) {
 					p.getCache().set("killedZomb", 7);
-				} 
-			} else if(p.getCache().getInt("necroSpawn") > 6 && p.getCache().hasKey("necroSpawn") && zombie != null && p.getCache().getInt("killedZomb") != 0) { 
-				npcTalk(p,zombie, "Raargh");
+				}
+			} else if (p.getCache().getInt("necroSpawn") > 6 && p.getCache().hasKey("necroSpawn") && zombie != null && p.getCache().getInt("killedZomb") != 0) {
+				npcTalk(p, zombie, "Raargh");
 				p.setBusyTimer(3000);
 				zombie.startCombat(p);
-			} else if(p.getCache().getInt("killedZomb") == 0 && p.getCache().hasKey("killedZomb")){
+			} else if (p.getCache().getInt("killedZomb") == 0 && p.getCache().hasKey("killedZomb")) {
 				p.startCombat(necromancer);
 			}
-		}	
+		}
 	}
-	
+
 	private void necromancerOnKilledMethod(Player p, Npc n) {
-		if(n.getID() == 358) {
+		if (n.getID() == 358) {
 			n.killedBy(p);
 			p.getCache().remove("necroSpawn");
 			p.getCache().remove("killedZomb");
@@ -65,15 +64,15 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 			newZombie.setShouldRespawn(false);
 			newZombie.setChasing(p);
 		}
-		if(n.getID() == 359) {
+		if (n.getID() == 359) {
 			n.killedBy(p);
-			if(p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0) {
+			if (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0) {
 				int delete = p.getCache().getInt("killedZomb");
 				p.getCache().set("killedZomb", delete - 1);
 			}
 		}
 	}
-	
+
 
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc necromancer) {
@@ -82,12 +81,12 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		necromancerOnKilledMethod(p,  n);
+		necromancerOnKilledMethod(p, n);
 	}
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if(n.getID() == 358 || n.getID() == 359) {
+		if (n.getID() == 358 || n.getID() == 359) {
 			return true;
 		}
 		return false;
@@ -95,7 +94,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if(n.getID() == 358 || n.getID() == 359) {
+		if (n.getID() == 358 || n.getID() == 359) {
 			return true;
 		}
 		return false;

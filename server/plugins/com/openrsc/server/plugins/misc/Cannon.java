@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.FireCannonEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -17,35 +18,29 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Cannon implements ObjectActionListener,
-		ObjectActionExecutiveListener, InvActionListener,
-		InvActionExecutiveListener, InvUseOnObjectListener,
-		InvUseOnObjectExecutiveListener {
-	
-	static int[] cannonItemIDs = { 1032, // Cannon Base
-			1033, // Cannon Stand
-			1034, // Cannon Barrels
-			1035 // Cannon Furnace
+	ObjectActionExecutiveListener, InvActionListener,
+	InvActionExecutiveListener, InvUseOnObjectListener,
+	InvUseOnObjectExecutiveListener {
+
+	public final static int[] cannonObjectIDs = {
+		946, // Cannon Base
+		947, // Cannon Stand
+		948, // Cannon Barrels
+		943 // Complete Cannon
 	};
 
-	public final static int[] cannonObjectIDs = { 946, // Cannon Base
-			947, // Cannon Stand
-			948, // Cannon Barrels
-			943 // Complete Cannon
-	};
-
-	
 	/***
 	 * Cannon cache values:
 	 * x, y location.
 	 * cannon_stage - 1-4 depending on how many parts have been added.
 	 */
-	
-	public final Item CANNON_BALL = new Item(1041);
+
+	public final Item CANNON_BALL = new Item(ItemId.MULTI_CANNON_BALL.id());
 
 	private void pickupBase(Player player, GameObject object) {
 		player.message("you pick up the cannon");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(cannonItemIDs[0], 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
 		World.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
 			player.getCache().remove("has_cannon");
@@ -58,9 +53,9 @@ public class Cannon implements ObjectActionListener,
 	private void pickupStand(Player player, GameObject object) {
 		player.message("you pick up the cannon");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(cannonItemIDs[0], 1));
-		player.getInventory().add(new Item(cannonItemIDs[1], 1));
-		
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
+
 		World.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
 			player.getCache().remove("has_cannon");
@@ -73,10 +68,10 @@ public class Cannon implements ObjectActionListener,
 	private void pickupBarrels(Player player, GameObject object) {
 		player.message("you pick up the cannon base");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(cannonItemIDs[0], 1));
-		player.getInventory().add(new Item(cannonItemIDs[1], 1));
-		player.getInventory().add(new Item(cannonItemIDs[2], 1));
-		
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id(), 1));
+
 		World.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
 			player.getCache().remove("has_cannon");
@@ -89,11 +84,11 @@ public class Cannon implements ObjectActionListener,
 	private void pickupCannon(Player player, GameObject object) {
 		player.message("you pick up the cannon");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(cannonItemIDs[0], 1));
-		player.getInventory().add(new Item(cannonItemIDs[1], 1));
-		player.getInventory().add(new Item(cannonItemIDs[2], 1));
-		player.getInventory().add(new Item(cannonItemIDs[3], 1));
-		
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id(), 1));
+		player.getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id(), 1));
+
 		World.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
 			player.getCache().remove("has_cannon");
@@ -101,7 +96,7 @@ public class Cannon implements ObjectActionListener,
 			player.getCache().remove("cannon_y");
 		}
 	}
-	
+
 	private void handleBase(Player player, Item item) {
 		if (item.getDef().getCommand().equalsIgnoreCase("set down")) {
 			if (player.getQuestStage(Constants.Quests.DWARF_CANNON) != -1) {
@@ -130,34 +125,38 @@ public class Cannon implements ObjectActionListener,
 			}
 			player.resetPath();
 			player.setBusy(true);
-			player.message(
-					"you place the cannon base on the ground");
+			player.message("you place the cannon base on the ground");
 			sleep(1500);
-			player.getInventory().remove(cannonItemIDs[0], 1);
-			
-			GameObject cannonBase = new GameObject(player.getLocation(),
-					cannonObjectIDs[0], 0, 0, player.getUsername());
+			player.getInventory().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
+
+			GameObject cannonBase = new GameObject(
+				player.getLocation(),
+				cannonObjectIDs[0],
+				0,
+				0,
+				player.getUsername()
+			);
 			World.getWorld().registerGameObject(cannonBase);
-			
+
 			player.getCache().store("has_cannon", true);
 			player.getCache().set("cannon_x", cannonBase.getX());
 			player.getCache().set("cannon_y", cannonBase.getY());
 			player.getCache().set("cannon_stage", 1);
-			
+
 			player.setBusy(false);
 		}
 	}
 
 	private void addCannonStand(Player player, Item item, GameObject object) {
-		if (item.getID() == 1033 && object.getID() == 946) {
+		if (item.getID() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
 			player.setBusy(true);
 			player.message("you add the stand");
-			player.getInventory().remove(cannonItemIDs[1], 1);
+			player.getInventory().remove(ItemId.DWARF_CANNON_STAND.id(), 1);
 
 			player.getCache().set("cannon_stage", 2);
 			World.getWorld().unregisterGameObject(object);
 			GameObject cannonStand = new GameObject(object.getLocation(),
-					cannonObjectIDs[1], 0, 0, player.getUsername());
+				cannonObjectIDs[1], 0, 0, player.getUsername());
 			World.getWorld().registerGameObject(cannonStand);
 			player.setBusy(false);
 		} else {
@@ -166,14 +165,14 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	private void addCannonBarrels(Player player, Item item, GameObject object) {
-		if (item.getID() == 1034 && object.getID() == 947) {
+		if (item.getID() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
 			player.setBusy(true);
 			player.message("you add the barrels");
-			player.getInventory().remove(cannonItemIDs[2], 1);
-			
+			player.getInventory().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
+
 			World.getWorld().unregisterGameObject(object);
 			GameObject cannonBarrels = new GameObject(object.getLocation(),
-					cannonObjectIDs[2], 0, 0, player.getUsername());
+				cannonObjectIDs[2], 0, 0, player.getUsername());
 			World.getWorld().registerGameObject(cannonBarrels);
 
 			player.getCache().set("cannon_stage", 3);
@@ -184,14 +183,14 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	private void addCannonFurnace(Player player, Item item, GameObject object) {
-		if (item.getID() == 1035 && object.getID() == 948) {
+		if (item.getID() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
 			player.setBusy(true);
 			player.message("you add the furnace");
-			player.getInventory().remove(cannonItemIDs[3], 1);
-			
+			player.getInventory().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
+
 			World.getWorld().unregisterGameObject(object);
 			GameObject cannonFurnace = new GameObject(object.getLocation(),
-					cannonObjectIDs[3], 0, 0, player.getUsername());
+				cannonObjectIDs[3], 0, 0, player.getUsername());
 			World.getWorld().registerGameObject(cannonFurnace);
 			player.getCache().set("cannon_stage", 4);
 			player.setBusy(false);
@@ -204,7 +203,7 @@ public class Cannon implements ObjectActionListener,
 		if (!p.getInventory().contains(CANNON_BALL)) {
 			p.message("you're out of ammo");
 			return;
-		} else if(p.isCannonEventActive()) {
+		} else if (p.isCannonEventActive()) {
 			return;
 		}
 		FireCannonEvent cannonEvent = new FireCannonEvent(p);
@@ -213,31 +212,21 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-			Player player) {
+	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		if (obj.getID() == 943 && !command.equalsIgnoreCase("fire")) {
 			return true;
-		}
-		else if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
+		} else if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
 			return true;
-		}
-		else if (obj.getID() == 946) {
+		} else if (obj.getID() == 946) {
 			return true;
-		}
-		else if (obj.getID() == 947) {
+		} else if (obj.getID() == 947) {
 			return true;
-		}
-		else if (obj.getID() == 948) {
-			return true;
-		}
-		
-		return false;
+		} else return obj.getID() == 948;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (inArray(obj.getID(), 946, 947, 948, 943) 
-			&& !obj.getOwner().equals(player.getUsername())) {
+		if (inArray(obj.getID(), 946, 947, 948, 943) && !obj.getOwner().equals(player.getUsername())) {
 			if (!command.equalsIgnoreCase("fire")) {
 				player.message("you can't pick that up, the owners still around");
 			} else {
@@ -245,9 +234,7 @@ public class Cannon implements ObjectActionListener,
 				sleep(1500);
 				player.message("...it doesn't belong to you");
 			}
-			return;
-		}
-		else if (!command.equalsIgnoreCase("fire") && player.getFatigue() >= player.MAX_FATIGUE)
+		} else if (!command.equalsIgnoreCase("fire") && player.getFatigue() >= player.MAX_FATIGUE)
 			player.message("you arms are too tired to pick it up");
 		else if (obj.getID() == 946)
 			pickupBase(player, obj);
@@ -263,15 +250,12 @@ public class Cannon implements ObjectActionListener,
 
 	@Override
 	public boolean blockInvAction(Item item, Player player) {
-		if (item.getID() == 1032) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.DWARF_CANNON_BASE.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player) {
-		if (item.getID() == 1032) {
+		if (item.getID() == ItemId.DWARF_CANNON_BASE.id()) {
 			handleBase(player, item);
 		}
 	}
@@ -287,10 +271,7 @@ public class Cannon implements ObjectActionListener,
 		if (obj.getID() == 948) {
 			return true;
 		}
-		if (obj.getID() == 943 && item.getID() == 1041) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 943 && item.getID() == ItemId.MULTI_CANNON_BALL.id();
 	}
 
 	@Override
@@ -316,7 +297,7 @@ public class Cannon implements ObjectActionListener,
 			}
 			addCannonFurnace(p, item, obj);
 		}
-		if (obj.getID() == 943 && item.getID() == 1041) {
+		if (obj.getID() == 943 && item.getID() == ItemId.MULTI_CANNON_BALL.id()) {
 			p.message("the cannon loads automatically");
 		}
 	}
