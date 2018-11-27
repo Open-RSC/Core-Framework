@@ -10,9 +10,6 @@ import java.util.Properties;
 
 public final class Constants {
 
-	// new area: 582, 157
-	// upstairs: 576, 1097
-
 	public static final class GameServer {
 		/**
 		 * RSC GAME TICK.
@@ -206,8 +203,13 @@ public final class Constants {
 		 * Config file for server configurations.
 		 */
 		public static Properties props = new Properties();
-		public static void initConfig(String file) throws IOException {
-			props.loadFromXML(new FileInputStream(file));
+		public static void initConfig(String defaultFile) throws IOException {
+			try { // Always try to load local.conf first
+				props.loadFromXML(new FileInputStream("local.conf"));
+			}
+			catch (Exception e) { // Otherwise default to default.conf
+				props.loadFromXML(new FileInputStream(defaultFile));
+			}
 
 			// Initialization confs
 			GAME_TICK = Integer.parseInt(props.getProperty("game_tick"));
@@ -350,7 +352,7 @@ public final class Constants {
 		public static final int DIGSITE = 47;
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
-		
+
 		public static final int MAPIDX_QP = 0;
 		public static final int MAPIDX_SKILL = 1;
 		public static final int MAPIDX_BASE = 2;
