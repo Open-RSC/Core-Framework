@@ -36,25 +36,68 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 		ItemId.FRESH_PINEAPPLE.id()
 	};
 
-	public static final int[] POTION = {482, 224, 485, 476};
+	private static final int[] POTION = {
+		ItemId.ONE_DEFENSE_POTION.id(),
+		ItemId.ONE_STRENGTH_POTION.id(),
+		ItemId.ONE_RESTORE_PRAYER_POTION.id(),
+		ItemId.ONE_ATTACK_POTION.id()
+	};
 
-	public static final int[] OTHER = {237, 986, 988, 815, 10, 676, 156, 549, 172, 14, 987, 1259, 166, 774};
+	private static final int[] OTHER = {
+		ItemId.ROPE.id(),
+		ItemId.ROCKS.id(),
+		ItemId.SHIP_TICKET.id(),
+		ItemId.UNIDENTIFIED_SNAKE_WEED.id(),
+		ItemId.COINS.id(),
+		ItemId.BOW_STRING.id(),
+		ItemId.BRONZE_PICKAXE.id(),
+		ItemId.CASKET.id(),
+		ItemId.GOLD_BAR.id(),
+		ItemId.LOGS.id(),
+		ItemId.PARAMAYA_REST_TICKET.id(),
+		ItemId.STEEL_PICKAXE.id(),
+		ItemId.TINDERBOX.id(),
+		ItemId.LIT_TORCH.id()
+	};
 
-	public static final int[] WEAPON = {1013, 1076, 1080, 1078, 1024, 1015, 1068, 1075, 1077, 1079, 1069};
+	private static final int[] WEAPON = {
+		ItemId.BRONZE_THROWING_DART.id(),
+		ItemId.BRONZE_THROWING_KNIFE.id(),
+		ItemId.RUNE_THROWING_KNIFE.id(),
+		ItemId.MITHRIL_THROWING_KNIFE.id(),
+		ItemId.STEEL_THROWING_DART.id(),
+		ItemId.IRON_THROWING_DART.id(),
+		ItemId.MITHRIL_THROWING_DART.id(),
+		ItemId.IRON_THROWING_KNIFE.id(),
+		ItemId.STEEL_THROWING_KNIFE.id(),
+		ItemId.ADAMANTITE_THROWING_KNIFE.id(),
+		ItemId.ADAMANTITE_THROWING_DART.id()
+	};
 
-	public static final int[] RUNES = {34, 32, 33, 31};
+	private static final int[] RUNES = {
+		ItemId.EARTH_RUNE.id(),
+		ItemId.WATER_RUNE.id(),
+		ItemId.AIR_RUNE.id(),
+		ItemId.FIRE_RUNE.id()
+	};
 
-	public static final int[] CERTIFICATE = {518, 519, 629, 534, 535, 631, 630, 713, 711};
+	private static final int[] CERTIFICATE = {
+		ItemId.COAL_CERTIFICATE.id(),
+		ItemId.MITHRIL_ORE_CERTIFICATE.id(),
+		ItemId.RAW_BASS_CERTIFICATE.id(),
+		ItemId.RAW_LOBSTER_CERTIFICATE.id(),
+		ItemId.SWORDFISH_CERTIFICATE.id(),
+		ItemId.RAW_SHARK_CERTIFICATE.id(),
+		ItemId.SHARK_CERTIFICATE.id(),
+		ItemId.WILLOW_LOGS_CERTIFICATE.id(),
+		ItemId.YEW_LOGS_CERTIFICATE.id()
+	};
 
-	public static final int[] MONSTER = {190, 199, 57, 99, 768, 61, 43, 21, 23, 41, 46, 40, 47, 67, 104, 66, 45, 19, 70};
-
+	private static final int[] MONSTER = {190, 199, 57, 99, 768, 61, 43, 21, 23, 41, 46, 40, 47, 67, 104, 66, 45, 19, 70};
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == STRANGE_BARREL) {
-			return true;
-		}
-		return false;
+		return obj.getID() == STRANGE_BARREL;
 	}
 
 	@Override
@@ -76,37 +119,37 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 						}
 					}
 				});
-				/**
-				 * Out comes a NPC only.
+				/*
+				  Out comes a NPC only.
 				 */
 				if (action == 1) {
 					spawnMonster(p, obj.getX(), obj.getY());
 				}
-				/**
-				 * Out comes an item only.
+				/*
+				  Out comes an item only.
 				 */
 				else if (action == 2) {
 					spawnItem(p, obj.getX(), obj.getY());
 				}
-				/**
-				 * Out comes both a NPC and an ITEM.
+				/*
+				  Out comes both a NPC and an ITEM.
 				 */
 				else if (action == 3) {
 					spawnItem(p, obj.getX(), obj.getY());
 					spawnMonster(p, obj.getX(), obj.getY());
 				}
-				/**
-				 * Smash the barrel and get randomly hit from 0-14 damage.
+				/*
+				  Smash the barrel and get randomly hit from 0-14 damage.
 				 */
 				else if (action == 4) {
 					p.message("The barrel explodes...");
 					p.message("...you take some damage...");
 					displayTeleportBubble(p, obj.getX(), obj.getY(), true);
-					p.damage((int) DataConversions.random(0, 14));
+					p.damage(DataConversions.random(0, 14));
 				}
 			} else {
-				/**
-				 * Smash the barrel open but nothing happens.
+				/*
+				  Smash the barrel open but nothing happens.
 				 */
 				if (DataConversions.random(0, 1) != 1) {
 					p.message("You smash the barrel open.");
