@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -241,6 +242,10 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 				p.message("you place the smouldering twigs to your torch");
 				p.message("your torch lights");
 				p.getInventory().add(new Item(774));
+				p.incExp(11, 450, true);
+				if(p.getQuestStage(Quests.SEA_SLUG) == 5 && !p.getCache().hasKey("lit_torch")) {
+					p.getCache().store("lit_torch", true);
+				}
 			} else {
 				p.message("the sticks smoke momentarily then die out");
 			}
