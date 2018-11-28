@@ -257,7 +257,6 @@ public class BankInterface {
 			pageButtonColour = 0xffff00;
 		drawString("<page 1>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
 		pageButtonMargin += 65;
-System.out.println(currentBankIDs.size());
 		if (currentBankIDs.size() > 48) {
 			pageButtonColour = 0xffffff;
 			if (mouseOverBankPageText == 1)
