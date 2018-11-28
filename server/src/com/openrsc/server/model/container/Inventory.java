@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.GameLogging;
@@ -256,6 +257,8 @@ public class Inventory {
 							return remove(id, amount, sendInventory);
 					}
 
+					if (sendInventory) ActionSender.sendInventory(player);
+
 					return index;
 				}
 			}
@@ -304,7 +307,7 @@ public class Inventory {
 	}
 
 	public void swap(int slot, int to) {
-		if(slot <= 0 && to <= 0 && to == slot) {	
+		if(slot <= 0 && to <= 0 && to == slot) {
 			return;
 		}
 		int idx = list.size() - 1;
@@ -321,7 +324,7 @@ public class Inventory {
 	}
 
 	public boolean insert(int slot, int to) {
-		if(slot < 0 || to < 0 || to == slot) {	
+		if(slot < 0 || to < 0 || to == slot) {
 			return false;
 		}
 		int idx = list.size() - 1;
@@ -476,7 +479,7 @@ public class Inventory {
 		}
 		if(!ableToWield)
 			return;
-		
+
 		ArrayList<Item> items = getItems();
 
 		for (Item i : items) {

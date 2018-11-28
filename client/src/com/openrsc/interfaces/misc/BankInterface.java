@@ -43,8 +43,8 @@ public class BankInterface {
 		int currMouseY = mc.getMouseY();
 
 		// Set up bank list to loop through later.
-		currentBankIDs.clear();
-		currentBankCounts.clear();
+		currentBankIDs = new ArrayList<>();
+		currentBankCounts = new ArrayList<>();
 		for (int i = 0; i < bankItems.size(); i++) {
 			currentBankIDs.add(bankItems.get(i).itemID);
 			currentBankCounts.add(bankItems.get(i).amount);
@@ -56,13 +56,13 @@ public class BankInterface {
 		}
 
 		// Set Bank Page
-    if (mouseOverBankPageText > 0 && currentBankIDs.size() <= 48)
-      mouseOverBankPageText = 0;
-    if (mouseOverBankPageText > 1 && currentBankIDs.size() <= 96)
-      mouseOverBankPageText = 1;
-    if (mouseOverBankPageText > 2 && currentBankIDs.size() <= 144)
-      mouseOverBankPageText = 2;
-    if (mc.getMouseClick() == 1 || (mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 20)) {
+		if (mouseOverBankPageText > 0 && currentBankIDs.size() <= 48)
+		  mouseOverBankPageText = 0;
+		if (mouseOverBankPageText > 1 && currentBankIDs.size() <= 96)
+		  mouseOverBankPageText = 1;
+		if (mouseOverBankPageText > 2 && currentBankIDs.size() <= 144)
+		  mouseOverBankPageText = 2;
+		if (mc.getMouseClick() == 1 || (mc.getMouseButtonDown() == 1 && mc.getMouseButtonDownTime() > 20)) {
 			int selectedX = currMouseX - (mc.getGameWidth() / 2 - width / 2);
 			int selectedY = currMouseY - (mc.getGameHeight() / 2 - height / 2 + 20);
 			if (selectedX >= 0 && selectedY >= 16 && selectedX < 408 && selectedY < 280) {
@@ -185,7 +185,7 @@ public class BankInterface {
 					&& currMouseX < selectedX + 400 && currMouseY <= selectedY + 251) {
 				sendWithdraw(Integer.MAX_VALUE); // Withdraw All
 			}
-	
+
 			// Depositing
 			else if (mc.getInventoryCount(itemID) >= 5 && currMouseX >= selectedX + 250 && currMouseY >= selectedY + 265
 					&& currMouseX < selectedX + 280 && currMouseY <= selectedY + 276) {
@@ -213,15 +213,15 @@ public class BankInterface {
 	}
 
 	private void drawBankComponents(int currMouseX, int currMouseY) {
-    int relativeX = mc.getGameWidth() / 2 - width / 2; // WAS 256
-    int relativeY = mc.getGameHeight() / 2 - height / 2 + 20; // WAS 170
-    mc.getSurface().drawBox(relativeX, relativeY, 408, 12, 192);
-    int backgroundColour = 0x989898;
-    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 12, 408, 17, backgroundColour, 160);
-    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 29, 8, 204, backgroundColour, 160);
-    mc.getSurface().drawBoxAlpha(relativeX + 399, relativeY + 29, 9, 204, backgroundColour, 160);
-    mc.getSurface().drawBoxAlpha(relativeX, relativeY + 233, 408, 47, backgroundColour, 160);
-    drawString("Bank", relativeX + 1, relativeY + 10, 1, 0xffffff);
+		int relativeX = mc.getGameWidth() / 2 - width / 2; // WAS 256
+		int relativeY = mc.getGameHeight() / 2 - height / 2 + 20; // WAS 170
+		mc.getSurface().drawBox(relativeX, relativeY, 408, 12, 192);
+		int backgroundColour = 0x989898;
+		mc.getSurface().drawBoxAlpha(relativeX, relativeY + 12, 408, 17, backgroundColour, 160);
+		mc.getSurface().drawBoxAlpha(relativeX, relativeY + 29, 8, 204, backgroundColour, 160);
+		mc.getSurface().drawBoxAlpha(relativeX + 399, relativeY + 29, 9, 204, backgroundColour, 160);
+		mc.getSurface().drawBoxAlpha(relativeX, relativeY + 233, 408, 47, backgroundColour, 160);
+		drawString("Bank", relativeX + 1, relativeY + 10, 1, 0xffffff);
 
 		// Draw Bank Page Buttons
 		drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
@@ -239,10 +239,10 @@ public class BankInterface {
 		drawBankItems(relativeX, relativeY);
 
 		// Line between Withdraw & Deposit
-    mc.getSurface().drawLineHoriz(relativeX + 5, relativeY + 256, width - 8, 0);
+    	mc.getSurface().drawLineHoriz(relativeX + 5, relativeY + 256, width - 8, 0);
 
 		// Draw the Quantity Buttons
-    if (this.selectedBankSlot != -1) {
+		if (this.selectedBankSlot != -1) {
 			drawQuantityButtons(currMouseX, currMouseY, relativeX, relativeY);
 		}
 	}
@@ -257,7 +257,7 @@ public class BankInterface {
 			pageButtonColour = 0xffff00;
 		drawString("<page 1>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
 		pageButtonMargin += 65;
-
+System.out.println(currentBankIDs.size());
 		if (currentBankIDs.size() > 48) {
 			pageButtonColour = 0xffffff;
 			if (mouseOverBankPageText == 1)
