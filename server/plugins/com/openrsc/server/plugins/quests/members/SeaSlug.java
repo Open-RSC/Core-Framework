@@ -146,8 +146,9 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "okay, when you have i'll come out");
 					return;
 				}
-				playerTalk(p, n, "are you okay?");
-				npcTalk(p, n, "i want to see daddy");
+				playerTalk(p, n, "hello kennith",
+						"are you okay?");
+				npcTalk(p, n, "no i want my daddy");
 				playerTalk(p, n, "you'll be able to see him soon",
 						"first we need to get you back to land",
 						"come with me to the boat");
@@ -158,42 +159,98 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 				playerTalk(p, n,
 						"okay, you wait here and i'll figure another way to get you out");
 				break;
+			case -1:
+				message(p, "He doesn't seem interested in talking");
 			}
 		}
 		if (n.getID() == 460) {
-			if (p.getQuestStage(getQuestId()) == 5) {
+			switch (p.getQuestStage(this)) {
+			case 3:
+			case 4:
 				playerTalk(p, n, "hello");
-				npcTalk(p, n, "oh thank god it's you",
-						"they've all gone mad i tell you",
-						"one of the fishermen tried to throw me into the sea");
-				playerTalk(p, n,
-						"they're all being controlled by the sea slugs");
-				npcTalk(p, n, "i figured as much");
-				playerTalk(p, n,
-						"i need to get kennith of this platform but i can't get past the fishermen");
-				npcTalk(p, n, "the sea slugs are scared of heat",
-						"i figured that out when i tried to cook them");
-				if (!hasItem(p, 773)) {
-					npcTalk(p, n, "here");
-					message(p, "bailey gives you a torch");
-					addItem(p, 773, 1);
-					npcTalk(p,
-							n,
-							"i doubt the fishermen will come near you if you can get this torch to light",
-							"the only problem is all the wood and flint is damp",
-							"i can't light a thing");
-				} else {
+				npcTalk(p, n, "well hello there",
+						"what are you doing here?");
+				playerTalk(p, n, "i'm trying to find out what happened to a boy named kennith");
+				npcTalk(p, n, "oh, you mean kent's son",
+						"he's around somewhere, probably hiding");
+				playerTalk(p, n, "hiding from what?");
+				npcTalk(p, n, "haven't you seen all those things out there?");
+				playerTalk(p, n, "the sea slugs?");
+				npcTalk(p, n, "ever since we pulled up that haul something strange has been going on",
+						"the fishermen spend all day pulling in hauls of fish",
+						"only to throw back the fish and keep those nasty sea slugs",
+						"what am i supposed to do with those",
+						"i haven't figured out how to kill one yet",
+						"if i put them near the stove they squirm and jump away");
+				playerTalk(p, n, "i doubt they would taste too good");
+				break;
+			case 5:
+				if(!p.getCache().hasKey("lit_torch")) {
+					playerTalk(p, n, "hello");
+					npcTalk(p, n, "oh thank god it's you",
+							"they've all gone mad i tell you",
+							"one of the fishermen tried to throw me into the sea");
 					playerTalk(p, n,
-							"i better figure a way to light this torch");
+							"they're all being controlled by the sea slugs");
+					npcTalk(p, n, "i figured as much");
+					playerTalk(p, n,
+							"i need to get kennith of this platform but i can't get past the fishermen");
+					npcTalk(p, n, "the sea slugs are scared of heat",
+							"i figured that out when i tried to cook them");
+					if (!hasItem(p, 773)) {
+						npcTalk(p, n, "here");
+						message(p, "bailey gives you a torch");
+						addItem(p, 773, 1);
+						npcTalk(p,
+								n,
+								"i doubt the fishermen will come near you if you can get this torch to light",
+								"the only problem is all the wood and flint is damp",
+								"i can't light a thing");
+					} else {
+						playerTalk(p, n,
+								"i better figure a way to light this torch");
+					}
 				}
-				return;
+				else {
+					if (hasItem(p, 774)) {
+						playerTalk(p, n, "i've managed to light the torch");
+						npcTalk(p, n, "well done traveler",
+								"you better get kennith out of here soon",
+								"the fishermen are becoming stranger by the minute",
+								"and they keep pulling up those blasted sea slugs");
+					}
+					else if(hasItem(p, 773)) {
+						//nothing
+					}
+					else {
+						playerTalk(p, n, "i've managed to lose my torch");
+						npcTalk(p, n, "that was silly, fortunately i have another",
+								"here, take it");
+						addItem(p, 773, 1);
+					}
+				}
+				break;
+			case 6:
+				playerTalk(p, n, "hello bailey");
+				npcTalk(p, n, "hello again",
+						"i saw you managed to get kennith of the platform",
+						"well done, he wasn't safe around these slugs");
+				playerTalk(p, n, "are you going to come back with us?");
+				npcTalk(p, n, "no, these fishermen are my friends",
+						"i'm sure they can be saved",
+						"i'm going to stay and try to get rid of all these slugs");
+				playerTalk(p, n, "you're braver than most",
+						"take care of yourself bailey");
+				npcTalk(p, n, "you to traveler");
+				break;
+			case -1:
+				playerTalk(p, n, "hello bailey");
+				npcTalk(p, n, "well hello again traveler",
+						"what brings you back out here");
+				playerTalk(p, n, "just looking around");
+				npcTalk(p, n, "well don't go touching any of those blasted slugs");
+				break;
 			}
-			playerTalk(p, n, "hello");
-			npcTalk(p, n, "well hello there", "what are you doing here?");
-			playerTalk(p, n,
-					"i'm trying to find out what happened to a boy named kennith");
-			npcTalk(p, n, "oh, you mean kent's son",
-					"he's around somewhere, probably hiding");
 		}
 		if (n.getID() == 463) {
 			playerTalk(p, n, "hello there");
@@ -284,6 +341,12 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "thank you", "take care of yourself adventurer");
 				addItem(p, 779, 1);
 				break;
+			case -1:
+				playerTalk(p, n, "hello again");
+				npcTalk(p, n, "hello traveler", "how are you?");
+				playerTalk(p, n, "not bad thanks, yourself?");
+				npcTalk(p, n, "i'm good", "busy as always looking after kent and kennith but no complaints");
+				break;
 			}
 		}
 		if (n.getID() == 456 || n.getID() == 457 || n.getID() == 458) { /* Holgart */
@@ -352,16 +415,20 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 					playerTalk(p, n, "hello holgart");
 					npcTalk(p, n, "hello again land lover",
 							"there's some strange going's on, on that platform i tell you");
-					int goMenu = showMenu(p, n, "will you take me there?",
+					int goMenu = showMenu(p, n, false, //do not send over
+							"will you take me there?",
 							"i'm keeping away from there");
 					if (goMenu == 0) {
+						playerTalk(p, n, "will you take me back there?");
 						npcTalk(p, n, "of course m'hearty",
 								"if that's what you want");
-						message(p, "you board the small row boat",
-								"you arrive at the fishing platform");
+						message(p, "you board the small row boat");
+						checkTorchCrossing(p);
+						message(p, "you arrive at the fishing platform");
 						p.teleport(495, 618, false);
 					} else if (goMenu == 1) {
-						npcTalk(p, n, " fair enough m'hearty");
+						playerTalk(p, n, "i'm keeping away from there");
+						npcTalk(p, n, "fair enough m'hearty");
 					}
 				} else {
 					playerTalk(p, n, "hey holgart");
@@ -371,26 +438,53 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 							"no, i'm going to stay a while",
 							"okay, lets go back");
 					if (goBack == 0) {
+						npcTalk(p, n, "okay, you're the boss");
+					} else if (goBack == 1) {
 						npcTalk(p, n, "okay m'hearty jump on");
 						message(p, "you arrive back on shore");
 						p.teleport(515, 613, false);
-					} else if (goBack == 1) {
-						npcTalk(p, n, " okay, you're the boss");
 					}
 				}
 				break;
 			case 4:
-				playerTalk(p, n, "holgart, something strange is going on here");
-				npcTalk(p, n, "you're telling me",
-						"none of the sailors seem to remember who i am");
-				playerTalk(p, n,
-						"apparently kenniths father left for help a couple of days ago");
-				npcTalk(p, n,
-						"that's a worry, no ones heard from him on shore",
-						"come on, we better go look for him");
-				message(p, "you board the row boat",
-						"you arrive on a small island");
-				p.teleport(512, 639, false);
+				if(p.getLocation().inPlatformArea()) {
+					playerTalk(p, n, "holgart, something strange is going on here");
+					npcTalk(p, n, "you're telling me",
+							"none of the sailors seem to remember who i am");
+					playerTalk(p, n,
+							"apparently kenniths father left for help a couple of days ago");
+					npcTalk(p, n,
+							"that's a worry, no ones heard from him on shore",
+							"come on, we better go look for him");
+					message(p, "you board the row boat",
+							"you arrive on a small island");
+					p.teleport(512, 639, false);
+				}
+				else if(p.getLocation().inArdougne()) { 
+					playerTalk(p, n, "hello holgart");
+					npcTalk(p, n, "hello again land lover",
+							"there's some strange going's on, on that platform i tell you");
+					int goMenu = showMenu(p, n, false, //do not send over
+							"will you take me there?",
+							"i'm keeping away from there");
+					if (goMenu == 0) {
+						playerTalk(p, n, "will you take me back there?");
+						npcTalk(p, n, "of course m'hearty",
+								"if that's what you want");
+						message(p, "you board the small row boat");
+						checkTorchCrossing(p);
+						message(p, "you arrive at the fishing platform");
+						p.teleport(495, 618, false);
+					} else if (goMenu == 1) {
+						playerTalk(p, n, "i'm keeping away from there");
+						npcTalk(p, n, "fair enough m'hearty");
+					}
+				}
+				else { //kents island
+					playerTalk(p, n, "where are we?");
+					npcTalk(p, n, "someway of mainland still",
+							"you better see if old matey's okay");
+				}
 				break;
 			case 5:
 				if (p.getLocation().inPlatformArea()) {
@@ -401,13 +495,33 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 							"no, i'm going to stay a while",
 							"okay, lets go back");
 					if (goBack == 0) {
+						npcTalk(p, n, "okay, you're the boss");
+					} else if (goBack == 1) {
 						npcTalk(p, n, "okay m'hearty jump on");
 						message(p, "you arrive back on shore");
 						p.teleport(515, 613, false);
-					} else if (goBack == 1) {
-						npcTalk(p, n, "okay, you're the boss");
 					}
-				} else {
+				} else if (p.getLocation().inArdougne()) {
+					playerTalk(p, n, "hello holgart");
+					npcTalk(p, n, "hello again land lover",
+							"there's some strange going's on, on that platform i tell you");
+					int goMenu = showMenu(p, n, false, //do not send over
+							"will you take me there?",
+							"i'm keeping away from there");
+					if (goMenu == 0) {
+						playerTalk(p, n, "will you take me back there?");
+						npcTalk(p, n, "of course m'hearty",
+								"if that's what you want");
+						message(p, "you board the small row boat");
+						checkTorchCrossing(p);
+						message(p, "you arrive at the fishing platform");
+						p.teleport(495, 618, false);
+					} else if (goMenu == 1) {
+						playerTalk(p, n, "i'm keeping away from there");
+						npcTalk(p, n, "fair enough m'hearty");
+					}
+				}
+				else { //kents island to fishing platform
 					playerTalk(p, n, "we had better get back to the platform",
 							"and see what's going on");
 					npcTalk(p, n, "you're right", "it all sounds pretty creepy");
@@ -416,15 +530,81 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 				}
 				break;
 			case 6:
-				playerTalk(p, n, "did you get the kid back to shore?");
-				npcTalk(p, n, "yes, he's safe and sound with his parents",
-						"your turn to return to land now adventurer");
-				playerTalk(p, n, "looking forward to it");
-				p.message("you board the small row boat");
-				p.message("you arrive back on shore");
-				p.teleport(515, 613, false);
+				if (p.getLocation().inPlatformArea()) {
+					playerTalk(p, n, "did you get the kid back to shore?");
+					npcTalk(p, n, "yes, he's safe and sound with his parents",
+							"your turn to return to land now adventurer");
+					playerTalk(p, n, "looking forward to it");
+					p.message("you board the small row boat");
+					p.message("you arrive back on shore");
+					p.teleport(515, 613, false);
+				}
+				else {
+					playerTalk(p, n, "hello holgart");
+					npcTalk(p, n, "hello again land lover",
+							"there's some strange going's on, on that platform i tell you");
+					int goMenu = showMenu(p, n, false, //do not send over
+							"will you take me there?",
+							"i'm keeping away from there");
+					if (goMenu == 0) {
+						playerTalk(p, n, "will you take me back there?");
+						npcTalk(p, n, "of course m'hearty",
+								"if that's what you want");
+						message(p, "you board the small row boat");
+						checkTorchCrossing(p);
+						message(p, "you arrive at the fishing platform");
+						p.teleport(495, 618, false);
+					} else if (goMenu == 1) {
+						playerTalk(p, n, "i'm keeping away from there");
+						npcTalk(p, n, "fair enough m'hearty");
+					}
+				}
+				break;
+			case -1:
+				if (p.getLocation().inArdougne()) {
+					playerTalk(p, n, "hello again holgart");
+					npcTalk(p, n, "well hello again m'hearty",
+							"your land loving legs getting bored?",
+							"fancy some cold and wet underfoot?");
+					playerTalk(p, n, "pardon");
+					npcTalk(p, n, "fancy going out to sea?");
+					int goMenu = showMenu(p, n, "i'll come back later",
+							"okay lets do it");
+					if (goMenu == 0) {
+						npcTalk(p, n, "okay then",
+								"i'll wait here for you");
+					}
+					if (goMenu == 1) {
+						npcTalk(p, n, "hold on tight");
+						message(p, "you board the small row boat");
+						checkTorchCrossing(p);
+						message(p, "you arrive at the fishing platform");
+						p.teleport(495, 618, false);
+					}
+				} else {
+					playerTalk(p, n, "hey holgart");
+					npcTalk(p, n, "have you had enough of this place yet?",
+							"it's scaring me");
+					int goBack = showMenu(p, n,
+							"no, i'm going to stay a while",
+							"okay, lets go back");
+					if (goBack == 0) {
+						npcTalk(p, n, "okay, you're the boss");
+					} else if (goBack == 1) {
+						npcTalk(p, n, "okay m'hearty jump on");
+						message(p, "you arrive back on shore");
+						p.teleport(515, 613, false);
+					}
+				}
 				break;
 			}
+		}
+	}
+	
+	public void checkTorchCrossing(Player p) {
+		if(hasItem(p, 774)) {
+			p.getInventory().replace(774, 773);
+			message(p, "your torch goes out on the crossing");
 		}
 	}
 
@@ -506,7 +686,11 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 						"and lower kennith to the row boat waiting below");
 				p.updateQuestStage(getQuestId(), 6);
 				p.getCache().remove("loose_panel");
-			} else {
+				p.getCache().remove("lit_torch");
+			} else if(p.getQuestStage(getQuestId()) > 0 && p.getQuestStage(getQuestId()) < 5) {
+				message(p, "you rotate the crane around");
+			}
+			else {
 				p.message("Nothing interesting happens");
 			}
 		}
@@ -530,7 +714,8 @@ public class SeaSlug implements QuestInterface,TalkToNpcListener,
 						"leaving an opening big enough for kennith to climb through");
 				p.getCache().store("loose_panel", true);
 			} else {
-				p.message("Nothing interesting happens");
+				message(p, "you kick the loose panal",
+						"nothing interesting happens");
 			}
 		}
 	}
