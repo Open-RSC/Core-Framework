@@ -444,6 +444,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						"Yes, I'll crawl through, I'm very athletic.",
 						"No, I'm pretty scared of enclosed areas.");
 				if(menu == 0) {
+					if(getCurrentLevel(p, AGILITY) < 50) {
+						p.message("You need an agility of 50 to even attempt this.");
+						p.setBusy(false);
+						return;
+					}
 					message(p, 1300, "You try to crawl through...",
 							"You contort your body to fit the crevice.");
 					if(Formulae.failCalculation(p, Skills.AGILITY, 50)) {
