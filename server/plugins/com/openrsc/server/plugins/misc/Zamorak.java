@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,91 +10,75 @@ import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-
 /**
- * 
  * @author n0m, Fate
- *
  */
 public class Zamorak implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcExecutiveListener, PlayerRangeNpcListener, PlayerMageNpcExecutiveListener, PlayerMageNpcListener {
 
 	@Override
 	public void onPickup(Player owner, GroundItem item) {
-		if (item.getID() == 501 && item.getX() == 333 && item.getY() == 434) {
+		if (item.getID() == ItemId.WINE_OF_ZAMORAK.id() && item.getX() == 333 && item.getY() == 434) {
 			Npc zam = getMultipleNpcsInArea(owner, 7, 140, 139);
 			if (zam != null && !zam.inCombat()) {
 				owner.face(zam);
 				zam.face(owner);
 				applyCurse(owner, zam);
-				return;
 			}
 		}
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if(i.getID() == 501) {
+		if (i.getID() == ItemId.WINE_OF_ZAMORAK.id()) {
 			Npc zam = getMultipleNpcsInArea(p, 7, 140, 139);
-			if(zam == null || zam.inCombat())
-				return false;
-			else 
-				return true;
+			return zam != null && !zam.inCombat();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if(n.getID() == 140 || n.getID() == 139) {
-			return true;
-		}	
-		return false;
+		return n.getID() == 140 || n.getID() == 139;
 	}
 
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc zamorak) {
-		if(zamorak.getID() == 140 || zamorak.getID() == 139) {
+		if (zamorak.getID() == 140 || zamorak.getID() == 139) {
 			applyCurse(p, zamorak);
-		}	
+		}
 	}
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if(n.getID() == 140 || n.getID() == 139) {
-			return true;
-		}	
-		return false;
+		return n.getID() == 140 || n.getID() == 139;
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc zamorak) {
-		if(zamorak.getID() == 140 || zamorak.getID() == 139) {
+		if (zamorak.getID() == 140 || zamorak.getID() == 139) {
 			applyCurse(p, zamorak);
 		}
 	}
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if(n.getID() == 140 || n.getID() == 139) {
-			return true;
-		}	
-		return false;
+		return n.getID() == 140 || n.getID() == 139;
 	}
 
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc zamorak) {
-		if(zamorak.getID() == 140 || zamorak.getID() == 139) {
+		if (zamorak.getID() == 140 || zamorak.getID() == 139) {
 			applyCurse(p, zamorak);
 		}
 	}
 
-	public void applyCurse(Player owner, Npc zam) {
+	private void applyCurse(Player owner, Npc zam) {
 		owner.setBusy(true);
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", owner));
 		sleep(2200);
 		owner.message("You feel slightly weakened");
-		if(owner.getSkills().getLevel(3) > 10) {
-			owner.damage((int) (owner.getSkills().getLevel(3) * (double) 0.08D));
+		if (owner.getSkills().getLevel(3) > 10) {
+			owner.damage((int) (owner.getSkills().getLevel(3) * 0.08D));
 		} else {
 			owner.damage(1);
 		}
@@ -111,21 +96,18 @@ public class Zamorak implements TalkToNpcListener, TalkToNpcExecutiveListener, P
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if(n.getID() == 140 || n.getID() == 139) {
-			return true;
-		}
-		return false;
+		return n.getID() == 140 || n.getID() == 139;
 	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(n.getID() == 140 || n.getID() == 139) {
-			if(n.getID() == 140) {
+		if (n.getID() == 140 || n.getID() == 139) {
+			if (n.getID() == 140) {
 				npcTalk(p, n, "Save your speech for the altar");
 			} else {
 				npcTalk(p, n, "Who are you to dare speak to the servants of Zamorak ?");
 			}
 			n.setChasing(p);
-		}	
+		}
 	}
 }
