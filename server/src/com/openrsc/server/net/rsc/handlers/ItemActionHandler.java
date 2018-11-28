@@ -103,12 +103,12 @@ public class ItemActionHandler implements PacketHandler {
 			case 387: // Disk of Returning
 				if(player.getX() == 305 && player.getY() == 3300) {
 					player.message("You spin your disk of returning");
-					player.teleport(310, 3347);
+					player.teleport(310, 3347, true);
 					player.getInventory().remove(387, 1);
 				}
 				else if(insideMines(player)) {
 					player.message("You spin your disk of returning");
-					player.teleport(305, 3300);
+					player.teleport(305, 3300, true);
 				}
 				else {
 					player.message("The disk will only work from in Thordur's black hole");
