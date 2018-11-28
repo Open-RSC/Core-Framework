@@ -15,7 +15,16 @@ RUN apt-get update && \
         openssh-server \
         git \
         cron \
-        nano
+        nano \
+        wget \
+        curl \
+        sudo \
+        zip \
+        unzip \
+        git \
+        gnupg1 \
+        gnupg2 \
+        gnupg
 
 # Install the PHP mcrypt extention (from PECL, mcrypt has been removed from PHP 7.2)
 RUN pecl install mcrypt-1.0.1
@@ -79,11 +88,51 @@ RUN curl -s http://getcomposer.org/installer | php && \
 RUN . ~/.bashrc
 
 #####################################
+# PHPUnit:
+#####################################
+
+RUN wget https://phar.phpunit.de/phpunit.phar
+RUN chmod +x phpunit.phar
+RUN mv phpunit.phar /usr/local/bin/phpunit
+
+#####################################
 # Laravel Schedule Cron Job:
 #####################################
 
 RUN echo "* * * * * root php /var/www/artisan schedule:run >> /dev/null 2>&1" >> /etc/cron.d/laravel-schedule
 RUN chmod 0644 /etc/cron.d/laravel-schedule
+
+#####################################
+# Security Checker:
+#####################################
+
+# Security Checker
+RUN wget http://get.sensiolabs.org/security-checker.phar
+RUN chmod +x security-checker.phar
+RUN mv security-checker.phar /usr/local/bin/security-checker
+
+#####################################
+# Node.js && Yarn:
+#####################################
+
+# Node.js
+RUN curl -sL https://deb.nodesource.com/setup_11.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install nodejs -y
+RUN npm install
+
+# Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+   apt-get update && \
+   apt-get install -qq -y build-essential yarn
+RUN yarn install
+
+#####################################
+# Laravel
+#####################################
+
+RUN composer global require "laravel/installer"
 
 #
 #--------------------------------------------------------------------------
