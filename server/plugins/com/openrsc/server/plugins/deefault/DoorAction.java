@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.deefault;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.GameServer;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
@@ -931,6 +932,10 @@ public class DoorAction {
 			break;
 		}
 		if (player.getInventory().hasItemId(keyItem) && item.getID() == keyItem) {
+			if(keyItem == 538 && player.getQuestStage(Quests.WITCHS_HOUSE) == 0) {
+				playerTalk(player, null, "It'd be rude to break into this house");
+				return;
+			}
 			if(showsBubble) {
 				showBubble(player, item);
 			}
