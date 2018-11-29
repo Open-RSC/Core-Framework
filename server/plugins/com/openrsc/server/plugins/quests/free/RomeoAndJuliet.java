@@ -164,7 +164,7 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "It may be our only hope");
 					p.message("Juliet gives you a message");
 					p.getInventory().add(new Item(56));
-					p.getCache().store("romeo_juliet_msgs", 1);
+					p.getCache().set("romeo_juliet_msgs", 1);
 					p.updateQuestStage(getQuestId(), 2);
 				} else if (sub_choice == 1) {
 					playerTalk(p, n, "No");
@@ -183,7 +183,7 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "It may be our only hope");
 					p.message("Juliet gives you a message");
 					p.getInventory().add(new Item(56));
-					p.getCache().store("romeo_juliet_msgs", 1);
+					p.getCache().set("romeo_juliet_msgs", 1);
 					p.updateQuestStage(getQuestId(), 2);
 				} else if (sub_choice == 1) {
 					playerTalk(p, n, "No, I have better things to do");
@@ -198,7 +198,7 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "It may be our only hope");
 				p.message("Juliet gives you a message");
 				p.getInventory().add(new Item(56));
-				p.getCache().store("romeo_juliet_msgs", 1);
+				p.getCache().set("romeo_juliet_msgs", 1);
 				p.updateQuestStage(getQuestId(), 2);
 			} else if (choice == 3) {
 				playerTalk(p, n, "I think you could do better");
@@ -215,7 +215,7 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 			npcTalk(p, n, "It may be our only hope");
 			p.message("Juliet gives you a message");
 			p.getInventory().add(new Item(56));
-			p.getCache().store("romeo_juliet_msgs", 1);
+			p.getCache().set("romeo_juliet_msgs", 1);
 			p.updateQuestStage(getQuestId(), 2);
 			break;
 		case 2:
@@ -228,12 +228,12 @@ public class RomeoAndJuliet implements QuestInterface,TalkToNpcListener,
 							"Please, take this message to him, and please don't lose it");
 					p.message("Juliet gives you another message");
 					p.getInventory().add(new Item(56));
-					p.getCache().store("romeo_juliet_msgs", 2);
+					p.getCache().set("romeo_juliet_msgs", 2);
 				} else if(count < 3) {
 					npcTalk(p, n, "It seems I cannot trust you with a simple message",
 							"I am sorry, I need a more reliable messenger");
 					//doesn't give another msg, just for dialogue purposes
-					p.getCache().store("romeo_juliet_msgs", 3);
+					p.getCache().set("romeo_juliet_msgs", 3);
 				} else {
 					npcTalk(p, n, "I am sorry, I do need a more reliable messenger",
 							"Can you send any friends my way?",

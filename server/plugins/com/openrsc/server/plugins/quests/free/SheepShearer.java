@@ -89,7 +89,7 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 						if (choice2 == 0) {
 							npcTalk(p, n,
 									"Ok I'll see you when you have some wool");
-							p.getCache().store("sheep_shearer_wool_count", 0);
+							p.getCache().set("sheep_shearer_wool_count", 0);
 							p.updateQuestStage(getQuestId(), 1);
 						} else if (choice2 == 1) {
 							npcTalk(p,
@@ -121,7 +121,7 @@ public class SheepShearer implements QuestInterface,TalkToNpcListener,
 					}
 				}
 				else {
-					p.getCache().store("sheep_shearer_wool_count", 0);
+					p.getCache().set("sheep_shearer_wool_count", 0);
 					if (woolCount > 20) {
 						woolCount = 20;
 						totalWool = 20;
