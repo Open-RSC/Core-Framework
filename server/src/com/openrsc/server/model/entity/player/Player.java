@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A single player.
- */  
+ */
 public final class Player extends Mob {
 	/**
 	 * The asynchronous logger.
@@ -127,15 +127,15 @@ public final class Player extends Mob {
 	public void setConsumeTimer(long l) {
 		consumeTimer = System.currentTimeMillis() + l;
 	}
-        
+
         public long getLastSaveTime() {
 		return lastSaveTime;
         }
-        
+
         public void setLastSaveTime(long save) {
 		lastSaveTime = save;
         }
-        
+
         private long lastSaveTime = System.currentTimeMillis();
 
 	private int appearanceID;
@@ -149,13 +149,13 @@ public final class Player extends Mob {
 	public void incAppearanceID() {
 		appearanceID++;
 	}
-    
+
     private long lastCommand;
-    
+
 	public void setLastCommand(long newTime) {
 		this.lastCommand = newTime;
 	}
-	
+
 	public long getLastCommand() {
 		return lastCommand;
 	}
@@ -444,7 +444,7 @@ public final class Player extends Mob {
 
 	/**
 	 * Constructs a new Player instance from LoginRequest
-	 * 
+	 *
 	 * @param request
 	 */
 	public Player(LoginRequest request) {
@@ -505,7 +505,7 @@ public final class Player extends Mob {
 
 	public void addCharge(long timeLeft) {
 		if (chargeEvent == null) {
-			chargeEvent = new DelayedEvent(this, 6 * 60000) { 
+			chargeEvent = new DelayedEvent(this, 6 * 60000) {
 				// 6 minutes taken from RS2.
 				// the charge spell in RSC seem to be bugged, but 10 minutes most of the times.
 				// sometimes you are charged for 1 hour lol.
@@ -620,7 +620,7 @@ public final class Player extends Mob {
 
 	/**
 	 * Unregisters this player instance from the server
-	 * 
+	 *
 	 * @param force
 	 *            - if false wait until combat is over
 	 * @param reason
@@ -1344,7 +1344,7 @@ public final class Player extends Mob {
 						+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
 						+ " mins ago";
 
-				for (Player p : World.getWorld().getPlayers()) { 
+				for (Player p : World.getWorld().getPlayers()) {
 					if (p.isMod()) {
 						p.message("@red@Server@whi@: " + string);
 					}
@@ -1666,17 +1666,17 @@ public final class Player extends Mob {
 		return achievements;
 	}
 
-	public void setAchievementStatus(int achid, int status) { 
-		getAchievements().put(achid, status); 
+	public void setAchievementStatus(int achid, int status) {
+		getAchievements().put(achid, status);
 
 		AchievementSystem.achievementListGUI(this, achid, status);
-	} 
+	}
 
-	public void updateAchievementStatus(Achievement ach, int status) { 
-		getAchievements().put(ach.getId(), status); 
+	public void updateAchievementStatus(Achievement ach, int status) {
+		getAchievements().put(ach.getId(), status);
 
 		AchievementSystem.achievementListGUI(this, ach.getId(), status);
-	} 
+	}
 
 	public int getAchievementStatus(int id) {
 		if (getAchievements().containsKey(id)) {
@@ -1817,21 +1817,6 @@ public final class Player extends Mob {
 			getUpdateFlags().setAppearanceChanged(true);
 		else if (getSkullType() == 0)
 			getUpdateFlags().setAppearanceChanged(true);
-		if(!super.getLocation().inWilderness() && p.inWilderness())
-		{
-			if (!canUsePool()) {
-				message("You must wait for " + secondsUntillPool() + " seconds after death to walk in wilderness");
-				getWalkingQueue().setPath(null);
-				return;
-			}
-		}
-		/*if(super.getLocation() != null && p != null)
-		{
-			if(super.getLocation().inWilderness() && !p.inWilderness())
-			{
-				World.getWildernessIPTracker().remove(getCurrentIP());
-			}
-		}*/
 
 		super.setLocation(p, teleported);
 
