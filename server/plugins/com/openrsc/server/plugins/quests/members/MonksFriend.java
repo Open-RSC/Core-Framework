@@ -59,24 +59,27 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "...yawn...oh, hello...yawn..",
 						"I'm sorry, I'm just so tired..",
 						"I haven't slept in a week", "It's driving me mad");
-				int firstMenu = showMenu(p, n,
+				int firstMenu = showMenu(p, n, false, //do not send over
 						"Why can't you sleep, what's wrong?",
 						"sorry, i'm too busy to hear your problems");
 				if (firstMenu == 0) {
+					playerTalk(p, n, "Why can't you sleep, what's wrong?");
 					npcTalk(p, n, "It's the brother Androe's son",
 							"with his constant waaaaaah..waaaaaaaaah",
-							"Androe said it's natural, but it's just annoying");
+							" Androe said it's natural, but it's just annoying");
 					playerTalk(p, n, "I suppose that's what kids do");
 					npcTalk(p, n, "he was fine, up until last week",
 							"thieves broke in",
 							"They stole his favourite sleeping blanket",
 							"now he won't rest until it's returned",
 							"..and that means neither can I!");
-					int secondMenu = showMenu(p, n, "Can I help at all?",
+					int secondMenu = showMenu(p, n, false, //do not send over
+							"Can I help at all?",
 							"I'm sorry to hear that, I hope you find his blanket");
 					if (secondMenu == 0) {
+						playerTalk(p, n, "can I help at all?");
 						npcTalk(p, n, "please do, we are peaceful men",
-								"but you could recover the blanket from the thieves");
+								" but you could recover the blanket from the thieves");
 						playerTalk(p, n, "where are they?");
 						npcTalk(p, n,
 								"they hide in a secret cave in the forest",
@@ -84,10 +87,10 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 								"please, bring back the blanket");
 						p.updateQuestStage(getQuestId(), 1);
 					} else if (secondMenu == 1) {
-						// NOTHING
+						playerTalk(p, n, "I'm sorry to hear that, I hope you find his blanket");
 					}
 				} else if (firstMenu == 1) {
-					// NOTHING
+					playerTalk(p, n, "Sorry, I'm too busy to hear your problems");
 				}
 				break;
 			case 1:
@@ -106,7 +109,7 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 					p.updateQuestStage(getQuestId(), 2);
 				} else {
 					playerTalk(p, n, "I'm afraid not");
-					npcTalk(p, n, " I need some sleep");
+					npcTalk(p, n, "I need some sleep");
 				}
 				break;
 			case 2:
@@ -136,7 +139,7 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 					if (fourthMenu == 0) {
 						// NOTHING
 					} else if (fourthMenu == 1) {
-						npcTalk(p, n, "oh, he won't be far,",
+						npcTalk(p, n, "oh, he won't be far",
 								"probably out in the forest");
 						p.updateQuestStage(getQuestId(), 3);
 					} else if (fourthMenu == 2) {
@@ -188,7 +191,7 @@ public class MonksFriend implements QuestInterface,TalkToNpcListener,
 						"..drunk..hic..up..");
 				playerTalk(p, n, "brother Omad needs the wine..",
 						"..for the party");
-				npcTalk(p, n, "oh dear, oh dear ",
+				npcTalk(p, n, " oh dear, oh dear ",
 						"I knew I had to do something",
 						"pleashhh, find me some water",
 						"once i'm sober i'll help you..",
