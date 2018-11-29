@@ -19,19 +19,19 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 
 	private final int CRYSTAL_CHEST = 248;
 	private final int CRYSTAL_CHEST_OPEN = 247;
-	
+
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == CRYSTAL_CHEST;
 	}
-	
+
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if(obj.getID() == CRYSTAL_CHEST) {
 			p.message("the chest is locked");
 		}
 	}
-	
+
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		return item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
@@ -44,7 +44,7 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 			player.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, CRYSTAL_CHEST_OPEN);
 			player.message("You find some treasure in the chest");
-			
+
 			removeItem(player, ItemId.CRYSTAL_KEY.id(), 1); // remove the crystal key.
 			ArrayList<Item> loot = new ArrayList<Item>();
 			loot.add(new Item(ItemId.UNCUT_DRAGONSTONE.id(), 1));

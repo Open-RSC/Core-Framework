@@ -41,6 +41,7 @@ public class SinisterChest implements ObjectActionListener, ObjectActionExecutiv
 			p.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, SINISTER_CHEST_OPEN);
 			p.message("A foul gas seeps from the chest");
+			replaceObjectDelayed(obj, 2000, 339);
 			p.message("You find a lot of herbs in the chest");
 
 			removeItem(p, ItemId.SINISTER_KEY.id(), 1); // remove the sinister key.
