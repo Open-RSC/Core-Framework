@@ -26,7 +26,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- *
+ * 
  * @author n0m
  *
  */
@@ -192,30 +192,31 @@ public final class GameStateUpdater {
 	private static void updateTimeouts(Player player) {
 		long curTime = System.currentTimeMillis();
 		int timeoutLimit = 300000; // 5 minute idle log out
-		int autoSave = 30000; // 30 second autosave
-		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
+                int autoSave = 30000; // 30 second autosave
+                
+                if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
-        if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
+                if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
 			player.save();
-			player.setLastSaveTime(curTime);
-		}
+                        player.setLastSaveTime(curTime);
+                }
 		if (curTime - player.getLastPing() >= 30000) {
 			player.unregister(false, "Ping time-out");
 		}
-		else if (player.warnedToMove()) {
+                else if (player.warnedToMove()) {
 			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isMod()) {
 				player.unregister(false, "Movement time-out");
 			}
 		}
-		else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
+                else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
 			if (player.isSleeping()) {
 				player.setSleeping(false);
 				ActionSender.sendWakeUp(player, false, false);
 			}
 			player.message("@cya@You have been standing here for " + (timeoutLimit / 60000)
 					+ " mins! Please move to a new area");
-			player.setWarnedToMove(true);
+			player.warnToMove();
 		}
 	}
 
@@ -373,7 +374,7 @@ public final class GameStateUpdater {
 
 	/**
 	 * Handles the appearance updating for @param player
-	 *
+	 * 
 	 * @param player
 	 */
 	public static void updatePlayerAppearances(Player player) {
@@ -529,7 +530,7 @@ public final class GameStateUpdater {
 			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || !o.isVisibleTo(playerToUpdate)) {
 				int offsetX = o.getX() - playerToUpdate.getX();
 				int offsetY = o.getY() - playerToUpdate.getY();
-				//If the object is close enough we can use regular way to remove:
+				//If the object is close enough we can use regular way to remove:	
 				if(offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					packet.writeShort(60000);
 					packet.writeByte(offsetX);
