@@ -447,7 +447,7 @@ public abstract class Mob extends Entity {
 
 	/**
 	 * Sets the time when player should be freed from the busy mode.
-	 *
+	 * 
 	 * @param i
 	 */
 	public void setBusyTimer(int i) {
@@ -479,7 +479,7 @@ public abstract class Mob extends Entity {
 		followEvent = new DelayedEvent(null, 500) {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
-						|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
+						|| (me.isPlayer() ? !((Player) me).getDuel().isDuelActive() && me.isBusy() : false)) {
 					resetFollowing();
 				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
 					me.resetPath();
@@ -499,7 +499,7 @@ public abstract class Mob extends Entity {
 		this.lastCombatState = lastCombatState;
 	}
 
-	private void setLastMoved() {
+	public void setLastMoved() {
 		lastMovement = System.currentTimeMillis();
 	}
 
@@ -516,12 +516,8 @@ public abstract class Mob extends Entity {
 		}
 
 		setLastMoved();
-		setWarnedToMove(false);
+		warnedToMove = false;
 		super.setLocation(p);
-	}
-
-	public void setWarnedToMove(boolean moved) {
-		warnedToMove = moved;
 	}
 
 	public void setOpponent(Mob opponent) {
@@ -607,7 +603,7 @@ public abstract class Mob extends Entity {
 		getWalkingQueue().processNextMovement();
 	}
 
-	private void updateSprite(Point newLocation) {
+	public void updateSprite(Point newLocation) {
 		try {
 			int xIndex = getLocation().getX() - newLocation.getX() + 1;
 			int yIndex = getLocation().getY() - newLocation.getY() + 1;
@@ -617,6 +613,26 @@ public abstract class Mob extends Entity {
 			LOGGER.catching(e);
 		}
 	}
+
+	/*public void updateSprite(Point newLocation) {
+		try {
+			int xIndex, yIndex;
+			int newSprite;
+			if (getLocation() == null) {
+				LOGGER.error("Location was null?");
+				super.setLocation(newLocation);
+			}
+			xIndex = getLocation().getX() - newLocation.getX() + 1;
+			yIndex = getLocation().getY() - newLocation.getY() + 1;
+			if (xIndex >= 0 && yIndex >= 0 && xIndex < 3 && yIndex < 3) {
+				newSprite = mobSprites[xIndex][yIndex];
+				setSprite(newSprite);
+			} else
+				setSprite(0);
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
+	}*/
 
 	public void walk(int x, int y) {
 		getWalkingQueue().reset();
@@ -640,6 +656,10 @@ public abstract class Mob extends Entity {
 
 	public boolean warnedToMove() {
 		return warnedToMove;
+	}
+
+	public void warnToMove() {
+		warnedToMove = true;
 	}
 
 	public boolean withinRange(Entity e) {
