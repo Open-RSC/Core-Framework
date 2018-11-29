@@ -5,27 +5,47 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
 
 import java.util.ArrayList;
 
-public class CrystalChest implements InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+public class CrystalChest implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
+	private final int CRYSTAL_CHEST = 248;
+	private final int CRYSTAL_CHEST_OPEN = 247;
+	
+	@Override
+	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+		return obj.getID() == CRYSTAL_CHEST;
+	}
+	
+	@Override
+	public void onObjectAction(GameObject obj, String command, Player p) {
+		if(obj.getID() == CRYSTAL_CHEST) {
+			p.message("the chest is locked");
+		}
+	}
+	
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == 248;
+		return item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		showBubble(player, item);
-		message(player, "You use the key to unlock the chest");
-		if (player.getInventory().remove(item) > -1) {
+		if(item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
+			int respawnTime = 1000;
+			player.message("you unlock the chest with your key");
+			replaceObjectDelayed(obj, respawnTime, CRYSTAL_CHEST_OPEN);
+			player.message("You find some treasure in the chest");
+			
+			removeItem(player, ItemId.CRYSTAL_KEY.id(), 1); // remove the crystal key.
 			ArrayList<Item> loot = new ArrayList<Item>();
 			loot.add(new Item(ItemId.UNCUT_DRAGONSTONE.id(), 1));
 			int percent = DataConversions.random(0, 10000);
