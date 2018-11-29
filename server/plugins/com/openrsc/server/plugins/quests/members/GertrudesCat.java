@@ -114,13 +114,42 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 				}
 				break;
 			case 1:
-			case 2:
 				playerTalk(p, n, "hello gertrude");
 				npcTalk(p, n, "have you seen my poor fluffs?");
 				playerTalk(p, n, "i'm afraid not");
 				npcTalk(p, n, "what about shilop?");
 				playerTalk(p, n, "no sign of him either");
 				npcTalk(p, n, "hmmm...strange, he should be at the market");
+				break;
+			case 2:
+				if(!p.getCache().hasKey("cat_milk") && !p.getCache().hasKey("cat_sardine")) {
+					playerTalk(p, n, "hello gertrude");
+					npcTalk(p, n, "hello again, did you manage to find shilop?",
+							"i can't keep an eye on him for the life of me");
+					playerTalk(p, n, "he does seem quite a handfull");
+					npcTalk(p, n, "you have no idea!.... did he help at all?");
+					playerTalk(p, n, "i think so, i'm just going to look now");
+					npcTalk(p, n, "thanks again adventurer");
+				}
+				else if(p.getCache().hasKey("cat_milk") && !p.getCache().hasKey("cat_sardine")) {
+					playerTalk(p, n, "hello again");
+					npcTalk(p, n, "hello, how's it going?, any luck?");
+					playerTalk(p, n, "yes, i've found fluffs");
+					npcTalk(p, n, "well well, you are clever, did you bring her back?");
+					playerTalk(p, n, "well, that's the thing, she refuses to leave");
+					npcTalk(p, n, "oh dear, oh dear, maybe she's just hungry",
+							"she loves doogle sardines but i'm all out");
+					playerTalk(p, n, "doogle sardines?");
+					npcTalk(p, n, "yes, raw sardines seasoned with doogle leaves",
+							"unfortunatly i've used all my doogle leaves",
+							"but you may find some in the woods out back");
+				}
+				else if(p.getCache().hasKey("cat_sardine")) {
+					playerTalk(p, n, "hi");
+					npcTalk(p, n, "hey traveller, did fluffs eat the sardines?");
+					playerTalk(p, n, "yeah, she loved them, but she still won't leave");
+					npcTalk(p, n, "well that is strange, there must be a reason!");
+				}
 				break;
 			case 3:
 				playerTalk(p, n, "hello gertrude",
@@ -204,15 +233,18 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 						"i haven't seen him since");
 				playerTalk(p, n, "and where is this play area?");
 				npcTalk(p, n, "if i told you that, it wouldn't be a secret");
-				int first = showMenu(p, n, "tell me sonny, or i will hurt you",
+				int first = showMenu(p, n, false, //do not send over 
+						"tell me sonny, or i will hurt you",
 						"what will make you tell me?",
 						"well never mind, fluffs' loss");
 				if (first == 0) {
+					playerTalk(p, n, "tell me sonny, or i will hurt you");
 					npcTalk(p, n,
 							"w..w..what? y..you wouldn't, a young lad like me",
 							"i'd have you behind bars before nightfall");
 					message(p, "you decide it's best not to hurt the boy");
 				} else if (first == 1) {
+					playerTalk(p, n, "what will make you tell me?");
 					npcTalk(p, n,
 							"well...now you ask, i am a bit short on cash");
 					playerTalk(p, n, "how much?");
@@ -220,11 +252,11 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 					playerTalk(p, n, "100 coins!, why should i pay you?");
 					npcTalk(p, n, "you shouldn't, but i won't help otherwise",
 							"i never liked that cat any way, so what do you say?");
-					int second = showMenu(p, n, " i'm not paying you a penny",
-							" ok then, i'll pay");
+					int second = showMenu(p, n, "i'm not paying you a penny",
+							"ok then, i'll pay");
 					if (second == 0) {
 						npcTalk(p, n,
-								" ok then, i find another way to make money");
+								"ok then, i find another way to make money");
 					} else if (second == 1) {
 						if (p.getInventory().countId(10) >= 100) {
 							playerTalk(p, n,
@@ -250,6 +282,7 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 						}
 					}
 				} else if (first == 2) {
+					playerTalk(p, n, "well, never mind, fluffs' loss");
 					npcTalk(p, n, "i'm sure my mum will get over it");
 				}
 
@@ -319,6 +352,11 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 			p.damage(damage);
 
 			playerTalk(p, null, "ouch");
+			if (p.getQuestStage(Constants.Quests.GERTRUDES_CAT) >= 3
+					|| p.getQuestStage(Constants.Quests.GERTRUDES_CAT) == -1) {
+				return;
+			}
+			
 			if (p.getCache().hasKey("cat_sardine")
 					&& p.getCache().hasKey("cat_milk")) {
 				message(p, "the cats seems afraid to leave",
@@ -375,6 +413,8 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 					"and then runs off home with her kittens");
 			removeItem(p, 1095, 1);
 			p.updateQuestStage(getQuestId(), 3);
+			p.getCache().remove("cat_milk");
+			p.getCache().remove("cat_sardine");
 			World.getWorld().unregisterItem(item);
 		}
 	}
@@ -414,19 +454,33 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 1039) {
-			message(p, "you search the crate...", "...but find nothing...",
-					"...you hear a cat's purring close by");
+			message(p, "you search the crate...", "...but find nothing...");
+			if (hasItem(p, 1095) || !p.getCache().hasKey("cat_sardine")
+					|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
+				//nothing
+			}
+			else {
+				message(p, "...you hear a cat's purring close by");
+			}
 		}
-		if (obj.getID() == 1040) {
+		else if (obj.getID() == 1041) {
+			message(p, "you search the barrel...", "...but find nothing...");
+			if (hasItem(p, 1095) || !p.getCache().hasKey("cat_sardine")
+					|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
+				//nothing
+			}
+			else {
+				message(p, "...you hear a cat's purring close by");
+			}
+		}
+		else if (obj.getID() == 1040) {
 			message(p, "you search the crate...");
 			if (hasItem(p, 1095) || !p.getCache().hasKey("cat_sardine")
-					|| p.getQuestStage(getQuestId()) == 3) {
+					|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
 				message(p, "you find nothing...");
 			} else {
 				message(p, "...and find two kittens");
 				addItem(p, 1095, 1);
-				p.getCache().remove("cat_milk");
-				p.getCache().remove("cat_sardine");
 			}
 		}
 
