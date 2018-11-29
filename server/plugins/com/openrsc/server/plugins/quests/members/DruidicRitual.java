@@ -140,18 +140,9 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 		case kaqemeex.SEARCH_OF_QUEST:
 			npcTalk(p,
 					n,
-					"We can teach you some of our skill if you complete a quest",
-					"We are skilled in the art of herblaw");
-
-			int first = showMenu(p, n, "Ok, I will help you",
-					"No I will not bother");
-			if (first == 0) {
-				npcTalk(p, n,
-						" Go speak to Sanfew to the south, he will help you in your quest");
-				p.updateQuestStage(getQuestId(), 1);
-			} else if (first == 1) {
-				// NOTHING
-			}
+					"I think I may have a worthwhile quest for you actually",
+					"I don't know if you are familair withe the stone circle south of Varrock");
+			kaqemeexDialogue(p, n, kaqemeex.STONE_CIRCLE);
 			break;
 		case kaqemeex.STONE_CIRCLE:
 			npcTalk(p,
@@ -162,18 +153,35 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 					"and making it useless for us",
 					"We need someone who will go on a quest for us",
 					"to help us purify the circle of Varrock");
-			int four = showMenu(p, n, "Ok, I will try and help",
+			int four = showMenu(p, n, false, //do not send over
+					"Ok, I will try and help",
 					"No that doesn't sound very interesting",
 					"So is there anything in this for me?");
 			if (four == 0) {
+				playerTalk(p, n, "Ok I will try and help");
 				npcTalk(p, n, "Ok go and speak to our Elder druid, Sanfew");
 				p.updateQuestStage(getQuestId(), 1);
 			} else if (four == 1) {
+				playerTalk(p, n, "No that doesn't sound very interesting");
 				npcTalk(p, n,
 						"Well suit yourself, we'll have to find someone else");
 			} else if (four == 2) {
+				playerTalk(p, n, "So is there anything in this for me?");
 				npcTalk(p, n, "We are skilled in the art of herblaw",
 						"We can teach you some of our skill if you complete your quest");
+				int five = showMenu(p, n, false, //do not send over
+						"Ok, I will try and help",
+						"No that doesn't sound very interesting");
+				if (five == 0) {
+					playerTalk(p, n, "Ok I will try and help");
+					npcTalk(p, n, "Ok go and speak to our Elder druid, Sanfew");
+					p.updateQuestStage(getQuestId(), 1);
+				}
+				else if (five == 1) {
+					playerTalk(p, n, "No that doesn't sound very interesting");
+					npcTalk(p, n,
+							"Well suit yourself, we'll have to find someone else");
+				}
 			}
 			break;
 		case kaqemeex.ON_MY_WAY_NOW:
@@ -189,9 +197,25 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 		}
 		if (n.getID() == 205) {
 			switch (p.getQuestStage(this)) {
-			case 1:
+			case 0:
 				npcTalk(p, n, "What can I do for you young 'un?");
 				int first = showMenu(
+						p,
+						n, "I've heard you druids might be able to teach me herblaw",
+								"Actually I don't need to speak to you" );
+				if (first == 0) {
+					npcTalk(p,
+							n,
+							"You should go to speak to kaqemeex",
+							"He is probably our best teacher of herblaw at the moment",
+							"I believe he is at our stone circle to the north of here");
+				} else if (first == 1) {
+					message(p, "Sanfew grunts");
+				}
+				break;
+			case 1:
+				npcTalk(p, n, "What can I do for you young 'un?");
+				first = showMenu(
 						p,
 						n, "I've been sent to help purify the varrock stone circle",
 								"Actually I don't need to speak to you" );
@@ -202,15 +226,17 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 							"Is the meats I needed for the sacrifice to Guthix",
 							"I need the raw meat from 4 different animals",
 							"Which all need to be dipped in the cauldron of thunder");
-					int second = showMenu(p, n,
+					int second = showMenu(p, n, false, //do not send over
 							"Where can I find this cauldron?",
 							"Ok I'll do that then");
 					if (second == 0) {
+						playerTalk(p, n, "Where can I find this cauldron");
 						npcTalk(p, n,
 								"It is in the mysterious underground halls",
 								"which are somewhere in the woods to the south of here");
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (second == 1) {
+						playerTalk(p, n, "Ok I'll do that then");
 						p.updateQuestStage(getQuestId(), 2);
 					}
 				} else if (first == 1) {
@@ -229,7 +255,7 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 					removeItem(p, 507, 1);
 					npcTalk(p,
 							n,
-							"Thank you, that has brought us much closer to reclaiming our stone circle",
+							"thank you, that has brought us much closer to reclaiming our stone circle",
 							"Now go and talk to kaqemeex",
 							"He will show you what you need to know about herblaw");
 					p.updateQuestStage(getQuestId(), 3);
@@ -242,16 +268,17 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 						npcTalk(p, n,
 								"I need the raw meat from 4 different animals",
 								"Which all need to be dipped in the cauldron of thunder");
-						int secondMenu = showMenu(p, n,
+						int secondMenu = showMenu(p, n, false, //do not send over
 								"Where can I find this cauldron?",
 								"Ok I'll do that then");
 						if (secondMenu == 0) {
+							playerTalk(p, n, "Where can I find this cauldron");
 							npcTalk(p,
 									n,
 									"It is in the mysterious underground halls",
 									"which are somewhere in the woods to the south of here");
 						} else if (secondMenu == 1) {
-							// NOTHING
+							playerTalk(p, n, "Ok I'll do that then");
 						}
 					} else if (menu == 1) {
 						// NOTHING
@@ -270,7 +297,7 @@ public class DruidicRitual implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, n, "Not at the moment",
 							"I need to make some more preparations myself now");
 				} else if (finalMenu == 1) {
-					// NOTHING
+					message(p, "Sanfew grunts");
 				}
 				break;
 			}
