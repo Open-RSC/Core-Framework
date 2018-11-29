@@ -12,7 +12,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MuddyChest implements ObjectActionExecutiveListener, ObjectActionListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
-	
+
 	private final int MUDDY_CHEST = 222;
 	private final int MUDDY_CHEST_OPEN = 221;
 
@@ -22,7 +22,7 @@ public class MuddyChest implements ObjectActionExecutiveListener, ObjectActionLi
 			p.message("the chest is locked");
 		}
 	}
-	
+
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if(obj.getID() == MUDDY_CHEST && item.getID() == ItemId.MUDDY_KEY.id()) {
@@ -30,7 +30,7 @@ public class MuddyChest implements ObjectActionExecutiveListener, ObjectActionLi
 			p.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, MUDDY_CHEST_OPEN);
 			p.message("You find some treasure in the chest");
-			
+
 			removeItem(p, ItemId.MUDDY_KEY.id(), 1); // remove the muddy key.
 			addItem(p, ItemId.UNCUT_RUBY.id(), 1);
 			addItem(p, ItemId.MITHRIL_BAR.id(), 1);
