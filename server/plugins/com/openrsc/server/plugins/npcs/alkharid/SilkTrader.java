@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -36,8 +37,8 @@ public class SilkTrader implements TalkToNpcListener,
 				);
 				if (option3 == 0) {
 					p.message("You buy some silk for 2 coins");
-					if (p.getInventory().remove(10, 2) > -1) {
-						addItem(p, 200, 1);
+					if (p.getInventory().remove(ItemId.COINS.id(), 2) > -1) {
+						addItem(p, ItemId.SILK.id(), 1);
 					} else {
 						playerTalk(p, n, "Oh dear. I don't have enough money");
 					}
@@ -47,8 +48,8 @@ public class SilkTrader implements TalkToNpcListener,
 				}
 				
 			} else if (option2 == 1) {
-				if (p.getInventory().remove(10, 3) > -1) {
-					addItem(p, 200, 1);
+				if (p.getInventory().remove(ItemId.COINS.id(), 3) > -1) {
+					addItem(p, ItemId.SILK.id(), 1);
 					p.message("You buy some silk for 3 coins");
 				} else {
 					playerTalk(p, n, "Oh dear. I don't have enough money");

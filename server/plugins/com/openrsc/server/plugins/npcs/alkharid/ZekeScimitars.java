@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,13 +14,16 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class ZekeScimitars implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	public static final int npcid = 84;
 
 	private final Shop shop = new Shop(false, 25000, 100, 55, 2,
-			new Item(82, 5), new Item(83, 3), new Item(84, 2),
-			new Item(85, 1));
+		new Item(ItemId.BRONZE_SCIMITAR.id(), 5),
+		new Item(ItemId.IRON_SCIMITAR.id(), 3),
+		new Item(ItemId.STEEL_SCIMITAR.id(), 2),
+		new Item(ItemId.MITHRIL_SCIMITAR.id(), 1)
+	);
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -28,7 +32,7 @@ public final class ZekeScimitars implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -38,16 +42,18 @@ public final class ZekeScimitars implements ShopInterface,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "A thousand greetings " + ((p.isMale()) ? "sir"
-				: "madam"));
+		npcTalk(p, n, "A thousand greetings " + ((p.isMale()) ? "sir" : "madam"));
 
-		final String[] options = new String[] { "Do you want to trade?", "Nice cloak" };
+		final String[] options = new String[]{
+			"Do you want to trade?",
+			"Nice cloak"
+		};
 		int option = showMenu(p, n, options);
 		if (option == 0) {
-			npcTalk(p, n, "Yes, certainly","I deal in scimitars");
+			npcTalk(p, n, "Yes, certainly", "I deal in scimitars");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
-		} else if(option == 1) {
+		} else if (option == 1) {
 			npcTalk(p, n, "Thank you");
 		}
 	}
