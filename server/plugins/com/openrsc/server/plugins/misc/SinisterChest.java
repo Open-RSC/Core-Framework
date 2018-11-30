@@ -16,7 +16,7 @@ public class SinisterChest implements ObjectActionListener, ObjectActionExecutiv
 
 	private final int SINISTER_CHEST = 645;
 	private final int SINISTER_CHEST_OPEN = 644;
-	
+
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == SINISTER_CHEST;
@@ -41,7 +41,6 @@ public class SinisterChest implements ObjectActionListener, ObjectActionExecutiv
 			p.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, SINISTER_CHEST_OPEN);
 			p.message("A foul gas seeps from the chest");
-			replaceObjectDelayed(obj, 2000, 339);
 			p.message("You find a lot of herbs in the chest");
 
 			removeItem(p, ItemId.SINISTER_KEY.id(), 1); // remove the sinister key.
