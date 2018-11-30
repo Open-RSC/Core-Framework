@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -8,11 +9,11 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListen
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener{
+public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == 217 && item.getID() == 21 || npc.getID() == 6 && item.getID() == 21;
+		return npc.getID() == 217 && item.getID() == ItemId.BUCKET.id() || npc.getID() == 6 && item.getID() == ItemId.BUCKET.id();
 	}
 
 	@Override
@@ -22,7 +23,7 @@ public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener{
 		npc.setBusy(true);
 		showBubble(player, item);
 		if (removeItem(player, item.getID(), 1)) {
-			addItem(player, 22, 1);
+			addItem(player, ItemId.MILK.id(), 1);
 		}
 		message(player, 3500, "You milk the cow");
 		npc.setBusy(false);
