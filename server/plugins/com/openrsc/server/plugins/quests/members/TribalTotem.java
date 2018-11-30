@@ -82,7 +82,7 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 							"I am told I can find such people in Brimhaven");
 					int sub_opt = showMenu(p, n, "Tell me of this mission",
 							"Yep I have heard there are many of that type here");
-					if (sub_opt == 1) {
+					if (sub_opt == 0) {
 						playerTalk(p, n, "I may be able to help");
 						npcTalk(p,
 								n,
@@ -91,29 +91,35 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 								"There you will need to find the house of Lord Handelmort",
 								"In his house he has our tribal totem",
 								"We need it back");
-						int sub_menu = showMenu(p, n, "Ok I will get it back",
+						int sub_menu = showMenu(p, n, false, //do not send over
+								"Ok I will get it back",
 								"Why does he have it?",
 								"How can I find Handelmort's house?");
 						if (sub_menu == 0) {
+							playerTalk(p, n, "Ok I will get it back");
 							p.updateQuestStage(this, 1);
 						} else if (sub_menu == 1) {
+							playerTalk(p, n, "Why does he have it?");
 							npcTalk(p,
 									n,
 									"Lord Handelmort is an Ardougnese explorer",
 									"Which mean he think he allowed to come and steal our stuff",
 									"To put in his private museum");
-							int sub_opt1 = showMenu(p, n,
+							int sub_opt1 = showMenu(p, n, false, //do not send over
 									"Ok I will get it back",
 									"How can I find Handlemort's house?");
 							if (sub_opt1 == 0) {
+								playerTalk(p, n, "Ok I will get it back");
 								p.updateQuestStage(this, 1);
 							} else if (sub_opt1 == 1) {
-								playerTalk(p, n, "Ardougne is a big place");
+								playerTalk(p, n, "How can I find Handelmort's house",
+										"Ardougne is a big place");
 								npcTalk(p, n, "I don't know Ardougne");
 							}
 
-						} else if (sub_menu == 1) {
-							playerTalk(p, n, "Ardougne is a big place");
+						} else if (sub_menu == 2) {
+							playerTalk(p, n, "How can I find Handelmort's house",
+									"Ardougne is a big place");
 							npcTalk(p, n, "I don't know Ardougne");
 						}
 
@@ -127,28 +133,35 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 							"There you will need to find the house of Lord Handelmort",
 							"In his house he has our tribal totem",
 							"We need it back");
-					int sub_opt = showMenu(p, n, "Ok I will get it back",
+					int sub_opt = showMenu(p, n, false, //do not send over
+							"Ok I will get it back",
 							"Why does he have it?",
 							"How can I find Handelmort's house?");
 					if (sub_opt == 0) {
+						playerTalk(p, n, "Ok I will get it back");
 						p.updateQuestStage(this, 1);
 					} else if (sub_opt == 1) {
+						playerTalk(p, n, "Why does he have it?");
 						npcTalk(p,
 								n,
 								"Lord Handelmort is an Ardougnese explorer",
 								"Which mean he think he allowed to come and steal our stuff",
 								"To put in his private museum");
-						int sub_opt1 = showMenu(p, n, "Ok I will get it back",
-								"How can I find Handlemort's house?");
+						int sub_opt1 = showMenu(p, n, false, //do not send over
+								"Ok I will get it back",
+								"How can I find Handelmort's house?");
 						if (sub_opt1 == 0) {
+							playerTalk(p, n, "Ok I will get it back");
 							p.updateQuestStage(this, 1);
 						} else if (sub_opt1 == 1) {
-							playerTalk(p, n, "Ardougne is a big place");
+							playerTalk(p, n, "How can I find Handelmort's house",
+									"Ardougne is a big place");
 							npcTalk(p, n, "I don't know Ardougne");
 						}
 
-					} else if (sub_opt == 1) {
-						playerTalk(p, n, "Ardougne is a big place");
+					} else if (sub_opt == 2) {
+						playerTalk(p, n, "How can I find Handelmort's house",
+								"Ardougne is a big place");
 						npcTalk(p, n, "I don't know Ardougne");
 					}
 				} else if (opt == 2) {
@@ -180,31 +193,37 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 		}
 		if (n.getID() == 335) {
 			npcTalk(p, n, "It's a fine day to be out in the garden isn't it?");
-			int menu = showMenu(p, n, "Yes, it's very nice", "So who are you?");
-			if (menu == 1) {
+			int menu = showMenu(p, n, false, //do not send over
+					"Yes, it's very nice", "So who are you?");
+			if (menu == 0) {
+				playerTalk(p, n, "Yes, it's very nice");
+			}
+			else if (menu == 1) {
+				playerTalk(p, n, "So who are you");
 				npcTalk(p, n, "My name is Horacio Dobson",
 						"I am the gardener to Lord Handelmort",
 						"All this around you is my handywork");
-				int sub_menu = showMenu(p, n,
-						"So do you garden round the back too?",
-						"Do you need any help?");
-				if (sub_menu == 0) {
-					npcTalk(p, n, " hat I do");
-					playerTalk(p, n, "Doesn't all this security in this house");
-					playerTalk(p, n, "get in your way?");
-					npcTalk(p,
-							n,
-							"Ah, I'm used to all that",
-							"I have my keys, the dogs knows me",
-							"And I know by heart the combination to the door lock",
-							"It's rather easy, it's his middle name");
-					playerTalk(p, n, "Who's middle name?");
-					npcTalk(p, n, "Hmm I shouldn't have said that",
-							"Forget I said it");
-
-				} else if (sub_menu == 1) {
-					npcTalk(p, n, "Trying to muscle in on my job ehh?",
-							"I'm happy to do this all myself");
+				if (p.getQuestStage(this) != 0) {
+					int sub_menu = showMenu(p, n,
+							"So do you garden round the back too?",
+							"Do you need any help?");
+					if (sub_menu == 0) {
+						npcTalk(p, n, "That I do");
+						playerTalk(p, n, "Doesn't all this security in this house",
+								"get in your way?");
+						npcTalk(p,
+								n,
+								"Ah, I'm used to all that",
+								"I have my keys, the dogs knows me",
+								"And I know by heart the combination to the door lock",
+								"It's rather easy, it's his middle name");
+						playerTalk(p, n, "Who's middle name?");
+						npcTalk(p, n, "Hmm I shouldn't have said that",
+								"Forget I said it");
+					} else if (sub_menu == 1) {
+						npcTalk(p, n, "Trying to muscle in on my job ehh?",
+								"I'm happy to do this all myself");
+					}
 				}
 			}
 		}
@@ -271,17 +290,22 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "By all means",
 						"Though I don't know where you will come out",
 						"Wherever the other teleport block is I suppose");
-				int tp = showMenu(p, n, "Yes, that sounds good teleport me",
+				int tp = showMenu(p, n, false, //do not send over
+						"Yes, that sounds good teleport me",
 						"That sounds dangerous leave me here");
 				if (tp == 0) {
+					playerTalk(p, n, "Yes, that sounds good",
+							"teleport me");
 					p.teleport(545, 577, false);
 					message(p, "Cromperty takes out a small box",
 							"Cromperty presses a switch on the box");
-					if (p.getQuestStage(this) == 2) {
-						p.teleport(560, 588, false);
+					if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == -1) {
+						p.teleport(560, 588, true);
 					} else {
-						p.teleport(558, 617, false);
+						p.teleport(558, 617, true);
 					}
+				} else if (tp == 1) {
+					playerTalk(p, n, "That sounds dangerous leave me here");
 				}
 			} else if (menu3 == 1) {
 				npcTalk(p, n, "The runescape parcel delivery team");
@@ -290,17 +314,22 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 			npcTalk(p, n, "By all means",
 					"Though I don't know where you will come out",
 					"Wherever the other teleport block is I suppose");
-			int tp = showMenu(p, n, "Yes, that sounds good teleport me",
+			int tp = showMenu(p, n, false, //do not send over
+					"Yes, that sounds good teleport me",
 					"That sounds dangerous leave me here");
 			if (tp == 0) {
+				playerTalk(p, n, "Yes, that sounds good",
+						"teleport me");
 				p.teleport(545, 577, false);
 				message(p, "Cromperty takes out a small box",
 						"Cromperty presses a switch on the box");
-				if (p.getQuestStage(this) == 2) {
-					p.teleport(560, 588, false);
+				if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == -1) {
+					p.teleport(560, 588, true);
 				} else {
-					p.teleport(558, 617, false);
+					p.teleport(558, 617, true);
 				}
+			} else if (tp == 1) {
+				playerTalk(p, n, "That sounds dangerous leave me here");
 			}
 		}
 	}
@@ -375,8 +404,7 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 					p.getCache().remove("trapy");
 					p.teleport(563, 1534, false);
 				} else {
-					message(p, "You go down the stairs",
-							"You here a click beneath you",
+					message(p, "You here a click beneath you",
 							"You feel yourself falling",
 							"You have fallen through a trap");
 					p.teleport(563, 3418, false);
@@ -413,10 +441,15 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 328 && item.getID() == 704) {
-			p.message("You stick the label on the crate");
-			playerTalk(p, null, "Now I just need someone to deliver it for me");
-			removeItem(p, 704, 1);
-			p.getCache().store("label", true);
+			if(p.getQuestStage(this) == -1) {
+				p.message("You've already done this!");
+			}
+			else {
+				p.message("You stick the label on the crate");
+				playerTalk(p, null, "Now I just need someone to deliver it for me");
+				removeItem(p, 704, 1);
+				p.getCache().store("label", true);
+			}
 		}
 
 	}
@@ -439,31 +472,30 @@ public class TribalTotem implements QuestInterface,TalkToNpcListener,
 		if (obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586
 				&& click == 0) {
 			p.message("choose a position for dial 1");
-			int dial = showMenu(p, "position A", "position B",
+			int dial = showMenu(p, "postition A", "position B",
 					"Position C", "Position D");
 			if (dial >= 0 || dial <= 3) {
-				p.message("choose a position for dial 2");
 				if (dial == 1) {
 					firstOpt = true;
 				}
+				p.message("choose a position for dial 2");
 				int dial2 = showMenu(p, "position R", "position S",
 						"position T", "Position U");
 				if (dial2 >= 0 || dial2 <= 3) {
-					p.message("choose a position for dial 3");
 					if (dial2 == 0) {
 						secondOpt = true;
 					}
-					int dial3 = showMenu(p, "position A", "position B",
+					p.message("choose a position for dial 3");
+					int dial3 = showMenu(p, "postition A", "position B",
 							"Position C", "Position D");
 					if (dial3 >= 0 || dial3 <= 3) {
-						p.message("choose a position for dial 3");
 						if (dial3 == 0) {
 							thirdOpt = true;
 						}
-						int dial4 = showMenu(p, "position A",
+						p.message("choose a position for dial 4");
+						int dial4 = showMenu(p, "postition A",
 								"position B", "Position C", "Position D");
 						if (dial4 >= 0 || dial4 <= 3) {
-							p.message("choose a position for dial 4");
 							if (firstOpt && secondOpt && thirdOpt && dial4 == 3) {
 								p.message("You here a satisfying click");
 								p.message("You go through the door");
