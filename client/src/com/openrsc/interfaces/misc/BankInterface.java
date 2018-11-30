@@ -18,25 +18,23 @@ public class BankInterface {
 	private boolean swapNoteMode;
 
 	public int width, height;
-	protected boolean rightClickMenu;
 
 	public Panel bank;
-	protected ArrayList<BankItem> bankItems;
+	ArrayList<BankItem> bankItems;
 
-	public BankInterface(mudclient mc) {
-		this.mc = mc;
-
-    width = 408; // WIDTH MODIFIER
-    height = 334; // HEIGHT MODIFIER
+	BankInterface(mudclient m) {
+		mc = m;
+		width = 408; // WIDTH MODIFIER
+		height = 334; // HEIGHT MODIFIER
 		bank = new Panel(mc.getSurface(), 3);
-		bankItems = new ArrayList<BankItem>();
+		bankItems = new ArrayList<>();
 	}
 
-	protected int selectedBankSlotItemID = -2;
-	protected int mouseOverBankPageText;
+	private int selectedBankSlotItemID = -2;
+	private int mouseOverBankPageText;
 
-	ArrayList<Integer> currentBankIDs = new ArrayList<>();
-	ArrayList<Integer> currentBankCounts = new ArrayList<>();
+	private ArrayList<Integer> currentBankIDs = new ArrayList<>();
+	private ArrayList<Integer> currentBankCounts = new ArrayList<>();
 
 	public boolean onRender() {
 		int currMouseX = mc.getMouseX();
@@ -74,7 +72,6 @@ public class BankInterface {
 				}
 
 				// Check for a transaction
-				int itemID, amount;
 				if (this.selectedBankSlot > -1) {
 					checkTransaction(currMouseX, currMouseY, selectedX, selectedY);
 				}
@@ -131,7 +128,7 @@ public class BankInterface {
 		}
 	}
 
-	public void checkTransaction(int currMouseX, int currMouseY, int selectedX, int selectedY) {
+	private void checkTransaction(int currMouseX, int currMouseY, int selectedX, int selectedY) {
 		int itemID = selectedBankSlotItemID;
 		int amount = currentBankCounts.get(this.selectedBankSlot);
 
@@ -299,11 +296,11 @@ public class BankInterface {
 				// Background Colour of Bank Tile
 				if (this.selectedBankSlot == inventorySlot) { // Selected
 					mc.getSurface().drawBoxAlpha(slotX, slotY, 49, 34, 0xff0000, 160);
-        } else { // Not Selected
-          mc.getSurface().drawBoxAlpha(slotX, slotY, 49, 34, 0xd0d0d0, 160);
+        		} else { // Not Selected
+          			mc.getSurface().drawBoxAlpha(slotX, slotY, 49, 34, 0xd0d0d0, 160);
 				}
 
-        mc.getSurface().drawBoxBorder(slotX, 50, slotY, 35, 0);
+				mc.getSurface().drawBoxBorder(slotX, 50, slotY, 35, 0);
 
 				// Draw Item Sprite From Bank
 				if (inventorySlot < currentBankIDs.size() && currentBankIDs.get(inventorySlot) != -1
@@ -328,7 +325,7 @@ public class BankInterface {
 					drawString(String.valueOf(inventoryCount), (slotX + 47) - mc.getSurface().stringWidth(1, String.valueOf(inventoryCount)), slotY + 29, 1, 65535); // Amount in inventory (blue)
 
 				}
-       	inventorySlot++;
+				inventorySlot++;
 			}
 		}
 	}
@@ -340,12 +337,11 @@ public class BankInterface {
 		int quantityColour = 0xffffff;
 		if (amount > 0) {
 			drawString(
-							"Withdraw " + " "
-											+ EntityHandler.getItemDef(itemID).getName(),
-							relativeX + 2, relativeY + 248, 1, 0xffffff);
+				"Withdraw " + " "
+						+ EntityHandler.getItemDef(itemID).getName(),
+				relativeX + 2, relativeY + 248, 1, 0xffffff);
 
 			if (Config.S_WANT_BANK_NOTES) {
-
 				if (currMouseX >= relativeX + 220 && currMouseY >= relativeY + 240 &&
 								currMouseX < relativeX + 250 && currMouseY <= relativeY + 251)
 					quantityColour = 0xff0000;
@@ -353,13 +349,12 @@ public class BankInterface {
 				drawString(swapNoteMode ? "On" : "Off",
 								relativeX + 257, relativeY + 248, 1, swapNoteMode ? 0x00FF00 : 0xFF0000);
 
-				if (amount >= 1) {
-					quantityColour = 0xffffff;
-					if (currMouseX >= relativeX + 305 && currMouseY >= relativeY + 240 &&
-									currMouseX < relativeX + 335 && currMouseY <= relativeY + 251)
-						quantityColour = 0xff0000;
-					drawString("One", relativeX + 307, relativeY + 248, 1, quantityColour);
-				}
+				quantityColour = 0xffffff;
+				if (currMouseX >= relativeX + 305 && currMouseY >= relativeY + 240 &&
+								currMouseX < relativeX + 335 && currMouseY <= relativeY + 251)
+					quantityColour = 0xff0000;
+				drawString("One", relativeX + 307, relativeY + 248, 1, quantityColour);
+
 			}
 
 			else { // Authentic
@@ -457,8 +452,9 @@ public class BankInterface {
 		}
 	}
 
-	public void bankClose() {
+	void bankClose() {
 		this.mc.setShowDialogBank(false);
+		this.selectedBankSlot = -1;
 		mc.packetHandler.getClientStream().newPacket(212);
 		mc.packetHandler.getClientStream().finishPacket();
 	}
@@ -472,7 +468,6 @@ public class BankInterface {
 		}
 		mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
 		mc.packetHandler.getClientStream().finishPacket();
-		rightClickMenu = false;
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
 			mc.setMouseButtonDown(0);
@@ -490,7 +485,6 @@ public class BankInterface {
 		}
 		mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
 		mc.packetHandler.getClientStream().finishPacket();
-		rightClickMenu = false;
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
 			mc.setMouseButtonDown(0);
@@ -537,9 +531,9 @@ public class BankInterface {
 
 	class BankItem {
 
-		public int bankID, itemID, amount;
+		int bankID, itemID, amount;
 
-		public BankItem(int bankID, int itemID, int amount) {
+		BankItem(int bankID, int itemID, int amount) {
 			this.bankID = bankID;
 			this.itemID = itemID;
 			this.amount = amount;
