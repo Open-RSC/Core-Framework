@@ -473,7 +473,9 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 21 && obj.getY() == 533) {
-			if (isBlackArmGang(p)) {
+			if (isBlackArmGang(p) && !(p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 5)) {
+				p.message("You hear the door being unbarred");
+				p.message("You go through the door");
 				if (p.getY() >= 533) {
 					doDoor(obj, p);
 					p.teleport(148, 532, false);
@@ -487,11 +489,13 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 		} else if (obj.getID() == 19 && obj.getY() == 3370) {
 			Npc man = getNearestNpc(p, 24, 20);
 			if (isPhoenixGang(p)) {
-				if (p.getQuestStage(this) != 5) {
+				if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 5) {
 					if (man != null) {
 						man.initializeTalkScript(p);
 					}
 				} else {
+					p.message("The door is opened for you");
+					p.message("You go through the door");
 					if (p.getY() <= 3369) {
 						doDoor(obj, p);
 						p.teleport(p.getX(), p.getY() + 1, false);
@@ -526,10 +530,12 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
 			Player player) {
+		//door on phoenix gang entrance
 		if (obj.getID() == 19 && obj.getY() == 3370) {
 			return true;
 		}
-		if (obj.getID() == 21 && isBlackArmGang(player)) {
+		//door on black arm gang entrance
+		if (obj.getID() == 21 && obj.getY() == 533) {
 			return true;
 		}
 		if (obj.getID() == 20 && obj.getY() == 532) {
