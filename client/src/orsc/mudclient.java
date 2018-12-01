@@ -7373,12 +7373,20 @@ public final class mudclient implements Runnable {
 			// Fog
 			if (settingIndex == 6 && this.mouseButtonClick == 1 && Config.S_FOG_TOGGLE) {
 				Config.C_SHOW_FOG = !Config.C_SHOW_FOG;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(6);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_SHOW_FOG ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
 				Config.saveConfiguration(false);
 			}
 
 			// Show Roof
 			if (settingIndex == 7 && this.mouseButtonClick == 1 && Config.S_SHOW_ROOF_TOGGLE) {
 				Config.C_SHOW_ROOF = !Config.C_SHOW_ROOF;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(5);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_SHOW_ROOF ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
 				Config.saveConfiguration(false);
 			}
 
