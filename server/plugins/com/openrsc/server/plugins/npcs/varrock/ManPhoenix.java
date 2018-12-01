@@ -37,12 +37,12 @@ TalkToNpcListener {
 				playerTalk(p,n, "So is this enough to get me a master thieves armband?");
 				npcTalk(p,n, "Hmm I dunno",
 						"I suppose I'm in a generous mood today");
-				playerTalk(p,n, "Straven hands you a master thief armband");
+				p.message("Straven hands you a master thief armband");
 				addItem(p, 586, 1);
 				return;
 			}
-			npcTalk(p, n, "How would i go about getting a master thieves armband?",
-					"Ooh tricky stuff, took me years to get that rank",
+			playerTalk(p, n, "How would I go about getting a master thieves armband?");
+			npcTalk(p, n, "Ooh tricky stuff, took me years to get that rank",
 					"Well what some of aspiring thieves in our gang are working on right now",
 					"Is to steal some very valuable rare candlesticks",
 					"From scarface Pete - the pirate leader on Karamja",
