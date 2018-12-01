@@ -270,20 +270,21 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 										"Thieves have been trying to get hold of this 1 for a while",
 										"You wanted to be ranked as master thief didn't you?",
 										"Well I guess this just about ranks as good enough");
-								playerTalk(p, n,
-										"Katrine gives you a master thief armband");
+								p.message("Katrine gives you a master thief armband");
 								addItem(p, 586, 1);
 							}
 							return;
 						}
-						int choice2 = showMenu(p, n,
+						int choice2 = showMenu(p, n, false, //do not send over
 								"Who are all those people in there?",
 								"Is there anyway I can get the rank of master thief?");
 						if (choice2 == 0) {
+							playerTalk(p, n, "Who are all those people in there?");
 							npcTalk(p, n, "They're just various rogues and thieves");
 							playerTalk(p, n, "They don't say a lot");
 							npcTalk(p, n, "Nope");
 						} else if (choice2 == 1) {
+							playerTalk(p, n, "Is there any way I can get the rank of master thief?");
 							npcTalk(p, n,
 									"Master thief? We are the ambitious one aren't we?",
 									"Well you're going to have do something pretty amazing");
