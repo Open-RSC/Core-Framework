@@ -88,12 +88,11 @@ TalkToNpcListener {
 						"Who should be in the blue moon inn");
 			}
 			
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
-			defaultConverstation(p, n);
-		}
-		else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
+		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
 				|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0 || p.getQuestStage(Quests.HEROS_QUEST) == -1) {
 			memberOfPhoenixConversation(p, n);
+		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
+			defaultConverstation(p, n);
 		}	
 	}
 
