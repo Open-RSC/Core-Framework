@@ -190,9 +190,10 @@ PickupExecutiveListener {
 				World.getWorld().registerGameObject(firstGate);
 				closed = false;
 				if (p.getCache().hasKey("foodtrough")) {
-					message(p, "The rats are eating the poison",
-							"In their panic the rats bend and twist",
+					message(p, "In their panic the rats bend and twist",
 							"The cage bars with their teeth",
+							"They're becoming weak, some have collapsed",
+							"The rats are eating the poison",
 							"They're becoming weak, some have collapsed",
 							"The rats are slowly dying");
 					for (Npc rats : p.getViewArea().getNpcsInView()) {
@@ -344,6 +345,7 @@ PickupExecutiveListener {
 			}
 		}
 		if (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457) {
+			p.playSound("secretdoor");
 			p.message("You just went through a secret door");
 			doDoor(obj, p, 16);
 		}
@@ -416,7 +418,7 @@ PickupExecutiveListener {
 			} else {
 				message(p,
 						"The cog is red hot from the flames, too hot to carry",
-						"A large old cog");
+						"The cogs are heavy");
 				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
 						|| hasItem(p, 729)) {
 					p.message("You can only carry one");
