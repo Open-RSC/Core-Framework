@@ -513,7 +513,7 @@ public class DoorAction {
 				break;
 			}
 			if (p.getY() > 523) {
-				if (p.getSkills().getLevel(10) < 68) {
+				if (getCurrentLevel(p, FISHING) < 68) {
 					p.setBusy(true);
 					Npc masterFisher = World.getWorld().getNpc(368, 582, 588,
 							524, 527);
@@ -540,13 +540,13 @@ public class DoorAction {
 			if (obj.getX() != 268 || obj.getY() != 3381) {
 				break;
 			}
-			if (p.getSkills().getLevel(14) < 60) {
+			if (getCurrentLevel(p, MINING) < 60) {
 				Npc dwarf = World.getWorld().getNpc(191, 265, 270, 3379, 3380);
 				if (dwarf != null) {
-					npcTalk(p, dwarf, "Hello only the top miners are allowed in here");
+					npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
 				}
 				sleep(600);
-				p.message("You need a mining level of 60 to enter");
+				p.message("You need a mining of level 60 to enter");
 			} else {
 				doDoor(obj, p);
 			}
@@ -556,15 +556,15 @@ public class DoorAction {
 			if (obj.getX() != 347 || obj.getY() != 601) {
 				return;
 			}
-			if (p.getSkills().getLevel(12) < 40) {
+			if (getCurrentLevel(p, CRAFTING) < 40) {
 				p.setBusy(true);
 				Npc master = World.getWorld().getNpc(231, 341, 349, 599, 612);
 				if (master != null) {
-					npcTalk(p, master, "Hello only the top crafters are allowed in here");
+					npcTalk(p, master, "Sorry only experienced craftsmen are allowed in here");
 				}
 				sleep(600);
 				p.setBusy(false);
-				p.message("You need a crafting level of 40 to enter");
+				p.message("You need a crafting level of 40 to enter the guild");
 			} else if (!p.getInventory().wielding(191)) {
 				Npc master = World.getWorld().getNpc(231, 341, 349, 599, 612);
 				if (master != null) {
@@ -580,10 +580,10 @@ public class DoorAction {
 			if (obj.getX() != 179 || obj.getY() != 488) {
 				break;
 			}
-			if (p.getSkills().getLevel(7) < 32) {
+			if (getCurrentLevel(p, COOKING) < 32) {
 				Npc chef = World.getWorld().getNpc(133, 176, 181, 480, 487);
 				if (chef != null) {
-					npcTalk(p, chef, "Hello only the top cooks are allowed in here");
+					npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
 				}
 				sleep(600);
 				p.message("You need a cooking level of 32 to enter");
@@ -602,7 +602,7 @@ public class DoorAction {
 			if (obj.getX() != 599 || obj.getY() != 757) {
 				break;
 			}
-			if (p.getSkills().getLevel(6) < 66) {
+			if (getCurrentLevel(p, MAGIC) < 66) {
 				Npc wizard = World.getWorld().getNpc(513, 596, 597, 755, 758);
 				if (wizard != null) {
 					npcTalk(p, wizard, "You need a magic level of 66 to get in here",
@@ -615,7 +615,7 @@ public class DoorAction {
 			}
 			break;
 
-		case 22: // Odd looking wall (545, 3283)
+		case 22: // Odd looking wall (545, 3283) & (219, 3282)
 			p.playSound("secretdoor");
 			doDoor(obj, p, -1);
 			p.message("You just went through a secret door");
@@ -1086,7 +1086,7 @@ public class DoorAction {
 				doGate(player, obj);
 			} else {
 				if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
-					if (player.getSkills().getLevel(8) < 70) {
+					if (getCurrentLevel(player, WOODCUT) < 70) {
 						player.setBusy(true);
 						final Npc forester = World.getWorld().getNpc(348, 562, 565,
 								468, 472);
