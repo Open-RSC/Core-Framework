@@ -18,14 +18,13 @@ public final class GameSettingHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-		
+
 		if(idx >= 4) {
 			if(idx == 4) {
 				player.getCache().set("setting_android_longpress",  p.readByte());
 			} else if(idx == 5) {
 				player.getCache().store("setting_showroof",  p.readByte() == 1);
 			} else if(idx == 6) {
-				if (!Constants.GameServer.FOG_TOGGLE) return;
 				player.getCache().store("setting_fogofwar",  p.readByte() == 1);
 			} else if(idx == 7) {
 				player.getCache().store("setting_android_holdnchoose",  p.readByte() == 1);
@@ -40,7 +39,7 @@ public final class GameSettingHandler implements PacketHandler {
 			}
 			return;
 		}
-		
+
 		boolean on = p.readByte() == 1;
 		player.getSettings().setGameSetting(idx, on);
 		ActionSender.sendGameSettings(player);

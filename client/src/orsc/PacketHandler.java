@@ -753,6 +753,7 @@ public class PacketHandler {
 			experienceDropsToggle = this.getClientStream().getUnsignedByte();
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
 			showRoofToggle = this.getClientStream().getUnsignedByte();
+			Config.C_SHOW_ROOF = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantGlobalChat = this.getClientStream().getUnsignedByte();
 			wantSkillMenus = this.getClientStream().getUnsignedByte();
 			wantQuestMenus = this.getClientStream().getUnsignedByte();
@@ -788,6 +789,7 @@ public class PacketHandler {
 			experienceDropsToggle = packetsIncoming.getUnsignedByte();
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
 			showRoofToggle = packetsIncoming.getUnsignedByte();
+			Config.C_SHOW_ROOF = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantGlobalChat = packetsIncoming.getUnsignedByte();
 			wantSkillMenus = packetsIncoming.getUnsignedByte();
 			wantQuestMenus = packetsIncoming.getUnsignedByte();
@@ -861,7 +863,7 @@ public class PacketHandler {
 		props.setProperty("S_EXPERIENCE_COUNTER_TOGGLE", experienceCounterToggle == 1 ? "true" : "false");
 		props.setProperty("S_EXPERIENCE_DROPS_TOGGLE", experienceDropsToggle == 1 ? "true" : "false");
 		props.setProperty("S_ITEMS_ON_DEATH_MENU", itemsOnDeathMenu == 1 ? "true" : "false");
-		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 0 ? "false" : "true");
+		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false");
 		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false");
 		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false");
 		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false");
