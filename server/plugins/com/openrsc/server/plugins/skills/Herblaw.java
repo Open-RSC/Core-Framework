@@ -70,7 +70,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 				Item newItem = new Item(herb.getNewId());
 				owner.getInventory().remove(item);
 				owner.getInventory().add(newItem);
-				owner.message("This herb is a " + newItem.getDef().getName());
+				owner.message("This herb is " + newItem.getDef().getName());
 				owner.incExp(15, herb.getExp(), true);
 				owner.setBusy(false);
 			}
