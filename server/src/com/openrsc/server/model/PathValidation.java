@@ -1,7 +1,10 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.content.market.CollectableItem;
+import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.Region;
+import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
@@ -15,8 +18,16 @@ import java.util.LinkedList;
  */
 public class PathValidation {
 
+	/* Used for non-walking specific pathing:
+	 * - Throwing
+	 * - Magic
+	 * - Ranged
+	 * - Cannons
+	 * - Trading
+	 * - Dueling
+	 */
 	public static boolean checkPath(Point src, Point dest) {
-		final Deque<Point> path = new LinkedList<Point>();
+		final Deque<Point> path = new LinkedList<>();
 
 		final Point curPoint = new Point(src.getX(), src.getY());
 
@@ -44,7 +55,6 @@ public class PathValidation {
 		/* Loop through the path and check for blocking walls */
 
 		Point nextPoint = null;
-		boolean check = true;
 		while ((nextPoint = path.poll()) != null) {
 			if (!checkAdjacent(curPoint, nextPoint)) return false;
 			curPoint.x = nextPoint.x;
@@ -95,7 +105,7 @@ public class PathValidation {
 		if (myYBlocked && startX == destX) return false;
 		if (newXBlocked && newYBlocked) return false;
 		if (newXBlocked && startY == coords[1]) return false;
-		if (myYBlocked && startX == coords[0]) return false;
+		if (newYBlocked && startX == coords[0]) return false;
 		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) return false;
 		return true;
 	}
@@ -109,7 +119,7 @@ public class PathValidation {
 		return isBlocking(t.traversalMask, (byte) bit);
 	}
 
-	private static boolean isBlocking(int objectValue, byte bit) {
+	public static boolean isBlocking(int objectValue, byte bit) {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
 		}
@@ -124,4 +134,5 @@ public class PathValidation {
 		}
 		return false;
 	}
+
 }
