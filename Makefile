@@ -137,3 +137,7 @@ backup:
 
 flush-website:
 	@$(shell sudo rm -rf Website)
+
+update-laravel:
+	sudo docker exec -i php bash -c "cd /var/www/html/openrsc-web && composer install && php artisan key:generate"
+	sudo chmod -R 777 Website/openrsc-web
