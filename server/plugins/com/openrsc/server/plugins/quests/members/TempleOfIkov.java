@@ -199,7 +199,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					playerTalk(p,n, "I have the 20 limpwurt roots, now transport me please");
 					npcTalk(p,n, "Oh marverlous",
 							"Brace yourself then");
-					removeItem(p, LIMPROOT, 20);
+					p.getInventory().remove(LIMPROOT, 20);
 					p.teleport(557, 3290);
 					sleep(650);
 					ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
