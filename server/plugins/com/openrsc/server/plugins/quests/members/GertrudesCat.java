@@ -27,7 +27,7 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 		if (n.getID() == 714) {
 			return true;
 		}
-		if (n.getID() == 715) {
+		if (n.getID() == 715 || n.getID() == 781) {
 			return true;
 		}
 		if(n.getID() == 783 || n.getID() == 782) {
@@ -216,7 +216,8 @@ ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
 				break;
 			}
 		}
-		if (n.getID() == 715) {
+		//shilop & wilough same dialogue
+		if (n.getID() == 715 || n.getID() == 781) {
 			switch (p.getQuestStage(this)) {
 			case 0:
 				playerTalk(p, n, "hello youngster");
