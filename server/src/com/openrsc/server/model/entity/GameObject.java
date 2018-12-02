@@ -24,6 +24,8 @@ public class GameObject extends Entity {
 	private GameObjectLoc loc = null;
 	/**
 	 * The type of object
+	 * Type 0: Game Object
+	 * Type 1: Wall Object
 	 */
 	private int type;
 
@@ -147,10 +149,10 @@ public class GameObject extends Entity {
 	public boolean isVisibleTo(Player p) {
 		if(statement == null)
 			return true;
-		
+
 		return statement != null && statement.isVisibleTo(this, p);
 	}
-	
+
 	public final Point[] getObjectBoundary() {
 		int dir = getDirection();
 		int minX = getX();
@@ -182,21 +184,21 @@ public class GameObject extends Entity {
 					--minY;
 					++worldHeight;
 				}
-				if (dir == 4) {// here.
+				if (dir == 4) {
 					++worldWidth;
 				}
 				maxX = worldWidth + getX() - 1;
 				maxY = worldHeight + getY() - 1;
 			}
 		} else if (getType() == 1) {
-			
+
 			if (dir == 0) {
 				minX = getX();
 				minY = getY() - 1;
 				maxX = getX();
 				maxY = getY();
 			} else if (dir != 1) {
-				
+
 				minX = getX();
 				minY = getY();
 				maxX = getX();
