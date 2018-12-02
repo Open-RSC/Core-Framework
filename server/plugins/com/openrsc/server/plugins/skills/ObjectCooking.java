@@ -182,7 +182,9 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 	
 	private String cookingOnMessage(Player p, Item item, GameObject object) {
-		String message = "You cook the " + item.getDef().getName().toLowerCase() + " on the " + (object.getID() == 97 ? "fire" : "stove");
+		String origItemName = item.getDef().getName().toLowerCase();
+		origItemName = origItemName.startsWith("raw ") ? origItemName.substring(4) : origItemName;
+		String message = "You cook the " + origItemName + " on the " + (object.getID() == 97 ? "fire" : "stove");
 		if(item.getID() == 504) {
 			message = "You cook the meat on the stove...";
 		}
