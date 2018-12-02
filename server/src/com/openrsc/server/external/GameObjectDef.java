@@ -24,8 +24,8 @@ public class GameObjectDef extends EntityDef {
     public String objectModel;
     /**
      * The object type.
-	 * Type 0: Game Objects
-	 * Type 1: Wall Objects
+	 * Type 0:
+	 * Type 1: Traversal Blocking
 	 * Can't figure out the significance type 2 & 3
      */
     public int type;
