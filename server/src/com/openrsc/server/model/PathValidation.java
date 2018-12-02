@@ -73,30 +73,30 @@ public class PathValidation {
 
 		if (startX > destX) {
 			// Check for wall on east edge of current square,
-			myXBlocked = isBlocking(startX, startY, CollisionFlag.WALL_EAST);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST);
 			// Or on west edge of square we are travelling toward.
-			newXBlocked = isBlocking(startX - 1, startY, CollisionFlag.WALL_WEST);
+			newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST);
 			coords[0] = startX - 1;
 		} else if (startX < destX) {
 			// Check for wall on west edge of current square,
-			myXBlocked = isBlocking(startX, startY, CollisionFlag.WALL_WEST);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST);
 			// Or on east edge of square we are travelling toward.
-			newXBlocked = isBlocking(startX + 1, startY, CollisionFlag.WALL_EAST);
+			newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST);
 			coords[0] = startX + 1;
 		}
 
 		if (startY > destY) {
 			// Check for wall on north edge of current square,
-			myYBlocked = isBlocking(startX, startY, CollisionFlag.WALL_NORTH);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH);
 			// Or on south edge of square we are travelling toward.
-			newYBlocked = isBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH);
+			newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH);
 			coords[1] = startY - 1;
 
 		} else if (startY < destY) {
 			// Check for wall on south edge of current square,
-			myYBlocked = isBlocking(startX, startY, CollisionFlag.WALL_SOUTH);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH);
 			// Or on north edge of square we are travelling toward.
-			newYBlocked = isBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH);
+			newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH);
 			coords[1] = startX + 1;
 		}
 
@@ -110,7 +110,7 @@ public class PathValidation {
 		return true;
 	}
 
-	private static boolean isBlocking(int x, int y, int bit) {
+	private static boolean checkBlocking(int x, int y, int bit) {
 		TileValue t = World.getWorld().getTile(x, y);
 		if(t.projectileAllowed) {
 			return false;
