@@ -68,17 +68,16 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "Now I am revealed to you Vacu, so shall ye perish.", p));
 					}
 					second_nezikchened.startCombat(p);
-					int randomMessage = DataConversions.random(0, 3);
-					if(randomMessage == 0) {
-						message(p, 1300, "A terrible fear comes over you. ",
-								"You feel a terrible sense of loss...");
-					} else if(randomMessage == 1) {
+					int newPray = (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 2);
+					if(p.getSkills().getLevel(PRAYER) - newPray < 30) {
 						message(p, 1300, "A sense of fear comes over you ",
 								"You feel a sense of loss...");
-					} else if(randomMessage == 2) {
+					}
+					else {
 						message(p, 1300, "An intense sense of fear comes over you ",
 								"You feel a great sense of loss...");
 					}
+					p.getSkills().setLevel(PRAYER, newPray);
 					if(p.getCache().hasKey("ran_from_2nd_nezi")) {
 						sleep(7000);
 						message(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
