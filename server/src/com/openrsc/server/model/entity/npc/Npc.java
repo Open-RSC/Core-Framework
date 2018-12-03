@@ -361,6 +361,18 @@ public class Npc extends Mob {
 		});
 
 	}
+	
+	public void initializeIndirectTalkScript(final Player p) {
+		final Npc npc = this;
+		//p.setBusyTimer(600);
+		Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
+			@Override
+			public void action() {
+				PluginHandler.getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[] { p, npc });
+			}
+		});
+
+	}
 
 	public void killedBy(Mob mob) {
 		this.cure();
