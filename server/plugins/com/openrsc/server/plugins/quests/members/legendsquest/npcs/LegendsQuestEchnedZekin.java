@@ -69,18 +69,21 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 				message(p, second_nezikchened, 1300, "The Demon lets out an unearthly, blood curdling scream...");
 				message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
 				second_nezikchened.getSkills().setLevel(DEFENCE, second_nezikchened.getSkills().getLevel(DEFENCE) - 5);
+				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 2);
+				if(p.getSkills().getLevel(PRAYER) - newPray < 30) {
+					message(p, 1300, "A sense of fear comes over you ",
+							"You feel a sense of loss...");
+				}
+				else {
+					message(p, 1300, "An intense sense of fear comes over you ",
+							"You feel a great sense of loss...");
+				}
+				p.getSkills().setLevel(PRAYER, newPray);
+			} else {
+				message(p, 1300, "A terrible fear comes over you. ",
+						"You feel a terrible sense of loss...");
+				p.getSkills().setLevel(PRAYER, 0);
 			}
-		}
-		int randomMessage = DataConversions.random(0, 3);
-		if(randomMessage == 0) {
-			message(p, 1300, "A terrible fear comes over you. ",
-					"You feel a terrible sense of loss...");
-		} else if(randomMessage == 1) {
-			message(p, 1300, "A sense of fear comes over you ",
-					"You feel a sense of loss...");
-		} else if(randomMessage == 2) {
-			message(p, 1300, "An intense sense of fear comes over you ",
-					"You feel a great sense of loss...");
 		}
 		if(useHolySpell) {
 			sleep(7000);
@@ -149,7 +152,8 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						if(second_nezikchened != null) {
 							sleep(600);
 							second_nezikchened.startCombat(p);
-							p.message("You feel a sense of loss...");
+							p.message("You feel a terrible sense of loss...");
+							p.getSkills().setLevel(PRAYER, 0);
 						}
 					}
 					/**
