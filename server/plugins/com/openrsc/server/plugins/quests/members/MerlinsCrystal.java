@@ -67,9 +67,13 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 				npcTalk(p, arhein, "Oi get away from there!");
 			} else {
 				p.teleport(456, 3352, false);
-				message(p, "You hide away in the ship",
-						"The ship starts to move.", "You are out at sea",
-						"The ship comes to a stop");
+				p.message("You hide away in the ship");
+				sleep(1200);
+				p.message("The ship starts to move");
+				sleep(3000);
+				p.message("You are out at sea");
+				sleep(3000);
+				p.message("The ship comes to a stop");
 				p.teleport(456, 520, false);
 				message(p, "You sneak out of the ship");
 			}
@@ -132,12 +136,18 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 				npcTalk(p, leFaye, "The lady of the lake has it");
 				npcTalk(p, leFaye, "I don't know if she will give it you though");
 				npcTalk(p, leFaye, "She can be rather temperamental");
-				int sub_opt2 = showMenu(p, leFaye, "OK I will go do all that",
+				int sub_opt2 = showMenu(p, leFaye, false, //do not send over 
+						"OK I will go do all that",
 						"What are the magic words?");
-				if (sub_opt2 == 1) {
+				if (sub_opt2 == 0) {
+					playerTalk(p, leFaye, "OK I will do all that");
+					p.message("Morgan Le Faye vanishes");
+				}
+				else if (sub_opt2 == 1) {
+					playerTalk(p, leFaye, "What are the magic words?");
 					npcTalk(p, leFaye,
-							" You will find the magic words at the base of one of the chaos altars");
-					npcTalk(p, leFaye, " Which chaos altar I cannot remember");
+							"You will find the magic words at the base of one of the chaos altars");
+					npcTalk(p, leFaye, "Which chaos altar I cannot remember");
 				}
 			} else if (sub_opt == 1) {
 				p.message("Morgan Le Faye vanishes");
@@ -232,14 +242,14 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 							doDoor(obj, p);
 						}
 						else if(p.getInventory().hasItemId(138)) {
-							message(p, "You give the bread to the beggar.");
+							message(p, "You give the bread to the beggar");
 							removeItem(p, 138, 1);
 							npcTalk(p, beggar, "Thankyou very much");
 							if(p.getCache().hasKey("lady_test")) {
 								p.message("The beggar has turned into the lady of the lake!");
 								Npc lady = transform(beggar, 284, false);
-								npcTalk(p, lady, "Well done you have passed the test",
-										"Here is excalibur, guard it well");
+								npcTalk(p, lady, "Well done you have passed my test",
+										"Here is Excalibur, guard it well");
 								addItem(p, 606, 1);
 								if(p.getCache().hasKey("lady_test")) {
 									p.getCache().remove("lady_test");
@@ -272,21 +282,28 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		p.message("Suddenly a demon appears");
 		playerTalk(p, null, "Now what were those magic words?");
-		int opt = showMenu(p, n, "Snarthtrick Candanto Termon",
+		int opt = showMenu(p, n, false, //do not send over 
+				"Snarthtrick Candanto Termon",
 				"Snarthon Candtrick Termanto", "Snarthanto Candon Termtrick");
 		if (opt == 1) {
+			playerTalk(p, n, "Snarthon Candtrick Termanto");
 			npcTalk(p, n, "rarrrrgh", "You have me in your control",
 					"What do you wish of me?",
 					"So that I may return to the nether regions");
 			playerTalk(p, n, "I wish to free Merlin from his giant crystal");
 			npcTalk(p, n, "rarrrrgh",
-					"It is done, you can now shatter Merlin's crystal with Excailbur");
+					"It is done, you can now shatter Merlins crystal with Excalibur");
 			n.remove();
 			p.updateQuestStage(this, 4);
-		} else {
-			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", p));
-			n.startCombat(p);
+			return;
 		}
+		if (opt == 0) {
+			playerTalk(p, n, "Snarthtrick Candato Termon");
+		} else if (opt == 2) {
+			playerTalk(p, n, "Snarthanto Candon Termtrick");
+		}
+		n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", p));
+		n.startCombat(p);
 	}
 
 	@Override
@@ -356,11 +373,12 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 			case 4:
 				npcTalk(p, n, "Welcome to the court of King Arthur");
 				npcTalk(p, n, "I am King Arthur");
-				int option = showMenu(p, n,
+				int option = showMenu(p, n, false, //do not send over
 						"I want to become a knight of the round table",
 						"So what are you doing in Runescape?",
 						"Thankyou very much");
 				if (option == 0) {
+					playerTalk(p, n, "I want to become a knight of the round table");
 					npcTalk(p,
 							n,
 							"Well I think you need to go on a quest to prove yourself worthy",
@@ -375,12 +393,15 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 						p.updateQuestStage(Constants.Quests.MERLINS_CRYSTAL, 1);
 					}
 				} else if (option == 1) {
+					playerTalk(p, n, "So what are you doing in Runescape");
 					npcTalk(p, n,
 							"Well legend says we will return to Britain in it's time of greatest need");
 					npcTalk(p, n, "But that's not for quite a while");
 					npcTalk(p, n,
 							"So we've moved the whole outfit here for now");
 					npcTalk(p, n, "We're passing the time in Runescape");
+				} else if (option == 2) {
+					playerTalk(p, n, "thankyou very much");
 				}
 				break;
 			case 5:
@@ -444,22 +465,31 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 			switch (p.getQuestStage(this)) {
 			case 0:
 				npcTalk(p, n, "Good day to you sir");
-				int opt = showMenu(p, n, "Good day",
+				int opt = showMenu(p, n, false, //do not send over
+						"Good day",
 						"Know you of any quests Sir knight?");
-				if (opt == 1) {
+				if (opt == 0) {
+					playerTalk(p, n, "good day");
+				} else if (opt == 1) {
+					playerTalk(p, n, "Know you of any quests sir knight?");
 					npcTalk(p, n,
 							"The king is the man to talk to if you want a quest");
 				}
 				break;
 			case 1:
 				npcTalk(p, n, "Good day to you sir");
-				int option = showMenu(p, n, "Good day",
+				int option = showMenu(p, n, false, //do not send over 
+						"Good day",
 						"Any ideas on how to get Merlin out that crystal?",
 						"Do you know how Merlin got trapped");
-				if (option == 1) {
+				if (option == 0) {
+					playerTalk(p, n, "good day");
+				} else if (option == 1) {
+					playerTalk(p, n, "Any ideas on how to get Merlin out that crystal?");
 					npcTalk(p, n, "I'm a little stumped myself",
 							"We've tried opening it with anything and everything");
 				} else if (option == 2) {
+					playerTalk(p, n, "Do you know how Merlin got trapped?");
 					npcTalk(p, n,
 							"I would guess this is the work of the evil Morgan Le Faye");
 					playerTalk(p, n, "And where can I find her?");
@@ -472,8 +502,7 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 							p,
 							n,
 							"Any idea how to get into Morgan Le Faye's stronghold?",
-							"Thankyou for the information",
-							"Do you know how Merlin got trapped");
+							"Thankyou for the information");
 					if (sub_option == 0) {
 						npcTalk(p, n, "No you've got me stumped there");
 					}
@@ -481,18 +510,26 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 				break;
 			case 2:
 				npcTalk(p, n, "Good day to you sir");
-				int op = showMenu(p, n, "Good day",
+				int op = showMenu(p, n, false, //do not send over 
+						"Good day",
 						"Know you of any quests Sir knight?");
-				if (op == 1) {
+				if (op == 0) {
+					playerTalk(p, n, "good day");
+				} else if (op == 1) {
+					playerTalk(p, n, "Know you of any quests sir knight?");
 					npcTalk(p, n,
 							"The king is the man to talk to if you want a quest");
 				}
 				break;
 			case -1:
 				npcTalk(p, n, "Good day to you sir");
-				int ope = showMenu(p, n, "Good day",
+				int ope = showMenu(p, n, false, //do not send over 
+						"Good day",
 						"Know you of any quests Sir knight?");
-				if (ope == 1) {
+				if (ope == 0) {
+					playerTalk(p, n, "good day");
+				} else if (ope == 1) {
+					playerTalk(p, n, "Know you of any quests sir knight?");
 					npcTalk(p,n, "I think you've done the main quest we were on right now");
 				}
 				break;
@@ -513,9 +550,8 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 							"Any ideas on how to get into Morgan Le Faye's stronghold?");
 					if (opt == 0) {
 						npcTalk(p, n,
-								" Well the knights of the round table can't manage it");
-						npcTalk(p, n,
-								" I can't see how a commoner like you could succeed where we have failed");
+								"Well the knights of the round table can't manage it",
+								"I can't see how a commoner like you could succeed where we have failed");
 					} else if (opt == 1) {
 						npcTalk(p, n,
 								"I have every right to be proud of myself",
@@ -534,8 +570,7 @@ InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
 				} else {
 					int opt = showMenu(p, n,
 							"I want to get Merlin out of the crystal",
-							"You're a little full of yourself aren't you",
-							"Thankyou very much");
+							"You're a little full of yourself aren't you?");
 					if (opt == 0) {
 						npcTalk(p,
 								n,

@@ -78,9 +78,16 @@ public final class NedInShip implements TalkToNpcExecutiveListener,
 						gave_map = true;
 					}
 					if(gave_map) {
-						message(p, "You feel the ship begin to move",
-								"You are out at sea", "The ship is sailing",
-								"The ship is sailing", "You feel a crunch");
+						p.message("You feel the ship begin to move");
+						sleep(1800);
+						p.message("You are out at sea");
+						sleep(2000);
+						p.message("The ship is sailing");
+						sleep(2000);
+						p.message("The ship is sailing");
+						sleep(2000);
+						p.message("You feel a crunch");
+						sleep(2000);
 						p.teleport(281, 3472, false);
 						p.getCache().remove("ship_fixed");
 						npcTalk(p, n, "Aha we've arrived");
