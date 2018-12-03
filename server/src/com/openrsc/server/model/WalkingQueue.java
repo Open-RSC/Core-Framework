@@ -66,10 +66,6 @@ public class WalkingQueue {
 			reset();
 			return;
 		}
-		if (mob.getID() == 95 && mob.getX() >= 212 && mob.getX() <= 220 && mob.getY() >= 448 && mob.getY() <= 453) {
-			System.out.println(destX + ", " + destY);
-		}
-
 		if (mob.isNpc())
 			mob.setLocation(Point.location(destX, destY));
 		else {
