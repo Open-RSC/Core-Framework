@@ -24,9 +24,6 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			return;
 		}
 		player.setConsumeTimer(1200);
-		if (!player.getLocation().inWilderness()) {
-			player.getUpdateFlags().setActionBubble(new Bubble(player, item.getID()));
-		}
 		switch (item.getID()) {
 		case 2106:
 			if(player.getCache().hasKey("elixir_time") && player.getElixir() > 0) {
