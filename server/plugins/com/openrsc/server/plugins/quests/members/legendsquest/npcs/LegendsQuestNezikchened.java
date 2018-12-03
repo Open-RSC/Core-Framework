@@ -221,6 +221,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 						"I'll kill you myself !");
 				third_nezikchened.startCombat(p);
 				p.message("You feel a great sense of loss...");
+				p.getSkills().setLevel(PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 4));
 				p.message("@yel@Nezikchened: Your faith will help you little here.");
 			} else {
 				third_nezikchened.startCombat(p);
