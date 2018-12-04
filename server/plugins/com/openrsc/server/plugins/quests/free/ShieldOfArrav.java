@@ -252,7 +252,7 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 					if (p.getQuestStage(Constants.Quests.HEROS_QUEST) > 0) {
 						playerTalk(p, n, "Hey");
 						npcTalk(p, n, "Hey");
-						if (hasItem(p, 585)) {
+						if (hasItem(p, 585) && !p.getCache().hasKey("armband")) {
 							int choice3 = showMenu(p, n,
 									"Who are all those people in there?",
 									"I have a candlestick now");
@@ -272,7 +272,14 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 										"Well I guess this just about ranks as good enough");
 								p.message("Katrine gives you a master thief armband");
 								addItem(p, 586, 1);
+								p.getCache().store("armband", true);
 							}
+							return;
+						}
+						else if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
+							playerTalk(p, n, "I have lost my master thief armband");
+							npcTalk(p, n, "Well I have a spare", "Don't lose it again");
+							addItem(p, 586, 1);
 							return;
 						}
 						int choice2 = showMenu(p, n, false, //do not send over
