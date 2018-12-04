@@ -28,7 +28,13 @@ TalkToNpcListener {
 			}
 		}		
 		else if(p.getQuestStage(Quests.HEROS_QUEST) >= 1 && isPhoenixGang(p)) {
-			if(hasItem(p, 585) && !p.getCache().hasKey("armband")) {
+			if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
+				playerTalk(p, n, "I have lost my master thief armband");
+				npcTalk(p, n, "You need to be more careful", "Ah well", "Have this spare");
+				addItem(p, 586, 1);
+				return;
+			}
+			else if (hasItem(p, 585) && !p.getCache().hasKey("armband")) {
 				playerTalk(p,n, "I have retrieved a candlestick");
 				npcTalk(p,n, "Hmm not a bad job",
 						"Let's see it, make sure it's genuine");
@@ -40,12 +46,6 @@ TalkToNpcListener {
 				p.message("Straven hands you a master thief armband");
 				addItem(p, 586, 1);
 				p.getCache().store("armband", true);
-				return;
-			}
-			else if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
-				playerTalk(p, n, "I have lost my master thief armband");
-				npcTalk(p, n, "You need to be more careful", "Ah well", "Have this spare");
-				addItem(p, 586, 1);
 				return;
 			}
 			playerTalk(p, n, "How would I go about getting a master thieves armband?");

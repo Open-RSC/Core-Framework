@@ -326,7 +326,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 			} else {
 				p.message("Ouch that is too hot to take");
 				p.message("I need something cold to pick it up with");
-				p.damage(7);
+				int damage = (int) Math.round((p.getSkills().getLevel(3)) * 0.15D);
+				p.damage(damage);
 				return true;
 			}
 		}

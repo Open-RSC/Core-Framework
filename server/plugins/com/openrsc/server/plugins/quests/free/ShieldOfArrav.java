@@ -250,6 +250,12 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 			case -2:
 				if (isBlackArmGang(p)) {
 					if (p.getQuestStage(Constants.Quests.HEROS_QUEST) > 0) {
+						if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
+							playerTalk(p, n, "I have lost my master thief armband");
+							npcTalk(p, n, "Well I have a spare", "Don't lose it again");
+							addItem(p, 586, 1);
+							return;
+						}
 						playerTalk(p, n, "Hey");
 						npcTalk(p, n, "Hey");
 						if (hasItem(p, 585) && !p.getCache().hasKey("armband")) {
@@ -274,12 +280,6 @@ public class ShieldOfArrav implements QuestInterface,InvUseOnWallObjectListener,
 								addItem(p, 586, 1);
 								p.getCache().store("armband", true);
 							}
-							return;
-						}
-						else if (!hasItem(p, 586) && p.getCache().hasKey("armband")) {
-							playerTalk(p, n, "I have lost my master thief armband");
-							npcTalk(p, n, "Well I have a spare", "Don't lose it again");
-							addItem(p, 586, 1);
 							return;
 						}
 						int choice2 = showMenu(p, n, false, //do not send over
