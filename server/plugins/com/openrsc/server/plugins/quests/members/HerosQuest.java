@@ -42,6 +42,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 		player.getCache().remove("talked_grubor");
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
+		player.getCache().remove("armband");
 		int[] questData = Quests.questData.get(Quests.HEROS_QUEST);
 		//keep order kosher
 		int[] skillIDs = {STRENGTH, DEFENCE, HITS, ATTACK, RANGED, HERBLAW,
