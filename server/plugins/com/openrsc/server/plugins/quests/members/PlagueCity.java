@@ -55,10 +55,8 @@ ObjectActionExecutiveListener {
 		if (n.getID() == 443) {
 			return true;
 		}
-		if (n.getID() == 446 || n.getID() == 447) {
-			return true;
-		}
-		if (n.getID() == 449) {
+		if (n.getID() == 446 || n.getID() == 447 || 
+				n.getID() == 448 || n.getID() == 449) {
 			return true;
 		}
 		if (n.getID() == 452) {
@@ -115,12 +113,14 @@ ObjectActionExecutiveListener {
 								"Well positions of responsibility are hard",
 								"I need something to take my mind off things",
 								"especially with the problems this place has");
-						int menu3 = showMenu(p, n, "Ok goodbye",
-								"Do you know what is in the cure?",
+						int menu3 = showMenu(p, n, false, //do not send over
+								"Ok goodbye",
+								"Do you know what is in the cure?\"",
 								"I don't think drink is the best solution");
 						if (menu3 == 0) {
-							// nothing
+							playerTalk(p, n, "Ok goodbye");
 						} else if (menu3 == 1) {
+							playerTalk(p, n, "Do you know what is in the cure?");
 							npcTalk(p, n, "Hmm let me think",
 									"ouch - thinking not clever",
 									"Ah here, she did scribble it down for me");
@@ -167,70 +167,12 @@ ObjectActionExecutiveListener {
 							"She's being held in a plague house I need permission to enter");
 					npcTalk(p, n,
 							"Well the mourners deal with that sort of thing");
-					int finale = showMenu(p, n, "Ok I'll go speak to them",
-							"Is that all anyone says around here?",
-							"They won't listen to me");
-					if (finale == 0) {
-						// NOTHING
-					} else if (finale == 1) {
-						npcTalk(p, n, "Well they know best about plague issues");
-						int last2 = showMenu(
-								p,
-								n,
-								"Don't you want to take an interest in it at all?",
-								"They won't listen to me");
-						if (last2 == 0) {
-							npcTalk(p, n,
-									"Nope I don't wish to take a deep interest in plagues");
-							npcTalk(p, n, "That stuff is too scary for me");
-							int last3 = showMenu(
-									p,
-									n,
-									"I see why people say you're a weak leader",
-									"Ok I'll talk to the mourners",
-									"they won't listen to me");
-							if (last3 == 0) {
-								npcTalk(p,
-										n,
-										"bah people always criticise their leaders",
-										"But delegating is the only way to lead",
-										"I delegate all plague issues to the mourners");
-								playerTalk(p, n,
-										"this whole city is a plague issue");
-							} else if (last3 == 1) {
-								// NOTHING
-							} else if (last3 == 2) {
-								playerTalk(
-										p,
-										n,
-										"They say I'm not properly equipped to go in the house",
-										"Though I do have a very effective gas mask");
-								npcTalk(p,
-										n,
-										"hmm well I guess they're not taking the issue of a kidnap seriously enough",
-										"They do go a bit far sometimes",
-										"I've heard of Elena, she has helped us a lot",
-										"Ok I'll give you this warrant to enter the house");
-								addItem(p, 775, 1);
-							}
-						}
-					} else if (finale == 2) {
-						playerTalk(
-								p,
-								n,
-								"They say I'm not properly equipped to go in the house",
-								"Though I do have a very effective gas mask");
-						npcTalk(p,
-								n,
-								"hmm well I guess they're not taking the issue of a kidnap seriously enough",
-								"They do go a bit far sometimes",
-								"I've heard of Elena, she has helped us a lot",
-								"Ok I'll give you this warrant to enter the house");
-						addItem(p, 775, 1);
-					}
+					postBravekDialogue(p, n);
 				}
 				break;
 			case 10:
+			case 11:
+			case -1:
 				npcTalk(p, n, "thanks again for the hangover cure");
 				if (hasItem(p, 775) || p.getQuestStage(getQuestId()) == 11
 						|| p.getQuestStage(getQuestId()) == -1) {
@@ -245,85 +187,12 @@ ObjectActionExecutiveListener {
 							"She's being held in a plague house I need permission to enter");
 					npcTalk(p, n,
 							"Well the mourners deal with that sort of thing");
-					int last = showMenu(p, n, "Ok I'll go speak to them",
-							"Is that all anyone says around here?",
-							"They won't listen to me");
-					if (last == 0) {
-						// NOTHING
-					} else if (last == 1) {
-						npcTalk(p, n, "Well they know best about plague issues");
-						int last2 = showMenu(
-								p,
-								n,
-								"Don't you want to take an interest in it at all?",
-								"They won't listen to me");
-						if (last2 == 0) {
-							npcTalk(p, n,
-									"Nope I don't wish to take a deep interest in plagues");
-							npcTalk(p, n, "That stuff is too scary for me");
-							int last3 = showMenu(
-									p,
-									n,
-									"I see why people say you're a weak leader",
-									"Ok I'll talk to the mourners",
-									"they won't listen to me");
-							if (last3 == 0) {
-								npcTalk(p,
-										n,
-										"bah people always criticise their leaders",
-										"But delegating is the only way to lead",
-										"I delegate all plague issues to the mourners");
-								playerTalk(p, n,
-										"this whole city is a plague issue");
-							} else if (last3 == 1) {
-								// NOTHING
-							} else if (last3 == 2) {
-								playerTalk(
-										p,
-										n,
-										"They say I'm not properly equipped to go in the house",
-										"Though I do have a very effective gas mask");
-								npcTalk(p,
-										n,
-										"hmm well I guess they're not taking the issue of a kidnap seriously enough",
-										"They do go a bit far sometimes",
-										"I've heard of Elena, she has helped us a lot",
-										"Ok I'll give you this warrant to enter the house");
-								addItem(p, 775, 1);
-							}
-						} else if (last2 == 1) {
-							playerTalk(
-									p,
-									n,
-									"They say I'm not properly equipped to go in the house",
-									"Though I do have a very effective gas mask");
-							npcTalk(p,
-									n,
-									"hmm well I guess they're not taking the issue of a kidnap seriously enough",
-									"They do go a bit far sometimes",
-									"I've heard of Elena, she has helped us a lot",
-									"Ok I'll give you this warrant to enter the house");
-							addItem(p, 775, 1);
-						}
-					} else if (last == 2) {
-						playerTalk(
-								p,
-								n,
-								"They say I'm not properly equipped to go in the house",
-								"Though I do have a very effective gas mask");
-						npcTalk(p,
-								n,
-								"hmm well I guess they're not taking the issue of a kidnap seriously enough",
-								"They do go a bit far sometimes",
-								"I've heard of Elena, she has helped us a lot",
-								"Ok I'll give you this warrant to enter the house");
-						addItem(p, 775, 1);
-					}
+					postBravekDialogue(p, n);
 				}
 				break;
 			}
 		}
-		if (n.getID() == 452) {
+		else if (n.getID() == 452) {
 			switch (p.getQuestStage(this)) {
 			case 0:
 			case 1:
@@ -335,17 +204,20 @@ ObjectActionExecutiveListener {
 			case 7:
 			case 10:
 			case 11:
+			case -1:
 				npcTalk(p, n,
 						"Hello welcome to the civic office of west Ardougne",
 						"How can I help you?");
-				int menuMan = showMenu(p, n, "who is through that door?",
+				int menuMan = showMenu(p, n, false, //do not send over
+						"who is through that door?",
 						"I'm just looking thanks");
 				if (menuMan == 0) {
+					playerTalk(p, n, "Who is through that door?");
 					npcTalk(p, n, "The city warder Bravek is in there");
 					playerTalk(p, n, "Can i go in?");
 					npcTalk(p, n, "He has asked not to be disturbed");
 				} else if (menuMan == 1) {
-					// nothing
+					playerTalk(p, n, "I'm just looking thanks");
 				}
 				break;
 			case 8:
@@ -353,10 +225,11 @@ ObjectActionExecutiveListener {
 				npcTalk(p, n,
 						"Hello welcome to the civic office of west Ardougne",
 						"How can I help you?");
-				int first = showMenu(p, n,
+				int first = showMenu(p, n, false, //do not send over
 						"I need permission to enter a plague house",
 						"who is through that door?", "I'm just looking thanks");
 				if (first == 0) {
+					playerTalk(p, n, "I need permission to enter a plague house");
 					npcTalk(p, n, "Rather you than me",
 							"Well the mourners normally deal with that stuff",
 							"You should speak to them",
@@ -376,23 +249,30 @@ ObjectActionExecutiveListener {
 								"Bravek the city warder",
 								"would have the power to override",
 								"I can't see that happening though");
-						playerTalk(p, n, "Can I speak to Bravek anyway?");
-						npcTalk(p, n, "He has asked not to be disturbed");
-						int third = showMenu(p, n, "This is urgent though",
-								"Ok I will leave him alone");
-						if (third == 0) {
-							playerTalk(p, n, "Someone's been kidnapped",
-									"and is being held in a plague house");
-							npcTalk(p, n, "I'll see what I can do I suppose",
-									"Mr Bravek there's a man here who really needs to speak to you");
-							Npc bravek = getNearestNpc(p, 454, 15);
-							npcTalk(p, bravek,
-									"I suppose they can come in then",
-									"If they keep it short");
-							p.message("You go into the office");
-							p.teleport(647, 585, false);
-						} else if (third == 1) {
-							// nothing
+						int second = showMenu(p, n, false, //do not send over
+								"I'll try asking them then",
+								"Can i speak to Bravek anyway?");
+						if (second == 0) {
+							playerTalk(p, n, "I'll try asking them then");
+						}
+						else if (second == 1) {
+							playerTalk(p, n, "Can I speak to Bravek anyway?");
+							npcTalk(p, n, "He has asked not to be disturbed\"");
+							int third = showMenu(p, n, "This is urgent though",
+									"Ok I will leave him alone");
+							if (third == 0) {
+								playerTalk(p, n, "Someone's been kidnapped",
+										"and is being held in a plague house");
+								npcTalk(p, n, "I'll see what I can do I suppose",
+										"Mr Bravek there's a man here who really needs to speak to you");
+								Npc bravek = getNearestNpc(p, 454, 15);
+								npcTalk(p, bravek, "I suppose they can come in then",
+										"If they keep it short");
+								p.message("You go into the office");
+								p.teleport(647, 585, false);
+							} else if (third == 1) {
+								// nothing
+							}
 						}
 					} else if (menuMenu == 2) {
 						playerTalk(p, n, "Someone's been kidnapped",
@@ -407,6 +287,7 @@ ObjectActionExecutiveListener {
 					}
 
 				} else if (first == 1) {
+					playerTalk(p, n, "Who is through that door?");
 					npcTalk(p, n, "The city warder Bravek is in there");
 					playerTalk(p, n, "Can i go in?");
 					npcTalk(p, n, "He has asked not to be disturbed");
@@ -426,12 +307,15 @@ ObjectActionExecutiveListener {
 						// nothing
 					}
 				} else if (first == 2) {
-					// nothing
+					playerTalk(p, n, "I'm just looking thanks");
 				}
 				break;
 			}
 		}
-		if (n.getID() == 449) {
+		else if (n.getID() == 448) {
+			p.message("Billy is not interested in talking");
+		}
+		else if (n.getID() == 449) {
 			switch (p.getQuestStage(this)) {
 			case 6:
 				playerTalk(p, n, "Hello",
@@ -447,6 +331,15 @@ ObjectActionExecutiveListener {
 						"In that south east corner of west Ardougne");
 				p.updateQuestStage(getQuestId(), 7);
 				break;
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+				npcTalk(p, n, "Have you found Elena yet?");
+				playerTalk(p, n, "No I am still looking");
+				npcTalk(p, n, "I hope you find her",
+						"She was nice");
+				break;
 			case -1:
 				npcTalk(p,n, "Have you found Elena yet?");
 				playerTalk(p,n, "Yes she's safe at home");
@@ -455,7 +348,7 @@ ObjectActionExecutiveListener {
 				break;
 			}
 		}
-		if (n.getID() == 446 || n.getID() == 447) {
+		else if (n.getID() == 446 || n.getID() == 447) {
 			switch (p.getQuestStage(this)) {
 			case 6:
 				playerTalk(p, n,
@@ -474,6 +367,7 @@ ObjectActionExecutiveListener {
 				playerTalk(p, n, "Not yet");
 				npcTalk(p, n, "I wish you luck she did a lot for us");
 				break;
+			case 11:
 			case -1:
 				npcTalk(p,n, "Any luck with finding Elena yet?");
 				playerTalk(p,n, "Yes she is safe at home now");
@@ -481,7 +375,7 @@ ObjectActionExecutiveListener {
 				break;
 			}
 		}
-		if (n.getID() == 443) {
+		else if (n.getID() == 443) {
 			switch (p.getQuestStage(this)) {
 			case 5:
 				npcTalk(p, n, "Hello I don't recognise you",
@@ -543,7 +437,7 @@ ObjectActionExecutiveListener {
 				break;
 			}
 		}
-		if (n.getID() == 450) {
+		else if (n.getID() == 450) {
 			switch (p.getQuestStage(this)) {
 			case 0:
 				playerTalk(p, n, "hello madam");
@@ -638,7 +532,7 @@ ObjectActionExecutiveListener {
 				break;
 			}
 		}
-		if (n.getID() == 437) {
+		else if (n.getID() == 437) {
 			switch (p.getQuestStage(this)) {
 			case 0:
 				playerTalk(p, n, "hello old man");
@@ -646,9 +540,11 @@ ObjectActionExecutiveListener {
 				playerTalk(p, n, "what's wrong?");
 				npcTalk(p, n, "I've got to find my daughter",
 						"i pray that she's still alive");
-				int firstMenu = showMenu(p, n, "What's happened to her?",
+				int firstMenu = showMenu(p, n, false, //do not send over
+						"What's happened to her?",
 						"Well, good luck with finding her");
 				if (firstMenu == 0) {
+					playerTalk(p, n, "what's happened to her?");
 					npcTalk(p,
 							n,
 							"elena's a missionary and a healer",
@@ -656,19 +552,22 @@ ObjectActionExecutiveListener {
 							"no one's allowed to cross the wall in case they spread the plague",
 							"but after hearing the screams of suffering she felt she had to help",
 							"she said she'd be gone for a few days but we've heard nothing since");
-					int secondMenu = showMenu(p, n,
+					int secondMenu = showMenu(p, n, false, //do not send over
 							"Tell me more about the plague",
 							"Can i help find her?", "I'm sorry i have to go");
 					if (secondMenu == 0) {
+						playerTalk(p, n, "Tell me more about the plague");
 						npcTalk(p,
 								n,
 								"The mourners can tell you more than me",
 								"they're the only ones allowed to cross the border",
 								"I do know the plague is a horrible way to go",
 								"that's why elena felt she had to go help");
-						int thirdMenu = showMenu(p, n, "Can I help find her?",
+						int thirdMenu = showMenu(p, n, false, //do not send over
+								"Can I help find her?",
 								"I'm sorry i have to go");
 						if (thirdMenu == 0) {
+							playerTalk(p, n, "can i help find her?");
 							npcTalk(p,
 									n,
 									"really, would you?",
@@ -686,9 +585,11 @@ ObjectActionExecutiveListener {
 							playerTalk(p, n, "ok I'll go get some");
 							p.updateQuestStage(getQuestId(), 1);
 						} else if (thirdMenu == 1) {
+							playerTalk(p, n, "I'm sorry i have to go");
 							npcTalk(p, n, "ok then goodbye");
 						}
 					} else if (secondMenu == 1) {
+						playerTalk(p, n, "can i help find her?");
 						npcTalk(p,
 								n,
 								"really, would you?",
@@ -699,16 +600,18 @@ ObjectActionExecutiveListener {
 								"with dwellberries rubbed into it",
 								"Dwellberries help repel the virus",
 								"We need some more though");
-						playerTalk(p, n, "Where can I find these Dwellberries?");
+						playerTalk(p, n,
+								"Where can I find these Dwellberries?");
 						npcTalk(p, n,
 								"the only place i know is mcgrubor's wood to the north");
 						playerTalk(p, n, "ok I'll go get some");
 						p.updateQuestStage(getQuestId(), 1);
 					} else if (secondMenu == 2) {
+						playerTalk(p, n, "I'm sorry i have to go");
 						npcTalk(p, n, "ok then goodbye");
 					}
 				} else if (firstMenu == 1) {
-					// NOTHING
+					playerTalk(p, n, "Well, good luck with finding her");
 				}
 				break;
 			case 1:
@@ -720,7 +623,7 @@ ObjectActionExecutiveListener {
 				} else {
 					playerTalk(p, n, "sorry I'm afraid not");
 					npcTalk(p, n,
-							" you'll probably find them in mcgrubor's wood to the north");
+							"you'll probably find them in mcgrubor's wood to the north");
 				}
 				break;
 			case 2:
@@ -790,13 +693,15 @@ ObjectActionExecutiveListener {
                     playerTalk(p, n, "No problem");
                 }
                 else if (!p.getBank().hasItemId(752) && !p.getInventory().hasItemId(752) && !p.getCache().hasKey("ardougne_scroll")) {
-                    int noScroll = showMenu(p, n, "Do you have any more of those scrolls?",
-                            "No problem");
+                    int noScroll = showMenu(p, n, false, //do not send over 
+                    		"Do you have any more of those scrolls?",
+                            "no problem");
                     if (noScroll == 0) {
+                        playerTalk(p, n, "Do you have any more of those scrolls?");
                         npcTalk(p, n, "yes here you go");
                         addItem(p, 752, 1);                            
                     } else {
-                    	// nothing
+                    	playerTalk(p, n, "No problem");
                     }
                 }
                 break;
@@ -804,6 +709,86 @@ ObjectActionExecutiveListener {
             }
         }
     }
+	
+	private void postBravekDialogue(Player p, Npc n) {
+		int finale = showMenu(p, n, false, //do not send over
+				"Ok I'll go speak to them",
+				"Is that all anyone says around here?",
+				"They won't listen to me");
+		if (finale == 0) {
+			playerTalk(p, n, "Ok I'll go speak to them");
+		} else if (finale == 1) {
+			playerTalk(p, n, "Is that all anyone says around here");
+			npcTalk(p, n, "Well they know best about plague issues");
+			int last2 = showMenu(
+					p,
+					n,
+					"Don't you want to take an interest in it at all?",
+					"They won't listen to me");
+			if (last2 == 0) {
+				npcTalk(p, n,
+						"Nope I don't wish to take a deep interest in plagues",
+						"That stuff is too scary for me");
+				int last3 = showMenu(p, n, false, //do not send over
+						"I see why people say you're a weak leader",
+						"Ok I'll talk to the mourners",
+						"they won't listen to me");
+				if (last3 == 0) {
+					playerTalk(p, n, "I see why people say you're a weak leader");
+					npcTalk(p,
+							n,
+							"bah people always criticise their leaders",
+							"But delegating is the only way to lead",
+							"I delegate all plague issues to the mourners");
+					playerTalk(p, n,
+							"this whole city is a plague issue");
+				} else if (last3 == 1) {
+					playerTalk(p, n, "Ok I'll talk to the mourners");
+				} else if (last3 == 2) {
+					playerTalk(
+							p,
+							n,
+							"They won't listen to me",
+							"They say I'm not properly equipped to go in the house",
+							"Though I do have a very effective gas mask");
+					npcTalk(p,
+							n,
+							"hmm well I guess they're not taking the issue of a kidnap seriously enough",
+							"They do go a bit far sometimes",
+							"I've heard of Elena, she has helped us a lot",
+							"Ok I'll give you this warrant to enter the house");
+					addItem(p, 775, 1);
+				}
+			} else if(last2 == 1) {
+				playerTalk(
+						p,
+						n,
+						"They say I'm not properly equipped to go in the house",
+						"Though I do have a very effective gas mask");
+				npcTalk(p,
+						n,
+						"hmm well I guess they're not taking the issue of a kidnap seriously enough",
+						"They do go a bit far sometimes",
+						"I've heard of Elena, she has helped us a lot",
+						"Ok I'll give you this warrant to enter the house");
+				addItem(p, 775, 1);
+			}
+		} else if (finale == 2) {
+			playerTalk(
+					p,
+					n,
+					"They won't listen to me",
+					"They say I'm not properly equipped to go in the house",
+					"Though I do have a very effective gas mask");
+			npcTalk(p,
+					n,
+					"hmm well I guess they're not taking the issue of a kidnap seriously enough",
+					"They do go a bit far sometimes",
+					"I've heard of Elena, she has helped us a lot",
+					"Ok I'll give you this warrant to enter the house");
+			addItem(p, 775, 1);
+		}
+	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
@@ -828,14 +813,15 @@ ObjectActionExecutiveListener {
 			if (item.getID() == 50) {
 				if(p.getQuestStage(getQuestId()) == 2) {
 					if (BUCKETS_USED >= 3) {
-						p.message("the soil softens slightly");
-						p.message("the soil is soft enough to dig into");
+						message(p, "you poor the water onto the soil",
+								"the soil softens slightly",
+								"the soil is soft enough to dig into");
 						if(!p.getCache().hasKey("soil_soften")) {
 							p.getCache().store("soil_soften", true);
 						}
 					} else {
-						p.message("you poor the water onto the soil");
-						p.message("the soil softens slightly");
+						message(p, "you poor the water onto the soil",
+								"the soil softens slightly");
 					}
 					p.getInventory().replace(50, 21);
 					BUCKETS_USED++;
@@ -919,15 +905,13 @@ ObjectActionExecutiveListener {
 			p.teleport(620, 578, false);
 		}
 		if (obj.getID() == 449) {
-			if(p.getQuestStage(this) == -1 && p.getQuestStage(Constants.Quests.BIOHAZARD) != -1) {
-				return;
-			}
+			//gasmask no longer needed only if plague city and biohazard are done
 			if(p.getQuestStage(this) == -1 && p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) {
 				p.message("you climb through the sewer pipe");
 				p.teleport(632, 589, false);
 				return;
 			}
-			if (p.getQuestStage(getQuestId()) >= 5) {
+			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
 				if (p.getInventory().wielding(766)) {
 					p.message("you climb through the sewer pipe");
 					p.teleport(632, 589, false);
