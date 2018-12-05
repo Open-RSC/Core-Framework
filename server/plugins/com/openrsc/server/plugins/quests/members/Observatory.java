@@ -510,7 +510,13 @@ InvUseOnObjectExecutiveListener {
 		if (obj.getID() == 919) { // KEY CHEST FOUND!
 			p.message("You search the chest");
 			p.message("You find a small key inside");
-			addItem(p, 1012, 1);
+			if(hasItem(p, 1012)) {
+				message(p, "You already have a keep key",
+						"Another one will have no use");
+			}
+			else {
+				addItem(p, 1012, 1);
+			}
 			World.getWorld().registerGameObject(
 					new GameObject(obj.getLocation(), 930, obj.getDirection(),
 							obj.getType()));
