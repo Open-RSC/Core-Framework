@@ -17,13 +17,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public class BioHazard implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
-	/** 
+	/**
 	 * 1.Decided to add the door into Elena for starting the Biohazard quest in this template,
-	 * instead of doors class. 
+	 * instead of doors class.
 	 **/
-	
-	/** 
-	 * BIG NOTE: START UNDERGROUND PASS ON KING LATHAS NPC IN THIS CLASS! 
+
+	/**
+	 * BIG NOTE: START UNDERGROUND PASS ON KING LATHAS NPC IN THIS CLASS!
 	 **/
 
 	// OBJECTS
@@ -526,7 +526,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 					addItem(p, ETHENEA, 1);
 					playerTalk(p,n, "Thanks. You've been a big help");
 					p.getCache().remove("vial_vinci");
-				} 
+				}
 			} else {
 				p.message("devinci doesn't feel like talking");
 
@@ -565,7 +565,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 							"I couldn't get anything for this on the blackmarket");
 					playerTalk(p,n, "That was the idea");
 					p.getCache().remove("vial_chancy");
-				} 
+				}
 			} else {
 				p.message("chancy doesn't feel like talking");
 
@@ -626,7 +626,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 			} else {
 				p.message("He is not in a fit state to talk");
 			}
-		} 
+		}
 		if(n.getID() == CHANCY) {
 			if(p.getQuestStage(this) == 7) {
 				if(p.getCache().hasKey("vial_chancy") || p.getCache().hasKey("wrong_vial_chancy")) {
@@ -1178,7 +1178,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 			} else {
 				p.message("You search the cupboard, but find nothing");
 			}
-		} 
+		}
 		if(obj.getID() == JERICOS_CUPBOARD_TWO || obj.getID() == 499) {
 			if(command.equalsIgnoreCase("open")) {
 				openCupboard(obj, p, 500);
@@ -1270,7 +1270,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 			}
 		}
 		if(item.getID() == ROTTEN_APPLE && obj.getID() == COOKING_POT) {
-			if(p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5) { 
+			if(p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5) {
 				message(p, "you place the rotten apples in the pot",
 						"they quickly dissolve into the stew",
 						"that wasn't very nice");
@@ -1303,10 +1303,11 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if(n.getID() == MOURNER_HAS_KEY) {
 			if(!hasItem(p, 803)) {
-				message(p, "you search the mourner",
-						"and find a key");
+				message(p, "you search the mourner");
 				addItem(p, 803, 1);
 				if(n != null) {
+					n.getBehavior().retreat();
+					message(p, 0, "and find a key");
 					n.remove();
 				}
 			} else {
