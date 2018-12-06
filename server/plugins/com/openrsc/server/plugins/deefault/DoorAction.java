@@ -392,6 +392,18 @@ public class DoorAction {
 			}
 			break;
 
+		case 120: // Plague city / Biohazard - unsure the purpose of this door
+			if(p.getX() > 624) {
+				Npc mourner = getNearestNpc(p, 445, 8);
+				p.message("The door won't open");
+				p.message("You notice a black cross on the door");
+				if (mourner != null) {
+					npcTalk(p, mourner, "I'd stand away from there",
+							"That black cross means that house has been touched by the plague");
+				}
+			}
+			break;
+		
 		case 122: // Plague City
 			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 6
 			|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
@@ -443,11 +455,12 @@ public class DoorAction {
 						return;
 					}
 					if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == 7) {
-						int menu = showMenu(p, mourner,
+						int menu = showMenu(p, mourner, false, //do not send over
 								"but I think a kidnap victim is in here",
 								"I fear not a mere plague",
 								"thanks for the warning");
 						if (menu == 0) {
+							playerTalk(p, mourner, "But I think a kidnap victim is in here");
 							npcTalk(p, mourner, "Sounds unlikely",
 									"Even kidnappers wouldn't go in there",
 									"even if someone is in there",
@@ -457,10 +470,8 @@ public class DoorAction {
 							if (menu2 == 0) {
 								// NOTHING
 							} else if (menu2 == 1) {
-								npcTalk(p, mourner,
-										"You don't have the clearance to go in there");
-								playerTalk(p, mourner,
-										"How do I get clearance?");
+								npcTalk(p, mourner, "You don't have clearance to go in there");
+								playerTalk(p, mourner, "How do I get clearance?");
 								npcTalk(p,
 										mourner,
 										"Well you'd need to apply to the head mourner",
@@ -469,6 +480,7 @@ public class DoorAction {
 								p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 8);
 							}
 						} else if (menu == 1) {
+							playerTalk(p, mourner, "I fear not a mere plague");
 							npcTalk(p, mourner, "that's irrelevant",
 									"You don't have clearance to go in there");
 							playerTalk(p, mourner, "How do I get clearance?");
@@ -480,7 +492,7 @@ public class DoorAction {
 							p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 8);
 
 						} else if (menu == 2) {
-							// NOTHING
+							playerTalk(p, mourner, "thanks for the warning");
 						}
 					}
 				}
@@ -762,6 +774,9 @@ public class DoorAction {
 								"we're waiting for a doctor");
 					}
 				}
+			} else if((p.getQuestStage(Constants.Quests.BIOHAZARD) > 5 || p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) && 
+					p.getInventory().wielding(802)) {
+				doDoor(obj, p);
 			} else {
 				p.message("the door is locked");
 			}
