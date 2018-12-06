@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Arrays;
@@ -60,7 +61,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getID() == 1268) {
-			if (object.getID() == 97)
+			if (object.getID() == 97 || object.getID() == 274)
 				message(p, 1200, "You cook the meat on the fire...");
 			else
 				message(p, 1200, "You cook the meat on the stove...");
@@ -94,30 +95,23 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				return;
 			}
 			if (p.getSkills().getLevel(7) < cookingDef.getReqLevel()) {
-				p.message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + item.getDef().getName().toLowerCase().substring(4));
+				String itemName = item.getDef().getName().toLowerCase();
+				itemName = itemName.startsWith("raw ") ? itemName.substring(4) : 
+					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName ;
+				p.message("You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
 				return;
 			}
 			if (!p.withinRange(object, 2)) { 
 				return;
 			}
 			// Some need a RANGE not a FIRE
-			boolean needRange = false;
+			boolean needOven = false;
 			int timeToCook = 1800;
-			switch (object.getID()) {
-				case 137: // Bread
-				case 254: // Apple Pie
-				case 255: // Meat Pie
-				case 256: // Redberry Pie
-				case 324: // Pizza
-				case 339: // Cake
-				case 1104: // Pitta Bread
-					needRange = true;
-					timeToCook = 3000;
-					break;
-				default:
-					break;
+			if(isOvenFood(item)) {
+				needOven = true;
+				timeToCook = 3000;
 			}
-			if (object.getID() == 97 && needRange) {
+			if ((object.getID() == 97 || object.getID() == 274) && needOven) {
 				p.message("You need a proper oven to cook this");
 				return;
 			}
@@ -125,7 +119,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			if (item.getID() == 1280)
 				p.message("You prepare to cook the Oomlie meat parcel.");
 			else
-				p.message(cookingOnMessage(p, item, object));
+				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
 			p.setBatchEvent(new BatchEvent(p, timeToCook, Formulae.getRepeatTimes(p, 7)) {
 				@Override
@@ -141,11 +135,18 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					if (owner.getInventory().remove(item) > -1) {
 						if (!Formulae.burnFood(owner, item.getID(), owner.getSkills().getLevel(7)) || item.getID() == 591) {
 							owner.getInventory().add(cookedFood);
-							owner.message(cookedMessage(p, cookedFood));
+							owner.message(cookedMessage(p, cookedFood, isOvenFood(item)));
 							owner.incExp(7, cookingDef.getExp(), true);
 						} else {
 							owner.getInventory().add(new Item(cookingDef.getBurnedId()));
-							owner.message("You accidentally burn the " + cookedFood.getDef().getName().toLowerCase());
+							if(cookedFood.getID() == 132) {
+								owner.message("You accidentally burn the meat");
+							}
+							else {
+								String food = cookedFood.getDef().getName().toLowerCase();
+								food = food.contains("pie") ? "pie" : food;
+								owner.message("You accidentally burn the " + food);
+							}
 						}
 					} else {
 						interrupt();
@@ -157,7 +158,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		int[] ids = new int[]{ 97, 11, 119, 435, 491};
+		int[] ids = new int[]{ 97, 11, 119, 274, 435, 491};
 		Arrays.sort(ids);
 		if ((item.getID() == 1268 || item.getID() == 622 || item.getID() == 784) && Arrays.binarySearch(ids, obj.getID()) >= 0) {
 			return true;
@@ -181,23 +182,52 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		}
 	}
 	
-	private String cookingOnMessage(Player p, Item item, GameObject object) {
-		String origItemName = item.getDef().getName().toLowerCase();
-		origItemName = origItemName.startsWith("raw ") ? origItemName.substring(4) : origItemName;
-		String message = "You cook the " + origItemName + " on the " + (object.getID() == 97 ? "fire" : "stove");
-		if(item.getID() == 504) {
-			message = "You cook the meat on the stove...";
+	private String cookingOnMessage(Player p, Item item, GameObject object, boolean needsOven) {
+		String itemName = item.getDef().getName().toLowerCase();
+		itemName = itemName.startsWith("raw ") ? itemName.substring(4) : 
+			itemName.contains("pie") ? "pie" : 
+				itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName ;
+		boolean isGenMeat = isGeneralMeat(item);
+		if(isGenMeat)
+			itemName = "meat";
+		String message = "You cook the " + itemName + " on the " + 
+			((object.getID() == 97 || object.getID() == 274) ? "fire" : "stove") + 
+			(isGenMeat ? "..." : "");
+		if(needsOven) {
+			message = "You cook the " + itemName + " in the oven...";
+		}
+
+		return message;
+		
+	}
+	
+	private String cookedMessage(Player p, Item cookedFood, boolean needsOven) {
+		String message = "The " + cookedFood.getDef().getName().toLowerCase() + " is now nicely cooked";
+		if(cookedFood.getID() == 132) {
+			message = "The meat is now nicely cooked";
+		}
+		if(needsOven) {
+			String cookedPastryFood = cookedFood.getDef().getName().toLowerCase();
+			cookedPastryFood = cookedPastryFood.contains("pie") ? "pie" : cookedPastryFood;
+			message = "You remove the " + cookedPastryFood + " from the oven";
 		}
 		return message;
 		
 	}
 	
-	private String cookedMessage(Player p, Item cookedFood) {
-		String message = "The " + cookedFood.getDef().getName().toLowerCase() + " is now nicely cooked";
-		if(cookedFood.getID() == 132) {
-			message = "The meat is now nicely cooked";
-		}
-		return message;
-		
+	private boolean isOvenFood(Item item) {
+		return DataConversions.inArray(new int[] {
+				137, // Bread
+				254, // Apple Pie
+				255, // Meat Pie
+				256, // Redberry Pie
+				324, // Pizza
+				339, // Cake
+				1104, // Pitta Bread
+		}, item.getID());
+	}
+	
+	private boolean isGeneralMeat(Item item) {
+		return DataConversions.inArray(new int[] {133, 502, 503, 504}, item.getID());
 	}
 }
