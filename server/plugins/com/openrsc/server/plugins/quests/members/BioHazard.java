@@ -186,7 +186,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 						"please don't give up until you find it");
 				break;
 			case 5:
-				npcTalk(p,n, " so, have you managed to retrieve my distillator?");
+				npcTalk(p,n, "so, have you managed to retrieve my distillator?");
 				if(hasItem(p, DISTILLATOR)) {
 					npcTalk(p,n, "You have - that's great!",
 							"Now can you pass me those refraction agents please?");
@@ -219,14 +219,16 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 			case 6:
 			case 7:
 				npcTalk(p,n, "what are you doing back here");
-				int menu6 = showMenu(p,n,
+				int menu6 = showMenu(p,n, false, //do not send over
 						"I just find it hard to say goodbye sometimes",
 						"I'm afraid I've lost some of the stuff that you gave me...",
 						"i've forgotten what i need to do");
 				if(menu6 == 0) {
+					playerTalk(p, n, "I just find it hard to say goodbye sometimes");
 					npcTalk(p,n, "Yes...I have feelings for you too...",
 							"Now get to work!");
 				} else if(menu6 == 1) {
+					playerTalk(p, n, "I'm afraid I've you lost some of the stuff that you gave me");
 					npcTalk(p,n, "That's alright, I've got plenty");
 					message(p, "Elena replaces your items");
 					p.getInventory().replace(LIQUID_HONEY, LIQUID_HONEY);
@@ -238,6 +240,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 							"And some bog-standard liquid honey...");
 					playerTalk(p,n, "Great. I'll be on my way");
 				} else if(menu6 == 2) {
+					playerTalk(p, n, "i've forgotten what i need to do");
 					npcTalk(p,n, "go to rimmington and get some touch paper from the chemist",
 							"use his errand boys to smuggle the vials into varrock",
 							"then go to varrock and take the sample to guidor, my old mentor");
@@ -314,12 +317,14 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 				playerTalk(p,n, "hello omart");
 				npcTalk(p,n, "hello traveller",
 						"the guards are still distracted if you wish to cross the wall");
-				int OverAgain = showMenu(p,n,
+				int OverAgain = showMenu(p,n, false, //do not send over
 						"ok lets do it",
 						"i'll be back soon");
 				if(OverAgain == 0) {
+					playerTalk(p, n, "ok lets do it");
 					ropeLadderInFunction(p);
 				} else if(OverAgain == 1) {
+					playerTalk(p, n, "I'll be back soon");
 					npcTalk(p,n, "don't take long",
 							"the mourners will soon be rid of those birds");
 				}
@@ -339,7 +344,9 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 		if(n.getID() == JERICO) {
 			switch (p.getQuestStage(this)) {
 			case 0:
-				// WEIRD hes just not saying anything.. Not even a "interesting in talking" message.
+				playerTalk(p,n, "hello");
+				npcTalk(p,n, "can i help you?");
+				playerTalk(p,n, "just passing by");
 				break;
 			case 1:
 				playerTalk(p,n, "hello jerico");
@@ -388,8 +395,21 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 		}
 		if(n.getID() == KILRON) {
 			switch (p.getQuestStage(this)) {
-			case 4: // not sure of this.
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+				playerTalk(p,n, "hello there");
+				npcTalk(p,n, "hello");
+				playerTalk(p,n, "how are you?");
+				npcTalk(p,n, "busy");
+				break;
+			case 4:
 			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
 			case -1:
 				playerTalk(p,n, "hello kilron");
 				npcTalk(p,n, "hello traveller",
@@ -407,15 +427,30 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 			}
 		}
 		if(n.getID() == NURSE_SARAH) {
-			if(p.getCache().hasKey("rotten_apples")) {
-				playerTalk(p,n, "hello nurse");
-				npcTalk(p,n, "oh hello there");
-				npcTalk(p,n, "im afraid i can't stop and talk",
-						"a group of mourners have became ill with food poisoning",
-						"i need to go over and see what i can do");
-				playerTalk(p,n, "hmmm, strange that!");
-			} else {
+			switch(p.getQuestStage(this)) {
+			case 4:
+			case 5:
+				if(p.getCache().hasKey("rotten_apples")) {
+					playerTalk(p,n, "hello nurse");
+					npcTalk(p,n, "oh hello there");
+					npcTalk(p,n, "im afraid i can't stop and talk",
+							"a group of mourners have became ill with food poisoning",
+							"i need to go over and see what i can do");
+					playerTalk(p,n, "hmmm, strange that!");
+				}
+				else {
+					playerTalk(p,n, "hello nurse");
+					npcTalk(p,n, "i don't know how much longer i can cope here");
+					playerTalk(p,n, "what? is the plague getting to you?");
+					npcTalk(p,n, "no, strangely enough the people here don't seem to be affected",
+							"it's just the awful living conditions that are making people ill");
+					playerTalk(p,n, "i was under the impression that every one here was affected");
+					npcTalk(p,n, "me too, but it doesn't seem to be the case");
+				}
+				break;
+			default:
 				p.message("nurse sarah doesn't feel like talking");
+				break;
 			}
 		}
 		if(n.getID() == SECOND_HOPS) { // DONE
@@ -462,7 +497,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 								"Its' just not stored in a vial anymore");
 						playerTalk(p,n, "What?");
 						npcTalk(p,n, "Instead it has been liberated",
-								"And it now gleams from the canvas of my latest epic",
+								"And it now gleams from the canvas of my latest epic:",
 								"The Majesty of Varrock");
 						playerTalk(p,n, "That's great",
 								"Thanks to you I'll have to walk back to East Ardougne to get another vial");
@@ -474,7 +509,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 								"Its' just not stored in a vial anymore");
 						playerTalk(p,n, "What?");
 						npcTalk(p,n, "Instead it has been liberated",
-								"And it now gleams from the canvas of my latest epic",
+								"And it now gleams from the canvas of my latest epic:",
 								"The Majesty of Varrock");
 						playerTalk(p,n, "That's great",
 								"Thanks to you I'll have to walk back to East Ardougne to get another vial");
@@ -561,7 +596,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 							npcTalk(p,n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
 						}
 					} else {
-						p.message("You can't give him what you don't have");
+						p.message("You have no ethenea to give");
 					}
 				} else if(menu == 1) {
 					if(hasItem(p, LIQUID_HONEY)) {
@@ -573,7 +608,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 							npcTalk(p,n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
 						}
 					} else {
-						p.message("You can't give him what you don't have");
+						p.message("You have no liquid honey to give");
 					}
 				} else if(menu == 2) {
 					if(hasItem(p, SULPHURIC_BROLINE)) {
@@ -585,7 +620,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 							npcTalk(p,n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
 						}
 					} else {
-						p.message("You can't give him what you don't have");
+						p.message("You have no sulphuric broline to give");
 					}
 				}
 			} else {
@@ -687,7 +722,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 					} else if(lastMenu == 1) {
 						npcTalk(p,n, "Guidor? This one's on me then- the poor guy. Sorry about the interrogation",
 								"It's just that there's been rumours of a man travelling with a plague on him",
-								"They're even doing spot checks in Varrock");
+								"They're even doing spot checks in Varrock: it's a pharmeceutical disaster");
 						playerTalk(p,n, "Oh right...so am I going to be OK carrying these three vials with me?");
 						npcTalk(p,n, "With touch paper as well? You're asking for trouble",
 								"You'd be better using my errand boys outside- give them a vial each",
@@ -721,7 +756,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 						"But I don't necessarily define my identity in such black and white terms");
 				playerTalk(p,n, "Good for you",
 						"Now can you take a vial to Varrock for me?");
-				npcTalk(p,n, " Go on then");
+				npcTalk(p,n, "Go on then");
 				int menu = showMenu(p,n,
 						"You give him the vial of ethenea",
 						"You give him the vial of liquid honey",
@@ -830,7 +865,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 				}
 				return;
 			}
-			if(p.getQuestStage(this) == 9) {
+			else if(p.getQuestStage(this) == 9) {
 				playerTalk(p,n, "I assume that you are the King of east Ardougne?");
 				npcTalk(p,n, "You assume correctly- but where do you get such impertinence?");
 				playerTalk(p,n, "I get it from finding out that the plague is a hoax");
@@ -888,8 +923,8 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 			if(p.getQuestStage(this) == 9 || p.getQuestStage(this) == -1) {
 				playerTalk(p,n, "hello");
 				npcTalk(p,n, "oh hello, i can't chat now",
-						"i have to keep an eye on my husband"
-						,"he's very ill");
+						"i have to keep an eye on my husband",
+						"he's very ill");
 				playerTalk(p,n, "i'm sorry to hear that");
 				return;
 			}
@@ -936,10 +971,12 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 					"she's kept me under house arrest",
 					"Of course she means well, and I am quite frail now...",
 					"So what brings you here?");
-			int menu = showMenu(p,n,
+			int menu = showMenu(p,n, false, //do not send over
 					"I've come to ask your assistance in stopping a plague that could kill thousands",
 					"Oh,nothing,I was just going to bless your room and I've done that now  Goodbye");
 			if(menu == 0) {
+				playerTalk(p, n, "Well it's funny you should ask actually...",
+						"I've come to ask your assistance in stopping a plague that could kill thousands");
 				npcTalk(p,n, "So you're the plague carrier!");
 				int menu2 = showMenu(p,n,
 						"No! Well, yes... but not exactly. It's contained in a sealed unit from elena",
@@ -978,6 +1015,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 											"The only question is...",
 											"...why?");
 								} else if(menu3 == 1) {
+									playerTalk(p, n, "That's why Elena wanted you to do it- because she wasn't sure what was happening");
 									npcTalk(p,n, "Well that's just it. Nothing has happened",
 											"I don't know what this sample is, but it certainly isn't toxic");
 									playerTalk(p,n, "So what about the plague?");
@@ -998,8 +1036,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 									"Come back when you've got them");
 						}
 					} else {
-						npcTalk(p,n, "Right then. Sounds like we'd better get to work!",
-								"Seems like you don't actually HAVE the plague sample",
+						npcTalk(p,n, "Seems like you don't actually HAVE the plague sample",
 								"It's a long way to come empty-handed...",
 								"And quite a long way back too");
 						return;
@@ -1038,6 +1075,7 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 											"The only question is...",
 											"...why?");
 								} else if(menu3 == 1) {
+									playerTalk(p, n, "That's why Elena wanted you to do it- because she wasn't sure what was happening");
 									npcTalk(p,n, "Well that's just it. Nothing has happened",
 											"I don't know what this sample is, but it certainly isn't toxic");
 									playerTalk(p,n, "So what about the plague?");
@@ -1058,13 +1096,14 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 									"Come back when you've got them");
 						}
 					} else {
-						npcTalk(p,n, "Right then. Sounds like we'd better get to work!",
-								"Seems like you don't actually HAVE the plague sample",
+						npcTalk(p,n, "Seems like you don't actually HAVE the plague sample",
 								"It's a long way to come empty-handed...",
 								"And quite a long way back too");
 						return;
 					}
 				}
+			} else if (menu == 1) {
+				playerTalk(p, n, "Oh, nothing, I was just going to bless your room, and I've done that now. Goodbye");
 			}
 		}
 	}
@@ -1232,17 +1271,17 @@ TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveL
 		}
 		if(item.getID() == ROTTEN_APPLE && obj.getID() == COOKING_POT) {
 			if(p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5) { 
-				message(p, "you place the rotten apples in the pot");
-				message(p, "they quickly dissolve into the stew");
-				p.message("that wasn't very nice");
+				message(p, "you place the rotten apples in the pot",
+						"they quickly dissolve into the stew",
+						"that wasn't very nice");
 				if(!p.getCache().hasKey("rotten_apples")) {
 					p.getCache().store("rotten_apples", true);
 				}
 				removeItem(p, ROTTEN_APPLE, 1);
 				return;
 			}
-			message(p, "you place the rotten apples in the pot");
-			p.message("that wasn't very nice");
+			message(p, "you place the rotten apples in the pot",
+					"that wasn't very nice");
 			removeItem(p, ROTTEN_APPLE, 1);
 		}
 		if(item.getID() == BRONZE_KEY && obj.getID() == GET_INTO_CRATES_GATE) {
