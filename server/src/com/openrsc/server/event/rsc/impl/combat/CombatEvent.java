@@ -17,7 +17,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 /***
- * 
+ *
  * @author n0m
  *
  */
@@ -168,7 +168,7 @@ public class CombatEvent extends GameTickEvent {
 					if (defenderMob.getCombatState() == CombatState.RUNNING)
 						delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
 				}
-					
+
 				defenderMob.setBusy(false);
 				defenderMob.setOpponent(null);
 				defenderMob.setCombatEvent(null);
@@ -200,13 +200,13 @@ public class CombatEvent extends GameTickEvent {
 	}
 
 	private boolean combatCanContinue() {
-		boolean bothLoggedIn = (attackerMob.isPlayer() && ((Player) attackerMob).loggedIn())
-				|| (defenderMob.isPlayer() && ((Player) defenderMob).loggedIn());
 		boolean removed = attackerMob.isRemoved() || defenderMob.isRemoved();
 		boolean nextToVictim = attackerMob.getLocation().equals(defenderMob.getLocation());
 		if (defenderMob.isNpc() && attackerMob.isNpc()) {
 			return !removed && nextToVictim && running;
 		}
+		boolean bothLoggedIn = (attackerMob.isPlayer() && ((Player) attackerMob).loggedIn())
+			|| (defenderMob.isPlayer() && ((Player) defenderMob).loggedIn());
 		return bothLoggedIn && !removed && nextToVictim && running;
 	}
 
