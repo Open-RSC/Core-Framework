@@ -152,7 +152,7 @@ public class WalkingQueue {
 
 		if (mob.isPlayer()) {
 			Npc npc = region.getNpc(x, y);
-			if (npc != null) {
+			if (npc != null && npc.getDef().isAttackable()) {
 				return true;
 			}
 		}
