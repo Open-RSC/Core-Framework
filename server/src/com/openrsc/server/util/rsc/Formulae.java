@@ -235,6 +235,11 @@ public final class Formulae {
 		}
 		return DataConversions.random(0, levelDiff - DataConversions.random(0, levelDiff) + 1) == 0;
 	}
+	
+	public static boolean goodWine(int cookingLevel) {
+		int chance = (int)(13 * Math.sqrt(cookingLevel - 10));
+		return chance > DataConversions.random(0, 100);
+	}
 
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {
 		if (source.isPlayer()) {

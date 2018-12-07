@@ -2,10 +2,12 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.util.rsc.Formulae;
 
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	int[] new_pumpkin_head = { 2098, 2099, 2100, 2097, 2102, 2101 };
@@ -100,9 +102,27 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 
 		else if(compareItemsIds(item1, item2, 143, 141)) { // wine
 			if (player.getInventory().remove(new Item(143)) > -1 && player.getInventory().remove(new Item(141)) > -1) {
-				player.message("You combine the grapes and water to make wine");
-				player.getInventory().add(new Item(142));
+				if(player.getSkills().getLevel(7) < 35) {
+					player.message("You need a cooking level of 35 to make wine");
+					return;
+				}
 				
+				player.message("You combine the grapes and water to make wine");
+				
+				player.setBatchEvent(new BatchEvent(player, 3000, 1) {
+					@Override
+					public void action() {
+						if(Formulae.goodWine(owner.getSkills().getLevel(7))) {
+							owner.message("The wine is successfully matured");
+							owner.getInventory().add(new Item(142));
+							owner.incExp(7, 440, true);
+						}
+						else {
+							owner.message("The wine does not get matured");
+							owner.getInventory().add(new Item(180));
+						}
+					}
+				});			
 				return;
 			}
 		}
