@@ -5,8 +5,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
+
+import com.openrsc.server.event.custom.BatchEvent;
 
 /**
  * Way better way to handle item on item cooking.
@@ -90,18 +93,24 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			}
 			if (player.getInventory().contains(item1)
 					&& player.getInventory().contains(item2)) {
-				int rand = DataConversions.random(0, 4);
-				if (rand == 2) {
-					player.incExp(7, 220, true);
-					player.getInventory().add(new Item(180));
-					player.message("You mix the grapes, and accidentally create Bad wine!");
-				} else {
-					player.incExp(7, 440, true);
-					player.getInventory().add(new Item(142));
-					player.message("You mix the grapes with the water and create wine!");
-				}
+				player.message("You squeeze the grapes into the jug");
 				player.getInventory().remove(141, 1);
 				player.getInventory().remove(143, 1);
+				
+				player.setBatchEvent(new BatchEvent(player, 3000, 1) {
+					@Override
+					public void action() {
+						if(Formulae.goodWine(owner.getSkills().getLevel(7))) {
+							owner.message("You make some nice wine");
+							owner.getInventory().add(new Item(142));
+							owner.incExp(7, 440, true);
+						}
+						else {
+							owner.message("You accidentally make some bad wine");
+							owner.getInventory().add(new Item(180));
+						}
+					}
+				});
 			}
 		}
 		else if (isWaterItem(item1) && item2.getID() == 136 || item1.getID() == 136 && isWaterItem(item2)) {
