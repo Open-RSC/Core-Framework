@@ -12,7 +12,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static final int CART_DRIVER = 618;
+	public static final int CART_DRIVER = 619;
 	public static final int TRAVEL_CART = 768;
 
 	@Override
