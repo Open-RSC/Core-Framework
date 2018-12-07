@@ -73,30 +73,30 @@ public class PathValidation {
 
 		if (startX > destX) {
 			// Check for wall on east edge of current square,
-			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST, true);
 			// Or on west edge of square we are travelling toward.
-			newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST);
+			newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST, false);
 			coords[0] = startX - 1;
 		} else if (startX < destX) {
 			// Check for wall on west edge of current square,
-			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST, true);
 			// Or on east edge of square we are travelling toward.
-			newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST);
+			newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST, false);
 			coords[0] = startX + 1;
 		}
 
 		if (startY > destY) {
 			// Check for wall on north edge of current square,
-			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH, true);
 			// Or on south edge of square we are travelling toward.
-			newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH);
+			newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
 			coords[1] = startY - 1;
 
 		} else if (startY < destY) {
 			// Check for wall on south edge of current square,
-			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH, true);
 			// Or on north edge of square we are travelling toward.
-			newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH);
+			newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH, false);
 			coords[1] = startX + 1;
 		}
 
@@ -110,16 +110,16 @@ public class PathValidation {
 		return true;
 	}
 
-	private static boolean checkBlocking(int x, int y, int bit) {
+	private static boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile) {
 		TileValue t = World.getWorld().getTile(x, y);
 		if(t.projectileAllowed) {
 			return false;
 		}
 
-		return isBlocking(t.traversalMask, (byte) bit);
+		return isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
 	}
 
-	public static boolean isBlocking(int objectValue, byte bit) {
+	public static boolean isBlocking(int objectValue, byte bit, boolean isCurrentTile) {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
 		}
@@ -129,7 +129,7 @@ public class PathValidation {
 		if ((objectValue & 32) != 0) { // There is a diagonal wall here: /
 			return true;
 		}
-		if ((objectValue & 64) != 0) { // This tile is unwalkable
+		if (!isCurrentTile && (objectValue & 64) != 0) { // This tile is unwalkable
 			return true;
 		}
 		return false;
