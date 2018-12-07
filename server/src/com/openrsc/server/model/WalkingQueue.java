@@ -85,30 +85,30 @@ public class WalkingQueue {
 
 		if (startX > destX) {
 			// Check for wall on east edge of current square,
-			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST, true);
 			// Or on west edge of square we are travelling toward.
-			newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST);
+			newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST, false);
 			coords[0] = startX - 1;
 		} else if (startX < destX) {
 			// Check for wall on west edge of current square,
-			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST);
+			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST, true);
 			// Or on east edge of square we are travelling toward.
-			newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST);
+			newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST, false);
 			coords[0] = startX + 1;
 		}
 
 		if (startY > destY) {
 			// Check for wall on north edge of current square,
-			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH, true);
 			// Or on south edge of square we are travelling toward.
-			newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH);
+			newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
 			coords[1] = startY - 1;
 
 		} else if (startY < destY) {
 			// Check for wall on south edge of current square,
-			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH);
+			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH, true);
 			// Or on north edge of square we are travelling toward.
-			newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH);
+			newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH, false);
 			coords[1] = startX + 1;
 		}
 
@@ -123,13 +123,13 @@ public class WalkingQueue {
 		// Diagonal checks
 		boolean diagonalBlocked = false;
 		if (startX + 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(startX + 1, startY + 1, 0);
+			diagonalBlocked = checkBlocking(startX + 1, startY + 1, 0, false);
 		else if (startX + 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(startX + 1, startY - 1, 0);
+			diagonalBlocked = checkBlocking(startX + 1, startY - 1, 0, false);
 		else if (startX - 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(startX - 1, startY + 1, 0);
+			diagonalBlocked = checkBlocking(startX - 1, startY + 1, 0, false);
 		else if (startX - 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(startX - 1, startY - 1, 0);
+			diagonalBlocked = checkBlocking(startX - 1, startY - 1, 0, false);
 
 		if (diagonalBlocked)
 			return false;
@@ -137,11 +137,11 @@ public class WalkingQueue {
 		return true;
 	}
 
-	private boolean checkBlocking(int x, int y, int bit) {
+	private boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile) {
 		TileValue t = World.getWorld().getTile(x, y);
 		/*boolean inFisherKingdom = (mob.getLocation().inBounds(415, 976, 423, 984)
 			|| mob.getLocation().inBounds(511, 976, 519, 984));*/
-		boolean blockedPath = PathValidation.isBlocking(t.traversalMask, (byte) bit);
+		boolean blockedPath = PathValidation.isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
 		return blockedPath || isMobBlocking(x, y);
 	}
 
