@@ -29,16 +29,16 @@ InvUseOnObjectExecutiveListener {
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, final Item item, final Player player) {
-		if (obj.getID() == 177) { // Doric's Anvil
-			if (checkDorics(player)) return;
-		}
+
+		// Doric's Anvil
+		if (obj.getID() == 177 && !allowDorics(player)) return;
 
 		if (!smithingChecks(obj, item, player)) return;
 
 		beginSmithing(item, player);
 	}
 
-	private boolean checkDorics(Player player) {
+	private boolean allowDorics(Player player) {
 		if (player.getQuestStage(3) > -1) {
 			Npc doric = World.getWorld().getNpc(144, 323, 327, 487, 492,
 				true);
