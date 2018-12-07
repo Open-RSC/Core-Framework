@@ -55,8 +55,8 @@ public class Crafting implements InvUseOnItemListener,
 									}
 									final int[] moulds = {
 										ItemId.RING_MOULD.id(),
-										ItemId.AMULET_MOULD.id(),
 										ItemId.NECKLACE_MOULD.id(),
+										ItemId.AMULET_MOULD.id(),
 									};
 									final int[] gems = {
 										-1,
