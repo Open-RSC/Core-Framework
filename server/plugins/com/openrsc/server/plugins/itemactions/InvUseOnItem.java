@@ -97,35 +97,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 
 
 		/**
-		 * Wine and combine Dyes
+		 * Combine Dyes
 		 */
-
-		else if(compareItemsIds(item1, item2, 143, 141)) { // wine
-			if (player.getInventory().remove(new Item(143)) > -1 && player.getInventory().remove(new Item(141)) > -1) {
-				if(player.getSkills().getLevel(7) < 35) {
-					player.message("You need a cooking level of 35 to make wine");
-					return;
-				}
-				
-				player.message("You combine the grapes and water to make wine");
-				
-				player.setBatchEvent(new BatchEvent(player, 3000, 1) {
-					@Override
-					public void action() {
-						if(Formulae.goodWine(owner.getSkills().getLevel(7))) {
-							owner.message("The wine is successfully matured");
-							owner.getInventory().add(new Item(142));
-							owner.incExp(7, 440, true);
-						}
-						else {
-							owner.message("The wine does not get matured");
-							owner.getInventory().add(new Item(180));
-						}
-					}
-				});			
-				return;
-			}
-		}
 		else if(compareItemsIds(item1, item2, 238, 239)) {
 			if (player.getInventory().remove(new Item(239)) > -1 && player.getInventory().remove(new Item(238)) > -1) {
 				player.getInventory().add(new Item(282));
@@ -327,8 +300,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		else if(compareItemsIds(item1, item2, 695, 696) || compareItemsIds(item1, item2, 695, 697) || compareItemsIds(item1, item2, 696, 697))
 			return true;
 		else if(compareItemsIds(item1, item2, 1276, 1277))
-			return true;
-		else if(compareItemsIds(item1, item2, 143, 141))
 			return true;
 
 		for(int il : capes) {
