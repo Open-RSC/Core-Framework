@@ -135,13 +135,17 @@ public class PathValidation {
 		// Diagonal checks
 		boolean diagonalBlocked = false;
 		if (startX + 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(startX + 1, startY + 1, 0, false);
+			diagonalBlocked = checkBlocking(startX + 1, startY + 1,
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST, false);
 		else if (startX + 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(startX + 1, startY - 1, 0, false);
+			diagonalBlocked = checkBlocking(startX + 1, startY - 1,
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST, false);
 		else if (startX - 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(startX - 1, startY + 1, 0, false);
+			diagonalBlocked = checkBlocking(startX - 1, startY + 1,
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST, false);
 		else if (startX - 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(startX - 1, startY - 1, 0, false);
+			diagonalBlocked = checkBlocking(startX - 1, startY - 1,
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST, false);
 
 		if (diagonalBlocked)
 			return false;
@@ -264,12 +268,6 @@ public class PathValidation {
 
 		}
 
-		// Walls in the way
-		// |_
-		mask = World.getWorld().getTile(x - 1, y - 1).traversalMask;
-		blocking = (mask & CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST) != 0;
-		if (blocking) return false;
-
 		return false;
 
 	}
@@ -326,12 +324,6 @@ public class PathValidation {
 			}
 
 		}
-
-		// Walls in the way
-		// _|
-		mask = World.getWorld().getTile(x + 1, y - 1).traversalMask;
-		blocking = (mask & CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST) != 0;
-		if (blocking) return false;
 
 		return false;
 	}
@@ -390,13 +382,6 @@ public class PathValidation {
 
 		}
 
-		// Walls in the way
-		//  _
-		// |
-		mask = World.getWorld().getTile(x - 1, y + 1).traversalMask;
-		blocking = (mask & CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST) != 0;
-		if (blocking) return false;
-
 		return false;
 
 	}
@@ -454,13 +439,6 @@ public class PathValidation {
 			}
 
 		}
-
-		// Walls in the way
-		//  _
-		//   |
-		mask = World.getWorld().getTile(x + 1, y + 1).traversalMask;
-		blocking = (mask & CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST) != 0;
-		if (blocking) return false;
 
 		return false;
 
