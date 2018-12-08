@@ -29,7 +29,7 @@ import java.util.LinkedList;
 public class WalkingQueue {
 
 	//private static final boolean CHARACTER_FACING = true;
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private Mob mob;
 
