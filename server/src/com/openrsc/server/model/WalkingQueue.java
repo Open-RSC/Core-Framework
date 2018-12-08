@@ -134,7 +134,8 @@ public class WalkingQueue {
 		if (diagonalBlocked)
 			return false;
 
-		return true;
+		return !PathValidation.checkDiagonalPassThroughCollisions(curPoint, nextPoint);
+
 	}
 
 	private boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile) {
