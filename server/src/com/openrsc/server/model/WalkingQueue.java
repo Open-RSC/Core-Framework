@@ -134,7 +134,9 @@ public class WalkingQueue {
 		if (diagonalBlocked)
 			return false;
 
+		// if (mob.isPlayer()) // for debugging
 		return !PathValidation.checkDiagonalPassThroughCollisions(curPoint, nextPoint);
+		// return true; // for debugging
 
 	}
 
