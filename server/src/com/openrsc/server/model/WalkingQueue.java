@@ -120,6 +120,26 @@ public class WalkingQueue {
 		if (newYBlocked && startX == coords[0]) return false;
 		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) return false;
 
+		if (coords[0] > startX) {
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false);
+		}
+		else if (coords[0] < startX) {
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_WEST, false);
+		}
+
+		if (coords[1] > startY) {
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
+		}
+		else if (coords[1] < startY) {
+			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
+		}
+
+		if (newXBlocked && newYBlocked) return false;
+		if (newXBlocked && startY == coords[1]) return false;
+		if (myYBlocked && startX == coords[0]) return false;
+		if (myXBlocked && newXBlocked) return false;
+		if (myYBlocked && newYBlocked) return false;
+
 		// Diagonal checks
 		boolean diagonalBlocked = false;
 		if (startX + 1 == destX && startY + 1 == destY)
@@ -153,11 +173,14 @@ public class WalkingQueue {
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 
-		if (mob.isPlayer()) {
-			Npc npc = region.getNpc(x, y);
-			if (npc != null && npc.getDef().isAggressive()) {
-				return true;
-			}
+		Npc npc = region.getNpc(x, y);
+		if (npc != null && npc.getDef().isAggressive()) {
+			return true;
+		}
+
+		if (mob.isNpc()) {
+			Player p = region.getPlayer(x, y);
+			return p != null;
 		}
 		return false;
 	}
