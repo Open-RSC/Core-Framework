@@ -29,6 +29,7 @@ import java.util.LinkedList;
 public class WalkingQueue {
 
 	//private static final boolean CHARACTER_FACING = true;
+	private boolean DEBUG = true;
 
 	private Mob mob;
 
@@ -64,6 +65,7 @@ public class WalkingQueue {
 		int startY = mob.getY();
 		if (!checkAdjacent(new Point(startX, startY), new Point(destX, destY))) {
 			reset();
+			if (DEBUG && mob.isPlayer()) System.out.println("Failed adjacent check, not pathing.");
 			return;
 		}
 		if (mob.isNpc())
@@ -113,12 +115,19 @@ public class WalkingQueue {
 		}
 
 		if (myXBlocked && myYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 1");
 		if (myXBlocked && startY == destY) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 2");
 		if (myYBlocked && startX == destX) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 3");
 		if (newXBlocked && newYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 4");
 		if (newXBlocked && startY == coords[1]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 5");
 		if (newYBlocked && startX == coords[0]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 6");
 		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 7");
 
 		if (coords[0] > startX) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false);
@@ -135,24 +144,35 @@ public class WalkingQueue {
 		}
 
 		if (newXBlocked && newYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 8");
 		if (newXBlocked && startY == coords[1]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 9");
 		if (myYBlocked && startX == coords[0]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 10");
 		if (myXBlocked && newXBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 11");
 		if (myYBlocked && newYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 12");
 
 		// Diagonal checks
 		boolean diagonalBlocked = false;
 		if (startX + 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(startX + 1, startY + 1, 0, false);
+			diagonalBlocked = checkBlocking(startX + 1, startY + 1,
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST, false);
 		else if (startX + 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(startX + 1, startY - 1, 0, false);
+			diagonalBlocked = checkBlocking(startX + 1, startY - 1,
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST, false);
 		else if (startX - 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(startX - 1, startY + 1, 0, false);
+			diagonalBlocked = checkBlocking(startX - 1, startY + 1,
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST, false);
 		else if (startX - 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(startX - 1, startY - 1, 0, false);
+			diagonalBlocked = checkBlocking(startX - 1, startY - 1,
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST, false);
 
 		if (diagonalBlocked)
 			return false;
+
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 13");
 
 		// if (mob.isPlayer()) // for debugging
 		return !PathValidation.checkDiagonalPassThroughCollisions(curPoint, nextPoint);
