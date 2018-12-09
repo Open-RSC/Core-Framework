@@ -166,10 +166,10 @@ public class PathValidation {
 		if ((objectValue & bit) != 0) { // There is a wall in the way
 			return true;
 		}
-		if ((objectValue & CollisionFlag.FULL_BLOCK_A) != 0) { // There is a diagonal wall here: \
+		if (!isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_A) != 0) { // There is a diagonal wall here: \
 			return true;
 		}
-		if ((objectValue & CollisionFlag.FULL_BLOCK_B) != 0) { // There is a diagonal wall here: /
+		if (!isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_B) != 0) { // There is a diagonal wall here: /
 			return true;
 		}
 		if (!isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0) { // This tile is unwalkable
