@@ -52,7 +52,8 @@ InvUseOnObjectExecutiveListener {
 
 	private boolean smithingChecks(final GameObject obj, final Item item, final Player player) {
 
-		if (obj.getID() != 50) return false;
+		// Not an anvil or Doric's Anvil...
+		if (!(obj.getID() == 50 || obj.getID() == 177)) return false;
 
 		// Using hammer with anvil.
 		if(item.getID() == 168) {
