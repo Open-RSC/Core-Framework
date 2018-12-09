@@ -26,14 +26,14 @@ public final class Formulae {
 	public static final int[] miningAxeLvls = { 41, 31, 21, 6, 1, 1 };
 	public static final int[] gemDropIDs = { 160, 159, 158, 157 };
 	public static final int[] gemDropWeights = { 100, 70, 45, 15 };
-	public static final int[] throwingIDs = { 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1013, 1015, 
-			1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1070, 1069, 
+	public static final int[] throwingIDs = { 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1013, 1015,
+			1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1070, 1069,
 			1068, 1024, 827, 1088, 1089, 1090, 1091, 1092, 1135, 1136, 1137, 1138, 1139, 1140 };
 
 	/**
 	 * The one and only method for getting face direction, removed the other
 	 * 10...
-	 * 
+	 *
 	 * @param you
 	 * @param x
 	 * @param y
@@ -235,7 +235,7 @@ public final class Formulae {
 		}
 		return DataConversions.random(0, levelDiff - DataConversions.random(0, levelDiff) + 1) == 0;
 	}
-	
+
 	public static boolean goodWine(int cookingLevel) {
 		int chance = (int)(13 * Math.sqrt(cookingLevel - 10));
 		return chance > DataConversions.random(0, 100);
@@ -271,13 +271,13 @@ public final class Formulae {
 				if(owner.getInventory().wielding(1000) && iban) {
 					max = DataConversions.random(0, 25);
 				} else {
-					if (owner.isCharged() && 
-							(owner.getInventory().wielding(1213) || 
-							owner.getInventory().wielding(1214) || 
+					if (owner.isCharged() &&
+							(owner.getInventory().wielding(1213) ||
+							owner.getInventory().wielding(1214) ||
 							owner.getInventory().wielding(1215))) {
 						max = DataConversions.random(0, 25);
 					} else {
-						max = DataConversions.random(0, 10);
+						max = DataConversions.random(0, 18);
 					}
 				}
 				int maxProb = 5; // 5%
@@ -313,7 +313,7 @@ public final class Formulae {
 
 	/**
 	 * Calculates what one mob should hit on another with range
-	 * 
+	 *
 	 * @param owner
 	 */
 	public static int calcRangeHit(Player owner, int rangeLvl, int armourEquip, int arrowID) {
@@ -557,7 +557,7 @@ public final class Formulae {
 	 * Chance to cut cacti is 75% success
 	 */
 	public static boolean cutCacti() { // Check is for FAIL, not SUCCESS.
-		return DataConversions.random(0, 100) > 75; 
+		return DataConversions.random(0, 100) > 75;
 	}
 
 	/**
@@ -985,7 +985,7 @@ public final class Formulae {
 		else if (goldValues.length == 7) weights = new int[] {18, 28, 24, 13, 9, 6, 2};
 		else if (goldValues.length == 8) weights = new int[] {18, 23, 27, 13, 9, 7, 2, 1};
 		else if (goldValues.length == 9) weights = new int[] {12, 17, 27, 23, 8, 6, 4, 2, 1};
-		
+
 
 		return weightedRandomChoice(goldValues, weights, goldValues[0]);
 	}
