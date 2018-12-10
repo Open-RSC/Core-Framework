@@ -685,6 +685,7 @@ public final class Formulae {
 			return false;
 		}
 		int bonus = 0;
+		/*
 		switch (axeId) {
 		case 156:
 			bonus = 0;
@@ -704,7 +705,7 @@ public final class Formulae {
 		case 1262:
 			bonus = 12;
 			break;
-		}
+		}*/
 		return DataConversions.percentChance(offsetToPercent(levelDiff + bonus));
 	}
 
