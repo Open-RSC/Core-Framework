@@ -24,7 +24,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			if (p.cantConsume()) {
 				return;
 			}
-			p.setConsumeTimer(325);
+			p.setConsumeTimer(1200);
 			ActionSender.sendSound(p, "eat");
 			if (item.getID() == 228 || item.getID() == 18) { // Cabbage
 				p.message("You eat the " + item.getDef().getName()
@@ -111,7 +111,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			} else
 				p.message("You eat the "
 						+ item.getDef().getName().toLowerCase());
-			
+
 			final boolean heals = p.getSkills().getLevel(3) < p.getSkills().getMaxStat(3);
 			if (heals) {
 				int newHp = p.getSkills().getLevel(3) + item.eatingHeals();
