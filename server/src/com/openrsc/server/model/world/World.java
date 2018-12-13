@@ -456,11 +456,6 @@ public final class World {
                     + npc.startY + "</startY>");
         }
 
-        /**
-         * Unique ID for event tracking.
-         */
-        n.setUUID(UUID.randomUUID().toString());
-
         npcs.add(n);
         return n;
     }
