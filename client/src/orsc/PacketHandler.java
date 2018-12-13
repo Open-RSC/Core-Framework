@@ -197,8 +197,8 @@ public class PacketHandler {
 			// Show NPCs
 			else if (opcode == 79) showNPCs(length);
 
-			// NPC Quest Message
-			else if (opcode == 104) updateQuestNPCStatus();
+			// NPC Appearances
+			else if (opcode == 104) updateNPCAppearances();
 
 			// Show Options Menu
 			else if (opcode == 245) showOptionsMenu();
@@ -1261,36 +1261,37 @@ public class PacketHandler {
 		packetsIncoming.endBitAccess();
 	}
 
-	private void updateQuestNPCStatus() {
-		int var4 = packetsIncoming.getShort();
+	private void updateNPCAppearances() {
+		int numberOfUpdates = packetsIncoming.getShort();
 
-		for (int var19 = 0; var4 > var19; ++var19) {
-			int var6 = packetsIncoming.getShort();
-			ORSCharacter var22 = mc.getNpcFromServer(var6);
+		for (int update = 0; numberOfUpdates > update; ++update) {
+			int sender = packetsIncoming.getShort();
+			ORSCharacter npc = mc.getNpcFromServer(sender);
 			int updateType = packetsIncoming.getUnsignedByte();
-			if (updateType == 1) {
-				int var9 = packetsIncoming.getShort();
-				if (var22 != null) {
+			if (updateType == 1) { // NPC Chat
+				int chatRecipient = packetsIncoming.getShort();
+				if (npc != null) {
 					String message = packetsIncoming.readString();
-					var22.messageTimeout = 150;
-					var22.message = message;
-					if (mc.getLocalPlayer().serverIndex == var9) {
+					npc.messageTimeout = 150;
+					npc.message = message;
+					if (mc.getLocalPlayer().serverIndex == chatRecipient) {
 						mc.showMessage(false, (String) null,
-										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(var22.npcId).getName() + ": "
-														+ var22.message,
+										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": "
+														+ npc.message,
 										MessageType.QUEST, 0, (String) null, "@yel@");
 					}
 				}
-			} else if (updateType == 2) {
-				int var9 = packetsIncoming.getUnsignedByte();
-				int var10 = packetsIncoming.getUnsignedByte();
-				int var11 = packetsIncoming.getUnsignedByte();
 
-				if (null != var22) {
-					var22.damageTaken = var9;
-					var22.healthMax = var11;
-					var22.combatTimeout = 200;
-					var22.healthCurrent = var10;
+			} else if (updateType == 2) { // NPC Hitpoints
+				int damage = packetsIncoming.getUnsignedByte();
+				int currentHits = packetsIncoming.getUnsignedByte();
+				int maximumHits = packetsIncoming.getUnsignedByte();
+
+				if (null != npc) {
+					npc.damageTaken = damage;
+					npc.healthMax = maximumHits;
+					npc.combatTimeout = 200;
+					npc.healthCurrent = currentHits;
 				}
 			}
 		}
