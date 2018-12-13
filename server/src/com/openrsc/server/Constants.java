@@ -96,6 +96,15 @@ public final class Constants {
 		 */
 		public static int VIEW_DISTANCE = 2;
 		/**
+		 * NPC blocking
+		 * 0 = no npc blocks
+		 * 1 = 2 * lvl + 1
+		 * 2 = any aggressive blocks
+		 * 3 = any attackable blocks
+		 * 4 = all npcs block
+		 */
+		public static int NPC_BLOCKING = 2;
+		/**
 		 * A message players will receive upon login
 		 */
 		public static String MOTD = "Welcome to " + SERVER_NAME + "!";
@@ -261,6 +270,7 @@ public final class Constants {
 			VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(props.getProperty("valuable_drop_extras"));
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 			START_TIME = System.currentTimeMillis();
+			NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
