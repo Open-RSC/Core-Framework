@@ -97,11 +97,11 @@ public final class Constants {
 		public static int VIEW_DISTANCE = 2;
 		/**
 		 * NPC blocking
-		 * 0 = no npc blocks
-		 * 1 = 2 * lvl + 1
-		 * 2 = any aggressive blocks
-		 * 3 = any attackable blocks
-		 * 4 = all npcs block
+		 * 0 = No NPC blocks
+		 * 1 = 2 * combat level + 1 blocks
+		 * 2 = Any aggressive NPC blocks
+		 * 3 = Any attackable NPC blocks
+		 * 4 = All NPCs block
 		 */
 		public static int NPC_BLOCKING = 2;
 		/**
@@ -285,8 +285,7 @@ public final class Constants {
 		public static final int TRIBESMAN = 421;
 		public static final int JUNGLE_SAVAGE = 776;
 		
-		public static final HashMap<Integer, Integer> npcData = new HashMap<Integer, Integer>()
-		{{
+		public static final HashMap<Integer, Integer> npcData = new HashMap<>() {{
 			put(POISON_SCORPION, 38);
 			put(POISON_SPIDER, 68);
 			put(DUNGEON_SPIDER, 38);
