@@ -38,13 +38,19 @@ public class AppFrame extends JFrame {
 
     public void build() {
         Random rand = new Random();
-        int value = rand.nextInt(3);
+        int value = rand.nextInt(5);
         if (value == 0) {
             (this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 980, 560);
         } else if (value == 1) {
             (this.bg = new JLabel(Utils.getImage("background2.png"))).setBounds(0, 0, 980, 560);
+		} else if (value == 2) {
+			(this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 980, 560);
+		} else if (value == 3) {
+			(this.bg = new JLabel(Utils.getImage("background4.png"))).setBounds(0, 0, 980, 560);
+		} else if (value == 4) {
+			(this.bg = new JLabel(Utils.getImage("background5.png"))).setBounds(0, 0, 980, 560);
         } else {
-            (this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 980, 560);
+            (this.bg = new JLabel(Utils.getImage("background6.png"))).setBounds(0, 0, 980, 560);
         }
 
         this.add(this.bg);
