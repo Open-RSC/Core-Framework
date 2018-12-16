@@ -511,7 +511,7 @@ public final class Admins implements CommandListener {
             }
         } else if (command.equals("update")) {
             String reason = "";
-            int seconds = 60;
+            int seconds = 300; // 5 minutes
             if (args.length > 0) {
                 for (int i = 0; i < args.length; i++) {
                     if (i == 0) {
@@ -530,7 +530,7 @@ public final class Admins implements CommandListener {
             int remainder = seconds % 60;
 
             if (Server.getServer().shutdownForUpdate(seconds)) {
-                String message = "The server will be shutting down in "
+                String message = "The server will be shutting down for updates in "
                         + (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
                         + (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
                         + (reason == "" ? "" : ": % % " + reason);
