@@ -69,7 +69,7 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 				if(shaman_done == 1) {
 					playerTalk(p, null, "Thats the second one gone...");
 				} else if(shaman_done == 2) {
-					playerTalk(p, null, "Thats the next one dealth with...");
+					playerTalk(p, null, "Thats the next one dealt with...");
 				} else if(shaman_done == 3) {
 					playerTalk(p, null, "There goes another one...");
 				} else if(shaman_done == 4) {
@@ -77,7 +77,7 @@ public class WatchTowerShaman implements TalkToNpcListener, TalkToNpcExecutiveLi
 				} else if(shaman_done == 5 || p.getCache().getInt("shaman_count") == 6) {
 					p.message("You hear a scream...");
 					p.message("The shaman dissolves before your eyes!");
-					p.message("A crystal drops from the hand of the dissapearing ogre!");
+					p.message("A crystal drops from the hand of the dissappearing ogre!");
 					p.message("You snatch it up quickly");
 					removeItem(p, 1054, 1);
 					addItem(p, 465, 1);
