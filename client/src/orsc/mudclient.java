@@ -5724,6 +5724,8 @@ public final class mudclient implements Runnable {
 																+ (wallObjectInstanceX[var9] + this.midRegionBaseX)
 																+ ","
 																+ (wallObjectInstanceZ[var9] + this.midRegionBaseZ)
+																+ ","
+																+ wallObjectInstanceDir[var9]
 																+ ")" : ""));
 									}
 
@@ -5781,6 +5783,8 @@ public final class mudclient implements Runnable {
 															+ ","
 															+ (gameObjectInstanceZ[var9]
 																	+ this.midRegionBaseZ)
+															+ ","
+															+ gameObjectInstanceDir[var9]
 															+ ")"
 															: ""));
 										}
@@ -5834,7 +5838,8 @@ public final class mudclient implements Runnable {
 															+ (adminRights
 																	? " @or1@(" + groundItemID[var9] + ":"
 																	+ (groundItemX[var9] + midRegionBaseX) + ","
-																	+ (groundItemZ[var9] + midRegionBaseZ) + ")"
+																	+ (groundItemZ[var9] + midRegionBaseZ) + ","
+																	+ wallObjectInstanceDir[var9] + ")"
 																	: ""));
 										}
 									} else {

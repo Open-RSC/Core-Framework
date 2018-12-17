@@ -115,6 +115,7 @@ public class WalkingQueue {
 			coords[1] = startX + 1;
 		}
 
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 0");
 		if (myXBlocked && myYBlocked) return false;
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 1");
 		if (myXBlocked && startY == destY) return false;
