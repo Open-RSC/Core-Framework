@@ -463,8 +463,8 @@ public final class Admins implements CommandListener {
             return;
         } else if (command.equals("tile")) {
             TileValue tv = World.getWorld().getTile(player.getLocation());
-            player.message("travelsal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
-                    + (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff));
+            player.message("traversal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
+                    + (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile? " + tv.projectileAllowed);
         } else if (command.equals("debugregion")) {
             boolean debugPlayers = Integer.parseInt(args[0]) == 1;
             boolean debugNpcs = Integer.parseInt(args[1]) == 1;
