@@ -433,8 +433,21 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			p.message("The nightshade was highly poisonous");
 		} 
 		else if (item.getID() == 1087) {
-			p.message("You search the robe");
-			p.message("You find nothing");
+			if(p.getQuestStage(Quests.WATCHTOWER) == 8 || p.getQuestStage(Quests.WATCHTOWER) == 9) {
+				p.message("You search the robe");
+				if(hasItem(p, 1153)) {
+					message(p, "You find nothing");
+				} else if(p.getBank().hasItemId(1153)) {
+					playerTalk(p, null, "I already have this in my bank");
+				} else {
+					message(p, "You find a crystal wrapped in the folds of the material");
+					addItem(p, 1153, 1);
+				}
+			}
+			else {
+				message(p, "You search the robe",
+						"You find nothing");
+			}
 		} 
 		else if (item.getID() == 1141) {
 			ActionSender.sendBox(p, 

@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+
+import com.openrsc.server.Constants.Quests;
 /**
  * 
  * @author Imposter/Fate
@@ -45,7 +47,12 @@ TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveLis
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if(n.getID() == GORAD) {
-			if(p.getCache().hasKey("ogre_grew_p1")) {
+			if(p.getCache().hasKey("ogre_grew")) {
+				playerTalk(p,n, "I've come to knock your teeth out!");
+				npcTalk(p,n, "How dare you utter that foul language in my prescence!",
+						"You shall die quickly vermin");
+				n.startCombat(p);
+			} else if(p.getCache().hasKey("ogre_grew_p1") || p.getQuestStage(Quests.WATCHTOWER) > 0) {
 				playerTalk(p,n, "Hello");
 				npcTalk(p,n, "Do you know who you are talking to ?");
 				int menu = showMenu(p,n,
@@ -61,11 +68,6 @@ TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveLis
 					npcTalk(p,n, "I am Gorad - who you are dosen't matter",
 							"Go now and you may live another day!");
 				}
-			} else if(p.getCache().hasKey("ogre_grew")) {
-				playerTalk(p,n, "I've come to knock your teeth out!");
-				npcTalk(p,n, "How dare you utter that foul language in my prescence!",
-						"You shall die quickly vermin");
-				n.startCombat(p);
 			} else {
 				p.message("Gorad is busy, try again later");
 			}
