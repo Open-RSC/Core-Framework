@@ -419,7 +419,6 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 		if(obj.getID() == YANILLE_HOLE) { 
 			playerTalk(p,null, "I can't get through this way",
 					"This hole must lead to somewhere...");
-
 		}
 		if(obj.getID() == SKAVID_HOLE) {
 			p.playerServerMessage(MessageType.QUEST, "You enter the tunnel");
