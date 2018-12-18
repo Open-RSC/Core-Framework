@@ -10464,14 +10464,15 @@ public final class mudclient implements Runnable {
 
 							try {
 								int dir = this.gameObjectInstanceDir[i];
+								this.getWorld().registerObjectDir(xTile, zTile, dir);
 								int xSize;
 								int zSize;
-								if (dir != 0 && dir != 4) {
-									zSize = EntityHandler.getObjectDef(objectID).getWidth();
-									xSize = EntityHandler.getObjectDef(objectID).getHeight();
-								} else {
-									zSize = EntityHandler.getObjectDef(objectID).getHeight();
+								if (dir == 0 || dir == 4) {
 									xSize = EntityHandler.getObjectDef(objectID).getWidth();
+									zSize = EntityHandler.getObjectDef(objectID).getHeight();
+								} else {
+									xSize = EntityHandler.getObjectDef(objectID).getHeight();
+									zSize = EntityHandler.getObjectDef(objectID).getWidth();
 								}
 
 								int x = (2 * xTile + xSize) * this.tileSize / 2;
