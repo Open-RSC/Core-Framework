@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -806,15 +807,19 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						} else if(m == 1) {
 							watchtowerWizardDialogue(p, n, WatchTowerWizard.SEARCHINGTHECAVES);
 						}
-					} else if(hasItem(p, WatchTowerObstacles.EYE_PATCH) || hasItem(p, WatchTowerObstacles.ARMOUR)
-							|| hasItem(p, WatchTowerObstacles.DAGGER) || hasItem(p, WatchTowerObstacles.ROBE)) {
-						if(hasItem(p, WatchTowerObstacles.EYE_PATCH)) {
+					}
+					/** EASTER EGG? IN OFFICIAL RSC THE RELATED QUEST ITEMS WERE NOT CHECKED 
+					 * BUT INSTEAD THE REGULAR ONES (see wiki)
+					 * **/
+					else if(hasItem(p, ItemId.EYE_PATCH.id()) || hasItem(p, ItemId.GOBLIN_ARMOUR.id())
+							|| hasItem(p, ItemId.IRON_DAGGER.id()) || hasItem(p, ItemId.WIZARDS_ROBE.id())) {
+						if(hasItem(p, ItemId.EYE_PATCH.id())) {
 							playerTalk(p, n, "I found this eye patch");
-						} else if(hasItem(p, WatchTowerObstacles.ARMOUR)) {
+						} else if(hasItem(p, ItemId.GOBLIN_ARMOUR.id())) {
 							playerTalk(p, n, "Have a look at this goblin armour");
-						} else if(hasItem(p, WatchTowerObstacles.DAGGER)) {
+						} else if(hasItem(p, ItemId.IRON_DAGGER.id())) {
 							playerTalk(p, n, "I found a dagger");
-						} else if(hasItem(p, WatchTowerObstacles.ROBE)) {
+						} else if(hasItem(p, ItemId.WIZARDS_ROBE.id())) {
 							playerTalk(p, n, "I have this robe");
 						}
 						npcTalk(p,n, "Let me see...",
@@ -1021,6 +1026,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 			}
 		}
 	}
+	
 	private void ogreSpawnAndAttack(Player p, Npc n) {
 		spawnNpc(706, p.getX(), p.getY(), 60000 * 3);
 		sleep(1600);
