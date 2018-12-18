@@ -1031,12 +1031,12 @@ public class PacketHandler {
 				mc.getWorld().registerObjectDir(xTile, zTile, dir);
 				if (id != 60000) {
 					int xSize, zSize;
-					if (dir != 0 && dir != 4) {
-						xSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getHeight();// EntityHandler.getObjectDef(id).getHeight();
-						zSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getWidth();// EntityHandler.getObjectDef(id).getWidth();
+					if (dir == 0 || dir == 4) {
+						zSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getHeight();
+						xSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getWidth();
 					} else {
-						zSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getHeight();// EntityHandler.getObjectDef(id).getHeight();
-						xSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getWidth();// EntityHandler.getObjectDef(id).getWidth();
+						xSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getHeight();
+						zSize = com.openrsc.client.entityhandling.EntityHandler.getObjectDef(id).getWidth();
 					}
 
 					int tileSize = mc.getTileSize();
