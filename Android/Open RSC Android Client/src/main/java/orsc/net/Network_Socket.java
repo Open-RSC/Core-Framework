@@ -1,12 +1,13 @@
 package orsc.net;
 
+import orsc.PacketHandler;
+import orsc.mudclient;
+import orsc.util.GenUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import orsc.mudclient;
-import orsc.util.GenUtil;
 
 public final class Network_Socket extends Network_Base implements Runnable {
 	private boolean closed = false;
@@ -22,7 +23,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 
 	private int writeBufWrite = 0;
 
-	public Network_Socket(Socket sock, mudclient var2) throws IOException {
+	public Network_Socket(Socket sock, PacketHandler var2) throws IOException {
 		try {
 			this.sock = sock;
 			this.inStream = sock.getInputStream();
@@ -91,6 +92,14 @@ public final class Network_Socket extends Network_Base implements Runnable {
 		}
 	}
 
+	public final int getByte() {
+		try {
+			return this.inStream.read();
+		} catch (IOException var3) {
+			throw GenUtil.makeThrowable(var3, "");
+		}
+	}
+
 	public final int getUnsignedByte() {
 		try {
 			int r = this.inStream.read();
@@ -99,6 +108,26 @@ public final class Network_Socket extends Network_Base implements Runnable {
 			throw GenUtil.makeThrowable(var3, "");
 		}
 	}
+
+	public final int getShort() {
+		try {
+			int r = this.inStream.read() + this.inStream.read();
+			return r & 32767;
+		} catch (IOException var3) {
+			throw GenUtil.makeThrowable(var3, "tb.G(" + "dummy" + ')');
+		}
+	}
+
+	public final int get32() {
+		try {
+			int r = this.inStream.read() + this.inStream.read()
+					+ this.inStream.read() + this.inStream.read();
+			return r & 0xFF;
+		} catch (IOException var3) {
+			throw GenUtil.makeThrowable(var3, "tb.G(" + "dummy" + ')');
+		}
+	}
+
 
 	public final String readString() {
 		try {

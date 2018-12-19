@@ -2,35 +2,34 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
 
+import java.util.ArrayList;
+
 
 public final class SkillGuideInterface {
 	private ArrayList<SkillItem> skillItems;
-	
+
 	public int curTab = 0;
-	
+
 	private boolean visible = false;
 
 	public int skillGuideScroll;
-	
+
 	public Panel skillGuide;
 
 	private mudclient mc;
 
 	private int panelColour, textColour, bordColour;
-	
+
 	int width = 430;
 	int height = 320;
 	int autoHeight = 0;
-	
+
 	private int x, y;
-	
+
 	// Different y values used for larger skill guides with more tabs
 	boolean largeSkillGuide = false;
 
@@ -41,16 +40,16 @@ public final class SkillGuideInterface {
 
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		skillItems = new ArrayList<SkillItem>();
-		
+
 		skillGuideScroll = skillGuide.addScrollingList2(x + 4, y + 79, width - 5, height - 77, 100, 7, true);
 	}
-	
+
 	public void reposition() {
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		skillGuide.reposition(skillGuideScroll, x + 4, y + 81, width - 5, height - 82);
 	}
 
@@ -58,15 +57,15 @@ public final class SkillGuideInterface {
 		reposition();
 		int x = (mc.getGameWidth() - width) / 2;
 		int y = (mc.getGameHeight() - height) / 2;
-		
+
 		panelColour = 0x989898; textColour = 0xffffff; bordColour = 0x000000;
-		
+
 		skillGuide.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
-		
+
 		// Draws the background
 		mc.getSurface().drawBoxAlpha(x, y, width, autoHeight - y, panelColour, 160);
 		mc.getSurface().drawBoxBorder(x, width, y, autoHeight - y, bordColour);
-		
+
 		// Draws the title
 		if (mc.skillGuideChosenTabs.size() <= 4) {
 			largeSkillGuide = false;
@@ -75,12 +74,12 @@ public final class SkillGuideInterface {
 			largeSkillGuide = true;
 			drawStringCentered(mc.getSkillGuideChosen(), x, y + 20, 5, textColour);
 		}
-		
+
 		this.drawButton(x + 394, y + 6, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.getClientStream().newPacket(212);
-				mc.getClientStream().finishPacket();
+				mc.packetHandler.getClientStream().newPacket(212);
+				mc.packetHandler.getClientStream().finishPacket();
 				skillGuide.resetScrollIndex(skillGuideScroll);
 				curTab = 0;
 				setVisible(false);
@@ -206,7 +205,7 @@ public final class SkillGuideInterface {
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
 		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
 	}
-	
+
 	// Used for drawing tabs
 	// Keeps track of current tab and tab hovered over
 	private void drawTab(int x, int y, int width, int height, String text, int font) {
@@ -228,9 +227,9 @@ public final class SkillGuideInterface {
 		}
 		mc.getSurface().drawBoxAlpha(x, y, width, height, bgBtnColour, 192);
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
-	    mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2), y + height / 2 + 5, textColour, font);
+		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2), y + height / 2 + 5, textColour, font);
 	}
-	
+
 	public void populateSkillItems() {
 		skillItems.clear();
 		if (mc.getSkillGuideChosen().equals("Attack")) {
@@ -458,7 +457,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(142, "35", "Wine"));
 				skillItems.add(new SkillItem(1269, "50", "Oomlie Meat Parcel"));
 				skillItems.add(new SkillItem(1102, "58", "Tasty Ugthanki Kebab"));
-			} 
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Woodcutting")) {
 			if (curTab == 0) {
@@ -833,7 +832,7 @@ public final class SkillGuideInterface {
 			}
 		}
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}

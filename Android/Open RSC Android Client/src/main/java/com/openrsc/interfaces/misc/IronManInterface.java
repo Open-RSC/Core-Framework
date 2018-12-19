@@ -13,39 +13,39 @@ public final class IronManInterface {
 	private mudclient mc;
 
 	public Panel ironmanPanel;
-	
+
 	private String[] ironManTitle = { "Standard Iron Man", "Hardcore Iron Man", "Ultimate Iron Man", "None" };
-	private String[] ironManDescription = 
-			{ 
-			"An Iron Man cannot trade, stake, receive PK loot, scavenge dropped items, nor play certain multiplayer minigames.", 
-			"In addition to the standard Iron Man rules, a Hardcore Iron Man only has 1 life. A dangerous death will result in being downgraded to a standard Iron Man.", 
-			"In addition to the standard Iron Man rules, an Ultimate Iron Man cannot use banks, nor retain any items on death in dangerous areas.", 
-			"- No Iron Man restrictions will apply to this account."
+	private String[] ironManDescription =
+			{
+					"An Iron Man cannot trade, stake, receive PK loot, scavenge dropped items, nor play certain multiplayer minigames.",
+					"In addition to the standard Iron Man rules, a Hardcore Iron Man only has 1 life. A dangerous death will result in being downgraded to a standard Iron Man.",
+					"In addition to the standard Iron Man rules, an Ultimate Iron Man cannot use banks, nor retain any items on death in dangerous areas.",
+					"- No Iron Man restrictions will apply to this account."
 			};
-	
+
 	private String[] restrictionTitle = { "PIN", "Permanent" };
-	private String[] restrictionDesc = 
-			{ 
-			"You must enter your Bank Pin to request that Iron Man restrictions be removed.", 
-			"- The Iron Man restrictions can never be removed." 
+	private String[] restrictionDesc =
+			{
+					"You must enter your Bank Pin to request that Iron Man restrictions be removed.",
+					"- The Iron Man restrictions can never be removed."
 			};
-	
+
 	private int[] order = { 3, 0, 2, 1 };
 	private int[] selectMode = { 1, 3, 2, 0 };
-	
-	
+
+
 	private String getIronManTitleByID(int id) {
 		return ironManTitle[id];
 	}
-	
+
 	private String getIronManDescByID(int id) {
 		return ironManDescription[id];
 	}
-	
+
 	private String getIronManRestrictionByID(int id) {
 		return restrictionTitle[id];
 	}
-	
+
 	private String getIronManRestrictionDescByID(int id) {
 		return restrictionDesc[id];
 	}
@@ -152,11 +152,11 @@ public final class IronManInterface {
 			drawClickBox(graphics, drawBoxX + 5, drawBoxY + 26, drawBoxWidth, 340, drawBoxheight, getIronManTitleByID(modeID), titleY, getIronManDescByID(modeID), descX, descY, new ButtonHandler() {
 				@Override
 				void handle() {
-					mc.getClientStream().newPacket(199);
-					mc.getClientStream().writeBuffer1.putByte(7);
-					mc.getClientStream().writeBuffer1.putByte(0);
-					mc.getClientStream().writeBuffer1.putByte(selectMode[modeID]);
-					mc.getClientStream().finishPacket();
+					mc.packetHandler.getClientStream().newPacket(199);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(7);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(selectMode[modeID]);
+					mc.packetHandler.getClientStream().finishPacket();
 				}
 			});
 
@@ -207,11 +207,11 @@ public final class IronManInterface {
 				@Override
 				void handle() {
 
-					mc.getClientStream().newPacket(199);
-					mc.getClientStream().writeBuffer1.putByte(7);
-					mc.getClientStream().writeBuffer1.putByte(1);
-					mc.getClientStream().writeBuffer1.putByte(restrictionID);
-					mc.getClientStream().finishPacket();
+					mc.packetHandler.getClientStream().newPacket(199);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(7);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
+					mc.packetHandler.getClientStream().writeBuffer1.putByte(restrictionID);
+					mc.packetHandler.getClientStream().finishPacket();
 				}
 			});
 			graphics.drawCircle(drawBoxX + 8 + 5, circleY, 8, 0x3A3026, 255, 0);
@@ -250,10 +250,10 @@ public final class IronManInterface {
 		if(i > 1 || i < 0) {
 			i = 0;
 		}
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(8);
-		mc.getClientStream().writeBuffer1.putByte(i);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(8);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(i);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	public boolean isVisible() {
@@ -299,7 +299,7 @@ public final class IronManInterface {
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height && deactivationMenu) {
 			allColor = 0x675F56;
 			if (mc.getMouseClick() == 1) {
-				
+
 				handler.handle();
 				mc.setMouseClick(0);
 			}

@@ -2,13 +2,13 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
+import com.openrsc.interfaces.misc.BankInterface;
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
+
+import java.util.ArrayList;
 
 public final class CustomBankInterface extends BankInterface {
 	private int organizeMode = 0;
@@ -23,10 +23,10 @@ public final class CustomBankInterface extends BankInterface {
 
 	private boolean swapNoteMode;
 
-  public int bankSearch;
-  public int bankScroll;
+	public int bankSearch;
+	public int bankScroll;
 	private int x, y;
-	
+
 	public int lastXAmount = 0;
 	public boolean saveXAmount = false;
 	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
@@ -62,7 +62,7 @@ public final class CustomBankInterface extends BankInterface {
 
 		bank.reposition(bankSearch, x + 375 + 6, y + 44, 110, 18);
 		bank.reposition(bankScroll, x + 4, y + 57, width - 5, 137);
-		
+
 		fontSizeHeight = mc.getSurface().fontHeight(fontSize);
 
 		mc.getSurface().drawBox(x, y, width, 21, 192);
@@ -70,7 +70,7 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxAlpha(x, y + 21, width, 309, colour, 160);
 		mc.getSurface().drawBoxBorder(x, width, y, 331, 0x000000);
 
-		drawString("The Bank of Open RSC", x + 196, y + 15, 1, 0xFFFFFF);
+		drawString("The Bank of " + Config.SERVER_NAME, x + 196, y + 15, 1, 0xFFFFFF);
 
 		int j3 = 0xFFFFFF;
 		if (mc.getMouseX() > x + 415 && mc.getMouseY() >= y && mc.getMouseX() < x + width && mc.getMouseY() < y + 12 + 9) {
@@ -107,7 +107,7 @@ public final class CustomBankInterface extends BankInterface {
 			if (mc.bankPage == 6)
 				mc.bankPage = 5;
 			bankPages = 5;
-		} 
+		}
 		else if(bankItems.size() > 200) {
 			bankPages = 6;
 		}
@@ -128,14 +128,14 @@ public final class CustomBankInterface extends BankInterface {
 			}
 			if(tabs != 0) {
 				switch(bankTabShow) {
-				case DIGIT:
-					mc.getSurface().drawString("" + tabs, tabX, tabY, 0xFFFFFF, 1);
-					break;
-				case FIRST_ITEM_IN_TAB:
-					mc.getSurface().drawSpriteClipping(mudclient.spriteItem + EntityHandler.getItemDef(first_item).getSprite(),
-							tabX, tabY, 48, 32, EntityHandler.getItemDef(first_item).getPictureMask(), 0, false, 0, 1);
-					mc.getSurface().drawString("" + tabs, tabX + 2, tabY + 12, 0xFFFFFF, 3);
-					break;            
+					case DIGIT:
+						mc.getSurface().drawString("" + tabs, tabX, tabY, 0xFFFFFF, 1);
+						break;
+					case FIRST_ITEM_IN_TAB:
+						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + EntityHandler.getItemDef(first_item).getSprite(),
+								tabX, tabY, 48, 32, EntityHandler.getItemDef(first_item).getPictureMask(), 0, false, 0, 1);
+						mc.getSurface().drawString("" + tabs, tabX + 2, tabY + 12, 0xFFFFFF, 3);
+						break;
 				}
 			} else {
 				mc.getSurface().drawString("ALL", tabX + 15, tabY + 20, 0xFFFFFF, 1);
@@ -223,13 +223,13 @@ public final class CustomBankInterface extends BankInterface {
 			bank.hide(bankScroll);
 		}
 
-		// Drawing items
+		// Drawing bank-specific items
 		for (int verticalSlots = 0; verticalSlots < 4; verticalSlots++) {
 			for (int horizonalSlots = 0; horizonalSlots < 10; horizonalSlots++) {
 
 				BankItem bankItem = null;
 				if(bankSlotStart >= 0 && bankSlotStart < searchList.size()) {
-					bankItem = searchList.get(bankSlotStart); 
+					bankItem = searchList.get(bankSlotStart);
 				}
 
 				int drawX = x + 6 + horizonalSlots * 49;
@@ -305,17 +305,17 @@ public final class CustomBankInterface extends BankInterface {
 					// Drawing item name
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY && mc.getMouseY() < drawY + 34) {
 						if (bankItems.get(bankItem.bankID).itemID != -1) {
-							drawString(EntityHandler.getItemDef(bankItems.get(bankItem.bankID).itemID).getName(), x + 7, y + 15, 0, 0xFFFFFF);
+							drawString(EntityHandler.getItemDef(bankItems.get(bankItem.bankID).itemID).getName(), x + 7, y + 15, 1, 0xFFFFFF);
 						}
-						
+
 					}
 					else if (mc.getMouseX() <= x + 6 || mc.getMouseX() >= x + 496 || mc.getMouseY() <= y + 57 ||
 							(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
 						drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 0, 0xFFFFFF);
 						mc.getSurface().drawLineVert(x + 9 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
-						drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 0, 0xFFFFFF);
+						drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
 					}
-					
+
 					bankSlotStart++;
 				}
 			}
@@ -332,39 +332,38 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxAlpha(x + 6, settingsY - 1, 75, 16, 0x5A5A55, 192);
 		mc.getSurface().drawBoxBorder(x + 6, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 7, 73, settingsY, 14, 0x706452);
-		drawString("Deposit All", x + 12, settingsY + 11, 2, 0xffffff);
+		drawString("Deposit All", x + 12, settingsY + 11, 1, 0xffffff);
 
-		drawString("Rearrange mode:", x + 190, settingsY - 3, 2, 0xF89922);
+		drawString("Rearrange mode:", x + 190, settingsY - 3, 1, 0xF89922);
 
 		mc.getSurface().drawBoxAlpha(x + 112, settingsY - 1, 75, 16, (organizeMode == 1 ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 112, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 113, 73, settingsY, 14, 0x706452);
-		drawString("Swap", x + 22 + 112, settingsY + 11, 2, 0xffffff);
+		drawString("Swap", x + 22 + 112, settingsY + 11, 1, 0xffffff);
 
 		mc.getSurface().drawBoxAlpha(x + 186, settingsY - 1, 75, 16, (organizeMode == 2 ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 186, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 187, 73, settingsY, 14, 0x706452);
-		drawString("Insert", x + 22 + 186, settingsY + 11, 2, 0xffffff);
+		drawString("Insert", x + 22 + 186, settingsY + 11, 1, 0xffffff);
 
 		mc.getSurface().drawBoxAlpha(x + 260, settingsY - 1, 75, 16, (organizeMode == 0 ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 260, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 261, 73, settingsY, 14, 0x706452);
-		drawString("None", x + 22 + 261, settingsY + 11, 2, 0xffffff);
+		drawString("None", x + 22 + 261, settingsY + 11, 1, 0xffffff);
 
-		drawString("Withdraw as:", x + 378 + 14, settingsY - 3, 2, 0xF89922);
+		drawString("Withdraw as:", x + 378 + 14, settingsY - 3, 1, 0xF89922);
 
 		mc.getSurface().drawBoxAlpha(x + 423 - 75, settingsY - 1, 75, 16, (!swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 423 - 75, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 424 - 75, 73, settingsY, 14, 0x706452);
-		drawString("Item", x + 26 + 423 - 75, settingsY + 11, 2, 0xffffff);
+		drawString("Item", x + 26 + 423 - 75, settingsY + 11, 1, 0xffffff);
 
 		mc.getSurface().drawBoxAlpha(x + 422, settingsY - 1, 75, 16, (swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 422, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 423, 73, settingsY, 14, 0x706452);
-		drawString("Note", x + 26 + 422, settingsY + 11, 2, 0xffffff);
+		drawString("Note", x + 26 + 422, settingsY + 11, 1, 0xffffff);
 
-		//mc.getSurface().drawLineHoriz(x + 8, y + 220, width - 19, 0x2E2C23);
-
+		// Inventory Items Loop
 		for (int verticalSlots = 0; verticalSlots < 3; verticalSlots++) {
 			for (int horizonalSlots = 0; horizonalSlots < 10; horizonalSlots++) {
 
@@ -387,7 +386,7 @@ public final class CustomBankInterface extends BankInterface {
 					}
 				}
 
-				// Draw inventory-only items 
+				// Draw inventory-only items
 				if (inventorySlot < mc.getInventoryItemCount() && mc.getInventoryItems()[inventorySlot] != -1) {
 					ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]);
 					mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), drawX, drawY, 48, 32,
@@ -407,7 +406,7 @@ public final class CustomBankInterface extends BankInterface {
 
 				if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY
 						&& mc.getMouseY() < drawY + 34 && !rightClickMenu && mc.inputX_Action == InputXAction.ACT_0) {
-					// Right-click Bank Item (Menu)
+					// Right-click Inventory Item (Menu)
 					if (mc.getMouseClick() == 2) {
 						if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY
 								&& mc.getMouseY() < drawY + 34 && inventorySlot < mc.getInventoryItemCount()
@@ -419,7 +418,7 @@ public final class CustomBankInterface extends BankInterface {
 							mc.setMouseClick(0);
 						}
 
-					// Right-click Bank Item (Organizing)
+						// Right-click Inventory Item (Organizing)
 					} else if (organizeMode > 0 && !rightClickMenu && mc.inputX_Action == InputXAction.ACT_0) {
 						if (mc.getMouseButtonDownTime() > 0 && mc.getMouseButtonDown() == 1) {
 							if (mc.getMouseButtonDownTime() < 2
@@ -434,7 +433,7 @@ public final class CustomBankInterface extends BankInterface {
 							draggingInventoryID = -1;
 						}
 
-					// Deposit Clicked Item
+						// Deposit Clicked Item
 					} else if (mc.getMouseClick() == 1 && !rightClickMenu) {
 						selectedInventorySlot = inventorySlot;
 						sendDeposit(1);
@@ -446,17 +445,17 @@ public final class CustomBankInterface extends BankInterface {
 					if (mc.getInventoryItems()[inventorySlot] != -1) {
 						drawString(EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]).getName(), x + 7, y + 15, 0, 0xFFFFFF);
 					}
-					
+
 				}
 
 				// Bank size hover
 				else if (mc.getMouseX() <= x + 6 || mc.getMouseX() >= x + 496 || mc.getMouseY() <= y + 57 ||
-							(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
-					drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 0, 0xFFFFFF);
+						(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
+					drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 1, 0xFFFFFF);
 					mc.getSurface().drawLineVert(x + 9 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
-					drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 0, 0xFFFFFF);
+					drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
 				}
-				
+
 				inventorySlot++;
 			}
 		}
@@ -473,14 +472,14 @@ public final class CustomBankInterface extends BankInterface {
 				if(menuWidth < checkMenuWidth) {
 					menuWidth = checkMenuWidth;
 				}
-				
+
 				if (rightClickMenuX + menuWidth >= mc.getGameWidth()) {
 					rightClickMenuX = mc.getGameWidth() - menuWidth - 5;
 				}
 				if (rightClickMenuY + menuHeight + 15 >= mc.getGameHeight()) {
 					rightClickMenuY = mc.getGameHeight() - menuHeight - 25;
 				}
-				
+
 				if (mc.getMouseX() >= rightClickMenuX - 10 && mc.getMouseX() <= rightClickMenuX + menuWidth + 5
 						&& mc.getMouseY() >= rightClickMenuY - 5
 						&& mc.getMouseY() <= rightClickMenuY + menuHeight + 20) {
@@ -494,7 +493,7 @@ public final class CustomBankInterface extends BankInterface {
 					mc.getSurface().drawBoxBorder(rightClickMenuX + 1, menuWidth, rightClickMenuY + 18, menuHeight + 1, 0x000000);
 
 					drawString(EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName(), rightClickMenuX + 4, rightClickMenuY + fontSize + 15, fontSize, 0xFFFFFF);
-					
+
 					int i = 0xffffff;
 					if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + 20
 							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight + 20) {
@@ -503,7 +502,7 @@ public final class CustomBankInterface extends BankInterface {
 							sendWithdraw(1);
 						}
 					}
-					
+
 					int is = 0xffffff;
 					if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight + 21
 							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight*2 + 20) {
@@ -600,7 +599,7 @@ public final class CustomBankInterface extends BankInterface {
 							}
 						}
 					}
-					
+
 					drawString("Withdraw-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight + 20, fontSize, i);
 					drawString("Withdraw-5", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight*2 + 20, fontSize, is);
 					drawString("Withdraw-10", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight*3 + 20, fontSize, i3);
@@ -622,20 +621,20 @@ public final class CustomBankInterface extends BankInterface {
 			} else if (selectedInventorySlot > -1) {
 				// Recalcs menu height and width based on fontSize
 				menuHeight = fontSizeHeight*6;
-				
+
 				menuWidth = mc.getSurface().stringWidth(fontSize, "Deposit-All") + 8;
 				int checkMenuWidth = mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(mc.getInventoryItems()[selectedInventorySlot]).getName()) + 8;
 				if(menuWidth < checkMenuWidth) {
 					menuWidth = checkMenuWidth;
 				}
-				
+
 				if (rightClickMenuX + menuWidth >= mc.getGameWidth()) {
 					rightClickMenuX = mc.getGameWidth() - menuWidth - 5;
 				}
 				if (rightClickMenuY + menuHeight + 15 >= mc.getGameHeight()) {
 					rightClickMenuY = mc.getGameHeight() - menuHeight - 25;
 				}
-				
+
 				if (mc.getMouseX() >= rightClickMenuX - 10 && mc.getMouseX() <= rightClickMenuX + menuWidth + 5
 						&& mc.getMouseY() >= rightClickMenuY - 5
 						&& mc.getMouseY() <= rightClickMenuY + menuHeight + 20) {
@@ -711,18 +710,18 @@ public final class CustomBankInterface extends BankInterface {
 	}
 
 	private void sendNoteMode() {
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(1);
-		mc.getClientStream().writeBuffer1.putByte(swapNoteMode ? 1 : 0);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(swapNoteMode ? 1 : 0);
+		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendInventoryOrganize(int draggingInventoryID2, int inventorySlot) {
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte(organizeMode == 1 ? 4 : 5);
-		mc.getClientStream().writeBuffer1.putInt(draggingInventoryID2);
-		mc.getClientStream().writeBuffer1.putInt(inventorySlot);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(organizeMode == 1 ? 4 : 5);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(draggingInventoryID2);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(inventorySlot);
+		mc.packetHandler.getClientStream().finishPacket();
 		mc.setMouseClick(0);
 	}
 
@@ -730,23 +729,23 @@ public final class CustomBankInterface extends BankInterface {
 		if(!bank.getControlText(bankSearch).isEmpty()) {
 			return;
 		}
-		mc.getClientStream().newPacket(199);
-		mc.getClientStream().writeBuffer1.putByte((organizeMode == 1 ? 2 : 3));
-		mc.getClientStream().writeBuffer1.putInt(draggingBankSlot2);
-		mc.getClientStream().writeBuffer1.putInt(currentSlot);
-		mc.getClientStream().finishPacket();
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte((organizeMode == 1 ? 2 : 3));
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(draggingBankSlot2);
+		mc.packetHandler.getClientStream().writeBuffer1.putInt(currentSlot);
+		mc.packetHandler.getClientStream().finishPacket();
 		mc.setMouseClick(0);
 	}
 
-  public void sendDeposit(int i) {
+	public void sendDeposit(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
-			mc.getClientStream().newPacket(23);
-			mc.getClientStream().writeBuffer1.putShort(mc.getInventoryItems()[selectedInventorySlot]);
+			mc.packetHandler.getClientStream().newPacket(23);
+			mc.packetHandler.getClientStream().writeBuffer1.putShort(mc.getInventoryItems()[selectedInventorySlot]);
 			if (i > mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot])) {
 				i = mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot]);
 			}
-			mc.getClientStream().writeBuffer1.putInt(i);
-			mc.getClientStream().finishPacket();
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+			mc.packetHandler.getClientStream().finishPacket();
 			rightClickMenu = false;
 			mc.setMouseClick(0);
 			mc.setMouseButtonDown(0);
@@ -758,24 +757,24 @@ public final class CustomBankInterface extends BankInterface {
 			// Authentic Bank Deposit
 			super.sendDeposit(i);
 		}
-  }
+	}
 
-  public void sendDepositAll() {
-    for (int i = 0; i < mc.getInventoryItemCount(); i++) {
-      selectedInventorySlot = i;
-      sendDeposit(Integer.MAX_VALUE);
-    }
-  }
+	public void sendDepositAll() {
+		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
+			selectedInventorySlot = i;
+			sendDeposit(Integer.MAX_VALUE);
+		}
+	}
 
-  public void sendWithdraw(int i) {
+	public void sendWithdraw(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
-			mc.getClientStream().newPacket(22);
-			mc.getClientStream().writeBuffer1.putShort(bankItems.get(selectedBankSlot).itemID);
+			mc.packetHandler.getClientStream().newPacket(22);
+			mc.packetHandler.getClientStream().writeBuffer1.putShort(bankItems.get(selectedBankSlot).itemID);
 			if (i > bankItems.get(selectedBankSlot).amount) {
 				i = bankItems.get(selectedBankSlot).amount;
 			}
-			mc.getClientStream().writeBuffer1.putInt(i);
-			mc.getClientStream().finishPacket();
+			mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+			mc.packetHandler.getClientStream().finishPacket();
 			rightClickMenu = false;
 			selectedBankSlot = -1;
 			mc.setMouseClick(0);
@@ -786,21 +785,21 @@ public final class CustomBankInterface extends BankInterface {
 		}
 	}
 
-  public boolean keyDown(int key) { 
-    if (bank.focusOn(bankSearch) && mc.inputX_Action == InputXAction.ACT_0) { 
-      if(mc.bankPage != 0) 
-        mc.bankPage = 0; 
-      bank.keyPress(key); 
-    } 
-    return true; 
-  }
+	public boolean keyDown(int key) {
+		if (bank.focusOn(bankSearch) && mc.inputX_Action == InputXAction.ACT_0) {
+			if(mc.bankPage != 0)
+				mc.bankPage = 0;
+			bank.keyPress(key);
+		}
+		return true;
+	}
 
-  public void resetVar() {
-    //bank.resetList(this.bankScroll);
-    bank.clearList(this.bankSearch);
-    bank.setText(this.bankSearch, "");
-    bank.setFocus(-1);
-    //mc.bankPage = 0;
-  }
+	public void resetVar() {
+		//bank.resetList(this.bankScroll);
+		bank.clearList(this.bankSearch);
+		bank.setText(this.bankSearch, "");
+		bank.setFocus(-1);
+		//mc.bankPage = 0;
+	}
 
 }
