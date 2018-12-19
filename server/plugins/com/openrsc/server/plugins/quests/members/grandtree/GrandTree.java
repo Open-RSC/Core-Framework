@@ -196,7 +196,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				if(!hasItem(p, 918) || !hasItem(p, 919)) {
 					if(!hasItem(p, 919)) {
 						playerTalk(p, n, "but i've lost the bark sample");
-						npcTalk(p, n, "here take another and try to hand on to it");
+						npcTalk(p, n, "here take another and try to hang on to it");
 						p.message("king shareem gives you another bark sample");
 						addItem(p, 919, 1);
 					}
@@ -247,7 +247,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					if(!hasItem(p, 918) || !hasItem(p, 919)) {
 						if(!hasItem(p, 919)) {
 							playerTalk(p, n, "but i've lost the bark sample");
-							npcTalk(p, n, "here take another and try to hand on to it");
+							npcTalk(p, n, "here take another and try to hang on to it");
 							p.message("king shareem gives you another bark sample");
 							addItem(p, 919, 1);
 						}
@@ -293,7 +293,6 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				playerTalk(p,n, "thanks");
 				break;
 			case 6:
-			case 7:
 				playerTalk(p,n, "king shareem");
 				npcTalk(p,n, "hello adventurer, so did you speak to the culprit?");
 				playerTalk(p,n, "yes i did and something's not right");
@@ -310,6 +309,15 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"i trust you, but the local gnomes are getting paranoid");
 				playerTalk(p,n, "that's a shame");
 				npcTalk(p,n, "hopefully i can keep my people calm, we'll see");
+				break;
+			case 7:
+				playerTalk(p, n, "king shareem, i'm concerned about glough");
+				npcTalk(p, n, "why, don't worry yourself about him",
+						"now the culprit has been caught...",
+						"..i'm sure glough's resentment of humans will die away");
+				playerTalk(p, n, "i'm not so sure");
+				npcTalk(p, n, "he just has an active imagination",
+						"if your really concerned, speak to him");
 				break;
 			case 8:
 			case 9:
@@ -347,9 +355,12 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				npcTalk(p,n, "please traveller, just leave before it's too late");
 				break;
 			case 12:
-				playerTalk(p,n, "hi narnode, did you think about what i said?");
-				npcTalk(p,n, "look, if you're right about glough i would have him arrested",
-						"but there's no reason for me to think he's lying",
+				playerTalk(p,n, "look, i found this at glough's home");
+				message(p, "you give the king the strategic notes");
+				removeItem(p, 926, 1);
+				npcTalk(p,n, "hmmm, these are interesting",
+						"but it's not proof, any one could have made these",
+						"traveller, i understand your concern",
 						"i had guards search glough's house",
 						"but they found nothing suspicious",
 						"just these old pebbles");
@@ -424,7 +435,6 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		if(n.getID() == HAZELMERE) {
 			switch (p.getQuestStage(this)) {
 			case 0:
-				playerTalk(p,n, "hello");
 				message(p, "the mage mumbles in an ancient tounge",
 						"you can't understand a word");
 				break;
@@ -487,7 +497,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			case -1:
 				playerTalk(p,n, "hello there");
 				npcTalk(p,n, "you shouldn't be here human");
-				playerTalk(p,n, "what do you mean");
+				playerTalk(p,n, "what do you mean?");
 				npcTalk(p,n, "the gnome stronghold is for gnomes alone");
 				playerTalk(p,n, "surely not!");
 				npcTalk(p,n, "we don't need you're sort around here");
@@ -567,8 +577,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"...to stop you escaping",
 						"let my glider pilot fly you away",
 						"untill things calm down around here");
-				narnode.remove();
 				playerTalk(p,narnode, "well, if that's how you feel");
+				narnode.remove();
 				p.updateQuestStage(this, 8);
 				break;
 			case 10:
@@ -664,7 +674,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		}
 
 		if(n.getID() == SHIPYARD_WORKER_WHITE || n.getID() == SHIPYARD_WORKER_BLACK) {
-			int selected = p.getRandom().nextInt(14);
+			int selected = p.getRandom().nextInt(13);
 			playerTalk(p, n, "hello");
 			if(selected == 0) {
 				npcTalk(p,n, "ouch");
@@ -716,19 +726,16 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"so if you don't mind...");
 				playerTalk(p,n, "of course, sorry to have disturbed you");
 			} else if(selected == 11) {
-				npcTalk(p,n, "are you too lazy to work as well");
+				npcTalk(p,n, "hello there",
+						"are you too lazy to work as well");
 				playerTalk(p,n, "something like that");
 				npcTalk(p,n, "i'm just sun bathing");
 			} else if(selected == 12) {
-				npcTalk(p,n, "are you too lazy to work as well");
-				playerTalk(p,n, "something like that");
-				npcTalk(p,n, "i'm just sun bathing");
-			} else if(selected == 13) {
 				npcTalk(p,n, "hello there");
 				npcTalk(p,n, "i haven't seen you before");
 				playerTalk(p,n, "i'm new");
 				npcTalk(p,n, "well it's hard work, but the pay is good");
-			} else if(selected == 14) {
+			} else if(selected == 13) {
 				npcTalk(p,n, "what do you want?");
 				playerTalk(p,n, "is that any way to talk to your new superior?");
 				npcTalk(p,n, "oh, i'm sorry, i didn't realise");
@@ -756,13 +763,8 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						"yes, they're both getting on great",
 						"always arguing as usual",
 						"his wife is no longer with us");
-				p.updateQuestStage(this, 9);
-				if(menu == 0) {
-					npcTalk(p,HUT_FOREMAN, "really...",
-							"..that's strange, considering she died last year",
-							"die imposter");
-					HUT_FOREMAN.setChasing(p);
-				} else if(menu == 1) {
+				if(menu == 0 || menu == 1) {
+					p.updateQuestStage(this, 9);
 					npcTalk(p,HUT_FOREMAN, "really...",
 							"..that's strange, considering she died last year",
 							"die imposter");
@@ -770,27 +772,35 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				} else if(menu == 2) {
 					npcTalk(p, HUT_FOREMAN, "right answear, i have to watch out for imposters", "if really know glough...", "you know his favourite gnome dish");
 					int menu2 = showMenu(p, HUT_FOREMAN, "he loves tangled toads legs", "he loves worm holes", "he loves choc bombs");
-					if(menu2 == 0) {
-						npcTalk(p,HUT_FOREMAN, "really...",
-								"..that's strange, considering he loves worm holes",
+					if(menu2 == 0 || menu2 == 2) {
+						p.updateQuestStage(this, 9);
+						npcTalk(p,HUT_FOREMAN, "he hates them",
 								"die imposter");
 						HUT_FOREMAN.setChasing(p);
 					} else if(menu2 == 1) {
 						npcTalk(p, HUT_FOREMAN, "ok, one more question", "what's the name of his new girlfriend");
-						int menu3 = showMenu(p, HUT_FOREMAN, "Alia", "Anita", "Elena");
-						if(menu3 == 0) {
-							npcTalk(p,HUT_FOREMAN, "really...",
-									"..that's strange, considering he's in love with Anita",
+						int menu3 = showMenu(p, HUT_FOREMAN, false, //do not send over
+								"Alia", "Anita", "Elena");
+						if(menu3 == 0 || menu3 == 2) {
+							p.updateQuestStage(this, 9);
+							if(menu3 == 0) {
+								playerTalk(p,HUT_FOREMAN, "alia");
+							}
+							else if(menu3 == 2) {
+								playerTalk(p,HUT_FOREMAN, "elena");
+							}
+							npcTalk(p,HUT_FOREMAN, "you almost fooled me",
 									"die imposter");
 							HUT_FOREMAN.setChasing(p);
 						} else if(menu3 == 1) {
+							playerTalk(p,HUT_FOREMAN, "anita");
 							npcTalk(p, HUT_FOREMAN, "well, well ,well, you do know glough",
 									"sorry for the interrogation but i'm sure you understand");
 							playerTalk(p, HUT_FOREMAN, "of course, security is paramount");
 							npcTalk(p, HUT_FOREMAN, "as you can see the ship builders are ready");
 							playerTalk(p, HUT_FOREMAN, "indeed");
 							npcTalk(p, HUT_FOREMAN, "when i was asked to build a fleet large enough...",
-									"..to invade port sarim and carry 30 gnome troops...",
+									"..to invade port sarim and carry 300 gnome troops...",
 									"..i said if anyone can, i can");
 							playerTalk(p, HUT_FOREMAN, "that's a lot of troops");
 							npcTalk(p, HUT_FOREMAN, "true but if the gnomes are really going to..",
@@ -811,17 +821,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 							message(p, "the foreman hands you the invoice");
 							addItem(p, 922, 1);
 							p.updateQuestStage(this, 10);
-						} else if(menu3 == 2) {
-							npcTalk(p,HUT_FOREMAN, "really...",
-									"..that's strange, considering he's in love with Anita",
-									"die imposter");
-							HUT_FOREMAN.setChasing(p);
 						}
-					} else if(menu2 == 2) {
-						npcTalk(p,HUT_FOREMAN, "really...",
-								"..that's strange, considering he loves worm holes",
-								"die imposter");
-						HUT_FOREMAN.setChasing(p);
 					}
 				}
 			}
@@ -1014,7 +1014,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			wrongQuestionMenu(p, n);
 		} else if(menu == 4) {
 			if(p.getCache().hasKey("gt_q1") && p.getCache().hasKey("gt_q2")) {
-				// remove to keep efficeny in cache.
+				// remove to keep efficiency in cache.
 				p.getCache().remove("gt_q1");
 				p.getCache().remove("gt_q2");
 				// Continue the last three menus.
@@ -1146,7 +1146,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			wrongShipyardPassword(p, worker);
 		} else if(menu == 1) {
 			if(p.getCache().hasKey("gt_shipyard_q1") && p.getCache().hasKey("gt_shipyard_q2")) {
-				// remove to keep efficeny in cache.
+				// remove to keep efficiency in cache.
 				p.getCache().remove("gt_q1");
 				p.getCache().remove("gt_q2");
 				//continue
@@ -1230,6 +1230,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		if(obj.getID() == SHIPYARD_GATE) {
 			if(p.getY() >= 762) {
 				if(p.getQuestStage(this) >= 8 && p.getQuestStage(this) <= 9) {
+					message(p, "the gate is locked");
 					final Npc worker = getNearestNpc(p, 557, 5);
 					//Continue
 					if(worker != null) {
@@ -1237,7 +1238,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						playerTalk(p,worker, "i'm trying to open the gate");
 						npcTalk(p,worker, "i can see that, but why?");
 						Menu defaultMenu = new Menu();
-						defaultMenu.addOption(new Option("i've come to check that you're working safely") {
+						defaultMenu.addOption(new Option("i've come to check that you're working safley") {
 							@Override
 							public void action() {
 								npcTalk(p,worker, "what business is that of yours?");
@@ -1303,12 +1304,12 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		}
 		if(obj.getID() == WATCH_TOWER_UP) {
 			if (p.getSkills().getLevel(16) >= 25) {
-			p.message("you jump up and grab hold of the platform");
-			p.teleport(710, 2364);
-			p.incExp(16, 30, true);
-			sleep(3000);
-			p.message("and pull yourself up");
-			}else {
+				p.message("you jump up and grab hold of the platform");
+				p.teleport(710, 2364);
+				p.incExp(16, 30, true);
+				sleep(3000);
+				p.message("and pull yourself up");
+			} else {
 				p.message("You need an agility level of 25 to climb up the platform");
 			}
 		}

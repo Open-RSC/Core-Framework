@@ -284,8 +284,9 @@ public final class Constants {
 		public static final int DUNGEON_SPIDER = 656;
 		public static final int TRIBESMAN = 421;
 		public static final int JUNGLE_SAVAGE = 776;
-		
-		public static final HashMap<Integer, Integer> npcData = new HashMap<>() {{
+
+		public static final HashMap<Integer, Integer> npcData = new HashMap<Integer, Integer>()
+		{{
 			put(POISON_SCORPION, 38);
 			put(POISON_SPIDER, 68);
 			put(DUNGEON_SPIDER, 38);

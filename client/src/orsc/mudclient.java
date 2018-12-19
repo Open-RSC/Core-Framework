@@ -3904,11 +3904,11 @@ public final class mudclient implements Runnable {
 							centerX %= 60;
 							if (centerX < 10) {
 								this.getSurface().drawColoredStringCentered(256,
-										"Automatic server restart in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
+										"Server shutting down for updates in: " + centerZ + ":0" + centerX, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 							} else {
 								this.getSurface().drawColoredStringCentered(256,
-										"Automatic server restart in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
+										"Server shutting down for updates in: " + centerZ + ":" + centerX, 0xFFFF00, 0, 1,
 										this.getGameHeight() - 7);
 							}
 						}
@@ -5724,6 +5724,8 @@ public final class mudclient implements Runnable {
 																+ (wallObjectInstanceX[var9] + this.midRegionBaseX)
 																+ ","
 																+ (wallObjectInstanceZ[var9] + this.midRegionBaseZ)
+																+ ","
+																+ wallObjectInstanceDir[var9]
 																+ ")" : ""));
 									}
 
@@ -5781,6 +5783,8 @@ public final class mudclient implements Runnable {
 															+ ","
 															+ (gameObjectInstanceZ[var9]
 																	+ this.midRegionBaseZ)
+															+ ","
+															+ gameObjectInstanceDir[var9]
 															+ ")"
 															: ""));
 										}
@@ -5834,7 +5838,8 @@ public final class mudclient implements Runnable {
 															+ (adminRights
 																	? " @or1@(" + groundItemID[var9] + ":"
 																	+ (groundItemX[var9] + midRegionBaseX) + ","
-																	+ (groundItemZ[var9] + midRegionBaseZ) + ")"
+																	+ (groundItemZ[var9] + midRegionBaseZ) + ","
+																	+ wallObjectInstanceDir[var9] + ")"
 																	: ""));
 										}
 									} else {
@@ -10459,14 +10464,15 @@ public final class mudclient implements Runnable {
 
 							try {
 								int dir = this.gameObjectInstanceDir[i];
+								this.getWorld().registerObjectDir(xTile, zTile, dir);
 								int xSize;
 								int zSize;
-								if (dir != 0 && dir != 4) {
-									zSize = EntityHandler.getObjectDef(objectID).getWidth();
-									xSize = EntityHandler.getObjectDef(objectID).getHeight();
-								} else {
-									zSize = EntityHandler.getObjectDef(objectID).getHeight();
+								if (dir == 0 || dir == 4) {
 									xSize = EntityHandler.getObjectDef(objectID).getWidth();
+									zSize = EntityHandler.getObjectDef(objectID).getHeight();
+								} else {
+									xSize = EntityHandler.getObjectDef(objectID).getHeight();
+									zSize = EntityHandler.getObjectDef(objectID).getWidth();
 								}
 
 								int x = (2 * xTile + xSize) * this.tileSize / 2;

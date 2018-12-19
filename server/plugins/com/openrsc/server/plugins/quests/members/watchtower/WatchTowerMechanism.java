@@ -327,9 +327,13 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 		}
 		if(i.getID() == 1037 || i.getID() == 1152 || i.getID() == 1154 || i.getID() == 1153) {
 			if(p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
-				p.message("You try and take the crystal but its stuck solid!");
-				p.message("You feel magic power coursing through the crystal...");
-				p.message("The force renews your magic level");
+				message(p, "You try and take the crystal but its stuck solid!",
+						"You feel magic power coursing through the crystal...",
+						"The force renews your magic level");
+				int maxMagic = p.getSkills().getMaxStat(6);
+				if (p.getSkills().getLevel(6) < maxMagic) {
+					p.getSkills().setLevel(6, maxMagic);
+				}
 			} else {
 				p.message("You take the crystal");
 				addItem(p, i.getID(), 1);

@@ -78,13 +78,13 @@ public class PathValidation {
 			// Check for wall on east edge of current square,
 			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_EAST, true);
 			// Or on west edge of square we are travelling toward.
-			newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST, false);
+			// newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST, false);
 			coords[0] = startX - 1;
 		} else if (startX < destX) {
 			// Check for wall on west edge of current square,
 			myXBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_WEST, true);
 			// Or on east edge of square we are travelling toward.
-			newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST, false);
+			// newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST, false);
 			coords[0] = startX + 1;
 		}
 
@@ -92,25 +92,34 @@ public class PathValidation {
 			// Check for wall on north edge of current square,
 			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_NORTH, true);
 			// Or on south edge of square we are travelling toward.
-			newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
+			// newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
 			coords[1] = startY - 1;
 
 		} else if (startY < destY) {
 			// Check for wall on south edge of current square,
 			myYBlocked = checkBlocking(startX, startY, CollisionFlag.WALL_SOUTH, true);
 			// Or on north edge of square we are travelling toward.
-			newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH, false);
+			// newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH, false);
 			coords[1] = startX + 1;
 		}
 
+		if (DEBUG) System.out.println("PathValidation 0");
 		if (myXBlocked && myYBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 1");
 		if (myXBlocked && startY == destY) return false;
+		if (DEBUG) System.out.println("PathValidation 2");
 		if (myYBlocked && startX == destX) return false;
-		if (newXBlocked && newYBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 3");
+		/* if (newXBlocked && newYBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 4");
 		if (newXBlocked && startY == coords[1]) return false;
+		if (DEBUG) System.out.println("PathValidation 5");
 		if (newYBlocked && startX == coords[0]) return false;
+		if (DEBUG) System.out.println("PathValidation 6");
 		if (myXBlocked && newXBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 7");
 		if (myYBlocked && newYBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 8");*/
 
 		if (coords[0] > startX) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false);
@@ -127,10 +136,15 @@ public class PathValidation {
 		}
 
 		if (newXBlocked && newYBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 9");
 		if (newXBlocked && startY == coords[1]) return false;
+		if (DEBUG) System.out.println("PathValidation 10");
 		if (myYBlocked && startX == coords[0]) return false;
+		if (DEBUG) System.out.println("PathValidation 11");
 		if (myXBlocked && newXBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 12");
 		if (myYBlocked && newYBlocked) return false;
+		if (DEBUG) System.out.println("PathValidation 13");
 
 		// Diagonal checks
 		boolean diagonalBlocked = false;
@@ -150,6 +164,7 @@ public class PathValidation {
 		if (diagonalBlocked)
 			return false;
 
+		if (DEBUG) System.out.println("PathValidation 14");
 		return true;
 	}
 
@@ -175,9 +190,9 @@ public class PathValidation {
 		if (!isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0) { // This tile is unwalkable
 			return true;
 		}
-		if (!isCurrentTile && (objectValue & CollisionFlag.OBJECT) != 0) { // Object?
+		/*if (!isCurrentTile && (objectValue & CollisionFlag.OBJECT) != 0) { // Object?
 			return true;
-		}
+		}*/
 		return false;
 	}
 
@@ -190,25 +205,21 @@ public class PathValidation {
 
 		// Moving northeast
 		if (x_next == x - 1 && y_next == y - 1) {
-			if (DEBUG) System.out.println("Northeast");
 			return checkNortheast(curPoint);
 		}
 
 		// Moving northwest
 		else if (x_next == x + 1 && y_next == y - 1) {
-			if (DEBUG) System.out.println("Northwest");
 			return checkNorthwest(curPoint);
 		}
 
 		// Moving southeast
 		else if (x_next == x - 1 && y_next == y + 1) {
-			if (DEBUG) System.out.println("Southeast");
 			return checkSoutheast(curPoint);
 		}
 
 		// Moving southwest
 		else if (x_next == x + 1 && y_next == y + 1) {
-			if (DEBUG) System.out.println("Southwest");
 			return checkSouthwest(curPoint);
 		}
 
@@ -231,7 +242,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_EAST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("East Object - East Wall");
 				return true;
 			}
 
@@ -239,7 +249,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x - 1, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_WEST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("East Object - West Wall");
 				return true;
 			}
 		}
@@ -254,7 +263,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x - 1, y).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_NORTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("North Object - North Wall");
 				return true;
 			}
 
@@ -262,7 +270,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x - 1, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_SOUTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("North Object - South Wall");
 				return true;
 			}
 
@@ -288,7 +295,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_WEST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("West Object - West Wall");
 				return true;
 			}
 
@@ -296,7 +302,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x + 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_EAST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("West Object - East Wall");
 				return true;
 			}
 		}
@@ -311,7 +316,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x + 1, y).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_NORTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("North Object - North Wall");
 				return true;
 			}
 
@@ -319,7 +323,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x + 1, y - 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_SOUTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("North Object - South Wall");
 				return true;
 			}
 
@@ -344,7 +347,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_EAST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("East Object - East Wall");
 				return true;
 			}
 
@@ -352,7 +354,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x - 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_WEST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("East Object - West Wall");
 				return true;
 			}
 		}
@@ -368,7 +369,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x - 1, y).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_SOUTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("South Object - South Wall");
 				return true;
 			}
 
@@ -376,7 +376,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x - 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_NORTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("South Object - North Wall");
 				return true;
 			}
 
@@ -402,7 +401,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_WEST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("West Object - West Wall");
 				return true;
 			}
 
@@ -410,7 +408,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x + 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_EAST) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("West Object - East Wall");
 				return true;
 			}
 		}
@@ -426,7 +423,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x + 1, y).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_SOUTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("South Object - South Wall");
 				return true;
 			}
 
@@ -434,7 +430,6 @@ public class PathValidation {
 			mask = World.getWorld().getTile(x + 1, y + 1).traversalMask;
 			blocking = (mask & CollisionFlag.WALL_NORTH) != 0;
 			if (blocking) {
-				if (DEBUG) System.out.println("South Object - North Wall");
 				return true;
 			}
 
