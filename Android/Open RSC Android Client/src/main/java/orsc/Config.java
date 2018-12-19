@@ -1,10 +1,6 @@
 package orsc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -15,7 +11,6 @@ public class Config {
 
 	public static final String SERVER_NAME = "Open RSC";
 	public static final String SERVER_IP = "game.openrsc.com";
-
 	public static final int SERVER_PORT = 43594;
 	public static final int CLIENT_VERSION = 1;
 	public static final boolean MEMBERS_FEATURES = true;
@@ -28,8 +23,8 @@ public class Config {
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
-	public static boolean C_SHOW_ROOF = false;
-	public static boolean C_SHOW_FOG = false;
+	public static boolean C_SHOW_ROOF = true;
+	public static boolean C_SHOW_FOG = true;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = false;
 	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;
@@ -56,9 +51,9 @@ public class Config {
 	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = false;
 
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
+	public static int S_PLAYER_LEVEL_LIMIT = 99;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
-	public static boolean S_SPAWN_SUBSCRIPTION_NPCS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
 	public static boolean S_WANT_SKILL_MENUS = false;
 	public static boolean S_WANT_QUEST_MENUS = false;
@@ -66,11 +61,13 @@ public class Config {
 	public static boolean S_WANT_KEYBOARD_SHORTCUTS = false;
 	public static boolean S_WANT_CUSTOM_BANKS = false;
 	public static boolean S_WANT_BANK_PINS = false;
+	public static boolean S_WANT_BANK_NOTES = false;
 	public static boolean S_CUSTOM_FIREMAKING = false;
 	public static boolean S_WANT_DROP_X = false;
 	public static boolean S_WANT_EXP_INFO = false;
 	public static boolean S_WANT_WOODCUTTING_GUILD = false;
 	public static boolean S_WANT_DECANTING = false;
+	public static boolean S_WANT_CERTS_TO_BANK = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
