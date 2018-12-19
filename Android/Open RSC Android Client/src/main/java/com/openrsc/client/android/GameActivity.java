@@ -16,6 +16,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 
+import orsc.PacketHandler;
 import orsc.multiclient.ClientPort;
 import orsc.mudclient;
 import orsc.Config;
@@ -25,6 +26,7 @@ public class GameActivity extends Activity implements ClientPort {
 	private InputImpl inputImpl;
 	private mudclient mudclient;
 	private RSCBitmapSurfaceView gameView;
+	static PacketHandler packetHandler;
 
 
 	@Override
@@ -34,6 +36,8 @@ public class GameActivity extends Activity implements ClientPort {
 		gameView = new RSCBitmapSurfaceView(this);
 		setMudclient(new mudclient(this));
 		setContentView(gameView);
+
+		mudclient.packetHandler = new PacketHandler(mudclient);
 
 		if (mudclient.threadState >= 0) {
 			mudclient.threadState = 0;
@@ -182,7 +186,7 @@ public class GameActivity extends Activity implements ClientPort {
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 		if (imm.isAcceptingText()) { // REMOVE?
 			Config.F_SHOWING_KEYBOARD = true;
-		} 
+		}
 	}
 
 	@Override
