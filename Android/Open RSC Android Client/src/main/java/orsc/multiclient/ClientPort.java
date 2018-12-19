@@ -1,15 +1,15 @@
 package orsc.multiclient;
 
-import java.io.ByteArrayInputStream;
-
 import com.openrsc.client.model.Sprite;
+
+import java.io.ByteArrayInputStream;
 
 public interface ClientPort {
 
 	public boolean drawLoading(int i);
 
 	public void showLoadingProgress(int percentage, String status);
-	
+
 	public void initListeners();
 
 	public void crashed();
@@ -37,10 +37,10 @@ public interface ClientPort {
 	public void playSound(byte[] soundData, int offset, int dataLength);
 
 	public void stopSoundPlayer();
-	
+
 	public void drawKeyboard();
-	
+
 	public boolean saveCredentials(String creds);
-	
+
 	public String loadCredentials();
 }

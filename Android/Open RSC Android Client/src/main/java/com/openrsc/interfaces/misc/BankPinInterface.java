@@ -2,16 +2,14 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.interfaces.InputListener;
 import com.openrsc.interfaces.NComponent;
-
-import orsc.Config;
 import orsc.mudclient;
 
 public class BankPinInterface extends NComponent {
-	
+
 	private NComponent titleBox;
 	private NComponent contentBox;
 	private NComponent alternativeBox;
-	
+
 	private int digitsEntered = 0;
 	private String bankPin = "";
 	private NComponent digitsEnteredText;
@@ -20,7 +18,7 @@ public class BankPinInterface extends NComponent {
 	public BankPinInterface(mudclient client) {
 		super(client);
 
-		setBackground(0x483E33,0x483E33,255); 
+		setBackground(0x483E33,0x483E33,255);
 		setBorderColors(0x4E4836, 0x4E4836);
 		setSize(300, 250 );
 		setLocation((client.getGameWidth() - getWidth()) / 2 , (client.getGameHeight() - getHeight()) / 2);
@@ -40,20 +38,20 @@ public class BankPinInterface extends NComponent {
 		titleBox.setBorderColors(0x4E4836, 0x4E4836);
 		titleBox.setLocation(0, 0);
 		titleBox.setSize(300, 25);
-		
-		
-		
+
+
+
 		contentBox = new NComponent(client);
 		contentBox.setLocation(15, 25);
 		contentBox.setSize(285, 225);
-		
+
 		alternativeBox = new NComponent(client);
 		alternativeBox.setBorderColors(0x565040, 0x565040);
 		alternativeBox.setBackground(0x524B31, 0x524B31, 255);
 		alternativeBox.setLocation(145 + 17, 193);
 		alternativeBox.setSize(123, 50);
-		
-		
+
+
 		NComponent exitButton = new NComponent(client);
 		exitButton.setTextCentered(true);
 		exitButton.setText("Exit");
@@ -69,7 +67,7 @@ public class BankPinInterface extends NComponent {
 			}
 		});
 		alternativeBox.addComponent(exitButton);
-		
+
 		NComponent resetPin = new NComponent(client);
 		resetPin.setTextCentered(true);
 		resetPin.setText("I don't know it");
@@ -85,21 +83,21 @@ public class BankPinInterface extends NComponent {
 			}
 		});
 		alternativeBox.addComponent(resetPin);
-		
+
 		NComponent titleText = new NComponent(client);
-		titleText.setText("Bank of " + Config.SERVER_NAME);
+		titleText.setText("Bank of RuneScape");
 		titleText.setFontColor(0x9B0907, 0x9B0907);
 		titleText.setTextSize(3);
-		titleText.setLocation(3, 2); 
-		
+		titleText.setLocation(3, 2);
+
 		digitsEnteredText = new NComponent(client);
 		digitsEnteredText.setText("? ? ? ?");
 		digitsEnteredText.setFontColor(0xBF751D, 0xBF751D);
 		digitsEnteredText.setTextSize(3);
-		digitsEnteredText.setLocation(243, 2); 
+		digitsEnteredText.setLocation(243, 2);
 		digitsEnteredText.setSize(50, 15);
 		titleBox.addComponent(digitsEnteredText);
-		
+
 		NComponent descriptionText1 = new NComponent(client);
 		descriptionText1.setText("Please enter your PIN using the buttons below.");
 		descriptionText1.setFontColor(0xFF981F, 0xFF981F);
@@ -107,7 +105,7 @@ public class BankPinInterface extends NComponent {
 		descriptionText1.setTextCentered(true);
 		descriptionText1.setSize(270, 25);
 		descriptionText1.setLocation(0, 0);
-		
+
 		descriptionText2 = new NComponent(client);
 		descriptionText2.setText("First click the FIRST digit.");
 		descriptionText2.setFontColor(0xFFFFFF, 0xFFFFFF);
@@ -117,10 +115,10 @@ public class BankPinInterface extends NComponent {
 		descriptionText2.setSize(270, 25);
 		contentBox.addComponent(descriptionText1);
 		contentBox.addComponent(descriptionText2);
-		
+
 		int numberBoxX = 0;
 		int numberBoxY = 38;
-		
+
 		for(int number = 0; number < 10; number++) {
 			final NComponent numberBox = new NComponent(client);
 			numberBox.setText(number + "");
@@ -145,15 +143,15 @@ public class BankPinInterface extends NComponent {
 					}
 					return true;
 				}
-				
+
 				private void sendBankPin() {
-					getClient().getClientStream().newPacket(199);
-					getClient().getClientStream().writeBuffer1.putByte(8);
-					getClient().getClientStream().writeBuffer1.putByte(0);
-					getClient().getClientStream().writeBuffer1.putString(bankPin);
-					getClient().getClientStream().finishPacket();
+					getClient().packetHandler.getClientStream().newPacket(199);
+					getClient().packetHandler.getClientStream().writeBuffer1.putByte(8);
+					getClient().packetHandler.getClientStream().writeBuffer1.putByte(0);
+					getClient().packetHandler.getClientStream().writeBuffer1.putString(bankPin);
+					getClient().packetHandler.getClientStream().finishPacket();
 				}
-				
+
 				private void updateDigits() {
 					digitsEnteredText.setText("? ? ? ?");
 					for(int i = 0; i < digitsEntered;i++) {
@@ -164,13 +162,13 @@ public class BankPinInterface extends NComponent {
 				}
 			});
 			numberBoxX += numberBox.getWidth() + 23;
-			
-			if(numberBoxX + numberBox.getWidth() > contentBox.getWidth()) { 
+
+			if(numberBoxX + numberBox.getWidth() > contentBox.getWidth()) {
 				numberBoxY += numberBox.getHeight() + 15;
 				numberBoxX = 0;
 			}
-			
-			
+
+
 			contentBox.addComponent(numberBox);
 		}
 		titleBox.addComponent(titleText);
@@ -184,7 +182,7 @@ public class BankPinInterface extends NComponent {
 		hide();
 		setVisible(true);
 	}
-	
+
 	public void hide() {
 		digitsEntered = 0;
 		bankPin = "";
@@ -192,5 +190,5 @@ public class BankPinInterface extends NComponent {
 		descriptionText2.setText(descriptionText2Texts[digitsEntered]);
 		setVisible(false);
 	}
-	
+
 }

@@ -2,32 +2,31 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
 import orsc.graphics.gui.Panel;
 import orsc.mudclient;
+
+import java.util.ArrayList;
 
 
 public final class DoSkillInterface {
 	private ArrayList<DoSkillItem> doSkillItems;
-	
+
 	private String skillToDo, skillDoing;
 	private String title = "";
-	
+
 	private boolean visible, rightClickMenu = false;
-	
+
 	int itemSelected = -1, rightClickMenuX = 0, rightClickMenuY = 0;
-	
+
 	public Panel doSkillPanel;
 
 	private mudclient mc;
 
 	private int panelColour, textColour, bordColour;
-	
+
 	int width = 430;
 	int height = 320;
-	
+
 	private int x, y, autoHeight;
 
 	public DoSkillInterface(mudclient mc) {
@@ -38,13 +37,13 @@ public final class DoSkillInterface {
 
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		doSkillItems = new ArrayList<DoSkillItem>();
 	}
-	
+
 	public void reposition() {
 		x = (mc.getGameWidth() - width) / 2;
-		
+
 		if (autoHeight == 0) {
 			y = (mc.getGameHeight() - height) / 2;
 		} else {
@@ -54,64 +53,64 @@ public final class DoSkillInterface {
 
 	public void onRender() {
 		reposition();
-		
+
 		panelColour = 0x989898; textColour = 0xFFFFFF; bordColour = 0x000000;
-		
+
 		doSkillPanel.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
-		
+
 		// Draws the background
 		mc.getSurface().drawBoxAlpha(x, y, width, autoHeight - y, panelColour, 160);
 		mc.getSurface().drawBoxBorder(x, width, y, autoHeight - y, bordColour);
-		
+
 		// Draws the title
 		drawStringCentered(title.isEmpty() ? mc.getSkillToDo() : title, x, y + 28, 5, textColour);
-		
+
 		int itemAmount = doSkillItems.size();
 		switch (itemAmount) {
 			case 1: width = mc.getSurface().stringWidth(5, title) + 80;
-					break;
+				break;
 			case 2: width = mc.getSurface().stringWidth(5, title) + 80;
-					break;
+				break;
 			case 3: width = 320;
-					break;
+				break;
 			default: width = 430;
-					break;
+				break;
 		}
 		reposition();
-		
+
 		this.drawButton(x + width - 35, y + 5, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.getClientStream().newPacket(212);
-				mc.getClientStream().finishPacket();
+				mc.packetHandler.getClientStream().newPacket(212);
+				mc.packetHandler.getClientStream().finishPacket();
 				setVisible(false);
 			}
 		});
-		
+
 		mc.getSurface().drawLineHoriz(x + 1, y + 40, width - 2, 0);
-		
+
 		drawSkillItems();
 	}
-	
+
 	public void drawSkillItems() {
 		reposition();
-		
+
 		// Gets all items in the list for what skill activity was chosen
 		populateSkillItems();
-		
+
 		int curX = x + 30, spriteY = y + 45, textY = spriteY + 45;
 		if (doSkillItems.size() == 1) {
 			curX = x + width/2 - 30;
 		}
-		
+
 		// Determines if the text takes two lines
 		boolean lotsaText = false;
-		
+
 		for (int i = 0; i < doSkillItems.size(); i++) {
 			if (i >= 100) {
 				break;
 			}
-			
+
 			DoSkillItem curItem = doSkillItems.get(i);
 			ItemDef def = EntityHandler.getItemDef(curItem.getItemID());
 			int levelReq = Integer.parseInt(curItem.getLevelReq());
@@ -119,30 +118,30 @@ public final class DoSkillInterface {
 			if (skillDetail.isEmpty()) {
 				skillDetail = EntityHandler.getItemDef(curItem.getItemID()).getName();
 			}
-			
+
 			lotsaText = skillDetail.length() >= 15;
-			
+
 			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
 					curX, spriteY, 48, 32, def.getPictureMask(), 0, false, 0, 1);
 
 			int stringWidth = drawStringWrapped(skillDetail, curX, textY, 2, textColour);
-			
+
 			// Different size highlight box based on if there is text, and the length of the text
 			int boxWidth = skillDetail.isEmpty() ? 48 : (stringWidth < 48 ? 54 : stringWidth + 10);
 			int boxHeight = skillDetail.isEmpty() ? 38 : (lotsaText ? 64 : 52);
 			int boxColor = 16711680;
-			
+
 			// Grays out box if player does not have required level to do
 			if (mc.getPlayerStatCurrent(skillDoing.equals("Cooking") ? 7 : skillDoing.equals("Fletching") ? 9 : skillDoing.equals("Crafting") ? 12 : skillDoing.equals("Smithing") ? 13 : 15) < levelReq) {
 				boxColor = 0x000000;
 			}
-			
+
 			if (mc.getMouseX() >= curX - (boxWidth - 48)/2 && mc.getMouseX() <= boxWidth + curX - (boxWidth - 48)/2 && mc.getMouseY() >= spriteY - 2 && mc.getMouseY() <= spriteY + boxHeight
 					&& !rightClickMenu) {
 				mc.getSurface().drawBoxAlpha(curX - (boxWidth - 48)/2, spriteY - 2, boxWidth, boxHeight, boxColor, 92);
 				if (mc.mouseButtonClick == 1 && boxColor != 0x000000) {
-					mc.getClientStream().newPacket(212);
-					mc.getClientStream().finishPacket();
+					mc.packetHandler.getClientStream().newPacket(212);
+					mc.packetHandler.getClientStream().finishPacket();
 					setVisible(false);
 					itemSelected = curItem.getItemID();
 					// send make all
@@ -158,7 +157,7 @@ public final class DoSkillInterface {
 			}
 
 			autoHeight = lotsaText ? spriteY + 70 : spriteY + 55;
-			
+
 			if (((i + 1) % 4) == 0) {
 				curX = x + 30;
 				spriteY += lotsaText ? 65 : 55; textY += lotsaText ? 65 : 55;
@@ -166,28 +165,28 @@ public final class DoSkillInterface {
 				curX += 105;
 			}
 		}
-		
+
 		if (itemSelected >= 0) {
 			String itemName = EntityHandler.getItemDef(itemSelected).getName();
 			int menuWidth = mc.getSurface().stringWidth(2, itemName) > mc.getSurface().stringWidth(2, "Make-All") ? mc.getSurface().stringWidth(2, itemName) + 5 : mc.getSurface().stringWidth(2, "Make-All") + 5;
 			int menuHeight = 105;
-			
+
 			if (rightClickMenuX + menuWidth > mc.getGameWidth()) {
 				rightClickMenuX = mc.getGameWidth() - menuWidth - 5;
 			}
 			if (rightClickMenuY + menuHeight > mc.getGameHeight()) {
 				rightClickMenuY = mc.getGameHeight() - menuHeight - 5;
 			}
-			
+
 			if (mc.getMouseX() >= rightClickMenuX && mc.getMouseX() <= rightClickMenuX + menuWidth && mc.getMouseY() >= rightClickMenuY && mc.getMouseY() <= rightClickMenuY + menuHeight) {
 				if (rightClickMenu) {
 					mc.getSurface().drawBoxAlpha(rightClickMenuX, rightClickMenuY, menuWidth, 15, 0x000000, 255);
 					mc.getSurface().drawBoxAlpha(rightClickMenuX, rightClickMenuY + 15, menuWidth, menuHeight - 15, 0x5C5548, 255);
 					mc.getSurface().drawBoxBorder(rightClickMenuX, menuWidth, rightClickMenuY, menuHeight, 0x000000);
-	
-					
+
+
 					drawString(itemName, rightClickMenuX + 1, rightClickMenuY + 11, 2, 0xFFFFFF);
-					
+
 					int hovering = 0;
 					for (int f = 1; f <= 6; f++) {
 						if (mc.getMouseX() >= rightClickMenuX + 1 && mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() > rightClickMenuY + 11 + (f-1)*15 && mc.getMouseY() <= rightClickMenuY + 11 + f*15) {
@@ -201,12 +200,12 @@ public final class DoSkillInterface {
 									case 4: ;// send make x
 									case 5: ;// send make all
 									case 6: rightClickMenu = false;
-											break;
+										break;
 									default: break;
 								}
 							}
 						}
-						
+
 						switch (f) {
 							case 1: drawString("Make-1", rightClickMenuX + 1, rightClickMenuY + 26, 2, hovering == 1 ? 0xFF0000 : 0xFFFFFF);
 							case 2: drawString("Make-5", rightClickMenuX + 1, rightClickMenuY + 41, 2, hovering == 2 ? 0xFF0000 : 0xFFFFFF);
@@ -214,7 +213,7 @@ public final class DoSkillInterface {
 							case 4: drawString("Make-X", rightClickMenuX + 1, rightClickMenuY + 71, 2, hovering == 4 ? 0xFF0000 : 0xFFFFFF);
 							case 5: drawString("Make-All", rightClickMenuX + 1, rightClickMenuY + 86, 2, hovering == 5 ? 0xFF0000 : 0xFFFFFF);
 							case 6: drawString("Cancel", rightClickMenuX + 1, rightClickMenuY + 101, 2, hovering == 6 ? 0xFF0000 : 0xFFFFFF);
-									break;
+								break;
 							default: break;
 						}
 					}
@@ -223,19 +222,19 @@ public final class DoSkillInterface {
 				rightClickMenu = false;
 			}
 		}
-		
+
 		doSkillPanel.drawPanel();
 	}
 
 	public void drawString(String str, int x, int y, int font, int color) {
 		mc.getSurface().drawString(str, x, y, color, font);
 	}
-	
+
 	public void drawStringCentered(String str, int x, int y, int font, int color) {
 		int stringWid = mc.getSurface().stringWidth(font, str);
 		mc.getSurface().drawString(str, x + (width/2) - (stringWid/2) - 2, y, color, font);
 	}
-	
+
 	public int drawStringWrapped(String text, int x, int y, int font, int color) {
 		int strWidth = mc.getSurface().stringWidth(font, text);
 		if (text.length() >= 15) {
@@ -243,7 +242,7 @@ public final class DoSkillInterface {
 			text1 = text.substring(0, text1.lastIndexOf(" "));
 			int strWidth1 = mc.getSurface().stringWidth(font, text1);
 			drawString(text1, x + 24 - (strWidth1/2), y, font, color);
-			
+
 			String text2 = text.substring(text1.lastIndexOf(" ") + 1);
 			text2 = text2.substring(text2.indexOf(" ") + 1);
 			int strWidth2 = mc.getSurface().stringWidth(font, text2);
@@ -272,7 +271,7 @@ public final class DoSkillInterface {
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
 		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
 	}
-	
+
 	public void populateSkillItems() {
 		doSkillItems.clear();
 		skillToDo = mc.getSkillToDo();
@@ -393,7 +392,7 @@ public final class DoSkillInterface {
 			skillDoing = "Crafting";
 			doSkillItems.add(new DoSkillItem(542, "55", ""));
 		}
-		
+
 		else if (skillToDo.equals("Smelt")) {
 			title = "Choose a bar type to smelt";
 			skillDoing = "Smithing";
@@ -534,7 +533,7 @@ public final class DoSkillInterface {
 			doSkillItems.add(new DoSkillItem(402, "99", "3 Bars"));
 			doSkillItems.add(new DoSkillItem(401, "99", "5 Bars"));
 		}
-		
+
 		else if (skillToDo.equals("Fletch normal")) {
 			title = "Choose an item to fletch";
 			skillDoing = "Fletching";
@@ -702,7 +701,7 @@ public final class DoSkillInterface {
 			skillDoing = "Fletching";
 			doSkillItems.add(new DoSkillItem(786, "34", ""));
 		}
-		
+
 		else if (skillToDo.equals("Mix guam")) {
 			title = "Choose an amount to mix";
 			skillDoing = "Herblaw";
@@ -833,18 +832,18 @@ public final class DoSkillInterface {
 			skillDoing = "Herblaw";
 			doSkillItems.add(new DoSkillItem(472, "1", ""));
 		}
-		
+
 		else if (skillToDo.equals("Wine")) {
 			title = "Choose an amount to create";
 			skillDoing = "Cooking";
 			doSkillItems.add(new DoSkillItem(142, "35", ""));
 		}
-		
+
 		else {
 			System.out.println("No doSkill matches");
 		}
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}
