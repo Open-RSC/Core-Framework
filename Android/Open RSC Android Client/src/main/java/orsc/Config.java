@@ -51,6 +51,7 @@ public class Config {
     public static int C_MENU_SIZE = 1;
     public static boolean C_SWIPE_TO_SCROLL = true;
     public static boolean C_SWIPE_TO_ROTATE = true;
+    public static boolean C_SHOW_COMMAND_BUTTONS = false;
 
     /* Experience Config Menu */
     public static int C_EXPERIENCE_COUNTER = 1;
