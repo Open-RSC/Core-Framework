@@ -247,7 +247,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 								"Rules is rules!");
 						workman.remove();
 					} else {
-						p.message("you dig here unless you have a specimen brush with you");
+						p.message("you can't dig here unless you have a specimen brush with you");
 					}
 					return;
 				}

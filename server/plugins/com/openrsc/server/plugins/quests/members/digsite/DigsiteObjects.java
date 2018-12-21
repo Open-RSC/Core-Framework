@@ -307,7 +307,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 					p.message("You strike the tinderbox");
 					p.message("Fizz...");
 					sleep(300);
-					playerTalk(p, null, "Whoa! this is going to blow!",
+					playerTalk(p, null, "Whoa! this is going to blow!\"",
 							"I'd better run!");
 					sleep(1500);
 					p.teleport(22, 3379);
