@@ -6961,17 +6961,20 @@ public final class mudclient implements Runnable {
 
 		private final void drawAndroidSettingsBox(int var3, byte var4, short var5, int unchosenColor, int chosenColor) {
 			if (this.settingTab == 0) {
-				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, chosenColor, 128);
-				this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
-				this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
+				this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
+				this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
+				this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
 			} else if (this.settingTab == 1) {
-				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, unchosenColor, 128);
-				this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, chosenColor, 128);
-				this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, unchosenColor, 128);
+				this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
+				this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
+				this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
+				this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
 			} else if (this.settingTab == 2) {
-				this.getSurface().drawBoxAlpha(var3, var4 - 25, var5/3, 24, unchosenColor, 128);
-				this.getSurface().drawBoxAlpha(var5/3 + var3, var4 - 25, (var5/3) + 1, 24, unchosenColor, 128);
-				this.getSurface().drawBoxAlpha(2*(var5/3) + var3 + 1, var4 - 25, var5/3, 24, chosenColor, 128);
+				this.getSurface().drawBoxAlpha(var3, 36, var5, 25, GenUtil.buildColor(181, 181, 181), 160);
+				this.getSurface().drawBoxAlpha(var3, 61, var5, 105, GenUtil.buildColor(201, 201, 201), 160);
+				this.getSurface().drawBoxAlpha(var3, 166, var5, 95, GenUtil.buildColor(181, 181, 181), 160);
+				this.getSurface().drawBoxAlpha(var3, 261, var5, this.insideTutorial ? 55 : 40, GenUtil.buildColor(201, 201, 201), 160);
 			}
 
 			this.getSurface().drawLineHoriz(var3, 24 + var4 - 25, var5, 0);
