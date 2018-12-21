@@ -47,8 +47,8 @@ public class Config {
     public static boolean F_SHOWING_KEYBOARD = false;
     public static int F_LONG_PRESS_CALC;
     public static boolean C_HOLD_AND_CHOOSE = true;
-    public static int C_LONG_PRESS_TIMER = 400;
-    public static int C_MENU_SIZE = 6;
+    public static int C_LONG_PRESS_TIMER = 200;
+    public static int C_MENU_SIZE = 1;
     public static boolean C_SWIPE_TO_SCROLL = true;
     public static boolean C_SWIPE_TO_ROTATE = true;
 
