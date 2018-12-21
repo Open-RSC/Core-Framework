@@ -7340,7 +7340,7 @@ public final class mudclient implements Runnable {
 					"@whi@Swipe to Rotate - @gre@On", 4, (String) null, (String) null);
 		}
 
-		var7 += 195;
+		var7 += 165;
 		this.getSurface().drawString("Always logout when you finish", var6, var7, 0, 1);
 		int var8 = 0xFFFFFF;
 		var7 +=15;
