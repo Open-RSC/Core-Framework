@@ -1,10 +1,10 @@
 package orsc.graphics.gui;
 
 import orsc.MiscFunctions;
-import orsc.mudclient;
 import orsc.enumerations.PanelControlType;
 import orsc.graphics.two.Fonts;
 import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 

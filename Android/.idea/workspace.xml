@@ -11,40 +11,37 @@
   <component name="ChangeListManager">
     <list default="true" id="e0d29bc8-e104-4838-a3f4-e0e913d1354d" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__android_android_27.xml" afterPath="" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Android.iml" afterPath="$PROJECT_DIR$/Android.iml" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" afterPath="$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/build.gradle" afterPath="$PROJECT_DIR$/Open RSC Android Client/build.gradle" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/render/InputImpl.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/render/InputImpl.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/render/RSCBitmapSurfaceView.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/render/RSCBitmapSurfaceView.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/android/GameActivity.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/android/GameActivity.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/data/DataConversions.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/data/DataConversions.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/EntityHandler.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/EntityHandler.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AuctionHouse.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AuctionHouse.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankPinInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankPinInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/CustomBankInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/CustomBankInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/DoSkillInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/DoSkillInterface.java" />
-      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/ExperienceConfigInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/ExperienceConfigInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/FishingTrawlerInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/FishingTrawlerInterface.java" />
-      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/IronManInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/IronManInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/LostOnDeathInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/LostOnDeathInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/OnlineListInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/OnlineListInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/ProgressBarInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/ProgressBarInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/QuestGuideInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/QuestGuideInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/SkillGuideInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/SkillGuideInterface.java" />
-      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/TerritorySignupInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/TerritorySignupInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/clan/ClanInterface.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/clan/ClanInterface.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java" />
-      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/buffers/RSBufferUtils.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/buffers/RSBufferUtils.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/gui/Panel.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/gui/Panel.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/three/World.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/three/World.java" />
-      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java" />
-      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java" />
+      <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/two/GraphicsController.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/two/GraphicsController.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/net/Network_Socket.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/net/Network_Socket.java" />
       <change beforePath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/util/GenUtil.java" afterPath="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/util/GenUtil.java" />
-      <change beforePath="$PROJECT_DIR$/../Makefile" afterPath="$PROJECT_DIR$/../Makefile" />
-      <change beforePath="$PROJECT_DIR$/../OFFdocker-compose.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/../Open RSC.ipr" afterPath="$PROJECT_DIR$/../Open RSC.ipr" />
-      <change beforePath="$PROJECT_DIR$/../Open RSC.iws" afterPath="$PROJECT_DIR$/../Open RSC.iws" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" afterPath="$PROJECT_DIR$/../docker-compose.yml" />
-      <change beforePath="$PROJECT_DIR$/../etc/nginx/OFFdefault.conf.bak" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/../etc/nginx/default.conf" afterPath="$PROJECT_DIR$/../etc/nginx/default.conf" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -80,7 +77,36 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="Config.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="28" column="90" lean-forward="false" selection-start-line="28" selection-start-column="90" selection-end-line="28" selection-end-column="90" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApplicationUpdater.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="32" column="50" lean-forward="false" selection-start-line="32" selection-start-column="50" selection-end-line="32" selection-end-column="50" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1362#1755#0" expanded="true" />
+                <element signature="e#1754#1755#0" expanded="true" />
+                <element signature="e#2714#3982#0" expanded="true" />
+                <element signature="e#3981#3982#0" expanded="true" />
+                <element signature="e#4019#4412#0" expanded="true" />
+                <element signature="e#4411#4412#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -91,12 +117,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cache</find>
-      <find>welcome to</find>
-      <find>runescape</find>
-      <find>ic final class mudclient implements Runnable {</find>
-      <find>this.clientPort.packetHandler.getClientStream().new</find>
-      <find>(!var3.equals(StringUtil.displayNameToKey(this.localPla</find>
       <find>(this.clientPort.packetHandler.getClientStr</find>
       <find>lic final void closeConnection(boolean sendPacket) {</find>
       <find>awAppearancePanelCharacterSprites(int var</find>
@@ -120,7 +140,13 @@
       <find>isVisible</find>
       <find>getClientStream()</find>
       <find>updatePage</find>
+      <find>droid.apk</find>
+      <find>ANDROID_CACHE_URL</find>
+      <find>versionCode</find>
       <find>version</find>
+      <find>getVersion</find>
+      <find>CLIENT_VDERSION</find>
+      <find>CACHE_VERSION</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -2353,10 +2379,11 @@
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/net/Network_Socket.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java" />
-        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/util/GenUtil.java" />
         <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java" />
+        <option value="$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java" />
       </list>
     </option>
   </component>
@@ -2384,8 +2411,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -2408,15 +2437,13 @@
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="android.project.structure.last.selected" value="app" />
+    <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545246511082" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545360212651" />
     <property name="device.picker.selection" value="Pixel_2_API_28" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.intellij.jarRepository.settings.RemoteRepositoriesConfigurable" />
@@ -2609,15 +2636,16 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32955974" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24968554" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24968554" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2322239" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -2625,12 +2653,33 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2322239" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32955974" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24968554" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -2641,20 +2690,242 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AuctionHouse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="809">
+          <caret line="1146" column="1" lean-forward="false" selection-start-line="1146" selection-start-column="1" selection-end-line="1146" selection-end-column="1" />
+          <folding>
+            <element signature="e#11858#11871#0" expanded="false" />
+            <element signature="e#23181#23194#0" expanded="false" />
+            <element signature="e#34218#34219#0" expanded="false" />
+            <element signature="e#34235#34236#0" expanded="false" />
+            <element signature="e#34268#34269#0" expanded="false" />
+            <element signature="e#34287#34288#0" expanded="false" />
+            <element signature="e#39054#39055#0" expanded="false" />
+            <element signature="e#39075#39076#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/clan/ClanInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13455">
+          <caret line="897" column="1" lean-forward="false" selection-start-line="897" selection-start-column="1" selection-end-line="897" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#6549#6881#0" expanded="false" />
+            <element signature="e#6880#6881#0" expanded="false" />
+            <element signature="e#7016#7561#0" expanded="false" />
+            <element signature="e#7560#7561#0" expanded="false" />
+            <element signature="e#8510#8617#0" expanded="false" />
+            <element signature="e#8616#8617#0" expanded="false" />
+            <element signature="e#8702#8810#0" expanded="false" />
+            <element signature="e#8809#8810#0" expanded="false" />
+            <element signature="e#9608#9740#0" expanded="false" />
+            <element signature="e#9739#9740#0" expanded="false" />
+            <element signature="e#9864#9979#0" expanded="false" />
+            <element signature="e#9978#9979#0" expanded="false" />
+            <element signature="e#10137#10232#0" expanded="false" />
+            <element signature="e#10231#10232#0" expanded="false" />
+            <element signature="e#10382#10569#0" expanded="false" />
+            <element signature="e#10568#10569#0" expanded="false" />
+            <element signature="e#10747#10839#0" expanded="false" />
+            <element signature="e#10838#10839#0" expanded="false" />
+            <element signature="e#11291#11376#0" expanded="false" />
+            <element signature="e#11375#11376#0" expanded="false" />
+            <element signature="e#11794#11806#0" expanded="false" />
+            <element signature="e#14251#14331#0" expanded="false" />
+            <element signature="e#14330#14331#0" expanded="false" />
+            <element signature="e#14477#14591#0" expanded="false" />
+            <element signature="e#14590#14591#0" expanded="false" />
+            <element signature="e#14752#14917#0" expanded="false" />
+            <element signature="e#14916#14917#0" expanded="false" />
+            <element signature="e#18160#18701#0" expanded="false" />
+            <element signature="e#18700#18701#0" expanded="false" />
+            <element signature="e#18860#19407#0" expanded="false" />
+            <element signature="e#19406#19407#0" expanded="false" />
+            <element signature="e#19548#20102#0" expanded="false" />
+            <element signature="e#20101#20102#0" expanded="false" />
+            <element signature="e#20320#20495#0" expanded="false" />
+            <element signature="e#20494#20495#0" expanded="false" />
+            <element signature="e#21030#21142#0" expanded="false" />
+            <element signature="e#21141#21142#0" expanded="false" />
+            <element signature="e#21368#21479#0" expanded="false" />
+            <element signature="e#21478#21479#0" expanded="false" />
+            <element signature="e#21563#21743#0" expanded="false" />
+            <element signature="e#21742#21743#0" expanded="false" />
+            <element signature="e#27720#27721#0" expanded="false" />
+            <element signature="e#27743#27744#0" expanded="false" />
+            <element signature="e#27774#27775#0" expanded="false" />
+            <element signature="e#27795#27796#0" expanded="false" />
+            <element signature="e#31294#31295#0" expanded="false" />
+            <element signature="e#31310#31311#0" expanded="false" />
+            <element signature="e#31685#31686#0" expanded="false" />
+            <element signature="e#31709#31710#0" expanded="false" />
+            <element signature="e#32528#32529#0" expanded="false" />
+            <element signature="e#32552#32553#0" expanded="false" />
+            <element signature="e#32605#32606#0" expanded="false" />
+            <element signature="e#32642#32643#0" expanded="false" />
+            <element signature="e#32673#32674#0" expanded="false" />
+            <element signature="e#32699#32700#0" expanded="false" />
+            <element signature="e#32727#32728#0" expanded="false" />
+            <element signature="e#32749#32750#0" expanded="false" />
+            <element signature="e#32781#32782#0" expanded="false" />
+            <element signature="e#32805#32806#0" expanded="false" />
+            <element signature="e#32836#32837#0" expanded="false" />
+            <element signature="e#32859#32860#0" expanded="false" />
+            <element signature="e#32900#32901#0" expanded="false" />
+            <element signature="e#32929#32930#0" expanded="false" />
+            <element signature="e#32968#32969#0" expanded="false" />
+            <element signature="e#32995#32996#0" expanded="false" />
+            <element signature="e#33032#33033#0" expanded="false" />
+            <element signature="e#33060#33061#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/EntityHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="6325" column="39" lean-forward="false" selection-start-line="6325" selection-start-column="39" selection-end-line="6325" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#795#803#0" expanded="false" />
+            <element signature="e#863#872#0" expanded="false" />
+            <element signature="e#938#950#0" expanded="false" />
+            <element signature="e#1020#1034#0" expanded="false" />
+            <element signature="e#1096#1106#0" expanded="false" />
+            <element signature="e#1170#1181#0" expanded="false" />
+            <element signature="e#1241#1250#0" expanded="false" />
+            <element signature="e#1310#1319#0" expanded="false" />
+            <element signature="e#1388#1402#0" expanded="false" />
+            <element signature="e#1470#1485#0" expanded="false" />
+            <element signature="e#1545#1553#0" expanded="false" />
+            <element signature="e#1635#1636#0" expanded="false" />
+            <element signature="e#1662#1663#0" expanded="false" />
+            <element signature="e#1835#1836#0" expanded="false" />
+            <element signature="e#1864#1865#0" expanded="false" />
+            <element signature="e#1897#1898#0" expanded="false" />
+            <element signature="e#1922#1923#0" expanded="false" />
+            <element signature="e#2082#2083#0" expanded="false" />
+            <element signature="e#2108#2109#0" expanded="false" />
+            <element signature="e#2275#2276#0" expanded="false" />
+            <element signature="e#2304#2305#0" expanded="false" />
+            <element signature="e#2343#2344#0" expanded="false" />
+            <element signature="e#2374#2375#0" expanded="false" />
+            <element signature="e#2559#2560#0" expanded="false" />
+            <element signature="e#2586#2587#0" expanded="false" />
+            <element signature="e#2756#2757#0" expanded="false" />
+            <element signature="e#2784#2785#0" expanded="false" />
+            <element signature="e#2956#2957#0" expanded="false" />
+            <element signature="e#2982#2983#0" expanded="false" />
+            <element signature="e#3146#3147#0" expanded="false" />
+            <element signature="e#3172#3173#0" expanded="false" />
+            <element signature="e#3341#3342#0" expanded="false" />
+            <element signature="e#3371#3372#0" expanded="false" />
+            <element signature="e#3555#3556#0" expanded="false" />
+            <element signature="e#3583#3584#0" expanded="false" />
+            <element signature="e#522632#522662#0" expanded="false" />
+            <element signature="e#522768#522786#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="19" column="27" lean-forward="true" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="119" column="61" lean-forward="false" selection-start-line="119" selection-start-column="51" selection-end-line="119" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/util/GenUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="809">
+          <caret line="171" column="1" lean-forward="false" selection-start-line="171" selection-start-column="1" selection-end-line="171" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/mudclient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="279" column="25" lean-forward="false" selection-start-line="279" selection-start-column="25" selection-end-line="279" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/buffers/RSBufferUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="809">
+          <caret line="394" column="1" lean-forward="false" selection-start-line="394" selection-start-column="1" selection-end-line="394" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/graphics/three/World.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="809">
+          <caret line="1931" column="1" lean-forward="false" selection-start-line="1931" selection-start-column="1" selection-end-line="1931" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="45" column="1" lean-forward="false" selection-start-line="45" selection-start-column="1" selection-end-line="45" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/net/Network_Socket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="809">
+          <caret line="246" column="1" lean-forward="false" selection-start-line="246" selection-start-column="1" selection-end-line="246" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="809">
+          <caret line="272" column="1" lean-forward="false" selection-start-line="272" selection-start-column="1" selection-end-line="272" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/PacketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="351" column="23" lean-forward="false" selection-start-line="351" selection-start-column="23" selection-end-line="351" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#932#933#0" expanded="false" />
+            <element signature="e#960#961#0" expanded="false" />
+            <element signature="e#1007#1008#0" expanded="false" />
+            <element signature="e#1042#1043#0" expanded="false" />
+            <element signature="e#1106#1107#0" expanded="false" />
+            <element signature="e#1154#1155#0" expanded="false" />
+            <element signature="e#1920#1921#0" expanded="false" />
+            <element signature="e#1958#1959#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#3902#3903#0" expanded="false" />
-            <element signature="e#3948#3949#0" expanded="false" />
-            <element signature="e#7274#7275#0" expanded="false" />
-            <element signature="e#7319#7320#0" expanded="false" />
-            <element signature="e#7363#7364#0" expanded="false" />
-            <element signature="e#7411#7412#0" expanded="false" />
-            <element signature="e#7449#7450#0" expanded="false" />
-            <element signature="e#7478#7479#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2684,7 +2955,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="553">
           <caret line="116" column="5" lean-forward="true" selection-start-line="116" selection-start-column="5" selection-end-line="116" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2916,68 +3186,44 @@
           <caret line="6325" column="39" lean-forward="false" selection-start-line="6325" selection-start-column="39" selection-end-line="6325" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="false" />
-            <element signature="e#390#398#0" expanded="false" />
-            <element signature="e#458#467#0" expanded="false" />
-            <element signature="e#533#545#0" expanded="false" />
-            <element signature="e#615#629#0" expanded="false" />
-            <element signature="e#691#701#0" expanded="false" />
-            <element signature="e#765#776#0" expanded="false" />
-            <element signature="e#836#845#0" expanded="false" />
-            <element signature="e#905#914#0" expanded="false" />
-            <element signature="e#983#997#0" expanded="false" />
-            <element signature="e#1065#1080#0" expanded="false" />
-            <element signature="e#1140#1148#0" expanded="false" />
-            <element signature="e#1230#1231#0" expanded="false" />
-            <element signature="e#1257#1258#0" expanded="false" />
-            <element signature="e#1430#1431#0" expanded="false" />
-            <element signature="e#1459#1460#0" expanded="false" />
-            <element signature="e#1492#1493#0" expanded="false" />
-            <element signature="e#1517#1518#0" expanded="false" />
-            <element signature="e#1677#1678#0" expanded="false" />
-            <element signature="e#1703#1704#0" expanded="false" />
-            <element signature="e#1870#1871#0" expanded="false" />
-            <element signature="e#1899#1900#0" expanded="false" />
-            <element signature="e#1938#1939#0" expanded="false" />
-            <element signature="e#1969#1970#0" expanded="false" />
-            <element signature="e#2154#2155#0" expanded="false" />
-            <element signature="e#2181#2182#0" expanded="false" />
-            <element signature="e#2351#2352#0" expanded="false" />
-            <element signature="e#2379#2380#0" expanded="false" />
-            <element signature="e#2551#2552#0" expanded="false" />
-            <element signature="e#2577#2578#0" expanded="false" />
-            <element signature="e#2741#2742#0" expanded="false" />
-            <element signature="e#2767#2768#0" expanded="false" />
-            <element signature="e#2936#2937#0" expanded="false" />
-            <element signature="e#2966#2967#0" expanded="false" />
-            <element signature="e#3150#3151#0" expanded="false" />
-            <element signature="e#3178#3179#0" expanded="false" />
-            <element signature="e#522227#522257#0" expanded="false" />
-            <element signature="e#522363#522381#0" expanded="false" />
+            <element signature="e#795#803#0" expanded="false" />
+            <element signature="e#863#872#0" expanded="false" />
+            <element signature="e#938#950#0" expanded="false" />
+            <element signature="e#1020#1034#0" expanded="false" />
+            <element signature="e#1096#1106#0" expanded="false" />
+            <element signature="e#1170#1181#0" expanded="false" />
+            <element signature="e#1241#1250#0" expanded="false" />
+            <element signature="e#1310#1319#0" expanded="false" />
+            <element signature="e#1388#1402#0" expanded="false" />
+            <element signature="e#1470#1485#0" expanded="false" />
+            <element signature="e#1545#1553#0" expanded="false" />
+            <element signature="e#1635#1636#0" expanded="false" />
+            <element signature="e#1662#1663#0" expanded="false" />
+            <element signature="e#1835#1836#0" expanded="false" />
+            <element signature="e#1864#1865#0" expanded="false" />
+            <element signature="e#1897#1898#0" expanded="false" />
+            <element signature="e#1922#1923#0" expanded="false" />
+            <element signature="e#2082#2083#0" expanded="false" />
+            <element signature="e#2108#2109#0" expanded="false" />
+            <element signature="e#2275#2276#0" expanded="false" />
+            <element signature="e#2304#2305#0" expanded="false" />
+            <element signature="e#2343#2344#0" expanded="false" />
+            <element signature="e#2374#2375#0" expanded="false" />
+            <element signature="e#2559#2560#0" expanded="false" />
+            <element signature="e#2586#2587#0" expanded="false" />
+            <element signature="e#2756#2757#0" expanded="false" />
+            <element signature="e#2784#2785#0" expanded="false" />
+            <element signature="e#2956#2957#0" expanded="false" />
+            <element signature="e#2982#2983#0" expanded="false" />
+            <element signature="e#3146#3147#0" expanded="false" />
+            <element signature="e#3172#3173#0" expanded="false" />
+            <element signature="e#3341#3342#0" expanded="false" />
+            <element signature="e#3371#3372#0" expanded="false" />
+            <element signature="e#3555#3556#0" expanded="false" />
+            <element signature="e#3583#3584#0" expanded="false" />
+            <element signature="e#522632#522662#0" expanded="false" />
+            <element signature="e#522768#522786#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="19" column="27" lean-forward="true" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
-          <folding>
-            <element signature="e#3902#3903#0" expanded="false" />
-            <element signature="e#3948#3949#0" expanded="false" />
-            <element signature="e#7274#7275#0" expanded="false" />
-            <element signature="e#7319#7320#0" expanded="false" />
-            <element signature="e#7363#7364#0" expanded="false" />
-            <element signature="e#7411#7412#0" expanded="false" />
-            <element signature="e#7449#7450#0" expanded="false" />
-            <element signature="e#7478#7479#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="119" column="61" lean-forward="false" selection-start-line="119" selection-start-column="51" selection-end-line="119" selection-end-column="61" />
         </state>
       </provider>
     </entry>
@@ -3043,17 +3289,47 @@
         <state relative-caret-position="247">
           <caret line="351" column="23" lean-forward="false" selection-start-line="351" selection-start-column="23" selection-end-line="351" selection-end-column="23" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#932#933#0" expanded="false" />
+            <element signature="e#960#961#0" expanded="false" />
+            <element signature="e#1007#1008#0" expanded="false" />
+            <element signature="e#1042#1043#0" expanded="false" />
+            <element signature="e#1106#1107#0" expanded="false" />
+            <element signature="e#1154#1155#0" expanded="false" />
+            <element signature="e#1920#1921#0" expanded="false" />
+            <element signature="e#1958#1959#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-28/android/content/DialogInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="118" column="13" lean-forward="false" selection-start-line="118" selection-start-column="13" selection-end-line="118" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="28" column="90" lean-forward="false" selection-start-line="28" selection-start-column="90" selection-end-line="28" selection-end-column="90" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="50" lean-forward="false" selection-start-line="32" selection-start-column="50" selection-end-line="32" selection-end-column="50" />
+          <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#932#933#0" expanded="true" />
-            <element signature="e#960#961#0" expanded="true" />
-            <element signature="e#1007#1008#0" expanded="true" />
-            <element signature="e#1042#1043#0" expanded="true" />
-            <element signature="e#1106#1107#0" expanded="true" />
-            <element signature="e#1154#1155#0" expanded="true" />
-            <element signature="e#1920#1921#0" expanded="true" />
-            <element signature="e#1958#1959#0" expanded="true" />
-            <element signature="e#59811#59812#0" expanded="true" />
-            <element signature="e#59879#59880#0" expanded="true" />
+            <element signature="e#1362#1755#0" expanded="true" />
+            <element signature="e#1754#1755#0" expanded="true" />
+            <element signature="e#2714#3982#0" expanded="true" />
+            <element signature="e#3981#3982#0" expanded="true" />
+            <element signature="e#4019#4412#0" expanded="true" />
+            <element signature="e#4411#4412#0" expanded="true" />
           </folding>
         </state>
       </provider>

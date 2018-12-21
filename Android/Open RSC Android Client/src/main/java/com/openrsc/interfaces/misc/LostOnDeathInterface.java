@@ -2,14 +2,15 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-import orsc.graphics.gui.Panel;
-import orsc.mudclient;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+
+import orsc.graphics.gui.Panel;
+import orsc.mudclient;
 
 
 public final class LostOnDeathInterface {
