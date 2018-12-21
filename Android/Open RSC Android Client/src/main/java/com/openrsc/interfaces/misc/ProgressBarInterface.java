@@ -3,6 +3,7 @@ package com.openrsc.interfaces.misc;
 import com.openrsc.interfaces.InputListener;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
+
 import orsc.mudclient;
 
 public class ProgressBarInterface {

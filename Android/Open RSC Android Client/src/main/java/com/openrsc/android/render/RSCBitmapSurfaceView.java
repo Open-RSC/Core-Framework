@@ -1,11 +1,5 @@
 package com.openrsc.android.render;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-
-import com.openrsc.client.android.GameActivity;
-import com.openrsc.client.model.Sprite;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,8 +22,14 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
-import orsc.multiclient.ClientPort;
+import com.openrsc.client.android.GameActivity;
+import com.openrsc.client.model.Sprite;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+
 import orsc.Config;
+import orsc.multiclient.ClientPort;
 
 public class RSCBitmapSurfaceView extends SurfaceView implements SurfaceHolder.Callback, ClientPort {
 

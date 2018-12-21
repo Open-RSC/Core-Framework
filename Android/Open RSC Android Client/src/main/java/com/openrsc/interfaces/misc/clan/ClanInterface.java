@@ -1,6 +1,11 @@
 package com.openrsc.interfaces.misc.clan;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.enumerations.MenuItemAction;
@@ -10,11 +15,6 @@ import orsc.graphics.gui.Panel;
 import orsc.graphics.gui.SocialLists;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 
 public final class ClanInterface {
 	private mudclient mc;
