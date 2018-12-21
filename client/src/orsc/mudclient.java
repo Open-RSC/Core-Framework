@@ -658,7 +658,8 @@ public final class mudclient implements Runnable {
 		private Panel panelSettings;
         public HashMap<String, File> soundCache = new HashMap<String, File>();
 		public boolean authenticSettings = !(
-						Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+			Config.isAndroid() ||
+			Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
             || Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
             || Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
             || Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
@@ -6843,13 +6844,13 @@ public final class mudclient implements Runnable {
 				int chosenColor = GenUtil.buildColor(220, 220, 220);
 				int unchosenColor = GenUtil.buildColor(160, 160, 160);
 
-				// Android Settings Tabs
+				/* Draw menu boxes */
+				// Android Settings Box & Tabs
 				if (Config.isAndroid()) {
 					this.drawAndroidSettingsBox(var3, var4, var5, unchosenColor, chosenColor);
 
-				// Desktop Settings tabs
+				// Desktop Settings Box & Tabs
 				} else {
-
 
 					// Authentic Settings GUI
 					if (this.authenticSettings) {
@@ -6869,6 +6870,7 @@ public final class mudclient implements Runnable {
 				int var6 = 3 + var3;
 				int var7 = var4 + 15;
 
+				/* Add Options to Settings Tabs */
 				if (this.authenticSettings)
 					this.drawAuthenticSettingsOptions(var3, var4, var5, var6, var7, chosenColor, unchosenColor);
 				else {
@@ -6893,7 +6895,6 @@ public final class mudclient implements Runnable {
 					var3 = 199 - this.getSurface().width2 + this.mouseX; // Relative X
 					int var13 = this.mouseY - 36; // Relative Y
 					if (var3 >= 0 && var13 >= 0 && var3 < 196 && var13 < 295) { // Within Panel
-
 						// Tab Switching
 						if (!this.authenticSettings) {
 							this.panelSettings.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
@@ -6910,7 +6911,7 @@ public final class mudclient implements Runnable {
 									this.panelSettings.resetList(this.controlSettingPanel);
 								}
 							}
-							else if (!Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
+							else if (!Config.isAndroid()) {
 								if (var13 <= 24 && this.mouseButtonClick == 1) {
 									if (var3 < 98 && this.settingTab == 1) {
 										this.settingTab = 0; // Social Settings Tab
