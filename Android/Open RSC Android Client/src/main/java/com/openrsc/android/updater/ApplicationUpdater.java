@@ -40,10 +40,10 @@ public class ApplicationUpdater extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.applicationupdater);
 
-        progressBar = findViewById(R.id.progressBar1);
+        progressBar = (TextProgressBar) findViewById(R.id.progressBar1);
         progressBar.setTextSize(18);
         progressBar.setIndeterminate(false);
-        tv1 = findViewById(R.id.textView1);
+        tv1 = (TextView) findViewById(R.id.textView1);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -141,9 +141,6 @@ public class ApplicationUpdater extends Activity {
 
         @Override
         protected void onProgressUpdate(String... values) {
-            if (values[0].toLowerCase().contains("couldn't")) {
-                Toast.makeText(ApplicationUpdater.this, "Unable to check for updates", Toast.LENGTH_LONG).show();
-            }
             tv1.setText(values[0]);
             super.onProgressUpdate(values);
         }
