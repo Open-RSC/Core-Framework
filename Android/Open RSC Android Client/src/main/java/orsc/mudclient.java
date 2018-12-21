@@ -690,14 +690,15 @@ public final class mudclient implements Runnable {
 	private Panel panelSettings;
 	public HashMap<String, File> soundCache = new HashMap<String, File>();
 	public boolean authenticSettings = !(
-			Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-					|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-					|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-					|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-					|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
-					|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-					|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-					|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+		Config.isAndroid() ||
+		Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+		|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+		|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+		|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+		|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
+		|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+		|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+		|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
 	private Panel panelSocial;
 	private Panel panelClan;
 	private SocialPopupMode panelSocialPopup_Mode = SocialPopupMode.NONE;
@@ -6942,7 +6943,7 @@ public final class mudclient implements Runnable {
 								this.panelSettings.resetList(this.controlSettingPanel);
 							}
 						}
-						else if (!Config.isAndroid() && var13 <= 24 && this.mouseButtonClick == 1) {
+						else if (!Config.isAndroid()) {
 							if (var13 <= 24 && this.mouseButtonClick == 1) {
 								if (var3 < 98 && this.settingTab == 1) {
 									this.settingTab = 0; // Social Settings Tab
