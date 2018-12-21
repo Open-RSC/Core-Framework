@@ -1,13 +1,12 @@
 package orsc.net;
 
-import orsc.PacketHandler;
-import orsc.mudclient;
-import orsc.util.GenUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+
+import orsc.PacketHandler;
+import orsc.util.GenUtil;
 
 public final class Network_Socket extends Network_Base implements Runnable {
 	private boolean closed = false;

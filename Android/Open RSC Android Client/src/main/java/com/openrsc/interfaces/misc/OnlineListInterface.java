@@ -4,6 +4,7 @@ import com.openrsc.interfaces.InputListener;
 import com.openrsc.interfaces.MenuAction;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NRightClickMenu;
+
 import orsc.graphics.gui.Panel;
 import orsc.mudclient;
 
