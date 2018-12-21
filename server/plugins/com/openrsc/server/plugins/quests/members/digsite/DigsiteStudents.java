@@ -70,8 +70,8 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 						npcTalk(p, n, "I'm getting there",
 								"Have you found my rock sample yet ?");
 						playerTalk(p, n, "No sorry, not yet");
-						npcTalk(p, n, "Oh dear, I hope it didn't fall into the stream");
-						npcTalk(p, n, "I might never find it again...");
+						npcTalk(p, n, "Oh dear, I hope it didn't fall into the stream",
+								"I might never find it again...");
 					}
 				} else {
 					playerTalk(p, n, "Can you help me with the earth sciences exams at all?");

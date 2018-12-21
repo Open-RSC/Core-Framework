@@ -52,8 +52,9 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 								p.setBusy(false);
 								return;
 							}
-							p.message("You try to climb down the rope");
-							message(p, "You lower yourself into the shaft");
+							message(p, "You try to climb down the rope", 
+									"You lower yourself into the shaft");
+							p.incExp(AGILITY, 20, true);
 							p.teleport(26, 3346);
 							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
@@ -74,8 +75,9 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 								p.setBusy(false);
 								return;
 							}
-							p.message("You try to climb down the rope");
-							message(p, "You lower yourself into the shaft");
+							message(p, "You try to climb down the rope", 
+									"You lower yourself into the shaft");
+							p.incExp(AGILITY, 20, true);
 							if(p.getQuestStage(Constants.Quests.DIGSITE) >= 6) {
 								p.teleport(19, 3385);
 							} else {

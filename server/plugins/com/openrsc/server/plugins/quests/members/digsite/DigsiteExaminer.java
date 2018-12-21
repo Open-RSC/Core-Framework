@@ -132,10 +132,11 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 					playerTalk(p, n, "Hello");
 					npcTalk(p, n, "Hello again",
 							"Are you ready for another shot at the exam ?");
-					int opt2 = showMenu(p, n,
+					int opt2 = showMenu(p, n, false, //do not send over
 							"Yes I certainly am",
 							"No, not at the moment");
 					if(opt2 == 0) {
+						playerTalk(p, n, "Yes I certainly am");
 						digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_AND_MENU_ONE);
 					} else if(opt2 == 1) {
 						playerTalk(p, n, "Sorry, I didn't mean to disturb you...");
@@ -232,13 +233,13 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 				if(p.getCache().hasKey("student_orange_c") 
 						&& p.getCache().hasKey("student_green_c") 
 						&& p.getCache().hasKey("student_purple_c")) {
-					menu1 = showMenu(p, n,
+					menu1 = showMenu(p, n, false, //do not send over
 							"The study of the earth, It's contents and It's history",
 							"The study of planets, and the history of forming worlds",
 							"The combination of all skills applied to the working of the earth");
 
 				} else {
-					menu1 = showMenu(p, n,
+					menu1 = showMenu(p, n, false, //do not send over
 							"The study of gardening, planting and fruiting vegetation",
 							"The study of planets, and the history of worlds",
 							"The combination of all skills applied to the working of the earth");
@@ -247,12 +248,18 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 					if(p.getCache().hasKey("student_orange_c") 
 							&& p.getCache().hasKey("student_green_c") 
 							&& p.getCache().hasKey("student_purple_c")) {
+						playerTalk(p, n, "The study of the earth, It's contents and It's history");
 						CORRECT_ANSWERS++;
+					}
+					else {
+						playerTalk(p, n, "The study of gardening, planting and fruiting vegetation");
 					}
 					digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_MENU_TWO);
 				} else if(menu1 == 1) {
+					playerTalk(p, n, "The study of planets, and the history of forming worlds");
 					digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_MENU_TWO);
 				} else if(menu1 == 2) {
+					playerTalk(p, n, "The combination of all skills applied to the working of the earth");
 					digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_MENU_TWO);
 				}
 				break;
@@ -301,7 +308,6 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"Overcoats and facemasks to be worn at all times",
 							"Gloves and boots to be worn at all times, proper tools must be used",
 							"Protective clothing to be worn, tools kept away from site");
-
 				} else {
 					menu3 = showMenu(p, n,
 							"Heat-resistant clothing to be worn at all times",
@@ -343,10 +349,20 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 					p.getCache().remove("student_green_c");
 					p.getCache().remove("student_purple_c");
 				} else {
-					npcTalk(p, n, "Oh deary me!",
-							"This is appauling, none correct at all!",
-							"I suggest you go and study properly...");
-					playerTalk(p, n, "Oh dear...");
+					if(CORRECT_ANSWERS == 0) {
+						npcTalk(p, n, "Oh deary me!",
+								"This is appauling, none correct at all!",
+								"I suggest you go and study properly...");
+						playerTalk(p, n, "Oh dear...");
+					} else if(CORRECT_ANSWERS == 1) {
+						npcTalk(p, n, "You got 1 question correct",
+								"Better luck next time");
+						playerTalk(p, n, "Oh bother!");
+					} else if(CORRECT_ANSWERS == 2) {
+						npcTalk(p, n, "You got 2 questions correct",
+								"Not bad, just a little more revision needed");
+						playerTalk(p, n, "Oh well...");
+					}
 				}
 				break;
 			case ExaminerNPC.START_EXAM2_AND_MENU_ONE:
@@ -579,7 +595,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 				break;
 			case ExaminerNPC.START_EXAM3_FINAL:
 				npcTalk(p, n, "Okay, that concludes level 3 Earthsciences exam",
-						"Let me add up the results...");
+						"Let me add up the results...\"");
 				sleep(2000);
 				if(p.getCache().hasKey("student_orange_exam3") 
 						&& p.getCache().hasKey("student_green_exam3") 

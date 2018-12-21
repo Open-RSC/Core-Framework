@@ -106,20 +106,24 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 						"I would like to see how you get on");
 				playerTalk(p, n, "Okay, I will, thanks, see you later");
 			}
-			if(item.getID() == DigsiteExaminer.LEVEL_1_CERTIFICATE) {
+			else if(item.getID() == DigsiteExaminer.STAMPED_LETTER) {
+				npcTalk(p, n, "No, I don't want it back, thankyou");
+			}
+			else if(item.getID() == DigsiteExaminer.LEVEL_1_CERTIFICATE) {
 				playerTalk(p, n, "Look what I have been awarded");
 				removeItem(p, DigsiteExaminer.LEVEL_1_CERTIFICATE, 1);
 				npcTalk(p, n, "Well that's great, well done",
 						"I'll take that for safekeeping",
 						"Come and tell me when you are the next level");
 			}
-			if(item.getID() == DigsiteExaminer.LEVEL_2_CERTIFICATE) {
+			else if(item.getID() == DigsiteExaminer.LEVEL_2_CERTIFICATE) {
+				playerTalk(p, n, "Look, I am level 2 now...");
 				npcTalk(p, n, "Excellent work!");
 				removeItem(p, DigsiteExaminer.LEVEL_2_CERTIFICATE, 1);
 				npcTalk(p, n, "I'll take that for safekeeping",
 						"Remember to come and see me when you have graduated");
 			}
-			if(item.getID() == DigsiteExaminer.LEVEL_3_CERTIFICATE) {
+			else if(item.getID() == DigsiteExaminer.LEVEL_3_CERTIFICATE) {
 				playerTalk(p, n, "Look at this certificate, curator...");
 				npcTalk(p, n, "Well well, a level 3 graduate!",
 						"I'll keep your certificate safe for you",
@@ -137,7 +141,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 					removeItem(p, DigsiteExaminer.LEVEL_3_CERTIFICATE, 1);
 					npcTalk(p, n, "Certainly, have this...");
 					addItem(p, 866, 1);
-					playerTalk(p, n, "A cocktail?");
+					playerTalk(p, n, "A cocktail ?");
 					npcTalk(p, n, "It's a new recipie from the gnome kingdom",
 							"You'll like it I'm sure");
 					playerTalk(p, n, "Cheers!");
