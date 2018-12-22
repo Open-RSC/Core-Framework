@@ -171,6 +171,7 @@ public final class Constants {
 		public static boolean WANT_CUSTOM_BANKS = false;
 		public static boolean WANT_BANK_PINS = false;
 		public static boolean WANT_BANK_NOTES = false;
+		public static boolean WANT_CERT_DEPOSIT = false;
 		public static boolean CUSTOM_FIREMAKING = false;
 		public static boolean WANT_DROP_X = false;
 		public static boolean WANT_EXP_INFO = false;
@@ -255,6 +256,7 @@ public final class Constants {
 			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
 			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
 			WANT_BANK_NOTES = Boolean.parseBoolean(props.getProperty("want_bank_notes"));
+			WANT_CERT_DEPOSIT = Boolean.parseBoolean(props.getProperty("want_cert_deposit"));
 			CUSTOM_FIREMAKING = Boolean.parseBoolean(props.getProperty("custom_firemaking"));
 			WANT_DROP_X = Boolean.parseBoolean(props.getProperty("want_drop_x"));
 			WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
