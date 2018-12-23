@@ -7,7 +7,6 @@ services:
         volumes:
             - "./etc/nginx:/etc/nginx/conf.d"
             - "./Website:/var/www/html"
-            - "./server/avatars:/var/www/html/avatars"
             - "./etc/nginx/logs:/var/log/nginx"
             - "./etc/letsencrypt:/etc/letsencrypt"
         ports:
@@ -16,8 +15,6 @@ services:
         environment:
             - NGINX_HOST=${NGINX_HOST}
         restart: always
-        depends_on:
-            - mysqldb
 
     php:
         build:
