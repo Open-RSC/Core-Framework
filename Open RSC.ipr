@@ -4,7 +4,9 @@
     <buildFile url="file://$PROJECT_DIR$/Launcher/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/client/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" />
   </component>
+  <component name="Encoding" addBOMForNewFiles="with NO BOM" />
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
       <option name="myName" value="Project Default" />
@@ -13,12 +15,13 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/client/Client.iml" filepath="$PROJECT_DIR$/client/Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/Server.iml" filepath="$PROJECT_DIR$/server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" filepath="$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
@@ -172,6 +175,14 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="lib4">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" recursive="false" />
     </library>
     <library name="MapEditor">
       <CLASSES>
