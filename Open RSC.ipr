@@ -5,6 +5,7 @@
     <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/client/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/Tools/Map Generator/build.xml" />
   </component>
   <component name="Encoding" addBOMForNewFiles="with NO BOM" />
   <component name="InspectionProjectProfileManager">
@@ -17,6 +18,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/client/Client.iml" filepath="$PROJECT_DIR$/client/Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tools/Map Generator/Map Generator.iml" filepath="$PROJECT_DIR$/Tools/Map Generator/Map Generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/Server.iml" filepath="$PROJECT_DIR$/server/Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" filepath="$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" />
     </modules>
