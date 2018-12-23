@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Databases/evo_game.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Databases/openrsc_web.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xpp3.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xpp3.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xstream.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xstream.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/3D Landscape Editor/MapEditor.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/3D Landscape Editor/MapEditor.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/Map Generator/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/Map Generator/build.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/Sprite Editor/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/Sprite Editor/build.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/Sprite Editor/nbbuild.xml" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,65 +17,7 @@
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/util/PersistenceManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/Sprite.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="255" selection-start-line="255" selection-end-line="255" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteUnpacker.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Tools/Map Generator/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="4" selection-start-line="38" selection-start-column="4" selection-end-line="41" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="764">
-              <caret line="65" column="33" selection-start-line="65" selection-start-column="33" selection-end-line="65" selection-end-column="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -106,11 +42,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="47" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="53" />
     <option name="y" value="23" />
-    <option name="width" value="1633" />
-    <option name="height" value="1027" />
+    <option name="width" value="3387" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -121,7 +57,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -133,13 +68,14 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545598492782" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545599886105" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
@@ -160,7 +96,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.Map Generator">
+  <component name="RunManager" selected="Ant Target.Client">
     <configuration name="Client" type="AntRunConfiguration">
       <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
       <method v="2">
@@ -234,10 +170,9 @@
     <option name="totallyTimeSpent" value="2209000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="32" width="3456" height="1416" extended-state="6" />
-    <editor active="true" />
+    <frame x="53" y="23" width="3387" height="1417" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13722026" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13004485" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -254,11 +189,12 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Messages" order="10" visible="true" weight="0.32735777" />
+      <window_info active="true" anchor="bottom" id="Messages" order="10" visible="true" weight="0.32679245" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="right" id="Maven" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" visible="true" weight="0.05270907" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.052615844" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -331,14 +267,27 @@
         <filter targetName="runclient" isVisible="false" />
         <filter targetName="compile-and-run" isVisible="false" />
       </targetFilters>
-      <treeView value="false" />
       <expanded value="true" />
     </buildFile>
     <buildFile url="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml">
+      <targetFilters>
+        <filter targetName="compile" isVisible="false" />
+        <filter targetName="editor" isVisible="false" />
+        <filter targetName="compile-and-run" isVisible="false" />
+        <filter targetName="packer" isVisible="false" />
+        <filter targetName="compile-and-run-packer" isVisible="false" />
+        <filter targetName="unpacker" isVisible="false" />
+        <filter targetName="compile-and-run-unpacker" isVisible="false" />
+      </targetFilters>
       <treeView value="false" />
       <expanded value="true" />
     </buildFile>
     <buildFile url="file://$PROJECT_DIR$/Tools/Map Generator/build.xml">
+      <targetFilters>
+        <filter targetName="compile" isVisible="false" />
+        <filter targetName="mapgenerator" isVisible="false" />
+        <filter targetName="compile-and-run" isVisible="false" />
+      </targetFilters>
       <treeView value="false" />
       <expanded value="true" />
     </buildFile>
@@ -347,9 +296,10 @@
     <entry file="file://$PROJECT_DIR$/server/build.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/Tools/Map Generator/map.png" />
     <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/util/PersistenceManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
+        <state relative-caret-position="180">
           <caret line="16" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -359,39 +309,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/Sprite.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
+        <state relative-caret-position="3210">
           <caret line="255" selection-start-line="255" selection-end-line="255" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/src/spriteeditor/SpriteUnpacker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
+        <state relative-caret-position="960">
           <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Tools/Map Generator/map.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
+        <state relative-caret-position="570">
           <caret line="38" column="4" selection-start-line="38" selection-start-column="4" selection-end-line="41" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="764">
+        <state relative-caret-position="975">
           <caret line="65" column="33" selection-start-line="65" selection-start-column="33" selection-end-line="65" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Tools/Map Generator/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+        <state relative-caret-position="255">
+          <caret line="17" column="33" lean-forward="true" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
         </state>
       </provider>
     </entry>
