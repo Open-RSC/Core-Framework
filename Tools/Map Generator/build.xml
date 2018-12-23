@@ -6,7 +6,7 @@
 	<target name="compile">
 		<delete file="${jar}" />
 		<mkdir dir="${build}" />
-		<javac srcdir="${src}" destdir="${build}" debug="on" target="1.8">
+		<javac srcdir="${src}" destdir="${build}" debug="on">
 		  <classpath>
 			<pathelement location="lib/xstream.jar"/>
 			<pathelement location="lib/xpp3.jar" />
@@ -25,4 +25,9 @@
 			</classpath>
 		</java>
 	</target>
+
+    <target name="compile-and-run">
+        <antcall target="compile"/>
+        <antcall target="mapgenerator"/>
+    </target>
 </project>
