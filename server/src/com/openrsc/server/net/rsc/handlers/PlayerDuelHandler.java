@@ -37,7 +37,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			unsetOptions(affectedPlayer);
 			return;
 		}
-		
+
 		if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
 			player.message("You are an Iron Man. You stand alone.");
 			unsetOptions(player);
@@ -74,10 +74,11 @@ public class PlayerDuelHandler implements PacketHandler {
 			affectedPlayer = world.getPlayer(p.readShort());
 			if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
 					|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
+				player.getDuel().setDuelRecipient(null);
 				player.getDuel().resetAll();
 				return;
 			}
-			
+
 			if (affectedPlayer.isIronMan(1) || affectedPlayer.isIronMan(2) || affectedPlayer.isIronMan(3)) {
 				player.message(affectedPlayer.getUsername() + " is an Iron Man. He stands alone.");
 				unsetOptions(player);
@@ -220,12 +221,12 @@ public class PlayerDuelHandler implements PacketHandler {
 
 						player.resetAllExceptDueling();
 						affectedPlayer.resetAllExceptDueling();
-						
+
 						player.setLocation(affectedPlayer.getLocation(), true);
 						affectedPlayer.setTeleporting(true);
 						// player.teleport(affectedPlayer.getX(),
 						// affectedPlayer.getY());
-						
+
 
 						player.setSprite(9);
 						player.setOpponent(mob);
@@ -252,7 +253,7 @@ public class PlayerDuelHandler implements PacketHandler {
 						//TEST
 						attacker.getDuel().setDuelActive(true);
 						opponent.getDuel().setDuelActive(true);
-						
+
 						CombatEvent combatEvent = new CombatEvent(attacker, opponent);
 						attacker.setCombatEvent(combatEvent);
 						opponent.setCombatEvent(combatEvent);
