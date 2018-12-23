@@ -115,3 +115,7 @@ etc/nginx/logs/*.log
 etc/logs/mariadb/*
 !etc/logs/mariadb/.gitsave
 gameserver.log
+
+Tools/Map Generator/map\.png
+
+Tools/Map Generator/spriteeditor\.jar
