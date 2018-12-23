@@ -6,7 +6,7 @@
 	<target name="compile">
 		<delete file="${jar}" />
 		<mkdir dir="${build}" />
-		<javac srcdir="${src}" destdir="${build}" debug="on" target="1.5">
+		<javac srcdir="${src}" destdir="${build}" debug="on">
 		  <classpath>
 			<pathelement location="lib/xstream.jar"/>
 			<pathelement location="lib/xpp3.jar" />
