@@ -95,11 +95,9 @@ server {
     add_header X-XSS-Protection "1; mode=block";
     add_header X-Content-Type-Options "nosniff";
 
-    ####### Proxies #######
     # PHP proxy
     location ~ \.php$ {
         root /var/www/html;
-        #fastcgi_cache laravel;
         fastcgi_cache_valid 200 204 1m;
         fastcgi_no_cache $http_authorization $cookie_laravel_session;
         fastcgi_cache_lock on;
@@ -115,7 +113,7 @@ server {
         fastcgi_read_timeout 900s;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
-        try_files $uri $uri/ /index.php$is_args$args /board/app.php$is_args$args;
+        try_files $uri $uri/ /index.php$is_args$args;
     }
 
     # Cache everything by default
@@ -140,38 +138,28 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
-    ####### PHPBB Forum #######
-    location /board {
-        try_files $uri $uri/ @rewriteapp @extensionless-php;
-        index index.php index.html index.htm;
-    }
-
-    location @rewriteapp {
-        rewrite ^(.*)$ /board/app.php/$1 last;
-    }
-
     location / {
-        try_files $uri $uri/ @rewriteapp2 @extensionless-php;
+        try_files $uri $uri/ @rewriteapp @extensionless-php;
         index index.html index.htm index.php;
+    }
+
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|eot|ttf|woff|woff2)$ {
+        expires max;
+        add_header Cache-Control public;
+        add_header Access-Control-Allow-Origin *;
+        access_log off;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     location @extensionless-php {
         rewrite ^(.*)$ $1.php last;
     }
 
-    location @rewriteapp2 {
+    location @rewriteapp {
         rewrite ^(.*)$ index.php/$1 last;
     }
 
-	 	location /board/install/ {
-	 	    try_files $uri $uri/ @rewrite_installapp;
-    }
-
-	 	location @rewrite_installapp {
-	 	    rewrite ^(.*)$ /board/install/app.php/$1 last;
-	 	}
-
-    # Deny access to hidden files
+	 	# Deny access to hidden files
     location ~ /\. {
         deny all;
         internal;
@@ -180,10 +168,4 @@ server {
     location ~ /\.(?!well-known).* {
         deny all;
     }
-
-    # Deny access to internal phpbb files.
-    location ~ /board(config\.php|common\.php|files|images/avatars/upload|includes|(?<!ext/)phpbb|store|vendor) {
-    		deny all;
-        internal;
-		}
 }
