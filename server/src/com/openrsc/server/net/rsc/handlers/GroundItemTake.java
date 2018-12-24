@@ -79,8 +79,6 @@ public class GroundItemTake implements PacketHandler {
 				if (item.getID() == 23) {
 					if(player.getInventory().hasItemId(135)) {
 						player.message("You put the flour in the pot");
-						Bubble bubble = new Bubble(player, 135);
-						player.getUpdateFlags().setActionBubble(bubble);
 						world.unregisterItem(item);
 						player.getInventory().replace(135, 136);
 					} else {
@@ -89,6 +87,16 @@ public class GroundItemTake implements PacketHandler {
 					}
 					return;
 				}
+				
+				if (item.getID() == 1039) {
+					//non-kosher, unsure if item despawned when killed or gave dialogue on this condition
+					player.message("@gre@Ana: Don't think for one minute ...");
+					player.message("@gre@Ana: You can just come back and pick me up");
+					player.message("Ana goes out running away");
+					world.unregisterItem(item);
+					return;
+				}
+				
 				player.resetAll();
 				Item itemFinal = new Item(item.getID(), item.getAmount());
 				if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {

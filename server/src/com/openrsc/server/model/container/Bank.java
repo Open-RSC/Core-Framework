@@ -7,21 +7,21 @@ import java.util.*;
 
 public class Bank {
 
-    private ArrayList<Item> list = new ArrayList<Item>();
+	private ArrayList<Item> list = new ArrayList<Item>();
     
 	private Player player;
 
-    public Bank(Player player) {
+	public Bank(Player player) {
     	this.player = player;
     }
 
-    public int add(Item item) {
-        if (item.getAmount() <= 0) {
-            return -1;
-        }
-        for (int index = 0; index < list.size(); index++) {
-        	Item existingStack = list.get(index);
-    		if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
+	public int add(Item item) {
+		if (item.getAmount() <= 0) {
+			return -1;
+		}
+		for (int index = 0; index < list.size(); index++) {
+			Item existingStack = list.get(index);
+			if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
 				long newAmount = Long.sum(existingStack.getAmount(), item.getAmount());
 				if (newAmount - Integer.MAX_VALUE >= 0) {
 					existingStack.setAmount(Integer.MAX_VALUE);
@@ -32,124 +32,124 @@ public class Bank {
 					return index;
 				}
 			}
-        }
-        list.add(item);
-        return list.size() - 2;
-    }
+		}
+		list.add(item);
+		return list.size() - 2;
+	}
 
-    public boolean canHold(ArrayList<Item> items) {
-        return (player.getBankSize() - list.size()) >= getRequiredSlots(items);
-    }
+	public boolean canHold(ArrayList<Item> items) {
+			return (player.getBankSize() - list.size()) >= getRequiredSlots(items);
+	}
 
-    public boolean canHold(Item item) {
-        return (player.getBankSize() - list.size()) >= getRequiredSlots(item);
-    }
+	public boolean canHold(Item item) {
+			return (player.getBankSize() - list.size()) >= getRequiredSlots(item);
+	}
 
-    public boolean contains(Item i) {
-        return list.contains(i);
-    }
+	public boolean contains(Item i) {
+			return list.contains(i);
+	}
 
-    public int countId(int id) {
-        for (Item i : list) {
-            if (i.getID() == id) {
-                return i.getAmount();
-            }
-        }
-        return 0;
-    }
+	public int countId(int id) {
+			for (Item i : list) {
+					if (i.getID() == id) {
+							return i.getAmount();
+					}
+			}
+			return 0;
+	}
 
-    public boolean full() {
+	public boolean full() {
         return list.size() >= player.getBankSize();
     }
 
-    public Item get(int index) {
-        if (index < 0 || index >= list.size()) {
-            return null;
-        }
-        return list.get(index);
-    }
+	public Item get(int index) {
+			if (index < 0 || index >= list.size()) {
+					return null;
+			}
+			return list.get(index);
+	}
 
-    public Item get(Item item) {
-        for (Item i : list) {
-            if (item.equals(i)) {
-                return i;
-            }
-        }
-        return null;
-    }
+	public Item get(Item item) {
+			for (Item i : list) {
+					if (item.equals(i)) {
+							return i;
+					}
+			}
+			return null;
+	}
 
-    public int getFirstIndexById(int id) {
-        for (int index = 0; index < list.size(); index++) {
-            if (list.get(index).getID() == id) {
-                return index;
-            }
-        }
-        return -1;
-    }
+	public int getFirstIndexById(int id) {
+			for (int index = 0; index < list.size(); index++) {
+					if (list.get(index).getID() == id) {
+							return index;
+					}
+			}
+			return -1;
+	}
 
-    public ArrayList<Item> getItems() {
-        return list;
-    }
+	public ArrayList<Item> getItems() {
+			return list;
+	}
 
-    public int getRequiredSlots(Item item) {
-        return (list.contains(item) ? 0 : 1);
-    }
+	public int getRequiredSlots(Item item) {
+			return (list.contains(item) ? 0 : 1);
+	}
 
-    public int getRequiredSlots(List<Item> items) {
-        int requiredSlots = 0;
-        for (Item item : items) {
-            if (list.contains(item)) {
-                continue;
-            }
-            requiredSlots++;
-        }
-        return requiredSlots;
-    }
+	public int getRequiredSlots(List<Item> items) {
+			int requiredSlots = 0;
+			for (Item item : items) {
+					if (list.contains(item)) {
+							continue;
+					}
+					requiredSlots++;
+			}
+			return requiredSlots;
+	}
 
-    public boolean hasItemId(int id) {
-        for (Item i : list) {
-            if (i.getID() == id)
-                return true;
-        }
+	public boolean hasItemId(int id) {
+			for (Item i : list) {
+					if (i.getID() == id)
+							return true;
+			}
 
-        return false;
-    }
+			return false;
+	}
 
-    public ListIterator<Item> iterator() {
-        return list.listIterator();
-    }
+	public ListIterator<Item> iterator() {
+			return list.listIterator();
+	}
 
-    public void remove(int index) {
-        Item item = get(index);
-        if (item == null) {
-            return;
-        }
-        remove(item.getID(), item.getAmount());
-    }
+	public void remove(int index) {
+			Item item = get(index);
+			if (item == null) {
+					return;
+			}
+			remove(item.getID(), item.getAmount());
+	}
 
-    public int remove(int id, int amount) {
-        Iterator<Item> iterator = list.iterator();
-        for (int index = 0; iterator.hasNext(); index++) {
-            Item i = iterator.next();
-            if (id == i.getID() && amount <= i.getAmount()) {
-                if (amount < i.getAmount()) {
-                    i.setAmount(i.getAmount() - amount);
-                } else {
-                    iterator.remove();
-                }
-                return index;
-            }
-        }
-        return -1;
-    }
-    
-    public int remove(Item item) {
-        return remove(item.getID(), item.getAmount());
-    }
+	public int remove(int id, int amount) {
+			Iterator<Item> iterator = list.iterator();
+			for (int index = 0; iterator.hasNext(); index++) {
+					Item i = iterator.next();
+					if (id == i.getID() && amount <= i.getAmount()) {
+							if (amount < i.getAmount()) {
+									i.setAmount(i.getAmount() - amount);
+							} else {
+									iterator.remove();
+							}
+							return index;
+					}
+			}
+			return -1;
+	}
 
-    public int size() {
-        return list.size();
-    }
+	public int remove(Item item) {
+			return remove(item.getID(), item.getAmount());
+	}
+
+	public int size() {
+			return list.size();
+	}
 
 	public boolean swap(int slot, int to) {
 		if(slot <= 0 && to <= 0 && to == slot) {	

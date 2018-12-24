@@ -18,7 +18,7 @@ public class DeadTree implements ObjectActionListener, ObjectActionExecutiveList
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		player.message("The tree seems to lash out at you!");
 		sleep(500);
-		player.damage((int) (player.getSkills().getLevel(3) * (double) 0.2D));
+		player.damage((int) (player.getSkills().getLevel(3) * 0.2D));
 		player.message("You are badly scratched by the tree");
 	}
 }

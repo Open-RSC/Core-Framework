@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -39,7 +40,7 @@ PickupExecutiveListener {
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.CLOCK_TOWER), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.getCache().remove("rats_dead");
 		p.getCache().remove("1st_cog");
@@ -189,9 +190,10 @@ PickupExecutiveListener {
 				World.getWorld().registerGameObject(firstGate);
 				closed = false;
 				if (p.getCache().hasKey("foodtrough")) {
-					message(p, "The rats are eating the poison",
-							"In their panic the rats bend and twist",
+					message(p, "In their panic the rats bend and twist",
 							"The cage bars with their teeth",
+							"They're becoming weak, some have collapsed",
+							"The rats are eating the poison",
 							"They're becoming weak, some have collapsed",
 							"The rats are slowly dying");
 					for (Npc rats : p.getViewArea().getNpcsInView()) {
@@ -343,6 +345,7 @@ PickupExecutiveListener {
 			}
 		}
 		if (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457) {
+			p.playSound("secretdoor");
 			p.message("You just went through a secret door");
 			doDoor(obj, p, 16);
 		}
@@ -391,7 +394,17 @@ PickupExecutiveListener {
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == 728) {
-			if (hasItem(p, 50)) {
+			if(p.getInventory().hasItemId(556) && p.getInventory().wielding(556)) {
+				message(p, "The ice gloves cool down the cog",
+						"You can carry it now");
+				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
+						|| hasItem(p, 729)) {
+					p.message("You can only carry one");
+				} else {
+					p.message("You take the cog");
+					addItem(p, 728, 1);
+				}
+			} else if (hasItem(p, 50)) {
 				message(p, "You pour water over the cog",
 						"The cog quickly cools down");
 				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
@@ -405,7 +418,7 @@ PickupExecutiveListener {
 			} else {
 				message(p,
 						"The cog is red hot from the flames, too hot to carry",
-						"A large old cog");
+						"The cogs are heavy");
 				if (hasItem(p, 728) || hasItem(p, 730) || hasItem(p, 727)
 						|| hasItem(p, 729)) {
 					p.message("You can only carry one");

@@ -2,14 +2,15 @@ package com.openrsc.android.render;
 
 import android.os.Handler;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
-import orsc.graphics.two.Fonts;
+
 import orsc.Config;
+import orsc.graphics.two.Fonts;
 import orsc.mudclient;
 
 public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListener {

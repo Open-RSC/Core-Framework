@@ -2,10 +2,12 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.util.rsc.Formulae;
 
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 	int[] new_pumpkin_head = { 2098, 2099, 2100, 2097, 2102, 2101 };
@@ -52,18 +54,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				return;
 			}
 		}
-		else if(compareItemsIds(item1, item2, 587, 457)) {
-			if(player.getInventory().remove(new Item(457)) > -1 && player.getInventory().remove(new Item(587)) > -1) {
-				if(player.getSkills().getMaxStat(15) >= 25) {
-					player.message("You mix the slime into your potion");
-					player.getInventory().add(new Item(588));
-					
-				} else {
-					player.message("You need a level of 25 herblaw to mix this potion");
-				}
-			}
-			return;
-		}
 		else if(compareItemsIds(item1, item2, 588, 377)) {
 			if(player.getInventory().remove(new Item(588)) > -1 && player.getInventory().remove(new Item(377)) > -1) {
 				player.message("You rub the oil onto the fishing rod");
@@ -107,17 +97,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 
 
 		/**
-		 * Wine and combine Dyes
+		 * Combine Dyes
 		 */
-
-		else if(compareItemsIds(item1, item2, 143, 141)) { // wine
-			if (player.getInventory().remove(new Item(143)) > -1 && player.getInventory().remove(new Item(141)) > -1) {
-				player.message("You combine the grapes and water to make wine");
-				player.getInventory().add(new Item(142));
-				
-				return;
-			}
-		}
 		else if(compareItemsIds(item1, item2, 238, 239)) {
 			if (player.getInventory().remove(new Item(239)) > -1 && player.getInventory().remove(new Item(238)) > -1) {
 				player.getInventory().add(new Item(282));
@@ -295,8 +276,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			return true;
 		else if(compareItemsIds(item1, item2, 166, 599))
 			return true;
-		else if(compareItemsIds(item1, item2, 587, 457))
-			return true;
 		else if(compareItemsIds(item1, item2, 588, 377))
 			return true;
 		else if(compareItemsIds(item1, item2, 778, 776))
@@ -321,8 +300,6 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		else if(compareItemsIds(item1, item2, 695, 696) || compareItemsIds(item1, item2, 695, 697) || compareItemsIds(item1, item2, 696, 697))
 			return true;
 		else if(compareItemsIds(item1, item2, 1276, 1277))
-			return true;
-		else if(compareItemsIds(item1, item2, 143, 141))
 			return true;
 
 		for(int il : capes) {

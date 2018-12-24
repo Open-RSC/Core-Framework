@@ -145,7 +145,7 @@ public class GenUtil {
 	}
 
 	public static final int computeItemCost(int basePrice, int shopItemPrice, int shopBuyPriceMod, int var3,
-			boolean var4, int var5, int count, int shopPriceMultiplier) {
+											boolean var4, int var5, int count, int shopPriceMultiplier) {
 		try {
 			int cost = 0;
 

@@ -35,8 +35,12 @@ public class Default implements DefaultHandler, TalkToNpcListener, ObjectActionL
 			doors.onInvUseOnWallObject(object, item, owner);
 			return;
 		}
-		System.out.println("InvUseOnObject unhandled: item " + item.getID()
-				+ " used with object: " + object.getID());
+		else {
+			owner.message("Nothing interesting happens");
+			//possibly unhandled
+			System.out.println("InvUseOnObject unhandled: item " + item.getID()
+			+ " used with object: " + object.getID());
+		}
 	}
 
 	@Override

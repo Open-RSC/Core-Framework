@@ -1,0 +1,51 @@
+## Install script
+# Follow the instructions in comments.
+
+sudo apt install git ack mysql-server apache2 -y
+sudo apt install libswt-gtk-4-java gtk3-nocsd
+
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/internal/skip-preseed boolean true"
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect"
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean false"
+
+sudo apt install phpmyadmin php-mbstring php-gettext -y
+
+sudo ln -s /usr/share/phpmyadmin /var/www/html
+sudo phpenmod mbstring
+
+sudo apt install openjdk-11-jdk ant -y
+sudo apt update
+sudo apt upgrade
+sudo apt autoremove
+
+## Add your own GitHub information here
+
+git config --global user.name "Your Name"
+git config --global user.email "yourgithub@email.com"
+ssh-keygen -t rsa -b 4096 -C "yourgithub@email.com"
+eval $(ssh-agent -s)
+ssh-add ~/.ssh/id_rsa
+
+## You MUST add your ssh key to your GitHub account. .ssh/id_rsa.pub
+
+git clone -b 2.0.0 git@github.com:Open-RSC/Game.git
+sudo update-rc.d apache2 defaults
+service apache2 start
+sudo update-rc.d mysql defaults
+service mysql start
+cd Game
+
+## Make this your own fork
+git remote add -t 2.0.0 upstream git@github.com:YourFork/Game.git
+
+sudo mysql -u"root" -p < Databases/openrsc_game.sql
+sudo mysql -u"root" -p < Databases/openrsc_forum.sql
+
+cd server
+ant compile_core
+ant compile_plugins
+ant runservermembers &
+cd ../client
+ant compile
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/jni/
+ant runclient

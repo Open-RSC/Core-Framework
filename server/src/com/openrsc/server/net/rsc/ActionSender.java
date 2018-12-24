@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * 
+ *
  * @author n0m
  *
  */
@@ -42,7 +42,7 @@ public class ActionSender {
 		/**
 		 * int slot = this.packetsIncoming.getUnsignedByte();
 		 * --this.inventoryItemCount;
-		 * 
+		 *
 		 * for (int index = slot; this.inventoryItemCount > index; ++index) {
 		 * this.inventoryItemID[index] = this.inventoryItemID[index + 1];
 		 * this.inventoryItemSize[index] = this.inventoryItemSize[index + 1];
@@ -75,16 +75,22 @@ public class ActionSender {
 		SEND_IGNORE_LIST(109),
 		SEND_INPUT_BOX(110),
 		SEND_ON_TUTORIAL(111),
+		SEND_CLAN(112),
+		SEND_IRONMAN(113),
 		SEND_FATIGUE(114),
 		SEND_SLEEPSCREEN(117),
+		SEND_KILL_ANNOUNCEMENT(118),
 		SEND_PRIVATE_MESSAGE(120),
-		SEND_INVENTORY_REMOVE_ITEM(123), // TODO: check what it does.
+		SEND_INVENTORY_REMOVE_ITEM(123),
 		SEND_DUEL_CANCEL_ACCEPTED(128),
 		SEND_TRADE_CLOSE(128),
 		SEND_SERVER_MESSAGE(131),
-		SEND_PROGRESS(134),
+		SEND_AUCTION_PROGRESS(132),
+		SEND_FISHING_TRAWLER(133),
 		SEND_PROGRESS_BAR(134),
 		SEND_REMOVE_PROGRESS_BAR(134),
+		SEND_BANK_PIN_INTERFACE(135),
+		SEND_ONLINE_LIST(136),
 		SEND_SHOP_CLOSE(137),
 		SEND_FRIEND_UPDATE(149),
 		SEND_EQUIPMENT_STATS(153),
@@ -158,7 +164,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client to start displaying the appearance changing screen.
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendAppearanceScreen(Player player) {
@@ -186,7 +192,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client of combat style
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendCombatStyle(Player player) {
@@ -199,7 +205,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client to display the 'Oh dear...you are dead' screen.
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendDied(Player player) {
@@ -210,7 +216,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client of everything on the duel screen
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendDuelConfirmScreen(Player player) {
@@ -242,7 +248,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client of duel accept
-	 * 
+	 *
 	 * @param player
 	 */
 
@@ -270,7 +276,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client of the offer changes on duel window.
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendDuelOpponentItems(Player player) {
@@ -291,7 +297,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client to update the duel settings on duel window.
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendDuelSettingUpdate(Player player) {
@@ -306,7 +312,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client to close the duel window
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendDuelWindowClose(Player player) {
@@ -317,7 +323,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client to open duel window
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendDuelWindowOpen(Player player) {
@@ -333,7 +339,7 @@ public class ActionSender {
 
 	/**
 	 * Inform client to start drawing sleep screen and the captcha.
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendEnterSleep(Player player) {
@@ -361,7 +367,7 @@ public class ActionSender {
 
 	/**
 	 * Sends fatigue
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendFatigue(Player player) {
@@ -373,7 +379,7 @@ public class ActionSender {
 
 	/**
 	 * Sends the sleeping state fatigue
-	 * 
+	 *
 	 * @param player
 	 * @param fatigue
 	 */
@@ -386,7 +392,7 @@ public class ActionSender {
 
 	/**
 	 * Sends friend list
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
@@ -497,6 +503,8 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_BANK_PINS ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_BANK_NOTES ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_CERT_DEPOSIT ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_DROP_X ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
@@ -533,7 +541,7 @@ public class ActionSender {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param player
 	 */
 	public static void sendInventory(Player player) {
@@ -980,7 +988,7 @@ public class ActionSender {
 
 	public static void sendProgress(Player player, int repeated) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_PROGRESS.opcode);
+		s.setID(Opcode.SEND_AUCTION_PROGRESS.opcode);
 		s.writeByte(0); // interface ID
 		s.writeByte((byte) 3);
 		s.writeByte((byte) repeated);
@@ -988,14 +996,14 @@ public class ActionSender {
 	}
 
 	public static void sendBankPinInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_BANK_PIN_INTERFACE.opcode);
 		pb.writeByte(1); // interface ID
 		pb.writeByte(0);
 		player.write(pb.toPacket());
 	}
 
 	public static void sendCloseBankPinInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_BANK_PIN_INTERFACE.opcode);
 		pb.writeByte(1); // interface ID
 		pb.writeByte(1);
 		player.write(pb.toPacket());
@@ -1060,7 +1068,7 @@ public class ActionSender {
 
 				sendCombatStyle(p);
 				sendIronManMode(p);
-				
+
 				sendInventory(p);
 				p.checkEquipment();
 
@@ -1095,7 +1103,7 @@ public class ActionSender {
 	}
 
 	public static void sendOnlineList(Player player) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
 		pb.writeByte(5);
 		pb.writeShort(World.getWorld().getPlayers().size());
 		for (Player p : World.getWorld().getPlayers()) {
@@ -1106,14 +1114,14 @@ public class ActionSender {
 	}
 
 	public static void showFishingTrawlerInterface(Player p) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
 		pb.writeByte(0);
 		p.write(pb.toPacket());
 	}
 
 	public static void hideFishingTrawlerInterface(Player p) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
 		pb.writeByte(2);
 		p.write(pb.toPacket());
@@ -1121,7 +1129,7 @@ public class ActionSender {
 
 	public static void updateFishingTrawler(Player p, int waterLevel, int minutesLeft, int fishCaught,
 			boolean netBroken) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
 		pb.writeByte(1);
 		pb.writeShort(waterLevel);
@@ -1133,7 +1141,7 @@ public class ActionSender {
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
 		if (!Constants.GameServer.WANT_KILL_FEED) return;
-		PacketBuilder pb = new PacketBuilder(135);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
 		pb.writeString(DataConversions.hashToUsername(killedHash));
 		pb.writeString(DataConversions.hashToUsername(killerHash));
 		pb.writeInt(type);
@@ -1145,7 +1153,7 @@ public class ActionSender {
 	}
 
 	public static void sendClan(Player p) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(7);
 		pb.writeByte(0);
 		pb.writeString(p.getClan().getClanName());
@@ -1160,9 +1168,9 @@ public class ActionSender {
 		}
 		p.write(pb.toPacket());
 	}
-	
+
 	public static void sendClans(Player p) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(7);
 		pb.writeByte(4);
 		pb.writeShort(ClanManager.clans.size());
@@ -1181,14 +1189,14 @@ public class ActionSender {
 	}
 
 	public static void sendLeaveClan(Player playerReference) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(7);
 		pb.writeByte(1);
 		playerReference.write(pb.toPacket());
 	}
 
 	public static void sendClanInvitationGUI(Player invited, String name, String username) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(7);
 		pb.writeByte(2);
 		pb.writeString(username);
@@ -1197,7 +1205,7 @@ public class ActionSender {
 	}
 
 	public static void sendClanSetting(Player p) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(7);
 		pb.writeByte(3);
 		pb.writeByte(p.getClan().getKickSetting());
@@ -1207,9 +1215,9 @@ public class ActionSender {
 		pb.writeByte(p.getClan().isAllowed(1, p) ? 1 : 0);
 		p.write(pb.toPacket());
 	}
-	
+
 	public static void sendIronManMode(Player player) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
 		pb.writeByte(2);
 		pb.writeByte(0);
 		pb.writeByte((byte) player.getIronMan());
@@ -1218,13 +1226,13 @@ public class ActionSender {
 	}
 
 	public static void sendIronManInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
 		pb.writeByte(2);
 		pb.writeByte(1);
 		player.write(pb.toPacket());
 	}
 	public static void sendHideIronManInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(134);
+		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
 		pb.writeByte(2);
 		pb.writeByte(2);
 		player.write(pb.toPacket());

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AntConfiguration">
+    <buildFile url="file://$PROJECT_DIR$/Launcher/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/client/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/Tools/Sprite Editor/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/Tools/Map Generator/build.xml" />
+  </component>
+  <component name="Encoding" addBOMForNewFiles="with NO BOM" />
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/client/Client.iml" filepath="$PROJECT_DIR$/client/Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tools/Map Generator/Map Generator.iml" filepath="$PROJECT_DIR$/Tools/Map Generator/Map Generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/Server.iml" filepath="$PROJECT_DIR$/server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" filepath="$PROJECT_DIR$/Tools/Sprite Editor/Sprite Editor.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Website" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/proguard/release/0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="01">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/mergeJavaRes/release/0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/Area Editor/textures/ground/2.zip!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="debug">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/167.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/162.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/159.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/146.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/140.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/168.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/153.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/166.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/144.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/161.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/147.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/165.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/152.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/156.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/160.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/148.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/164.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/155.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/157.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/151.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/150.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/55.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/149.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/163.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/145.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/158.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/debug/154.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="game-icons">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Website/board/styles/pbwow3/contrib/game-icons.zip!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="gradle-wrapper">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="gradle-wrapper1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/gradle/wrapper/gradle-wrapper.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="gradle-wrapper2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/gradle/wrapper/gradle-wrapper.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="instant-run">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/incremental-runtime-classes/debug/instant-run.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="instant-run-bootstrap">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Landscape_Editor">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/2D Landscape Editor/Landscape_Editor.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lib">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/server/lib/log4j-core-2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/mysql-connector-java-5.1.40.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/disruptor-3.3.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xpp3-1.1.4c.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xstream-1.4.9.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/log4j-api-2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xpp3_min-1.1.4c.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/commons-lang-2.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/netty-all-4.1.8.Final.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lib1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/Sprite Editor/lib/xpp3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Tools/Sprite Editor/lib/hex-string.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Tools/Sprite Editor/lib/xstream.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lib2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/javafx.graphics.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javafx.base.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javafx.swing.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javafx.media.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javafx.fxml.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javafx.controls.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lib3">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xstream.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Tools/2D Landscape Editor/lib/xpp3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lib4">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/Tools/Sprite Editor/lib" recursive="false" />
+    </library>
+    <library name="MapEditor">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/3D Landscape Editor/MapEditor.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Open_RSC_Client">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/client/Open_RSC_Client.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="OpenRSC">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Launcher/OpenRSC.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="openrsc_wiki.sql">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Website/wiki/openrsc_wiki.sql.zip!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="release">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates/transforms/dexBuilder/release/0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="RSC_Map_Generator">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/RSC Map Generator/dist/RSC_Map_Generator.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="RSCArchiver">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Tools/RSC Archiver/RSCArchiver.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Server">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/server/core.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/plugins.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="zip">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/trail.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/cd-gap.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/wrong-cd-start-disk.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/split.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/class-trailing-slash.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/nosig.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/class.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/class-trailing-null.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/empty.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/cd-truncated.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/wrong-central-entry-sig.zip!/" />
+        <root url="jar://$PROJECT_DIR$/Website/wiki/tests/phpunit/data/zip/looks-like-zip64.zip!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
+</project>

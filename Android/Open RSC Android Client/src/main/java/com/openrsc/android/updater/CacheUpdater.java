@@ -1,19 +1,5 @@
 package com.openrsc.android.updater;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Properties;
-
-import com.openrsc.client.android.GameActivity;
-import com.openrsc.client.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +10,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.openrsc.client.R;
+import com.openrsc.client.android.GameActivity;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 public class CacheUpdater extends Activity {
 

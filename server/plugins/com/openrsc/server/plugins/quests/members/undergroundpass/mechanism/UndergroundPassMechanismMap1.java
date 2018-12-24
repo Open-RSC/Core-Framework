@@ -77,7 +77,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 		if(item.getID() == LIT_ARROW && obj.getID() == OLD_BRIDGE) {
 			if(hasABow(player)) {
 				removeItem(player, LIT_ARROW, 1);
-				if((getMaxLevel(player, RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
+				if((getCurrentLevel(player, RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					message(player, "you fire the lit arrow at the bridge",
 							"it burns out and has little effect");
 				} else {

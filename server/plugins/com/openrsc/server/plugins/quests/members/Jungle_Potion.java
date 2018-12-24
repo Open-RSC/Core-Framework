@@ -75,9 +75,8 @@ WallObjectActionExecutiveListener {
 	@Override
 	public void handleReward(Player player) {
 		player.message("You gain experience in Herblaw !");
-		player.incQuestPoints(1);
 		player.message("@gre@You haved gained 1 quest point!");
-		player.incQuestExp(15, (player.getSkills().getMaxStat(15) * 500) + 1600);
+		incQuestReward(player, Quests.questData.get(Quests.JUNGLE_POTION), true);
 		player.getCache().store("jungle_completed", true);
 	}
 

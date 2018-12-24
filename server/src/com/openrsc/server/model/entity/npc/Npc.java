@@ -30,8 +30,8 @@ import java.util.*;
 import static com.openrsc.server.Constants.GameServer.*;
 
 public class Npc extends Mob {
-	
-	
+
+
 	/**
 	 * Logger instance
 	 */
@@ -81,7 +81,7 @@ public class Npc extends Mob {
 	public Npc(int id, int x, int y) {
 		this(new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
 	}
-	
+
 	public Npc(int id, int x, int y, int radius) {
 		this(new NPCLoc(id, x, y, x - radius, x + radius, y - radius, y + radius));
 	}
@@ -116,12 +116,17 @@ public class Npc extends Mob {
 		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
 		getSkills().setLevelTo(Skills.HITPOINTS, def.getHits());
 
+		/**
+		 * Unique ID for event tracking.
+		 */
+		setUUID(UUID.randomUUID().toString());
+
 		Server.getServer().getGameEventHandler().add(statRestorationEvent);
 	}
 
 	/**
 	 * Adds combat damage done by a player
-	 * 
+	 *
 	 * @param p
 	 * @param damage
 	 */
@@ -135,7 +140,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Adds mage damage done by a player
-	 * 
+	 *
 	 * @param p
 	 * @param damage
 	 */
@@ -149,7 +154,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Adds range damage done by a player
-	 * 
+	 *
 	 * @param p
 	 * @param damage
 	 */
@@ -178,7 +183,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Combat damage done by player p
-	 * 
+	 *
 	 * @param p
 	 * @return
 	 */
@@ -195,7 +200,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Iterates over combatDamagers map and returns the keys
-	 * 
+	 *
 	 * @return
 	 */
 	public ArrayList<Integer> getCombatDamagers() {
@@ -216,7 +221,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Mage damage done by player p
-	 * 
+	 *
 	 * @param p
 	 * @return
 	 */
@@ -230,7 +235,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Iterates over mageDamagers map and returns the keys
-	 * 
+	 *
 	 * @return
 	 */
 	public ArrayList<Integer> getMageDamagers() {
@@ -239,7 +244,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Range damage done by player p
-	 * 
+	 *
 	 * @param p
 	 * @return
 	 */
@@ -253,7 +258,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Iterates over rangeDamagers map and returns the keys
-	 * 
+	 *
 	 * @return
 	 */
 	public ArrayList<Integer> getRangeDamagers() {
@@ -270,7 +275,7 @@ public class Npc extends Mob {
 
 	/**
 	 * Distributes the XP from this monster and the loot
-	 * 
+	 *
 	 * @param attacker
 	 *            the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
@@ -362,6 +367,18 @@ public class Npc extends Mob {
 
 	}
 
+	public void initializeIndirectTalkScript(final Player p) {
+		final Npc npc = this;
+		//p.setBusyTimer(600);
+		Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
+			@Override
+			public void action() {
+				PluginHandler.getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[] { p, npc });
+			}
+		});
+
+	}
+
 	public void killedBy(Mob mob) {
 		this.cure();
 		Player owner = mob instanceof Player ? (Player) mob : null;
@@ -375,14 +392,14 @@ public class Npc extends Mob {
 			if (NPC_KILL_LOGGING) {
 				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
 					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
-						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, true);
+						owner.addNpcKill(this, true);
 					}
 					else {
-						Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, false);
+						owner.addNpcKill(this, false);
 					}
 				}
 				else {
-					Server.getPlayerDataProcessor().getDatabase().addNpcKill(owner, this, NPC_KILL_MESSAGES);
+					owner.addNpcKill(this, NPC_KILL_MESSAGES);
 				}
 			}
 
@@ -433,16 +450,7 @@ public class Npc extends Mob {
 							continue;
 						}
 
-						
 						if (!EntityHandler.getItemDef(dropID).isStackable()) {
-
-
-
-							// Rare Drop Table
-							if (drop.getID() == 160) {
-								dropID = Formulae.calculateRareDrop();
-								amount = 1;
-							}
 
 							Server.getPlayerDataProcessor().getDatabase().addNpcDrop(
 								owner, this, dropID, amount);
@@ -450,10 +458,18 @@ public class Npc extends Mob {
 
 							// We need to drop multiple counts of "1" item if it's not a stack
 							for (int count = 0; count < amount; count++) {
+
+								// Gem Drop Table
+								if (drop.getID() == 160) {
+									dropID = Formulae.calculateGemDrop();
+									amount = 1;
+								}
+
 								// Herb Drop Table
-								if (drop.getID() == 165) {
+								else if (drop.getID() == 165) {
 									dropID = Formulae.calculateHerbDrop();
 								}
+
 								groundItem = new GroundItem(dropID, getX(), getY(), 1, owner);
 								groundItem.setAttribute("npcdrop", true);
 								world.registerItem(groundItem);

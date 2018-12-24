@@ -6,20 +6,20 @@ import orsc.mudclient;
 
 public final class TerritorySignupInterface {
 	private boolean visible = false;
-	
+
 	public Panel territorySignup;
 
 	private mudclient mc;
 
 	private int panelColour, textColour, bordColour, lineColour;
-	
+
 	int width = 250;
 	int height = 200;
 	int autoHeight = 0;
-	
+
 	int index = 0;
 	int trackY = 0;
-	
+
 	private int x, y;
 
 	public TerritorySignupInterface(mudclient mc) {
@@ -30,7 +30,7 @@ public final class TerritorySignupInterface {
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
 	}
-	
+
 	public void reposition() {
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
@@ -38,29 +38,29 @@ public final class TerritorySignupInterface {
 
 	public void onRender() {
 		reposition();
-		
+
 		int x = (mc.getGameWidth() - width) / 2;
 		int y = (mc.getGameHeight() - height) / 2;
-		
+
 		panelColour = 0x989898; textColour = 0xffffff;
 		bordColour = 0x000000; lineColour = 0x000000;
-		
+
 		territorySignup.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
-		
+
 		if (autoHeight - y > 200) {
-		mc.getSurface().drawBoxAlpha(x, y, width, height, panelColour, 90);
-		mc.getSurface().drawBoxBorder(x, width, y, height, bordColour);
+			mc.getSurface().drawBoxAlpha(x, y, width, height, panelColour, 90);
+			mc.getSurface().drawBoxBorder(x, width, y, height, bordColour);
 		} else {
 			mc.getSurface().drawBoxAlpha(x, y, width, autoHeight - y, panelColour, 90);
 			mc.getSurface().drawBoxBorder(x, width, y, autoHeight - y, bordColour);
 		}
 		drawStringCentered("Territory Signup", x, y + 28, 5, textColour);
-		
+
 		this.drawCloseButton(x + 214, y + 6, 30, 30, "X", 5, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.getClientStream().newPacket(212);
-				mc.getClientStream().finishPacket();
+				mc.packetHandler.getClientStream().newPacket(212);
+				mc.packetHandler.getClientStream().finishPacket();
 				setVisible(false);
 			}
 		});
@@ -145,7 +145,7 @@ public final class TerritorySignupInterface {
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
 		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}

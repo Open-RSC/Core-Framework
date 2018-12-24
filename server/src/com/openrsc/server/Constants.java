@@ -10,9 +10,6 @@ import java.util.Properties;
 
 public final class Constants {
 
-	// new area: 582, 157
-	// upstairs: 576, 1097
-
 	public static final class GameServer {
 		/**
 		 * RSC GAME TICK.
@@ -75,24 +72,6 @@ public final class Constants {
 		 */
 		public static String HMAC_PRIVATE_KEY = "";
 		/**
-		 *  AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
-		 */
-		public static int RESTART_HOUR1;
-		public static int RESTART_MINUTE1;
-		public static int RESTART_HOUR2;
-		public static int RESTART_MINUTE2;
-		public static int RESTART_HOUR3;
-		public static int RESTART_MINUTE3;
-		public static int RESTART_HOUR4;
-		public static int RESTART_MINUTE4;
-		/**
-		 * AutoRestart Delay in seconds, alert players
-		 */
-		public static int RESTART_DELAY1;
-		public static int RESTART_DELAY2;
-		public static int RESTART_DELAY3;
-		public static int RESTART_DELAY4;
-		/**
 		 * Player Skill Level Limit
 		 */
 		public static int PLAYER_LEVEL_LIMIT = 99;
@@ -116,6 +95,15 @@ public final class Constants {
 		 * Player view distance
 		 */
 		public static int VIEW_DISTANCE = 2;
+		/**
+		 * NPC blocking
+		 * 0 = No NPC blocks
+		 * 1 = 2 * combat level + 1 blocks
+		 * 2 = Any aggressive NPC blocks
+		 * 3 = Any attackable NPC blocks
+		 * 4 = All NPCs block
+		 */
+		public static int NPC_BLOCKING = 2;
 		/**
 		 * A message players will receive upon login
 		 */
@@ -151,7 +139,7 @@ public final class Constants {
 		 * Remember, 30+ Magic damage gives you +1 damage, so these damages are
 		 * -1 the absolute max. Level Requirement, Max Damage
 		 */
-		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 2}, {13, 3}, {17, 3}, {23, 4}, {29, 4}, {35, 5}, {41, 5}, {47, 6}, {53, 6}, {59, 7}, {62, 8}, {65, 9}, {70, 10}, {75, 11}};
+		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 3}, {13, 4}, {17, 5}, {23, 5}, {29, 6}, {35, 6}, {41, 7}, {47, 7}, {53, 8}, {59, 8}, {62, 9}, {65, 9}, {70, 10}, {75, 10}};
 
 		public static boolean AVATAR_GENERATOR = false; // Not sent to client.
 		public static boolean PLAYER_COMMANDS = false; // This either.
@@ -182,13 +170,14 @@ public final class Constants {
 		public static boolean WANT_KEYBOARD_SHORTCUTS = false;
 		public static boolean WANT_CUSTOM_BANKS = false;
 		public static boolean WANT_BANK_PINS = false;
+		public static boolean WANT_BANK_NOTES = false;
+		public static boolean WANT_CERT_DEPOSIT = false;
 		public static boolean CUSTOM_FIREMAKING = false;
 		public static boolean WANT_DROP_X = false;
 		public static boolean WANT_EXP_INFO = false;
 		public static boolean WANT_WOODCUTTING_GUILD = false;
 		public static boolean WANT_DECANTING = false;
 		public static boolean WANT_CERTS_TO_BANK = false;
-                public static boolean AUTO_SERVER_RESTART = true;
 		public static boolean NPC_KILL_MESSAGES = false;
 		public static boolean NPC_KILL_MESSAGES_FILTER = false;
 		public static String NPC_KILL_MESSAGES_NPCs = "";
@@ -205,8 +194,13 @@ public final class Constants {
 		 * Config file for server configurations.
 		 */
 		public static Properties props = new Properties();
-		public static void initConfig(String file) throws IOException {
-			props.loadFromXML(new FileInputStream(file));
+		public static void initConfig(String defaultFile) throws IOException {
+			try { // Always try to load local.conf first
+				props.loadFromXML(new FileInputStream("local.conf"));
+			}
+			catch (Exception e) { // Otherwise default to default.conf
+				props.loadFromXML(new FileInputStream(defaultFile));
+			}
 
 			// Initialization confs
 			GAME_TICK = Integer.parseInt(props.getProperty("game_tick"));
@@ -261,6 +255,8 @@ public final class Constants {
 			WANT_KEYBOARD_SHORTCUTS = Boolean.parseBoolean(props.getProperty("want_keyboard_shortcuts"));
 			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
 			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
+			WANT_BANK_NOTES = Boolean.parseBoolean(props.getProperty("want_bank_notes"));
+			WANT_CERT_DEPOSIT = Boolean.parseBoolean(props.getProperty("want_cert_deposit"));
 			CUSTOM_FIREMAKING = Boolean.parseBoolean(props.getProperty("custom_firemaking"));
 			WANT_DROP_X = Boolean.parseBoolean(props.getProperty("want_drop_x"));
 			WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
@@ -268,33 +264,37 @@ public final class Constants {
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
-        	        NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
+			NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
 			NPC_KILL_MESSAGES_NPCs = props.getProperty("npc_kill_messages_npcs");
 			NPC_KILL_LOGGING = Boolean.parseBoolean(props.getProperty("npc_kill_logging"));
 			VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
 			VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
 			VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(props.getProperty("valuable_drop_extras"));
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
-
 			START_TIME = System.currentTimeMillis();
-                        AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
-			RESTART_HOUR1 = Integer.parseInt(props.getProperty("restart_hour1"));
-			RESTART_HOUR2 = Integer.parseInt(props.getProperty("restart_hour2"));
-                        RESTART_HOUR3 = Integer.parseInt(props.getProperty("restart_hour3"));
-                        RESTART_HOUR4 = Integer.parseInt(props.getProperty("restart_hour4"));
-			RESTART_MINUTE1 = Integer.parseInt(props.getProperty("restart_minute1"));
-			RESTART_MINUTE2 = Integer.parseInt(props.getProperty("restart_minute2"));
-                        RESTART_MINUTE3 = Integer.parseInt(props.getProperty("restart_minute3"));
-                        RESTART_MINUTE4 = Integer.parseInt(props.getProperty("restart_minute4"));
-			RESTART_DELAY1 = Integer.parseInt(props.getProperty("restart_delay1"));
-			RESTART_DELAY2 = Integer.parseInt(props.getProperty("restart_delay2"));
-                        RESTART_DELAY3 = Integer.parseInt(props.getProperty("restart_delay3"));
-                        RESTART_DELAY4 = Integer.parseInt(props.getProperty("restart_delay4"));
+			NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
 				VIEW_DISTANCE = 4;
 		}
+	}
+	
+	public static final class Poison {
+		public static final int POISON_SCORPION = 271;
+		public static final int POISON_SPIDER = 292;
+		public static final int DUNGEON_SPIDER = 656;
+		public static final int TRIBESMAN = 421;
+		public static final int JUNGLE_SAVAGE = 776;
+
+		public static final HashMap<Integer, Integer> npcData = new HashMap<Integer, Integer>()
+		{{
+			put(POISON_SCORPION, 38);
+			put(POISON_SPIDER, 68);
+			put(DUNGEON_SPIDER, 38);
+			put(TRIBESMAN, 68);
+			put(JUNGLE_SAVAGE, 68);
+		}};
 	}
 
 	public static final class Quests {
@@ -349,13 +349,18 @@ public final class Constants {
 		public static final int GERTRUDES_CAT = 48;
 		public static final int LEGENDS_QUEST = 49;
 
+		public static final int MAPIDX_QP = 0;
+		public static final int MAPIDX_SKILL = 1;
+		public static final int MAPIDX_BASE = 2;
+		public static final int MAPIDX_VAR = 3;
+
 		public static final HashMap<Integer, int[]> questData = new HashMap<Integer, int[]>()
 		{{
 			// QuestID -> Quest Points, Exp Skill ID, Base Exp, Variable Exp
 			put(BLACK_KNIGHTS_FORTRESS, new int[] {3, -1, 0, 0});
 			put(COOKS_ASSISTANT, new int[] {1, Skills.COOKING, 1000, 200});
 			put(DEMON_SLAYER, new int[] {3, -1, 0, 0});
-			put(DORICS_QUEST, new int[] {1, Skills.SMITHING, 700, 300});
+			put(DORICS_QUEST, new int[] {1, Skills.MINING, 700, 300});
 			put(THE_RESTLESS_GHOST, new int[] {1, Skills.PRAYER, 2000, 250});
 			put(GOBLIN_DIPLOMACY, new int[] {5, Skills.CRAFTING, 500, 60});
 			put(ERNEST_THE_CHICKEN, new int[] {4, -1, 0, 0});
@@ -368,7 +373,7 @@ public final class Constants {
 			put(THE_KNIGHTS_SWORD, new int[] {1, Skills.SMITHING, 1400, 1500});
 			put(VAMPIRE_SLAYER, new int[] {3, Skills.ATTACK, 1300, 600});
 			put(WITCHS_POTION, new int[] {1, Skills.MAGIC, 900, 200});
-			put(DRAGON_SLAYER, new int[] {2, -1, 0, 0}); // XP Handled in Dragon Slayer files
+			put(DRAGON_SLAYER, new int[] {2, -1, 2600, 1200}); // Skill ID in Dragon Slayer files
 			put(WITCHS_HOUSE, new int[] {4, Skills.HITPOINTS, 1300, 600});
 			put(LOST_CITY, new int[] {3, -1, 0, 0});
 			put(HEROS_QUEST, new int[] {1, -1, 300, 200}); // Skill ID Handled in Heros files
@@ -378,7 +383,7 @@ public final class Constants {
 			put(FAMILY_CREST, new int[] {1, -1, 0, 0});
 			put(TRIBAL_TOTEM, new int[] {1, Skills.THIEVING, 800, 300});
 			put(FISHING_CONTEST, new int[] {1, Skills.FISHING, 0, 300}); // Base XP Handled in Fishing Contest files
-			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 0, 500});
+			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 500, 500});
 			put(TEMPLE_OF_IKOV, new int[] {1, -1, 2000, 1000}); // Skill ID Handled in Ikov files
 			put(CLOCK_TOWER, new int[] {1, -1, 0, 0});
 			put(THE_HOLY_GRAIL, new int[] {2, -1, 0, 0}); // XP Handled in Grail files
@@ -392,16 +397,16 @@ public final class Constants {
 			put(BIOHAZARD, new int[] {3, Skills.THIEVING, 2000, 200});
 			put(JUNGLE_POTION, new int[] {1, Skills.HERBLAW, 1600, 500});
 			put(GRAND_TREE, new int[] {5, -1, 0, 0}); // XP Handled in Grade Tree files
-			put(SHILO_VILLAGE, new int[] {2, Skills.CRAFTING, 500, 0});
+			put(SHILO_VILLAGE, new int[] {2, Skills.CRAFTING, 500, 500});
 			put(UNDERGROUND_PASS, new int[] {5, -1, 2000, 200}); // Skill ID Handled in Pass files
-			put(OBSERVATORY_QUEST, new int[] {2, -1, 500, 100}); // Skill ID Handled in Observatory files
-			put(TOURIST_TRAP, new int[] {2, -1, 0, 600}); // Skill ID Handled in Trap files
-			put(WATCHTOWER, new int[] {4, Skills.MAGIC, 0, 1000});
+			put(OBSERVATORY_QUEST, new int[] {2, -1, 1000, 400}); // Skill ID and adjustments Handled in Observatory files
+			put(TOURIST_TRAP, new int[] {2, -1, 600, 600}); // Skill ID Handled in Trap files
+			put(WATCHTOWER, new int[] {4, Skills.MAGIC, 1000, 1000});
 			put(DWARF_CANNON, new int[] {1, Skills.CRAFTING, 1000, 200});
 			put(MURDER_MYSTERY, new int[] {3, Skills.CRAFTING, 750, 150});
 			put(DIGSITE, new int[] {2, -1, 0, 0}); // XP Handled in Digsite files
 			put(GERTRUDES_CAT, new int[] {1, Skills.COOKING, 700, 180});
-			put(LEGENDS_QUEST, new int[] {4, -1, 0, 0}); // XP Handled in Legends files
+			put(LEGENDS_QUEST, new int[] {4, -1, 600, 600}); // Skill ID Handled in Legends files
 		}};
 	}
 

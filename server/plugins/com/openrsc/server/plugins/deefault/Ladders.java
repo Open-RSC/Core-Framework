@@ -185,6 +185,15 @@ public class Ladders {
 			if(paladinGuard != null) {
 				npcYell(player, paladinGuard, "Stop right there");
 				paladinGuard.setChasing(player);
+				sleep(1000);
+				if(player.inCombat()) {
+					return;
+				}
+				int[] coords = coordModifier(player, true, obj);
+				player.teleport(coords[0], coords[1], false);
+				player.message(
+						"You " + command.replace("-", " ") + " the "
+								+ obj.getGameObjectDef().getName().toLowerCase());
 				return;
 			}
 		}

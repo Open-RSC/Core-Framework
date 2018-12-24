@@ -21,24 +21,23 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					"I need some Cadava potion to help Romeo and Juliet");
 			npcTalk(p, n, "Cadava potion. Its pretty nasty. And hard to make",
 					"Wing of Rat, Tail of frog. Ear of snake and horn of dog",
-					"I have all that, but i need some cadavaberries",
-					"You will have to find them while i get the rest ready",
+					"I have all that, but I need some cadavaberries",
+					"You will have to find them while I get the rest ready",
 					"Bring them here when you have them. But be careful. They are nasty");
 			p.updateQuestStage(Constants.Quests.ROMEO_N_JULIET, 5);
 			return;
 		} else if (p.getQuestStage(Constants.Quests.ROMEO_N_JULIET) == 5) {
 			if (!p.getInventory().hasItemId(55)) {
 				npcTalk(p, n, "Keep searching for the berries",
-						"they are needed for the potion");
+						"They are needed for the potion");
 			} else {
 				npcTalk(p, n, "Well done. You have the berries");
 				message(p, "You hand over the berries");
-				p.getInventory().remove(p.getInventory().getLastIndexById(55));
+				p.getInventory().remove(55, 1);
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcTalk(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");
 				p.getInventory().add(new Item(57));
-				p.message("I'm meant to give this to Juliet");
 				p.updateQuestStage(Constants.Quests.ROMEO_N_JULIET, 6);
 			}
 			return;
@@ -48,57 +47,73 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 		if (!Constants.GameServer.WANT_EXPERIENCE_ELIXIRS)
       option = showMenu(p,n, "Can you make a strength potion?",
           "Do you know a potion to make hair fall out?",
-          "Have you got any good potions to give away?");
+          "Have you got any good potions to give way?");
 		else
 			option = showMenu(p,n, "Can you make a strength potion?",
 					"Do you know a potion to make hair fall out?",
-					"Have you got any good potions to give away?",
+					"Have you got any good potions to give way?",
 					"Do you have any experience elixir?");
 
 		if(option == 0) {
 			if (hasItem(p, 10, 5)
 					&& hasItem(p, 220, 1)
 					&& hasItem(p, 219, 1)) {
-				playerTalk(p,n,  "I have the root and spider eggs needed to make it",
+				playerTalk(p,n,  "I have the root and spiders eggs needed to make it",
 						"Well give me them and 5 gold and I'll make you your potion");
-
-				message(p, "Apothecary: starts brewing and fixes to a strength potion");
-				p.setBatchEvent(new BatchEvent(p, 600, 14) {
-					@Override
-					public void action() {
-						if (p.getInventory().countId(10) < 5) {
-							p.message("You don't have all the ingredients");
-							interrupt();
-							return;
+				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
+				if(sub_option == 0) {
+					p.setBatchEvent(new BatchEvent(p, 600, 14) {
+						@Override
+						public void action() {
+							if (p.getInventory().countId(10) < 5) {
+								p.message("You don't have enough coins");
+								interrupt();
+								return;
+							}
+							if (p.getInventory().countId(220) < 1 || p.getInventory().countId(219) < 1) {
+								p.message("You don't have all the ingredients");
+								interrupt();
+								return;
+							}
+							removeItem(p, 10, 5);
+							removeItem(p, 220, 1);
+							removeItem(p, 219, 1);
+							p.message("The Apothecary brews you a potion");
+							p.message("The Apothecary gives you a strength potion");
+							addItem(p, 221, 1);
 						}
-						if (p.getInventory().countId(220) < 1 || p.getInventory().countId(219) < 1) {
-							p.message("You don't have all the ingredients");
-							interrupt();
-							return;
-						}
-						p.message("Apothecary gives you a strength potion.");
-						removeItem(p, 10, 5);
-						removeItem(p, 220, 1);
-						removeItem(p, 219, 1);
-						addItem(p, 221, 1);
-					}
-				});
+					});
+				}
 			} else {
 				npcTalk(p, n,
 						"Yes. But the ingredients are a little hard to find",
-						"If you ever get them I will make it for you... for a cost",
-						"You'll need to find the eggs of the deadly red spider",
+						"If you ever get them I will make it for you. For a cost");
+				playerTalk(p, n, "So what are the ingredients?");
+				npcTalk(p, n,
+						"You'll need to find to find the eggs of the deadly red spider",
 						"And a limpwurt root",
 						"Oh and you'll have to pay me 5 coins");
 				playerTalk(p, n, "Ok, I'll look out for them");
-
 			}
 		} 
 		else if(option == 1) {
 			npcTalk(p,n, "I do indeed. I gave it to my mother. That's why I now live alone");
 		}
 		else if(option == 2) {
-			npcTalk(p,n, "Sorry, charity is not my strongest point");
+			if(hasItem(p, 58)) {
+				npcTalk(p,n, "Only that spot cream. Hope you enjoy it",
+						"Yes, ok. Try this potion");
+				addItem(p, 58, 1);
+			}
+			else {
+				int chance = DataConversions.random(0, 2);
+				if (chance < 2) {
+					npcTalk(p,n, "Yes, ok. Try this potion");
+					addItem(p, 58, 1);
+				} else {
+					npcTalk(p,n, "Sorry, charity is not my strongest point");
+				}
+			}
 		}
 		else if(option == 3 && Constants.GameServer.WANT_EXPERIENCE_ELIXIRS) {
 			npcTalk(p, n, "Yes, it's my most mysterious and special elixir",

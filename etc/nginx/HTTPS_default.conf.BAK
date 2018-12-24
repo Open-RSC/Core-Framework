@@ -8,8 +8,25 @@ server {
     gzip_static on;
     gzip_vary on;
     gzip_http_version 1.1;
-    gzip_min_length 700;
-    gzip_comp_level 6;
+    gzip_min_length 256;
+    gzip_comp_level 5;
+    gzip_proxied any;
+    gzip_types
+      application/atom+xml
+      application/javascript
+      application/json
+      application/rss+xml
+      application/vnd.ms-fontobject
+      application/x-font-ttf
+      application/x-web-app-manifest+json
+      application/xhtml+xml
+      application/xml
+      font/opentype
+      image/svg+xml
+      image/x-icon
+      text/css
+      text/plain
+      text/x-component;
 
     error_log                               /var/log/nginx/error.log;
     access_log                              /var/log/nginx/access.log;
@@ -25,6 +42,30 @@ server {
 
     error_log                               /var/log/nginx/error.log;
     access_log                              /var/log/nginx/access.log;
+
+    gzip on;
+    gzip_static on;
+    gzip_vary on;
+    gzip_http_version 1.1;
+    gzip_min_length 256;
+    gzip_comp_level 5;
+    gzip_proxied any;
+    gzip_types
+      application/atom+xml
+      application/javascript
+      application/json
+      application/rss+xml
+      application/vnd.ms-fontobject
+      application/x-font-ttf
+      application/x-web-app-manifest+json
+      application/xhtml+xml
+      application/xml
+      font/opentype
+      image/svg+xml
+      image/x-icon
+      text/css
+      text/plain
+      text/x-component;
 
     client_max_body_size                    25m;
     proxy_connect_timeout                   600;
@@ -48,59 +89,83 @@ server {
 
     index index.php index.html index.htm;
 
-    ####### Proxies #######
+    error_page 404 /index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
     # PHP proxy
     location ~ \.php$ {
+        root /var/www/html;
+        fastcgi_cache_valid 200 204 1m;
+        fastcgi_no_cache $http_authorization $cookie_laravel_session;
+        fastcgi_cache_lock on;
+        fastcgi_cache_lock_timeout 10s;
+        add_header X-Proxy-Cache $upstream_cache_status;
+        fastcgi_no_cache $no_cache;
+        fastcgi_cache_use_stale updating error timeout invalid_header http_500;
+        fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass php:9000;
         fastcgi_index index.php;
         include fastcgi_params;
-        fastcgi_read_timeout 3000;
+        fastcgi_read_timeout 900s;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
-        try_files $uri $uri/ /index.php$is_args$args /board/app.php$is_args$args;
+        try_files $uri $uri/ /index.php$is_args$args;
     }
 
-    ####### PHPBB Forum #######
-    location /board {
-        try_files $uri $uri/ @rewriteapp @extensionless-php;
-        index index.php index.html index.htm;
+    # Cache everything by default
+    set $no_cache 0;
+    # Don't cache POST requests
+    if ($request_method = POST) {
+        set $no_cache 1;
+    }
+    # Don't cache if the URL contains a query string
+    if ($query_string != "") {
+        set $no_cache 1;
+    }
+    # Don't cache the following URLs
+    if ($request_uri ~* "/(cp/)") {
+        set $no_cache 1;
+    }
+    # Don't cache if there is a cookie called PHPSESSID
+    if ($http_cookie = "PHPSESSID") {
+        set $no_cache 1;
     }
 
-    location @rewriteapp {
-        rewrite ^(.*)$ /board/app.php/$1 last;
-    }
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
 
     location / {
-        try_files $uri $uri/ @rewriteapp2 @extensionless-php;
+        try_files $uri $uri/ @rewriteapp @extensionless-php;
         index index.html index.htm index.php;
+    }
+
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|eot|ttf|woff|woff2)$ {
+        expires max;
+        add_header Cache-Control public;
+        add_header Access-Control-Allow-Origin *;
+        access_log off;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     location @extensionless-php {
         rewrite ^(.*)$ $1.php last;
     }
 
-    location @rewriteapp2 {
+    location @rewriteapp {
         rewrite ^(.*)$ index.php/$1 last;
     }
 
-	 	location /board/install/ {
-	 	    try_files $uri $uri/ @rewrite_installapp;
-    }
-
-	 	location @rewrite_installapp {
-	 	    rewrite ^(.*)$ /board/install/app.php/$1 last;
-	 	}
-
-    # Deny access to version control system directories.
-    location ~ /\.svn|/\.git {
+	 	# Deny access to hidden files
+    location ~ /\. {
         deny all;
         internal;
     }
 
-    # Deny access to internal phpbb files.
-    location ~ /board(config\.php|common\.php|files|images/avatars/upload|includes|(?<!ext/)phpbb|store|vendor) {
-    		deny all;
-        internal;
-		}
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
 }

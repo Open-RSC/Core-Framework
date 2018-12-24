@@ -73,21 +73,17 @@ public class MeleeFormula {
 		double def = getMeleeDefence(victim);
 		int maxHit = getMeleeDamage(source, hitMultiplier);
 
-		double finalAccuracy = 0;
+		if (acc * 10 < def) // Defense bonus is >= 10x accuracy - why would this hit?
+			return 0;
+
+		int finalAccuracy;
 		if (acc > def)
 			finalAccuracy = (int)((1.0 - ((def + 2.0) / (2.0 * (acc + 1.0)))) * 10000.0);
 		else
 			finalAccuracy = (int)((acc / (2.0 * (def + 1.0))) * 10000.0);
 
-		/*
-		 * This modifier is used to absorb some damage out of the hit.
-		 */
 		if (finalAccuracy > DataConversions.random(0, 10000)) {
-			int damage = (int) getGaussian(1.0, source.getRandom(), maxHit);
-			if (damage == 0) {
-				damage += 1;
-			}
-			return damage;
+			return (int) getGaussian(1.0, source.getRandom(), maxHit);
 		}
 		return 0;
 	}
@@ -104,9 +100,6 @@ public class MeleeFormula {
 		double bonusMultiplier = (source.getWeaponPowerPoints() + 64) / 640.0D;
 		int maxHit = (int)((strengthLevel * bonusMultiplier) + 0.5D);
 
-		if(source.isNpc())  {
-			maxHit = maxHit - 1;
-		}
 		return maxHit;
 	}
 
@@ -119,6 +112,10 @@ public class MeleeFormula {
 		
 		int defenseLevel = (int)(defender.getSkills().getLevel(Skills.DEFENCE) * prayerBonus) + styleBonus + 8;
 		double bonusMultiplier = (double)(defender.getArmourPoints() + 64);
+
+		if (defender.isNpc())
+			bonusMultiplier *= 0.9;
+
 		return (defenseLevel * bonusMultiplier);
 	}
 
@@ -130,14 +127,21 @@ public class MeleeFormula {
 
 		int attackLevel = (int)(attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus + 8;
 		double bonusMultiplier = (double)(attacker.getWeaponAimPoints() + 64);
+
+		if (attacker.isNpc())
+			bonusMultiplier *= 0.9;
+
 		return (attackLevel * bonusMultiplier);
 	}
 
 	public static int styleBonus(Mob mob, int skill) {
+		if (mob.isNpc())
+			return 0;
+
 		int style = mob.getCombatStyle();
-		if (style == 0) {
+		if (style == 0)
 			return 1;
-		}
+
 		return (skill == 0 && style == 2) || (skill == 1 && style == 3)
 				|| (skill == 2 && style == 1) ? 3 : 0;
 	}

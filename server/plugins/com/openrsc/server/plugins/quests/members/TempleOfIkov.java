@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -72,10 +73,14 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		p.getCache().remove("openSpiderDoor");
 		p.getCache().remove("completeLever");
 		p.getCache().remove("killedLesarkus");
-		p.incQuestExp(RANGED, (p.getSkills().getMaxStat(RANGED) * 1000) + 2000);
-		p.incQuestExp(FLETCHING, (p.getSkills().getMaxStat(FLETCHING) * 1000) + 2000);
+		int[] questData = Quests.questData.get(Quests.TEMPLE_OF_IKOV);
+		//keep order kosher
+		int[] skillIDs = {RANGED, FLETCHING};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 		p.message("@gre@You haved gained 1 quest point!");
-		p.incQuestPoints(1);
 		p.message("Well done you have completed the temple of Ikov quest");
 	}
 
@@ -101,37 +106,45 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								"Near Hemenster, to the north of here",
 								"Kill the fire warrior of Lesarkus",
 								"And retrieve the staff of Armardyl");
-						int newMenu = showMenu(p,n,
+						int newMenu = showMenu(p,n, false, //do not send over
 								"Why can't you do it yourself?",
 								"That sounds like fun",
 								"That sounds too dangerous for me",
 								"How much will you pay me?");
 						if(newMenu == 0) {
+							playerTalk(p, n, "Why can't you do that yourself?");
 							npcTalk(p,n, "The guardians of the staff of Armardyl fear me",
 									"They know my kind is powerful",
 									"So they have set up magical wards against are race");
-							int newMenu2 = showMenu(p,n,
+							int newMenu2 = showMenu(p,n, false, //do not send over
 									"How much will you pay me?",
 									"That sounds like fun",
 									"Who are your kind?",
 									"That sounds too dangerous for me");
 							if(newMenu2 == 0) {
+								playerTalk(p, n, "How much will you pay me");
 								lucienDialogue(p, n, Lucien.PAYME);
 							} else if(newMenu2 == 1) {
+								playerTalk(p, n, "That sounds like fun");
 								lucienDialogue(p, n, Lucien.SOUNDSFUN);
 							} else if(newMenu2 == 2) {
+								playerTalk(p, n, "Who are your kind?");
 								npcTalk(p,n, "An ancient and powerful race",
 										"Back in the second age we held great influence in this world",
 										"There are few of us left now");
 							} else if(newMenu2 == 3) {
+								playerTalk(p, n, "That sounds too dangerous for me");
 								npcTalk(p,n, "Fortune favours the bold");
 							}
 
 						} else if(newMenu == 1) {
+							playerTalk(p, n, "That sounds like fun");
 							lucienDialogue(p, n, Lucien.SOUNDSFUN);
 						} else if(newMenu == 2) {
+							playerTalk(p, n, "That sounds too dangerous for me");
 							npcTalk(p,n, "Fortune favours the bold");
 						} else if(newMenu == 3) {
+							playerTalk(p, n, "How much will you pay me");
 							lucienDialogue(p, n, Lucien.PAYME);
 						}
 					}
@@ -139,6 +152,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				case 1:
 				case 2:
 				case -1:
+				case -2:
 					npcTalk(p,n, "I thought I told you not to meet me here again");
 					if(hasItem(p, PENDANT_OF_LUCIEN)) {
 						playerTalk(p,n, "Yes you did, sorry");
@@ -185,7 +199,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					playerTalk(p,n, "I have the 20 limpwurt roots, now transport me please");
 					npcTalk(p,n, "Oh marverlous",
 							"Brace yourself then");
-					removeItem(p, LIMPROOT, 20);
+					p.getInventory().remove(LIMPROOT, 20);
 					p.teleport(557, 3290);
 					sleep(650);
 					ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
@@ -198,7 +212,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							"Yes I do");
 					if(menu == 0) {
 						npcTalk(p,n, "Hehe ye'll come back later",
-								"hey always come back later");
+								"They always come back later");
 					} else if(menu == 1) {
 						wineldaDialogue(p, n, Winelda.YES);
 					} else if(menu == 2) {
@@ -211,8 +225,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						"But I'm knowing some useful magic tricks",
 						"I could get you over there easy as that");
 				playerTalk(p,n, "Okay get me over there");
-				npcTalk(p,n, "Okay brace yourself");
-				npcTalk(p,n, "Actually no no",
+				npcTalk(p,n, "Okay brace yourself",
+						"Actually no no",
 						"Why should I do it for free",
 						"Bring me a bite to eat and I'll be a touch more helpful",
 						"How about some nice tasty limpwurt roots to chew on",
@@ -252,17 +266,19 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								"As did our fathers",
 								"And our father's fathers",
 								"Why dost thou seeketh it?");
-						int seekMenu = showMenu(p,n,
+						int seekMenu = showMenu(p,n, false, //do not send over
 								"A guy named Lucien is paying me",
 								"Just give it to me",
 								"I am a collector of rare and powerful artifacts");
 						if(seekMenu == 0) {
+							playerTalk(p, n, "A guy named Lucien is paying me");
 							guardianDialogue(p, n, Guardian.WORKINGFORLUCIEN);
 						} else if(seekMenu == 1) {
+							playerTalk(p, n, "Just give it to me");
 							npcTalk(p,n, "The staff is a sacred object",
 									"Not to be given away to anyone who asks");
-
 						} else if(seekMenu == 2) {
+							playerTalk(p, n, "I am a collector of rare and powerful objects");
 							npcTalk(p,n, "The staff is not yours to collect");
 						}
 
@@ -293,14 +309,15 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 									"Who have the honour to stay here",
 									"And guard his artifacts",
 									"Till he needs them to smite his enemies");
-							int bla = showMenu(p,n,
+							int bla = showMenu(p,n, false, //do not send over
 									"Ok that's nice to know",
 									"Someone told me there were only three gods");
 							if(bla == 0) {
 								playerTalk(p,n, "I am a collector of rare and powerful objects");
 								npcTalk(p,n, "The staff is not yours to collect");
 							} else if(bla == 1) {
-								playerTalk(p,n, "Saradomin, Zamorak and Guthix");
+								playerTalk(p, n, "Someone told me there were only three gods",
+										"Saradomin, Zamorak and Guthix");
 								npcTalk(p,n, "Was that someone a Saradominist?",
 										"I hear Saradominism is the principle doctrine",
 										"Out in the world currently",
@@ -308,7 +325,6 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 										"They are wrong",
 										"Depending on what you define as a god",
 										"We are aware of at least twenty");
-
 							}
 						} else if(whoMenu == 1) {
 							npcTalk(p,n, "Ancient powerful beings",
@@ -319,13 +335,15 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 									"Some still have presence in this world in their liche forms",
 									"Mahjarrat such as Lucien and Azzanadra would become extremely powerful",
 									"If they got their hands on the staff of Armadyl");
-							int maj = showMenu(p,n,
+							int maj = showMenu(p,n, false, //do not send over
 									"Did you say Lucien?",
 									"You had better guard it well then");
 							if(maj == 0) {
-								playerTalk(p, n, "He's the one who sent me to fetch the staff");
+								playerTalk(p, n, "Did you say Lucien?",
+										"He's the one who sent me to fetch the staff");
 								guardianDialogue(p, n, Guardian.WORKINGFORLUCIEN);
 							} else if(maj == 1) {
+								playerTalk(p, n, "You had better guard it well them");
 								npcTalk(p,n, "Don't fret, for we shall");
 							}
 						} else if(whoMenu == 2) {
@@ -365,19 +383,22 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				npcTalk(p,n, "Thou art working for him?",
 						"Thy fool",
 						"Quick you must be cleansed to save your soul");
-				int menu = showMenu(p,n,
+				int menu = showMenu(p,n, false, //do not send over
 						"How dare you call me a fool?",
 						"Erm I think I'll be leaving now",
 						"Yes I could do with a bath");
 				if(menu == 0) {
-					playerTalk(p,n, "I will work for who I please");
+					playerTalk(p, n, "How dare you call me a fool",
+							"I will work for who I please");
 					npcTalk(p,n, "This one is too far gone",
 							"He must be cut down to stop the spread of the blight");
 					n.startCombat(p);
 				} else if(menu == 1) {
+					playerTalk(p, n, "Erm, I think I'll be leaving now");
 					npcTalk(p,n, "We cannot allow an agent of Lucien to roam free");
 					n.startCombat(p);
 				} else if(menu == 2) {
+					playerTalk(p, n, "Yes I could do with a bath");
 					p.message("The guardian splashes holy water over you");
 					npcTalk(p,n, "That should do the trick",
 							"Now you say that Lucien sent you to retrieve the staff",
@@ -503,7 +524,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				}
 			} else if(command.equals("searchfortraps")) {
 				p.message("You search the lever for traps");
-				if(p.getSkills().getMaxStat(17) < 42) {
+				if(getCurrentLevel(p, THIEVING) < 42) {
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}
@@ -679,7 +700,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;
 			}
 			else { 
-				if ((n.getID() == WARRIOR_OF_LESARKUS && p.getInventory().hasItemId(723) || p.getCache().hasKey("shot_ice"))) {			
+				if (n.getID() == WARRIOR_OF_LESARKUS && ((p.getInventory().hasItemId(723) && hasGoodBow(p)) || p.getCache().hasKey("shot_ice"))) {			
 				p.getCache().store("shot_ice", true);
 				return false;
 			}
@@ -688,6 +709,18 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;			
 		}
 		return false;
+	}
+	
+	public boolean hasGoodBow(Player p) {
+		
+		int[] allowedBowsIce = {654, 655, 656, 657};
+		boolean hasGoodBow = false;
+		
+		for(int bow : allowedBowsIce) {
+			hasGoodBow |= (p.getInventory().hasItemId(bow) && p.getInventory().wielding(bow));
+		}
+		
+		return hasGoodBow;
 	}
 
 	@Override
@@ -698,7 +731,10 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				return;
 			}
 			if(!p.getInventory().wielding(726)) {
-				p.message("You decide you don't want to attack Lucien really, He is your friend");
+				npcTalk(p,n, "I'm sure you don't want to attack me really",
+						"I am your friend");
+				message(p, "You decide you don't want to attack Lucien really",
+						"He is your friend");
 				return;
 			}
 		}

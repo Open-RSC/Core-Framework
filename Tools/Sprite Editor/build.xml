@@ -6,7 +6,7 @@
 	<target name="compile">
 		<delete file="${jar}" />
 		<mkdir dir="${build}" />
-		<javac srcdir="${src}" destdir="${build}" debug="on" target="1.5">
+		<javac srcdir="${src}" destdir="${build}" debug="on">
 		  <classpath>
 			<pathelement location="lib/xstream.jar"/>
 			<pathelement location="lib/xpp3.jar" />
@@ -28,6 +28,11 @@
 			</classpath>
 		</java>
 	</target>
+
+    <target name="compile-and-run">
+        <antcall target="compile"/>
+        <antcall target="editor"/>
+    </target>
 	
 	<target name="packer">
 		<java classname="spriteeditor.SpritePacker" fork="true">
@@ -39,6 +44,11 @@
 			</classpath>
 		</java>
 	</target>
+
+    <target name="compile-and-run-packer">
+        <antcall target="compile"/>
+        <antcall target="packer"/>
+    </target>
 	
 	<target name="unpacker">
 		<java classname="spriteeditor.SpriteUnpacker" fork="true">
@@ -50,4 +60,9 @@
 			</classpath>
 		</java>
 	</target>
+
+    <target name="compile-and-run-unpacker">
+        <antcall target="compile"/>
+        <antcall target="unpacker"/>
+    </target>
 </project>

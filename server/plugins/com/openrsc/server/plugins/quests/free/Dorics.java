@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -33,18 +34,18 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 		case 0:
 			npcTalk(p, n,
 					"Hello traveller, what brings you to my humble smithy?");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 					"I wanted to use your anvils",
 					"Mind your own business, shortstuff",
 					"I was just checking out the landscape",
-					"What do you make here?" });
+					"What do you make here?");
 			if (choice == 0) {
 				npcTalk(p, n, "My anvils get enough work with my own use",
 						"I make amulets, it takes a lot of work.",
 						"If you could get me some more materials I could let you use them");
-				int choice2 = showMenu(p, n, false, new String[] { // Do not send to client
+				int choice2 = showMenu(p, n, false, // Do not send to client
 						"Yes I will get you materials",
-						"No, hitting rocks is for the boring people, sorry." });
+						"No, hitting rocks is for the boring people, sorry.");
 				if (choice2 == 0) {
 					playerTalk(p, n, "Yes I will get you materials");
 					npcTalk(p,
@@ -131,8 +132,7 @@ public class Dorics implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed Dorics quest");
-		player.incQuestExp(14, (player.getSkills().getMaxStat(14) + 1) * 300 + 700);
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.DORICS_QUEST), true);
 		player.message("@gre@You haved gained 1 quest points!");
 	}
 

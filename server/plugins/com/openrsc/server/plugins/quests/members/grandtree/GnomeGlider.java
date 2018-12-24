@@ -45,7 +45,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 				"ok then",
 				"no thanks");
 				if(travelBackMenu == 0) {
-					npcTalk(p,n, " ok, hold on tight");
+					npcTalk(p,n, "ok, hold on tight");
 					message(p, "you both hold onto the wooden beam",
 							"you take a few steps backand rush forwards",
 							"the glider just lifts of the ground");
@@ -64,13 +64,14 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 				npcTalk(p,n, "well hello again traveller");
 				npcTalk(p,n, "can i take you somewhere?");
 				npcTalk(p,n, "i can fly like the birds");
-				int menu = showMenu(p,n,
+				int menu = showMenu(p,n, false, //do not send over
 				"karamja",
 				"varrock",
 				"Al kharid",
 				"white wolf mountain",
 				"I'll stay here thanks");
 				if(menu == 0) {
+					playerTalk(p, n, "take me to karamja");
 					npcTalk(p,n, "ok, your the boss, jump on",
 							"hold on tight, it'll be a rough ride");
 					message(p, "you hold on tight to the glider's wooden beam",
@@ -81,6 +82,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					p.teleport(389, 753);
 					playerTalk(p,n, "ouch");
 				} else if(menu == 1) {
+					playerTalk(p, n, "take me to Varrock");
 					npcTalk(p,n, "ok, your the boss, jump on",
 							"hold on tight, it'll be a rough ride");
 					message(p, "you hold on tight to the glider's wooden beam",
@@ -91,6 +93,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					p.teleport(58, 504);
 					playerTalk(p,n, "ouch");
 				} else if(menu == 2) {
+					playerTalk(p, n, "take me to Al kharid");
 					npcTalk(p,n, "ok, your the boss, jump on",
 							"hold on tight, it'll be a rough ride");
 					message(p, "you hold on tight to the glider's wooden beam",
@@ -101,6 +104,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					p.teleport(88, 664);
 					playerTalk(p,n, "ouch");
 				} else if(menu == 3) {
+					playerTalk(p, n, "take me to White wolf mountain");
 					npcTalk(p,n, "ok, your the boss, jump on",
 							"hold on tight, it'll be a rough ride");
 					message(p, "you hold on tight to the glider's wooden beam",
@@ -111,6 +115,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					p.teleport(400, 461);
 					playerTalk(p,n, "ouch");
 				} else if(menu == 4) {
+					playerTalk(p, n, "i'll stay here thanks");
 					npcTalk(p,n, "no worries, let me know if you change your mind");
 				}
 				return;
@@ -147,7 +152,7 @@ public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListene
 					npcTalk(p,GNOME_PILOT, "traveller watch out");
 					Npc JOGRE = getNearestNpc(p, 523, 15);
 					if(JOGRE != null) {
-						npcTalk(p,JOGRE, " grrrrr");
+						npcTalk(p,JOGRE, "grrrrr");
 						JOGRE.setChasing(p);
 					}
 				} else if(menu == 1) {

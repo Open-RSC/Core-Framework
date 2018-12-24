@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,9 +12,9 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MuddyChest implements ObjectActionExecutiveListener, ObjectActionListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
-	
-	public final int MUDDY_CHEST = 222;
-	public final int MUDDY_KEY = 414;
+
+	private final int MUDDY_CHEST = 222;
+	private final int MUDDY_CHEST_OPEN = 221;
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
@@ -21,38 +22,34 @@ public class MuddyChest implements ObjectActionExecutiveListener, ObjectActionLi
 			p.message("the chest is locked");
 		}
 	}
-	
+
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if(obj.getID() == MUDDY_CHEST && item.getID() == MUDDY_KEY) {
-			removeItem(p, MUDDY_KEY, 1);
-			message(p, "you unlock the chest with your key");
+		if(obj.getID() == MUDDY_CHEST && item.getID() == ItemId.MUDDY_KEY.id()) {
+			int respawnTime = 3000;
+			p.message("you unlock the chest with your key");
+			replaceObjectDelayed(obj, respawnTime, MUDDY_CHEST_OPEN);
 			p.message("You find some treasure in the chest");
-			openChest(obj, 3000, 221);
-			addItem(p, 158, 1); // uncut ruby (1)
-			addItem(p, 173, 1); // mithril bar (1)
-			addItem(p, 42, 2); // law rune (2)
-			addItem(p, 327, 1); // anchovie pizza (1)
-			addItem(p, 64, 1); // mithril dagger (1)
-			addItem(p, 10, 50); // coins (50)
-			addItem(p, 38, 2); // death-rune (2)
-			addItem(p, 41, 10); // chaos-rune (10)
+
+			removeItem(p, ItemId.MUDDY_KEY.id(), 1); // remove the muddy key.
+			addItem(p, ItemId.UNCUT_RUBY.id(), 1);
+			addItem(p, ItemId.MITHRIL_BAR.id(), 1);
+			addItem(p, ItemId.LAW_RUNE.id(), 2);
+			addItem(p, ItemId.ANCHOVIE_PIZZA.id(), 1);
+			addItem(p, ItemId.MITHRIL_DAGGER.id(), 1);
+			addItem(p, ItemId.COINS.id(), 50);
+			addItem(p, ItemId.DEATH_RUNE.id(), 2);
+			addItem(p, ItemId.CHAOS_RUNE.id(), 10);
 		}
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == MUDDY_CHEST) {
-			return true;
-		}
-		return false;
+		return obj.getID() == MUDDY_CHEST;
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if(obj.getID() == MUDDY_CHEST && item.getID() == MUDDY_KEY) {
-			return true;
-		}
-		return false;
+		return obj.getID() == MUDDY_CHEST && item.getID() == ItemId.MUDDY_KEY.id();
 	}
 }

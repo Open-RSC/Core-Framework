@@ -10,23 +10,20 @@ import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveList
 import static com.openrsc.server.plugins.Functions.sleep;
 
 public class SalarinTheTwistedMageAI implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
-	
+
 	/*
 	 * Player maging Salarin the twisted AI - Just to degenerate ATTACK AND STRENGTH if over 2 in said skill.
 	 */
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if(n.getID() == 567 && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2)) {
-			return true;
-		}
-		return false;
+		return n.getID() == 567 && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2);
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if(n.getID() == 567 && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2)) {
-			if(!p.withinRange(n, 5)) 
+		if (n.getID() == 567 && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2)) {
+			if (!p.withinRange(n, 5))
 				return;
 			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Amshalaraz Nithcosh dimarilo", p));
 			sleep(600);

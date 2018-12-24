@@ -28,7 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * 
+ *
  * @author n0m
  *
  */
@@ -129,7 +129,7 @@ public class Functions {
 
 	/**
 	 * Returns true if you are in any stages provided.
-	 * 
+	 *
 	 * @param p
 	 * @param quest
 	 * @param stage
@@ -162,6 +162,25 @@ public class Functions {
 		ActionSender.sendStat(p, skill);
 	}
 
+	/**
+	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
+	 * @param p - the player
+	 * @param questData - the data, if skill id is < 0 means no exp is applied
+	 * @param applyQP - apply the quest point increase
+	 */
+	public static void incQuestReward(Player p, int[] questData, boolean applyQP) {
+		int qp = questData[0];
+		int skillId = questData[1];
+		int baseXP = questData[2];
+		int varXP = questData[3];
+		if(skillId >= 0 && baseXP > 0 && varXP >= 0) {
+			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
+		}
+		if(applyQP) {
+			p.incQuestPoints(qp);
+		}
+	}
+
 	public static void movePlayer(Player p, int x, int y) {
 		movePlayer(p, x, y, false);
 
@@ -185,7 +204,7 @@ public class Functions {
 		}
 	}
 
-	private static boolean isBlocking(Npc npc, int x, int y, int bit) {
+	private static boolean checkBlocking(Npc npc, int x, int y, int bit) {
 		TileValue t = World.getWorld().getTile(x, y);
 		Point p = new Point(x, y);
 		for(Npc n : npc.getViewArea().getNpcsInView()) {
@@ -226,19 +245,19 @@ public class Functions {
 		int newY = y;
 		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
 		if (myX > x) {
-			myXBlocked = isBlocking(n, myX - 1, myY, 8); // Check right
+			myXBlocked = checkBlocking(n, myX - 1, myY, 8); // Check right
 			// tiles
 			newX = myX - 1;
 		} else if (myX < x) {
-			myXBlocked = isBlocking(n, myX + 1, myY, 2); // Check left
+			myXBlocked = checkBlocking(n, myX + 1, myY, 2); // Check left
 			// tiles
 			newX = myX + 1;
 		}
 		if (myY > y) {
-			myYBlocked = isBlocking(n, myX, myY - 1, 4); // Check top tiles
+			myYBlocked = checkBlocking(n, myX, myY - 1, 4); // Check top tiles
 			newY = myY - 1;
 		} else if (myY < y) {
-			myYBlocked = isBlocking(n, myX, myY + 1, 1); // Check bottom
+			myYBlocked = checkBlocking(n, myX, myY + 1, 1); // Check bottom
 			// tiles
 			newY = myY + 1;
 		}
@@ -248,15 +267,15 @@ public class Functions {
 		}
 
 		if (newX > myX) {
-			newXBlocked = isBlocking(n, newX, newY, 2);
+			newXBlocked = checkBlocking(n, newX, newY, 2);
 		} else if (newX < myX) {
-			newXBlocked = isBlocking(n, newX, newY, 8);
+			newXBlocked = checkBlocking(n, newX, newY, 8);
 		}
 
 		if (newY > myY) {
-			newYBlocked = isBlocking(n, newX, newY, 1);
+			newYBlocked = checkBlocking(n, newX, newY, 1);
 		} else if (newY < myY) {
-			newYBlocked = isBlocking(n, newX, newY, 4);
+			newYBlocked = checkBlocking(n, newX, newY, 4);
 		}
 		if ((newXBlocked && newYBlocked) || (newXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
 			return null;
@@ -271,7 +290,7 @@ public class Functions {
 		if (player.getLocation().equals(n.getLocation())) {
 			for (int x = -1; x <= 1; ++x) {
 				for (int y = -1; y <= 1; ++y) {
-					if(x == 0 || y == 0) 
+					if(x == 0 || y == 0)
 						continue;
 					Point destination = canWalk(n, player.getX() - x, player.getY() - y);
 					if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
@@ -311,7 +330,7 @@ public class Functions {
 		});
 		return npc;
 	}
-	
+
 	public static Npc spawnNpcWithRadius(Player p, int id, int x, int y, int radius, final int time) {
 
 		final Npc npc = new Npc(id, x, y, radius);
@@ -358,7 +377,7 @@ public class Functions {
 
 	/**
 	 * Creates a new ground item
-	 * 
+	 *
 	 * @param id
 	 * @param amount
 	 * @param x
@@ -373,7 +392,7 @@ public class Functions {
 
 	/**
 	 * Creates a new ground item
-	 * 
+	 *
 	 * @param id
 	 * @param amount
 	 * @param x
@@ -409,7 +428,7 @@ public class Functions {
 
 	/**
 	 * Checks if this @param obj id is @param i
-	 * 
+	 *
 	 * @param obj
 	 * @param i
 	 * @return
@@ -420,7 +439,7 @@ public class Functions {
 
 	/**
 	 * Checks if players quest stage for this quest is @param stage
-	 * 
+	 *
 	 * @param p
 	 * @param qID
 	 * @param stage
@@ -432,11 +451,6 @@ public class Functions {
 
 	/**
 	 * Checks if players quest stage for this quest is @param stage
-	 * 
-	 * @param p
-	 * @param qID
-	 * @param stage
-	 * @return
 	 */
 	public static boolean atQuestStage(Player p, QuestInterface quest, int stage) {
 		return getQuestStage(p, quest) == stage;
@@ -444,7 +458,7 @@ public class Functions {
 
 	/**
 	 * Returns the quest stage for @param quest
-	 * 
+	 *
 	 * @param p
 	 * @param quest
 	 * @return
@@ -455,11 +469,6 @@ public class Functions {
 
 	/**
 	 * Returns the quest stage for @param qID
-	 * 
-	 * @param p
-	 * @param qID
-	 * @param stage
-	 * @return
 	 */
 	public static int getQuestStage(Player p, int questID) {
 		return p.getQuestStage(questID);
@@ -467,7 +476,7 @@ public class Functions {
 
 	/**
 	 * Sets Quest with ID @param questID's stage to @parma stage
-	 * 
+	 *
 	 * @param p
 	 * @param questID
 	 * @param stage
@@ -483,9 +492,9 @@ public class Functions {
 
 	/**
 	 * Sets @param quest 's stage to @param stage
-	 * 
+	 *
 	 * @param p
-	 * @param questID
+	 * @param quest
 	 * @param stage
 	 */
 	public static void setQuestStage(Player p, QuestInterface quest, int stage) {
@@ -547,10 +556,6 @@ public class Functions {
 
 	/**
 	 * Adds an item to players inventory.
-	 * 
-	 * @param p
-	 * @param id
-	 * @param amt
 	 */
 	public static void addItem(final Player p, final int item, final int amt) {
 
@@ -572,9 +577,6 @@ public class Functions {
 	/**
 	 * Opens a door object for the player and walks through it. Works for any
 	 * regular door in any direction.
-	 * 
-	 * @param object
-	 * @param p
 	 */
 	public static void doDoor(final GameObject object, final Player p) {
 		doDoor(object, p, 11);
@@ -600,20 +602,20 @@ public class Functions {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX(), object.getY() + 1);
-			} 
+			}
 			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() - 1, object.getY());
 			}
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX(), object.getY() - 1);
-			} 
+			}
 			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() + 1, object.getY());
 			}
 			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX() + 1, object.getY() + 1);
-			} 
+			}
 			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX() - 1, object.getY() - 1);
 			}
@@ -673,20 +675,20 @@ public class Functions {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX(), object.getY() + 1);
-			} 
+			}
 			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() - 1, object.getY());
 			}
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX(), object.getY() - 1);
-			} 
+			}
 			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() + 1, object.getY());
 			}
 			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX() + 1, object.getY() + 1);
-			} 
+			}
 			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX() - 1, object.getY() - 1);
 			}
@@ -1052,7 +1054,7 @@ public class Functions {
 
 	/**
 	 * Gets closest npc within players area.
-	 * 
+	 *
 	 * @param npcId
 	 * @param radius
 	 * @return
@@ -1099,7 +1101,7 @@ public class Functions {
 
 	/**
 	 * Checks if player has an item, and returns true/false.
-	 * 
+	 *
 	 * @param p
 	 * @param item
 	 * @return
@@ -1110,7 +1112,7 @@ public class Functions {
 
 	/**
 	 * Checks if player has item and returns true/false
-	 * 
+	 *
 	 * @param p
 	 * @param id
 	 * @param amt
@@ -1122,7 +1124,7 @@ public class Functions {
 
 	/**
 	 * Displays server message(s) with 2.2 second delay.
-	 * 
+	 *
 	 * @param player
 	 * @param messages
 	 */
@@ -1154,7 +1156,7 @@ public class Functions {
 
 	/**
 	 * Displays server message(s) with 2.2 second delay.
-	 * 
+	 *
 	 * @param player
 	 * @param messages
 	 */
@@ -1179,7 +1181,7 @@ public class Functions {
 
 	/**
 	 * Npc chat method
-	 * 
+	 *
 	 * @param player
 	 * @param npc
 	 * @param messages
@@ -1223,7 +1225,7 @@ public class Functions {
 
 	/**
 	 * Npc chat method not blocking
-	 * 
+	 *
 	 * @param player
 	 * @param npc
 	 * @param messages
@@ -1244,7 +1246,7 @@ public class Functions {
 
 	/**
 	 * Player message(s), each message has 2.2s delay between.
-	 * 
+	 *
 	 * @param player
 	 * @param npc
 	 * @param messages
@@ -1279,7 +1281,7 @@ public class Functions {
 
 	/**
 	 * Removes an item from players inventory.
-	 * 
+	 *
 	 * @param p
 	 * @param id
 	 * @param amt
@@ -1294,9 +1296,7 @@ public class Functions {
 			public void run() {
 				final Item item = new Item(id, 1);
 				if (!item.getDef().isStackable()) {
-					for (int i = 0; i < amt; i++) {
-						p.getInventory().remove(new Item(id, 1));
-					}
+					p.getInventory().remove(new Item(id, 1));
 				} else {
 					p.getInventory().remove(new Item(id, amt));
 				}
@@ -1307,7 +1307,7 @@ public class Functions {
 
 	/**
 	 * Removes an item from players inventory.
-	 * 
+	 *
 	 * @param p
 	 * @param id
 	 * @param amt
@@ -1332,7 +1332,7 @@ public class Functions {
 
 	/**
 	 * Displays item bubble above players head.
-	 * 
+	 *
 	 * @param player
 	 * @param item
 	 */
@@ -1343,7 +1343,7 @@ public class Functions {
 
 	/**
 	 * Displays item bubble above players head.
-	 * 
+	 *
 	 * @param player
 	 * @param item
 	 */
@@ -1404,10 +1404,10 @@ public class Functions {
 	}
 
 	public static void resetGnomeCooking(Player p) {
-		String[] caches = { 
+		String[] caches = {
 				"cheese_on_batta", "tomato_on_batta", "tomato_cheese_batta", "leaves_on_batta",
 				"complete_dish", "chocolate_on_bowl", "leaves_on_bowl", "chocolate_bomb", "cream_on_bowl",
-				"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta", 
+				"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta",
 				"kingworms_on_bowl", "onions_on_bowl", "gnomespice_on_bowl", "wormhole", "gnomespice_on_dough",
 				"toadlegs_on_dough", "gnomecrunchie_dough", "gnome_crunchie_cooked", "gnomespice_on_worm",
 				"worm_on_batta", "worm_batta", "onion_on_batta", "cabbage_on_batta", "dwell_on_batta",
@@ -1423,11 +1423,11 @@ public class Functions {
 		}
 	}
 
-	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) { 
-		String[] caches = { 
-				"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink", 
+	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) {
+		String[] caches = {
+				"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
 				"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
-				"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base", 
+				"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base",
 				"leaves_into_drink", "lime_slices_to_drink", "whisky_in_shaker", "milk_in_shaker",
 				"leaves_in_shaker", "choco_bar_in_drink", "chocolate_saturday_base", "heated_choco_saturday",
 				"choco_dust_into_drink", "brandy_in_shaker", "diced_orange_in_drink", "blurberry_special_base",
@@ -1476,7 +1476,7 @@ public class Functions {
 	/**
 	 * Transforms npc into another please note that you will need to unregister
 	 * the transformed npc after using this method.
-	 * 
+	 *
 	 * @param n
 	 * @param newID
 	 * @return

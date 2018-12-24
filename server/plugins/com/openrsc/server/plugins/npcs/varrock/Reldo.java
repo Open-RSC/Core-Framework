@@ -27,7 +27,7 @@ public final class Reldo implements TalkToNpcListener,
 		Menu defaultMenu = new Menu();
 		if (p.getCache().hasKey("read_arrav")
 				&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
-			playerTalk(p, n, "Ok I've read the book",
+			playerTalk(p, n, "OK I've read the book",
 					"Do you know where I can find the Phoenix Gang");
 			npcTalk(p, n, "No I don't",
 					"I think I know someone who will though",
@@ -40,7 +40,7 @@ public final class Reldo implements TalkToNpcListener,
 		playerTalk(p, n, "Hello");
 		npcTalk(p, n, "Hello stranger");
 		if (p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 0) {
-			defaultMenu.addOption(new Option("I'm in search of quest.") {
+			defaultMenu.addOption(new Option("I'm in search of a quest") {
 				@Override
 				public void action() {
 					npcTalk(p, n, "I don't think there's any here");
@@ -56,10 +56,10 @@ public final class Reldo implements TalkToNpcListener,
 				}
 			});
 		}
-		defaultMenu.addOption(new Option("Do you have anything to trade") {
+		defaultMenu.addOption(new Option("Do you have anything to trade?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "No sorry. I'm not the trading type");
+				npcTalk(p, n, "No, sorry. I'm not the trading type");
 				playerTalk(p, n, "ah well");
 			}
 		});
@@ -75,32 +75,30 @@ public final class Reldo implements TalkToNpcListener,
 		});
 		if (p.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
 			defaultMenu.addOption(new Option(
-					"What do you know about the incando dwarves?") {
+					"What do you know about the Imcando dwarves?") {
 				@Override
 				public void action() {
 					npcTalk(p,
 							n,
-							"The incando dwarves, you say?",
+							"The Imcando Dwarves, you say?",
 							"They were the world's most skilled smiths about a hundred years ago",
 							"They used secret knowledge",
 							"Which they passed down from generation to generation",
 							"Unfortunatly about a century ago the once thriving race",
 							"Was wiped out during the barbarian invasions of that time");
-					playerTalk(p, n, "So are there any incando left at all?");
+					playerTalk(p, n, "So are there any Imcando left at all?");
 					npcTalk(p,
 							n,
 							"A few of them survived",
 							"But with the bulk of their population destroyed",
 							"Their numbers have dwindled even further",
-							"Last i knew there were a couple living in asgarnia",
-							"Near the cliffs on the asgarnian southern peninsula",
+							"Last I knew there were a couple living in Asgarnia",
+							"Near the cliffs on the Asgarnian southern peninsula",
 							"They tend to keep to themselves",
-							"They don't tend to tell people that they're the descendants of the incando",
+							"They don't tend to tell people that they're the descendants of the Imcando",
 							"Which is why people think that the tribe has died out totally",
-							"You may have more luck talking to them if you bring them some red berry pie",
+							"you may have more luck talking to them if you bring them some red berry pie",
 							"They really like red berry pie");
-					playerTalk(p, n, "Thank you");
-					npcTalk(p, n, "You're welcome");
 					p.updateQuestStage(Quests.THE_KNIGHTS_SWORD, 2);
 				}
 			});

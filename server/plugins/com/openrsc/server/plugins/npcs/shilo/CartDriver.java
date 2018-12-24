@@ -12,7 +12,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static final int CART_DRIVER = 618;
+	public static final int CART_DRIVER = 619;
 	public static final int TRAVEL_CART = 768;
 
 	@Override
@@ -25,15 +25,16 @@ public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener
 
 	private void cartRide(Player p, Npc n) {
 		npcTalk(p, n, "I am offering a cart ride to Brimhaven if you're interested!",
-				"It will cost 300 Gp");
-		int menu = showMenu(p, n,
-				"Yes please, I'd like to go to Brimhaven!",
+				"It will cost 500 Gold");
+		int menu = showMenu(p, n, false, //do not send over
+				"Yes, that sounds great!",
 				"No thanks.");
 		if(menu == 0) {
-			if(hasItem(p, 10, 300)) {
+			playerTalk(p, n, "Yes please, I'd like to go to Brimhaven!");
+			if(hasItem(p, 10, 500)) {
 				npcTalk(p, n, "Great!",
 						"Just hop into the cart then and we'll go!");
-				removeItem(p, 10, 300);
+				removeItem(p, 10, 500);
 				message(p, 1000, "You Hop into the cart and the driver urges the horses on.");
 				p.teleport(468, 662);
 				message(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");
@@ -44,6 +45,7 @@ public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener
 						"Come back and see me when you have enough for the ride.");
 			}
 		} else if(menu == 1) {
+			playerTalk(p, n, "No thanks.");
 			npcTalk(p, n, "Ok Bwana, let me know if you change your mind.");
 		}
 	}

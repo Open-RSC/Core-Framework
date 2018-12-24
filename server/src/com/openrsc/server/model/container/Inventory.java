@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.GameLogging;
@@ -221,13 +222,18 @@ public class Inventory {
 
 			for (int index = size - 1; iterator.hasPrevious(); index--) {
 				Item i = iterator.previous();
-				if (id == i.getID() && i != null && i.getAmount() >= amount) {
+				if (id == i.getID() && i != null) {
+
+					/* Stack Items */
 					if (i.getDef().isStackable() && amount < i.getAmount()) {
+						// More than we need to remove, keep item in inventory.
 						i.setAmount(i.getAmount() - amount);
 						ActionSender.sendInventoryUpdateItem(player, index);
 					} else if (i.getDef().isStackable() && amount > i.getAmount()) {
+						// Not enough, do not remove.
 						return -1;
-					} else {
+					} else if (i.getDef().isStackable() && amount == i.getAmount()){
+						// Exact amount, remove all.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
 							ActionSender.sendEquipmentStats(player);
@@ -235,6 +241,24 @@ public class Inventory {
 						iterator.remove();
 						ActionSender.sendRemoveItem(player, index);
 					}
+
+					/* Non-stack items */
+					else {
+						// Remove 1.
+						if (i.isWielded()) {
+							unwieldItem(i, false);
+							ActionSender.sendEquipmentStats(player);
+						}
+						iterator.remove();
+						ActionSender.sendRemoveItem(player, index);
+
+						amount -= 1;
+						if (amount > 0)
+							return remove(id, amount, sendInventory);
+					}
+
+					if (sendInventory) ActionSender.sendInventory(player);
+
 					return index;
 				}
 			}
@@ -283,7 +307,7 @@ public class Inventory {
 	}
 
 	public void swap(int slot, int to) {
-		if(slot <= 0 && to <= 0 && to == slot) {	
+		if(slot <= 0 && to <= 0 && to == slot) {
 			return;
 		}
 		int idx = list.size() - 1;
@@ -300,7 +324,7 @@ public class Inventory {
 	}
 
 	public boolean insert(int slot, int to) {
-		if(slot < 0 || to < 0 || to == slot) {	
+		if(slot < 0 || to < 0 || to == slot) {
 			return false;
 		}
 		int idx = list.size() - 1;
@@ -455,7 +479,7 @@ public class Inventory {
 		}
 		if(!ableToWield)
 			return;
-		
+
 		ArrayList<Item> items = getItems();
 
 		for (Item i : items) {

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -39,35 +40,38 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "Greetings traveller",
-						"What could you want with an old woman like me");
-				int choice = showMenu(p, n, new String[] {
+				npcTalk(p, n, "Greetings Traveller",
+						"What could you want with an old woman like me?");
+				int choice = showMenu(p, n,
 						"I am in search of a quest",
-						"I've heard that you are a witch" });
+						"I've heard that you are a witch");
 				if (choice == 0) {
-					npcTalk(p, n, "Hmm maybe i can think of something for you",
+					npcTalk(p, n, "Hmm maybe I can think of something for you",
 							"Would you like to become more proficient in the dark arts?");
-					int choice2 = showMenu(p, n, new String[] {
+					int choice2 = showMenu(p, n, false, //do not send over
 							"Yes help me become one with my darker side",
 							"No I have my principles and honour",
-							"What, you mean improve my magic?" });
+							"What you mean improve my magic?");
 					if (choice2 == 0) {
+						playerTalk(p, n, "Yes help me become one with my darker side");
 						hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
-
 					} else if (choice2 == 1) {
+						playerTalk(p, n, "No, I have my principles and honour");
 						npcTalk(p, n, "Suit yourself, but you're missing out");
 					} else if (choice2 == 2) {
+						playerTalk(p, n, "What you mean improve my magic?");
 						npcTalk(p, n, "Yes improve your magic",
-								"Do you have no sense of drama");
-						int choice4 = showMenu(p, n, new String[] {
+								"Do you have no sense of drama?");
+						int choice4 = showMenu(p, n,
 								"Yes I'd like to improve my magic",
 								"No I'm not interested",
-								"Show me the mysteries of the dark arts" });
+								"Show me the mysteries of the dark arts");
 						if (choice4 == 0) {
+							p.message("The witch sighs");
 							hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
 						} else if (choice4 == 1) {
 							npcTalk(p, n, "Many aren't to start off with",
-									"But i think you'll be drawn back to this place");
+									"But I think you'll be drawn back to this place");
 						} else if (choice4 == 2) {
 							hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
 						}
@@ -76,7 +80,7 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 					npcTalk(p,
 							n,
 							"Yes it does seem to be getting fairly common knowledge",
-							"I fear i may get a visit from the witch hunters of falador before long");
+							"I fear I may get a visit from the witch hunters of Falador before long");
 				}
 				break;
 			case 1:
@@ -85,33 +89,34 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 						&& p.getInventory().hasItemId(270)
 						&& p.getInventory().hasItemId(134)
 						&& p.getInventory().hasItemId(241)) {
-					playerTalk(p, n, "Yes i have everything");
-					npcTalk(p, n, "Excellent, can i have them then?");
+					playerTalk(p, n, "Yes I have everthing");
+					npcTalk(p, n, "Excellent, can I have them then?");
 					p.message("You pass the ingredients to Hetty");
 					p.getInventory().remove(271, 1);
 					p.getInventory().remove(270, 1);
 					p.getInventory().remove(134, 1);
 					p.getInventory().remove(241, 1);
 					message(p,
-							"Hetty puts all the ingredients in her cauldron",
-							"She closes her eyes and begins to chant");
+							"Hetty put's all the ingredients in her cauldron",
+							"Hetty closes her eyes and begins to chant");
 					npcTalk(p, n, "Ok drink from the cauldron");
 					sleep(2000);
 					p.updateQuestStage(getQuestId(), 2);
 				} else {
 					playerTalk(p, n, "No not yet");
-					npcTalk(p, n, "Well remember what you need to get",
-							"An eye of newt, a rat's tail, some burnt meat and an onion");
+					npcTalk(p, n, "Well remember you need to get",
+							"An eye of newt, a rat's tail,some burnt meat and an onion");
 				}
 				break;
 			case 2:
-				npcTalk(p, n, "Well are you going to drink the potion or not?");
+				npcTalk(p, n, "Greetings Traveller",
+						"Well are you going to drink the potion or not?");
 				break;
 			case -1:
-				npcTalk(p, n, "Greetings traveller",
-						"How's your magic coming along");
+				npcTalk(p, n, "Greetings Traveller",
+						"How's your magic coming along?");
 				playerTalk(p, n, "I'm practicing and slowly getting better");
-				npcTalk(p, n, "Good, good");
+				npcTalk(p, n, "good good");
 				break;
 			}
 		}
@@ -119,23 +124,13 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 		case Hetty.SOUNDOFIT_ALRIGHT:
 			npcTalk(p,
 					n,
-					"Ok, I'm going to make a potion to help bring out your darker self",
-					"So that you can perform acts of dark magic with greater ease");
-			playerTalk(p, n, "Dark magic?");
-			npcTalk(p, n, "It's not as ominous as it sounds, trust me");
-			int choice3 = showMenu(p, n, new String[] {
-					"No, I don't like the sound of it", "Well, alright..." });
-			if (choice3 == 0) {
-				npcTalk(p, n, "Fine, suit yourself",
-						"But I sense a great deal of dark power within you",
-						"You'll change your mind one day");
-			} else if (choice3 == 1) {
-				npcTalk(p, n, "You will need certain ingredients");
-				playerTalk(p, n, "What do i need?");
-				npcTalk(p, n,
-						"You need an eye of newt, a rat's tail, an onion and a piece of burnt meat");
-				p.updateQuestStage(getQuestId(), 1);
-			}
+					"Ok I'm going to make a potion to help bring out your darker self",
+					"So that you can perform acts of  dark magic with greater ease",
+					"You will need certain ingredients");
+			playerTalk(p, n, "What do I need");
+			npcTalk(p, n,
+					"You need an eye of newt, a rat's tail, an onion and a piece of burnt meat");
+			p.updateQuestStage(getQuestId(), 1);
 			break;
 		}
 	}
@@ -156,9 +151,6 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 		if (command.equals("drink from") && obj.getID() == 147
 				&& obj.getX() == 316 && obj.getY() == 666) {
 			if (player.getQuestStage(this) != 2) {
-				/*
-				 * Really sloppy, david :P. player.setBusy(true);
-				 */
 				playerTalk(player, null, "I'd rather not",
 						"It doesn't look very tasty");
 			} else {
@@ -208,10 +200,8 @@ public class WitchesPotion implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the witches potion quest");
-		player.incQuestExp(6, 900 + 200 * player.getSkills().getMaxStat(6));
-		player.incQuestPoints(1);
+		incQuestReward(player, Quests.questData.get(Quests.WITCHS_POTION), true);
 		player.message("@gre@You haved gained 1 quest point!");
-
 	}
 
 	@Override

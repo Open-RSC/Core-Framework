@@ -17,7 +17,7 @@ public class GemMining implements ObjectActionListener,
 ObjectActionExecutiveListener {
 
 	public static final int GEM_ROCK = 588;
-	
+
 	public final int UNCUT_OPAL = 891;
 	public final int UNCUT_JADE = 890;
 	public final int UNCUT_RED_TOPAZ = 889;
@@ -129,21 +129,21 @@ ObjectActionExecutiveListener {
 			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
 					return Formulae.miningAxeIDs[i];
-				} 
+				}
 			}
 		}
 		return -1;
 	}
-	
+
 	private boolean getGem(Player p, int req, int miningLevel, int axeId) {
 		int levelDiff = miningLevel - req;
 		if (levelDiff > 50)
-			return DataConversions.random(0, 9) != 1;
+			return DataConversions.random(0, 9) < 6;
 		if (levelDiff < 0) {
 			return false;
 		}
 		int bonus = 0;
-		switch (axeId) {
+		/*switch (axeId) {
 		case 156:
 			bonus = 0;
 			break;
@@ -162,7 +162,7 @@ ObjectActionExecutiveListener {
 		case 1262:
 			bonus = 12;
 			break;
-		}
+		}*/
 		if(p.getInventory().wielding(597)) { // charged dragonstone amulet bonus
 			bonus = 5; // 5%
 		}
@@ -176,24 +176,24 @@ ObjectActionExecutiveListener {
 	 */
 	private int getGemFormula() {
 		int rand = DataConversions.random(0, 100);
-		if (rand >= 0 && rand <= 46.86) {
+		if (rand >= 0 && rand <= 50.00) {
 			return UNCUT_OPAL;
-		} else if (rand >= 46.86 && rand <= 70.12) {
+		} else if (rand >= 50.01 && rand <= 66.75) {
 			return UNCUT_JADE;
-		} else if (rand >= 70.12 && rand <= 81.88) {
+		} else if (rand >= 66.76 && rand <= 79.00) {
 			return UNCUT_RED_TOPAZ;
-		} else if (rand >= 81.88 && rand <= 89.02) {
+		} else if (rand >= 79.01 && rand <= 87.50) {
 			return UNCUT_SAPPHIRE;
-		} else if (rand >= 89.02 && rand <= 92.96) {
+		} else if (rand >= 87.51 && rand <= 95.50) {
 			return UNCUT_EMERALD;
-		} else if (rand >= 92.96 && rand <= 96.85) {
+		} else if (rand >= 95.51 && rand <= 99.00) {
 			return UNCUT_RUBY;
-		} else if (rand >= 96.85 && rand <= 100) {
+		} else if (rand >= 99.01 && rand <= 100) {
 			return UNCUT_DIAMOND;
-		} 
+		}
 		return -1;
 	}
-	
+
 	private String minedString(int gemID) {
 		if(gemID == UNCUT_OPAL) {
 			return "You just mined an Opal!";

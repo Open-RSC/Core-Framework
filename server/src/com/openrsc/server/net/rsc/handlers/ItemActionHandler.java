@@ -101,7 +101,19 @@ public class ItemActionHandler implements PacketHandler {
 		} else {
 			switch (item.getID()) {
 			case 387: // Disk of Returning
-				player.message("The disk doesn't seem to work here.");
+				if(player.getX() == 305 && player.getY() == 3300) {
+					player.message("You spin your disk of returning");
+					player.teleport(310, 3347, true);
+					player.getInventory().remove(387, 1);
+				}
+				else if(insideMines(player)) {
+					player.message("You spin your disk of returning");
+					player.teleport(305, 3300, true);
+				}
+				else {
+					player.message("The disk will only work from in Thordur's black hole");
+					player.message("or the dwarven mines");
+				}
 				break;
 			case 260: // burntpie
 				if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
@@ -114,5 +126,9 @@ public class ItemActionHandler implements PacketHandler {
 				return;
 			}
 		}
+	}
+	
+	public boolean insideMines(Player p) {
+		return ((p.getX() >= 250 && p.getX() <= 315) && (p.getY() >= 3325 && p.getY() <= 3400));
 	}
 }
