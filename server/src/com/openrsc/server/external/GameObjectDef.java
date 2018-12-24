@@ -23,8 +23,10 @@ public class GameObjectDef extends EntityDef {
     public int height;
     public String objectModel;
     /**
-     * The object type. Can't figure out the significance of it. Item type 2 & 3
-     * seem to be special
+     * The object type.
+	 * Type 0:
+	 * Type 1: Traversal Blocking
+	 * Can't figure out the significance type 2 & 3
      */
     public int type;
 
@@ -53,6 +55,11 @@ public class GameObjectDef extends EntityDef {
         return objectModel;
     }
 
+    // Refers to the object's type within the game.
+	// Type 0:
+	// Type 1: Full Traversal Blocking Object
+	// Type 2:
+	// Type 3:
     public int getType() {
         return type;
     }

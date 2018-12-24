@@ -102,7 +102,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 						if(ogre_guard != null) {
 							npcTalk(p,ogre_guard, "Well, what proof of friendship did you bring ?");
 							if(hasItem(p, OGRE_RELIC_COMPLETE)) {
-								playerTalk(p, ogre_guard, "I have a relic from chieftan");
+								playerTalk(p, ogre_guard, "I have a relic from a chieftan");
 								npcTalk(p, ogre_guard, "It's got the statue of Dalgroth",
 										"Welcome to Gu'Tanoth",
 										"Friend of the ogres");

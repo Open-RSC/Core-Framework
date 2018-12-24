@@ -29,8 +29,8 @@ public class Config {
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
-	public static boolean C_SHOW_ROOF = false;
-	public static boolean C_SHOW_FOG = false;
+	public static boolean C_SHOW_ROOF = true;
+	public static boolean C_SHOW_FOG = true;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = false;
 	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;
@@ -67,6 +67,8 @@ public class Config {
 	public static boolean S_WANT_KEYBOARD_SHORTCUTS = false;
 	public static boolean S_WANT_CUSTOM_BANKS = false;
 	public static boolean S_WANT_BANK_PINS = false;
+	public static boolean S_WANT_BANK_NOTES = false;
+	public static boolean S_WANT_CERT_DEPOSIT = false;
 	public static boolean S_CUSTOM_FIREMAKING = false;
 	public static boolean S_WANT_DROP_X = false;
 	public static boolean S_WANT_EXP_INFO = false;
@@ -225,7 +227,7 @@ public class Config {
 	public static String getServerName() {
 		return prop.getProperty("SERVER_NAME");
 	}
-    
+
 	public static String getCommandPrefix() {
 		return prop.getProperty("COMMAND_PREFIX");
 	}

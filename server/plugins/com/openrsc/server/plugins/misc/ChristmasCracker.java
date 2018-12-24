@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
@@ -9,13 +10,11 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
-	
-	public static int RED_CRACKER = 575;
 
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if(item.getID() == RED_CRACKER) {
-			if(otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
+		if (item.getID() == ItemId.CHRISTMAS_CRACKER.id()) {
+			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. He stands alone.");
 				return;
 			}
@@ -38,7 +37,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if(item.getID() == RED_CRACKER) {
+		if (item.getID() == ItemId.CHRISTMAS_CRACKER.id()) {
 			return true;
 		}
 		return false;

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -23,6 +24,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	public static final int CERIL = 418;
 	public static final int BUTLER = 419;
 	public static final int LADY_HENRYETA = 422;
+	public static final int PHILIPE = 423;
 	public static final int CARNILLEAN_GUARD = 420;
 	public static final int CLIVET = 424;
 	public static final int CLAUS = 429;
@@ -37,7 +39,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == CLAUS || n.getID() == CERIL || n.getID() == BUTLER || n.getID() == LADY_HENRYETA || n.getID() == CARNILLEAN_GUARD || n.getID() == CLIVET || n.getID() == CULT_MEMBER || n.getID() == ALOMONE;
+		return n.getID() == CLAUS || n.getID() == CERIL || n.getID() == BUTLER || n.getID() == LADY_HENRYETA || n.getID() == PHILIPE || n.getID() == CARNILLEAN_GUARD || n.getID() == CLIVET || n.getID() == CULT_MEMBER || n.getID() == ALOMONE;
 	}
 
 	@Override
@@ -48,11 +50,12 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				playerTalk(p,n, "hello there");
 				npcTalk(p,n, "blooming, thieving, wierdos",
 						"why don't they leave me alone?");
-				int menu = showMenu(p,n,
+				int menu = showMenu(p, n, false, //do not send over
 						"What's wrong?",
 						"You probably deserve it",
 						"You seem uptight, I'll leave you alone");
 				if(menu == 0) {
+					playerTalk(p, n, "What's wrong?");
 					npcTalk(p,n, "it's those strange folk from the forest",
 							"those freaks keep breaking into my house");
 					playerTalk(p,n, "have they taken much?");
@@ -65,15 +68,17 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							"we've played a large part in ardounge pollitics for generations",
 							"maybe you could help retrieve the armour?",
 							"of course there would be a handsom cash reward for yourself");
-					int option = showMenu(p,n,
+					int option = showMenu(p,n, false, //do not send over
 							"No thanks i've got plans",
 							"yes, off course,i'd be happy to help");
 					if(option == 0) {
+						playerTalk(p, n, "no thanks i've got plans");
 						npcTalk(p,n, "no wonder i'm the one with the big house and you're on the streets");
 					} else if(option == 1) {
+						playerTalk(p, n, "yes of course, i'd be happy to help");
 						npcTalk(p, n, "that's very kind of you", 
 								"I caught a glimpse of the thieves leaving", 
-								"but due to ermm... my col... I was unable to give chase", 
+								"but due to ermm... my cold... I was unable to give chase", 
 								"they were dressed all in black", 
 								"I think they may have belonged to some sort of cult");
 						playerTalk(p, n, "do you know where they are?");
@@ -82,15 +87,17 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 								"unfortunately the next night he died in his sleep");
 						playerTalk(p, n, "that's awful");
 						npcTalk(p, n, "it's ok, a replacement arrived the next day",
-								"he's been great, cooks and excellent broth");
+								"he's been great, cooks an excellent broth");
 						playerTalk(p, n, "ok ceril, i'll see what i can do");
 						p.updateQuestStage(this, 1);
 					}
 				} else if(menu == 1) {
-					npcTalk(p,n, "who are you to judge me?",
+					playerTalk(p, n, "you probably deserve it");
+					npcTalk(p, n, "who are you to judge me?",
 							"hmmm, you look like a peasant",
 							"i'm wasting my time talking to you");
 				} else if(menu == 2) {
+					playerTalk(p, n, "you seem uptight,i'll leave you alone");
 					npcTalk(p,n, "yes, i doubt you could help");
 				}
 				break;
@@ -99,7 +106,6 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				playerTalk(p,n, "hello ceril");
 				npcTalk(p,n, "it's sir ceril to you",
 						"and shouldn't you be out recovering my suit of armour?");
-
 				break;
 			case 3:
 				npcTalk(p,n, "have you had any luck yet?");
@@ -124,37 +130,46 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				break;
 			case 4:
 				if(p.getCache().hasKey("good_side")) {
-					playerTalk(p,n, "ceril, how are you?",
-							"Look, I've found the armour");
-					npcTalk(p,n, "well done i must say i am impressed");
-					message(p, "you give ceril the family armour");
-					removeItem(p, 755, 1);
-					npcTalk(p,n, "before we send you on your way",
-							"i'll get our butler jones",
-							"to whip you up some of his special broth");
-					playerTalk(p,n, "i'd rather not",
-							"i overheard the cult members talking",
-							"the buttler is really working for them");
-					npcTalk(p,n, "that's it, come with me",
-							"we'll sort this out once and for all");
-					message(p, "you follow ceril up to butler Jones' room");
-					p.teleport(613, 1562);
-					message(p, "ceril speaks briefly with Jones");
-					Npc ceril = getNearestNpc(p, CERIL, 10);
-					npcTalk(p,ceril, "Well, he assures me that he's a loyal hard working man",
-							"I cannot fathom, why you would believe he is a spy");
-					playerTalk(p,ceril, "surely you won't take his word for it?");
-					npcTalk(p,ceril, "we have also decided that due to the humilliation you have caused",
-							"it is only fair that Jones shall recieve your reward",
-							"you shall recieve payment more suited to your low life personality");
-					message(p, "ceril gives you 5 gold coins");
-					addItem(p, 10, 5);
-					message(p, "ceril gives jones 695 gold coins");
-					npcTalk(p,ceril, "now take it and leave");
-					message(p, "butler Jones has a slight grin",
-							"You're going to need more than just your word",
-							"To prove Jones' treachary");
-					p.updateQuestStage(this, 5);
+					if(hasItem(p, 755)) {
+						playerTalk(p,n, "ceril, how are you?",
+								"Look, I've found the armour");
+						npcTalk(p,n, "well done i must say i am impressed");
+						message(p, "you give ceril the family armour");
+						removeItem(p, 755, 1);
+						npcTalk(p,n, "before we send you on your way",
+								"i'll get our butler jones",
+								"to whip you up some of his special broth");
+						playerTalk(p,n, "i'd rather not",
+								"i overheard the cult members talking",
+								"the buttler is really working for them");
+						npcTalk(p,n, "that's it, come with me",
+								"we'll sort this out once and for all");
+						message(p, "you follow ceril up to butler Jones' room");
+						p.teleport(613, 1562);
+						message(p, "ceril speaks briefly with Jones");
+						Npc ceril = getNearestNpc(p, CERIL, 10);
+						npcTalk(p,ceril, "Well, he assures me that he's a loyal hard working man",
+								"I cannot fathom, why you would believe he is a spy");
+						playerTalk(p,ceril, "surely you won't take his word for it?");
+						npcTalk(p,ceril, "we have also decided that due to the humilliation you have caused",
+								"it is only fair that Jones shall recieve your reward",
+								"you shall recieve payment more suited to your low life personality");
+						message(p, "ceril gives you 5 gold coins");
+						addItem(p, 10, 5);
+						message(p, "ceril gives jones 695 gold coins");
+						npcTalk(p,ceril, "now take it and leave");
+						message(p, "butler Jones has a slight grin",
+								"You're going to need more than just your word",
+								"To prove Jones' treachary");
+						p.updateQuestStage(this, 5);
+					}
+					else {
+						playerTalk(p,n, "ceril, how are you?");
+						npcTalk(p,n, "Im ok. Have you found the armour");
+						playerTalk(p,n, "i'm afraid not");
+						npcTalk(p,n, "well i'm not paying you to see the sights");
+						playerTalk(p,n, "okay, i'll go and try and retrieve it for you");
+					}
 					return;
 				} else if(p.getCache().hasKey("evil_side")) {
 					playerTalk(p,n, "hello again");
@@ -228,20 +243,22 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				playerTalk(p,n, "that's a shame");
 				npcTalk(p,n, "yes well these things are bound to happen",
 						"when you're as wealthy as the Varnilleans");
-				int butMenu = showMenu(p,n,
+				int butMenu = showMenu(p,n, false, //do not send over
 						"Have you any more info on the carnilleans?",
 						"How long have you worked here?",
 						"Ok then take care");
 				if(butMenu == 0) {
+					playerTalk(p, n, "Have you any more info on the carnilleans?");
 					npcTalk(p,n, "there's a lot i could tell you",
 							"about the carnillean family history",
 							"i'm afraid if did speak about such matter's",
 							"i would lose my job and that i cannot risk");
 				} else if(butMenu == 1) {
+					playerTalk(p, n, "how long have you worked here?");
 					npcTalk(p,n, "long enough to know the carnilleans",
 							"are not as innocent or noble as they seem");
-
 				} else if(butMenu == 2) {
+					playerTalk(p, n, "ok then take care");
 					npcTalk(p,n, "you to");
 				}
 				break;
@@ -310,7 +327,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				break;
 			case 6:
 				playerTalk(p,n, "hello jones");
-				npcTalk(p,n, "have you managed to find the script");
+				npcTalk(p,n, "have you managed to find the script?");
 				if(hasItem(p, 747)) {
 					playerTalk(p,n, "I have it here");
 					npcTalk(p,n, "incredible, we owe you a lot",
@@ -339,7 +356,6 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							"I hope things are well");
 					playerTalk(p,n, "not bad, yourself");
 					npcTalk(p,n, "i'm good thanks");
-
 				}
 				break;
 			}
@@ -368,7 +384,6 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					playerTalk(p,n, "I'm afraid not");
 					npcTalk(p,n, "you really are useless");
 					playerTalk(p,n, "thanks a lot");
-
 				}
 				break;
 			case 4:
@@ -412,7 +427,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 			case -1:
 				if(p.getCache().hasKey("good_side")) {
 					playerTalk(p,n, "hello");
-					npcTalk(p,n, "hello again adventurer",
+					npcTalk(p,n, "hello again adventurer\"",
 							"things really have picked up around here",
 							"since you dealt with those nasty cult members",
 							"good to hear");
@@ -421,6 +436,109 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					npcTalk(p,n, "i've been instructed by my husband not to talk to you",
 							"so go away and leave me alone");
 					playerTalk(p,n, "charming");
+				}
+				break;
+			}
+		}
+		if(n.getID() == PHILIPE) {
+			switch(p.getQuestStage(this)) {
+			case 0:
+			case 1:
+			case 2:
+				playerTalk(p, n, "hello there");
+				npcTalk(p, n, "what have you brought me?",
+						"I want some more toys");
+				playerTalk(p, n, "I'm afraid i don't have any");
+				npcTalk(p, n, "toys, i want toys");
+				break;
+			case 3:
+				if(p.getCache().hasKey("good_side")) {
+					playerTalk(p, n, "hello");
+					npcTalk(p, n, "i want more toys");
+					playerTalk(p, n, "sorry i don't have any");
+					npcTalk(p, n, "i want sweets, gimme sweets");
+					playerTalk(p, n, "no sorrry i don't have sweets either");
+					npcTalk(p, n, "i hate you, i want my mum");
+					return;
+				} else if(p.getCache().hasKey("evil_side")) {
+					playerTalk(p, n, "hello");
+					npcTalk(p, n, "i want more toys");
+					playerTalk(p, n, "sorry i don't have any");
+					npcTalk(p, n, "i want sweets, gimme sweets");
+					playerTalk(p, n, "no sorrry i don't have sweets either");
+					npcTalk(p, n, "i hate you, i want my mum");
+					return;
+				}
+				break;
+			case 4:
+				if(p.getCache().hasKey("good_side")) {
+					playerTalk(p, n, "hello");
+					npcTalk(p, n, "mommy said your here to",
+							"kill all the nasty men",
+							"that come into our house");
+					playerTalk(p, n, "something like that");
+					npcTalk(p, n, "can i watch?");
+					playerTalk(p, n, "no");
+					return;
+				} else if(p.getCache().hasKey("evil_side")) {
+					playerTalk(p, n, "hello youngster");
+					message(p, "the boy looks very upset");
+					npcTalk(p, n, "someone killed scruffy",
+							"i liked scruffy",
+							"he never told me off");
+					playerTalk(p, n, "that's unfortunate");
+					npcTalk(p, n, "i want my mommy");
+					return;
+				}
+				break;
+			case 5:
+				if(p.getCache().hasKey("good_side")) {
+					playerTalk(p, n, "hello youngster");
+					npcTalk(p, n, "daddy say's you dont like Jones",
+							"Jones is nice",
+							"he brings me toys and sweets");
+					playerTalk(p, n, "jones is a bad person philipe");
+					npcTalk(p, n, "you're a bad person",
+							"i don't like you");
+					playerTalk(p, n, "ok");
+					return;
+				} else if(p.getCache().hasKey("evil_side")) {
+					playerTalk(p, n, "hello");
+					npcTalk(p, n, "mommy said your here to",
+							"kill all the nasty men",
+							"that come into our house");
+					playerTalk(p, n, "something like that");
+					npcTalk(p, n, "can i watch?");
+					playerTalk(p, n, "no");
+					return;
+				}
+				break;
+			case 6:
+				playerTalk(p, n, "hello youngster");
+				npcTalk(p, n, "why are you still here?");
+				playerTalk(p, n, "just looking around");
+				npcTalk(p, n, "have you got me some toys?");
+				playerTalk(p, n, "no");
+				npcTalk(p, n, "then i don't like you");
+				playerTalk(p, n, "that's a shame");
+				break;
+			case -1:
+				if(p.getCache().hasKey("good_side")) {
+					playerTalk(p, n, "hello philipe");
+					npcTalk(p, n, "i want more toys");
+					playerTalk(p, n, "sorry i don't have any");
+					npcTalk(p, n, "i want sweets, gimme sweets");
+					playerTalk(p, n, "no sorrry",
+							"I don't have any sweets either");
+					npcTalk(p, n, "i hate you,i want my mum");
+				} else if(p.getCache().hasKey("evil_side")) {
+					playerTalk(p, n, "hello philipe");
+					npcTalk(p, n, "i want more toys");
+					playerTalk(p, n, "sorry i don't have any");
+					npcTalk(p, n, "i want sweets, gimme sweets");
+					playerTalk(p, n, "no sorrry",
+							"I don't have any sweets either");
+					npcTalk(p, n, "i hate you,i want my mum");
 				}
 				break;
 			}
@@ -592,10 +710,11 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				npcTalk(p,n, "there's a lot more than meets the eye to the carnilleans",
 						"and none of it's decent");
 				p.updateQuestStage(this, 2);
-				int menu = showMenu(p,n,
+				int menu = showMenu(p,n, false, //do not send over
 						"What do you mean?",
 						"I've heard enough of your rubbish");
 				if(menu == 0) {
+					playerTalk(p, n, "what do you mean?");
 					npcTalk(p, n, "the carnillean family house does not belong to them",
 							"it's original owner was lord hazeel",
 							"hazeel was one of the mahjarrat followers of zamorak",
@@ -609,16 +728,16 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					npcTalk(p, n, "well now i'm asking you to do a job",
 							"hazeel is going to return my friend",
 							"those who aid his journey will gain rewards",
-							"help us avenge hezeel's spirit so he may return");
-					int chooseSideMenu = showMenu(p,n,
+							"help us avenge hazeel's spirit so he may return");
+					int chooseSideMenu = showMenu(p,n, false, //do not send over
 							"You're crazy, i'd never help you",
 							"So what would i have to do?");
 					if(chooseSideMenu == 0) {
 						//GOOD SIDE;
+						playerTalk(p, n, "You're crazy, i'd never help you");
 						npcTalk(p,n, "then you're a fool",
 								"go back to your adventures traveller");
-						message(p, "the man jumps onto a small raft",
-								"and pushes off down the sewer system");
+						message(p, "clivet boards the raft and pushes of down the sewer system");
 						n.remove();
 						message(p, "you hear him call out",
 								"@yel@clivet:you'll never find us...");
@@ -627,18 +746,19 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 						p.getCache().store("good_side", true);
 					} else if(chooseSideMenu == 1) {
 						//EVIL SIDE;
+						playerTalk(p, n, "so what would i have to do?");
 						npcTalk(p,n, "first you must prove your loyalty to the cause",
 								"you must kill one of the carnillean family members",
 								"then we will know who's side you're really on",
 								"so will you do it?");
-						int whichSideMenu = showMenu(p,n,
+						int whichSideMenu = showMenu(p,n, false, //do not send over
 								"No i won't do it",
 								"Ok i'll do it");
 						if(whichSideMenu == 0) {
+							playerTalk(p, n, "no i won't do it");
 							npcTalk(p,n, "then you're a fool",
 									"go back to your adventures traveller");
-							message(p, "the man jumps onto a small raft",
-									"and pushes off down the sewer system");
+							message(p, "clivet boards the raft and pushes of down the sewer system");
 							n.remove();
 							message(p, "you hear him call out",
 									"@yel@clivet:you'll never find us...");
@@ -646,6 +766,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							p.updateQuestStage(this, 3);
 							p.getCache().store("good_side", true);
 						} else if(whichSideMenu == 1) {
+							playerTalk(p, n, "ok, i'll do it");
 							npcTalk(p,n, "good, few see through the carnillean lies",
 									"but i guessed you were of stronger character",
 									"here take this poison, pour it into one of their meals",
@@ -656,15 +777,18 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 						}
 					}
 				} else if(menu == 1) {
+					playerTalk(p, n, "I've heard enough of your rubbish");
 					npcTalk(p,n, "then leave, fool");
 				}
 				break;
 			case 2:
 				playerTalk(p,n, "hello");
-				npcTalk(p,n, "so you've returned",
+				npcTalk(p,n, "so you've returned\"",
 						"now do you want to know the truth about the carnilleans?");
-				int menu2 = showMenu(p, n, "What do you mean?", "I've heard enough of your rubbish");
+				int menu2 = showMenu(p, n, false, //do not send over
+						"What do you mean?", "I've heard enough of your rubbish");
 				if(menu2 == 0) {
+					playerTalk(p, n, "what do you mean?");
 					npcTalk(p, n, "the carnillean family house does not belong to them",
 							"it's original owner was lord hazeel",
 							"hazeel was one of the mahjarrat followers of zamorak",
@@ -678,12 +802,13 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					npcTalk(p, n, "well now i'm asking you to do a job",
 							"hazeel is going to return my friend",
 							"those who aid his journey will gain rewards",
-							"help us avenge hezeel's spirit so he may return");
-					int chooseSideMenu = showMenu(p,n,
+							"help us avenge hazeel's spirit so he may return");
+					int chooseSideMenu = showMenu(p,n, false, //do not send over
 							"You're crazy, i'd never help you",
 							"So what would i have to do?");
 					if(chooseSideMenu == 0) {
 						//GOOD SIDE;
+						playerTalk(p, n, "You're crazy, i'd never help you");
 						npcTalk(p,n, "then you're a fool",
 								"go back to your adventures traveller");
 						message(p, "the man jumps onto a small raft",
@@ -696,18 +821,19 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 						p.getCache().store("good_side", true);
 					} else if(chooseSideMenu == 1) {
 						//EVIL SIDE;
+						playerTalk(p, n, "so what would i have to do?");
 						npcTalk(p,n, "first you must prove your loyalty to the cause",
 								"you must kill one of the carnillean family members",
 								"then we will know who's side you're really on",
 								"so will you do it?");
-						int whichSideMenu = showMenu(p,n,
+						int whichSideMenu = showMenu(p,n, false, //do not send over
 								"No i won't do it",
 								"Ok i'll do it");
 						if(whichSideMenu == 0) {
+							playerTalk(p, n, "no i won't do it");
 							npcTalk(p,n, "then you're a fool",
 									"go back to your adventures traveller");
-							message(p, "the man jumps onto a small raft",
-									"and pushes off down the sewer system");
+							message(p, "clivet boards the raft and pushes of down the sewer system");
 							n.remove();
 							message(p, "you hear him call out",
 									"@yel@clivet:you'll never find us...");
@@ -715,6 +841,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							p.updateQuestStage(this, 3);
 							p.getCache().store("good_side", true);
 						} else if(whichSideMenu == 1) {
+							playerTalk(p, n, "ok, i'll do it");
 							npcTalk(p,n, "good, few see through the carnillean lies",
 									"but i guessed you were of stronger character",
 									"here take this poison, pour it into one of their meals",
@@ -725,6 +852,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 						}
 					}
 				} else if(menu2 == 1) {
+					playerTalk(p, n, "I've heard enough of your rubbish");
 					npcTalk(p,n, "then leave, fool");
 				}
 				break;
@@ -752,20 +880,20 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					return;
 				} else if(p.getCache().hasKey("evil_side")) {
 					if(!hasItem(p, 753)) {
-						playerTalk(p, n, "Hello",
+						playerTalk(p, n, "hello",
 								"I poured the poison into the carnillean's meal as requested");
-						npcTalk(p, n, "Yes we have people on the inside who informed me of your deed",
-								"Hazeel will reward you for your loyalty");
-						playerTalk(p, n, "Ok, so what's next?");
-						npcTalk(p, n, "First you must wear the sign of hazeel");
+						npcTalk(p, n, "yes we have people on the inside who informed me of your deed",
+								"hazeel will reward you for your loyalty");
+						playerTalk(p, n, "ok, so what's next?");
+						npcTalk(p, n, "first you must wear the sign of hazeel");
 						message(p, "clivet hands you a small metal amulet");
 						addItem(p, 753, 1);
-						npcTalk(p, n, "The amulet is proof to other cult members that you're one of us",
-								"It is also the key to finding the cult hideout");
-						playerTalk(p, n, "In what way?");
-						npcTalk(p, n, "The flow of the sewer's are controlled by 5 sewer valves above",
-								"Turn them correctly and the sewer will carry you to the hideout",
-								"The sign of hazeel is your guide - you must begin at the tail",
+						npcTalk(p, n, "the amulet is proof to other cult members that you're one of us",
+								"it is also the key to finding the cult hideout");
+						playerTalk(p, n, "in what way?");
+						npcTalk(p, n, "the flow of the sewer's are controlled by 5 sewer valves above",
+								"turn them correctly and the sewer will carry you to the hideout",
+								"the sign of hazeel is your guide - you must begin at the tail",
 								"The cult leader alomone shall be expecting you");
 					} else {
 						playerTalk(p,n, "hello");
@@ -901,28 +1029,29 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 		if(n.getID() == ALOMONE) {
 			switch(p.getQuestStage(this)) {
 			case 0:
+			case 1:
+			case 2:
 				playerTalk(p,n, "hello");
 				npcTalk(p,n, "what, an intruder",
 						"kill him");
 				Npc cults = getNearestNpc(p, CULT_MEMBER, 20);
 				cults.setChasing(p);
 				break;
-			case 1:
-			case 2:
 			case 3:
-				if(p.getCache().hasKey("evil_side")) {
+				if(p.getCache().hasKey("good_side")) {
+					npcTalk(p,n, "How did get you get in here?");
+					playerTalk(p,n, "I've come for the carnillean family armour");
+					npcTalk(p,n, "I thought I told the butler to get rid of you",
+							"he must be going soft");
+					playerTalk(p,n, "so the butler is working for you too?",
+							"Why's it always the Butler? I should have guessed");
+					sleep(1900);
+					n.setChasing(p);
+				} else if(p.getCache().hasKey("evil_side")) {
 					playerTalk(p,n, "hello");
 					npcTalk(p,n, "Can't you see I'm busy?");
 					return;
-				} 
-				npcTalk(p,n, "How did get you get in here?");
-				playerTalk(p,n, "I've come for the carnillean family armour");
-				npcTalk(p,n, "I thought I told the butler to get rid of you",
-						"he must be going soft");
-				playerTalk(p,n, "so the butler is working for you too?",
-						"Why's it always the Butler? I should have guessed");
-				sleep(1900);
-				n.setChasing(p);
+				}
 				break;
 			case 4:
 				if(p.getCache().hasKey("good_side")) {
@@ -957,7 +1086,6 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					playerTalk(p,n, "hello alomone");
 					npcTalk(p,n, "hazeel has waited long enough traveller",
 							"the sooner you find the hazeel script the better");
-
 					return;
 				}
 				break;
@@ -1060,19 +1188,15 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 	public void handleReward(Player p) {
 		if(p.getCache().hasKey("good_side")) {
 			p.message("Well done you have completed the Hazeel cult quest");
-			//THIEVING LEVEL
-			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
+			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
 			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			p.message("ceril gives you 2000 gold coins");
 			addItem(p, 10, 2000);
 		} else if(p.getCache().hasKey("evil_side")) {
 			p.message("Hazeel gives you some coins");
 			addItem(p, 10, 2000);
-			// THIEVING LEVEL
-			p.incQuestExp(17, p.getSkills().getMaxStat(17) * 200 + 2000);
+			incQuestReward(p, Quests.questData.get(Quests.THE_HAZEEL_CULT), true);
 			p.message("@gre@You haved gained 1 quest point!");
-			p.incQuestPoints(1);
 			p.message("you have completed the hazeel cult quest");
 		}
 	}
@@ -1139,7 +1263,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				Npc butler = getNearestNpc(player, BUTLER, 10);
 				npcTalk(player,butler, "mr carnillean, it's for the rats",
 						"i'm just a loyal servent");
-				npcTalk(player,ceril, " i've seen this amulet before",
+				npcTalk(player,ceril, "i've seen this amulet before",
 						"the thieves that broke in",
 						"one of them  was wearing exactly the same amulet",
 						"jones i don't believe it",

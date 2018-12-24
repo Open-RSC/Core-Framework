@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -32,8 +33,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("You have completed the demonslayer quest");
+		incQuestReward(p, Quests.questData.get(Quests.DEMON_SLAYER), true);
 		p.message("@gre@You haved gained 3 quest points!");
-		p.incQuestPoints(3);
 	}
 
 	@Override
@@ -44,10 +45,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 			Player player) {
-		if (obj.getID() == 77) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 77;
 	}
 
 	@Override
@@ -88,19 +86,13 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		if (n.getID() == 17) {
 			return true;
 		}
-		if (n.getID() == 18) {
-			return true;
-		}
-		return false;
+		return n.getID() == 18;
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 			Player player) {
-		if (obj.getID() == 77) {
-			return true;
-		}
-		return false;
+		return obj.getID() == 77;
 	}
 
 	@Override
@@ -184,8 +176,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		switch (cID) {
 		case CaptainRovin.PALACE:
 			npcTalk(p, n, "No, you're not. I know all the palace guard");
-			int choice2 = showMenu(p, n, new String[] { "I'm a new recruit",
-			"I've had extensive plastic surgery" });
+			int choice2 = showMenu(p, n, "I'm a new recruit",
+				"I've had extensive plastic surgery");
 			if (choice2 == 0) {
 				captainRovinDialogue(p, n, CaptainRovin.RECRUIT);
 			} else if (choice2 == 1) {
@@ -209,10 +201,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			break;
 		case CaptainRovin.IMPORTANT:
 			npcTalk(p, n, "Ok, I'm listening", "Tell me what's so important");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 					"There's a demon who wants to invade this city",
 					"Erm I forgot",
-			"The castle has just received it's ale delivery" });
+			"The castle has just received it's ale delivery");
 			if (choice == 0) {
 				captainRovinDialogue(p, n, CaptainRovin.DEMON_INVASION);
 			} else if (choice == 1) {
@@ -264,19 +256,19 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			case 0:
 			case 1:
 				npcTalk(p, n, "Ello young thingummywut");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"Whats a thingummywut?",
-				"Teach me to be a mighty and powerful wizard" });
+				"Teach me to be a mighty and powerful wizard");
 				if (choice == 0) {
 					traibornTheWizDialogue(p, n, Traiborn.THINGWUT);
-					int choice2 = showMenu(p, n, new String[] {
+					int choice2 = showMenu(p, n,
 							"Err you just called me thingummywut",
-					"Tell me what they look like and I'll mash 'em" });
+					"Tell me what they look like and I'll mash 'em");
 					if (choice2 == 0) {
 						traibornTheWizDialogue(p, n, Traiborn.CALLEDME);
-						int choice3 = showMenu(p, n, new String[] {
+						int choice3 = showMenu(p, n,
 								"Err I'd better be off really",
-						"They're right, you are mad" });
+						"They're right, you are mad");
 						if (choice3 == 0) {
 							traibornTheWizDialogue(p, n, Traiborn.BEOFF);
 						} else if (choice3 == 1) {
@@ -294,9 +286,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				//key obtained, present in inventory
 				if(p.getInventory().hasItemId(25)) {
 					npcTalk(p, n, "Ello young thingummywut");
-					int choice3 = showMenu(p, n, new String[] {
+					int choice3 = showMenu(p, n,
 							"Whats a thingummywut?",
-							"Teach me to be a mighty and powerful wizard" });
+							"Teach me to be a mighty and powerful wizard");
 					if (choice3 == 0) {
 						traibornTheWizDialogue(p, n, Traiborn.THINGWUT);
 					} else if (choice3 == 1) {
@@ -365,14 +357,14 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				npcTalk(p, n, "Ello young thingummywut");
 				int choice4;
 				if (!p.getInventory().hasItemId(25)) {
-					choice4 = showMenu(p, n, new String[] {
+					choice4 = showMenu(p, n,
 							"Whats a thingummywut?",
 							"Teach me to be a mighty and powerful wizard",
-							"I need to get a key given to you by Sir Prysin" });
+							"I need to get a key given to you by Sir Prysin");
 				} else {
-					choice4 = showMenu(p, n, new String[] {
+					choice4 = showMenu(p, n,
 							"Whats a thingummywut?",
-							"Teach me to be a mighty and powerful wizard" });
+							"Teach me to be a mighty and powerful wizard");
 				}
 				if (choice4 == 0) {
 					traibornTheWizDialogue(p, n, Traiborn.THINGWUT);
@@ -381,10 +373,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				} else if (choice4 == 2) {
 					npcTalk(p, n, "Sir Prysin?  Who's that?",
 							"What would I want his key for?");
-					int choice5 = showMenu(p, n, new String[] {
+					int choice5 = showMenu(p, n,
 							"He told me you were looking after it for him",
 							"He's one of the king's knights",
-							"Well, have you got any keys knocking around?" });
+							"Well, have you got any keys knocking around?");
 					if (choice5 == 0) {
 						npcTalk(p,
 								n,
@@ -392,15 +384,15 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 								"I'd lose my head if it wasn't screwed on properly",
 								"Go tell him to find someone else",
 								"to look after his valuables in future");
-						int choice6 = showMenu(p, n, new String[] {
+						int choice6 = showMenu(p, n,
 								"Ok, I'll go and tell him that",
-								"Well, have you got any keys knocking around?" });
+								"Well, have you got any keys knocking around?");
 						if (choice6 == 0) {
 							npcTalk(p, n, "Oh that's great",
 									"If it wouldn't be too much trouble");
-							int choice7 = showMenu(p, n, new String[] {
+							int choice7 = showMenu(p, n,
 											"Err I'd better be off really",
-									"Well, have you got any keys knocking around?" });
+									"Well, have you got any keys knocking around?");
 							if (choice7 == 0) {
 								traibornTheWizDialogue(p, n, Traiborn.BEOFF);
 							} else if (choice7 == 1) {
@@ -414,18 +406,18 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 								"He had nice shoes",
 								"and didn't like my homemade spinach rolls",
 								"Would you like a spinach roll?");
-						int choice8 = showMenu(p, n, new String[] {
+						int choice8 = showMenu(p, n,
 								"Yes Please",
-						"Just tell me if you have the key" });
+						"Just tell me if you have the key");
 						if (choice8 == 0) {
 							message(p,
 									"Traiborn digs around in the pockets of his robes",
 									"Traiborn hands you a spinach roll");
 							addItem(p, 179, 1);
 							playerTalk(p, n, "Thank you very much");
-							int choice9 = showMenu(p, n, new String[] {
+							int choice9 = showMenu(p, n,
 											"Err I'd better be off really",
-									"Well, have you got any keys knocking around?" });
+									"Well, have you got any keys knocking around?");
 							if (choice9 == 0) {
 								traibornTheWizDialogue(p, n, Traiborn.BEOFF);
 							} else if (choice9 == 1) {
@@ -448,9 +440,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"You don't want any truck with that sort",
 					"They're not to be trusted",
 					"That's what I've heard anyways");
-			int choice4 = showMenu(p, n, false, new String[] {
+			int choice4 = showMenu(p, n, false,
 					"So aren't you a wizard?",
-			"Oh I'd better stop talking to you then" }); // Don't send to client
+			"Oh I'd better stop talking to you then"); // Don't send to client
 			if (choice4 == 0) {
 				playerTalk(p, n, "So aren't you a wizard");
 				npcTalk(p, n, "How dare you?", "Of course I'm a wizard",
@@ -502,9 +494,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Hmm",
 					"Main problem with that is I'll need 25 sets of bones",
 					"Now where am I going to get hold of something like that");
-			int choices = showMenu(p, n, new String[] {
+			int choices = showMenu(p, n,
 					"Hmm, that's too bad. I really need that key",
-					"I'll get the bones for you" });
+					"I'll get the bones for you");
 			if (choices == 0) {
 				npcTalk(p, n, "Ah well sorry I couldn't be any more help");
 			} else if (choices == 1) {
@@ -577,18 +569,18 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						playerTalk(p, n,
 								"I've got the key You dropped down the drain");
 					}
-					choice = showMenu(p, n, false, new String[] {
+					choice = showMenu(p, n, false,
 							"Can you remind me where all the keys were again?",
-					"I'm still looking" });
+					"I'm still looking");
 					if (choice == 0) {
 						playerTalk(p, n, "Can you remind me where all the keys were again");
 						npcTalk(p, n, "I kept one of the keys", "I gave the other two", 
 								"To other people for safe keeping", "One I gave to Rovin", 
 								"who is captain of the palace guard", "I gave the other to the wizard Traiborn");
-						choice = showMenu(p, n, new String[] {
+						choice = showMenu(p, n,
 								"Can you give me your key?",
 								"Where can I find Captain Rovin?",
-						"Where does the wizard live?" });
+						"Where does the wizard live?");
 						if (choice == 0) {
 							sirPrysinDialogue(p, n, SirPrysin.YOUR_KEY);
 						} else if (choice == 1) {
@@ -633,8 +625,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			npcTalk(p, n, "Gypsy Aris?  Is she still alive?",
 					"I remember her from when I was pretty young",
 					"Well what do you need to talk to me about?");
-			int choice = showMenu(p, n, new String[] {
-					"I need to find Silverlight", "Yes, she is still alive" });
+			int choice = showMenu(p, n,
+					"I need to find Silverlight",
+					"Yes, she is still alive");
 			if (choice == 0) {}
 			else if (choice == 1) {
 				npcTalk(p, n,
@@ -650,9 +643,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			npcTalk(p, n, "What do you need to find that for?");
 			playerTalk(p, n, "I need it to fight Delrith");
 			npcTalk(p, n, "Delrith?", "I thought the world was rid of him");
-			choice = showMenu(p, n, new String[] {
+			choice = showMenu(p, n,
 					"Well, the gypsy's crystal ball seems to think otherwise",
-					"He's back and unfortunatly I've got to deal with him" });
+					"He's back and unfortunatly I've got to deal with him");
 			if (choice == 0) {
 				npcTalk(p, n, "Well if the ball says so, I'd better help you");
 			}
@@ -667,8 +660,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"That I have put it in a special box",
 					"Which needs three different keys to open it",
 					"That way, it won't fall into the wrong hands");
-			choice = showMenu(p, n, new String[] { "So give me the keys",
-					"And why is this a problem?" });
+			choice = showMenu(p, n, "So give me the keys",
+					"And why is this a problem?");
 			if (choice == 0) {
 				npcTalk(p, n, "Um", "Well, It's not so easy");
 			}
@@ -683,10 +676,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"who is captain of the palace guard",
 					"I gave the other to the wizard Traiborn");
 			p.updateQuestStage(this, 2);
-			int problemMenu = showMenu(p, n, new String[] {
+			int problemMenu = showMenu(p, n,
 					"Can you give me your key?",
 					"Where can I find Captain Rovin?",
-			"Where does the wizard live?" });
+			"Where does the wizard live?");
 			if (problemMenu == 0) {
 				sirPrysinDialogue(p, n, SirPrysin.YOUR_KEY);
 			} else if (problemMenu == 1) {
@@ -700,10 +693,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"I managed to drop the key in the drain",
 					"Just outside the palace kitchen",
 					"It is just inside and I can't reach it");
-			int yourKey = showMenu(p, n, new String[] {
+			int yourKey = showMenu(p, n,
 					"So what does the drain connect to?",
 					"Where can I find Captain Rovin?",
-			"Where does the wizard live?" });
+			"Where does the wizard live?");
 			if (yourKey == 0) {
 				sirPrysinDialogue(p, n, SirPrysin.DRAIN);
 			} else if (yourKey == 1) {
@@ -716,10 +709,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			npcTalk(p, n, "It is the drain",
 					"For the drainpipe running from the sink in the kitchen",
 					"Down to the palace sewers");
-			int drainMenu = showMenu(p, n, new String[] {
+			int drainMenu = showMenu(p, n,
 					"Where can I find Captain Rovin?",
 					"Where does the wizard live?",
-			"Well I'd better go key hunting" });
+			"Well I'd better go key hunting");
 			if (drainMenu == 0) {
 				sirPrysinDialogue(p, n, SirPrysin.ROVIN);
 			} else if (drainMenu == 1) {
@@ -735,9 +728,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			npcTalk(p, n,
 					"Captain Rovin lives at the top of the guards quarters",
 					"in the northwest wing of this palace");
-			int rovinMenu = showMenu(p, n, new String[] {
+			int rovinMenu = showMenu(p, n,
 					"Can you give me your key", "Where does the wizard live?",
-			"Well I'd better go key hunting" });
+			"Well I'd better go key hunting");
 			if (rovinMenu == 0) {
 				sirPrysinDialogue(p, n, SirPrysin.YOUR_KEY);
 			} else if (rovinMenu == 1) {
@@ -751,10 +744,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"He is one of the wizards who lives in the tower",
 					"On the little island just off the south coast",
 					"I believe his quarters are on the first floor of the tower");
-			int wizardMenu = showMenu(p, n, new String[] {
+			int wizardMenu = showMenu(p, n,
 					"Can you give me your key?",
 					"Where can I find Captain Rovin?",
-			"Well I'd better go key hunting" });
+			"Well I'd better go key hunting");
 			if (wizardMenu == 0) {
 				sirPrysinDialogue(p, n, SirPrysin.YOUR_KEY);
 			} else if (wizardMenu == 1) {
@@ -766,7 +759,7 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 		}
 	}
 
-	public void gypsyDialogue(Player p, Npc n, int conversationID) {
+	private void gypsyDialogue(Player p, Npc n, int conversationID) {
 		if (conversationID == -1) {
 			switch (p.getQuestStage(this)) {
 			case 0:
@@ -777,11 +770,11 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				playerTalk(p, n, "I'm still working on it");
 				npcTalk(p, n,
 						"Well if you need any advice I'm always here young one");
-				int choice = showMenu(p, n, new String[] {
+				int choice = showMenu(p, n,
 						"What is the magical incantation?",
 						"Where can I find Silverlight?",
 						"Well I'd better press on with it",
-				"Stop calling me that" });
+				"Stop calling me that");
 				if (choice == 0) {
 					gypsyDialogue(p, n, GypsyConversation.INCANTATION);
 				} else if (choice == 1) {
@@ -790,9 +783,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					npcTalk(p, n, "See you anon");
 				} else if (choice == 4) {
 					npcTalk(p, n, "In the scheme of things you are very young");
-					int choice2 = showMenu(p, n, new String[] {
+					int choice2 = showMenu(p, n,
 							"Ok but how old are you",
-					"Oh if its in the scheme of things that's ok" });
+					"Oh if its in the scheme of things that's ok");
 					if (choice2 == 0) {
 						gypsyDialogue(p, n, GypsyConversation.HOW_OLD_TWO);
 					} else if (choice2 == 1) {
@@ -818,17 +811,17 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			case -1:
 				npcTalk(p, n, "Greetings young one", "You're a hero now",
 						"That was a good bit of demonslaying");
-				int choice3 = showMenu(p, n, new String[] {
+				int choice3 = showMenu(p, n,
 						"How do you know I killed it?", "Thanks",
-				"Stop calling me that" });
+				"Stop calling me that");
 				if (choice3 == 0) {
 					npcTalk(p, n, "You forget",
 							"I'm good at knowing these things");
 				} else if (choice3 == 2) {
 					npcTalk(p, n, "In the scheme of things you are very young");
-					int choice2 = showMenu(p, n, new String[] {
+					int choice2 = showMenu(p, n,
 							"Ok but how old are you",
-					"Oh if its in the scheme of things that's ok" });
+					"Oh if its in the scheme of things that's ok");
 					if (choice2 == 0) {
 						gypsyDialogue(p, n, GypsyConversation.HOW_OLD);
 					} else if (choice2 == 1) {
@@ -851,9 +844,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 				npcTalk(p, n, "You have been on this world",
 						"A relatively short time", "At least compared to me",
 						"So do you want your fortune told or not?");
-				int choice = showMenu(p, n, new String[] { "Yes please",
+				int choice = showMenu(p, n, "Yes please",
 						"No, I don't believe in that stuff",
-				"Ooh how old are you then?" });
+				"Ooh how old are you then?");
 				if (choice == 0) {
 					gypsyDialogue(p, n, GypsyConversation.QUEST_START);
 				} else if (choice == 1) {
@@ -867,10 +860,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			break;
 		case GypsyConversation.HOW_OLD:
 			npcTalk(p, n, "Older than you imagine");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 				"Believe me, I have a good imagination",
 				"How do you know how old I think you are?",
-				"Oh pretty old then"});
+				"Oh pretty old then");
 			if (choice == 0) {
 				// Believe me, I have a good imagination
 				npcTalk(p, n, "You seem like just the sort of person",
@@ -936,8 +929,8 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Are you alright?", "Aaargh?");
 			if (aargh > -1) {
 				npcTalk(p, n, "Aaargh its Delrith", "Delrith is coming");
-				choice = showMenu(p, n, new String[] { "Who's Delrith?",
-				"Get a grip!" });
+				choice = showMenu(p, n, "Who's Delrith?",
+				"Get a grip!");
 				if (choice == 0) {
 					gypsyDialogue(p, n, GypsyConversation.WHO_IS_DELRITH);
 				}
@@ -966,10 +959,10 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Ye Gods",
 					"Silverlight was the sword you were holding in the ball vision",
 					"You are the one destined to try and stop the demon this time");
-			choice = showMenu(p, n, new String[] {
+			choice = showMenu(p, n,
 					"How am I meant to fight a demon who can destroy cities?",
 					"Ok where is he? I'll kill him for you",
-					"Wally doesn't sound like a very heroic name" });
+					"Wally doesn't sound like a very heroic name");
 			if (choice == 0) {
 				npcTalk(p, n, "I admit it won't be easy");
 				gypsyDialogue(p, n, GypsyConversation.DEFEATING_DELRITH);
@@ -1004,9 +997,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 					"Have you got that?");
 			playerTalk(p, n, "I think so, yes");
-			choice = showMenu(p, n, new String[] {
+			choice = showMenu(p, n,
 					"Ok thanks. I'll do my best to stop the Demon",
-			"Where can I find Silverlight?" });
+			"Where can I find Silverlight?");
 			if (choice == 0) {
 				gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 			} else if (choice == 1) {
@@ -1015,9 +1008,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 			break;
 
 		case GypsyConversation.INCANTATION_SILVERLIGHT_MENU:
-			choice = showMenu(p, n, new String[] {
+			choice = showMenu(p, n,
 					"What is the magical incantation?",
-			"Where can I find Silverlight?" });
+			"Where can I find Silverlight?");
 			if (choice == 0) {
 				npcTalk(p, n, "Oh yes let me think a second");
 				message(p, "The gypsy is thinking");
@@ -1026,9 +1019,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 						"Have you got that?");
 				playerTalk(p, n, "I think so, yes");
-				choice = showMenu(p, n, new String[] {
+				choice = showMenu(p, n,
 						"Ok thanks. I'll do my best to stop the Demon",
-				"Where can I find Silverlight?" });
+				"Where can I find Silverlight?");
 				if (choice == 0) {
 					gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 				} else if (choice == 1) {
@@ -1043,9 +1036,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 						"called Sir Prysin",
 						"He shouldn't be to hard to find he lives in the royal palace in this city",
 						"Tell him Gypsy Aris sent you");
-				choice = showMenu(p, n, new String[] {
+				choice = showMenu(p, n,
 						"Ok thanks. I'll do my best to stop the Demon",
-				"What is the magical incantation?" });
+				"What is the magical incantation?");
 				if (choice == 0) {
 					gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 				} else if (choice == 1) {
@@ -1062,9 +1055,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"Who knows how much pain and suffering",
 					"Delrith would have brought forth without Wally to stop him",
 					"It looks like you are going to need to perform similar heroics");
-			choice = showMenu(p, n, new String[] {
+			choice = showMenu(p, n,
 					"How am I meant to fight a demon who can destroy cities?",
-			"Ok where is he? I'll kill him for you" });
+			"Ok where is he? I'll kill him for you");
 			if (choice == 0) {
 				npcTalk(p, n, "I admit it won't be easy");
 				gypsyDialogue(p, n, GypsyConversation.DEFEATING_DELRITH);
@@ -1083,9 +1076,9 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 					"called Sir Prysin",
 					"He shouldn't be to hard to find he lives in the royal palace in this city",
 					"Tell him Gypsy Aris sent you");
-			choice = showMenu(p, n, new String[] {
+			choice = showMenu(p, n,
 					"Ok thanks. I'll do my best to stop the Demon",
-			"What is the magical incantation?" });
+			"What is the magical incantation?");
 			if (choice == 0) {
 				gypsyDialogue(p, n, GypsyConversation.ILL_DO_MY_BEST);
 			} else if (choice == 1) {
@@ -1164,67 +1157,61 @@ InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener,
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 35)
-			return true;
-
-		return false;
+		return n.getID() == 35;
 	}
 	
 	class GypsyConversation {
-		public static final int INTRO = 0;
-		public static final int QUEST_START = 1;
-		public static final int DEFEATING_DELRITH = 2;
-		public static final int WHO_IS_DELRITH = 3;
-		public static final int WALLY = 4;
-		public static final int INCANTATION_SILVERLIGHT_MENU = 5;
-		public static final int SILVERLIGHT = 6;
-		public static final int ILL_DO_MY_BEST = 7;
-		public static final int INCANTATION = 8;
-		public static final int HOW_OLD = 9;
-		public static final int HOW_OLD_TWO = 10;
+		static final int INTRO = 0;
+		static final int QUEST_START = 1;
+		static final int DEFEATING_DELRITH = 2;
+		static final int WHO_IS_DELRITH = 3;
+		static final int WALLY = 4;
+		static final int INCANTATION_SILVERLIGHT_MENU = 5;
+		static final int SILVERLIGHT = 6;
+		static final int ILL_DO_MY_BEST = 7;
+		static final int INCANTATION = 8;
+		static final int HOW_OLD = 9;
+		static final int HOW_OLD_TWO = 10;
 	}
 
 	class SirPrysin {
-		public static final int GOT_THEM = 9;
-		public static final int ALIVE = 8;
-		public static final int DRAIN = 7;
-		public static final int PROBLEM = 6;
-		public static final int WIZARD = 5;
-		public static final int ROVIN = 4;
-		public static final int YOUR_KEY = 3;
-		public static final int Stage2 = 2;
-		public static final int SILVERLIGHT = 1;
-		public static final int GYPSY = 0;
+		static final int GOT_THEM = 9;
+		static final int ALIVE = 8;
+		static final int DRAIN = 7;
+		static final int PROBLEM = 6;
+		static final int WIZARD = 5;
+		static final int ROVIN = 4;
+		static final int YOUR_KEY = 3;
+		static final int Stage2 = 2;
+		static final int SILVERLIGHT = 1;
+		static final int GYPSY = 0;
 	}
 
 	class Traiborn {
-		public static final int TEACHME = 0;
-		public static final int THINGWUT = 1;
-		public static final int CALLEDME = 2;
-		public static final int MASHEM = 3;
-		public static final int BEOFF = 4;
-		public static final int MAD = 5;
-		public static final int KNOCKING = 6;
-		public static final int BONES = 7;
+		static final int TEACHME = 0;
+		static final int THINGWUT = 1;
+		static final int CALLEDME = 2;
+		static final int MASHEM = 3;
+		static final int BEOFF = 4;
+		static final int MAD = 5;
+		static final int KNOCKING = 6;
+		static final int BONES = 7;
 	}
 
 	class CaptainRovin {
-		public static final int PALACE = 7;
-		public static final int RECRUIT = 0;
-		public static final int DELIVERY = 1;
-		public static final int I_FORGOT = 2;
-		public static final int DEMON_INVASION = 3;
-		public static final int IMPORTANT = 4;
-		public static final int KING = 5;
-		public static final int SURGERY = 6;
+		static final int PALACE = 7;
+		static final int RECRUIT = 0;
+		static final int DELIVERY = 1;
+		static final int I_FORGOT = 2;
+		static final int DEMON_INVASION = 3;
+		static final int IMPORTANT = 4;
+		static final int KING = 5;
+		static final int SURGERY = 6;
 	}
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == 35) {
-			return true;
-		}
-		return false;
+		return n.getID() == 35;
 	}
 
 	@Override

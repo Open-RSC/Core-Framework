@@ -5,8 +5,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -31,94 +29,106 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 				"would you like a cup of tea?",
 				"I'll just put the kettle on");
 		p.message("Brother galahad hangs a kettle over the fire");
-		Menu defaultMenu = new Menu();
-		defaultMenu.addOption(new Option("Are you any relation to Sir Galahad?") {
-			@Override
-			public void action() {
-				npcTalk(p,n, "I am Sir Galahad",
-						"Though I've given up being a knight for now",
-						"I am now live as a solitary monk",
-						"I prefer to be known as brother rather than sir now",
-						"Half a moment your cup of tea is ready");
-				p.message("Sir Galahad give you a cup of tea");
-				addItem(p, 739, 1);
-			}
-		});
-		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 2) {
-			defaultMenu.addOption(new Option("I'm on a quest to find the holy grail") {
-				@Override
-				public void action() {
-					npcTalk(p,n, "Ah the grail yes",
-							"that did fill be with wonder",
-							"Oh, that I could have stayed forever",
-							"The spear, the food, the people");
-					new Menu().addOptions(
-							new Option("So how can I find it?") {
-								public void action() {
-									FIND_IT(p, n);
-								}
-							},
-							new Option("What are you talking about?") {
-								public void action() {
-									TALKING_ABOUT(p, n);
-								}
-							},
-							new Option("Why did you leave") {
-								public void action() {
-									LEAVE(p, n);
-								}
-							},		
-							new Option("why didn't you bring the grail with you?") {
-								public void action() {
-									DIDNT_BRING(p, n);
-								}
-							}).showMenu(p);
-				}
-			});
+		
+		String[] menuOps = new String[] { // Default Menu
+				"Are you any relation to Sir Galahad?",
+				"do you get lonely here on your own?"
+		};
+		if(p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 && !hasItem(p, 742)) {
+			menuOps = new String[] {
+					"Are you any relation to Sir Galahad?",
+					"I'm on a quest to find the holy grail",
+					"do you get lonely here on your own?",
+					"I seek an item from the realm of the fisher king"
+			};
 		}
-		defaultMenu.addOption(new Option("do you get lonely here on your own?") {
-			@Override
-			public void action() {
-				npcTalk(p,n, "Sometimes I do yes",
-						"Still not many people to share my solidarity with",
-						"Most the religious men around here are worshippers od Saradomin",
-						"Half a moment your cup of tea is ready");
-				p.message("Sir Galahad give you a cup of tea");
-				addItem(p, 739, 1);
-			}
-		});
-		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 && !hasItem(p, 742)) {
-			defaultMenu.addOption(new Option("I seek an item from the realm of the fisher king") {
-				@Override
-				public void action() {
-					npcTalk(p,n, "when i left there",
-							"I took this small cloth from the table as a keepsake");
-					playerTalk(p,n, "I don't suppose I could borrow that?",
-							"it could come in useful on my quest");
-					p.message("Galahad reluctantly passes you a small cloth");
-					addItem(p, 742, 1);
-				}
-			});
+		else if(p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 2) {
+			menuOps = new String[] {
+					"Are you any relation to Sir Galahad?",
+					"I'm on a quest to find the holy grail",
+					"do you get lonely here on your own?",
+			};
 		}
-		defaultMenu.showMenu(p);
+		int menu = showMenu(p, n, false, menuOps);
+		//Are you any relation to Sir Galahad?
+		if (menu == 0) {
+			playerTalk(p, n, "Are you any relation to Sir Galahad");
+			npcTalk(p,n, "I am Sir Galahad",
+					"Though I've given up being a knight for now",
+					"I am now live as a solitary monk",
+					"I prefer to be known as brother rather than sir now",
+					"Half a moment your cup of tea is ready");
+			p.message("Sir Galahad give you a cup of tea");
+			addItem(p, 739, 1);
+		}
+		//I'm on a quest to find the holy grail
+		else if (menu == 1 && menuOps.length > 2) {
+			playerTalk(p, n, "I'm on a quest to find the holy grail");
+			npcTalk(p,n, "Ah the grail yes",
+					"that did fill be with wonder",
+					"Oh, that I could have stayed forever",
+					"The spear, the food, the people");
+			int sub_menu = showMenu(p, n, false, //do not send over
+					"So how can I find it?",
+					"What are you talking about?",
+					"Why did you leave",
+					"why didn't you bring the grail with you?");
+			if (sub_menu == 0) {
+				playerTalk(p, n, "So how can I find it?");
+				FIND_IT(p, n);
+			} else if (sub_menu == 1) {
+				playerTalk(p, n, "What are you talking about?");
+				TALKING_ABOUT(p, n);
+			} else if (sub_menu == 2) {
+				playerTalk(p, n, "Why did you leave?");
+				LEAVE(p, n);
+			} else if (sub_menu == 3) {
+				playerTalk(p, n, "Why didn't you bring the grail with you?");
+				DIDNT_BRING(p, n);
+			}
+		}
+		//do you get lonely here on your own?
+		else if (menu == 2 || (menu == 1 && menuOps.length == 2)) {
+			playerTalk(p, n, "Do you get lonely out here on your own?");
+			npcTalk(p,n, "Sometimes I do yes",
+					"Still not many people to share my solidarity with",
+					"Most the religious men around here are worshippers od Saradomin",
+					"Half a moment your cup of tea is ready");
+			p.message("Sir Galahad give you a cup of tea");
+			addItem(p, 739, 1);
+		}
+		//I seek an item from the realm of the fisher king
+		else if (menu == 3) {
+			playerTalk(p, n, "I seek an item from the realm of the fisher king");
+			npcTalk(p,n, "when i left there",
+					"I took this small cloth from the table as a keepsake");
+			playerTalk(p,n, "I don't suppose I could borrow that?",
+					"it could come in useful on my quest");
+			p.message("Galahad reluctantly passes you a small cloth");
+			addItem(p, 742, 1);
+		}
 	}
 
 	private void FIND_IT(Player p, Npc n) {
 		npcTalk(p,n, "I did not find it through looking",
 				"though admidtedly I looked long and hard",
 				"Eventually it found me");
-		int m = showMenu(p,n,
+		int m = showMenu(p,n, false, //do not send over
 				"What are you talking about?",
 				"Why did you leave",
 				"why didn't you bring the grail with you?",
 				"Well I'd better be going then");
 		if(m == 0) {
+			playerTalk(p, n, "What are you talking about?");
 			TALKING_ABOUT(p, n);
 		} else if(m == 1) {
+			playerTalk(p, n, "Why did you leave?");
 			LEAVE(p, n);
 		} else if(m == 2) {
+			playerTalk(p, n, "Why didn't you bring the grail with you?");
 			DIDNT_BRING(p, n);
 		} else if(m == 3) {
+			playerTalk(p, n, "well I'd better be going then");
 			BETTER_BE_GOING(p, n);
 		}
 	}
@@ -146,18 +156,22 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 		npcTalk(p,n, "The grail castle",
 				"It's hard to describe with words",
 				"It mostly felt like a dream");
-		int m = showMenu(p,n,
+		int m = showMenu(p,n, false, //do not send over
 				"So how can I find it?",
 				"Why did you leave?",
 				"why didn't you bring the grail with you?",
 				"Well I'd better be going then");
 		if(m == 0) {
+			playerTalk(p, n, "So how can I find it?");
 			FIND_IT(p, n);
 		} else if(m == 1) {
+			playerTalk(p, n, "Why did you leave?");
 			LEAVE(p, n);
 		} else if(m == 2) {
+			playerTalk(p, n, "Why didn't you bring the grail with you?");
 			DIDNT_BRING(p, n);
 		} else if(m == 3) {
+			playerTalk(p, n, "well I'd better be going then");
 			BETTER_BE_GOING(p, n);
 		}
 	}

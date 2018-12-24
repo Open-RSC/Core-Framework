@@ -456,11 +456,6 @@ public final class World {
                     + npc.startY + "</startY>");
         }
 
-        /**
-         * Unique ID for event tracking.
-         */
-        n.setUUID(UUID.randomUUID().toString());
-
         npcs.add(n);
         return n;
     }
@@ -674,51 +669,6 @@ public final class World {
         Server.getServer().getEventHandler().add(new SingleEvent(null, 1000) {
             public void action() {
                 int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
-
-                if (Constants.GameServer.AUTO_SERVER_RESTART) {
-
-                    if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR1
-                            && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE1) {
-                        int seconds = Constants.GameServer.RESTART_DELAY1;
-                        int minutes = seconds / 60;
-                        int remainder = seconds % 60;
-                        if (Server.getServer().restart(seconds)) {
-                            for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.startShutdown(p, seconds);
-                            }
-                        }
-                    } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR2
-                            && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE2) {
-                        int seconds = Constants.GameServer.RESTART_DELAY2;
-                        int minutes = seconds / 60;
-                        int remainder = seconds % 60;
-                        if (Server.getServer().restart(seconds)) {
-                            for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.startShutdown(p, seconds);
-                            }
-                        }
-                    } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR3
-                            && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE3) {
-                        int seconds = Constants.GameServer.RESTART_DELAY3;
-                        int minutes = seconds / 60;
-                        int remainder = seconds % 60;
-                        if (Server.getServer().restart(seconds)) {
-                            for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.startShutdown(p, seconds);
-                            }
-                        }
-                    } else if ((int) ((currSecond / 3600.0) % 24) == Constants.GameServer.RESTART_HOUR4
-                            && (int) ((currSecond / 60.0) % 60) >= Constants.GameServer.RESTART_MINUTE4) {
-                        int seconds = Constants.GameServer.RESTART_DELAY4;
-                        int minutes = seconds / 60;
-                        int remainder = seconds % 60;
-                        if (Server.getServer().restart(seconds)) {
-                            for (Player p : World.getWorld().getPlayers()) {
-                                ActionSender.startShutdown(p, seconds);
-                            }
-                        }
-                    }
-                }
                 shutdownCheck();
             }
         });

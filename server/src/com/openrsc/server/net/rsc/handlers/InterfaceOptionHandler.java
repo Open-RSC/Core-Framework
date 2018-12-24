@@ -23,6 +23,9 @@ public class InterfaceOptionHandler implements PacketHandler {
 	@Override
 	public void handlePacket(Packet p, Player player) throws Exception {
 		switch (p.readByte()) {
+		case 0:
+			player.setAttribute("swap_cert", p.readByte() == 1);
+			break;
 		case 1:
 			player.setAttribute("swap_note", p.readByte() == 1);
 			break;

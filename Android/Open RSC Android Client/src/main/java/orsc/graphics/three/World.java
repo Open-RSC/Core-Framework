@@ -1,14 +1,14 @@
 package orsc.graphics.three;
 
+import com.openrsc.client.data.DataConversions;
+import com.openrsc.client.entityhandling.EntityHandler;
+import com.openrsc.client.model.Sector;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import com.openrsc.client.data.DataConversions;
-import com.openrsc.client.entityhandling.EntityHandler;
-import com.openrsc.client.model.Sector;
 
 import orsc.Config;
 import orsc.graphics.two.GraphicsController;
@@ -91,19 +91,19 @@ public final class World {
 	public final void addGameObject_UpdateCollisionMap(int xTile, int zTile, int objectID, boolean var3) {
 		try {
 			if (!var3) {
-				
+
 				if (xTile >= 0 && zTile >= 0 && xTile < 95 && zTile < 95)
 					if (EntityHandler.getObjectDef(objectID).getType() == 1
 							|| EntityHandler.getObjectDef(objectID).getType() == 2) {
 						int dir = this.getTileDirection((int) xTile, zTile);
 						int xSize;
 						int zSize;
-						if (dir != 0 && dir != 4) {
-							zSize = EntityHandler.getObjectDef(objectID).getWidth();
-							xSize = EntityHandler.getObjectDef(objectID).getHeight();
-						} else {
-							zSize = EntityHandler.getObjectDef(objectID).getHeight();
+						if (dir == 0 || dir == 4) {
 							xSize = EntityHandler.getObjectDef(objectID).getWidth();
+							zSize = EntityHandler.getObjectDef(objectID).getHeight();
+						} else {
+							xSize = EntityHandler.getObjectDef(objectID).getHeight();
+							zSize = EntityHandler.getObjectDef(objectID).getWidth();
 						}
 
 						for (int x = xTile; x < xSize + xTile; ++x)
@@ -147,7 +147,7 @@ public final class World {
 
 	public final void addLoginScreenModels(RSModel[] modelTable) {
 		try {
-			
+
 
 			for (int x = 0; x < 94; ++x)
 				for (int z = 0; z < 94; ++z)
@@ -156,12 +156,12 @@ public final class World {
 						int dir = this.getTileDirection((int) x, z);
 						int xSize;
 						int zSize;
-						if (dir != 0 && dir != 4) {
-							xSize = EntityHandler.getObjectDef(diagWall).getHeight();
-							zSize = EntityHandler.getObjectDef(diagWall).getWidth();
-						} else {
+						if (dir == 0 || dir == 4) {
 							zSize = EntityHandler.getObjectDef(diagWall).getHeight();
 							xSize = EntityHandler.getObjectDef(diagWall).getWidth();
+						} else {
+							xSize = EntityHandler.getObjectDef(diagWall).getHeight();
+							zSize = EntityHandler.getObjectDef(diagWall).getWidth();
 						}
 
 						this.addGameObject_UpdateCollisionMap(x, z, diagWall, false);
@@ -203,7 +203,7 @@ public final class World {
 
 	public final void applyWallToCollisionFlags(int wallID, int x, int z, int dir) {
 		try {
-			
+
 			if (x >= 0 && z >= 0 && x < 95 && z < 95)
 				if (EntityHandler.getDoorDef(wallID).getDoorType() == 1) {
 					if (dir == 0) {
@@ -233,7 +233,7 @@ public final class World {
 
 	private final void applyWallToElevationCache(int wallID, int x1, int z1, int x2, int z2) {
 		try {
-			
+
 			int height = EntityHandler.getDoorDef(wallID).getWallObjectHeight();
 
 			if (this.tileElevationCache[x1][z1] < 80000)
@@ -250,7 +250,7 @@ public final class World {
 
 	private final void collisionFlagBitwiseOr(int x, int z, int val) {
 		try {
-			
+
 			this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z], val);
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "k.O(" + val + ',' + z + ',' + "dummy" + ',' + x + ')');
@@ -259,7 +259,7 @@ public final class World {
 
 	private final void collisionFlagModify(int x, int z, int and, int or) {
 		try {
-			
+
 			this.collisionFlags[x][z] = FastMath.bitwiseAnd(this.collisionFlags[x][z], and - or);
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "k.E(" + z + ',' + and + ',' + x + ',' + or + ')');
@@ -268,7 +268,7 @@ public final class World {
 
 	private final int collisionFlagSafe(int x, int z) {
 		try {
-			
+
 			return x >= 0 && z >= 0 && x < 96 && z < 96 ? this.collisionFlags[x][z] : 0;
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "k.JA(" + -38 + ',' + z + ',' + x + ')');
@@ -277,7 +277,7 @@ public final class World {
 
 	private final void drawMinimapTile(int tileX, int tileZ, int bridge00_11, int res01, int res10) {
 		try {
-			
+
 			int mx = tileX * 3;
 			int my = tileZ * 3;
 			int a = this.scene.resourceToColor(res10, true);
@@ -324,7 +324,7 @@ public final class World {
 	 * @return the number of nodes in the path
 	 */
 	public final int findPath(int[] pathX, int[] pathZ, int startX, int startZ, int xLow, int xHigh, int zLow,
-			int zHigh, boolean reachBorder) {
+							  int zHigh, boolean reachBorder) {
 		// System.out.println("Find path: " + startX + "," + startZ + " -> [" +
 		// xLow + "-" + xHigh + "," + zLow + "-"
 		// + zHigh + "] Border good: " + reachBorder);
@@ -333,7 +333,7 @@ public final class World {
 				for (int y = 0; y < 96; ++y)
 					this.pathFindSource[x][y] = 0;
 
-			
+
 			byte var20 = 0;
 			int openListRead = 0;
 			int x = startX;
@@ -493,7 +493,7 @@ public final class World {
 
 	private final void generateLandscapeModel(int var1, int var2, boolean showWallOnMinimap, int plane, int var5) {
 		try {
-			
+
 			int chunkX = (24 + var1) / 48;
 			int chunkZ = (24 + var5) / 48;
 			this.loadSection(0, plane, chunkX - 1, chunkZ - 1);
@@ -553,8 +553,8 @@ public final class World {
 							if (this.getTileDecorationID((int) x, z, plane) > 0) {
 								int decorID = this.getTileDecorationID((int) x, z, plane);
 								int decorType = EntityHandler.getTileDef(decorID - 1).getTileValue();// CacheValues.tileType[decorID
-																										// -
-																										// 1];
+								// -
+								// 1];
 
 								int decorType2 = this.isTileType2(x, z, plane, 15282);
 								colorResource = res01 = EntityHandler.getTileDef(decorID - 1).getColour();
@@ -572,25 +572,25 @@ public final class World {
 										if (this.getTileDecorationCacheVal(x - 1, z, plane,
 												defaultVal) != Scene.TRANSPARENT
 												&& this.getTileDecorationCacheVal(x, z - 1, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+												defaultVal) != Scene.TRANSPARENT) {
 											bridge00_11 = 0;
 											colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 										} else if (this.getTileDecorationCacheVal(1 + x, z, plane,
 												defaultVal) != Scene.TRANSPARENT
 												&& this.getTileDecorationCacheVal(x, 1 + z, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+												defaultVal) != Scene.TRANSPARENT) {
 											res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 											bridge00_11 = 0;
 										} else if (this.getTileDecorationCacheVal(1 + x, z, plane,
 												defaultVal) != Scene.TRANSPARENT
 												&& this.getTileDecorationCacheVal(x, z - 1, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+												defaultVal) != Scene.TRANSPARENT) {
 											res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 											bridge00_11 = 1;
 										} else if (this.getTileDecorationCacheVal(x - 1, z, plane,
 												defaultVal) != Scene.TRANSPARENT
 												&& this.getTileDecorationCacheVal(x, z + 1, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+												defaultVal) != Scene.TRANSPARENT) {
 											bridge00_11 = 1;
 											colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 										}
@@ -712,7 +712,7 @@ public final class World {
 									.getTileDef(this.getTileDecorationID(x, z, plane) - 1).getTileValue() != 3) {
 								if (this.getTileDecorationID(x, z + 1, plane) > 0
 										&& EntityHandler.getTileDef(this.getTileDecorationID(x, 1 + z, plane) - 1)
-												.getTileValue() == 4) {
+										.getTileValue() == 4) {
 									int tileDecor = EntityHandler
 											.getTileDef(this.getTileDecorationID((int) x, z + 1, plane) - 1)
 											.getColour();
@@ -733,7 +733,7 @@ public final class World {
 
 								if (this.getTileDecorationID((int) x, z - 1, plane) > 0
 										&& EntityHandler.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
-												.getTileValue() == 4) {
+										.getTileValue() == 4) {
 									int tileDecor = EntityHandler
 											.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
 											.getColour();
@@ -1159,7 +1159,7 @@ public final class World {
 
 	public final int getElevation(int x, int z) {
 		try {
-			
+
 			int xTile = x >> 7;
 			int zTile = z >> 7;
 			int xLerp = 127 & x;
@@ -1190,7 +1190,7 @@ public final class World {
 
 	private final int getTerrainColour(int tileX, int tileZ) {
 		try {
-			
+
 			if (tileX >= 0 && tileX < 96 && tileZ >= 0 && tileZ < 96) {
 				byte chunk = 0;
 				if (tileX >= 48 && tileZ < 48) {
@@ -1214,7 +1214,7 @@ public final class World {
 
 	private final int getTileDecorationCacheVal(int xTile, int zTile, int plane, int defaultVal) {
 		try {
-			
+
 			int id = this.getTileDecorationID(xTile, zTile, plane);
 			if (id == 0) {
 				return defaultVal;
@@ -1228,7 +1228,7 @@ public final class World {
 
 	private final int getTileDecorationID(int xTile, int zTile, int plane) {
 		try {
-			
+
 			if (xTile >= 0 && xTile < 96 && zTile >= 0 && zTile < 96) {
 				byte chunk = 0;
 				if (xTile >= 48 && zTile < 48) {
@@ -1254,7 +1254,7 @@ public final class World {
 
 	public final int getTileDirection(int xTile, int zTile) {
 		try {
-			
+
 			if (xTile >= 0 && xTile < 96 && zTile >= 0 && zTile < 96) {
 				return this.tileDirection[xTile][zTile];
 			} else
@@ -1266,7 +1266,7 @@ public final class World {
 
 	private final int getTileElevation(int xTile, int zTile) {
 		try {
-			
+
 			if (xTile >= 0 && xTile < 96 && zTile >= 0 && zTile < 96) {
 				byte region = 0;
 				if (xTile >= 48 && zTile < 48) {
@@ -1292,7 +1292,7 @@ public final class World {
 
 	private final int getWallDiagonal(int tileX, int tileZ) {
 		try {
-			
+
 			if (tileX >= 0 && tileX < 96 && tileZ >= 0 && tileZ < 96) {
 				byte chunk = 0;
 				if (tileX >= 48 && tileZ < 48) {
@@ -1318,7 +1318,7 @@ public final class World {
 
 	private final int getVerticalWall(int tileX, int tileZ) {
 		try {
-			
+
 			if (tileX >= 0 && tileX < 96 && tileZ >= 0 && tileZ < 96) {
 				byte chunk = 0;
 				if (tileX >= 48 && tileZ < 48) {
@@ -1342,7 +1342,7 @@ public final class World {
 
 	private final int getHorizontalWall(int xTile, int zTile) {
 		try {
-			
+
 			if (xTile >= 0 && xTile < 96 && zTile >= 0 && zTile < 96) {
 				byte chunk = 0;
 				if (xTile >= 48 && zTile < 48) {
@@ -1366,7 +1366,7 @@ public final class World {
 
 	private final int getWallRoof(int tileX, int tileZ) {
 		try {
-			
+
 			if (tileX >= 0 && tileX < 96 && tileZ >= 0 && tileZ < 96) {
 				byte chunk = 0;
 				if (tileX >= 48 && tileZ < 48) {
@@ -1391,7 +1391,7 @@ public final class World {
 
 	private final boolean hasRoofStrut(int tileX, int tileZ) {
 		try {
-			
+
 			return this.getWallRoof(tileX, tileZ) > 0 || this.getWallRoof(tileX - 1, tileZ) > 0
 					|| this.getWallRoof(tileX - 1, tileZ - 1) > 0 || this.getWallRoof(tileX, tileZ - 1) > 0;
 		} catch (RuntimeException var5) {
@@ -1401,7 +1401,7 @@ public final class World {
 
 	private final boolean hasRoofTile(boolean var1, int tileX, int tileZ) {
 		try {
-			
+
 			return this.getWallRoof(tileX, tileZ) > 0 && this.getWallRoof(tileX - 1, tileZ) > 0
 					&& this.getWallRoof(tileX - 1, tileZ - 1) > 0 && this.getWallRoof(tileX, tileZ - 1) > 0;
 		} catch (RuntimeException var5) {
@@ -1411,7 +1411,7 @@ public final class World {
 
 	private final void insertWallIntoModel(int var1, RSModel model, int t2X, int t1Z, int t1X, int var6, int t2Z) {
 		try {
-			
+
 			this.setVertexLightOther(t1X, t1Z, 40);
 			this.setVertexLightOther(t2X, t2Z, 40);
 			int height = EntityHandler.getDoorDef(var1).getWallObjectHeight();// CacheValues.wallObjectHeight[var1];
@@ -1443,7 +1443,7 @@ public final class World {
 
 	private final int isTileType2(int xTile, int zTile, int plane, int var3) {
 		try {
-			
+
 			if (var3 != 15282)
 				this.membersMapPack = (byte[]) null;
 
@@ -1462,7 +1462,7 @@ public final class World {
 	public final void loadSections(int worldX, int worldZ, int plane) {
 		try {
 			this.resetModels();
-			
+
 			int x = (24 + worldX) / 48;
 
 			this.generateLandscapeModel(worldX, 122, true, plane, worldZ);
@@ -1484,7 +1484,7 @@ public final class World {
 
 	public final void removeGameObject_CollisonFlags(int id, int x, int z) {
 		try {
-			
+
 			if (x >= 0 && z >= 0 && x < 95 && z < 95)
 				if (EntityHandler.getObjectDef(id).getType() == 1 || EntityHandler.getObjectDef(id).getType() == 2) {
 					int var5 = this.getTileDirection((int) x, z);
@@ -1540,7 +1540,7 @@ public final class World {
 
 	public final void removeWallObject_CollisionFlags(boolean var1, int dir, int z, int x, int id) {
 		try {
-			
+
 			if (x >= 0 && z >= 0 && x < 95 && z < 95)
 				if (EntityHandler.getDoorDef(id).getDoorType() == 1) {
 					if (dir == 0) {
@@ -1572,7 +1572,7 @@ public final class World {
 			if (this.removeAllObjectsOnReset)
 				this.scene.removeAllGameObjects(false);
 
-			
+
 
 			for (int j = 0; j < 64; ++j) {
 				this.modelLandscapeGrid[j] = null;
@@ -1593,7 +1593,7 @@ public final class World {
 
 	private final void setTileDecoration(int xTile, int zTile, int val) {
 		try {
-			
+
 			if (xTile >= 0 && xTile < 96 && zTile >= 0 && zTile < 96) {
 				byte chunk = 0;
 				if (xTile >= 48 && zTile < 48) {
@@ -1617,7 +1617,7 @@ public final class World {
 
 	private final void setTileDecorationOnBridge() {
 		try {
-			
+
 
 			for (int x = 0; x < 96; ++x)
 				for (int z = 0; z < 96; ++z)
@@ -1638,7 +1638,7 @@ public final class World {
 
 	private final void setVertexLightArea(int tileX, int tileZ, int width, int height) {
 		try {
-			
+
 			if (tileX >= 1 && tileZ >= 1 && width + tileX < 96 && height + tileZ < 96)
 				for (int x = tileX; x <= width + tileX; ++x)
 					for (int z = tileZ; tileZ + height >= z; ++z) {
@@ -1667,7 +1667,7 @@ public final class World {
 
 	private final void setVertexLightOther(int x, int z, int light) {
 		try {
-			
+
 			int chunkX = x / 12;
 			int chunkZ = z / 12;
 			int chunkXM1 = (x - 1) / 12;
@@ -1687,7 +1687,7 @@ public final class World {
 
 	private final void setVertexLightOther(int chunkX, int chunkZ, int tileX, int tileZ, int light) {
 		try {
-			
+
 			RSModel m = this.modelLandscapeGrid[chunkX + chunkZ * 8];
 
 			for (int id = 0; m.vertHead > id; ++id)
@@ -1705,13 +1705,13 @@ public final class World {
 	private Sector[] worldMapSector = new Sector[4];
 	private int mapPointX = 0;
 	private int mapPointZ = 0;
-	
+
 	public void setWorldMapPoint(int offsetX, int offsetY) {
 		mapPointX = offsetX;
 		mapPointZ = offsetY;
 		System.out.println(mapPointX + ", " + mapPointZ);
 	}
-	
+
 	public void generateWorldMap() {
 		int plane = 0;
 
@@ -1757,17 +1757,17 @@ public final class World {
 								colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 							} else if (this.getTileDecorationCacheVal(1 + x, z, plane, defaultVal) != Scene.TRANSPARENT
 									&& this.getTileDecorationCacheVal(x, 1 + z, plane,
-											defaultVal) != Scene.TRANSPARENT) {
+									defaultVal) != Scene.TRANSPARENT) {
 								res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 								bridge00_11 = 0;
 							} else if (this.getTileDecorationCacheVal(1 + x, z, plane, defaultVal) != Scene.TRANSPARENT
 									&& this.getTileDecorationCacheVal(x, z - 1, plane,
-											defaultVal) != Scene.TRANSPARENT) {
+									defaultVal) != Scene.TRANSPARENT) {
 								res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 								bridge00_11 = 1;
 							} else if (this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal) != Scene.TRANSPARENT
 									&& this.getTileDecorationCacheVal(x, z + 1, plane,
-											defaultVal) != Scene.TRANSPARENT) {
+									defaultVal) != Scene.TRANSPARENT) {
 								bridge00_11 = 1;
 								colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 							}

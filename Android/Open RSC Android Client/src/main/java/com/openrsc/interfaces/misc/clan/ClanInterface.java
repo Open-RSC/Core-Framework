@@ -38,7 +38,7 @@ public final class ClanInterface {
 
 	private String invitationBy = null;
 	private String invitationByClan = null;
-	
+
 	private String[] clanMateTable = { "Username", "Rank", "Kills", "Deaths", "Ratio" };
 
 	private Menu rightClickMenu;
@@ -52,7 +52,7 @@ public final class ClanInterface {
 
 		x = (mc.getGameWidth() / 2) - width;
 		y = (mc.getGameHeight() / 2) - height;
-		
+
 		readClans = new ArrayList<ClanResult>();
 
 		clanSetupPanel = new Panel(mc.getSurface(), 15);
@@ -60,7 +60,7 @@ public final class ClanInterface {
 
 		clanGUIScroll = clanSetupPanel.addScrollingList2(x + 97, y + 49 + 34, 307, 146, 500, 1, true);
 		clanSearchScroll = clanSetupPanel.addScrollingList2(x + 97, y + 49 + 34, 307, 146, 1000, 1, true);
-		
+
 		clanName_field = clanSetupPanel.addCenteredTextEntry(x + 201, y + 102, 174, 16, 13, 3, false, true);
 		clanTag_field = clanSetupPanel.addCenteredTextEntry(x + 201, y + 162, 174, 5, 13, 3, false, true);
 		clanSearch_field = clanSetupPanel.addLeftTextEntry(x + 95, y + 61, 174, 13, 3, 16, false, false);
@@ -72,7 +72,7 @@ public final class ClanInterface {
 
 		clanSetupPanel.reposition(clanGUIScroll, x + 97, y + 49 + 34, 307, (selectedClanMate != -1 && mc.clan.isAllowed(0) ? 83 : 146));
 		clanSetupPanel.reposition(clanSearchScroll, x + 100, y + 95, 307, 141);
-		
+
 		clanSetupPanel.reposition(clanName_field, x + 201, y + 102, 174, 18);
 		clanSetupPanel.reposition(clanTag_field, x + 201, y + 174, 174, 18);
 		clanSetupPanel.reposition(clanSearch_field, x + 95, y + 61, 174, 18);
@@ -81,12 +81,12 @@ public final class ClanInterface {
 	public boolean onRender(GraphicsController graphics) {
 		reposition();
 		switch(clanActiveInterface) {
-		case 1: // CLAN MAIN GUI
-			drawClanMain(graphics);
-			break;
-		case 2: // CLAN INVITEED SCREEN
-			drawInvite(graphics);
-			break;
+			case 1: // CLAN MAIN GUI
+				drawClanMain(graphics);
+				break;
+			case 2: // CLAN INVITEED SCREEN
+				drawInvite(graphics);
+				break;
 		}
 		return true;
 	}
@@ -102,10 +102,10 @@ public final class ClanInterface {
 
 		int newX = x + 4;
 		int newY = y + 82;
-		
+
 		int tableBox = x + 5;
 		int tableBoxW = 65;
-		
+
 		if(selectedClanMate != -1 && mc.clan.isAllowed(0)) {
 			graphics.drawBoxAlpha(x + 3, y + 48 + 12, leftBoxW, leftBoxH - 4, 0x1D1915, 192); //5F5147
 			graphics.drawBoxBorder(x + 3, leftBoxW, y + 48 + 11, leftBoxH - 4, 0x5F5147);
@@ -113,7 +113,7 @@ public final class ClanInterface {
 			graphics.drawBoxAlpha(x + 3, y + 48 + 12, leftBoxW, leftBoxH + 59, 0x1D1915, 192); //5F5147
 			graphics.drawBoxBorder(x + 3, leftBoxW, y + 48 + 11, leftBoxH + 59, 0x5F5147);
 		}
-		
+
 		for(int i = 0; i < 5; i++) {
 			if(i == 0) {
 				graphics.drawBoxAlpha(tableBox, y + 48 + 11 + 2, tableBoxW + 69, 20, 0x432C26, 192); //5F5147
@@ -139,7 +139,7 @@ public final class ClanInterface {
 
 			clanSetupPanel.setListEntry(clanGUIScroll, i + 1, "", 0, (String) null, (String) null);
 
-			if (i < listStartPoint || i > listEndPoint) 
+			if (i < listStartPoint || i > listEndPoint)
 				continue;
 			if(mc.clan.isAllowed(0)) {
 				if (mc.getMouseX() >= (newX) && mc.getMouseY() >= (newY) && mc.getMouseX() <= newX + 384
@@ -172,7 +172,7 @@ public final class ClanInterface {
 			graphics.drawColoredString(newX + 3 + 135 + 67 + 67 + 67, newY + 16, "" + mc.clan.getKDR(i), 2, 0xffffff, 0);
 			newY += boxHeight - 1;
 		}
-		
+
 
 		graphics.drawString("Total clanmates: (" + showing + " / 15)", newX, y + 55, 0xEFB063, 0);
 		if(selectedClanMate != -1 && mc.clan.isAllowed(0)) {
@@ -208,8 +208,8 @@ public final class ClanInterface {
 		}
 		clanSetupPanel.drawPanel();
 	}
-	
-	
+
+
 
 	public void drawInvite(GraphicsController graphics) {
 		clanSetupPanel.hide(clanGUIScroll);
@@ -274,12 +274,12 @@ public final class ClanInterface {
 						resetAll();
 					}
 				});
-					drawButton(graphics, x + 3 + (mc.clan.isClanLeader() ? 256 : 128), y + 18, (mc.clan.isClanLeader() ? 146 : 146), 22, "Clan Stats / Challenges", false, new ButtonHandler() {
-						@Override
-						void handle() {
-							setVisible(false);
-						}
-					});
+				drawButton(graphics, x + 3 + (mc.clan.isClanLeader() ? 256 : 128), y + 18, (mc.clan.isClanLeader() ? 146 : 146), 22, "Clan Stats / Challenges", false, new ButtonHandler() {
+					@Override
+					void handle() {
+						setVisible(false);
+					}
+				});
 				if(mc.clan.isAllowed(1) && !mc.clan.isClanLeader()) {
 					drawSubmitButton(graphics, x + 280, y + 18, 125, 22, 15, 1, "Invite Player", false, new ButtonHandler() {
 						@Override
@@ -301,21 +301,21 @@ public final class ClanInterface {
 		}
 
 		switch(clanActivePanel) {
-		case 1:
-			drawClanSetup(graphics);
-			break;
-		case 2:
-			if(mc.clan.inClan()) {
-				drawClanMates(graphics);
-			} else {
-				clanActivePanel = 1;
-			}
-			break;
-		case 3:
-			if(!mc.clan.inClan()) {
-				drawClanSearch(graphics);
-			}
-			break;
+			case 1:
+				drawClanSetup(graphics);
+				break;
+			case 2:
+				if(mc.clan.inClan()) {
+					drawClanMates(graphics);
+				} else {
+					clanActivePanel = 1;
+				}
+				break;
+			case 3:
+				if(!mc.clan.inClan()) {
+					drawClanSearch(graphics);
+				}
+				break;
 		}
 
 		// FOOTER
@@ -345,10 +345,10 @@ public final class ClanInterface {
 				filteredList.add(c);
 			}
 		}
-		
+
 		int width = 200;
 		int height = 28;
-		
+
 		int boxWidth = (int) (387);
 		int boxHeight = (int) (32);
 
@@ -388,7 +388,7 @@ public final class ClanInterface {
 			graphics.drawShadowText("Type:", newX + 2, newY - 32, 0xB5DC4F, 1, false);
 			graphics.drawColoredStringCentered(rightX, vc.getClanSearchSettingByName(vc.canJoin), 0xf1f1f1, 0, 1, newY - 32);
 			graphics.drawLineHoriz(newX, newY - 27, horizWidth, horizColor);
-			
+
 			drawSubmitButton(graphics, x + 7, newY - 20, 394, 28, 18, 1, "Send Clan Request", false, new ButtonHandler() {
 				@Override
 				void handle() {
@@ -425,7 +425,7 @@ public final class ClanInterface {
 				graphics.drawString("Displaying search results For: " + (!searchTerm.isEmpty() ? "\"" + searchTerm.toLowerCase() + "\"" : "ALL") + " (" + (filteredList.size()) + ")", x + 5, y + 90, 0xf1f1f1, 0);
 				clanSetupPanel.setListEntry(clanSearchScroll, i + 1, "", 0, (String) null, (String) null);
 
-				if (i < listStartPoint || i > listEndPoint) 
+				if (i < listStartPoint || i > listEndPoint)
 					continue;
 				ClanResult cr = filteredList.get(i);
 				if (mc.getMouseX() >= (newX) && mc.getMouseY() >= (newY) && mc.getMouseX() <= newX + 389
@@ -478,7 +478,7 @@ public final class ClanInterface {
 			graphics.drawBoxAlpha(x + 3 + 196 + 10, y + 48, leftBoxW, leftBoxH, 0x1D1915, 192); //5F5147
 			graphics.drawBoxBorder(x + 3 + 196 + 10, leftBoxW, y + 48, leftBoxH, 0x5F5147);
 
-			graphics.drawBoxAlpha(x + 9, y + 54, 184, 37, 0x544B40, 255); 
+			graphics.drawBoxAlpha(x + 9, y + 54, 184, 37, 0x544B40, 255);
 			graphics.drawBoxBorder(x + 9, 184, y + 54, 37, 0x7D7161);
 			graphics.drawBoxBorder(x + 8, 186, y + 53, 39, 0x060607);
 			graphics.drawColoredStringCentered(x + 32 + (184 / 2 - graphics.stringWidth(1, "My clan:") / 2), "My clan:" , 0xEA9F59, 0, 1, y + 66);
@@ -502,7 +502,7 @@ public final class ClanInterface {
 							"General+", 2);
 				}
 			});
-			
+
 			drawSelectButton(graphics, x + 9, y + 133, 184, 32, 14, 14, 1, 1, "Who can invite into clan?", mc.clan.getClanSettingByName(mc.clan.getClanSetting(1)), new ButtonHandler() {
 				@Override
 				void handle() {
@@ -521,7 +521,7 @@ public final class ClanInterface {
 							"General+", 2);
 				}
 			});
-			
+
 			drawSelectButton(graphics, x + 9, y + 131 + 39, 184, 32, 14, 14, 1, 1, "Accept clan requests?", mc.clan.getClanSearchSettingByName(), new ButtonHandler() {
 				@Override
 				void handle() {
@@ -581,7 +581,7 @@ public final class ClanInterface {
 	}
 
 	private void drawCloseButton(GraphicsController graphics, int x, int y, int width, int height, String text,
-			boolean checked, ButtonHandler handler) {
+								 boolean checked, ButtonHandler handler) {
 		int allColor = 0x957357;
 
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height && !menu_visible) {
@@ -598,7 +598,7 @@ public final class ClanInterface {
 	}
 
 	private void drawButton(GraphicsController graphics, int x, int y, int width, int height, String text,
-			boolean checked, ButtonHandler handler) {
+							boolean checked, ButtonHandler handler) {
 		int allColor = 0x231B15;
 		if(checked) {
 			allColor = 0x332A22;
@@ -617,7 +617,7 @@ public final class ClanInterface {
 	}
 
 	private void drawInputButton(GraphicsController graphics, int x, int y, int width, int height, int heightText, int fontSize, String text,
-			boolean checked, ButtonHandler handler) {
+								 boolean checked, ButtonHandler handler) {
 		int allColor = 0x3D3428;
 		if(checked) {
 			allColor = 0x332A22;
@@ -632,7 +632,7 @@ public final class ClanInterface {
 		graphics.drawBoxBorder(x, width, y, height, 0x777775);
 		graphics.drawString(text, x + (width / 2 - graphics.stringWidth(1, text) / 2), y + heightText, 0xE3CCCF, fontSize);
 	}
-	
+
 	private void drawSearchButton(GraphicsController graphics, int x, int y, int width, int height, ButtonHandler handler) {
 		int allColor = 0xFBFCFE;
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
@@ -646,7 +646,7 @@ public final class ClanInterface {
 	}
 
 	private void drawSelectButton(GraphicsController graphics, int x, int y, int width, int height, int heightText, int secondaryHeightText, int fontSize, int secondaryFontSize, String text,
-			String secondaryText, ButtonHandler handler) {
+								  String secondaryText, ButtonHandler handler) {
 		int allColor = 0x4F4841;
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
 			if (mc.getMouseClick() == 2) {
@@ -663,10 +663,10 @@ public final class ClanInterface {
 	}
 
 	private void drawSubmitButton(GraphicsController graphics, int x, int y, int width, int height, int heightText, int fontSize, String text,
-			boolean checked, ButtonHandler handler) {
+								  boolean checked, ButtonHandler handler) {
 		int allColor = 0x403020;
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
-			if(!checked) 
+			if(!checked)
 				allColor = 0x423D2D;
 			if (mc.getMouseClick() == 1) {
 				handler.handle();
@@ -695,7 +695,7 @@ public final class ClanInterface {
 					mc.mouseButtonClick = 0;
 					menu_visible = false;
 					MenuItemAction act = this.rightClickMenu.getItemAction((int) clickedIndex);
-					if (act == MenuItemAction.CLAN_PROMOTE) {	
+					if (act == MenuItemAction.CLAN_PROMOTE) {
 						if(clickedIndex == 1) {
 							clickedIndex = 2;
 						} else if(clickedIndex == 2) {
@@ -743,64 +743,64 @@ public final class ClanInterface {
 	}
 
 	protected void sendCreateClan(String name, String tag) {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(0);
-		getClient().getClientStream().writeBuffer1.putString(name);
-		getClient().getClientStream().writeBuffer1.putString(tag);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(0);
+		getClient().packetHandler.getClientStream().writeBuffer1.putString(name);
+		getClient().packetHandler.getClientStream().writeBuffer1.putString(tag);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAfterCreation();
 	}
 	public void sendClanLeave() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(1);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(1);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
 	}
 	protected void sendClanAccept() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(3);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(3);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
 	}
 
 	protected void sendClanDecline() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(4);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(4);
+		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
 	}
 
 	protected void sendClanRank(String playerName, int rank) {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(6);
-		getClient().getClientStream().writeBuffer1.putString(playerName);
-		getClient().getClientStream().writeBuffer1.putByte(rank);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
+		getClient().packetHandler.getClientStream().writeBuffer1.putString(playerName);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(rank);
+		getClient().packetHandler.getClientStream().finishPacket();
 	}
-	
+
 	protected void sendClanSettings(int settingMode, int state) {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(7);
-		getClient().getClientStream().writeBuffer1.putByte(settingMode);
-		getClient().getClientStream().writeBuffer1.putByte(state);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(7);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(settingMode);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(state);
+		getClient().packetHandler.getClientStream().finishPacket();
 	}
-	
+
 	public void sendClanSearch() {
-		getClient().getClientStream().newPacket(199);
-		getClient().getClientStream().writeBuffer1.putByte(11);
-		getClient().getClientStream().writeBuffer1.putByte(8);
-		getClient().getClientStream().finishPacket();
+		getClient().packetHandler.getClientStream().newPacket(199);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(11);
+		getClient().packetHandler.getClientStream().writeBuffer1.putByte(8);
+		getClient().packetHandler.getClientStream().finishPacket();
 	}
 
 	public void initializeInvite(String byPlayer, String byClan) {
@@ -831,7 +831,7 @@ public final class ClanInterface {
 	abstract class ButtonHandler {
 		abstract void handle();
 	}
-	
+
 	public void resetClans() {
 		readClans.clear();
 	}
@@ -843,7 +843,7 @@ public final class ClanInterface {
 		private String clanName, clanTag;
 		private int membersTotal, clanPoints, canJoin, clanID, clanRank;
 		private String[] clanSearchSettings = { "@gr2@Anyone can join", "@yel@Invite only", "@red@Closed"};
-		
+
 		public ClanResult(int clanID, String clanName, String clanTag, int members, int canJoin, int clanPoints, int clanRank) {
 			this.clanID = clanID;
 			this.clanName = clanName;
@@ -853,7 +853,7 @@ public final class ClanInterface {
 			this.clanPoints = clanPoints;
 			this.clanRank = clanRank;
 		}
-		
+
 		public int getClanGlobalRank() {
 			return clanRank;
 		}
@@ -864,7 +864,7 @@ public final class ClanInterface {
 		public int getClanPoints() {
 			return clanPoints;
 		}
-		
+
 		public int getClanID() {
 			return clanID;
 		}
@@ -884,7 +884,7 @@ public final class ClanInterface {
 			return membersTotal;
 		}
 	}
-	
+
 	Comparator<ClanResult> clanComperator = new Comparator<ClanResult>() {
 		@Override
 		public int compare(ClanResult o1, ClanResult o2) {
@@ -894,5 +894,5 @@ public final class ClanInterface {
 			return o1.getClanPoints() > o2.getClanPoints() ? -1 : 1;
 		}
 	};
-	
+
 }

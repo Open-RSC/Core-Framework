@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -40,9 +41,13 @@ TalkToNpcExecutiveListener {
 	@Override
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 5 quest points!");
-		p.incQuestPoints(5);
-		p.incQuestExp(AGILITY, (p.getSkills().getMaxStat(AGILITY) * 200) + 2000);
-		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 200 + 1000);
+		int[] questData = Quests.questData.get(Quests.UNDERGROUND_PASS);
+		//keep order kosher
+		int[] skillIDs = {AGILITY, ATTACK};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 		p.message("you have completed the underground pass quest");
 		p.getCache().set("Iban blast_casts", 25);
 	}

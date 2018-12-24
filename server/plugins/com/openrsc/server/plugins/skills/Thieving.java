@@ -44,45 +44,52 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 				new LootItem(1117, 1, 12), 
 				new LootItem(16, 1, 10), 
 				new LootItem(-1, 0, 8)), 
-		ROGUE(32, 142, "Hey what do you think you're doing",
+		ROGUE(32, 146, "Hey what do you think you're doing",
 				new LootItem(10, 25, 40),
 				new LootItem(10, 40, 30), 
 				new LootItem(142, 1, 10), 
 				new LootItem(33, 8, 10),
 				new LootItem(714, 1, 10), 
 				new LootItem(559, 1, 3)), 
-		GUARD(40, 186, "Err what do you think you're doing",
+		GUARD(40, 187, "Err what do you think you're doing",
 				new LootItem(10, 30, 100)), 
-		KNIGHT(55, 338, "Err what do you think you're doing",
+		KNIGHT(55, 337, "Err what do you think you're doing",
 				new LootItem(10, 50, 100)),
-		YANILLE_WATCHMAN(65, 500, "Oi you nasty little thief",
+		YANILLE_WATCHMAN(65, 550, "Oi you nasty little thief",
 				new LootItem(10, 60, 100), 
 				new LootItem(138, 1, 100)), 
-		PALADIN(70, 608, "Get your hands off my valuables",
+		PALADIN(70, 607, "Get your hands off my valuables",
 				new LootItem(10, 80, 100), 
 				new LootItem(41, 1, 100)),
-		GNOME_LOCAL(75, 792, "Get your hands off my valuables human",
+		GNOME_LOCAL(75, 793, "Get your hands off my valuables human",
 				new LootItem(10, 200, 22), 
 				new LootItem(10, 400, 18), 
 				new LootItem(152, 1, 10),
 				new LootItem(34, 1, 15), 
 				new LootItem(895, 1, 15), 
 				new LootItem(897, 1, 20)),
-		GNOME_CHILD(75, 792, "Get your hands off my valuables human",
+		GNOME_CHILD(75, 793, "Get your hands off my valuables human",
 				new LootItem(10, 200, 22), 
 				new LootItem(10, 400, 18), 
 				new LootItem(152, 1, 10),
 				new LootItem(34, 1, 15), 
 				new LootItem(895, 1, 15), 
 				new LootItem(897, 1, 20)),
-		BLURBERRY_BARMAN(75, 792, "Get your hands off my valuables human",
+		GNOME_TRAINER(75, 793, "Get your hands off my valuables human",
 				new LootItem(10, 200, 22), 
 				new LootItem(10, 400, 18), 
 				new LootItem(152, 1, 10),
 				new LootItem(34, 1, 15), 
 				new LootItem(895, 1, 15), 
 				new LootItem(897, 1, 20)),
-		HERO(80, 1096, "Get your hands off my valuables",
+		BLURBERRY_BARMAN(75, 793, "Get your hands off my valuables human",
+				new LootItem(10, 200, 22), 
+				new LootItem(10, 400, 18), 
+				new LootItem(152, 1, 10),
+				new LootItem(34, 1, 15), 
+				new LootItem(895, 1, 15), 
+				new LootItem(897, 1, 20)),
+		HERO(80, 1093, "Get your hands off my valuables",
 				new LootItem(10, 100, 25), 
 				new LootItem(10, 200, 15), 
 				new LootItem(10, 300, 10),
@@ -336,7 +343,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		case 337:
 			// blood Chest
 			req = 59;
-			xp = 600;
+			xp = 1000;
 			respawnTime = 250000;
 			loot = getLootAsList(new LootItem(10, 500, 100), new LootItem(619, 2, 100));
 			teleLoc = Point.location(614, 568);
@@ -455,10 +462,15 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 			return;
 		}
 		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
-		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+		String thievedMobName = npc.getDef().getName().toLowerCase();
+		//gnome local, child, trainer and barman all known as gnome for the thiev messages
+		//yanille watchman known simply as watchman
+		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" : 
+			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
+		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
 			sleep(1800);
-			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
@@ -499,7 +511,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 						}
 						total += loot.getChance();
 					}
-					player.message("You pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+					player.message("You pick the " + thievedMobSt + "'s pocket");
 					if (selectedLoot != null) {
 						player.getInventory().add(selectedLoot);
 					} 
@@ -508,7 +520,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					player.setBusyTimer(0);
 					npc.setBusyTimer(0);
 					setDelay(600);
-					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + npc.getDef().getName().toLowerCase() + "'s pocket");
+					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
 					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
 					interrupt();

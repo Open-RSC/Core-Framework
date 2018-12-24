@@ -22,7 +22,7 @@ import java.util.Random;
 
 
 public final class DataConversions {
-	
+
 	/**
      * The asynchronous logger.
      */
@@ -72,7 +72,7 @@ public final class DataConversions {
 		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
 		'5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(',
 		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
-		'%', '"', '[', ']', '{', '}', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+		'%', '"', '[', ']', '{', '}', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
 		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 		'U', 'V', 'W', 'X', 'Y', 'Z'};
 
@@ -104,7 +104,7 @@ public final class DataConversions {
 			return toHex(md5.digest());
 		}
 	}
-    
+
     public static String sha1(String s) {
         synchronized (sha1) {
             sha1.reset();
@@ -119,8 +119,8 @@ public final class DataConversions {
             sha512.update(s.getBytes());
             return toHex(sha512.digest()).toLowerCase();
         }
-    }	   
-    
+    }
+
     public static String generateSalt() {
         int len = 30;
         StringBuilder sb = new StringBuilder( len );
@@ -133,7 +133,7 @@ public final class DataConversions {
         }
         return sb.toString();
     }
-    
+
     public static String hashPassword(String password, String salt){
         return DataConversions.sha512(salt + DataConversions.md5(password));
     }
@@ -386,7 +386,7 @@ public final class DataConversions {
 	public static Random getRandom() {
 		return rand;
 	}
-	
+
 	public static int random(int range) {
 		int number = (int) (Math.random() * (range + 1));
 		return number < 0 ? 0 : number;
@@ -721,15 +721,15 @@ public final class DataConversions {
 
 		return out;
 	}
-	
+
 	public static String hmac(String hashType, String value, String key) {
 		try {
 			byte[] keyBytes = key.getBytes();
 			SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "Hmac" + hashType);
-			
+
 			Mac mac = Mac.getInstance("Hmac" + hashType);
 			mac.init(signingKey);
-			
+
 			byte[] rawHmac = mac.doFinal(value.getBytes());
 			return new BigInteger(1, rawHmac).toString(16);
 		} catch (Exception e) {
@@ -737,12 +737,12 @@ public final class DataConversions {
 		}
 		return "";
 	}
-        
+
         public static int getTimeStamp() {
 		long time = System.currentTimeMillis() / 1000;
 		return (int)time;
         }
-        
+
 	public static String numberFormat(int i) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 	    String number = numberFormat.format(i);

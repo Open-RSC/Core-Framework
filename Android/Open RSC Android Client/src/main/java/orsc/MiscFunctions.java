@@ -105,9 +105,9 @@ public final class MiscFunctions {
 	}
 
 	public static final void copyBlock4(int srcStep, int val, int[] src, int srcI, int destI, int[] dest,
-			int negatedCount, byte var7) {
+										int negatedCount, byte var7) {
 		try {
-			
+
 			if (negatedCount < 0) {
 				val = src[(0xFF00 & srcI) >> 8];
 				srcStep <<= 1;
@@ -154,7 +154,7 @@ public final class MiscFunctions {
 
 	public static final synchronized byte[] clazz_10_a(int count, byte var1) {
 		try {
-			
+
 			byte[] var5;
 			if (count == 100 && MiscFunctions.scanline_s_b > 0) {
 				var5 = s_j[--MiscFunctions.scanline_s_b];
@@ -189,9 +189,9 @@ public final class MiscFunctions {
 	}
 
 	public static final void copyBlock16(int val, int srcStride, int negCount, int[] dest, int[] src, int srcHead,
-			int destHead, int var7) {
+										 int destHead, int var7) {
 		try {
-			
+
 			if (negCount < 0) {
 				val = src[255 & srcHead >> 8];
 				srcStride <<= 2;
@@ -244,7 +244,7 @@ public final class MiscFunctions {
 
 	static final String netbase_a(int var0, byte var1, String var2) {
 		try {
-			
+
 			String var3 = "";
 
 			for (int var4 = 0; var4 < var0; ++var4) {

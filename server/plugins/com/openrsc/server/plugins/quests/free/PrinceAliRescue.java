@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -172,8 +173,8 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			message(p, "The chancellor pays you 700 coins");
 			addItem(p, 10, 700);
 		}
-		p.incQuestPoints(3);
 		p.message("You have completed the quest of the Prince of Al Kharid");
+		incQuestReward(p, Quests.questData.get(Quests.PRINCE_ALI_RESCUE), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
 
@@ -185,10 +186,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			final int choice = showMenu(
 					p,
 					n,
-					new String[] {
 							"Can I help you? You must need some help here in the desert.",
 							"Its just too hot here. How can you stand it?",
-							"Do you mind if I just kill your Warriors?" });
+							"Do you mind if I just kill your Warriors?");
 			if (choice == 0) {
 				npcTalk(p, n, "I need the services of someone, yes.",
 						"If you are interested, see the spymaster, Osman",
@@ -271,9 +271,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		playerTalk(p, n, "Hi, who are you guarding here?");
 		npcTalk(p, n, "Can't say, all very secret. you should get out of here",
 				"I am not supposed to talk while I guard");
-		final int choice = showMenu(p, n, new String[] {
+		final int choice = showMenu(p, n,
 				"Hey, chill out, I won't cause you trouble",
-				"I had better leave, I don't want trouble" });
+				"I had better leave, I don't want trouble");
 		if (choice == 0) {
 			playerTalk(p, n, "I was just wondering what you do to relax");
 			npcTalk(p, n,
@@ -297,11 +297,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 						n,
 						"Can't say, all very secret. you should get out of here",
 						"I am not supposed to talk while I guard");
-				final int choice = showMenu(p, n, new String[] {
+				final int choice = showMenu(p, n,
 						"Hey, chill out, I won't cause you trouble",
 						"Tell me about the life of a guard",
 						"What did you want to be when you were a boy",
-						"I had better leave, I don't want trouble" });
+						"I had better leave, I don't want trouble");
 				if (choice == 0) {
 					joeDialogue(p, n, Joe.CHILL);
 				} else if (choice == 1) {
@@ -330,11 +330,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 						n,
 						"Can't say, all very secret, you should get out of here",
 						"I am not supposed to talk while I guard");
-				final int menu2 = showMenu(p, n, new String[] {
+				final int menu2 = showMenu(p, n,
 						"I have some beer here, fancy one?",
 						"Tell me about the life of a guard",
 						"What did you want to be when you were a boy",
-						"I had better leave, I don't want trouble" });
+						"I had better leave, I don't want trouble");
 				if (menu2 == 0) {
 					joeDialogue(p, n, Joe.BEER);
 				} else if (menu2 == 1) {
@@ -385,14 +385,15 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 						"Of course, it might be tough being here without a drink");
 				message(p,
 						"You hand a beer to the guard, he drinks it in seconds");
-				removeItem(p, BEER, 3); // if all beers he takes all.
+				removeItem(p, BEER, 1); //takes 2 more after dialogue
 				npcTalk(p, n, "Thas was perfect, i cant thank you enough");
 				playerTalk(p, n, "Would you care for another, my friend?");
 				npcTalk(p, n, "I better not, I don't want to be drunk on duty");
 				playerTalk(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
-				message(p, "You hand two more beers to the guard",
-						"he takes a sip of one, and then he drinks them both");
+				message(p, "You hand two more beers to the guard");
+				p.getInventory().remove(BEER, 2);
+				message(p, "he takes a sip of one, and then he drinks them both");
 				npcTalk(p,
 						n,
 						"Franksh, that wash just what I need to shtay on guard",
@@ -408,11 +409,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"You never relax with these people, but its a good career for a young man",
 					"And some of the shouting I rather like",
 					"RESISTANCE IS USELESS!");
-			final int choice = showMenu(p, n, new String[] {
+			final int choice = showMenu(p, n,
 					"So what do you buy with these great wages?",
 					"Tell me about the life of a guard",
 					"Would you be interested in making a little more money?",
-					"I had better leave, I don't want trouble" });
+					"I had better leave, I don't want trouble");
 			if (choice == 0) {
 				joeDialogue(p, n, Joe.BUYWITH);
 			} else if (choice == 1) {
@@ -430,10 +431,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"All us guards go to the same bar, And drink ourselves stupid",
 					"Its what I enjoy these days, that fade into unconciousness",
 					"I can't resist the sight of a really cold beer");
-			final int choice1 = showMenu(p, n, new String[] {
+			final int choice1 = showMenu(p, n,
 					"Tell me about the life of a guard",
 					"What did you want to be when you were a boy",
-					"I had better leave, I don't want trouble" });
+					"I had better leave, I don't want trouble");
 			if (choice1 == 0) {
 				joeDialogue(p, n, Joe.LIFE);
 			} else if (choice1 == 1) {
@@ -451,10 +452,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"I just wondered if you wanted some part-time bodyguard work");
 			npcTalk(p, n, "Oh. sorry. no, I don't need money",
 					"As long as you were not offering me a bribe");
-			final int choice11 = showMenu(p, n, new String[] {
+			final int choice11 = showMenu(p, n,
 					"Tell me about the life of a guard",
 					"What did you want to be when you were a boy",
-					"I had better leave, I don't want trouble" });
+					"I had better leave, I don't want trouble");
 			if (choice11 == 0) {
 				joeDialogue(p, n, Joe.LIFE);
 			} else if (choice11 == 1) {
@@ -470,10 +471,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					".... But most of those hours are a drag",
 					"If only I had spent more time in Knight school when I was a young boy",
 					"Maybe I wouldn't be here now, scared of Keli");
-			final int choice2 = showMenu(p, n, new String[] {
+			final int choice2 = showMenu(p, n,
 					"Hey chill out, I won't cause you trouble",
 					"What did you want to be when you were a boy",
-					"I had better leave, I don't want trouble" });
+					"I had better leave, I don't want trouble");
 			if (choice2 == 0) {
 				joeDialogue(p, n, Joe.CHILL);
 			} else if (choice2 == 1) {
@@ -492,10 +493,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					n,
 					"It kept us from goblin hunting, which was what most boys did",
 					"What are you here for?");
-			final int choice3 = showMenu(p, n, new String[] {
+			final int choice3 = showMenu(p, n,
 					"Hey chill out, I won't cause you trouble",
 					"Tell me about the life of a guard",
-					"I had better leave, I don't want trouble" });
+					"I had better leave, I don't want trouble");
 			if (choice3 == 0) {
 				joeDialogue(p, n, Joe.CHILL);
 			} else if (choice3 == 1) {
@@ -526,11 +527,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				final int choice = showMenu(
 						p,
 						n,
-						new String[] {
 								"Heard of you? you are famous in Runescape!",
 								"I have heard a little, but I think Katrine is tougher",
 								"I have heard rumours that you kill people",
-								"No I have never really heard of you" });
+								"No I have never really heard of you");
 				if (choice == 0) {
 					keliDialogue(p, n, Keli.FAMOUS);
 				} else if (choice == 1) {
@@ -555,11 +555,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					n,
 					"Thats very kind of you to say. Reputations are not easily earnt",
 					"I have managed to succeed where many fail");
-			final int choice = showMenu(p, n, new String[] {
+			final int choice = showMenu(p, n,
 					"I think Katrine is still tougher",
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice == 0) {
 				keliDialogue(p, n, Keli.KATRINE);
 			} else if (choice == 1) {
@@ -587,11 +587,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"Well, I can tell you, I have a valuable prisoner here in my cells",
 					"I can expect a high reward to be paid very soon for this guy",
 					"I can't tell you who he is, but he is a lot colder now");
-			final int choice2 = showMenu(p, n, new String[] {
+			final int choice2 = showMenu(p, n,
 					"Ah, I see. You must have been very skilful",
 					"Thats great, are you sure they will pay?",
 					"Can you be sure they will not try to get him out?",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice2 == 0) {
 				keliDialogue(p, n, Keli.SKILLFUL);
 			} else if (choice2 == 1) {
@@ -608,10 +608,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"Yes, I did most of the work, we had to grab the Pr...",
 					"er, we had to grab him under cover of ten of his bodyguards",
 					"It was a stronke of genius");
-			final int choice3 = showMenu(p, n, new String[] {
+			final int choice3 = showMenu(p, n,
 					"Are you sure they will pay?",
 					"Can you be sure they will not try to get him out?",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice3 == 0) {
 				keliDialogue(p, n, Keli.GREAT);
 			} else if (choice3 == 1) {
@@ -628,10 +628,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			npcTalk(p, n,
 					"Thats a good idea, I could use talented people like you",
 					"I may call on you if I need work doing");
-			final int choice4 = showMenu(p, n, new String[] {
+			final int choice4 = showMenu(p, n,
 					"You must have been very skilful",
 					"Can you be sure they will not try to get him out?",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice4 == 0) {
 				keliDialogue(p, n, Keli.SKILLFUL);
 			} else if (choice4 == 1) {
@@ -646,10 +646,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"And the locksmith who made the lock,",
 					"died suddenly when he had finished",
 					"There is not another key like this in the world");
-			final int choice5 = showMenu(p, n, new String[] {
+			final int choice5 = showMenu(p, n,
 					"Could I see the key please",
 					"That is a good way to keep secrets",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice5 == 0) {
 				keliDialogue(p, n, Keli.KEYPLEASE);
 			} else if (choice5 == 1) {
@@ -667,9 +667,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"I cannot see the harm");
 			p.message("Keli shows you a small key on a stronglooking chain");
 			if (p.getQuestStage(this) == 2 && hasItem(p, 243)) {
-				final int menu1 = showMenu(p, n, new String[] {
+				final int menu1 = showMenu(p, n,
 						"Could I touch the key for a moment please",
-						"I should not disturb someone as tough as you" });
+						"I should not disturb someone as tough as you");
 				if (menu1 == 0) {
 					npcTalk(p, n, "Only for a moment then");
 					message(p,
@@ -696,10 +696,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case Keli.TRAINED:
 			npcTalk(p, n, "I have used a sword since I was a small girl",
 					"I stabbed three people before I was 6 years old");
-			final int choice6 = showMenu(p, n, new String[] {
+			final int choice6 = showMenu(p, n,
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
-					"I think Katrine is still tougher" });
+					"I think Katrine is still tougher");
 			if (choice6 == 0) {
 				keliDialogue(p, n, Keli.PLAN);
 			} else if (choice6 == 1) {
@@ -714,11 +714,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"Theres always someone ready to spread rumours",
 					"I heard a rumour the other day, that some men are wearing skirts",
 					"If one of my men wore a skirt, he would wish he hadn't");
-			final int choice7 = showMenu(p, n, new String[] {
+			final int choice7 = showMenu(p, n,
 					"I think Katrine is still tougher",
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice7 == 0) {
 				keliDialogue(p, n, Keli.KATRINE);
 			} else if (choice7 == 1) {
@@ -732,11 +732,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case Keli.NEVERHEARD:
 			npcTalk(p, n, "You must be new to this land then",
 					"EVERYONE knows of Lady Keli and her prowess with the sword");
-			final int choice8 = showMenu(p, n, new String[] {
+			final int choice8 = showMenu(p, n,
 					"No, still doesn't ring a bell",
 					"Yes, of course I have heard of you",
 					"You must have trained a lot for this work",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (choice8 == 0) {
 				keliDialogue(p, n, Keli.NOBELL);
 			} else if (choice8 == 1) {
@@ -753,10 +753,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			final int choice9 = showMenu(
 					p,
 					n,
-					new String[] {
 							"I do not show respect to killers and hoodlums",
 							"You must have trained a lot for this work",
-							"I should not disturb someone as tough as you, great lady" });
+							"I should not disturb someone as tough as you, great lady");
 			if (choice9 == 0) {
 				npcTalk(p, n, "You should, you really should",
 						"I am wealthy enough to place a bounty on your head",
@@ -773,11 +772,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			npcTalk(p, n,
 					"Thats very kind of you to say. Reputations are not easily earnt",
 					"I have managed to succeed where many fail");
-			final int menu = showMenu(p, n, new String[] {
+			final int menu = showMenu(p, n,
 					"I think Katrine is still tougher",
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
-					"I should not disturb someone as tough as you" });
+					"I should not disturb someone as tough as you");
 			if (menu == 0) {
 				keliDialogue(p, n, Keli.KATRINE);
 			} else if (menu == 1) {
@@ -813,11 +812,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 						&& hasItem(p, 244)) {
 					npcTalk(p, n, "Good, you have all the basic equipment",
 							"What are your plans to stop the guard interfering?");
-					final int chose = showMenu(p, n, new String[] {
+					final int chose = showMenu(p, n,
 							"I haven't spoken to him yet",
 							"I was going to attack him",
 							"I hoped to get him drunk",
-							"Maybe I could bribe him to leave" });
+							"Maybe I could bribe him to leave");
 					if (chose == 0) {
 						leelaDialogue(p, n, Leela.HAVENT_SPOKE);
 					} else if (chose == 1) {
@@ -832,11 +831,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				playerTalk(p, n, "I am here to help you free the Prince");
 				npcTalk(p, n, "Your employment is known to me.",
 						"Now, do you know all that we need to make the break?");
-				final int choice = showMenu(p, n, new String[] {
+				final int choice = showMenu(p, n,
 						"I must make a disguise. What do you suggest?",
 						"I need to get the key made",
 						"What can i do with the guards?",
-						"I will go and get the rest of the escape equipment" });
+						"I will go and get the rest of the escape equipment");
 				if (choice == 0) {
 					leelaDialogue(p, n, Leela.DISGUISE);
 				} else if (choice == 1) {
@@ -934,10 +933,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 
 			}
 
-			final int choice = showMenu(p, n, new String[] {
+			final int choice = showMenu(p, n,
 					"I need to get the key made",
 					"What can i do with the guards?",
-					"I will go and get the rest of the escape equipment" });
+					"I will go and get the rest of the escape equipment");
 			if (choice == 0) {
 				leelaDialogue(p, n, Leela.KEYMADE);
 			} else if (choice == 1) {
@@ -964,10 +963,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"The only guard who will be a problem will be the one at the door",
 					"He is talkative, try to find a weakness in him",
 					"We can discuss this more when you have the rest of the escape kit");
-			final int choice2 = showMenu(p, n, new String[] {
+			final int choice2 = showMenu(p, n,
 					"I must make a disguise. What do you suggest?",
 					"I need to get the key made",
-					"I will go and get the rest of the escape equipment" });
+					"I will go and get the rest of the escape equipment");
 			if (choice2 == 0) {
 				leelaDialogue(p, n, Leela.DISGUISE);
 			} else if (choice2 == 1) {
@@ -1086,10 +1085,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 			case 0:
 				npcTalk(p, n, "Hello, I am Osman",
 						"What can I assist you with");
-				final int choice = showMenu(p, n, new String[] {
+				final int choice = showMenu(p, n,
 						"You don't seem very tough. Who are you?",
 						"I hear wild rumours about a Prince",
-						"I am just being nosy." });
+						"I am just being nosy.");
 				if (choice == 0) {
 					npcTalk(p, n, "I am in the employ of the Emir",
 							"That is all you need to know");
@@ -1107,10 +1106,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 				npcTalk(p, n, "Our Prince is captive by the Lady Keli",
 						"We just need to make the rescue",
 						"There are three things we need you to do");
-				final int menu = showMenu(p, n, new String[] {
+				final int menu = showMenu(p, n,
 						"What is first thing I must do?",
 						"What is needed second?",
-						"And the final thing you need?" });
+						"And the final thing you need?");
 				if (menu == 0) {
 					osmanDialogue(p, n, Osman.FIRST);
 				} else if (menu == 1) {
@@ -1129,9 +1128,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					p.getCache().store("key_made", true);
 					npcTalk(p, n, "Pick the key up from Leela.",
 							"I will let you get 80 coins from the chancellor for getting this key");
-					final int wutwut = showMenu(p, n, new String[] {
+					final int wutwut = showMenu(p, n,
 							"Thankyou, I will try to find the other items",
-							"Can you tell me what I still need to get?" });
+							"Can you tell me what I still need to get?");
 					if (wutwut == 0) {
 
 					} else if (wutwut == 1) {
@@ -1167,10 +1166,10 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"A blonde wig too. That is up to you to make or find",
 					"Something to colour the skin of the prince.",
 					"My daughter and top spy, leela, can help you there");
-			final int firstMenu = showMenu(p, n, new String[] {
+			final int firstMenu = showMenu(p, n,
 					"Explain the first thing again", "What is needed second?",
 					"And the final thing you need?",
-					"Okay, I better go find some things" });
+					"Okay, I better go find some things");
 			if (firstMenu == 0) {
 				osmanDialogue(p, n, Osman.FIRST);
 			} else if (firstMenu == 1) {
@@ -1189,11 +1188,11 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 					"If you can convince Lady Keli to show it to you for a moment",
 					"She is very boastful. It should not be too hard",
 					"Bring the imprint to me, with a bar of bronze.");
-			final int choice = showMenu(p, n, new String[] {
+			final int choice = showMenu(p, n,
 					"What is first thing I must do?",
 					"What exactly is needed second?",
 					"And the final thing you need?",
-					"Okay, I better go find some things" });
+					"Okay, I better go find some things");
 			if (choice == 0) {
 				osmanDialogue(p, n, Osman.FIRST);
 			} else if (choice == 1) {
@@ -1207,9 +1206,9 @@ public class PrinceAliRescue implements QuestInterface,WallObjectActionListener,
 		case Osman.FINAL:
 			npcTalk(p, n, "You will need to stop the guard at the door",
 					"Find out if he has any weaknesses, and use them");
-			final int finalChoice = showMenu(p, n, new String[] {
+			final int finalChoice = showMenu(p, n,
 					"What is first thing I must do?", "What is needed second?",
-					"Okay, I better go find some things" });
+					"Okay, I better go find some things");
 			if (finalChoice == 0) {
 				osmanDialogue(p, n, Osman.FIRST);
 			} else if (finalChoice == 1) {

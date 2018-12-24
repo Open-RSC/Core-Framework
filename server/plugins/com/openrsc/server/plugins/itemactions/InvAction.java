@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -26,7 +27,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	public void onInvAction(Item item, Player p) {
 		if (item.getID() == 793) {
 			p.message("you open the oyster shell");
-			if (DataConversions.random(0, 1) == 1) {
+			if (DataConversions.random(0, 10) == 1) {
 				p.getInventory().replace(793, 792);
 			} else {
 				p.getInventory().replace(793, 791);
@@ -231,7 +232,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		}
 		else if (item.getID() == 777) {
 			p.message("you rub together the dry sticks");
-			if (p.getSkills().getMaxStat(11) < 30) {
+			if (getCurrentLevel(p, FIREMAKING) < 30) {
 				p.message("you need a firemaking level of 30 or above");
 				p.message("the sticks smoke momentarily then die out");
 				return;
@@ -241,6 +242,10 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 				p.message("you place the smouldering twigs to your torch");
 				p.message("your torch lights");
 				p.getInventory().add(new Item(774));
+				p.incExp(11, 450, true);
+				if(p.getQuestStage(Quests.SEA_SLUG) == 5 && !p.getCache().hasKey("lit_torch")) {
+					p.getCache().store("lit_torch", true);
+				}
 			} else {
 				p.message("the sticks smoke momentarily then die out");
 			}
@@ -255,13 +260,38 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 					"fnales add 5cme snape gras5",
 					"you guess it really says something slightly different");
 		}
+		// magic scroll
 		else if (item.getID() == 752) {
-			message(p, "You memorise what is written on the scroll",
-					"You can now cast the Ardougne teleport spell",
-					"Provided you have the required runes and magic level",
-					"The scroll crumbles to dust");
+			if (p.getCache().hasKey("ardougne_scroll") && p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
+				message(p, "The scroll crumbles to dust");
+			}
+			else {
+				message(p, "You memorise what is written on the scroll",
+						"You can now cast the Ardougne teleport spell",
+						"Provided you have the required runes and magic level",
+						"The scroll crumbles to dust");
+			}			
 			removeItem(p, 752, 1);
+			if (!p.getCache().hasKey("ardougne_scroll")) {
+				p.getCache().store("ardougne_scroll", true);
+			}
 		}
+		// spell scroll
+		else if (item.getID() == 1181) {
+			if (p.getCache().hasKey("watchtower_scroll") && p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
+				message(p, "The scroll crumbles to dust");
+			}
+			else {
+				message(p, "You memorise what is written on the scroll",
+						"You can now cast the Watchtower teleport spell",
+						"Provided you have the required runes and magic level",
+						"The scroll crumbles to dust");
+			}
+			removeItem(p, 1181, 1);
+			if (!p.getCache().hasKey("watchtower_scroll")) {
+				p.getCache().store("watchtower_scroll", true);
+			}
+		} 
 		/** TOURIST GUIDE BOOK - REMAKE THIS CODE LATER **/
 		else if (item.getID() == 706) {
 			message(p, "You read the guide");
@@ -403,20 +433,20 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			p.message("The nightshade was highly poisonous");
 		} 
 		else if (item.getID() == 1087) {
-			p.message("You search the robe");
-			p.message("You find nothing");
-		} 
-		else if (item.getID() == 1181) {
-			if (p.getCache().hasKey("watchtower_scroll") && p.getQuestStage(Constants.Quests.WATCHTOWER) == -1) {
-				return;
+			if(p.getQuestStage(Quests.WATCHTOWER) == 8 || p.getQuestStage(Quests.WATCHTOWER) == 9) {
+				p.message("You search the robe");
+				if(hasItem(p, 1153)) {
+					message(p, "You find nothing");
+				} else if(p.getBank().hasItemId(1153)) {
+					playerTalk(p, null, "I already have this in my bank");
+				} else {
+					message(p, "You find a crystal wrapped in the folds of the material");
+					addItem(p, 1153, 1);
+				}
 			}
-			message(p, "You memorise what is written on the scroll");
-			p.message("You can now cast the Watchtower teleport spell");
-			p.message("Provided you have the required runes and magic level");
-			p.message("The scroll crumbles to dust");
-			removeItem(p, 1181, 1);
-			if (!p.getCache().hasKey("watchtower_scroll")) {
-				p.getCache().store("watchtower_scroll", true);
+			else {
+				message(p, "You search the robe",
+						"You find nothing");
 			}
 		} 
 		else if (item.getID() == 1141) {

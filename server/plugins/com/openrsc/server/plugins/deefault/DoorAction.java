@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.deefault;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.GameServer;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
@@ -391,6 +392,18 @@ public class DoorAction {
 			}
 			break;
 
+		case 120: // Plague city / Biohazard - unsure the purpose of this door
+			if(p.getX() > 624) {
+				Npc mourner = getNearestNpc(p, 445, 8);
+				p.message("The door won't open");
+				p.message("You notice a black cross on the door");
+				if (mourner != null) {
+					npcTalk(p, mourner, "I'd stand away from there",
+							"That black cross means that house has been touched by the plague");
+				}
+			}
+			break;
+		
 		case 122: // Plague City
 			if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) >= 6
 			|| p.getQuestStage(Constants.Quests.PLAGUE_CITY) == -1) {
@@ -442,11 +455,12 @@ public class DoorAction {
 						return;
 					}
 					if (p.getQuestStage(Constants.Quests.PLAGUE_CITY) == 7) {
-						int menu = showMenu(p, mourner,
+						int menu = showMenu(p, mourner, false, //do not send over
 								"but I think a kidnap victim is in here",
 								"I fear not a mere plague",
 								"thanks for the warning");
 						if (menu == 0) {
+							playerTalk(p, mourner, "But I think a kidnap victim is in here");
 							npcTalk(p, mourner, "Sounds unlikely",
 									"Even kidnappers wouldn't go in there",
 									"even if someone is in there",
@@ -456,10 +470,8 @@ public class DoorAction {
 							if (menu2 == 0) {
 								// NOTHING
 							} else if (menu2 == 1) {
-								npcTalk(p, mourner,
-										"You don't have the clearance to go in there");
-								playerTalk(p, mourner,
-										"How do I get clearance?");
+								npcTalk(p, mourner, "You don't have clearance to go in there");
+								playerTalk(p, mourner, "How do I get clearance?");
 								npcTalk(p,
 										mourner,
 										"Well you'd need to apply to the head mourner",
@@ -468,6 +480,7 @@ public class DoorAction {
 								p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 8);
 							}
 						} else if (menu == 1) {
+							playerTalk(p, mourner, "I fear not a mere plague");
 							npcTalk(p, mourner, "that's irrelevant",
 									"You don't have clearance to go in there");
 							playerTalk(p, mourner, "How do I get clearance?");
@@ -479,7 +492,7 @@ public class DoorAction {
 							p.updateQuestStage(Constants.Quests.PLAGUE_CITY, 8);
 
 						} else if (menu == 2) {
-							// NOTHING
+							playerTalk(p, mourner, "thanks for the warning");
 						}
 					}
 				}
@@ -512,7 +525,7 @@ public class DoorAction {
 				break;
 			}
 			if (p.getY() > 523) {
-				if (p.getSkills().getLevel(10) < 68) {
+				if (getCurrentLevel(p, FISHING) < 68) {
 					p.setBusy(true);
 					Npc masterFisher = World.getWorld().getNpc(368, 582, 588,
 							524, 527);
@@ -539,13 +552,13 @@ public class DoorAction {
 			if (obj.getX() != 268 || obj.getY() != 3381) {
 				break;
 			}
-			if (p.getSkills().getLevel(14) < 60) {
+			if (getCurrentLevel(p, MINING) < 60) {
 				Npc dwarf = World.getWorld().getNpc(191, 265, 270, 3379, 3380);
 				if (dwarf != null) {
-					npcTalk(p, dwarf, "Hello only the top miners are allowed in here");
+					npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
 				}
 				sleep(600);
-				p.message("You need a mining level of 60 to enter");
+				p.message("You need a mining of level 60 to enter");
 			} else {
 				doDoor(obj, p);
 			}
@@ -555,15 +568,15 @@ public class DoorAction {
 			if (obj.getX() != 347 || obj.getY() != 601) {
 				return;
 			}
-			if (p.getSkills().getLevel(12) < 40) {
+			if (getCurrentLevel(p, CRAFTING) < 40) {
 				p.setBusy(true);
 				Npc master = World.getWorld().getNpc(231, 341, 349, 599, 612);
 				if (master != null) {
-					npcTalk(p, master, "Hello only the top crafters are allowed in here");
+					npcTalk(p, master, "Sorry only experienced craftsmen are allowed in here");
 				}
 				sleep(600);
 				p.setBusy(false);
-				p.message("You need a crafting level of 40 to enter");
+				p.message("You need a crafting level of 40 to enter the guild");
 			} else if (!p.getInventory().wielding(191)) {
 				Npc master = World.getWorld().getNpc(231, 341, 349, 599, 612);
 				if (master != null) {
@@ -579,10 +592,10 @@ public class DoorAction {
 			if (obj.getX() != 179 || obj.getY() != 488) {
 				break;
 			}
-			if (p.getSkills().getLevel(7) < 32) {
+			if (getCurrentLevel(p, COOKING) < 32) {
 				Npc chef = World.getWorld().getNpc(133, 176, 181, 480, 487);
 				if (chef != null) {
-					npcTalk(p, chef, "Hello only the top cooks are allowed in here");
+					npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
 				}
 				sleep(600);
 				p.message("You need a cooking level of 32 to enter");
@@ -601,7 +614,7 @@ public class DoorAction {
 			if (obj.getX() != 599 || obj.getY() != 757) {
 				break;
 			}
-			if (p.getSkills().getLevel(6) < 66) {
+			if (getCurrentLevel(p, MAGIC) < 66) {
 				Npc wizard = World.getWorld().getNpc(513, 596, 597, 755, 758);
 				if (wizard != null) {
 					npcTalk(p, wizard, "You need a magic level of 66 to get in here",
@@ -614,7 +627,7 @@ public class DoorAction {
 			}
 			break;
 
-		case 22: // Odd looking wall (545, 3283)
+		case 22: // Odd looking wall (545, 3283) & (219, 3282)
 			p.playSound("secretdoor");
 			doDoor(obj, p, -1);
 			p.message("You just went through a secret door");
@@ -677,9 +690,36 @@ public class DoorAction {
 			}
 			doDoor(obj, p);
 			break;
-
-		case 67: // Lost City Market Door (117, 3539), (116, 3537)
-			Npc n = World.getWorld().getNpcById(221);
+			
+		case 67: // Lost City Market Door (117, 3539), (116, 3537) NPC: 221
+			if (p.getLocation().getX() == 115 || p.getLocation().getY() == 3539)  {
+				Npc n = World.getWorld().getNpc(221, 105, 116, 3536, 3547);
+				if (n != null) {
+					npcTalk(p, n,
+							"You cannot go through this door without paying the trading tax");
+					playerTalk(p, n, "What do I need to pay?");
+					npcTalk(p, n, "One diamond");
+					int m = showMenu(p, n, "Okay", "A diamond, are you crazy?",
+							"I haven't brought my diamonds with me");
+					if (m == 0) {
+						if (!hasItem(p, 161)) {
+							playerTalk(p, n,
+									"I haven't brought my diamonds with me");
+						} else {
+							p.message("You give the doorman a diamond");
+							removeItem(p, 161, 1);
+							doDoor(obj, p);
+						}
+					}
+					else if (m == 1) {
+						npcTalk(p, n, "Nope those are the rules");						
+						}
+				}
+				break;	
+			}	
+			if (p.getLocation().getX() == 116 || p.getLocation().getY() == 3538) {						
+				Npc n = World.getWorld().getNpc(221, 117, 125, 3531, 3538);
+			
 			if (n != null) {
 				npcTalk(p, n,
 						"You cannot go through this door without paying the trading tax");
@@ -698,7 +738,8 @@ public class DoorAction {
 					}
 				}
 				else if (m == 1) {
-					npcTalk(p, n, "Nope those are the rules");
+					npcTalk(p, n, "Nope those are the rules");				
+					}
 				}
 			}
 			break;
@@ -733,6 +774,9 @@ public class DoorAction {
 								"we're waiting for a doctor");
 					}
 				}
+			} else if((p.getQuestStage(Constants.Quests.BIOHAZARD) > 5 || p.getQuestStage(Constants.Quests.BIOHAZARD) == -1) && 
+					p.getInventory().wielding(802)) {
+				doDoor(obj, p);
 			} else {
 				p.message("the door is locked");
 			}
@@ -903,6 +947,10 @@ public class DoorAction {
 			break;
 		}
 		if (player.getInventory().hasItemId(keyItem) && item.getID() == keyItem) {
+			if(keyItem == 538 && player.getQuestStage(Quests.WITCHS_HOUSE) == 0) {
+				playerTalk(player, null, "It'd be rude to break into this house");
+				return;
+			}
 			if(showsBubble) {
 				showBubble(player, item);
 			}
@@ -1053,7 +1101,7 @@ public class DoorAction {
 				doGate(player, obj);
 			} else {
 				if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
-					if (player.getSkills().getLevel(8) < 70) {
+					if (getCurrentLevel(player, WOODCUT) < 70) {
 						player.setBusy(true);
 						final Npc forester = World.getWorld().getNpc(348, 562, 565,
 								468, 472);

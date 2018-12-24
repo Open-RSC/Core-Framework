@@ -27,7 +27,7 @@ public class RSBufferUtils {
 
 	public static final int computeCRC(byte[] data, int count) {
 		try {
-			
+
 			return RSBufferUtils.computeCRC(count, -49, data, 0);
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
@@ -37,7 +37,7 @@ public class RSBufferUtils {
 
 	public static final int computeCRC(int right, int var1, byte[] data, int left) {
 		try {
-			
+
 			int crc = -1;
 
 			for (int i = left; i < right; ++i) {
@@ -52,7 +52,7 @@ public class RSBufferUtils {
 
 	public static final int get16(int offset, byte[] data) {
 		try {
-			
+
 			return (data[1 + offset] & 255) + ((255 & data[offset]) << 8);
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
@@ -62,7 +62,7 @@ public class RSBufferUtils {
 
 	public static final int get32(int offset, byte[] data) {
 		try {
-			
+
 			return (data[offset + 3] & 255) + (data[offset + 2] << 8 & 0xFF00) + ((255 & data[offset]) << 24)
 					+ ((255 & data[1 + offset]) << 16);
 		} catch (RuntimeException var4) {
@@ -73,23 +73,20 @@ public class RSBufferUtils {
 
 	public static final String getEncryptedString(RSBuffer buffer) {
 		try {
-			
+
 			return getEncryptedString(buffer, 32767);
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "ia.C(" + (buffer != null ? "{...}" : "null") + ',' + false + ')');
 		}
 	}
-
 	public static final String getEncryptedString(RSBuffer src, int limit) {
 		try {
-			
 
 			try {
 				int count = src.getSmart08_16();
 				if (count > limit) {
 					count = limit;
 				}
-
 				byte[] dest = new byte[count];
 				src.packetEnd += RSBufferUtils.stringEncryption.decryptString(src.dataBuffer, dest, 0,
 						src.packetEnd, -1, count);
@@ -106,7 +103,7 @@ public class RSBufferUtils {
 
 	public static final String getStringFromBytes(byte[] src, int offset, int count) {
 		try {
-			
+
 			char[] dest = new char[count];
 			int dh = 0;
 
@@ -132,7 +129,7 @@ public class RSBufferUtils {
 
 	public static final int putEncryptedString(RSBuffer dest, String src) {
 		try {
-			
+
 			int oldHead = dest.packetEnd;
 			byte[] data = RSBufferUtils.stringToBytes(src);
 			dest.putSmart08_16(data.length);
@@ -147,7 +144,7 @@ public class RSBufferUtils {
 
 	static final int putStringIntoBytes(CharSequence str, int strLeft, int strRight, byte[] dest, int destOffset) {
 		try {
-			
+
 			int count = strRight - strLeft;
 			for (int i = 0; count > i; ++i) {
 				char c = str.charAt(strLeft + i);
@@ -251,7 +248,7 @@ public class RSBufferUtils {
 
 	public static final int readShort(byte[] data, int var1, int index) {
 		try {
-			
+
 			int val = FastMath.byteToUByte(data[index]) * 256 + FastMath.byteToUByte(data[1 + index]);
 			if (val > 32767) {
 				val -= 65536;
@@ -266,7 +263,7 @@ public class RSBufferUtils {
 
 	public static final byte[] stringToBytes(CharSequence str) {
 		try {
-			
+
 			int len = str.length();
 			byte[] out = new byte[len];
 
@@ -378,21 +375,21 @@ public class RSBufferUtils {
 	public static final void setStringEncryptor(StringEncryption var0) {
 		try {
 			RSBufferUtils.stringEncryption = var0;
-			
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "cb.C(" + (var0 != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
 	}
 
 	public static StringEncryption encryption = new StringEncryption(StringEncryption.asByte(22, 22, 22, 22, 22, 22, 21, 22,
-	22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8, 22,
-	16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15, 17,
-	8, 11, 9, 10, 10, 10, 10, 11, 10, 9, 7, 12, 11, 10, 10, 9, 10, 10, 12, 10, 9, 8, 12, 12, 9, 14, 8, 12, 17,
-	16, 17, 22, 13, 21, 4, 7, 6, 5, 3, 6, 6, 5, 4, 10, 7, 5, 6, 4, 4, 6, 10, 5, 4, 4, 5, 7, 6, 10, 6, 10, 22,
-	19, 22, 14, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-	22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-	22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-	22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-	22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
+			22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8, 22,
+			16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15, 17,
+			8, 11, 9, 10, 10, 10, 10, 11, 10, 9, 7, 12, 11, 10, 10, 9, 10, 10, 12, 10, 9, 8, 12, 12, 9, 14, 8, 12, 17,
+			16, 17, 22, 13, 21, 4, 7, 6, 5, 3, 6, 6, 5, 4, 10, 7, 5, 6, 4, 4, 6, 10, 5, 4, 4, 5, 7, 6, 10, 6, 10, 22,
+			19, 22, 14, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
 
 }

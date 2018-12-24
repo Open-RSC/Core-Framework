@@ -1,9 +1,9 @@
 package com.openrsc.client.data;
 
-import java.util.Random;
-import java.nio.ByteBuffer;
-import java.io.IOException;
 import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Random;
 
 public final class DataConversions {
 

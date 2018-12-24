@@ -7,21 +7,45 @@ server {
     error_log                               /var/log/nginx/error.log;
     access_log                              /var/log/nginx/access.log;
 
+    gzip on;
+    gzip_static on;
+    gzip_vary on;
+    gzip_http_version 1.1;
+    gzip_min_length 256;
+    gzip_comp_level 5;
+    gzip_proxied any;
+    gzip_types
+      application/atom+xml
+      application/javascript
+      application/json
+      application/rss+xml
+      application/vnd.ms-fontobject
+      application/x-font-ttf
+      application/x-web-app-manifest+json
+      application/xhtml+xml
+      application/xml
+      font/opentype
+      image/svg+xml
+      image/x-icon
+      text/css
+      text/plain
+      text/x-component;
+
     client_max_body_size                    25m;
     proxy_connect_timeout                   600;
     proxy_send_timeout                      600;
     proxy_read_timeout                      600;
     send_timeout                            600;
-    gzip on;
-    gzip_static on;
-    gzip_vary on;
-    gzip_http_version 1.1;
-    gzip_min_length 700;
-    gzip_comp_level 6;
 
     root /var/www/html;
 
     index index.php index.html index.htm;
+
+    error_page 404 /index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
 
     ####### Proxies #######
     # PHP proxy
@@ -39,6 +63,16 @@ server {
     ####### Proxies #######
     # PHP proxy
     location ~ \.php$ {
+        root /var/www/html;
+        #fastcgi_cache laravel;
+        fastcgi_cache_valid 200 204 1m;
+        fastcgi_no_cache $http_authorization $cookie_laravel_session;
+        fastcgi_cache_lock on;
+        fastcgi_cache_lock_timeout 10s;
+        add_header X-Proxy-Cache $upstream_cache_status;
+        fastcgi_no_cache $no_cache;
+        fastcgi_cache_use_stale updating error timeout invalid_header http_500;
+        fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass php:9000;
         fastcgi_index index.php;
@@ -48,6 +82,28 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
         try_files $uri $uri/ /index.php$is_args$args /board/app.php$is_args$args;
     }
+
+    # Cache everything by default
+    set $no_cache 0;
+    # Don't cache POST requests
+    if ($request_method = POST) {
+        set $no_cache 1;
+    }
+    # Don't cache if the URL contains a query string
+    if ($query_string != "") {
+        set $no_cache 1;
+    }
+    # Don't cache the following URLs
+    if ($request_uri ~* "/(cp/)") {
+        set $no_cache 1;
+    }
+    # Don't cache if there is a cookie called PHPSESSID
+    if ($http_cookie = "PHPSESSID") {
+        set $no_cache 1;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
 
     ####### PHPBB Forum #######
     location /board {

@@ -7,6 +7,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -27,25 +28,37 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					"Go get the authenticity of the shield verified",
 					"By the curator at the museum",
 					"And I will grant you your reward");
-			return;// Can u test it from beginning to end? sure thing btw, need
-					// todo the door.. :/ which one
-		} else if (hasItem(p, 61)
-				&& p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
+			return;
+		} else if (hasItem(p, 61)) {
 			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
 					"For the return of the shield of Arrav");
-			message(p, "You show the certificate to the king");
-			npcTalk(p, n, "My goodness",
-					"This is the claim for a reward put out by my father",
-					"I never thought I'd see anyone claim this reward",
-					"I see you are claiming half the reward",
-					"So that would come to 600 gold coins");
-			message(p, "You hand the certificate",
-					"The king gives you 600 coins");
-			removeItem(p, 61, 1);
-			p.sendQuestComplete(Constants.Quests.SHIELD_OF_ARRAV);
+			if(p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) == 5) {
+				message(p, "You show the certificate to the king");
+				npcTalk(p, n, "My goodness",
+						"This is the claim for a reward put out by my father",
+						"I never thought I'd see anyone claim this reward",
+						"I see you are claiming half the reward",
+						"So that would come to 600 gold coins");
+				message(p, "You hand over a certificate",
+						"The king gives you 600 coins");
+				removeItem(p, 61, 1);
+				p.sendQuestComplete(Constants.Quests.SHIELD_OF_ARRAV);
+				if (isBlackArmGang(p))
+					p.updateQuestStage(Constants.Quests.SHIELD_OF_ARRAV, -2);
+				return;
+			} else if(p.getQuestStage(Constants.Quests.SHIELD_OF_ARRAV) >= 0) {
+				npcTalk(p, n, "The name on this certificate isn't yours!",
+						"I can't give you the reward",
+						"Unless you do the quest yourself");
+			} else {
+				npcTalk(p, n, "You have already claimed the reward",
+						"You can't claim it twice");
+				message(p, "Why don't you give this certificate",
+						"To whoever helped you get the shield");
+			}
 			return;
 		}
-		playerTalk(p, n, "Greetings your majesty");
+		playerTalk(p, n, "Greetings, your majesty");
 		npcTalk(p, n, "Do you have anything of import to say?");
 		playerTalk(p, n, "Not really");
 		npcTalk(p, n, "You will have to excuse me then", "I am very busy",

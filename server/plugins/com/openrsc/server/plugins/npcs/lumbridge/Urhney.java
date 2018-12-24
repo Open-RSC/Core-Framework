@@ -16,7 +16,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		npcTalk(p, n, "Go away, I'm meditating");
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 1 && !hasItem(p, 24)) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, 24)) {
 			defaultMenu.addOption(new Option(
 					"Father Aereck sent me to talk to you") {
 				@Override
@@ -36,7 +36,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 											"Sigh",
 											"Well I can't go back and exorcise it",
 											"I vowed not to leave this place",
-											"Until I had a full two years of prayer and meditation",
+											"Until I had done a full two years of prayer and meditation",
 											"Tell you what I can do though",
 											"Take this amulet");
 									message(p,
@@ -78,7 +78,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 											"Sigh",
 											"Well I can't go back and exorcise it",
 											"I vowed not to leave this place",
-											"Until I had a full two years of prayer and meditation",
+											"Until I had done a full two years of prayer and meditation",
 											"Tell you what I can do though",
 											"Take this amulet");
 									message(p,
@@ -100,6 +100,21 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 											2);
 								}
 							}).showMenu(p);
+				}
+			});
+		}
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2 && !hasItem(p, 24)) {
+			defaultMenu.addOption(new Option(
+					"I've lost the amulet") {
+				@Override
+				public void action() {
+					message(p, "Father Urhney sighs");
+					npcTalk(p, n, "How careless can you get",
+							"Those things aren't easy to come by you know",
+							"It's a good job I've got a spare");
+					message(p, "Father Urhney hands you an amulet");
+					npcTalk(p, n, "Be more careful this time");
+					playerTalk(p, n, "Ok I'll try to be");
 				}
 			});
 		}

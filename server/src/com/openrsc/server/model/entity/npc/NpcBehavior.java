@@ -18,6 +18,7 @@ public class NpcBehavior {
 	protected Npc npc;
 
 	protected Mob target;
+	protected Mob lastTarget;
 
 	public NpcBehavior(Npc npc) {
 		this.npc = npc;
@@ -30,19 +31,22 @@ public class NpcBehavior {
 	private State state = State.ROAM;
 
 	public void tick() {
-		
+
 		if (state == State.ROAM) {
-			
+
 			if (npc.inCombat()) {
 				state = State.COMBAT;
 				return;
 			} else if (npc.isBusy()) {
 				return;
 			}
-			
+
 			target = null;
-			if (System.currentTimeMillis() - lastMovement > 3000 && npc.finishedPath()) {
+			if (System.currentTimeMillis() - lastMovement > 3000
+					&& System.currentTimeMillis() - npc.getCombatTimer() > 3000
+					&& npc.finishedPath()) {
 				lastMovement = System.currentTimeMillis();
+				lastTarget = null;
 				int rand = DataConversions.random(0, 1);
 				if(!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
 					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
@@ -85,69 +89,85 @@ public class NpcBehavior {
 				}
 			}
 		} else if (state == State.AGGRO) {
+
+			// There should not be combat or aggro. Let's resume roaming.
 			if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat()) {
-				state = State.ROAM;
-				return;
-			}
-			if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
-					|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
-				state = State.ROAM;
-				return;
+				setRoaming();
 			}
 
-			if (npc.inCombat() && npc.getOpponent() != target) {
-				target = npc.getOpponent();
-				state = State.COMBAT;
+			// Target is not in range.
+			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
+					|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
+				setRoaming();
 			}
-			lastMovement = System.currentTimeMillis();
-			npc.walkToEntity(target.getX(), target.getY());
-			if (npc.withinRange(target, 1) && npc.canReach(target) && !target.inCombat()
-					&& !(System.currentTimeMillis()
-							- target.getCombatTimer() < (target.getCombatState() == CombatState.RUNNING
-									|| target.getCombatState() == CombatState.WAITING ? 3000 : 1500))) {
-				npc.startCombat(target);
-				state = State.COMBAT;
+
+			// Combat with another target - set state.
+			else {
+				if (npc.inCombat() && npc.getOpponent() != target) {
+					target = npc.getOpponent();
+					state = State.COMBAT;
+				}
+
+				lastMovement = System.currentTimeMillis();
+				if (!checkTargetCombatTimer()) {
+					npc.walkToEntity(target.getX(), target.getY());
+					if (npc.withinRange(target, 1)
+						&& npc.canReach(target)
+						&& !target.inCombat()) {
+						setFighting(target);
+					}
+				}
 			}
+
 		} else if (state == State.COMBAT) {
+			lastTarget = target;
 			target = npc.getOpponent();
 			if (target == null || npc.isRemoved() || target.isRemoved()) {
-				state = State.ROAM;
-				return;
+				setRoaming();
 			}
 			if (npc.inCombat()) {
-				if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_DO_RETREAT, npc.getID())
-						&& npc.getSkills().getLevel(Skills.HITPOINTS) <= Math
-								.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)
-						&& npc.getSkills().getLevel(Skills.HITPOINTS) > 0 && npc.getOpponent().getHitsMade() >= 3) {
-					
-					
-					state = State.RETREAT;
-					if (npc.getOpponent().isPlayer()) {
-						Player victimPlayer = ((Player) npc.getOpponent());
-						victimPlayer.resetAll();
-						victimPlayer.message("Your opponent is retreating");
-						ActionSender.sendSound(victimPlayer, "retreat");
+				if (DataConversions.inArray(Constants.GameServer.NPCS_THAT_DO_RETREAT, npc.getID())) {
+					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
+						Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)) {
+						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0
+								&& npc.getOpponent().getHitsMade() >= 3) {
+							retreat();
+						}
 					}
-					npc.setLastCombatState(CombatState.RUNNING);
-					npc.getOpponent().setLastCombatState(CombatState.WAITING);
-					npc.resetCombatEvent();
-
-					Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
-							DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
-					npc.walk(walkTo.getX(), walkTo.getY());
 				}
 			} else if (!npc.inCombat()) {
-				if (npc.getDef().isAggressive() || npc.getLocation().inWilderness()) {
+				if ((npc.getDef().isAggressive() &&
+					lastTarget != null &&
+					lastTarget.getCombatLevel() <= ((npc.getNPCCombatLevel() * 2) + 1)
+				) || npc.getLocation().inWilderness()) {
 					state = State.AGGRO;
+					if (lastTarget != null)
+						target = lastTarget;
 				} else {
-					state = State.ROAM;
+					setRoaming();
 				}
 			}
 
 		} else if (state == State.RETREAT) {
-			if (npc.finishedPath())
-				state = State.ROAM;
+			if (npc.finishedPath()) setRoaming();
 		}
+	}
+
+	public void retreat() {
+		state = State.RETREAT;
+		if (npc.getOpponent().isPlayer()) {
+			Player victimPlayer = ((Player) npc.getOpponent());
+			victimPlayer.resetAll();
+			victimPlayer.message("Your opponent is retreating");
+			ActionSender.sendSound(victimPlayer, "retreat");
+		}
+		npc.setLastCombatState(CombatState.RUNNING);
+		npc.getOpponent().setLastCombatState(CombatState.WAITING);
+		npc.resetCombatEvent();
+
+		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
+			DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
+		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
 	private boolean canAggro(Mob p) {
@@ -164,24 +184,31 @@ public class NpcBehavior {
 
 		boolean closeEnough = npc.canReach(p);
 
-		boolean revenantsTarget = false;
-		return closeEnough && shouldAttack && !p.getAttribute("no-aggro", false) && !outOfBounds && !playerOccupied
-				&& !playerCombatTimeout && !p.warnedToMove() && !revenantsTarget;
+		return closeEnough && shouldAttack
+			&& !p.getAttribute("no-aggro", false)
+			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
 
 	public State getBehaviorState() {
 		return state;
 	}
 
-	public boolean isChasing() {
+	boolean isChasing() {
 		return state == State.AGGRO;
 	}
 
-	public Player getChasedPlayer() {
+	Player getChasedPlayer() {
 		if (target.isPlayer())
 			return (Player) target;
 
 		return null;
+	}
+
+	public boolean checkTargetCombatTimer() {
+		return (System.currentTimeMillis()	- target.getCombatTimer()
+			< (target.getCombatState() == CombatState.RUNNING
+			|| target.getCombatState() == CombatState.WAITING ? 3000 : 1500)
+		);
 	}
 
 	public Mob getChaseTarget() {
@@ -190,7 +217,16 @@ public class NpcBehavior {
 
 	public void setChasing(Player player) {
 		state = State.AGGRO;
-		this.target = player;
+		target = player;
+	}
+
+	private void setRoaming() {
+		state = State.ROAM;
+	}
+
+	private void setFighting(Mob target) {
+		npc.startCombat(target);
+		state = State.COMBAT;
 	}
 
 	public void onKill(Mob killed) {

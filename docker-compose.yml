@@ -2,12 +2,11 @@ version: '3.1'
 services:
 
     nginx:
-        image: nginx:1.15.3-alpine-perl
+        image: nginx:latest
         container_name: nginx
         volumes:
             - "./etc/nginx:/etc/nginx/conf.d"
             - "./Website:/var/www/html"
-            - "./server/avatars:/var/www/html/avatars"
             - "./etc/nginx/logs:/var/log/nginx"
             - "./etc/letsencrypt:/etc/letsencrypt"
         ports:
@@ -16,17 +15,19 @@ services:
         environment:
             - NGINX_HOST=${NGINX_HOST}
         restart: always
-        depends_on:
-            - mysqldb
 
     php:
-        image: nanoninja/php-fpm
+        build:
+            context: .
+            dockerfile: etc/php/Dockerfile
         container_name: php
         ports:
             - "127.0.0.1:9000:9000"
         volumes:
             - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
             - "./Website:/var/www/html"
+        environment:
+            - XDEBUG=true
 
     mysqldb:
         image: mariadb:latest
@@ -36,6 +37,14 @@ services:
             - ".env"
         command: [
             '--wait_timeout=360000',
+            '--log-bin=bin.log',
+            '--log-bin-index=bin-log.index',
+            '--max_binlog_size=100M',
+            '--binlog-format=MIXED',
+            '--slow-query-log',
+            '--general_log=1',
+            '--expire_logs_days=10',
+            '--sync_binlog=1'
             ]
         environment:
             - MYSQL_DATABASE=mysql
@@ -49,3 +58,4 @@ services:
         volumes:
             - "./data/db/mysql:/var/lib/mysql"
             - "./etc/mariadb/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro"
+            - "./etc/logs/mariadb:/var/log/mysql"

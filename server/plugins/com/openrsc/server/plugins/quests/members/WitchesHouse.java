@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -30,6 +31,28 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	 * use magnet room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	 */
 	
+	//considerations: sq/kite shields, med/large helms, plate-bodies/plate-tops/chains, legs/skirts
+	public static final int[] metal_armour = { 
+			//plate bodies
+			8, 117, 118, 119, 120, 196, 401,
+			//plate tops
+			308, 309, 310, 311, 312, 313, 407,
+			//chains
+			7, 113, 114, 115, 116, 400, 431,
+			//legs
+			9, 121, 122, 123, 206, 248, 402,
+			//skirts
+			214, 215, 225, 226, 227, 406, 434,
+			//medium helmets
+			5, 104, 105, 106, 107, 399, 470, 795,
+			//large helmets
+			6, 108, 109, 110, 111, 112, 230,
+			//square shields
+			3, 124, 125, 126, 127, 403, 432, 1278,
+			//kite shields
+			2, 128, 129, 130, 131, 404, 433
+	};
+	
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.WITCHS_HOUSE;
@@ -48,11 +71,11 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done you have completed the Witches house quest");
-		p.incQuestPoints(4);
 		p.message("@gre@You haved gained 4 quest points!");
-		p.incQuestExp(3, p.getSkills().getMaxStat(3) * 600 + 1300);
+		incQuestReward(p, Quests.questData.get(Quests.WITCHS_HOUSE), true);
 		p.getCache().remove("witch_gone");
 		p.getCache().remove("shapeshifter");
+		p.getCache().remove("found_magnet");
 	}
 
 	@Override
@@ -153,11 +176,12 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, witch, "Get out you pesky intruder");
 					message(p, "Nora begins to cast a spell");
 					
-					p.teleport(347, 616, false);
+					p.teleport(347, 616, true);
 					removeNpc(witch);
 					
 					p.getCache().remove("witch_spawned");
 					p.updateQuestStage(this, 1);
+					p.getCache().remove("found_magnet");
 				}
 				return;
 			}
@@ -188,9 +212,10 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, witch, "Get out you pesky intruder");
 				message(p, "Nora begins to cast a spell");
 
-				p.teleport(347, 616, false);
+				p.teleport(347, 616, true);
 				removeNpc(witch);
 				p.updateQuestStage(this, 1);
+				p.getCache().remove("found_magnet");
 			}
 		}
 		if (obj.getID() == 72 && obj.getX() == 356) {
@@ -207,11 +232,11 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 					p.message("The witch disappears into the shed");
 					npcTalk(p, witch, "How are you tonight my pretty?",
 							"Would you like some food?",
-							"Just wait there while i get some");
+							"Just wait there while I get some");
 					witch.teleport(353, 492);
 					witch.setLocation(Point.location(353, 492), true);
 					message(p,
-							"The witch passes back through the garden again",
+							"The witch passes  back through the garden again",
 							"Leaving the shed door unlocked");
 					sleep(2500);
 					
@@ -244,8 +269,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 255) {
-			if ((p.getQuestStage(getQuestId()) >= 1 || p
-					.getQuestStage(getQuestId()) == -1) && !hasItem(p, 538)) {
+			if (!hasItem(p, 538)) {
 				p.message("You find a key under the mat");
 				addItem(p, 538, 1);
 			} else {
@@ -253,8 +277,16 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		if (obj.getID() == 256 && obj.getX() == 363) {
-			if (!p.getInventory().wielding(16)) {
+			boolean shouldShock = false;
+			if(wearingMetalArmour(p)) {
+				p.message("As your metal armour touches the gate you feel a shock");
+				shouldShock = true;
+			}
+			else if (!wearingInsulatingGloves(p)) {
 				p.message("As your bare hands touch the gate you feel a shock");
+				shouldShock = true;
+			}
+			if (shouldShock) {
 				int damage;
 				if (p.getSkills().getLevel(Skills.HITPOINTS) < 20) {
 					damage = p.getRandom().nextInt(9) + 1;
@@ -270,6 +302,9 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			if (!hasItem(p, 540)) {
 				p.message("You find a magnet in the cupboard");
 				addItem(p, 540, 1);
+				if(p.getQuestStage(this) > 0) {
+					p.getCache().store("found_magnet", true);
+				}
 			} else {
 				p.message("You search the cupboard, but find nothing");
 			}
@@ -312,13 +347,18 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			if(p.getQuestStage(this) == -1) {
 				return;
 			}
-			p.message("You put the magnet on the rat");
-			Npc rat = World.getWorld().getNpcById(241);
-			removeNpc(rat);
-			message(p, "The rat runs back into his hole",
-					"You hear a click and whirr");
-			p.getInventory().remove(540, 1);
-			p.updateQuestStage(getQuestId(), 2);
+			if (!p.getCache().hasKey("found_magnet")) {
+				p.message("You need to get the magnet yourself to do this quest");
+			}
+			else {
+				p.message("You put the magnet on the rat");
+				Npc rat = World.getWorld().getNpcById(241);
+				removeNpc(rat);
+				message(p, "The rat runs back into his hole",
+						"You hear a click and whirr");
+				p.getInventory().remove(540, 1);
+				p.updateQuestStage(getQuestId(), 2);
+			}
 		}
 
 	}
@@ -377,7 +417,6 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				return true;
 			}
 			if (!p.getCache().hasKey("shapeshifter")) {
-
 				return true;
 			}
 		}
@@ -395,5 +434,23 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			playerTalk(p, null, "I'd better not take it, its not mine");
 		}
 
+	}
+	
+	private boolean wearingInsulatingGloves(Player p) {
+		return p.getInventory().wielding(16) || p.getInventory().wielding(556);
+	}
+	
+	private boolean wearingMetalArmour(Player p) {
+		if(wearingInsulatingGloves(p)) {
+			return false;
+		}
+		boolean isWearingMetal = false;
+			
+		for(int itemId : metal_armour) {
+			isWearingMetal |= p.getInventory().wielding(itemId);
+			if(isWearingMetal) break;
+		}
+
+		return isWearingMetal;
 	}
 }

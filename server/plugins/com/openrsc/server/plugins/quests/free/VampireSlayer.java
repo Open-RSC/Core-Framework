@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -40,9 +41,9 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 					"Our little village has been dreadfully ravaged by an evil vampire",
 					"There's hardly any of us left",
 					"We need someone to get rid of him once and for good");
-			int choice = showMenu(p, n, new String[] {
+			int choice = showMenu(p, n,
 					"No. vampires are scary", "Ok I'm up for an adventure",
-					"I tried fighting him. He wouldn't die" });
+					"I tried fighting him. He wouldn't die");
 			if (choice == 0) {
 				npcTalk(p, n, "I don't blame you");
 			} else if (choice == 1) {
@@ -50,7 +51,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						n,
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
-						"Called Dr Hallow",
+						"Called Dr Harlow",
 						"He may be able to give you some tips",
 						"He can normally be found in the Jolly boar inn these days",
 						"He's a bit of an old soak",
@@ -64,7 +65,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						"Maybe you're not going about it right",
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
-						"Called Dr Hallow",
+						"Called Dr Harlow",
 						"He may be able to give you some tips",
 						"He can normally be found in the Jolly boar inn these days",
 						"He's a bit of an old soak",
@@ -93,10 +94,11 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 	private void harlowDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
 		case -1:
+		case 0:
 		case 1:
 		case 2:
 			String[] options;
-			npcTalk(p, n, "Buy me a drink pleassh");
+			npcTalk(p, n, "Buy me a drrink pleassh");
 			if (!hasItem(p, 217)
 					&& p.getQuestStage(Constants.Quests.VAMPIRE_SLAYER) != -1) {
 				options = new String[] { "No you've had enough", "Ok mate",
@@ -119,11 +121,11 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 				npcTalk(p, n, "Morgan you shhay?");
 				playerTalk(p, n,
 						"His village is being terrorised by a vampire",
-						"He wanted me to ask you how I should go about stoping it");
+						"He wanted me to ask you how i should go about stopping it");
 				npcTalk(p, n,
-						"Buy me a beer then I will teash you what you need to know");
-				int choice2 = showMenu(p, n, new String[] { "Ok mate",
-						"But this is your friend Morgan we're talking about" });
+						"Buy me a beer then i'll teash you what you need to know");
+				int choice2 = showMenu(p, n, "Ok mate",
+						"But this is your friend Morgan we're talking about");
 				if (choice2 == 0) {
 					if (p.getInventory().hasItemId(193)) {
 						p.message("You give a beer to Dr Harlow");
@@ -153,7 +155,6 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						p.updateQuestStage(getQuestId(), 2);
 					} else {
 						playerTalk(p, n, "I'll just go and buy one");
-
 					}
 				} else if (choice2 == 1) {
 					npcTalk(p, n, "Buy ush a drink anyway");
@@ -200,7 +201,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 			
 			final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
 			n.setShouldRespawn(false);
-			player.message("A vampire jumps out off the coffin");
+			player.message("A vampire jumps out of the coffin");
 			return;
 		}
 	}
@@ -227,8 +228,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the vampire slayer quest");
-		player.incQuestExp(0, player.getSkills().getMaxStat(0) * 600 + 1300);
-		player.incQuestPoints(3);
+		incQuestReward(player, Quests.questData.get(Quests.VAMPIRE_SLAYER), true);
 		player.message("@gre@You haved gained 3 quest points!");
 
 	}

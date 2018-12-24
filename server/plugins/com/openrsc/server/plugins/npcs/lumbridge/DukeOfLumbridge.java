@@ -25,11 +25,13 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 				"Where can I find money?"
 			};
 			int choice = showMenu(p, n, menu);
-			handleResponse(p, n, choice);
+			if (choice > -1)
+				handleResponse(p, n, choice);
 		}
 		else {
 			int choice = showMenu(p, n, menu);
-			handleResponse(p, n, choice + 1);
+			if (choice > -1)
+				handleResponse(p, n, choice + 1);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
@@ -11,6 +12,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.util.rsc.DataConversions;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -133,17 +136,37 @@ public final class BankHandler implements PacketHandler {
 			// " amount " + amount));
 
 			if (EntityHandler.getItemDef(itemID).isStackable()) {
-				item = new Item(itemID, amount);
-				Item originalItem = null;
-				if(item.getDef().getOriginalItemID() != -1) {
-					originalItem = new Item(item.getDef().getOriginalItemID(), amount);
-					itemID = originalItem.getID();
+				if(!player.getAttribute("swap_cert", false) || !isCert(itemID)) {
+					item = new Item(itemID, amount);
+					Item originalItem = null;
+					if(item.getDef().getOriginalItemID() != -1) {
+						originalItem = new Item(item.getDef().getOriginalItemID(), amount);
+						itemID = originalItem.getID();
+					}
+					if (bank.canHold(item) && inventory.remove(item) > -1) {
+						bank.add(originalItem != null ? originalItem : item);
+					} else {
+						player.message("You don't have room for that in your bank");
+					}
 				}
-				if (bank.canHold(item) && inventory.remove(item) > -1) {
-					bank.add(originalItem != null ? originalItem : item);
-				} else {
-					player.message("You don't have room for that in your bank");
+				else {
+					item = new Item(itemID, amount);
+					Item originalItem = null;
+					if(item.getDef().getOriginalItemID() != -1) {
+						originalItem = new Item(item.getDef().getOriginalItemID(), amount);
+						itemID = originalItem.getID();
+					}
+					Item removedItem = originalItem != null ? originalItem : item;
+					int uncertedID = uncertedID(removedItem.getID());
+					itemID = uncertedID;
+					Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getID() ? amount : amount * 5);
+					if (bank.canHold(uncertedItem) && inventory.remove(removedItem) > -1) {
+						bank.add(uncertedItem);
+					} else {
+						player.message("You don't have room for that in your bank");
+					}
 				}
+				
 			} else {
 				for (int i = 0; i < amount; i++) {
 					int idx = inventory.getLastIndexById(itemID);
@@ -165,6 +188,84 @@ public final class BankHandler implements PacketHandler {
 				ActionSender.updateBankItem(player, slot, itemID,
 						bank.countId(itemID));
 			}
+		}
+	}
+	
+	private boolean isCert(int itemID) {
+		int[] certIds = { 
+				/** Ores **/
+				517, 518, 519, 520, 521,
+				/** Bars **/
+				528, 529, 530, 531, 532,
+				/** Fish **/
+				533, 534, 535, 536, 628, 629, 630, 631,
+				/** Logs **/
+				711, 712, 713,
+				/** Misc **/
+				1270, 1271, 1272, 1273, 1274, 1275
+				};
+		
+		return DataConversions.inArray(certIds, itemID);
+	}
+	
+	private int uncertedID(int itemID) {
+		
+		if(itemID == ItemId.IRON_ORE_CERTIFICATE.id()) {
+			return ItemId.IRON_ORE.id();
+		} else if(itemID == ItemId.COAL_CERTIFICATE.id()) {
+			return ItemId.COAL.id();
+		} else if(itemID == ItemId.MITHRIL_ORE_CERTIFICATE.id()) {
+			return ItemId.MITHRIL_ORE.id();
+		} else if(itemID == ItemId.SILVER_CERTIFICATE.id()) {
+			return ItemId.SILVER.id();
+		} else if(itemID == ItemId.GOLD_CERTIFICATE.id()) {
+			return ItemId.GOLD.id();
+		} else if(itemID == ItemId.IRON_BAR_CERTIFICATE.id()) {
+			return ItemId.IRON_BAR.id();
+		} else if(itemID == ItemId.STEEL_BAR_CERTIFICATE.id()) {
+			return ItemId.STEEL_BAR.id();
+		} else if(itemID == ItemId.MITHRIL_BAR_CERTIFICATE.id()) {
+			return ItemId.MITHRIL_BAR.id();
+		} else if(itemID == ItemId.SILVER_BAR_CERTIFICATE.id()) {
+			return ItemId.SILVER_BAR.id();
+		} else if(itemID == ItemId.GOLD_BAR_CERTIFICATE.id()) {
+			return ItemId.GOLD_BAR.id();
+		} else if(itemID == ItemId.LOBSTER_CERTIFICATE.id()) {
+			return ItemId.LOBSTER.id();
+		} else if(itemID == ItemId.RAW_LOBSTER_CERTIFICATE.id()) {
+			return ItemId.RAW_LOBSTER.id();
+		} else if(itemID == ItemId.SWORDFISH_CERTIFICATE.id()) {
+			return ItemId.SWORDFISH.id();
+		} else if(itemID == ItemId.RAW_SWORDFISH_CERTIFICATE.id()) {
+			return ItemId.RAW_SWORDFISH.id();
+		} else if(itemID == ItemId.BASS_CERTIFICATE.id()) {
+			return ItemId.BASS.id();
+		} else if(itemID == ItemId.RAW_BASS_CERTIFICATE.id()) {
+			return ItemId.RAW_BASS.id();
+		} else if(itemID == ItemId.SHARK_CERTIFICATE.id()) {
+			return ItemId.SHARK.id();
+		} else if(itemID == ItemId.RAW_SHARK_CERTIFICATE.id()) {
+			return ItemId.RAW_SHARK.id();
+		} else if(itemID == ItemId.YEW_LOGS_CERTIFICATE.id()) {
+			return ItemId.YEW_LOGS.id();
+		} else if(itemID == ItemId.MAPLE_LOGS_CERTIFICATE.id()) {
+			return ItemId.MAPLE_LOGS.id();
+		} else if(itemID == ItemId.WILLOW_LOGS_CERTIFICATE.id()) {
+			return ItemId.WILLOW_LOGS.id();
+		} else if(itemID == ItemId.DRAGON_BONE_CERTIFICATE.id()) {
+			return ItemId.DRAGON_BONES.id();
+		} else if(itemID == ItemId.LIMPWURT_ROOT_CERTIFICATE.id()) {
+			return ItemId.LIMPWURT_ROOT.id();
+		} else if(itemID == ItemId.PRAYER_POTION_CERTIFICATE.id()) {
+			return ItemId.FULL_RESTORE_PRAYER_POTION.id();
+		} else if(itemID == ItemId.SUPER_ATTACK_POTION_CERTIFICATE.id()) {
+			return ItemId.FULL_SUPER_ATTACK_POTION.id();
+		} else if(itemID == ItemId.SUPER_DEFENSE_POTION_CERTIFICATE.id()) {
+			return ItemId.FULL_SUPER_DEFENSE_POTION.id();
+		} else if(itemID == ItemId.SUPER_STRENGTH_POTION_CERTIFICATE.id()) {
+			return ItemId.FULL_SUPER_STRENGTH_POTION.id();
+		} else {
+			return itemID;
 		}
 	}
 

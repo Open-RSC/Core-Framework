@@ -10,24 +10,24 @@ import orsc.mudclient;
 
 public final class QuestGuideInterface {
 	private boolean visible = false;
-	
+
 	private ArrayList<QuestItem> questItems;
-	
+
 	public int questGuideScroll;
-	
+
 	public Panel questGuide;
 
 	private mudclient mc;
 
 	private int panelColour, textColour, bordColour, lineColour;
-	
+
 	int width = 430;
 	int height = 320;
 	int autoHeight = 0;
-	
+
 	int index = 0;
 	int trackY = 0;
-	
+
 	private int x, y;
 
 	public QuestGuideInterface(mudclient mc) {
@@ -37,30 +37,30 @@ public final class QuestGuideInterface {
 
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		questItems = new ArrayList<QuestItem>();
-		
+
 		questGuideScroll = questGuide.addScrollingList(x + 4, y + 36, width - 5, height - 37, 100, 2, false);
 	}
-	
+
 	public void reposition() {
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		questGuide.reposition(questGuideScroll, x + 4, y + 36, width - 5, height - 37);
 	}
 
 	public void onRender(GraphicsController graphics) {
 		reposition();
-		
+
 		int x = (mc.getGameWidth() - width) / 2;
 		int y = (mc.getGameHeight() - height) / 2;
-		
+
 		panelColour = 0x989898; textColour = 0xffffff;
 		bordColour = 0x000000; lineColour = 0x000000;
-		
+
 		questGuide.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
-		
+
 		if (autoHeight - y > 320) {
 			mc.getSurface().drawBoxAlpha(x, y, width, height, panelColour, 90);
 			mc.getSurface().drawBoxBorder(x, width, y, height, bordColour);
@@ -69,12 +69,12 @@ public final class QuestGuideInterface {
 			mc.getSurface().drawBoxBorder(x, width, y, autoHeight - y, bordColour);
 		}
 		drawStringCentered(mc.getQuestGuideChosen(), x, y + 28, 5, textColour);
-		
+
 		this.drawButton(x + 394, y + 6, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.getClientStream().newPacket(212);
-				mc.getClientStream().finishPacket();
+				mc.packetHandler.getClientStream().newPacket(212);
+				mc.packetHandler.getClientStream().finishPacket();
 				questGuide.resetScrollIndex(questGuideScroll);
 				setVisible(false);
 			}
@@ -185,7 +185,7 @@ public final class QuestGuideInterface {
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
 		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}
@@ -205,15 +205,15 @@ class QuestItem {
 		this.font = font;
 		this.color = color;
 	}
-	
+
 	public String getText() {
 		return text;
 	}
-	
+
 	public int getFont() {
 		return font;
 	}
-	
+
 	public int getColor() {
 		return color;
 	}

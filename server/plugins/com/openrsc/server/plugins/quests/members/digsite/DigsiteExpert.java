@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -54,15 +55,18 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 				playerTalk(p, n, "Oh, okay if I find anything of interest I will bring it here");
 				npcTalk(p, n, "Very good",
 						"Can I help you at all ?");
-				int menu = showMenu(p, n,
+				int menu = showMenu(p, n, false, //do not send over
 						"I have something I need checking out",
 						"No thanks",
 						"Can you tell me anything about the digsite?");
 				if(menu == 0) {
+					playerTalk(p, n, "I have something I need checking out");
 					npcTalk(p, n, "Okay, give it to me and I'll have a look for you");
 				} else if(menu == 1) {
+					playerTalk(p, n, "No thanks");
 					npcTalk(p, n, "Good, let me know if you find anything unusual");
 				} else if(menu == 2) {
+					playerTalk(p, n, "Can you tell me anything about the digsite ?");
 					npcTalk(p, n, "Yes indeed, I am currently studying the lives of the settlers",
 							"During the end of the third age, this used to be a great city",
 							"It's inhabitants were humans, supporters of the god Saradomin",
@@ -92,10 +96,18 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 	@Override
 	public void handleReward(Player player) {
 		player.message("Congratulations, you have finished the digsite quest");
-		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(MINING, 1200 * (player.getSkills().getLevel(MINING) + 1));
-		player.incQuestExp(HERBLAW, 500 * (player.getSkills().getLevel(HERBLAW) + 1));
+		int[] questData = Quests.questData.get(Quests.DIGSITE);
+		//keep order kosher
+		int[] skillIDs = {MINING, HERBLAW};
+		//1200 for mining, 500 for herblaw
+		int[] amounts = {1200, 500};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			questData[Quests.MAPIDX_BASE] = amounts[i];
+			questData[Quests.MAPIDX_VAR] = amounts[i];
+			incQuestReward(player, questData, i==(skillIDs.length-1));
+		}
 		player.getCache().remove("winch_rope_2");
 		player.getCache().remove("winch_rope_1");
 		player.getCache().remove("digsite_winshaft");
@@ -117,14 +129,15 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 				playerTalk(p, n, "I have these gold nuggets");
 				if(hasItem(p, 1118, 3)) {
 					p.message("You give the nuggets to the expert");
-					removeItem(p, 1118, 3);
+					p.getInventory().remove(1118, 3);
 					addItem(p, 152, 1);
 					npcTalk(p, n, "Good, that's 3, I can exchange them for normal gold now",
 							"You can get this refined and make a profit!");
 					playerTalk(p, n, "Excellent!");
 				} else {
 					npcTalk(p, n, "I can't do much with these nuggets yet",
-							"Come back when you have 3, and I will exchange them for you");
+							"Come back when you have 3, and I will exchange them with you");
+					playerTalk(p, n, "Okay I will, thanks");
 				}
 				break;
 			case 1113: // FULL PANNING TRAY
@@ -133,6 +146,13 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 				playerTalk(p, n, "Not that I remember");
 				npcTalk(p, n, "It may contain something, I don't want to get my hands dirty");
 				p.playerServerMessage(MessageType.QUEST, "The expert hands the tray back to you");
+				break;
+			case 1112: // PANNING TRAY WITH NUGGETS
+				p.message("You give the panning tray to the expert");
+				npcTalk(p, n, "Did you realize there is something in this tray ?");
+				playerTalk(p, n, "Err, not really");
+				npcTalk(p, n, "Check it out thoroughly first");
+				p.playerServerMessage(MessageType.QUEST, "The expert hands you back the tray");
 				break;
 			case 1111: // EMPTY PANNING TRAY
 				p.message("You give the panning tray to the expert");
@@ -169,7 +189,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 				p.message("The expert hands you a letter");
 				p.getInventory().replace(1175, 1173);
 				break;
-			case 1232: // unindentified liquid
+			case 1232: // unidentified liquid
 				playerTalk(p, n, "Do you know what this is ?");
 				npcTalk(p, n, "Where did you get this ?");
 				playerTalk(p, n, "From one of the barrels at the digsite");
@@ -183,9 +203,9 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 						"This is normally mixed with other chemicals",
 						"To produce a potent compound...",
 						"Be sure not to drop it!",
-						"That stuff is higly volatile...");
+						"That stuff is highly volatile...");
 				break;
-			case 1171: // unitendified powder
+			case 1171: // unidentified powder
 				playerTalk(p, n, "Do you know what this powder is ?");
 				npcTalk(p, n, "Really you do find the most unusual items",
 						"I know what this is...",
@@ -195,7 +215,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 				break;
 			case 1178: // mixed chemicals
 				playerTalk(p, n, "Hey, look at this");
-				npcTalk(p, n, "Mmmm, that looks dangerous...",
+				npcTalk(p, n, "Hmmm, that looks dangerous...",
 						"Handle it carefully and don't drop it!");
 				break;
 			case 1176: // explosive compound
@@ -235,6 +255,99 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 					addItem(p, 172, 2);
 					p.sendQuestComplete(Constants.Quests.DIGSITE);
 				}
+				break;
+			case 1151: //belt buckle
+				playerTalk(p, n, "Have a look at this unusual item");
+				npcTalk(p, n, "Let me see..",
+						"This is a belt buckle",
+						"I should imagine it came from a guard");
+				break;
+			case 20: //bones
+				playerTalk(p, n, "Have a look at these bones");
+				npcTalk(p, n, "Ah yes, a fine bone example",
+						"No noticeable fractures, and in good condition",
+						"There are common cow bones however",
+						"They have no archaeological value");
+				break;
+			case 1165: //broken arrow
+				playerTalk(p, n, "Have a look at this arrow");
+				npcTalk(p, n, "No doubt this arrow was shot by a strong warrior",
+						"It's split in half!",
+						"It is not a valuable object though...");
+				break;
+			case 1170: //broken glass
+				playerTalk(p, n, "Have a look at this glass");
+				npcTalk(p, n, "Hey you should be careful of that",
+						"It might cut your fingers, throw it away!");
+				break;
+			case 1167: //broken staff
+				playerTalk(p, n, "Have a look at this staff");
+				npcTalk(p, n, "Look at this...interesting",
+						"This appears to belong to a cleric of some kind",
+						"Certainly not a follower of saradomin however...",
+						"I wonder if there was another civilization before the saradominists ?");
+				break;
+			case 1166: //buttons
+				playerTalk(p, n, "I found these buttons");
+				npcTalk(p, n, "Let's have a look",
+						"Ah, I think these are from the nobility",
+						"Perhaps a royal servant ?",
+						"Not valuable but an unusual find for this area");
+				break;
+			case 1169: //ceramic remains
+				playerTalk(p, n, "I found some potery pieces");
+				npcTalk(p, n, "Yes many parts are discovered",
+						"The inhabitants of these parts were great potters...");
+				playerTalk(p, n, "You mean they were good at using potions ?");
+				npcTalk(p, n, "No no silly - they were known for their skill with clay");
+				break;
+			case 1157: //damaged armour
+				playerTalk(p, n, "I found some old armour");
+				npcTalk(p, n, "Hmm...unusual",
+						"This armour dosen't seem to match with the other finds",
+						"keep looking, this could be evidence of an older civilization!");
+				break;
+			case 1158: //damage armour body
+				playerTalk(p, n, "I found some armour");
+				npcTalk(p, n, "It looks like the wearer of this fought a mighty battle");
+				break;
+			case 39: //needle
+				playerTalk(p, n, "I found a needle");
+				npcTalk(p, n, "Hmm yes, I wondered why this race were so well dressed!",
+						"It looks like they had a mastery of needlework");
+				break;
+			case 1155: //old boot
+				playerTalk(p, n, "Have a look at this");
+				npcTalk(p, n, "Ah yes, an old boot",
+						"Not really an ancient artifact is it?");
+				break;
+			case 1162: //old tooth
+				playerTalk(p, n, "Hey look at this");
+				npcTalk(p, n, "Oh, an old tooth",
+						"..It looks like it has come from a mighty being");
+				break;
+			case 1173: //scroll (permission)
+				npcTalk(p, n, "There's no point in giving me this back!");
+				break;
+			case 1117: case 1148: case 1149: //rock samples
+				playerTalk(p, n, "Have a look at this rock");
+				npcTalk(p, n, "This rock is not naturally formed",
+						"It looks like it might belong to someone...");
+				break;
+			case 801: //rotten apples
+				playerTalk(p, n, "I found these...");
+				npcTalk(p, n, "Ew! throw them away this instant!");
+				break;
+			case 1159: //rusty sword
+				playerTalk(p, n, "I found an old sword");
+				npcTalk(p, n, "Oh, its very rusty isn't it ?",
+						"I'm not sure this sword belongs here",
+						"It looks very out of place...");
+				break;
+			case 1168: //vase
+				playerTalk(p, n, "I found a vase");
+				npcTalk(p, n, "Ah yes these are commonly found in these parts",
+						"Not a valuable item");
 				break;
 			default:
 				p.message("Nothing interesting happens");

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -49,11 +50,9 @@ public class DwarfCannon
 
 	@Override
 	public void handleReward(Player p) {
-		p.incQuestExp(12, p.getSkills().getMaxStat(12) * 200 + 1000);
-		p.incQuestPoints(1);
+		incQuestReward(p, Quests.questData.get(Quests.DWARF_CANNON), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		message(p, "well done", "you have completed the dwarf cannon quest");
-
 	}
 
 	@Override
@@ -111,8 +110,8 @@ public class DwarfCannon
 				playerTalk(p, n, "not bad thanks, yourself?");
 				npcTalk(p, n, "i'm good, just working hard as usual");
 				int completeMenu = showMenu(p, n,
-						new String[] { "i was hoping you might sell me a cannon?", "well, take care of yourself then",
-								"i want to know more about the cannon?", "i've lost my cannon" });
+						"i was hoping you might sell me a cannon?", "well, take care of yourself then",
+								"i want to know more about the cannon?", "i've lost my cannon");
 				if (completeMenu == 0) {
 					npcTalk(p, n, "hmmm", "i shouldn't really, but as you helped us so much",
 							"well, i could sort something out", "i'll warn you though, they don't come cheap");
@@ -121,8 +120,8 @@ public class DwarfCannon
 							"or i can sell you the seperate parts for 200 000 each");
 					playerTalk(p, n, "that's not cheap");
 					int cannon = showMenu(p, n,
-							new String[] { "ok, i'll take a cannon please", "can i look at the seperate parts please",
-									"sorry, that's too much for me", "have you any ammo or instructions to sell?" });
+							"ok, i'll take a cannon please", "can i look at the seperate parts please",
+									"sorry, that's too much for me", "have you any ammo or instructions to sell?");
 					if (cannon == 0) {
 						npcTalk(p, n, "ok then, but keep it quiet..");
 						npcTalk(p, n, "this thing's top secret");
@@ -238,7 +237,7 @@ public class DwarfCannon
 				playerTalk(p, n, "why, what's wrong?");
 				npcTalk(p, n, "as part of the dwarven black guard..", "...it is our duty to protect these mines",
 						"but we just don't have the man power", "could you help?");
-				int first = showMenu(p, n, new String[] { "i'm sorry, i'm too busy mining", "yeah, i'd love to help" });
+				int first = showMenu(p, n, "i'm sorry, i'm too busy mining", "yeah, i'd love to help");
 				if (first == 0) {
 					npcTalk(p, n, "ok then, we'll have find someone else");
 				} else if (first == 1) {
@@ -332,7 +331,7 @@ public class DwarfCannon
 					npcTalk(p, n, "unfortunatly we're having trouble fixing the thing",
 							"the cannon is stored in our shed", "if you could fix it, it would be a great help");
 					int gobMenu = showMenu(p, n,
-							new String[] { "ok, i'll see what i can do", "sorry, i've done enough for today" });
+							"ok, i'll see what i can do", "sorry, i've done enough for today");
 					if (gobMenu == 0) {
 						npcTalk(p, n, "that's great,you'll need this");
 						message(p, "the Dwarf commander gives you a tool kit");
@@ -366,7 +365,7 @@ public class DwarfCannon
 					npcTalk(p, n, "i can't leave this post, could you go to the black guard..",
 							"..base and find out what this thing actually shoots?");
 					int finale = showMenu(p, n,
-							new String[] { "sorry, i've really done enough", "ok then, just for you" });
+							"sorry, i've really done enough", "ok then, just for you");
 					if (finale == 0) {
 						npcTalk(p, n, "fair enough");
 					} else if (finale == 1) {

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -11,7 +12,7 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.BLACK_ARM;
+import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class HerosQuest implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener  {
@@ -41,19 +42,15 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 		player.getCache().remove("talked_grubor");
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
-		player.incQuestExp(2, (player.getSkills().getMaxStat(2) * 200) + 300);//STRENGTH
-		player.incQuestExp(1, (player.getSkills().getMaxStat(1) * 200) + 300);//DEFENSE
-		player.incQuestExp(3, (player.getSkills().getMaxStat(3) * 200) + 300);//HITS
-		player.incQuestExp(0, (player.getSkills().getMaxStat(0) * 200) + 300);//ATTACK
-		player.incQuestExp(4, (player.getSkills().getMaxStat(4) * 200) + 300);//RANGED
-		player.incQuestExp(15, (player.getSkills().getMaxStat(15) * 200) + 300);//HERBLAW
-		player.incQuestExp(10, (player.getSkills().getMaxStat(10) * 200) + 300);//FISHING
-		player.incQuestExp(7, (player.getSkills().getMaxStat(7) * 200) + 300);//COOKING
-		player.incQuestExp(11, (player.getSkills().getMaxStat(11) * 200) + 300);//FIREMAKING
-		player.incQuestExp(8, (player.getSkills().getMaxStat(8) * 200) + 300);//WOODCUT
-		player.incQuestExp(14, (player.getSkills().getMaxStat(14) * 200) + 300);//MINING
-		player.incQuestExp(13, (player.getSkills().getMaxStat(13) * 200) + 300);//SMITHING
-		player.incQuestPoints(1);
+		player.getCache().remove("armband");
+		int[] questData = Quests.questData.get(Quests.HEROS_QUEST);
+		//keep order kosher
+		int[] skillIDs = {STRENGTH, DEFENCE, HITS, ATTACK, RANGED, HERBLAW,
+				FISHING, COOKING, FIREMAKING, WOODCUT, MINING, SMITHING};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(player, questData, i==(skillIDs.length-1));
+		}
 		player.message("@gre@You haved gained 1 quest point!");
 
 	}
@@ -201,16 +198,17 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 							"He had a spare fortunatley",
 							"Here it is");
 					addItem(p, 573, 1);
-					npcTalk(p,n, " Be more careful this time");
+					npcTalk(p,n, "Be more careful this time");
 				}
 				return;
 			}
 			npcTalk(p,n, "Hi, welcome to our Brimhaven headquarters",
 					"I'm Trobert and I'm in charge here");
-			int menu = showMenu(p,n,
+			int menu = showMenu(p,n, false, //do not send over
 					"So can you help me get Scarface Pete's candlesticks?",
 					"pleased to meet you");
 			if(menu == 0) {
+				playerTalk(p, n, "So can you help me get Scarface Pete's candlesticks?");
 				npcTalk(p,n, "Well we have made some progress there",
 						"We know one of the keys to Pete's treasure room is carried by Grip the head guard",
 						"So we thought it might be good to get close to the head guard",
@@ -229,6 +227,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 					p.getCache().store("hq_impersonate", true);
 					npcTalk(p,n, "Take that to the guard room at Scarface Pete's mansion");
 				}
+			} else if(menu == 1) {
+				playerTalk(p, n, "Pleased to meet you");
 			}
 		}
 		if(n.getID() == 255) {
@@ -254,16 +254,19 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 								"A master thief armband",
 								"And a cooked lava eel");
 						p.updateQuestStage(this, 1);
-						int opt2 = showMenu(p,n,
+						int opt2 = showMenu(p,n, false, //do not send over
 								"Any hints on getting the armband?",
 								"Any hints on getting the feather?",
 								"Any hints on getting the eel?",
 								"I'll start looking for all those things then");
 						if(opt2 == 0) {
+							playerTalk(p, n, "Any hints on getting the thieves armband?");
 							npcTalk(p,n, "I'm sure you have relevant contacts to find out about that");
 						} else if(opt2 == 1) {
+							playerTalk(p, n, "Any hints on getting the feather?");
 							npcTalk(p,n, "Not really - Entrana firebirds live on Entrana");
 						} else if(opt2 == 2) {
+							playerTalk(p, n, "Any hints on getting the eel?");
 							npcTalk(p,n, "Maybe go and find someone who knows a lot about fishing?");
 						}
 					} else {
@@ -271,7 +274,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 						message(p, "You need to have 55 quest points to file for an application",
 								"You also need to have completed the following quests",
 								"The shield of arrav, the lost city",
-								"Merlin's crystal and dragon slayer");
+								"Merlin's crystal and dragon slayer\"");
 					}
 				}
 				break;
@@ -290,16 +293,19 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 					npcTalk(p,n, "Remember you need the feather of an Entrana firebird",
 							"A master thief armband",
 							"And a cooked lava eel");
-					int opt2 = showMenu(p,n,
+					int opt2 = showMenu(p,n, false, //do not send over
 							"Any hints on getting the armband?",
 							"Any hints on getting the feather?",
 							"Any hints on getting the eel?",
 							"I'll start looking for all those things then");
 					if(opt2 == 0) {
+						playerTalk(p, n, "Any hints on getting the thieves armband?");
 						npcTalk(p,n, "I'm sure you have relevant contacts to find out about that");
 					} else if(opt2 == 1) {
+						playerTalk(p, n, "Any hints on getting the feather?");
 						npcTalk(p,n, "Not really - Entrana firebirds live on Entrana");
 					} else if(opt2 == 2) {
+						playerTalk(p, n, "Any hints on getting the eel?");
 						npcTalk(p,n, "Maybe go and find someone who knows a lot about fishing?");
 					}
 				}
@@ -320,7 +326,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 			} else {
 				p.message("Ouch that is too hot to take");
 				p.message("I need something cold to pick it up with");
-				p.damage(7);
+				int damage = (int) Math.round((p.getSkills().getLevel(3)) * 0.15D);
+				p.damage(damage);
 				return true;
 			}
 		}
@@ -371,15 +378,18 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 			Npc grubor = getNearestNpc(p, 255, 10);
 			if(p.getQuestStage(this) == -1) {
 				npcTalk(p,grubor, "Yes? what do you want?");
-				int mem = showMenu(p,grubor,
+				int mem = showMenu(p,grubor, false, //do not send over
 						"Would you like to have your windows refitting?",
 						"I want to come in",
 						"Do you want to trade?");
 				if(mem == 0) {
+					playerTalk(p, grubor, "Would you like to have your windows refitting?");
 					npcTalk(p,grubor, "Don't be daft, we don't have any windows");
 				} else if(mem == 1) {
+					playerTalk(p, grubor, "I want to come in");
 					npcTalk(p,grubor, "No, go away");
 				} else if(mem == 2) {
+					playerTalk(p, grubor, "Do you want to trade");
 					npcTalk(p,grubor, "No I'm busy");
 				}
 				return;
@@ -392,20 +402,29 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 				} else {
 					if(grubor != null) {
 						npcTalk(p,grubor, "Yes? what do you want?");
-						int menu = showMenu(p,grubor,
+						int menu = showMenu(p,grubor, false, //do not send over
 								"Rabbit's foot",
 								"four leaved clover",
 								"Lucky Horseshoe",
 								"Black cat");
 						if(menu == 1) {
+							playerTalk(p, grubor, "Four leaved clover");
 							npcTalk(p,grubor, "Oh you're one of the gang are you",
 									"Just a second I'll let you in");
 							p.message("You here the door being unbarred");
 							p.getCache().store("talked_grubor", true);
-						} else {
-							npcTalk(p,grubor, "What are you on about",
-									"Go away");
+							return;
 						}
+						if(menu == 0) {
+							playerTalk(p, grubor, "Rabbit's foot");
+						} else if(menu == 2) {
+							playerTalk(p, grubor, "Lucky Horseshoe");
+						} else if(menu == 3) {
+							playerTalk(p, grubor, "Black cat");
+						}
+						npcTalk(p,grubor, "What are you on about",
+								"Go away");
+						return;
 					}
 				}
 			} else {
@@ -422,7 +441,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 			}
 			if(garv != null) {
 				npcTalk(p,garv, "Where do you think you're going?");
-				if(p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM) {
+				if(isBlackArmGang(p)) {
 					playerTalk(p,garv, "Hi, I'm Hartigen",
 							"I've come to work here");
 					if(p.getInventory().wielding(248) && p.getInventory().wielding(230) && p.getInventory().wielding(196)) {
@@ -432,7 +451,7 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 									"Grip will want to talk to you");
 							p.getCache().store("garv_door", true);
 						} else {
-							npcTalk(p,garv, "No you don't - come back when you have");
+							playerTalk(p,garv, "No I must have left it in my other suit of armour");
 						}
 					} else {
 						npcTalk(p,garv, "Hartigen the black knight?",
@@ -451,7 +470,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 				p.message("You need to speak to grip first");
 			}
 		}
-		if(obj.getID() == 79) { // 11
+		if(obj.getID() == 79) { // strange panel - 11
+			p.playSound("secretdoor");
 			p.message("You just went through a secret door");
 			doDoor(obj, p, 11);
 		}
@@ -526,18 +546,24 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 						npcTalk(p,grip, "Hey what are you doing there",
 								"That's my drinks cabinet get away from it");
 					}
+					else {
+						p.message("You find a bottle of whisky in the cupboard");
+						addItem(p, 584, 1);
+					}
 				}
 			} else {
 				p.message("The guard is busy at the moment");
 			}
 		}
 		if(obj.getID() == 265) {
-			if(p.getQuestStage(this) == 1) {
+			if(!hasItem(p, 585)) {
 				addItem(p, 585, 2);
-				p.updateQuestStage(this, 2);
 				message(p, "You find two candlesticks in the chest",
 						"So that will be one for you",
 						"And one to the person who killed grip for you");
+				if(p.getQuestStage(this) == 1) {
+					p.updateQuestStage(this, 2);
+				}
 			} else {
 				p.message("The chest is empty");
 			}
@@ -576,8 +602,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 				playerTalk(p, null, "I can't attack the head guard here",
 						"There are too many witnesses to see me do it",
 						"I'd have the whole of Brimhaven after me",
-						"Besides if he dies I want to have the chance of being promoted",
-						"Maybe you need another player's help");
+						"Besides if he dies I want to have the chance of being promoted");
+				p.message("Maybe you need another player's help");
 			}
 		}
 	}
@@ -588,8 +614,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 			playerTalk(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
 					"I'd have the whole of Brimhaven after me",
-					"Besides if he dies I want to have the chance of being promoted",
-					"Maybe you need another player's help");
+					"Besides if he dies I want to have the chance of being promoted");
+			p.message("Maybe you need another player's help");
 		}
 	}
 
@@ -600,8 +626,8 @@ TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, W
 				playerTalk(p, null, "I can't attack the head guard here",
 						"There are too many witnesses to see me do it",
 						"I'd have the whole of Brimhaven after me",
-						"Besides if he dies I want to have the chance of being promoted",
-						"Maybe you need another player's help");
+						"Besides if he dies I want to have the chance of being promoted");
+				p.message("Maybe you need another player's help");
 			}
 		}
 

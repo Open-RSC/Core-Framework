@@ -41,10 +41,18 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the holy grail quest");
-		player.incQuestPoints(2);
 		player.message("@gre@You haved gained 2 quest points!");
-		player.incQuestExp(5, (player.getSkills().getMaxStat(5) + 1) * 1000);
-		player.incQuestExp(1, (player.getSkills().getMaxStat(1) + 1) * 1200);
+		int[] questData = Quests.questData.get(Quests.THE_HOLY_GRAIL);
+		//keep order kosher
+		int[] skillIDs = {PRAYER, DEFENCE};
+		//1000 for prayer, 1200 for defense
+		int[] amounts = {1000, 1200};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			questData[Quests.MAPIDX_BASE] = amounts[i];
+			questData[Quests.MAPIDX_VAR] = amounts[i];
+			incQuestReward(player, questData, i==(skillIDs.length-1));
+		}
 	}
 
 	/**
@@ -108,9 +116,13 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 				if (p.getQuestStage(this) == 1) {
 					setQuestStage(p, this, 2);
 				}
-				int menu = showMenu(p, n, "Thankyou for the advice",
+				int menu = showMenu(p, n, false, //do not send over 
+						"Thankyou for the advice",
 						"Where can I find Sir Galahad?");
-				if (menu == 1) {
+				if (menu == 0) {
+					playerTalk(p, n, "Thankyou for the advice");
+				} else if (menu == 1) {
+					playerTalk(p, n, "Where can I find Sir Galahad");
 					npcTalk(p,
 							n,
 							"Galahad now lives a life of religious contemplation",
@@ -188,12 +200,12 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 							"then he will claim the grail as his prize");
 					playerTalk(p, n, "Any ideas how I can restore the land?");
 					npcTalk(p, n, "None at all");
-					int m = showMenu(p, n, "You don't look to well",
+					int m = showMenu(p, n, false, //do not send over
+							"You don't look to well",
 							"Do you mind if I have a look around?");
 					if (m == 0) {
-						npcTalk(p,
-								n,
-								"Nope I don't feel so good either",
+						playerTalk(p, n, "You don't look too well");
+						npcTalk(p, n, "Nope I don't feel so good either",
 								"I fear my life is running short",
 								"Alas my son and heir is not here",
 								"I am waiting for my son to return to this castle",
@@ -203,7 +215,8 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 								"I believe he is a knight of the round table");
 						playerTalk(p, n, "I shall go and see if I can find him");
 					} else if (m == 1) {
-						npcTalk(p, n, " No not at all, be my guest");
+						playerTalk(p, n, "Do you mind if I have a look around?");
+						npcTalk(p, n, "No not at all, be my guest");
 					}
 				} else if (mm == 1) {
 					npcTalk(p, n, "Nope I don't feel so good either",
@@ -216,7 +229,7 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 							"I believe he is a knight of the round table");
 					playerTalk(p, n, "I shall go and see if I can find him");
 				} else if (mm == 2) {
-					npcTalk(p, n, " No not at all, be my guest");
+					npcTalk(p, n, "No not at all, be my guest");
 				}
 			} else if (menu == 1) {
 				npcTalk(p,
@@ -229,9 +242,11 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 						"then he will claim the grail as his prize");
 				playerTalk(p, n, "Any ideas how I can restore the land?");
 				npcTalk(p, n, "None at all");
-				int m = showMenu(p, n, "You don't look to well",
+				int m = showMenu(p, n, false, //do not send over
+						"You don't look to well",
 						"Do you mind if I have a look around?");
 				if (m == 0) {
+					playerTalk(p, n, "You don't look too well");
 					npcTalk(p, n, "Nope I don't feel so good either",
 							"I fear my life is running short",
 							"Alas my son and heir is not here",
@@ -242,7 +257,8 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 							"I believe he is a knight of the round table");
 					playerTalk(p, n, "I shall go and see if I can find him");
 				} else if (m == 1) {
-					npcTalk(p, n, " No not at all, be my guest");
+					playerTalk(p, n, "Do you mind if I have a look around?");
+					npcTalk(p, n, "No not at all, be my guest");
 				}
 			} else if (menu == 2) {
 				npcTalk(p, n, "Nope I don't feel so good either",
@@ -441,7 +457,7 @@ public class TheHolyGrail implements QuestInterface,TalkToNpcListener,
 				|| p.getLocation().inBounds(411, 1920, 518, 1925)
 				|| p.getLocation().inBounds(511, 976, 519, 984)
 				|| p.getLocation().inBounds(511, 1920, 518, 1925)){
-			message(p, " A mysterious force blocks your teleport spell!",
+			message(p, "A mysterious force blocks your teleport spell!",
 					"You can't use teleport after level 20 wilderness");
 				return true;
 			}

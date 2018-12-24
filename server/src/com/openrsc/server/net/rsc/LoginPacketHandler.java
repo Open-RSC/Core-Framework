@@ -133,7 +133,7 @@ public class LoginPacketHandler {
 				return;
 			}
 
-			if (pass.length() < 4 || pass.length() > 16) {
+			if (pass.length() < 4 || pass.length() > 64) {
 				channel.writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
 				channel.close();
 				return;

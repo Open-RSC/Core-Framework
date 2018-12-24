@@ -1,14 +1,18 @@
 package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
@@ -17,7 +21,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class FightArena implements QuestInterface,TalkToNpcListener,
 TalkToNpcExecutiveListener, ObjectActionListener,
-ObjectActionExecutiveListener, PlayerKilledNpcListener,
+ObjectActionExecutiveListener, InvUseOnObjectListener,
+InvUseOnObjectExecutiveListener, PlayerKilledNpcListener,
 PlayerKilledNpcExecutiveListener {
 
 	@Override
@@ -41,10 +46,14 @@ PlayerKilledNpcExecutiveListener {
 				"Lady Servil gives you 1000 gold coins",
 				"you gain two quest points");
 		addItem(p, 10, 1000);
-		p.incQuestPoints(2);
 		p.message("@gre@You haved gained 2 quest points!");
-		p.incQuestExp(0, p.getSkills().getMaxStat(0) * 800 + 700);
-		p.incQuestExp(17, p.getSkills().getMaxStat(17) * 800 + 700);
+		int[] questData = Quests.questData.get(Quests.FIGHT_ARENA);
+		//keep order kosher
+		int[] skillIDs = {ATTACK, THIEVING};
+		for(int i=0; i<skillIDs.length; i++) {
+			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
+			incQuestReward(p, questData, i==(skillIDs.length-1));
+		}
 		p.getCache().remove("freed_servil");
 		p.getCache().remove("killed_ogre");
 	}
@@ -133,6 +142,7 @@ PlayerKilledNpcExecutiveListener {
 			}
 		}
 		if (n.getID() == 386) {
+			p.message("You defeat the scorpion");
 			spawnNpc(383, 613, 708, 30000);
 			sleep(1000);
 			Npc generalAgain = getNearestNpc(p, 383, 15);
@@ -434,13 +444,16 @@ PlayerKilledNpcExecutiveListener {
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 382 && obj.getY() == 1623) {
-			p.message("You search the cupboard...");
 			if (!hasItem(p, 734) && !hasItem(p, 733)
 					&& p.getQuestStage(getQuestId()) >= 1) {
+				p.message("You search the cupboard...");
 				p.message("You find a khazard helmet");
 				p.message("You find a khazard chainmail");
 				addItem(p, 734, 1);
 				addItem(p, 733, 1);
+			}
+			else {
+				p.message("You search the cupboard, but find nothing");
 			}
 		}
 		if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
@@ -504,6 +517,22 @@ PlayerKilledNpcExecutiveListener {
 				npcTalk(p, servil, "The guard keeps them.. always");
 				p.updateQuestStage(getQuestId(), 2);
 			}
+		}
+	}
+	
+	@Override
+	public boolean blockInvUseOnObject(GameObject obj, Item item,
+			Player player) {
+		if (obj.getID() == 371 && obj.getY() == 716 && item.getID() == 736) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+		if (obj.getID() == 371 && obj.getY() == 716 && item.getID() == 736) {
+			p.message("To unlock the gate, left click on it");
 		}
 	}
 

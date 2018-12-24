@@ -59,7 +59,7 @@ public class ItemUseOnObject implements PacketHandler {
 	private void handleObject(final Player player, final Point location,
 			final GameObject object, final Item item) {
 		player.setStatus(Action.USING_Item_ON_OBJECT);
-		if (object.getID() == 226 && player.withinRange(object, 2)) {
+		if ((object.getID() == 226 || object.getID() == 232) && player.withinRange(object, 2)) {
 			player.resetPath();
 			player.resetAll();
 			if (PluginHandler.getPluginHandler().blockDefaultAction(

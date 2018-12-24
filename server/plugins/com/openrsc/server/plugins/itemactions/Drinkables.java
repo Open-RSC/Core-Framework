@@ -24,9 +24,6 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			return;
 		}
 		player.setConsumeTimer(1200);
-		if (!player.getLocation().inWilderness()) {
-			player.getUpdateFlags().setActionBubble(new Bubble(player, item.getID()));
-		}
 		switch (item.getID()) {
 		case 2106:
 			if(player.getCache().hasKey("elixir_time") && player.getElixir() > 0) {
@@ -160,7 +157,14 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			player.playerServerMessage(MessageType.QUEST, "You drink the wine");
 			player.playerServerMessage(MessageType.QUEST, "It makes you feel a bit dizzy");
 			player.getInventory().remove(item);
-			player.getInventory().add(new Item(140));
+			//half-wine set to 1/25k chance
+			int rand = DataConversions.random(0, 25000);
+			if(item.getID() == 142 && rand == 0) {
+				player.getInventory().add(new Item(246));
+			}
+			else {
+				player.getInventory().add(new Item(140));
+			}
 			if (player.getSkills().getLevel(3) < player.getSkills().getMaxStat(3)) {
 				int newStat = player.getSkills().getLevel(3) + 11;
 				if (newStat > player.getSkills().getMaxStat(3)) {
@@ -255,10 +259,11 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		case 269: // Dwarven Stout
 			showBubble(player, item);
 			player.message("You drink the " + item.getDef().getName() + ".");
+			player.message("It tastes foul.");
 			player.getInventory().remove(item);
 			player.getInventory().add(new Item(620));
-			sleep(1200);
-			player.message("It tastes foul.");
+			sleep(1600);
+			player.message("It tastes pretty strong too");
 			for (int stat = 0; stat < 3; stat++) {
 				player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
 			}

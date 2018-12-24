@@ -10,6 +10,9 @@ import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
+
 /**
  * Rewritten in Java.
  * 
@@ -37,7 +40,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	 */
 	@Override
 	public int getQuestId() {
-		return 18;
+		return Constants.Quests.LOST_CITY;
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void handleReward(Player player) {
-		player.incQuestPoints(3);
+		incQuestReward(player, Quests.questData.get(Quests.LOST_CITY), true);
 		player.message("@gre@You haved gained 3 quest points!");
 		player.message("Well done you have completed the Lost City of Zanaris quest");
 	}
@@ -95,7 +98,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 					return;
 				}
 				if (getWoodcutAxe(p) == -1) {
-					p.message("You need an axe to chop this tree down");
+					p.message("You need an axe to chop down this tree");
 					return;
 				}
 
@@ -104,8 +107,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				 * anymore
 				 */
 				if (atQuestStages(p, this, 4, -1)) {
-					message(p, "You attempt to chop the tree",
-							"You manage to cut off a dramen branch");
+					message(p, "You cut a branch from the Dramen tree");
 					addItem(p, 510, 1);
 					return;
 				}
@@ -120,20 +122,23 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 							/* Check if the spawned tree spirit was spawned for us */
 							if (spawnedTreeSpirit.getAttribute("spawnedFor")
 									.equals(p)) {
-								attack(spawnedTreeSpirit, p);
+								npcTalk(p, spawnedTreeSpirit, "Stop",
+										"I am the spirit of the Dramen Tree",
+										"You must come through me before touching that tree");
 								return;
 							}
 						}
 					}
 				}
-				message(p, "You attempt to chop the tree");
 				Npc treeSpirit = spawnNpc(216, p.getX() + 1, p.getY() + 1,
 						300000, p);
 				if (treeSpirit == null) {
 					return;
 				}
 				sleep(2000);
-				attack(treeSpirit, p);
+				npcTalk(p, treeSpirit, "Stop",
+						"I am the spirit of the Dramen Tree",
+						"You must come through me before touching that tree");
 				if (atQuestStages(p, this, 2)) {
 					setQuestStage(p, this, 3);
 				}
@@ -153,51 +158,84 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == LEPRECHAUN) {
-			if (atQuestStage(p, this, 1)) {
-				npcTalk(p, n, "Ay you big elephant", "you have caught me",
-						"What would you be wanting with Old Shamus then");
-				playerTalk(p, n, "I want to find zanaris");
+			if (atQuestStage(p, this, 0)) {
+				npcTalk(p, n, "Ay you big elephant", "You have caught me",
+						"What would you be wanting with old Shamus then?");
+				playerTalk(p, n, "I'm not sure");
+				npcTalk(p, n, "Well you'll have to catch me again when you are");
+				p.message("The leprechaun magically disapeers");
+				n.remove();
+			}
+			else if (atQuestStage(p, this, 1)) {
+				npcTalk(p, n, "Ay you big elephant", "You have caught me",
+						"What would you be wanting with old Shamus then?");
+				playerTalk(p, n, "I want to find Zanaris");
 				npcTalk(p, n, "Zanaris?",
 						"You need to go in the funny little shed",
 						"in the middle of the swamp");
-				playerTalk(p, n, "Oh I thought zanaris was a city");
-				npcTalk(p, n, "it is");
-				showMenu(p, n, "How does it fit in a shed then?",
+				playerTalk(p, n, "Oh I thought Zanaris was a city");
+				npcTalk(p, n, "It is");
+				int menu = showMenu(p, n, false, //do not send over
+						"How does it fit in a shed then?",
 						"I've been in that shed, I didn't see a city");
-				/* Regardless the option, the dialogue is the same. */
-				npcTalk(p, n, "Silly person", "the city isn't in the shed",
-						"the shed is a portal to Zanaris");
-				playerTalk(p, n,
-						"So I just want into the shed and end up in Zanaris?");
-				npcTalk(p, n, "Oh I didn't say?",
-						"You need to be carrying around a dramenwood staff",
-						"otherwise you do just end up in a shed");
-				playerTalk(p, n, "so where would I get a staff?");
-				npcTalk(p, n, "Dramenwood branches are crafted from branches",
-						"these staffs are cut from the Dramen tree",
-						"located somewhere in a cave on the island of entrana",
-						"I believe the monks of Entrana have recently",
-						"start running a ship from port sarim to Entrana");
+				if(menu == 0) {
+					playerTalk(p, n, "How does it fit in a shed then?");
+					npcTalk(p, n, "The city isn't in the shed",
+							"The shed is a portal to Zanaris");
+					playerTalk(p, n, "So I just walk into the shed and end up in Zanaris?");
+				} else if(menu == 1) {
+					playerTalk(p, n, "I've been in that shed",
+							"I didn't see a city");
+				}
+				npcTalk(p, n, "Oh didn't I say?",
+						"You need to be carrying a Dramenwood staff",
+						"Otherwise you do just end up in a shed");
+				playerTalk(p, n, "So where would I get a staff?");
+				npcTalk(p, n, "Dramenwood staffs are crafted from branches",
+						"These staffs are cut from the Dramen tree",
+						"located somewhere in a cave on the island of Entrana",
+						"I believe the monks of Entrana have recetnly",
+						"Started running a ship from port sarim to Entrana");
 				setQuestStage(p, this, 2);
-				p.message("The leprechaun magically disappears");
+				p.message("The leprechaun magically disapeers");
 				n.remove();
+			} else if(atQuestStages(p, this, 4, 3, 2, -1)) {
+				npcTalk(p, n, "Ay you big elephant",
+						"You have caught me",
+						"What would you be wanting with old Shamus then?");
+				int menu = showMenu(p, n, "I'm not sure", "How do I get to Zanaris again?");
+				if (menu == 0) {
+					npcTalk(p, n, "I dunno, what stupid people",
+							"Who go to all the trouble to catch leprechaun's",
+							"When they don't even know what they want");
+					p.message("The leprechaun magically disapeers");
+					n.remove();
+				} else if (menu == 1) {
+					npcTalk(p, n, "You need to enter the shed in the middle of the swamp",
+							"While holding a dramenwood staff",
+							"Made from a branch",
+							"Cut from the dramen tree on the island of Entrana");
+					p.message("The leprechaun magically disapeers");
+					n.remove();
+				}
 			}
 		}
 		if (inArray(n.getID(), ADVENTURER_ARCHER, ADVENTURER_CLERIC,
 				ADVENTURER_WARRIOR, ADVENTURER_WIZARD)) {
 			if (atQuestStage(p, this, 0)) {
-				npcTalk(p, n, "hello traveler");
-				int option = showMenu(p, n,
-						"what are you camped out here for?",
+				npcTalk(p, n, "hello traveller");
+				int option = showMenu(p, n, false, //do not send over
+						"What are you camped out here for?",
 						"Do you know any good adventures I can go on?");
 				if (option == 0) {
-					npcTalk(p, n, "we're looking for Zanaris");
-					int sub_option = showMenu(p, n, "Who's Zanaris",
-							"What's Zanaris",
-							"what makes you think its out here");
+					playerTalk(p, n, "What are you camped here for?");
+					npcTalk(p, n, "We're looking for Zanaris");
+					int sub_option = showMenu(p, n, "Who's Zanaris?",
+							"what's Zanaris?",
+							"What makes you think it's out here");
 					if (sub_option == 0 || sub_option == 2) {
 						if (sub_option == 0)
-							npcTalk(p, n, "here Zanaris isn't a person",
+							npcTalk(p, n, "hehe Zanaris isn't a person",
 									"It's a magical hidden city");
 						else
 							npcTalk(p, n, "Don't you know of the legends?",
@@ -205,7 +243,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						ZANARIS_MENU(p, n);
 					} else if (sub_option == 1) {
 						npcTalk(p, n,
-								"I don't think we want other people competing with us to finish");
+								"I don't think we want other people competing with us to find it");
 						int next_option = showMenu(p, n, "Please tell me",
 								"Oh well never mind");
 						if (next_option == 0) {
@@ -213,7 +251,38 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						}
 					}
 				} else if (option == 1) {
-					npcTalk(p, n, "No sorry I don't");
+					playerTalk(p, n, "Do you know any good adventures I can go on");
+					npcTalk(p, n, "Well we're on an adventure now",
+							"Mind you this is our adventure",
+							"We don't want to share it - find your own");
+					int insist = showMenu(p, n, "Please tell me",
+							"I don't think you've found a good adventure at all");
+					if (insist == 0) {
+						npcTalk(p, n, "No");
+					} else if (insist == 1) {
+						npcTalk(p, n, "We're on one of the greatest adventures I'll have you know",
+								"Searching for Zanaris isn't a walk in the park");
+						int sub_option = showMenu(p, n, "Who's Zanaris?",
+								"what's Zanaris?",
+								"What makes you think it's out here");
+						if (sub_option == 0 || sub_option == 2) {
+							if (sub_option == 0)
+								npcTalk(p, n, "hehe Zanaris isn't a person",
+										"It's a magical hidden city");
+							else
+								npcTalk(p, n, "Don't you know of the legends?",
+										"of the magical city, hidden in the swamp");
+							ZANARIS_MENU(p, n);
+						} else if (sub_option == 1) {
+							npcTalk(p, n,
+									"I don't think we want other people competing with us to find it");
+							int next_option = showMenu(p, n, "Please tell me",
+									"Oh well never mind");
+							if (next_option == 0) {
+								npcTalk(p, n, "No");
+							}
+						}
+					}
 				} 
 			} else if (atQuestStage(p, this, 1)) {
 				playerTalk(
@@ -221,19 +290,19 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						n,
 						"So let me get this straight",
 						"I need to search the trees near here for a leprechaun?",
-						"and he will tell me where Zanaris is?");
-				npcTalk(p, n, "That is what the legends and rumours are, yes");
-			} else if (atQuestStage(p, this, 2)) {
+						"And he will tell me where Zanaris is?");
+				npcTalk(p, n, "That is what the legends and rumours are,yes");
+			} else if (atQuestStages(p, this, 4, 3, 2, -1)) {
 				playerTalk(p, n, "thankyou for your information",
-						"it has helped me a lot in my quest to find Zanaris");
-				npcTalk(p, n, "so what have you found out?",
+						"It has helped me a lot in my quest to find Zanaris");
+				npcTalk(p, n, "So what have you found out?",
 						"Where is Zanaris?");
 				playerTalk(p, n, "I think I will keep that to myself");
 			}
 		} else if (n.getID() == MONK_OF_ENTRANA) {
-			npcTalk(p, n, "Be careful going down there",
-					"You are unarmed, and there is much evilness lurking",
-					"The evilness seems to block off our contact with our god",
+			npcTalk(p, n, "Be careful going in there",
+					"You are unarmed, and there is much evilness lurking down there",
+					"The evilness seems to block off our contact with our gods",
 					"Our prayers seem to have less effect down there",
 					"Oh also you won't be able to come back this way",
 					"This ladder only goes one way",
@@ -248,6 +317,8 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				/* What is the point of this? */
 				if (getCurrentLevel(p, PRAYER) <= 3)
 					setCurrentLevel(p, PRAYER, 1);
+				else if (getCurrentLevel(p, PRAYER) <= 39)
+					setCurrentLevel(p, PRAYER, 2);
 				else
 					setCurrentLevel(p, PRAYER, 3);
 			}
@@ -256,29 +327,39 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	public void ZANARIS_MENU(Player p, Npc n) {
 		int next_option = showMenu(p, n,
-				"If it's hidden how are planning to find it",
+				"If it's hidden how are you planning to find it",
 				"There's no such thing");
 		if (next_option == 0) {
-			npcTalk(p, n, "well we dont wan't to tell others that",
-					"we all want the glory to find it ourselves");
-			int after_option = showMenu(p, n, "please tell me",
+			npcTalk(p, n, "Well we don't want to tell others that",
+					"We want all the glory of finding it for ourselves");
+			int after_option = showMenu(p, n, false, //do not send over
+					"please tell me",
 					"looks like you don't know either if you're sitting around here");
 			if (after_option == 0) {
+				playerTalk(p, n, "Please tell me");
 				npcTalk(p, n, "No");
 			} else if (after_option == 1) {
+				playerTalk(p, n, "looks like you don't know either if you're sitting around here");
 				npcTalk(p,
 						n,
-						"of course we know",
-						"We haven't worked out which tree the stupid leprechaun is hiding in",
-						"oops didn't mean to tell you that");
-				playerTalk(p, n, "So a leprechaun knows where Zanaris is?");
-				npcTalk(p, n, "eerm", "yes");
-				playerTalk(p, n, "and he's in a tree somewhere around here",
+						"Of course we know",
+						"We haven't worked out which tree the stupid leprechaun is in yet",
+						"Oops I didn't mean to tell you that");
+				playerTalk(p, n, "So a Leprechaun knows where Zanaris is?");
+				npcTalk(p, n, "Eerm", "yes");
+				playerTalk(p, n, "And he's in a tree somewhere around here",
 						"thankyou very much");
 				setQuestStage(p, this, 1);
 			}
 		} else if (next_option == 1) {
-			npcTalk(p, n, "hehe thats what you think");
+			npcTalk(p, n, "Well when we find which tree the leprechaun is in",
+					"You can eat those words",
+					"Oops I didn't mean to tell you that");
+			playerTalk(p, n, "So a Leprechaun knows where Zanaris is?");
+			npcTalk(p, n, "Eerm", "yes");
+			playerTalk(p, n, "And he's in a tree somewhere around here",
+					"thankyou very much");
+			setQuestStage(p, this, 1);
 		}
 	}
 
@@ -324,7 +405,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			removeItem(p, 510, 1);
-			message(p, "You craft a dramen staff out of the branch");
+			message(p, "you carve the branch into a staff");
 			addItem(p, 509, 1);
 		}
 	}
@@ -338,7 +419,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == MAGIC_DOOR) {
-			movePlayer(p, 109, 245);
+			p.teleport(109, 245, true);
 			sleep(500);
 			p.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {

@@ -8,6 +8,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -25,8 +26,8 @@ import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Crafting implements InvUseOnItemListener,
-InvUseOnItemExecutiveListener, InvUseOnObjectListener,
-InvUseOnObjectExecutiveListener {
+	InvUseOnItemExecutiveListener, InvUseOnObjectListener,
+	InvUseOnObjectExecutiveListener {
 
 	/**
 	 * World instance
@@ -34,266 +35,227 @@ InvUseOnObjectExecutiveListener {
 	public static final World world = World.getWorld();
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item,
-			Player owner) {
+	public void onInvUseOnObject(GameObject obj, final Item item, Player owner) {
 		switch (obj.getID()) {
-		case 118:
-		case 813: // Furnace
-			if (item.getID() == 172 || item.getID() == 691) {
-				Server.getServer().getEventHandler().add(new MiniEvent(owner) {
-					public void action() {
-						owner.message(
-								"What would you like to make?");
-						String[] options = new String[] { "Ring", "Necklace",
-						"Amulet" };
-						owner.setMenuHandler(new MenuOptionListener(options) {
-							public void handleReply(int option, String reply) {
-								if (owner.isBusy() || option < 0 || option > 2) {
-									return;
-								}
-								final int[] moulds = { 293, 295, 294 };
-								final int[] gems = { -1, 164, 163, 162, 161,
-										523 };
-								String[] options = { "Gold", "Sapphire",
-										"Emerald", "Ruby", "Diamond" };
-								if (Constants.GameServer.MEMBER_WORLD) {
-									options = new String[] { "Gold",
-											"Sapphire", "Emerald", "Ruby",
-											"Diamond", "Dragonstone" };
-								}
-								final int craftType = option;
-								if (owner.getInventory().countId(
-										moulds[craftType]) < 1) {
-									owner.message(
-											"You need a "
-													+ EntityHandler.getItemDef(
-															moulds[craftType])
-													.getName()
-													+ " to make a " + reply);
-									return;
-								}
-								owner.message(
-										"What type of " + reply
-										+ " would you like to make?");
-								owner.setMenuHandler(new MenuOptionListener(options) {
-									public void handleReply(final int option,
-											final String reply) {
-										owner.setBatchEvent(new BatchEvent(
-												owner, 1200,
-												Formulae.getRepeatTimes(owner, 12)) {
-											public void action() {
-												if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5
-														: 4)) {
-													owner.checkAndInterruptBatchEvent();
-													return;
-												}
-												if (owner.getFatigue() >= owner.MAX_FATIGUE) {
-													owner.message("You are too tired to craft");
-													interrupt();
-													return;
-												}
-												if (option != 0
-														&& owner.getInventory()
-														.countId(
-																gems[option]) < 1) {
-													owner.message("You don't have a "
-															+ reply
-															+ ".");
-													owner.checkAndInterruptBatchEvent();
-													return;
-												}
-												ItemCraftingDef def = EntityHandler
-														.getCraftingDef((option * 3)
-																+ craftType);
-												if (def == null) {
-													owner.message(
-															"Nothing interesting happens");
-													owner.checkAndInterruptBatchEvent();
-													return;
-												}
-												if (owner.getSkills().getLevel(12) < def
-														.getReqLevel()) {
-													owner.message("You need a crafting skill level of "
-															+ def.getReqLevel()
-															+ " to make this");
-													owner.checkAndInterruptBatchEvent();
-													return;
-												}
-												if (owner.getInventory()
-														.remove(item) > -1
-														&& (option == 0 || owner
-														.getInventory()
-														.remove(gems[option],
-																1) > -1)) {
-													showBubble(owner, item);
-													Item result = null;
-													if (item.getID() == 691
-															&& option == 3
-															&& craftType == 0) { 
-														result = new Item(
-																692, 1);
-													} else if (item.getID() == 691
-															&& option == 3
-															&& craftType == 1) {
-														result = new Item(
-																693, 1);
-													} else {
-														result = new Item(
-																def.getItemID(),
-																1);
+			case 118:
+			case 813: // Furnace
+				if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
+					Server.getServer().getEventHandler().add(new MiniEvent(owner) {
+						public void action() {
+							owner.message("What would you like to make?");
+							String[] options = new String[]{
+								"Ring",
+								"Necklace",
+								"Amulet"
+							};
+							owner.setMenuHandler(new MenuOptionListener(options) {
+								public void handleReply(int option, String reply) {
+									if (owner.isBusy() || option < 0 || option > 2) {
+										return;
+									}
+									final int[] moulds = {
+										ItemId.RING_MOULD.id(),
+										ItemId.NECKLACE_MOULD.id(),
+										ItemId.AMULET_MOULD.id(),
+									};
+									final int[] gems = {
+										-1,
+										ItemId.SAPPHIRE.id(),
+										ItemId.EMERALD.id(),
+										ItemId.RUBY.id(),
+										ItemId.DIAMOND.id(),
+										ItemId.DRAGONSTONE.id()
+									};
+									String[] options = {
+										"Gold",
+										"Sapphire",
+										"Emerald",
+										"Ruby",
+										"Diamond"
+									};
+									if (Constants.GameServer.MEMBER_WORLD) {
+										options = new String[]{
+											"Gold",
+											"Sapphire",
+											"Emerald",
+											"Ruby",
+											"Diamond",
+											"Dragonstone"
+										};
+									}
+									final int craftType = option;
+									if (owner.getInventory().countId(moulds[craftType]) < 1) {
+										owner.message("You need a " + EntityHandler.getItemDef(moulds[craftType]).getName() + " to make a " + reply);
+										return;
+									}
+									owner.message("What type of " + reply + " would you like to make?");
+									owner.setMenuHandler(new MenuOptionListener(options) {
+										public void handleReply(final int option, final String reply) {
+											owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, 12)) {
+												public void action() {
+													if (option < 0 || option > (Constants.GameServer.MEMBER_WORLD ? 5 : 4)) {
+														owner.checkAndInterruptBatchEvent();
+														return;
 													}
-													owner.message(
-															"You make a "
-																	+ result.getDef()
-																	.getName());
-													owner.getInventory().add(
-															result);
-													owner.incExp(12,
-															def.getExp(), true);
-												} else {
-													owner.message("You don't have a "
-															+ reply
-															+ ".");
-													owner.checkAndInterruptBatchEvent();
+													if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+														owner.message("You are too tired to craft");
+														interrupt();
+														return;
+													}
+													if (option != 0 && owner.getInventory().countId(gems[option]) < 1) {
+														owner.message("You don't have a " + reply + ".");
+														owner.checkAndInterruptBatchEvent();
+														return;
+													}
+													ItemCraftingDef def = EntityHandler.getCraftingDef((option * 3) + craftType);
+													if (def == null) {
+														owner.message("Nothing interesting happens");
+														owner.checkAndInterruptBatchEvent();
+														return;
+													}
+													if (owner.getSkills().getLevel(12) < def.getReqLevel()) {
+														owner.message("You need a crafting skill level of " + def.getReqLevel() + " to make this");
+														owner.checkAndInterruptBatchEvent();
+														return;
+													}
+													if (owner.getInventory().remove(item) > -1 && (option == 0 || owner.getInventory().remove(gems[option], 1) > -1)) {
+														showBubble(owner, item);
+														Item result;
+														if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && option == 3 && craftType == 0) {
+															result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
+														} else if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && option == 3 && craftType == 1) {
+															result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+														} else {
+															result = new Item(def.getItemID(), 1);
+														}
+														owner.message("You make a " + result.getDef().getName());
+														owner.getInventory().add(result);
+														owner.incExp(12, def.getExp(), true);
+													} else {
+														owner.message("You don't have a " + reply + ".");
+														owner.checkAndInterruptBatchEvent();
+													}
 												}
-											}
-										});
-									}
-								});
-								ActionSender.sendMenu(owner, options);
-							}
-						});
-						ActionSender.sendMenu(owner, options);
-					}
-				});
-				return;
-			}
-			if (item.getID() == 384) { // Silver Bar (Crafting)
-				Server.getServer().getEventHandler().add(new MiniEvent(owner) {
-					public void action() {
-						owner.message(
-								"What would you like to make?");
-						String[] options = new String[] { "Holy Symbol of Saradomin", "Unholy symbol of Zamorak" };
-						owner.setMenuHandler(new MenuOptionListener(options) {
-							public void handleReply(final int option,
-									String reply) {
-								if (owner.isBusy() || option < 0 || option > 1) {
-									return;
-								}
-								int[] moulds = { 386, 1026 };
-								final int[] results = { 44, 1027 };
-								if (owner.getInventory()
-										.countId(moulds[option]) < 1) {
-									owner.message(
-											"You need a "
-													+ EntityHandler.getItemDef(
-															moulds[option])
-													.getName()
-													+ " to make a " + reply + "!");
-									return;
-								}
-
-								owner.setBatchEvent(new BatchEvent(owner, 1200,
-										Formulae.getRepeatTimes(owner, 12)) {
-
-									@Override
-									public void action() {
-										if (owner.getSkills().getLevel(12) < 16) {
-											owner.message("You need a crafting skill of level 16 to make this");
-											interrupt();
-											return;
+											});
 										}
-										if (owner.getInventory().remove(item) > -1) {
-											showBubble(owner, item);
-											Item result = new Item(
-													results[option]);
-											owner.message("You make a "
-													+ result.getDef()
-													.getName());
-											owner.getInventory().add(result);
-											owner.incExp(12, 200, true);
-										} else {
-											interrupt();
-										}
-									}
-
-								});
-
-							}
-						});
-						ActionSender.sendMenu(owner, options);
-					}
-				});
-				return;
-			} else if (item.getID() == 624 || item.getID() == 625) { // Soda Ash or Sand (Glass)
-				if (owner.getInventory().countId(624) < 1) {
-					owner.message(
-							"You need some soda ash to make glass");
-					return;
-				}
-				else if(owner.getInventory().countId(625) < 1) {
-					owner.message(
-							"You need some sand to make glass");
-					return;
-				}
-				owner.setBusy(true);
-				showBubble(owner, item);
-				int otherItem = item.getID() == 625 ? 624 : 625;
-				owner.message("you heat the sand and soda ash in the furnace to make glass");
-				Server.getServer().getEventHandler()
-				.add(new ShortEvent(owner) {
-					public void action() {
-						if (owner.getInventory().remove(otherItem, 1) > -1
-								&& owner.getInventory().remove(item) > -1) {
-							owner.getInventory().add(
-									new Item(623, 1));
-							owner.getInventory().add(
-									new Item(21, 1));
-							owner.incExp(12, 80, true);
+									});
+									ActionSender.sendMenu(owner, options);
+								}
+							});
+							ActionSender.sendMenu(owner, options);
 						}
-						owner.setBusy(false);
+					});
+					return;
+				}
+				if (item.getID() == ItemId.SILVER_BAR.id()) {
+					Server.getServer().getEventHandler().add(new MiniEvent(owner) {
+						public void action() {
+							owner.message("What would you like to make?");
+							String[] options = new String[]{
+								"Holy Symbol of Saradomin",
+								"Unholy symbol of Zamorak"
+							};
+							owner.setMenuHandler(new MenuOptionListener(options) {
+								public void handleReply(final int option, String reply) {
+									if (owner.isBusy() || option < 0 || option > 1) {
+										return;
+									}
+									int[] moulds = {
+										ItemId.HOLY_SYMBOL_MOULD.id(),
+										ItemId.UNHOLY_SYMBOL_MOULD.id(),
+									};
+									final int[] results = {
+										ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
+										ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
+									};
+									if (owner.getInventory().countId(moulds[option]) < 1) {
+										owner.message("You need a " + EntityHandler.getItemDef(moulds[option]).getName() + " to make a " + reply + "!");
+										return;
+									}
+
+									owner.setBatchEvent(new BatchEvent(owner, 1200, Formulae.getRepeatTimes(owner, 12)) {
+										@Override
+										public void action() {
+											if (owner.getSkills().getLevel(12) < 16) {
+												owner.message("You need a crafting skill of level 16 to make this");
+												interrupt();
+												return;
+											}
+											if (owner.getInventory().remove(item) > -1) {
+												showBubble(owner, item);
+												Item result = new Item(results[option]);
+												owner.message("You make a " + result.getDef().getName());
+												owner.getInventory().add(result);
+												owner.incExp(12, 200, true);
+											} else {
+												interrupt();
+											}
+										}
+									});
+								}
+							});
+							ActionSender.sendMenu(owner, options);
+						}
+					});
+					return;
+				} else if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
+					if (owner.getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
+						owner.message("You need some soda ash to make glass");
+						return;
+					} else if (owner.getInventory().countId(ItemId.SAND.id()) < 1) {
+						owner.message("You need some sand to make glass");
+						return;
 					}
-				});
-				return;
-			}
-			break;
+					owner.setBusy(true);
+					showBubble(owner, item);
+					int otherItem = item.getID() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
+					owner.message("you heat the sand and soda ash in the furnace to make glass");
+					Server.getServer().getEventHandler().add(new ShortEvent(owner) {
+						public void action() {
+							if (owner.getInventory().remove(otherItem, 1) > -1
+								&& owner.getInventory().remove(item) > -1) {
+								owner.getInventory().add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
+								owner.getInventory().add(new Item(ItemId.BUCKET.id(), 1));
+								owner.incExp(12, 80, true);
+							}
+							owner.setBusy(false);
+						}
+					});
+					return;
+				}
+				break;
 		}
-		return;
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == 167 && doCutGem(player, item1, item2)) {
+		if (item1.getID() == ItemId.CHISEL.id() && doCutGem(player, item1, item2)) {
 			return;
-		} else if (item2.getID() == 167 && doCutGem(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.CHISEL.id() && doCutGem(player, item2, item1)) {
 			return;
-		} else if (item1.getID() == 621 && doGlassBlowing(player, item1, item2)) {
+		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id() && doGlassBlowing(player, item1, item2)) {
 			return;
-		} else if (item2.getID() == 621 && doGlassBlowing(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id() && doGlassBlowing(player, item2, item1)) {
 			return;
 		}
-		if (item1.getID() == 39 && makeLeather(player, item1, item2)) {
+		if (item1.getID() == ItemId.NEEDLE.id() && makeLeather(player, item1, item2)) {
 			return;
-		} else if (item2.getID() == 39 && makeLeather(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.NEEDLE.id() && makeLeather(player, item2, item1)) {
 			return;
-		} else if (item1.getID() == 207 && useWool(player, item1, item2)) {
+		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id() && useWool(player, item1, item2)) {
 			return;
-		} else if (item2.getID() == 207 && useWool(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id() && useWool(player, item2, item1)) {
 			return;
-		} else if ((item1.getID() == 50 || item1.getID() == 141 || item1
-				.getID() == 342) && useWater(player, item1, item2)) {
+		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id() || item1.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
 			return;
-		} else if ((item2.getID() == 50 || item2.getID() == 141 || item2
-				.getID() == 342) && useWater(player, item2, item1)) {
+		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id() || item2.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
 			return;
-		} else if (item1.getID() == 623 && item2.getID() == 1017
-				|| item1.getID() == 1017 && item2.getID() == 623) {
+		} else if (item1.getID() == ItemId.MOLTEN_GLASS.id() && item2.getID() == ItemId.LENS_MOULD.id() || item1.getID() == ItemId.LENS_MOULD.id() && item2.getID() == ItemId.MOLTEN_GLASS.id()) {
 			if (player.getSkills().getLevel(12) < 10) {
-				player.message(
-						"You need a crafting level of 10 to make the lens");
+				player.message("You need a crafting level of 10 to make the lens");
 				return;
 			}
-			if (player.getInventory().remove(new Item(623)) > -1) {
+			if (player.getInventory().remove(new Item(ItemId.MOLTEN_GLASS.id())) > -1) {
 				player.message("You pour the molten glass into the mould");
 				player.message("And clasp it together");
 				player.message("It produces a small convex glass disc");
@@ -301,13 +263,10 @@ InvUseOnObjectExecutiveListener {
 			}
 			return;
 		}
-		player.message(
-				"Nothing interesting happens");
-		return;
+		player.message("Nothing interesting happens");
 	}
 
-	private boolean doCutGem(Player player, final Item chisel,
-			final Item gem) {
+	private boolean doCutGem(Player player, final Item chisel, final Item gem) {
 		final ItemGemDef gemDef = EntityHandler.getItemGemDef(gem.getID());
 		if (gemDef == null) {
 			return false;
@@ -317,20 +276,31 @@ InvUseOnObjectExecutiveListener {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(12) < gemDef.getReqLevel()) {
-					boolean pluralize = gemDef.getGemID() <= 542;
+					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
 					owner.message(
-							"you need a crafting level of " + gemDef.getReqLevel()
+						"you need a crafting level of " + gemDef.getReqLevel()
 							+ " to cut " + (gem.getDef().getName().contains("ruby") ? "rubies" : gem.getDef().getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
 					return;
 				}
 				if (owner.getInventory().remove(gem) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
-					/** Jade, Opal and red topaz fail handler - 25% chance to fail **/
-					if((gem.getID() == 889 || gem.getID() == 890 || gem.getID() == 891) && DataConversions.random(0, 3) == 2) {
+					/* Jade, Opal and red topaz fail handler - 25% chance to fail **/
+					int[] gemsThatFail = new int[]{
+						ItemId.UNCUT_RED_TOPAZ.id(),
+						ItemId.UNCUT_JADE.id(),
+						ItemId.UNCUT_OPAL.id(),
+					};
+					if (DataConversions.inArray(gemsThatFail, gem.getID()) && DataConversions.random(0, 3) == 2) {
 						owner.message("You miss hit the chisel and smash the " + cutGem.getDef().getName() + " to pieces!");
-						owner.getInventory().add(new Item(915));
-						owner.incExp(12, (gem.getID() == 889 ? 25 : gem.getID() == 890 ? 20 : 15), true);
+						owner.getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
+						if (gem.getID() == ItemId.UNCUT_RED_TOPAZ.id()) {
+							owner.incExp(12, 25, true);
+						} else if (gem.getID() == ItemId.UNCUT_JADE.id()) {
+							owner.incExp(12, 20, true);
+						} else {
+							owner.incExp(12, 15, true);
+						}
 					} else {
 						owner.message("You cut the " + cutGem.getDef().getName().toLowerCase());
 						owner.playSound("chisel");
@@ -345,53 +315,53 @@ InvUseOnObjectExecutiveListener {
 		return true;
 	}
 
-	private boolean doGlassBlowing(Player player, final Item pipe,
-			final Item glass) {
-		if (glass.getID() != 623) {
+	private boolean doGlassBlowing(Player player, final Item pipe, final Item glass) {
+		if (glass.getID() != ItemId.MOLTEN_GLASS.id()) {
 			return false;
 		}
 		player.message("what would you like to make?");
 		Server.getServer().getEventHandler().add(new MiniEvent(player) {
 			public void action() {
-				String[] options = new String[] { "Vial", "orb", "Beer glass" };
+				String[] options = new String[]{
+					"Vial",
+					"orb",
+					"Beer glass"
+				};
 				owner.setMenuHandler(new MenuOptionListener(options) {
 					public void handleReply(final int option, final String reply) {
 						Item result;
 						int reqLvl, exp;
 						String resultGen;
 						switch (option) {
-						case 0:
-							result = new Item(465, 1);
-							reqLvl = 33;
-							exp = 140;
-							resultGen = "vials";
-							break;
-						case 1:
-							result = new Item(611, 1);
-							reqLvl = 46;
-							exp = 210;
-							resultGen = "orbs";
-							break;
-						case 2:
-							result = new Item(620, 1);
-							reqLvl = 1;
-							exp = 70;
-							// should not use this, as beer glass is made at level 1
-							resultGen = "beer glasses";
-							break;
-						default:
-							return;
+							case 0:
+								result = new Item(ItemId.EMPTY_VIAL.id(), 1);
+								reqLvl = 33;
+								exp = 140;
+								resultGen = "vials";
+								break;
+							case 1:
+								result = new Item(ItemId.UNPOWERED_ORB.id(), 1);
+								reqLvl = 46;
+								exp = 210;
+								resultGen = "orbs";
+								break;
+							case 2:
+								result = new Item(ItemId.BEER_GLASS.id(), 1);
+								reqLvl = 1;
+								exp = 70;
+								// should not use this, as beer glass is made at level 1
+								resultGen = "beer glasses";
+								break;
+							default:
+								return;
 						}
 						if (owner.getSkills().getLevel(12) < reqLvl) {
 							owner.message(
-									"You need a crafting level of " + reqLvl
-									+ " to make "
-									+ resultGen);
+								"You need a crafting level of " + reqLvl + " to make " + resultGen);
 							return;
 						}
 						if (owner.getInventory().remove(glass) > -1) {
-							owner.message(
-									"You make a " + result.getDef().getName());
+							owner.message("You make a " + result.getDef().getName());
 							owner.getInventory().add(result);
 							owner.incExp(12, exp, true);
 						}
@@ -403,64 +373,61 @@ InvUseOnObjectExecutiveListener {
 		return true;
 	}
 
-	private boolean makeLeather(Player player, final Item needle,
-			final Item leather) {
-		if (leather.getID() != 148) {
+	private boolean makeLeather(Player player, final Item needle, final Item leather) {
+		if (leather.getID() != ItemId.LEATHER.id()) {
 			return false;
 		}
-		if (player.getInventory().countId(43) < 1) {
-			player.message(
-					"You need some thread to make anything out of leather");
+		if (player.getInventory().countId(ItemId.THREAD.id()) < 1) {
+			player.message("You need some thread to make anything out of leather");
 			return true;
 		}
 		Server.getServer().getEventHandler().add(new MiniEvent(player) {
 			public void action() {
-				String[] options = new String[] { "Armour", "Gloves", "Boots",
-				"Cancel" };
+				String[] options = new String[]{
+					"Armour",
+					"Gloves",
+					"Boots",
+					"Cancel"
+				};
 				owner.setMenuHandler(new MenuOptionListener(options) {
 					public void handleReply(final int option, final String reply) {
 						Item result;
 						int reqLvl, exp;
 						switch (option) {
-						case 0:
-							result = new Item(15, 1);
-							reqLvl = 14;
-							exp = 100;
-							break;
-						case 1:
-							result = new Item(16, 1);
-							reqLvl = 1;
-							exp = 55;
-							break;
-						case 2:
-							result = new Item(17, 1);
-							reqLvl = 7;
-							exp = 65;
-							break;
-						default:
-							return;
+							case 0:
+								result = new Item(ItemId.LEATHER_ARMOUR.id(), 1);
+								reqLvl = 14;
+								exp = 100;
+								break;
+							case 1:
+								result = new Item(ItemId.LEATHER_GLOVES.id(), 1);
+								reqLvl = 1;
+								exp = 55;
+								break;
+							case 2:
+								result = new Item(ItemId.BOOTS.id(), 1);
+								reqLvl = 7;
+								exp = 65;
+								break;
+							default:
+								return;
 						}
 						if (owner.getSkills().getLevel(12) < reqLvl) {
-							owner.message(
-									"You need to have a crafting of level " + reqLvl
-									+ " or higher to make "
-									+ result.getDef().getName());
+							owner.message("You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef().getName());
 							return;
 						}
 						if (owner.getInventory().remove(leather) > -1) {
-							owner.message(
-									"You make some "
-											+ result.getDef().getName());
+							owner.message("You make some " + result.getDef().getName());
 							owner.getInventory().add(result);
 							owner.incExp(12, exp, true);
 							//a reel of thread accounts for 5 uses
-							if(!owner.getCache().hasKey("part_reel_thread")) {
-								owner.getCache().set("part_reel_thread", 1);	
+							if (!owner.getCache().hasKey("part_reel_thread")) {
+								owner.getCache().set("part_reel_thread", 1);
 							} else {
-								int parts = owner.getCache().getInt("part_reel_thread");	
-								if(parts >= 4) {
+								int parts = owner.getCache().getInt("part_reel_thread");
+								if (parts >= 4) {
 									owner.message("You use up one of your reels of thread");
-									owner.getInventory().remove(43, 1);
+									owner.getInventory().remove(ItemId.THREAD.id(), 1);
 									owner.getCache().remove("part_reel_thread");
 								} else {
 									owner.getCache().put("part_reel_thread", parts + 1);
@@ -475,43 +442,42 @@ InvUseOnObjectExecutiveListener {
 		return true;
 	}
 
-	private boolean useWool(Player player, final Item woolBall,
-			final Item item) {
+	private boolean useWool(Player player, final Item woolBall, final Item item) {
 		int newID;
 		switch (item.getID()) {
-		case 44: // Holy Symbol of saradomin
-			newID = 45;
-			break;
-		case 1027: // Unholy Symbol of Zamorak
-			newID = 1028;
-			break;
-		case 296: // Gold Amulet
-			newID = 301;
-			break;
-		case 297: // Sapphire Amulet
-			newID = 302;
-			break;
-		case 298: // Emerald Amulet
-			newID = 303;
-			break;
-		case 299: // Ruby Amulet
-			newID = 304;
-			break;
-		case 300: // Diamond Amulet
-			newID = 305;
-			break;
-		case 524: // Dragonstone Amulet
-			newID = 610;
-			break;
-		default:
-			return false;
+			case 44:
+				newID = ItemId.UNBLESSED_HOLY_SYMBOL.id();
+				break;
+			case 1027:
+				newID = ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id();
+				break;
+			case 296:
+				newID = ItemId.GOLD_AMULET.id();
+				break;
+			case 297:
+				newID = ItemId.SAPPHIRE_AMULET.id();
+				break;
+			case 298:
+				newID = ItemId.EMERALD_AMULET.id();
+				break;
+			case 299:
+				newID = ItemId.RUBY_AMULET.id();
+				break;
+			case 300:
+				newID = ItemId.DIAMOND_AMULET.id();
+				break;
+			case 524:
+				newID = ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id();
+				break;
+			default:
+				return false;
 		}
 		final int newId = newID;
 		player.setBatchEvent(new BatchEvent(player, 600,
-				Formulae.getRepeatTimes(player,12)) {
+			Formulae.getRepeatTimes(player, 12)) {
 			@Override
 			public void action() {
-				if(owner.getInventory().countId(item.getID()) <= 0 || owner.getInventory().countId(207) <= 0) {
+				if (owner.getInventory().countId(item.getID()) <= 0 || owner.getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
 					interrupt();
 					return;
 				}
@@ -526,23 +492,21 @@ InvUseOnObjectExecutiveListener {
 		return true;
 	}
 
-	private boolean useWater(Player player, final Item water,
-			final Item item) {
+	private boolean useWater(Player player, final Item water, final Item item) {
 		int jugID = Formulae.getEmptyJug(water.getID());
 		if (jugID == -1) { // This shouldn't happen
 			return false;
 		}
-		switch (item.getID()) {
-		case 149: // Clay
+		// Clay
+		if (item.getID() == ItemId.CLAY.id()) {
 			if (player.getInventory().remove(water) > -1
-					&& player.getInventory().remove(item) > -1) {
+				&& player.getInventory().remove(item) > -1) {
 				message(player, 1200, "You mix the clay and water");
 				player.message("You now have some soft workable clay");
 				player.getInventory().add(new Item(jugID, 1));
 				player.getInventory().add(new Item(243, 1));
 			}
-			break;
-		default:
+		} else {
 			return false;
 		}
 		return true;
@@ -550,43 +514,38 @@ InvUseOnObjectExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == 167 && doCutGem(player, item1, item2)) {
+		if (item1.getID() == ItemId.CHISEL.id() && doCutGem(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == 167 && doCutGem(player, item2, item1)) {
+		} else if (item2.getID() == ItemId.CHISEL.id() && doCutGem(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == 621) {
+		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
 			return true;
-		} else if (item2.getID() == 621) {
+		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
 			return true;
-		} else if (item1.getID() == 39) {
+		} else if (item1.getID() == ItemId.NEEDLE.id()) {
 			return true;
-		} else if (item2.getID() == 39) {
+		} else if (item2.getID() == ItemId.NEEDLE.id()) {
 			return true;
-		} else if (item1.getID() == 207) {
+		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if (item2.getID() == 207) {
+		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if ((item1.getID() == 50 || item1.getID() == 141 || item1
-				.getID() == 342) && item2.getID() == 149) {
+		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id() || item1.getID() == ItemId.BOWL_OF_WATER.id()) && item2.getID() == ItemId.CLAY.id()) {
 			return true;
-		} else if ((item2.getID() == 50 || item2.getID() == 141 || item2
-				.getID() == 342) && item1.getID() == 149) {
+		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id() || item2.getID() == ItemId.BOWL_OF_WATER.id()) && item1.getID() == ItemId.CLAY.id()) {
 			return true;
-		} else if (item1.getID() == 623 && item2.getID() == 1017
-				|| item1.getID() == 1017 && item2.getID() == 623) {
-			return true;
-		}
-
-		return false;
+		} else return item1.getID() == ItemId.MOLTEN_GLASS.id() && item2.getID() == ItemId.LENS_MOULD.id() || item1.getID() == ItemId.LENS_MOULD.id() && item2.getID() == ItemId.MOLTEN_GLASS.id();
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-			Player player) {
-		if ((obj.getID() == 118 || obj.getID() == 813)
-				&& DataConversions.inArray(new int[] {384, 172, 624, 625, 691}, item.getID())) {
-			return true;
-		}
-		return false;
+	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+		int[] blockItems = new int[]{
+			ItemId.SILVER_BAR.id(),
+			ItemId.GOLD_BAR.id(),
+			ItemId.SODA_ASH.id(),
+			ItemId.SAND.id(),
+			ItemId.GOLD_BAR_FAMILYCREST.id(),
+		};
+		return (obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(blockItems, item.getID());
 	}
 }
