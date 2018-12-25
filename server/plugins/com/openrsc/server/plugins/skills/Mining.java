@@ -133,11 +133,11 @@ ObjectActionExecutiveListener {
 			retrytimes = 2;
 			break;
 		case 1259:
-			retrytimes = 4;
+			retrytimes = 3;
 			reqlvl = 6;
 			break;
 		case 1260:
-			retrytimes = 6;
+			retrytimes = 5;
 			reqlvl = 21;
 			break;
 		case 1261:
@@ -150,12 +150,7 @@ ObjectActionExecutiveListener {
 			break;
 		}
 
-		if (object.getID() == 98) {
-			owner.message("Nothing interesting happens");
-			return;
-		}
-
-		if (def == null || def.getRespawnTime() < 1 || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6)) {
+		if (owner.click == 0 && (def == null || def.getRespawnTime() < 1 || (def.getOreId() == 315 && owner.getQuestStage(Quests.FAMILY_CREST) < 6))) {
 			if (axeId < 0 || reqlvl > mineLvl) {
 				message(owner, "You need a pickaxe to mine this rock",
 						"You do not have a pickaxe which you have the mining level to use");
