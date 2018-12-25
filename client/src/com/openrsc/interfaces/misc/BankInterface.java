@@ -40,6 +40,12 @@ public class BankInterface {
 	public boolean onRender() {
 		int currMouseX = mc.getMouseX();
 		int currMouseY = mc.getMouseY();
+		
+		if(!mc.getInitLoginCleared()) {
+			swapNoteMode = false;
+			swapCertMode = false;
+			mc.setInitLoginCleared(true);
+		}
 
 		// Set up bank list to loop through later.
 		currentBankIDs = new ArrayList<>();
