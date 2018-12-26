@@ -12,7 +12,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 
-	public static final int[] phatWeights = {8, 12, 14, 18, 24, 24};
+	public static final int[] phatWeights = {10, 15, 20, 23, 32, 28};
 	public static final int[] phatIds = {
 		ItemId.PINK_PARTY_HAT.id(),
 		ItemId.BLUE_PARTY_HAT.id(),
