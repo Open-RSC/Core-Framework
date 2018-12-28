@@ -283,7 +283,7 @@ public final class GameStateUpdater {
 				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
-						|| otherPlayer.isTeleporting() || otherPlayer.getAttribute("invisible", false)
+						|| otherPlayer.isTeleporting() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
 						|| !visibleConditionOverride) {
 					positionBuilder.writeBits(1, 1);
 					positionBuilder.writeBits(1, 1);
@@ -309,7 +309,7 @@ public final class GameStateUpdater {
 				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
-						|| otherPlayer.isRemoved() || otherPlayer.getAttribute("invisible", false)
+						|| otherPlayer.isRemoved() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
 						|| !visibleConditionOverride) {
 					continue;
 				}
