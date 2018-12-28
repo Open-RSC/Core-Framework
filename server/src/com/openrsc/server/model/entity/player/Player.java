@@ -2044,4 +2044,16 @@ public final class Player extends Mob {
 		}
 	}
 
+	public void setInvisible(boolean invisible)
+	{
+		if (invisible)
+			this.setTeleporting(true);
+
+		this.setAttribute("invisible", invisible);
+	}
+
+	public boolean isInvisible()
+	{
+		return this.getAttribute("invisible", false);
+	}
 }
