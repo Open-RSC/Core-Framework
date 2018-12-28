@@ -18,7 +18,7 @@ public final class Gulluck implements ShopInterface,
 			200), new Item(190, 150), new Item(786, 1), new Item(189,
 			4), new Item(188, 2), new Item(60, 2), new Item(669, 200),
 			new Item(670, 180), new Item(671, 160),
-			new Item(671, 140), new Item(12, 5), new Item(88, 3),
+			new Item(672, 140), new Item(12, 5), new Item(88, 3),
 			new Item(89, 5), new Item(90, 2), new Item(91, 1),
 			new Item(76, 4), new Item(77, 3), new Item(78, 2),
 			new Item(426, 1), new Item(79, 1), new Item(80, 1));
