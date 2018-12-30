@@ -1,11 +1,9 @@
 package orsc;
 
-import orsc.Config;
-
 import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
-import java.io.File;
+import java.io.*;
 
 public class ORSCFrame extends ORSCApplet {
 
@@ -36,7 +34,7 @@ public class ORSCFrame extends ORSCApplet {
 //		jframe.add(applet);
 	}
 
-    @Override
+	@Override
     public void playSound(byte[] soundData, int offset, int dataLength) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
