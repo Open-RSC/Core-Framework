@@ -1,11 +1,8 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
-import orsc.Config;
 import orsc.graphics.two.Fonts;
-import orsc.mudclient;
 import orsc.multiclient.ClientPort;
-import orsc.PacketHandler;
 import orsc.util.GenUtil;
 
 import javax.imageio.ImageIO;
@@ -14,10 +11,10 @@ import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.io.ByteArrayInputStream;
+import java.io.*;
 
 public class ORSCApplet extends Applet implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener,
-		ImageObserver, ClientPort, ImageProducer {
+		ImageObserver, ImageProducer, ClientPort {
 
 	static mudclient mudclient;
 	static PacketHandler packetHandler;
@@ -785,16 +782,39 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	}
 
-	@Override
-	public boolean saveCredentials(String creds) {
-		// TODO Auto-generated method stub
+	public static boolean saveCredentials(String creds) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+
+			OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+			outputWriter.write(creds);
+			outputWriter.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
-	@Override
 	public String loadCredentials() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+
+			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+			InputStreamReader inputStreamReader = new InputStreamReader(in);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+			in.close();
+
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
     @Override
