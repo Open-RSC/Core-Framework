@@ -39,8 +39,14 @@ public interface ClientPort {
 	public void stopSoundPlayer();
 	
 	public void drawKeyboard();
-	
-	public boolean saveCredentials(String creds);
-	
+
+	static boolean saveCredentials() {
+		return saveCredentials();
+	}
+
+	public static boolean saveCredentials(String creds) {
+		return false;
+	}
+
 	public String loadCredentials();
 }
