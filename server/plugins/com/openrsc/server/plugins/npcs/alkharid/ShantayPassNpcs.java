@@ -373,7 +373,7 @@ public class ShantayPassNpcs implements ShopInterface,
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
 									 Player player) {
-		if (obj.getID() == BANK_CHEST || obj.getID() == STONE_GATE) {
+		if (obj.getID() == BANK_CHEST || (obj.getID() == STONE_GATE && player.getY() < 735)) {
 			return true;
 		}
 		return false;
@@ -405,62 +405,57 @@ public class ShantayPassNpcs implements ShopInterface,
 			p.setAccessingBank(true);
 			ActionSender.showBank(p);
 		}
-		if (obj.getID() == STONE_GATE) {
+		if (obj.getID() == STONE_GATE && p.getY() < 735) {
 			if (command.equals("go through")) {
-				if (p.getY() >= 735) {
-					p.message("you go through the gate");
-					p.teleport(62, 732);
+				int menu;
+				if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+					message(p, "There is a large poster on the wall near the gateway. It reads..",
+						"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
+						"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
+						"@gre@No responsibility is taken by Shantay ",
+						"@gre@If anything bad should happen to you in any circumstances whatsoever.",
+						"That seems pretty scary! Are you sure you want to go through?");
+					menu = showMenu(p,
+						"Yeah, that poster doesn't scare me!",
+						"No, I'm having serious second thoughts now.");
 				} else {
-					int menu;
-					if (!hasItem(p, SHANTAY_DISCLAIMER)) {
-						message(p, "There is a large poster on the wall near the gateway. It reads..",
-							"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
-							"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
-							"@gre@No responsibility is taken by Shantay ",
-							"@gre@If anything bad should happen to you in any circumstances whatsoever.",
-							"That seems pretty scary! Are you sure you want to go through?");
-						menu = showMenu(p,
-							"Yeah, that poster doesn't scare me!",
-							"No, I'm having serious second thoughts now.");
-					} else {
-						message(p, "A poster on the wall says exactly the same as the disclaimer.",
-							"Are you sure you want to go through?");
-						menu = showMenu(p,
-							"Yeah, I'm not scared!",
-							"No, I'm having serious second thoughts now.");
-					}
-					Npc shantayGuard = getNearestNpc(p, SHANTAY_STANDING_GUARD, 5);
-					if (menu == 0) {
-						if (!hasItem(p, SHANTAY_PASS)) {
-							message(p, "A guard stops you on your way out of the gate...");
-							if (shantayGuard != null) {
-								npcTalk(p, shantayGuard, "You need a Shantay pass to get through this gate.",
-									"See Shantay, he will sell you one for a very reasonable price.");
-							} else {
-								p.message("Shantay guard seem to be busy at the moment.");
-							}
+					message(p, "A poster on the wall says exactly the same as the disclaimer.",
+						"Are you sure you want to go through?");
+					menu = showMenu(p,
+						"Yeah, I'm not scared!",
+						"No, I'm having serious second thoughts now.");
+				}
+				Npc shantayGuard = getNearestNpc(p, SHANTAY_STANDING_GUARD, 5);
+				if (menu == 0) {
+					if (!hasItem(p, SHANTAY_PASS)) {
+						message(p, "A guard stops you on your way out of the gate...");
+						if (shantayGuard != null) {
+							npcTalk(p, shantayGuard, "You need a Shantay pass to get through this gate.",
+								"See Shantay, he will sell you one for a very reasonable price.");
 						} else {
-							if (shantayGuard != null) {
-								npcTalk(p, shantayGuard, "Can I see your Shantay Desert Pass please.");
-								p.message("You hand over a Shantay Pass.");
-								removeItem(p, SHANTAY_PASS, 1);
-								playerTalk(p, shantayGuard, "Sure, here you go!");
-								if (!hasItem(p, SHANTAY_DISCLAIMER)) {
-									npcTalk(p, shantayGuard, "Here, have a disclaimer...",
-										"It means that Shantay isn't responsible if you die in the desert.");
-									p.message("The guard gives you a disclaimer.");
-									addItem(p, SHANTAY_DISCLAIMER, 1);
-								}
-								p.message("you go through the gate");
-								p.teleport(62, 735);
-							} else {
-								p.message("Shantay guard seem to be busy at the moment.");
-							}
+							p.message("Shantay guard seem to be busy at the moment.");
 						}
-					} else if (menu == 1) {
-						message(p, "You decide that your visit to the desert can be postponed..");
-						p.message("Perhaps indefinitely!");
+					} else {
+						if (shantayGuard != null) {
+							npcTalk(p, shantayGuard, "Can I see your Shantay Desert Pass please.");
+							p.message("You hand over a Shantay Pass.");
+							removeItem(p, SHANTAY_PASS, 1);
+							playerTalk(p, shantayGuard, "Sure, here you go!");
+							if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+								npcTalk(p, shantayGuard, "Here, have a disclaimer...",
+									"It means that Shantay isn't responsible if you die in the desert.");
+								p.message("The guard gives you a disclaimer.");
+								addItem(p, SHANTAY_DISCLAIMER, 1);
+							}
+							p.message("you go through the gate");
+							p.teleport(62, 735);
+						} else {
+							p.message("Shantay guard seem to be busy at the moment.");
+						}
 					}
+				} else if (menu == 1) {
+					message(p, "You decide that your visit to the desert can be postponed..");
+					p.message("Perhaps indefinitely!");
 				}
 			} else if (command.equals("look")) {
 				message(p, "You look at the huge Stone Gate.",
