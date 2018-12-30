@@ -135,10 +135,24 @@ public abstract class Mob extends Entity {
 					return true;
 				}
 			} else {
-				return canReach(low.getX(), high.getX(), low.getY(), high.getY());
+				return canReach(low.getX(), high.getX(), low.getY(), high.getY()) || closeSpecObject(o);
 			}
 		} else if (o.getType() == 1) {
 			if (getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//TODO: Verify block of special rock in tourist trap
+	public final boolean closeSpecObject(GameObject o) {
+		Point[] boundaries = o.getObjectBoundary();
+		Point low = boundaries[0];
+		Point high = boundaries[1];
+		if((Math.abs(getX() - low.getX()) <= 1 || Math.abs(getX() - high.getX()) <= 1) && 
+				(Math.abs(getY() - low.getY()) <= 1 || Math.abs(getY() - high.getY()) <= 1)) {
+			if (o.getID() == 953) {
 				return true;
 			}
 		}

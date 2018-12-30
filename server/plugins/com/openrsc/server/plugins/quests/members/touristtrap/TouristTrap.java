@@ -15,16 +15,17 @@ import static com.openrsc.server.plugins.Functions.*;
 
 import java.util.ArrayList;
 
-public class TouristTrap implements QuestInterface,TalkToNpcListener,
-TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener,NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
+public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener,
+ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener,NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
 
 	/** Player isWielding **/
 	public static final int[] restricted = { 0, 1, 3, 4, 5, 6, 7, 9 };
-	public static final int[] allow = { 1019, 1020, 1021, 1022};		
+	public static final int[] allow = { 1019, 1020, 1021, 1022, 1023 };		
 	ArrayList<Integer> wieldPos = new ArrayList<>();
     ArrayList<Integer> allowed = new ArrayList<>();
      	
 	/** Quest Items **/
+	public static int WROUGHT_KEY = 1097;
 	public static int METAL_KEY = 1021;
 	public static int CELL_DOOR_KEY = 1098;
 	public static int BEDOBIN_COPY_KEY = 1059;
@@ -49,6 +50,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	public static int CAVE_ANA = 554;
 
 	/** Quest Objects **/
+	public static int STONE_GATE = 916;
 	public static int IRON_GATE = 932;
 	public static int JAIL_DOOR = 177;
 	public static int WINDOW = 178;
@@ -80,6 +82,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		public static final int GUARDING_SECOND = 5;
 		public static final int ANA_FIRST = 6;
 		public static final int ANA_SECOND = 7;
+		public static final int LEAVE_DESERT = 8;
 	}
 	class MercenaryCaptain {
 		public static final int GUARDING = 0;
@@ -104,7 +107,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	}
 	class AlShabim {
 		public static final int WHATISTHISPLACE = 0;
-
+		public static final int HAVE_PLANS = 1;
+		public static final int MADE_WEAPON = 2;
 	}
 	class Siad {
 		public static final int PREPARETODIE = 0;
@@ -118,9 +122,13 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		public static final int PLANS = 8;
 		public static final int SUCCEED = 9;
 		public static final int BOOKS = 10;
+		public static final int PUNISHED = 11;
 	}
 	class Ana {
 		public static final int TRYGETYOUOUTOFHERE = 0;
+		public static final int GOTTHAT = 1;
+		public static final int SNEAKEDPAST = 2;
+		public static final int GUARDSRUBBISH = 3;
 	}
 
 	@Override
@@ -171,6 +179,14 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;
 		}
 		if(n.getID() == CAVE_2_MERCENARY || n.getID() == CAVE_ANA) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
+		if(n.getID() == AL_SHABIM) {
 			return true;
 		}
 		return false;
@@ -255,25 +271,21 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 									"Pop by again sometime, I'm sure we'll have a barrel of laughs!",
 									"Oh! I nearly forgot, here's a key I found in the tunnels.",
 									"It might be of some use to you, not sure what it opens.");
-							addItem(p, 1097, 1);
+							addItem(p, WROUGHT_KEY, 1);
 							message(p, "Ana spots Irena and waves...");
 							npcTalk(p,Ana, "Hi Mum!",
 									"Sorry, I have to go now!");
 							Ana.remove();
 						}
 						npcTalk(p,n, "Hi Ana!");
-						rewardMenu(p, n);
+						rewardMenu(p, n, true);
 					}
 					break;
 				case 10:
-					npcTalk(p,n, "Thank you very much for returning my daughter to me.",
-							"I'm really very grateful...",
-							"I would like to reward you for your bravery and daring.",
-							"I can offer you increased knowledge in two of the following areas.");
 					if(p.getCache().hasKey("advanced1")) {
-						lastRewardMenu(p, n);
+						lastRewardMenu(p, n, true);
 					} else {
-						rewardMenu(p, n);
+						rewardMenu(p, n, true);
 					}
 					break;
 				case -1:
@@ -322,7 +334,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				}
 				break;
 			case Irene.REWARD:
-				npcTalk(p,n, "Well, yes, you'll have my gratitude young lady.",
+				npcTalk(p,n, "Well, yes, you'll have my gratitude young " + 
+						(p.isMale() ? "man." : "lady."),
 						"And I'm sure that Ana will also be very pleased!",
 						"And I may see if I can get a small reward together...",
 						"But I cannot promise anything.",
@@ -358,9 +371,15 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 		} 
 	}
-	private void lastRewardMenu(Player p, Npc n) {
+	private void lastRewardMenu(Player p, Npc n, boolean showIrenaDialogue) {
+		if(showIrenaDialogue) {
+			npcTalk(p,n, "Thank you very much for returning my daughter to me.",
+					"I'm really very grateful...",
+					"I would like to reward you for your bravery and daring.",
+					"I can offer you increased knowledge in one of the following areas.");
+		}
 		int[] questData = Quests.questData.get(Quests.TOURIST_TRAP);
-		int lastRewardMenu = showMenu(p, n, 
+		int lastRewardMenu = showMenu(p, n, false, //do not send over
 				"Fletching.",
 				"Agility.",
 				"Smithing.",
@@ -399,13 +418,13 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 		}
 	}
-	private void rewardMenu(Player p, Npc n) {
-		npcTalk(p, n, "Thank you very much for returning my daughter to me.",
+	private void rewardMenu(Player p, Npc n, boolean showIrenaDialogue) {
+		npcTalk(p,n, "Thank you very much for returning my daughter to me.",
 				"I'm really very grateful...",
 				"I would like to reward you for your bravery and daring.",
 				"I can offer you increased knowledge in two of the following areas.");
 		int[] questData = Quests.questData.get(Quests.TOURIST_TRAP);
-		int rewardMenu = showMenu(p,n,
+		int rewardMenu = showMenu(p,n, false, //do not send over
 				"Fletching.",
 				"Agility.",
 				"Smithing.",
@@ -418,7 +437,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			if(!p.getCache().hasKey("advanced1")) {
 				p.getCache().store("advanced1", true);
 			}
-			lastRewardMenu(p, n);
+			lastRewardMenu(p, n, false);
 		} else if(rewardMenu == 1) {
 			questData[Quests.MAPIDX_SKILL] = AGILITY;
 			incQuestReward(p, questData, false);
@@ -427,7 +446,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			if(!p.getCache().hasKey("advanced1")) {
 				p.getCache().store("advanced1", true);
 			}
-			lastRewardMenu(p, n);
+			lastRewardMenu(p, n, false);
 		} else if(rewardMenu == 2) {
 			questData[Quests.MAPIDX_SKILL] = SMITHING;
 			incQuestReward(p, questData, false);
@@ -436,7 +455,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			if(!p.getCache().hasKey("advanced1")) {
 				p.getCache().store("advanced1", true);
 			}
-			lastRewardMenu(p, n);
+			lastRewardMenu(p, n, false);
 		} else if(rewardMenu == 3) {
 			questData[Quests.MAPIDX_SKILL] = THIEVING;
 			incQuestReward(p, questData, false);
@@ -445,7 +464,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			if(!p.getCache().hasKey("advanced1")) {
 				p.getCache().store("advanced1", true);
 			}
-			lastRewardMenu(p, n);
+			lastRewardMenu(p, n, false);
 		}
 	}
 
@@ -477,6 +496,95 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						npcTalk(p,n, "Move along now...we've had enough of your sort!");
 						return;
 					}
+					if(p.getQuestStage(this) == 1 && p.getCache().hasKey("first_kill_captn") && p.getCache().getBoolean("first_kill_captn")) {
+						//dialogue only on stage 1
+						//talking after captain is killed -> special dialogue bet and sets false flag
+						boolean completed = false;
+						if(!p.getCache().hasKey("mercenary_bet")) {
+							npcTalk(p, n, "Well, you've killed our Captain.",
+									"I guess you've proved yourself in combat.",
+									"However, you've left a horrible mess now.",
+									"And it's gonna cost you for us to clean it up.",
+									"Let's say 20 gold and we won't have to get rough with you?");
+							int opts = showMenu(p, n, false, //do not send over
+									"Yeah, ok, I'll give you 20 gold.",
+									"I'll give you 15, that's all you're gettin'",
+									"You can whistle for you money, I'll take you all on.");
+							if(opts == 0) {
+								playerTalk(p, n, "Yeah, ok, I'll give you 20 gold.");
+								if(hasItem(p, 10, 20)) {
+									removeItem(p, 10, 20);
+									npcTalk(p, n, "Good! Seeya, we have some cleaning to do.");
+									completed = true;
+								}
+								else {
+									npcTalk(p, n, "You don't have the gold and now we're gonna teach you a lesson.");
+									message(p, "The Guards search you!");
+									mercenaryDialogue(p, n, Mercenary.LEAVE_DESERT);
+									completed = true;
+								}
+							}
+							else if(opts == 1) {
+								playerTalk(p, n, "I'll give you 15, that's all you're gettin'");
+								if(hasItem(p, 10, 15)) {
+									removeItem(p, 10, 15);
+									npcTalk(p, n, "Ok, we'll take fifteen, you push a hard bargain!");
+									completed = true;
+								}
+								else {
+									npcTalk(p, n, "You don't have the gold and now we're gonna teach you a lesson.");
+									message(p, "The Guards search you!");
+									mercenaryDialogue(p, n, Mercenary.LEAVE_DESERT);
+									completed = true;
+								}
+							}
+							else if(opts == 2) {
+								playerTalk(p, n, "You can whistle for your money, I'll take you all on.");
+								npcTalk(p, n, "Ok, that's it, we're gonna teach you a lesson.");
+								message(p, "The Guards search you!");
+								mercenaryDialogue(p, n, Mercenary.LEAVE_DESERT);
+								completed = true;
+							}
+						}
+						else {
+							playerTalk(p, n, "Hey, I've come to collect my bet!");
+							npcTalk(p, n, "Well, I guess congratulations are in order.");
+							playerTalk(p, n, "Thanks!");
+							npcTalk(p, n, "And we'll only charge the paltry sum of..erm...");
+							message(p, "The guards starts to do some mental calculations...",
+									"You can see his brow furrow and he starts to sweat profusely");
+							switch(p.getCache().getInt("mercenary_bet")) {
+							case 5:
+								npcTalk(p, n, "Five gold for cleaning up the mess.",
+										"You have won 1 Gold piece!");
+								addItem(p, 10, 1);
+								break;
+							case 10:
+								npcTalk(p, n, "10 gold for cleaning up the mess.",
+										"You have won 2 Gold pieces!");
+								addItem(p, 10, 2);
+								break;
+							case 15:
+								npcTalk(p, n, "15 gold for cleaning up the mess.",
+										"You have won 4 Gold pieces!");
+								addItem(p, 10, 4);
+								break;
+							case 20:
+								npcTalk(p, n, "20 gold for cleaning up the mess.",
+										"You have won 10 Gold pieces!");
+								addItem(p, 10, 10);
+								break;
+							}
+							npcTalk(p, n, "Well done..!", "Ha, ha, ha ha!");
+							p.message("The guards walk off chuckling to themselves.");
+							completed = true;
+						}
+						if (completed) {
+							p.getCache().store("first_kill_captn", false);
+						}
+						return;
+					}
+					
 					npcTalk(p,n, "Yeah, what do you want?");
 					int option = showMenu(p,n,
 							"What is this place?",
@@ -504,13 +612,21 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			} switch(cID) {
 			case Mercenary.THROW_PLAYER:
 				npcTalk(p,n, "Don't try to fool me, you don't have five gold coins!",
-						"Before you try to bribe someone, make sure you have the money effendi!",
-						"Guards, guards!");
+						"Before you try to bribe someone, make sure you have the money effendi!");
+				mercenaryDialogue(p, n, Mercenary.LEAVE_DESERT);
+				break;
+			case Mercenary.LEAVE_DESERT:
+				npcTalk(p,n, "Guards, guards!");
 				n.setChasing(p);
 				message(p, "Nearby guards quickly grab you and rough you up a bit.");
 				npcTalk(p,n, "Let's see how good you are with desert survival techniques!");
 				message(p, "You're bundled into the back of a cart and blindfolded...");
 				message(p, "Sometime later you wake up in the desert.");
+				if(hasItem(p, 342)) {
+					npcTalk(p,n, "You won't be needing that water any more!");
+					message(p, "The guards throw your water away...");
+					removeItem(p, 342, 1);
+				}
 				p.teleport(121, 803);
 				message(p, "The guards move off in the cart leaving you stranded in the desert.");
 				break;
@@ -576,26 +692,29 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							npcTalk(p,n, "Well, he could be anywhere, he's a nomadic desert dweller.",
 									"However, he is frequently to be found to the west in the ",
 									"hospitality of the tenti's.");
-							int eleventhMenu = showMenu(p,n,
+							int eleventhMenu = showMenu(p,n, false, //do not send over
 									"The Tenti's, who are they?",
 									"Ok thanks.");
 							if(eleventhMenu == 0) {
+								playerTalk(p, n, "The Tenti's, who are they?");
 								npcTalk(p,n, "Well, we're not really sure what they're proper name is.",
 										"But they live in tents so we call them the 'Tenti's'.");
-								int twelftMenu = showMenu(p,n,
+								int twelftMenu = showMenu(p,n, false, //do not send over
 										"Ok thanks.",
 										"Is Al Zaba Bhasim very tough?");
 								if(twelftMenu == 0) {
+									playerTalk(p, n, "Ok, thanks.");
 									npcTalk(p,n, "Yeah, whatever!");
 								} else if(twelftMenu == 1) {
+									playerTalk(p, n, "Is Al Zaba Bhasim very tough?");
 									npcTalk(p,n, "Well, I'm not sure, but by all accounts, he is a slippery fellow.",
 											"The Captain has been trying to capture him for years.",
 											"A bit of a waste of time if you ask me.",
 											"Anyway, I have to get going, I do have work to do.");
 									p.message("The guard walks off.");
-
 								}
 							} else if(eleventhMenu == 1) {
+								playerTalk(p, n, "Ok, thanks.");
 								npcTalk(p,n, "Yeah, whatever!");
 							}
 						} else if(tenthMenu == 1) {
@@ -618,10 +737,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				if(sixthMenu == 0) {
 					npcTalk(p,n, "Heh?");
 					message(p, "The guard looks at you with a confused stare...");
-					int seventhMenu = showMenu(p,n,
+					int seventhMenu = showMenu(p,n, false, //do not send over
 							"It doesn't sound as if you respect your Captain much.",
 							"Ok thanks.");
 					if(seventhMenu == 0) {
+						playerTalk(p, n, "It doesn't sound is if you respect your Captain much.");
 						npcTalk(p,n, "Well, to be honest.");
 						message(p, "The guard looks around conspiratorially.");
 						npcTalk(p,n, "We think he's not exactly as brave as he makes out.",
@@ -630,10 +750,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								"or managed to trick him into a one-on-one duel.",
 								"Many of us bet that he'll be slaughtered in double quick time.",
 								"And all the men agreed that they wouldn't intervene.");
-						int eightMenu = showMenu(p,n,
+						int eightMenu = showMenu(p,n, false, //do not send over
 								"Can I have a bet on that?",
 								"Ok Thanks.");
 						if(eightMenu == 0) {
+							playerTalk(p, n, "Can I have a bet on that?");
 							npcTalk(p,n, "Well, if you think you stand a chance, sure.",
 									"But remember, if he gives us an order, we have to obey.");
 							int ninthMenu = showMenu(p,n,
@@ -642,41 +763,39 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 									"I'll bet 15 gold that I win.",
 									"I'll bet 20 gold that I win.",
 									"Ok, thanks.");
-							if(ninthMenu == 0) {
-								npcTalk(p,n, "Great, I'll take that bet.");
-								p.message("You hand over 5 gold coins.");
-								removeItem(p, 10, 5);
-								npcTalk(p,n, "Ok, if you win, you'll get 6 gold back.",
-										"Anyway, I have to get going, I do have work to do.");
-								p.message("The guard walks off.");
-							} else if(ninthMenu == 1) {
-								npcTalk(p,n, "Great, I'll take that bet.");
-								p.message("You hand over 10 gold coins.");
-								removeItem(p, 10, 10);
-								npcTalk(p,n, "Ok, if you win, you'll get 12 gold back.",
-										"Anyway, I have to get going, I do have work to do.");
-								p.message("The guard walks off.");
-							} else if(ninthMenu == 2) {
-								npcTalk(p,n, "Great, I'll take that bet.");
-								p.message("You hand over 15 gold coins.");
-								removeItem(p, 10, 15);
-								npcTalk(p,n, "Ok, if you win, you'll get 18 gold back.",
-										"Anyway, I have to get going, I do have work to do.");
-								p.message("The guard walks off.");
-							} else if(ninthMenu == 3) {
-								npcTalk(p,n, "Great, I'll take that bet.");
-								p.message("You hand over 20 gold coins.");
-								removeItem(p, 10, 20);
-								npcTalk(p,n, "Ok, if you win, you'll get 24 gold back.",
-										"Anyway, I have to get going, I do have work to do.");
+							if(ninthMenu >=0 && ninthMenu <= 3) {
+								int betAmount = 5, recvAmount = 6;
+								if(ninthMenu == 0) {
+									betAmount = 5;
+									recvAmount = 6;
+								} else if(ninthMenu == 1) {
+									betAmount = 10;
+									recvAmount = 12;
+								} else if(ninthMenu == 2) {
+									betAmount = 15;
+									recvAmount = 19;
+								} else if(ninthMenu == 3) {
+									betAmount = 20;
+									recvAmount = 30;
+								}
+								if(hasItem(p, 10, betAmount)) {
+									npcTalk(p,n, "Great, I'll take that bet.");
+									p.message("You hand over " + betAmount + " gold coins.");
+									removeItem(p, 10, betAmount);
+									npcTalk(p,n, "Ok, if you win, you'll get " + recvAmount + "gold back.");
+									p.getCache().set("mercenary_bet", betAmount);
+								}
+								npcTalk(p,n, "Anyway, I have to get going, I do have work to do.");
 								p.message("The guard walks off.");
 							} else if(ninthMenu == 4) {
 								npcTalk(p,n, "Yeah, whatever!");
 							}
 						} else if(eightMenu == 1) {
+							playerTalk(p, n, "Ok, thanks.");
 							npcTalk(p,n, "Yeah, whatever!");
 						}
 					} else if(seventhMenu == 1) {
+						playerTalk(p, n, "Ok, thanks.");
 						npcTalk(p,n, "Yeah, whatever!");
 					}
 				} else if(sixthMenu == 1) {
@@ -685,12 +804,14 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				break;
 			case Mercenary.GUARDING_FIRST:
 				npcTalk(p,n, "Get lost before I chop off your head!");
-				int chopMenu = showMenu(p,n,
+				int chopMenu = showMenu(p,n, false, //do not send over
 						"Ok thanks.",
 						"Perhaps these five gold coins will sweeten your mood?");
 				if(chopMenu == 0) {
+					playerTalk(p, n, "Ok, thanks.");
 					npcTalk(p,n, "Yeah, whatever!");
 				} else if(chopMenu == 1){
+					playerTalk(p, n, "Perhaps these five gold coins will sweeten your mood?");
 					if(hasItem(p, 10, 5)) {
 						npcTalk(p,n, "Well, it certainly will help...");
 						p.message("The guard takes the five gold coins.");
@@ -718,12 +839,14 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				npcTalk(p,n, "And to make sure that unauthorised people don't get in.");
 				message(p, "The guard looks around nervously.");
 				npcTalk(p,n,  "You'd better go now before the Captain orders us to kill you.");
-				int gmenu = showMenu(p,n,
+				int gmenu = showMenu(p,n, false, //do not send over
 						"Does the Captain order you to kill a lot of people?",
 						"Ok Thanks.");
 				if(gmenu == 0) {
+					playerTalk(p, n, "Does the Captain order you to kill a lot of people?");
 					mercenaryDialogue(p, n, Mercenary.ORDER_KILL_PEOPLE);
 				} else if(gmenu == 2) {
+					playerTalk(p, n, "Ok, thanks.");
 					npcTalk(p,n, "Yeah, whatever!");
 				}
 				break;
@@ -735,7 +858,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				if(altMenu == 0) {
 					npcTalk(p,n, "Hmm, it might help!");
 					if(hasItem(p, 10, 5)) {
-						p.message("The guard takes the five gold coins.");
+						p.message("The guards takes the five gold coins.");
 						removeItem(p, 10, 5);
 						npcTalk(p,n, "Now then, what did you want to know?");
 						int anaMenu = showMenu(p,n,
@@ -807,23 +930,23 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							npcTalk(p,n, "Oh yes! How might you do that?",
 									"You seem little more than a gutter dweller.",
 									"How could you teach me manners?");
-							int manners = showMenu(p,n,
+							int manners = showMenu(p,n, false, //do not send over
 									"With my right fist and a good deal of force.",
 									"Err, sorry, I thought I was talking to someone else.");
 							if(manners == 0) {
+								playerTalk(p, n, "With my good right arm and a good deal of force.");
 								npcTalk(p,n, "Oh yes, ready your weapon then!",
 										"I'm sure you won't mind if my men join in?",
 										"Har, har, har!",
-										" Guards, kill this gutter dwelling slime.");
-								message(p, "An angry guard approaches you and whips out his sword.");
+										"Guards, kill this gutter dwelling slime.");
 								captainWantToThrowPlayer(p, n);
 							} else if(manners == 1) {
+								playerTalk(p, n, "Err, sorry, I thought I was talking to someone else.");
 								npcTalk(p,n, "Well, Effendi, you do need to be carefull of what you say to people.",
 										"Or they may take it the wrong way.",
 										"Thankfully, I'm very understanding.",
 										"I'll just let me guards deal with you.",
 										"Guards, teach this desert weed some manners.");
-								message(p, "An angry guard approaches you and whips out his sword.");
 								captainWantToThrowPlayer(p, n);
 							}
 
@@ -876,8 +999,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					} else if(menu == 2) {
 						npcTalk(p,n, "I will not tolerate such insults..",
 								"Guards, kill " + (p.isMale() ? "him." : "her."));
-						message(p, "The captain marches away in disgust leaving his guards to tackle you.",
-								"An angry guard approaches you and whips out his sword.");
+						message(p, "The captain marches away in disgust leaving his guards to tackle you.");
 						captainWantToThrowPlayer(p, n);
 					}
 					break;
@@ -897,15 +1019,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					npcTalk(p,n, "Why....you ignorant, rude and eternally damned infidel,");
 					p.message( "The captain seems very agitated with what you just said.");
 					npcTalk(p,n, "Guards, kill this infidel!");
-					p.message("The guard approaches you again kicks you slightly.");
-					n = getNearestNpc(p, MERCENARY, 10);
-					playerTalk(p,n, "Ow!");
-					npcTalk(p,n, "Take that you mad child of a dog!");
-					playerTalk(p,n, "The guard leans closer to you and says in a low voice.");
-					npcTalk(p,n, "What are you doing here again?",
-							"Didn't I tell you to get out of here!",
-							"Now get lost, properly this time!",
-							"Or we may be forced to see his orders through properly.");
+					captainWantToThrowPlayer(p, n);
 				} else if(fourthMenu == 1) {
 					mercenaryCaptainDialogue(p, n, MercenaryCaptain.DONTSCAREME);
 				}
@@ -913,16 +1027,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			case MercenaryCaptain.DONTSCAREME:
 				npcTalk(p,n, "Well, perhaps I can try a little harder.",
 						"Guards, kill this infidel.");
-				p.message("A guard approaches you and pretends to start hiting you.");
-				n = getNearestNpc(p, MERCENARY, 10);
-				if(n != null) {
-					npcTalk(p,n, "Take that you infidel!");
-					p.message("The guard leans closer to you and says in a low voice.");
-					npcTalk(p,n, "We're sick of having to kill every lunatic that comes along",
-							"and insults the captain, it makes such a mess.",
-							"Thankfully, he's a bit decrepid so he doesn't notice",
-							"so please, buzz off and don't come here again.");
-				}
+				captainWantToThrowPlayer(p, n);
 				break;
 			case MercenaryCaptain.MUSTBESOMETHINGICANDO:
 				p.message("The Captain ponders a moment and then looks at you critically.");
@@ -940,10 +1045,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				} else if(doThis == 1) {
 					npcTalk(p,n, "Hmm, well yes, I did consider that you might not be right for the job.",
 							"Be off with you then before I turn my men loose on you.");
-					int no = showMenu(p,n,
+					int no = showMenu(p,n, false, //do not send over
 							"I guess you can't fight your own battles then?",
 							"Ok, I'll move on.");
 					if(no == 0) {
+						playerTalk(p, n, "I guess you can't fight your own battles then?");
 						p.message("The men around you fall silent and the Captain silently fumes.");
 						sleep(1600);
 						p.message("All eyes turn to the Captain...");
@@ -951,6 +1057,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						p.message("The guards gather around to watch the fight.");
 						n.setChasing(p);
 					} else if(no == 1) {
+						playerTalk(p, n, "Ok, I'll be moving along then.");
 						npcTalk(p,n, "Effendi, I think you'll find that is the ",
 								"wisest decision you have made today.");
 					}
@@ -1039,7 +1146,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								npcN = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 								sleep(1000);
 							}
-							npcTalk(p,npcN, "Hey, you're no slave!");
+							npcTalk(p,npcN, "Hey! You're no slave!");
 							npcN.startCombat(p);
 							message(p, "The Guards search you!");
 							if(hasItem(p, CELL_DOOR_KEY)) {
@@ -1047,7 +1154,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							}
 							message(p, "Some guards rush to help their comrade.",
 									"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-							npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
+							npcTalk(p, npcN, "Into the cell you go! I hope this teaches you a lesson.");
 							if(p.getQuestStage(this) >= 9) {
 								p.teleport(74, 3626); 
 							} else {
@@ -1105,10 +1212,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				} else if(thirdMenu == 1) {
 					npcTalk(p,n, "Yes, it is actually.",
 							"I have all the details figured out except for one.");
-					int four = showMenu(p,n,
+					int four = showMenu(p,n, false, //do not send over
 							"What's that then?",
 							"Oh, that's a shame.");
 					if(four == 0) {
+						playerTalk(p, n, "What's that then?");
 						message(p, "The slave shakes his arms and the chains rattle loudly.");
 						npcTalk(p,n, "These bracelets, I can't seem to get them off.",
 								"If I could get them off, I'd be able to climb my way",
@@ -1131,7 +1239,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							}
 						}
 					} else if(four == 1) {
-						playerTalk(p,n, "Still, 'worse things happen at sea right?'");
+						playerTalk(p,n, "Oh, that's a shame...",
+								"Still, 'worse things happen at sea right?'");
 						npcTalk(p,n, "You've obviously never worked as a slave",
 								"...in a mining camp...",
 								"...in the middle of the desert");
@@ -1146,10 +1255,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				npcTalk(p,n, "Hang on a minute...I suppose you want something for doing this?",
 						"The last time I did a trade in this place,",
 						"I nearly lost the shirt from my back!");
-				int trade = showMenu(p,n,
+				int trade = showMenu(p,n, false, //do not send over
 						"It's funny you should say that...",
 						"That sounds awful.");
 				if(trade == 0) {
+					playerTalk(p, n, "It's funny you should say that actually.");
 					message(p, "The slave looks at you blankly.");
 					npcTalk(p,n, "Yeah, go on!");
 					playerTalk(p,n, "If I can get the chains off, you have to give me something, ok?");
@@ -1161,6 +1271,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							"Get me some nice desert clothes and I'll think about it?",
 							"Do you still want to try and undo the locks for me?");
 					p.updateQuestStage(this, 2);
+					p.getCache().remove("first_kill_captn");
+					p.getCache().remove("mercenary_bet");
 					int go = showMenu(p,n,
 							"Yeah, Ok, let's give it a go.",
 							"I need to do some other things first.");
@@ -1170,34 +1282,78 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						npcTalk(p,n, "Ok, fair enough, let me know when you want to give it another go.");
 					}
 				} else if(trade == 1) {
+					playerTalk(p, n, "That sounds awful.");
 					npcTalk(p,n, "Yeah, bunch of no hopers, tried to rob me blind.",
 							"But I guess that's what you get when you deal with convicts.");
 				}
 				break;
 			case Slave.GIVEITAGO:
 				npcTalk(p,n, "Great!");
-				message(p, "You use some nearby bits of wood and wire to try and pick the lock.",
-						"You hear a satisfying 'click' as you tumble the lock mechanism.");
-				npcTalk(p,n, "Great! You did it!");
-				npcTalk(p,n, "I need a desert robe if you want these clothes off me.");
-				p.updateQuestStage(this, 3);
+				message(p, "You use some nearby bits of wood and wire to try and pick the lock.");
+				int attempt1 = DataConversions.random(0, 1);
+				//failed attempt 1
+				if(attempt1 == 0) {
+					message(p, "You fail!", "You didn't manage to pick the lock this time, would you like another go?");
+					int anotherGo = showMenu(p, "Yeah, I'll give it another go.", "I'll try something different instead.");
+					if (anotherGo == 0)
+					{
+						message(p, "You use some nearby bits of wood and wire to try and pick the lock.");
+						int attempt2 = DataConversions.random(0, 1);
+						//failed attempt 2
+						if(attempt2 == 0) {
+							message(p, "You fail!");
+							Npc mercenary = getNearestNpc(p, MERCENARY, 15);
+							if (mercenary != null) {
+								message(p, "A nearby guard spots you!");
+								npcTalk(p, n, "Oh oh!");
+								npcTalk(p,mercenary, "Oi, what are you two doing?");
+								mercenary.setChasing(p);
+								message(p, "The Guards search you!",
+										"More guards rush to catch you.",
+										"You are roughed up a bit by the guards as you're manhandlded to a cell.");
+								npcTalk(p, mercenary, "Into the cell you go! I hope this teaches you a lesson.");
+								p.teleport(89, 801);
+							}
+						}
+						else {
+							succeedFreeSlave(p, n);
+						}
+					}
+					else if (anotherGo == 1) {
+						message(p, "You decide to try something else.");
+						npcTalk(p, n, "Are you givin in already?");
+						playerTalk(p, n, "I just want to try something else.");
+						npcTalk(p, n, "Ok, if you want to try again, let me know.");
+					}
+				}
+				else {
+					succeedFreeSlave(p, n);
+				}
+						
 				break;
 			}
 		}
 	}
+	private void succeedFreeSlave(Player p, Npc n) {
+		message(p, "You hear a satisfying 'click' as you tumble the lock mechanism.");
+		npcTalk(p,n, "Great! You did it!");
+		npcTalk(p,n, "I need a desert shirt, robe and boots if you want these clothes off me.");
+		p.updateQuestStage(this, 3);
+	}
+	
 	private void mercenaryInsideDialogue(Player p, Npc n, int cID) {
 		if(n.getID() == MERCENARY_INSIDE) {
 			if(cID == -1) {
 				if(p.getLocation().inTouristTrapCave()) {
 					if(!p.getInventory().wielding(1022) && !p.getInventory().wielding(1023)) {
 						p.message("This guard looks as if he's been down here a while.");
-						npcTalk(p,n, "Hey, you're no slave!");
-						npcTalk(p,n, "What are you doing down here?");
+						npcTalk(p,n, "Hey, you're no slave!",
+								"What are you doing down here?");
 						n.setChasing(p);
 						if(p.getQuestStage(this) != -1) {
 							message(p, "More guards rush to catch you.",
 									"You are roughed up a bit by the guards as you're manhandlded to a cell.");
-							npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
+							npcTalk(p, n, "Into the cell you go! I hope this teaches you a lesson.");
 							p.teleport(89, 801);
 						}
 						return;
@@ -1209,6 +1365,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						p.message("The guard looks at you pleadingly.");
 						return;
 					}
+					p.message("This guard looks as if he's been down here a while.");
 					npcTalk(p,n, "Yeah, what do you want?");
 					int mama = showMenu(p,n,
 							"Er nothing really.",
@@ -1290,21 +1447,26 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			if(cID == -1) {
 				npcTalk(p,n, "Hello Effendi!",
 						"How can I help you?");
-				int menu = showMenu(p,n,
+				int menu = showMenu(p,n, false, //do not send over
 						"What is this place?",
 						"Where is the Shantay Pass?",
 						"Buy a jug of water - 5 Gold Pieces.",
 						"Buy a full waterskin - 20 Gold Pieces.",
 						"Buy a bucket of water - 20 Gold Pieces.");
 				if(menu == 0) {
+					playerTalk(p, n, "What is this place?");
 					bedabinNomadDialogue(p, n, BedabinNomad.PLACE);
 				} else if(menu == 1) {
+					playerTalk(p, n, "Where is the Shantay Pass.");
 					bedabinNomadDialogue(p, n, BedabinNomad.SHANTAYPASS);
 				} else if(menu == 2) {
+					playerTalk(p, n, "Buy a jug of water - 5 Gold Pieces.");
 					bedabinNomadDialogue(p, n, BedabinNomad.JUGOFWATER);
 				} else if(menu == 3) {
+					playerTalk(p, n, "Buy a full waterskin - 25 Gold Pieces.");
 					bedabinNomadDialogue(p, n, BedabinNomad.FULLWATERSKIN);
 				} else if(menu == 4) {
+					playerTalk(p, n, "Buy a bucket of water - 20 Gold Pieces.");
 					bedabinNomadDialogue(p, n, BedabinNomad.BUCKETOFWATER);
 				}
 			} switch(cID) {
@@ -1445,22 +1607,6 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				switch(p.getQuestStage(this)) {
 				case 0:
 				case 1:
-					npcTalk(p,n, "Hello Effendi!",
-							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
-					int menus = showMenu(p,n,
-							"I am looking for Al Zaba Bhasim.",
-							"What is this place?");
-					if(menus == 0) {
-						npcTalk(p,n, "Huh! You have been talking to the guards at the mining camp.",
-								"Or worse, that cowardly mercenary captain.",
-								"Al Zaba Bhasim does not exist, he is a figment of their imagination!",
-								"Go back and tell this captain that if he wants to find this man",
-								"he should search for him personally.",
-								"See how much of his own time he would like to waste.");
-					} else if(menus == 1) {
-						alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
-					}
-					break;
 				case 2:
 				case 3:
 				case 4:
@@ -1512,83 +1658,15 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					break;
 				case 6:
 				case 7:
+					npcTalk(p,n, "Hello Effendi!");
 					if(hasItem(p, 1014)) {
-						npcTalk(p,n, "Hello Effendi!",
-								"Wonderful, I see you have made the new weapon!");
-						message(p, "You show Al Shabim the prototype dart.");
-						removeItem(p, 1014, 1);
-						npcTalk(p,n, "This is truly fantastic Effendi!");
-						if(hasItem(p, TECHNICAL_PLANS)) {
-							npcTalk(p,n, "We will take the technical plans for the weapon as well.");
-							removeItem(p, TECHNICAL_PLANS, 1);
-							message(p, "You hand over the technical plans for the weapon.");
-						}
-						npcTalk(p,n, "We are forever grateful for this gift.",
-								"My advisors have discovered some secrets which we will share with you.");
-						message(p, "Al Shabim's advisors show you some advanced techniques for making the new weapon.");
-						npcTalk(p,n, "Oh, and here is your pineapple!");
-						addItem(p, PINE_APPLE, 1);
-						npcTalk(p,n, "Please accept this selection of six bronze throwing darts",
-								"as a token of our appreciation.");
-						addItem(p, 1013, 6);
-						if(hasItem(p, BEDOBIN_COPY_KEY)) {
-							npcTalk(p,n, "I'll take that key off your hands as well effendi!");
-							removeItem(p, BEDOBIN_COPY_KEY, 1);
-						}
-						npcTalk(p,n, "Many thanks!");
-						p.message("********************************************************************");
-						p.message("*** You can now make a new weapon type: Throwing dart. ***");
-						p.message("********************************************************************");
-						p.updateQuestStage(this, 8); //>= 8 or -1 for throwing darts.
+						alShabimDialogue(p, n, AlShabim.MADE_WEAPON);
 					}
 					else if(hasItem(p, TECHNICAL_PLANS) && !hasItem(p, 1014)) {
-						npcTalk(p,n, "Hello Effendi!",
-								"Aha! I see you have the plans.",
-								"This is great!",
-								"However, these plans do indeed look very technical",
-								"My people have further need of your skills.",
-								"If you can help us to manufacture this item,",
-								"we will share it's secret with you.",
-								"Does this deal interest you effendi?");
-						int tati = showMenu(p,n,
-								"Yes, I'm very interested.",
-								"No, sorry.");
-						if(tati == 0) {
-							if(hasItem(p, 169) && hasItem(p, 381, 10)) {
-								npcTalk(p,n, "Aha! I see you have the items we need!",
-										"Are you still willing to help make the weapon?");
-								int make = showMenu(p,n,
-										"Yes, I'm kind of curious.",
-										"No,sorry.");
-								if(make == 0) {
-									npcTalk(p,n, "Ok Effendi, you need to follow the plans.",
-											"You will need some special tools for this...",
-											"There is a forge in the other tent.",
-											"You have my permision to use it, but show the plans to the guard.",
-											"You have the plans and the all the items needed, ",
-											"You should be able to complete the item on your own.",
-											"Please bring me the item when it is finished.");
-									if(p.getQuestStage(this) == 6) {
-										p.updateQuestStage(this, 7);
-									}
-								} else if(make == 1) {
-									npcTalk(p,n, "As you wish effendi!",
-											"Come back if you change your mind!");
-								}
-							} else {
-								npcTalk(p,n, "Great, we need the following items.",
-										"A bar of pure bronze and 10 feathers.",
-										"Bring them to me and we'll continue to make the item.");
-							}
-
-						} else if(tati == 1) {
-							npcTalk(p,n, "As you wish effendi!",
-									"Come back if you change your mind!");
-						}
+						alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
 					}
 					else if(hasItem(p, BEDOBIN_COPY_KEY) && !hasItem(p, TECHNICAL_PLANS)) {
-						npcTalk(p,n, "Hello Effendi!",
-								"How are things going Effendi?");
+						npcTalk(p,n, "How are things going Effendi?");
 						int dede = showMenu(p,n,
 								"Very well thanks!",
 								"Not so good actually!",
@@ -1605,7 +1683,6 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						}
 					}
 					else {
-						npcTalk(p,n, "Hello Effendi!");
 						int kaka = showMenu(p,n,
 								"I've lost the key!",
 								"What is this place?",
@@ -1623,9 +1700,51 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					}
 					break;
 				case 8:
-					npcTalk(p,n, "Hello Effendi!",
-							"Many thanks with your help previously Effendi!");
-					if(hasItem(p, PINE_APPLE)) {
+				case 9:
+				case 10:
+				case -1:
+					if(hasItem(p, 1014)) {
+						npcTalk(p, n, "Hello Effendi!",
+								"Wonderful, I see you have made the new weapon!",
+								"Where did you get this from Effendi!",
+								"I'll have to confiscate this for your own safety!");
+						removeItem(p, 1014, 1);
+						return;
+					}
+					if(hasItem(p, TECHNICAL_PLANS)) {
+						npcTalk(p, n, "Hello Effendi!");
+						alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
+						return;
+					}
+					if(p.getQuestStage(this) == 8) {
+						npcTalk(p,n, "Hello Effendi!",
+								"Many thanks with your help previously Effendi!");
+						if(hasItem(p, PINE_APPLE)) {
+							int mopt = showMenu(p,n,
+									"What is this place?",
+									"Goodbye!");
+							if(mopt == 0) {
+								alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
+							} else if(mopt == 1) {
+								npcTalk(p,n, "Very well, good day Effendi!");
+							}
+						} else {
+							int mopt = showMenu(p,n,
+									"I am looking for a pineapple.",
+									"What is this place?");
+							if(mopt == 0) {
+								npcTalk(p,n, "Here is another pineapple, try not to lose this one.");
+								p.message("Al Shabim gives you another pineapple.");
+								addItem(p, PINE_APPLE, 1);
+							} else if(mopt == 1) {
+								alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
+							}
+						}
+					}
+					else {
+						npcTalk(p,n, "Hello Effendi!",
+								"Many thanks with your help previously Effendi!",
+								"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
 						int mopt = showMenu(p,n,
 								"What is this place?",
 								"Goodbye!");
@@ -1634,32 +1753,6 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						} else if(mopt == 1) {
 							npcTalk(p,n, "Very well, good day Effendi!");
 						}
-					} else {
-						int mopt = showMenu(p,n,
-								"I am looking for a pineapple.",
-								"What is this place?");
-						if(mopt == 0) {
-							npcTalk(p,n, "Here is another pineapple, try not to lose this one.");
-							p.message("Al Shabim gives you another pineapple.");
-							addItem(p, PINE_APPLE, 1);
-						} else if(mopt == 1) {
-							alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
-						}
-					}
-					break;
-				case 9:
-				case 10:
-				case -1:
-					npcTalk(p,n, "Hello Effendi!",
-							"Many thanks with your help previously Effendi!",
-							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
-					int mopt = showMenu(p,n,
-							"What is this place?",
-							"Goodbye!");
-					if(mopt == 0) {
-						alShabimDialogue(p, n, AlShabim.WHATISTHISPLACE);
-					} else if(mopt == 1) {
-						npcTalk(p,n, "Very well, good day Effendi!");
 					}
 					break;
 				}
@@ -1682,6 +1775,79 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							"They are grown in a secret location.",
 							"To stop thieves from raiding our most precious prize.");
 				}
+				break;
+			case AlShabim.HAVE_PLANS:
+				npcTalk(p,n, "Aha! I see you have the plans.",
+						"This is great!",
+						"However, these plans do indeed look very technical",
+						"My people have further need of your skills.",
+						"If you can help us to manufacture this item,",
+						"we will share it's secret with you.",
+						"Does this deal interest you effendi?");
+				int tati = showMenu(p,n,
+						"Yes, I'm very interested.",
+						"No, sorry.");
+				if(tati == 0) {
+					if(hasItem(p, 169) && hasItem(p, 381, 10)) {
+						npcTalk(p,n, "Aha! I see you have the items we need!",
+								"Are you still willing to help make the weapon?");
+						int make = showMenu(p,n,
+								"Yes, I'm kind of curious.",
+								"No,sorry.");
+						if(make == 0) {
+							npcTalk(p,n, "Ok Effendi, you need to follow the plans.",
+									"You will need some special tools for this...",
+									"There is a forge in the other tent.",
+									"You have my permision to use it, but show the plans to the guard.",
+									"You have the plans and the all the items needed, ",
+									"You should be able to complete the item on your own.",
+									"Please bring me the item when it is finished.");
+							if(p.getQuestStage(this) == 6) {
+								p.updateQuestStage(this, 7);
+							}
+						} else if(make == 1) {
+							npcTalk(p,n, "As you wish effendi!",
+									"Come back if you change your mind!");
+						}
+					} else {
+						npcTalk(p,n, "Great, we need the following items.",
+								"A bar of pure bronze and 10 feathers.",
+								"Bring them to me and we'll continue to make the item.");
+					}
+
+				} else if(tati == 1) {
+					npcTalk(p,n, "As you wish effendi!",
+							"Come back if you change your mind!");
+				}
+				break;
+			case AlShabim.MADE_WEAPON:
+				npcTalk(p,n, "Wonderful, I see you have made the new weapon!");
+				message(p, "You show Al Shabim the prototype dart.");
+				removeItem(p, 1014, 1);
+				npcTalk(p,n, "This is truly fantastic Effendi!");
+				if(hasItem(p, TECHNICAL_PLANS)) {
+					npcTalk(p,n, "We will take the technical plans for the weapon as well.");
+					removeItem(p, TECHNICAL_PLANS, 1);
+					message(p, "You hand over the technical plans for the weapon.");
+				}
+				npcTalk(p,n, "We are forever grateful for this gift.",
+						"My advisors have discovered some secrets which we will share with you.");
+				message(p, "Al Shabim's advisors show you some advanced techniques for making the new weapon.");
+				npcTalk(p,n, "Oh, and here is your pineapple!");
+				addItem(p, PINE_APPLE, 1);
+				npcTalk(p,n, "Please accept this selection of six bronze throwing darts",
+						"as a token of our appreciation.");
+				addItem(p, 1013, 6);
+				if(hasItem(p, BEDOBIN_COPY_KEY)) {
+					npcTalk(p,n, "I'll take that key off your hands as well effendi!");
+					removeItem(p, BEDOBIN_COPY_KEY, 1);
+					npcTalk(p,n, "Many thanks!");
+				}
+				p.message("");
+				p.message("********************************************************************");
+				p.message("*** You can now make a new weapon type: Throwing dart. ***");
+				p.message("********************************************************************");
+				p.updateQuestStage(this, 8); //>= 8 or -1 for throwing darts.
 				break;
 			}
 		}
@@ -1743,14 +1909,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						npcTalk(p,n, "This happens to be my office.",
 								"Now explain yourself before I run you through!");
 						int keke = showMenu(p,n,
-								"I'm here to take your plans, hand them over now or I'll kill you!",
 								"The guard downstairs said you were lonely.",
 								"I need to service your chest.");
 						if(keke == 0) {
-							captainSiadDialogue(p, n, Siad.PLANS, null);
-						} else if(keke == 1) {
 							captainSiadDialogue(p, n, Siad.LONELY, null);
-						} else if(keke == 2) {
+						} else if(keke == 1) {
 							captainSiadDialogue(p, n, Siad.SERVICE, null);
 						}
 
@@ -1767,11 +1930,18 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			case Siad.PREPARETODIE:
 				npcTalk(p,n, "I'll teach you a lesson!",
 						"Guards! Guards!");
+				captainSiadDialogue(p, n, Siad.PUNISHED, null);
+				break;
+			case Siad.PUNISHED:
 				message(p, "The Guards search you!");
-				n.setChasing(p);
+				if(hasItem(p, METAL_KEY)) {
+					p.message("The guards find the main gate key and remove it!");
+					removeItem(p, METAL_KEY, 1);
+				}
 				message(p, "Some guards rush to help the captain.",
 						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-				npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
+				p.damage(7);
+				message(p, "@yel@Guards: Into the cell you go! I hope this teaches you a lesson.");
 				p.teleport(89, 801);
 				break;
 			case Siad.TWOMINUTES:
@@ -1794,10 +1964,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							"The guard downstairs said you were lonely.",
 							"I need to service your chest.");
 					if(gay == 0) {
-						message(p, "The captain gives you a puzzled look.");
-						npcTalk(p,n, "Well, I most certainly am not lonely!",
-								"I'm an incredibly busy man you know!",
-								"Now, get to the point, what do you want?");
+						captainSiadDialogue(p, n, Siad.LONELY, null);
 					} else if(gay == 1) {
 						captainSiadDialogue(p, n, Siad.SERVICE, null);
 					}
@@ -1811,8 +1978,9 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				break;
 			case Siad.ERM:
 				npcTalk(p,n, "Come on, spit it out!",
-						"Right that's it!");
-				captainSiadDialogue(p, n, Siad.PREPARETODIE, null);
+						"Right that's it!",
+						"Guards!");
+				captainSiadDialogue(p, n, Siad.PUNISHED, null);
 				break;
 			case Siad.SERVICE:
 				npcTalk(p,n, "You need to what?");
@@ -1822,8 +1990,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						"I'm here to take your plans, hand them over now or I'll kill you!",
 						"Fire!Fire!");
 				if(fire == 0) {
-					npcTalk(p,n, "Don't be silly!");
-					captainSiadDialogue(p, n, Siad.PREPARETODIE, null);
+					captainSiadDialogue(p, n, Siad.PLANS, null);
 				} else if(fire == 1) {
 					captainSiadDialogue(p, n, Siad.FIREFIRE, null);
 				}
@@ -1853,15 +2020,17 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				}
 				break;
 			case Siad.PLANS:
-				npcTalk(p,n, "Don't be silly!");
-				captainSiadDialogue(p, n, Siad.PREPARETODIE, null);
+				npcTalk(p,n, "Don't be silly!",
+						"I'm going to teach you a lesson!",
+						"Guards! Guards!");
+				captainSiadDialogue(p, n, Siad.PUNISHED, null);
 				break;
 			case Siad.SUCCEED:
 				message(p, "The captain seems distracted with what you just said.",
 						"The captain looks out of the window for the dragon.");
 				if(!p.getCache().hasKey("tourist_chest")) {
 					p.getCache().store("tourist_chest", true); // if don't have the key, remove the cache.
-				} 
+				}
 				break;
 			case Siad.FIREFIRE:
 				if(!succeedRate(p)) {
@@ -1888,16 +2057,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								message(p,  "The Captain shouts the guards...");
 								npcTalk(p,n, "Guards!",
 										"Show this person out!");
-								message(p, "The Guards search you!");
-								if(hasItem(p, METAL_KEY)) {
-									p.message("The guards find the main gate key and remove it!");
-									removeItem(p, METAL_KEY, 1);
-								}
-								message(p, "Some guards rush to help the captain.",
-										"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-								p.damage(7);
-								npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
-								p.teleport(89, 801);
+								captainSiadDialogue(p, n, Siad.PUNISHED, null);
 							} else if(variableG == 1) {
 								npcTalk(p,n, "Well, that's very good of you.",
 										"But as you can see, I am very fine and well thanks!",
@@ -1926,7 +2086,11 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						}
 					}
 				} else {
-					captainSiadDialogue(p, n, Siad.SUCCEED, null);
+					message(p, "The captain seems distracted with what you just said.",
+							"The captain looks out of the window to see if is a fire.");
+					if(!p.getCache().hasKey("tourist_chest")) {
+						p.getCache().store("tourist_chest", true); // if don't have the key, remove the cache.
+					}
 				}
 				break;
 			case Siad.BOOKS:
@@ -1936,7 +2100,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					books = showMenu(p,n,
 							"How long have you been interested in books?",
 							"I could get you some books!",
-							"So, you're insterested in sailing?");
+							"So, you're interested in sailing?");
 				} else {
 					books = showMenu(p,n,
 							"How long have you been interested in books?",
@@ -1946,22 +2110,12 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					npcTalk(p,n, "Long enough to know when someone is stalling!",
 							"Ok, that's it, get out!",
 							"Guards!");
-					message(p, "The Guards search you!",
-							"Some guards rush to help the captain.",
-							"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-					p.damage(7);
-					npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
-					p.teleport(89, 801);
+					captainSiadDialogue(p, n, Siad.PUNISHED, null);
 				} else if(books == 1) {
 					npcTalk(p,n, "Oh, really!",
 							"Sorry, not interested!",
 							"GUARDS!");
-					message(p, "The Guards search you!"
-							,"Some guards rush to help the captain.",
-							"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-					p.damage(7);
-					npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
-					p.teleport(89, 801);
+					captainSiadDialogue(p, n, Siad.PUNISHED, null);
 				} else if(books == 2) {
 					p.message("The captain's interest seems to perk up.");
 					npcTalk(p,n, "Well, yes actually...",
@@ -2009,7 +2163,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					npcN = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 					sleep(1000);
 				}
-				npcTalk(p,npcN, "Hey, you're no slave!");
+				npcTalk(p,npcN, "Hey! You're no slave!");
 				npcN.startCombat(p);
 				message(p, "The Guards search you!");
 				if(hasItem(p, CELL_DOOR_KEY)) {
@@ -2017,7 +2171,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				}
 				message(p, "Some guards rush to help their comrade.",
 						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-				npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
+				npcTalk(p, npcN, "Into the cell you go! I hope this teaches you a lesson.");
 				p.teleport(75, 3625);
 				return;
 			}
@@ -2048,7 +2202,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 								"I want to try and get you out of here.",
 								"Do you have any ideas about how we can get out of here?");
 						if(enjoy == 0) {
-
+							anaDialogue(p, n, Ana.TRYGETYOUOUTOFHERE);
 						} else if(enjoy == 1) {
 							npcTalk(p,n, "Hmmm, not really, I would have tried them already if I did.",
 									"The guards seem to live in the compound.",
@@ -2057,41 +2211,32 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 									"I managed to sneak past the guards.",
 									"Huh, these guards are rubbish, it was easy to sneak past them!");
 							if(mmm == 0) {
-
+								anaDialogue(p, n, Ana.SNEAKEDPAST);
 							} else if(mmm == 1) {
-								Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
-								if(guard != null) {
-									npcTalk(p,n, "I heard that! So you managed to sneak in did you!");
-									npcTalk(p,n, "Guards! Guards!");
-									guard.startCombat(p);
-									npcTalk(p,n, "Oopps! See ya!");
-									message(p, "The Guards search you!",
-											"Some guards rush to help their comrade.",
-											"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-									npcTalk(p,n, " Into the cell you go! I hope this teaches you a lesson.");
-									p.teleport(75, 3625);
-								}
+								anaDialogue(p, n, Ana.GUARDSRUBBISH);
 							}
 						}
 					} else if(often == 1) {
 						npcTalk(p,n, "Goodbye and good luck!");
 					}
 				} else if(ooo == 1) {
-
+					anaDialogue(p, n, Ana.TRYGETYOUOUTOFHERE);
 				}
 			} else if(menu == 1) {
 				npcTalk(p,n, "My name? Oh, how sweet, my name is Ana,",
 						"I come from Al Kharid, thought the desert might be interesting.",
 						"What a surprise I got!");
-				int opt = showMenu(p,n,
+				int opt = showMenu(p,n, false, //do not send over
 						"What kind of suprise did you get?",
 						"Do you want to go back to Al Kharid?");
 				if(opt == 0) {
+					playerTalk(p, n, "What kind of surpise did you get?");
 					npcTalk(p,n, "Well, I was just touring the desert looking for the nomad tribe to west.",
 							"And I was set upon by these armoured men.",
 							"I think that the guards think I am an escaped prisoner.",
 							"They didn't understand that I was exploring the desert as an adventurer.");
 				} else if(opt == 1) {
+					playerTalk(p, n, "Do you want to go back to Al Kharid?");
 					npcTalk(p,n, "Sure, I miss my Mum, her name is Irena and she is probably waiting for me.",
 							"how do you propose we get out of here though?",
 							"I'm sure you've noticed the many square jawed guards around here.",
@@ -2114,45 +2259,9 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 						"I managed to sneak past the guards.",
 						"Huh, these guards are rubbish, it was easy to sneak past them!");
 				if(last == 0) {
-					npcTalk(p,n, "Hmm, impressive, but can you so easily sneak out again?",
-							"How did you manage to get through the gate?");
-					int gosh = showMenu(p,n,
-							"I have a key",
-							"It's a trade secret!");
-					if(gosh == 0) {
-						Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
-						if(guard != null) {
-							npcTalk(p,guard, "I heard that! So you used a key did you?! ",
-									"Right, we'll have that key off you!");
-							if(hasItem(p, METAL_KEY)) {
-								removeItem(p, METAL_KEY, 1);
-							}
-							npcTalk(p,guard, "Guards! Guards!");
-							guard.startCombat(p);
-							npcTalk(p,n, "Oopps! See ya!");
-							message(p, "Some guards rush to help their comrade.",
-									"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-							npcTalk(p,guard, "Into the cell you go! I hope this teaches you a lesson.");
-							p.teleport(75, 3625);
-						}
-					} else if(gosh == 1) {
-						npcTalk(p,n, "Oh, right, well, I guess you know what you're doing.",
-								"Anyway, I have to get back to work.",
-								"The guards will come along soon and give us some trouble else.");
-					}
+					anaDialogue(p, n, Ana.SNEAKEDPAST);
 				} else if(last == 1) {
-					Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
-					if(guard != null) {
-						npcTalk(p,guard, "I heard that! So you managed to sneak in did you!",
-								"Guards! Guards!");
-						guard.startCombat(p);
-						npcTalk(p,n, "Oopps! See ya!");
-						message(p, "The Guards search you!",
-								"Some guards rush to help their comrade.",
-								"You are roughed up a bit by the guards as you're manhandlded into a cell.");
-						npcTalk(p,guard, "Into the cell you go! I hope this teaches you a lesson.");
-						p.teleport(75, 3625);
-					}
+					anaDialogue(p, n, Ana.GUARDSRUBBISH);
 				}
 			} else if(menu == 1) {
 				npcTalk(p,n, "Hmmm, let me think...",
@@ -2193,36 +2302,72 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 							npcTalk(p,n, "Hmmm, just don't get any funny ideas...",
 									"I am not going to get into one of those barrels!",
 									"Ok, have you got that?");
-							int barrel = showMenu(p,n,
-									"Ok, yep, I've got that.",
-									"Well, we'll see, it might be the only way.");
-							if(barrel == 0) {
-								npcTalk(p,n, "Good, just make sure you keep it in mind.",
-										"Anyway, I have to get back to work.",
-										"The guards will come along soon and give us some trouble else.");
-							} else if(barrel == 1) {
-								npcTalk(p,n, "No, there has to be a better way!",
-										"Anyway, I have to get back to work.",
-										"The guards will come along soon and give us some trouble else.");
-							}
+							anaDialogue(p, n, Ana.GOTTHAT);
 						} else if(tjatja == 1) {
 							npcTalk(p,n, "There is no way that you are getting me into a barrel.",
 									"No WAY! DO you understand?");
-							int variableH = showMenu(p,n,
-									"Ok, yep, I've got that.",
-									"Well, we'll see, it might be the only way.");
-							if(variableH == 0) {
-								npcTalk(p,n, "Good, just make sure you keep it in mind.",
-										"Anyway, I have to get back to work.",
-										"The guards will come along soon and give us some trouble else.");
-							} else if(variableH == 1) {
-								npcTalk(p,n, "No, there has to be a better way!",
-										"Anyway, I have to get back to work.",
-										"The guards will come along soon and give us some trouble else.");
-							}
+							anaDialogue(p, n, Ana.GOTTHAT);
 						}
 					}
 				}
+			}
+			break;
+		case Ana.GOTTHAT:
+			int gotit = showMenu(p,n,
+					"Ok, yep, I've got that.",
+					"Well, we'll see, it might be the only way.");
+			if(gotit == 0) {
+				npcTalk(p,n, "Good, just make sure you keep it in mind.",
+						"Anyway, I have to get back to work.",
+						"The guards will come along soon and give us some trouble else.");
+			} else if(gotit == 1) {
+				npcTalk(p,n, "No, there has to be a better way!",
+						"Anyway, I have to get back to work.",
+						"The guards will come along soon and give us some trouble else.");
+			}
+			break;
+		case Ana.SNEAKEDPAST:
+			npcTalk(p,n, "Hmm, impressive, but can you so easily sneak out again?",
+					"How did you manage to get through the gate?");
+			int gosh = showMenu(p,n, false, //do not send over
+					"I have a key",
+					"It's a trade secret!");
+			if(gosh == 0) {
+				playerTalk(p, n, "I used a key.");
+				Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+				if(guard != null) {
+					npcTalk(p,guard, "I heard that! So you used a key did you?! ");
+					if(hasItem(p, METAL_KEY)) {
+						npcTalk(p,guard, "Right, we'll have that key off you!");
+						removeItem(p, METAL_KEY, 1);
+					}
+					npcTalk(p,guard, "Guards! Guards!");
+					guard.startCombat(p);
+					npcTalk(p,n, "Oopps! See ya!");
+					message(p, "Some guards rush to help their comrade.",
+							"You are roughed up a bit by the guards as you're manhandlded into a cell.");
+					npcTalk(p, guard, "Into the cell you go! I hope this teaches you a lesson.");
+					p.teleport(75, 3625);
+				}
+			} else if(gosh == 1) {
+				playerTalk(p, n, "It's a trade secret!");
+				npcTalk(p,n, "Oh, right, well, I guess you know what you're doing.",
+						"Anyway, I have to get back to work.",
+						"The guards will come along soon and give us some trouble else.");
+			}
+			break;
+		case Ana.GUARDSRUBBISH:
+			Npc guard = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+			if(guard != null) {
+				npcTalk(p,guard, "I heard that! So you managed to sneak in did you!",
+						"Guards! Guards!");
+				guard.startCombat(p);
+				npcTalk(p,n, "Oopps! See ya!");
+				message(p, "The Guards search you!",
+						"Some guards rush to help their comrade.",
+						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
+				npcTalk(p, guard, "Into the cell you go! I hope this teaches you a lesson.");
+				p.teleport(75, 3625);
 			}
 			break;
 		}
@@ -2257,6 +2402,10 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			case -1:
 				npcTalk(p,n, "Sorry, but you can't use the tent without permission.",
 						"But thanks for your help to the Bedabin people.");
+				if(hasItem(p, TECHNICAL_PLANS)) {
+					npcTalk(p,n, "And we'll take those plans off your hands as well!");
+					removeItem(p, TECHNICAL_PLANS, 1);
+				}
 				break;
 			default:
 				npcTalk(p,n, "Sorry, this is a private tent, no one is allowed in.",
@@ -2286,13 +2435,27 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				message(p, "The guard shouts for help.");
 				n.startCombat(p);
 				message(p, "Other guards start arriving.");
-				npcTalk(p,n, "Get him men!");
+				npcTalk(p,n, "Get " + (p.isMale() ? "him" : "her") + " men!");
 				p.message("The guards rough you up a bit and then drag you to a cell.");
 				p.teleport(76, 3625);
 			}
 		}
 		if(n.getID() == CAVE_ANA) {
 			anaDialogue(p, n, -1);
+		}
+	}
+	
+	@Override
+	public void onIndirectTalkToNpc(Player p, final Npc n) {
+		if(n.getID() == AL_SHABIM) {
+			if(p.getQuestStage(this) == 6 || p.getQuestStage(this) == 7) {
+				alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
+			}
+			else if(p.getQuestStage(this) > 7 || p.getQuestStage(this) == -1) {
+				message(p, "Al Shabim takes the technical plans off you.");
+				npcTalk(p, n, "Thanks for the technical plans Effendi!",
+						"We've been lost without them!");
+			}
 		}
 	}
 
@@ -2307,20 +2470,69 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		if(obj.getID() == WOODEN_DOORS || obj.getID() == DESK || obj.getID() == BOOKCASE || obj.getID() == CAPTAINS_CHEST) {
 			return true;
 		}
+		if(obj.getID() == STONE_GATE && p.getY() >= 735) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
+		if(obj.getID() == STONE_GATE && p.getY() >= 735) {
+			if(command.equals("go through")) {
+				if(!hasItem(p, 1039)) {
+					p.message("you go through the gate");
+					p.teleport(62, 732);
+				}
+				else {
+					if(p.getQuestStage(this) == 9) {
+						message(p, "Ana looks out of the barrel...");
+						message(p, "@gre@Ana: Hey great, we're at the Shantay Pass!");
+						removeItem(p, 1039, 1);
+						p.updateQuestStage(this, 10);
+						Npc Ana = spawnNpc(CAVE_ANA, p.getX(), p.getY(), 60000);
+						Ana.teleport(p.getX(), p.getY() + 1);
+						if(Ana != null) {
+							sleep(650);
+							npcTalk(p, Ana, "Great! Thanks for getting me out of that mine!",
+									"And that barrel wasn't too bad anyway!",
+									"Pop by again sometime, I'm sure we'll have a barrel of laughs!",
+									"Oh! I nearly forgot, here's a key I found in the tunnels.",
+									"It might be of some use to you, not sure what it opens.");
+							addItem(p, WROUGHT_KEY, 1);
+							message(p, "Ana spots Irena and waves...");
+							npcTalk(p, Ana, "Hi Mum!",
+									"Sorry, I have to go now!");
+							Ana.remove();
+						}
+						Npc Irena = getNearestNpc(p, IRENA, 15);
+						npcTalk(p, Irena, "Hi Ana!");
+						rewardMenu(p, Irena, true);
+					}
+					//should not have an ana in barrel in other stages
+					else {
+						removeItem(p, 1039, 1);
+					}
+				}
+			} else if(command.equals("look")) {
+				message(p, "You look at the huge Stone Gate.",
+						"On the gate is a large poster, it reads.",
+						"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
+						"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
+						"@gre@No responsibility is taken by Shantay ",
+						"@gre@If anything bad should happen to you in any circumstances whatsoever.",
+						"Despite this warning lots of people seem to pass through the gate.");
+			}
+		}
 		if(obj.getID() == IRON_GATE) {
 			if(command.equals("open")) {
 				if(hasItem(p, 1039)) {
-					failAnaInBarrel(p, null);
+					failEscapeAnaInBarrel(p, null);
+					return;
 				}
 				else if(!hasItem(p, METAL_KEY)) {
 					p.message("This gate is locked, you'll need a key to open it.");
 				} else {
-
 					message(p, "You use the metal key to unlock the gates.",
 							"You manage to sneak past the guards!.");
 					doGate(p, obj);
@@ -2329,22 +2541,32 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					p.message("The gates close behind you.");
 					Npc n = getNearestNpc(p, MERCENARY_INSIDE, 15);
 					if(n != null) {
-                        if(p.getQuestStage(this) == -1) { // TODO check the real dialogue after completion
+                        if(p.getQuestStage(this) == -1) { // no dialogue after quest on just opening gates
                         // todo change the coords going in and going out.
-                            npcTalk(p,n, "Move along now...we've had enough of your sort!");
-                            
                         } else {
-                        	if (playerArmed(p)) {
-							npcTalk(p,n, "Oi You with the weapon and armour, what are you doing?",
-									"You don't belong in here!");
-							p.message("More guards come to arrest you.");
-							n.startCombat(p);
-							npcTalk(p,n, "Right, you're going in the cell!");
-							message(p, "You're outnumbered by all the guards.",
-									"They man-handle you into a cell.");
-							p.teleport(89, 801);
+                        	Armed armedVal = playerArmed(p);
+                        	if (armedVal != Armed.NONE) {
+                        		switch(armedVal) {
+                        		case WEAPON:
+                        			npcTalk(p,n, "Oi You with the weapon, what are you doing?");
+                        			break;
+                        		case ARMOUR:
+                        			npcTalk(p,n, "Oi You with the armour on, what are you doing?");
+                        			break;
+                        		case BOTH:
+                        		default:
+                        			npcTalk(p,n, "Oi You with the weapon and armour, what are you doing?");
+                        			break;
+                        		}
+                        		npcTalk(p,n, "You don't belong in here!");
+    							p.message("More guards come to arrest you.");
+    							n.startCombat(p);
+    							npcTalk(p,n, "Right, you're going in the cell!");
+    							message(p, "You're outnumbered by all the guards.",
+    									"They man-handle you into a cell.");
+    							p.teleport(89, 801);
                         	}
-						}
+                        }
 					}
 				}
 			} else if(command.equals("search")) {
@@ -2398,8 +2620,8 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					}
 					message(p, "More guards rush to catch you.",
 							"You are roughed up a bit by the guards as you're manhandlded to a cell.");
-					if(n != null) {
-						npcTalk(p,n, "Into the cell you go! I hope this teaches you a lesson.");
+					if (n != null) {
+						npcTalk(p, n, "Into the cell you go! I hope this teaches you a lesson.");
 					}
 					p.teleport(89, 801);
 				}
@@ -2415,16 +2637,22 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		}
 		if(obj.getID() == DESK) {
             message(p, "You search the captains desk while he's not looking.");
-            if(!hasItem(p, CELL_DOOR_KEY) && p.getQuestStage(this) != -1) {
+            if(hasItem(p, CELL_DOOR_KEY) && hasItem(p, METAL_KEY) && hasItem(p, WROUGHT_KEY)) {
+            	message(p, "...but you find nothing of interest.");
+            	return;
+            }
+            if(!hasItem(p, CELL_DOOR_KEY)) {
                 message(p, "You find a cell door key.");
                 addItem(p, CELL_DOOR_KEY, 1);
-            } 
-            else if (!hasItem(p, METAL_KEY) && p.getQuestStage(this) == -1) {
-                    message(p, "You find a metal key.");
-                    addItem(p, METAL_KEY, 1);                                    
-            } else {
-                message(p, "...but you find nothing of interest.");
-            }            
+            }
+            if(!hasItem(p, METAL_KEY)) {
+            	message(p, "You find a large metalic key.");
+                addItem(p, METAL_KEY, 1);
+            }
+            if(!hasItem(p, WROUGHT_KEY)) {
+            	message(p, "You find a large wrought iron key.");
+                addItem(p, WROUGHT_KEY, 1);
+            }       
         }
 		if(obj.getID() == BOOKCASE) {
 			if(command.equals("search")) {
@@ -2503,6 +2731,9 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if(n.getID() == MERCENARY_CAPTAIN) {
 			p.message("You kill the captain!");
+			if(p.getQuestStage(this) == 1 && !p.getCache().hasKey("first_kill_captn")) {
+				p.getCache().store("first_kill_captn", true);
+			}
 			n.killedBy(p);
 			if(!hasItem(p, METAL_KEY)) {
 				addItem(p, METAL_KEY, 1);
@@ -2542,7 +2773,6 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
 		tryToAttackMercenarys(p, n);
-
 	}
 
 	@Override
@@ -2559,7 +2789,6 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
 		tryToAttackMercenarys(p, n);
-
 	}
 
 	private void tryToAttackMercenarys(Player p, Npc affectedmob) {
@@ -2579,15 +2808,20 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				if(affectedmob.getID() == MERCENARY_INSIDE) {
 					p.message("More guards rush to catch you.");
 					message(p, "You are roughed up a bit by the guards as you're manhandlded to a cell.");
-					npcTalk(p,affectedmob, "Into the cell you go! I hope this teaches you a lesson.");
+					npcTalk(p, affectedmob, "Into the cell you go! I hope this teaches you a lesson.");
 					p.teleport(89, 801);
 				} else {
 					npcTalk(p,affectedmob, "Guards, guards!");
 					message(p, "Nearby guards quickly grab you and rough you up a bit.");
 					npcTalk(p,affectedmob, "Let's see how good you are with desert survival techniques!");
 					message(p, "You're bundled into the back of a cart and blindfolded...",
-							"Sometime later you wake up in the desert.",
-							"The guards move off in the cart leaving you stranded in the desert.");
+							"Sometime later you wake up in the desert.");
+					if(hasItem(p, 342)) {
+						npcTalk(p,affectedmob, "You won't be needing that water any more!");
+						message(p, "The guards throw your water away...");
+						removeItem(p, 342, 1);
+					}
+					message(p, "The guards move off in the cart leaving you stranded in the desert.");
 					p.teleport(121, 743);
 				}
 			} else if(menu == 1) {
@@ -2598,24 +2832,58 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 	private void captainWantToThrowPlayer(Player p, Npc n) {
 		n = getNearestNpc(p, MERCENARY, 10);
 		if(n != null) {
-			npcTalk(p,n, "Ok, that does it!",
-					"You're in serious trouble now!",
-					"Ok men, we need to teach this " + (p.isMale() ? "man" : "woman") + " a thing or two",
-					"about desert survival techniques.");
-			message(p, "The guards grab you and beat you up.");
-			p.damage(7);
-			message(p, "You're grabed and manhandled onto a cart.",
-					"Sometime later you're dumped in the middle of the desert.",
-					"The guards move off in the cart leaving you stranded in the desert.");
-			int random = DataConversions.getRandom().nextInt(2);
-			if(random == 0) {
-				p.teleport(102, 775);
-			} else if(random == 1) {
-				p.teleport(135, 775);
+			int punishment = DataConversions.random(0, 3);
+			if (punishment == 0) {
+				p.message("A guard approaches you and pretends to start hiting you.");
+				npcTalk(p,n, "Take that you infidel!");
+				p.message("The guard leans closer to you and says in a low voice.");
+				npcTalk(p,n, "We're sick of having to kill every lunatic that comes along",
+						"and insults the captain, it makes such a mess.",
+						"Thankfully, he's a bit decrepid so he doesn't notice",
+						"so please, buzz off and don't come here again.");
+			}
+			else if (punishment == 1) {
+				p.message("The guard approaches you again kicks you slightly.");
+				playerTalk(p,n, "Ow!");
+				npcTalk(p,n, "Take that you mad child of a dog!");
+				p.message("The guard leans closer to you and says in a low voice.");
+				npcTalk(p,n, "What are you doing here again?",
+						"Didn't I tell you to get out of here!",
+						"Now get lost, properly this time!",
+						"Or we may be forced to see his orders through properly.");
+			}
+			else if (punishment == 2) {
+				p.message("A guard approaches you and looks very angry, he slaps you across the face.");
+				npcTalk(p,n, "Prepare to die effendi!");
+				p.message("The guard leans close and whispers");
+				npcTalk(p,n, "Are you mad effendi!",
+						"This is your last chance.",
+						"Leave now and never come back.",
+						"Or I'll introduce you to my friend.");
+				p.message("The guard half draws his fearsome looking scimitar.");
+				npcTalk(p,n, "And we'll be pleased to clean the mess up after you've been dispatched.");
+			}
+			else {
+				p.message("An angry guard approaches you and whips out his sword.");
+				npcTalk(p,n, "Ok, that does it!",
+						"You're in serious trouble now!",
+						"Ok men, we need to teach this " + (p.isMale() ? "man" : "woman") + " a thing or two",
+						"about desert survival techniques.");
+				message(p, "The guards grab you and beat you up.");
+				p.damage(7);
+				message(p, "You're grabed and manhandled onto a cart.",
+						"Sometime later you're dumped in the middle of the desert.",
+						"The guards move off in the cart leaving you stranded in the desert.");
+				int random = DataConversions.getRandom().nextInt(2);
+				if(random == 0) {
+					p.teleport(102, 775);
+				} else if(random == 1) {
+					p.teleport(135, 775);
+				}
 			}
 		}
 	}
-	private void failAnaInBarrel(Player p, Npc n) {
+	private void failEscapeAnaInBarrel(Player p, Npc n) {
 		if(hasItem(p, 1039)) {
 			n = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 			sleep(650);
@@ -2634,19 +2902,29 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			if(ana != null) {
 				ana.remove();
 			}
-			npcTalk(p,n, "Hey, watch it with the hands buster.",
-					"These are the upper market slaves clothes doncha know!",
-					"Right, we'd better teach you a lesson as well!");
+			message(p, "@gre@Ana: Hey, watch it with the hands buster.",
+					"@gre@Ana: These are the upper market slaves clothes doncha know!");
+			npcTalk(p, n, "Right, we'd better teach you a lesson as well!");
 			message(p, "The guards rough you up a bit.");
-			npcTalk(p,n, "Right lads, stuff him in the mining cell!",
+			npcTalk(p,n, "Right lads, stuff " + (p.isMale() ? "him" : "her") + " in the mining cell!",
 					"Specially for our most honoured guests.");
 			p.message("The guards drag you away to a cell.");
-			npcTalk(p,n, "There you go, we hope you 'dig' you're stay here.",
-					"Har! Har! Har!");
+			message(p, "@yel@Guards: There you go, we hope you 'dig' you're stay here.",
+					"@yel@Guards: Har! Har! Har!");
 			if(n != null) {
 				n.remove();
 			}
 			p.teleport(75, 3626);
+		}
+	}
+	private void failWindowAnaInBarrel(Player p, Npc n) {
+		if(hasItem(p, 1039)) {
+			message(p, "You focus all of your strength on the bar. Your muscles ripple!",
+					"You manage to bend the bars on the window .",
+					"You'll never get Ana in the Barrel through the window.",
+					"The barrel is just too big.");
+			message(p, "@gre@Ana: Don't think for one minute ...",
+					"@gre@Ana: you're gonna get me through that window!");
 		}
 	}
 
@@ -2673,11 +2951,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		if(obj.getID() == WINDOW && obj.getX() == 90 && obj.getY() == 802) {
-			if(hasItem(p, 1039)) {
-				failAnaInBarrel(p, null);
-				return;
-			}
+		if(obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802) {
 			message(p, "You search the window.",
 					"After some time you find that one of the bars looks weak,  ",
 					"you may be able to bend one of the bars. ",
@@ -2686,18 +2960,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 					"Yes, I'll bend the bar.",
 					"No, I'd better stay here.");
 			if(menu == 0) {
-				if(p.getX() <= 89) {
-					message(p, "You manage to bend the bar and climb out of the window.");
-					// SHOULD GIVE XP LOL
-					p.teleport(91, 801);
-					p.message("You land near some rough rocks, which you may be able to climb.");
-				} else {
-					message(p, "You focus all of your strength on the bar. Your muscles ripple!");
-					// GIVE XP LOL
-					message(p, "You manage to bend the bar !");
-					p.teleport(89, 802);
-					p.message("You climb back inside the cell.");
-				}
+				attemptBendBar(p);
 			} else if(menu == 1) {
 				message(p, "You decide to stay in the cell.",
 						"Maybe they'll let you out soon?");
@@ -2729,6 +2992,10 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 				case -1:
 					npcTalk(p,n, "Sorry, but you can't use the tent without permission.",
 							"But thanks for your help to the Bedabin people.");
+					if(hasItem(p, TECHNICAL_PLANS)) {
+						npcTalk(p,n, "And we'll take those plans off your hands as well!");
+						removeItem(p, TECHNICAL_PLANS, 1);
+					}
 					break;
 				default:
 					npcTalk(p,n, "Sorry, this is a private tent, no one is allowed in.",
@@ -2770,7 +3037,7 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 		}
 		if(obj.getID() == STURDY_IRON_GATE) {
 			if(p.getY() >= 3617) {
-				if(hasItem(p, 1097)) {
+				if(hasItem(p, WROUGHT_KEY)) {
 					p.message("You use the wrought iron key to unlock the gate.");
 					p.teleport(p.getX(), p.getY() - 1);
 				} else {
@@ -2783,6 +3050,65 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			}
 		}
 	}
+	
+	private void attemptBendBar(Player p) {
+		message(p, "You focus all of your strength on the bar. Your muscles ripple!");
+		if(p.getX() <= 89) {
+			int attempt = DataConversions.random(0, 1);
+			if (attempt == 0) { //fail-cell
+				message(p, "You find it hard to bend the bar, perhaps you should try again?");
+				int stay = showMenu(p,
+						"Yes, I'll try to bend the bar again.",
+						"No, I'm going to give up.");
+				if (stay == 0) {
+					attemptBendBar(p);
+				}
+				else if (stay == 1) {
+					message(p, "You decide to stay in the cell.",
+							"Maybe they'll let you out soon?");
+				}
+			}
+			else { //success-cell
+				if(hasItem(p, 1039)) {
+					failWindowAnaInBarrel(p, null);
+					return;
+				}
+				else {
+					message(p, "You manage to bend the bar and climb out of the window.");
+					p.incExp(2, 40, true);
+					p.teleport(90, 802);
+					p.message("You land near some rough rocks, which you may be able to climb.");
+				}
+			}
+		} else {
+			int attempt = DataConversions.random(0, 1);
+			if (attempt == 0) { //fail-hill
+				message(p, "You find it hard to bend the bar, perhaps you should try again?");
+				int stay = showMenu(p,
+						"Yes, I'll try to bend the bar again.",
+						"No, I'm going to give up.");
+				if (stay == 0) {
+					attemptBendBar(p);
+				}
+				else if (stay == 1) {
+					message(p, "You decide to stay in the cell.",
+							"Maybe they'll let you out soon?");
+				}
+			}
+			else { //success-hill
+				if(hasItem(p, 1039)) { //from the hill outside the window (fail-safe)
+					failWindowAnaInBarrel(p, null);
+					return;
+				}
+				else {
+					message(p, "You manage to bend the bar !");
+					p.incExp(2, 40, true);
+					p.teleport(89, 802);
+					p.message("You climb back inside the cell.");
+				}
+			}
+		}
+	}
 
 	private boolean succeedRate(Player p) {
 		int random = DataConversions.getRandom().nextInt(5);
@@ -2792,22 +3118,64 @@ TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener,
 			return true;
 		}
 	}
-	private boolean playerArmed(Player p) {
+	private Armed playerArmed(Player p) {
         for (int robes : allow) {
-                    allowed.add(robes);
+        	allowed.add(robes);
         }
-         for (int pos : restricted) {
-                    wieldPos.add(pos);
+        for (int pos : restricted) {
+        	wieldPos.add(pos);
         }
-                for (Item item : p.getInventory().getItems()) {
-                if (item.isWielded() && item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID()))  {
-                        return false;
-                        }
-                if (item.isWielded() && wieldPos.contains(item.getDef().getWieldPosition())) {
-                        return true; 
-                        }
-                    }
-                return false;
-                }
-}
+        boolean hasArmour = false;
+        boolean hasWeapon = false;
+        int wieldpos;
+        for (Item item : p.getInventory().getItems()) {
+        	if(item.isWielded() && item.getDef().getWieldPosition() > 5 && allowed.contains(item.getID())) {
+        		continue;
+        	}
+        	wieldpos = item.getDef().getWieldPosition();
+        	if(item.isWielded() && wieldPos.contains(wieldpos)) {
+        		if(wieldpos == 3) {
+        			if(item.getDef().getName().toLowerCase().contains("shield")) {
+        				hasArmour = true;
+        			}
+        			else { hasWeapon = true; }
+        		}
+        		else if(wieldpos == 4) { hasWeapon = true; } 
+        		else { hasArmour = true; }
+        	}
+        }
+        if(hasWeapon && hasArmour) return Armed.BOTH;
+        else if(hasWeapon) return Armed.WEAPON;
+        else if(hasArmour) return Armed.ARMOUR;
+        else return Armed.NONE;
+	}
+	
+	enum Armed {
+		NONE,
+		ARMOUR,
+		WEAPON,
+		BOTH
+	}
 
+	@Override
+	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+		if(item.getID() == 1014 && npc.getID() == AL_SHABIM) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
+		if(npc.getID() == AL_SHABIM && hasItem(player, 1014)) {
+			if(player.getQuestStage(this) == 7) {
+				alShabimDialogue(player, npc, AlShabim.MADE_WEAPON);
+			}
+			else if(player.getQuestStage(this) > 7 || player.getQuestStage(this) == -1) {
+				npcTalk(player, npc, "Where did you get this from Effendi!",
+						"I'll have to confiscate this for your own safety!");
+				removeItem(player, 1014, 1);
+			}
+		}
+	}
+}
