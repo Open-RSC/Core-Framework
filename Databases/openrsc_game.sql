@@ -38187,7 +38187,7 @@ DROP TABLE IF EXISTS `openrsc_players`;
 CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(12) NOT NULL DEFAULT '',
-  `group_id` int(10) DEFAULT 4,
+  `group_id` int(10) DEFAULT 10,
   `owner` int(5) UNSIGNED NOT NULL,
   `pass` varchar(512) NOT NULL,
   `salt` varchar(250) NOT NULL DEFAULT '',

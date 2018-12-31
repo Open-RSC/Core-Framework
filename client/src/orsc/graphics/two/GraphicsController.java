@@ -85,7 +85,7 @@ public class GraphicsController {
 	public boolean interlace = false;
 	public boolean loggedIn = false;
 	private int clipTop = 0;
-	private int m_D;
+	private int iconSpriteIndex;
 	private int clipLeft = 0;
 	private int[] trigTable256;
 	public int height2;
@@ -892,6 +892,13 @@ public class GraphicsController {
 		}
 	}
 
+	private final void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
+													 int destColumnSkewPerRow, int destFirstColumn, int dummy1, int dummy2, int mask2, int scaleY, int scaleX,
+													 int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
+													 int destRowHead){
+		plot_trans_scale_with_2_masks(dest, src, destColumnCount, destColumnSkewPerRow, destFirstColumn, dummy1, dummy2, mask2, scaleY, scaleX, srcStartX, skipEveryOther, srcStartY, srcWidth, mask1, destHeight, destRowHead, 0xFFFFFFFF);
+	}
+
 	/**
 	 * 
 	 * @param src
@@ -920,7 +927,7 @@ public class GraphicsController {
 	 * @param skipEveryOther
 	 *            if this is 0 or 1 the rasterizer skips every other destination
 	 *            pixel
-	 * @param dummy2
+	 * @param spritePixel
 	 * @param srcStartX
 	 *            (source start column) << 16
 	 * @param destRowHead
@@ -929,23 +936,25 @@ public class GraphicsController {
 	 *            destination column count
 	 * @param destHeight
 	 *            destination row count
+	 * 	@param colourTransform
+	 * 	          The colour and opacity with which to shade this sprite a uniform colour
 	 */
 	private final void plot_trans_scale_with_2_masks(int[] dest, int[] src, int destColumnCount,
-			int destColumnSkewPerRow, int destFirstColumn, int dummy1, int dummy2, int mask2, int scaleY, int scaleX,
+			int destColumnSkewPerRow, int destFirstColumn, int dummy1, int spritePixel, int mask2, int scaleY, int scaleX,
 			int srcStartX, int skipEveryOther, int srcStartY, int srcWidth, int mask1, int destHeight,
-			int destRowHead) {
+			int destRowHead, int colourTransform) {
 		try {
 			
-			int var21 = mask1 >> 16 & 255;
-			int var22 = mask1 >> 8 & 255;
-			int var23 = mask1 & 255;
-			int var24 = mask2 >> 16 & 255;
+			int mask1R = mask1 >> 16 & 0xFF;
+			int mask1G = mask1 >> 8 & 0xFF;
+			int mask1B = mask1 & 0xFF;
+			int mask2R = mask2 >> 16 & 0xFF;
+			int mask2G = mask2 >> 8 & 0xFF;
+			int mask2B = mask2 & 0xFF;
+
 			if (dummy1 != 1603920392) {
 				this.clipBottom = 29;
 			}
-
-			int var25 = mask2 >> 8 & 255;
-			int var26 = 255 & mask2;
 
 			try {
 				int var27 = srcStartX;
@@ -970,20 +979,53 @@ public class GraphicsController {
 					skipEveryOther = 1 - skipEveryOther;
 					if (skipEveryOther != 0) {
 						for (var32 = var30; var30 + var31 > var32; ++var32) {
-							dummy2 = src[var29 + (srcStartX >> 16)];
-							if (dummy2 != 0) {
-								int var18 = 255 & dummy2 >> 16;
-								int var19 = 255 & dummy2 >> 8;
-								int var20 = dummy2 & 255;
-								if (var18 == var19 && var20 == var19) {
-									dest[var32 + destRowHead] = (var20 * var23 >> 8) + (var22 * var19 >> 8 << 8)
-											+ (var18 * var21 >> 8 << 16);
-								} else if (var18 == 255 && var19 == var20) {
-									dest[var32 + destRowHead] = (var26 * var20 >> 8) + (var18 * var24 >> 8 << 16)
-											+ (var19 * var25 >> 8 << 8);
-								} else {
-									dest[var32 + destRowHead] = dummy2;
+							spritePixel = src[var29 + (srcStartX >> 16)];
+							if (spritePixel != 0) {
+								int spritePixelR = spritePixel >> 16 & 0xFF;
+								int spritePixelG = spritePixel >> 8 & 0xFF;
+								int spritePixelB = spritePixel & 0xFF;
+
+								// Is the colour from the sprite gray?
+								if (spritePixelR == spritePixelG && spritePixelG == spritePixelB){
+									spritePixelR = (spritePixelR * mask1R) >> 8;
+									spritePixelG = (spritePixelG * mask1G) >> 8;
+									spritePixelB = (spritePixelB * mask1B) >> 8;
+								} else if(spritePixelR == 255 && spritePixelG == spritePixelB) { // Is sprite colour full white?
+									spritePixelR = (spritePixelR * mask2R) >> 8;
+									spritePixelG = (spritePixelG * mask2G) >> 8;
+									spritePixelB = (spritePixelB * mask2B) >> 8;
 								}
+
+								int opacity			= colourTransform >> 24 & 0xFF;
+								int inverseOpacity	= 0xFF - opacity;
+
+								int transformR	= (colourTransform >> 16) & 0xFF;
+								int transformG	= (colourTransform >> 8) & 0xFF;
+								int transformB	= colourTransform & 0xFF;
+
+								int spriteR = ((spritePixelR * transformR) >> 8) * opacity;
+								int spriteG = ((spritePixelG * transformG) >> 8) * opacity;
+								int spriteB = ((spritePixelB * transformB) >> 8) * opacity;
+
+								int canvasR = (dest[var32 + destRowHead] >> 16 & 0xff) * inverseOpacity;
+								int canvasG = (dest[var32 + destRowHead] >> 8 & 0xff) * inverseOpacity;
+								int canvasB = (dest[var32 + destRowHead] & 0xff) * inverseOpacity;
+
+								int finalColour =
+									(((spriteR + canvasR) >> 8) << 16) +
+										(((spriteG + canvasG) >> 8) << 8) +
+										((spriteB + canvasB) >> 8);
+								dest[var32 + destRowHead] = finalColour;
+
+								/*if (spritePixelR == spritePixelG && spritePixelB == spritePixelG) {
+									dest[var32 + destRowHead] = (spritePixelB * mask1B >> 8) + (mask1G * spritePixelG >> 8 << 8)
+											+ (spritePixelR * mask1R >> 8 << 16);
+								} else if (spritePixelR == 255 && spritePixelG == spritePixelB) {
+									dest[var32 + destRowHead] = (mask2B * spritePixelB >> 8) + (spritePixelR * mask2R >> 8 << 16)
+											+ (spritePixelG * mask2G >> 8 << 8);
+								} else {
+									dest[var32 + destRowHead] = spritePixel;
+								}*/
 							}
 
 							srcStartX += scaleX;
@@ -1003,7 +1045,7 @@ public class GraphicsController {
 			throw GenUtil.makeThrowable(var34,
 					"ua.AA(" + (dest != null ? "{...}" : "null") + ',' + (src != null ? "{...}" : "null") + ','
 							+ destColumnCount + ',' + destColumnSkewPerRow + ',' + destFirstColumn + ',' + dummy1 + ','
-							+ dummy2 + ',' + mask2 + ',' + scaleY + ',' + scaleX + ',' + srcStartX + ','
+							+ spritePixel + ',' + mask2 + ',' + scaleY + ',' + scaleX + ',' + srcStartX + ','
 							+ skipEveryOther + ',' + srcStartY + ',' + srcWidth + ',' + mask1 + ',' + destHeight + ','
 							+ destRowHead + ')');
 		}
@@ -1173,7 +1215,7 @@ public class GraphicsController {
 
 	public final void setIconsStart(int var1, int var2) {
 		try {
-			this.m_D = var2;
+			this.iconSpriteIndex = var2;
 			
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "ua.I(" + var1 + ',' + var2 + ')');
@@ -1377,10 +1419,23 @@ public class GraphicsController {
 		try {
 			try {
 				if (spriteHeader > 0) {
-					int var8 = spriteHeader + this.m_D - 1;
-					if (sprites[var8] != null) {
-						this.drawSprite(var8, x, y - sprites[var8].getHeight());
-						x += sprites[var8].getWidth() + 5;
+					int iconSprite 			= (spriteHeader >> 24 & 0xFF) + this.iconSpriteIndex - 1;
+					int spriteHeaderMask	= (spriteHeader & 0x00FFFFFF);
+					if (sprites[iconSprite] != null) {
+						this.drawSpriteClipping(
+							iconSprite,
+							x,
+							y - sprites[iconSprite].getHeight(),
+							sprites[iconSprite].getWidth(),
+							sprites[iconSprite].getHeight(),
+							spriteHeaderMask,
+							0,
+							false,
+							0,
+							0
+						);
+						//this.drawSprite(var8, x, y - sprites[var8].getHeight());
+						x += sprites[iconSprite].getWidth() + 5;
 					}
 				}
 
@@ -1409,11 +1464,7 @@ public class GraphicsController {
 							color = 0x000000;
 						} else if (key.equalsIgnoreCase("dre")) {
 							color = 0xC00000;
-						} else if (key.equalsIgnoreCase("sil")) {
-							color = 0xC0C0C0;
-						} else if (key.equalsIgnoreCase("pre")) {
-							color = 0x44eadf;
-						} else if (key.equalsIgnoreCase("ora")) {
+						}  else if (key.equalsIgnoreCase("ora")) {
 							color = 0xFF9040;
 						} else if (key.equalsIgnoreCase("ran")) {
 							color = (int) (0xFFFFFF * Math.random());
@@ -1429,6 +1480,28 @@ public class GraphicsController {
 							color = 0x80FF00;
 						} else if (key.equalsIgnoreCase("gr3")) {
 							color = 0x40FF00;
+						} else if (key.equalsIgnoreCase("bl1")) {
+							color = 0x4040ff;
+						} else if (key.equalsIgnoreCase("bl2")) {
+							color = 0x0040ff;
+						} else if (key.equalsIgnoreCase("bl3")) {
+							color = 0x4000ff;
+						} else if (key.equalsIgnoreCase("dgr")) {
+							color = 0x00c000;
+						} else if (key.equalsIgnoreCase("dbl")) {
+							color = 0x0000c0;
+						} else if (key.equalsIgnoreCase("dcy")) {
+							color = 0x00c0c0;
+						} else if (key.equalsIgnoreCase("dor")) {
+							color = 0xc06020;
+						} else if (key.equalsIgnoreCase("sub")) {
+							color = 0xEEDDDD;
+						} else if (key.equalsIgnoreCase("eve")) {
+							color = 0x4D33BD;
+						} else if (key.equalsIgnoreCase("sil")) {
+							color = 0xC0C0C0;
+						} else if (key.equalsIgnoreCase("pre")) {
+							color = 0x44eadf;
 						} else if (key.equalsIgnoreCase("cla")) {
 							color = 0x7CADDA;
 						}
@@ -1452,7 +1525,68 @@ public class GraphicsController {
 									&& c3 <= '9')
 								x = Integer.parseInt(str.substring(i + 1, i + 5));
 							i += 5;
-						} else {
+						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("adm")) {
+							this.drawSpriteClipping(
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0x00FF00,
+								0,
+								false,
+								0,
+								0
+							);
+							x += sprites[this.iconSpriteIndex].getWidth() + 5;
+							i += 4;
+						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("mod")) {
+							this.drawSpriteClipping(
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0x0000FF,
+								0,
+								false,
+								0,
+								0
+							);
+							x += sprites[this.iconSpriteIndex].getWidth() + 5;
+							i += 4;
+						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("dev")) {
+							this.drawSpriteClipping(
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0xFF0000,
+								0,
+								false,
+								0,
+								0
+							);
+							x += sprites[this.iconSpriteIndex].getWidth() + 5;
+							i += 4;
+						} else if (Config.S_WANT_CUSTOM_RANK_DISPLAY && str.charAt(i) == '#' && i + 4 < str.length() && str.charAt(i + 4) == '#' && str.substring(i + 1, i + 4).equalsIgnoreCase("eve")) {
+							this.drawSpriteClipping(
+								this.iconSpriteIndex,
+								x - 1,
+								y - sprites[this.iconSpriteIndex].getHeight(),
+								sprites[this.iconSpriteIndex].getWidth(),
+								sprites[this.iconSpriteIndex].getHeight(),
+								0x4D33BD,
+								0,
+								false,
+								0,
+								0
+							);
+							x += sprites[this.iconSpriteIndex].getWidth() + 5;
+							i += 4;
+						}
+						else {
 							char here = str.charAt(i);
 							if (here == 160) {
 								here = ' ';
@@ -2293,10 +2427,13 @@ public class GraphicsController {
 	}
 
 	public final void drawSpriteClipping(int sprite, int x, int y, int width, int height, int colorMask, int colorMask2,
-			boolean mirrorX, int topPixelSkew, int dummy) {
-		try {
-			
+										 boolean mirrorX, int topPixelSkew, int dummy) {
+		drawSpriteClipping(sprite, x, y, width, height, colorMask, colorMask2, mirrorX, topPixelSkew, dummy, 0xFFFFFFFF);
+	}
 
+	public final void drawSpriteClipping(int sprite, int x, int y, int width, int height, int colorMask, int colorMask2,
+			boolean mirrorX, int topPixelSkew, int dummy, int colourTransform) {
+		try {
 			try {
 				if (colorMask2 == 0) {
 					colorMask2 = 0xFFFFFF;
@@ -2373,22 +2510,22 @@ public class GraphicsController {
 							this.plot_tran_scale_with_mask(dummy ^ 74, sprites[sprite].getPixels(), scaleY, 0,
 									srcStartY, (sprites[sprite].getWidth() << 16) - (srcStartX + 1), width,
 									this.pixelData, height, destColumnSkewPerRow, destRowHead, -scaleX, destFirstColumn,
-									spriteWidth, skipEveryOther, colorMask);
+									spriteWidth, skipEveryOther, colorMask, colourTransform);
 						} else {
 							this.plot_tran_scale_with_mask(dummy + 89, sprites[sprite].getPixels(), scaleY, 0,
 									srcStartY, srcStartX, width, this.pixelData, height, destColumnSkewPerRow,
-									destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask);
+									destRowHead, scaleX, destFirstColumn, spriteWidth, skipEveryOther, colorMask, colourTransform);
 						}
 					}
 				} else if (mirrorX) {
 					this.plot_trans_scale_with_2_masks(this.pixelData, sprites[sprite].getPixels(), width,
 							destColumnSkewPerRow, destFirstColumn, dummy + 1603920391, 0, colorMask2, scaleY, -scaleX,
 							(sprites[sprite].getWidth() << 16) - srcStartX - 1, skipEveryOther, srcStartY, spriteWidth,
-							colorMask, height, destRowHead);
+							colorMask, height, destRowHead, colourTransform);
 				} else {
 					this.plot_trans_scale_with_2_masks(this.pixelData, sprites[sprite].getPixels(), width,
 							destColumnSkewPerRow, destFirstColumn, 1603920392, 0, colorMask2, scaleY, scaleX, srcStartX,
-							skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead);
+							skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform);
 				}
 			} catch (Exception var24) {
 				System.out.println("error in sprite clipping routine");
@@ -2507,6 +2644,12 @@ public class GraphicsController {
 		}
 	}
 
+	private final void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
+												 int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
+												 int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int background){
+		plot_tran_scale_with_mask(dummy2, src, scaleY, dummy1, srcStartY, srcStartX, destColumnCount, dest, destHeight, destColumnSkewPerRow, destRowHead, scaleX, destFirstColumn, srcWidth, skipEveryOther, background, 0xFFFFFFFF);
+	}
+
 	/**
 	 * 
 	 * @param dummy2
@@ -2538,18 +2681,20 @@ public class GraphicsController {
 	 * @param skipEveryOther
 	 *            if this is 0 or 1 the rasterizer skips every other destination
 	 *            pixel
-	 * @param background
+	 * @param spritePixel
 	 *            background color to show through when the source data is grey
 	 *            (dest = background * source)
+	 * @param colourTransform
+	 * 			  The colour and opacity with which to shade this sprite a uniform colour
 	 */
 	private final void plot_tran_scale_with_mask(int dummy2, int[] src, int scaleY, int dummy1, int srcStartY,
 			int srcStartX, int destColumnCount, int[] dest, int destHeight, int destColumnSkewPerRow, int destRowHead,
-			int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int background) {
+			int scaleX, int destFirstColumn, int srcWidth, int skipEveryOther, int spritePixel, int colourTransform) {
 		try {
 			
-			int backgroundR = (0xFF0000 & background) >> 16;
-			int backgroundG = (background & 0xFF00) >> 8;
-			int backgroundB = 255 & background;
+			int spritePixelR = spritePixel >> 16 & 0xFF;
+			int spritePixelG = spritePixel >> 8 & 0xFF;
+			int spritePixelB = spritePixel & 0xFF;
 
 			try {
 				int firstColumn = srcStartX;
@@ -2575,16 +2720,45 @@ public class GraphicsController {
 						for (int j = duFirstColumn; j < duColumnCount + duFirstColumn; ++j) {
 							int newColor = src[srcRowHead + (srcStartX >> 16)];
 							if (newColor != 0) {
+								int opacity			= colourTransform >> 24 & 0xFF;
+								int inverseOpacity	= 256 - opacity;
+
+								int transformR	= colourTransform >> 16 & 0xFF;
+								int transformG	= colourTransform >> 8 & 0xFF;
+								int transformB	= colourTransform & 0xFF;
+
+								int newR = newColor >> 16 & 0xFF;
+								int newG = newColor >> 8 & 0xFF;
 								int newB = newColor & 0xFF;
-								int newR = (newColor & 0xFF0000) >> 16;
-								int newG = 0xFF & (newColor >> 8);
-								// Are we a grey?
+
+								// Is the colour from the sprite gray?
+								if(newR == newG && newG == newB){
+									newR = (spritePixelR * newR) >> 8;
+									newG = (spritePixelG * newG) >> 8;
+									newB = (spritePixelB * newB) >> 8;
+								}
+
+								int spriteR = ((newR * transformR) >> 8) * opacity;
+								int spriteG = ((newG * transformG) >> 8) * opacity;
+								int spriteB = ((newB * transformB) >> 8) * opacity;
+
+								int canvasR = (dest[destRowHead + j] >> 16 & 0xff) * inverseOpacity;
+								int canvasG = (dest[destRowHead + j] >> 8 & 0xff) * inverseOpacity;
+								int canvasB = (dest[destRowHead + j] & 0xff) * inverseOpacity;
+
+								int finalColour =
+									(((spriteR + canvasR) >> 8) << 16) +
+										(((spriteG + canvasG) >> 8) << 8) +
+										((spriteB + canvasB) >> 8);
+								dest[destRowHead + j] = finalColour;
+
+								/*// Are we a grey?
 								if (newR == newG && newB == newG) {
 									dest[destRowHead + j] = (newB * backgroundB >> 8) + ((backgroundG * newG >> 8) << 8)
 											+ ((backgroundR * newR >> 8) << 16);
 								} else {
 									dest[destRowHead + j] = newColor;
-								}
+								}*/
 							}
 
 							srcStartX += scaleX;
@@ -2610,7 +2784,7 @@ public class GraphicsController {
 							+ srcStartY + ',' + srcStartX + ',' + destColumnCount + ','
 							+ (dest != null ? "{...}" : "null") + ',' + destHeight + ',' + destColumnSkewPerRow + ','
 							+ destRowHead + ',' + scaleX + ',' + destFirstColumn + ',' + srcWidth + ',' + skipEveryOther
-							+ ',' + background + ')');
+							+ ',' + spritePixel + ')');
 		}
 	}
 

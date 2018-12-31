@@ -285,7 +285,7 @@ public final class AuctionHouse {
 							int amount = mc.getInventoryCount(itemID);
 							if(itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
 								mc.showMessage(false, (String) null, "This object cannot be added to auction", MessageType.GAME,
-										0, (String) null, (String) null);
+										0, (String) null);
 								return; 
 							}
 							if (amount > 0) {
@@ -838,7 +838,7 @@ public final class AuctionHouse {
 
 			graphics.drawString("Seller: " + ahItem.getSeller() , selectX + 8, selectY + 83, 0xffffff, 2);
 
-			if (mc.adminRights) {
+			if (mc.getLocalPlayer().isMod()) {
 				drawButton(graphics, selectX + 186, selectY + 68, 200, 22, "@red@[Staff] Delete Item", false, new ButtonHandler() {
 					@Override
 					void handle() {

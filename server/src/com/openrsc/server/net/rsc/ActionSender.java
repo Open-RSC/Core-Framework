@@ -446,7 +446,7 @@ public class ActionSender {
 	public static void sendGameSettings(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_GAME_SETTINGS.opcode);
-		s.writeByte(player.isMod() ? 1 : 0);
+		s.writeByte((byte) player.getGroupID());
 		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1
 				: 0)); /* Camera Auto Angle */
 		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1
@@ -511,6 +511,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_DECANTING ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
 		return s;
 	}
 
@@ -642,10 +643,10 @@ public class ActionSender {
 	}
 
 	public static void sendMessage(Player player, Player sender, int prefix, MessageType type, String message,
-			int crownID) {
+			int iconSprite) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_MESSAGE.opcode);
-		s.writeByte(crownID);
+		s.writeInt(iconSprite);
 		s.writeByte(type.getRsID());
 		/**
 		 * This is actually a controller which check if we should present
@@ -692,7 +693,7 @@ public class ActionSender {
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
 		s.writeString(sender.getUsername());
 		s.writeString(sender.getUsername());// former name?
-		s.writeByte(sender.getIcon());
+		s.writeInt(sender.getIcon());
 		// s.writeLong(5);// the duck is this
 		s.writeRSCString(message);
 		player.write(s.toPacket());
@@ -1108,7 +1109,7 @@ public class ActionSender {
 		pb.writeShort(World.getWorld().getPlayers().size());
 		for (Player p : World.getWorld().getPlayers()) {
 			pb.writeString(p.getUsername());
-			pb.writeByte(p.getIcon());
+			pb.writeInt(p.getIcon());
 		}
 		player.write(pb.toPacket());
 	}

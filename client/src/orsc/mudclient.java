@@ -13,7 +13,6 @@ import com.openrsc.interfaces.NCustomComponent;
 import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
 import orsc.buffers.RSBufferUtils;
-import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.*;
 import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
@@ -28,15 +27,14 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.Socket;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
-
-import javax.sound.sampled.*;
 
 public final class mudclient implements Runnable {
 
@@ -88,7 +86,7 @@ public final class mudclient implements Runnable {
 	public int screenOffsetX;
 	public int screenOffsetY;
 	public boolean shiftPressed = false;
-	public boolean adminRights;
+	//public int groupID = 100;
 	public boolean rendering;
 	private static ClientPort clientPort;
 	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
@@ -591,7 +589,7 @@ public final class mudclient implements Runnable {
 		private int m_Xi;
 		private int rememberButtonIdx;
 		private int m_Zb = 0;
-		private int m_Zc = -1;
+		private int localPlayerServerIndex = -1;
 		private int m_Ze;
 		public Menu menuCommon;
 		private Menu menuDuel;
@@ -825,8 +823,8 @@ public final class mudclient implements Runnable {
 			try {
 
 				if (200 <= SocialLists.friendListCount) {
-					this.showMessage(false, (String) null, "Friend list is full", MessageType.GAME, 0, (String) null,
-							(String) null);
+					this.showMessage(false, (String) null, "Friend list is full", MessageType.GAME, 0, (String) null
+					);
 				} else {
 					String var3 = StringUtil.displayNameToKey(player);
 					if (null != var3) {
@@ -834,14 +832,14 @@ public final class mudclient implements Runnable {
 						for (var4 = 0; var4 < SocialLists.friendListCount; ++var4) {
 							if (var3.equals(StringUtil.displayNameToKey(SocialLists.friendList[var4]))) {
 								this.showMessage(false, (String) null, player + " is already on your friend list.",
-										MessageType.GAME, 0, (String) null, (String) null);
+										MessageType.GAME, 0, (String) null);
 								return;
 							}
 
 							if (SocialLists.friendListOld[var4] != null
 									&& var3.equals(StringUtil.displayNameToKey(SocialLists.friendListOld[var4]))) {
 								this.showMessage(false, (String) null, player + " is already on your friend list.",
-										MessageType.GAME, 0, (String) null, (String) null);
+										MessageType.GAME, 0, (String) null);
 								return;
 							}
 						}
@@ -850,7 +848,7 @@ public final class mudclient implements Runnable {
 							if (var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg0[var4]))) {
 								this.showMessage(false, (String) null,
 										"Please remove " + player + " from your ignore list first.", MessageType.GAME, 0,
-										(String) null, (String) null);
+										(String) null);
 								return;
 							}
 
@@ -858,7 +856,7 @@ public final class mudclient implements Runnable {
 									&& var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg1[var4]))) {
 								this.showMessage(false, (String) null,
 										"Please remove " + player + " from your ignore list first.", MessageType.GAME, 0,
-										(String) null, (String) null);
+										(String) null);
 								return;
 							}
 						}
@@ -869,7 +867,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().finishPacket();
 						} else {
 							this.showMessage(false, (String) null, "You can\'t add yourself to your own friend list.",
-									MessageType.GAME, 0, (String) null, (String) null);
+									MessageType.GAME, 0, (String) null);
 						}
 					}
 				}
@@ -882,8 +880,8 @@ public final class mudclient implements Runnable {
 			try {
 
 				if (SocialLists.ignoreListCount >= 100) {
-					this.showMessage(false, (String) null, "Ignore list full", MessageType.GAME, 0, (String) null,
-							(String) null);
+					this.showMessage(false, (String) null, "Ignore list full", MessageType.GAME, 0, (String) null
+					);
 				} else {
 					String var3 = StringUtil.displayNameToKey(player);
 					if (var3 != null) {
@@ -891,14 +889,14 @@ public final class mudclient implements Runnable {
 						for (var4 = 0; var4 < SocialLists.ignoreListCount; ++var4) {
 							if (var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg0[var4]))) {
 								this.showMessage(false, (String) null, player + " is already on your ignore list",
-										MessageType.GAME, 0, (String) null, (String) null);
+										MessageType.GAME, 0, (String) null);
 								return;
 							}
 
 							if (SocialLists.ignoreListArg1[var4] != null
 									&& var3.equals(StringUtil.displayNameToKey(SocialLists.ignoreListArg1[var4]))) {
 								this.showMessage(false, (String) null, player + " is already on your ignore list",
-										MessageType.GAME, 0, (String) null, (String) null);
+										MessageType.GAME, 0, (String) null);
 								return;
 							}
 						}
@@ -907,7 +905,7 @@ public final class mudclient implements Runnable {
 							if (var3.equals(StringUtil.displayNameToKey(SocialLists.friendList[var4]))) {
 								this.showMessage(false, (String) null,
 										"Please remove " + player + " from your friends list first", MessageType.GAME, 0,
-										(String) null, (String) null);
+										(String) null);
 								return;
 							}
 
@@ -915,7 +913,7 @@ public final class mudclient implements Runnable {
 									&& var3.equals(StringUtil.displayNameToKey(SocialLists.friendListOld[var4]))) {
 								this.showMessage(false, (String) null,
 										"Please remove " + player + " from your friends list first", MessageType.GAME, 0,
-										(String) null, (String) null);
+										(String) null);
 								return;
 							}
 						}
@@ -926,7 +924,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().finishPacket();
 						} else {
 							this.showMessage(false, (String) null, "You can\'t add yourself to your ignore list",
-									MessageType.GAME, 0, (String) null, (String) null);
+									MessageType.GAME, 0, (String) null);
 						}
 					}
 				}
@@ -975,7 +973,7 @@ public final class mudclient implements Runnable {
 			try {
 
 				ORSCharacter player = this.players[index];
-				String name = player.displayName;
+				String name = player.getStaffName(true);
 				int var5 = 2203 - this.midRegionBaseZ - this.playerLocalZ - this.worldOffsetZ;
 				if (this.midRegionBaseX + this.playerLocalX + this.worldOffsetX >= 2640) {
 					var5 = -50;
@@ -1019,7 +1017,11 @@ public final class mudclient implements Runnable {
 					level = "@gre@";
 				}
 
-				level = " " + level + "(level-" + player.level + ")";
+				if(player.isInvulnerable){
+					level = "@bla@";
+				}
+
+				level = " @whi@" + level + "(level-" + player.level + ")";
 				if (this.selectedSpell >= 0) {
 					if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 1
 							|| EntityHandler.getSpellDef(selectedSpell).getSpellType() == 2) {
@@ -1048,7 +1050,7 @@ public final class mudclient implements Runnable {
 							"@whi@" + name + level);
 					this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_FOLLOW, "Follow",
 							"@whi@" + name + level);
-					this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.displayName,
+					this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(true),
 							MenuItemAction.REPORT_ABUSE, player.accountName);
 					if (modMenu) {
 						this.menuCommon.addItem_With2Strings("Summon", "@whi@" + name, player.displayName,
@@ -1185,7 +1187,7 @@ public final class mudclient implements Runnable {
 				this.logoutTimeout = 0;
 
 				this.showMessage(false, (String) null, "Sorry, you can\'t logout at the moment", MessageType.GAME, 0,
-						(String) null, "@cya@");
+						(String) null);
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.CB(" + var1 + ')');
 			}
@@ -1539,12 +1541,12 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		public void setM_Zc(int i) { this.m_Zc = i; }
-		public int getM_Zc() { return this.m_Zc; }
+		public void setLocalPlayerServerIndex(int i) { this.localPlayerServerIndex = i; }
+		public int getLocalPlayerServerIndex() { return this.localPlayerServerIndex; }
 		public void setM_rc(int i) { this.m_rc = i; }
 		public int getM_rc() { return this.m_rc; }
 
-		public final ORSCharacter createPlayer(int var1, int serverIndex, int var3, int var4, ORSCharacterDirection var5) {
+		public final ORSCharacter createPlayer(int zPosition, int serverIndex, int xPosition, int var4, ORSCharacterDirection direction) {
 			try {
 				if (null == this.playerServer[serverIndex]) {
 					this.playerServer[serverIndex] = new ORSCharacter();
@@ -1553,40 +1555,40 @@ public final class mudclient implements Runnable {
 
 
 				ORSCharacter c = this.playerServer[serverIndex];
-				boolean var7 = false;
+				boolean existingCharFound = false;
 
-				int var8;
-				for (var8 = 0; var8 < this.knownPlayerCount; ++var8) {
-					if (this.knownPlayers[var8].serverIndex == serverIndex) {
-						var7 = true;
+				int i;
+				for (i = 0; i < this.knownPlayerCount; ++i) {
+					if (this.knownPlayers[i].serverIndex == serverIndex) {
+						existingCharFound = true;
 						break;
 					}
 				}
 
-				if (var7) {
-					c.animationNext = var5.rsDir;
-					var8 = c.waypointCurrent;
-					if (var3 != c.waypointsX[var8] || c.waypointsZ[var8] != var1) {
-						c.waypointCurrent = var8 = (1 + var8) % 10;
-						c.waypointsX[var8] = var3;
-						c.waypointsZ[var8] = var1;
+				if (existingCharFound) {
+					c.animationNext = direction.rsDir;
+					i = c.waypointCurrent;
+					if (xPosition != c.waypointsX[i] || c.waypointsZ[i] != zPosition) {
+						c.waypointCurrent = i = (1 + i) % 10;
+						c.waypointsX[i] = xPosition;
+						c.waypointsZ[i] = zPosition;
 					}
 				} else {
 					c.serverIndex = serverIndex;
-					c.waypointsX[0] = c.currentX = var3;
+					c.waypointsX[0] = c.currentX = xPosition;
 					c.waypointCurrent = 0;
 					c.movingStep = 0;
 					c.stepFrame = 0;
-					c.direction = var5;
-					c.animationNext = var5.rsDir;
-					c.waypointsZ[0] = c.currentZ = var1;
+					c.direction = direction;
+					c.animationNext = direction.rsDir;
+					c.waypointsZ[0] = c.currentZ = zPosition;
 				}
 
 				this.players[this.playerCount++] = c;
 				return c;
 			} catch (RuntimeException var9) {
 				throw GenUtil.makeThrowable(var9,
-						"client.P(" + var1 + ',' + serverIndex + ',' + var3 + ',' + var4 + ',' + var5 + ')');
+						"client.P(" + zPosition + ',' + serverIndex + ',' + xPosition + ',' + var4 + ',' + direction + ')');
 			}
 		}
 
@@ -3994,7 +3996,7 @@ public final class mudclient implements Runnable {
 						}
 						if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
 							int i = 130;
-							if (adminRights) {
+							if (localPlayer.isDev()) {
 								this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
 										+ "@gre@,@whi@" + (playerLocalZ + midRegionBaseZ) + "@gre@)", 7, i, 0xffffff, 1);
 								i += 14;
@@ -4810,8 +4812,16 @@ public final class mudclient implements Runnable {
 									}
 
 									int colorMask2 = this.getPlayerSkinColors()[player.colourSkin];
+									int colourTransform	= 0xFFFFFFFF;
+
+									if(player.isInvisible)
+										colourTransform &= 0x80FFFFFF;
+
+									if(player.isInvulnerable)
+										colourTransform &= 0xFF202020;
+
 									this.getSurface().drawSpriteClipping(sprite, xOffset + x, y + yOffset, spriteWidth,
-											height, colorMask1, colorMask2, mirrorX, topPixelSkew, 1);
+											height, colorMask1, colorMask2, mirrorX, topPixelSkew, 1, colourTransform);
 
 									/*if(sprite != 1948 && sprite != 1947 && sprite != 1949) {
 										this.getSurface().drawSpriteClipping(sprite, xOffset + x, y + yOffset, spriteWidth,
@@ -4846,7 +4856,7 @@ public final class mudclient implements Runnable {
 					if (Config.S_SHOW_FLOATING_NAMETAGS) {
 						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.displayName != null)
-								this.getSurface().drawShadowText(player.displayName, (width - this.getSurface().stringWidth(0, player.displayName)) / 2 + x + 1, y - 14, 0xffff00, 0, false);
+								this.getSurface().drawShadowText(player.getStaffName(true), (width - this.getSurface().stringWidth(0, player.getStaffName())) / 2 + x + 1, y - 14, 0xffff00, 0, false);
 						}
 						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.clanTag != null)
@@ -5721,7 +5731,7 @@ public final class mudclient implements Runnable {
 												"Examine", "@cya@"
 														+ EntityHandler.getDoorDef(id)
 														.getName()
-														+ (adminRights ? " @or1@(" + id + ":"
+														+ (localPlayer.isDev() ? " @or1@(" + id + ":"
 																+ (wallObjectInstanceX[var9] + this.midRegionBaseX)
 																+ ","
 																+ (wallObjectInstanceZ[var9] + this.midRegionBaseZ)
@@ -5777,7 +5787,7 @@ public final class mudclient implements Runnable {
 											.addCharacterItem(id, MenuItemAction.OBJECT_EXAMINE, "Examine",
 													"@cya@" + EntityHandler.getObjectDef(id)
 													.getName()
-													+ (adminRights
+													+ (localPlayer.isDev()
 															? " @or1@(" + id + ":"
 															+ (gameObjectInstanceX[var9]
 																	+ this.midRegionBaseX)
@@ -5836,7 +5846,7 @@ public final class mudclient implements Runnable {
 													"Examine", "@lre@"
 															+ EntityHandler.getItemDef(this.groundItemID[var9])
 															.getName()
-															+ (adminRights
+															+ (localPlayer.isDev()
 																	? " @or1@(" + groundItemID[var9] + ":"
 																	+ (groundItemX[var9] + midRegionBaseX) + ","
 																	+ (groundItemZ[var9] + midRegionBaseZ) + ","
@@ -5937,7 +5947,7 @@ public final class mudclient implements Runnable {
 										this.menuCommon.addCharacterItem(this.npcs[var9].npcId, MenuItemAction.NPC_EXAMINE,
 												"Examine",
 												"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-												+ (adminRights ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));
+												+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));
 									} else {
 										this.menuCommon.addCharacterItem_WithID(this.npcs[var9].serverIndex,
 												"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName(),
@@ -6089,7 +6099,7 @@ public final class mudclient implements Runnable {
 											"@lre@" + EntityHandler.getItemDef(id).getName());
 								this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
 										"@lre@" + EntityHandler.getItemDef(id).getName()
-										+ (adminRights ? " @or1@(" + id + ")" : ""));
+										+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
 							} else {
 								this.menuCommon.addCharacterItem_WithID(var5,
 										"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
@@ -6653,7 +6663,7 @@ public final class mudclient implements Runnable {
 									if (var10 < EntityHandler.getSpellDef(var9).getReqLevel()) {
 										this.showMessage(false, (String) null,
 												"Your magic ability is not high enough for this spell", MessageType.GAME, 0,
-												(String) null, (String) null);
+												(String) null);
 									} else {
 										int k3 = 0;
 										for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(var9)
@@ -6661,7 +6671,7 @@ public final class mudclient implements Runnable {
 											if (!hasRunes(e.getKey(), e.getValue())) {
 												this.showMessage(false, (String) null,
 														"You don\'t have all the reagents you need for this spell",
-														MessageType.GAME, 0, (String) null, (String) null);
+														MessageType.GAME, 0, (String) null);
 												k3 = -1;
 												break;
 											}
@@ -6686,11 +6696,11 @@ public final class mudclient implements Runnable {
 									if (var10 < EntityHandler.getPrayerDef(var9).getReqLevel()) {
 										this.showMessage(false, (String) null,
 												"Your prayer ability is not high enough for this prayer", MessageType.GAME,
-												0, (String) null, (String) null);
+												0, (String) null);
 									} else if (this.playerStatCurrent[5] == 0) {
 										this.showMessage(false, (String) null,
 												"You have run out of prayer points. Return to a church to recharge",
-												MessageType.GAME, 0, (String) null, (String) null);
+												MessageType.GAME, 0, (String) null);
 									} else if (!this.prayerOn[var9]) {
 										this.packetHandler.getClientStream().newPacket(60);
 										this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
@@ -8157,10 +8167,10 @@ public final class mudclient implements Runnable {
 					andStakeSuccess = true;
 				}
 
-				if (EntityHandler.getItemDef(andStakeInvID).quest) {
+				if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
 					andStakeSuccess = true;
 					this.showMessage(false, (String) null, "This object cannot be added to a duel offer", MessageType.GAME,
-							0, (String) null, (String) null);
+							0, (String) null);
 				}
 
 				if (!andStakeSuccess) {
@@ -8556,13 +8566,13 @@ public final class mudclient implements Runnable {
 							if (this.deathScreenTimeout == 0) {
 								this.showMessage(false, (String) null,
 										"You have been granted another life. Be more careful this time!", MessageType.GAME,
-										0, (String) null, (String) null);
+										0, (String) null);
 							}
 
 							if (this.deathScreenTimeout == 0) {
 								this.showMessage(false, (String) null,
 										"You retain your skills. Your objects land where you died", MessageType.GAME, 0,
-										(String) null, (String) null);
+										(String) null);
 							}
 						}
 					}
@@ -8806,11 +8816,11 @@ public final class mudclient implements Runnable {
 							String var11 = this.panelMessageTabs.getControlText(this.panelMessageEntry);
 							this.panelMessageTabs.setText(this.panelMessageEntry, "");
 							if (var11.startsWith("::")) {
-								if (var11.equalsIgnoreCase("::dev") && adminRights) {
+								if (var11.equalsIgnoreCase("::dev") && localPlayer.isDev()) {
 									developerMenu = true;
-								} else if (var11.equalsIgnoreCase("::mod") && adminRights) {
+								} else if (var11.equalsIgnoreCase("::mod") && localPlayer.isMod()) {
 									modMenu = true;
-								} else if (var11.startsWith("::n ") && adminRights) {
+								} else if (var11.startsWith("::n ") && localPlayer.isDev()) {
 									devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
 								} else if (var11.equalsIgnoreCase("::overlay") && Config.S_SIDE_MENU_TOGGLE) {
 									Config.C_SIDE_MENU_OVERLAY = Config.C_SIDE_MENU_OVERLAY;
@@ -9372,7 +9382,7 @@ public final class mudclient implements Runnable {
 				}
 				case GROUND_ITEM_EXAMINE: {
 					this.showMessage(false, (String) null, EntityHandler.getItemDef(indexOrX).getDescription(),
-							MessageType.GAME, 0, (String) null, (String) null);
+							MessageType.GAME, 0, (String) null);
 					break;
 				}
 				case ITEM_EXAMINE: {
@@ -9383,7 +9393,7 @@ public final class mudclient implements Runnable {
 					//					MessageType.GAME, 0, (String) null, (String) null);
 					//} else {
 						this.showMessage(false, (String) null, EntityHandler.getItemDef(indexOrX).getDescription(),
-								MessageType.GAME, 0, (String) null, (String) null);
+								MessageType.GAME, 0, (String) null);
 					//}
 					break;
 				}
@@ -9430,7 +9440,7 @@ public final class mudclient implements Runnable {
 				}
 				case WALL_EXAMINE: {
 					this.showMessage(false, (String) null, EntityHandler.getDoorDef(indexOrX).getDescription(),
-							MessageType.GAME, 0, (String) null, (String) null);
+							MessageType.GAME, 0, (String) null);
 					break;
 				}
 				case OBJECT_CAST_SPELL: {
@@ -9472,7 +9482,7 @@ public final class mudclient implements Runnable {
 				}
 				case OBJECT_EXAMINE: {
 					this.showMessage(false, (String) null, EntityHandler.getObjectDef(indexOrX).getDescription(),
-							MessageType.GAME, 0, (String) null, (String) null);
+							MessageType.GAME, 0, (String) null);
 					break;
 				}
 				case ITEM_CAST_SPELL: {
@@ -9532,7 +9542,7 @@ public final class mudclient implements Runnable {
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, (String) null,
 							"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
-							MessageType.INVENTORY, 0, (String) null, (String) null);
+							MessageType.INVENTORY, 0, (String) null);
 					break;
 				}
 				case ITEM_DROP_X: {
@@ -9626,7 +9636,7 @@ public final class mudclient implements Runnable {
 				}
 				case NPC_EXAMINE: {
 					this.showMessage(false, (String) null, EntityHandler.getNpcDef(indexOrX).getDescription(),
-							MessageType.GAME, 0, (String) null, (String) null);
+							MessageType.GAME, 0, (String) null);
 					break;
 				}
 				case PLAYER_CAST_SPELL: {
@@ -11259,7 +11269,7 @@ public final class mudclient implements Runnable {
 					if (this.combatTimeout <= 450) {
 						if (var1 < this.combatTimeout) {
 							this.showMessage(false, (String) null, "You can\'t logout for 10 seconds after combat",
-									MessageType.GAME, 0, (String) null, "@cya@");
+									MessageType.GAME, 0, (String) null);
 						} else {
 							this.packetHandler.getClientStream().newPacket(102);
 							this.packetHandler.getClientStream().finishPacket();
@@ -11267,7 +11277,7 @@ public final class mudclient implements Runnable {
 						}
 					} else {
 						this.showMessage(false, (String) null, "You can\'t logout during combat!", MessageType.GAME, 0,
-								(String) null, "@cya@");
+								(String) null);
 					}
 				}
 			} catch (RuntimeException var3) {
@@ -11392,7 +11402,7 @@ public final class mudclient implements Runnable {
 		}
 
 		public final void showMessage(boolean crownEnabled, String sender, String message, MessageType type, int crownID,
-				String formerName, String colorOverride) {
+									  String formerName) {
 			try {
 
 				if ((type == MessageType.PRIVATE_RECIEVE || type == MessageType.CHAT || type == MessageType.TRADE
@@ -11409,7 +11419,9 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				String color = type.color;
+				if(!crownEnabled)
+					crownID = 0;
+
 				if (this.messageTabSelected != MessageTab.ALL) {
 					if ((type == MessageType.FRIEND_STATUS || type == MessageType.PRIVATE_RECIEVE
 							|| type == MessageType.PRIVATE_SEND) && this.messageTabSelected != MessageTab.PRIVATE) {
@@ -11445,10 +11457,6 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				if (null != colorOverride) {
-					color = colorOverride;
-				}
-
 				for (int i = 99; i > 0; --i) {
 					MessageHistory.messageHistoryType[i] = MessageHistory.messageHistoryType[i - 1];
 					MessageHistory.messageHistoryTimeout[i] = MessageHistory.messageHistoryTimeout[i - 1];
@@ -11464,8 +11472,8 @@ public final class mudclient implements Runnable {
 				MessageHistory.messageHistoryCrownID[0] = crownID;
 				MessageHistory.messageHistoryClan[0] = formerName;
 				MessageHistory.messageHistoryMessage[0] = message;
-				MessageHistory.messageHistoryColor[0] = color;
-				String msg = color + StringUtil.formatMessage(message, sender, true, type);
+				MessageHistory.messageHistoryColor[0] = type.color;
+				String msg = StringUtil.formatMessage(message, sender, true, type);
 
 				if (type == MessageType.CHAT) {
 					if (this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
@@ -11519,7 +11527,7 @@ public final class mudclient implements Runnable {
 			} catch (RuntimeException var12) {
 				throw GenUtil.makeThrowable(var12, "client.BD(" + crownEnabled + ',' + (sender != null ? "{...}" : "null")
 						+ ',' + "dummy" + ',' + (message != null ? "{...}" : "null") + ',' + type + ',' + crownID + ','
-						+ (formerName != null ? "{...}" : "null") + ',' + (colorOverride != null ? "{...}" : "null") + ')');
+						+ (formerName != null ? "{...}" : "null") + ',' + ')');
 			}
 		}
 
@@ -12100,9 +12108,9 @@ public final class mudclient implements Runnable {
 			this.showDialogShop = show;
 		}
 
-		public void setAdminRights(boolean admin) {
-			this.adminRights = admin;
-		}
+		/*public void setGroupID(int groupID) {
+			this.groupID = groupID;
+		}*/
 
 		public void setOptionCameraModeAuto(boolean auto) {
 			this.optionCameraModeAuto = auto;
@@ -12727,10 +12735,10 @@ public final class mudclient implements Runnable {
 					offerSuccess = true;
 				}
 
-				if (EntityHandler.getItemDef(id).quest && !adminRights) {
+				if (EntityHandler.getItemDef(id).quest && !localPlayer.isAdmin()) {
 					offerSuccess = true;
 					this.showMessage(false, (String) null, "This object cannot be traded with other players",
-							MessageType.GAME, 0, (String) null, (String) null);
+							MessageType.GAME, 0, (String) null);
 				}
 
 				if (!offerSuccess) {

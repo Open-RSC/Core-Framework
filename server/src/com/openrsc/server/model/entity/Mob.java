@@ -528,8 +528,12 @@ public abstract class Mob extends Entity {
 		combatWith = opponent;
 	}
 
-	public void setSprite(int x) {
+	public void setSpriteChanged() {
 		spriteChanged = true;
+	}
+
+	public void setSprite(int x) {
+		setSpriteChanged();
 		mobSprite = x;
 	}
 
