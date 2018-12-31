@@ -16,6 +16,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 	public static int MERCENARY = 668;
 	public static int TECHNICAL_PLANS = 1060;
 	public static int BEDABIN_NOMAD_GUARD = 703;
+	public static int AL_SHABIM = 700;
 	public static int MERCENARY_INSIDE = 670;
 	public static int PINE_APPLE = 1058;
 	public static int MINING_CAVE = 963;
@@ -37,8 +38,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		public static final int PSSST = 0;
 		public static final int PSSST2 = 1;
 		public static final int PSSST3 = 2;
-		public static final int PSSST4 = 3;
-		public static final int PSSSTFINAL = 4;
+		public static final int PSSSTFINAL = 3;
+		public static final int OKSORRY = 4;
 		public static final int NICECART = 5;
 		public static final int WAGON = 6;
 		public static final int HELPYOU = 7;
@@ -70,7 +71,10 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		if(item.getID() == TECHNICAL_PLANS && npc.getID() == BEDABIN_NOMAD_GUARD && p.getQuestStage(Constants.Quests.TOURIST_TRAP) >= 7) {
+		if(item.getID() == TECHNICAL_PLANS && npc.getID() == BEDABIN_NOMAD_GUARD) {
+			return true;
+		}
+		if(item.getID() == TECHNICAL_PLANS && npc.getID() == AL_SHABIM) {
 			return true;
 		}
 		if(item.getID() == PINE_APPLE && npc.getID() == MERCENARY_INSIDE) {
@@ -84,11 +88,25 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if(item.getID() == TECHNICAL_PLANS && npc.getID() == BEDABIN_NOMAD_GUARD && p.getQuestStage(Constants.Quests.TOURIST_TRAP) >= 7) {
-			if(npc != null) {
+		if(item.getID() == TECHNICAL_PLANS && npc.getID() == BEDABIN_NOMAD_GUARD) {
+			if(p.getQuestStage(Constants.Quests.TOURIST_TRAP) > 7 
+					|| p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
+				npcTalk(p, npc, "Sorry, but you can't use the tent without permission.",
+						"But thanks for all your help with the Bedabin people.",
+						"And we'll take those plans off your hands as well!");
+			}
+			else if(p.getQuestStage(Constants.Quests.TOURIST_TRAP) == 6 || p.getQuestStage(Constants.Quests.TOURIST_TRAP) == 7) {
 				npcTalk(p, npc, "Ok, you can go in, Al Shabim has told me about you.");
 				p.teleport(171, 792);
-			} 
+			}
+			else if(p.getQuestStage(Constants.Quests.TOURIST_TRAP) >= 0) {
+				npcTalk(p, npc, "Hmm, those plans look interesting.",
+						"Go and show them to Al Shabim...",
+						"I'm sure he'll be pleased to see them.");
+			}
+		}
+		if(item.getID() == TECHNICAL_PLANS && npc.getID() == AL_SHABIM) {
+			npc.initializeIndirectTalkScript(p);
 		}
 		if(item.getID() == PINE_APPLE && npc.getID() == MERCENARY_INSIDE) {
 			removeItem(p, PINE_APPLE, 1);
@@ -104,6 +122,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		if(item.getID() == 1038 && npc.getID() == ANA) {
 			if(p.getQuestStage(Constants.Quests.TOURIST_TRAP) == -1) {
 				p.message("You have already completed this quest.");
+				npcTalk(p, npc, "I think you might have me confused with someone else.");
 				return;
 			}
 			if(!hasItem(p, 1039)) {
@@ -129,7 +148,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 						"You need detailed plans of the item you want to make in order to use it.");
 				return;
 			}
-			message(p,"Do you want to follow the technical plans?");
+			message(p,"Do you want to follow the technical plans ?");
 			int menu = showMenu(p, "Yes. I'd like to try.", "No, not just yet.");
 			if(menu == 0) {
 				if(getCurrentLevel(p, SMITHING) < 20) {
@@ -172,12 +191,17 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				return;
 			}
 			message(p, "You try to attach feathers to the bronze dart tip.",
-					"Following the plans is tricky, but you persevere.",
-					"You succesfully attach the feathers to the dart tip.");
-			p.getInventory().replace(1071, 1014);
+					"Following the plans is tricky, but you persevere.");
 			removeItem(p, 381, 10);
-			//kosher: dependent on fletching level!
-			p.incExp(FLETCHING, getMaxLevel(p, FLETCHING) * 50, true);
+			if(succeedRate(p)) {
+				message(p, "You succesfully attach the feathers to the dart tip.");
+				p.getInventory().replace(1071, 1014);
+				//kosher: dependent on fletching level!
+				p.incExp(FLETCHING, getMaxLevel(p, FLETCHING) * 50, true);
+			} else {
+				message(p, "An unlucky accident causes you to waste the feathers.",
+						"But you feel that you're close to making this item though.");
+			}
 		}
 	}
 
@@ -217,7 +241,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		}
 		if(obj.getID() == MINING_CAVE_BACK) {
 			if(hasItem(p, 1039)) {
-				failAnaInBarrel(p, null);
+				failCaveAnaInBarrel(p, null);
 				return;
 			}
 			message(p, "You walk into the dark of the cavern...");
@@ -265,7 +289,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				}
 				p.message("There may be just enough space to squeeze yourself into the cart.");
 				p.message("Would you like to try?");
-				int menu = showMenu(p, "Yes, of course.", "No thanks, it looks pretty dangerous.");
+				int menu = showMenu(p, "Yes, of course.", "No Thanks, it looks pretty dangerous.");
 				if(menu == 0) {
 					if(succeedRate(p)) {
 						p.message("You succeed!");
@@ -422,11 +446,12 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		if(cID == -1) {
 			message(p, "The cart driver seems to be festidiously cleaning his cart.",
 					"It doesn't look as if he wants to be disturbed.");
-			int menu = showMenu(p,n,
+			int menu = showMenu(p,n, false, //do not send over
 					"Hello.",
 					"Nice cart.",
 					"Pssst...");
 			if(menu == 0) {
+				playerTalk(p,n, "Hello");
 				npcTalk(p,n, "Can't you see I'm busy?",
 						"Now get out of here!");
 				int getGo = showMenu(p,n,
@@ -434,16 +459,17 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 						"Nice cart.",
 						"Pssst...");
 				if(getGo == 0) {
-					npcTalk(p,n, "Look just leave me alone!");
-					p.message("The cart driver goes back to his work.");
+					getOutWithAnaInCart(p, n, CartDriver.OKSORRY);
 				} else if(getGo == 1) {
 					getOutWithAnaInCart(p, n, CartDriver.NICECART);
 				} else if(getGo == 2) {
 					getOutWithAnaInCart(p, n, CartDriver.PSSST);
 				}
 			} else if(menu == 1) {
+				playerTalk(p,n, "Nice cart.");
 				getOutWithAnaInCart(p, n, CartDriver.NICECART);
 			} else if(menu == 2) {
+				playerTalk(p,n, "Pssst...");
 				getOutWithAnaInCart(p, n, CartDriver.PSSST);
 			}
 		} switch(cID) {
@@ -470,7 +496,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			if(m == 0) {
 				getOutWithAnaInCart(p, n, CartDriver.PSSST3);
 			} else if(m == 1) {
-				getOutWithAnaInCart(p, n, CartDriver.PSSST4);
+				getOutWithAnaInCart(p, n, CartDriver.PSSST);
 			} else if(m == 2) {
 				getOutWithAnaInCart(p, n, CartDriver.PSSSTFINAL);
 			}
@@ -484,23 +510,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			if(me == 0) {
 				getOutWithAnaInCart(p, n, CartDriver.PSSST2);
 			} else if(me == 1) {
-				getOutWithAnaInCart(p, n, CartDriver.PSSST4);
+				getOutWithAnaInCart(p, n, CartDriver.PSSST);
 			} else if(me == 2) {
-				getOutWithAnaInCart(p, n, CartDriver.PSSSTFINAL);
-			}
-
-			break;
-		case CartDriver.PSSST4:
-			message(p, "The cart driver completely ignores you.");
-			int meh = showMenu(p,n,
-					"Psssst...",
-					"Psssssst...",
-					"Pssssssssttt!!!");
-			if(meh == 0) {
-				getOutWithAnaInCart(p, n, CartDriver.PSSST2);
-			} else if(meh == 1) {
-				getOutWithAnaInCart(p, n, CartDriver.PSSST3);
-			} else if(meh == 2) {
 				getOutWithAnaInCart(p, n, CartDriver.PSSSTFINAL);
 			}
 			break;
@@ -512,12 +523,15 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					"Oh, ok, sorry.",
 					"Shhshhh!");
 			if(shh == 0) {
-				npcTalk(p,n, "Look just leave me alone!");
-				p.message("The cart driver goes back to his work.");
+				getOutWithAnaInCart(p, n, CartDriver.OKSORRY);
 			} else if(shh == 1) {
 				npcTalk(p,n, "Shush yourself!");
 				p.message("The cart driver goes back to his work.");
 			}
+			break;
+		case CartDriver.OKSORRY:
+			npcTalk(p,n, "Look just leave me alone!");
+			p.message("The cart driver goes back to his work.");
 			break;
 		case CartDriver.NICECART:
 			message(p, "The cart driver looks around at you and tries to weigh you up.");
@@ -539,10 +553,11 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		case CartDriver.WAGON:
 			message(p, "The cart driver smirks a little.",
 					"He starts checking the steering on the cart.");
-			int menu = showMenu(p,n,
+			int menu = showMenu(p,n, false, //do not send over
 					"'One good turn deserves another'",
 					"Can you get me the heck out of here please?");
 			if(menu == 0) {
+				playerTalk(p, n, "'One good turn deserves another.");
 				message(p, "The cart driver smiles a bit and then turns to you.");
 				npcTalk(p,n, "Are you trying to get me fired?");
 				int menu2 = showMenu(p,n,
@@ -555,9 +570,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					p.message("The cart driver goes back to his work.");
 				} else if(menu2 == 1) {
 					npcTalk(p,n, "And why would you want to do a crazy thing like that for?",
-							"I ought to teach you a lesson!",
-							"Guards! Guards!");
-					// CONTINUE
+							"I ought to teach you a lesson!");
+					driverCallGuards(p, n);
 				} else if(menu2 == 2) {
 					npcTalk(p,n, "Ha ha ha! You're funny!");
 					message(p, "The cart driver checks that the guards aren't watching him.");
@@ -573,29 +587,31 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 								"Ha ha ha!");
 						p.message("The Cart driver goes back to his work.");
 					} else if(menu3 == 1) {
-						npcTalk(p,n, "Hmm, well, I wonder what the guards are gonna say about that!",
-								"Guards! Guards!");
-						// CONTINUE
+						npcTalk(p,n, "Hmm, well, I wonder what the guards are gonna say about that!");
+						driverCallGuards(p, n);
 					} else if(menu3 == 2) {
 						message(p, "The cart driver laughs at your pun...");
 						npcTalk(p,n, "Ha ha ha, oh Stoppit!");
 						message(p, "The cart driver seems much happier now.");
 						npcTalk(p,n, "What can I do for you anyway?");
-						int menu4 = showMenu(p,n,
+						int menu4 = showMenu(p,n, false, //do not send over
 								"Can you smuggle me out on your cart?",
 								"Can you smuggle my friend Ana out on your cart?",
 								"Well, you see, it's like this...");
 						if(menu4 == 0) {
+							playerTalk(p, n, "Can you smuggle me out on your cart?");
 							message(p, "The cart driver points at a nearby guard.");
 							npcTalk(p,n, "Ask that man over there if it's OK and I'll consider it!",
 									"Ha ha ha!");
 							p.message("The cart driver goes back to his work, laughing to himself.");
 						} else if(menu4 == 1) {
+							playerTalk(p, n, "Can you smuggle my friend out on your cart?");
 							npcTalk(p,n, "As long as your friend is a barrel full of rocks.",
 									"I don't think it would be a problem at all!",
 									"Ha ha ha!");
 							p.message("The cart driver goes back to his work, laughing to himself.");
 						} else if(menu4 == 2) {
+							playerTalk(p, n, "Well, you see, it's like this...");
 							npcTalk(p,n, "yeah!");
 							int menu5 = showMenu(p,n,
 									"Prison riot in ten minutes, get your cart out of here!",
@@ -608,10 +624,12 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 										"Good luck!",
 										"You can't leave me here, I'll get killed!");
 								if(menu6 == 0) {
-									npcTalk(p, n, "Ok great!");
+									npcTalk(p, n, "Yeah, you too!");
+									message(p, "The cart sets off at a hectic pace.",
+											"The guards at the gate get suspiscious and search the cart.",
+											"They find Ana in the Barrel and take her back into the mine.");
 									if(p.getCache().hasKey("ana_in_cart")) {
 										p.getCache().remove("ana_in_cart");
-										p.getCache().store("rescue", true);
 									}
 								} else if(menu6 == 1) {
 									npcTalk(p,n, "Oh, right...ok, you'd better jump in the cart then!",
@@ -625,22 +643,26 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 								npcTalk(p,n, "If you're going to bribe me, at least make it worth my while.",
 										"Now, let's say 100 Gold pieces should we?",
 										"Ha ha ha!");
-								int menu6 = showMenu(p,n,
+								int menu6 = showMenu(p,n, false, //do not send over
 										"A hundred it is!",
 										"Forget it!");
 								if(menu6 == 0) {
+									playerTalk(p, n, "A hundred it is.");
+									npcTalk(p, n, "Great!");
 									if(hasItem(p, 10, 100)) {
-										npcTalk(p, n, "Great!", "Ok, get in the back of the cart then!");
+										npcTalk(p, n, "Ok, get in the back of the cart then!");
 										removeItem(p, 10, 100);
 										if(p.getCache().hasKey("ana_in_cart")) {
 											p.getCache().remove("ana_in_cart");
 											p.getCache().store("rescue", true);
 										}
 									} else {
-										playerTalk(p, n, "I'll go get the money! wait for me.");
-										npcTalk(p, n, "OK great!");
+										npcTalk(p, n, "You little cheat, trying to trick me!",
+												"I'll show you!");
+										driverCallGuards(p, n);
 									}
 								} else if(menu6 == 1) {
+									playerTalk(p, n, "Forget it!");
 									npcTalk(p,n, "Ok, fair enough!",
 											"But don't bother me anymore.");
 									p.message("The cart driver goes back to work.");
@@ -650,6 +672,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 					}
 				}
 			} else if(menu == 1) {
+				playerTalk(p, n, "Can you get me the heck out of here please?");
 				getOutWithAnaInCart(p, n, CartDriver.HECKOUT);
 			}
 			break;
@@ -666,8 +689,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 						"Why you cheeky little....");
 				message(p, "The cart driver seems mortally offended...",
 						"his temper explodes as he shouts the guards.");
-				npcTalk(p,n, "Guards! Guards!");
-				// CONTINUE
+				driverCallGuards(p, n);
 			}
 			break;
 		case CartDriver.WONDERIF:
@@ -690,6 +712,30 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		}
 
 	}
+	
+	private void driverCallGuards(Player p, Npc n) {
+		int succeed = DataConversions.random(0, 1);
+		npcTalk(p, n, "Guards! Guards!");
+		if(succeed == 0) {
+			message(p, "Some guards notice you and come over.");
+			Npc mercenary = getNearestNpc(p, MERCENARY, 15);
+			if (mercenary != null) {
+				mercenary = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
+				sleep(1000);
+			}
+			npcTalk(p, mercenary, "Oi, what are you two doing?");
+			mercenary.startCombat(p);
+			message(p, "The Guards search you!",
+					"More guards rush to catch you.",
+					"You are roughed up a bit by the guards as you're manhandlded to a cell.");
+			npcTalk(p, mercenary, "Into the cell you go! I hope this teaches you a lesson.");
+			p.teleport(89, 801);
+		}
+		else {
+			message(p, "You quickly slope away and hide from the guards.");
+		}
+	}
+	
 	private void repeatLiftDialogue(Player p, Npc n, int cID) {
 		switch(cID) {
 		case RepeatLift.THING:
@@ -706,43 +752,40 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			npcTalk(p,n, "Of course not, you'd be doing me out of a job.",
 					"Anyway, you haven't got any barrels that need to go to the surface.",
 					"Now, move along and get some work done before you get a good beating.");
-			int options = showMenu(p,n,
+			int options = showMenu(p,n, false, //do not send over
 					"What is this thing?,",
 					"Ok, thanks.");
 			if(options == 0) {
+				playerTalk(p, n, "What is this thing?");
 				repeatLiftDialogue(p, n, RepeatLift.THING);
+			} else if(options == 1) {
+				playerTalk(p, n, "Ok, thanks.");
 			}
 			break;
 		}
 	}
-	private void failAnaInBarrel(Player p, Npc n) {
+	private void failCaveAnaInBarrel(Player p, Npc n) {
 		if(hasItem(p, 1039)) {
 			n = spawnNpc(MERCENARY, p.getX(), p.getY(), 60000);
 			sleep(650);
-			npcTalk(p,n, "Hey, where d'ya think you're going with that barrel?",
-					"You should know that they go out on the cart!",
-					"We'd better check this out!");
-			p.message("The guards prize the lid off the barrel.");
+			npcTalk(p,n, "Hey, where d'ya think you're going with that Barrel?");
+			p.message("A guard comes over and takes the barrel off you.");
 			removeItem(p, 1039, 1);
-			npcTalk(p,n, "Blimey! It's a jail break!",
-					"They're making a break for it!");
+			npcTalk(p,n, "'Cor! This barrel is really heavy!",
+					"Have you been mining lead?",
+					"Har, har har!");
+			message(p, "@gre@Ana: How rude! Why I ought to teach you a lesson.");
+			npcTalk(p,n, "What was that!");
+			p.message("The guards kick the barrel open.!");
 			Npc ana = spawnNpc(ANA, p.getX(), p.getY(), 30000);
 			sleep(650);
-			npcTalk(p,ana, "I could have told you we wouldn't get away with it!",
-					"Now look at the mess you've caused!");
-			p.message("The guards grab Ana and drag her away.");
+			npcTalk(p,ana, "How dare you say that I'm as heavy as lead?");
+			p.message("The guards drag Ana of and then throw you into a cell.");
 			if(ana != null) {
 				ana.remove();
 			}
-			npcTalk(p,n, "Hey, watch it with the hands buster.",
-					"These are the upper market slaves clothes doncha know!",
-					"Right, we'd better teach you a lesson as well!");
-			message(p, "The guards rough you up a bit.");
-			npcTalk(p,n, "Right lads, stuff him in the mining cell!",
-					"Specially for our most honoured guests.");
-			p.message("The guards drag you away to a cell.");
-			npcTalk(p,n, "There you go, we hope you 'dig' you're stay here.",
-					"Har! Har! Har!");
+			message(p, "@yel@Guards: Into the cell you go!",
+					"@yel@I hope this teaches you a lesson.");
 			if(n != null) {
 				n.remove();
 			}

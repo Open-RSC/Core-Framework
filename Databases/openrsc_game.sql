@@ -3573,7 +3573,6 @@ DROP TABLE IF EXISTS `openrsc_name_changes`;
 CREATE TABLE IF NOT EXISTS `openrsc_name_changes` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `playerID` int(10) UNSIGNED NOT NULL,
-  `owner` int(10) UNSIGNED NOT NULL,
   `old_name` varchar(12) NOT NULL,
   `new_name` varchar(12) NOT NULL,
   `date` int(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -6133,8 +6132,8 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (45, '1', 1, 3110, 11288),
 (45, '1', 443, 610, 11289),
 (555, '1', 497, 500, 11330),
-(555, '3', 220, 500, 11331),
-(555, '2', 220, 500, 11332),
+(555, '3', 220, 100, 11331),
+(555, '2', 220, 250, 11332),
 (555, '1', 220, 500, 11333),
 (555, '1', 473, 500, 11334),
 (555, '1', 471, 500, 11335),
@@ -6147,6 +6146,13 @@ INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index
 (555, '8', 31, 700, 11365),
 (555, '24', 33, 700, 11366),
 (555, '1', 20, 0, 11367),
+(555, '1', 526, 3, 11368),
+(555, '1', 527, 3, 11369),
+(555, '8', 35, 600, 11370),
+(555, '6', 34, 600, 11371),
+(555, '1', 40, 400, 11372),
+(555, '1', 423, 200, 11373),
+(555, '1', 469, 300, 11374),
 (104, '1', 179, 100, 11582),
 (104, '1', 129, 310, 11583),
 (104, '1', 432, 300, 11584),
@@ -38187,8 +38193,8 @@ DROP TABLE IF EXISTS `openrsc_players`;
 CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(12) NOT NULL DEFAULT '',
+  `email` varchar(255) DEFAULT NULL,
   `group_id` int(10) DEFAULT 4,
-  `owner` int(5) UNSIGNED NOT NULL,
   `pass` varchar(512) NOT NULL,
   `salt` varchar(250) NOT NULL DEFAULT '',
   `combat` int(10) DEFAULT 3,
@@ -38335,69 +38341,6 @@ CREATE TABLE IF NOT EXISTS `openrsc_trade_logs` (
   KEY `time` (`time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `group_id` int(10) UNSIGNED NOT NULL DEFAULT 3,
-  `username` varchar(200) NOT NULL DEFAULT '',
-  `password` varchar(512) NOT NULL DEFAULT '',
-  `salt` varchar(8) NOT NULL DEFAULT '',
-  `email` varchar(80) NOT NULL DEFAULT '',
-  `title` varchar(50) DEFAULT NULL,
-  `realname` varchar(40) DEFAULT NULL,
-  `url` varchar(100) DEFAULT NULL,
-  `facebook` varchar(50) DEFAULT NULL,
-  `msn` varchar(80) DEFAULT NULL,
-  `twitter` varchar(50) DEFAULT NULL,
-  `google` varchar(50) DEFAULT NULL,
-  `location` varchar(30) DEFAULT NULL,
-  `signature` text DEFAULT NULL,
-  `disp_threads` tinyint(3) UNSIGNED DEFAULT NULL,
-  `disp_comments` tinyint(3) UNSIGNED DEFAULT NULL,
-  `email_setting` tinyint(1) NOT NULL DEFAULT 1,
-  `notify_with_comment` tinyint(1) NOT NULL DEFAULT 0,
-  `advanced_editor` tinyint(1) NOT NULL DEFAULT 1,
-  `dialog_editor` tinyint(1) NOT NULL DEFAULT 1,
-  `auto_notify` tinyint(1) NOT NULL DEFAULT 0,
-  `show_smilies` tinyint(1) NOT NULL DEFAULT 1,
-  `show_img` tinyint(1) NOT NULL DEFAULT 1,
-  `show_img_sig` tinyint(1) NOT NULL DEFAULT 1,
-  `show_avatars` tinyint(1) NOT NULL DEFAULT 1,
-  `show_sig` tinyint(1) NOT NULL DEFAULT 1,
-  `php_timezone` varchar(100) NOT NULL DEFAULT 'UTC',
-  `time_format` tinyint(1) NOT NULL DEFAULT 0,
-  `date_format` tinyint(1) NOT NULL DEFAULT 0,
-  `language` varchar(25) NOT NULL DEFAULT 'English',
-  `num_comments` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `last_comment` int(10) UNSIGNED DEFAULT NULL,
-  `last_search` int(10) UNSIGNED DEFAULT NULL,
-  `last_email_sent` int(10) UNSIGNED DEFAULT NULL,
-  `last_report_sent` int(10) UNSIGNED DEFAULT NULL,
-  `registered` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `registration_ip` varchar(39) NOT NULL DEFAULT '0.0.0.0',
-  `last_visit` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `admin_note` varchar(30) DEFAULT NULL,
-  `activate_string` varchar(128) DEFAULT NULL,
-  `activate_key` varchar(8) DEFAULT NULL,
-  `use_inbox` tinyint(1) NOT NULL DEFAULT 1,
-  `notify_inbox` tinyint(1) NOT NULL DEFAULT 1,
-  `notify_inbox_full` tinyint(1) NOT NULL DEFAULT 0,
-  `num_inbox` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `jewels` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `teleport_stone` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `character_slots` tinyint(3) UNSIGNED NOT NULL DEFAULT 6,
-  `gold_time` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `premium_time` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_username_idx` (`username`(25)),
-  KEY `users_registered_idx` (`registered`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables

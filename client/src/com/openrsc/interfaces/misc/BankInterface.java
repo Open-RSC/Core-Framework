@@ -40,6 +40,12 @@ public class BankInterface {
 	public boolean onRender() {
 		int currMouseX = mc.getMouseX();
 		int currMouseY = mc.getMouseY();
+		
+		if(!mc.getInitLoginCleared()) {
+			swapNoteMode = false;
+			swapCertMode = false;
+			mc.setInitLoginCleared(true);
+		}
 
 		// Set up bank list to loop through later.
 		currentBankIDs = new ArrayList<>();
@@ -352,8 +358,7 @@ public class BankInterface {
 		int quantityColour = 0xffffff;
 		if (amount > 0) {
 			drawString(
-				"Withdraw " + " "
-						+ EntityHandler.getItemDef(itemID).getName(),
+				"Withdraw " + EntityHandler.getItemDef(itemID).getName(),
 				relativeX + 2, relativeY + 248, 1, 0xffffff);
 
 			if (Config.S_WANT_BANK_NOTES) {
@@ -427,7 +432,7 @@ public class BankInterface {
 				if (currMouseX >= relativeX + 220 && currMouseY >= relativeY + 265 &&
 						currMouseX < relativeX + 250 && currMouseY <= relativeY + 276)
 					quantityColour = 0xff0000;
-				drawString("Item: ", relativeX + 222, relativeY + 273, 1, quantityColour);
+				drawString("Uncert: ", relativeX + 212, relativeY + 273, 1, quantityColour);
 				drawString(swapCertMode ? "On" : "Off",
 						relativeX + 257, relativeY + 273, 1, swapCertMode ? 0x00FF00 : 0xFF0000);
 				
