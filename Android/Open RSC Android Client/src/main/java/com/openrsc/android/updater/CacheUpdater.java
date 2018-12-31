@@ -25,9 +25,10 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import orsc.Config;
+
 public class CacheUpdater extends Activity {
 
-	public static final String CACHE_URL = "https://game.openrsc.com/downloads/cache/";
 	private TextProgressBar progressBar;
 
 	private TextView tv1;
@@ -180,7 +181,7 @@ public class CacheUpdater extends Activity {
 			Log.d("Updater", "Downloading file: " + filename + " - " + getNiceName(filename));
 			HttpURLConnection connection = null;
 			try {
-				connection = (HttpURLConnection) new URL(CACHE_URL + filename).openConnection();
+				connection = (HttpURLConnection) new URL(Config.CACHE_URL + filename).openConnection();
 				connection.connect();
 				publishProgress("Downloading " + getNiceName(filename));
 				int fileLength = connection.getContentLength();

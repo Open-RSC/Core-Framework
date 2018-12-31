@@ -119,3 +119,5 @@ gameserver.log
 Tools/Map Generator/map\.png
 
 Tools/Map Generator/spriteeditor\.jar
+
+client/Cache/credentials\.txt

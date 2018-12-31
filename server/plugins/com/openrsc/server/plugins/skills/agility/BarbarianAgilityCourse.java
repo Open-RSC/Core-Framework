@@ -37,6 +37,17 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 		switch(obj.getID()) {
 			case BACK_PIPE:
 			case PIPE:
+				if (getCurrentLevel(p, AGILITY) < 35) {
+					p.message("You need an agility level of 35 to attempt to squeeze through the pipe");
+					p.setBusy(false);
+					return;
+				}
+				if(p.getFatigue() >= 69750) {
+					p.message("You are too tired to squeeze through the pipe");
+					p.setBusy(false);
+					return;
+				}
+				
 				p.message("You squeeze through the pipe");
 				sleep(1000);
 				if(p.getY() <= 551) {
