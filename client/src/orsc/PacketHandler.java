@@ -1,14 +1,7 @@
 package orsc;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Properties;
-
-import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.client.model.Sprite;
-
+import com.openrsc.interfaces.misc.clan.Clan;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -20,6 +13,12 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Properties;
 
 
 public class PacketHandler {
@@ -478,7 +477,7 @@ public class PacketHandler {
 		mc.getOnlineList().reset();
 		int onlinePlayerCount = packetsIncoming.getShort();
 		for (int i = 0; i < onlinePlayerCount; i++) {
-			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.getByte());
+			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32());
 		}
 		mc.getOnlineList().setVisible(true);
 	}
@@ -557,7 +556,7 @@ public class PacketHandler {
 	}
 
 	private void showMessage() {
-		int crown = packetsIncoming.getUnsignedByte();
+		int crown = packetsIncoming.get32();
 		MessageType type = MessageType.lookup(packetsIncoming.getUnsignedByte());
 		int var5 = packetsIncoming.getUnsignedByte();
 		String message = packetsIncoming.readString();
@@ -576,7 +575,7 @@ public class PacketHandler {
 			color = packetsIncoming.readString();
 		}
 
-		mc.showMessage(false, sender, message, type, crown, clan, color);
+		mc.showMessage(false, sender, message, type, crown, clan);
 	}
 
 	private void sendConnectionMessage() {
@@ -594,12 +593,12 @@ public class PacketHandler {
 				if (SocialLists.friendList[i].equals(currentName)) {
 					if (SocialLists.friendListArgS[i] == null && online) {
 						mc.showMessage(false, (String) null, currentName + " has logged in",
-										MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
+										MessageType.FRIEND_STATUS, 0, (String) null);
 					}
 
 					if (null != SocialLists.friendListArgS[i] && !online) {
 						mc.showMessage(false, (String) null, currentName + " has logged out",
-										MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
+										MessageType.FRIEND_STATUS, 0, (String) null);
 					}
 
 					SocialLists.friendListOld[i] = formerName;
@@ -611,12 +610,12 @@ public class PacketHandler {
 			} else if (SocialLists.friendList[i].equals(formerName)) {
 				if (SocialLists.friendListArgS[i] == null && online) {
 					mc.showMessage(false, (String) null, currentName + " has logged in",
-									MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
+									MessageType.FRIEND_STATUS, 0, (String) null);
 				}
 
 				if (SocialLists.friendListArgS[i] != null && !online) {
 					mc.showMessage(false, (String) null, currentName + " has logged out",
-									MessageType.FRIEND_STATUS, 0, (String) null, (String) null);
+									MessageType.FRIEND_STATUS, 0, (String) null);
 				}
 
 				SocialLists.friendList[i] = currentName;
@@ -705,16 +704,17 @@ public class PacketHandler {
 	private void receivePrivateMessage() {
 		String sender = packetsIncoming.readString();
 		String formerName = packetsIncoming.readString();
-		int icon = packetsIncoming.getUnsignedByte();
+		int icon = packetsIncoming.get32();
 		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
-		mc.showMessage(icon == 2, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName,
-						(String) null);
+		// Disabled because we're going to embed rank crowns in text
+		//mc.showMessage(true, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName, (String) null);
+		mc.showMessage(false, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
 	}
 
 	private void sendPrivateMessage() {
 		String var13 = packetsIncoming.readString();
 		String var14 = RSBufferUtils.getEncryptedString(packetsIncoming);
-		mc.showMessage(false, var13, var14, MessageType.PRIVATE_SEND, 0, var13, (String) null);
+		mc.showMessage(false, var13, var14, MessageType.PRIVATE_SEND, 0, var13);
 	}
 
 	private void setServerConfiguration() {
@@ -730,7 +730,7 @@ public class PacketHandler {
 		int wantExperienceElixirs, wantKeyboardShortcuts;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild;
-		int wantDecanting, wantCertsToBank;
+		int wantDecanting, wantCertsToBank, wantCustomRankDisplay;
 
 		if (!mc.gotInitialConfigs) {
 			serverName = this.getClientStream().readString();
@@ -769,6 +769,7 @@ public class PacketHandler {
 			wantWoodcuttingGuild = this.getClientStream().getUnsignedByte();
 			wantDecanting = this.getClientStream().getUnsignedByte();
 			wantCertsToBank = this.getClientStream().getUnsignedByte();
+			wantCustomRankDisplay = this.getClientStream().getUnsignedByte();
 		} else {
 			serverName = packetsIncoming.readString();
 			playerLevelLimit = packetsIncoming.getUnsignedByte();
@@ -806,6 +807,7 @@ public class PacketHandler {
 			wantWoodcuttingGuild = packetsIncoming.getUnsignedByte();
 			wantDecanting = packetsIncoming.getUnsignedByte();
 			wantCertsToBank = packetsIncoming.getUnsignedByte();
+			wantCustomRankDisplay = packetsIncoming.getUnsignedByte();
 		}
 
 		if (mc.DEBUG) {
@@ -842,7 +844,8 @@ public class PacketHandler {
 				"\nS_WANT_EXP_INFO " + wantExpInfo +
 				"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild +
 				"\nS_WANT_DECANTING " + wantDecanting +
-				"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank
+				"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
+					"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay
 			);
 		}
 
@@ -881,6 +884,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false");
 		props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false");
 		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
+		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false");
 
 		Config.updateServerConfiguration(props);
 
@@ -922,7 +926,7 @@ public class PacketHandler {
 		mc.setLocalPlayerZ(mc.getLocalPlayerZ() - mc.getMidRegionBaseZ());
 
 		int tileSize = mc.getTileSize();
-		int currentX = 64 + mc.getLocalPlayerX() * tileSize;
+		int currentX = mc.getLocalPlayerX() * tileSize + 64;
 		int currentZ = mc.getLocalPlayerZ() * tileSize + 64;
 		mc.setPlayerCount(0);
 		if (needNextRegion) {
@@ -933,7 +937,7 @@ public class PacketHandler {
 		}
 
 		mc.setLocalPlayer(
-			mc.createPlayer(currentZ, mc.getM_Zc(), currentX, 1,
+			mc.createPlayer(currentZ, mc.getLocalPlayerServerIndex(), currentX, 1,
 					ORSCharacterDirection.lookup(direction)
 			)
 		);
@@ -941,7 +945,7 @@ public class PacketHandler {
 		int dir = packetsIncoming.getBitMask(8);
 
 		for (int var9 = 0; dir > var9; ++var9) {
-			ORSCharacter var34 = mc.getKnownPlayer(var9 + 1);
+			ORSCharacter playerToShow = mc.getKnownPlayer(var9 + 1);
 			int needsUpdate = packetsIncoming.getBitMask(1);
 			if (needsUpdate != 0) {
 				int updateType = packetsIncoming.getBitMask(1);
@@ -950,12 +954,12 @@ public class PacketHandler {
 					if (needsNextSprite == 3) {
 						continue;
 					}
-					var34.animationNext = packetsIncoming.getBitMask(2) + (needsNextSprite << 2);
+					playerToShow.animationNext = packetsIncoming.getBitMask(2) + (needsNextSprite << 2);
 				} else {
 					int modelIndex = packetsIncoming.getBitMask(3);
-					int var33 = var34.waypointCurrent;
-					int var15 = var34.waypointsX[var33];
-					int var16 = var34.waypointsZ[var33];
+					int var33 = playerToShow.waypointCurrent;
+					int var15 = playerToShow.waypointsX[var33];
+					int var16 = playerToShow.waypointsZ[var33];
 					if (modelIndex == 2 || modelIndex == 1 || modelIndex == 3) {
 						var15 += tileSize;
 					}
@@ -967,17 +971,17 @@ public class PacketHandler {
 					if (modelIndex == 4 || modelIndex == 3 || modelIndex == 5) {
 						var16 += tileSize;
 					}
-					var34.animationNext = modelIndex;
+					playerToShow.animationNext = modelIndex;
 					if (modelIndex == 0 || modelIndex == 1 || modelIndex == 7) {
 						var16 -= tileSize;
 					}
-					var34.waypointCurrent = var33 = (1 + var33) % 10;
-					var34.waypointsX[var33] = var15;
-					var34.waypointsZ[var33] = var16;
+					playerToShow.waypointCurrent	= var33 = (1 + var33) % 10;
+					playerToShow.waypointsX[var33] = var15;
+					playerToShow.waypointsZ[var33] = var16;
 				}
 			}
 
-			mc.setPlayer(mc.getPlayerCount(), var34);
+			mc.setPlayer(mc.getPlayerCount(), playerToShow);
 			mc.setPlayerCount(mc.getPlayerCount() + 1);
 		}
 
@@ -1282,7 +1286,7 @@ public class PacketHandler {
 						mc.showMessage(false, (String) null,
 										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": "
 														+ npc.message,
-										MessageType.QUEST, 0, (String) null, "@yel@");
+										MessageType.QUEST, 0, (String) null);
 					}
 				}
 
@@ -1312,7 +1316,7 @@ public class PacketHandler {
 
 	private void loadArea() {
 		mc.setLoadingArea(true);
-		mc.setM_Zc(packetsIncoming.getShort());
+		mc.setLocalPlayerServerIndex(packetsIncoming.getShort());
 		mc.setWorldOffsetX(packetsIncoming.getShort());
 		mc.setWorldOffsetZ(packetsIncoming.getShort());
 		mc.setRequestedPlane(packetsIncoming.getShort());
@@ -1458,7 +1462,7 @@ public class PacketHandler {
 	}
 
 	private void updateOptionsMenuSettings() {
-		mc.setAdminRights(packetsIncoming.getUnsignedByte() == 1);
+		//mc.setGroupID(packetsIncoming.getByte());
 		mc.setOptionCameraModeAuto(packetsIncoming.getUnsignedByte() == 1);
 		mc.setOptionMouseButtonOne(packetsIncoming.getUnsignedByte() == 1);
 		mc.setOptionSoundDisabled(packetsIncoming.getUnsignedByte() == 1);
@@ -1840,7 +1844,6 @@ public class PacketHandler {
 
 	private void drawNearbyPlayers() {
 		int playerCount = packetsIncoming.getShort();
-
 		for (int pp = 0; playerCount > pp; ++pp) {
 			int playerServerIndex = packetsIncoming.getShort();
 			ORSCharacter player = mc.getPlayerFromServer(playerServerIndex);
@@ -1851,27 +1854,42 @@ public class PacketHandler {
 					player.bubbleTimeout = 150;
 					player.bubbleItem = itemType;
 				}
-			} else if (updateType == 1) {
-				if (null != player) {
-					int crownID = packetsIncoming.getUnsignedByte();
+			} else if (updateType == 1 || updateType == 6) {
+				if (updateType == 1) {
+					int crownID = packetsIncoming.get32();
 					String message = packetsIncoming.readString();
-					boolean var29 = false;
-					String displayName = StringUtil.displayNameToKey(player.accountName);
-					if (null != displayName) {
-						for (int modelIndex = 0; modelIndex < SocialLists.ignoreListCount; ++modelIndex) {
-							if (displayName.equals(
-											StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
-								var29 = true;
-								break;
+					if(null != player) {
+						boolean var29 = false;
+						String displayName = StringUtil.displayNameToKey(player.accountName);
+						if (null != displayName) {
+							for (int modelIndex = 0; modelIndex < SocialLists.ignoreListCount; ++modelIndex) {
+								if (displayName.equals(
+									StringUtil.displayNameToKey(SocialLists.ignoreList[modelIndex]))) {
+									var29 = true;
+									break;
+								}
 							}
 						}
-					}
 
-					if (!var29) {
-						player.messageTimeout = 150;
+						if (!var29) {
+							player.messageTimeout = 150;
+							player.message = message;
+							mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.getStaffName(false) : player.getStaffName(false)), player.message,
+								MessageType.CHAT, crownID, player.accountName);
+
+						}
+					}
+				}
+				else {
+					String message = packetsIncoming.readString();
+
+					if(null != player) {
 						player.message = message;
-						mc.showMessage(crownID == 2, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.displayName : player.displayName), player.message,
-										MessageType.CHAT, crownID, player.accountName, (String) null);
+						player.messageTimeout = 150;
+						if (mc.getLocalPlayer() == player) {
+							mc.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.getStaffName(true) : player.getStaffName(true)), player.message, MessageType.QUEST, 0,
+								player.accountName);
+						}
 					}
 				}
 			} else if (updateType == 2) {
@@ -1908,32 +1926,38 @@ public class PacketHandler {
 					player.attackingPlayerServerIndex = shooterServerIndex;
 					player.incomingProjectileSprite = sprite;
 				}
-			} else if (updateType == 6 && player != null) {
-				String message = packetsIncoming.readString();
-
-				player.message = message;
-				player.messageTimeout = 150;
-				if (mc.getLocalPlayer() == player) {
-					mc.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.displayName : player.displayName), player.message, MessageType.QUEST, 0,
-									player.accountName, (String) null);
-				}
 			} else if (updateType == 5) {
 				if (player == null) {
-					packetsIncoming.getShort();
+					//packetsIncoming.getShort();
 					packetsIncoming.readString();
-					packetsIncoming.readString();
-					int vtmp = packetsIncoming.getUnsignedByte();
-					packetsIncoming.packetEnd += 6 + vtmp;
-				} else {
-					packetsIncoming.getShort();
-					player.displayName = packetsIncoming.readString();
-					player.accountName = packetsIncoming.readString();
+					//packetsIncoming.readString();
 					int itemCount = packetsIncoming.getUnsignedByte();
+					for (int i = 0; i < itemCount; ++i)
+						packetsIncoming.getShort();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					if (packetsIncoming.getByte() == 1)
+						packetsIncoming.readString();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.getUnsignedByte();
+					packetsIncoming.get32();
+				} else {
+					//packetsIncoming.getShort();
 
+					String playerName	= packetsIncoming.readString();
+					player.displayName = player.accountName = playerName;
+					//player.displayName = packetsIncoming.readString();
+					//player.accountName = packetsIncoming.readString();
+
+					int itemCount = packetsIncoming.getUnsignedByte();
 					for (int i = 0; i < itemCount; ++i) {
 						player.layerAnimation[i] = packetsIncoming.getShort();
 					}
-
 					for (int i = itemCount; i < 12; ++i) {
 						player.layerAnimation[i] = 0;
 					}
@@ -1949,6 +1973,11 @@ public class PacketHandler {
 					} else {
 						player.clanTag = null;
 					}
+
+					player.isInvisible		= packetsIncoming.getByte() > 0 ? true : false;
+					player.isInvulnerable	= packetsIncoming.getByte() > 0 ? true : false;
+					player.groupID			= packetsIncoming.getByte();
+					player.icon				= packetsIncoming.get32();
 				}
 			}
 		}

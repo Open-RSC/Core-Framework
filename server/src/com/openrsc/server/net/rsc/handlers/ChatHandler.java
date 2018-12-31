@@ -9,12 +9,13 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.Constants;
 
 public final class ChatHandler implements PacketHandler {
 
 	public void handlePacket(Packet p, Player sender) throws Exception {
 		if (sender.isMuted()) {
-			sender.message("You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
+			sender.message(Constants.GameServer.MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
 			return;
 		}
 

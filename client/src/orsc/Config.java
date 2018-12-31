@@ -76,6 +76,7 @@ public class Config {
 	public static boolean S_WANT_WOODCUTTING_GUILD = false;
 	public static boolean S_WANT_DECANTING = false;
 	public static boolean S_WANT_CERTS_TO_BANK = false;
+	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
