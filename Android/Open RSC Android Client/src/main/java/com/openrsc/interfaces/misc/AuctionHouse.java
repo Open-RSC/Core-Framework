@@ -2,16 +2,15 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import orsc.enumerations.MessageType;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-
-import orsc.enumerations.MessageType;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.two.GraphicsController;
-import orsc.mudclient;
 
 public final class AuctionHouse {
 	private int x, y;
@@ -63,7 +62,7 @@ public final class AuctionHouse {
 		textField_price = myAuctions.addLeftTextEntry(x + 60, y + 130, 70, 18, 1, 8, false, true);
 		textField_amount = myAuctions.addLeftTextEntry(x + 60, y + 209, 70, 18, 1, 8, false, true);
 		textField_priceEach = myAuctions.addLeftTextEntry(x + 60, y + 169, 70, 18, 1, 8, false, true);
-
+		
 		myAuctionScrollHandle = myAuctions.addScrollingList2(x + 216, y + 74, 270, 179, 1000, 7, true);
 	}
 
@@ -125,11 +124,11 @@ public final class AuctionHouse {
 				setVisible(false);
 			}
 		});
-
+		
 		if (activeInterface == 0) {
 			drawAuctionMenu(graphics);
 		} else if (activeInterface == 1) {
-			drawMyAuctions(graphics);
+			drawMyAuctions(graphics);	
 		}
 		return true;
 	}
@@ -240,7 +239,7 @@ public final class AuctionHouse {
 
 		//graphics.drawString("Fee: 2.5%", x + 5 + 38, y + 280, 0xffffff, 0);
 		// END RIGHT SIDE
-
+		
 		if(selectItemAdd == 1) {
 			//graphics.drawString("Auction House has a fee of 2.5% upon adding your sale", x + 176, y + 285, 0xffffff, 0);
 			graphics.drawString("My Inventory", x + 189, y + 64, 0xFFFF00, 1);
@@ -286,8 +285,8 @@ public final class AuctionHouse {
 							int amount = mc.getInventoryCount(itemID);
 							if(itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
 								mc.showMessage(false, (String) null, "This object cannot be added to auction", MessageType.GAME,
-										0, (String) null, (String) null);
-								return;
+										0, (String) null);
+								return; 
 							}
 							if (amount > 0) {
 								int price = EntityHandler.getItemDef(itemID).getBasePrice();
@@ -320,7 +319,7 @@ public final class AuctionHouse {
 					}
 				});
 			}
-
+			
 			LinkedList<AuctionItem> filteredList = new LinkedList<AuctionItem>();
 			for (AuctionItem item : auctionItems) {
 				if (item.getSeller().equalsIgnoreCase(mc.getUsername())) {
@@ -442,7 +441,7 @@ public final class AuctionHouse {
 			selectItemAdd = 0;
 			newAuctionItem = null;
 			newAuctionInventoryIndex = -1;
-		}
+		} 
 	}
 
 	private int selectedFilter;
@@ -451,7 +450,7 @@ public final class AuctionHouse {
 	private String sortBy = "Price Down";
 
 	private void drawButton(GraphicsController graphics, int x, int y, int width, int height, String text,
-							boolean checked, ButtonHandler handler) {
+			boolean checked, ButtonHandler handler) {
 		int allColor = 0x333333;
 		if (checked) {
 			allColor = 0x659CDE;
@@ -470,7 +469,7 @@ public final class AuctionHouse {
 	}
 
 	private void drawButtonFancy(GraphicsController graphics, int x, int y, int width, int height, String text,
-								 boolean checked, ButtonHandler handler) {
+			boolean checked, ButtonHandler handler) {
 		int allColor = 0x0A2B56;
 		if (checked) {
 			allColor = 0x659CDE;
@@ -489,7 +488,7 @@ public final class AuctionHouse {
 	}
 
 	private void drawTextHit(GraphicsController graphics, int x, int y, int width, int height, String text,
-							 boolean checked, ButtonHandler handler) {
+			boolean checked, ButtonHandler handler) {
 		int allColor = 0xffffff;
 		if (checked) {
 			allColor = 0x6b8e23;
@@ -652,7 +651,7 @@ public final class AuctionHouse {
 				nameFilter = new String[] { "-rune", "arrow", "bolt" };
 			} else if (selectedFilter == 5) {
 				nameFilter = new String[] { "uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone" };
-				exactNameFilter = new String[] { "opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
+				exactNameFilter = new String[] { "opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace", 
 						"gold necklace", "holy symbol of saradomin", "unblessed holy symbol" };
 			} else if (selectedFilter == 6) {
 				nameFilter = new String[] { " ore", "coal", "bar", "clay" };
@@ -669,14 +668,14 @@ public final class AuctionHouse {
 			}
 			if (selectedFilter == 9) {
 				nameFilter = resources;
-				exactNameFilter = new String[] {
+				exactNameFilter = new String[] { 
 						"fur", "leather", "wool", "bow string", "flax", "cow hide",
-						"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
-						"needle", "thread", "holy", "water", "cadavaberries",
+						"knife", "egg", "bucket", "milk", "flour", "skull", "grain", 
+						"needle", "thread", "holy", "water", "cadavaberries", 
 						"pot", "jug", "grapes", "shears", "tinderbox",
-						"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
-						"flier", "garlic", "redberries", "rope", "bad wine", "cape",
-						"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
+						"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk", 
+						"flier", "garlic", "redberries", "rope", "bad wine", "cape", 
+						"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon", 
 						"fishing bait", "feather"
 				};
 			}
@@ -708,7 +707,7 @@ public final class AuctionHouse {
 					}
 				}
 			}
-
+			
 			if (nameFilter != null || commandFilter != null || exactNameFilter != null) {
 				if (skip) {
 					continue;
@@ -746,7 +745,7 @@ public final class AuctionHouse {
 				}
 				auctionMenu.setListEntry(auctionScrollHandle, i + 1, "", 0, (String) null, (String) null);
 
-				if (i < listStartPoint || i > listEndPoint)
+				if (i < listStartPoint || i > listEndPoint) 
 					continue;
 				AuctionItem ahItem = filteredList.get(i);
 				if (mc.getMouseX() >= (listX - 3) && mc.getMouseY() >= (listY - 5) && mc.getMouseX() <= listX + 384
@@ -839,7 +838,7 @@ public final class AuctionHouse {
 
 			graphics.drawString("Seller: " + ahItem.getSeller() , selectX + 8, selectY + 83, 0xffffff, 2);
 
-			if (mc.adminRights) {
+			if (mc.getLocalPlayer().isMod()) {
 				drawButton(graphics, selectX + 186, selectY + 68, 200, 22, "@red@[Staff] Delete Item", false, new ButtonHandler() {
 					@Override
 					void handle() {

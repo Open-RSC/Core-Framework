@@ -153,9 +153,7 @@ public class OnlineListInterface extends NComponent {
 						});
 						staffMenu.createOption("Summon", new MenuAction() {
 							@Override
-							public void action() {
-								getClient().sendCommandString("summon " + username);
-							}
+							public void action() { getClient().sendCommandString("summon " + username); }
 						});
 						staffMenu.createOption("Take", new MenuAction() {
 							@Override
@@ -189,7 +187,7 @@ public class OnlineListInterface extends NComponent {
 							}
 						});
 
-						if(getClient().adminRights)
+						if(getClient().getLocalPlayer().isMod())
 							rightClickMenu.createSubMenuOption("Staff >", null, staffMenu);
 						
 						rightClickMenu.show(userComp.x, userComp.y);

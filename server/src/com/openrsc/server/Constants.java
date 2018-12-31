@@ -186,6 +186,7 @@ public final class Constants {
 		public static double VALUABLE_DROP_RATIO = 0;
 		public static boolean VALUABLE_DROP_EXTRAS = false;
 		public static String VALUABLE_DROP_ITEMS = "";
+		public static boolean WANT_CUSTOM_RANK_DISPLAY = false;
 
 		/**
 		 *
@@ -231,7 +232,6 @@ public final class Constants {
 
 			SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 			SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
-
 			SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 			WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 			WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
@@ -263,6 +263,8 @@ public final class Constants {
 			WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
 			WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
 			WANT_CERTS_TO_BANK = Boolean.parseBoolean(props.getProperty("want_certs_to_bank"));
+			WANT_CUSTOM_RANK_DISPLAY = Boolean.parseBoolean(props.getProperty("want_custom_rank_display"));
+
 			NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
 			NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
 			NPC_KILL_MESSAGES_NPCs = props.getProperty("npc_kill_messages_npcs");

@@ -33,9 +33,48 @@ public final class ORSCharacter {
 	public int skullVisible = 0;
 	public int stepFrame;
 	public int waypointCurrent;
-
 	public int[] waypointsX = new int[10];
-
 	public int[] waypointsZ = new int[10];
 	public String clanTag;
+	public boolean isInvisible = false;
+	public boolean isInvulnerable = false;
+	public int icon = 0;
+	public int groupID = Group.DEFAULT_GROUP;
+
+	public boolean isSuperMod() {
+		return groupID == 2 || isAdmin();
+	}
+
+	public boolean isMod() {
+		return groupID == 3 || isSuperMod();
+	}
+
+	public boolean isDev() {
+		return groupID == 8 || isAdmin();
+	}
+
+	public boolean isEvent()
+	{
+		return groupID == 9 || isAdmin();
+	}
+
+	public boolean isOwner() {
+		return groupID == 0;
+	}
+
+	public boolean isAdmin() {
+		return groupID == 1 || isOwner();
+	}
+
+	public boolean isStaff(){
+		return isMod() || isDev() || isEvent();
+	}
+
+	public String getStaffName() {
+		return getStaffName(true);
+	}
+
+	public String getStaffName(boolean isMenu) {
+		return Group.getStaffPrefix(groupID, isMenu) + displayName;
+	}
 }

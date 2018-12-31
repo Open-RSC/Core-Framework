@@ -38193,8 +38193,8 @@ DROP TABLE IF EXISTS `openrsc_players`;
 CREATE TABLE IF NOT EXISTS `openrsc_players` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(12) NOT NULL DEFAULT '',
+  `group_id` int(10) DEFAULT 10,
   `email` varchar(255) DEFAULT NULL,
-  `group_id` int(10) DEFAULT 4,
   `pass` varchar(512) NOT NULL,
   `salt` varchar(250) NOT NULL DEFAULT '',
   `combat` int(10) DEFAULT 3,
@@ -38342,7 +38342,6 @@ CREATE TABLE IF NOT EXISTS `openrsc_trade_logs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
---
 -- Indexes for dumped tables
 --
 

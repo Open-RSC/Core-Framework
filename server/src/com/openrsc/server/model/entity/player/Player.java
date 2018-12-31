@@ -128,15 +128,15 @@ public final class Player extends Mob {
 		consumeTimer = System.currentTimeMillis() + l;
 	}
 
-        public long getLastSaveTime() {
-		return lastSaveTime;
-        }
+	public long getLastSaveTime() {
+	return lastSaveTime;
+	}
 
-        public void setLastSaveTime(long save) {
-		lastSaveTime = save;
-        }
+	public void setLastSaveTime(long save) {
+	lastSaveTime = save;
+	}
 
-        private long lastSaveTime = System.currentTimeMillis();
+	private long lastSaveTime = System.currentTimeMillis();
 
 	private int appearanceID;
 
@@ -282,7 +282,7 @@ public final class Player extends Mob {
 	/**
 	 * The main accounts group is
 	 */
-	private int groupID = 4;
+	private int groupID = Group.DEFAULT_GROUP;
 
 	/**
 	 * Is the player accessing their bank?
@@ -793,10 +793,6 @@ public final class Player extends Mob {
 		return fatigue;
 	}
 
-	public int getGroupID() {
-		return groupID;
-	}
-
 	public int getIncorrectSleepTimes() {
 		return incorrectSleepTries;
 	}
@@ -931,13 +927,12 @@ public final class Player extends Mob {
 		return throwingEvent;
 	}
 
-	public String getRankHeader() {
-		if (isAdmin()) {
-			return "@yel@";
-		} else if (groupID == 2) {
-			return "@gre@";
-		}
-		return "";
+	public String getStaffName() {
+		return getStaffName(true);
+	}
+
+	public String getStaffName(boolean isMenu) {
+		return Group.getStaffPrefix(this.getGroupID()) + getUsername();
 	}
 
 	public Channel getChannel() {
@@ -1129,8 +1124,41 @@ public final class Player extends Mob {
 		incorrectSleepTries++;
 	}
 
+	public int getGroupID() {
+		return groupID;
+	}
+
+	public void setGroupID(int id) {
+		getUpdateFlags().setAppearanceChanged(true);
+		groupID = id;
+	}
+
+	public boolean isOwner() {
+		return groupID == Group.OWNER;
+	}
+
 	public boolean isAdmin() {
-		return groupID == 1;
+		return groupID == Group.ADMIN || isOwner();
+	}
+
+	public boolean isSuperMod() {
+		return groupID == Group.SUPER_MOD || isAdmin();
+	}
+
+	public boolean isMod() {
+		return groupID == Group.MOD || isSuperMod();
+	}
+
+	public boolean isDev() {
+		return groupID == Group.DEV || isAdmin();
+	}
+
+	public boolean isEvent() {
+		return groupID == Group.EVENT || isAdmin();
+	}
+
+	public boolean isStaff(){
+		return isMod() || isDev() || isEvent();
 	}
 
 	public boolean isChangingAppearance() {
@@ -1155,10 +1183,6 @@ public final class Player extends Mob {
 
 	public boolean isMaleGender() {
 		return maleGender;
-	}
-
-	public boolean isMod() {
-		return groupID == 2 || isAdmin();
 	}
 
 	public boolean isMuted() {
@@ -1574,10 +1598,6 @@ public final class Player extends Mob {
 		ActionSender.sendFatigue(this);
 	}
 
-	public void setGroupID(int id) {
-		groupID = id;
-	}
-
 	public void setInBank(boolean inBank) {
 		this.inBank = inBank;
 	}
@@ -1961,18 +1981,31 @@ public final class Player extends Mob {
 		return prayers;
 	}
 
-	public int getIcon() {
-		if (groupID == 1)
-			return 2;
-		if (groupID == 2)
-			return 1;
-		if (isIronMan(1))
-			return 5;
-		if (isIronMan(2))
-			return 6;
-		if (isIronMan(3))
-			return 7;
-		return 0;
+	public int getIcon(){
+		if(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY) {
+			if (isAdmin())
+				return 0x0100FF00;
+
+			if (isMod())
+				return 0x010000FF;
+
+			if (isDev())
+				return 0x01FF0000;
+
+			if (isEvent())
+				return 0x014D33BD;
+
+			return 0;
+		}
+		else {
+			if (isAdmin())
+				return 0x02FFFFFF;
+
+			if (isMod())
+				return 0x03FFFFFF;
+
+			return 0;
+		}
 	}
 
 	public Trade getTrade() {
@@ -2044,4 +2077,33 @@ public final class Player extends Mob {
 		}
 	}
 
+	public void setInvisible(boolean invisible)
+	{
+		getUpdateFlags().setAppearanceChanged(true);
+		this.getCache().store("invisible", invisible);
+	}
+	public void toggleInvisible(){
+		setInvisible(!isInvisible());
+	}
+	public boolean isInvisible() {
+		if(!getCache().hasKey("invisible"))
+			return false;
+
+		return getCache().getBoolean("invisible");
+	}
+
+	public void setInvulnerable(boolean invulnerable)
+	{
+		getUpdateFlags().setAppearanceChanged(true);
+		this.getCache().store("invulnerable", invulnerable);
+	}
+	public boolean isInvulnerable() {
+		if(!getCache().hasKey("invulnerable"))
+			return false;
+
+		return getCache().getBoolean("invulnerable");
+	}
+	public void toggleInvulnerable(){
+		setInvulnerable(!isInvulnerable());
+	}
 }
