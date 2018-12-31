@@ -1,10 +1,6 @@
 package orsc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -19,7 +15,7 @@ public class Config {
     public static final int SERVER_PORT = 43594;
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
-    public static final int ANDROID_CLIENT_VERSION = 2;
+    public static final int ANDROID_CLIENT_VERSION = 3;
     public static final boolean MEMBERS_FEATURES = true;
     public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
     public static final boolean CACHE_APPEND_VERSION = false;
@@ -28,6 +24,7 @@ public class Config {
     public static boolean F_ANDROID_BUILD = true; // Note: this MUST be set to true for Android or it will crash on Android!
     //public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
     public static String F_CACHE_DIR = "Cache";
+
 
     /* Configurable: */
     public static boolean C_EXPERIENCE_DROPS = false;
@@ -72,12 +69,14 @@ public class Config {
     public static boolean S_WANT_CUSTOM_BANKS = false;
     public static boolean S_WANT_BANK_PINS = false;
     public static boolean S_WANT_BANK_NOTES = false;
+	public static boolean S_WANT_CERT_DEPOSIT = false;
     public static boolean S_CUSTOM_FIREMAKING = false;
     public static boolean S_WANT_DROP_X = false;
     public static boolean S_WANT_EXP_INFO = false;
     public static boolean S_WANT_WOODCUTTING_GUILD = false;
     public static boolean S_WANT_DECANTING = false;
     public static boolean S_WANT_CERTS_TO_BANK = false;
+	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
 
     // if you change these, and the config file,
     // they will also change the options menu to

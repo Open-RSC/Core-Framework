@@ -285,22 +285,27 @@ public final class GameStateUpdater {
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 						|| otherPlayer.isTeleporting() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
 						|| !visibleConditionOverride) {
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(3, 2);
+					positionBuilder.writeBits(1, 1); //Needs Update
+					positionBuilder.writeBits(1, 1); //Update Type
+					positionBuilder.writeBits(3, 2); //???
 					it$.remove();
 					playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
 				} else {
-					if (otherPlayer.hasMoved()) {
-						positionBuilder.writeBits(1, 1);
-						positionBuilder.writeBits(0, 1);
-						positionBuilder.writeBits(otherPlayer.getSprite(), 3);
-					} else if (otherPlayer.spriteChanged()) {
-						positionBuilder.writeBits(1, 1);
-						positionBuilder.writeBits(1, 1);
-						positionBuilder.writeBits(otherPlayer.getSprite(), 4);
-					} else {
-						positionBuilder.writeBits(0, 1);
+					if(!otherPlayer.hasMoved() && !otherPlayer.spriteChanged())
+					{
+						positionBuilder.writeBits(0, 1); //Needs Update
+					}
+					else {
+						// The player is actually going to be updated
+						if (otherPlayer.hasMoved()) {
+							positionBuilder.writeBits(1, 1); //Needs Update
+							positionBuilder.writeBits(0, 1); //Update Type
+							positionBuilder.writeBits(otherPlayer.getSprite(), 3);
+						} else if (otherPlayer.spriteChanged()) {
+							positionBuilder.writeBits(1, 1); //Needs Update
+							positionBuilder.writeBits(1, 1); //Update Type
+							positionBuilder.writeBits(otherPlayer.getSprite(), 4);
+						}
 					}
 				}
 			}
@@ -455,9 +460,8 @@ public final class GameStateUpdater {
 					int chatType = cm.getRecipient() == null ? 1 : 6;
 					appearancePacket.writeByte(chatType);
 					if (chatType == 1) {
-						if (cm.getSender() != null)
-							appearancePacket
-							.writeByte(cm.getSender().isPlayer() ? ((Player) cm.getSender()).getIcon() : 0);
+						if (cm.getSender() != null && cm.getSender() instanceof Player)
+							appearancePacket.writeInt(((Player)(cm.getSender())).getIcon());
 					}
 					appearancePacket.writeString(cm.getMessageString());
 				}
@@ -487,11 +491,12 @@ public final class GameStateUpdater {
 				Player playerNeedingAppearanceUpdate;
 				while ((playerNeedingAppearanceUpdate = playersNeedingAppearanceUpdate.poll()) != null) {
 					PlayerAppearance appearance = playerNeedingAppearanceUpdate.getSettings().getAppearance();
-					appearancePacket.writeShort(playerNeedingAppearanceUpdate.getIndex());
+
+					appearancePacket.writeShort((short)playerNeedingAppearanceUpdate.getIndex());
 					appearancePacket.writeByte((byte) 5);
-					appearancePacket.writeShort(0);
+					//appearancePacket.writeShort(0);
 					appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
-					appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
+					//appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
 
 					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
 					for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
@@ -510,6 +515,11 @@ public final class GameStateUpdater {
 					} else {
 						appearancePacket.writeByte(0);
 					}
+
+					appearancePacket.writeByte(playerNeedingAppearanceUpdate.isInvisible() ? 1 : 0);
+					appearancePacket.writeByte(playerNeedingAppearanceUpdate.isInvulnerable() ? 1 : 0);
+					appearancePacket.writeByte(playerNeedingAppearanceUpdate.getGroupID());
+					appearancePacket.writeInt(playerNeedingAppearanceUpdate.getIcon());
 				}
 
 				player.write(appearancePacket.toPacket());

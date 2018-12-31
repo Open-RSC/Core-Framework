@@ -182,7 +182,8 @@ public class DatabasePlayerLoader {
 			statement.setInt(21, s.getCombatStyle());
 			statement.setLong(22, s.getMuteExpires());
 			statement.setLong(23, s.getBankSize());
-			statement.setInt(24, s.getDatabaseID());
+			statement.setLong(24, s.getGroupID());
+			statement.setInt(25, s.getDatabaseID());
 			statement.executeUpdate();
 
 			// PRIVACY SETTINGS
@@ -795,7 +796,7 @@ public class DatabasePlayerLoader {
 				+ "invitems`(`playerID`, `id`, `amount`, `wielded`, `slot`) VALUES(?, ?, ?, ?, ?)";
 
 		private static final String save_UpdateBasicInfo = "UPDATE `" + PREFIX
-				+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=? WHERE `id`=?";
+				+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";
 
 		private static final String save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 

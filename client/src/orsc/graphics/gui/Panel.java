@@ -32,7 +32,7 @@ public final class Panel {
 	private int[] controlSpaceHeight;
 	private int[] controlSpaceTextHeight;
 	public int[] controlListCurrentSize;
-	private int[][] controlListEntryInt;
+	private int[][] controlListEntryCrown;
 	private String[][] controlListEntryString;
 	private String[][] controlListEntryString2;
 	private String[][] controlListEntryString3;
@@ -70,7 +70,7 @@ public final class Panel {
 			this.controlSelectedListIndex = new int[maxControls];
 			this.controlClickedListIndex = new int[maxControls];
 			this.controlType = new PanelControlType[maxControls];
-			this.controlListEntryInt = new int[maxControls][];
+			this.controlListEntryCrown = new int[maxControls][];
 			this.controlText = new String[maxControls];
 			this.isScrolling = new boolean[maxControls];
 			this.controlScrollAmount = new int[maxControls];
@@ -229,7 +229,7 @@ public final class Panel {
 			this.controlSpaceTextHeight[this.controlCount] = spaceTextHeight;
 			this.controlMaxSize[this.controlCount] = listSize;
 			this.controlListEntryString[this.controlCount] = new String[listSize];
-			this.controlListEntryInt[this.controlCount] = new int[listSize];
+			this.controlListEntryCrown[this.controlCount] = new int[listSize];
 			this.controlListEntryString2[this.controlCount] = new String[listSize];
 			this.controlListEntryString3[this.controlCount] = new String[listSize];
 			this.controlListCurrentSize[this.controlCount] = 0;
@@ -258,7 +258,7 @@ public final class Panel {
 			this.controlHeight[this.controlCount] = height;
 			this.controlMaxSize[this.controlCount] = listSize;
 			this.controlListEntryString[this.controlCount] = new String[listSize];
-			this.controlListEntryInt[this.controlCount] = new int[listSize];
+			this.controlListEntryCrown[this.controlCount] = new int[listSize];
 			this.controlListEntryString2[this.controlCount] = new String[listSize];
 			this.controlListEntryString3[this.controlCount] = new String[listSize];
 			this.controlListCurrentSize[this.controlCount] = 0;
@@ -288,7 +288,7 @@ public final class Panel {
 			this.controlListCurrentSize[this.controlCount] = 0;
 			this.controlScrollAmount[this.controlCount] = 0;
 			this.controlListEntryString[this.controlCount] = new String[maxSize];
-			this.controlListEntryInt[this.controlCount] = new int[maxSize];
+			this.controlListEntryCrown[this.controlCount] = new int[maxSize];
 			this.controlListEntryString2[this.controlCount] = new String[maxSize];
 			this.controlListEntryString3[this.controlCount] = new String[maxSize];
 			return this.controlCount++;
@@ -317,7 +317,7 @@ public final class Panel {
 		}
 	}
 
-	public final void addToList(String str, boolean scrollToEnd, int intVal, String str3, String str2, int control) {
+	public final void addToList(String str, boolean scrollToEnd, int crownId, String str3, String str2, int control) {
 		try {
 			
 			int size = this.controlListCurrentSize[control]++;
@@ -327,14 +327,14 @@ public final class Panel {
 
 				for (int i = 0; size > i; ++i) {
 					this.controlListEntryString[control][i] = this.controlListEntryString[control][1 + i];
-					this.controlListEntryInt[control][i] = this.controlListEntryInt[control][i + 1];
+					this.controlListEntryCrown[control][i] = this.controlListEntryCrown[control][i + 1];
 					this.controlListEntryString2[control][i] = this.controlListEntryString2[control][i + 1];
 					this.controlListEntryString3[control][i] = this.controlListEntryString3[control][i + 1];
 				}
 			}
 
 			this.controlListEntryString[control][size] = str;
-			this.controlListEntryInt[control][size] = intVal;
+			this.controlListEntryCrown[control][size] = crownId;
 
 			this.controlListEntryString2[control][size] = str2;
 			this.controlListEntryString3[control][size] = str3;
@@ -344,7 +344,7 @@ public final class Panel {
 
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
-					"qa.JA(" + (str != null ? "{...}" : "null") + ',' + scrollToEnd + ',' + intVal + ','
+					"qa.JA(" + (str != null ? "{...}" : "null") + ',' + scrollToEnd + ',' + crownId + ','
 							+ (str3 != null ? "{...}" : "null") + ',' + (str2 != null ? "{...}" : "null") + ','
 							+ "dummy" + ',' + control + ')');
 		}
@@ -391,7 +391,7 @@ public final class Panel {
 					case SCROLLING_LIST:
 						this.renderScrollingList(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
 								this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
-								this.controlListEntryString[i], this.controlListEntryInt[i],
+								this.controlListEntryString[i], this.controlListEntryCrown[i],
 								this.controlScrollAmount[i]);
 						break;
 					case TOGGLE_BUTTON:
@@ -417,13 +417,13 @@ public final class Panel {
 					case SCROLLING_LIST_2:
 						this.renderScrollingList2(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
 								this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
-								this.controlListEntryString[i], this.controlListEntryInt[i],
+								this.controlListEntryString[i], this.controlListEntryCrown[i],
 								this.controlScrollAmount[i]);
 						break;
 					case SCROLLING_LIST3:
 						this.renderScrollingList3(i, this.controlX[i], this.controlY[i], this.controlWidth[i],
 								this.controlHeight[i], this.controlArgInt[i], this.controlListCurrentSize[i],
-								this.controlListEntryString[i], this.controlListEntryInt[i],
+								this.controlListEntryString[i], this.controlListEntryCrown[i],
 								this.controlScrollAmount[i], this.controlSpaceHeight[i], this.controlSpaceTextHeight[i]);
 						break;
 					case HORIZ_LINE:
@@ -485,7 +485,7 @@ public final class Panel {
 	public final int getControlSelectedListInt(int controlID, int entryID) {
 		try {
 
-			return this.controlListEntryInt[controlID][entryID];
+			return this.controlListEntryCrown[controlID][entryID];
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "qa.C(" + controlID + ',' + "dummy" + ')');
 		}
@@ -807,7 +807,7 @@ public final class Panel {
 	
 
 	private final void renderScrollingList(int controlIndex, int x, int y, int width, int height, int font,
-			int entryCount, String[] entriesString, int[] entriesInt, int scroll) {
+			int entryCount, String[] entriesString, int[] entriesCrowns, int scroll) {
 		try {
 			
 			int maxLines = height / this.graphics.fontHeight(font);
@@ -896,7 +896,7 @@ public final class Panel {
 					color = 16711680;
 				}
 
-				this.graphics.drawColoredString(x + 2, lineY, entriesString[line], font, color, entriesInt[line]);
+				this.graphics.drawColoredString(x + 2, lineY, entriesString[line], font, color, entriesCrowns[line]);
 				lineY += this.graphics.fontHeight(font);
 				if (lineY >= height + y) {
 					break;
@@ -906,7 +906,7 @@ public final class Panel {
 		} catch (RuntimeException var17) {
 			throw GenUtil.makeThrowable(var17,
 					"qa.D(" + height + ',' + x + ',' + controlIndex + ',' + (entriesString != null ? "{...}" : "null")
-							+ ',' + entryCount + ',' + font + ',' + y + ',' + (entriesInt != null ? "{...}" : "null")
+							+ ',' + entryCount + ',' + font + ',' + y + ',' + (entriesCrowns != null ? "{...}" : "null")
 							+ ',' + "dummy" + ',' + scroll + ',' + width + ')');
 		}
 	}
@@ -1227,11 +1227,11 @@ public final class Panel {
 		return focusControlIndex == i;
 	}
 
-	public final void setListEntry(int controlID, int entryID, String str, int argInt, String str2, String str3) {
+	public final void setListEntry(int controlID, int entryID, String str, int crownId, String str2, String str3) {
 		try {
 			
 			this.controlListEntryString[controlID][entryID] = str;
-			this.controlListEntryInt[controlID][entryID] = argInt;
+			this.controlListEntryCrown[controlID][entryID] = crownId;
 			this.controlListEntryString2[controlID][entryID] = str2;
 			this.controlListEntryString3[controlID][entryID] = str3;
 			if (entryID + 1 > this.controlListCurrentSize[controlID]) {
@@ -1239,7 +1239,7 @@ public final class Panel {
 			}
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"qa.Q(" + entryID + ',' + (str3 != null ? "{...}" : "null") + ',' + "dummy" + ',' + argInt + ','
+					"qa.Q(" + entryID + ',' + (str3 != null ? "{...}" : "null") + ',' + "dummy" + ',' + crownId + ','
 							+ (str2 != null ? "{...}" : "null") + ',' + (str != null ? "{...}" : "null") + ','
 							+ controlID + ')');
 		}

@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
@@ -23,7 +24,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -186,7 +186,7 @@ public class LoginPacketHandler {
 					"INSERT INTO users (username, group_id, password, email, language, registered, registration_ip, last_visit, php_timezone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			
 			statement.setString(1, user);
-			statement.setInt(2, 4);
+			statement.setInt(2, Group.DEFAULT_GROUP);
 			statement.setString(3, sha1(pass));
 			statement.setString(4, email);
 			statement.setString(5, "English");

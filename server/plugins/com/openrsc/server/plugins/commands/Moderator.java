@@ -6,6 +6,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -20,9 +21,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public final class Moderator implements CommandListener {
+
+	public static final String messagePrefix =  Constants.GameServer.MESSAGE_PREFIX;
+	public static final String badSyntaxPrefix = Constants.GameServer.MESSAGE_PREFIX + "Invalid Syntax: ::";
 
 	public static final World world = World.getWorld();
 
@@ -38,15 +43,13 @@ public final class Moderator implements CommandListener {
 			Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641) };
 
 	private void sendInvalidArguments(Player p, String... strings) {
-		StringBuilder sb = new StringBuilder(COMMAND_PREFIX + "Invalid arguments @red@Syntax: @whi@");
+		StringBuilder sb = new StringBuilder(messagePrefix + "Invalid arguments @red@Syntax: @whi@");
 
 		for (int i = 0; i < strings.length; i++) {
 			sb.append(i == 0 ? strings[i].toUpperCase() : strings[i]).append(i == (strings.length - 1) ? "" : " ");
 		}
 		p.message(sb.toString());
 	}
-
-	private static final String COMMAND_PREFIX = "@red@SERVER: @whi@";
 
 	@Override
 	public void onCommand(String command, String[] args, Player player) {
@@ -243,7 +246,7 @@ public final class Moderator implements CommandListener {
 				newStr += args[i] + " ";
 			}
 			GameLogging.addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr = player.getRankHeader() + player.getUsername() + ": @whi@" + newStr;
+			newStr = player.getStaffName() + player.getUsername() + ": @whi@" + newStr;
 			for (Player p : World.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr, player.getIcon());
 			}
@@ -260,17 +263,113 @@ public final class Moderator implements CommandListener {
 			}
 			return;
 		}
-		if (command.equals("invis")) {
-			if (player.getAttribute("invisible", false)) {
-				player.setAttribute("invisible", false);
-			} else {
-				player.setTeleporting(true);
-				player.setAttribute("invisible", true);
-			}
-			player.message(COMMAND_PREFIX + "You are now "
-					+ (player.getAttribute("invisible", false) ? "invisible" : "visible"));
+		if (command.equalsIgnoreCase("invisible") || command.equalsIgnoreCase("invis"))
+		{
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
 
-			GameLogging.addQuery(new StaffLog(player, 14, "Invisible: " + (player.getAttribute("invisible", false) ? "Yes" : "No")));
+			if(p != null)
+			{
+				p.toggleInvisible();
+				String invisibleText = p.isInvisible() ? "invisible" : "visible";
+				player.message(messagePrefix + p.getUsername() + " is now " + invisibleText);
+				p.message(messagePrefix + "A staff member has made you " + invisibleText);
+				GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
+			}
+			else
+			{
+				player.message(messagePrefix + "Invalid name or player is not online");
+			}
+		}
+		if (command.equalsIgnoreCase("invulnerable") || command.equalsIgnoreCase("invul"))
+		{
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p != null)
+			{
+				p.toggleInvulnerable();
+				String invulnerableText = p.isInvisible() ? "invulnerable" : "vulnerable";
+				player.message(messagePrefix + p.getUsername() + " is now " + invulnerableText);
+				p.message(messagePrefix + "A staff member has made you " + invulnerableText);
+				GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerableText));
+			}
+			else
+			{
+				player.message(messagePrefix + "Invalid name or player is not online");
+			}
+		}
+		if (command.equalsIgnoreCase("setgroup") || command.equalsIgnoreCase("setrank") || command.equalsIgnoreCase("group") || command.equalsIgnoreCase("rank"))
+		{
+			if(args.length < 1)
+			{
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] OR to set a group");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [group_id/group_name]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			if(p == null)
+			{
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+			if(args.length == 1)
+			{
+				player.message(messagePrefix + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ")");
+			}
+			else
+			{
+				if(!player.isAdmin())
+					return;
+
+				int newGroup	= -1;
+				int oldGroup	= p.getGroupID();
+				String newGroupName;
+				String oldGroupName = Group.GROUP_NAMES.get(oldGroup);
+
+				try
+				{
+					newGroup = Integer.parseInt(args[1]);
+					newGroupName = Group.GROUP_NAMES.get(newGroup);
+				}
+				catch(NumberFormatException e)
+				{
+					newGroupName   = "";
+					for (int i = 1; i < args.length; i++)
+						newGroupName += args[i] + " ";
+					newGroupName   = newGroupName.trim();
+
+					for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
+						if(newGroupName.equalsIgnoreCase(entry.getValue())){
+							newGroup = entry.getKey();
+							newGroupName = entry.getValue();
+							break;
+						}
+					}
+				}
+
+				if(Group.GROUP_NAMES.get(newGroup) == null)
+				{
+					player.message(messagePrefix + "Invalid group_id or group_name");
+					return;
+				}
+
+				if(player.getGroupID() >= newGroup || player.getGroupID() >= p.getGroupID())
+				{
+					player.message(messagePrefix + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + " (" + newGroup + ")");
+					return;
+				}
+
+				p.setGroupID(newGroup);
+				p.message(messagePrefix + player.getStaffName() + "@whi@ has set your group to " + Group.getStaffPrefix(newGroup) + newGroupName + " (" + newGroup + ")");
+				player.message(messagePrefix + "Set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + " (" + newGroup + ")");
+
+				GameLogging.addQuery(new StaffLog(player, 23, player.getUsername() + " has changed " + p.getUsername() + "'s group to " + newGroupName + " from " + oldGroupName));
+				return;
+			}
 		}
 		if (command.equals("teleport")) {
 			if (args.length != 2) {
@@ -325,7 +424,7 @@ public final class Moderator implements CommandListener {
 					player.teleport(affectedPlayer.getX(), affectedPlayer.getY(), false);
 				}
 			} else {
-				player.message(COMMAND_PREFIX + "Invalid player");
+				player.message(messagePrefix + "Invalid player");
 				return;
 			}
 		}
@@ -396,23 +495,23 @@ public final class Moderator implements CommandListener {
 			Player target = World.getWorld().getPlayer(hash);
 			if (target == null) {
 				player.message(
-						COMMAND_PREFIX + "No online character found named '" + args[0] + "'.. checking database..");
+					messagePrefix + "No online character found named '" + args[0] + "'.. checking database..");
 				try {
 					PreparedStatement statement = DatabaseConnection.getDatabase()
 							.prepareStatement("SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
 					statement.setString(1, username);
 					ResultSet result = statement.executeQuery();
 					if (!result.next()) {
-						player.message(COMMAND_PREFIX + "Error character not found in MySQL");
+						player.message(messagePrefix + "Error character not found in MySQL");
 						return;
 					}
 					currentIp = result.getString("login_ip");
 					result.close();
-					player.message(COMMAND_PREFIX + "Found character '" + args[0] + "' with IP: " + currentIp
+					player.message(messagePrefix + "Found character '" + args[0] + "' with IP: " + currentIp
 							+ ", fetching other characters..");
 				} catch (SQLException e) {
 					e.printStackTrace();
-					player.message(COMMAND_PREFIX + "A MySQL error has occured! " + e.getMessage());
+					player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
 					return;
 				}
 			} else {
@@ -420,7 +519,7 @@ public final class Moderator implements CommandListener {
 			}
 
 			if (currentIp == null) {
-				player.message(COMMAND_PREFIX + "An unknown error has occured!");
+				player.message(messagePrefix + "An unknown error has occured!");
 				return;
 			}
 
@@ -456,7 +555,7 @@ public final class Moderator implements CommandListener {
 				ActionSender.sendBox(player, builder.toString(), names.size() > 10);
 				result.close();
 			} catch (SQLException e) {
-				player.message(COMMAND_PREFIX + "A MySQL error has occured! " + e.getMessage());
+				player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
 			}
 		}
 	}

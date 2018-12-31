@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.clan.ClanInvite;
+import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
@@ -11,12 +12,13 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class RegularPlayer implements CommandListener {
 	public static final World world = World.getWorld();
@@ -242,8 +244,16 @@ public final class RegularPlayer implements CommandListener {
 			}
 			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames,true);
 
-
 			return;
+		}
+		if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks"))
+		{
+			ArrayList<String> groups    = new ArrayList();
+			for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
+				groups.add(Group.getStaffPrefix(entry.getKey()) + entry.getValue() + (player.isDev() ? " (" + entry.getKey() + ")" : ""));
+			}
+
+			ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 		}
 		if(command.equals("commands")) {
 			ActionSender.sendBox(player, ""
