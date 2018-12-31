@@ -27,8 +27,6 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -10940,9 +10938,10 @@ public final class mudclient implements Runnable {
 					if (sound == null)
 						return;
 					try {
-                        Clip clip = AudioSystem.getClip();
+                        /*Clip clip = AudioSystem.getClip();
                         clip.open(AudioSystem.getAudioInputStream(sound));
-                        clip.start();
+                        clip.start();*/
+                        return;
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

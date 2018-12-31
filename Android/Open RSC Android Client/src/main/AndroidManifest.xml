@@ -1,13 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.openrsc.client"
     android:versionCode="22"
-    android:versionName="3.1" >
+    android:versionName="3.1">
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.INTERNET_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.DELETE_PACKAGES" />
 
@@ -29,41 +30,38 @@
         android:smallScreens="true" />
 
     <application
-        android:configChanges="orientation"
         android:allowBackup="true"
+        android:configChanges="orientation"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:isGame="true"
         android:label="OpenRSC"
         android:largeHeap="true"
         android:noHistory="true"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-        <activity 
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
             android:name="com.openrsc.android.updater.ApplicationUpdater"
             android:configChanges="orientation"
             android:label="OpenRSC"
-            android:screenOrientation="sensorLandscape" >
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
-                <action android:name="android.intent.action.MAIN" >
-                </action>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.openrsc.android.updater.CacheUpdater"
             android:configChanges="orientation"
             android:label="OpenRSC"
-            android:screenOrientation="sensorLandscape" >
-        </activity>
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name="com.openrsc.client.android.GameActivity"
             android:configChanges="orientation"
             android:label="OpenRSC"
             android:largeHeap="true"
-            
-            android:screenOrientation="sensorLandscape" >
-        </activity>
+            android:screenOrientation="sensorLandscape" />
     </application>
 
 </manifest>

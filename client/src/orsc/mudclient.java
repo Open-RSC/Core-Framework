@@ -91,7 +91,7 @@ public final class mudclient implements Runnable {
 	private static ClientPort clientPort;
 	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
 
-	public mudclient(ClientPort handler) {
+	public mudclient(ORSCApplet handler) {
 		this.clientPort = handler;
 		Config.F_CACHE_DIR = clientPort.getCacheLocation();
 		Config.initConfig();
@@ -818,6 +818,10 @@ public final class mudclient implements Runnable {
 		private int menuNewUserCancel;
 
 		private int loginButtonNewUser;
+		
+		//flag consumed by bank interface to sync custom options
+		//gets unset when player logins again after welcome screen
+		private boolean initLoginCleared;
 
 		public final void addFriend(String player) {
 			try {
@@ -1381,7 +1385,7 @@ public final class mudclient implements Runnable {
 				this.panelLogin.addButtonBackground(190, var6, 200, 40);
 				this.panelLogin.addCenteredText(190, var6 - 10, "Password:", 4, false);
 				this.controlLoginPass = this.panelLogin.addCenteredTextEntry(190, 10 + var6, 200, 20, 40, 4, true, false);
-				if(Config.isAndroid()) {
+				if(Config.isAndroid() || Config.Remember()) {
 					String cred = clientPort.loadCredentials();
 					if(cred != null) {
 						if(cred.length() > 0) {
@@ -1407,7 +1411,7 @@ public final class mudclient implements Runnable {
 				this.panelLogin.setFocus(this.controlLoginUser);
 				var6 += 30;
 
-				if(Config.isAndroid()) {
+				if(Config.isAndroid() || Config.Remember()) {
 					this.panelLogin.addButtonBackground(410, var6, 120, 25);
 					this.panelLogin.addCenteredText(410, var6, "Remember", 4, false);
 					this.rememberButtonIdx = this.panelLogin.addButton(410, var6, 120, 25);
@@ -5470,6 +5474,7 @@ public final class mudclient implements Runnable {
 					this.drawDialogLogout();
 				} else if (this.showDialogMessage) {
 					this.drawDialogWelcome(var1 - 4853);
+					this.setInitLoginCleared(false);
 				} else if (this.showDialogServerMessage) {
 					this.drawDialogServerMessage((byte) -115);
 				} else if (this.showUiWildWarn != 1) {
@@ -9169,10 +9174,10 @@ public final class mudclient implements Runnable {
 						if (this.panelLogin.isClicked(this.m_Xi)) {
 							this.loginScreenNumber = 0;
 						}
-						if(Config.isAndroid()) {
+						if(Config.isAndroid() || Config.Remember()) {
 							if (this.panelLogin.isClicked(this.rememberButtonIdx)) {
 
-								boolean temp = clientPort.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
+								boolean temp = ORSCApplet.saveCredentials(this.panelLogin.getControlText(this.controlLoginUser) + "," + this.panelLogin.getControlText(this.controlLoginPass));
 								if(temp)
 									this.panelLogin.setText(this.controlLoginStatus2, "@gre@Credentials Saved");
 							}
@@ -10515,6 +10520,7 @@ public final class mudclient implements Runnable {
 							int dir = this.wallObjectInstanceDir[i];
 
 							try {
+								this.getWorld().registerObjectDir(xTile, zTile, dir);
 								this.world.applyWallToCollisionFlags(id, xTile, zTile, dir);
 								RSModel var25 = this.createWallObjectModel(xTile, zTile, id, dir, i);
 								this.wallObjectInstanceModel[i] = var25;
@@ -12310,6 +12316,14 @@ public final class mudclient implements Runnable {
 			return xpNotifications;
 		}
 
+		public boolean getInitLoginCleared() {
+			return this.initLoginCleared;
+		}
+		
+		public void setInitLoginCleared(boolean cleared) {
+			this.initLoginCleared = cleared;
+		}
+		
 		public boolean getWelcomeScreenShown() {
 			return this.welcomeScreenShown;
 		}

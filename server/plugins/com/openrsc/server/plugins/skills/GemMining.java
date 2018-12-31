@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,6 +14,7 @@ import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class GemMining implements ObjectActionListener,
 ObjectActionExecutiveListener {
@@ -33,6 +36,7 @@ ObjectActionExecutiveListener {
 		if (!p.withinRange(obj, 1)) {
 			return;
 		}
+		final ObjectMiningDef def = EntityHandler.getObjectMiningDef(obj.getID());
 		final int axeId = getAxe(p);
 		int retrytimes = -1;
 		final int mineLvl = p.getSkills().getLevel(14);
@@ -45,21 +49,37 @@ ObjectActionExecutiveListener {
 			retrytimes = 2;
 			break;
 		case 1259:
-			retrytimes = 4;
+			retrytimes = 3;
 			reqlvl = 6;
 			break;
 		case 1260:
-			retrytimes = 6;
+			retrytimes = 5;
 			reqlvl = 21;
 			break;
 		case 1261:
-			retrytimes = 9;
+			retrytimes = 8;
 			reqlvl = 31;
 			break;
 		case 1262:
 			retrytimes = 12;
 			reqlvl = 41;
 			break;
+		}
+		
+		if (p.click == 1) {
+			p.playSound("prospect");
+			p.setBusyTimer(1800);
+			p.message("You examine the rock for ores...");
+			sleep(1800);
+			if (obj.getID() == GEM_ROCK) {
+				p.message("You fail to find anything interesting");
+				return;
+			}
+			//should not get into the else, just a fail-safe
+			else {
+				p.message("There is currently no ore available in this rock");
+				return;
+			}
 		}
 
 		if (axeId < 0 || reqlvl > mineLvl) {
@@ -110,7 +130,7 @@ ObjectActionExecutiveListener {
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == GEM_ROCK && command.equals("mine")) {
+		if(obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			return true;
 		}
 		return false;
@@ -118,7 +138,7 @@ ObjectActionExecutiveListener {
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == GEM_ROCK && command.equals("mine")) {
+		if(obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			handleGemRockMining(obj, p, p.click);
 		}
 	}

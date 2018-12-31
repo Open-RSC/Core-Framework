@@ -291,7 +291,7 @@ public final class Moderator implements CommandListener {
 			if(p != null)
 			{
 				p.toggleInvulnerable();
-				String invulnerableText = p.isInvisible() ? "invulnerable" : "vulnerable";
+				String invulnerableText = p.isInvulnerable() ? "invulnerable" : "vulnerable";
 				player.message(messagePrefix + p.getUsername() + " is now " + invulnerableText);
 				p.message(messagePrefix + "A staff member has made you " + invulnerableText);
 				GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerableText));

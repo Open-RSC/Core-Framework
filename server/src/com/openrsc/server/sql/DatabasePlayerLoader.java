@@ -395,7 +395,7 @@ public class DatabasePlayerLoader {
 			if (!result.next()) {
 				return save;
 			}
-			save.setOwner(result.getInt("owner"));
+			save.setOwner(result.getInt("id"));
 			save.setDatabaseID(result.getInt("id"));
 			save.setGroupID(result.getInt("group_id"));
 			save.setCombatStyle((byte) result.getInt("combatstyle"));
@@ -746,7 +746,7 @@ public class DatabasePlayerLoader {
 
 		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
 
-		private static final String playerData = "SELECT `owner`, `id`, `group_id`, "
+		private static final String playerData = "SELECT `id`, `group_id`, "
 				+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`, `kills`,"
 				+ "`deaths`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
 				+ "`block_trade`, `block_duel`, `cameraauto`,"

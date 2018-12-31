@@ -22,6 +22,7 @@ public class Config {
 
 
 	public static boolean F_ANDROID_BUILD = false;
+	public static boolean SAVE_CREDENTIALS = true;
 	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
     public static String F_CACHE_DIR = "";
 
@@ -236,4 +237,6 @@ public class Config {
 	public static boolean isAndroid() {
 		return F_ANDROID_BUILD;
 	}
+
+	public static boolean Remember() { return SAVE_CREDENTIALS; }
 }
