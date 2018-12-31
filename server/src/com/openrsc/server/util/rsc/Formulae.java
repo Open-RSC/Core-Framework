@@ -965,7 +965,7 @@ public final class Formulae {
 		int total = 0;
 		for (int x : weights)
 			total += x;
-		int r = DataConversions.random(0, total);
+		int r = DataConversions.random(0, total-1);
 		total = 0;
 		for (int i = 0; i < list.length; i++) {
 			if (r >= total && r < (total + weights[i])) {
