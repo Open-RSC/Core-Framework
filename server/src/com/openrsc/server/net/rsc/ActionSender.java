@@ -655,9 +655,12 @@ public class ActionSender {
 		 **/
 		s.writeByte(prefix);// Used for clan/color/sender.
 		s.writeString(message);
-		if (prefix == 1) {
+		if ((prefix & 1) != 0) {
 			s.writeString(sender.getUsername());
 			s.writeString(sender.getUsername());
+		}
+		if((prefix & 2) != 0) {
+			s.writeString((String) null); // Interpreted as colour by the client.
 		}
 		player.write(s.toPacket());
 	}

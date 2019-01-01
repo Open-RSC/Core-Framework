@@ -4087,8 +4087,8 @@ public final class mudclient implements Runnable {
 								if (MessageHistory.messageHistoryTimeout[centerX] > 0) {
 									String var17 = MessageHistory.messageHistoryColor[centerX]
 											+ StringUtil.formatMessage(MessageHistory.messageHistoryMessage[centerX],
-													MessageHistory.messageHistorySender[centerX], true,
-													MessageHistory.messageHistoryType[centerX]);
+													MessageHistory.messageHistorySender[centerX],
+										MessageHistory.messageHistoryType[centerX], MessageHistory.messageHistoryColor[centerX]);
 									double boost = this.getGameHeight();
 									if(Config.isAndroid() && Config.F_SHOWING_KEYBOARD)
 										boost = (boost / 2.5) + 8;
@@ -5655,9 +5655,9 @@ public final class mudclient implements Runnable {
 								|| MessageHistory.messageHistoryType[i] == MessageType.TRADE
 								|| MessageHistory.messageHistoryType[i] == MessageType.GLOBAL_CHAT
 								|| MessageHistory.messageHistoryType[i] == MessageType.CLAN_CHAT)) {
-							String msg = MessageHistory.messageHistoryColor[i] + StringUtil.formatMessage(
-									MessageHistory.messageHistoryMessage[i], MessageHistory.messageHistorySender[i], true,
-									MessageHistory.messageHistoryType[i]);
+							String msg = StringUtil.formatMessage(
+									MessageHistory.messageHistoryMessage[i], MessageHistory.messageHistorySender[i],
+								MessageHistory.messageHistoryType[i], MessageHistory.messageHistoryColor[i]);
 							if (this.mouseX > 7 && this.mouseX < this.getSurface().stringWidth(1, msg) + 7
 									&& this.mouseY > -(i * 12) - 30 + this.getGameHeight()
 									&& this.getGameHeight() - i * 12 - 18 > this.mouseY
@@ -11407,8 +11407,12 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		public final void showMessage(boolean crownEnabled, String sender, String message, MessageType type, int crownID, String formerName) {
+			showMessage(crownEnabled, sender, message, type, crownID, formerName, (String) null);
+		}
+
 		public final void showMessage(boolean crownEnabled, String sender, String message, MessageType type, int crownID,
-									  String formerName) {
+									  String formerName, String colourOverride) {
 			try {
 
 				if ((type == MessageType.PRIVATE_RECIEVE || type == MessageType.CHAT || type == MessageType.TRADE
@@ -11424,6 +11428,8 @@ public final class mudclient implements Runnable {
 						}
 					}
 				}
+
+				String colour = null != colourOverride ? colourOverride : type.color;
 
 				if(!crownEnabled)
 					crownID = 0;
@@ -11478,8 +11484,8 @@ public final class mudclient implements Runnable {
 				MessageHistory.messageHistoryCrownID[0] = crownID;
 				MessageHistory.messageHistoryClan[0] = formerName;
 				MessageHistory.messageHistoryMessage[0] = message;
-				MessageHistory.messageHistoryColor[0] = type.color;
-				String msg = StringUtil.formatMessage(message, sender, true, type);
+				MessageHistory.messageHistoryColor[0] = colour;
+				String msg = colour + StringUtil.formatMessage(message, sender, type, colour);
 
 				if (type == MessageType.CHAT) {
 					if (this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
