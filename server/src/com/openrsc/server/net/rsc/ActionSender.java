@@ -446,7 +446,7 @@ public class ActionSender {
 	public static void sendGameSettings(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_GAME_SETTINGS.opcode);
-		s.writeByte((byte) player.getGroupID());
+		//s.writeByte((byte) player.getGroupID());
 		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1
 				: 0)); /* Camera Auto Angle */
 		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1
