@@ -343,7 +343,7 @@ public final class mudclient implements Runnable {
 	private int questPoints = 0;
 	private int m_Ji = 0;
 	private int settingTab = 0;
-	private int m_Jj;
+	private int loginButtonExistingUser;
 	private int m_Kj;
 	private int m_ld = 2;
 	private int characterBottomColour = 14;
@@ -832,6 +832,10 @@ public final class mudclient implements Runnable {
 					--this.m_b;
 					var6 &= 255;
 					if (reposition()) {
+						if (this.currentViewMode == GameMode.LOGIN) {
+							this.createLoginPanels(3845);
+							this.renderLoginScreenViewports(-127);
+						}
 						continue;
 					}
 					this.draw();
@@ -1390,51 +1394,50 @@ public final class mudclient implements Runnable {
 		try {
 
 			this.panelLoginWelcome = new Panel(this.getSurface(), 50);
-			byte var2 = 40;
+			byte yOffsetWelcome = 40;
 			if (Config.isAndroid())
-				var2 = -125;
-			this.panelLoginWelcome.addCenteredText(256, 190 + var2, "Welcome to " + Config.SERVER_NAME, 6, true);
-			String var3 = null;
-			var3 = "Join our Discord for the latest updates.";
+				yOffsetWelcome  = -125;
+			this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 23 + yOffsetWelcome, "Welcome to " + Config.SERVER_NAME, 6, true);
+			String var3 = "Join our Discord for the latest updates.";
 			if (null != var3) {
-				this.panelLoginWelcome.addCenteredText(256, 210 + var2, var3, 1, true);
+				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 43 + yOffsetWelcome, var3, 1, true);
 			}
 			//
 			// this.panelLoginWelcome.addButtonBackground(256, var2 + 250, 200,
 			// 35);
 			// this.panelLoginWelcome.addCenteredText(256, var2 + 250, "Click
 			// here to login", 5, false);
-			// this.m_Jj = this.panelLoginWelcome.addButton(256, 250 + var2,
+			// loginButtonExistingUser = this.panelLoginWelcome.addButton(256, 250 + var2,
 			// 200, 35);
 			//
 			//
-			panelLoginWelcome.addButtonBackground(156, 240 + var2, 120, 35);
-			panelLoginWelcome.addButtonBackground(356, 240 + var2, 120, 35);
+			panelLoginWelcome.addButtonBackground(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
+			panelLoginWelcome.addButtonBackground(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
 
-			panelLoginWelcome.addCenteredText(156, 240 + var2, "New User", 5, false);
-			panelLoginWelcome.addCenteredText(356, 240 + var2, "Existing User", 5, false);
+			panelLoginWelcome.addCenteredText(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, "New User", 5, false);
+			panelLoginWelcome.addCenteredText(halfGameWidth() + 100, halfGameHeight() + 73 + yOffsetWelcome, "Existing User", 5, false);
 
-			loginButtonNewUser = panelLoginWelcome.addButton(156, 240 + var2, 120, 35);
-			this.m_Jj = panelLoginWelcome.addButton(356, 240 + var2, 120, 35);
+			loginButtonNewUser = panelLoginWelcome.addButton(halfGameWidth() - 100, halfGameHeight() + 73 + yOffsetWelcome, 120, 35);
+			loginButtonExistingUser = panelLoginWelcome.addButton(halfGameWidth() + 100, halfGameHeight() + 73  + yOffsetWelcome, 120, 35);
 
 			this.panelLogin = new Panel(this.getSurface(), 50);
 			short var5 = Config.isAndroid() ? (short) 30 : 230;
-			this.controlLoginStatus1 = this.panelLogin.addCenteredText(256, var5 - 30, "", 4, true);
-			this.controlLoginStatus2 = this.panelLogin.addCenteredText(256, var5 - 10,
+			this.controlLoginStatus1 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 35, "", 4, true);
+			this.controlLoginStatus2 = this.panelLogin.addCenteredText(halfGameWidth(), halfGameHeight() + 55,
 				"Please enter your username and password", 4, true);
 			int var6 = var5 + 28;
-			this.panelLogin.addButtonBackground(140, var6, 200, 40);
-			this.panelLogin.addCenteredText(140, var6 - 10, "Username:", 4, false);
+			this.panelLogin.addButtonBackground(halfGameWidth() - 116, halfGameHeight() + 91, 200, 40);
+			this.panelLogin.addCenteredText(halfGameWidth() - 116, halfGameHeight() + 81, "Username:", 4, false);
+			this.controlLoginUser = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 116, halfGameHeight() + 98, 200, 320, 40, 4, false, false);
+
 			if (var1 != 3845) {
 				this.drawNPC(51, 106, -15, -96, 26, 108, 22, -63);
 			}
 
-			this.controlLoginUser = this.panelLogin.addCenteredTextEntry(140, 10 + var6, 200, 320, 40, 4, false, false);
+			this.panelLogin.addButtonBackground(halfGameWidth() - 66, halfGameHeight() + 138, 200, 40);
+			this.panelLogin.addCenteredText(halfGameWidth() - 66, halfGameHeight() + 128, "Password:", 4, false);
+			this.controlLoginPass = this.panelLogin.addCenteredTextEntry(halfGameWidth() - 66, halfGameHeight() + 146, 200, 20, 40, 4, true, false);
 
-			var6 += 47;
-			this.panelLogin.addButtonBackground(190, var6, 200, 40);
-			this.panelLogin.addCenteredText(190, var6 - 10, "Password:", 4, false);
-			this.controlLoginPass = this.panelLogin.addCenteredTextEntry(190, 10 + var6, 200, 20, 40, 4, true, false);
 			if (Config.isAndroid() || Config.Remember()) {
 				String cred = clientPort.loadCredentials();
 				if (cred != null) {
@@ -1450,68 +1453,60 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			var6 -= 55;
-			this.panelLogin.addButtonBackground(410, var6, 120, 25);
-			this.panelLogin.addCenteredText(410, var6, "Ok", 4, false);
-			this.m_be = this.panelLogin.addButton(410, var6, 120, 25);
-			var6 += 30;
-			this.panelLogin.addButtonBackground(410, var6, 120, 25);
-			this.panelLogin.addCenteredText(410, var6, "Cancel", 4, false);
-			this.m_Xi = this.panelLogin.addButton(410, var6, 120, 25);
+			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
+			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 83, "Ok", 4, false);
+			this.m_be = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 83, 120, 25);
+			this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
+			this.panelLogin.addCenteredText(halfGameWidth() + 154, halfGameHeight() + 113, "Cancel", 4, false);
+			this.m_Xi = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 113, 120, 25);
 			this.panelLogin.setFocus(this.controlLoginUser);
-			var6 += 30;
 
 			if (Config.isAndroid() || Config.Remember()) {
-				this.panelLogin.addButtonBackground(410, var6, 120, 25);
-				this.panelLogin.addCenteredText(410, var6, "Remember", 4, false);
-				this.rememberButtonIdx = this.panelLogin.addButton(410, var6, 120, 25);
-				var6 += 30;
+				this.panelLogin.addButtonBackground(halfGameWidth() + 154, halfGameHeight() + 143, 120, 25);
+				this.panelLogin.addCenteredText(halfGameWidth() + 154,halfGameHeight() + 143, "Remember", 4, false);
+				this.rememberButtonIdx = this.panelLogin.addButton(halfGameWidth() + 154, halfGameHeight() + 143, 120, 25);
 			}
 
 			/* Registration setup */
 
-			int i = 60;
-			byte byte0 = 110;
 			menuNewUser = new Panel(getSurface(), 50);
 			if (Config.isAndroid()) {
-				menuNewUser.addCenteredText(250, i - 42, "@whi@To open keyboard press the back button", 5, false);
+				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 149, "@whi@To open keyboard press the back button", 5 ,false);
 			}
-			menuNewUser.addCenteredText(250, i - 42 + 22, "@whi@Enter a username between 2 and 12 characters long", 1, false);
-			menuNewUser.addCenteredText(250, i - 42 + 33, "@red@(Only regular letters, numbers and spaces are allowed)", 0, false);
-			menuNewUser.addButtonBackground(250, i + 17, 420, 34);
-			menuNewUser.addCenteredText(250, i + 8, "Choose a Username (This is the name other users will see)", 4,
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 127, "@whi@Enter a username between 2 and 12 characters long", 1, false);
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() -116, "@red@(Only regular letters, numbers and spaces are allowed)", 0, false);
+			menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 90, 420, 34);
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 99, "Choose a Username (This is the name other users will see)", 4,
 				false);
-			menuNewUserUsername = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 12, 40, 4, false, false);
-			i += 62;
-			menuNewUser.addCenteredText(250, i - 19, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
-			menuNewUser.addCenteredText(250, i - 19 + 11, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
+			menuNewUserUsername = menuNewUser.addCenteredTextEntry(halfGameWidth() - 6, halfGameHeight() - 82, 200, 12, 40, 4, false, false);
 
-			menuNewUser.addButtonBackground(250, i + 17, 420, 34);
-			menuNewUser.addCenteredText(250, i + 8, "Choose a Password (You will require this to login)", 4, false);
-			menuNewUserPassword = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 64, 40, 4, true, false);
-			i += 54;
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 53, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
-			menuNewUser.addCenteredText(250, i - 11, "@whi@It's recommended to use a valid email adress", 1, false);
-			menuNewUser.addButtonBackground(250, i + 17, 420, 34);
-			menuNewUser.addCenteredText(250, i + 8, "E-mail address", 4, false);
-			menuNewUserEmail = menuNewUser.addCenteredTextEntry(256, i + 25, 200, 40, 40, 4, false, false);
-			i += 40;
+			menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 28, 420, 34);
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 37, "Choose a Password (You will require this to login)", 4, false);
+			menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 64, 40, 4, true, false);
+
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 2, "@whi@It's recommended to use a valid email address", 1, false);
+			menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() + 26, 420, 34);
+			menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() + 17, "E-mail address", 4, false);
+			menuNewUserEmail = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 34, 200, 40, 40, 4, false, false);
 
 			// menuNewUser.addButtonBackground(250, i + 22, 420, 44);
 
-			menuNewUser.addButtonBackground(((250 - byte0) + 50) - 15, i + 17, 270, 34);
-			menuNewUserStatus = menuNewUser.addCenteredText(((250 - byte0) + 50) - 15, i + 8,
+			menuNewUser.addButtonBackground(halfGameWidth() - 81, halfGameHeight() + 66, 270, 34);
+			menuNewUserStatus = menuNewUser.addCenteredText(halfGameWidth() - 81, halfGameHeight() + 57,
 				"To create an account please enter", 4, true);
-			menuNewUserStatus2 = menuNewUser.addCenteredText(((250 - byte0) + 50) - 15, i + 25,
+			menuNewUserStatus2 = menuNewUser.addCenteredText(halfGameWidth() - 81, halfGameHeight() + 74,
 				"all the requested details", 4, true);
 
-			menuNewUser.addButtonBackground(350, i + 17, 70, 34);
-			menuNewUser.addCenteredText(350, i + 17, "Submit", 5, false);
-			menuNewUserSubmit = menuNewUser.addButton(335, i + 17, 100, 34);
+			menuNewUser.addButtonBackground(halfGameWidth() + 94, halfGameHeight() + 66, 70, 34);
+			menuNewUser.addCenteredText(halfGameWidth() + 94, halfGameHeight() + 66, "Submit", 5, false);
+			menuNewUserSubmit = menuNewUser.addButton(halfGameWidth() + 79, halfGameHeight() + 66, 100, 34);
 
-			menuNewUser.addButtonBackground(425, i + 17, 70, 34);
-			menuNewUser.addCenteredText(425, i + 17, "Cancel", 5, false);
-			menuNewUserCancel = menuNewUser.addButton(425, i + 17, 100, 34);
+			menuNewUser.addButtonBackground(halfGameWidth() + 169, halfGameHeight() + 66, 70, 34);
+			menuNewUser.addCenteredText(halfGameWidth() + 169, halfGameHeight() + 66, "Cancel", 5, false);
+			menuNewUserCancel = menuNewUser.addButton(halfGameWidth() + 169, halfGameHeight() + 66, 100, 34);
 
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.B(" + var1 + ')');
@@ -2026,10 +2021,10 @@ public final class mudclient implements Runnable {
 
 			this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
 			if (Config.S_WANT_CLANS) {
-				this.getSurface().drawSprite(mudclient.spriteMedia + 30, (getGameWidth() / 2) - 256,
+				this.getSurface().drawSprite(mudclient.spriteMedia + 30, halfGameWidth() - 256,
 					this.getGameHeight() - 4);
 			} else {
-				this.getSurface().drawSprite(mudclient.spriteMedia + 23, (getGameWidth() / 2) - 256,
+				this.getSurface().drawSprite(mudclient.spriteMedia + 23, halfGameWidth() - 256,
 					this.getGameHeight() - 4);
 			}
 
@@ -2041,7 +2036,7 @@ public final class mudclient implements Runnable {
 				if (this.messageTabActivity_Game % 30 > 15) {
 					color = GenUtil.buildColor(255, 50, 50);
 				}
-				this.getSurface().drawColoredStringCentered((getGameWidth() / 2) - 200, "All messages", color, 0, 0,
+				this.getSurface().drawColoredStringCentered(halfGameWidth() - 200, "All messages", color, 0, 0,
 					6 + this.getGameHeight());
 
 				color = GenUtil.buildColor(255, 255, 255);
@@ -2051,7 +2046,7 @@ public final class mudclient implements Runnable {
 				if (this.messageTabActivity_Chat % 30 > 15) {
 					color = GenUtil.buildColor(255, 50, 50);
 				}
-				this.getSurface().drawColoredStringCentered((getGameWidth() / 2) - 100, "Chat history", color, 0, 0,
+				this.getSurface().drawColoredStringCentered(halfGameWidth() - 100, "Chat history", color, 0, 0,
 					this.getGameHeight() + 6);
 
 				color = GenUtil.buildColor(255, 255, 255);
@@ -2061,7 +2056,7 @@ public final class mudclient implements Runnable {
 				if (this.messageTabActivity_Quest % 30 > 15) {
 					color = GenUtil.buildColor(255, 50, 50);
 				}
-				this.getSurface().drawColoredStringCentered((getGameWidth() / 2), "Quest history", color, 0, 0,
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "Quest history", color, 0, 0,
 					6 + this.getGameHeight());
 
 				color = GenUtil.buildColor(255, 255, 255);
@@ -2071,7 +2066,7 @@ public final class mudclient implements Runnable {
 				if (this.messageTabActivity_Private % 30 > 15) {
 					color = GenUtil.buildColor(255, 50, 50);
 				}
-				this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 100, "Private history", color, 0, 0,
+				this.getSurface().drawColoredStringCentered(halfGameWidth() + 100, "Private history", color, 0, 0,
 					this.getGameHeight() + 6);
 				if (Config.S_WANT_CLANS) {
 					color = GenUtil.buildColor(255, 255, 255);
@@ -2081,10 +2076,10 @@ public final class mudclient implements Runnable {
 					if (this.messageTabActivity_Clan % 30 > 15) {
 						color = GenUtil.buildColor(255, 50, 50);
 					}
-					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Clan history", color, 0, 0, 6 + this.getGameHeight());
+					this.getSurface().drawColoredStringCentered(halfGameWidth() + 200, "Clan history", color, 0, 0, 6 + this.getGameHeight());
 				} else {
 					color = GenUtil.buildColor(255, 255, 255);
-					this.getSurface().drawColoredStringCentered((getGameWidth() / 2) + 200, "Report Abuse", color, 0, 0, 6 + this.getGameHeight());
+					this.getSurface().drawColoredStringCentered(halfGameWidth() + 200, "Report Abuse", color, 0, 0, 6 + this.getGameHeight());
 				}
 			}
 		} catch (RuntimeException var3) {
@@ -3572,48 +3567,33 @@ public final class mudclient implements Runnable {
 	private void drawDialogWildWarn(int var1) {
 		try {
 
-			this.getSurface().drawBox(86, 77, 340, 180, 0);
-			byte var2 = 97;
+			this.getSurface().drawBox(halfGameWidth() - 170, halfGameHeight() - 90, 340, 180, 0);
 			if (var1 <= 90) {
 				this.loadGameConfig(true);
 			}
 
-			this.getSurface().drawBoxBorder(86, 340, 77, 180, 0xFFFFFF);
-			this.getSurface().drawColoredStringCentered(256, "Warning! Proceed with caution", 0xFF0000, 0, 4, var2);
-			int var5 = var2 + 26;
-			this.getSurface().drawColoredStringCentered(256, "If you go much further north you will enter the",
-				0xFFFFFF, 0, 1, var5);
-			var5 += 13;
-			this.getSurface().drawColoredStringCentered(256, "wilderness. This a very dangerous area where", 0xFFFFFF,
-				0, 1, var5);
-			var5 += 13;
-			this.getSurface().drawColoredStringCentered(256, "other players can attack you!", 0xFFFFFF, 0, 1, var5);
-			var5 += 22;
-			this.getSurface().drawColoredStringCentered(256, "The further north you go the more dangerous it", 0xFFFFFF,
-				0, 1, var5);
-			var5 += 13;
-			this.getSurface().drawColoredStringCentered(256, "becomes, but the more treasure you will find.", 0xFFFFFF,
-				0, 1, var5);
-			var5 += 22;
-			this.getSurface().drawColoredStringCentered(256, "In the wilderness an indicator at the bottom-right",
-				0xFFFFFF, 0, 1, var5);
-			var5 += 13;
-			this.getSurface().drawColoredStringCentered(256, "of the screen will show the current level of danger",
-				0xFFFFFF, 0, 1, var5);
-			var5 += 22;
+			this.getSurface().drawBoxBorder(halfGameWidth() - 170, 340, halfGameHeight() - 90, 180, 0xFFFFFF);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "Warning! Proceed with caution", 0xFF0000, 0, 4, halfGameHeight() - 70);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "If you go much further north you will enter the", 0xFFFFFF, 0, 1, halfGameHeight() - 44);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "wilderness. This a very dangerous area where", 0xFFFFFF,0, 1, halfGameHeight() - 31);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "other players can attack you!", 0xFFFFFF, 0, 1, halfGameHeight() - 18);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "The further north you go the more dangerous it", 0xFFFFFF, 0, 1, halfGameHeight() + 4);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "becomes, but the more treasure you will find.", 0xFFFFFF, 0, 1, halfGameHeight() + 17);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "In the wilderness an indicator at the bottom-right", 0xFFFFFF, 0, 1, halfGameHeight() + 39);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "of the screen will show the current level of danger",0xFFFFFF, 0, 1, halfGameHeight() + 52);
 			int var3 = 0xFFFFFF;
-			if (this.mouseY > var5 - 12 && this.mouseY <= var5 && this.mouseX > 181 && this.mouseX < 331) {
+			if (this.mouseY > halfGameHeight() + 62 && this.mouseY <= halfGameHeight() + 74 && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 				var3 = 0xFF0000;
 			}
 
-			this.getSurface().drawColoredStringCentered(256, "Click here to close window", var3, 0, 1, var5);
+			this.getSurface().drawColoredStringCentered(halfGameWidth(), "Click here to close window", var3, 0, 1, halfGameHeight() + 74);
 			if (this.mouseButtonClick != 0) {
-				if (var5 - 12 < this.mouseY && var5 >= this.mouseY && this.mouseX > 181 && this.mouseX < 331) {
+				if (halfGameHeight() + 62 < this.mouseY && halfGameHeight() + 74 >= this.mouseY && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 					this.showUiWildWarn = 2;
 				}
 
 				this.mouseButtonClick = 0;
-				if (this.mouseX < 86 || this.mouseX > 426 || this.mouseY < 77 || this.mouseY > 257) {
+				if (this.mouseX < halfGameWidth() - 170 || this.mouseX > halfGameWidth() + 170 || this.mouseY < halfGameHeight() - 90 || this.mouseY > halfGameHeight() + 90) {
 					this.showUiWildWarn = 2;
 				}
 			}
@@ -3629,8 +3609,8 @@ public final class mudclient implements Runnable {
 			if (var1 == 13) {
 				if (this.deathScreenTimeout != 0) {
 					this.getSurface().fade2black(16316665);
-					this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "Oh dear! You are dead...",
-						0xFF0000, 0, 7, this.getGameHeight() / 2);
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "Oh dear! You are dead...",
+						0xFF0000, 0, 7, this.halfGameHeight());
 					this.drawChatMessageTabs(var1 - 8);
 					// this.getSurface().draw(this.graphics, this.screenOffsetX,
 					// 256, this.screenOffsetY);
@@ -3650,34 +3630,34 @@ public final class mudclient implements Runnable {
 							(int) (334.0D * Math.random()));
 					}
 					//"*"
-					this.getSurface().drawBox(this.getGameWidth() / 2 - 100, 160 - (Config.isAndroid() ? 80 : 0), 200, 40, 0);
+					this.getSurface().drawBox(this.halfGameWidth() - 100, 160 - (Config.isAndroid() ? 80 : 0), 200, 40, 0);
 					if (Config.isAndroid()) {
-						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+						this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
 							"You are sleeping - Fatigue: " + this.fatigueSleeping + "%", 0xFFFF00, var1 - 13, 7, 31);
 					} else {
-						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "You are sleeping", 0xFFFF00,
+						this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "You are sleeping", 0xFFFF00,
 							var1 - 13, 7, 50);
-						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+						this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
 							"Fatigue: " + this.fatigueSleeping + "%", 0xFFFF00, var1 - 13, 7, 90);
 					}
-					this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
 						"When you want to wake up just use your", 0xFFFFFF, 0, 5, 140 - (Config.isAndroid() ? 80 : 0));
-					this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
 						"keyboard to type the word in the box below", 0xFFFFFF, var1 ^ 13, 5, 160 - (Config.isAndroid() ? 80 : 0));
-					this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, this.inputTextCurrent + "*",
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.inputTextCurrent + "*",
 						'\uffff', var1 - 13, 5, 180 - (Config.isAndroid() ? 80 : 0));
 					if (null != this.sleepingStatusText) {
-						this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, this.sleepingStatusText,
+						this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.sleepingStatusText,
 							0xFF0000, 0, 5, 260 - (Config.isAndroid() ? 110 : 0));
 					} else {
-						this.getSurface().drawSprite(mudclient.spriteLogo + 2, this.getGameWidth() / 2 - 127, 230 - (Config.isAndroid() ? 110 : 0));
+						this.getSurface().drawSprite(mudclient.spriteLogo + 2, this.halfGameWidth() - 127, 230 - (Config.isAndroid() ? 110 : 0));
 					}
 
-					this.getSurface().drawBoxBorder(this.getGameWidth() / 2 - 128, 257, 229 - (Config.isAndroid() ? 110 : 0), 42, 0xFFFFFF);
+					this.getSurface().drawBoxBorder(this.halfGameWidth() - 128, 257, 229 - (Config.isAndroid() ? 110 : 0), 42, 0xFFFFFF);
 					this.drawChatMessageTabs(5);
-					this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2, "If you can\'t read the word",
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "If you can\'t read the word",
 						0xFFFFFF, var1 - 13, 1, 290 - (Config.isAndroid() ? 110 : 0));
-					this.getSurface().drawColoredStringCentered(this.getGameWidth() / 2,
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
 						"@yel@click here@whi@ to get a different one", 0xFFFFFF, var1 ^ 13, 1, 305 - (Config.isAndroid() ? 110 : 0));
 					// this.getSurface().draw(this.graphics, this.screenOffsetX,
 					// 256, this.screenOffsetY);
@@ -4500,13 +4480,13 @@ public final class mudclient implements Runnable {
 			if (this.loginScreenNumber == 2) {
 				String var4 = this.panelLogin.getControlText(this.controlLoginStatus1);
 				if (null != var4 && var4.length() > 0) {
-					this.getSurface().drawBoxAlpha(0, 185, this.getGameWidth(), 30, 0, 100);
+					this.getSurface().drawBoxAlpha(0, halfGameHeight() + 18, this.getGameWidth(), 30, 0, 100);
 				}
 
 				this.panelLogin.drawPanel();
 			}
 
-			this.getSurface().drawSprite(mudclient.spriteMedia + 22, 0, this.gameHeight);
+			this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
 			clientPort.draw();
@@ -5331,15 +5311,15 @@ public final class mudclient implements Runnable {
 			}
 
 			int stringWid = getSurface().stringWidth(3, "Total: " + totalXp);
-			int x = (getGameWidth() / 2) - (stringWid / 2) - 10;
+			int x = halfGameWidth() - (stringWid / 2) - 10;
 			int width = stringWid + 6;
 			this.getSurface().drawBoxAlpha(x, 0, width, 20, 0x989898, 90);
 			//this.getSurface().drawBoxBorder(x, width, 0, 20, 0x000000);
 
 			if (textColor == 0xFFFFFF) {
-				getSurface().drawShadowText("Total: " + totalXp, (getGameWidth() / 2) - (stringWid / 2) - 4, 15, textColor, 2, false);
+				getSurface().drawShadowText("Total: " + totalXp, halfGameWidth() - (stringWid / 2) - 4, 15, textColor, 2, false);
 			} else {
-				getSurface().drawString("Total: " + totalXp, (getGameWidth() / 2) - (stringWid / 2) - 4, 15, textColor, 2);
+				getSurface().drawString("Total: " + totalXp, halfGameWidth() - (stringWid / 2) - 4, 15, textColor, 2);
 			}
 
 			if (Config.isAndroid() && this.mouseButtonClick == 1 && mouseX >= x && mouseX <= x + width && mouseY >= 0 && mouseY <= 20) {
@@ -5470,7 +5450,7 @@ public final class mudclient implements Runnable {
 				int boxWidth = 75;
 				int boxHeight = 50;
 				int x = getGameWidth() - boxWidth - 15;
-				int y = (getGameHeight() / 2) - boxHeight;
+				int y = halfGameHeight() - boxHeight;
 
 				getSurface().drawBoxAlpha(x, y, boxWidth, boxHeight, 0x989898, 128);
 				getSurface().drawBoxBorder(x, boxWidth, y, boxHeight, 0);
@@ -8293,8 +8273,8 @@ public final class mudclient implements Runnable {
 
 		getSurface().resize(this.gameWidth, this.gameHeight + 12);
 		this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
-		this.scene.setMidpoints(this.getGameHeight() / 2, true, this.getGameWidth(), this.getGameWidth() / 2,
-			this.getGameHeight() / 2, this.m_qd, this.getGameWidth() / 2);
+		this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(), this.halfGameWidth(),
+			this.halfGameHeight(), this.m_qd, this.halfGameWidth());
 
 		clientPort.resized();
 		int var3 = this.getSurface().width2 - 199;
@@ -8798,25 +8778,25 @@ public final class mudclient implements Runnable {
 
 				if (!this.isSleeping) {
 					if (mouseY > (getGameHeight() - 4)) { // Chat Tab Selection
-						if (mouseX > 15 + ((getGameWidth() / 2) - 256) && mouseX < 96 + ((getGameWidth() / 2) - 256)
+						if (mouseX > 15 + (halfGameWidth() - 256) && mouseX < 96 + (halfGameWidth() - 256)
 							&& lastMouseButtonDown == 1)
 							this.messageTabSelected = MessageTab.ALL;
-						if (mouseX > 110 + ((getGameWidth() / 2) - 256) && mouseX < 194 + ((getGameWidth() / 2) - 256)
+						if (mouseX > 110 + (halfGameWidth() - 256) && mouseX < 194 + (halfGameWidth() - 256)
 							&& lastMouseButtonDown == 1) {
 							this.messageTabSelected = MessageTab.CHAT;
 							this.panelMessageTabs.controlScrollAmount[this.panelMessageChat] = 999999;
 						}
-						if (mouseX > 215 + ((getGameWidth() / 2) - 256) && mouseX < 295 + ((getGameWidth() / 2) - 256)
+						if (mouseX > 215 + (halfGameWidth() - 256) && mouseX < 295 + (halfGameWidth() - 256)
 							&& lastMouseButtonDown == 1) {
 							this.messageTabSelected = MessageTab.QUEST;
 							this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] = 999999;
 						}
-						if (mouseX > 315 + ((getGameWidth() / 2) - 256) && mouseX < 395 + ((getGameWidth() / 2) - 256)
+						if (mouseX > 315 + (halfGameWidth() - 256) && mouseX < 395 + (halfGameWidth() - 256)
 							&& lastMouseButtonDown == 1) {
 							this.messageTabSelected = MessageTab.PRIVATE;
 							this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] = 999999;
 						}
-						if (mouseX > 417 + ((getGameWidth() / 2) - 256) && mouseX < 497 + ((getGameWidth() / 2) - 256)
+						if (mouseX > 417 + (halfGameWidth() - 256) && mouseX < 497 + (halfGameWidth() - 256)
 							&& lastMouseButtonDown == 1) {
 							if (Config.S_WANT_CLANS) {
 								this.messageTabSelected = MessageTab.CLAN;
@@ -9226,7 +9206,7 @@ public final class mudclient implements Runnable {
 			} else {
 				this.panelLoginWelcome.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 					this.lastMouseButtonDown);
-				if (this.panelLoginWelcome.isClicked(this.m_Jj)) {
+				if (this.panelLoginWelcome.isClicked(loginButtonExistingUser)) {
 					this.loginScreenNumber = 2;
 					this.panelLogin.setText(this.controlLoginStatus1, "");
 					this.panelLogin.setText(this.controlLoginStatus2, "Please enter your username and password");
@@ -9282,7 +9262,7 @@ public final class mudclient implements Runnable {
 			return;
 		}
 		if (!isValidEmailAddress(email)) {
-			showLoginScreenStatus("Invalid email address", "please use a valid email adress");
+			showLoginScreenStatus("Invalid email address", "please use a valid email address");
 			return;
 		}
 		try {
@@ -9334,7 +9314,7 @@ public final class mudclient implements Runnable {
 				return;
 			}
 			if (registerResponse == 6) {
-				showLoginScreenStatus("Invalid e-mail address", "please use a valid email adress");
+				showLoginScreenStatus("Invalid e-mail address", "please use a valid email address");
 				return;
 			}
 			if (registerResponse == 7) {
@@ -11074,15 +11054,15 @@ public final class mudclient implements Runnable {
 				this.getSurface().a(8, var9, var9, 0, 16740352, getGameWidth(), 0);
 			}
 
-			this.getSurface().drawBox(0, 194, getGameWidth(), 20, 0);
+			this.getSurface().drawBox(0, halfGameHeight() + 27, getGameWidth(), 20, 0);
 
 			for (var9 = 6; var9 >= 1; --var9) {
-				this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
+				this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
 			}
 
 			//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
-			this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), 200);
+			this.getSurface().storeSpriteVert(spriteLogo, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
 			// Second view
 			slide_y = 9216;
@@ -11103,15 +11083,15 @@ public final class mudclient implements Runnable {
 				this.getSurface().a(8, var9, var9, 0, 16740352, getGameWidth(), 0);
 			}
 
-			this.getSurface().drawBox(0, 194, getGameWidth(), 20, 0);
+			this.getSurface().drawBox(0, halfGameHeight() + 27, getGameWidth(), 20, 0);
 
 			for (var9 = 6; var9 >= 1; --var9) {
-				this.getSurface().a(8, var9, 194 - var9, 0, 16740352, getGameWidth(), 0);
+				this.getSurface().a(8, var9, halfGameHeight() + 27 - var9, 0, 16740352, getGameWidth(), 0);
 			}
 
 			//this.getSurface().drawSprite(mudclient.spriteMedia + 15, 30, 30); // Sprite 2010 logo
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
-			this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), 200);
+			this.getSurface().storeSpriteVert(spriteLogo + 1, 0, 0, getGameWidth(), halfGameHeight() + 33);
 
 			// Third view
 			zoom_distance = 500;
@@ -11128,11 +11108,12 @@ public final class mudclient implements Runnable {
 			}
 
 			this.scene.fogLandscapeDistance = 10000;
-			this.scene.fogSmoothingStartDistance = 10000;
-			this.scene.fogZFalloff = 1;
 			this.scene.fogEntityDistance = 10000;
+			this.scene.fogZFalloff = 1;
+			this.scene.fogSmoothingStartDistance = 10000;
 			this.scene.setCamera(slide_x, -this.world.getElevation(slide_x, slide_y), slide_y, 912, rotation, (int) 0, zoom_distance * 2);
 			this.scene.endScene(-111);
+
 			this.getSurface().fade2black(16316665);
 			this.getSurface().fade2black(16316665);
 			this.getSurface().drawBox(0, 0, getGameWidth(), 6, 0);
@@ -11141,15 +11122,15 @@ public final class mudclient implements Runnable {
 				this.getSurface().a(8, var9, var9, 0, 16740352, getGameWidth(), 0);
 			}
 
-			this.getSurface().drawBox(0, 194, getGameWidth(), 20, 0);
+			this.getSurface().drawBox(0, halfGameHeight() + 27, getGameWidth(), 20, 0);
 
 			for (var9 = 6; var9 >= 1; --var9) {
-				this.getSurface().a(8, var9, 194, 0, 16740352, getGameWidth(), 0);
+				this.getSurface().a(8, var9, halfGameHeight() + 27, 0, 16740352, getGameWidth(), 0);
 			}
 
 			//this.getSurface().drawSprite(mudclient.spriteMedia + 10, 30, 30); // Sprite 2010 logo
 			//this.getSurface().drawColoredStringCentered(250, "Open RSC", 0xFFFFFF, 0, 7, 110); // width, title, color, crown sprite, font size, height
-			this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), 200);
+			this.getSurface().storeSpriteVert(spriteMedia + 10, 0, 0, getGameWidth(), halfGameHeight() + 33);
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10, "client.HC(" + var1 + ')');
 		}
@@ -12688,9 +12669,9 @@ public final class mudclient implements Runnable {
 					this.loadEntities(true);
 					if (!this.errorLoadingData) {
 						this.scene = new Scene(this.getSurface(), 25000, 50000, 1000);
-						this.scene.setMidpoints(this.getGameHeight() / 2, true, this.getGameWidth(),
-							this.getGameWidth() / 2, this.getGameHeight() / 2, this.m_qd,
-							this.getGameWidth() / 2);
+						this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(),
+							this.halfGameWidth(), this.halfGameHeight(), this.m_qd,
+							this.halfGameWidth());
 						this.scene.fogLandscapeDistance = 2400;
 						this.scene.fogEntityDistance = 2400;
 						this.scene.fogSmoothingStartDistance = 2300;
@@ -13109,8 +13090,16 @@ public final class mudclient implements Runnable {
 		return gameWidth;
 	}
 
+	public int halfGameWidth() {
+		return gameWidth/2;
+	}
+
 	public int getGameHeight() {
 		return gameHeight;
+	}
+
+	public int halfGameHeight() {
+		return gameHeight/2;
 	}
 
 	public void setGameHeight(int gameHeight) {
@@ -13487,17 +13476,17 @@ public final class mudclient implements Runnable {
 	}
 
 	class XPNotification {
-		private int x, y;
-		private int amount = 0;
-		private int skill = 0;
-		private boolean levelUp;
-		private boolean isActive;
+		protected int x, y;
+		protected int amount = 0;
+		protected int skill = 0;
+		protected boolean levelUp;
+		protected boolean isActive;
 
 		public XPNotification(int skill, int amount, boolean levelUp) {
 			this.skill = skill;
 			this.amount = amount;
 			this.levelUp = levelUp;
-			x = (int) ((getGameWidth() / 2) - 50);
+			x = (int) (halfGameWidth() - 50);
 			y = (int) ((float) getGameHeight() / 4.0f + 40);
 			isActive = false;
 		}
