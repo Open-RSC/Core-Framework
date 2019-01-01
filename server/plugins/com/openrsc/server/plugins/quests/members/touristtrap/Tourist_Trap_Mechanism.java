@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -29,6 +30,8 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 	public static int LIFT_UP = 966;
 	public static int MINING_CART_ABOVE = 1025;
 	public static int CART_DRIVER = 711;
+	public static int DISTURBED_SAND1 = 944;
+	public static int DISTURBED_SAND2 = 945;
 
 	class RepeatLift {
 		public static final int USETHIS = 0;
@@ -126,14 +129,32 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				return;
 			}
 			if(!hasItem(p, 1039)) {
-				npcTalk(p,npc, "Hey, what do you think you're doing?",
-						"Harumph!");
+				boolean isFirstTime = !p.getCache().hasKey("tried_ana_barrel");
+				if(p.getCache().hasKey("ana_lift") || p.getCache().hasKey("ana_cart") 
+						|| p.getCache().hasKey("ana_in_cart")) {
+					message(p, "Oh, here's Ana, the guards must have discovered her.",
+							"And sent her back to the mines...");
+				}
+				if(isFirstTime) {
+					npcTalk(p,npc, "Hey, what do you think you're doing?",
+							"Harumph!");
+				}
+				else {
+					npcTalk(p, npc, "Hey, what do you think you're doing?",
+							"Leave me alone and let me get on with my work.",
+							"Else we'll both be in trouble.",
+							"Oh no, NOT AGAIN!",
+							"Harumph!");
+				}
 				playerTalk(p,npc, "Shush...It's for your own good!");
 				message(p, "You manage to squeeze Ana into the barrel,",
 						"despite her many complaints.");
 				p.getInventory().replace(1038, 1039);
 				if(npc != null){
 					npc.remove();
+				}
+				if(isFirstTime) {
+					p.getCache().store("tried_ana_barrel", true);
 				}
 			} else {
 				p.message("You already have Ana in a barrel, you can't get two in there!");
@@ -216,6 +237,9 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+		if(obj.getID() == DISTURBED_SAND1 || obj.getID() == DISTURBED_SAND2) {
+			return true;
+		}
 		if(obj.getID() == 1006) {
 			return true;
 		}
@@ -236,6 +260,53 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
+		//closest to irena
+		if(obj.getID() == DISTURBED_SAND1) {
+			if(command.equals("look")) {
+				if(p.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
+					message(p, "You see some footsteps in the sand.");
+				}
+				else {
+					message(p, "This looks like some disturbed sand.",
+							"footsteps seem to be heading of towards the south west.");
+				}
+			}
+			else if(command.equals("search")) {
+				if(p.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
+					message(p, "You just see some footsteps in the sand.");
+				}
+				else {
+					message(p, "You search the footsteps more closely.",
+							"You can see that there are five sets of footprints.",
+							"One set of footprints seems lighter than the others.",
+							"The four other footsteps were made by heavier people with boots.");
+				}
+			}
+		}
+		//closest to camp
+		if(obj.getID() == DISTURBED_SAND2) {
+			if(command.equals("look")) {
+				if(p.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
+					message(p, "You just see some footsteps in the sand.");
+				}
+				else {
+					message(p, "You find footsteps heading south.",
+							"And this time evidence of a struggle...",
+							"The footsteps head off due south.");
+				}
+			}
+			else if(command.equals("search")) {
+				if(p.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
+					message(p, "You just see some footsteps in the sand!");
+				}
+				else {
+					message(p, "You search the area thoroughly...",
+							"You notice something colourful in the sand.",
+							"You dig around and find a piece of red silk scarf.",
+							"It looks as if Ana has been this way!");
+				}
+			}
+		}
 		if(obj.getID() == 1006) {
 			makeDartTip(p, obj);
 		}
