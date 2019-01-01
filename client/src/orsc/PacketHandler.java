@@ -706,9 +706,7 @@ public class PacketHandler {
 		String formerName = packetsIncoming.readString();
 		int icon = packetsIncoming.get32();
 		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
-		// Disabled because we're going to embed rank crowns in text
-		//mc.showMessage(true, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName, (String) null);
-		mc.showMessage(false, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
+		mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
 	}
 
 	private void sendPrivateMessage() {
