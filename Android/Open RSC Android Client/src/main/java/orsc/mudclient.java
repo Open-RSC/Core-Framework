@@ -816,6 +816,10 @@ public final class mudclient implements Runnable {
 		private int menuNewUserCancel;
 
 		private int loginButtonNewUser;
+		
+		//flag consumed by bank interface to sync custom options
+		//gets unset when player logins again after welcome screen
+		private boolean initLoginCleared;
 
 		public final void addFriend(String player) {
 			try {
@@ -5468,6 +5472,7 @@ public final class mudclient implements Runnable {
 					this.drawDialogLogout();
 				} else if (this.showDialogMessage) {
 					this.drawDialogWelcome(var1 - 4853);
+					this.setInitLoginCleared(false);
 				} else if (this.showDialogServerMessage) {
 					this.drawDialogServerMessage((byte) -115);
 				} else if (this.showUiWildWarn != 1) {
@@ -12309,6 +12314,14 @@ public final class mudclient implements Runnable {
 			return xpNotifications;
 		}
 
+		public boolean getInitLoginCleared() {
+			return this.initLoginCleared;
+		}
+		
+		public void setInitLoginCleared(boolean cleared) {
+			this.initLoginCleared = cleared;
+		}
+		
 		public boolean getWelcomeScreenShown() {
 			return this.welcomeScreenShown;
 		}
