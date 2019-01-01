@@ -12,12 +12,12 @@ public class Config {
     public static final String SERVER_NAME = "Open RSC";
     public static final String SERVER_IP = "game.openrsc.com";
     public static final String DL_URL = "game.openrsc.com";
-    public static final String ANDROID_DOWNLOAD_PATH = DL_URL + "/downloads/";
+    public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
     public static final String CACHE_URL = "https://" + DL_URL + "/downloads/cache/";
     public static final int SERVER_PORT = 43594;
     public static final int CLIENT_VERSION = 1;
     public static final int CACHE_VERSION = 2;
-    public static final int ANDROID_CLIENT_VERSION = 3;
+    public static final int ANDROID_CLIENT_VERSION = 4;
     public static final boolean MEMBERS_FEATURES = true;
     public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
     public static final boolean CACHE_APPEND_VERSION = false;
