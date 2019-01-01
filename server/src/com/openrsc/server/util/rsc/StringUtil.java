@@ -72,34 +72,39 @@ public class StringUtil {
 		return str;
 	}
 
-	// here yea what about this?
-	public static final String formatMessage(String msg, String sender, boolean var2, MessageType type) {
+	public static final String formatMessage(String msg, String sender, MessageType type) {
+		return formatMessage(msg, sender, type, (String) null);
+	}
+
+	public static final String formatMessage(String msg, String sender, MessageType type, String colourOverride) {
+		String colour = null != colourOverride ? colourOverride : type.color;
+
 		if ((sender == null || sender.length() == 0) && type != MessageType.TRADE)
-			return type.color + msg;
+			return colour + msg;
 
 		switch (type) {
 			case GAME:
-				return type.color + sender + ": " + type.color + msg;
+				return colour + sender + ": " + colour + msg;
 			case PRIVATE_RECIEVE:
-				return type.color + sender + type.color + " tells you: " + msg;
+				return colour + sender + colour + " tells you: " + msg;
 			case PRIVATE_SEND:
-				return type.color + "You tell " + sender + type.color + ": " + msg;
+				return colour + "You tell " + sender + colour + ": " + msg;
 			case QUEST:
-				return type.color + sender + ": " + type.color + msg;
+				return colour + sender + ": " + colour + msg;
 			case CHAT:
-				return type.color + sender + ": " + type.color + msg;
+				return colour + sender + ": " + colour + msg;
 			case FRIEND_STATUS:
-				return type.color + msg;
+				return colour + msg;
 			case TRADE:
-				return type.color + sender + type.color + " wishes to trade with you.";
+				return colour + sender + colour + " wishes to trade with you.";
 			case INVENTORY:
-				return type.color + sender + ": " + type.color + msg;
+				return colour + sender + ": " + colour + msg;
 			case GLOBAL_CHAT:
-				return type.color + msg;
+				return colour + msg;
 			case CLAN_CHAT:
-				return type.color + msg;
+				return colour + msg;
 			default:
-				return "";
+				return colour;
 		}
 	}
 

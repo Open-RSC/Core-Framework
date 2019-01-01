@@ -91,39 +91,39 @@ public class StringUtil {
 		}
 	}
 
-	// here yea what about this?
-	public static final String formatMessage(String msg, String sender, boolean var2, MessageType type) {
-		try {
-			if ((sender == null || sender.length() == 0) && type != MessageType.TRADE)
-				return type.color + msg;
+	public static final String formatMessage(String msg, String sender, MessageType type) {
+		return formatMessage(msg, sender, type, (String) null);
+	}
 
-			switch (type) {
-				case GAME:
-					return type.color + sender + ": " + type.color + msg;
-				case PRIVATE_RECIEVE:
-					return type.color + sender + type.color + " tells you: " + msg;
-				case PRIVATE_SEND:
-					return type.color + "You tell " + sender + type.color + ": " + msg;
-				case QUEST:
-					return type.color + sender + ": " + type.color + msg;
-				case CHAT:
-					return type.color + sender + ": " + type.color + msg;
-				case FRIEND_STATUS:
-					return type.color + msg;
-				case TRADE:
-					return type.color + sender + type.color + " wishes to trade with you.";
-				case INVENTORY:
-					return type.color + sender + ": " + type.color + msg;
-				case GLOBAL_CHAT:
-					return type.color + msg;
-				case CLAN_CHAT:
-					return type.color + msg;
-				default:
-					return "";
-			}
-		} catch (RuntimeException var5) {
-			throw GenUtil.makeThrowable(var5, "mb.D(" + (msg != null ? "{...}" : "null") + ','
-					+ (sender != null ? "{...}" : "null") + ',' + true + ',' + type + ')');
+	public static final String formatMessage(String msg, String sender, MessageType type, String colourOverride) {
+		String colour = null != colourOverride ? colourOverride : type.color;
+
+		if ((sender == null || sender.length() == 0) && type != MessageType.TRADE)
+			return colour + msg;
+
+		switch (type) {
+			case GAME:
+				return colour + sender + ": " + colour + msg;
+			case PRIVATE_RECIEVE:
+				return colour + sender + colour + " tells you: " + msg;
+			case PRIVATE_SEND:
+				return colour + "You tell " + sender + colour + ": " + msg;
+			case QUEST:
+				return colour + sender + ": " + colour + msg;
+			case CHAT:
+				return colour + sender + ": " + colour + msg;
+			case FRIEND_STATUS:
+				return colour + msg;
+			case TRADE:
+				return colour + sender + colour + " wishes to trade with you.";
+			case INVENTORY:
+				return colour + sender + ": " + colour + msg;
+			case GLOBAL_CHAT:
+				return colour + msg;
+			case CLAN_CHAT:
+				return colour + msg;
+			default:
+				return colour;
 		}
 	}
 
