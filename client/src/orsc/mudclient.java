@@ -1191,7 +1191,7 @@ public final class mudclient implements Runnable {
 				this.logoutTimeout = 0;
 
 				this.showMessage(false, (String) null, "Sorry, you can\'t logout at the moment", MessageType.GAME, 0,
-						(String) null);
+						(String) null, "@cya@");
 			} catch (RuntimeException var3) {
 				throw GenUtil.makeThrowable(var3, "client.CB(" + var1 + ')');
 			}
@@ -11275,7 +11275,7 @@ public final class mudclient implements Runnable {
 					if (this.combatTimeout <= 450) {
 						if (var1 < this.combatTimeout) {
 							this.showMessage(false, (String) null, "You can\'t logout for 10 seconds after combat",
-									MessageType.GAME, 0, (String) null);
+									MessageType.GAME, 0, (String) null, "@cya@");
 						} else {
 							this.packetHandler.getClientStream().newPacket(102);
 							this.packetHandler.getClientStream().finishPacket();
@@ -11283,7 +11283,7 @@ public final class mudclient implements Runnable {
 						}
 					} else {
 						this.showMessage(false, (String) null, "You can\'t logout during combat!", MessageType.GAME, 0,
-								(String) null);
+								(String) null, "@cya@");
 					}
 				}
 			} catch (RuntimeException var3) {
