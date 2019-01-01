@@ -558,24 +558,21 @@ public class PacketHandler {
 	private void showMessage() {
 		int crown = packetsIncoming.get32();
 		MessageType type = MessageType.lookup(packetsIncoming.getUnsignedByte());
-		int var5 = packetsIncoming.getUnsignedByte();
+		int messageType = packetsIncoming.getUnsignedByte();
 		String message = packetsIncoming.readString();
 		String sender = null;
 		String clan = null;
-		String color = null;
-		if ((var5 & 1) != 0) {
+		String colour = null;
+		if ((messageType & 1) != 0) {
 			sender = packetsIncoming.readString();
-		}
-
-		if ((1 & var5) != 0) {
 			clan = packetsIncoming.readString();
 		}
-
-		if ((var5 & 2) != 0) {
-			color = packetsIncoming.readString();
+		if((messageType & 2) != 0) {
+			colour = packetsIncoming.readString();
 		}
 
-		mc.showMessage(false, sender, message, type, crown, clan);
+		// Why is clan being sent into former name?
+		mc.showMessage(false, sender, message, type, crown, clan, colour);
 	}
 
 	private void sendConnectionMessage() {
@@ -1282,9 +1279,8 @@ public class PacketHandler {
 					npc.message = message;
 					if (mc.getLocalPlayer().serverIndex == chatRecipient) {
 						mc.showMessage(false, (String) null,
-										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": "
-														+ npc.message,
-										MessageType.QUEST, 0, (String) null);
+										com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
+										MessageType.QUEST, 0, (String) null, "@yel@");
 					}
 				}
 
@@ -1885,8 +1881,7 @@ public class PacketHandler {
 						player.message = message;
 						player.messageTimeout = 150;
 						if (mc.getLocalPlayer() == player) {
-							mc.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.getStaffName(true) : player.getStaffName(true)), player.message, MessageType.QUEST, 0,
-								player.accountName);
+							mc.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.getStaffName(true) : player.getStaffName(true)), player.message, MessageType.QUEST, 0, player.accountName);
 						}
 					}
 				}
