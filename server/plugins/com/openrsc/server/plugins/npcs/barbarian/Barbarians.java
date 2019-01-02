@@ -20,32 +20,32 @@ public class Barbarians implements TalkToNpcListener, TalkToNpcExecutiveListener
 	public void onTalkToNpc(Player p, Npc n) {
 		playerTalk(p, n, "Hello");
 		int randomDiag = DataConversions.random(0, 10);
-		if(randomDiag == 0) {
+		if (randomDiag == 0) {
 			npcTalk(p, n, "Go away",
-					"This is our village");
-		} else if(randomDiag == 1) {
+				"This is our village");
+		} else if (randomDiag == 1) {
 			npcTalk(p, n, "Hello");
-		} else if(randomDiag == 2) {
+		} else if (randomDiag == 2) {
 			npcTalk(p, n, "Wanna fight?");
 			n.startCombat(p);
-		} else if(randomDiag == 3) {
+		} else if (randomDiag == 3) {
 			npcTalk(p, n, "Who are you?");
 			playerTalk(p, n, "I'm a bold adventurer");
 			npcTalk(p, n, "You don't look very strong");
-		} else if(randomDiag == 4) {
+		} else if (randomDiag == 4) {
 			p.message("The barbarian grunts");
-		} else if(randomDiag == 5) {
+		} else if (randomDiag == 5) {
 			p.message("Ello");
-		} else if(randomDiag == 6) {
+		} else if (randomDiag == 6) {
 			npcTalk(p, n, "ug");
-		} else if(randomDiag == 7) {
+		} else if (randomDiag == 7) {
 			npcTalk(p, n, "I'm a little busy right now",
-					"We're getting ready for our next barbarian raid");
-		} else if(randomDiag == 8) {
+				"We're getting ready for our next barbarian raid");
+		} else if (randomDiag == 8) {
 			npcTalk(p, n, "Beer?");
-		} else if(randomDiag == 9) {
+		} else if (randomDiag == 9) {
 			p.message("The barbarian ignores you");
-		} else if(randomDiag == 10) {
+		} else if (randomDiag == 10) {
 			p.message("Grr");
 		}
 	}

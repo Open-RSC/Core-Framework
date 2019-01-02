@@ -23,13 +23,15 @@ import static com.openrsc.server.plugins.Functions.message;
 
 public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	/** LOG IDs **/
-	public static int[] LOGS = { 14, 632, 633, 634, 635, 636 };
 	public final static int TINDERBOX = 166;
+	/**
+	 * LOG IDs
+	 **/
+	public static int[] LOGS = {14, 632, 633, 634, 635, 636};
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		if(myItem.getID() == TINDERBOX && inArray(item.getID(), LOGS)) {
+		if (myItem.getID() == TINDERBOX && inArray(item.getID(), LOGS)) {
 			return true;
 		}
 		return false;
@@ -51,13 +53,10 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 					player.message("Nothing interesting happens");
 					return;
 			}
-		}
-
-		else {
+		} else {
 			if (item.getID() == 14) { // Log
 				handleFiremaking(item, player);
-			}
-			else
+			} else
 				player.message("Nothing interesting happens");
 		}
 	}
@@ -107,9 +106,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 					}
 				}
 			);
-		}
-
-		else {
+		} else {
 			message(player, 1200, "You fail to light a fire");
 			player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		}
@@ -117,52 +114,52 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	private void handleCustomFiremaking(final GroundItem gItem, Player player) {
 		final FiremakingDef def = EntityHandler.getFiremakingDef(gItem.getID());
-		
+
 		if (def == null) {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		
+
 		if (player.getSkills().getLevel(11) < def.getRequiredLevel()) {
 			player.message("You need at least " + def.getRequiredLevel() + " firemaking to light these logs");
 			return;
 		}
-		
+
 		if (player.getViewArea().getGameObject(gItem.getLocation()) != null) {
 			player.message("You can't light a fire here");
 			return;
 		}
-		
+
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.message("You attempt to light the logs");
-		
+
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, 11)) {
 			@Override
 			public void action() {
 				if (Formulae.lightCustomLogs(def, owner.getSkills().getLevel(11))) {
 					owner.message("The fire catches and the logs begin to burn");
 					World.getWorld().unregisterItem(gItem);
-					
+
 					final GameObject fire = new GameObject(gItem.getLocation(), 97, 0, 0);
 					World.getWorld().registerGameObject(fire);
-					
+
 					Server.getServer().getEventHandler().add(
-							new SingleEvent(null, def.getLength()) {
-								@Override
-								public void action() {
-									if (fire != null) {
-										World.getWorld().registerItem(new GroundItem(181,
-												fire.getX(),
-												fire.getY(),
-												1, null));
-										World.getWorld().unregisterGameObject(fire);
-									}
+						new SingleEvent(null, def.getLength()) {
+							@Override
+							public void action() {
+								if (fire != null) {
+									World.getWorld().registerItem(new GroundItem(181,
+										fire.getX(),
+										fire.getY(),
+										1, null));
+									World.getWorld().unregisterGameObject(fire);
 								}
-							});
-					
+							}
+						});
+
 					owner.incExp(11, Formulae.firemakingExp(owner.getSkills().getMaxStat(11), 25), true);
 					interrupt();
-					
+
 				} else {
 					owner.message("You fail to light a fire");
 					owner.getUpdateFlags().setActionBubble(new Bubble(owner, TINDERBOX));
@@ -173,7 +170,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if(item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
+		if (item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
 			return true;
 		}
 		return false;
@@ -181,7 +178,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if(item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
+		if (item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
 			player.message("I think you should put the logs down before you light them!");
 		}
 	}

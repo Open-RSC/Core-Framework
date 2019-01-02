@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class ServerEventHandler {
-	
+
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private LinkedHashMap<String, DelayedEvent> events = new LinkedHashMap<String, DelayedEvent>();
 	private LinkedHashMap<String, DelayedEvent> toAdd = new LinkedHashMap<String, DelayedEvent>();
@@ -24,10 +24,10 @@ public final class ServerEventHandler {
 		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) {
 			String u;
-			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {}
+			while (toAdd.containsKey(u = UUID.randomUUID().toString())) {
+			}
 			toAdd.put(className + u, event);
-		}
-		else {
+		} else {
 			if (event.getOwner().isPlayer())
 				toAdd.put(className + event.getOwner().getUUID() + "p", event);
 			else
@@ -47,7 +47,7 @@ public final class ServerEventHandler {
 				events.put(e.getKey(), e.getValue());
 			toAdd.clear();
 		}
-		for (Iterator<Map.Entry<String, DelayedEvent>> it = events.entrySet().iterator(); it.hasNext();) {
+		for (Iterator<Map.Entry<String, DelayedEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
 			DelayedEvent event = it.next().getValue();
 			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
 				it.remove();

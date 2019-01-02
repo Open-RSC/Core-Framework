@@ -10,8 +10,9 @@ import java.sql.SQLException;
 
 /**
  * staff username|action int|affected player username|time in epoch|staff x|staff y|affected x|affected y|staff ip|affected ip
- * @author openfrog
  *
+ * @author openfrog
+ * <p>
  * 0 - Mute
  * 1 - Unmuted
  * 2 - Summon
@@ -42,8 +43,8 @@ public final class StaffLog extends Query {
 	private int action, staffX, staffY, affectedX, affectedY;
 
 	public StaffLog(Player staffMember, int action, Player affectedPlayer) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX 
-				+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
 		this.affectedUsername = affectedPlayer == null ? "" : affectedPlayer.getUsername();
@@ -56,8 +57,8 @@ public final class StaffLog extends Query {
 	}
 
 	public StaffLog(Player staffMember, int action, String extra) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX 
-				+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`, `extra`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`, `extra`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
 		this.staffX = staffMember == null ? 0 : staffMember.getX();
@@ -65,9 +66,10 @@ public final class StaffLog extends Query {
 		this.staffIp = staffMember == null ? "" : staffMember.getCurrentIP();
 		this.extra = extra == null ? "" : extra;
 	}
+
 	public StaffLog(Player staffMember, int action) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX 
-				+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
 		this.staffX = staffMember == null ? 0 : staffMember.getX();
@@ -76,8 +78,8 @@ public final class StaffLog extends Query {
 	}
 
 	public StaffLog(Player staffMember, int action, Player affectedPlayer, String extra) {
-		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX 
-				+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`, `extra`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+			+ "staff_logs`(`staff_username`, `action`, `affected_player`, `time`, `staff_x`, `staff_y`, `affected_x`, `affected_y`, `staff_ip`, `affected_ip`, `extra`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.action = action;
 		this.staffUsername = staffMember == null ? "" : staffMember.getUsername();
 		this.affectedUsername = affectedPlayer == null ? "" : affectedPlayer.getUsername();
@@ -94,7 +96,7 @@ public final class StaffLog extends Query {
 	public Query build() {
 		return this;
 	}
-	
+
 	@Override
 	public PreparedStatement prepareStatement(Connection connection) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -108,7 +110,7 @@ public final class StaffLog extends Query {
 		statement.setInt(8, affectedY);
 		statement.setString(9, staffIp);
 		statement.setString(10, affectedIp);
-		if(extra != null)
+		if (extra != null)
 			statement.setString(11, extra);
 		return statement;
 	}

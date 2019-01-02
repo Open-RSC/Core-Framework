@@ -12,20 +12,18 @@ import java.util.TreeMap;
 public class Social {
 
 	private Player player;
-
-	public Social(Player player) {
-		this.player = player;
-	}
-
 	/**
 	 * Map of players on players friend list
 	 */
 	private TreeMap<Long, Integer> friendList = new TreeMap<Long, Integer>();
-
 	/**
 	 * List of usernameHash's of players on players ignore list
 	 */
 	private ArrayList<Long> ignoreList = new ArrayList<Long>();
+
+	public Social(Player player) {
+		this.player = player;
+	}
 
 	public boolean addFriend(long id, int world, String friendName) {
 		boolean added = Server.getPlayerDataProcessor().getDatabase().addFriend(player.getDatabaseID(), id, friendName);
@@ -40,7 +38,7 @@ public class Social {
 			ignoreList.add(id);
 		return added;
 	}
-	
+
 	public void removeFriend(long id) {
 		friendList.remove(id);
 		Server.getPlayerDataProcessor().getDatabase().removeFriend(player.getDatabaseID(), id);
@@ -51,14 +49,6 @@ public class Social {
 		Server.getPlayerDataProcessor().getDatabase().removeIgnore(player.getDatabaseID(), id);
 	}
 
-	public void setIgnoreList(ArrayList<Long> ignoreList) {
-		this.ignoreList = ignoreList;
-	}
-	
-	public void setFriendList(TreeMap<Long, Integer> friendList) {
-		this.friendList = friendList;
-	}
-	
 	public boolean isFriendsWith(long usernameHash) {
 		return friendList.containsKey(usernameHash);
 	}
@@ -70,13 +60,21 @@ public class Social {
 	public Collection<Entry<Long, Integer>> getFriendListEntry() {
 		return friendList.entrySet();
 	}
-	
+
 	public TreeMap<Long, Integer> getFriendList() {
 		return friendList;
 	}
-	
+
+	public void setFriendList(TreeMap<Long, Integer> friendList) {
+		this.friendList = friendList;
+	}
+
 	public ArrayList<Long> getIgnoreList() {
 		return ignoreList;
+	}
+
+	public void setIgnoreList(ArrayList<Long> ignoreList) {
+		this.ignoreList = ignoreList;
 	}
 
 	public int friendCount() {

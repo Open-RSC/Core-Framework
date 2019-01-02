@@ -13,19 +13,19 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class FrincosVialShopEntrana implements ShopInterface,
-TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 3000, 100, 70,2,
-			new Item(465, 50), new Item(468, 3), new Item(270, 50));
+	private final Shop shop = new Shop(false, 3000, 100, 70, 2,
+		new Item(465, 50), new Item(468, 3), new Item(270, 50));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		npcTalk(p,n, "Hello how can I help you?");
-		int menu = showMenu(p,n,
-				"What are you selling?",
-				"You can't, I'm beyond help",
-				"I'm okay, thankyou");
-		if(menu == 0) {
+		npcTalk(p, n, "Hello how can I help you?");
+		int menu = showMenu(p, n,
+			"What are you selling?",
+			"You can't, I'm beyond help",
+			"I'm okay, thankyou");
+		if (menu == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}
@@ -38,7 +38,7 @@ TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

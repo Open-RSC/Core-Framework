@@ -2,9 +2,9 @@ package com.openrsc.server.plugins.skills;
 
 
 public class LootItem implements Comparable<LootItem> {
-	private int chance;
 	private final int id;
 	private final int amount;
+	private int chance;
 
 	public LootItem(int id, int amount, int chance) {
 		this.id = id;

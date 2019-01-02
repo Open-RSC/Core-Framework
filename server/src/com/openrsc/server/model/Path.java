@@ -6,30 +6,50 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public class Path {
-	
-	public enum PathType {
-		WALK_TO_POINT,
-		WALK_TO_ENTITY
-	}
-	
+
 	public static final int MAXIMUM_SIZE = 50;
-
 	private Deque<Point> waypoints = new LinkedList<Point>();
-
 	private PathType pathType;
 	private Mob mob;
-	
 	public Path(Mob mob, PathType type) {
 		setPathType(type);
 		this.mob = mob;
 	}
-	
+
+	public static int direction(int dx, int dy) {
+		if (dx < 0) {
+			if (dy < 0) {
+				return 5;
+			} else if (dy > 0) {
+				return 0;
+			} else {
+				return 3;
+			}
+		} else if (dx > 0) {
+			if (dy < 0) {
+				return 7;
+			} else if (dy > 0) {
+				return 2;
+			} else {
+				return 4;
+			}
+		} else {
+			if (dy < 0) {
+				return 6;
+			} else if (dy > 0) {
+				return 1;
+			} else {
+				return -1;
+			}
+		}
+	}
+
 	public void addStep(int x, int y) {
 
-		if(waypoints.size() == 0) {
+		if (waypoints.size() == 0) {
 			waypoints.add(new Point(mob.getX(), mob.getY()));
 		}
-		
+
 		/*
 		 * We retrieve the previous point here.
 		 */
@@ -101,39 +121,11 @@ public class Path {
 			waypoints.add(new Point(x, y));
 		}
 	}
-	
-	public static int direction(int dx, int dy) {
-		if (dx < 0) {
-			if (dy < 0) {
-				return 5;
-			} else if (dy > 0) {
-				return 0;
-			} else {
-				return 3;
-			}
-		} else if (dx > 0) {
-			if (dy < 0) {
-				return 7;
-			} else if (dy > 0) {
-				return 2;
-			} else {
-				return 4;
-			}
-		} else {
-			if (dy < 0) {
-				return 6;
-			} else if (dy > 0) {
-				return 1;
-			} else {
-				return -1;
-			}
-		}
-	}
 
 	public void finish() {
 		waypoints.removeFirst();
 	}
-	
+
 	public boolean isEmpty() {
 		return waypoints.isEmpty();
 	}
@@ -141,7 +133,7 @@ public class Path {
 	public Point poll() {
 		return waypoints.poll();
 	}
-	
+
 	public Point getLastPoint() {
 		return waypoints.getLast();
 	}
@@ -160,7 +152,12 @@ public class Path {
 
 	@Override
 	public String toString() {
-		
+
 		return "Path: " + pathType.toString() + ", " + waypoints.toString() + "";
+	}
+
+	public enum PathType {
+		WALK_TO_POINT,
+		WALK_TO_ENTITY
 	}
 }

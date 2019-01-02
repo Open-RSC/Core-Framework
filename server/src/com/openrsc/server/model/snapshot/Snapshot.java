@@ -2,8 +2,8 @@ package com.openrsc.server.model.snapshot;
 
 public abstract class Snapshot {
 
-	private long eventTime;
 	protected String owner;
+	private long eventTime;
 
 	public Snapshot(String owner) {
 		this.owner = owner;

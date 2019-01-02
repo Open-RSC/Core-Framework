@@ -7,13 +7,14 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.sleep;
+
 public class Prayer implements ObjectActionExecutiveListener, ObjectActionListener {
 
 	@Override
 	public void onObjectAction(final GameObject object, String command, Player player) {
-		if(command.equalsIgnoreCase("recharge at")) {
+		if (command.equalsIgnoreCase("recharge at")) {
 			int maxPray = object.getID() == 200 ? player.getSkills().getMaxStat(5) + 2 : player.getSkills().getMaxStat(5);
-			if(player.getSkills().getLevel(5) == maxPray) {
+			if (player.getSkills().getLevel(5) == maxPray) {
 				player.message("You already have full prayer points");
 			} else {
 				player.message("You recharge your prayer points");
@@ -21,9 +22,9 @@ public class Prayer implements ObjectActionExecutiveListener, ObjectActionListen
 				if (player.getSkills().getLevel(5) < maxPray) {
 					player.getSkills().setLevel(5, maxPray);
 				}
-			
+
 			}
-			if(object.getID() == 625 && object.getY() == 3573) {
+			if (object.getID() == 625 && object.getY() == 3573) {
 				sleep(650);
 				message(player, "Suddenly a trapdoor opens beneath you");
 				player.teleport(608, 3525);

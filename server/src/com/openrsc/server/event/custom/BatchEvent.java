@@ -9,7 +9,7 @@ public abstract class BatchEvent extends DelayedEvent {
 
 	private int repeatFor;
 	private int repeated;
-	
+
 	public BatchEvent(Player owner, int delay, int repeatFor) {
 		super(owner, delay);
 		if (Constants.GameServer.BATCH_PROGRESSION) this.repeatFor = repeatFor;
@@ -25,7 +25,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			owner.setBusyTimer(delay + 200);
 			action();
 			repeated++;
-			if(repeated < getRepeatFor()) {
+			if (repeated < getRepeatFor()) {
 				ActionSender.sendProgress(owner, repeated);
 			} else {
 				interrupt();
@@ -34,11 +34,11 @@ public abstract class BatchEvent extends DelayedEvent {
 	}
 
 	public abstract void action();
-	
+
 	public boolean isCompleted() {
 		return (repeated + 1) >= getRepeatFor() || !matchRunning;
 	}
-	
+
 	public void interrupt() {
 		ActionSender.sendRemoveProgressBar(owner);
 		owner.setBusyTimer(0);
@@ -49,7 +49,7 @@ public abstract class BatchEvent extends DelayedEvent {
 	public int getRepeatFor() {
 		return repeatFor;
 	}
-	
+
 	public void setRepeatFor(int i) {
 		repeatFor = i;
 	}

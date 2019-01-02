@@ -19,16 +19,11 @@ public class NpcBehavior {
 
 	protected Mob target;
 	protected Mob lastTarget;
+	private State state = State.ROAM;
 
 	public NpcBehavior(Npc npc) {
 		this.npc = npc;
 	}
-
-	enum State {
-		ROAM, AGGRO, COMBAT, RETREAT;
-	}
-
-	private State state = State.ROAM;
 
 	public void tick() {
 
@@ -43,29 +38,29 @@ public class NpcBehavior {
 
 			target = null;
 			if (System.currentTimeMillis() - lastMovement > 3000
-					&& System.currentTimeMillis() - npc.getCombatTimer() > 3000
-					&& npc.finishedPath()) {
+				&& System.currentTimeMillis() - npc.getCombatTimer() > 3000
+				&& npc.finishedPath()) {
 				lastMovement = System.currentTimeMillis();
 				lastTarget = null;
 				int rand = DataConversions.random(0, 1);
-				if(!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
+				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
 					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
 					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
 					npc.walk(newX, newY);
 				}
 			}
 			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
-					&& ((npc.getDef().isAggressive()
-						&& !(npc.getID() == 40 && npc.getX() >= 208 && npc.getX() <= 211 && npc.getY() >= 545 && npc.getY() <= 546)) // Skeleton in draynor manor
-						|| (npc.getLocation().inWilderness() && npc.getID() != 342 && npc.getID() != 233 && npc.getID() != 234 && npc.getID() != 235))
-						|| (npc.getX() > 274 && npc.getX() < 283 && npc.getY() > 432 && npc.getY() < 441) // Black Knight's Fortress
-				) {
+				&& ((npc.getDef().isAggressive()
+				&& !(npc.getID() == 40 && npc.getX() >= 208 && npc.getX() <= 211 && npc.getY() >= 545 && npc.getY() <= 546)) // Skeleton in draynor manor
+				|| (npc.getLocation().inWilderness() && npc.getID() != 342 && npc.getID() != 233 && npc.getID() != 234 && npc.getID() != 235))
+				|| (npc.getX() > 274 && npc.getX() < 283 && npc.getY() > 432 && npc.getY() < 441) // Black Knight's Fortress
+			) {
 
 				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 
 					int range = 1;
-					switch(npc.getID()) {
+					switch (npc.getID()) {
 						case 232: // Bandit
 							range = 5;
 							break;
@@ -97,7 +92,7 @@ public class NpcBehavior {
 
 			// Target is not in range.
 			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
-					|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
+				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 				setRoaming();
 			}
 
@@ -130,7 +125,7 @@ public class NpcBehavior {
 					if (npc.getSkills().getLevel(Skills.HITPOINTS) <=
 						Math.ceil(npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.20)) {
 						if (npc.getSkills().getLevel(Skills.HITPOINTS) > 0
-								&& npc.getOpponent().getHitsMade() >= 3) {
+							&& npc.getOpponent().getHitsMade() >= 3) {
 							retreat();
 						}
 					}
@@ -172,15 +167,15 @@ public class NpcBehavior {
 
 	private boolean canAggro(Mob p) {
 		boolean outOfBounds = !p.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
-				npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
+			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
 
 		boolean playerOccupied = p.inCombat();
 		boolean playerCombatTimeout = System.currentTimeMillis()
-				- p.getCombatTimer() < (p.getCombatState() == CombatState.RUNNING
-						|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
+			- p.getCombatTimer() < (p.getCombatState() == CombatState.RUNNING
+			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
 
 		boolean shouldAttack = p.getCombatLevel() <= ((npc.getNPCCombatLevel() * 2) + 1)
-				|| npc.getLocation().inWilderness();
+			|| npc.getLocation().inWilderness();
 
 		boolean closeEnough = npc.canReach(p);
 
@@ -197,6 +192,11 @@ public class NpcBehavior {
 		return state == State.AGGRO;
 	}
 
+	public void setChasing(Player player) {
+		state = State.AGGRO;
+		target = player;
+	}
+
 	Player getChasedPlayer() {
 		if (target.isPlayer())
 			return (Player) target;
@@ -205,7 +205,7 @@ public class NpcBehavior {
 	}
 
 	public boolean checkTargetCombatTimer() {
-		return (System.currentTimeMillis()	- target.getCombatTimer()
+		return (System.currentTimeMillis() - target.getCombatTimer()
 			< (target.getCombatState() == CombatState.RUNNING
 			|| target.getCombatState() == CombatState.WAITING ? 3000 : 1500)
 		);
@@ -213,11 +213,6 @@ public class NpcBehavior {
 
 	public Mob getChaseTarget() {
 		return target;
-	}
-
-	public void setChasing(Player player) {
-		state = State.AGGRO;
-		target = player;
 	}
 
 	private void setRoaming() {
@@ -231,5 +226,9 @@ public class NpcBehavior {
 
 	public void onKill(Mob killed) {
 
+	}
+
+	enum State {
+		ROAM, AGGRO, COMBAT, RETREAT;
 	}
 }

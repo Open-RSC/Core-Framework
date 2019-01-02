@@ -16,12 +16,12 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
-
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public class Herblaw implements InvActionListener, InvUseOnItemListener,
-InvActionExecutiveListener, InvUseOnItemExecutiveListener {
+	InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 
 	@Override
 	public void onInvAction(final Item item, Player player) {
@@ -56,7 +56,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-				.getRepeatTimes(player, 15)) {
+			.getRepeatTimes(player, 15)) {
 			public void action() {
 				if (!owner.getInventory().hasItemId(item.getID())) {
 					interrupt();
@@ -82,10 +82,10 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 	public void onInvUseOnItem(Player player, Item item, Item usedWith) {
 		ItemHerbSecond secondDef = null;
 		if ((secondDef = EntityHandler.getItemHerbSecond(item.getID(), usedWith
-				.getID())) != null) {
+			.getID())) != null) {
 			doHerbSecond(player, item, usedWith, secondDef, false);
 		} else if ((secondDef = EntityHandler.getItemHerbSecond(usedWith
-				.getID(), item.getID())) != null) {
+			.getID(), item.getID())) != null) {
 			doHerbSecond(player, usedWith, item, secondDef, true);
 		} else if (item.getID() == 468) {
 			doGrind(player, item, usedWith);
@@ -95,15 +95,15 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			doHerblaw(player, item, usedWith);
 		} else if (usedWith.getID() == 464) {
 			doHerblaw(player, usedWith, item);
-		} else if(item.getID() == 1052 && usedWith.getID() == 1051) {
+		} else if (item.getID() == 1052 && usedWith.getID() == 1051) {
 			makeLiquid(player, usedWith, item, true);
-		} else if(item.getID() == 1051 && usedWith.getID() == 1052) {
+		} else if (item.getID() == 1051 && usedWith.getID() == 1052) {
 			makeLiquid(player, item, usedWith, false);
-		} else if(item.getID() == 1074 && (usedWith.getID() == 1051 || usedWith.getID() == 444)) {
+		} else if (item.getID() == 1074 && (usedWith.getID() == 1051 || usedWith.getID() == 444)) {
 			makeLiquid(player, item, usedWith, false);
-		} else if(usedWith.getID() == 1074 && (item.getID() == 1051 || item.getID() == 444)) {
+		} else if (usedWith.getID() == 1074 && (item.getID() == 1051 || item.getID() == 444)) {
 			makeLiquid(player, usedWith, item, true);
-		} else if(usedWith.getID() == 1161 && item.getID() == 1160 || usedWith.getID() == 1160 && item.getID() == 1161) {
+		} else if (usedWith.getID() == 1161 && item.getID() == 1160 || usedWith.getID() == 1160 && item.getID() == 1161) {
 			if (player.getSkills().getLevel(15) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
@@ -114,7 +114,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			showBubble(player, new Item(1160));
 			player.getInventory().remove(1160, 1);
 			player.getInventory().replace(1161, 1178);
-		} else if(usedWith.getID() == 1179 && item.getID() == 1178 || usedWith.getID() == 1178 && item.getID() == 1179) {
+		} else if (usedWith.getID() == 1179 && item.getID() == 1178 || usedWith.getID() == 1178 && item.getID() == 1179) {
 			if (player.getSkills().getLevel(15) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
@@ -125,7 +125,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			showBubble(player, new Item(1179));
 			player.getInventory().remove(1179, 1);
 			player.getInventory().replace(1178, 1180);
-		} else if(usedWith.getID() == 1284 && item.getID() == 1180 || usedWith.getID() == 1180 && item.getID() == 1284) {
+		} else if (usedWith.getID() == 1284 && item.getID() == 1180 || usedWith.getID() == 1180 && item.getID() == 1284) {
 			if (player.getSkills().getLevel(15) < 10) {
 				player.message("You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
@@ -137,7 +137,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.getInventory().remove(1284, 1);
 			player.getInventory().replace(1180, 1176);
 			playerTalk(player, null, "Excellent this looks just right");
-		} else if(usedWith.getID() == 457 && item.getID() == 587 || usedWith.getID() == 587 && item.getID() == 457) {
+		} else if (usedWith.getID() == 457 && item.getID() == 587 || usedWith.getID() == 587 && item.getID() == 457) {
 			if (player.getSkills().getLevel(15) < 25) {
 				player.message("You need a level of 25 herblaw to mix this potion");
 				return;
@@ -146,13 +146,13 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.message("You mix the slime into your potion");
 			player.getInventory().remove(457, 1);
 			player.getInventory().replace(587, 588);
-		} else if(usedWith.getID() == 1251 && item.getID() == 818 || usedWith.getID() == 818 && item.getID() == 1251) {
+		} else if (usedWith.getID() == 1251 && item.getID() == 818 || usedWith.getID() == 818 && item.getID() == 1251) {
 			if (player.getSkills().getLevel(15) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
 				return;
 			}
 			//player needs to have learned secret from gujuo
-			if(player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) < 7) {
+			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) < 7) {
 				player.message("You're not quite sure what effect this will have.");
 				player.message("You decide against experimenting.");
 				return;
@@ -161,13 +161,13 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
 			player.getInventory().remove(818, 1);
 			player.getInventory().replace(1251, 1253);
-		} else if(usedWith.getID() == 1252 && item.getID() == 816 || usedWith.getID() == 816 && item.getID() == 1252) {
+		} else if (usedWith.getID() == 1252 && item.getID() == 816 || usedWith.getID() == 816 && item.getID() == 1252) {
 			if (player.getSkills().getLevel(15) < 45) {
 				player.message("You need to have a herblaw level of 45 or over to mix this potion");
 				return;
 			}
 			//player needs to have learned secret from gujuo
-			if(player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) < 7) {
+			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) < 7) {
 				player.message("You're not quite sure what effect this will have.");
 				player.message("You decide against experimenting.");
 				return;
@@ -183,59 +183,59 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 
 	public boolean blockInvUseOnItem(Player p, Item item, Item usedWith) {
 		if ((EntityHandler.getItemHerbSecond(item.getID(), usedWith.getID())) != null
-				|| (EntityHandler.getItemHerbSecond(usedWith.getID(), item
-						.getID())) != null) {
+			|| (EntityHandler.getItemHerbSecond(usedWith.getID(), item
+			.getID())) != null) {
 			return true;
 		} else if (item.getID() == 468 || usedWith.getID() == 468) {
 			return true;
 		} else if (item.getID() == 464 || usedWith.getID() == 464) {
 			return true;
-		} else if(item.getID() == 1052 && usedWith.getID() == 1051
-				|| item.getID() == 1051 && usedWith.getID() == 1052) {
+		} else if (item.getID() == 1052 && usedWith.getID() == 1051
+			|| item.getID() == 1051 && usedWith.getID() == 1052) {
 			return true;
-		} else if(item.getID() == 1074 && (usedWith.getID() == 1051 || usedWith.getID() == 444)
-				|| usedWith.getID() == 1074 && (item.getID() == 1051 || item.getID() == 444)) {
+		} else if (item.getID() == 1074 && (usedWith.getID() == 1051 || usedWith.getID() == 444)
+			|| usedWith.getID() == 1074 && (item.getID() == 1051 || item.getID() == 444)) {
 			return true;
-		} else if(usedWith.getID() == 1161 && item.getID() == 1160 || usedWith.getID() == 1160 && item.getID() == 1161) {
+		} else if (usedWith.getID() == 1161 && item.getID() == 1160 || usedWith.getID() == 1160 && item.getID() == 1161) {
 			return true;
-		} else if(usedWith.getID() == 1179 && item.getID() == 1178 || usedWith.getID() == 1178 && item.getID() == 1179) {
+		} else if (usedWith.getID() == 1179 && item.getID() == 1178 || usedWith.getID() == 1178 && item.getID() == 1179) {
 			return true;
-		} else if(usedWith.getID() == 1284 && item.getID() == 1180 || usedWith.getID() == 1180 && item.getID() == 1284) {
+		} else if (usedWith.getID() == 1284 && item.getID() == 1180 || usedWith.getID() == 1180 && item.getID() == 1284) {
 			return true;
-		} else if(usedWith.getID() == 457 && item.getID() == 587 || usedWith.getID() == 587 && item.getID() == 457) {
+		} else if (usedWith.getID() == 457 && item.getID() == 587 || usedWith.getID() == 587 && item.getID() == 457) {
 			return true;
-		} else if(usedWith.getID() == 1251 && item.getID() == 818 || usedWith.getID() == 818 && item.getID() == 1251) {
+		} else if (usedWith.getID() == 1251 && item.getID() == 818 || usedWith.getID() == 818 && item.getID() == 1251) {
 			return true;
-		} else if(usedWith.getID() == 1252 && item.getID() == 816 || usedWith.getID() == 816 && item.getID() == 1252) {
+		} else if (usedWith.getID() == 1252 && item.getID() == 816 || usedWith.getID() == 816 && item.getID() == 1252) {
 			return true;
 		}
 		return false;
 	}
 
 	private boolean doHerblaw(Player player, final Item vial,
-			final Item herb) {
+							  final Item herb) {
 		if (!Constants.GameServer.MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
-		if(vial.getID() == 464 && herb.getID() == 1051) {
+		if (vial.getID() == 464 && herb.getID() == 1051) {
 			player.message("You mix the ground bones into the water");
 			player.message("Fizz!!!");
 			playerTalk(player, null, "Oh dear, the mixture has evaporated!",
-					"It's useless...");
+				"It's useless...");
 			player.getInventory().remove(vial.getID(), 1);
 			player.getInventory().remove(herb.getID(), 1);
 			player.getInventory().add(new Item(465, 1));
 			return false;
 		}
-		if(vial.getID() == 464 && (herb.getID() == 936)) {
+		if (vial.getID() == 464 && (herb.getID() == 936)) {
 			player.message("You mix the berries into the water");
 			player.getInventory().remove(vial.getID(), 1);
 			player.getInventory().remove(herb.getID(), 1);
 			player.getInventory().add(new Item(1074, 1));
 			return false;
 		}
-		if(vial.getID() == 464 && (herb.getID() == 818)) {
+		if (vial.getID() == 464 && (herb.getID() == 818)) {
 			player.message("You put the ardrigal herb into the watervial.");
 			player.message("You make a solution of Ardrigal.");
 			player.getInventory().remove(vial.getID(), 1);
@@ -243,7 +243,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			player.getInventory().add(new Item(1252, 1));
 			return false;
 		}
-		if(vial.getID() == 464 && (herb.getID() == 816)) {
+		if (vial.getID() == 464 && (herb.getID() == 816)) {
 			player.message("You put the Snake Weed herb into the watervial.");
 			player.message("You make a solution of Snake Weed.");
 			player.getInventory().remove(vial.getID(), 1);
@@ -256,23 +256,23 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			return false;
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
-				.getRepeatTimes(player, 15)) {
+			.getRepeatTimes(player, 15)) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(15) < herbDef.getReqLevel()) {
 					owner.message("you need level " + herbDef.getReqLevel()
-					+ " herblaw to make this potion");
+						+ " herblaw to make this potion");
 					interrupt();
 					return;
 				}
 				if (owner.getInventory().hasItemId(vial.getID())
-						&& owner.getInventory().hasItemId(herb.getID())) {
+					&& owner.getInventory().hasItemId(herb.getID())) {
 					owner.getInventory().remove(vial.getID(), 1);
 					owner.getInventory().remove(herb.getID(), 1);
 					owner.message("You put the " + herb.getDef().getName()
-							+ " into the vial of water");
+						+ " into the vial of water");
 					owner.getInventory().add(
-							new Item(herbDef.getPotionId(), 1));
+						new Item(herbDef.getPotionId(), 1));
 				} else {
 					interrupt();
 				}
@@ -282,7 +282,7 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 	}
 
 	private boolean doHerbSecond(Player player, final Item second,
-			final Item unfinished, final ItemHerbSecond def, final boolean isSwapped) {
+								 final Item unfinished, final ItemHerbSecond def, final boolean isSwapped) {
 		if (!Constants.GameServer.MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
@@ -293,36 +293,34 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		final AtomicReference<Item> bubbleItem = new AtomicReference<Item>();
 		bubbleItem.set(null);
 		//constraint shaman potion
-		if(second.getID() == 936 && unfinished.getID() == 454 &&
-				(player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 6)) {
+		if (second.getID() == 936 && unfinished.getID() == 454 &&
+			(player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 6)) {
 			playerTalk(player, null, "Hmmm...perhaps I shouldn't try and mix these items together",
-					"It might have unpredictable results...");
+				"It might have unpredictable results...");
 			return false;
-		}
-		else if(second.getID() == 936 && unfinished.getID() == 454) {
-			if(!isSwapped) {
+		} else if (second.getID() == 936 && unfinished.getID() == 454) {
+			if (!isSwapped) {
 				bubbleItem.set(unfinished);
-			}
-			else {
+			} else {
 				bubbleItem.set(second);
 			}
 		}
 		player.setBatchEvent(new BatchEvent(player, 1200, Formulae
-				.getRepeatTimes(player, 15)) {
+			.getRepeatTimes(player, 15)) {
 			public void action() {
 				if (owner.getSkills().getLevel(15) < def.getReqLevel()) {
 					owner.message("You need a herblaw level of "
-							+ def.getReqLevel() + " to make this potion");
+						+ def.getReqLevel() + " to make this potion");
 					interrupt();
 					return;
 				}
 				if (owner.getInventory().hasItemId(second.getID())
-						&& owner.getInventory().hasItemId(unfinished.getID())) {
-					if(bubbleItem.get() != null) {
+					&& owner.getInventory().hasItemId(unfinished.getID())) {
+					if (bubbleItem.get() != null) {
 						showBubble(owner, bubbleItem.get());
 					}
 					owner.message("You mix the " + second.getDef().getName()
-							+ " into your potion");
+						+ " into your potion");
 					owner.getInventory().remove(second.getID(), 1);
 					owner.getInventory().remove(unfinished.getID(), 1);
 					owner.getInventory().add(new Item(def.getPotionID(), 1));
@@ -333,15 +331,16 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 		});
 		return false;
 	}
+
 	// 1052.
 	private boolean makeLiquid(Player p, final Item ingredient,
-			final Item unfinishedPot, final boolean isSwapped) {
+							   final Item unfinishedPot, final boolean isSwapped) {
 		if (!Constants.GameServer.MEMBER_WORLD) {
 			p.sendMemberErrorMessage();
 			return false;
 		}
-		if(unfinishedPot.getID() == 1074 && (ingredient.getID() == 1051 || ingredient.getID() == 444)
-				|| ingredient.getID() == 1074 && (unfinishedPot.getID() == 1051 || unfinishedPot.getID() == 444)) {
+		if (unfinishedPot.getID() == 1074 && (ingredient.getID() == 1051 || ingredient.getID() == 444)
+			|| ingredient.getID() == 1074 && (unfinishedPot.getID() == 1051 || unfinishedPot.getID() == 444)) {
 			p.message("You mix the liquid with the " + ingredient.getDef().getName().toLowerCase());
 			p.message("Bang!!!");
 			displayTeleportBubble(p, p.getX(), p.getY(), true);
@@ -353,23 +352,21 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 			p.getInventory().add(new Item(465, 1));
 			return false;
 		}
-		if(unfinishedPot.getID() == 1052 && ingredient.getID() == 1051 
-				|| unfinishedPot.getID() == 1051 && ingredient.getID() == 1052) {
+		if (unfinishedPot.getID() == 1052 && ingredient.getID() == 1051
+			|| unfinishedPot.getID() == 1051 && ingredient.getID() == 1052) {
 			if (p.getSkills().getLevel(15) < 14) {
 				p.message("You need to have a herblaw level of 14 or over to mix this liquid");
 				return false;
 			}
-			if(p.getQuestStage(Quests.WATCHTOWER) >= 0 && p.getQuestStage(Quests.WATCHTOWER) < 6) {
+			if (p.getQuestStage(Quests.WATCHTOWER) >= 0 && p.getQuestStage(Quests.WATCHTOWER) < 6) {
 				playerTalk(p, null, "Hmmm...perhaps I shouldn't try and mix these items together",
-						"It might have unpredictable results...");
+					"It might have unpredictable results...");
 				return false;
-			}
-			else if (p.getInventory().hasItemId(ingredient.getID())
-					&& p.getInventory().hasItemId(unfinishedPot.getID())) {
-				if(!isSwapped) {
+			} else if (p.getInventory().hasItemId(ingredient.getID())
+				&& p.getInventory().hasItemId(unfinishedPot.getID())) {
+				if (!isSwapped) {
 					showBubble(p, unfinishedPot);
-				}
-				else {
+				} else {
 					showBubble(p, ingredient);
 				}
 				p.message("You mix the " + ingredient.getDef().getName().toLowerCase() + " into the liquid");
@@ -385,42 +382,42 @@ InvActionExecutiveListener, InvUseOnItemExecutiveListener {
 	}
 
 	private boolean doGrind(Player player, final Item mortar,
-			final Item item) {
+							final Item item) {
 		if (!Constants.GameServer.MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
 		int newID;
 		switch (item.getID()) {
-		case 466: // Unicorn Horn
-			newID = 473;
-			break;
-		case 467: // Blue dragon scale
-			newID = 472;
-			break;
+			case 466: // Unicorn Horn
+				newID = 473;
+				break;
+			case 467: // Blue dragon scale
+				newID = 472;
+				break;
 			/**
 			 * Quest items.
 			 */
-		case 604: // Bat bone
-			newID = 1051; // Ground bat
-			break;
-		case 983: // Charcoal GEM
-			newID = 1179; // Ground charcoal
-			player.message("You grind the charcoal to a powder");
-			break;
-		case 337:
-			newID = 772; // Chocolate dust
-			break;
+			case 604: // Bat bone
+				newID = 1051; // Ground bat
+				break;
+			case 983: // Charcoal GEM
+				newID = 1179; // Ground charcoal
+				player.message("You grind the charcoal to a powder");
+				break;
+			case 337:
+				newID = 772; // Chocolate dust
+				break;
 			/**
 			 * End of Herblaw Quest Items.
 			 */
-		default:
-			return false;
+			default:
+				return false;
 		}
 		if (player.getInventory().remove(item) > -1) {
-			if(item.getID() != 983) {
+			if (item.getID() != 983) {
 				player.message("You grind the " + item.getDef().getName()
-						+ " to dust");
+					+ " to dust");
 			}
 			showBubble(player, new Item(468));
 			player.getInventory().add(new Item(newID, 1));

@@ -14,18 +14,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PlayerCollectItemsTask extends MarketTask {
-	
+
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
-	
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private Player player;
 
 	public PlayerCollectItemsTask(Player p) {
 		this.player = p;
 	}
-	
+
 	@Override
 	public void doTask() throws Exception {
 		ArrayList<CollectableItem> list = MarketDatabase.getCollectableItemsFor(player.getDatabaseID());
@@ -38,9 +38,9 @@ public class PlayerCollectItemsTask extends MarketTask {
 		String items = "Following items have been inserted to your bank: % ";
 		try {
 			PreparedStatement setCollected = MarketDatabase.databaseInstance
-					.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX
-						+ "expired_auctions` SET `claim_time`= '" + System.currentTimeMillis()
-							+ "',`claimed`='1' WHERE `claim_id`=?");
+				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+					+ "expired_auctions` SET `claim_time`= '" + System.currentTimeMillis()
+					+ "',`claimed`='1' WHERE `claim_id`=?");
 			for (CollectableItem i : list) {
 				Item item = new Item(i.item_id, i.item_amount);
 				if (!player.getBank().canHold(item)) {
@@ -49,7 +49,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 				}
 				player.getBank().add(item);
 				items += " @lre@" + item.getDef().getName() + " @whi@x @cya@" + item.getAmount() + "@whi@ "
-						+ i.explanation + " %";
+					+ i.explanation + " %";
 				setCollected.setInt(1, i.claim_id);
 				setCollected.addBatch();
 			}

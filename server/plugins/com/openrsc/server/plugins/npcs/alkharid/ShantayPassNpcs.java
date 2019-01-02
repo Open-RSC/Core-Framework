@@ -28,6 +28,14 @@ public class ShantayPassNpcs implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
 	ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener {
 
+	private static int ASSISTANT = 720;
+	private static int SHANTAY_DISCLAIMER = ItemId.A_FREE_SHANTAY_DISCLAIMER.id();
+	private static int SHANTAY_STANDING_GUARD = 719;
+	private static int SHANTAY_MOVING_GUARD = 717;
+	private static int SHANTAY = 549;
+	private static int BANK_CHEST = 942;
+	private static int STONE_GATE = 916;
+	private static int SHANTAY_PASS = ItemId.SHANTAY_DESERT_PASS.id();
 	private final Shop shop = new Shop(false, 10000, 120, 70, 3,
 		new Item(ItemId.JUG_OF_WATER.id(), 15),
 		new Item(ItemId.BOWL_OF_WATER.id(), 15),
@@ -45,17 +53,7 @@ public class ShantayPassNpcs implements ShopInterface,
 		new Item(ItemId.SHANTAY_DESERT_PASS.id(), 20),
 		new Item(ItemId.KNIFE.id(), 20)
 	);
-
 	private boolean inJail = false;
-
-	private static int ASSISTANT = 720;
-	private static int SHANTAY_DISCLAIMER = ItemId.A_FREE_SHANTAY_DISCLAIMER.id();
-	private static int SHANTAY_STANDING_GUARD = 719;
-	private static int SHANTAY_MOVING_GUARD = 717;
-	private static int SHANTAY = 549;
-	private static int BANK_CHEST = 942;
-	private static int STONE_GATE = 916;
-	private static int SHANTAY_PASS = ItemId.SHANTAY_DESERT_PASS.id();
 
 	@Override
 	public void onTalkToNpc(final Player p, Npc n) {

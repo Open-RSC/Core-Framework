@@ -32,14 +32,6 @@ public class LoginPacketHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public String getString(ByteBuf payload) {
-		StringBuilder bldr = new StringBuilder();
-		byte b;
-		while (payload.isReadable() && (b = payload.readByte()) != 10)
-			bldr.append((char) b);
-		return bldr.toString();
-	}
-
 	public static boolean isValidEmailAddress(String email) {
 		boolean stricterFilter = true;
 		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
@@ -48,6 +40,14 @@ public class LoginPacketHandler {
 		java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
 		java.util.regex.Matcher m = p.matcher(email);
 		return m.matches();
+	}
+
+	public String getString(ByteBuf payload) {
+		StringBuilder bldr = new StringBuilder();
+		byte b;
+		while (payload.isReadable() && (b = payload.readByte()) != 10)
+			bldr.append((char) b);
+		return bldr.toString();
 	}
 
 	public void processLogin(Packet p, Channel channel) throws Exception {

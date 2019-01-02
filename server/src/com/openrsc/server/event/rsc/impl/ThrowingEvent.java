@@ -18,9 +18,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 /**
- * 
  * @author Davve
- *
  */
 
 public class ThrowingEvent extends GameTickEvent {
@@ -51,18 +49,18 @@ public class ThrowingEvent extends GameTickEvent {
 
 	private boolean canReach(Mob mob) {
 		int radius = 3;
-		if(getPlayerOwner().getThrowingEquip() == 1013 
-				|| getPlayerOwner().getThrowingEquip() == 1015
-				|| getPlayerOwner().getThrowingEquip() == 1024
-				|| getPlayerOwner().getThrowingEquip() == 1068
-				|| getPlayerOwner().getThrowingEquip() == 1069
-				|| getPlayerOwner().getThrowingEquip() == 1070
-				|| getPlayerOwner().getThrowingEquip() == 1122
-				|| getPlayerOwner().getThrowingEquip() == 1123
-				|| getPlayerOwner().getThrowingEquip() == 1124
-				|| getPlayerOwner().getThrowingEquip() == 1125
-				|| getPlayerOwner().getThrowingEquip() == 1126
-				|| getPlayerOwner().getThrowingEquip() == 1127) { // throwing darts.
+		if (getPlayerOwner().getThrowingEquip() == 1013
+			|| getPlayerOwner().getThrowingEquip() == 1015
+			|| getPlayerOwner().getThrowingEquip() == 1024
+			|| getPlayerOwner().getThrowingEquip() == 1068
+			|| getPlayerOwner().getThrowingEquip() == 1069
+			|| getPlayerOwner().getThrowingEquip() == 1070
+			|| getPlayerOwner().getThrowingEquip() == 1122
+			|| getPlayerOwner().getThrowingEquip() == 1123
+			|| getPlayerOwner().getThrowingEquip() == 1124
+			|| getPlayerOwner().getThrowingEquip() == 1125
+			|| getPlayerOwner().getThrowingEquip() == 1126
+			|| getPlayerOwner().getThrowingEquip() == 1127) { // throwing darts.
 			radius = 4;
 		}
 		return getPlayerOwner().withinRange(mob, radius);
@@ -72,9 +70,9 @@ public class ThrowingEvent extends GameTickEvent {
 	public void run() {
 		int throwingID = getPlayerOwner().getThrowingEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
-				|| (target.isPlayer() && !((Player) target).loggedIn())
-				|| target.getSkills().getLevel(Skills.HITPOINTS) <= 0 || !getPlayerOwner().checkAttack(target, true)
-				|| !getPlayerOwner().withinRange(target)) {
+			|| (target.isPlayer() && !((Player) target).loggedIn())
+			|| target.getSkills().getLevel(Skills.HITPOINTS) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| !getPlayerOwner().withinRange(target)) {
 			getPlayerOwner().resetRange();
 			stop();
 			return;
@@ -82,7 +80,7 @@ public class ThrowingEvent extends GameTickEvent {
 
 		if (!canReach(target)) {
 			getPlayerOwner().walkToEntity(target.getX(), target.getY());
-			if(owner.nextStep(owner.getX(), owner.getY(), target) == null && throwingID != -1) {
+			if (owner.nextStep(owner.getX(), owner.getY(), target) == null && throwingID != -1) {
 				getPlayerOwner().message("I can't get close enough");
 				getPlayerOwner().resetRange();
 				stop();
@@ -90,7 +88,7 @@ public class ThrowingEvent extends GameTickEvent {
 			}
 		} else {
 			getPlayerOwner().resetPath();
-			
+
 			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
 			if (canShoot) {
 				if (!PathValidation.checkPath(getPlayerOwner().getLocation(), target.getLocation())) {
@@ -99,7 +97,7 @@ public class ThrowingEvent extends GameTickEvent {
 					stop();
 					return;
 				}
-				
+
 				getPlayerOwner().face(target);
 				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
@@ -110,10 +108,10 @@ public class ThrowingEvent extends GameTickEvent {
 						return;
 					}
 				}
-				
+
 				if (target.isNpc()) {
 					if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerRangeNpc",
-							new Object[] { owner, target })) {
+						new Object[]{owner, target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
@@ -154,7 +152,7 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 
 				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGE), target.getArmourPoints(), throwingID);
-				
+
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
 					if (damage > 1 && npc.getID() == 477)
@@ -169,7 +167,7 @@ public class ThrowingEvent extends GameTickEvent {
 						getPlayerOwner().damage(DataConversions.random(0, maxHit));
 					}
 				}
-				
+
 				if (!Formulae.looseArrow(damage)) {
 					GroundItem knivesOrDarts = getFloorItem(throwingID);
 					if (knivesOrDarts == null) {

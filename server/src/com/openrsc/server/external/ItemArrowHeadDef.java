@@ -5,28 +5,28 @@ package com.openrsc.server.external;
  */
 public class ItemArrowHeadDef {
 
-    /**
-     * The ID of the arrow created
-     */
-    public int arrowID;
-    /**
-     * The exp given by attaching this arrow head
-     */
-    public int exp;
-    /**
-     * The level required to attach this head to an arrow
-     */
-    public int requiredLvl;
+	/**
+	 * The ID of the arrow created
+	 */
+	public int arrowID;
+	/**
+	 * The exp given by attaching this arrow head
+	 */
+	public int exp;
+	/**
+	 * The level required to attach this head to an arrow
+	 */
+	public int requiredLvl;
 
-    public int getArrowID() {
-        return arrowID;
-    }
+	public int getArrowID() {
+		return arrowID;
+	}
 
-    public int getExp() {
-        return exp;
-    }
+	public int getExp() {
+		return exp;
+	}
 
-    public int getReqLevel() {
-        return requiredLvl;
-    }
+	public int getReqLevel() {
+		return requiredLvl;
+	}
 }

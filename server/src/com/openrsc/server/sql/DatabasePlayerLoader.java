@@ -28,7 +28,9 @@ public class DatabasePlayerLoader {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-
+	private static final String[] gameSettings = {"cameraauto", "onemouse", "soundoff"};
+	private static final String[] privacySettings = {"block_chat", "block_private", "block_trade",
+		"block_duel"};
 	private final DatabaseConnection conn;
 	private boolean useTransactions = false;
 
@@ -44,7 +46,6 @@ public class DatabasePlayerLoader {
 		 */
 		conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET `online`='0' WHERE online='1'");
 	}
-
 
 	public boolean savePlayer(Player s) {
 		if (!playerExists(s.getDatabaseID())) {
@@ -115,7 +116,7 @@ public class DatabasePlayerLoader {
 			updateLongs(Statements.save_DeleteCache, s.getDatabaseID());
 			if (s.getCache().getCacheMap().size() > 0) {
 				statement = conn.prepareStatement(
-						"INSERT INTO `" + Statements.PREFIX + "player_cache` (`playerID`, `type`, `key`, `value`) VALUES(?,?,?,?)");
+					"INSERT INTO `" + Statements.PREFIX + "player_cache` (`playerID`, `type`, `key`, `value`) VALUES(?,?,?,?)");
 
 				for (String key : s.getCache().getCacheMap().keySet()) {
 					Object o = s.getCache().getCacheMap().get(key);
@@ -296,19 +297,19 @@ public class DatabasePlayerLoader {
 	}
 
 	public void chatBlock(int on, long user) {
-		updateIntsLongs(Statements.chatBlock, new int[] { on }, new long[] { user });
+		updateIntsLongs(Statements.chatBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void privateBlock(int on, long user) {
-		updateIntsLongs(Statements.privateBlock, new int[] { on }, new long[] { user });
+		updateIntsLongs(Statements.privateBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void tradeBlock(int on, long user) {
-		updateIntsLongs(Statements.tradeBlock, new int[] { on }, new long[] { user });
+		updateIntsLongs(Statements.tradeBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void duelBlock(int on, long user) {
-		updateIntsLongs(Statements.duelBlock, new int[] { on }, new long[] { user });
+		updateIntsLongs(Statements.duelBlock, new int[]{on}, new long[]{user});
 	}
 
 	public void addNpcKill(int player, int npc) {
@@ -364,28 +365,23 @@ public class DatabasePlayerLoader {
 		return hasNextFromInt(Statements.basicInfo, user);
 	}
 
-	private static final String[] gameSettings = { "cameraauto", "onemouse", "soundoff" };
-
-	private static final String[] privacySettings = { "block_chat", "block_private", "block_trade",
-	"block_duel" };
-
 	public void setGameSettings(boolean settings[], int user) {
 		for (int i = 0; i < settings.length; i++) {
 			conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET " + gameSettings[i] + "="
-					+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
+				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
 		}
 	}
 
 	public void setPrivacySettings(boolean settings[], int user) {
 		for (int i = 0; i < settings.length; i++) {
 			conn.executeUpdate("UPDATE `" + Statements.PREFIX + "players` SET " + privacySettings[i] + "="
-					+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
+				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
 		}
 	}
 
 	public void setTeleportStones(int stones, int user) {
 		conn.executeUpdate("UPDATE `users` SET teleport_stone="
-				+ stones + " WHERE id='" + user + "'");
+			+ stones + " WHERE id='" + user + "'");
 	}
 
 	public Player loadPlayer(LoginRequest rq) {
@@ -423,8 +419,8 @@ public class DatabasePlayerLoader {
 			save.setBankSize(result.getShort("bank_size"));
 
 			PlayerAppearance pa = new PlayerAppearance(result.getInt("haircolour"), result.getInt("topcolour"),
-					result.getInt("trousercolour"), result.getInt("skincolour"), result.getInt("headsprite"),
-					result.getInt("bodysprite"));
+				result.getInt("trousercolour"), result.getInt("skincolour"), result.getInt("headsprite"),
+				result.getInt("bodysprite"));
 
 			save.getSettings().setAppearance(pa);
 			save.setMale(result.getInt("male") == 1);
@@ -466,10 +462,10 @@ public class DatabasePlayerLoader {
 			save.setBank(bank);
 
 			save.getSocial().addFriends(longListFromResultSet(
-					resultSetFromInteger(Statements.playerFriends, save.getDatabaseID()), "friend"));
+				resultSetFromInteger(Statements.playerFriends, save.getDatabaseID()), "friend"));
 
 			save.getSocial().addIgnore(longListFromResultSet(
-					resultSetFromInteger(Statements.playerIngored, save.getDatabaseID()), "ignore"));
+				resultSetFromInteger(Statements.playerIngored, save.getDatabaseID()), "ignore"));
 
 			result = resultSetFromInteger(Statements.playerQuests, save.getDatabaseID());
 			while (result.next()) {
@@ -608,7 +604,7 @@ public class DatabasePlayerLoader {
 			replyMessage = user + " has been unbanned.";
 		} else {
 			query = "UPDATE `" + Statements.PREFIX + "players` SET `banned`='" + (System.currentTimeMillis() + (time * 60000))
-					+ "', offences = offences + 1 WHERE `username` LIKE '" + user + "'";
+				+ "', offences = offences + 1 WHERE `username` LIKE '" + user + "'";
 			replyMessage = user + " has been banned for " + time + " minutes";
 		}
 		try {
@@ -717,127 +713,6 @@ public class DatabasePlayerLoader {
 		}
 	}
 
-	public class Statements {
-		private static final String PREFIX = "openrsc_";
-
-		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
-
-		//private static final String teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";
-
-		private static final String addFriend = "INSERT INTO `" + PREFIX
-				+ "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";
-
-		private static final String removeFriend = "DELETE FROM `" + PREFIX
-				+ "friends` WHERE `playerID` LIKE ? AND `friend` LIKE ?";
-
-		private static final String addIgnore = "INSERT INTO `" + PREFIX
-				+ "ignores`(`playerID`, `ignore`) VALUES(?, ?)";
-
-		private static final String removeIgnore = "DELETE FROM `" + PREFIX
-				+ "ignores` WHERE `playerID` LIKE ? AND `ignore` LIKE ?";
-
-		private static final String chatBlock = "UPDATE `" + PREFIX + "players` SET block_chat=? WHERE playerID=?";
-
-		private static final String privateBlock = "UPDATE `" + PREFIX + "players` SET block_private=? WHERE id=?";
-
-		private static final String tradeBlock = "UPDATE `" + PREFIX + "id` SET block_trade=? WHERE playerID=?";
-
-		private static final String duelBlock = "UPDATE `" + PREFIX + "players` SET block_duel=? WHERE playerID=?";
-
-		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
-
-		private static final String playerData = "SELECT `id`, `group_id`, "
-				+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`, `kills`,"
-				+ "`deaths`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
-				+ "`block_trade`, `block_duel`, `cameraauto`,"
-				+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
-				+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
-				+ "`skulled`, `charged`, `pass`, `salt`, `banned`, `bank_size` FROM `" + PREFIX + "players` WHERE `username`=?";
-
-		private static final String playerExp = "SELECT `exp_attack`, `exp_defense`, `exp_strength`, "
-				+ "`exp_hits`, `exp_ranged`, `exp_prayer`, `exp_magic`, `exp_cooking`, `exp_woodcut`,"
-				+ "`exp_fletching`, `exp_fishing`, `exp_firemaking`, `exp_crafting`, `exp_smithing`,"
-				+ "`exp_mining`, `exp_herblaw`, `exp_agility`, `exp_thieving` FROM `" + PREFIX
-				+ "experience` WHERE `playerID`=?";
-
-		private static final String playerCurExp = "SELECT `cur_attack`, `cur_defense`, `cur_strength`,"
-				+ "`cur_hits`, `cur_ranged`, `cur_prayer`, `cur_magic`, `cur_cooking`, `cur_woodcut`,"
-				+ "`cur_fletching`, `cur_fishing`, `cur_firemaking`, `cur_crafting`, `cur_smithing`,"
-				+ "`cur_mining`, `cur_herblaw`, `cur_agility`, `cur_thieving` FROM `" + PREFIX
-				+ "curstats` WHERE `playerID`=?";
-
-		private static final String playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX
-				+ "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
-
-		private static final String playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX
-				+ "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
-
-		private static final String playerFriends = "SELECT `friend` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
-
-		private static final String playerIngored = "SELECT `ignore` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
-
-		private static final String playerQuests = "SELECT `id`, `stage` FROM `" + PREFIX
-				+ "quests` WHERE `playerID`=?";
-
-		private static final String playerAchievements = "SELECT `id`, `status` FROM `" + PREFIX
-				+ "achievement_status` WHERE `playerID`=?";
-
-		private static final String playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX
-				+ "player_cache` WHERE `playerID`=?";
-
-		private static final String save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=?";
-
-		private static final String save_AddBank = "INSERT INTO `" + PREFIX
-				+ "bank`(`playerID`, `id`, `amount`, `slot`) VALUES(?, ?, ?, ?)";
-
-		private static final String save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
-
-		private static final String save_AddInvItem = "INSERT INTO `" + PREFIX
-				+ "invitems`(`playerID`, `id`, `amount`, `wielded`, `slot`) VALUES(?, ?, ?, ?, ?)";
-
-		private static final String save_UpdateBasicInfo = "UPDATE `" + PREFIX
-				+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";
-
-		private static final String save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
-
-		private static final String save_DeleteAchievements = "DELETE FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
-
-		private static final String save_DeleteCache = "DELETE FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
-
-		private static final String save_AddQuest = "INSERT INTO `" + PREFIX
-				+ "quests` (`playerID`, `id`, `stage`) VALUES(?, ?, ?)";
-
-		private static final String save_AddAchievement = "INSERT INTO `" + PREFIX
-				+ "achievement_status` (`playerID`, `id`, `status`) VALUES(?, ?, ?)";
-
-		private static final String updateExperience = "UPDATE `" + PREFIX
-				+ "experience` SET `exp_attack`=?, `exp_defense`=?, "
-				+ "`exp_strength`=?, `exp_hits`=?, `exp_ranged`=?, `exp_prayer`=?, `exp_magic`=?, `exp_cooking`=?, `exp_woodcut`=?, "
-				+ "`exp_fletching`=?, `exp_fishing`=?, `exp_firemaking`=?, `exp_crafting`=?, `exp_smithing`=?, `exp_mining`=?, "
-				+ "`exp_herblaw`=?, `exp_agility`=?, `exp_thieving`=? WHERE `playerID`=?";
-
-		private static final String updateStats = "UPDATE `" + PREFIX
-				+ "curstats` SET `cur_attack`=?, `cur_defense`=?, "
-				+ "`cur_strength`=?, `cur_hits`=?, `cur_ranged`=?, `cur_prayer`=?, `cur_magic`=?, `cur_cooking`=?, `cur_woodcut`=?, "
-				+ "`cur_fletching`=?, `cur_fishing`=?, `cur_firemaking`=?, `cur_crafting`=?, `cur_smithing`=?, `cur_mining`=?, "
-				+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
-
-		private static final String playerLoginData = "SELECT `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
-
-		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
-
-		private static final String npcKillSelectAll = "SELECT * FROM `" + PREFIX + "npckills` WHERE playerID = ?";
-		private static final String npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
-		private static final String npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)";
-		private static final String npcKillUpdate = "UPDATE `" + PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?";
-
-		private static final String npcDropSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
-		private static final String npcDropInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
-		private static final String npcDropUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
-	}
-
-
-
 	public byte validateLogin(LoginRequest request) {
 		PreparedStatement statement = null;
 		ResultSet playerSet = null;
@@ -849,10 +724,10 @@ public class DatabasePlayerLoader {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
 			String hashedPassword = DataConversions.hashPassword(request.getPassword(), playerSet.getString("salt"));
-            //System.out.println("Request Password: " + request.getPassword());
-            //System.out.println("Stored Salt: " + playerSet.getString("salt"));
-            //System.out.println("Stored Pass: " + playerSet.getString("pass"));
-            //System.out.println("Hashed Pass: " + hashedPassword);
+			//System.out.println("Request Password: " + request.getPassword());
+			//System.out.println("Stored Salt: " + playerSet.getString("salt"));
+			//System.out.println("Stored Pass: " + playerSet.getString("pass"));
+			//System.out.println("Hashed Pass: " + hashedPassword);
 			if (!hashedPassword.equals(playerSet.getString("pass"))) {
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}
@@ -871,6 +746,125 @@ public class DatabasePlayerLoader {
 			LOGGER.catching(e);
 		}
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL;
+	}
+
+	public class Statements {
+		private static final String PREFIX = "openrsc_";
+
+		//private static final String unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
+
+		//private static final String teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";
+
+		private static final String addFriend = "INSERT INTO `" + PREFIX
+			+ "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";
+
+		private static final String removeFriend = "DELETE FROM `" + PREFIX
+			+ "friends` WHERE `playerID` LIKE ? AND `friend` LIKE ?";
+
+		private static final String addIgnore = "INSERT INTO `" + PREFIX
+			+ "ignores`(`playerID`, `ignore`) VALUES(?, ?)";
+
+		private static final String removeIgnore = "DELETE FROM `" + PREFIX
+			+ "ignores` WHERE `playerID` LIKE ? AND `ignore` LIKE ?";
+
+		private static final String chatBlock = "UPDATE `" + PREFIX + "players` SET block_chat=? WHERE playerID=?";
+
+		private static final String privateBlock = "UPDATE `" + PREFIX + "players` SET block_private=? WHERE id=?";
+
+		private static final String tradeBlock = "UPDATE `" + PREFIX + "id` SET block_trade=? WHERE playerID=?";
+
+		private static final String duelBlock = "UPDATE `" + PREFIX + "players` SET block_duel=? WHERE playerID=?";
+
+		private static final String basicInfo = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
+
+		private static final String playerData = "SELECT `id`, `group_id`, "
+			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`, `kills`,"
+			+ "`deaths`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
+			+ "`block_trade`, `block_duel`, `cameraauto`,"
+			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
+			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
+			+ "`skulled`, `charged`, `pass`, `salt`, `banned`, `bank_size` FROM `" + PREFIX + "players` WHERE `username`=?";
+
+		private static final String playerExp = "SELECT `exp_attack`, `exp_defense`, `exp_strength`, "
+			+ "`exp_hits`, `exp_ranged`, `exp_prayer`, `exp_magic`, `exp_cooking`, `exp_woodcut`,"
+			+ "`exp_fletching`, `exp_fishing`, `exp_firemaking`, `exp_crafting`, `exp_smithing`,"
+			+ "`exp_mining`, `exp_herblaw`, `exp_agility`, `exp_thieving` FROM `" + PREFIX
+			+ "experience` WHERE `playerID`=?";
+
+		private static final String playerCurExp = "SELECT `cur_attack`, `cur_defense`, `cur_strength`,"
+			+ "`cur_hits`, `cur_ranged`, `cur_prayer`, `cur_magic`, `cur_cooking`, `cur_woodcut`,"
+			+ "`cur_fletching`, `cur_fishing`, `cur_firemaking`, `cur_crafting`, `cur_smithing`,"
+			+ "`cur_mining`, `cur_herblaw`, `cur_agility`, `cur_thieving` FROM `" + PREFIX
+			+ "curstats` WHERE `playerID`=?";
+
+		private static final String playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX
+			+ "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
+
+		private static final String playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX
+			+ "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
+
+		private static final String playerFriends = "SELECT `friend` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
+
+		private static final String playerIngored = "SELECT `ignore` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
+
+		private static final String playerQuests = "SELECT `id`, `stage` FROM `" + PREFIX
+			+ "quests` WHERE `playerID`=?";
+
+		private static final String playerAchievements = "SELECT `id`, `status` FROM `" + PREFIX
+			+ "achievement_status` WHERE `playerID`=?";
+
+		private static final String playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX
+			+ "player_cache` WHERE `playerID`=?";
+
+		private static final String save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=?";
+
+		private static final String save_AddBank = "INSERT INTO `" + PREFIX
+			+ "bank`(`playerID`, `id`, `amount`, `slot`) VALUES(?, ?, ?, ?)";
+
+		private static final String save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
+
+		private static final String save_AddInvItem = "INSERT INTO `" + PREFIX
+			+ "invitems`(`playerID`, `id`, `amount`, `wielded`, `slot`) VALUES(?, ?, ?, ?, ?)";
+
+		private static final String save_UpdateBasicInfo = "UPDATE `" + PREFIX
+			+ "players` SET `combat`=?, skill_total=?, `x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `iron_man`=?, `iron_man_restriction`=?, `hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, `headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=? WHERE `id`=?";
+
+		private static final String save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
+
+		private static final String save_DeleteAchievements = "DELETE FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
+
+		private static final String save_DeleteCache = "DELETE FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
+
+		private static final String save_AddQuest = "INSERT INTO `" + PREFIX
+			+ "quests` (`playerID`, `id`, `stage`) VALUES(?, ?, ?)";
+
+		private static final String save_AddAchievement = "INSERT INTO `" + PREFIX
+			+ "achievement_status` (`playerID`, `id`, `status`) VALUES(?, ?, ?)";
+
+		private static final String updateExperience = "UPDATE `" + PREFIX
+			+ "experience` SET `exp_attack`=?, `exp_defense`=?, "
+			+ "`exp_strength`=?, `exp_hits`=?, `exp_ranged`=?, `exp_prayer`=?, `exp_magic`=?, `exp_cooking`=?, `exp_woodcut`=?, "
+			+ "`exp_fletching`=?, `exp_fishing`=?, `exp_firemaking`=?, `exp_crafting`=?, `exp_smithing`=?, `exp_mining`=?, "
+			+ "`exp_herblaw`=?, `exp_agility`=?, `exp_thieving`=? WHERE `playerID`=?";
+
+		private static final String updateStats = "UPDATE `" + PREFIX
+			+ "curstats` SET `cur_attack`=?, `cur_defense`=?, "
+			+ "`cur_strength`=?, `cur_hits`=?, `cur_ranged`=?, `cur_prayer`=?, `cur_magic`=?, `cur_cooking`=?, `cur_woodcut`=?, "
+			+ "`cur_fletching`=?, `cur_fishing`=?, `cur_firemaking`=?, `cur_crafting`=?, `cur_smithing`=?, `cur_mining`=?, "
+			+ "`cur_herblaw`=?, `cur_agility`=?, `cur_thieving`=? WHERE `playerID`=?";
+
+		private static final String playerLoginData = "SELECT `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
+
+		private static final String userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
+
+		private static final String npcKillSelectAll = "SELECT * FROM `" + PREFIX + "npckills` WHERE playerID = ?";
+		private static final String npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
+		private static final String npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(npcID, playerID) VALUES (?, ?)";
+		private static final String npcKillUpdate = "UPDATE `" + PREFIX + "npckills` SET killCount = ? WHERE npcID = ? AND playerID = ?";
+
+		private static final String npcDropSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
+		private static final String npcDropInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
+		private static final String npcDropUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
 	}
 
 }

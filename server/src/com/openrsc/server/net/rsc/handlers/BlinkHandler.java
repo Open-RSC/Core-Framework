@@ -10,7 +10,7 @@ public class BlinkHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 		int coordX = p.readShort();
 		int coordY = p.readShort();
-		if(player.isMod()) 
+		if (player.isMod())
 			player.teleport(coordX, coordY);
 		else
 			player.setSuspiciousPlayer(true);

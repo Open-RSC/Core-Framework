@@ -18,37 +18,37 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			npcTalk(p, n, "Have you got rid of the ghost yet?");
 			playerTalk(p, n, "I can't find father Urhney at the moment");
 			npcTalk(p,
-					n,
-					"Well to get to the swamp he is in",
-					"you need to go round the back of the castle",
-					"The swamp is on the otherside of the fence to the south",
-					"You'll have to go through the wood to the west to get round the fence",
-					"Then you'll have to go right into the eastern depths of the swamp");
+				n,
+				"Well to get to the swamp he is in",
+				"you need to go round the back of the castle",
+				"The swamp is on the otherside of the fence to the south",
+				"You'll have to go through the wood to the west to get round the fence",
+				"Then you'll have to go right into the eastern depths of the swamp");
 			return;
 		}
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2) {
 			npcTalk(p, n, "Have you got rid of the ghost yet?");
 			if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 2) {
 				playerTalk(p, n, "I had a talk with father Urhney",
-						"He has given me this funny amulet to talk to the ghost with");
+					"He has given me this funny amulet to talk to the ghost with");
 				npcTalk(p, n, "I always wondered what that amulet was",
-						"Well I hope it's useful. Tell me if you get rid of the ghost");
+					"Well I hope it's useful. Tell me if you get rid of the ghost");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
-					&& !hasItem(p, 27)) {
+				&& !hasItem(p, 27)) {
 				playerTalk(
-						p,
-						n,
-						"I've found out that the ghost's corpse has lost its skull",
-						"If I can find the skull the ghost will go");
+					p,
+					n,
+					"I've found out that the ghost's corpse has lost its skull",
+					"If I can find the skull the ghost will go");
 				npcTalk(p, n, "That would explain it",
-						"Well I haven't seen any skulls");
+					"Well I haven't seen any skulls");
 				playerTalk(p, n, "Yes I think a warlock has stolen it");
 				npcTalk(p, n, "I hate warlocks", "Ah well good luck");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
-					&& hasItem(p, 27)) {
+				&& hasItem(p, 27)) {
 				playerTalk(p, n, "I've finally found the ghost's skull");
 				npcTalk(p, n,
-						"Great. Put it in the ghost's coffin and see what happens!");
+					"Great. Put it in the ghost's coffin and see what happens!");
 			}
 			return;
 		}
@@ -58,13 +58,13 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			@Override
 			public void action() {
 				npcTalk(p,
-						n,
-						"Surely you have heard of the God, Saradomin?",
-						"He who creates the forces of goodness and purity in this world?",
-						"I cannot believe your ignorance!",
-						"This is the God with more followers than any other!",
-						"At least in these parts!",
-						"He who along with his brothers Guthix and Zamorak created this world");
+					n,
+					"Surely you have heard of the God, Saradomin?",
+					"He who creates the forces of goodness and purity in this world?",
+					"I cannot believe your ignorance!",
+					"This is the God with more followers than any other!",
+					"At least in these parts!",
+					"He who along with his brothers Guthix and Zamorak created this world");
 				new Menu().addOptions(new Option("Oh that Saradomin") {
 					@Override
 					public void action() {
@@ -74,28 +74,28 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					@Override
 					public void action() {
 						npcTalk(p, n, "That's strange",
-								"I thought things not from this world were all slime and tenticles");
+							"I thought things not from this world were all slime and tenticles");
 						new Menu()
-								.addOptions(
-										new Option(
-												"You don't understand. This is a computer game") {
-											@Override
-											public void action() {
-												npcTalk(p, n,
-														"I beg your pardon?");
-												playerTalk(p, n, "Never mind");
-											}
-										},
-										new Option(
-												"I am - do you like my disguise?") {
-											@Override
-											public void action() {
-												npcTalk(p, n,
-														"Aargh begone foul creature from another dimension");
-												playerTalk(p, n,
-														"Ok, Ok, It was a joke");
-											}
-										}).showMenu(p);
+							.addOptions(
+								new Option(
+									"You don't understand. This is a computer game") {
+									@Override
+									public void action() {
+										npcTalk(p, n,
+											"I beg your pardon?");
+										playerTalk(p, n, "Never mind");
+									}
+								},
+								new Option(
+									"I am - do you like my disguise?") {
+									@Override
+									public void action() {
+										npcTalk(p, n,
+											"Aargh begone foul creature from another dimension");
+										playerTalk(p, n,
+											"Ok, Ok, It was a joke");
+									}
+								}).showMenu(p);
 					}
 				}).showMenu(p);
 			}
@@ -112,20 +112,20 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				public void action() {
 					if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 0) {
 						npcTalk(p, n,
-								"That's lucky, I need someone to do a quest for me");
+							"That's lucky, I need someone to do a quest for me");
 						playerTalk(p, n, "Ok I'll help");
 						npcTalk(p,
-								n,
-								"Ok the problem is, there is a ghost in the church graveyard",
-								"I would like you to get rid of it",
-								"If you need any help",
-								"My friend father Urhney is an expert on ghosts",
-								"I believe he is currently living as a hermit",
-								"He has a little shack somewhere in the swamps south of here",
-								"I'm sure if you told him that I sent you he'd be willing to help",
-								"My name is father Aereck by the way",
-								"Be careful going through the swamps",
-								"I have heard they can be quite dangerous");
+							n,
+							"Ok the problem is, there is a ghost in the church graveyard",
+							"I would like you to get rid of it",
+							"If you need any help",
+							"My friend father Urhney is an expert on ghosts",
+							"I believe he is currently living as a hermit",
+							"He has a little shack somewhere in the swamps south of here",
+							"I'm sure if you told him that I sent you he'd be willing to help",
+							"My name is father Aereck by the way",
+							"Be careful going through the swamps",
+							"I have heard they can be quite dangerous");
 						p.updateQuestStage(Quests.THE_RESTLESS_GHOST, 1);
 					} else {
 						npcTalk(p, n, "Sorry I only had the one quest");
@@ -133,7 +133,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				}
 			});
 		}
-		
+
 		defaultMenu.showMenu(p);
 	}
 

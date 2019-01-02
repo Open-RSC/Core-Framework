@@ -16,7 +16,7 @@ public class OpenRSCThreadFactory implements ThreadFactory {
 	@Override
 	public Thread newThread(Runnable r) {
 		Thread thread = new Thread(r, new StringBuilder(name).append("-")
-				.append(threadCount.getAndIncrement()).toString());
+			.append(threadCount.getAndIncrement()).toString());
 		return thread;
 	}
 }

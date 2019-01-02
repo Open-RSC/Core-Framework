@@ -13,12 +13,12 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class ZamboRum implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	public static final int npcid = 165;
 
 	private final Shop shop = new Shop(false, 25000, 100, 70, 2, new Item(193,
-			3), new Item(318, 3), new Item(142, 1));
+		3), new Item(318, 3), new Item(142, 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -27,7 +27,7 @@ public final class ZamboRum implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -38,11 +38,11 @@ public final class ZamboRum implements ShopInterface,
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p,
-				n,
-				"Hey are you wanting to try some of my fine wines and spirits?",
-				"All brewed locally on Karamja island");
+			n,
+			"Hey are you wanting to try some of my fine wines and spirits?",
+			"All brewed locally on Karamja island");
 
-		final String[] options = new String[] { "Yes please", "No thankyou" };
+		final String[] options = new String[]{"Yes please", "No thankyou"};
 		int option = showMenu(p, n, options);
 		if (option == 0) {
 			p.setAccessingShop(shop);

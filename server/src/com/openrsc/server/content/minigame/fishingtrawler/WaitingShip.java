@@ -33,7 +33,7 @@ public class WaitingShip {
 				gameStarts = 100;
 				startingGame = true;
 			}
-		
+
 			if (gameStarts > 0 && startingGame) {
 				gameStarts--;
 				if (gameStarts % 2 == 1) {// around 1.2 secs per msg.
@@ -57,7 +57,7 @@ public class WaitingShip {
 			if (timeTillNextMessage-- <= 0) {
 				for (Player p : players) {
 					p.message("Trawler ship will return in approximately " + (trawler.getTimeTillReturn() * 600 / 60000)
-							+ " minutes");
+						+ " minutes");
 				}
 				timeTillNextMessage = 15;
 			}
@@ -73,9 +73,9 @@ public class WaitingShip {
 
 	public void removePlayer(Player p) {
 		p.setLocation(FishingTrawler.SPAWN_LAND, true);
-		if(players.contains(p))
+		if (players.contains(p))
 			players.remove(p);
-		
-		
+
+
 	}
 }

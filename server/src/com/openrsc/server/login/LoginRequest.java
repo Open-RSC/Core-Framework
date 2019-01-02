@@ -6,22 +6,20 @@ import io.netty.channel.Channel;
 
 /**
  * Container for all the login data which will be used to construct a player
- * @author n0m
  *
+ * @author n0m
  */
 public abstract class LoginRequest {
-	
+
+	protected Player loadedPlayer;
 	private String ipAddress;
 	private String username;
 	private String password;
 	private long usernameHash;
 	private Channel channel;
 	private int clientVersion;
-	
-	protected Player loadedPlayer;
-	
-	
-	
+
+
 	public LoginRequest(String username, String password, int clientVersion, Channel channel) {
 		this.setUsername(username);
 		this.setPassword(password);
@@ -30,7 +28,7 @@ public abstract class LoginRequest {
 		this.setUsernameHash(DataConversions.usernameToHash(username));
 		this.setChannel(channel);
 	}
-	
+
 	public String getIpAddress() {
 		return ipAddress;
 	}
@@ -78,7 +76,8 @@ public abstract class LoginRequest {
 	public void setClientVersion(int clientVersion) {
 		this.clientVersion = clientVersion;
 	}
-	
+
 	public abstract void loginValidated(int response);
+
 	public abstract void loadingComplete(Player loadedPlayer);
 }

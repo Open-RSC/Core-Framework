@@ -13,14 +13,14 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class HerquinGems implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	public static final int npcid = 155;
 
 	private final Shop shop = new Shop(false, 60000 * 10, 100, 70, 3, new Item(160,
-			1), new Item(159, 0), new Item(158, 0), new Item(157, 0),
-			new Item(164, 1), new Item(163, 0), new Item(162, 0),
-			new Item(161, 0));
+		1), new Item(159, 0), new Item(158, 0), new Item(157, 0),
+		new Item(164, 1), new Item(163, 0), new Item(162, 0),
+		new Item(161, 0));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -29,7 +29,7 @@ public final class HerquinGems implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
@@ -58,8 +57,8 @@ public class GroundItemTake implements PacketHandler {
 		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
 			public void execute() {
 				if (player.isBusy() || player.isRanging() || item == null || item.isRemoved()
-						|| getItem(id, location, player) == null || !player.canReach(item)
-						|| player.getStatus() != Action.TAKING_GITEM || item.getAmount() < 1) {
+					|| getItem(id, location, player) == null || !player.canReach(item)
+					|| player.getStatus() != Action.TAKING_GITEM || item.getAmount() < 1) {
 					return;
 				}
 
@@ -77,7 +76,7 @@ public class GroundItemTake implements PacketHandler {
 				}
 
 				if (item.getID() == 23) {
-					if(player.getInventory().hasItemId(135)) {
+					if (player.getInventory().hasItemId(135)) {
 						player.message("You put the flour in the pot");
 						world.unregisterItem(item);
 						player.getInventory().replace(135, 136);
@@ -87,7 +86,7 @@ public class GroundItemTake implements PacketHandler {
 					}
 					return;
 				}
-				
+
 				if (item.getID() == 1039) {
 					//non-kosher, unsure if item despawned when killed or gave dialogue on this condition
 					player.message("@gre@Ana: Don't think for one minute ...");
@@ -96,16 +95,16 @@ public class GroundItemTake implements PacketHandler {
 					world.unregisterItem(item);
 					return;
 				}
-				
+
 				player.resetAll();
 				Item itemFinal = new Item(item.getID(), item.getAmount());
 				if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
 					itemFinal.setAttribute("npcdrop", true);
 				}
-				if (PluginHandler.getPluginHandler().blockDefaultAction("Pickup", new Object[] { player, item })) {
+				if (PluginHandler.getPluginHandler().blockDefaultAction("Pickup", new Object[]{player, item})) {
 					return;
 				}
-				
+
 				if (!player.getInventory().canHold(itemFinal)) {
 					return;
 				}
@@ -121,7 +120,7 @@ public class GroundItemTake implements PacketHandler {
 
 				player.getInventory().add(itemFinal);
 				GameLogging.addQuery(new GenericLog(player.getUsername() + " picked up " + item.getDef().getName() + " x"
-						+ item.getAmount() + " at " + player.getLocation().toString()));
+					+ item.getAmount() + " at " + player.getLocation().toString()));
 			}
 		});
 	}

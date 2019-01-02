@@ -26,21 +26,21 @@ import java.util.List;
 
 public final class Moderator implements CommandListener {
 
-	public static final String messagePrefix =  Constants.GameServer.MESSAGE_PREFIX;
+	public static final String messagePrefix = Constants.GameServer.MESSAGE_PREFIX;
 	public static final String badSyntaxPrefix = Constants.GameServer.MESSAGE_PREFIX + "Invalid Syntax: ::";
 
 	public static final World world = World.getWorld();
 
-	private static final String[] towns = { "varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
-			"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
-			"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom" };
+	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
+		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
+		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom"};
 
-	private static final Point[] townLocations = { Point.location(122, 509), Point.location(304, 542),
-			Point.location(214, 632), Point.location(269, 643), Point.location(370, 685), Point.location(89, 693),
-			Point.location(120, 648), Point.location(217, 449), Point.location(270, 352), Point.location(373, 498),
-			Point.location(653, 491), Point.location(501, 450), Point.location(233, 513), Point.location(325, 663),
-			Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
-			Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641) };
+	private static final Point[] townLocations = {Point.location(122, 509), Point.location(304, 542),
+		Point.location(214, 632), Point.location(269, 643), Point.location(370, 685), Point.location(89, 693),
+		Point.location(120, 648), Point.location(217, 449), Point.location(270, 352), Point.location(373, 498),
+		Point.location(653, 491), Point.location(501, 450), Point.location(233, 513), Point.location(325, 663),
+		Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
+		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641)};
 
 	private void sendInvalidArguments(Player p, String... strings) {
 		StringBuilder sb = new StringBuilder(messagePrefix + "Invalid arguments @red@Syntax: @whi@");
@@ -79,8 +79,8 @@ public final class Moderator implements CommandListener {
 			if (EntityHandler.getNpcDef(id) != null) {
 				player.message("[DEV]: You have spawned " + EntityHandler.getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
 				final Npc n = new Npc(id, player.getX(), player.getY(),
-						player.getX() - radius, player.getX() + radius,
-						player.getY() - radius, player.getY() + radius);
+					player.getX() - radius, player.getX() + radius,
+					player.getY() - radius, player.getY() + radius);
 				n.setShouldRespawn(false);
 				World.getWorld().registerNpc(n);
 				Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000) {
@@ -114,7 +114,7 @@ public final class Moderator implements CommandListener {
 			World.EVENT_COMBAT_MIN = cmin;
 			World.EVENT_COMBAT_MAX = cmax;
 			player.message("Event enabled: " + x + ", " + y + ", Combat level range: " + World.EVENT_COMBAT_MIN + " - "
-					+ World.EVENT_COMBAT_MAX + "");
+				+ World.EVENT_COMBAT_MAX + "");
 			GameLogging.addQuery(new StaffLog(player, 9, "Created event at: (" + x + ", " + y + ") cb-min: " + World.EVENT_COMBAT_MIN + " cb-max: " + World.EVENT_COMBAT_MAX + ""));
 		}
 		if (command.equals("resetq")) {
@@ -125,12 +125,12 @@ public final class Moderator implements CommandListener {
 
 				scrn.updateQuestStage(quest, stage);
 				player.message("You have changed " + scrn.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage
-						+ ".");
+					+ ".");
 			} else {
 				player.message("User is null or you didn't type in all the 3 arguments");
 				player.message("::resetq <playername>, <questid>, <stage>");
 			}
-		} 
+		}
 		if (command.equals("wildrule")) {
 			if (args[0].equals("god")) {
 				int start = Integer.parseInt(args[1]);
@@ -138,25 +138,25 @@ public final class Moderator implements CommandListener {
 				World.godSpellsStart = start;
 				World.godSpellsMax = end;
 				player.message("Wilderness rule for god spells set to [" + World.godSpellsStart + " -> "
-						+ World.godSpellsMax + "]");
+					+ World.godSpellsMax + "]");
 			} else if (args[0].equals("members")) {
 				int start = Integer.parseInt(args[1]);
 				int end = Integer.parseInt(args[2]);
 				World.membersWildStart = start;
 				World.membersWildMax = end;
 				player.message("Wilderness rule for members set to [" + World.membersWildStart + " -> "
-						+ World.membersWildMax + "]");
+					+ World.membersWildMax + "]");
 			} else {
 				player.message("Unknown rule. Use ::wildrule <god/members> <startLevel> <endLevel>");
 			}
 		}
-		if(command.equals("gmute")) {
+		if (command.equals("gmute")) {
 			if (args.length != 2) {
 				player.message("Wrong syntax. ::mute <name> <time in minutes> (-1 for permanent)");
 				return;
 			}
 			final Player playerToMute = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-			if(playerToMute != null) {
+			if (playerToMute != null) {
 				int minutes = Integer.parseInt(args[1]);
 				if (minutes == -1) {
 					player.message("You have given " + playerToMute.getUsername() + " a permanent mute from ::g chat.");
@@ -209,14 +209,14 @@ public final class Moderator implements CommandListener {
 			String username = DataConversions.hashToUsername(user);
 			int time = Integer.parseInt(args[1]);
 			Player bannedPlayer = World.getWorld().getPlayer(user);
-			if((time == -1 || time == 0) && !player.isAdmin()) {
+			if ((time == -1 || time == 0) && !player.isAdmin()) {
 				return;
 			}
 			if (bannedPlayer != null) {
 				bannedPlayer.unregister(true, "Banned by " + player.getUsername() + " for " + time + " minutes");
 			}
-			if(player.isAdmin()) {
-				if(time == 0) {
+			if (player.isAdmin()) {
+				if (time == 0) {
 					GameLogging.addQuery(new StaffLog(player, 11, bannedPlayer, player.getUsername() + " was unbanned"));
 
 				} else {
@@ -263,87 +263,70 @@ public final class Moderator implements CommandListener {
 			}
 			return;
 		}
-		if (command.equalsIgnoreCase("invisible") || command.equalsIgnoreCase("invis"))
-		{
+		if (command.equalsIgnoreCase("invisible") || command.equalsIgnoreCase("invis")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p != null)
-			{
+			if (p != null) {
 				p.toggleInvisible();
 				String invisibleText = p.isInvisible() ? "invisible" : "visible";
 				player.message(messagePrefix + p.getUsername() + " is now " + invisibleText);
 				p.message(messagePrefix + "A staff member has made you " + invisibleText);
 				GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
-			}
-			else
-			{
+			} else {
 				player.message(messagePrefix + "Invalid name or player is not online");
 			}
 		}
-		if (command.equalsIgnoreCase("invulnerable") || command.equalsIgnoreCase("invul"))
-		{
+		if (command.equalsIgnoreCase("invulnerable") || command.equalsIgnoreCase("invul")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p != null)
-			{
+			if (p != null) {
 				p.toggleInvulnerable();
 				String invulnerableText = p.isInvulnerable() ? "invulnerable" : "vulnerable";
 				player.message(messagePrefix + p.getUsername() + " is now " + invulnerableText);
 				p.message(messagePrefix + "A staff member has made you " + invulnerableText);
 				GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerableText));
-			}
-			else
-			{
+			} else {
 				player.message(messagePrefix + "Invalid name or player is not online");
 			}
 		}
-		if (command.equalsIgnoreCase("setgroup") || command.equalsIgnoreCase("setrank") || command.equalsIgnoreCase("group") || command.equalsIgnoreCase("rank"))
-		{
-			if(args.length < 1)
-			{
+		if (command.equalsIgnoreCase("setgroup") || command.equalsIgnoreCase("setrank") || command.equalsIgnoreCase("group") || command.equalsIgnoreCase("rank")) {
+			if (args.length < 1) {
 				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] OR to set a group");
 				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [group_id/group_name]");
 				return;
 			}
 
 			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
-			if(p == null)
-			{
+			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			if(args.length == 1)
-			{
+			if (args.length == 1) {
 				player.message(messagePrefix + p.getStaffName() + "@whi@ has group " + Group.getStaffPrefix(p.getGroupID()) + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ")");
-			}
-			else
-			{
-				if(!player.isAdmin())
+			} else {
+				if (!player.isAdmin())
 					return;
 
-				int newGroup	= -1;
-				int oldGroup	= p.getGroupID();
+				int newGroup = -1;
+				int oldGroup = p.getGroupID();
 				String newGroupName;
 				String oldGroupName = Group.GROUP_NAMES.get(oldGroup);
 
-				try
-				{
+				try {
 					newGroup = Integer.parseInt(args[1]);
 					newGroupName = Group.GROUP_NAMES.get(newGroup);
-				}
-				catch(NumberFormatException e)
-				{
-					newGroupName   = "";
+				} catch (NumberFormatException e) {
+					newGroupName = "";
 					for (int i = 1; i < args.length; i++)
 						newGroupName += args[i] + " ";
-					newGroupName   = newGroupName.trim();
+					newGroupName = newGroupName.trim();
 
 					for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
-						if(newGroupName.equalsIgnoreCase(entry.getValue())){
+						if (newGroupName.equalsIgnoreCase(entry.getValue())) {
 							newGroup = entry.getKey();
 							newGroupName = entry.getValue();
 							break;
@@ -351,14 +334,12 @@ public final class Moderator implements CommandListener {
 					}
 				}
 
-				if(Group.GROUP_NAMES.get(newGroup) == null)
-				{
+				if (Group.GROUP_NAMES.get(newGroup) == null) {
 					player.message(messagePrefix + "Invalid group_id or group_name");
 					return;
 				}
 
-				if(player.getGroupID() >= newGroup || player.getGroupID() >= p.getGroupID())
-				{
+				if (player.getGroupID() >= newGroup || player.getGroupID() >= p.getGroupID()) {
 					player.message(messagePrefix + "You can't to set " + p.getStaffName() + "@whi@ to group " + Group.getStaffPrefix(newGroup) + newGroupName + " (" + newGroup + ")");
 					return;
 				}
@@ -397,7 +378,7 @@ public final class Moderator implements CommandListener {
 			if (world.withinWorld(x, y) && p != null) {
 				p.message("You were teleported from " + p.getLocation().toString() + " to (" + x + ", " + y + ")");
 				player.message("You teleported " + p.getUsername() + " from " + p.getLocation().toString() + " to (" + x
-						+ ", " + y + ")");
+					+ ", " + y + ")");
 				GameLogging.addQuery(new StaffLog(player, 16, p, p.getUsername() + " was sent from: " + p.getLocation().toString() + " to (" + x + ", " + y + ")"));
 				p.teleport(x, y, false);
 			} else {
@@ -498,7 +479,7 @@ public final class Moderator implements CommandListener {
 					messagePrefix + "No online character found named '" + args[0] + "'.. checking database..");
 				try {
 					PreparedStatement statement = DatabaseConnection.getDatabase()
-							.prepareStatement("SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
+						.prepareStatement("SELECT * FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
 					statement.setString(1, username);
 					ResultSet result = statement.executeQuery();
 					if (!result.next()) {
@@ -508,7 +489,7 @@ public final class Moderator implements CommandListener {
 					currentIp = result.getString("login_ip");
 					result.close();
 					player.message(messagePrefix + "Found character '" + args[0] + "' with IP: " + currentIp
-							+ ", fetching other characters..");
+						+ ", fetching other characters..");
 				} catch (SQLException e) {
 					e.printStackTrace();
 					player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
@@ -525,7 +506,7 @@ public final class Moderator implements CommandListener {
 
 			try {
 				PreparedStatement statement = DatabaseConnection.getDatabase()
-						.prepareStatement("SELECT `username` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
+					.prepareStatement("SELECT `username` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
 				statement.setString(1, currentIp);
 				ResultSet result = statement.executeQuery();
 
@@ -534,8 +515,8 @@ public final class Moderator implements CommandListener {
 					names.add(result.getString("username"));
 				}
 				StringBuilder builder = new StringBuilder("@red@").append(args[0].toUpperCase())
-						.append(" @whi@currently has ").append(names.size() > 0 ? "@gre@" : "@red@")
-						.append(names.size()).append(" @whi@registered characters.");
+					.append(" @whi@currently has ").append(names.size() > 0 ? "@gre@" : "@red@")
+					.append(names.size()).append(" @whi@registered characters.");
 
 				if (names.size() > 0) {
 					builder.append(" % % They are: ");
@@ -543,8 +524,8 @@ public final class Moderator implements CommandListener {
 				for (int i = 0; i < names.size(); i++) {
 
 					builder.append("@yel@")
-					.append((World.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
-					? "@gre@" : "@red@") + names.get(i));
+						.append((World.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
+							? "@gre@" : "@red@") + names.get(i));
 
 					if (i != names.size() - 1) {
 						builder.append("@whi@, ");

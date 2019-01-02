@@ -31,25 +31,12 @@ import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class Server implements Runnable {
 
-	private final ScheduledExecutorService scheduledExecutor = Executors
-			.newSingleThreadScheduledExecutor(new NamedThreadFactory("GameEngine"));
-
-	private final GameStateUpdater gameUpdater = new GameStateUpdater();
-
-	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
-
-	private final ServerEventHandler eventHandler = new ServerEventHandler();
-
-	private static PlayerDatabaseExecutor playerDataProcessor;
-
-	private long lastClientUpdate;
-
-	private static Server server = null;
-
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER;
+	private static PlayerDatabaseExecutor playerDataProcessor;
+	private static Server server = null;
 
 	static {
 		try {
@@ -62,6 +49,21 @@ public final class Server implements Runnable {
 		} catch (Exception e) {
 			throw new ExceptionInInitializerError(e);
 		}
+	}
+
+	private final ScheduledExecutorService scheduledExecutor = Executors
+		.newSingleThreadScheduledExecutor(new NamedThreadFactory("GameEngine"));
+	private final GameStateUpdater gameUpdater = new GameStateUpdater();
+	private final GameTickEventHandler tickEventHandler = new GameTickEventHandler();
+	private final ServerEventHandler eventHandler = new ServerEventHandler();
+	private long lastClientUpdate;
+	private boolean running;
+	private DelayedEvent updateEvent;
+	private ChannelFuture serverChannel;
+
+	public Server() {
+		running = true;
+		playerDataProcessor = new PlayerDatabaseExecutor();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -82,20 +84,19 @@ public final class Server implements Runnable {
 			LOGGER.info("\t Double experience: " + (Constants.GameServer.IS_DOUBLE_EXP ? "Enabled" : "Disabled"));
 			LOGGER.info("\t View Distance: {}", box(Constants.GameServer.VIEW_DISTANCE));*/
 		}
-		if(server == null) {
+		if (server == null) {
 			server = new Server();
 			server.initialize();
 			server.start();
 		}
 	}
 
-	private boolean running;
+	public static Server getServer() {
+		return server;
+	}
 
-	private DelayedEvent updateEvent;
-
-	public Server() {
-		running = true;
-		playerDataProcessor = new PlayerDatabaseExecutor();
+	public static PlayerDatabaseExecutor getPlayerDataProcessor() {
+		return playerDataProcessor;
 	}
 
 	private void initialize() {
@@ -130,25 +131,23 @@ public final class Server implements Runnable {
 			final ServerBootstrap bootstrap = new ServerBootstrap();
 
 			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-			.childHandler(new ChannelInitializer<SocketChannel>() {
-				@Override
-				protected void initChannel(final SocketChannel channel) throws Exception {
-					final ChannelPipeline pipeline = channel.pipeline();
-					pipeline.addLast("decoder", new RSCProtocolDecoder());
-					pipeline.addLast("encoder", new RSCProtocolEncoder());
-					pipeline.addLast("handler", new RSCConnectionHandler());
+				.childHandler(new ChannelInitializer<SocketChannel>() {
+					@Override
+					protected void initChannel(final SocketChannel channel) throws Exception {
+						final ChannelPipeline pipeline = channel.pipeline();
+						pipeline.addLast("decoder", new RSCProtocolDecoder());
+						pipeline.addLast("encoder", new RSCProtocolEncoder());
+						pipeline.addLast("handler", new RSCConnectionHandler());
 
-				}
-			});
+					}
+				});
 
 			bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 			bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
 			bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
 			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
-			try
-
-			{
-				PluginHandler.getPluginHandler().handleAction("Startup", new Object[] {});
+			try {
+				PluginHandler.getPluginHandler().handleAction("Startup", new Object[]{});
 				serverChannel = bootstrap.bind(new InetSocketAddress(Constants.GameServer.SERVER_PORT)).sync();
 				LOGGER.info("Game world is now online on port {}!", box(Constants.GameServer.SERVER_PORT));
 			} catch (final InterruptedException e) {
@@ -162,7 +161,6 @@ public final class Server implements Runnable {
 
 		lastClientUpdate = System.currentTimeMillis();
 	}
-	private ChannelFuture serverChannel;
 
 	public boolean isRunning() {
 		return running;
@@ -218,14 +216,6 @@ public final class Server implements Runnable {
 		}
 	}
 
-	public static Server getServer() {
-		return server;
-	}
-
-	public static PlayerDatabaseExecutor getPlayerDataProcessor() {
-		return playerDataProcessor;
-	}
-
 	public void run() {
 		for (Player p : World.getWorld().getPlayers()) {
 			p.processIncomingPackets();
@@ -265,6 +255,7 @@ public final class Server implements Runnable {
 	public void submitTask(Runnable r) {
 		scheduledExecutor.submit(r);
 	}
+
 	public boolean restart(int seconds) {
 		if (updateEvent != null) {
 			return false;
@@ -278,6 +269,7 @@ public final class Server implements Runnable {
 		Server.getServer().getEventHandler().add(updateEvent);
 		return true;
 	}
+
 	public void saveAndRestart() {
 		//ClanManager.saveClans();
 		LOGGER.info("Saving players...");

@@ -10,7 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class NewMarketItemTask extends MarketTask {
-	
+
 	private MarketItem newItem;
 	private Player owner;
 
@@ -18,7 +18,7 @@ public class NewMarketItemTask extends MarketTask {
 		this.owner = player;
 		this.newItem = item;
 	}
-	
+
 	@Override
 	public void doTask() throws Exception {
 		ItemDefinition def = EntityHandler.getItemDef(newItem.getItemID());
@@ -57,26 +57,26 @@ public class NewMarketItemTask extends MarketTask {
 				}
 			}
 		}*/
-		
+
 		if (!def.isStackable()) {
 			for (int i = 0; i < newItem.getAmount(); i++) {
 				owner.getInventory().remove(newItem.getItemID(), 1);
 			}
 		} else {
 			owner.getInventory().remove(newItem.getItemID(), newItem.getAmount());
-		}		
+		}
 
 		if (def.getOriginalItemID() != -1) {
 			newItem.setItemID(def.getOriginalItemID());
 		}
-		
-		if(MarketDatabase.add(newItem)) {
+
+		if (MarketDatabase.add(newItem)) {
 			//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);
 			ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp", false);
 		} else {
 			Item item = new Item(newItem.getItemID(), newItem.getAmount());
-			if(item.getDef().isStackable()) {
-				for(int i = 0; i < newItem.getAmount(); i++) {
+			if (item.getDef().isStackable()) {
+				for (int i = 0; i < newItem.getAmount(); i++) {
 					owner.getInventory().add(new Item(newItem.getItemID(), 1));
 				}
 			} else {

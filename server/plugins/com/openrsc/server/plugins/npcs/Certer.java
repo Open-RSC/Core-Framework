@@ -15,15 +15,15 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	int[] certers = new int[] { 225, 226, 227, 466, 467, 299, 341, 369,
-			370, 348, 267};
+	int[] certers = new int[]{225, 226, 227, 466, 467, 299, 341, 369,
+		370, 348, 267};
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 
 		// Forester (Log certer; custom)
-		if ((n.getID() == 348) 
-				&& !Constants.GameServer.WANT_WOODCUTTING_GUILD) {
+		if ((n.getID() == 348)
+			&& !Constants.GameServer.WANT_WOODCUTTING_GUILD) {
 			return;
 		}
 
@@ -33,110 +33,109 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		final String[] names = certerDef.getCertNames();
 		npcTalk(p, n, "Welcome to my " + certerDef.getType()
-		+ " exchange stall");
+			+ " exchange stall");
 		int option = showMenu(p, n, "I have some certificates to trade in",
-				"I have some " + certerDef.getType() + 
+			"I have some " + certerDef.getType() +
 				(n.getID() == 226 || n.getID() == 341 || n.getID() == 467 ? "s" : "")
 				+ " to trade in");
 		switch (option) {
-		case 0:
-			p.message("What sort of certificate do you wish to trade in?");
-			int index = showMenu(p, n, names);
-			p.message("How many certificates do you wish to trade in?");
-			int certAmount;
-			if (Constants.GameServer.WANT_CERTS_TO_BANK) {
-				certAmount = showMenu(p, n, "One", "Two", "Three", "Four",
+			case 0:
+				p.message("What sort of certificate do you wish to trade in?");
+				int index = showMenu(p, n, names);
+				p.message("How many certificates do you wish to trade in?");
+				int certAmount;
+				if (Constants.GameServer.WANT_CERTS_TO_BANK) {
+					certAmount = showMenu(p, n, "One", "Two", "Three", "Four",
 						"Five", "All to bank");
-			}
-			else {
-				certAmount = showMenu(p, n, "One", "Two", "Three", "Four", "Five");
-			}
-			int certID = certerDef.getCertID(index);
-			if (certID < 0) {
-				return;
-			}
-			int itemID = certerDef.getItemID(index);
-			if (certAmount == 5) {
-				if(p.isIronMan(2)) {
-					p.message("As an Ultimate Iron Man. you cannot use certer to bank.");
+				} else {
+					certAmount = showMenu(p, n, "One", "Two", "Three", "Four", "Five");
+				}
+				int certID = certerDef.getCertID(index);
+				if (certID < 0) {
 					return;
 				}
-				certAmount = p.getInventory().countId(certID);
-				if (certAmount <= 0) {
-					p.message("You don't have any " + names[index]
+				int itemID = certerDef.getItemID(index);
+				if (certAmount == 5) {
+					if (p.isIronMan(2)) {
+						p.message("As an Ultimate Iron Man. you cannot use certer to bank.");
+						return;
+					}
+					certAmount = p.getInventory().countId(certID);
+					if (certAmount <= 0) {
+						p.message("You don't have any " + names[index]
 							+ " certificates");
-					return;
-				}
-				Item bankItem = new Item(itemID, certAmount * 5);
-				if (p.getInventory().remove(new Item(certID, certAmount)) > -1) {
-					p.message("You exchange the certificates, "
+						return;
+					}
+					Item bankItem = new Item(itemID, certAmount * 5);
+					if (p.getInventory().remove(new Item(certID, certAmount)) > -1) {
+						p.message("You exchange the certificates, "
 							+ bankItem.getAmount() + " "
 							+ bankItem.getDef().getName()
 							+ " is added to your bank");
-					p.getBank().add(bankItem);
-				}
-			} else {
-				certAmount += 1;
-				int itemAmount = certAmount * 5;
-				if (p.getInventory().countId(certID) < certAmount) {
-					p.message("You don't have that many certificates");
-					return;
-				}
-				if (p.getInventory().remove(certID, certAmount) > -1) {
-					p.message("You exchange the certificates for "
+						p.getBank().add(bankItem);
+					}
+				} else {
+					certAmount += 1;
+					int itemAmount = certAmount * 5;
+					if (p.getInventory().countId(certID) < certAmount) {
+						p.message("You don't have that many certificates");
+						return;
+					}
+					if (p.getInventory().remove(certID, certAmount) > -1) {
+						p.message("You exchange the certificates for "
 							+ certerDef.getType() + ".");
-					for (int x = 0; x < itemAmount; x++) {
-						p.getInventory().add(new Item(itemID, 1));
+						for (int x = 0; x < itemAmount; x++) {
+							p.getInventory().add(new Item(itemID, 1));
+						}
 					}
 				}
-			}
-			break;
-		case 1:
-			p.message("What sort of " + certerDef.getType()
-			+ " do you wish to trade in?");
-			index = showMenu(p, n, names);
-			p.message("How many " + certerDef.getType()
-			+ " do you wish to trade in?");
-			certAmount = showMenu(p, n, "5", "10", "15", "20", "25",
+				break;
+			case 1:
+				p.message("What sort of " + certerDef.getType()
+					+ " do you wish to trade in?");
+				index = showMenu(p, n, names);
+				p.message("How many " + certerDef.getType()
+					+ " do you wish to trade in?");
+				certAmount = showMenu(p, n, "5", "10", "15", "20", "25",
 					"All from bank");
-			certID = certerDef.getCertID(index);
-			if (certID < 0) {
-				return;
-			}
-			itemID = certerDef.getItemID(index);
-			if (certAmount == 5) {
-				if(p.isIronMan(2)) {
-					p.message("As an Ultimate Iron Man. you cannot use certer to bank.");
+				certID = certerDef.getCertID(index);
+				if (certID < 0) {
 					return;
 				}
-				certAmount = (int) (p.getBank().countId(itemID) / 5);
-				int itemAmount = certAmount * 5;
-				if (itemAmount <= 0) {
-					p.message("You don't have any " + names[index] + " to cert");
-					return;
-				}
-				if (p.getBank().remove(itemID, itemAmount) > -1) {
-					p.message("You exchange the " + certerDef.getType() + ", "
+				itemID = certerDef.getItemID(index);
+				if (certAmount == 5) {
+					if (p.isIronMan(2)) {
+						p.message("As an Ultimate Iron Man. you cannot use certer to bank.");
+						return;
+					}
+					certAmount = (int) (p.getBank().countId(itemID) / 5);
+					int itemAmount = certAmount * 5;
+					if (itemAmount <= 0) {
+						p.message("You don't have any " + names[index] + " to cert");
+						return;
+					}
+					if (p.getBank().remove(itemID, itemAmount) > -1) {
+						p.message("You exchange the " + certerDef.getType() + ", "
 							+ itemAmount + " "
 							+ EntityHandler.getItemDef(itemID).getName()
 							+ " is taken from your bank");
+						p.getInventory().add(new Item(certID, certAmount));
+					}
+				} else {
+					certAmount += 1;
+					int itemAmount = certAmount * 5;
+					if (p.getInventory().countId(itemID) < itemAmount) {
+						p.message("You don't have that many " + certerDef.getType());
+						return;
+					}
+					p.message("You exchange the " + certerDef.getType()
+						+ " for certificates.");
+					for (int x = 0; x < itemAmount; x++) {
+						p.getInventory().remove(itemID, 1);
+					}
 					p.getInventory().add(new Item(certID, certAmount));
 				}
-			} else {
-				certAmount += 1;
-				int itemAmount = certAmount * 5;
-				if (p.getInventory().countId(itemID) < itemAmount) {
-					p.message("You don't have that many " + certerDef.getType());
-					return;
-				}
-				p.message("You exchange the " + certerDef.getType()
-				+ " for certificates.");
-				for (int x = 0; x < itemAmount; x++) {
-					p.getInventory().remove(itemID, 1);
-				}
-				p.getInventory().add(new Item(certID, certAmount));
-			}
-			break;
+				break;
 		}
 	}
 

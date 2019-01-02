@@ -7,12 +7,12 @@ import com.openrsc.server.model.entity.player.Player;
 
 public abstract class DelayedEvent {
 
-	protected int delay = 600;
 	protected final ServerEventHandler handler = Server.getServer().getEventHandler();
-	private long lastRun = System.currentTimeMillis();
+	protected int delay = 600;
 	protected Player owner;
 	protected boolean matchRunning = true;
 	protected boolean gameEvent;
+	private long lastRun = System.currentTimeMillis();
 
 	public DelayedEvent(Player owner, int delay) {
 		this.owner = owner;
@@ -25,6 +25,10 @@ public abstract class DelayedEvent {
 
 	public int getDelay() {
 		return delay;
+	}
+
+	public void setDelay(int delay) {
+		this.delay = delay;
 	}
 
 	public Object getIdentifier() {
@@ -44,34 +48,31 @@ public abstract class DelayedEvent {
 	}
 
 	public abstract void run();
-		public void setDelay(int delay) {
-			this.delay = delay;
-		}
 
-		public void setLastRun(long time) {
-			lastRun = time;
-		}
+	public void setLastRun(long time) {
+		lastRun = time;
+	}
 
-		public final boolean shouldRemove() {
-			return !matchRunning;
-		}
+	public final boolean shouldRemove() {
+		return !matchRunning;
+	}
 
-		public final boolean shouldRun() {
-			return matchRunning && System.currentTimeMillis() - lastRun >= delay;
-		}
+	public final boolean shouldRun() {
+		return matchRunning && System.currentTimeMillis() - lastRun >= delay;
+	}
 
-		public final void stop() {
-			matchRunning = false;
-		}
+	public final void stop() {
+		matchRunning = false;
+	}
 
-		public int timeTillNextRun() {
-			int time = (int) (delay - (System.currentTimeMillis() - lastRun));
-			return time < 0 ? 0 : time;
-		}
+	public int timeTillNextRun() {
+		int time = (int) (delay - (System.currentTimeMillis() - lastRun));
+		return time < 0 ? 0 : time;
+	}
 
-		public final void updateLastRun() {
-			lastRun = System.currentTimeMillis();
-		}
+	public final void updateLastRun() {
+		lastRun = System.currentTimeMillis();
+	}
 
 	public boolean isGameEvent() {
 		return gameEvent;

@@ -18,100 +18,100 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 		npcTalk(p, n, "Go away, I'm meditating");
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, 24)) {
 			defaultMenu.addOption(new Option(
-					"Father Aereck sent me to talk to you") {
+				"Father Aereck sent me to talk to you") {
 				@Override
 				public void action() {
 					npcTalk(p, n, "I suppose I'd better talk to you then",
-							"What problems has he got himself into this time?");
+						"What problems has he got himself into this time?");
 					new Menu().addOptions(
-							new Option(
-									"He's got a ghost haunting his graveyard") {
-								@Override
-								public void action() {
-									npcTalk(p,
-											n,
-											"Oh the silly fool",
-											"I leave town for just five months",
-											"and already he can't manage",
-											"Sigh",
-											"Well I can't go back and exorcise it",
-											"I vowed not to leave this place",
-											"Until I had done a full two years of prayer and meditation",
-											"Tell you what I can do though",
-											"Take this amulet");
-									message(p,
-											"Father Urhney hands you an amulet");
-									addItem(p, 24, 1); // AMULET OF GHOST SPEAK.
-									npcTalk(p,
-											n,
-											"It is an amulet of Ghostspeak",
-											"So called because when you wear it you can speak to ghosts",
-											"A lot of ghosts are doomed to be ghosts",
-											"Because they have left some task uncompleted",
-											"Maybe if you know what this task is",
-											"You can get rid of the ghost",
-											"I'm not making any guarantees mind you",
-											"But it is the best I can do right now");
-									playerTalk(p, n,
-											"Thank you, I'll give it a try");
-									p.updateQuestStage(Quests.THE_RESTLESS_GHOST,
-											2);
-								}
-							},
-							new Option(
-									"You mean he gets himself into lots of problems?") {
-								@Override
-								public void action() {
-									npcTalk(p,
-											n,
-											"Yeah. For example when we were trainee priests",
-											"He kept on getting stuck up bell ropes",
-											"Anyway I don't have time for chitchat",
-											"What's his problem this time?");
-									playerTalk(p, n,
-											"He's got a ghost haunting his graveyard");
-									npcTalk(p,
-											n,
-											"Oh the silly fool",
-											"I leave town for just five months",
-											"and already he can't manage",
-											"Sigh",
-											"Well I can't go back and exorcise it",
-											"I vowed not to leave this place",
-											"Until I had done a full two years of prayer and meditation",
-											"Tell you what I can do though",
-											"Take this amulet");
-									message(p,
-											"Father Urhney hands you an amulet");
-									addItem(p, 24, 1); // AMULET OF GHOST SPEAK.
-									npcTalk(p,
-											n,
-											"It is an amulet of Ghostspeak",
-											"So called because when you wear it you can speak to ghosts",
-											"A lot of ghosts are doomed to be ghosts",
-											"Because they have left some task uncompleted",
-											"Maybe if you know what this task is",
-											"You can get rid of the ghost",
-											"I'm not making any guarantees mind you",
-											"But it is the best I can do right now");
-									playerTalk(p, n,
-											"Thank you, I'll give it a try");
-									p.updateQuestStage(Quests.THE_RESTLESS_GHOST,
-											2);
-								}
-							}).showMenu(p);
+						new Option(
+							"He's got a ghost haunting his graveyard") {
+							@Override
+							public void action() {
+								npcTalk(p,
+									n,
+									"Oh the silly fool",
+									"I leave town for just five months",
+									"and already he can't manage",
+									"Sigh",
+									"Well I can't go back and exorcise it",
+									"I vowed not to leave this place",
+									"Until I had done a full two years of prayer and meditation",
+									"Tell you what I can do though",
+									"Take this amulet");
+								message(p,
+									"Father Urhney hands you an amulet");
+								addItem(p, 24, 1); // AMULET OF GHOST SPEAK.
+								npcTalk(p,
+									n,
+									"It is an amulet of Ghostspeak",
+									"So called because when you wear it you can speak to ghosts",
+									"A lot of ghosts are doomed to be ghosts",
+									"Because they have left some task uncompleted",
+									"Maybe if you know what this task is",
+									"You can get rid of the ghost",
+									"I'm not making any guarantees mind you",
+									"But it is the best I can do right now");
+								playerTalk(p, n,
+									"Thank you, I'll give it a try");
+								p.updateQuestStage(Quests.THE_RESTLESS_GHOST,
+									2);
+							}
+						},
+						new Option(
+							"You mean he gets himself into lots of problems?") {
+							@Override
+							public void action() {
+								npcTalk(p,
+									n,
+									"Yeah. For example when we were trainee priests",
+									"He kept on getting stuck up bell ropes",
+									"Anyway I don't have time for chitchat",
+									"What's his problem this time?");
+								playerTalk(p, n,
+									"He's got a ghost haunting his graveyard");
+								npcTalk(p,
+									n,
+									"Oh the silly fool",
+									"I leave town for just five months",
+									"and already he can't manage",
+									"Sigh",
+									"Well I can't go back and exorcise it",
+									"I vowed not to leave this place",
+									"Until I had done a full two years of prayer and meditation",
+									"Tell you what I can do though",
+									"Take this amulet");
+								message(p,
+									"Father Urhney hands you an amulet");
+								addItem(p, 24, 1); // AMULET OF GHOST SPEAK.
+								npcTalk(p,
+									n,
+									"It is an amulet of Ghostspeak",
+									"So called because when you wear it you can speak to ghosts",
+									"A lot of ghosts are doomed to be ghosts",
+									"Because they have left some task uncompleted",
+									"Maybe if you know what this task is",
+									"You can get rid of the ghost",
+									"I'm not making any guarantees mind you",
+									"But it is the best I can do right now");
+								playerTalk(p, n,
+									"Thank you, I'll give it a try");
+								p.updateQuestStage(Quests.THE_RESTLESS_GHOST,
+									2);
+							}
+						}).showMenu(p);
 				}
 			});
 		}
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2 && !hasItem(p, 24)) {
 			defaultMenu.addOption(new Option(
-					"I've lost the amulet") {
+				"I've lost the amulet") {
 				@Override
 				public void action() {
 					message(p, "Father Urhney sighs");
 					npcTalk(p, n, "How careless can you get",
-							"Those things aren't easy to come by you know",
-							"It's a good job I've got a spare");
+						"Those things aren't easy to come by you know",
+						"It's a good job I've got a spare");
 					message(p, "Father Urhney hands you an amulet");
 					npcTalk(p, n, "Be more careful this time");
 					playerTalk(p, n, "Ok I'll try to be");

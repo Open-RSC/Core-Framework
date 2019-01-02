@@ -10,7 +10,7 @@ public abstract class WalkToObjectAction extends WalkToAction {
 	public WalkToObjectAction(Player owner, GameObject object) {
 		super(owner, object.getLocation());
 		this.object = object;
-		if(player.atObject(object)) {
+		if (player.atObject(object)) {
 			execute();
 			player.setWalkToAction(null);
 			hasExecuted = true;

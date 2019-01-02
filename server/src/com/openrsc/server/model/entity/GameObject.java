@@ -48,13 +48,13 @@ public class GameObject extends Entity {
 
 	public GameObject(Point location, int id, int direction, int type) {
 		this(new GameObjectLoc(id, location.getX(), location.getY(), direction,
-				type));
+			type));
 	}
 
 	public GameObject(Point location, int id, int direction, int type,
-			String owner) {
+					  String owner) {
 		this(new GameObjectLoc(id, location.getX(), location.getY(), direction,
-				type, owner));
+			type, owner));
 	}
 
 	public String getOwner() {
@@ -73,15 +73,19 @@ public class GameObject extends Entity {
 		if (o instanceof GameObject) {
 			GameObject go = (GameObject) o;
 			return go.getLocation().equals(getLocation())
-					&& go.getID() == getID()
-					&& go.getDirection() == getDirection()
-					&& go.getType() == getType();
+				&& go.getID() == getID()
+				&& go.getDirection() == getDirection()
+				&& go.getType() == getType();
 		}
 		return false;
 	}
 
 	public int getDirection() {
 		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
 	}
 
 	public DoorDef getDoorDef() {
@@ -100,6 +104,10 @@ public class GameObject extends Entity {
 		return type;
 	}
 
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public boolean isOn(int x, int y) {
 		int width, height;
 		if (type == 1) {
@@ -113,7 +121,7 @@ public class GameObject extends Entity {
 		}
 		if (type == 0) { // Object
 			return x >= getX() && x <= (getX() + width) && y >= getY()
-					&& y <= (getY() + height);
+				&& y <= (getY() + height);
 		} else { // Door
 			return x == getX() && y == getY();
 		}
@@ -132,22 +140,14 @@ public class GameObject extends Entity {
 		super.remove();
 	}
 
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
 	public String toString() {
 		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + id
-				+ "; dir = " + direction + "; location = "
-				+ location.toString() + ";";
+			+ "; dir = " + direction + "; location = "
+			+ location.toString() + ";";
 	}
 
 	public boolean isVisibleTo(Player p) {
-		if(statement == null)
+		if (statement == null)
 			return true;
 
 		return statement != null && statement.isVisibleTo(this, p);
@@ -203,7 +203,7 @@ public class GameObject extends Entity {
 				minY = getY();
 				maxX = getX();
 				maxY = getY();
-				if(dir == 3 || dir == 2) {
+				if (dir == 3 || dir == 2) {
 					minX = getX() - 1;
 					minY = getY() - 1;
 					maxX = getX() + 1;
@@ -216,6 +216,6 @@ public class GameObject extends Entity {
 				maxY = getY();
 			}
 		}
-		return new Point[] { Point.location(minX, minY), Point.location(maxX, maxY)};
+		return new Point[]{Point.location(minX, minY), Point.location(maxX, maxY)};
 	}
 }

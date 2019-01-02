@@ -13,18 +13,18 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public final class GeneralStore  implements ShopInterface,
-TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class GeneralStore implements ShopInterface,
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	public static Item[] shop_items = new Item[] { new Item(135, 3),
+	public static Item[] shop_items = new Item[]{new Item(135, 3),
 		new Item(140, 2), new Item(144, 2), new Item(21, 2),
 		new Item(166, 2), new Item(167, 2), new Item(168, 5),
-		new Item(1263, 10) };
+		new Item(1263, 10)};
 
 	private final Shop baseShop = new Shop(true, 12400, 130, 40, 3, new Item(
-			135, 3), new Item(140, 2), new Item(144, 2), new Item(21,
-					2), new Item(166, 2), new Item(167, 2), new Item(168, 5),
-					new Item(1263, 10));
+		135, 3), new Item(140, 2), new Item(144, 2), new Item(21,
+		2), new Item(166, 2), new Item(167, 2), new Item(168, 5),
+		new Item(1263, 10));
 	private Shop[] shops = null;
 
 	@Override
@@ -89,13 +89,13 @@ TalkToNpcExecutiveListener, TalkToNpcListener {
 		Shop shop = shap;
 
 		if (location.getX() >= 132 && location.getX() <= 137
-				&& location.getY() >= 639 && location.getY() <= 644) {
+			&& location.getY() >= 639 && location.getY() <= 644) {
 			shop = shops[3];
 		} else if (location.getX() >= 317 && location.getX() <= 322
-				&& location.getY() >= 530 && location.getY() <= 536) {
+			&& location.getY() >= 530 && location.getY() <= 536) {
 			shop = shops[2];
 		} else if (location.getX() >= 124 && location.getX() <= 129
-				&& location.getY() >= 513 && location.getY() <= 518) {
+			&& location.getY() >= 513 && location.getY() <= 518) {
 			shop = shops[1];
 		}
 
@@ -103,7 +103,7 @@ TalkToNpcExecutiveListener, TalkToNpcListener {
 			if (shop != null) {
 				npcTalk(p, n, "Can I help you at all?");
 				int menu = showMenu(p, n, "Yes please, what are you selling?", "No thanks");
-				if(menu == 0) {
+				if (menu == 0) {
 					npcTalk(p, n, "Take a look");
 
 					p.setAccessingShop(shop);

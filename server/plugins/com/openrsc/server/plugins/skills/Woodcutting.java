@@ -17,11 +17,11 @@ import com.openrsc.server.util.rsc.Formulae;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Woodcutting implements ObjectActionListener,
-		ObjectActionExecutiveListener {
+	ObjectActionExecutiveListener {
 
 	@Override
 	public boolean blockObjectAction(final GameObject obj,
-			final String command, final Player player) {
+									 final String command, final Player player) {
 		final ObjectWoodcuttingDef def = EntityHandler.getObjectWoodcuttingDef(obj.getID());
 		if (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204) {
 			return true;
@@ -30,9 +30,9 @@ public class Woodcutting implements ObjectActionListener,
 	}
 
 	private void handleWoodcutting(final GameObject object, final Player owner,
-			final int click) {
+								   final int click) {
 		final ObjectWoodcuttingDef def = EntityHandler
-				.getObjectWoodcuttingDef(object.getID());
+			.getObjectWoodcuttingDef(object.getID());
 		if (owner.isBusy()) {
 			return;
 		}
@@ -43,7 +43,7 @@ public class Woodcutting implements ObjectActionListener,
 			owner.message("Nothing interesting happens");
 			return;
 		}
-		if(def.getReqLevel() > 1 && !Constants.GameServer.MEMBER_WORLD) {
+		if (def.getReqLevel() > 1 && !Constants.GameServer.MEMBER_WORLD) {
 			owner.message(owner.MEMBER_MESSAGE);
 			return;
 		}
@@ -68,28 +68,28 @@ public class Woodcutting implements ObjectActionListener,
 		}
 		int batchTimes = 1;
 		switch (axeId) {
-		case 87:
-			batchTimes = 1;
-			break;
-		case 12:
-			batchTimes = 2;
-			break;
-		case 88:
-			batchTimes = 3;
-			break;
-		case 428:
-			batchTimes = 4;
-			break;
-		case 203:
-			batchTimes = 5;
-			break;
-		case 204:
-			batchTimes = 8;
-		case 405:
-			batchTimes = 12;
-			break;
+			case 87:
+				batchTimes = 1;
+				break;
+			case 12:
+				batchTimes = 2;
+				break;
+			case 88:
+				batchTimes = 3;
+				break;
+			case 428:
+				batchTimes = 4;
+				break;
+			case 203:
+				batchTimes = 5;
+				break;
+			case 204:
+				batchTimes = 8;
+			case 405:
+				batchTimes = 12;
+				break;
 		}
-		
+
 		final int axeID = axeId;
 		showBubble(owner, new Item(axeId));
 		owner.message("You swing your " + EntityHandler.getItemDef(axeId).getName().toLowerCase() + " at the tree...");
@@ -102,27 +102,27 @@ public class Woodcutting implements ObjectActionListener,
 				}
 				if (Formulae.getLog(def, owner.getSkills().getLevel(8), axeID)) {
 					final Item log = new Item(def.getLogId());
-					if(!owner.getInventory().full()) 
+					if (!owner.getInventory().full())
 						owner.getInventory().add(log);
-					else 
+					else
 						World.getWorld().registerItem(new GroundItem(log.getID(), owner.getX(),
-								owner.getY(), log.getAmount(), owner));
+							owner.getY(), log.getAmount(), owner));
 					owner.message("You get some wood");
 					owner.incExp(8, (int) def.getExp(), true);
 					if (DataConversions.random(1, 100) <= def.getFell()) {
 						interrupt();
 						GameObject obj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						if(obj != null && obj.getID() == object.getID()) {
+						if (obj != null && obj.getID() == object.getID()) {
 							World.getWorld().replaceGameObject(object, new GameObject(object.getLocation(), 4, object.getDirection(), object.getType()));
 							World.getWorld().delayedSpawnObject(object.getLoc(), def
-									.getRespawnTime() * 1000);
+								.getRespawnTime() * 1000);
 						}
 					}
 				} else {
 					owner.message("You slip and fail to hit the tree");
-					if(getRepeatFor() > 1) {
+					if (getRepeatFor() > 1) {
 						GameObject checkObj = owner.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						if(checkObj == null) {
+						if (checkObj == null) {
 							interrupt();
 						}
 					}
@@ -135,7 +135,7 @@ public class Woodcutting implements ObjectActionListener,
 	public void onObjectAction(final GameObject object, final String command, final Player owner) {
 		final ObjectWoodcuttingDef def = EntityHandler.getObjectWoodcuttingDef(object.getID());
 		if (command.equals("chop") && def != null && object.getID() != 245 && object.getID() != 204) {
-			handleWoodcutting(object, owner, owner.click); 
-		} 
+			handleWoodcutting(object, owner, owner.click);
+		}
 	}
 }

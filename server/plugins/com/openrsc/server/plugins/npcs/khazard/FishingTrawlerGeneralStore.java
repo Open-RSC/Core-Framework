@@ -13,28 +13,28 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class FishingTrawlerGeneralStore implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 130, 40, 3,
-			new Item(156, 5), new Item(135, 3), new Item(140, 2),
-			new Item(144, 2), new Item(50, 2), new Item(166, 2),
-			new Item(167, 2), new Item(168, 5), new Item(237, 30),
-			new Item(136, 30), new Item(1282, 30), new Item(785, 30));
+		new Item(156, 5), new Item(135, 3), new Item(140, 2),
+		new Item(144, 2), new Item(50, 2), new Item(166, 2),
+		new Item(167, 2), new Item(168, 5), new Item(237, 30),
+		new Item(136, 30), new Item(1282, 30), new Item(785, 30));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 
 		npcTalk(p, n, "Can I help you at all");
 
-		String[] options = new String[] { "Yes please. What are you selling?",
-				"No thanks" };
-		int option = showMenu(p,n, options);
+		String[] options = new String[]{"Yes please. What are you selling?",
+			"No thanks"};
+		int option = showMenu(p, n, options);
 		switch (option) {
-		case 0:
-			npcTalk(p, n, "Take a look");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-			break;
+			case 0:
+				npcTalk(p, n, "Take a look");
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+				break;
 		}
 	}
 
@@ -45,7 +45,7 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

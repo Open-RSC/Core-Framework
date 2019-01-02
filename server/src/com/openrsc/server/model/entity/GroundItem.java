@@ -28,7 +28,7 @@ public class GroundItem extends Entity {
 	 * The time that the item was spawned
 	 */
 	private long spawnedTime = 0L;
-	
+
 	public GroundItem(int id, Point location) { // used for ::masks
 		super.id = id;
 		super.location.set(location);
@@ -71,15 +71,25 @@ public class GroundItem extends Entity {
 		if (o instanceof GroundItem) {
 			GroundItem item = (GroundItem) o;
 			return item.getID() == getID() && item.getAmount() == getAmount()
-					&& item.getSpawnedTime() == getSpawnedTime()
-					&& (item.getOwnerUsernameHash() == getOwnerUsernameHash())
-					&& item.getLocation().equals(getLocation());
+				&& item.getSpawnedTime() == getSpawnedTime()
+				&& (item.getOwnerUsernameHash() == getOwnerUsernameHash())
+				&& item.getLocation().equals(getLocation());
 		}
 		return false;
 	}
 
 	public int getAmount() {
 		return amount;
+	}
+
+	public void setAmount(int amount) {
+		if (getDef() != null) {
+			if (getDef().isStackable()) {
+				this.amount = amount;
+			} else {
+				this.amount = 1;
+			}
+		}
 	}
 
 	public ItemDefinition getDef() {
@@ -110,16 +120,6 @@ public class GroundItem extends Entity {
 		super.remove();
 	}
 
-	public void setAmount(int amount) {
-		if (getDef() != null) {
-			if (getDef().isStackable()) {
-				this.amount = amount;
-			} else {
-				this.amount = 1;
-			}
-		}
-	}
-
 	public boolean visibleTo(Player p) {
 		if (belongsTo(p)) {
 			return true;
@@ -129,7 +129,7 @@ public class GroundItem extends Entity {
 		}
 		if (getDef().isUntradable())
 			return false;
-		if(!belongsTo(p) && p.getIronMan() >= 1 && p.getIronMan() <= 3)
+		if (!belongsTo(p) && p.getIronMan() >= 1 && p.getIronMan() <= 3)
 			return false;
 		return System.currentTimeMillis() - spawnedTime > 60000;
 	}

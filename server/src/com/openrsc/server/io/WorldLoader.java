@@ -14,15 +14,24 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class WorldLoader {
+	public static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 128, 229, 230};
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
-    
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 	private ZipFile tileArchive;
 
+	private static boolean projectileClipAllowed(int wallID) {
+		for (int i = 0; i < ALLOWED_WALL_ID_TYPES.length; i++) {
+			if (ALLOWED_WALL_ID_TYPES[i] == wallID) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private boolean loadSection(int sectionX, int sectionY, int height,
-			World world, int bigX, int bigY) {
+								World world, int bigX, int bigY) {
 		Sector s = null;
 		try {
 			String filename = "h" + height + "x" + sectionX + "y" + sectionY;
@@ -32,8 +41,8 @@ public class WorldLoader {
 				return false;
 			}
 			ByteBuffer data = DataConversions
-					.streamToBuffer(new BufferedInputStream(tileArchive
-							.getInputStream(e)));
+				.streamToBuffer(new BufferedInputStream(tileArchive
+					.getInputStream(e)));
 			s = Sector.unpack(data);
 		} catch (Exception e) {
 			LOGGER.catching(e);
@@ -45,36 +54,36 @@ public class WorldLoader {
 				if (!world.withinWorld(bx, by)) {
 					continue;
 				}
-				Tile sectorTile = s.getTile(x,y);
+				Tile sectorTile = s.getTile(x, y);
 				TileValue tile = world.getTile(bx, by);
-						
+
 				tile.overlay = sectorTile.groundOverlay;
 				tile.diagWallVal = sectorTile.diagonalWalls;
 				tile.horizontalWallVal = sectorTile.horizontalWall;
 				tile.verticalWallVal = sectorTile.verticalWall;
-				tile.elevation = sectorTile.groundElevation;	
-				
+				tile.elevation = sectorTile.groundElevation;
+
 				if ((sectorTile.groundOverlay & 0xff) == 250) {
 					sectorTile.groundOverlay = (byte) 2;
 				}
-				
+
 				byte groundOverlay = sectorTile.groundOverlay;
 				if (groundOverlay > 0
-						&& EntityHandler.getTileDef(groundOverlay - 1)
-								.getObjectType() != 0) {
+					&& EntityHandler.getTileDef(groundOverlay - 1)
+					.getObjectType() != 0) {
 					tile.traversalMask |= 0x40; // 64
 				}
-				
+
 				byte verticalWall = sectorTile.verticalWall;
 				if (verticalWall > 0
-						&& EntityHandler.getDoorDef(verticalWall - 1)
-								.getUnknown() == 0
-						&& EntityHandler.getDoorDef(verticalWall - 1)
-								.getDoorType() != 0) {
+					&& EntityHandler.getDoorDef(verticalWall - 1)
+					.getUnknown() == 0
+					&& EntityHandler.getDoorDef(verticalWall - 1)
+					.getDoorType() != 0) {
 					world.getTile(bx, by).traversalMask |= 1; // 1
 					world.getTile(bx, by - 1).traversalMask |= 4; // 4
-					
-					if(projectileClipAllowed(verticalWall)) {
+
+					if (projectileClipAllowed(verticalWall)) {
 						tile.projectileAllowed = true;
 						world.getTile(bx, by - 1).projectileAllowed = true;
 					}
@@ -82,13 +91,13 @@ public class WorldLoader {
 
 				byte horizontalWall = sectorTile.horizontalWall;
 				if (horizontalWall > 0
-						&& EntityHandler.getDoorDef(horizontalWall - 1)
-								.getUnknown() == 0
-						&& EntityHandler.getDoorDef(horizontalWall - 1)
-								.getDoorType() != 0) {
+					&& EntityHandler.getDoorDef(horizontalWall - 1)
+					.getUnknown() == 0
+					&& EntityHandler.getDoorDef(horizontalWall - 1)
+					.getDoorType() != 0) {
 					tile.traversalMask |= 2; // 2
 					world.getTile(bx - 1, by).traversalMask |= 8; // 8
-					if(projectileClipAllowed(horizontalWall)) {
+					if (projectileClipAllowed(horizontalWall)) {
 						tile.projectileAllowed = true;
 						world.getTile(bx - 1, by).projectileAllowed = true;
 					}
@@ -96,30 +105,30 @@ public class WorldLoader {
 
 				int diagonalWalls = sectorTile.diagonalWalls;
 				if (diagonalWalls > 0
-						&& diagonalWalls < 12000
-						&& EntityHandler.getDoorDef(diagonalWalls - 1)
-								.getUnknown() == 0
-						&& EntityHandler.getDoorDef(diagonalWalls - 1)
-								.getDoorType() != 0) {
+					&& diagonalWalls < 12000
+					&& EntityHandler.getDoorDef(diagonalWalls - 1)
+					.getUnknown() == 0
+					&& EntityHandler.getDoorDef(diagonalWalls - 1)
+					.getDoorType() != 0) {
 					tile.traversalMask |= 0x20; // 32
-					if(projectileClipAllowed(diagonalWalls)) {
+					if (projectileClipAllowed(diagonalWalls)) {
 						tile.projectileAllowed = true;
 					}
 				}
 				if (diagonalWalls > 12000
-						&& diagonalWalls < 24000
-						&& EntityHandler.getDoorDef(diagonalWalls - 12001)
-								.getUnknown() == 0
-						&& EntityHandler.getDoorDef(diagonalWalls - 12001)
-								.getDoorType() != 0) {
+					&& diagonalWalls < 24000
+					&& EntityHandler.getDoorDef(diagonalWalls - 12001)
+					.getUnknown() == 0
+					&& EntityHandler.getDoorDef(diagonalWalls - 12001)
+					.getDoorType() != 0) {
 					tile.traversalMask |= 0x10; // 16
-					
-					if(projectileClipAllowed(diagonalWalls)) {
+
+					if (projectileClipAllowed(diagonalWalls)) {
 						tile.projectileAllowed = true;
 					}
 				}
-			
-				if(	world.getTile(bx, by).overlay == 2 || world.getTile(bx, by).overlay == 11)
+
+				if (world.getTile(bx, by).overlay == 2 || world.getTile(bx, by).overlay == 11)
 					world.getTile(bx, by).projectileAllowed = true;
 			}
 		}
@@ -143,7 +152,7 @@ public class WorldLoader {
 				for (int sy = 0; sy < 944; sy += 48) {
 					int x = (sx + wildX) / 48;
 					int y = (sy + (lvl * 944) + wildY) / 48;
-					if(loadSection(x, y, lvl, world, sx, sy + (944 * lvl))) {
+					if (loadSection(x, y, lvl, world, sx, sy + (944 * lvl))) {
 						loadSection(x, y, lvl, world, sx, sy + (944 * lvl));
 						sectors++;
 					}
@@ -151,16 +160,5 @@ public class WorldLoader {
 			}
 		}
 		LOGGER.info(((System.currentTimeMillis() - start) / 1000) + "s to load landscape with " + sectors + " regions.");
-	}
-	
-	public static final int[] ALLOWED_WALL_ID_TYPES = { 5, 6, 14, 42, 128, 229, 230 };
-	
-	private static boolean projectileClipAllowed(int wallID) {
-		for (int i = 0; i < ALLOWED_WALL_ID_TYPES.length; i++) {
-			if (ALLOWED_WALL_ID_TYPES[i] == wallID) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

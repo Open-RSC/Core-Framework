@@ -19,16 +19,16 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 		npcTalk(p, n, "What can I do yer for?");
 		String[] options = {};
 		if (p.getCache().hasKey("barcrawl") && !p.getCache().hasKey("bartwo")) {
-			options = new String[] {
-					"A glass of your finest ale please",
-					"Can you recommend anywhere an adventurer might make his fortune?",
-					"Do you know where I can get some good equipment?",
-					"I'm doing Alfred Grimhand's barcrawl" };
+			options = new String[]{
+				"A glass of your finest ale please",
+				"Can you recommend anywhere an adventurer might make his fortune?",
+				"Do you know where I can get some good equipment?",
+				"I'm doing Alfred Grimhand's barcrawl"};
 		} else {
-			options = new String[] {
-					"A glass of your finest ale please",
-					"Can you recommend anywhere an adventurer might make his fortune?",
-					"Do you know where I can get some good equipment?" };
+			options = new String[]{
+				"A glass of your finest ale please",
+				"Can you recommend anywhere an adventurer might make his fortune?",
+				"Do you know where I can get some good equipment?"};
 		}
 		int reply = showMenu(p, n, options);
 		if (reply == 0) {
@@ -40,43 +40,43 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				playerTalk(p, n, "oh dear i don't seem to have enough coins");
 		} else if (reply == 1) {
 			npcTalk(p, n,
-					"Ooh I don't know if I should be giving away information",
-					"Makes the computer game too easy");
+				"Ooh I don't know if I should be giving away information",
+				"Makes the computer game too easy");
 			reply = showMenu(p, n, "Oh ah well",
-					"Computer game? What are you talking about?",
-					"Just a small clue?");
+				"Computer game? What are you talking about?",
+				"Just a small clue?");
 			if (reply == 0) {
 				playerTalk(p, n, "Oh ah well");
 			} else if (reply == 1) {
 				playerTalk(p, n, "Computer game?",
-						"What are you talking about?");
+					"What are you talking about?");
 				npcTalk(p, n, "This world around us..",
-						"is all a computer game..", "called RuneScape");
+					"is all a computer game..", "called RuneScape");
 				playerTalk(
-						p,
-						n,
-						"Nope, still don't understand what you are talking about",
-						"What's a computer?");
+					p,
+					n,
+					"Nope, still don't understand what you are talking about",
+					"What's a computer?");
 				npcTalk(p, n, "It's a sort of magic box thing.",
-						"which can do all sorts of different things");
+					"which can do all sorts of different things");
 				playerTalk(p, n, "I give up",
-						"You're obviously completely mad!");
+					"You're obviously completely mad!");
 
 			} else if (reply == 2) {
 				playerTalk(p, n, "Just a small clue?");
 				npcTalk(p, n,
-						"Go and talk to the bartender in the Jolly Boar Inn",
-						"He doesn't seem to mind giving away clues");
+					"Go and talk to the bartender in the Jolly Boar Inn",
+					"He doesn't seem to mind giving away clues");
 			}
 		} else if (reply == 2) {
 			npcTalk(p, n, "Well, there's the sword shop across the road.",
-					"or there's also all sorts of shops up around the market");
+				"or there's also all sorts of shops up around the market");
 		} else if (reply == 3) {
 			npcTalk(p,
-					n,
-					"Oh no not another of you guys",
-					"These barbarian barcrawls cause too much damage to my bar",
-					"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
+				n,
+				"Oh no not another of you guys",
+				"These barbarian barcrawls cause too much damage to my bar",
+				"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
 			if (removeItem(p, 10, 50)) {
 				p.message("You buy some gutrot");
 				sleep(800);

@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface PlayerAttackNpcListener {
-	
-	 public void onPlayerAttackNpc(Player p, Npc affectedmob);
+
+	public void onPlayerAttackNpc(Player p, Npc affectedmob);
 
 }

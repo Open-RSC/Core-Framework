@@ -3,9 +3,7 @@ package com.openrsc.server.net;
 import io.netty.buffer.ByteBuf;
 
 /**
- * 
  * @author n0m
- *
  */
 public class Packet {
 	/**
@@ -17,7 +15,7 @@ public class Packet {
 	 * The payload.
 	 */
 	private final ByteBuf payload;
-	
+
 	public Packet(final int opcode, final ByteBuf payload) {
 		this.opcode = opcode;
 		this.payload = payload;
@@ -26,7 +24,7 @@ public class Packet {
 	/**
 	 * Checks if this packet is raw. A raw packet does not have the usual
 	 * headers such as opcode or size.
-	 * 
+	 *
 	 * @return <code>true</code> if so, <code>false</code> if not.
 	 */
 	public boolean isRaw() {
@@ -35,7 +33,7 @@ public class Packet {
 
 	/**
 	 * reads the opcode.
-	 * 
+	 *
 	 * @return The opcode.
 	 */
 	public int getID() {
@@ -44,7 +42,7 @@ public class Packet {
 
 	/**
 	 * reads the payload.
-	 * 
+	 *
 	 * @return The payload.
 	 */
 	public ByteBuf getBuffer() {
@@ -53,7 +51,7 @@ public class Packet {
 
 	/**
 	 * reads the length.
-	 * 
+	 *
 	 * @return The length.
 	 */
 	public int getLength() {
@@ -62,7 +60,7 @@ public class Packet {
 
 	/**
 	 * Reads a single byte.
-	 * 
+	 *
 	 * @return A single byte.
 	 */
 	public byte read() {
@@ -71,9 +69,8 @@ public class Packet {
 
 	/**
 	 * Reads several bytes.
-	 * 
-	 * @param b
-	 *            The tarread array.
+	 *
+	 * @param b The tarread array.
 	 */
 	public void read(final byte[] b) {
 		payload.readBytes(b);
@@ -81,21 +78,21 @@ public class Packet {
 
 	/**
 	 * Reads a byte.
-	 * 
+	 *
 	 * @return A single byte.
 	 */
 	public byte readByte() {
 		return read();
 	}
 
-	
+
 	public byte[] readBytes(int length) {
 		return payload.readBytes(length).array();
 	}
-	
+
 	/**
 	 * Reads an unsigned byte.
-	 * 
+	 *
 	 * @return An unsigned byte.
 	 */
 	public int readUnsignedByte() {
@@ -104,26 +101,26 @@ public class Packet {
 
 	/**
 	 * Reads a short.
-	 * 
+	 *
 	 * @return A short.
 	 */
 	public short readShort() {
 		return payload.readShort();
 	}
-	
+
 	public short readAnotherShort() {
-        try {
-            return (short) ((short) ((payload.readByte() & 0xff) << 8) | (short) (payload.readByte() & 0xff));
-        } catch (Exception e) {
-        	System.out.println("Error reading packet (short)");
-            return 0;
-        }
-    }
+		try {
+			return (short) ((short) ((payload.readByte() & 0xff) << 8) | (short) (payload.readByte() & 0xff));
+		} catch (Exception e) {
+			System.out.println("Error reading packet (short)");
+			return 0;
+		}
+	}
 
 
 	/**
 	 * Reads an integer.
-	 * 
+	 *
 	 * @return An integer.
 	 */
 	public int readInt() {
@@ -132,15 +129,16 @@ public class Packet {
 
 	/**
 	 * Reads a long.
-	 * 
+	 *
 	 * @return A long.
 	 */
 	public long readLong() {
 		return payload.readLong();
 	}
+
 	/**
 	 * Reads a RuneScape string.
-	 * 
+	 *
 	 * @return The string.
 	 */
 	public String readString() {
@@ -153,13 +151,10 @@ public class Packet {
 
 	/**
 	 * Reads a series of bytes.
-	 * 
-	 * @param is
-	 *            The tarread byte array.
-	 * @param offset
-	 *            The offset.
-	 * @param length
-	 *            The length.
+	 *
+	 * @param is     The tarread byte array.
+	 * @param offset The offset.
+	 * @param length The length.
 	 */
 	public void read(final byte[] is, final int offset, final int length) {
 		for (int i = 0; i < length; i++)

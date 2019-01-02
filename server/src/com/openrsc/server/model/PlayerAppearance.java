@@ -5,17 +5,16 @@ import com.openrsc.server.util.rsc.Formulae;
 
 public class PlayerAppearance {
 
+	public boolean hideTrousers;
 	private int body;
 	private byte hairColour;
 	private int head;
 	private byte skinColour;
-
 	private byte topColour;
 	private byte trouserColour;
-	public boolean hideTrousers;
 
 	public PlayerAppearance(int hairColour, int topColour, int trouserColour,
-			int skinColour, int head, int body) {
+							int skinColour, int head, int body) {
 		this.hairColour = (byte) hairColour;
 		this.topColour = (byte) topColour;
 		this.trouserColour = (byte) trouserColour;
@@ -34,17 +33,17 @@ public class PlayerAppearance {
 
 	public int getSprite(int pos) {
 		switch (pos) {
-		case 0:
-			return getHead();
-		case 1:
-			return getBody();
-		case 2:
-			if (hideTrousers) {
+			case 0:
+				return getHead();
+			case 1:
+				return getBody();
+			case 2:
+				if (hideTrousers) {
+					return 0;
+				}
+				return 3;
+			default:
 				return 0;
-			}
-			return 3;
-		default:
-			return 0;
 		}
 	}
 
@@ -53,7 +52,7 @@ public class PlayerAppearance {
 	}
 
 	public int[] getSprites() {
-		return new int[] { getHead(), getBody(), 3, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		return new int[]{getHead(), getBody(), 3, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	}
 
 	public byte getTopColour() {
@@ -66,15 +65,15 @@ public class PlayerAppearance {
 
 	public boolean isValid() {
 		if (!DataConversions.inArray(Formulae.headSprites, getHead())
-				|| !DataConversions.inArray(Formulae.bodySprites, getBody())) {
+			|| !DataConversions.inArray(Formulae.bodySprites, getBody())) {
 			return false;
 		}
 		if (hairColour < 0 || topColour < 0 || trouserColour < 0
-				|| skinColour < 0) {
+			|| skinColour < 0) {
 			return false;
 		}
 		if (hairColour > 9 || topColour > 14 || trouserColour > 14
-				|| skinColour > 4) {
+			|| skinColour > 4) {
 			return false;
 		}
 		return true;

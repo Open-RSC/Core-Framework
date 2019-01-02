@@ -16,15 +16,15 @@ import static com.openrsc.server.plugins.Functions.*;
 public class GemMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 60000 * 5, 150, 80, 3, new Item(164,
-			2), new Item(163, 1), new Item(162, 1), new Item(161,
-					0));
+		2), new Item(163, 1), new Item(162, 1), new Item(161,
+		0));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(p.getCache().hasKey("gemStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("gemStolen") + 1200)) {
+		if (p.getCache().hasKey("gemStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("gemStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
-					"That you have just stolen from me",
-					"guards guards");
+				"That you have just stolen from me",
+				"guards guards");
 
 			Npc attacker = getNearestNpc(p, 324, 5); // Hero first
 			if (attacker == null)
@@ -40,13 +40,13 @@ public class GemMerchant implements ShopInterface, TalkToNpcExecutiveListener, T
 		} else {
 			npcTalk(p, n, "Here, look at my lovely gems");
 			int menu = showMenu(p, n, "Ok show them to me", "I'm not interested thankyou");
-			if(menu == 0) {
+			if (menu == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
-			} 
+			}
 		}
 	}
-	
+
 	// WHEN STEALING AND CAUGHT BY A MERCHANT ("Hey thats mine");
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
@@ -57,7 +57,7 @@ public class GemMerchant implements ShopInterface, TalkToNpcExecutiveListener, T
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

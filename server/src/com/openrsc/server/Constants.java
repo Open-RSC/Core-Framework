@@ -12,6 +12,30 @@ public final class Constants {
 
 	public static final class GameServer {
 		/**
+		 * Avatar web directory (full path required)
+		 */
+		public static final String AVATAR_DIR = "avatars/"; //located with the Server folder
+		/**
+		 * ID's of all Undead-type of NPC's. (Used for crumble undead & sounds)
+		 */
+		public static final int[] UNDEAD_NPCS = {15, 53, 80, 178, 664, 41, 52, 68, 180, 214, 319, 40, 45, 46, 50, 179, 195, 516, 542};
+		/**
+		 * ID's of all ARMOR type NPC's. (Used for armor hitting sounds)
+		 */
+		public static final int[] ARMOR_NPCS = {66, 102, 189, 277, 322, 401324, 323, 632, 633};
+		/**
+		 * Maximum hit for Crumble Undead (Magic) spell. (Against undead)
+		 */
+		public static final int CRUMBLE_UNDEAD_MAX = 12;
+		public static final int[] NPCS_THAT_DO_RETREAT = {3, 89, 114, 40, 64, 0, 34, 241, 29, 116, 23, 21, 81, 351, 367, 52, 71, 666, 359, 188, 136, 190, 296};
+		/**
+		 * Strikes, Bolts & Blast Spells.
+		 * <p/>
+		 * Remember, 30+ Magic damage gives you +1 damage, so these damages are
+		 * -1 the absolute max. Level Requirement, Max Damage
+		 */
+		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 3}, {13, 4}, {17, 5}, {23, 5}, {29, 6}, {35, 6}, {41, 7}, {47, 7}, {53, 8}, {59, 8}, {62, 9}, {65, 9}, {70, 10}, {75, 10}};
+		/**
 		 * RSC GAME TICK.
 		 */
 		public static int GAME_TICK = 600;
@@ -19,10 +43,10 @@ public final class Constants {
 		 * the servers name
 		 */
 		public static String SERVER_NAME = "Open RSC";
-        /**
-         * Server prefix for messages
-         */
-        public static String MESSAGE_PREFIX = "@gre@OpenRSC:@whi@ ";
+		/**
+		 * Server prefix for messages
+		 */
+		public static String MESSAGE_PREFIX = "@gre@OpenRSC:@whi@ ";
 		/**
 		 * whether or not this is a members world
 		 */
@@ -64,7 +88,7 @@ public final class Constants {
 		 */
 		public static String MYSQL_PASS = "root";
 		/**
-		 *  mysql prefix
+		 * mysql prefix
 		 */
 		public static String MYSQL_TABLE_PREFIX = "openrsc_";
 		/**
@@ -112,35 +136,7 @@ public final class Constants {
 		 * where the server will look for other configuration files
 		 */
 		public static String CONFIG_DIR = "conf" + File.separator + "server";
-
-		/**
-		 * Avatar web directory (full path required)
-		 */
-		public static final String AVATAR_DIR = "avatars/"; //located with the Server folder
-
 		public static long START_TIME = 0L;
-		/**
-		 * ID's of all Undead-type of NPC's. (Used for crumble undead & sounds)
-		 */
-		public static final int[] UNDEAD_NPCS = {15, 53, 80, 178, 664, 41, 52, 68, 180, 214, 319, 40, 45, 46, 50, 179, 195 , 516, 542};
-		/**
-		 * ID's of all ARMOR type NPC's. (Used for armor hitting sounds)
-		 */
-		public static final int[] ARMOR_NPCS = {66, 102, 189, 277, 322, 401324, 323, 632, 633};
-		/**
-		 * Maximum hit for Crumble Undead (Magic) spell. (Against undead)
-		 */
-		public static final int CRUMBLE_UNDEAD_MAX = 12;
-
-		public static final int[] NPCS_THAT_DO_RETREAT = {3, 89, 114, 40, 64, 0, 34, 241, 29, 116, 23, 21, 81, 351, 367, 52, 71, 666, 359, 188, 136, 190, 296};
-		/**
-		 * Strikes, Bolts & Blast Spells.
-		 * <p/>
-		 * Remember, 30+ Magic damage gives you +1 damage, so these damages are
-		 * -1 the absolute max. Level Requirement, Max Damage
-		 */
-		public static final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 3}, {13, 4}, {17, 5}, {23, 5}, {29, 6}, {35, 6}, {41, 7}, {47, 7}, {53, 8}, {59, 8}, {62, 9}, {65, 9}, {70, 10}, {75, 10}};
-
 		public static boolean AVATAR_GENERATOR = false; // Not sent to client.
 		public static boolean PLAYER_COMMANDS = false; // This either.
 
@@ -190,17 +186,16 @@ public final class Constants {
 		public static boolean RIGHT_CLICK_BANK = false;
 
 		/**
-		 *
 		 * @param file
 		 * @throws IOException
 		 * Config file for server configurations.
 		 */
 		public static Properties props = new Properties();
+
 		public static void initConfig(String defaultFile) throws IOException {
 			try { // Always try to load local.conf first
 				props.loadFromXML(new FileInputStream("local.conf"));
-			}
-			catch (Exception e) { // Otherwise default to default.conf
+			} catch (Exception e) { // Otherwise default to default.conf
 				props.loadFromXML(new FileInputStream(defaultFile));
 			}
 
@@ -283,7 +278,7 @@ public final class Constants {
 				VIEW_DISTANCE = 4;
 		}
 	}
-	
+
 	public static final class Poison {
 		public static final int POISON_SCORPION = 271;
 		public static final int POISON_SPIDER = 292;
@@ -291,8 +286,7 @@ public final class Constants {
 		public static final int TRIBESMAN = 421;
 		public static final int JUNGLE_SAVAGE = 776;
 
-		public static final HashMap<Integer, Integer> npcData = new HashMap<Integer, Integer>()
-		{{
+		public static final HashMap<Integer, Integer> npcData = new HashMap<Integer, Integer>() {{
 			put(POISON_SCORPION, 38);
 			put(POISON_SPIDER, 68);
 			put(DUNGEON_SPIDER, 38);
@@ -358,59 +352,58 @@ public final class Constants {
 		public static final int MAPIDX_BASE = 2;
 		public static final int MAPIDX_VAR = 3;
 
-		public static final HashMap<Integer, int[]> questData = new HashMap<Integer, int[]>()
-		{{
+		public static final HashMap<Integer, int[]> questData = new HashMap<Integer, int[]>() {{
 			// QuestID -> Quest Points, Exp Skill ID, Base Exp, Variable Exp
-			put(BLACK_KNIGHTS_FORTRESS, new int[] {3, -1, 0, 0});
-			put(COOKS_ASSISTANT, new int[] {1, Skills.COOKING, 1000, 200});
-			put(DEMON_SLAYER, new int[] {3, -1, 0, 0});
-			put(DORICS_QUEST, new int[] {1, Skills.MINING, 700, 300});
-			put(THE_RESTLESS_GHOST, new int[] {1, Skills.PRAYER, 2000, 250});
-			put(GOBLIN_DIPLOMACY, new int[] {5, Skills.CRAFTING, 500, 60});
-			put(ERNEST_THE_CHICKEN, new int[] {4, -1, 0, 0});
-			put(IMP_CATCHER, new int[] {1, Skills.MAGIC, 1500, 400});
-			put(PIRATES_TREASURE, new int[] {2, -1, 0, 0});
-			put(PRINCE_ALI_RESCUE, new int[] {3, -1, 0, 0});
-			put(ROMEO_N_JULIET, new int[] {5, -1, 0, 0});
-			put(SHEEP_SHEARER, new int[] {1, Skills.CRAFTING, 500, 100});
-			put(SHIELD_OF_ARRAV, new int[] {1, -1, 0, 0});
-			put(THE_KNIGHTS_SWORD, new int[] {1, Skills.SMITHING, 1400, 1500});
-			put(VAMPIRE_SLAYER, new int[] {3, Skills.ATTACK, 1300, 600});
-			put(WITCHS_POTION, new int[] {1, Skills.MAGIC, 900, 200});
-			put(DRAGON_SLAYER, new int[] {2, -1, 2600, 1200}); // Skill ID in Dragon Slayer files
-			put(WITCHS_HOUSE, new int[] {4, Skills.HITPOINTS, 1300, 600});
-			put(LOST_CITY, new int[] {3, -1, 0, 0});
-			put(HEROS_QUEST, new int[] {1, -1, 300, 200}); // Skill ID Handled in Heros files
-			put(DRUIDIC_RITUAL, new int[] {4, Skills.HERBLAW, 1000, 0});
-			put(MERLINS_CRYSTAL, new int[] {6, -1, 0, 0});
-			put(SCORPION_CATCHER, new int[] {1, Skills.STRENGTH, 1500, 500});
-			put(FAMILY_CREST, new int[] {1, -1, 0, 0});
-			put(TRIBAL_TOTEM, new int[] {1, Skills.THIEVING, 800, 300});
-			put(FISHING_CONTEST, new int[] {1, Skills.FISHING, 0, 300}); // Base XP Handled in Fishing Contest files
-			put(MONKS_FRIEND, new int[] {1, Skills.WOODCUT, 500, 500});
-			put(TEMPLE_OF_IKOV, new int[] {1, -1, 2000, 1000}); // Skill ID Handled in Ikov files
-			put(CLOCK_TOWER, new int[] {1, -1, 0, 0});
-			put(THE_HOLY_GRAIL, new int[] {2, -1, 0, 0}); // XP Handled in Grail files
-			put(FIGHT_ARENA, new int[] {2, -1, 700, 800}); // Skill ID Handled in Arena files
-			put(TREE_GNOME_VILLAGE, new int[] {2, Skills.ATTACK, 800, 900});
-			put(THE_HAZEEL_CULT, new int[] {1, Skills.THIEVING, 2000, 200});
-			put(SHEEP_HERDER, new int[] {4, -1, 0, 0});
-			put(PLAGUE_CITY, new int[] {1, Skills.MINING, 700, 300});
-			put(SEA_SLUG, new int[] {1, Skills.FISHING, 700, 800});
-			put(WATERFALL_QUEST, new int[] {1, -1, 1000, 900}); // Skill ID Handled in Waterfall files
-			put(BIOHAZARD, new int[] {3, Skills.THIEVING, 2000, 200});
-			put(JUNGLE_POTION, new int[] {1, Skills.HERBLAW, 1600, 500});
-			put(GRAND_TREE, new int[] {5, -1, 0, 0}); // XP Handled in Grade Tree files
-			put(SHILO_VILLAGE, new int[] {2, Skills.CRAFTING, 500, 500});
-			put(UNDERGROUND_PASS, new int[] {5, -1, 2000, 200}); // Skill ID Handled in Pass files
-			put(OBSERVATORY_QUEST, new int[] {2, -1, 1000, 400}); // Skill ID and adjustments Handled in Observatory files
-			put(TOURIST_TRAP, new int[] {2, -1, 600, 600}); // Skill ID Handled in Trap files
-			put(WATCHTOWER, new int[] {4, Skills.MAGIC, 1000, 1000});
-			put(DWARF_CANNON, new int[] {1, Skills.CRAFTING, 1000, 200});
-			put(MURDER_MYSTERY, new int[] {3, Skills.CRAFTING, 750, 150});
-			put(DIGSITE, new int[] {2, -1, 0, 0}); // XP Handled in Digsite files
-			put(GERTRUDES_CAT, new int[] {1, Skills.COOKING, 700, 180});
-			put(LEGENDS_QUEST, new int[] {4, -1, 600, 600}); // Skill ID Handled in Legends files
+			put(BLACK_KNIGHTS_FORTRESS, new int[]{3, -1, 0, 0});
+			put(COOKS_ASSISTANT, new int[]{1, Skills.COOKING, 1000, 200});
+			put(DEMON_SLAYER, new int[]{3, -1, 0, 0});
+			put(DORICS_QUEST, new int[]{1, Skills.MINING, 700, 300});
+			put(THE_RESTLESS_GHOST, new int[]{1, Skills.PRAYER, 2000, 250});
+			put(GOBLIN_DIPLOMACY, new int[]{5, Skills.CRAFTING, 500, 60});
+			put(ERNEST_THE_CHICKEN, new int[]{4, -1, 0, 0});
+			put(IMP_CATCHER, new int[]{1, Skills.MAGIC, 1500, 400});
+			put(PIRATES_TREASURE, new int[]{2, -1, 0, 0});
+			put(PRINCE_ALI_RESCUE, new int[]{3, -1, 0, 0});
+			put(ROMEO_N_JULIET, new int[]{5, -1, 0, 0});
+			put(SHEEP_SHEARER, new int[]{1, Skills.CRAFTING, 500, 100});
+			put(SHIELD_OF_ARRAV, new int[]{1, -1, 0, 0});
+			put(THE_KNIGHTS_SWORD, new int[]{1, Skills.SMITHING, 1400, 1500});
+			put(VAMPIRE_SLAYER, new int[]{3, Skills.ATTACK, 1300, 600});
+			put(WITCHS_POTION, new int[]{1, Skills.MAGIC, 900, 200});
+			put(DRAGON_SLAYER, new int[]{2, -1, 2600, 1200}); // Skill ID in Dragon Slayer files
+			put(WITCHS_HOUSE, new int[]{4, Skills.HITPOINTS, 1300, 600});
+			put(LOST_CITY, new int[]{3, -1, 0, 0});
+			put(HEROS_QUEST, new int[]{1, -1, 300, 200}); // Skill ID Handled in Heros files
+			put(DRUIDIC_RITUAL, new int[]{4, Skills.HERBLAW, 1000, 0});
+			put(MERLINS_CRYSTAL, new int[]{6, -1, 0, 0});
+			put(SCORPION_CATCHER, new int[]{1, Skills.STRENGTH, 1500, 500});
+			put(FAMILY_CREST, new int[]{1, -1, 0, 0});
+			put(TRIBAL_TOTEM, new int[]{1, Skills.THIEVING, 800, 300});
+			put(FISHING_CONTEST, new int[]{1, Skills.FISHING, 0, 300}); // Base XP Handled in Fishing Contest files
+			put(MONKS_FRIEND, new int[]{1, Skills.WOODCUT, 500, 500});
+			put(TEMPLE_OF_IKOV, new int[]{1, -1, 2000, 1000}); // Skill ID Handled in Ikov files
+			put(CLOCK_TOWER, new int[]{1, -1, 0, 0});
+			put(THE_HOLY_GRAIL, new int[]{2, -1, 0, 0}); // XP Handled in Grail files
+			put(FIGHT_ARENA, new int[]{2, -1, 700, 800}); // Skill ID Handled in Arena files
+			put(TREE_GNOME_VILLAGE, new int[]{2, Skills.ATTACK, 800, 900});
+			put(THE_HAZEEL_CULT, new int[]{1, Skills.THIEVING, 2000, 200});
+			put(SHEEP_HERDER, new int[]{4, -1, 0, 0});
+			put(PLAGUE_CITY, new int[]{1, Skills.MINING, 700, 300});
+			put(SEA_SLUG, new int[]{1, Skills.FISHING, 700, 800});
+			put(WATERFALL_QUEST, new int[]{1, -1, 1000, 900}); // Skill ID Handled in Waterfall files
+			put(BIOHAZARD, new int[]{3, Skills.THIEVING, 2000, 200});
+			put(JUNGLE_POTION, new int[]{1, Skills.HERBLAW, 1600, 500});
+			put(GRAND_TREE, new int[]{5, -1, 0, 0}); // XP Handled in Grade Tree files
+			put(SHILO_VILLAGE, new int[]{2, Skills.CRAFTING, 500, 500});
+			put(UNDERGROUND_PASS, new int[]{5, -1, 2000, 200}); // Skill ID Handled in Pass files
+			put(OBSERVATORY_QUEST, new int[]{2, -1, 1000, 400}); // Skill ID and adjustments Handled in Observatory files
+			put(TOURIST_TRAP, new int[]{2, -1, 600, 600}); // Skill ID Handled in Trap files
+			put(WATCHTOWER, new int[]{4, Skills.MAGIC, 1000, 1000});
+			put(DWARF_CANNON, new int[]{1, Skills.CRAFTING, 1000, 200});
+			put(MURDER_MYSTERY, new int[]{3, Skills.CRAFTING, 750, 150});
+			put(DIGSITE, new int[]{2, -1, 0, 0}); // XP Handled in Digsite files
+			put(GERTRUDES_CAT, new int[]{1, Skills.COOKING, 700, 180});
+			put(LEGENDS_QUEST, new int[]{4, -1, 600, 600}); // Skill ID Handled in Legends files
 		}};
 	}
 

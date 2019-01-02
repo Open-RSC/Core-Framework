@@ -10,9 +10,6 @@ import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
 /**
  * <p>
  * A <code>WalkingQueue</code> stores steps the client needs to walk and allows
@@ -25,7 +22,6 @@ import java.util.LinkedList;
  * </p>
  *
  * @author Graham Edgecombe
- *
  */
 public class WalkingQueue {
 
@@ -44,9 +40,9 @@ public class WalkingQueue {
 	 * Processes the next player's movement.
 	 */
 	public void processNextMovement() {
-		if(path == null) {
+		if (path == null) {
 			return;
-		} else if(path.isEmpty()) {
+		} else if (path.isEmpty()) {
 			reset();
 			return;
 		}
@@ -79,7 +75,7 @@ public class WalkingQueue {
 	}
 
 	private boolean checkAdjacent(Point curPoint, Point nextPoint) {
-		int[] coords = { curPoint.getX(), curPoint.getY() };
+		int[] coords = {curPoint.getX(), curPoint.getY()};
 		int startX = curPoint.getX();
 		int startY = curPoint.getY();
 		int destX = nextPoint.getX();
@@ -133,15 +129,13 @@ public class WalkingQueue {
 
 		if (coords[0] > startX) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false);
-		}
-		else if (coords[0] < startX) {
+		} else if (coords[0] < startX) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_WEST, false);
 		}
 
 		if (coords[1] > startY) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
-		}
-		else if (coords[1] < startY) {
+		} else if (coords[1] < startY) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
 		}
 
@@ -202,23 +196,19 @@ public class WalkingQueue {
 		 */
 		if (Constants.GameServer.NPC_BLOCKING == 0) { // No NPC blocks
 			return false;
-		}
-		else if (Constants.GameServer.NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
+		} else if (Constants.GameServer.NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
 			if (npc != null && mob.getCombatLevel() <= ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
 				return true;
 			}
-		}
-		else if (Constants.GameServer.NPC_BLOCKING == 2) { // Any aggressive NPC blocks
+		} else if (Constants.GameServer.NPC_BLOCKING == 2) { // Any aggressive NPC blocks
 			if (npc != null && npc.getDef().isAggressive()) {
 				return true;
 			}
-		}
-		else if (Constants.GameServer.NPC_BLOCKING == 3) { // Any attackable NPC blocks
+		} else if (Constants.GameServer.NPC_BLOCKING == 3) { // Any attackable NPC blocks
 			if (npc != null && npc.getDef().isAttackable()) {
 				return true;
 			}
-		}
-		else if (Constants.GameServer.NPC_BLOCKING == 4) { // All NPCs block
+		} else if (Constants.GameServer.NPC_BLOCKING == 4) { // All NPCs block
 			if (npc != null) {
 				return true;
 			}

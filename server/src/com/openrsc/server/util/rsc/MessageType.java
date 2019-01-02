@@ -11,14 +11,6 @@ public enum MessageType {
 	INVENTORY(7, "@whi@"),
 	GLOBAL_CHAT(8, "@yel@"),
 	CLAN_CHAT(9, "@yel@");
-	private final int rsID;
-	public final String color;
-
-	private MessageType(int rsID, String color) {
-		this.rsID = rsID;
-		this.color = color;
-	}
-
 	private static final MessageType[] map;
 
 	static {
@@ -30,6 +22,14 @@ public enum MessageType {
 		for (MessageType t : values())
 			if (t.getRsID() >= 0)
 				map[t.getRsID()] = t;
+	}
+
+	public final String color;
+	private final int rsID;
+
+	private MessageType(int rsID, String color) {
+		this.rsID = rsID;
+		this.color = color;
 	}
 
 	public static MessageType lookup(int rsID) {

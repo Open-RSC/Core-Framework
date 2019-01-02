@@ -34,14 +34,14 @@ public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				@Override
 				public void action() {
 					npcTalk(p,
-							n,
-							"Aye, I have that artifact in my possession",
-							"Tis very valuable and not an artifact to be given away lightly",
-							"I would want to give it away only to one who is worthy and good");
+						n,
+						"Aye, I have that artifact in my possession",
+						"Tis very valuable and not an artifact to be given away lightly",
+						"I would want to give it away only to one who is worthy and good");
 					playerTalk(p, n, "And how am I meant to prove that");
 					npcTalk(p, n, "I will set a test for you",
-							"First I need you to travel to Port Sarim",
-							"Then go to the upstairs room of the jeweller's shop there");
+						"First I need you to travel to Port Sarim",
+						"Then go to the upstairs room of the jeweller's shop there");
 					playerTalk(p, n, "Ok that seems easy enough");
 					p.getCache().store("lady_test", true);
 				}
