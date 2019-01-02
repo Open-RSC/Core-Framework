@@ -11,35 +11,35 @@ import java.security.cert.X509Certificate;
 import static com.loader.openrsc.Constants.BASE_URL;
 
 public class ConnectHttps {
-    public static void main(final String[] args) throws Exception {
-        final TrustManager[] trustAllCerts = {new X509TrustManager() {
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
+	public static void main(final String[] args) throws Exception {
+		final TrustManager[] trustAllCerts = {new X509TrustManager() {
+			@Override
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
 
-            @Override
-            public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
-            }
+			@Override
+			public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+			}
 
-            @Override
-            public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
-            }
-        }};
-        final SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        final HostnameVerifier allHostsValid = (hostname, session) -> true;
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        final URL url = new URL(BASE_URL);
-        final URLConnection con = url.openConnection();
-        final Reader reader = new InputStreamReader(con.getInputStream());
-        while (true) {
-            final int ch = reader.read();
-            if (ch == -1) {
-                break;
-            }
-            System.out.print((char) ch);
-        }
-    }
+			@Override
+			public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+			}
+		}};
+		final SSLContext sc = SSLContext.getInstance("SSL");
+		sc.init(null, trustAllCerts, new SecureRandom());
+		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		final HostnameVerifier allHostsValid = (hostname, session) -> true;
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		final URL url = new URL(BASE_URL);
+		final URLConnection con = url.openConnection();
+		final Reader reader = new InputStreamReader(con.getInputStream());
+		while (true) {
+			final int ch = reader.read();
+			if (ch == -1) {
+				break;
+			}
+			System.out.print((char) ch);
+		}
+	}
 }
