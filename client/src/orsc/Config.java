@@ -26,7 +26,7 @@ public class Config {
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
-	public static boolean C_SHOW_ROOF = true;
+	public static boolean C_HIDE_ROOFS = true;
 	public static boolean C_SHOW_FOG = true;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = false;
