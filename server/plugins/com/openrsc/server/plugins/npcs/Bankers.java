@@ -165,7 +165,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
     @Override
     public void onNpcCommand(Npc n, String command, Player p) {
         if (inArray(n.getID(), BANKERS)) {
-            if (command.equalsIgnoreCase("Bank")) {
+            if (command.equalsIgnoreCase("Bank") && Constants.GameServer.RIGHT_CLICK_BANK) {
                 quickFeature(n, p, false);
             } else if (command.equalsIgnoreCase("Collect") && Constants.GameServer.SPAWN_AUCTION_NPCS) {
                 quickFeature(n, p, true);
@@ -175,13 +175,11 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 
     @Override
     public boolean blockNpcCommand(Npc n, String command, Player p) {
-		if (Constants.GameServer.RIGHT_CLICK_BANK) {
 			if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Bank")) {
 				return true;
 			}
 			if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Collect")) {
 				return true;
-			}
 		}
         return false;
     }
