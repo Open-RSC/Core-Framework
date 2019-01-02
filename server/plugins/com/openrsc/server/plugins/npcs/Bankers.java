@@ -175,12 +175,14 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 
     @Override
     public boolean blockNpcCommand(Npc n, String command, Player p) {
-        if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Bank")) {
-            return true;
-        }
-        if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Collect")) {
-            return true;
-        }
+		if (Constants.GameServer.RIGHT_CLICK_BANK) {
+			if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Bank")) {
+				return true;
+			}
+			if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Collect")) {
+				return true;
+			}
+		}
         return false;
     }
 

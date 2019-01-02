@@ -273,7 +273,8 @@ public class EntityHandler {
 		int[] sprites;
 
 		/* Configurable NPC Data */
-		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null; // Banker Collect for Auctions
+		String bankerOption1 = Config.S_RIGHT_CLICK_BANK ? "Bank" : ""; // Banker right click bank
+		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null; // Banker collect for auctions
 
 		sprites = new int[] { 130, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Unicorn","It's a unicorn", "", 21, 23, 19, 23, true, sprites, 0, 0, 0, 0, 201, 230, 6, 6, 7, i++));
@@ -466,7 +467,7 @@ public class EntityHandler {
 		sprites = new int[] { 6, 1, 2, -1, 109, 70, 45, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Dwarf","A short angry guy", "", 20, 17, 16, 20, true, sprites, 7360576, 8409120, 8409120, 15523536, 121, 176, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Banker","He can look after my money", "Bank", bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Banker","He can look after my money", bankerOption1, bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 63 };
 		npcs.add(new NPCDef("Count Draynor","A vicious vampire", "", 40, 65, 35, 35, true, sprites, 1, 2, 3, 16576224, 140, 230, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -724,7 +725,7 @@ public class EntityHandler {
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1 };
 		npcs.add(new NPCDef("Fairy Shop Assistant","Maybe he'd like to buy some of my junk", "", 0, 0, 3, 0, false, sprites, 6307872, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Fairy banker","He can look after my money", "Bank", bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 94, 143, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Fairy banker","He can look after my money", bankerOption1, bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 94, 143, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Giles","He runs an ore exchange store", "", 30, 30, 30, 30, false, sprites, 1, 255, 14508096, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -814,7 +815,8 @@ public class EntityHandler {
 		int i = npcs.size() - 1;
 
 		/* Configurable NPC Data */
-		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null;
+		String bankerOption1 = Config.S_RIGHT_CLICK_BANK ? "Bank" : ""; // Banker right click bank
+		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null; // Auction collect banker
 
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Grubor","A rough looking thief", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 15523536, 150, 220, 6, 6, 5, i++));
@@ -843,7 +845,7 @@ public class EntityHandler {
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Seth","He runs a fish exchange store", "", 30, 30, 30, 30, false, sprites, 15921906, 255, 14508096, 9461792, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Banker","He can look after my money", "Bank", bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 13415270, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Banker","He can look after my money", bankerOption1, bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 6, 33, 41, 102, 52, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Helemos","A retired hero", "", 45, 50, 42, 48, false, sprites, 1, 2, 3, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, 84, 90, -1, -1, -1, -1 };
@@ -1277,7 +1279,7 @@ public class EntityHandler {
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Omart","A nervous looking fellow", "", 15, 60, 30, 15, false, sprites, 15658734, 13426124, 15641275, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Bank assistant","She can look after my stuff", "", 11, 8, 7, 11, false, sprites, 15921906, 7368816, 7368816, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Bank assistant","She can look after my stuff", bankerOption1, bankerOption2, 11, 8, 7, 11, false, sprites, 15921906, 7368816, 7368816, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
 		npcs.add(new NPCDef("Jerico","He looks friendly enough", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
@@ -1387,7 +1389,7 @@ public class EntityHandler {
 		sprites = new int[] { 0, 1, 2, 180, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Mosol","A jungle warrior", "", 0, 0, 3, 0, false, sprites, 1, 9461792, 9461792, 9461792, 160, 220, 6, 6, 5, i++));
 		sprites = new int[] { 5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-		npcs.add(new NPCDef("Gnome banker","It's tree gnome banker", "Bank", bankerOption2, 3, 3, 3, 3, false, sprites, 16777215, 1052688, 1052688, 36864, 90, 130, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Gnome banker","It's tree gnome banker", bankerOption1, bankerOption2, 3, 3, 3, 3, false, sprites, 16777215, 1052688, 1052688, 36864, 90, 130, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, 150, -1, -1, -1, -1, -1, 62 };
 		npcs.add(new NPCDef("King Narnode Shareen","It's a gnome he look's important", "", 3, 3, 3, 3, false, sprites, 1, 16776960, 16711424, 36864, 100, 150, 6, 6, 5, i++));
 		sprites = new int[] { 135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -1541,7 +1543,7 @@ public class EntityHandler {
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, 10, -1 };
 		npcs.add(new NPCDef("Fernahei","An enthusiastic fishing shop owner", "", 10, 5, 7, 5, false, sprites, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, 201, -1, -1, -1, 10, -1 };
-		npcs.add(new NPCDef("Jungle Banker","He can look after my money", "Bank", bankerOption2, 11, 8, 7, 11, false, sprites, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Jungle Banker","He can look after my money", bankerOption1, bankerOption2, 11, 8, 7, 11, false, sprites, 12632256, 7296823, 7296823, 7296823, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		npcs.add(new NPCDef("Cart Driver","He drives the cart", "", 15, 16, 12, 18, false, sprites, 16760880, 16777215, 16777215, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -1891,7 +1893,7 @@ public class EntityHandler {
 		sprites = new int[] { 6, 1, 2, -1, 218, -1, 85, 86, -1, -1, -1, 64 };
 		npcs.add(new NPCDef("Battle mage","He kills in the name of Saradomin", "", 0, 90, 120, 0, true, sprites, 3158064, 16763952, 15609986, 9461792, 145, 220, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
-		npcs.add(new NPCDef("Gundai","He must get lonely out here", "Bank", bankerOption2, 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Gundai","He must get lonely out here", bankerOption1, bankerOption2, 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[] { 6, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };
 		npcs.add(new NPCDef("Lundail","He sells rune stones", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[] { 0, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1 };

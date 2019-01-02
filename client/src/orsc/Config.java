@@ -18,14 +18,10 @@ public class Config {
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
 	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-
-
-
 	public static boolean F_ANDROID_BUILD = false;
 	public static boolean SAVE_CREDENTIALS = true;
 	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
     public static String F_CACHE_DIR = "";
-
 
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
@@ -77,6 +73,7 @@ public class Config {
 	public static boolean S_WANT_DECANTING = false;
 	public static boolean S_WANT_CERTS_TO_BANK = false;
 	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
+	public static boolean S_RIGHT_CLICK_BANK = false;
 
 	// if you change these, and the config file,
 	// they will also change the options menu to
