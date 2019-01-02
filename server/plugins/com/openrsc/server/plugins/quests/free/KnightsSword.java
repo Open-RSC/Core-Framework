@@ -109,11 +109,11 @@ public class KnightsSword implements QuestInterface,TalkToNpcListener,
 							"Can you make me a special sword?");
 					if (option == 0) {
 						givePie(p, n);
-					} else {
+					} else if (option == 1) {
 						npcTalk(p, n, "no I don't do that anymore",
 								"I'm getting old");
 					}
-				} else {
+				} else if (option == 1) {
 					givePie(p, n);
 				}
 			}
@@ -248,10 +248,10 @@ public class KnightsSword implements QuestInterface,TalkToNpcListener,
 						squireDialogue(p, n, Squire.MAIN);
 					} else if (option == 1) {
 						squireDialogue(p, n, Squire.MAIN);
-					} else {
+					} else if (option == 2) {
 						squireDialogue(p, n, Squire.ANGRY);
 					}
-				} else {
+				} else if (option == 1) {
 					npcTalk(p, n, "No, sorry I'm loyal to Vyvin");
 				}
 				break;
@@ -304,7 +304,7 @@ public class KnightsSword implements QuestInterface,TalkToNpcListener,
 			} else if (option == 2) {
 				playerTalk(p, n, "Well the kingdom is fairly abundant with swords");
 				squireDialogue(p, n, Squire.ABUNDANT);
-			} else {
+			} else if (option == 3) {
 				playerTalk(p, n, "Is he angry?");
 				squireDialogue(p, n, Squire.ANGRY);
 			}

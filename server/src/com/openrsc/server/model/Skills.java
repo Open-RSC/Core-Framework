@@ -176,7 +176,7 @@ public class Skills {
 							+ " in " + SKILL_NAME[skill] + ", congratulations!"));
 				}
 				player.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME[skill] + " level"
-						+ (levelDiff > 1 ? "s" : "") + "!");
+						/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				ActionSender.sendSound((Player) mob, "advance");
 			}
 
