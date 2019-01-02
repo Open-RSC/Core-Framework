@@ -71,10 +71,6 @@ public final class ORSCharacter {
 	}
 
 	public String getStaffName() {
-		return getStaffName(true);
-	}
-
-	public String getStaffName(boolean isMenu) {
-		return Group.getStaffPrefix(groupID, isMenu) + displayName;
+		return Group.getStaffPrefix(groupID) + displayName;
 	}
 }
