@@ -43,25 +43,6 @@ public class Tile {
 	public byte groundOverlay = 0;
 
 	/**
-	 * Writes the Tile raw data into a ByteBuffer
-	 */
-	public ByteBuffer pack() throws IOException {
-		ByteBuffer out = ByteBuffer.allocate(10);
-
-		out.put(groundElevation);
-		out.put(groundTexture);
-		out.put(groundOverlay);
-		out.put(roofTexture);
-
-		out.put(horizontalWall);
-		out.put(verticalWall);
-		out.putInt(diagonalWalls);
-
-		out.flip();
-		return out;
-	}
-
-	/**
 	 * Create a new tile from raw data packed into the given ByteBuffer
 	 */
 	public static Tile unpack(ByteBuffer in) throws IOException {
@@ -79,5 +60,24 @@ public class Tile {
 		tile.diagonalWalls = in.getInt();
 
 		return tile;
+	}
+
+	/**
+	 * Writes the Tile raw data into a ByteBuffer
+	 */
+	public ByteBuffer pack() throws IOException {
+		ByteBuffer out = ByteBuffer.allocate(10);
+
+		out.put(groundElevation);
+		out.put(groundTexture);
+		out.put(groundOverlay);
+		out.put(roofTexture);
+
+		out.put(horizontalWall);
+		out.put(verticalWall);
+		out.putInt(diagonalWalls);
+
+		out.flip();
+		return out;
 	}
 }

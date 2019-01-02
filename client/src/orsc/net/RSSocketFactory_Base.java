@@ -9,6 +9,18 @@ public abstract class RSSocketFactory_Base {
 	String socketHost;
 	int socketPort;
 
+	public static final RSSocketFactory_Base createRSSocketConnection(String host, int port) {
+		try {
+			RSSocketFactory var3 = new RSSocketFactory();
+			var3.socketHost = host;
+			var3.socketPort = port;
+			return var3;
+		} catch (RuntimeException var4) {
+			throw GenUtil.makeThrowable(var4,
+				"na.B(" + "dummy" + ',' + port + ',' + (host != null ? "{...}" : "null") + ')');
+		}
+	}
+
 	final Socket openRaw() throws IOException {
 		try {
 			return new Socket(this.socketHost, this.socketPort);
@@ -18,16 +30,4 @@ public abstract class RSSocketFactory_Base {
 	}
 
 	public abstract Socket open() throws IOException;
-
-	public static final RSSocketFactory_Base createRSSocketConnection(String host, int port) {
-		try {
-			RSSocketFactory var3 = new RSSocketFactory();
-			var3.socketHost = host;
-			var3.socketPort = port;
-			return var3;
-		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4,
-					"na.B(" + "dummy" + ',' + port + ',' + (host != null ? "{...}" : "null") + ')');
-		}
-	}
 }

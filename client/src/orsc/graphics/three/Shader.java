@@ -6,13 +6,13 @@ import orsc.util.GenUtil;
 public class Shader {
 
 	public static final void shadeScanline(int var0, int var1, int var2, int var3, int[] var4, int var5, int var6,
-			int var7, int var8, int var9, int var10, int var11, int var12, int var13, int[] var14, int var15) {
+										   int var7, int var8, int var9, int var10, int var11, int var12, int var13, int[] var14, int var15) {
 		try {
-			
+
 			if (var15 > 0) {
 				if (var1 != 10) {
 					shadeScanline(-30, -28, 22, 0, (int[]) null, -78, 109, 44, -120, 67, 27, 2, 107, -113, (int[]) null,
-							56);
+						56);
 				}
 
 				int var16 = 0;
@@ -194,16 +194,16 @@ public class Shader {
 			}
 		} catch (RuntimeException var23) {
 			throw GenUtil.makeThrowable(var23,
-					"wb.S(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null")
-							+ ',' + var5 + ',' + var6 + ',' + var7 + ',' + var8 + ',' + var9 + ',' + var10 + ',' + var11
-							+ ',' + var12 + ',' + var13 + ',' + (var14 != null ? "{...}" : "null") + ',' + var15 + ')');
+				"wb.S(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null")
+					+ ',' + var5 + ',' + var6 + ',' + var7 + ',' + var8 + ',' + var9 + ',' + var10 + ',' + var11
+					+ ',' + var12 + ',' + var13 + ',' + (var14 != null ? "{...}" : "null") + ',' + var15 + ')');
 		}
 	}
 
 	public static final void shadeScanline(int var0, int var1, byte var2, int var3, int val, int valStep, int[] src,
-			int dH, int var8, int var9, int high, int low, int[] dest, int var13, int var14) {
+										   int dH, int var8, int var9, int high, int low, int[] dest, int var13, int var14) {
 		try {
-			
+
 			if (var14 > 0) {
 				int var15 = 0;
 				int var16 = 0;
@@ -337,22 +337,22 @@ public class Shader {
 			}
 		} catch (RuntimeException var21) {
 			throw GenUtil.makeThrowable(var21,
-					"gb.E(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + val + ',' + valStep + ','
-							+ (src != null ? "{...}" : "null") + ',' + dH + ',' + var8 + ',' + var9 + ',' + high + ','
-							+ low + ',' + (dest != null ? "{...}" : "null") + ',' + var13 + ',' + var14 + ')');
+				"gb.E(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + val + ',' + valStep + ','
+					+ (src != null ? "{...}" : "null") + ',' + dH + ',' + var8 + ',' + var9 + ',' + high + ','
+					+ low + ',' + (dest != null ? "{...}" : "null") + ',' + var13 + ',' + var14 + ')');
 		}
 	}
 
 	public static final void shadeScanline(int var0, int var1, int var2, int var3, int var4, int var5, int var6,
-			int var7, int var8, int var9, int[] var10, int var11, int var12, int[] var13, byte var14) {
+										   int var7, int var8, int var9, int[] var10, int var11, int var12, int[] var13, byte var14) {
 		try {
-			
+
 			if (var11 > 0) {
 				int var15 = 0;
 				int var16 = 0;
 				if (var14 <= 97) {
 					Shader.shadeScanline(-65, -47, -42, (byte) -16, 62, 50, -59, -91, (int[]) null, (int[]) null, 71,
-							-91, -16, -29, 110, 81);
+						-91, -16, -29, 110, 81);
 				}
 
 				int var19 = 0;
@@ -394,76 +394,76 @@ public class Shader {
 					var6 += var4 & 6291456;
 					var4 += var9;
 					var13[var0++] = FastMath.bitwiseAnd(var13[var0] >> 1, 8355711)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19);
 					var3 += var18;
 					var6 += var17;
 					var13[var0++] = FastMath.bitwiseAnd(var13[var0] >> 1, 8355711)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = (var10[FastMath.bitwiseAnd(0x3F80, var3) + (var6 >> 7)] >>> var19)
-							+ (FastMath.bitwiseAnd(16711422, var13[var0]) >> 1);
+						+ (FastMath.bitwiseAnd(16711422, var13[var0]) >> 1);
 					var3 += var18;
 					var6 += var17;
 					var13[var0++] = (FastMath.bitwiseAnd(16711422, var13[var0]) >> 1)
-							+ (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19);
+						+ (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19);
 					var3 += var18;
 					var6 += var17;
 					var19 = var4 >> 23;
 					var6 = (var6 & 16383) + (var4 & 6291456);
 					var4 += var9;
 					var13[var0++] = FastMath.bitwiseAnd(var13[var0] >> 1, 8355711)
-							+ (var10[FastMath.bitwiseAnd(0x3F80, var3) + (var6 >> 7)] >>> var19);
+						+ (var10[FastMath.bitwiseAnd(0x3F80, var3) + (var6 >> 7)] >>> var19);
 					var3 += var18;
 					var6 += var17;
 					var13[var0++] = (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19)
-							+ FastMath.bitwiseAnd(var13[var0] >> 1, 8355711);
+						+ FastMath.bitwiseAnd(var13[var0] >> 1, 8355711);
 					var3 += var18;
 					var6 += var17;
 					var13[var0++] = (FastMath.bitwiseAnd(var13[var0], 16711423) >> 1)
-							+ (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19);
+						+ (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19);
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19)
-							+ (FastMath.bitwiseAnd(var13[var0], 16711423) >> 1);
+						+ (FastMath.bitwiseAnd(var13[var0], 16711423) >> 1);
 					var6 += var17;
 					var3 += var18;
 					var6 = (16383 & var6) + (var4 & 6291456);
 					var19 = var4 >> 23;
 					var13[var0++] = (FastMath.bitwiseAnd(16711423, var13[var0]) >> 1)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19);
 					var4 += var9;
 					var3 += var18;
 					var6 += var17;
 					var13[var0++] = FastMath.bitwiseAnd(var13[var0] >> 1, 8355711)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19)
-							+ FastMath.bitwiseAnd(8355711, var13[var0] >> 1);
+						+ FastMath.bitwiseAnd(8355711, var13[var0] >> 1);
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = (FastMath.bitwiseAnd(16711423, var13[var0]) >> 1)
-							+ (var10[FastMath.bitwiseAnd(0x3F80, var3) + (var6 >> 7)] >>> var19);
+						+ (var10[FastMath.bitwiseAnd(0x3F80, var3) + (var6 >> 7)] >>> var19);
 					var3 += var18;
 					var6 += var17;
 					var6 = (var6 & 16383) + (var4 & 6291456);
 					var19 = var4 >> 23;
 					var13[var0++] = FastMath.bitwiseAnd(8355711, var13[var0] >> 1)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(var3, 0x3F80)] >>> var19);
 					var4 += var9;
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = FastMath.bitwiseAnd(var13[var0] >> 1, 8355711)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19)
-							+ FastMath.bitwiseAnd(var13[var0] >> 1, 8355711);
+						+ FastMath.bitwiseAnd(var13[var0] >> 1, 8355711);
 					var6 += var17;
 					var3 += var18;
 					var13[var0++] = FastMath.bitwiseAnd(var13[var0] >> 1, 8355711)
-							+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
+						+ (var10[(var6 >> 7) + FastMath.bitwiseAnd(0x3F80, var3)] >>> var19);
 					var7 += var12;
 					var1 += var5;
 					var2 += var8;
@@ -494,7 +494,7 @@ public class Shader {
 					}
 
 					var13[var0++] = (var10[FastMath.bitwiseAnd(var3, 0x3F80) + (var6 >> 7)] >>> var19)
-							+ (FastMath.bitwiseAnd(var13[var0], 16711422) >> 1);
+						+ (FastMath.bitwiseAnd(var13[var0], 16711422) >> 1);
 					var6 += var17;
 					var3 += var18;
 				}
@@ -502,16 +502,16 @@ public class Shader {
 			}
 		} catch (RuntimeException var21) {
 			throw GenUtil.makeThrowable(var21,
-					"cb.E(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ','
-							+ var7 + ',' + var8 + ',' + var9 + ',' + (var10 != null ? "{...}" : "null") + ',' + var11
-							+ ',' + var12 + ',' + (var13 != null ? "{...}" : "null") + ',' + var14 + ')');
+				"cb.E(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ','
+					+ var7 + ',' + var8 + ',' + var9 + ',' + (var10 != null ? "{...}" : "null") + ',' + var11
+					+ ',' + var12 + ',' + (var13 != null ? "{...}" : "null") + ',' + var14 + ')');
 		}
 	}
 
 	public static final void shadeScanline(int[] var0, int var1, int var2, int var3, int var4, int var5, int var6,
-			int var7, int var8, int var9, int[] var10, boolean var11, int var12, int var13, int var14) {
+										   int var7, int var8, int var9, int[] var10, boolean var11, int var12, int var13, int var14) {
 		try {
-			
+
 			if (var7 > 0) {
 				int var15 = 0;
 				int var16 = 0;
@@ -553,80 +553,80 @@ public class Shader {
 					var5 += var4;
 					if (var19 >= 16) {
 						var0[var6++] = FastMath.bitwiseAnd(var0[var6] >> 1, 0x7f7f7f)
-								+ (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20);
+							+ (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20);
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1)
-								+ (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20);
+							+ (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20);
 						var9 += var18;
 						var14 += var17;
 						var0[var6++] = (FastMath.bitwiseAnd(0xfefeff, var0[var6]) >> 1)
-								+ (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20);
+							+ (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20);
 						var9 += var18;
 						var14 += var17;
 						var0[var6++] = (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1)
-								+ (var10[(var14 >> 6) + FastMath.bitwiseAnd(0xFC0, var9)] >>> var20);
+							+ (var10[(var14 >> 6) + FastMath.bitwiseAnd(0xFC0, var9)] >>> var20);
 						var14 += var17;
 						var9 += var18;
 						var14 = (var5 & 786432) + (4095 & var14);
 						var20 = var5 >> 20;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20)
-								+ (FastMath.bitwiseAnd(var0[var6], 0xFEFEFE) >> 1);
+							+ (FastMath.bitwiseAnd(var0[var6], 0xFEFEFE) >> 1);
 						var5 += var4;
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (var10[(var14 >> 6) + FastMath.bitwiseAnd(0xFC0, var9)] >>> var20)
-								+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
+							+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20)
-								+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
+							+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
 						var9 += var18;
 						var14 += var17;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20)
-								+ (FastMath.bitwiseAnd(0xfefeff, var0[var6]) >> 1);
+							+ (FastMath.bitwiseAnd(0xfefeff, var0[var6]) >> 1);
 						var14 += var17;
 						var9 += var18;
 						var14 = (786432 & var5) + (4095 & var14);
 						var20 = var5 >> 20;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20)
-								+ (FastMath.bitwiseAnd(var0[var6], 0xFEFEFE) >> 1);
+							+ (FastMath.bitwiseAnd(var0[var6], 0xFEFEFE) >> 1);
 						var5 += var4;
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20)
-								+ FastMath.bitwiseAnd(var0[var6] >> 1, 0x7f7f7f);
+							+ FastMath.bitwiseAnd(var0[var6] >> 1, 0x7f7f7f);
 						var9 += var18;
 						var14 += var17;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20)
-								+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
+							+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (FastMath.bitwiseAnd(0xFEFEFE, var0[var6]) >> 1)
-								+ (var10[(var14 >> 6) + FastMath.bitwiseAnd(var9, 0xFC0)] >>> var20);
+							+ (var10[(var14 >> 6) + FastMath.bitwiseAnd(var9, 0xFC0)] >>> var20);
 						var14 += var17;
 						var9 += var18;
 						var14 = (var5 & 786432) + (var14 & 4095);
 						var20 = var5 >> 20;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20)
-								+ (FastMath.bitwiseAnd(0xFEFEFE, var0[var6]) >> 1);
+							+ (FastMath.bitwiseAnd(0xFEFEFE, var0[var6]) >> 1);
 						var5 += var4;
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1)
-								+ (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20);
+							+ (var10[FastMath.bitwiseAnd(var9, 0xFC0) + (var14 >> 6)] >>> var20);
 						var14 += var17;
 						var9 += var18;
 						var0[var6++] = (var10[FastMath.bitwiseAnd(0xFC0, var9) + (var14 >> 6)] >>> var20)
-								+ FastMath.bitwiseAnd(var0[var6] >> 1, 0x7f7f7f);
+							+ FastMath.bitwiseAnd(var0[var6] >> 1, 0x7f7f7f);
 						var9 += var18;
 						var14 += var17;
 						var0[var6++] = (var10[(var14 >> 6) + FastMath.bitwiseAnd(0xFC0, var9)] >>> var20)
-								+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
+							+ (FastMath.bitwiseAnd(var0[var6], 0xfefeff) >> 1);
 					} else {
 						for (int var21 = 0; var19 > var21; ++var21) {
 							var0[var6++] = (var10[(var14 >> 6) + FastMath.bitwiseAnd(var9, 0xFC0)] >>> var20)
-									+ (FastMath.bitwiseAnd(0xFEFEFE, var0[var6]) >> 1);
+								+ (FastMath.bitwiseAnd(0xFEFEFE, var0[var6]) >> 1);
 							var9 += var18;
 							var14 += var17;
 							if ((var21 & 3) == 3) {
@@ -641,15 +641,15 @@ public class Shader {
 			}
 		} catch (RuntimeException var22) {
 			throw GenUtil.makeThrowable(var22, "jb.D(" + (var0 != null ? "{...}" : "null") + ',' + var1 + ',' + var2
-					+ ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ',' + var8 + ',' + var9 + ','
-					+ (var10 != null ? "{...}" : "null") + ',' + false + ',' + var12 + ',' + var13 + ',' + var14 + ')');
+				+ ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ',' + var8 + ',' + var9 + ','
+				+ (var10 != null ? "{...}" : "null") + ',' + false + ',' + var12 + ',' + var13 + ',' + var14 + ')');
 		}
 	}
 
 	public static final void shadeScanline(int var0, int var1, int var2, int var3, int var4, int[] src, int var6,
-			int var7, int var8, int var9, int[] dest, int var11, int var12, int var13, int var14) {
+										   int var7, int var8, int var9, int[] dest, int var11, int var12, int var13, int var14) {
 		try {
-			
+
 			if (var14 > 0) {
 				int var15 = 0;
 				int var16 = 0;
@@ -669,7 +669,7 @@ public class Shader {
 
 				if (var1 != 1121159302) {
 					shadeScanline(-69, 127, -20, -29, -78, (int[]) null, 16, 2, -77, -5, (int[]) null, 113, -57, 68,
-							-87);
+						-87);
 				}
 
 				for (int var19 = var14; var19 > 0; var19 -= 16) {
@@ -767,15 +767,15 @@ public class Shader {
 			}
 		} catch (RuntimeException var22) {
 			throw GenUtil.makeThrowable(var22, "p.B(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ','
-					+ (src != null ? "{...}" : "null") + ',' + var6 + ',' + var7 + ',' + var8 + ',' + var9 + ','
-					+ (dest != null ? "{...}" : "null") + ',' + var11 + ',' + var12 + ',' + var13 + ',' + var14 + ')');
+				+ (src != null ? "{...}" : "null") + ',' + var6 + ',' + var7 + ',' + var8 + ',' + var9 + ','
+				+ (dest != null ? "{...}" : "null") + ',' + var11 + ',' + var12 + ',' + var13 + ',' + var14 + ')');
 		}
 	}
 
 	public static final void shadeScanline(int var0, int var1, int var2, byte var3, int var4, int var5, int var6,
-			int var7, int[] var8, int[] var9, int var10, int var11, int var12, int var13, int var14, int var15) {
+										   int var7, int[] var8, int[] var9, int var10, int var11, int var12, int var13, int var14, int var15) {
 		try {
-			
+
 			if (var0 > 0) {
 				int var16 = 0;
 				int var17 = 0;
@@ -958,9 +958,9 @@ public class Shader {
 			}
 		} catch (RuntimeException var23) {
 			throw GenUtil.makeThrowable(var23,
-					"cb.B(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ','
-							+ var7 + ',' + (var8 != null ? "{...}" : "null") + ',' + (var9 != null ? "{...}" : "null")
-							+ ',' + var10 + ',' + var11 + ',' + var12 + ',' + var13 + ',' + var14 + ',' + var15 + ')');
+				"cb.B(" + var0 + ',' + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ','
+					+ var7 + ',' + (var8 != null ? "{...}" : "null") + ',' + (var9 != null ? "{...}" : "null")
+					+ ',' + var10 + ',' + var11 + ',' + var12 + ',' + var13 + ',' + var14 + ',' + var15 + ')');
 		}
 	}
 

@@ -3,21 +3,20 @@ package orsc;
 import java.util.HashMap;
 
 /**
- *
  * @author Kenix
  */
 public class Group {
-	public static final int OWNER       = 0;
-	public static final int ADMIN       = 1;
-	public static final int SUPER_MOD   = 2;
-	public static final int MOD         = 3;
-	public static final int DEV         = 8;
-	public static final int EVENT       = 9;
-	public static final int USER        = 10;
+	public static final int OWNER = 0;
+	public static final int ADMIN = 1;
+	public static final int SUPER_MOD = 2;
+	public static final int MOD = 3;
+	public static final int DEV = 8;
+	public static final int EVENT = 9;
+	public static final int USER = 10;
 
-	public static final int DEFAULT_GROUP	= Group.USER;
+	public static final int DEFAULT_GROUP = Group.USER;
 
-	public static final HashMap<Integer, String> GROUP_NAMES = new HashMap<Integer, String> ();
+	public static final HashMap<Integer, String> GROUP_NAMES = new HashMap<Integer, String>();
 
 	static {
 		GROUP_NAMES.put(OWNER, "Owner");
@@ -30,11 +29,10 @@ public class Group {
 	}
 
 	public static String getNameColour(int groupID) {
-		if(!Config.S_WANT_CUSTOM_RANK_DISPLAY)
+		if (!Config.S_WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
-		switch(groupID)
-		{
+		switch (groupID) {
 			case OWNER:
 				return "@dcy@";
 			case ADMIN:
@@ -53,11 +51,10 @@ public class Group {
 	}
 
 	public static String getNameSprite(int groupID) {
-		if(!Config.S_WANT_CUSTOM_RANK_DISPLAY)
+		if (!Config.S_WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
-		switch(groupID)
-		{
+		switch (groupID) {
 			case OWNER:
 			case ADMIN:
 				return "#adm#";
