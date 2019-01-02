@@ -1,4 +1,5 @@
 package orsc.graphics.three;
+
 final class Polygon {
 	int m_b;
 	boolean m_c = false;

@@ -11,15 +11,6 @@ public enum ORSCharacterDirection {
 	NORTH_EAST(7, -1, -1),
 	COMBAT_A(8, 0, 0),
 	COMBAT_B(9, 0, 0);
-	public final int x0, z0;
-	public final int rsDir;
-
-	private ORSCharacterDirection(int rsDir, int x0, int z0) {
-		this.rsDir = rsDir;
-		this.x0 = x0;
-		this.z0 = z0;
-	}
-
 	private static final ORSCharacterDirection[] rsDir_Lookup;
 
 	static {
@@ -29,6 +20,15 @@ public enum ORSCharacterDirection {
 		rsDir_Lookup = new ORSCharacterDirection[max];
 		for (ORSCharacterDirection c : values())
 			rsDir_Lookup[c.rsDir] = c;
+	}
+
+	public final int x0, z0;
+	public final int rsDir;
+
+	private ORSCharacterDirection(int rsDir, int x0, int z0) {
+		this.rsDir = rsDir;
+		this.x0 = x0;
+		this.z0 = z0;
 	}
 
 	public static ORSCharacterDirection lookup(int rsDir) {

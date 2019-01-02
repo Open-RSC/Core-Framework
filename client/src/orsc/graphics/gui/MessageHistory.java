@@ -3,7 +3,8 @@ package orsc.graphics.gui;
 import orsc.enumerations.MessageType;
 
 public class MessageHistory {
-	public static MessageType[] messageHistoryType = new MessageType[100];;
+	public static MessageType[] messageHistoryType = new MessageType[100];
+	;
 	public static int[] messageHistoryTimeout = new int[100];
 	public static String[] messageHistorySender = new String[100];
 	public static int[] messageHistoryCrownID = new int[100];

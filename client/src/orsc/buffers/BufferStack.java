@@ -7,6 +7,30 @@ public final class BufferStack {
 	RSBuffer_Base writeHead = new RSBuffer_Base();
 	private RSBuffer_Base readHead;
 
+	public BufferStack() {
+		try {
+			this.writeHead.next = this.writeHead;
+			this.writeHead.previous = this.writeHead;
+		} catch (RuntimeException var2) {
+			throw GenUtil.makeThrowable(var2, "db.<init>()");
+		}
+	}
+
+	static final void insertAfter(RSBuffer_Base insert, byte var1, RSBuffer_Base after) {
+		try {
+			if (null != insert.next) {
+				insert.removeThisBufferFromChain();
+			}
+			insert.previous = after;
+			insert.next = after.next;
+			insert.next.previous = insert;
+			insert.previous.next = insert;
+		} catch (RuntimeException var4) {
+			throw GenUtil.makeThrowable(var4, "ac.B(" + (insert != null ? "{...}" : "null") + ',' + "dummy" + ','
+				+ (after != null ? "{...}" : "null") + ')');
+		}
+	}
+
 	final void add(RSBuffer_Base of) {
 		try {
 			if (null != of.next) {
@@ -51,30 +75,6 @@ public final class BufferStack {
 			}
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "db.A(" + 80 + ')');
-		}
-	}
-
-	static final void insertAfter(RSBuffer_Base insert, byte var1, RSBuffer_Base after) {
-		try {
-			if (null != insert.next) {
-				insert.removeThisBufferFromChain();
-			}
-			insert.previous = after;
-			insert.next = after.next;
-			insert.next.previous = insert;
-			insert.previous.next = insert;
-		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "ac.B(" + (insert != null ? "{...}" : "null") + ',' + "dummy" + ','
-					+ (after != null ? "{...}" : "null") + ')');
-		}
-	}
-
-	public BufferStack() {
-		try {
-			this.writeHead.next = this.writeHead;
-			this.writeHead.previous = this.writeHead;
-		} catch (RuntimeException var2) {
-			throw GenUtil.makeThrowable(var2, "db.<init>()");
 		}
 	}
 }

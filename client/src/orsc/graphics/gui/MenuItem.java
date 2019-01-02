@@ -15,9 +15,9 @@ public final class MenuItem {
 	MenuItemAction actionID;
 
 	final void set(String label, int var2, int index_or_x, int id_or_z, int tile_id, String dropped2, int var7,
-			MenuItemAction actionID, String actor, String dropped, int dir, String strB) {
+				   MenuItemAction actionID, String actor, String dropped, int dir, String strB) {
 		try {
-			
+
 			this.label = label;
 			this.m_l = var2;
 			this.id_or_z = id_or_z;
@@ -31,10 +31,10 @@ public final class MenuItem {
 			}
 		} catch (RuntimeException var14) {
 			throw GenUtil.makeThrowable(var14,
-					"t.B(" + (label != null ? "{...}" : "null") + ',' + var2 + ',' + index_or_x + ',' + id_or_z + ','
-							+ tile_id + ',' + (dropped2 != null ? "{...}" : "null") + ',' + var7 + ',' + actionID + ','
-							+ (actor != null ? "{...}" : "null") + ',' + (dropped != null ? "{...}" : "null") + ','
-							+ dir + ',' + (strB != null ? "{...}" : "null") + ')');
+				"t.B(" + (label != null ? "{...}" : "null") + ',' + var2 + ',' + index_or_x + ',' + id_or_z + ','
+					+ tile_id + ',' + (dropped2 != null ? "{...}" : "null") + ',' + var7 + ',' + actionID + ','
+					+ (actor != null ? "{...}" : "null") + ',' + (dropped != null ? "{...}" : "null") + ','
+					+ dir + ',' + (strB != null ? "{...}" : "null") + ')');
 		}
 	}
 }

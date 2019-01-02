@@ -9,24 +9,22 @@ import orsc.mudclient;
 
 public class OnlineListInterface extends NComponent {
 
-	private NRightClickMenu rightClickMenu;
-	private int currentX = 5, currentY = 25;
-
-	private NComponent userListContainer;
-
-	private NComponent title, titleText;
 	public int scroll;
 	public Panel panel;
+	private NRightClickMenu rightClickMenu;
+	private int currentX = 5, currentY = 25;
+	private NComponent userListContainer;
+	private NComponent title, titleText;
 
 	public OnlineListInterface(mudclient client) {
 		super(client);
-		
+
 		panel = new Panel(client.getSurface(), 1);
 		scroll = panel.addScrollingList2(getX(), getY() + 20, getWidth(), getHeight() - 20, 500, 1, true);
-		
+
 
 		//graphics.drawBoxAlpha((client.getGameHeight() - getWidth()) / 2, (client.getGameHeight() - getHeight()) / 2, 408, 246, 10000536, 192);
-		
+
 		setBackground(10000536, 10000536, 128);
 		setSize(408, 246);
 		setLocation((client.getGameWidth() - getWidth()) / 2, (client.getGameHeight() - getHeight()) / 2);
@@ -35,6 +33,7 @@ public class OnlineListInterface extends NComponent {
 			public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
 				return true;
 			}
+
 			@Override
 			public boolean onMouseMove(int x, int y) {
 				return true;
@@ -45,8 +44,8 @@ public class OnlineListInterface extends NComponent {
 		title.setBackground(0x7e8d09, 0x7e8d09, 192);
 		title.setLocation(0, 0);
 		title.setSize(408, 20);
-		
-		titleText =  new NComponent(client);
+
+		titleText = new NComponent(client);
 		titleText.setText("Users online");
 		titleText.setFontColor(0xFFFFFF, 0xFFFFFF);
 		titleText.setTextSize(1);
@@ -98,7 +97,7 @@ public class OnlineListInterface extends NComponent {
 		userComponent.setSize(textWidth, textHeight);
 		userComponent.setCrownDisplay(true);
 		userComponent.setCrown(crownID);
-		
+
 		userListContainer.addComponent(userComponent);
 		currentX += textWidth + 5;
 	}
@@ -106,18 +105,18 @@ public class OnlineListInterface extends NComponent {
 	@Override
 	public void update() {
 		panel.handleMouse(getClient().getMouseX(), getClient().getMouseY(), getClient().getMouseButtonDown(),
-				getClient().getLastMouseDown());
+			getClient().getLastMouseDown());
 		panel.reposition(scroll, getX(), getY() + 20, getWidth(), getHeight() - 20);
 		panel.clearList(scroll);
-		
+
 		getClient().getSurface().drawBoxAlpha((getClient().getGameHeight() - getWidth()) / 2 + 40, (getClient().getGameHeight() - getHeight()) / 2 - 29, 408, 226, 10000536, 192);
-		
-		
+
+
 		int currentX = 5;
 		int currentY = 0;
-		
-		
-		int startComponentIndex = panel.getScrollPosition(scroll); 
+
+
+		int startComponentIndex = panel.getScrollPosition(scroll);
 		int listEndPoint = startComponentIndex + 49;
 
 		for (int componentIndex = 0; componentIndex < userListContainer.subComponents().size(); componentIndex++) {
@@ -125,11 +124,11 @@ public class OnlineListInterface extends NComponent {
 			userComp.setVisible(false);
 
 			panel.setListEntry(scroll, componentIndex, "", 0, (String) null, (String) null);
-			
-		
-			if (componentIndex < startComponentIndex || componentIndex > listEndPoint) 
+
+
+			if (componentIndex < startComponentIndex || componentIndex > listEndPoint)
 				continue;
-			
+
 			int textWidth = graphics().stringWidth(1, userComp.getText()) + (userComp.crown > 0 ? 15 : 0) + 5;
 			int textHeight = graphics().fontHeight(1);
 
@@ -153,7 +152,9 @@ public class OnlineListInterface extends NComponent {
 						});
 						staffMenu.createOption("Summon", new MenuAction() {
 							@Override
-							public void action() { getClient().sendCommandString("summon " + username); }
+							public void action() {
+								getClient().sendCommandString("summon " + username);
+							}
 						});
 						staffMenu.createOption("Take", new MenuAction() {
 							@Override
@@ -187,9 +188,9 @@ public class OnlineListInterface extends NComponent {
 							}
 						});
 
-						if(getClient().getLocalPlayer().isMod())
+						if (getClient().getLocalPlayer().isMod())
 							rightClickMenu.createSubMenuOption("Staff >", null, staffMenu);
-						
+
 						rightClickMenu.show(userComp.x, userComp.y);
 						return true;
 					}
