@@ -4,8 +4,8 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface PickupListener {
-    /**
-     * Called when a user picks up an item
-     */
-    public void onPickup(Player p, GroundItem i);
+	/**
+	 * Called when a user picks up an item
+	 */
+	public void onPickup(Player p, GroundItem i);
 }

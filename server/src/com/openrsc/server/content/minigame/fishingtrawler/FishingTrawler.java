@@ -17,22 +17,18 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 public class FishingTrawler extends DelayedEvent {
-	
-	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final int WAITING = -1, FIRST_SHIP = 0, SECOND_SHIP = 1;
-
+	public static final Point SPAWN_LAND = new Point(538, 703);
+	public static final int MAX_PLAYERS = 10;
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final int SHIP_WATER_LIMIT_SECOND_BOAT = 500;
 	private static final int SHIP_WATER_LIMIT_SINK = 1000;
-
-	public static final Point SPAWN_LAND = new Point(538, 703);
 	private static final Point spawnEastFail = new Point(254, 759);
-
-	public static final int MAX_PLAYERS = 10;
-	private final int LEAK1 = 1077; 
+	private final int LEAK1 = 1077;
 	private final int LEAK2 = 1071;
 
 	private WaitingShip waitingShip;
@@ -51,10 +47,10 @@ public class FishingTrawler extends DelayedEvent {
 
 	private GameObject[] leaks = new GameObject[14];
 	private ArrayList<Player> players = new ArrayList<Player>();
-	private String[] murphys_messages_ship1 = new String[] { "That's the stuff, fill those holes",
-			" it's a fierce sea today traveller", "check those nets" };
-	private String[] murphys_messages_ship2 = new String[] { "we're going under", "we'll all end up in a watery grave",
-			"check those nets" };
+	private String[] murphys_messages_ship1 = new String[]{"That's the stuff, fill those holes",
+		" it's a fierce sea today traveller", "check those nets"};
+	private String[] murphys_messages_ship2 = new String[]{"we're going under", "we'll all end up in a watery grave",
+		"check those nets"};
 
 	public FishingTrawler() {
 		super(null, 600);
@@ -171,8 +167,8 @@ public class FishingTrawler extends DelayedEvent {
 			setNetBroken(true);
 			for (Player p : players) {
 				ActionSender.sendBox(p,
-						"@red@the trawler net is damaged" + "% %" + " you cannot catch any fish with damaged net",
-						false);
+					"@red@the trawler net is damaged" + "% %" + " you cannot catch any fish with damaged net",
+					false);
 			}
 		}
 	}
@@ -182,11 +178,11 @@ public class FishingTrawler extends DelayedEvent {
 		String message = "";
 		if (currentStage == FIRST_SHIP) {
 			npc = World.getWorld().getNpc(734, shipArea.getMinX(), shipArea.getMaxX(), shipArea.getMinY(),
-					shipArea.getMaxY());
+				shipArea.getMaxY());
 			message = murphys_messages_ship1[DataConversions.random(0, murphys_messages_ship1.length - 1)];
 		} else if (currentStage == SECOND_SHIP) {
 			npc = World.getWorld().getNpc(734, getShipAreaWater().getMinX(), getShipAreaWater().getMaxX(),
-					getShipAreaWater().getMinY(), getShipAreaWater().getMaxY());
+				getShipAreaWater().getMinY(), getShipAreaWater().getMaxY());
 			message = murphys_messages_ship2[DataConversions.random(0, murphys_messages_ship2.length - 1)];
 		}
 		if (npc != null) {
@@ -195,7 +191,7 @@ public class FishingTrawler extends DelayedEvent {
 	}
 
 	private void endGame() {
-		if(players.size() == 0 || fishCaught == 0) {
+		if (players.size() == 0 || fishCaught == 0) {
 			players.clear();
 			resetGame();
 			return;
@@ -203,7 +199,7 @@ public class FishingTrawler extends DelayedEvent {
 		int rewardForEach = fishCaught / players.size();
 		for (Player p : players) {
 			ActionSender.sendBox(p,
-					"@yel@you have trawled a full net% %@yel@It's time to go back in and inspect the catch", false);
+				"@yel@you have trawled a full net% %@yel@It's time to go back in and inspect the catch", false);
 			p.message("murphy turns the boat towards shore");
 			p.setLocation(SPAWN_LAND, true);
 			p.getCache().set("fishing_trawler_reward", rewardForEach);
@@ -268,7 +264,7 @@ public class FishingTrawler extends DelayedEvent {
 				x = DataConversions.random(shipArea.getMinX() + 1, shipArea.getMaxX() - 1);
 				y = (DataConversions.random(0, 1) == 0 ? spawnLocation.getY() - 1 : spawnLocation.getY() + 1);
 			} else if (currentStage == SECOND_SHIP) {
-				x = DataConversions.random(shipAreaWater.getMinX() + 1 , shipAreaWater.getMaxX() - 1);
+				x = DataConversions.random(shipAreaWater.getMinX() + 1, shipAreaWater.getMaxX() - 1);
 				y = (DataConversions.random(0, 1) == 0 ? shipAreaWaterSpawn.getY() - 1 : shipAreaWaterSpawn.getY() + 1);
 			}
 			int freeLeakIndex = getFreeLeakIndex();
@@ -350,7 +346,7 @@ public class FishingTrawler extends DelayedEvent {
 	}
 
 	public void bailWater() {
-		
+
 		waterLevel -= DataConversions.random(1, 3);
 		if (waterLevel < 0)
 			waterLevel = 0;

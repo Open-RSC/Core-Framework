@@ -17,7 +17,7 @@ public class ExitBarrel implements ObjectActionListener, ObjectActionExecutiveLi
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		message(player, 1900, "you climb onto the floating barrel", "and begin to kick your way to the shore",
-				"you make it to the shore tired and weary");
+			"you make it to the shore tired and weary");
 		player.teleport(550, 711);
 		player.damage(3);
 	}

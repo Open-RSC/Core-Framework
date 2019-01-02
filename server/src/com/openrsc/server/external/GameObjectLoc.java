@@ -30,6 +30,7 @@ public class GameObjectLoc {
 		this.direction = direction;
 		this.type = type;
 	}
+
 	public GameObjectLoc(int id, int x, int y, int direction, int type, String owner) {
 		this.id = id;
 		this.x = x;

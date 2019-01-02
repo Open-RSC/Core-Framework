@@ -14,21 +14,20 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		playerTalk(p, n, "Hello");
-		npcTalk(p,n, "Hello adventurer",
-				"I run a tourist attraction",
-				"called the Black Hole",
-				"I sell a handy disk for 10 coins",
-				"to get you there",
-				"Would you like to buy one?");
+		npcTalk(p, n, "Hello adventurer",
+			"I run a tourist attraction",
+			"called the Black Hole",
+			"I sell a handy disk for 10 coins",
+			"to get you there",
+			"Would you like to buy one?");
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("Yes please") {
 			@Override
 			public void action() {
-				if(!hasItem(p, 10, 10)) {
+				if (!hasItem(p, 10, 10)) {
 					playerTalk(p, n,
-							"Oh dear I don't actually seem to have enough money");
-				}
-				else {
+						"Oh dear I don't actually seem to have enough money");
+				} else {
 					p.getInventory().remove(10, 10);
 					addItem(p, 387, 1);
 				}

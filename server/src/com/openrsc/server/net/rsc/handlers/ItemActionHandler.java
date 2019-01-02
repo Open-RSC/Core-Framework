@@ -39,7 +39,7 @@ public class ItemActionHandler implements PacketHandler {
 			player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - " + World.membersWildMax);
 			return;
 		}*/
-		
+
 		if (item.getDef().isMembersOnly() && !Constants.GameServer.MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
@@ -55,7 +55,7 @@ public class ItemActionHandler implements PacketHandler {
 		player.resetAll();
 
 		if (PluginHandler.getPluginHandler().blockDefaultAction("InvAction",
-				new Object[] { item, player })) {
+			new Object[]{item, player})) {
 			return;
 		}
 
@@ -67,19 +67,19 @@ public class ItemActionHandler implements PacketHandler {
 		}
 
 		if (item.getDef().getCommand().equalsIgnoreCase("bury")) {
-			if(item.getID() == 1308 || item.getID() == 1648 || item.getID() == 1793 || item.getID() == 1871 || item.getID() == 2257) {
+			if (item.getID() == 1308 || item.getID() == 1648 || item.getID() == 1793 || item.getID() == 1871 || item.getID() == 2257) {
 				player.message("You can't bury noted bones");
 				return;
 			}
 			player.setBusyTimer(650);
 			player.message("You dig a hole in the ground");
 			Server.getServer().getEventHandler()
-					.add(new MiniEvent(player) {
-						public void action() {
-							owner.message("You bury the "
-									+ item.getDef().getName().toLowerCase());
-							owner.getInventory().remove(item);
-							switch (item.getID()) {
+				.add(new MiniEvent(player) {
+					public void action() {
+						owner.message("You bury the "
+							+ item.getDef().getName().toLowerCase());
+						owner.getInventory().remove(item);
+						switch (item.getID()) {
 							case 20: // Bones
 								owner.incExp(5, 15, true); // 3.75
 								break;
@@ -95,39 +95,37 @@ public class ItemActionHandler implements PacketHandler {
 							case 2256: // Soul of Greatwood NOT INCLUDED
 								owner.incExp(5, 800 * 4, true); // 800
 								break;
-							}
 						}
-					});
+					}
+				});
 		} else {
 			switch (item.getID()) {
-			case 387: // Disk of Returning
-				if(player.getX() == 305 && player.getY() == 3300) {
-					player.message("You spin your disk of returning");
-					player.teleport(310, 3347, true);
-					player.getInventory().remove(387, 1);
-				}
-				else if(insideMines(player)) {
-					player.message("You spin your disk of returning");
-					player.teleport(305, 3300, true);
-				}
-				else {
-					player.message("The disk will only work from in Thordur's black hole");
-					player.message("or the dwarven mines");
-				}
-				break;
-			case 260: // burntpie
-				if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
-					player.message("you remove the burnt pie from the pie dish");
-					player.getInventory().replace(item.getID(), 251);
-				}
-				break;
-			default:
-				player.message("Nothing interesting happens");
-				return;
+				case 387: // Disk of Returning
+					if (player.getX() == 305 && player.getY() == 3300) {
+						player.message("You spin your disk of returning");
+						player.teleport(310, 3347, true);
+						player.getInventory().remove(387, 1);
+					} else if (insideMines(player)) {
+						player.message("You spin your disk of returning");
+						player.teleport(305, 3300, true);
+					} else {
+						player.message("The disk will only work from in Thordur's black hole");
+						player.message("or the dwarven mines");
+					}
+					break;
+				case 260: // burntpie
+					if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
+						player.message("you remove the burnt pie from the pie dish");
+						player.getInventory().replace(item.getID(), 251);
+					}
+					break;
+				default:
+					player.message("Nothing interesting happens");
+					return;
 			}
 		}
 	}
-	
+
 	public boolean insideMines(Player p) {
 		return ((p.getX() >= 250 && p.getX() <= 315) && (p.getY() >= 3325 && p.getY() <= 3400));
 	}

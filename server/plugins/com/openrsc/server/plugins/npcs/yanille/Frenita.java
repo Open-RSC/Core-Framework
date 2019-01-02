@@ -13,13 +13,13 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class Frenita implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 55, 1,
-			new Item(251, 5), new Item(252, 2), new Item(338, 2),
-			new Item(341, 2), new Item(348, 5), new Item(166, 4),
-			new Item(140, 1), new Item(135, 8), new Item(337, 2),
-			new Item(136, 8));
+		new Item(251, 5), new Item(252, 2), new Item(338, 2),
+		new Item(341, 2), new Item(348, 5), new Item(166, 4),
+		new Item(140, 1), new Item(135, 8), new Item(337, 2),
+		new Item(136, 8));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
@@ -28,10 +28,10 @@ public final class Frenita implements ShopInterface,
 		int option = showMenu(p, n, "Yes please", "No thank you");
 		switch (option) {
 
-		case 0:
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-			break;
+			case 0:
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+				break;
 		}
 
 	}
@@ -43,7 +43,7 @@ public final class Frenita implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

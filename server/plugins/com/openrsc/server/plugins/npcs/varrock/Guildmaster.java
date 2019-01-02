@@ -12,7 +12,7 @@ import com.openrsc.server.plugins.menu.Option;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
 public class Guildmaster implements TalkToNpcListener,
-		TalkToNpcExecutiveListener {
+	TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -26,24 +26,24 @@ public class Guildmaster implements TalkToNpcListener,
 			@Override
 			public void action() {
 				npcTalk(p,
-						n,
-						" This is the champions' guild",
-						" Only Adventurers who have proved themselves worthy",
-						" by gaining influence from quests are allowed in here",
-						" As the number of quests in the world rises",
-						" So will the requirements to get in here",
-						" But so will the rewards");
+					n,
+					" This is the champions' guild",
+					" Only Adventurers who have proved themselves worthy",
+					" by gaining influence from quests are allowed in here",
+					" As the number of quests in the world rises",
+					" So will the requirements to get in here",
+					" But so will the rewards");
 			}
 		});
 		defaultMenu.addOption(new Option(
-				"Do you know where I could get a rune plate mail body?") {
+			"Do you know where I could get a rune plate mail body?") {
 			@Override
 			public void action() {
 				npcTalk(p,
-						n,
-						"I have a friend called Oziach who lives by the cliffs",
-						"He has a supply of rune plate mail",
-						"He may sell you some if you're lucky, he can be little strange sometimes though");
+					n,
+					"I have a friend called Oziach who lives by the cliffs",
+					"He has a supply of rune plate mail",
+					"He may sell you some if you're lucky, he can be little strange sometimes though");
 				if (p.getQuestStage(Constants.Quests.DRAGON_SLAYER) == 0) {
 					p.updateQuestStage(Quests.DRAGON_SLAYER, 1);
 				}

@@ -18,11 +18,10 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 
 	@Override
 	public void doTask() throws Exception {
-		if(!player.isMod()) {
+		if (!player.isMod()) {
 			player.setSuspiciousPlayer(true);
 			ActionSender.sendBox(player, "@red@[Auction House - Error] % @whi@ Unable to remove auction", false);
-		}
-		else {
+		} else {
 			MarketItem item = MarketDatabase.getAuctionItem(auctionID);
 			if (item != null) {
 				int itemIndex = item.getItemID();

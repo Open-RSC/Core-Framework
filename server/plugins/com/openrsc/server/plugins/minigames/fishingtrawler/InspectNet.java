@@ -18,17 +18,17 @@ public class InspectNet implements ObjectActionListener, ObjectActionExecutiveLi
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
-	
+
 		message(player, 1900, "you inspect the net");
-		
-		if(World.getWorld().getFishingTrawler().isNetBroken()) {
+
+		if (World.getWorld().getFishingTrawler().isNetBroken()) {
 			player.message("it's beginning to rip");
-			if(!hasItem(player, 237)) {
+			if (!hasItem(player, 237)) {
 				player.message("you'll need some rope to fix it");
 				return;
 			}
 			message(player, 1900, "you attempt to fix it with your rope");
-			if(DataConversions.random(0, 1) == 0) {
+			if (DataConversions.random(0, 1) == 0) {
 				player.message("you manage to fix the net");
 				removeItem(player, 237, 1);
 				World.getWorld().getFishingTrawler().setNetBroken(false);

@@ -3,20 +3,16 @@ package com.openrsc.server.util;
 import com.openrsc.server.model.entity.Entity;
 
 import java.util.*;
- 
+
 public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 
 	public static final int DEFAULT_CAPACITY = 2000;
-
-	protected int capacity;
-
-	protected Object[] entities;
-
 	protected final Set<Integer> indicies = Collections
-			.synchronizedSet(new HashSet<Integer>());
-
+		.synchronizedSet(new HashSet<Integer>());
+	protected int capacity;
+	protected Object[] entities;
 	private int curIndex = 0;
-	
+
 	public EntityList() {
 		this(DEFAULT_CAPACITY);
 	}

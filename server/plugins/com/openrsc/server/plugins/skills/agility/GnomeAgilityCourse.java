@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExecutiveListener {
-	
+
 	private static final int BALANCE_LOG = 655;
 	private static final int NET = 647;
 	private static final int WATCH_TOWER = 648;
@@ -17,29 +17,29 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 	private static final int LANDING = 649;
 	private static final int SECOND_NET = 653;
 	private static final int PIPE = 654;
-	
+
 	public static int[] obstacleOrder = {BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE};
-	
+
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE);
 	}
-	
+
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		Npc gnomeTrainer = getNearestNpc(p, 578, 10);
 		p.setBusy(true);
-		switch(obj.getID()) {
+		switch (obj.getID()) {
 			case BALANCE_LOG:
 				p.message("You stand on slippery log");
-				for(int y = 494; y < 500;y++) {
+				for (int y = 494; y < 500; y++) {
 					movePlayer(p, 692, y);
 					sleep(650);
 				}
 				p.message("and walk across");
-			break;
+				break;
 			case NET:
-				if(gnomeTrainer != null) {
+				if (gnomeTrainer != null) {
 					npcYell(p, gnomeTrainer, "Move it, move it, move it");
 				}
 				p.message("You climb the net");
@@ -47,9 +47,9 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				movePlayer(p, 692, 1448);
 				p.message("and pull yourself onto the platform");
 				break;
-				
+
 			case WATCH_TOWER:
-				if(gnomeTrainer != null) {
+				if (gnomeTrainer != null) {
 					npcYell(p, gnomeTrainer, "that's it, straight up, no messing around");
 				}
 				p.message("You pull yourself up the tree");
@@ -57,7 +57,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				movePlayer(p, 693, 2394);
 				p.message("to the platform above");
 				break;
-				
+
 			case ROPE_SWING:
 				p.message("You reach out and grab the rope swing");
 				sleep(1000);
@@ -74,7 +74,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				playerTalk(p, null, "ooof");
 				break;
 			case SECOND_NET:
-				if(gnomeTrainer != null) {
+				if (gnomeTrainer != null) {
 					npcYell(p, gnomeTrainer, "my granny can move faster than you");
 				}
 				p.message("You take a few steps back");
@@ -89,7 +89,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 			case PIPE:
 				message(p, "You squeeze through the pipe", "and shuffle down into it");
 				movePlayer(p, 683, 494);
-				if(gnomeTrainer != null) {
+				if (gnomeTrainer != null) {
 					npcYell(p, gnomeTrainer, "that's the way, well done");
 				}
 				break;

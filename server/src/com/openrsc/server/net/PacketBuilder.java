@@ -6,9 +6,7 @@ import io.netty.buffer.Unpooled;
 
 
 /**
- * 
  * @author n0m
- *
  */
 public class PacketBuilder {
 
@@ -21,7 +19,7 @@ public class PacketBuilder {
 	 * Creates the bit mask array.
 	 */
 	static {
-		for(int i = 0; i < BIT_MASK_OUT.length; i++) {
+		for (int i = 0; i < BIT_MASK_OUT.length; i++) {
 			BIT_MASK_OUT[i] = (1 << i) - 1;
 		}
 	}
@@ -50,8 +48,9 @@ public class PacketBuilder {
 
 	/**
 	 * Creates a packet builder with the specified opcode and type.
+	 *
 	 * @param opcode The opcode.
-	 * @param type The type.
+	 * @param type   The type.
 	 */
 	public PacketBuilder(int opcode) {
 		this.opcode = opcode;
@@ -59,6 +58,7 @@ public class PacketBuilder {
 
 	/**
 	 * Writes a byte.
+	 *
 	 * @param i The byte to write.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -69,6 +69,7 @@ public class PacketBuilder {
 
 	/**
 	 * Writes an array of bytes.
+	 *
 	 * @param b The byte array.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -79,6 +80,7 @@ public class PacketBuilder {
 
 	/**
 	 * Writes a short.
+	 *
 	 * @param s The short.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -89,6 +91,7 @@ public class PacketBuilder {
 
 	/**
 	 * Writes an integer.
+	 *
 	 * @param i The integer.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -99,6 +102,7 @@ public class PacketBuilder {
 
 	/**
 	 * Writes a long.
+	 *
 	 * @param l The long.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -109,6 +113,7 @@ public class PacketBuilder {
 
 	/**
 	 * Converts this PacketBuilder to a packet.
+	 *
 	 * @return The Packet object.
 	 */
 	public Packet toPacket() {
@@ -117,6 +122,7 @@ public class PacketBuilder {
 
 	/**
 	 * Writes a RuneScape string.
+	 *
 	 * @param string The string to write.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -128,6 +134,7 @@ public class PacketBuilder {
 
 	/**
 	 * Checks if this packet builder is empty.
+	 *
 	 * @return <code>true</code> if so, <code>false</code> if not.
 	 */
 	public boolean isEmpty() {
@@ -136,6 +143,7 @@ public class PacketBuilder {
 
 	/**
 	 * Starts bit access.
+	 *
 	 * @return The PacketBuilder instance, for chaining.
 	 */
 	public PacketBuilder startBitAccess() {
@@ -145,6 +153,7 @@ public class PacketBuilder {
 
 	/**
 	 * Finishes bit access.
+	 *
 	 * @return The PacketBuilder instance, for chaining.
 	 */
 	public PacketBuilder finishBitAccess() {
@@ -154,16 +163,17 @@ public class PacketBuilder {
 
 	/**
 	 * Writes some bits.
+	 *
 	 * @param numBits The number of bits to write.
-	 * @param value The value.
+	 * @param value   The value.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
 	public PacketBuilder writeBits(int value, int numBits) {
 		if (!payload.hasArray())
 			throw new UnsupportedOperationException(
-					"The ChannelBuffer implementation must support array() for bit usage.");
+				"The ChannelBuffer implementation must support array() for bit usage.");
 
-		if(numBits < 1 || numBits > 32) {
+		if (numBits < 1 || numBits > 32) {
 			throw new IllegalArgumentException("Invalid number of bits");
 		}
 		int bytePos = bitPosition >> 3;
@@ -195,6 +205,7 @@ public class PacketBuilder {
 
 	/**
 	 * writes an <code>ByteBuffer</code>.
+	 *
 	 * @param buf The buffer.
 	 * @return The PacketBuilder instance, for chaining.
 	 */
@@ -202,10 +213,11 @@ public class PacketBuilder {
 		payload.writeBytes(buf);
 		return this;
 	}
-	
+
 	/**
 	 * writes a sequence of bytes in the buffer.
-	 * @param data The bytes.
+	 *
+	 * @param data   The bytes.
 	 * @param offset The offset.
 	 * @param length The length.
 	 * @return The PacketBuilder instance, for chaining.
@@ -238,6 +250,7 @@ public class PacketBuilder {
 		payload.writeBytes(message);
 		payload.writeByte(10);
 	}
+
 	public void writeSmart08_16(int value) {
 		if (value >= 0 && value < 128) {
 			this.writeByte(value);
@@ -247,10 +260,11 @@ public class PacketBuilder {
 			throw new IllegalArgumentException();
 		}
 	}
+
 	//TODO: Make this more efficient
 	public void writeRSCString(String string) {
 		byte[] data = DataConversions.stringToBytes(string);
-		
+
 		byte[] packet = new byte[256];
 		int value = data.length;
 		int pointer = 0;
@@ -260,10 +274,10 @@ public class PacketBuilder {
 			packet[pointer++] = (byte) (value >> 8);
 			packet[pointer++] = (byte) value;
 		}
-		
+
 		DataConversions.encryption.encryptString(data.length, packet, pointer, data, 0);
 		payload.writeBytes(packet);
-		
+
 	}
 	/*public void writeRSCString(String string) {
 		string = DataConversions.formatToRSCString(string);

@@ -12,13 +12,13 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class Drogo  implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Drogo implements ShopInterface,
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 70, 2, new Item(168,
-			4), new Item(156, 4), new Item(150, 0), new Item(202, 0),
-			new Item(151, 0), new Item(155, 0), new Item(169, 0),
-			new Item(170, 0), new Item(172, 0));
+		4), new Item(156, 4), new Item(150, 0), new Item(202, 0),
+		new Item(151, 0), new Item(155, 0), new Item(169, 0),
+		new Item(170, 0), new Item(172, 0));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -27,7 +27,7 @@ public class Drogo  implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class Drogo  implements ShopInterface,
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Ello");
 		int m = showMenu(p, n, "Do you want to trade?", "Hello shorty",
-				"Why don't you ever restock ores and bars?");
+			"Why don't you ever restock ores and bars?");
 		if (m == 0) {
 			npcTalk(p, n, "Yeah sure, I run a mining store.");
 			ActionSender.showShop(p, shop);

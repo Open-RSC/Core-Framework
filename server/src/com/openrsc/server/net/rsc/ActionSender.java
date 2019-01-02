@@ -33,97 +33,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- *
  * @author n0m
- *
  */
 public class ActionSender {
-	public enum Opcode {
-		/**
-		 * int slot = this.packetsIncoming.getUnsignedByte();
-		 * --this.inventoryItemCount;
-		 *
-		 * for (int index = slot; this.inventoryItemCount > index; ++index) {
-		 * this.inventoryItemID[index] = this.inventoryItemID[index + 1];
-		 * this.inventoryItemSize[index] = this.inventoryItemSize[index + 1];
-		 * this.inventoryItemEquipped[index] = this.inventoryItemEquipped[index
-		 * + 1]; }
-		 */
-		SEND_LOGOUT(4),
-		SEND_QUESTS(5),
-		SEND_DUEL_OPPONENTS_ITEMS(6),
-		SEND_TRADE_ACCPETED(15),
-		SEND_SERVER_CONFIGS(19),
-		SEND_TRADE_OPEN_CONFIRM(20),
-		SEND_WORLD_INFO(25),
-		SEND_DUEL_SETTINGS(30),
-		SEND_EXPERIENCE(33),
-		SEND_BUBBLE(36),
-		SEND_BANK_OPEN(42),
-		SEND_SYSTEM_UPDATE(52),
-		SEND_INVENTORY(53),
-		SEND_ELIXIR(54),
-		SEND_APPEARANCE_CHANGE(59),
-		SEND_DEATH(83),
-		SEND_STOPSLEEP(84),
-		SEND_PRIVATE_MESSAGE_SENT(87),
-		SEND_BOX2(89),
-		SEND_INVENTORY_UPDATEITEM(90),
-		SEND_TRADE_WINDOW(92),
-		SEND_TRADE_OTHER_ITEMS(97),
-		SEND_SHOP_OPEN(101),
-		SEND_IGNORE_LIST(109),
-		SEND_INPUT_BOX(110),
-		SEND_ON_TUTORIAL(111),
-		SEND_CLAN(112),
-		SEND_IRONMAN(113),
-		SEND_FATIGUE(114),
-		SEND_SLEEPSCREEN(117),
-		SEND_KILL_ANNOUNCEMENT(118),
-		SEND_PRIVATE_MESSAGE(120),
-		SEND_INVENTORY_REMOVE_ITEM(123),
-		SEND_DUEL_CANCEL_ACCEPTED(128),
-		SEND_TRADE_CLOSE(128),
-		SEND_SERVER_MESSAGE(131),
-		SEND_AUCTION_PROGRESS(132),
-		SEND_FISHING_TRAWLER(133),
-		SEND_PROGRESS_BAR(134),
-		SEND_REMOVE_PROGRESS_BAR(134),
-		SEND_BANK_PIN_INTERFACE(135),
-		SEND_ONLINE_LIST(136),
-		SEND_SHOP_CLOSE(137),
-		SEND_FRIEND_UPDATE(149),
-		SEND_EQUIPMENT_STATS(153),
-		SEND_STATS(156),
-		SEND_PRIVACY_SETTINGS(158),
-		SEND_STAT(159),
-		SEND_UPDATE_STAT(159),
-		SEND_TRADE_OTHER_ACCEPTED(162),
-		SEND_LOGOUT_REQUEST_CONFIRM(165),
-		SEND_DUEL_CONFIRMWINDOW(172),
-		SEND_DUEL_WINDOW(176),
-		SEND_WELCOME_INFO(182),
-		SEND_CANT_LOGOUT(183),
-		SEND_SLEEPWORD_INCORRECT(194),
-		SEND_BANK_CLOSE(203),
-		SEND_PLAY_SOUND(204),
-		SEND_PRAYERS_ACTIVE(206),
-		SEND_DUEL_ACCEPTED(210),
-		SEND_BOX(222),
-		SEND_DUEL_CLOSE(225),
-		SEND_GAME_SETTINGS(240),
-		SEND_SLEEP_FATIGUE(244),
-		SEND_OPTIONS_MENU_OPEN(245),
-		SEND_BANK_UPDATE(249),
-		SEND_OPTIONS_MENU_CLOSE(252),
-		SEND_DUEL_OTHER_ACCEPTED(253);
-
-		private int opcode;
-
-		private Opcode(int i) {
-			this.opcode = i;
-		}
-	}
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Hides the bank windows
@@ -398,15 +314,16 @@ public class ActionSender {
 	public static void sendFriendList(Player player) {
 		Server.getServer().getEventHandler().add(new DelayedEvent(player, 50) {
 			int currentFriend = 0;
+
 			@Override
 			public void run() {
-				if(currentFriend == player.getSocial().getFriendListEntry().size()) {
+				if (currentFriend == player.getSocial().getFriendListEntry().size()) {
 					stop();
 					return;
 				}
 				int iteratorindex = 0;
-				for(Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
-					if(iteratorindex == currentFriend) {
+				for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
+					if (iteratorindex == currentFriend) {
 						sendFriendUpdate(player, entry.getKey(), entry.getValue());
 						break;
 					}
@@ -429,9 +346,9 @@ public class ActionSender {
 		// s.writeString(username);
 		s.writeByte(10);
 		if (World.getWorld().getPlayer(usernameHash) != null
-				&& (!World.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1)
-						|| World.getWorld().getPlayer(usernameHash).getSocial().isFriendsWith(player.getUsernameHash())
-						|| player.isMod())) {
+			&& (!World.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1)
+			|| World.getWorld().getPlayer(usernameHash).getSocial().isFriendsWith(player.getUsernameHash())
+			|| player.isMod())) {
 			world = 6;
 		}
 		s.writeByte(world);
@@ -448,11 +365,11 @@ public class ActionSender {
 		s.setID(Opcode.SEND_GAME_SETTINGS.opcode);
 		//s.writeByte((byte) player.getGroupID());
 		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1
-				: 0)); /* Camera Auto Angle */
+			: 0)); /* Camera Auto Angle */
 		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1
-				: 0)); /* Mouse buttons */
+			: 0)); /* Mouse buttons */
 		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1
-				: 0)); /* Sound Effects */
+			: 0)); /* Sound Effects */
 		s.writeByte((byte) player.getCombatStyle());
 		s.writeByte(player.getGlobalBlock());
 		s.writeByte((byte) (player.getClanInviteSetting() ? 1 : 0));
@@ -478,41 +395,41 @@ public class ActionSender {
 		s.setID(Opcode.SEND_SERVER_CONFIGS.opcode);
 		s.writeString(Constants.GameServer.SERVER_NAME); // Server Name
 		s.writeByte((byte) Constants.GameServer.PLAYER_LEVEL_LIMIT);
-		s.writeByte((byte)(Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
-		s.writeByte((byte)(Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
-		s.writeByte((byte)(Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
-		s.writeByte((byte)(Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
-		s.writeByte((byte)(Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
-		s.writeByte((byte)(Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // Fog Toggle
-		s.writeByte((byte)(Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // Ground Item Toggle
-		s.writeByte((byte)(Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // Auto Message Switch Toggle
-		s.writeByte((byte)(Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // Batch Progression
-		s.writeByte((byte)(Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // Side Menu Toggle
-		s.writeByte((byte)(Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // Inventory Count Toggle
-		s.writeByte((byte)(Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // Zoom View Toggle
-		s.writeByte((byte)(Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // Menu Combat Style Toggle
-		s.writeByte((byte)(Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // Fightmode Selector Toggle
-		s.writeByte((byte)(Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_BANK_PINS ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_BANK_NOTES ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_CERT_DEPOSIT ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_DROP_X ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_DECANTING ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
-		s.writeByte((byte)(Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.SPAWN_AUCTION_NPCS ? 1 : 0)); // Auction NPC Spawns
+		s.writeByte((byte) (Constants.GameServer.SPAWN_IRON_MAN_NPCS ? 1 : 0)); // Iron Man NPC Spawns
+		s.writeByte((byte) (Constants.GameServer.SHOW_FLOATING_NAMETAGS ? 1 : 0)); // Floating Names
+		s.writeByte((byte) (Constants.GameServer.WANT_CLANS ? 1 : 0)); // Clan Toggle
+		s.writeByte((byte) (Constants.GameServer.WANT_KILL_FEED ? 1 : 0)); // Kill Feed
+		s.writeByte((byte) (Constants.GameServer.FOG_TOGGLE ? 1 : 0)); // Fog Toggle
+		s.writeByte((byte) (Constants.GameServer.GROUND_ITEM_TOGGLE ? 1 : 0)); // Ground Item Toggle
+		s.writeByte((byte) (Constants.GameServer.AUTO_MESSAGE_SWITCH_TOGGLE ? 1 : 0)); // Auto Message Switch Toggle
+		s.writeByte((byte) (Constants.GameServer.BATCH_PROGRESSION ? 1 : 0)); // Batch Progression
+		s.writeByte((byte) (Constants.GameServer.SIDE_MENU_TOGGLE ? 1 : 0)); // Side Menu Toggle
+		s.writeByte((byte) (Constants.GameServer.INVENTORY_COUNT_TOGGLE ? 1 : 0)); // Inventory Count Toggle
+		s.writeByte((byte) (Constants.GameServer.ZOOM_VIEW_TOGGLE ? 1 : 0)); // Zoom View Toggle
+		s.writeByte((byte) (Constants.GameServer.MENU_COMBAT_STYLE_TOGGLE ? 1 : 0)); // Menu Combat Style Toggle
+		s.writeByte((byte) (Constants.GameServer.FIGHTMODE_SELECTOR_TOGGLE ? 1 : 0)); // Fightmode Selector Toggle
+		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_COUNTER_TOGGLE ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.EXPERIENCE_DROPS_TOGGLE ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.ITEMS_ON_DEATH_MENU ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.SHOW_ROOF_TOGGLE ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_GLOBAL_CHAT ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_SKILL_MENUS ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_QUEST_MENUS ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_EXPERIENCE_ELIXIRS ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_KEYBOARD_SHORTCUTS ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_BANKS ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_BANK_PINS ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_BANK_NOTES ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_CERT_DEPOSIT ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.CUSTOM_FIREMAKING ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_DROP_X ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_EXP_INFO ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_WOODCUTTING_GUILD ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_DECANTING ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
 		return s;
 	}
 
@@ -543,7 +460,6 @@ public class ActionSender {
 	}
 
 	/**
-	 *
 	 * @param player
 	 */
 	public static void sendInventory(Player player) {
@@ -644,7 +560,7 @@ public class ActionSender {
 	}
 
 	public static void sendMessage(Player player, Player sender, int prefix, MessageType type, String message,
-			int iconSprite) {
+								   int iconSprite) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_MESSAGE.opcode);
 		s.writeInt(iconSprite);
@@ -660,7 +576,7 @@ public class ActionSender {
 			s.writeString(sender.getUsername());
 			s.writeString(sender.getUsername());
 		}
-		if((prefix & 2) != 0) {
+		if ((prefix & 2) != 0) {
 			s.writeString((String) null); // Interpreted as colour by the client.
 		}
 		player.write(s.toPacket());
@@ -679,13 +595,13 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVACY_SETTINGS.opcode);
 		s.writeByte(
-				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES) ? 1 : 0));
+			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES) ? 1 : 0));
 		s.writeByte(
-				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES) ? 1 : 0));
+			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES) ? 1 : 0));
 		s.writeByte(
-				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS) ? 1 : 0));
+			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS) ? 1 : 0));
 		s.writeByte(
-				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS) ? 1 : 0));
+			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS) ? 1 : 0));
 		player.write(s.toPacket());
 	}
 
@@ -1020,11 +936,6 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
-
 	public static void sendLogin(Player p) {
 		try {
 			if (World.getWorld().registerPlayer(p)) {
@@ -1037,7 +948,7 @@ public class ActionSender {
 					startShutdown(p, (int) (timeTillShutdown / 1000));
 
 				int elixir = p.getElixir();
-				if(elixir > -1)
+				if (elixir > -1)
 					sendElixirTimer(p, p.getElixir());
 
 				sendPlayerOnTutorial(p);
@@ -1056,10 +967,10 @@ public class ActionSender {
 				//sendMessage(p, null, 0, MessageType.QUEST, "For guides and tips - please visit http://runescapeclassic.wikia.com", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
-							+ (double) (System.currentTimeMillis() - p.getMuteExpires()) / 3600000D + " hours.");
+						+ (double) (System.currentTimeMillis() - p.getMuteExpires()) / 3600000D + " hours.");
 				}
 
-				if(p.getLocation().inTutorialLanding()) {
+				if (p.getLocation().inTutorialLanding()) {
 					sendBox(p, "@gre@Welcome to the RuneScape tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
@@ -1084,10 +995,10 @@ public class ActionSender {
 					p.setAttribute("no-aggro", true);
 				}
 
-				if(!p.getLocation().inWilderness()) {
-                    if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
-                        Market.getInstance().addCollectableItemsNotificationTask(p);
-                    }
+				if (!p.getLocation().inWilderness()) {
+					if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
+						Market.getInstance().addCollectableItemsNotificationTask(p);
+					}
 				}
 
 				p.setBusy(false);
@@ -1132,7 +1043,7 @@ public class ActionSender {
 	}
 
 	public static void updateFishingTrawler(Player p, int waterLevel, int minutesLeft, int fishCaught,
-			boolean netBroken) {
+											boolean netBroken) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
 		pb.writeByte(1);
@@ -1165,7 +1076,7 @@ public class ActionSender {
 		pb.writeString(p.getClan().getLeader().getUsername());
 		pb.writeByte(p.getClan().getLeader().getUsername().equalsIgnoreCase(p.getUsername()) ? 1 : 0);
 		pb.writeByte(p.getClan().getPlayers().size());
-		for(ClanPlayer m : p.getClan().getPlayers()) {
+		for (ClanPlayer m : p.getClan().getPlayers()) {
 			pb.writeString(m.getUsername());
 			pb.writeByte(m.getRank().getRankIndex());
 			pb.writeByte(m.isOnline() ? 1 : 0);
@@ -1235,10 +1146,98 @@ public class ActionSender {
 		pb.writeByte(1);
 		player.write(pb.toPacket());
 	}
+
 	public static void sendHideIronManInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
 		pb.writeByte(2);
 		pb.writeByte(2);
 		player.write(pb.toPacket());
+	}
+
+	public enum Opcode {
+		/**
+		 * int slot = this.packetsIncoming.getUnsignedByte();
+		 * --this.inventoryItemCount;
+		 * <p>
+		 * for (int index = slot; this.inventoryItemCount > index; ++index) {
+		 * this.inventoryItemID[index] = this.inventoryItemID[index + 1];
+		 * this.inventoryItemSize[index] = this.inventoryItemSize[index + 1];
+		 * this.inventoryItemEquipped[index] = this.inventoryItemEquipped[index
+		 * + 1]; }
+		 */
+		SEND_LOGOUT(4),
+		SEND_QUESTS(5),
+		SEND_DUEL_OPPONENTS_ITEMS(6),
+		SEND_TRADE_ACCPETED(15),
+		SEND_SERVER_CONFIGS(19),
+		SEND_TRADE_OPEN_CONFIRM(20),
+		SEND_WORLD_INFO(25),
+		SEND_DUEL_SETTINGS(30),
+		SEND_EXPERIENCE(33),
+		SEND_BUBBLE(36),
+		SEND_BANK_OPEN(42),
+		SEND_SYSTEM_UPDATE(52),
+		SEND_INVENTORY(53),
+		SEND_ELIXIR(54),
+		SEND_APPEARANCE_CHANGE(59),
+		SEND_DEATH(83),
+		SEND_STOPSLEEP(84),
+		SEND_PRIVATE_MESSAGE_SENT(87),
+		SEND_BOX2(89),
+		SEND_INVENTORY_UPDATEITEM(90),
+		SEND_TRADE_WINDOW(92),
+		SEND_TRADE_OTHER_ITEMS(97),
+		SEND_SHOP_OPEN(101),
+		SEND_IGNORE_LIST(109),
+		SEND_INPUT_BOX(110),
+		SEND_ON_TUTORIAL(111),
+		SEND_CLAN(112),
+		SEND_IRONMAN(113),
+		SEND_FATIGUE(114),
+		SEND_SLEEPSCREEN(117),
+		SEND_KILL_ANNOUNCEMENT(118),
+		SEND_PRIVATE_MESSAGE(120),
+		SEND_INVENTORY_REMOVE_ITEM(123),
+		SEND_DUEL_CANCEL_ACCEPTED(128),
+		SEND_TRADE_CLOSE(128),
+		SEND_SERVER_MESSAGE(131),
+		SEND_AUCTION_PROGRESS(132),
+		SEND_FISHING_TRAWLER(133),
+		SEND_PROGRESS_BAR(134),
+		SEND_REMOVE_PROGRESS_BAR(134),
+		SEND_BANK_PIN_INTERFACE(135),
+		SEND_ONLINE_LIST(136),
+		SEND_SHOP_CLOSE(137),
+		SEND_FRIEND_UPDATE(149),
+		SEND_EQUIPMENT_STATS(153),
+		SEND_STATS(156),
+		SEND_PRIVACY_SETTINGS(158),
+		SEND_STAT(159),
+		SEND_UPDATE_STAT(159),
+		SEND_TRADE_OTHER_ACCEPTED(162),
+		SEND_LOGOUT_REQUEST_CONFIRM(165),
+		SEND_DUEL_CONFIRMWINDOW(172),
+		SEND_DUEL_WINDOW(176),
+		SEND_WELCOME_INFO(182),
+		SEND_CANT_LOGOUT(183),
+		SEND_SLEEPWORD_INCORRECT(194),
+		SEND_BANK_CLOSE(203),
+		SEND_PLAY_SOUND(204),
+		SEND_PRAYERS_ACTIVE(206),
+		SEND_DUEL_ACCEPTED(210),
+		SEND_BOX(222),
+		SEND_DUEL_CLOSE(225),
+		SEND_GAME_SETTINGS(240),
+		SEND_SLEEP_FATIGUE(244),
+		SEND_OPTIONS_MENU_OPEN(245),
+		SEND_BANK_UPDATE(249),
+		SEND_OPTIONS_MENU_CLOSE(252),
+		SEND_DUEL_OTHER_ACCEPTED(253);
+
+		private int opcode;
+
+		private Opcode(int i) {
+			this.opcode = i;
+		}
 	}
 }

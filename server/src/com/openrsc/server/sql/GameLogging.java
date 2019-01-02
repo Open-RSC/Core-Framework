@@ -11,22 +11,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class GameLogging implements Runnable {
-	
+
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final static BlockingQueue<Query> queries = new ArrayBlockingQueue<Query>(10000);
 
 	private final static AtomicBoolean running = new AtomicBoolean(true);
-
-	private static GameLogging singleton;
-
-	private final Thread thread = new Thread(this, "Database logging thread");
-
 	private final static Object lock = new Object();
+	private static GameLogging singleton;
 	private static DatabaseConnection loggingConnection;
+	private final Thread thread = new Thread(this, "Database logging thread");
 
 	public static GameLogging singleton() {
 		return singleton;
@@ -35,6 +32,16 @@ public final class GameLogging implements Runnable {
 	public static void load() {
 		singleton = new GameLogging();
 		singleton.start();
+	}
+
+	public static void addQuery(Query log) {
+		if (!running.get()) {
+			return;
+		}
+		queries.add(log);
+		synchronized (lock) {
+			lock.notifyAll();
+		}
 	}
 
 	public synchronized void start() {
@@ -104,16 +111,6 @@ public final class GameLogging implements Runnable {
 			} catch (Exception e) {
 				LOGGER.catching(e);
 			}
-		}
-	}
-
-	public static void addQuery(Query log) {
-		if (!running.get()) {
-			return;
-		}
-		queries.add(log);
-		synchronized (lock) {
-			lock.notifyAll();
 		}
 	}
 

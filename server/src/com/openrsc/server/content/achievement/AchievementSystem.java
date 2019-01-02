@@ -31,11 +31,11 @@ public class AchievementSystem {
 
 		try {
 			PreparedStatement fetchAchievement = DatabaseConnection.getDatabase()
-					.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
+				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
 			PreparedStatement fetchRewards = DatabaseConnection.getDatabase()
-					.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
+				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
 			PreparedStatement fetchTasks = DatabaseConnection.getDatabase()
-					.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
+				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
 
 			ResultSet result = fetchAchievement.executeQuery();
 			while (result.next()) {
@@ -46,7 +46,7 @@ public class AchievementSystem {
 				while (rewardResult.next()) {
 					TaskReward rewardType = TaskReward.valueOf(TaskReward.class, rewardResult.getString("reward_type"));
 					rewards.add(new AchievementReward(rewardType, rewardResult.getInt("item_id"), rewardResult.getInt("amount"),
-							rewardResult.getInt("guaranteed") == 1 ? true : false));
+						rewardResult.getInt("guaranteed") == 1 ? true : false));
 				}
 				rewardResult.close();
 
@@ -61,14 +61,14 @@ public class AchievementSystem {
 				taskResult.close();
 
 				Achievement achievement = new Achievement(tasks, rewards, result.getInt("id"),
-						result.getString("name"), result.getString("description"), result.getString("extra"));
+					result.getString("name"), result.getString("description"), result.getString("extra"));
 				loadedAchievements.add(achievement);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static LinkedList<Achievement> getAchievements() {
 		return loadedAchievements;
 	}
@@ -81,29 +81,29 @@ public class AchievementSystem {
 					continue;
 				}
 				switch (task.getAchievementType()) {
-				case TALK_TO_NPC:
-					if (e.isNpc()) {
-						if (!tasksAvailable.contains(task)) {
-							tasksAvailable.add(task);
+					case TALK_TO_NPC:
+						if (e.isNpc()) {
+							if (!tasksAvailable.contains(task)) {
+								tasksAvailable.add(task);
+							}
 						}
-					}
-					break;
-				case PICK_UP_ITEM:
-					if (e instanceof GroundItem && task.getStartID() == e.getID()
+						break;
+					case PICK_UP_ITEM:
+						if (e instanceof GroundItem && task.getStartID() == e.getID()
 							&& isPlayerCanStartQuest(player, task)) {
-						if (!tasksAvailable.contains(task)) {
-							tasksAvailable.add(task);
+							if (!tasksAvailable.contains(task)) {
+								tasksAvailable.add(task);
+							}
 						}
-					}
-					break;
-				case USE_OBJECT:
-					if (e instanceof GameObject && task.getStartID() == e.getID()
+						break;
+					case USE_OBJECT:
+						if (e instanceof GameObject && task.getStartID() == e.getID()
 							&& isPlayerCanStartQuest(player, task)) {
-						if (!tasksAvailable.contains(task)) {
-							tasksAvailable.add(task);
+							if (!tasksAvailable.contains(task)) {
+								tasksAvailable.add(task);
+							}
 						}
-					}
-					break;
+						break;
 				}
 			}
 		}
@@ -240,16 +240,16 @@ public class AchievementSystem {
 			String taskHeader = "";
 			if (task.getTask() == TaskType.KILL_NPC) {
 				taskHeader = "Slay " + task.getAmount() + " of monster " + EntityHandler.getNpcDef(task.getId()).name
-						+ ": ";
+					+ ": ";
 			} else if (task.getTask() == TaskType.GATHER_ITEM) {
 				taskHeader = "Gather " + task.getAmount() + " of item "
-						+ EntityHandler.getItemDef(task.getId()).getName() + ": ";
+					+ EntityHandler.getItemDef(task.getId()).getName() + ": ";
 			} else if (task.getTask() == TaskType.DO_QUEST) {
 				taskHeader = "Complete Quest " + World.getWorld().getQuest(task.getId()).getQuestName() + ": ";
 			}
 			int taskProgress = getTaskProgress(p, task);
 			questInfo += (taskProgress == task.getAmount() ? "@gre@" : "@red@") + taskHeader + " "
-					+ getTaskProgress(p, task) + "/" + task.getAmount() + "@whi@ %";
+				+ getTaskProgress(p, task) + "/" + task.getAmount() + "@whi@ %";
 		}
 		return questInfo;
 	}
@@ -316,10 +316,10 @@ public class AchievementSystem {
 					if (task.getId() == item.getID() && getTaskProgress(p, task) < task.getAmount()) {
 						int newAmount = getTaskProgress(p, task) + item.getAmount();
 						p.getCache().set("simpletask[" + task.getId() + "]_task_" + task.getTask().toString(),
-								newAmount);
+							newAmount);
 						if (newAmount == task.getAmount()) {
 							p.message("@gre@You have completed task gather item " + item.getDef().getName() + "x"
-									+ newAmount + "!");
+								+ newAmount + "!");
 						}
 					}
 				}
@@ -337,17 +337,17 @@ public class AchievementSystem {
 					if (task.getId() == npc.getID() && getTaskProgress(p, task) < task.getAmount()) {
 						int newAmount = getTaskProgress(p, task) + 1;
 						p.getCache().set("simpletask[" + task.getId() + "]_task_" + task.getTask().toString(),
-								newAmount);
+							newAmount);
 						if (newAmount == task.getAmount()) {
 							p.message("@gre@You have completed slay npc" + npc.getDef().getName() + "x" + newAmount
-									+ "!");
+								+ "!");
 						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	public static void achievementListGUI(Player p, int achievement, int status) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(50);
@@ -356,6 +356,7 @@ public class AchievementSystem {
 		s.writeByte((byte) status);
 		p.write(s.toPacket());
 	}
+
 	public static void achievementListGUI(Player p) {
 		try {
 			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
@@ -372,7 +373,7 @@ public class AchievementSystem {
 				//task desc?
 			}
 			p.write(s.toPacket());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

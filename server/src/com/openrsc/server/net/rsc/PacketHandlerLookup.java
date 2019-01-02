@@ -20,7 +20,7 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.WALL_OBJECT_COMMAND2.getOpcode(), GameObjectWallAction.class);
 
 		bind(OpcodeIn.QUESTION_DIALOG_ANSWER.getOpcode(), MenuReplyHandler.class);
-		
+
 		bind(OpcodeIn.PLAYER_APPEARANCE_CHANGE.getOpcode(), PlayerAppearanceUpdater.class);
 
 		bind(OpcodeIn.OBJECT_COMMAND1.getOpcode(), GameObjectAction.class);
@@ -90,25 +90,25 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.SOCIAL_ADD_IGNORE.getOpcode(), FriendHandler.class);
 		bind(OpcodeIn.SOCIAL_REMOVE_IGNORE.getOpcode(), FriendHandler.class);
 		bind(OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.getOpcode(), FriendHandler.class);
-		
+
 		bind(OpcodeIn.REPORT_ABUSE.getOpcode(), ReportHandler.class);
-		
+
 		bind(OpcodeIn.BANK_CLOSE.getOpcode(), BankHandler.class);
 		bind(OpcodeIn.BANK_WITHDRAW.getOpcode(), BankHandler.class);
 		bind(OpcodeIn.BANK_DEPOSIT.getOpcode(), BankHandler.class);
-		
+
 		bind(OpcodeIn.INTERFACE_OPTIONS.getOpcode(), InterfaceOptionHandler.class);
 		bind(OpcodeIn.BLINK.getOpcode(), BlinkHandler.class);
-		
+
 		bind(OpcodeIn.PLAYER_TRADE.getOpcode(), PlayerTradeHandler.class);
 		bind(OpcodeIn.TRADE_ACCEPTED.getOpcode(), PlayerTradeHandler.class);
 		bind(OpcodeIn.TRADE_CONFIRM_ACCEPTED.getOpcode(), PlayerTradeHandler.class);
 		bind(OpcodeIn.TRADE_DECLINED.getOpcode(), PlayerTradeHandler.class);
 		bind(OpcodeIn.TRADE_OFFER.getOpcode(), PlayerTradeHandler.class);
-	
+
 		bind(OpcodeIn.SLEEPWORD_ENTERED.getOpcode(), SleepHandler.class);
 		bind(OpcodeIn.ON_TUTORIAL_ISLAND.getOpcode(), TutorialHandler.class);
-		
+
 		bind(OpcodeIn.COMBAT_STYLE_CHANGED.getOpcode(), StyleHandler.class);
 	}
 

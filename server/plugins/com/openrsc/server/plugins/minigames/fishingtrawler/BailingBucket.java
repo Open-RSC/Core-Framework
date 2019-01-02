@@ -15,7 +15,7 @@ public class BailingBucket implements InvActionExecutiveListener, InvActionListe
 		if (player.isBusy())
 			return;
 		if (World.getWorld().getFishingTrawler().getShipAreaWater().inBounds(player.getLocation())
-				|| World.getWorld().getFishingTrawler().getShipArea().inBounds(player.getLocation())) {
+			|| World.getWorld().getFishingTrawler().getShipArea().inBounds(player.getLocation())) {
 			player.setBusyTimer(650);
 			player.message("you bail a little water...");
 			sleep(650);

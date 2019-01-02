@@ -19,14 +19,14 @@ public final class SleepHandler implements PacketHandler {
 			player.incrementSleepTries();
 
 			Server.getServer()
-					.getEventHandler()
-					.add(new SingleEvent(player, player
-							.getIncorrectSleepTimes() * 1000) {
-						@Override
-						public void action() {
-							ActionSender.sendEnterSleep(owner);
-						}
-					});
+				.getEventHandler()
+				.add(new SingleEvent(player, player
+					.getIncorrectSleepTimes() * 1000) {
+					@Override
+					public void action() {
+						ActionSender.sendEnterSleep(owner);
+					}
+				});
 		} else {
 			if (!player.isSleeping()) {
 				return;
@@ -43,13 +43,13 @@ public final class SleepHandler implements PacketHandler {
 				}
 
 				Server.getServer().getEventHandler()
-						.add(new SingleEvent(player, player
-								.getIncorrectSleepTimes() * 1000) {
-							@Override
-							public void action() {
-								ActionSender.sendEnterSleep(owner);
-							}
-						});
+					.add(new SingleEvent(player, player
+						.getIncorrectSleepTimes() * 1000) {
+						@Override
+						public void action() {
+							ActionSender.sendEnterSleep(owner);
+						}
+					});
 			}
 		}
 	}

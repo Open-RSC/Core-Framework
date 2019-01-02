@@ -12,7 +12,7 @@ public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, Pla
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if(n.getID() == 658) {
+		if (n.getID() == 658) {
 			return true;
 		}
 		return false;
@@ -20,11 +20,11 @@ public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, Pla
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if(n.getID() == 658) {
+		if (n.getID() == 658) {
 			n.killedBy(p);
-			if(p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 7 || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 7 || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
 				message(p, "you search the diciples remains");
-				if(!hasItem(p, 1031)) {
+				if (!hasItem(p, 1031)) {
 					p.message("and find a staff of iban");
 					addItem(p, 1031, 1);
 				} else {

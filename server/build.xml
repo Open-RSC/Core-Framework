@@ -1,75 +1,75 @@
 <project default="compile_core" basedir=".">
-	<property name="src" location="src" />
-	<property name="build" location="build" />
-	<property name="lib" location="lib" />
-	<property name="jar" location="core.jar" />
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="lib" location="lib"/>
+    <property name="jar" location="core.jar"/>
 
-	<target name="compile_plugins">
-		<delete file="plugins.jar" />
-		<delete dir="buildplugins" />
-		<mkdir dir="buildplugins"/>
-		<javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false">
-		  <classpath>
-			<pathelement location="core.jar" />
-			<pathelement path="${java.class.path}/"/>
-			<pathelement location="${lib}/log4j-api-2.8.jar" />
-			<pathelement location="${lib}/log4j-core-2.8.jar" />
-			<pathelement location="${lib}/disruptor-3.3.5.jar" />
-			<pathelement location="${lib}/commons-lang-2.6.jar" />
-		</classpath>
-		<compilerarg line="-Xlint:unchecked" />
-		</javac>
-		<jar basedir="buildplugins" destfile="plugins.jar" />
-		<delete dir="buildplugins" />
-	</target>
+    <target name="compile_plugins">
+        <delete file="plugins.jar"/>
+        <delete dir="buildplugins"/>
+        <mkdir dir="buildplugins"/>
+        <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false">
+            <classpath>
+                <pathelement location="core.jar"/>
+                <pathelement path="${java.class.path}/"/>
+                <pathelement location="${lib}/log4j-api-2.8.jar"/>
+                <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/disruptor-3.3.5.jar"/>
+                <pathelement location="${lib}/commons-lang-2.6.jar"/>
+            </classpath>
+            <compilerarg line="-Xlint:unchecked"/>
+        </javac>
+        <jar basedir="buildplugins" destfile="plugins.jar"/>
+        <delete dir="buildplugins"/>
+    </target>
 
     <target name="compile_core">
-		<delete file="${jar}" />
-		<delete dir="${build}" />
-		<mkdir dir="${build}"/>
-		<javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false">
-		  <classpath>
-			<pathelement location="${lib}/netty-all-4.1.8.Final.jar" />
-			<pathelement location="${lib}/log4j-api-2.8.jar" />
-			<pathelement location="${lib}/log4j-core-2.8.jar" />
-			<pathelement location="${lib}/xpp3_min-1.1.4c.jar" />
-			<pathelement location="${lib}/xpp3-1.1.4c.jar" />
-			<pathelement location="${lib}/xstream-1.4.9.jar"/>
-			<pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar" />
-			<pathelement location="${lib}/disruptor-3.3.5.jar" />
-			<pathelement location="${lib}/commons-lang-2.6.jar" />
-			<pathelement location="${lib}/*" />
-			<pathelement path="${java.class.path}/"/>
-		  </classpath>
-		</javac>
-		<jar basedir="${build}" destfile="${jar}" />
-		<delete dir="${build}" />
-	</target>
+        <delete file="${jar}"/>
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+        <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false">
+            <classpath>
+                <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
+                <pathelement location="${lib}/log4j-api-2.8.jar"/>
+                <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
+                <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
+                <pathelement location="${lib}/xstream-1.4.9.jar"/>
+                <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/disruptor-3.3.5.jar"/>
+                <pathelement location="${lib}/commons-lang-2.6.jar"/>
+                <pathelement location="${lib}/*"/>
+                <pathelement path="${java.class.path}/"/>
+            </classpath>
+        </javac>
+        <jar basedir="${build}" destfile="${jar}"/>
+        <delete dir="${build}"/>
+    </target>
 
-	<target name="runserver">
-		<java classname="com.openrsc.server.Server" fork="true">
-			<arg value="default.conf" />
-			<jvmarg line="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
-			<classpath>
-				<pathelement location="${lib}/netty-all-4.1.8.Final.jar" />
-				<pathelement location="${lib}/disruptor-3.3.0.jar" />
-				<pathelement location="${lib}/log4j-api-2.8.jar" />
-				<pathelement location="${lib}/log4j-core-2.8.jar" />
-				<pathelement location="${lib}/xpp3_min-1.1.4c.jar" />
-				<pathelement location="${lib}/xpp3-1.1.4c.jar" />
-				<pathelement location="${lib}/xstream-1.4.9.jar"/>
-				<pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar" />
-				<pathelement location="${lib}/disruptor-3.3.5.jar" />
-				<pathelement location="${lib}/commons-lang-2.6.jar" />
-				<pathelement location="${lib}/*" />
-				<pathelement path="${jar}/" />
-			</classpath>
-		</java>
-	</target>
+    <target name="runserver">
+        <java classname="com.openrsc.server.Server" fork="true">
+            <arg value="default.conf"/>
+            <jvmarg line="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+            <classpath>
+                <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
+                <pathelement location="${lib}/disruptor-3.3.0.jar"/>
+                <pathelement location="${lib}/log4j-api-2.8.jar"/>
+                <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
+                <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
+                <pathelement location="${lib}/xstream-1.4.9.jar"/>
+                <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/disruptor-3.3.5.jar"/>
+                <pathelement location="${lib}/commons-lang-2.6.jar"/>
+                <pathelement location="${lib}/*"/>
+                <pathelement path="${jar}/"/>
+            </classpath>
+        </java>
+    </target>
 
-	<target name="compile-and-run">
-	        <antcall target="compile_core"/>
-	        <antcall target="compile_plugins"/>
-        	<antcall target="runserver"/>
-	</target>
+    <target name="compile-and-run">
+        <antcall target="compile_core"/>
+        <antcall target="compile_plugins"/>
+        <antcall target="runserver"/>
+    </target>
 </project>

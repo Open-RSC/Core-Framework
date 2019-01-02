@@ -34,16 +34,16 @@ public final class NpcCommand implements PacketHandler {
 				player.resetFollowing();
 				player.resetPath();
 				if (player.isBusy() || player.isRanging()
-						|| !player.canReach(affectedNpc)) {
+					|| !player.canReach(affectedNpc)) {
 					return;
 				}
 				player.resetAll();
 				NPCDef def = affectedNpc.getDef();
 				String command = (click == 0 ? def.getCommand1() : def
-						.getCommand2()).toLowerCase();
+					.getCommand2()).toLowerCase();
 				affectedNpc.resetPath();
 				if (PluginHandler.getPluginHandler().blockDefaultAction(
-						"NpcCommand", new Object[] { affectedNpc, command, player })) {
+					"NpcCommand", new Object[]{affectedNpc, command, player})) {
 					return;
 				}
 			}

@@ -18,16 +18,16 @@ import com.openrsc.server.plugins.listeners.executive.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
-PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
-PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
-PickupExecutiveListener, DropListener, DropExecutiveListener {
+	PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
+	PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
+	PickupExecutiveListener, DropListener, DropExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		if (p.getSkills().getMaxStat(MAGIC) < 60) { // TODO: Enter the arena game.
 			playerTalk(p, n, "hello there", "what is this place?");
 			npcTalk(p, n, "do not waste my time with trivial questions!",
-					"i am the great kolodion, master of battle magic", "i have an arena to run");
+				"i am the great kolodion, master of battle magic", "i have an arena to run");
 			playerTalk(p, n, "can i enter?");
 			npcTalk(p, n, "hah, a wizard of your level..don't be absurd");
 		} else if (p.getCache().hasKey("mage_arena")) {
@@ -36,7 +36,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 			if (stage == 1) {
 				playerTalk(p, n, "hi");
 				npcTalk(p, n, "you return young conjurer", "..you obviously have a taste for the darkside of magic",
-						"let us continue with the battle...now");
+					"let us continue with the battle...now");
 				if (cantGo(p)) {
 					npcTalk(p, n, "you may not take armour or weapons into the arena");
 					message(p, "You cannot enter the arena...", "...while carrying armor or weapons");
@@ -53,44 +53,44 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				npcTalk(p, n, "hey there, how are you?, enjoying the bloodshed?");
 				playerTalk(p, n, "it's not bad, i've seen worse");
 				int menu = showMenu(p, n,
-						"i think i've had enough for now",
-						"how can i use my new spells outside of the arena?");
-				if(menu == 0) {
+					"i think i've had enough for now",
+					"how can i use my new spells outside of the arena?");
+				if (menu == 0) {
 					npcTalk(p, n, "shame , you're a good battle mage",
-							"hope to see you soon");
-				} else if(menu == 1) {
+						"hope to see you soon");
+				} else if (menu == 1) {
 					npcTalk(p, n, "experience my friend, experience",
-							"once you've used the spell enough times in the arena...",
-							"...you'll be able to use them in the rest of runescape");
+						"once you've used the spell enough times in the arena...",
+						"...you'll be able to use them in the rest of runescape");
 					playerTalk(p, n, "good stuff");
 					npcTalk(p, n, "not so good for the citizens, they won't stand a chance");
 					playerTalk(p, n, "how am i doing so far?");
-					if(p.getCache().hasKey("Saradomin strike_casts") && p.getCache().getInt("Saradomin strike_casts") >= 100) {
+					if (p.getCache().hasKey("Saradomin strike_casts") && p.getCache().getInt("Saradomin strike_casts") >= 100) {
 						npcTalk(p, n, "you're fully trained to use the strike spell anywhere");
 					} else {
 						npcTalk(p, n, "you still need to train with the strike spell...",
-								"...inside the arena before you can use it outside");
+							"...inside the arena before you can use it outside");
 					}
-					if(p.getCache().hasKey("Claws of Guthix_casts") && p.getCache().getInt("Claws of Guthix_casts") >= 100) {
+					if (p.getCache().hasKey("Claws of Guthix_casts") && p.getCache().getInt("Claws of Guthix_casts") >= 100) {
 						npcTalk(p, n, "you're fully trained to use the claw spell anywhere");
 					} else {
 						npcTalk(p, n, "you still need to train with the claw spell...",
-								"...inside the arena before you can use it outside");
+							"...inside the arena before you can use it outside");
 					}
-					if(p.getCache().hasKey("Flames of Zamorak_casts") && p.getCache().getInt("Flames of Zamorak_casts") >= 100) {
+					if (p.getCache().hasKey("Flames of Zamorak_casts") && p.getCache().getInt("Flames of Zamorak_casts") >= 100) {
 						npcTalk(p, n, "you're fully trained to use the flame spell anywhere");
 					} else {
 						npcTalk(p, n, "you still need to train with the flame spell...",
-								"...inside the arena before you can use it outside");
+							"...inside the arena before you can use it outside");
 					}
 				}
 			}
 		} else {
 			playerTalk(p, n, "hello there",
-					"what is this place?");
+				"what is this place?");
 			npcTalk(p, n, "i am the great kolodion, master of battle magic ...",
-					"... and this is my battle arena",
-					"top wizards travel from all over to fight here");
+				"... and this is my battle arena",
+				"top wizards travel from all over to fight here");
 			int choice = showMenu(p, n, "can i fight here?", "what's the point of that?", "that's barbaric");
 			if (choice == 0) {
 				fight(p, n);
@@ -104,8 +104,8 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 
 	public void whatsthepoint(Player p, Npc n) {
 		npcTalk(p, n, "we learn how to use magic to it fullest...",
-				".., how to channel forces of the cosmos into our world",
-				".., but mainly I just like blasting people into dust");
+			".., how to channel forces of the cosmos into our world",
+			".., but mainly I just like blasting people into dust");
 		int choice = showMenu(p, n, "can i fight here?", "that's barbaric");
 		if (choice == 0) {
 			fight(p, n);
@@ -126,9 +126,9 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 
 	public void fight(Player p, Npc n) {
 		npcTalk(p, n, "good..good, you have a healthy sense of competition",
-				"remember traveller in my arena hand to hand combat is useless",
-				"your strength will diminish as you enter the arena", "before i can accept you in, we must duel",
-				"you may not take armour or weapons into the arena");
+			"remember traveller in my arena hand to hand combat is useless",
+			"your strength will diminish as you enter the arena", "before i can accept you in, we must duel",
+			"you may not take armour or weapons into the arena");
 		int choice = showMenu(p, n, "ok let's fight", "no thanks");
 		if (choice == 0) {
 			if (cantGo(p)) {
@@ -161,11 +161,11 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 					stop();
 					return;
 				}
-				if(!owner.getLocation().inMageArena()) {
+				if (!owner.getLocation().inMageArena()) {
 					stop();
 					return;
 				}
-				if(owner.inCombat()) {
+				if (owner.inCombat()) {
 					return;
 				}
 				if (owner.getSkills().getLevel(Skills.ATTACK) > 0 || owner.getSkills().getLevel(Skills.STRENGTH) > 0) {
@@ -173,13 +173,13 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 					owner.getSkills().setLevel(Skills.STRENGTH, 0);
 				}
 				Npc Guthix = getNearestNpc(p, 789, 2);
-				Npc Zamorak =  getNearestNpc(p, 790, 2);
-				Npc Saradomin =  getNearestNpc(p, 791, 2);
-				String[] randomMessage = { "@yel@zamorak mage: feel the wrath of zamarok", "@yel@saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix" };
+				Npc Zamorak = getNearestNpc(p, 790, 2);
+				Npc Saradomin = getNearestNpc(p, 791, 2);
+				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
 				if (Guthix != null && Guthix.withinRange(owner, 1)) {
 					godSpellObject(owner, 33);
 					p.message(randomMessage[2]);
-					if(getCurrentLevel(owner, HITS) < 20) {
+					if (getCurrentLevel(owner, HITS) < 20) {
 						owner.damage(2);
 					} else {
 						owner.damage(getCurrentLevel(owner, HITS) / 10);
@@ -187,7 +187,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				} else if (Zamorak != null && Zamorak.withinRange(owner, 1)) {
 					godSpellObject(owner, 35);
 					p.message(randomMessage[0]);
-					if(getCurrentLevel(owner, HITS) < 20) {
+					if (getCurrentLevel(owner, HITS) < 20) {
 						owner.damage(2);
 					} else {
 						owner.damage(getCurrentLevel(owner, HITS) / 10);
@@ -195,7 +195,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				} else if (Saradomin != null && Saradomin.withinRange(owner, 1)) {
 					godSpellObject(owner, 34);
 					p.message(randomMessage[1]);
-					if(getCurrentLevel(owner, HITS) < 20) {
+					if (getCurrentLevel(owner, HITS) < 20) {
 						owner.damage(2);
 					} else {
 						owner.damage(getCurrentLevel(owner, HITS) / 10);
@@ -251,17 +251,17 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				}
 				int spell_type = random(0, 2);
 				switch (spell_type) {
-				case 0:
-					godSpellObject(owner, 33);
-					break;
-				case 1:
-					godSpellObject(owner, 34);
-					break;
-				case 2:
-					godSpellObject(owner, 35);
-					break;
+					case 0:
+						godSpellObject(owner, 33);
+						break;
+					case 1:
+						godSpellObject(owner, 34);
+						break;
+					case 2:
+						godSpellObject(owner, 35);
+						break;
 				}
-				String[] randomMessage = { "this is your end", "die fool", "feel the power of elements" };
+				String[] randomMessage = {"this is your end", "die fool", "feel the power of elements"};
 				npcYell(owner, npc, randomMessage[random(0, randomMessage.length - 1)]);
 				owner.damage(random(3, 13));
 
@@ -291,11 +291,11 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 		for (Item item : p.getInventory().getItems()) {
 			String name = item.getDef().getName().toLowerCase();
 			if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
-					|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
-							&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-					|| name.contains("mace") || name.contains("helmet") || name.contains("axe")
-					|| name.contains("arrow") || name.contains("bow") || name.contains("spear")
-					|| name.contains("battlestaff")) {
+				|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
+				&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
+				|| name.contains("mace") || name.contains("helmet") || name.contains("axe")
+				|| name.contains("arrow") || name.contains("bow") || name.contains("spear")
+				|| name.contains("battlestaff")) {
 
 				return true;
 			}
@@ -327,21 +327,21 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				spawnKolodion(p, 757);
 			} else if (n.getID() == 757) {
 				message(p, "kolodion slumps to the floor once more...",
-						"..but again his body begins to grow and changes form", "he becomes enormous spider");
+					"..but again his body begins to grow and changes form", "he becomes enormous spider");
 				spawnKolodion(p, n.getID() + 1);
 			} else if (n.getID() == 758) {
 				message(p, "kolodion slumps to the floor once more...",
-						"..but again his body begins to grow as he changes form", "he becomes ethereal being");
+					"..but again his body begins to grow as he changes form", "he becomes ethereal being");
 				spawnKolodion(p, n.getID() + 1);
 			} else if (n.getID() == 759) {
 				message(p, "kolodion slumps to the floor motionless..",
-						"..but again his body begins to grow as he changes form", "...larger this time",
-						"He becomes a vicious demon");
+					"..but again his body begins to grow as he changes form", "...larger this time",
+					"He becomes a vicious demon");
 				spawnKolodion(p, n.getID() + 1);
 			} else if (n.getID() == 760) {
 				message(p, "kolodion slumps to the floor motionless..", "he slowly rises to his feet in his true form");
 				message(p, "@yel@Kolodion: \"well done young adventurer\"",
-						"@yel@Kolodion: \"you truly are a worthy battle mage\"");
+					"@yel@Kolodion: \"you truly are a worthy battle mage\"");
 				p.teleport(446, 3370);
 				Npc kolodion = getNearestNpc(p, 712, 5);
 				if (kolodion == null) {
@@ -351,7 +351,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				p.message("kolodion teleports you to his cave");
 				playerTalk(p, kolodion, "what now kolodion, how can i learn some of those spells");
 				npcTalk(p, kolodion, "these spells are gifts from gods", "first you must choose which god",
-						"...you will represent in the mage arena");
+					"...you will represent in the mage arena");
 				playerTalk(p, kolodion, "cool");
 				npcTalk(p, kolodion, "step into the magic pool, it will carry you to the chamber");
 				playerTalk(p, kolodion, "the chamber?");
@@ -359,7 +359,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				npcTalk(p, kolodion, "there you must decide your loyalty");
 				playerTalk(p, kolodion, "ok kolodion, thanks for the battle");
 				npcTalk(p, kolodion, "remember young mage, you must use the spells...",
-						"many times in the arena before you can use them outside");
+					"many times in the arena before you can use them outside");
 				playerTalk(p, kolodion, "no problem");
 				p.getCache().set("mage_arena", 2);
 				p.getCache().remove("kolodion_stage");
@@ -380,26 +380,26 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 
 	public void godSpellObject(Mob affectedMob, int spell) {
 		switch (spell) {
-		case 33:
-			GameObject guthix = new GameObject(affectedMob.getLocation(), 1142, 0, 0);
-			World.getWorld().registerGameObject(guthix);
-			Server.getServer().getGameEventHandler().add(new ObjectRemover(guthix, 2));
-			break;
-		case 34:
-			GameObject sara = new GameObject(affectedMob.getLocation(), 1031, 0, 0);
-			World.getWorld().registerGameObject(sara);
-			Server.getServer().getGameEventHandler().add(new ObjectRemover(sara, 2));
-			break;
-		case 35:
-			GameObject zammy = new GameObject(affectedMob.getLocation(), 1036, 0, 0);
-			World.getWorld().registerGameObject(zammy);
-			Server.getServer().getGameEventHandler().add(new ObjectRemover(zammy, 2));
-			break;
-		case 47:
-			GameObject charge = new GameObject(affectedMob.getLocation(), 1147, 0, 0);
-			World.getWorld().registerGameObject(charge);
-			Server.getServer().getGameEventHandler().add(new ObjectRemover(charge, 2));
-			break;
+			case 33:
+				GameObject guthix = new GameObject(affectedMob.getLocation(), 1142, 0, 0);
+				World.getWorld().registerGameObject(guthix);
+				Server.getServer().getGameEventHandler().add(new ObjectRemover(guthix, 2));
+				break;
+			case 34:
+				GameObject sara = new GameObject(affectedMob.getLocation(), 1031, 0, 0);
+				World.getWorld().registerGameObject(sara);
+				Server.getServer().getGameEventHandler().add(new ObjectRemover(sara, 2));
+				break;
+			case 35:
+				GameObject zammy = new GameObject(affectedMob.getLocation(), 1036, 0, 0);
+				World.getWorld().registerGameObject(zammy);
+				Server.getServer().getGameEventHandler().add(new ObjectRemover(zammy, 2));
+				break;
+			case 47:
+				GameObject charge = new GameObject(affectedMob.getLocation(), 1147, 0, 0);
+				World.getWorld().registerGameObject(charge);
+				Server.getServer().getGameEventHandler().add(new ObjectRemover(charge, 2));
+				break;
 		}
 	}
 
@@ -417,7 +417,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == 1019 || obj.getID() == 1020 || obj.getID() == 1027
-				|| obj.getID() == 1152 || obj.getID() == 1153 || obj.getID() == 1154;
+			|| obj.getID() == 1152 || obj.getID() == 1153 || obj.getID() == 1154;
 	}
 
 	@Override
@@ -454,7 +454,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				message(player, "you kneel begin to chant to saradomin");
 				if (!alreadyHasCape(player)) {
 					message(player, "you feel a rush of energy charge through your veins",
-							"...and a cape appears before you");
+						"...and a cape appears before you");
 					addItem(player, 1214, 1);
 				} else {
 					message(player, "but there is no response");
@@ -468,7 +468,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				message(player, "you kneel begin to chant to guthix");
 				if (!alreadyHasCape(player)) {
 					message(player, "you feel a rush of energy charge through your veins",
-							"...and a cape appears before you");
+						"...and a cape appears before you");
 					addItem(player, 1215, 1);
 				} else {
 					message(player, "but there is no response");
@@ -482,7 +482,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener {
 				message(player, "you kneel begin to chant to zamorak");
 				if (!alreadyHasCape(player)) {
 					message(player, "you feel a rush of energy charge through your veins",
-							"...and a cape appears before you");
+						"...and a cape appears before you");
 					addItem(player, 1213, 1);
 				} else {
 					message(player, "but there is no response");

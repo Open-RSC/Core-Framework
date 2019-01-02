@@ -91,16 +91,16 @@ public final class ItemDropHandler implements PacketHandler {
 			player.setStatus(Action.IDLE);
 			return;
 		}
-		if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[] { player, item })) {
+		if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
 			return;
 		}
 		if (player.getInventory().remove(item.getID(), amount) > -1) {
 			GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), amount,
-					player);
+				player);
 			ActionSender.sendSound(player, "dropobject");
 			World.getWorld().registerItem(groundItem);
 			GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
-					+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
+				+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 			player.setStatus(Action.IDLE);
 		}
 	}
@@ -137,7 +137,7 @@ public final class ItemDropHandler implements PacketHandler {
 					return;
 				}
 				ActionSender.sendSound(owner, "dropobject");
-				if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[] { player, item })) {
+				if (PluginHandler.getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
 					stop();
 					//TODO I GUESS???? if plugins allow to drop aswell and not completely stop?
 					//Not sure though - handle it all via plugins for specific blockAction.
@@ -146,10 +146,10 @@ public final class ItemDropHandler implements PacketHandler {
 				}
 				if (owner.getInventory().remove(item) > -1) {
 					GroundItem groundItem = new GroundItem(item.getID(), owner.getX(), owner.getY(), amount,
-							owner);
+						owner);
 					World.getWorld().registerItem(groundItem);
 					GameLogging.addQuery(new GenericLog(owner.getUsername() + " dropped " + item.getDef().getName()
-							+ " at " + owner.getLocation().toString()));
+						+ " at " + owner.getLocation().toString()));
 					dropCount++;
 					if (amount > 1)
 						player.message("Dropped " + dropCount + "/" + amount);

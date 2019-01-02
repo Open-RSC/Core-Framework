@@ -8,12 +8,12 @@ import java.util.*;
 public class Bank {
 
 	private ArrayList<Item> list = new ArrayList<Item>();
-    
+
 	private Player player;
 
 	public Bank(Player player) {
-    	this.player = player;
-    }
+		this.player = player;
+	}
 
 	public int add(Item item) {
 		if (item.getAmount() <= 0) {
@@ -38,130 +38,130 @@ public class Bank {
 	}
 
 	public boolean canHold(ArrayList<Item> items) {
-			return (player.getBankSize() - list.size()) >= getRequiredSlots(items);
+		return (player.getBankSize() - list.size()) >= getRequiredSlots(items);
 	}
 
 	public boolean canHold(Item item) {
-			return (player.getBankSize() - list.size()) >= getRequiredSlots(item);
+		return (player.getBankSize() - list.size()) >= getRequiredSlots(item);
 	}
 
 	public boolean contains(Item i) {
-			return list.contains(i);
+		return list.contains(i);
 	}
 
 	public int countId(int id) {
-			for (Item i : list) {
-					if (i.getID() == id) {
-							return i.getAmount();
-					}
+		for (Item i : list) {
+			if (i.getID() == id) {
+				return i.getAmount();
 			}
-			return 0;
+		}
+		return 0;
 	}
 
 	public boolean full() {
-        return list.size() >= player.getBankSize();
-    }
+		return list.size() >= player.getBankSize();
+	}
 
 	public Item get(int index) {
-			if (index < 0 || index >= list.size()) {
-					return null;
-			}
-			return list.get(index);
+		if (index < 0 || index >= list.size()) {
+			return null;
+		}
+		return list.get(index);
 	}
 
 	public Item get(Item item) {
-			for (Item i : list) {
-					if (item.equals(i)) {
-							return i;
-					}
+		for (Item i : list) {
+			if (item.equals(i)) {
+				return i;
 			}
-			return null;
+		}
+		return null;
 	}
 
 	public int getFirstIndexById(int id) {
-			for (int index = 0; index < list.size(); index++) {
-					if (list.get(index).getID() == id) {
-							return index;
-					}
+		for (int index = 0; index < list.size(); index++) {
+			if (list.get(index).getID() == id) {
+				return index;
 			}
-			return -1;
+		}
+		return -1;
 	}
 
 	public ArrayList<Item> getItems() {
-			return list;
+		return list;
 	}
 
 	public int getRequiredSlots(Item item) {
-			return (list.contains(item) ? 0 : 1);
+		return (list.contains(item) ? 0 : 1);
 	}
 
 	public int getRequiredSlots(List<Item> items) {
-			int requiredSlots = 0;
-			for (Item item : items) {
-					if (list.contains(item)) {
-							continue;
-					}
-					requiredSlots++;
+		int requiredSlots = 0;
+		for (Item item : items) {
+			if (list.contains(item)) {
+				continue;
 			}
-			return requiredSlots;
+			requiredSlots++;
+		}
+		return requiredSlots;
 	}
 
 	public boolean hasItemId(int id) {
-			for (Item i : list) {
-					if (i.getID() == id)
-							return true;
-			}
+		for (Item i : list) {
+			if (i.getID() == id)
+				return true;
+		}
 
-			return false;
+		return false;
 	}
 
 	public ListIterator<Item> iterator() {
-			return list.listIterator();
+		return list.listIterator();
 	}
 
 	public void remove(int index) {
-			Item item = get(index);
-			if (item == null) {
-					return;
-			}
-			remove(item.getID(), item.getAmount());
+		Item item = get(index);
+		if (item == null) {
+			return;
+		}
+		remove(item.getID(), item.getAmount());
 	}
 
 	public int remove(int id, int amount) {
-			Iterator<Item> iterator = list.iterator();
-			for (int index = 0; iterator.hasNext(); index++) {
-					Item i = iterator.next();
-					if (id == i.getID() && amount <= i.getAmount()) {
-							if (amount < i.getAmount()) {
-									i.setAmount(i.getAmount() - amount);
-							} else {
-									iterator.remove();
-							}
-							return index;
-					}
+		Iterator<Item> iterator = list.iterator();
+		for (int index = 0; iterator.hasNext(); index++) {
+			Item i = iterator.next();
+			if (id == i.getID() && amount <= i.getAmount()) {
+				if (amount < i.getAmount()) {
+					i.setAmount(i.getAmount() - amount);
+				} else {
+					iterator.remove();
+				}
+				return index;
 			}
-			return -1;
+		}
+		return -1;
 	}
 
 	public int remove(Item item) {
-			return remove(item.getID(), item.getAmount());
+		return remove(item.getID(), item.getAmount());
 	}
 
 	public int size() {
-			return list.size();
+		return list.size();
 	}
 
 	public boolean swap(int slot, int to) {
-		if(slot <= 0 && to <= 0 && to == slot) {	
+		if (slot <= 0 && to <= 0 && to == slot) {
 			return false;
 		}
 		int idx = list.size() - 1;
-		if(to > idx) {
+		if (to > idx) {
 			return false;
 		}
 		Item item = get(slot);
 		Item item2 = get(to);
-		if(item != null && item2 != null) {
+		if (item != null && item2 != null) {
 			list.set(slot, item2);
 			list.set(to, item);
 			return true;
@@ -170,11 +170,11 @@ public class Bank {
 	}
 
 	public boolean insert(int slot, int to) {
-		if(slot <= 0 && to <= 0 && to == slot) {	
+		if (slot <= 0 && to <= 0 && to == slot) {
 			return false;
 		}
 		int idx = list.size() - 1;
-		if(to > idx) {
+		if (to > idx) {
 			return false;
 		}
 		// we reset the item in the from slot
@@ -218,6 +218,6 @@ public class Bank {
 
 	public void setTab(int int1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

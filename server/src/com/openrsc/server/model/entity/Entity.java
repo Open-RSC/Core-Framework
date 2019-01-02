@@ -16,9 +16,9 @@ public abstract class Entity {
 	public static final World world = World.getWorld();
 
 	protected final Map<String, Object> attributes = new HashMap<String, Object>();
-	
+
 	protected final ArrayList<VisibleCondition> visibleConditions = new ArrayList<VisibleCondition>();
-	
+
 	public int id;
 
 	protected int index;
@@ -47,12 +47,35 @@ public abstract class Entity {
 		return id;
 	}
 
+	public final void setID(int newid) {
+		id = newid;
+	}
+
 	public final int getIndex() {
 		return index;
 	}
 
+	public final void setIndex(int newIndex) {
+		index = newIndex;
+	}
+
 	public final Point getLocation() {
 		return location.get();
+	}
+
+	public void setLocation(Point p) {
+		/*if (this.isPlayer() && location != null) { // No need to unwield the wilderness items, that is not authentic
+			Player pl = (Player) this;
+			if (pl != null && getX() > 0 && getY() > 0) {
+				if (!Point.inWilderness(getX(), getY()) && Point.inWilderness(p.getX(), p.getY())
+						|| (getLocation().wildernessLevel() <= 48)) {
+					pl.unwieldMembersItems();
+				}
+			}
+
+		}*/
+		location.set(p);
+		updateRegion();
 	}
 
 	public Region getRegion() {
@@ -71,6 +94,16 @@ public abstract class Entity {
 		return removed;
 	}
 
+	/***
+	 * Sets this entity to be removed on next updateCollections run.
+	 *
+	 * @param removed
+	 */
+
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+
 	public void remove() {
 		if (region.get() == null) {
 			throw new IllegalStateException("Region should not be null if remove() is called.");
@@ -87,41 +120,8 @@ public abstract class Entity {
 		attributes.put(string, object);
 	}
 
-	public final void setID(int newid) {
-		id = newid;
-	}
-
-	public final void setIndex(int newIndex) {
-		index = newIndex;
-	}
-
 	public void setInitialLocation(Point p) {
 		location.set(p);
-	}
-
-	public void setLocation(Point p) {
-		/*if (this.isPlayer() && location != null) { // No need to unwield the wilderness items, that is not authentic
-			Player pl = (Player) this;
-			if (pl != null && getX() > 0 && getY() > 0) {
-				if (!Point.inWilderness(getX(), getY()) && Point.inWilderness(p.getX(), p.getY())
-						|| (getLocation().wildernessLevel() <= 48)) {
-					pl.unwieldMembersItems();
-				}
-			}
-			
-		}*/
-		location.set(p);
-		updateRegion();
-	}
-
-	/***
-	 * Sets this entity to be removed on next updateCollections run.
-	 * 
-	 * @param removed
-	 */
-
-	public void setRemoved(boolean removed) {
-		this.removed = removed;
 	}
 
 	public void updateRegion() {
@@ -130,7 +130,7 @@ public abstract class Entity {
 			if (getRegion() != null) {
 				region.get().removeEntity(this);
 			}
-			
+
 			if (!isRemoved()) {
 				region.set(newRegion);
 				region.get().addEntity(this);
@@ -153,18 +153,18 @@ public abstract class Entity {
 	}
 
 	public boolean isVisibleTo(Player p) {
-		for(VisibleCondition c : visibleConditions) {
-			if(!c.isVisibleTo(this, p)) {
+		for (VisibleCondition c : visibleConditions) {
+			if (!c.isVisibleTo(this, p)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	public void removeVisibleCondition(VisibleCondition c) {
 		visibleConditions.remove(c);
 	}
-	
+
 	public boolean isPlayer() {
 		return false;
 	}

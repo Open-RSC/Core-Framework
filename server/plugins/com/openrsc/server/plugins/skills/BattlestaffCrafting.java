@@ -11,33 +11,6 @@ import static com.openrsc.server.plugins.Functions.*;
 public class BattlestaffCrafting implements InvUseOnItemListener,
 	InvUseOnItemExecutiveListener {
 
-	enum Battlestaff {
-		WATER_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.WATER_ORB.id(), ItemId.BATTLESTAFF_OF_WATER.id(), 400, 54, ""),
-		EARTH_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.EARTH_ORB.id(), ItemId.BATTLESTAFF_OF_EARTH.id(), 450, 58, ""),
-		FIRE_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.FIRE_ORB.id(), ItemId.BATTLESTAFF_OF_FIRE.id(), 500, 62, ""),
-		AIR_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.AIR_ORB.id(), ItemId.BATTLESTAFF_OF_AIR.id(), 550, 66, "");
-
-		private int itemID;
-		private int itemIDOther;
-		private int resultItem;
-		private int experience;
-		private int requiredLevel;
-		private String[] messages;
-
-		Battlestaff(int itemOne, int itemTwo, int resultItem, int experience, int level, String... messages) {
-			this.itemID = itemOne;
-			this.itemIDOther = itemTwo;
-			this.resultItem = resultItem;
-			this.experience = experience;
-			this.requiredLevel = level;
-			this.messages = messages;
-		}
-
-		public boolean isValid(int i, int is) {
-			return itemID == i && itemIDOther == is || itemIDOther == i && itemID == is;
-		}
-	}
-
 	private boolean canCraft(Item itemOne, Item itemTwo) {
 		for (Battlestaff c : Battlestaff.values()) {
 			if (c.isValid(itemOne.getID(), itemTwo.getID())) {
@@ -99,5 +72,32 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 				name = "this";
 		}
 		return name;
+	}
+
+	enum Battlestaff {
+		WATER_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.WATER_ORB.id(), ItemId.BATTLESTAFF_OF_WATER.id(), 400, 54, ""),
+		EARTH_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.EARTH_ORB.id(), ItemId.BATTLESTAFF_OF_EARTH.id(), 450, 58, ""),
+		FIRE_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.FIRE_ORB.id(), ItemId.BATTLESTAFF_OF_FIRE.id(), 500, 62, ""),
+		AIR_BATTLESTAFF(ItemId.BATTLESTAFF.id(), ItemId.AIR_ORB.id(), ItemId.BATTLESTAFF_OF_AIR.id(), 550, 66, "");
+
+		private int itemID;
+		private int itemIDOther;
+		private int resultItem;
+		private int experience;
+		private int requiredLevel;
+		private String[] messages;
+
+		Battlestaff(int itemOne, int itemTwo, int resultItem, int experience, int level, String... messages) {
+			this.itemID = itemOne;
+			this.itemIDOther = itemTwo;
+			this.resultItem = resultItem;
+			this.experience = experience;
+			this.requiredLevel = level;
+			this.messages = messages;
+		}
+
+		public boolean isValid(int i, int is) {
+			return itemID == i && itemIDOther == is || itemIDOther == i && itemID == is;
+		}
 	}
 }

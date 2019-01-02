@@ -46,7 +46,7 @@ public class PlayerDuelHandler implements PacketHandler {
 		}
 
 		if (player.getDuel().isDuelConfirmAccepted() && affectedPlayer != null
-				&& affectedPlayer.getDuel().isDuelConfirmAccepted()) {
+			&& affectedPlayer.getDuel().isDuelConfirmAccepted()) {
 			return;
 		}
 
@@ -73,7 +73,7 @@ public class PlayerDuelHandler implements PacketHandler {
 		if (pID == packetFour) { // Sending duel request
 			affectedPlayer = world.getPlayer(p.readShort());
 			if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
-					|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
+				|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
 				player.getDuel().setDuelRecipient(null);
 				player.getDuel().resetAll();
 				return;
@@ -87,8 +87,8 @@ public class PlayerDuelHandler implements PacketHandler {
 			}
 
 			if ((affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS)
-					&& !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
-					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) {
+				&& !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
+				|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) {
 				return;
 			}
 
@@ -107,8 +107,8 @@ public class PlayerDuelHandler implements PacketHandler {
 			player.getDuel().setDuelRecipient(affectedPlayer);
 
 			if (!player.getDuel().isDuelActive() && affectedPlayer.getDuel().getDuelRecipient() != null
-					&& affectedPlayer.getDuel().getDuelRecipient().equals(player)
-					&& !affectedPlayer.getDuel().isDuelActive()) {
+				&& affectedPlayer.getDuel().getDuelRecipient().equals(player)
+				&& !affectedPlayer.getDuel().isDuelActive()) {
 
 				player.resetPath();
 				player.getDuel().setDuelActive(true);
@@ -124,19 +124,19 @@ public class PlayerDuelHandler implements PacketHandler {
 				ActionSender.sendDuelWindowOpen(affectedPlayer);
 			} else {
 				ActionSender.sendMessage(player, null, 0, MessageType.INVENTORY, affectedPlayer.getDuel().isDuelActive()
-						? affectedPlayer.getUsername() + " is already in a duel" : "Sending duel request", 0);
+					? affectedPlayer.getUsername() + " is already in a duel" : "Sending duel request", 0);
 				ActionSender
-						.sendMessage(affectedPlayer, null, 0, MessageType.INVENTORY,
-								player.getUsername() + " "
-										+ Formulae.getLvlDiffColour(
-												affectedPlayer.getCombatLevel() - player.getCombatLevel())
-										+ "(level-" + player.getCombatLevel() + ")@whi@ wishes to duel with you",
-								player.getIcon());
+					.sendMessage(affectedPlayer, null, 0, MessageType.INVENTORY,
+						player.getUsername() + " "
+							+ Formulae.getLvlDiffColour(
+							affectedPlayer.getCombatLevel() - player.getCombatLevel())
+							+ "(level-" + player.getCombatLevel() + ")@whi@ wishes to duel with you",
+						player.getIcon());
 			}
 		} else if (pID == packetSix) { // Duel accepted
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
-					|| !affectedPlayer.getDuel().isDuelActive()) {
+				|| !affectedPlayer.getDuel().isDuelActive()) {
 				player.setSuspiciousPlayer(true);
 				player.getDuel().resetAll();
 
@@ -153,8 +153,8 @@ public class PlayerDuelHandler implements PacketHandler {
 		} else if (pID == packetThree) { // Confirm accepted
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
-					|| !affectedPlayer.getDuel().isDuelActive() || !player.getDuel().isDuelAccepted()
-					|| !affectedPlayer.getDuel().isDuelAccepted()) { // This
+				|| !affectedPlayer.getDuel().isDuelActive() || !player.getDuel().isDuelAccepted()
+				|| !affectedPlayer.getDuel().isDuelAccepted()) { // This
 				// shouldn't
 				// happen
 				player.setSuspiciousPlayer(true);
@@ -165,7 +165,7 @@ public class PlayerDuelHandler implements PacketHandler {
 
 			if (affectedPlayer.getDuel().isDuelConfirmAccepted()) {
 				if (PluginHandler.getPluginHandler().blockDefaultAction("Duel",
-						new Object[] { player, affectedPlayer })) {
+					new Object[]{player, affectedPlayer})) {
 					return;
 				}
 				ActionSender.sendDuelWindowClose(player);
@@ -265,7 +265,7 @@ public class PlayerDuelHandler implements PacketHandler {
 		} else if (pID == packetOne) {
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
-					|| !affectedPlayer.getDuel().isDuelActive()) {
+				|| !affectedPlayer.getDuel().isDuelActive()) {
 				player.setSuspiciousPlayer(true);
 				player.getDuel().resetAll();
 				return;
@@ -275,9 +275,9 @@ public class PlayerDuelHandler implements PacketHandler {
 		} else if (pID == packetTwo) { // Receive offered item data
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
-					|| !affectedPlayer.getDuel().isDuelActive()
-					|| (player.getDuel().isDuelAccepted() && affectedPlayer.getDuel().isDuelAccepted())
-					|| player.getDuel().isDuelConfirmAccepted() || affectedPlayer.getDuel().isDuelConfirmAccepted()) {
+				|| !affectedPlayer.getDuel().isDuelActive()
+				|| (player.getDuel().isDuelAccepted() && affectedPlayer.getDuel().isDuelAccepted())
+				|| player.getDuel().isDuelConfirmAccepted() || affectedPlayer.getDuel().isDuelConfirmAccepted()) {
 				player.setSuspiciousPlayer(true);
 				player.getDuel().resetAll();
 				return;
@@ -325,9 +325,9 @@ public class PlayerDuelHandler implements PacketHandler {
 		} else if (pID == packetFive) { // Set duel options
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
-					|| !affectedPlayer.getDuel().isDuelActive()
-					|| (player.getDuel().isDuelConfirmAccepted() && affectedPlayer.getDuel().isDuelConfirmAccepted())
-					|| player.getDuel().isDuelConfirmAccepted() || affectedPlayer.getDuel().isDuelConfirmAccepted()) { // This
+				|| !affectedPlayer.getDuel().isDuelActive()
+				|| (player.getDuel().isDuelConfirmAccepted() && affectedPlayer.getDuel().isDuelConfirmAccepted())
+				|| player.getDuel().isDuelConfirmAccepted() || affectedPlayer.getDuel().isDuelConfirmAccepted()) { // This
 				// shouldn't
 				// happen
 				player.setSuspiciousPlayer(true);

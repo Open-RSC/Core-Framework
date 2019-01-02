@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.GameLogging;
@@ -77,9 +76,9 @@ public class Inventory {
 			if (this.full()) {
 				//player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
 				world.registerItem(
-						new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player));
+					new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player));
 				GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped(inventory full) "
-						+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
+					+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
 				return;
 			}
 			list.add(itemToAdd);
@@ -232,7 +231,7 @@ public class Inventory {
 					} else if (i.getDef().isStackable() && amount > i.getAmount()) {
 						// Not enough, do not remove.
 						return -1;
-					} else if (i.getDef().isStackable() && amount == i.getAmount()){
+					} else if (i.getDef().isStackable() && amount == i.getAmount()) {
 						// Exact amount, remove all.
 						if (i.isWielded()) {
 							unwieldItem(i, false);
@@ -307,11 +306,11 @@ public class Inventory {
 	}
 
 	public void swap(int slot, int to) {
-		if(slot <= 0 && to <= 0 && to == slot) {
+		if (slot <= 0 && to <= 0 && to == slot) {
 			return;
 		}
 		int idx = list.size() - 1;
-		if(to > idx) {
+		if (to > idx) {
 			return;
 		}
 		Item item = get(slot);
@@ -324,11 +323,11 @@ public class Inventory {
 	}
 
 	public boolean insert(int slot, int to) {
-		if(slot < 0 || to < 0 || to == slot) {
+		if (slot < 0 || to < 0 || to == slot) {
 			return false;
 		}
 		int idx = list.size() - 1;
-		if(to > idx) {
+		if (to > idx) {
 			return false;
 		}
 		Item from = list.get(slot);
@@ -377,7 +376,7 @@ public class Inventory {
 			player.playSound("click");
 		}
 		player.updateWornItems(affectedItem.getDef().getWieldPosition(),
-				player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
+			player.getSettings().getAppearance().getSprite(affectedItem.getDef().getWieldPosition()));
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
@@ -399,22 +398,19 @@ public class Inventory {
 			ableToWield = false;
 		}
 		if ((item.getID() == 401 || item.getID() == 407)
-				&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
+			&& (player.getQuestStage(Constants.Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return;
-		}
-		else if (item.getID() == 593 && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
+		} else if (item.getID() == 593 && player.getQuestStage(Constants.Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return;
-		}
-		else if (item.getID() == 594 && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
+		} else if (item.getID() == 594 && player.getQuestStage(Constants.Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return;
-		}
-		else if(item.getID() == 1278 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == 1278 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return;
@@ -422,27 +418,22 @@ public class Inventory {
 		/*
 		 * Hacky but works for god staffs and god capes.
 		 */
-		else if(item.getID() == 1217 && (wielding(1213) || wielding(1214))) { // try to wear guthix staff
+		else if (item.getID() == 1217 && (wielding(1213) || wielding(1214))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
-		}
-		else if(item.getID() == 1218 && (wielding(1213) || wielding(1215))) { // try to wear sara staff
+		} else if (item.getID() == 1218 && (wielding(1213) || wielding(1215))) { // try to wear sara staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
-		}
-		else if(item.getID() == 1216 && (wielding(1214) || wielding(1215))) { // try to wear zamorak staff
+		} else if (item.getID() == 1216 && (wielding(1214) || wielding(1215))) { // try to wear zamorak staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return;
-		}
-		else if(item.getID() == 1215 && (wielding(1216) || wielding(1218))) { // try to wear guthix cape
+		} else if (item.getID() == 1215 && (wielding(1216) || wielding(1218))) { // try to wear guthix cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
-		}
-		else if(item.getID() == 1214 && (wielding(1216) || wielding(1217))) { // try to wear sara cape
+		} else if (item.getID() == 1214 && (wielding(1216) || wielding(1217))) { // try to wear sara cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
-		}
-		else if(item.getID() == 1213 && (wielding(1217) || wielding(1218))) { // try to wear zamorak cape
+		} else if (item.getID() == 1213 && (wielding(1217) || wielding(1218))) { // try to wear zamorak cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return;
 		}
@@ -463,21 +454,18 @@ public class Inventory {
 		else if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
 			player.message("You need to be an Iron Man to wear this");
 			return;
-		}
-		else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
+		} else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
 			return;
-		}
-		else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
+		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return;
-		}
-		else if(item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getID() == 2254 && player.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
 			return;
 		}
-		if(!ableToWield)
+		if (!ableToWield)
 			return;
 
 		ArrayList<Item> items = getItems();
@@ -499,7 +487,7 @@ public class Inventory {
 	public void dropOnDeath(Mob opponent) {
 		sort();
 		ListIterator<Item> iterator = iterator();
-		if(!player.isIronMan(2)) {
+		if (!player.isIronMan(2)) {
 			if (!player.isSkulled()) {
 				for (int i = 0; i < 3 && iterator.hasNext(); i++) {
 					if ((iterator.next()).getDef().isStackable()) {
@@ -515,7 +503,7 @@ public class Inventory {
 			}
 		}
 		DeathLog log = new DeathLog(player, opponent, false);
-		for (; iterator.hasNext();) {
+		for (; iterator.hasNext(); ) {
 			Item item = iterator.next();
 			/**
 			 * ALWAYS KEEP THE GAUNTLESS (STEEL GAUNTLESS OR THE GAUNTLESS YOU
@@ -532,7 +520,7 @@ public class Inventory {
 			}
 			if (item.isWielded()) {
 				player.updateWornItems(item.getDef().getWieldPosition(),
-						player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+					player.getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
 				item.setWielded(false);
 			}
 			iterator.remove();
@@ -543,7 +531,7 @@ public class Inventory {
 			} else {
 				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
 				GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), item.getAmount(), dropOwner);
-				if(dropOwner.getIronMan() != 0) {
+				if (dropOwner.getIronMan() != 0) {
 					groundItem.setAttribute("playerKill", true);
 				}
 				world.registerItem(groundItem);

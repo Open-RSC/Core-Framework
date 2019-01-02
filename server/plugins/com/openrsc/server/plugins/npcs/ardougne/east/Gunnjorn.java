@@ -23,11 +23,11 @@ public class Gunnjorn implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		if (n.getID() == 588) {
 			npcTalk(p, n, "Ahoy there!");
 			int menu = showMenu(p, n, "What is this place?");
-			if(menu == 0) {
+			if (menu == 0) {
 				npcTalk(p, n, "Haha welcome to my obstacle course",
-						"Have fun, but remember this isn't a child's playground",
-						"People have died here", "The best way to train",
-						"Is to go round the course in a clockwise direction");
+					"Have fun, but remember this isn't a child's playground",
+					"People have died here", "The best way to train",
+					"Is to go round the course in a clockwise direction");
 			}
 		}
 	}

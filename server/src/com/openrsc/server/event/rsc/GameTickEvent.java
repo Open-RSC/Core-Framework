@@ -7,12 +7,10 @@ import com.openrsc.server.model.entity.player.Player;
 public abstract class GameTickEvent {
 
 	protected boolean running = true;
-
-	private int delayTicks;
-
 	protected Mob owner;
-
+	private int delayTicks;
 	private boolean immediate;
+	private int ticksBeforeRun = -1;
 
 	public GameTickEvent(Mob owner, int ticks) {
 		this.owner = owner;
@@ -37,8 +35,6 @@ public abstract class GameTickEvent {
 	public final boolean shouldRemove() {
 		return !running;
 	}
-	
-	private int ticksBeforeRun = -1;
 
 	public long getTicksBeforeRun() {
 		return ticksBeforeRun;
@@ -60,12 +56,12 @@ public abstract class GameTickEvent {
 		this.delayTicks = delayTicks;
 	}
 
-	public void setImmediate(boolean b) {
-		this.immediate = b;
-	}
-
 	public boolean isImmediate() {
 		return immediate;
+	}
+
+	public void setImmediate(boolean b) {
+		this.immediate = b;
 	}
 
 	public Player getPlayerOwner() {
@@ -75,7 +71,7 @@ public abstract class GameTickEvent {
 	public Npc getNpcOwner() {
 		return owner != null && owner.isNpc() ? (Npc) owner : null;
 	}
-	
+
 	public void resetCountdown() {
 		ticksBeforeRun = delayTicks;
 	}

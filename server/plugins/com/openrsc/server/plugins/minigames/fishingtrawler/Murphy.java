@@ -14,7 +14,7 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	/**
 	 * IMPORTANT NOTES:
-	 * 
+	 * <p>
 	 * START EAST: 272, 741 START WEST: 320, 741 GO UNDER EAST: 251, 730 GO
 	 * UNDER WEST: 296, 729 - NPC: 734 FAIL - AFTER GO UNDER EAST: 254, 759
 	 * (SHARED) FAIL - AFTER GO UNDER WEST AND/OR QUIT MINI-GAME: 302, 759 GO
@@ -29,7 +29,7 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 733) { // Murphy on land
-			if(p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
+			if (p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
 				p.message("As an Iron Man, you cannot use the Trawler.");
 				return;
 			}
@@ -45,8 +45,8 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			} else {
 				playerTalk(p, n, "hello again murphy");
 				npcTalk(p, n, "good day to you land lover");
-				if(p.getCache().hasKey("fishing_trawler_reward")) {
-					npcTalk(p,n, "It looks like your net is full from last trip");
+				if (p.getCache().hasKey("fishing_trawler_reward")) {
+					npcTalk(p, n, "It looks like your net is full from last trip");
 					return;
 				}
 				npcTalk(p, n, "fancy hitting the high seas again?");
@@ -59,12 +59,12 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			}
 		} else if (n.getID() == 734) {// Murphy on the boat.
 			onship(n, p);
-		} else if(n.getID() == 739) {
-			npcTalk(p,n, "did you change your mind?");
-			int opt = showMenu(p,n, "Yes, I want out", "No");
-			if(opt == 0) {
+		} else if (n.getID() == 739) {
+			npcTalk(p, n, "did you change your mind?");
+			int opt = showMenu(p, n, "Yes, I want out", "No");
+			if (opt == 0) {
 				World.getWorld().getFishingTrawler().getWaitingShip().removePlayer(p);
-				
+
 			}
 		}
 	}
@@ -112,20 +112,20 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					npcTalk(p, n, "oh, and one more thing...");
 					npcTalk(p, n, "..i hope you're a good swimmer");
 					int gooption = showMenu(p, n, "actually, i think i'll leave it", "i'll be fine, lets go",
-							"what's swamp paste?");
+						"what's swamp paste?");
 					switch (gooption) {
-					case 0:
-						break;
-					case 1:
-						playerTalk(p, n, "i'll be fine, lets go");
-						letsGo(p, n);
-						break;
-					case 2:
-						npcTalk(p, n, "swamp tar mixed with flour...");
-						npcTalk(p, n, "...which is then heated over a fire");
-						playerTalk(p, n, "where can i find swamp tar?");
-						npcTalk(p, n, "unfortunately the only supply of swamp tar is in the swamps below lumbridge");
-						break;
+						case 0:
+							break;
+						case 1:
+							playerTalk(p, n, "i'll be fine, lets go");
+							letsGo(p, n);
+							break;
+						case 2:
+							npcTalk(p, n, "swamp tar mixed with flour...");
+							npcTalk(p, n, "...which is then heated over a fire");
+							playerTalk(p, n, "where can i find swamp tar?");
+							npcTalk(p, n, "unfortunately the only supply of swamp tar is in the swamps below lumbridge");
+							break;
 					}
 				}
 			});
@@ -140,7 +140,7 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		playerTalk(p, n, "i'm ready and waiting");
 		p.getCache().store("fishingtrawler", true);
 		World.getWorld().getFishingTrawler().getWaitingShip().addPlayer(p);
-		
+
 //		npcTalk(p, n, "would you like to sail east or west?");
 //		Menu goMenu = new Menu();
 //		goMenu.addOptions(new Option("east please") {

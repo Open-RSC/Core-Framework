@@ -9,8 +9,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 public class Bed implements ObjectActionExecutiveListener, ObjectActionListener {
 
 	@Override
-	public void onObjectAction(final GameObject object, String command, Player owner) {	
-		if((command.equalsIgnoreCase("rest") || command.equalsIgnoreCase("sleep")) && !owner.isSleeping() || command.equalsIgnoreCase("lie in")) {
+	public void onObjectAction(final GameObject object, String command, Player owner) {
+		if ((command.equalsIgnoreCase("rest") || command.equalsIgnoreCase("sleep")) && !owner.isSleeping() || command.equalsIgnoreCase("lie in")) {
 			ActionSender.sendEnterSleep(owner);
 			if (object.getID() == 1035) // Crude Bed is like Sleeping Bag.
 				owner.startSleepEvent(false);

@@ -15,10 +15,10 @@ public class Chatlog extends Snapshot {
 
 	/**
 	 * Constructor
-	 * @param sender player that sent the message
+	 *
+	 * @param sender     player that sent the message
 	 * @param chatstring the message that was sent
-	 * @param recievers players that saw the public message
-	 * 
+	 * @param recievers  players that saw the public message
 	 */
 	public Chatlog(String sender, String chatstring, ArrayList<String> recievers) {
 		super(sender);
@@ -30,16 +30,17 @@ public class Chatlog extends Snapshot {
 		super(sender);
 		this.setMessage(chatstring);
 	}
+
 	public ArrayList<String> getRecievers() {
 		return recievers;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public String getMessage() {
 		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }
 

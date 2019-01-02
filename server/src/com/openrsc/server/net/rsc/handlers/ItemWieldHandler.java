@@ -52,7 +52,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		if (pID == packetOne) {
 			if (!item.isWielded()) {
 				if (PluginHandler.getPluginHandler().blockDefaultAction(
-						"Wield", new Object[] { player, item })) {
+					"Wield", new Object[]{player, item})) {
 					return;
 				}
 				player.getInventory().wieldItem(item, true);
@@ -60,7 +60,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		} else if (pID == packetTwo) {
 			if (item.isWielded()) {
 				if (PluginHandler.getPluginHandler().blockDefaultAction(
-						"UnWield", new Object[] { player, item }))
+					"UnWield", new Object[]{player, item}))
 					return;
 				player.getInventory().unwieldItem(item, true);
 			}

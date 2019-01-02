@@ -22,10 +22,10 @@ public class GameTickEventHandler {
 		String className = String.valueOf(event.getClass());
 		if (event.getOwner() == null) { // Server events, no owner.
 			String u;
-			while (events.containsKey(u = UUID.randomUUID().toString())) {}
+			while (events.containsKey(u = UUID.randomUUID().toString())) {
+			}
 			toAdd.put(className + u, event);
-		}
-		else {
+		} else {
 			if (event.getOwner().isPlayer())
 				toAdd.put(className + event.getOwner().getUUID() + "p", event);
 			else
@@ -45,7 +45,7 @@ public class GameTickEventHandler {
 				events.put(e.getKey(), e.getValue());
 			toAdd.clear();
 		}
-		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext();) {
+		for (Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
 			GameTickEvent event = it.next().getValue();
 			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
 				it.remove();

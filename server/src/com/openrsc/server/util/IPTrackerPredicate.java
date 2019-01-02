@@ -1,6 +1,5 @@
 package com.openrsc.server.util;
 
-public interface IPTrackerPredicate
-{
+public interface IPTrackerPredicate {
 	boolean proceedIf();
 }

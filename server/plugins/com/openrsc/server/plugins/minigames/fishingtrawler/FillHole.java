@@ -7,12 +7,12 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FillHole implements ObjectActionExecutiveListener, ObjectActionListener{
+public class FillHole implements ObjectActionExecutiveListener, ObjectActionListener {
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		player.setBusyTimer(650);
-		if(removeItem(player, 785, 1)) {
+		if (removeItem(player, 785, 1)) {
 			removeObject(obj);
 			message(player, 0, "you fill the hole with swamp paste");
 		} else {

@@ -27,26 +27,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class Mob extends Entity {
 
 	/**
-	 * Unique ID for event tracking.
-	 */
-	private String uuid;
-
-	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-
+	protected final Skills skills = new Skills(this);
+	/**
+	 * Used to block new requests when we are in the middle of one
+	 */
+	private final AtomicBoolean busy = new AtomicBoolean(false);
+	private final Random random = new Random();
+	/**
+	 * The path we are walking
+	 */
+	private final WalkingQueue walkingQueue = new WalkingQueue(this);
+	public int poisonDamage = 0;
+	/**
+	 * Tiles around us that we can see
+	 */
+	public ViewArea viewArea = new ViewArea(this);
+	public int killType = 0;
 	/**
 	 * Flag to indicate that this mob will be needed to be unregistered after
 	 * next update tick.
 	 */
 	protected boolean unregistering;
-
-	public int poisonDamage = 0;
-	/**
-	 * Used to block new requests when we are in the middle of one
-	 */
-	private final AtomicBoolean busy = new AtomicBoolean(false);
 	/**
 	 * Time in MS when we are freed from the 'busy' mode.
 	 */
@@ -55,6 +59,27 @@ public abstract class Mob extends Entity {
 	 * The combat event instance.
 	 */
 	protected CombatEvent combatEvent;
+	/**
+	 * Have we moved since last update?
+	 */
+	protected boolean hasMoved;
+	/**
+	 * Time of last movement, used for timeout
+	 */
+	protected long lastMovement = System.currentTimeMillis();
+	protected int mobSprite = 1;
+	/**
+	 * The stat restore event
+	 */
+	protected StatRestorationEvent statRestorationEvent = new StatRestorationEvent(this);
+	/**
+	 * If we are warned to move
+	 */
+	protected boolean warnedToMove = false;
+	/**
+	 * Unique ID for event tracking.
+	 */
+	private String uuid;
 	/**
 	 * Timer used to track start and end of combat
 	 */
@@ -72,57 +97,27 @@ public abstract class Mob extends Entity {
 	 */
 	private Mob following;
 	/**
-	 * Have we moved since last update?
-	 */
-	protected boolean hasMoved;
-	/**
 	 * How many times we have hit our opponent
 	 */
 	private int hitsMade = 0;
-
 	/**
 	 * The end state of the last combat encounter
 	 */
 	private CombatState lastCombatState = CombatState.WAITING;
-
-	/**
-	 * Time of last movement, used for timeout
-	 */
-	protected long lastMovement = System.currentTimeMillis();
-	protected int mobSprite = 1;
-	private int[][] mobSprites = new int[][] { { 3, 2, 1 }, { 4, -1, 0 }, { 5, 6, 7 } };
-	private final Random random = new Random();
+	private int[][] mobSprites = new int[][]{{3, 2, 1}, {4, -1, 0}, {5, 6, 7}};
 	/**
 	 * Has the sprite changed?
 	 */
 	private boolean spriteChanged = false;
 	/**
-	 * The stat restore event
-	 */
-	protected StatRestorationEvent statRestorationEvent = new StatRestorationEvent(this);
-	/**
 	 * Holds all the update flags for the appearance packet.
 	 */
 	private UpdateFlags updateFlags = new UpdateFlags();
-	/**
-	 * Tiles around us that we can see
-	 */
-	public ViewArea viewArea = new ViewArea(this);
-
-	/**
-	 * The path we are walking
-	 */
-	private final WalkingQueue walkingQueue = new WalkingQueue(this);
-
-	protected final Skills skills = new Skills(this);
-
-	/**
-	 * If we are warned to move
-	 */
-	protected boolean warnedToMove = false;
+	private long lastRun = 0;
+	private boolean teleporting;
 
 	public double[] getModifiers() {
-		return new double[] { 1, 1, 1 };
+		return new double[]{1, 1, 1};
 	}
 
 	public final boolean atObject(GameObject o) {
@@ -144,14 +139,14 @@ public abstract class Mob extends Entity {
 		}
 		return false;
 	}
-	
+
 	//TODO: Verify block of special rock in tourist trap
 	public final boolean closeSpecObject(GameObject o) {
 		Point[] boundaries = o.getObjectBoundary();
 		Point low = boundaries[0];
 		Point high = boundaries[1];
-		if((Math.abs(getX() - low.getX()) <= 1 || Math.abs(getX() - high.getX()) <= 1) && 
-				(Math.abs(getY() - low.getY()) <= 1 || Math.abs(getY() - high.getY()) <= 1)) {
+		if ((Math.abs(getX() - low.getX()) <= 1 || Math.abs(getX() - high.getX()) <= 1) &&
+			(Math.abs(getY() - low.getY()) <= 1 || Math.abs(getY() - high.getY()) <= 1)) {
 			if (o.getID() == 953) {
 				return true;
 			}
@@ -164,26 +159,26 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
-				&& (World.getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
+			&& (World.getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
-				&& (CollisionFlag.WALL_EAST & World.getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_EAST & World.getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
-				&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_SOUTH & World.getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-				&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
+			&& (CollisionFlag.WALL_NORTH & World.getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
 			return true;
 		}
 		return false;
 	}
 
 	public final boolean canReach(Entity e) {
-		int[] currentCoords = { getX(), getY() };
+		int[] currentCoords = {getX(), getY()};
 		while (currentCoords[0] != e.getX() || currentCoords[1] != e.getY()) {
 			currentCoords = nextStep(currentCoords[0], currentCoords[1], e);
 			if (currentCoords == null) {
@@ -195,7 +190,7 @@ public abstract class Mob extends Entity {
 
 	public int[] nextStep(int myX, int myY, Entity e) {
 		if (myX == e.getX() && myY == e.getY()) {
-			return new int[] { myX, myY };
+			return new int[]{myX, myY};
 		}
 		int newX = myX, newY = myY;
 		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
@@ -248,7 +243,7 @@ public abstract class Mob extends Entity {
 			return null;
 		}
 
-		return new int[] { newX, newY };
+		return new int[]{newX, newY};
 	}
 
 	private boolean isBlocking(Entity e, int x, int y, int bit) {
@@ -263,8 +258,8 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		if ((val & 64) != 0
-				&& (e instanceof Npc || e instanceof Player || (e instanceof GroundItem && !((GroundItem) e).isOn(x, y))
-						|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)))) {
+			&& (e instanceof Npc || e instanceof Player || (e instanceof GroundItem && !((GroundItem) e).isOn(x, y))
+			|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)))) {
 			return true;
 		}
 		return false;
@@ -287,7 +282,7 @@ public abstract class Mob extends Entity {
 	public void damage(int damage) {
 		int newHp = skills.getLevel(Skills.HITPOINTS) - damage;
 		if (newHp <= 0) {
-			if(this.isPlayer())
+			if (this.isPlayer())
 				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
 
 			killedBy(null);
@@ -335,6 +330,10 @@ public abstract class Mob extends Entity {
 		return combatEvent;
 	}
 
+	public void setCombatEvent(CombatEvent combatEvent2) {
+		this.combatEvent = combatEvent2;
+	}
+
 	public CombatState getCombatState() {
 		return lastCombatState;
 	}
@@ -343,6 +342,10 @@ public abstract class Mob extends Entity {
 
 	public long getCombatTimer() {
 		return combatTimer;
+	}
+
+	public void setCombatTimer(int delay) {
+		combatTimer = System.currentTimeMillis() + delay;
 	}
 
 	public DelayedEvent getFollowEvent() {
@@ -357,6 +360,10 @@ public abstract class Mob extends Entity {
 		return hitsMade;
 	}
 
+	public void setHitsMade(int i) {
+		hitsMade = i;
+	}
+
 	public long getLastMoved() {
 		return lastMovement;
 	}
@@ -365,12 +372,21 @@ public abstract class Mob extends Entity {
 		return combatWith;
 	}
 
+	public void setOpponent(Mob opponent) {
+		combatWith = opponent;
+	}
+
 	public Random getRandom() {
 		return random;
 	}
 
 	public int getSprite() {
 		return mobSprite;
+	}
+
+	public void setSprite(int x) {
+		setSpriteChanged();
+		mobSprite = x;
 	}
 
 	public StatRestorationEvent getStatRestorationEvent() {
@@ -405,24 +421,28 @@ public abstract class Mob extends Entity {
 		return (mobSprite == 8 || mobSprite == 9) && combatWith != null;
 	}
 
-	private long lastRun = 0;
-
-	private boolean teleporting;
+	public long getLastRun() {
+		return lastRun;
+	}
 
 	public void setLastRun(long lastRun) {
 		this.lastRun = lastRun;
-	}
-
-	public long getLastRun() {
-		return lastRun;
 	}
 
 	public boolean isBusy() {
 		return busyTimer - System.currentTimeMillis() > 0 || busy.get();
 	}
 
+	public synchronized void setBusy(boolean busy) {
+		this.busy.set(busy);
+	}
+
 	public boolean isFollowing() {
 		return followEvent != null && following != null;
+	}
+
+	public void setFollowing(Mob mob) {
+		setFollowing(mob, 0);
 	}
 
 	public abstract void killedBy(Mob mob);
@@ -455,10 +475,6 @@ public abstract class Mob extends Entity {
 		spriteChanged = false;
 	}
 
-	public synchronized void setBusy(boolean busy) {
-		this.busy.set(busy);
-	}
-
 	/**
 	 * Sets the time when player should be freed from the busy mode.
 	 *
@@ -468,20 +484,8 @@ public abstract class Mob extends Entity {
 		this.busyTimer = System.currentTimeMillis() + i;
 	}
 
-	public void setCombatEvent(CombatEvent combatEvent2) {
-		this.combatEvent = combatEvent2;
-	}
-
-	public void setCombatTimer(int delay) {
-		combatTimer = System.currentTimeMillis() + delay;
-	}
-
 	public void setCombatTimer() {
 		combatTimer = System.currentTimeMillis();
-	}
-
-	public void setFollowing(Mob mob) {
-		setFollowing(mob, 0);
 	}
 
 	public void setFollowing(final Mob mob, final int radius) {
@@ -493,7 +497,7 @@ public abstract class Mob extends Entity {
 		followEvent = new DelayedEvent(null, 500) {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
-						|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
+					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
 					resetFollowing();
 				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
 					me.resetPath();
@@ -503,10 +507,6 @@ public abstract class Mob extends Entity {
 			}
 		};
 		Server.getServer().getEventHandler().add(followEvent);
-	}
-
-	public void setHitsMade(int i) {
-		hitsMade = i;
 	}
 
 	public void setLastCombatState(CombatState lastCombatState) {
@@ -538,17 +538,8 @@ public abstract class Mob extends Entity {
 		warnedToMove = moved;
 	}
 
-	public void setOpponent(Mob opponent) {
-		combatWith = opponent;
-	}
-
 	public void setSpriteChanged() {
 		spriteChanged = true;
-	}
-
-	public void setSprite(int x) {
-		setSpriteChanged();
-		mobSprite = x;
 	}
 
 	public void setUpdateRequests(UpdateFlags updateRequests) {
@@ -698,10 +689,10 @@ public abstract class Mob extends Entity {
 		this.unregistering = unregistering;
 	}
 
-	public int killType = 0;
 	public int getKillType() {
 		return killType;
 	}
+
 	public void setKillType(int i) {
 		this.killType = i;
 	}

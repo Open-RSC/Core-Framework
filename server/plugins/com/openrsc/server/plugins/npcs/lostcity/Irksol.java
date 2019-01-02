@@ -13,25 +13,25 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class Irksol implements ShopInterface, TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+	TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 3000, 50, 30,2,
-			new Item(286, 5));
+	private final Shop shop = new Shop(false, 3000, 50, 30, 2,
+		new Item(286, 5));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 		if (n.getID() == 218) {
 			npcTalk(p, n, "selling ruby rings",
-					"The best deals in all the planes of existance");
+				"The best deals in all the planes of existance");
 			int option = showMenu(p, n, "I'm interested in these deals",
-					"No thank you");
+				"No thank you");
 			switch (option) {
 
-			case 0:
-				npcTalk(p, n, "Take a look at these beauties");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
-				break;
+				case 0:
+					npcTalk(p, n, "Take a look at these beauties");
+					p.setAccessingShop(shop);
+					ActionSender.showShop(p, shop);
+					break;
 			}
 		}
 	}
@@ -43,7 +43,7 @@ public final class Irksol implements ShopInterface, TalkToNpcExecutiveListener,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

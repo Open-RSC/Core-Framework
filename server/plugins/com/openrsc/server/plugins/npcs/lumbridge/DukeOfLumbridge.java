@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+	TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
@@ -19,7 +19,7 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 			"Where can I find money?"
 		};
 		if (p.getQuestStage(Quests.DRAGON_SLAYER) >= 2 || p.getQuestStage(Quests.DRAGON_SLAYER) < 0) {
-			menu = new String[] { // Dragon Slayer
+			menu = new String[]{ // Dragon Slayer
 				"I seek a shield that will protect me from dragon's breath",
 				"Have you any quests for me?",
 				"Where can I find money?"
@@ -27,8 +27,7 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 			int choice = showMenu(p, n, menu);
 			if (choice > -1)
 				handleResponse(p, n, choice);
-		}
-		else {
+		} else {
 			int choice = showMenu(p, n, menu);
 			if (choice > -1)
 				handleResponse(p, n, choice + 1);
@@ -39,14 +38,13 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 		if (option == 0) { // Dragon Slayer
 			if (!hasItem(p, 420, 1)) {
 				npcTalk(p, n, "A knight going on a dragon quest hmm?",
-						"A most worthy cause",
-						"Guard this well my friend"
+					"A most worthy cause",
+					"Guard this well my friend"
 				);
 				message(p, "The duke hands you a shield");
 				addItem(p, 420, 1);
 			}
-		}
-		else if (option == 1)
+		} else if (option == 1)
 			npcTalk(p, n, "All is well for me");
 		else if (option == 2) {
 			npcTalk(p, n, "I've heard the blacksmiths are prosperous amoung the peasantry");

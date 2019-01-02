@@ -10,11 +10,11 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Refill implements InvUseOnObjectListener,
-		InvUseOnObjectExecutiveListener {
+	InvUseOnObjectExecutiveListener {
 
-	final int[] VALID_OBJECTS = { 2, 466, 814, 48, 26, 86, 1130 };
-	final int[] REFILLABLE = { 21, 140, 341, 465 };
-	final int[] REFILLED = { 50, 141, 342, 464 };
+	final int[] VALID_OBJECTS = {2, 466, 814, 48, 26, 86, 1130};
+	final int[] REFILLABLE = {21, 140, 341, 465};
+	final int[] REFILLED = {50, 141, 342, 464};
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
