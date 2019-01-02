@@ -928,10 +928,6 @@ public final class Player extends Mob {
 	}
 
 	public String getStaffName() {
-		return getStaffName(true);
-	}
-
-	public String getStaffName(boolean isMenu) {
 		return Group.getStaffPrefix(this.getGroupID()) + getUsername();
 	}
 

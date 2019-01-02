@@ -31,7 +31,7 @@ public class Group {
 		GROUP_NAMES.put(USER, "User");
 	}
 
-	public static String getNameColour(int groupID, boolean isMenu) {
+	public static String getNameColour(int groupID) {
 		if(!Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
@@ -50,11 +50,11 @@ public class Group {
 			case MOD:
 			case USER:
 			default:
-				return isMenu ? "@whi@" : "@yel@";
+				return "";
 		}
 	}
 
-	public static String getNameSprite(int groupID, boolean isMenu) {
+	public static String getNameSprite(int groupID) {
 		if(!Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY)
 			return "";
 
@@ -77,10 +77,6 @@ public class Group {
 	}
 
 	public static String getStaffPrefix(int groupID) {
-		return getStaffPrefix(groupID, true);
-	}
-
-	public static String getStaffPrefix(int groupID, boolean isMenu) {
-		return getNameSprite(groupID, isMenu) + getNameColour(groupID, isMenu);
+		return getNameSprite(groupID) + getNameColour(groupID);
 	}
 }

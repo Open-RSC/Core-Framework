@@ -694,8 +694,8 @@ public class ActionSender {
 	public static void sendPrivateMessageReceived(Player player, Player sender, String message) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
-		s.writeString(sender.getStaffName());
-		s.writeString(sender.getStaffName());// former name
+		s.writeString(sender.getUsername());
+		s.writeString(sender.getUsername());// former name
 		s.writeInt(sender.getIcon());
 		s.writeRSCString(message);
 		player.write(s.toPacket());
