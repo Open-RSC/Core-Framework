@@ -512,6 +512,7 @@ public class ActionSender {
 		s.writeByte((byte)(Constants.GameServer.WANT_DECANTING ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
 		s.writeByte((byte)(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
+		s.writeByte((byte)(Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
 		return s;
 	}
 
