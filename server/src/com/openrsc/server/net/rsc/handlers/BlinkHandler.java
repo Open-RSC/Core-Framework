@@ -12,6 +12,8 @@ public class BlinkHandler implements PacketHandler {
 		int coordY = p.readShort();
 		if(player.isMod()) 
 			player.teleport(coordX, coordY);
+		else
+			player.setSuspiciousPlayer(true);
 	}
 
 }
