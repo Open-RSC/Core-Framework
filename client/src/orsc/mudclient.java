@@ -3496,48 +3496,30 @@ public final class mudclient implements Runnable {
 		private void drawDialogWildWarn(int var1) {
 			try {
 
-				this.getSurface().drawBox(86, 77, 340, 180, 0);
-				byte var2 = 97;
+				this.getSurface().drawBox(halfGameWidth() - 170, halfGameHeight() - 90, 340, 180, 0);
 				if (var1 <= 90) {
 					this.loadGameConfig(true);
 				}
-
-				this.getSurface().drawBoxBorder(86, 340, 77, 180, 0xFFFFFF);
-				this.getSurface().drawColoredStringCentered(256, "Warning! Proceed with caution", 0xFF0000, 0, 4, var2);
-				int var5 = var2 + 26;
-				this.getSurface().drawColoredStringCentered(256, "If you go much further north you will enter the",
-						0xFFFFFF, 0, 1, var5);
-				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "wilderness. This a very dangerous area where", 0xFFFFFF,
-						0, 1, var5);
-				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "other players can attack you!", 0xFFFFFF, 0, 1, var5);
-				var5 += 22;
-				this.getSurface().drawColoredStringCentered(256, "The further north you go the more dangerous it", 0xFFFFFF,
-						0, 1, var5);
-				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "becomes, but the more treasure you will find.", 0xFFFFFF,
-						0, 1, var5);
-				var5 += 22;
-				this.getSurface().drawColoredStringCentered(256, "In the wilderness an indicator at the bottom-right",
-						0xFFFFFF, 0, 1, var5);
-				var5 += 13;
-				this.getSurface().drawColoredStringCentered(256, "of the screen will show the current level of danger",
-						0xFFFFFF, 0, 1, var5);
-				var5 += 22;
+				this.getSurface().drawBoxBorder(halfGameWidth() - 170, 340, halfGameHeight() - 90, 180, 0xFFFFFF);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "Warning! Proceed with caution", 0xFF0000, 0, 4, halfGameHeight() - 70);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "If you go much further north you will enter the", 0xFFFFFF, 0, 1, halfGameHeight() - 44);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "wilderness. This a very dangerous area where", 0xFFFFFF,0, 1, halfGameHeight() - 31);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "other players can attack you!", 0xFFFFFF, 0, 1, halfGameHeight() - 18);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "The further north you go the more dangerous it", 0xFFFFFF, 0, 1, halfGameHeight() + 4);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "becomes, but the more treasure you will find.", 0xFFFFFF, 0, 1, halfGameHeight() + 17);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "In the wilderness an indicator at the bottom-right", 0xFFFFFF, 0, 1, halfGameHeight() + 39);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "of the screen will show the current level of danger",0xFFFFFF, 0, 1, halfGameHeight() + 52);
 				int var3 = 0xFFFFFF;
-				if (this.mouseY > var5 - 12 && this.mouseY <= var5 && this.mouseX > 181 && this.mouseX < 331) {
+				if (this.mouseY > halfGameHeight() + 62 && this.mouseY <= halfGameHeight() + 74 && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 					var3 = 0xFF0000;
 				}
-
-				this.getSurface().drawColoredStringCentered(256, "Click here to close window", var3, 0, 1, var5);
+				this.getSurface().drawColoredStringCentered(halfGameWidth(), "Click here to close window", var3, 0, 1, halfGameHeight() + 74);
 				if (this.mouseButtonClick != 0) {
-					if (var5 - 12 < this.mouseY && var5 >= this.mouseY && this.mouseX > 181 && this.mouseX < 331) {
+					if (halfGameHeight() + 62 < this.mouseY && halfGameHeight() + 74 >= this.mouseY && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 						this.showUiWildWarn = 2;
 					}
-
 					this.mouseButtonClick = 0;
-					if (this.mouseX < 86 || this.mouseX > 426 || this.mouseY < 77 || this.mouseY > 257) {
+					if (this.mouseX < halfGameWidth() - 170 || this.mouseX > halfGameWidth() + 170 || this.mouseY < halfGameHeight() - 90 || this.mouseY > halfGameHeight() + 90) {
 						this.showUiWildWarn = 2;
 					}
 				}
