@@ -725,7 +725,7 @@ public class PacketHandler {
 		int wantExperienceElixirs, wantKeyboardShortcuts;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild;
-		int wantDecanting, wantCertsToBank, wantCustomRankDisplay;
+		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
 
 		if (!mc.gotInitialConfigs) {
 			serverName = this.getClientStream().readString();
@@ -748,7 +748,7 @@ public class PacketHandler {
 			experienceDropsToggle = this.getClientStream().getUnsignedByte();
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
 			showRoofToggle = this.getClientStream().getUnsignedByte();
-			Config.C_SHOW_ROOF = showRoofToggle != 1; // If we don't want the toggle, always show.
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantGlobalChat = this.getClientStream().getUnsignedByte();
 			wantSkillMenus = this.getClientStream().getUnsignedByte();
 			wantQuestMenus = this.getClientStream().getUnsignedByte();
@@ -765,6 +765,7 @@ public class PacketHandler {
 			wantDecanting = this.getClientStream().getUnsignedByte();
 			wantCertsToBank = this.getClientStream().getUnsignedByte();
 			wantCustomRankDisplay = this.getClientStream().getUnsignedByte();
+			wantRightClickBank = this.getClientStream().getUnsignedByte();
 		} else {
 			serverName = packetsIncoming.readString();
 			playerLevelLimit = packetsIncoming.getUnsignedByte();
@@ -786,7 +787,7 @@ public class PacketHandler {
 			experienceDropsToggle = packetsIncoming.getUnsignedByte();
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
 			showRoofToggle = packetsIncoming.getUnsignedByte();
-			Config.C_SHOW_ROOF = showRoofToggle != 1; // If we don't want the toggle, always show.
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantGlobalChat = packetsIncoming.getUnsignedByte();
 			wantSkillMenus = packetsIncoming.getUnsignedByte();
 			wantQuestMenus = packetsIncoming.getUnsignedByte();
@@ -803,6 +804,7 @@ public class PacketHandler {
 			wantDecanting = packetsIncoming.getUnsignedByte();
 			wantCertsToBank = packetsIncoming.getUnsignedByte();
 			wantCustomRankDisplay = packetsIncoming.getUnsignedByte();
+			wantRightClickBank = packetsIncoming.getUnsignedByte();
 		}
 
 		if (mc.DEBUG) {
@@ -840,7 +842,8 @@ public class PacketHandler {
 				"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild +
 				"\nS_WANT_DECANTING " + wantDecanting +
 				"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
-					"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay
+				"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay +
+				"\nS_RIGHT_CLICK_BANK" + wantRightClickBank
 			);
 		}
 
@@ -880,6 +883,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false");
 		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
 		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false");
+		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false");
 
 		Config.updateServerConfiguration(props);
 
