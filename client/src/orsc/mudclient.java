@@ -3571,7 +3571,6 @@ public final class mudclient implements Runnable {
 			if (var1 <= 90) {
 				this.loadGameConfig(true);
 			}
-
 			this.getSurface().drawBoxBorder(halfGameWidth() - 170, 340, halfGameHeight() - 90, 180, 0xFFFFFF);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "Warning! Proceed with caution", 0xFF0000, 0, 4, halfGameHeight() - 70);
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "If you go much further north you will enter the", 0xFFFFFF, 0, 1, halfGameHeight() - 44);
@@ -3585,17 +3584,20 @@ public final class mudclient implements Runnable {
 			if (this.mouseY > halfGameHeight() + 62 && this.mouseY <= halfGameHeight() + 74 && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 				var3 = 0xFF0000;
 			}
-
 			this.getSurface().drawColoredStringCentered(halfGameWidth(), "Click here to close window", var3, 0, 1, halfGameHeight() + 74);
 			if (this.mouseButtonClick != 0) {
 				if (halfGameHeight() + 62 < this.mouseY && halfGameHeight() + 74 >= this.mouseY && this.mouseX > halfGameWidth() - 75 && this.mouseX < halfGameWidth() + 75) {
 					this.showUiWildWarn = 2;
 				}
-
 				this.mouseButtonClick = 0;
 				if (this.mouseX < halfGameWidth() - 170 || this.mouseX > halfGameWidth() + 170 || this.mouseY < halfGameHeight() - 90 || this.mouseY > halfGameHeight() + 90) {
 					this.showUiWildWarn = 2;
 				}
+			}
+
+			this.mouseButtonClick = 0;
+			if (this.mouseX < halfGameWidth() - 170 || this.mouseX > halfGameWidth() + 170 || this.mouseY < halfGameHeight() - 90 || this.mouseY > halfGameHeight() + 90) {
+				this.showUiWildWarn = 2;
 			}
 
 		} catch (RuntimeException var4) {
