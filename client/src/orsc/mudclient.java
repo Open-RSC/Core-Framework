@@ -388,9 +388,6 @@ public final class mudclient implements Runnable {
 		gameState = 1;
 	}
 
-	static final int ORSC_VERSION = 19;
-
-	public static int orscRunningVersion;
 	/**
 	 * Newest RSC cache: SAME VALUES.
 	 * <p>
