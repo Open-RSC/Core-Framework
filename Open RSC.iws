@@ -2,98 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/build.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/EntityHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/EntityHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/DoorDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/DoorDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/ElevationDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/ElevationDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/EntityDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/EntityDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/GameObjectDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/GameObjectDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/ItemDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/ItemDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/NPCDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/NPCDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/PrayerDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/PrayerDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/SpellDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/SpellDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/TileDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/TileDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/extras/AnimationDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/extras/AnimationDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/extras/TextureDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/defs/extras/TextureDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/model/Sector.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/model/Sector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/model/Sprite.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/model/Sprite.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/client/model/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/client/model/Tile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/data/DataConversions.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/data/DataConversions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/data/DataFileDecrypter.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/data/DataFileDecrypter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/data/DataFileVariables.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/data/DataFileVariables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/data/DataOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/data/DataOperations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/InputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/InputListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/MenuAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/MenuAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/NComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/NComponent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/NCustomComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/NCustomComponent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/NRightClickMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/NRightClickMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/AchievementGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/AchievementGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/AuctionHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/AuctionHouse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankPinInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/BankPinInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/CustomBankInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/CustomBankInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/DoSkillInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/DoSkillInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/ExperienceConfigInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/ExperienceConfigInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/IronManInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/IronManInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/LostOnDeathInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/LostOnDeathInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/OnlineListInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/OnlineListInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/ProgressBarInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/ProgressBarInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/QuestGuideInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/QuestGuideInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/SkillGuideInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/SkillGuideInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/TerritorySignupInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/TerritorySignupInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/clan/Clan.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/clan/Clan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/clan/ClanInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/com/openrsc/interfaces/misc/clan/ClanInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/MiscFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/MiscFunctions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/ORSCApplet.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/ORSCApplet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/ORSCFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/ORSCFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/ORSCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/ORSCharacter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/PacketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/PacketHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/buffers/BufferStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/buffers/BufferStack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/buffers/RSBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/buffers/RSBuffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/buffers/RSBufferUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/buffers/RSBufferUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/buffers/RSBuffer_Bits.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/buffers/RSBuffer_Bits.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/buffers/StringEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/buffers/StringEncryption.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/GameModeWhat.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/GameModeWhat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/GameModeWhere.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/GameModeWhere.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/InputXAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/InputXAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/MenuItemAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/MenuItemAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/MessageTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/MessageTab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/MessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/MessageType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/enumerations/ORSCharacterDirection.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/enumerations/ORSCharacterDirection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/InputXPrompt.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/InputXPrompt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/KillAnnouncer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/KillAnnouncer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/KillAnnouncerQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/KillAnnouncerQueue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/MenuItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/MessageHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/MessageHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/Panel.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/Panel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/gui/SocialLists.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/gui/SocialLists.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/three/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/three/Polygon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/three/RSModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/three/RSModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/three/Scanline.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/three/Scanline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/three/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/three/Scene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/three/Shader.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/three/Shader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/three/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/three/World.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/two/Fonts.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/two/Fonts.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/two/GraphicsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/two/GraphicsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/graphics/two/MudClientGraphics.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/graphics/two/MudClientGraphics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/mudclient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/mudclient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/multiclient/ClientPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/net/Isaac.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/net/Isaac.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/net/Network_Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/net/Network_Base.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/net/Network_Socket.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/net/Network_Socket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/net/RSSocketFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/net/RSSocketFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/net/RSSocketFactory_Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/net/RSSocketFactory_Base.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/net/SocketProxyFailure.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/net/SocketProxyFailure.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/ArrayUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/ArrayUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/FastMath.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/FastMath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/GenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/GenUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/RSRuntimeError.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/RSRuntimeError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/StringUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/bzip/BZLib.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/bzip/BZLib.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/orsc/util/bzip/BZState.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/orsc/util/bzip/BZState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/DecoderThreadFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/DecoderThreadFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/FastThreadFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/FastThreadFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/GameEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/SlowThreadFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/SlowThreadFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/ControlButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/ControlButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LaunchButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LaunchButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LinkButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LinkButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/NavButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/NavButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/PositionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/PositionListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/popup/PopupFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/popup/PopupFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/threads/StatusChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/threads/StatusChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/ui/CustomBarUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/ui/CustomBarUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ConnectHttps.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ConnectHttps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -107,38 +36,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/plugins/PluginHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="361" column="39" selection-start-line="361" selection-start-column="36" selection-end-line="361" selection-end-column="39" />
-              <folding>
-                <element signature="e#1317#1338#0" expanded="true" />
-                <element signature="e#1406#1427#0" expanded="true" />
-                <element signature="e#1579#1589#0" expanded="true" />
-                <element signature="e#1725#1743#0" expanded="true" />
-                <element signature="e#2046#2056#0" expanded="true" />
-                <element signature="e#2111#2117#0" expanded="true" />
-                <element signature="e#6744#6753#0" expanded="true" />
-                <element signature="e#7356#7372#0" expanded="true" />
-                <element signature="e#7430#7440#0" expanded="true" />
-                <element signature="e#9773#9781#0" expanded="true" />
-                <element signature="e#11167#11175#0" expanded="true" />
-                <element signature="e#11593#11603#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client/src/orsc/Config.java">
+        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="23" column="53" lean-forward="true" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="53" />
-              <folding>
-                <element signature="e#8312#8313#0" expanded="true" />
-                <element signature="e#8342#8343#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="315">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
             </state>
           </provider>
         </entry>
@@ -155,6 +57,7 @@
         <option value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
         <option value="$PROJECT_DIR$/server/src/com/openrsc/server/plugins/PluginHandler.java" />
         <option value="$PROJECT_DIR$/client/src/orsc/Config.java" />
+        <option value="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java" />
       </list>
     </option>
   </component>
@@ -191,22 +94,7 @@
           <expand>
             <path>
               <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="orsc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="Launcher" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -218,7 +106,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1546468057397" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1546468370637" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
@@ -239,7 +127,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.Client">
+  <component name="RunManager" selected="Ant Target.Launcher">
     <configuration name="Client" type="AntRunConfiguration">
       <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
       <method v="2">
@@ -316,7 +204,7 @@
     <frame x="53" y="23" width="1627" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13123028" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13123028" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -333,7 +221,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="10" visible="true" weight="0.32406417" />
+      <window_info active="true" anchor="bottom" id="Messages" order="10" visible="true" weight="0.32406417" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -471,6 +359,34 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Tools/Map Generator/build.xml" />
+    <entry file="file://$PROJECT_DIR$/server/default.conf">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="51" column="35" lean-forward="true" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/orsc/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="14" column="27" lean-forward="true" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
+          <folding>
+            <element signature="e#8312#8313#0" expanded="true" />
+            <element signature="e#8342#8343#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/src/com/openrsc/server/plugins/PluginHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -492,17 +408,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/default.conf">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/orsc/Config.java">
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="23" column="53" lean-forward="true" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="53" />
-          <folding>
-            <element signature="e#8312#8313#0" expanded="true" />
-            <element signature="e#8342#8343#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="225">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
         </state>
       </provider>
     </entry>
