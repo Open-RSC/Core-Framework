@@ -248,7 +248,7 @@ public final class RegularPlayer implements CommandListener {
 		}
 		if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks"))
 		{
-			ArrayList<String> groups    = new ArrayList();
+			ArrayList<String> groups = new ArrayList();
 			for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
 				groups.add(Group.getStaffPrefix(entry.getKey()) + entry.getValue() + (player.isDev() ? " (" + entry.getKey() + ")" : ""));
 			}
