@@ -1,9 +1,11 @@
 package orsc.util;
 
 public class FastMath {
+	public static final int[] bitwiseMaskForShift = new int[]{0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095,
+		8191, 16383, 32767, '\uffff', 131071, 262143, 524287, 1048575, 2097151, 4194303, 8388607, 16777215,
+		33554431, 67108863, 134217727, 268435455, 536870911, 1073741823, Integer.MAX_VALUE, -1};
 	public static int[] trigTable256 = new int[512];
 	public static int[] trigTable1024 = new int[2048];
-
 	public static int[] trigTable_256 = new int[512];
 	public static int[] trigTable_1024 = new int[2048];
 
@@ -83,8 +85,4 @@ public class FastMath {
 			throw GenUtil.makeThrowable(var3, "aa.C(" + n + ',' + false + ')');
 		}
 	}
-
-	public static final int[] bitwiseMaskForShift = new int[] { 0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095,
-			8191, 16383, 32767, '\uffff', 131071, 262143, 524287, 1048575, 2097151, 4194303, 8388607, 16777215,
-			33554431, 67108863, 134217727, 268435455, 536870911, 1073741823, Integer.MAX_VALUE, -1 };
 }

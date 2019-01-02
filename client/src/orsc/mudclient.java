@@ -38,24 +38,127 @@ import java.util.Map.Entry;
 
 public final class mudclient implements Runnable {
 
-	public boolean DEBUG = false;
-
-	long lastFPSUpdate = 0;
-	int currentFPS = 0;
+	/**
+	 * Newest RSC cache: SAME VALUES.
+	 * <p>
+	 * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
+	 * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
+	 * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
+	 * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
+	 * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
+	 * mudclient.spriteProjectile; 3210
+	 */
+	public static final int spriteMedia = 2000;
+	public static final int spriteUtil = 2100;
+	public static final int spriteItem = 2150;
+	static final int spriteLogo = 3150;
+	static final int spriteProjectile = 3160;
+	static final int spriteTexture = 3225;
 	public static int FPS = 0;
-
+	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
 	static byte[][] s_kb = new byte[250][];
 	static int[] s_wb;
-
-	public Thread clientBaseThread = null;
+	private static ArrayList<String> messages = new ArrayList<String>();
+	private static int currentChat = 0;
+	private static ClientPort clientPort;
+	public final int[] bankItemOnTab = new int[500];
+	public final int[] mouseClickX = new int[8192];
+	public final int[] mouseClickY = new int[8192];
 	private final int m_S = 1000;
+	private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
+		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
+		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
+		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
+		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
+	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
+	private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
+	private final int[] bankItemID = new int[500];
+	private final int[] bankItemSize = new int[500];
+	private final boolean cameraAutoAngleDebug = false;
+	private final int[] characterBubbleScale = new int[150];
+	private final int[] characterBubbleX = new int[150];
+	private final int[] characterBubbleY = new int[150];
+	private final int[] characterDialogHalfWidth = new int[150];
+	private final int[] characterDialogHeight = new int[150];
+	private final String[] characterDialogString = new String[150];
+	private final int[] characterDialogX = new int[150];
+	private final int[] characterDialogY = new int[150];
+	private final int[] characterHealthX = new int[150];
+	private final int[] characterHealthY = new int[150];
+	private final int[] duelItemCounts = new int[8];
+	private final int[] duelOfferItemID = new int[8];
+	private final int[] duelOfferItemSize = new int[8];
+	private final int[] duelOpponentItemCount = new int[8];
+	private final int[] duelOpponentItemCounts = new int[8];
+	private final int[] duelOpponentItemId = new int[8];
+	private final int[] duelOpponentItems = new int[8];
+	private final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
+		"Prayer"};
+	private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
+	private final int[] gameObjectInstanceDir = new int[5000];
+	private final int[] gameObjectInstanceID = new int[5000];
+	private final RSModel[] gameObjectInstanceModel = new RSModel[5000];
+	private final int[] gameObjectInstanceX = new int[5000];
+	private final int[] groundItemID = new int[5000];
+	private final int[] groundItemX = new int[5000];
+	private final int[] groundItemZ = new int[5000];
+	private final int[] inventoryItemEquipped = new int[35];
+	private final int[] inventoryItemID = new int[35];
+	private final int[] inventoryItemSize = new int[35];
+	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
+	private final String[] optionsMenuText = new String[20];
+	private final int[] groundItemHeight = new int[5000];
+	private final int character2Colour = 2;
+	private final RSModel[] modelCache = new RSModel[1000];
+	private final int[] newBankItems = new int[500];
+	private final int[] newBankItemsCount = new int[500];
+	private final ORSCharacter[] npcs = new ORSCharacter[500];
+	private final ORSCharacter[] npcsCache = new ORSCharacter[500];
+	private final ORSCharacter[] npcsServer = new ORSCharacter[5000];
+	private final int[] pathX = new int[8000];
+	private final int[] pathZ = new int[8000];
+	private final int[] playerClothingColors = new int[]{0xFF0000, 16744448, 16769024, 10543104, '\ue000', '\u8000',
+		'\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 0xFFFFFF};
+	private final int[] playerExperience = new int[18];
+	private final int[] playerHairColors = new int[]{16760880, 16752704, 8409136, 6307872, 3158064, 16736288,
+		16728064, 0xFFFFFF, '\uff00', '\uffff'};
+	private final ORSCharacter[] players = new ORSCharacter[500];
+	private final ORSCharacter[] playerServer = new ORSCharacter[4000];
+	private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
+	private final int[] playerStatBase = new int[18];
+	private final int[] playerStatEquipment = new int[5];
+	private final boolean[] prayerOn = new boolean[50];
+	private final int projectileMaxRange = 40;
+	private final int[] shopItemCount = new int[256];
+	private final int[] shopItemID = new int[256];
+	private final int[] shopItemPrice = new int[256];
+	private final String[] skillNameLong = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
+		"Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+		"Herblaw", "Agility", "Thieving"};
+	private final String[] skillNames = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
+		"Magic", "Cooking", "Woodcut", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+		"Herblaw", "Agility", "Thieving"};
+	private final int[] teleportBubbleTime = new int[50];
+	private final int[] teleportBubbleX = new int[50];
+	private final int[] teleportBubbleZ = new int[50];
+	private final int tileSize = 128;
+	private final int[] tradeConfirmItems = new int[14];
+	private final int[] tradeConfirmItemsCount1 = new int[14];
+	private final int[] tradeItemID = new int[14];
+	private final int[] tradeItemSize = new int[14];
+	private final int[] tradeRecipientConfirmItemCount = new int[14];
+	private final int[] tradeRecipientConfirmItems = new int[14];
+	private final int[] tradeRecipientItem = new int[14];
+	private final int[] tradeRecipientItemCount = new int[14];
+	private final boolean[] wallObjectInstance_Arg1 = new boolean[500];
+	private final int[] wallObjectInstanceDir = new int[500];
+	private final int[] wallObjectInstanceID = new int[500];
+	private final RSModel[] wallObjectInstanceModel = new RSModel[500];
+	private final int[] wallObjectInstanceX = new int[500];
+	private final int[] wallObjectInstanceZ = new int[500];
+	public boolean DEBUG = false;
+	public Thread clientBaseThread = null;
 	public int threadState = 0;
-	private boolean hasGameCrashed = false;
-	private int gameState = 1;
-	int m_Q = 10;
-	long[] m_F = new long[10];
-	private int m_b = 0;
-
 	public String chatMessageInput = "";
 	public String chatMessageInputCommit = "";
 	public boolean controlPressed = false;
@@ -71,16 +174,9 @@ public final class mudclient implements Runnable {
 	public boolean pageUp = false;
 	public int lastMouseAction = 0;
 	public int lastMouseButtonDown = 0;
-	private static ArrayList<String> messages = new ArrayList<String>();
-	private static int currentChat = 0;
-	private PrintWriter printWriter;
 	public PacketHandler packetHandler;
-
 	public int selectedSkill = -1;
-	private int totalAchievements = 0;
-	private int sleepModifier = 20;
 	public boolean m_N = false;
-	String m_p = null;
 	public int mouseX = 0;
 	public int mouseY = 0;
 	public int screenOffsetX;
@@ -88,13 +184,399 @@ public final class mudclient implements Runnable {
 	public boolean shiftPressed = false;
 	//public int groupID = 100;
 	public boolean rendering;
-	private static ClientPort clientPort;
-	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
+	public int bankItemCount = 0;
+	public int bankItemsMax = 50;
+	public int bankPage = 0;
+	public int bankSelectedItemSlot = -1;
+	public int cameraRotation = 128;
+	public GameMode currentViewMode = GameMode.LOGIN;
+	public InputXAction inputX_Action = InputXAction.ACT_0;
+	public Menu menuCommon;
+	public int menuX = 0;
+	public int menuY = 0;
+	public int mouseButtonClick = 0;
+	public int mouseButtonItemCountIncrement = 0;
+	public int mouseClickCount = 0;
+	public int mouseClickXStep = 0;
+	public HashMap<String, File> soundCache = new HashMap<String, File>();
+	public boolean authenticSettings = !(
+		Config.isAndroid() ||
+			Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
+			|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
+			|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
+			|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
+			|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
+			|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
+			|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
+			|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+	public long totalXpGainedStartTime = 0;
+	public String[] achievementNames = new String[500];
+	public String[] achievementTitles = new String[500];
+	public String[] achievementDescs = new String[500];
+	public int[] achievementProgress = new int[500];
+	public boolean serverTypeMembers = Config.MEMBERS_FEATURES;
+	public int showUiTab = 0;
+	public boolean topMouseMenuVisible = false;
+	public boolean LAST_FRAME_SHOWING_KEYBOARD = false;
+	public int resizeWidth;
+	public int resizeHeight;
+	public Clan clan;
+	public boolean PAUSED;
+	public boolean gotInitialConfigs = false;
+	public ArrayList<String> skillGuideChosenTabs;
+	public String clanKickPlayer;
+	long lastFPSUpdate = 0;
+	int currentFPS = 0;
+	int m_Q = 10;
+	long[] m_F = new long[10];
+	String m_p = null;
+	long timePassed = 0;
+	double xpPerHour = 0;
+	private boolean hasGameCrashed = false;
+	private int gameState = 1;
+	private int m_b = 0;
+	private PrintWriter printWriter;
+	private int totalAchievements = 0;
+	private int sleepModifier = 20;
+	private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
+	private int appearanceHeadGender = 1;
+	private int appearanceHeadType = 0;
+	private int autoLoginTimeout = 0;
+	private int cameraAngle = 1;
+	private int cameraAutoRotatePlayerX = 0;
+	private int cameraAutoRotatePlayerZ = 0;
+	private boolean cameraAllowPitchModification = false;
+	private int cameraPitch = 912;
+	private int cameraRotationX = 0;
+	private int cameraRotationZ = 0;
+	private int cameraZoom = 550;
+	private int characterBubbleCount = 0;
+	private int[] characterBubbleID = new int[150];
+	private int characterDialogCount = 0;
+	private int[] characterHealthBar = new int[150];
+	private int characterHealthCount = 0;
+	private String chatMessageTarget;
+	private int frameCounter = 0;
+	private int combatStyle = 0;
+	private int combatTimeout = 0;
+	private int controlButtonAppearanceHeadMinus;
+	private int controlButtonAppearanceHeadPlus;
+	private int controlLoginPass;
+	private int controlLoginStatus1;
+	private int controlLoginStatus2;
+	private int controlLoginUser;
+	private int controlMagicPanel;
+	private int controlPlayerInfoPanel;
+	private int controlQuestInfoPanel;
+	private int controlSettingPanel;
+	private int controlPlayerTaskInfoPanel;
+	private int controlSocialPanel;
+	private int controlClanPanel;
+	private int currentRegionMaxX;
+	private int currentRegionMaxZ;
+	private int currentRegionMinX;
+	private int currentRegionMinZ;
+	private int deathScreenTimeout = 0;
+	private boolean duelConfirmed = false;
+	private String duelConfirmOpponentName = "";
+	private int duelDoX_Slot;
+	private int dropInventorySlot = -1;
+	private int[] duelItems = new int[8];
+	private int duelItemsCount = 0;
+	private boolean duelOfferAccepted = false;
+	private int duelOfferItemCount = 0;
+	private boolean duelOffsetOpponentAccepted = false;
+	private int duelOffsetOpponentItemCount = 0;
+	private int duelOpponentItemsCount = 0;
+	private String duelOpponentName;
+	private int duelOptionMagic;
+	private int duelOptionPrayer;
+	private int duelOptionRetreat;
+	private int duelOptionWeapons;
+	private boolean duelSettingsMagic = false;
+	private boolean duelSettingsPrayer = false;
+	private boolean duelSettingsRetreat = false;
+	private boolean duelSettingsWeapons = false;
+	private boolean errorLoadingCoadebase = false;
+	private boolean errorLoadingData = false;
+	private boolean errorLoadingMemory = false;
+	private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
+	private int fatigueSleeping = 0;
+	private boolean fogOfWar = false;
+	private int gameHeight = 334;
+	private int gameObjectInstanceCount = 0;
+	private int[] gameObjectInstanceZ = new int[5000];
+	private int gameWidth = 512;
+	private int groundItemCount = 0;
+	private boolean inputX_Focused = true;
+	private int inputX_Height = 0;
+	private String[] inputX_Lines = null;
+	private boolean inputX_OK = false;
+	private int inputX_Width = 0;
+	private boolean insideTutorial = false;
+	private int inventoryItemCount;
+	private boolean isSleeping = false;
+	private int knownPlayerCount = 0;
+	private int lastHeightOffset = -1;
+	private int lastObjectAnimationNumberFireLightningSpell = -1;
+	private int lastObjectAnimationNumberTorch = -1;
+	private int lastObjectAnimatonNumberClaw = -1;
+	private boolean loadingArea = false;
+	private ORSCharacter localPlayer = new ORSCharacter();
+	private int logoutTimeout = 0;
+	private int m_Ai;
+	private int m_be;
+	private int m_Ce = 0;
+	private int m_Cg;
+	private int m_cl = 30;
+	private int m_dk = 1;
+	private int m_ed;
+	private int m_eg = 2;
+	private int m_Eg;
+	private int m_ek;
+	private int m_Ge;
+	private int m_hh = 0;
+	private boolean runningAsApplet = true;
+	private boolean allowDebugCommands = !runningAsApplet || true;
+	private int optionsMenuCount = 0;
+	private String m_ig = "";
+	private int questPoints = 0;
+	private int m_Ji = 0;
+	private int settingTab = 0;
+	private int m_Jj;
+	private int m_Kj;
+	private int m_ld = 2;
+	private int characterBottomColour = 14;
+	private int m_Mj;
+	private int m_nj = -1;
+	private int m_Of;
+	private int m_oj = 0;
+	private int m_Oj = 0;
+	private int m_Ok = 2;
+	private int m_qd = 9;
+	private int m_rc = 0;
+	private int m_Re;
+	private int m_rf;
+	private boolean m_ue = false;
+	private int m_Wc = 0;
+	private int m_Wg = 8;
+	private long lastWrite;
+	private int m_wk = -1;
+	private int m_Xc;
+	private int loginScreenNumber = 0;
+	private int m_Xi;
+	private int rememberButtonIdx;
+	private int m_Zb = 0;
+	private int localPlayerServerIndex = -1;
+	private int m_Ze;
+	private Menu menuDuel;
+	private boolean menuDuel_Visible = false;
+	private int menuDuelX;
+	private int menuDuelY;
+	private Menu menuTrade;
+	private boolean menuTrade_Visible = false;
+	private int menuTradeX;
+	private int menuTradeY;
+	private boolean menuVisible = false;
+	private int messageTabActivity_Chat = 0;
+	private int messageTabActivity_Game = 0;
+	private int messageTabActivity_Private = 0;
+	private int messageTabActivity_Clan = 0;
+	private int messageTabActivity_Quest = 0;
+	private MessageTab messageTabSelected = MessageTab.ALL;
+	private int midRegionBaseX;
+	private int midRegionBaseZ;
+	private int minimapRandom_1 = 0;
+	private int minimapRandom_2 = 0;
+	private int mouseButtonDownTime = 0;
+	private int mouseWalkX = 0;
+	private int mouseWalkY = 0;
+	private int newBankItemCount = 0;
+	private int npcCacheCount = 0;
+	private int npcCount = 0;
+	private int objectAnimationCount = 0;
+	private int objectAnimationNumberClaw = 0;
+	private int objectAnimationNumberFireLightningSpell = 0;
+	private int objectAnimationNumberTorch = 0;
+	private boolean optionCameraModeAuto = true;
+	private boolean optionMouseButtonOne = false;
+	private boolean optionSoundDisabled = true;
+	private boolean clanInviteBlockSetting = false;
+	private Panel panelAppearance;
+	private Panel panelLogin;
+	private Panel panelLoginWelcome;
+	private Panel panelMagic;
+	private int panelMessageChat;
+	private int panelMessageEntry;
+	private int panelMessagePrivate;
+	private int panelMessageQuest;
+	private int panelMessageClan;
+	private Panel panelMessageTabs;
+	private Panel panelPlayerInfo;
+	private Panel panelQuestInfo;
+	//private Panel panelPlayerTaskInfo;
+	private Panel panelSettings;
+	private Panel panelSocial;
+	private Panel panelClan;
+	private SocialPopupMode panelSocialPopup_Mode = SocialPopupMode.NONE;
+	private int panelSocialTab = 0;
+	private String password = "";
+	private int playerCount = 0;
+	private int playerLocalX;
+	private int playerLocalZ;
+	private int[] playerStatCurrent = new int[18];
+	private String[] messagesArray = new String[5];
+	private long[] playerStatXpGained = new long[18];
+	private long[] xpGainedStartTime = new long[18];
+	private long playerXpGainedTotal = 0;
+	private String[] questNames = new String[100];
+	private int[] questStages = new int[100];
+	private int reportAbuse_AbuseType = 0;
+	private String reportAbuse_Name = "";
+	private int reportAbuse_State = 0;
+	private int requestedPlane = -1;
+	private Scene scene;
+	private int selectedItemInventoryIndex = -1;
+	private int selectedSpell = -1;
+	private String serverMessage = "";
+	private boolean serverMessageBoxTop = false;
+	private boolean developerMenu = false;
+	private int devMenuNpcID;
+	private boolean modMenu = false;
+	private int settingsBlockChat = 0;
+	private int settingsBlockDuel = 0;
+	private int settingsBlockPrivate = 0;
+	private int settingsBlockTrade = 0;
+	private int shopBuyPriceMod = 0;
+	private int shopPriceMultiplier = 0;
+	private int shopSelectedItemIndex = -1;
+	private int shopSelectedItemType = -2;
+	private int shopSellPriceMod = 0;
+	private boolean showAppearanceChange = false;
+	private boolean showDialogBank = false;
+	private boolean showDialogDuel = false;
+	private boolean showDialogDuelConfirm = false;
+	private boolean showDialogMessage = false;
+	private boolean showDialogServerMessage = false;
+	private boolean showDialogShop = false;
+	private boolean showDialogTrade = false;
+	private boolean showDialogTradeConfirm = false;
+	private boolean optionsMenuShow = false;
+	private int showUiWildWarn = 0;
+	private int recentSkill = -1;
+	private String sleepingStatusText = null;
+	private boolean sleepWordDelay = true;
+	private int sleepWordDelayTimer = 0;
+	private byte[] soundData = null;
+	private int spriteCount = 0;
+	private int statFatigue = 0;
+	private MudClientGraphics surface;
+	private int systemUpdate = 0;
+	private int elixirTimer = 0;
+	private boolean inWild = false;
+	private int teleportBubbleCount = 0;
+	private int[] teleportBubbleType = new int[50];
+	private boolean tradeAccepted = false;
+	private boolean tradeConfirmAccepted = false;
+	private int tradeConfirmItemsCount = 0;
+	private int tradeDoX_Slot;
+	private int tradeItemCount = 0;
+	private boolean tradeRecipientAccepted = false;
+	private int tradeRecipientConfirmItemsCount = 0;
+	private String tradeRecipientConfirmName;
+	private int tradeRecipientItemsCount = 0;
+	private String tradeRecipientName = "";
+	private int uiTabPlayerInfoSubTab = 0;
+	private String username = "";
+	private int wallObjectInstanceCount = 0;
+	private int welcomeLastLoggedInDays = 0;
+	private String welcomeLastLoggedInHost = null;
+	private String welcomeLastLoggedInIp;
+
+	private int welcomeRecoverySetDays = 0;
+
+	private boolean welcomeScreenShown = false;
+
+	//private int welcomeUnreadMessages = 0;
+	private World world;
+	private int worldOffsetX = 0;
+	private int worldOffsetZ = 0;
+	private int prayerMenuIndex = 0;
+	private int magicMenuIndex = 0;
+	private Panel menuNewUser;
+	private int menuNewUserUsername;
+	private int menuNewUserPassword;
+	private int menuNewUserEmail;
+	private int menuNewUserStatus;
+	private int menuNewUserStatus2;
+	private int menuNewUserSubmit;
+	private int menuNewUserCancel;
+	private int loginButtonNewUser;
+	//flag consumed by bank interface to sync custom options
+	//gets unset when player logins again after welcome screen
+	private boolean initLoginCleared;
+	private int xpPerHourCount = 0;
+	private CustomBankInterface bank;
+	private int settingsBlockGlobal;
+	private int lastSelectedSpell = -1;
+	private int flag = 0;
+	private Timer tiktok = new Timer();
+	private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
+	private NComponent mainComponent;
+	private OnlineListInterface onlineList;
+	private NCustomComponent experienceOverlay;
+	private ProgressBarInterface batchProgressBar;
+	private BankPinInterface bankPinInterface;
+	private FishingTrawlerInterface fishingTrawlerInterface;
+	//private AchievementGUI achievementInterface;
+	private IronManInterface ironmanInterface;
+	private AuctionHouse auctionHouse;
+	private SkillGuideInterface skillGuideInterface;
+	private QuestGuideInterface questGuideInterface;
+	private ExperienceConfigInterface experienceConfigInterface;
+	private DoSkillInterface doSkillInterface;
+	private LostOnDeathInterface lostOnDeathInterface;
+	private TerritorySignupInterface territorySignupInterface;
+	private String skillGuideChosen;
+	private String questGuideChosen;
+	private int questGuideProgress;
+	private String questGuideStartWho;
+	private String questGuideStartWhere;
+	private String[] questGuideStartWhos = {"Sir Amik Varze", "the Cook", "the Gypsy", "Doric", "the Priest", "the Bertender", "Veronica", "Wizard Mizgog", "Redbeard Frank", "Chancellor Hassan", "Romeo", "Fred the Farmer", "Reldo", "the Squire", "Morgan", "Hetty", "the Guildmaster", "a boy", "the Adventurers", "Achetties", "Kaqemeex", "King Arthur", "Thormac", "Dimintheis", "Kangai Mau", "a mountain dwarf", "Brother Omad", "Lucien", "Brother Kojo", "King Arthur", "Lady Servil", "Bolren", "Ceril Carnillean", "Councillor Halgrive", "Edmond", "Caroline", "Almera", "Elena", "Trufitus", "King Narnode Shareen", "Mosol Rei", "King Lathas", "Observatory Professor", "Irena", "Watchtower Wizard", "Captain Lawgof", "a Gaurd", "an Examiner", "Gertrude", "Sir Radimus Erkle"};
+	private String[] questGuideStartWheres = {"on the first floor of the White Knight's Castle in Falador", "on the first floor of Lumbridge Castle", "in Varrock Square", "north of Falador", "in the Lumbridge church", "inside the Rusty Anchor bar in Port Sarim", "outside of Draynor Manor", "on the top floor of the Wizard's Tower", "in Port Sarim", "inside Al-Kharid palace", "in Varrock Square", "north of Lumbridge", "in the Varrock Palace Library", "on the White Knight Castle grounds in Falador", "in Draynor Village", "in Rimmington", "inside the Champion's Guild", "in Taverly", "in the Lumbridge swamp", "outside of the Heroes' Guild north of Taverly", "at the Druid's Stone Circle in Taverly", "in Camelot", "on the top floor fo the Sorcerer's Tower south of Seer's Village", "in eastern Varrock", "in The Shrimp and Parrot pub in Brimhaven", "on either side of the White Wolf Mountain passage", "in the Monastery south of East Ardougne", "in the Flying Horse Inn on the western end of East Ardougne", "inside the Clock Tower south of East Ardougne", "in Camelot", "west of Port Khazard", "in Tree Gnome Village", "south of the Ardougne Castle", "outside of the East Ardougne church", "north of the Ardougne Castle", "east of Ardougne", "northeast of Baxtorian Falls", "north of the Ardougne Castle", "north-east of Tai Bwo Wannai", "in the Grand Tree", "outside of Shilo Village in southern Karamja", "on the ground floor of Ardougne Castle", "in the Observatory reception room west of the Tree Gnome Village", "outside the Shantay Pass in the Kharidian desert", "at the top of the Watchtower north of Yanille", "far north-east of Seer's Village", "in the Sinclair Mansion north of Camelot", "in the Exam Centre south of the Digsite", "at her house west of Varrock", "inside the Legend's Guild"};
+	private String[] questGuideRequirement;
+	private String[] questGuideReward;
+	private String[][] questGuideRequirements = {{"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"}};
+	private String[][] questGuideRewards = {{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "300 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "(Lvl + 1)*75 + 100 Mining experience", "Ability to use Doric's anvils", "180 coins",}, {"1 Quest Point", "1125 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*30 + 20 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "875 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "180 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "4825 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 1000 Defense experience", "Lvl*300 + 1000 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*125 + 200 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "6625 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*75 + 6950 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*57 + 205 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Trees", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 Agility Experience", "875 Attack experience", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "15000 Magic experience", "Ability to use the Watchtower teleport spell", "5000 coins"}, {"3 Quest Points", "Lvl*38 + 162 Crafting experience", "2000 coins"}, {"1 Quest Points", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"2 Quest Points", "(Lvl+1)*300 Mining experience", "(Lvl+1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "7650 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}};
+	private String skillToDo;
+	private long time;
+	private long m_timer;
+	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
 
 	public mudclient(ORSCApplet handler) {
 		this.clientPort = handler;
 		Config.F_CACHE_DIR = clientPort.getCacheLocation();
 		Config.initConfig();
+	}
+
+	public static boolean isValidEmailAddress(String email) {
+		boolean stricterFilter = true;
+		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
+		String emailRegex = stricterFilter ? stricterFilterString : laxString;
+		java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
+		java.util.regex.Matcher m = p.matcher(email);
+		return m.matches();
+	}
+
+	public static final String formatStackAmount(int length) {
+		if (length < 100000) {
+			return String.valueOf(length);
+		}
+		if (length < 10000000) {
+			return "@whi@" + String.valueOf(length / 1000) + "K";
+		}
+		return "@gre@" + String.valueOf(length / 1000000) + "M";
 	}
 
 	final void zeroMF() {
@@ -388,437 +870,9 @@ public final class mudclient implements Runnable {
 		gameState = 1;
 	}
 
-	/**
-	 * Newest RSC cache: SAME VALUES.
-	 * <p>
-	 * mudclient.spriteMedia = 2000; mudclient.spriteUtil =
-	 * mudclient.spriteMedia + 100; 2100 mudclient.spriteItem = 50 +
-	 * mudclient.spriteUtil; 2150 mudclient.spriteLogo = 1000 +
-	 * mudclient.spriteItem; 3150 mudclient.spriteProjectile = 10 +
-	 * mudclient.spriteLogo; 3160 mudclient.spriteTexture = 50 +
-	 * mudclient.spriteProjectile; 3210
-	 */
-	public static final int spriteMedia = 2000;
-	public static final int spriteUtil = 2100;
-	public static final int spriteItem = 2150;
-	static final int spriteLogo = 3150;
-	static final int spriteProjectile = 3160;
-	static final int spriteTexture = 3225;
-
-	private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
-		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4}, {11, 3, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4},
-		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
-		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
-		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
-	private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
-	private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
-	private int appearanceHeadGender = 1;
-	private int appearanceHeadType = 0;
-	private int autoLoginTimeout = 0;
-	public int bankItemCount = 0;
-	private final int[] bankItemID = new int[500];
-	private final int[] bankItemSize = new int[500];
-	public final int[] bankItemOnTab = new int[500];
-	public int bankItemsMax = 50;
-	public int bankPage = 0;
-	public int bankSelectedItemSlot = -1;
-	private int cameraAngle = 1;
-	private final boolean cameraAutoAngleDebug = false;
-	private int cameraAutoRotatePlayerX = 0;
-	private int cameraAutoRotatePlayerZ = 0;
-	public int cameraRotation = 128;
-	private boolean cameraAllowPitchModification = false;
-	private int cameraPitch = 912;
-	private int cameraRotationX = 0;
-	private int cameraRotationZ = 0;
-	private int cameraZoom = 550;
-	private int characterBubbleCount = 0;
-	private int[] characterBubbleID = new int[150];
-	private final int[] characterBubbleScale = new int[150];
-	private final int[] characterBubbleX = new int[150];
-	private final int[] characterBubbleY = new int[150];
-	private int characterDialogCount = 0;
-	private final int[] characterDialogHalfWidth = new int[150];
-	private final int[] characterDialogHeight = new int[150];
-	private final String[] characterDialogString = new String[150];
-	private final int[] characterDialogX = new int[150];
-	private final int[] characterDialogY = new int[150];
-	private int[] characterHealthBar = new int[150];
-	private int characterHealthCount = 0;
-	private final int[] characterHealthX = new int[150];
-	private final int[] characterHealthY = new int[150];
-	private String chatMessageTarget;
-	private int frameCounter = 0;
-	private int combatStyle = 0;
-	private int combatTimeout = 0;
-	private int controlButtonAppearanceHeadMinus;
-	private int controlButtonAppearanceHeadPlus;
-	private int controlLoginPass;
-	private int controlLoginStatus1;
-	private int controlLoginStatus2;
-	private int controlLoginUser;
-	private int controlMagicPanel;
-	private int controlPlayerInfoPanel;
-	private int controlQuestInfoPanel;
-	private int controlSettingPanel;
-	private int controlPlayerTaskInfoPanel;
-	private int controlSocialPanel;
-	private int controlClanPanel;
-	private int currentRegionMaxX;
-	private int currentRegionMaxZ;
-	private int currentRegionMinX;
-	private int currentRegionMinZ;
-	public GameMode currentViewMode = GameMode.LOGIN;
-	private int deathScreenTimeout = 0;
-	private boolean duelConfirmed = false;
-	private String duelConfirmOpponentName = "";
-	private int duelDoX_Slot;
-	private int dropInventorySlot = -1;
-	private final int[] duelItemCounts = new int[8];
-	private int[] duelItems = new int[8];
-	private int duelItemsCount = 0;
-	private boolean duelOfferAccepted = false;
-	private int duelOfferItemCount = 0;
-	private final int[] duelOfferItemID = new int[8];
-	private final int[] duelOfferItemSize = new int[8];
-	private boolean duelOffsetOpponentAccepted = false;
-	private int duelOffsetOpponentItemCount = 0;
-	private final int[] duelOpponentItemCount = new int[8];
-	private final int[] duelOpponentItemCounts = new int[8];
-	private final int[] duelOpponentItemId = new int[8];
-	private final int[] duelOpponentItems = new int[8];
-	private int duelOpponentItemsCount = 0;
-	private String duelOpponentName;
-	private int duelOptionMagic;
-	private int duelOptionPrayer;
-	private int duelOptionRetreat;
-	private int duelOptionWeapons;
-	private boolean duelSettingsMagic = false;
-	private boolean duelSettingsPrayer = false;
-	private boolean duelSettingsRetreat = false;
-	private boolean duelSettingsWeapons = false;
-	private final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
-		"Prayer"};
-	private boolean errorLoadingCoadebase = false;
-	private boolean errorLoadingData = false;
-	private boolean errorLoadingMemory = false;
-	private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
-	private int fatigueSleeping = 0;
-	private boolean fogOfWar = false;
-	private int gameHeight = 334;
-	private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
-	private int gameObjectInstanceCount = 0;
-	private final int[] gameObjectInstanceDir = new int[5000];
-	private final int[] gameObjectInstanceID = new int[5000];
-	private final RSModel[] gameObjectInstanceModel = new RSModel[5000];
-	private final int[] gameObjectInstanceX = new int[5000];
-	private int[] gameObjectInstanceZ = new int[5000];
-	private int gameWidth = 512;
-	private int groundItemCount = 0;
-	private final int[] groundItemID = new int[5000];
-	private final int[] groundItemX = new int[5000];
-	private final int[] groundItemZ = new int[5000];
-	public InputXAction inputX_Action = InputXAction.ACT_0;
-	private boolean inputX_Focused = true;
-	private int inputX_Height = 0;
-	private String[] inputX_Lines = null;
-	private boolean inputX_OK = false;
-	private int inputX_Width = 0;
-	private boolean insideTutorial = false;
-	private int inventoryItemCount;
-	private final int[] inventoryItemEquipped = new int[35];
-	private final int[] inventoryItemID = new int[35];
-	private final int[] inventoryItemSize = new int[35];
-	private boolean isSleeping = false;
-	private int knownPlayerCount = 0;
-	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
-	private int lastHeightOffset = -1;
-	private int lastObjectAnimationNumberFireLightningSpell = -1;
-	private int lastObjectAnimationNumberTorch = -1;
-	private int lastObjectAnimatonNumberClaw = -1;
-	private boolean loadingArea = false;
-	private ORSCharacter localPlayer = new ORSCharacter();
-	private int logoutTimeout = 0;
-	private final String[] optionsMenuText = new String[20];
-	private int m_Ai;
-	private int m_be;
-	private int m_Ce = 0;
-	private int m_Cg;
-	private int m_cl = 30;
-	private int m_dk = 1;
-	private int m_ed;
-	private int m_eg = 2;
-	private int m_Eg;
-	private int m_ek;
-	private int m_Ge;
-	private int m_hh = 0;
-	private boolean runningAsApplet = true;
-	private boolean allowDebugCommands = !runningAsApplet || true;
-	private int optionsMenuCount = 0;
-	private String m_ig = "";
-	private int questPoints = 0;
-	private int m_Ji = 0;
-	private int settingTab = 0;
-	private int m_Jj;
-	private int m_Kj;
-	private int m_ld = 2;
-	private final int[] groundItemHeight = new int[5000];
-	private int characterBottomColour = 14;
-	private int m_Mj;
-	private int m_nj = -1;
-	private int m_Of;
-	private int m_oj = 0;
-	private int m_Oj = 0;
-	private int m_Ok = 2;
-	private int m_qd = 9;
-	private int m_rc = 0;
-	private int m_Re;
-	private int m_rf;
-	private boolean m_ue = false;
-	private int m_Wc = 0;
-	private final int character2Colour = 2;
-	private int m_Wg = 8;
-	private long lastWrite;
-	private int m_wk = -1;
-	private int m_Xc;
-	private int loginScreenNumber = 0;
-	private int m_Xi;
-	private int rememberButtonIdx;
-	private int m_Zb = 0;
-	private int localPlayerServerIndex = -1;
-	private int m_Ze;
-	public Menu menuCommon;
-	private Menu menuDuel;
-	private boolean menuDuel_Visible = false;
-	private int menuDuelX;
-	private int menuDuelY;
-	private Menu menuTrade;
-	private boolean menuTrade_Visible = false;
-	private int menuTradeX;
-	private int menuTradeY;
-	private boolean menuVisible = false;
-	public int menuX = 0;
-	public int menuY = 0;
-	private int messageTabActivity_Chat = 0;
-	private int messageTabActivity_Game = 0;
-	private int messageTabActivity_Private = 0;
-	private int messageTabActivity_Clan = 0;
-	private int messageTabActivity_Quest = 0;
-	private MessageTab messageTabSelected = MessageTab.ALL;
-	private int midRegionBaseX;
-	private int midRegionBaseZ;
-	private int minimapRandom_1 = 0;
-	private int minimapRandom_2 = 0;
-	private final RSModel[] modelCache = new RSModel[1000];
-	public int mouseButtonClick = 0;
-	private int mouseButtonDownTime = 0;
-	public int mouseButtonItemCountIncrement = 0;
-	public int mouseClickCount = 0;
-	public final int[] mouseClickX = new int[8192];
-	public int mouseClickXStep = 0;
-	public final int[] mouseClickY = new int[8192];
-	private int mouseWalkX = 0;
-	private int mouseWalkY = 0;
-	private int newBankItemCount = 0;
-	private final int[] newBankItems = new int[500];
-	private final int[] newBankItemsCount = new int[500];
-	private int npcCacheCount = 0;
-	private int npcCount = 0;
-	private final ORSCharacter[] npcs = new ORSCharacter[500];
-	private final ORSCharacter[] npcsCache = new ORSCharacter[500];
-	private final ORSCharacter[] npcsServer = new ORSCharacter[5000];
-	private int objectAnimationCount = 0;
-	private int objectAnimationNumberClaw = 0;
-	private int objectAnimationNumberFireLightningSpell = 0;
-	private int objectAnimationNumberTorch = 0;
-	private boolean optionCameraModeAuto = true;
-	private boolean optionMouseButtonOne = false;
-	private boolean optionSoundDisabled = true;
-	private boolean clanInviteBlockSetting = false;
-
-	private Panel panelAppearance;
-	private Panel panelLogin;
-	private Panel panelLoginWelcome;
-	private Panel panelMagic;
-	private int panelMessageChat;
-	private int panelMessageEntry;
-	private int panelMessagePrivate;
-	private int panelMessageQuest;
-	private int panelMessageClan;
-	private Panel panelMessageTabs;
-	private Panel panelPlayerInfo;
-	private Panel panelQuestInfo;
-	//private Panel panelPlayerTaskInfo;
-	private Panel panelSettings;
-	public HashMap<String, File> soundCache = new HashMap<String, File>();
-	public boolean authenticSettings = !(
-		Config.isAndroid() ||
-			Config.S_WANT_CLANS || Config.S_WANT_KILL_FEED
-			|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
-			|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
-			|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-			|| Config.S_ZOOM_VIEW_TOGGLE || Config.S_MENU_COMBAT_STYLE_TOGGLE
-			|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
-			|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-			|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
-	private Panel panelSocial;
-	private Panel panelClan;
-	private SocialPopupMode panelSocialPopup_Mode = SocialPopupMode.NONE;
-	private int panelSocialTab = 0;
-	private String password = "";
-	private final int[] pathX = new int[8000];
-	private final int[] pathZ = new int[8000];
-	private final int[] playerClothingColors = new int[]{0xFF0000, 16744448, 16769024, 10543104, '\ue000', '\u8000',
-		'\ua080', '\ub0ff', '\u80ff', 12528, 14680288, 3158064, 6307840, 8409088, 0xFFFFFF};
-	private int playerCount = 0;
-	private final int[] playerExperience = new int[18];
-	private final int[] playerHairColors = new int[]{16760880, 16752704, 8409136, 6307872, 3158064, 16736288,
-		16728064, 0xFFFFFF, '\uff00', '\uffff'};
-	private int playerLocalX;
-	private int playerLocalZ;
-	private final ORSCharacter[] players = new ORSCharacter[500];
-	private final ORSCharacter[] playerServer = new ORSCharacter[4000];
-	private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
-	private final int[] playerStatBase = new int[18];
-	private int[] playerStatCurrent = new int[18];
-	private String[] messagesArray = new String[5];
-	private final int[] playerStatEquipment = new int[5];
-	private long[] playerStatXpGained = new long[18];
-	private long[] xpGainedStartTime = new long[18];
-	private long playerXpGainedTotal = 0;
-	public long totalXpGainedStartTime = 0;
-	private final boolean[] prayerOn = new boolean[50];
-	private final int projectileMaxRange = 40;
-	private String[] questNames = new String[100];
-	public String[] achievementNames = new String[500];
-	public String[] achievementTitles = new String[500];
-	public String[] achievementDescs = new String[500];
-	private int[] questStages = new int[100];
-	public int[] achievementProgress = new int[500];
-	private int reportAbuse_AbuseType = 0;
-	private String reportAbuse_Name = "";
-	private int reportAbuse_State = 0;
-	private int requestedPlane = -1;
-	private Scene scene;
-	private int selectedItemInventoryIndex = -1;
-	private int selectedSpell = -1;
-	private String serverMessage = "";
-	private boolean serverMessageBoxTop = false;
-	public boolean serverTypeMembers = Config.MEMBERS_FEATURES;
-	private boolean developerMenu = false;
-	private int devMenuNpcID;
-	private boolean modMenu = false;
-	private int settingsBlockChat = 0;
-	private int settingsBlockDuel = 0;
-	private int settingsBlockPrivate = 0;
-	private int settingsBlockTrade = 0;
-	private int shopBuyPriceMod = 0;
-	private final int[] shopItemCount = new int[256];
-	private final int[] shopItemID = new int[256];
-	private final int[] shopItemPrice = new int[256];
-	private int shopPriceMultiplier = 0;
-	private int shopSelectedItemIndex = -1;
-	private int shopSelectedItemType = -2;
-	private int shopSellPriceMod = 0;
-	private boolean showAppearanceChange = false;
-	private boolean showDialogBank = false;
-	private boolean showDialogDuel = false;
-	private boolean showDialogDuelConfirm = false;
-	private boolean showDialogMessage = false;
-	private boolean showDialogServerMessage = false;
-	private boolean showDialogShop = false;
-	private boolean showDialogTrade = false;
-	private boolean showDialogTradeConfirm = false;
-	private boolean optionsMenuShow = false;
-	public int showUiTab = 0;
-	private int showUiWildWarn = 0;
-	private final String[] skillNameLong = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
-		"Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
-		"Herblaw", "Agility", "Thieving"};
-	private final String[] skillNames = new String[]{"Attack", "Defense", "Strength", "Hits", "Ranged", "Prayer",
-		"Magic", "Cooking", "Woodcut", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
-		"Herblaw", "Agility", "Thieving"};
-	private int recentSkill = -1;
-	private String sleepingStatusText = null;
-	private boolean sleepWordDelay = true;
-	private int sleepWordDelayTimer = 0;
-	private byte[] soundData = null;
-	private int spriteCount = 0;
-	private int statFatigue = 0;
-	private MudClientGraphics surface;
-	private int systemUpdate = 0;
-	private int elixirTimer = 0;
-	private boolean inWild = false;
-	private int teleportBubbleCount = 0;
-	private final int[] teleportBubbleTime = new int[50];
-	private int[] teleportBubbleType = new int[50];
-	private final int[] teleportBubbleX = new int[50];
-	private final int[] teleportBubbleZ = new int[50];
-	private final int tileSize = 128;
-	public boolean topMouseMenuVisible = false;
-	private boolean tradeAccepted = false;
-	private boolean tradeConfirmAccepted = false;
-	private final int[] tradeConfirmItems = new int[14];
-	private int tradeConfirmItemsCount = 0;
-	private final int[] tradeConfirmItemsCount1 = new int[14];
-	private int tradeDoX_Slot;
-	private int tradeItemCount = 0;
-	private final int[] tradeItemID = new int[14];
-	private final int[] tradeItemSize = new int[14];
-	private boolean tradeRecipientAccepted = false;
-	private final int[] tradeRecipientConfirmItemCount = new int[14];
-	private final int[] tradeRecipientConfirmItems = new int[14];
-	private int tradeRecipientConfirmItemsCount = 0;
-	private String tradeRecipientConfirmName;
-	private final int[] tradeRecipientItem = new int[14];
-	private final int[] tradeRecipientItemCount = new int[14];
-	private int tradeRecipientItemsCount = 0;
-	private String tradeRecipientName = "";
-	private int uiTabPlayerInfoSubTab = 0;
-	private String username = "";
-	private final boolean[] wallObjectInstance_Arg1 = new boolean[500];
-	private int wallObjectInstanceCount = 0;
-	private final int[] wallObjectInstanceDir = new int[500];
-	private final int[] wallObjectInstanceID = new int[500];
-	private final RSModel[] wallObjectInstanceModel = new RSModel[500];
-	private final int[] wallObjectInstanceX = new int[500];
-	private final int[] wallObjectInstanceZ = new int[500];
-	private int welcomeLastLoggedInDays = 0;
-	private String welcomeLastLoggedInHost = null;
-	private String welcomeLastLoggedInIp;
-
-	private int welcomeRecoverySetDays = 0;
-
-	private boolean welcomeScreenShown = false;
-
-	//private int welcomeUnreadMessages = 0;
-	private World world;
-
 	public World getWorld() {
 		return world;
 	}
-
-	private int worldOffsetX = 0;
-	private int worldOffsetZ = 0;
-	private int prayerMenuIndex = 0;
-	private int magicMenuIndex = 0;
-
-	private Panel menuNewUser;
-
-	private int menuNewUserUsername;
-	private int menuNewUserPassword;
-	private int menuNewUserEmail;
-	private int menuNewUserStatus;
-	private int menuNewUserStatus2;
-	private int menuNewUserSubmit;
-	private int menuNewUserCancel;
-
-	private int loginButtonNewUser;
-
-	//flag consumed by bank interface to sync custom options
-	//gets unset when player logins again after welcome screen
-	private boolean initLoginCleared;
 
 	public final void addFriend(String player) {
 		try {
@@ -1541,20 +1595,20 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	public void setLocalPlayerServerIndex(int i) {
-		this.localPlayerServerIndex = i;
-	}
-
 	public int getLocalPlayerServerIndex() {
 		return this.localPlayerServerIndex;
 	}
 
-	public void setM_rc(int i) {
-		this.m_rc = i;
+	public void setLocalPlayerServerIndex(int i) {
+		this.localPlayerServerIndex = i;
 	}
 
 	public int getM_rc() {
 		return this.m_rc;
+	}
+
+	public void setM_rc(int i) {
+		this.m_rc = i;
 	}
 
 	public final ORSCharacter createPlayer(int zPosition, int serverIndex, int xPosition, int var4, ORSCharacterDirection direction) {
@@ -4136,8 +4190,6 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	public boolean LAST_FRAME_SHOWING_KEYBOARD = false;
-
 	private void drawInputX() {
 		try {
 			if (this.inputTextFinal.length() <= 0 && !this.inputX_OK) {
@@ -5263,10 +5315,6 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private int xpPerHourCount = 0;
-	long timePassed = 0;
-	double xpPerHour = 0;
-
 	private final void drawExperienceCounter(int skill) {
 		if (!Config.S_EXPERIENCE_COUNTER_TOGGLE) return;
 		if (selectedSkill >= 0) {
@@ -5604,14 +5652,6 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var4, "client.DC(" + var1 + ')');
 		}
 	}
-
-	private CustomBankInterface bank;
-
-	private int settingsBlockGlobal;
-	private int lastSelectedSpell = -1;
-
-	public int resizeWidth;
-	public int resizeHeight;
 
 	private void drawDialogBank() {
 		bank.onRender();
@@ -7847,9 +7887,6 @@ public final class mudclient implements Runnable {
 
 	}
 
-	private int flag = 0;
-	private Timer tiktok = new Timer();
-
 	private boolean doubleClick() {
 		if (tiktok == null) {
 			tiktok = new Timer();
@@ -9041,8 +9078,6 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private boolean optionsMenuKeyboardInput = Config.S_WANT_KEYBOARD_SHORTCUTS ? true : false;
-
 	public final void handleKeyPress(byte var1, int key) {
 		try {
 
@@ -9316,16 +9351,6 @@ public final class mudclient implements Runnable {
 			e.printStackTrace();
 		}
 
-	}
-
-	public static boolean isValidEmailAddress(String email) {
-		boolean stricterFilter = true;
-		String stricterFilterString = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-		String laxString = ".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
-		String emailRegex = stricterFilter ? stricterFilterString : laxString;
-		java.util.regex.Pattern p = java.util.regex.Pattern.compile(emailRegex);
-		java.util.regex.Matcher m = p.matcher(email);
-		return m.matches();
 	}
 
 	private final void handleMenuItemClicked(boolean var1, int item) {
@@ -9829,7 +9854,6 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var13, "client.KA(" + var1 + ',' + item + ')');
 		}
 	}
-
 
 	private final void handleReportAbuseClick() {
 		try {
@@ -10572,7 +10596,6 @@ public final class mudclient implements Runnable {
 			ex.printStackTrace();
 		}
 	}
-
 
 	private final void loadTextures(byte var1) {
 		clientPort.showLoadingProgress(50, "Textures");
@@ -11572,27 +11595,6 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private NComponent mainComponent;
-	private OnlineListInterface onlineList;
-	private NCustomComponent experienceOverlay;
-	private ProgressBarInterface batchProgressBar;
-	private BankPinInterface bankPinInterface;
-	private FishingTrawlerInterface fishingTrawlerInterface;
-	//private AchievementGUI achievementInterface;
-	private IronManInterface ironmanInterface;
-	private AuctionHouse auctionHouse;
-	private SkillGuideInterface skillGuideInterface;
-	private QuestGuideInterface questGuideInterface;
-	private ExperienceConfigInterface experienceConfigInterface;
-	private DoSkillInterface doSkillInterface;
-	private LostOnDeathInterface lostOnDeathInterface;
-	private TerritorySignupInterface territorySignupInterface;
-	public Clan clan;
-
-	public boolean PAUSED;
-
-	public boolean gotInitialConfigs = false;
-
 	final void startGame(byte var1) {
 		try {
 			this.fetchContainerSize();
@@ -11675,16 +11677,12 @@ public final class mudclient implements Runnable {
 		this.settingsBlockDuel = status;
 	}
 
-	public void setPlayerCount(int i) {
-		this.playerCount = i;
-	}
-
 	public int getPlayerCount() {
 		return this.playerCount;
 	}
 
-	public void setKnownPlayerCount(int i) {
-		this.knownPlayerCount = i;
+	public void setPlayerCount(int i) {
+		this.playerCount = i;
 	}
 
 	public ORSCharacter getKnownPlayer(int i) {
@@ -11693,6 +11691,10 @@ public final class mudclient implements Runnable {
 
 	public int getKnownPlayerCount() {
 		return this.knownPlayerCount;
+	}
+
+	public void setKnownPlayerCount(int i) {
+		this.knownPlayerCount = i;
 	}
 
 	public void setKnownPlayer(int i, ORSCharacter p) {
@@ -11735,16 +11737,12 @@ public final class mudclient implements Runnable {
 		return this.tileSize;
 	}
 
-	public void setGameObjectInstanceCount(int i) {
-		this.gameObjectInstanceCount = i;
-	}
-
 	public int getGameObjectInstanceCount() {
 		return gameObjectInstanceCount;
 	}
 
-	public void setInventoryItemCount(int i) {
-		this.inventoryItemCount = i;
+	public void setGameObjectInstanceCount(int i) {
+		this.gameObjectInstanceCount = i;
 	}
 
 	public void setGameObjectInstanceX(int i, int n) {
@@ -11792,6 +11790,10 @@ public final class mudclient implements Runnable {
 		return this.wallObjectInstanceCount;
 	}
 
+	public void setWallObjectInstanceCount(int i) {
+		this.wallObjectInstanceCount = i;
+	}
+
 	public void setWallObjectInstanceX(int i, int n) {
 		this.wallObjectInstanceX[i] = n;
 	}
@@ -11833,10 +11835,6 @@ public final class mudclient implements Runnable {
 		return this.wallObjectInstanceID[i];
 	}
 
-	public void setWallObjectInstanceCount(int i) {
-		this.wallObjectInstanceCount = i;
-	}
-
 	public Scene getScene() {
 		return this.scene;
 	}
@@ -11865,20 +11863,20 @@ public final class mudclient implements Runnable {
 		return this.inventoryItemSize[i];
 	}
 
-	public void setNpcCount(int i) {
-		this.npcCount = i;
-	}
-
 	public int getNpcCount() {
 		return this.npcCount;
 	}
 
-	public void setNpcCacheCount(int i) {
-		this.npcCacheCount = i;
+	public void setNpcCount(int i) {
+		this.npcCount = i;
 	}
 
 	public int getNpcCacheCount() {
 		return this.npcCacheCount;
+	}
+
+	public void setNpcCacheCount(int i) {
+		this.npcCacheCount = i;
 	}
 
 	public void setNpcFromCache(int i, ORSCharacter n) {
@@ -11921,20 +11919,20 @@ public final class mudclient implements Runnable {
 		this.worldOffsetX = i;
 	}
 
-	public void setWorldOffsetZ(int i) {
-		this.worldOffsetZ = i;
-	}
-
 	public int getWorldOffsetZ() {
 		return this.worldOffsetZ;
 	}
 
-	public void setRequestedPlane(int i) {
-		this.requestedPlane = i;
+	public void setWorldOffsetZ(int i) {
+		this.worldOffsetZ = i;
 	}
 
 	public int getRequestedPlane() {
 		return this.requestedPlane;
+	}
+
+	public void setRequestedPlane(int i) {
+		this.requestedPlane = i;
 	}
 
 	public void set() {
@@ -11972,6 +11970,10 @@ public final class mudclient implements Runnable {
 		return this.groundItemCount;
 	}
 
+	public void setGroundItemCount(int i) {
+		this.groundItemCount = i;
+	}
+
 	public void setGroundItemX(int i, int n) {
 		this.groundItemX[i] = n;
 	}
@@ -12004,10 +12006,6 @@ public final class mudclient implements Runnable {
 		return this.groundItemHeight[i];
 	}
 
-	public void setGroundItemCount(int i) {
-		this.groundItemCount = i;
-	}
-
 	public ORSCharacter getPlayerFromServer(int i) {
 		return this.playerServer[i];
 	}
@@ -12020,12 +12018,12 @@ public final class mudclient implements Runnable {
 		this.showDialogTrade = show;
 	}
 
-	public void setTradeRecipientItemsCount(int i) {
-		this.tradeRecipientItemsCount = i;
-	}
-
 	public int getTradeRecipientItemsCount() {
 		return this.tradeRecipientItemsCount;
+	}
+
+	public void setTradeRecipientItemsCount(int i) {
+		this.tradeRecipientItemsCount = i;
 	}
 
 	public void setTradeRecipientItem(int i, int n) {
@@ -12036,13 +12034,17 @@ public final class mudclient implements Runnable {
 		this.tradeRecipientItemCount[i] = n;
 	}
 
+	public int getTradeItemCount() {
+		return this.tradeItemCount;
+	}
+
 	public void setTradeItemCount(int i) {
 		this.tradeItemCount = i;
 	}
 
-	public int getTradeItemCount() {
-		return this.tradeItemCount;
-	}
+		/*public void setGroupID(int groupID) {
+			this.groupID = groupID;
+		}*/
 
 	public void setTradeItemID(int i, int n) {
 		this.tradeItemID[i] = n;
@@ -12072,12 +12074,12 @@ public final class mudclient implements Runnable {
 		this.tradeRecipientConfirmName = n;
 	}
 
-	public void setTradeRecipientConfirmItemsCount(int n) {
-		this.tradeRecipientConfirmItemsCount = n;
-	}
-
 	public int getTradeRecipientConfirmItemsCount() {
 		return this.tradeRecipientConfirmItemsCount;
+	}
+
+	public void setTradeRecipientConfirmItemsCount(int n) {
+		this.tradeRecipientConfirmItemsCount = n;
 	}
 
 	public void setTradeRecipientConfirmItems(int i, int n) {
@@ -12088,12 +12090,12 @@ public final class mudclient implements Runnable {
 		this.tradeRecipientConfirmItemCount[i] = n;
 	}
 
-	public void setTradeConfirmItemsCount(int i) {
-		this.tradeConfirmItemsCount = i;
-	}
-
 	public int getTradeConfirmItemsCount() {
 		return this.tradeConfirmItemsCount;
+	}
+
+	public void setTradeConfirmItemsCount(int i) {
+		this.tradeConfirmItemsCount = i;
 	}
 
 	public void setTradeConfirmItems(int i, int n) {
@@ -12111,10 +12113,6 @@ public final class mudclient implements Runnable {
 	public void setShowDialogShop(boolean show) {
 		this.showDialogShop = show;
 	}
-
-		/*public void setGroupID(int groupID) {
-			this.groupID = groupID;
-		}*/
 
 	public void setOptionCameraModeAuto(boolean auto) {
 		this.optionCameraModeAuto = auto;
@@ -12160,12 +12158,12 @@ public final class mudclient implements Runnable {
 		return this.bank;
 	}
 
-	public void setNewBankItemCount(int i) {
-		this.newBankItemCount = i;
-	}
-
 	public int getNewBankItemCount() {
 		return this.newBankItemCount;
+	}
+
+	public void setNewBankItemCount(int i) {
+		this.newBankItemCount = i;
 	}
 
 	public void setBankItemsMax(int i) {
@@ -12180,12 +12178,12 @@ public final class mudclient implements Runnable {
 		this.showDialogDuelConfirm = show;
 	}
 
-	public void setDuelOffsetOpponentItemCount(int i) {
-		this.duelOffsetOpponentItemCount = i;
-	}
-
 	public int getDuelOffsetOpponentItemCount() {
 		return this.duelOffsetOpponentItemCount;
+	}
+
+	public void setDuelOffsetOpponentItemCount(int i) {
+		this.duelOffsetOpponentItemCount = i;
 	}
 
 	public void setDuelOpponentItemId(int i, int n) {
@@ -12244,12 +12242,12 @@ public final class mudclient implements Runnable {
 		this.duelOpponentName = n;
 	}
 
-	public void setDuelOpponentItemsCount(int n) {
-		this.duelOpponentItemsCount = n;
-	}
-
 	public int getDuelOpponentItemsCount() {
 		return this.duelOpponentItemsCount;
+	}
+
+	public void setDuelOpponentItemsCount(int n) {
+		this.duelOpponentItemsCount = n;
 	}
 
 	public void setDuelOpponentItems(int i, int n) {
@@ -12260,12 +12258,12 @@ public final class mudclient implements Runnable {
 		this.duelOpponentItemCounts[i] = n;
 	}
 
-	public void setDuelItemsCount(int i) {
-		this.duelItemsCount = i;
-	}
-
 	public int getDuelItemsCount() {
 		return this.duelItemsCount;
+	}
+
+	public void setDuelItemsCount(int i) {
+		this.duelItemsCount = i;
 	}
 
 	public void setDuelItems(int i, int n) {
@@ -12304,12 +12302,12 @@ public final class mudclient implements Runnable {
 		return this.xpGainedStartTime[stat];
 	}
 
-	public void setPlayerXpGainedTotal(long exp) {
-		this.playerXpGainedTotal = exp;
-	}
-
 	public long getPlayerXpGainedTotal() {
 		return this.playerXpGainedTotal;
+	}
+
+	public void setPlayerXpGainedTotal(long exp) {
+		this.playerXpGainedTotal = exp;
 	}
 
 	public ArrayList getXpNotifications() {
@@ -12328,6 +12326,10 @@ public final class mudclient implements Runnable {
 		return this.welcomeScreenShown;
 	}
 
+	public void setWelcomeScreenShown(boolean show) {
+		this.welcomeScreenShown = show;
+	}
+
 	public void setWelcomeLastLoggedInIp(String i) {
 		this.welcomeLastLoggedInIp = i;
 	}
@@ -12344,10 +12346,6 @@ public final class mudclient implements Runnable {
 		this.welcomeLastLoggedInHost = i;
 	}
 
-	public void setWelcomeScreenShown(boolean show) {
-		this.welcomeScreenShown = show;
-	}
-
 	public void setServerMessage(String i) {
 		this.serverMessage = i;
 	}
@@ -12360,12 +12358,12 @@ public final class mudclient implements Runnable {
 		this.serverMessageBoxTop = boxTop;
 	}
 
-	public void setIsSleeping(boolean sleeping) {
-		this.isSleeping = sleeping;
-	}
-
 	public boolean getIsSleeping() {
 		return this.isSleeping;
+	}
+
+	public void setIsSleeping(boolean sleeping) {
+		this.isSleeping = sleeping;
 	}
 
 	public void setFatigueSleeping(int fatigue) {
@@ -12374,6 +12372,12 @@ public final class mudclient implements Runnable {
 
 	public int getStatFatigue() {
 		return this.statFatigue;
+	}
+
+	public void setStatFatigue(int fatigue) {
+		if (DEBUG)
+			System.out.println("Fatigue: " + fatigue);
+		this.statFatigue = fatigue;
 	}
 
 	public void setInputTextCurrent(String s) {
@@ -12400,14 +12404,12 @@ public final class mudclient implements Runnable {
 		this.elixirTimer = i;
 	}
 
-	public void setStatFatigue(int fatigue) {
-		if (DEBUG)
-			System.out.println("Fatigue: " + fatigue);
-		this.statFatigue = fatigue;
-	}
-
 	public int getTeleportBubbleCount() {
 		return this.teleportBubbleCount;
+	}
+
+	public void setTeleportBubbleCount(int count) {
+		this.teleportBubbleCount = count;
 	}
 
 	public void setTeleportBubbleType(int i, int n) {
@@ -12426,10 +12428,6 @@ public final class mudclient implements Runnable {
 		this.teleportBubbleZ[i] = z;
 	}
 
-	public void setTeleportBubbleCount(int count) {
-		this.teleportBubbleCount = count;
-	}
-
 	public void setShopSellPriceMod(int i) {
 		this.shopSellPriceMod = i;
 	}
@@ -12441,6 +12439,22 @@ public final class mudclient implements Runnable {
 	public void setShopPriceMultiplier(int i) {
 		this.shopPriceMultiplier = i;
 	}
+
+//		private final void updateBankItems(int var1) {
+//			try {
+//
+//				this.bankItemCount = this.newBankItemCount;
+//
+//				int var2;
+//				for (var2 = 0; var2 < this.newBankItemCount; ++var2) {
+//					this.bankItemID[var2] = this.newBankItems[var2];
+//					this.bankItemSize[var2] = this.newBankItemsCount[var2];
+//				}
+//
+//			} catch (RuntimeException var6) {
+//				throw GenUtil.makeThrowable(var6, "client.WB(" + var1 + ')');
+//			}
+//		}
 
 	public void setShopItemID(int i, int n) {
 		this.shopItemID[i] = n;
@@ -12458,20 +12472,20 @@ public final class mudclient implements Runnable {
 		this.shopItemPrice[i] = n;
 	}
 
-	public void setShopSelectedItemIndex(int i) {
-		this.shopSelectedItemIndex = i;
-	}
-
 	public int getShopSelectedItemIndex() {
 		return this.shopSelectedItemIndex;
 	}
 
-	public void setShopSelectedItemType(int i) {
-		this.shopSelectedItemType = i;
+	public void setShopSelectedItemIndex(int i) {
+		this.shopSelectedItemIndex = i;
 	}
 
 	public int getShopSelectedItemType() {
 		return this.shopSelectedItemType;
+	}
+
+	public void setShopSelectedItemType(int i) {
+		this.shopSelectedItemType = i;
 	}
 
 	public void setPlayerStatEquipment(int i, int n) {
@@ -12925,22 +12939,6 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-//		private final void updateBankItems(int var1) {
-//			try {
-//
-//				this.bankItemCount = this.newBankItemCount;
-//
-//				int var2;
-//				for (var2 = 0; var2 < this.newBankItemCount; ++var2) {
-//					this.bankItemID[var2] = this.newBankItems[var2];
-//					this.bankItemSize[var2] = this.newBankItemsCount[var2];
-//				}
-//
-//			} catch (RuntimeException var6) {
-//				throw GenUtil.makeThrowable(var6, "client.WB(" + var1 + ')');
-//			}
-//		}
-
 	private final void updateObjectAnimation(byte var1, int instanceNumber, String modelFileName) {
 		try {
 
@@ -13159,8 +13157,16 @@ public final class mudclient implements Runnable {
 		return mouseButtonClick;
 	}
 
+	public void setMouseClick(int i) {
+		this.mouseButtonClick = i;
+	}
+
 	public int getMouseButtonDown() {
 		return currentMouseButtonDown;
+	}
+
+	public void setMouseButtonDown(int i) {
+		this.currentMouseButtonDown = i;
 	}
 
 	public int getMouseButtonDownTime() {
@@ -13181,6 +13187,10 @@ public final class mudclient implements Runnable {
 
 	public int getInventoryItemCount() {
 		return inventoryItemCount;
+	}
+
+	public void setInventoryItemCount(int i) {
+		this.inventoryItemCount = i;
 	}
 
 	public int[] getInventoryItemEquipped() {
@@ -13213,24 +13223,6 @@ public final class mudclient implements Runnable {
 		return toReturn;
 	}
 
-	public static final String formatStackAmount(int length) {
-		if (length < 100000) {
-			return String.valueOf(length);
-		}
-		if (length < 10000000) {
-			return "@whi@" + String.valueOf(length / 1000) + "K";
-		}
-		return "@gre@" + String.valueOf(length / 1000000) + "M";
-	}
-
-	public void setMouseClick(int i) {
-		this.mouseButtonClick = i;
-	}
-
-	public void setMouseButtonDown(int i) {
-		this.currentMouseButtonDown = i;
-	}
-
 	public int getLastMouseDown() {
 		return lastMouseButtonDown;
 	}
@@ -13254,9 +13246,6 @@ public final class mudclient implements Runnable {
 	public int getGameState() {
 		return gameState;
 	}
-
-	private String skillGuideChosen;
-	public ArrayList<String> skillGuideChosenTabs;
 
 	private void drawSkillGuide() {
 		skillGuideInterface.onRender(this.getSurface());
@@ -13339,17 +13328,6 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private String questGuideChosen;
-	private int questGuideProgress;
-	private String questGuideStartWho;
-	private String questGuideStartWhere;
-	private String[] questGuideStartWhos = {"Sir Amik Varze", "the Cook", "the Gypsy", "Doric", "the Priest", "the Bertender", "Veronica", "Wizard Mizgog", "Redbeard Frank", "Chancellor Hassan", "Romeo", "Fred the Farmer", "Reldo", "the Squire", "Morgan", "Hetty", "the Guildmaster", "a boy", "the Adventurers", "Achetties", "Kaqemeex", "King Arthur", "Thormac", "Dimintheis", "Kangai Mau", "a mountain dwarf", "Brother Omad", "Lucien", "Brother Kojo", "King Arthur", "Lady Servil", "Bolren", "Ceril Carnillean", "Councillor Halgrive", "Edmond", "Caroline", "Almera", "Elena", "Trufitus", "King Narnode Shareen", "Mosol Rei", "King Lathas", "Observatory Professor", "Irena", "Watchtower Wizard", "Captain Lawgof", "a Gaurd", "an Examiner", "Gertrude", "Sir Radimus Erkle"};
-	private String[] questGuideStartWheres = {"on the first floor of the White Knight's Castle in Falador", "on the first floor of Lumbridge Castle", "in Varrock Square", "north of Falador", "in the Lumbridge church", "inside the Rusty Anchor bar in Port Sarim", "outside of Draynor Manor", "on the top floor of the Wizard's Tower", "in Port Sarim", "inside Al-Kharid palace", "in Varrock Square", "north of Lumbridge", "in the Varrock Palace Library", "on the White Knight Castle grounds in Falador", "in Draynor Village", "in Rimmington", "inside the Champion's Guild", "in Taverly", "in the Lumbridge swamp", "outside of the Heroes' Guild north of Taverly", "at the Druid's Stone Circle in Taverly", "in Camelot", "on the top floor fo the Sorcerer's Tower south of Seer's Village", "in eastern Varrock", "in The Shrimp and Parrot pub in Brimhaven", "on either side of the White Wolf Mountain passage", "in the Monastery south of East Ardougne", "in the Flying Horse Inn on the western end of East Ardougne", "inside the Clock Tower south of East Ardougne", "in Camelot", "west of Port Khazard", "in Tree Gnome Village", "south of the Ardougne Castle", "outside of the East Ardougne church", "north of the Ardougne Castle", "east of Ardougne", "northeast of Baxtorian Falls", "north of the Ardougne Castle", "north-east of Tai Bwo Wannai", "in the Grand Tree", "outside of Shilo Village in southern Karamja", "on the ground floor of Ardougne Castle", "in the Observatory reception room west of the Tree Gnome Village", "outside the Shantay Pass in the Kharidian desert", "at the top of the Watchtower north of Yanille", "far north-east of Seer's Village", "in the Sinclair Mansion north of Camelot", "in the Exam Centre south of the Digsite", "at her house west of Varrock", "inside the Legend's Guild"};
-	private String[] questGuideRequirement;
-	private String[] questGuideReward;
-	private String[][] questGuideRequirements = {{"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"}};
-	private String[][] questGuideRewards = {{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "300 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "(Lvl + 1)*75 + 100 Mining experience", "Ability to use Doric's anvils", "180 coins",}, {"1 Quest Point", "1125 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*30 + 20 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "875 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "180 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "4825 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 1000 Defense experience", "Lvl*300 + 1000 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*125 + 200 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "6625 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*75 + 6950 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*57 + 205 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Trees", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 Agility Experience", "875 Attack experience", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "15000 Magic experience", "Ability to use the Watchtower teleport spell", "5000 coins"}, {"3 Quest Points", "Lvl*38 + 162 Crafting experience", "2000 coins"}, {"1 Quest Points", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"2 Quest Points", "(Lvl+1)*300 Mining experience", "(Lvl+1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "7650 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}};
-
 	private void drawQuestGuide() {
 		questGuideInterface.onRender(this.getSurface());
 	}
@@ -13401,8 +13379,6 @@ public final class mudclient implements Runnable {
 	public void setQuestGuideReward(int chosen) {
 		this.questGuideReward = questGuideRewards[chosen];
 	}
-
-	private String skillToDo;
 
 	private void drawDoSkill() {
 		this.doSkillInterface.onRender();
@@ -13501,8 +13477,14 @@ public final class mudclient implements Runnable {
 		return input.substring(0, maxLength) + "...";
 	}
 
-	private long time;
-	private long m_timer;
+	public void addXpNotification(int skill, int receivedXp, boolean b) {
+		XPNotification n = new XPNotification(skill, receivedXp, false);
+		this.xpNotifications.add(n);
+	}
+
+	public void kickClanPlayer(String player) {
+		this.clanKickPlayer = player;
+	}
 
 	class XPNotification {
 		private int x, y;
@@ -13519,18 +13501,5 @@ public final class mudclient implements Runnable {
 			y = (int) ((float) getGameHeight() / 4.0f + 40);
 			isActive = false;
 		}
-	}
-
-	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
-
-	public void addXpNotification(int skill, int receivedXp, boolean b) {
-		XPNotification n = new XPNotification(skill, receivedXp, false);
-		this.xpNotifications.add(n);
-	}
-
-	public String clanKickPlayer;
-
-	public void kickClanPlayer(String player) {
-		this.clanKickPlayer = player;
 	}
 }

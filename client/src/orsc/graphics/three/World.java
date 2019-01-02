@@ -15,27 +15,23 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public final class World {
-	public int baseMediaSprite = 750;
-	public int[][] collisionFlags = new int[96][96];
-
-	public int[] faceTileX = new int[18432];
-	public int[] faceTileZ = new int[18432];
-	public byte[] landscapePack;
-
 	private final int[] colorToResource = new int[256];
-
-	public byte[] mapPack;
-	public byte[] memberLandscapePack;
-	public byte[] membersMapPack;
-
-	private GraphicsController minimapGraphics;
 	private final int[][] tileElevationCache = new int[96][96];
 	private final int[][] pathFindSource = new int[96][96];
 	private final int[][] tileDirection = new int[96][96];
-	public boolean playerAlive = false;
 	private final boolean removeAllObjectsOnReset = true;
-	private Scene scene;
 	private final boolean showInvisibleWalls = false;
+	public int baseMediaSprite = 750;
+	public int[][] collisionFlags = new int[96][96];
+	public int[] faceTileX = new int[18432];
+	public int[] faceTileZ = new int[18432];
+	public byte[] landscapePack;
+	public byte[] mapPack;
+	public byte[] memberLandscapePack;
+	public byte[] membersMapPack;
+	public boolean playerAlive = false;
+	public RSModel[][] modelWallGrid = new RSModel[4][64];
+	public RSModel[][] modelRoofGrid = new RSModel[4][64];
 	// private final byte[][] elevation = new byte[4][2304];
 	// private final byte[][] terrainColour = new byte[4][2304];
 	// private final byte[][] tileDecoration = new byte[4][2304];
@@ -45,11 +41,15 @@ public final class World {
 	// private final byte[][] wallsEastWest = new byte[4][2304];
 	// private final byte[][] wallsNorthSouth = new byte[4][2304];
 	// private final byte[][] wallsRoof = new byte[4][2304];
-
+	private GraphicsController minimapGraphics;
+	private Scene scene;
 	private RSModel modelAccumulate;
 	private RSModel[] modelLandscapeGrid = new RSModel[64];
-	public RSModel[][] modelWallGrid = new RSModel[4][64];
-	public RSModel[][] modelRoofGrid = new RSModel[4][64];
+	private Sector[] worldMapSector = new Sector[4];
+	private int mapPointX = 0;
+	private int mapPointZ = 0;
+	private ZipFile tileArchive;
+	private Sector[] sectors;
 
 	public World(Scene var1, GraphicsController var2) {
 		try {
@@ -59,18 +59,18 @@ public final class World {
 			int var3;
 			for (var3 = 0; var3 < 64; ++var3)
 				this.colorToResource[var3] = GenUtil.colorToResource(255 - var3 * 4,
-						255 - (int) ((double) var3 * 1.75D), 255 - var3 * 4);
+					255 - (int) ((double) var3 * 1.75D), 255 - var3 * 4);
 
 			for (var3 = 0; var3 < 64; ++var3)
 				this.colorToResource[64 + var3] = GenUtil.colorToResource(var3 * 3, 144, 0);
 
 			for (var3 = 0; var3 < 64; ++var3)
 				this.colorToResource[128 + var3] = GenUtil.colorToResource(192 - (int) ((double) var3 * 1.5D),
-						144 - (int) ((double) var3 * 1.5D), 0);
+					144 - (int) ((double) var3 * 1.5D), 0);
 
 			for (var3 = 0; var3 < 64; ++var3)
 				this.colorToResource[192 + var3] = GenUtil.colorToResource(96 - (int) ((double) var3 * 1.5D),
-						(int) ((double) var3 * 1.5D) + 48, 0);
+					(int) ((double) var3 * 1.5D) + 48, 0);
 
 			sectors = new Sector[4];
 
@@ -83,7 +83,7 @@ public final class World {
 
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
-					"k.<init>(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ')');
+				"k.<init>(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -93,7 +93,7 @@ public final class World {
 
 				if (xTile >= 0 && zTile >= 0 && xTile < 95 && zTile < 95)
 					if (EntityHandler.getObjectDef(objectID).getType() == 1
-							|| EntityHandler.getObjectDef(objectID).getType() == 2) {
+						|| EntityHandler.getObjectDef(objectID).getType() == 2) {
 						int dir = this.getTileDirection((int) xTile, zTile);
 						int xSize;
 						int zSize;
@@ -109,29 +109,29 @@ public final class World {
 							for (int z = zTile; zTile + zSize > z; ++z)
 								if (EntityHandler.getObjectDef(objectID).getType() == 1)
 									this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-											CollisionFlag.FULL_BLOCK_C);
+										CollisionFlag.FULL_BLOCK_C);
 								else if (dir != 0) {
 									if (dir == 2) {
 										this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-												CollisionFlag.WALL_SOUTH);
+											CollisionFlag.WALL_SOUTH);
 										if (z < 95)
 											this.collisionFlagBitwiseOr(x, (int) (1 + z), CollisionFlag.WALL_NORTH);
 									} else if (dir != 4) {
 										if (dir == 6) {
 											this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-													CollisionFlag.WALL_NORTH);
+												CollisionFlag.WALL_NORTH);
 											if (z > 0)
 												this.collisionFlagBitwiseOr(x, (int) (z - 1), CollisionFlag.WALL_SOUTH);
 										}
 									} else {
 										this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-												CollisionFlag.WALL_WEST);
+											CollisionFlag.WALL_WEST);
 										if (x < 95)
 											this.collisionFlagBitwiseOr(x + 1, (int) z, CollisionFlag.WALL_EAST);
 									}
 								} else {
 									this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-											CollisionFlag.WALL_EAST);
+										CollisionFlag.WALL_EAST);
 									if (x > 0)
 										this.collisionFlagBitwiseOr(x - 1, (int) z, CollisionFlag.WALL_WEST);
 								}
@@ -165,7 +165,7 @@ public final class World {
 
 						this.addGameObject_UpdateCollisionMap(x, z, diagWall, false);
 						RSModel copy = modelTable[EntityHandler.getObjectDef(diagWall).modelID].copyModel(false, -120,
-								false, false, true);
+							false, false, true);
 						int xTranslate = (xSize + x + x) * 128 / 2;
 						int zTranslate = (zSize + z + z) * 128 / 2;
 						copy.translate2(xTranslate, -this.getElevation(xTranslate, zTranslate), zTranslate);
@@ -207,21 +207,21 @@ public final class World {
 				if (EntityHandler.getDoorDef(wallID).getDoorType() == 1) {
 					if (dir == 0) {
 						this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-								CollisionFlag.WALL_NORTH);
+							CollisionFlag.WALL_NORTH);
 						if (z > 0)
 							this.collisionFlagBitwiseOr(x, (int) (z - 1), CollisionFlag.WALL_SOUTH);
 					} else if (dir == 1) {
 						this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-								CollisionFlag.WALL_EAST);
+							CollisionFlag.WALL_EAST);
 						if (x > 0)
 							this.collisionFlagBitwiseOr(x - 1, (int) z, CollisionFlag.WALL_WEST);
 					} else if (dir != 2) {
 						if (dir == 3)
 							this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-									CollisionFlag.FULL_BLOCK_B);
+								CollisionFlag.FULL_BLOCK_B);
 					} else
 						this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-								CollisionFlag.FULL_BLOCK_A);
+							CollisionFlag.FULL_BLOCK_A);
 
 					this.setVertexLightArea(x, z, 1, 1);
 				}
@@ -243,7 +243,7 @@ public final class World {
 
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"k.AA(" + wallID + ',' + x2 + ',' + z1 + ',' + z2 + ',' + "dummy" + ',' + x1 + ')');
+				"k.AA(" + wallID + ',' + x2 + ',' + z1 + ',' + z2 + ',' + "dummy" + ',' + x1 + ')');
 		}
 	}
 
@@ -305,12 +305,11 @@ public final class World {
 
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12,
-					"k.C(" + bridge00_11 + ',' + "dummy" + ',' + res01 + ',' + tileX + ',' + tileZ + ',' + res10 + ')');
+				"k.C(" + bridge00_11 + ',' + "dummy" + ',' + res01 + ',' + tileX + ',' + tileZ + ',' + res10 + ')');
 		}
 	}
 
 	/**
-	 *
 	 * @param pathX
 	 * @param pathZ
 	 * @param startX
@@ -323,7 +322,7 @@ public final class World {
 	 * @return the number of nodes in the path
 	 */
 	public final int findPath(int[] pathX, int[] pathZ, int startX, int startZ, int xLow, int xHigh, int zLow,
-			int zHigh, boolean reachBorder) {
+							  int zHigh, boolean reachBorder) {
 		// System.out.println("Find path: " + startX + "," + startZ + " -> [" +
 		// xLow + "-" + xHigh + "," + zLow + "-"
 		// + zHigh + "] Border good: " + reachBorder);
@@ -356,32 +355,32 @@ public final class World {
 
 				if (reachBorder) {
 					if (x > 0 && xLow <= x - 1 && xHigh >= x - 1 && zLow <= z && zHigh >= z
-							&& (this.collisionFlags[x - 1][z] & CollisionFlag.WALL_WEST) == 0) {
+						&& (this.collisionFlags[x - 1][z] & CollisionFlag.WALL_WEST) == 0) {
 						complete = true;
 						break;
 					}
 
 					if (x < 95 && 1 + x >= xLow && x + 1 <= xHigh && z >= zLow && zHigh >= z
-							&& (CollisionFlag.WALL_EAST & this.collisionFlags[x + 1][z]) == 0) {
+						&& (CollisionFlag.WALL_EAST & this.collisionFlags[x + 1][z]) == 0) {
 						complete = true;
 						break;
 					}
 
 					if (z > 0 && xLow <= x && xHigh >= x && z - 1 >= zLow && zHigh >= z - 1
-							&& (CollisionFlag.WALL_SOUTH & this.collisionFlags[x][z - 1]) == 0) {
+						&& (CollisionFlag.WALL_SOUTH & this.collisionFlags[x][z - 1]) == 0) {
 						complete = true;
 						break;
 					}
 
 					if (z < 95 && xLow <= x && x <= xHigh && zLow <= z + 1 && zHigh >= z + 1
-							&& (CollisionFlag.WALL_NORTH & this.collisionFlags[x][z + 1]) == 0) {
+						&& (CollisionFlag.WALL_NORTH & this.collisionFlags[x][z + 1]) == 0) {
 						complete = true;
 						break;
 					}
 				}
 
 				if (x > 0 && this.pathFindSource[x - 1][z] == 0
-						&& (this.collisionFlags[x - 1][z] & CollisionFlag.WEST_BLOCKED) == 0) {
+					&& (this.collisionFlags[x - 1][z] & CollisionFlag.WEST_BLOCKED) == 0) {
 					pathX[openListWrite] = x - 1;
 					pathZ[openListWrite] = z;
 					this.pathFindSource[x - 1][z] = CollisionFlag.SOURCE_WEST;
@@ -389,7 +388,7 @@ public final class World {
 				}
 
 				if (x < 95 && this.pathFindSource[1 + x][z] == 0
-						&& (this.collisionFlags[1 + x][z] & CollisionFlag.EAST_BLOCKED) == 0) {
+					&& (this.collisionFlags[1 + x][z] & CollisionFlag.EAST_BLOCKED) == 0) {
 					pathX[openListWrite] = 1 + x;
 					pathZ[openListWrite] = z;
 					this.pathFindSource[x + 1][z] = CollisionFlag.SOURCE_EAST;
@@ -397,7 +396,7 @@ public final class World {
 				}
 
 				if (z > 0 && this.pathFindSource[x][z - 1] == 0
-						&& (CollisionFlag.SOUTH_BLOCKED & this.collisionFlags[x][z - 1]) == 0) {
+					&& (CollisionFlag.SOUTH_BLOCKED & this.collisionFlags[x][z - 1]) == 0) {
 					pathX[openListWrite] = x;
 					pathZ[openListWrite] = z - 1;
 					this.pathFindSource[x][z - 1] = CollisionFlag.SOURCE_SOUTH;
@@ -405,7 +404,7 @@ public final class World {
 				}
 
 				if (z < 95 && this.pathFindSource[x][1 + z] == 0
-						&& (CollisionFlag.NORTH_BLOCKED & this.collisionFlags[x][1 + z]) == 0) {
+					&& (CollisionFlag.NORTH_BLOCKED & this.collisionFlags[x][1 + z]) == 0) {
 					pathX[openListWrite] = x;
 					pathZ[openListWrite] = z + 1;
 					this.pathFindSource[x][z + 1] = CollisionFlag.SOURCE_NORTH;
@@ -413,9 +412,9 @@ public final class World {
 				}
 
 				if (x > 0 && z > 0 && (CollisionFlag.SOUTH_BLOCKED & this.collisionFlags[x][z - 1]) == 0
-						&& (CollisionFlag.WEST_BLOCKED & this.collisionFlags[x - 1][z]) == 0
-						&& (CollisionFlag.SOUTH_WEST_BLOCKED & this.collisionFlags[x - 1][z - 1]) == 0
-						&& this.pathFindSource[x - 1][z - 1] == 0) {
+					&& (CollisionFlag.WEST_BLOCKED & this.collisionFlags[x - 1][z]) == 0
+					&& (CollisionFlag.SOUTH_WEST_BLOCKED & this.collisionFlags[x - 1][z - 1]) == 0
+					&& this.pathFindSource[x - 1][z - 1] == 0) {
 					pathX[openListWrite] = x - 1;
 					pathZ[openListWrite] = z - 1;
 					this.pathFindSource[x - 1][z - 1] = CollisionFlag.SOURCE_SOUTH_WEST;
@@ -423,9 +422,9 @@ public final class World {
 				}
 
 				if (x < 95 && z > 0 && (this.collisionFlags[x][z - 1] & CollisionFlag.SOUTH_BLOCKED) == 0
-						&& (this.collisionFlags[1 + x][z] & CollisionFlag.EAST_BLOCKED) == 0
-						&& (this.collisionFlags[x + 1][z - 1] & CollisionFlag.SOUTH_EAST_BLOCKED) == 0
-						&& this.pathFindSource[1 + x][z - 1] == 0) {
+					&& (this.collisionFlags[1 + x][z] & CollisionFlag.EAST_BLOCKED) == 0
+					&& (this.collisionFlags[x + 1][z - 1] & CollisionFlag.SOUTH_EAST_BLOCKED) == 0
+					&& this.pathFindSource[1 + x][z - 1] == 0) {
 					pathX[openListWrite] = 1 + x;
 					pathZ[openListWrite] = z - 1;
 					this.pathFindSource[x + 1][z - 1] = CollisionFlag.SOURCE_SOUTH_EAST;
@@ -433,9 +432,9 @@ public final class World {
 				}
 
 				if (x > 0 && z < 95 && (this.collisionFlags[x][1 + z] & CollisionFlag.NORTH_BLOCKED) == 0
-						&& (this.collisionFlags[x - 1][z] & CollisionFlag.WEST_BLOCKED) == 0
-						&& (this.collisionFlags[x - 1][1 + z] & CollisionFlag.NORTH_WEST_BLOCKED) == 0
-						&& this.pathFindSource[x - 1][1 + z] == 0) {
+					&& (this.collisionFlags[x - 1][z] & CollisionFlag.WEST_BLOCKED) == 0
+					&& (this.collisionFlags[x - 1][1 + z] & CollisionFlag.NORTH_WEST_BLOCKED) == 0
+					&& this.pathFindSource[x - 1][1 + z] == 0) {
 					pathX[openListWrite] = x - 1;
 					pathZ[openListWrite] = 1 + z;
 					openListWrite = (1 + openListWrite) % openListSize;
@@ -443,9 +442,9 @@ public final class World {
 				}
 
 				if (x < 95 && z < 95 && (CollisionFlag.NORTH_BLOCKED & this.collisionFlags[x][1 + z]) == 0
-						&& (this.collisionFlags[x + 1][z] & CollisionFlag.EAST_BLOCKED) == 0
-						&& (CollisionFlag.NORTH_EAST_BLOCKED & this.collisionFlags[x + 1][1 + z]) == 0
-						&& this.pathFindSource[x + 1][1 + z] == 0) {
+					&& (this.collisionFlags[x + 1][z] & CollisionFlag.EAST_BLOCKED) == 0
+					&& (CollisionFlag.NORTH_EAST_BLOCKED & this.collisionFlags[x + 1][1 + z]) == 0
+					&& this.pathFindSource[x + 1][1 + z] == 0) {
 					pathX[openListWrite] = 1 + x;
 					pathZ[openListWrite] = 1 + z;
 					this.pathFindSource[1 + x][1 + z] = CollisionFlag.SOURCE_NORTH_EAST;
@@ -484,9 +483,9 @@ public final class World {
 			}
 		} catch (RuntimeException var19) {
 			throw GenUtil.makeThrowable(var19,
-					"k.Q(" + (pathX != null ? "{...}" : "null") + ',' + xLow + ',' + "dummy" + ',' + zHigh + ','
-							+ (pathZ != null ? "{...}" : "null") + ',' + startX + ',' + startZ + ',' + xHigh + ','
-							+ zLow + ',' + reachBorder + ')');
+				"k.Q(" + (pathX != null ? "{...}" : "null") + ',' + xLow + ',' + "dummy" + ',' + zHigh + ','
+					+ (pathZ != null ? "{...}" : "null") + ',' + startX + ',' + startZ + ',' + xHigh + ','
+					+ zLow + ',' + reachBorder + ')');
 		}
 	}
 
@@ -518,18 +517,18 @@ public final class World {
 						for (int z = 0; z < 96; ++z) {
 							int y = -this.getTileElevation(x, z);
 							if (this.getTileDecorationID(x, z, plane) > 0 && EntityHandler
-									.getTileDef(getTileDecorationID(x, z, plane) - 1).getTileValue() == 4)
+								.getTileDef(getTileDecorationID(x, z, plane) - 1).getTileValue() == 4)
 								y = 0;
 							if (this.getTileDecorationID(x - 1, z, plane) > 0 && EntityHandler
-									.getTileDef(this.getTileDecorationID(x - 1, z, plane) - 1).getTileValue() == 4)
+								.getTileDef(this.getTileDecorationID(x - 1, z, plane) - 1).getTileValue() == 4)
 								y = 0;
 
 							if (this.getTileDecorationID(x, z - 1, plane) > 0 && EntityHandler
-									.getTileDef(this.getTileDecorationID(x, z - 1, plane) - 1).getTileValue() == 4)
+								.getTileDef(this.getTileDecorationID(x, z - 1, plane) - 1).getTileValue() == 4)
 								y = 0;
 
 							if (this.getTileDecorationID(x - 1, z - 1, plane) > 0 && EntityHandler
-									.getTileDef(this.getTileDecorationID(x - 1, z - 1, plane) - 1).getTileValue() == 4)
+								.getTileDef(this.getTileDecorationID(x - 1, z - 1, plane) - 1).getTileValue() == 4)
 								y = 0;
 
 							int vID = worldMod.insertVertex(x * 128, y, z * 128);
@@ -552,8 +551,8 @@ public final class World {
 							if (this.getTileDecorationID((int) x, z, plane) > 0) {
 								int decorID = this.getTileDecorationID((int) x, z, plane);
 								int decorType = EntityHandler.getTileDef(decorID - 1).getTileValue();// CacheValues.tileType[decorID
-																										// -
-																										// 1];
+								// -
+								// 1];
 
 								int decorType2 = this.isTileType2(x, z, plane, 15282);
 								colorResource = res01 = EntityHandler.getTileDef(decorID - 1).getColour();
@@ -569,69 +568,69 @@ public final class World {
 								if (decorType == 5) {
 									if (this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 24000)
 										if (this.getTileDecorationCacheVal(x - 1, z, plane,
-												defaultVal) != Scene.TRANSPARENT
-												&& this.getTileDecorationCacheVal(x, z - 1, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+											defaultVal) != Scene.TRANSPARENT
+											&& this.getTileDecorationCacheVal(x, z - 1, plane,
+											defaultVal) != Scene.TRANSPARENT) {
 											bridge00_11 = 0;
 											colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 										} else if (this.getTileDecorationCacheVal(1 + x, z, plane,
-												defaultVal) != Scene.TRANSPARENT
-												&& this.getTileDecorationCacheVal(x, 1 + z, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+											defaultVal) != Scene.TRANSPARENT
+											&& this.getTileDecorationCacheVal(x, 1 + z, plane,
+											defaultVal) != Scene.TRANSPARENT) {
 											res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 											bridge00_11 = 0;
 										} else if (this.getTileDecorationCacheVal(1 + x, z, plane,
-												defaultVal) != Scene.TRANSPARENT
-												&& this.getTileDecorationCacheVal(x, z - 1, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+											defaultVal) != Scene.TRANSPARENT
+											&& this.getTileDecorationCacheVal(x, z - 1, plane,
+											defaultVal) != Scene.TRANSPARENT) {
 											res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 											bridge00_11 = 1;
 										} else if (this.getTileDecorationCacheVal(x - 1, z, plane,
-												defaultVal) != Scene.TRANSPARENT
-												&& this.getTileDecorationCacheVal(x, z + 1, plane,
-														defaultVal) != Scene.TRANSPARENT) {
+											defaultVal) != Scene.TRANSPARENT
+											&& this.getTileDecorationCacheVal(x, z + 1, plane,
+											defaultVal) != Scene.TRANSPARENT) {
 											bridge00_11 = 1;
 											colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 										}
 								} else if (decorType != 2
-										|| this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 24000)
+									|| this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 24000)
 									if (decorType2 != this.isTileType2(x - 1, z, plane, 15282)
-											&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
+										&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
 										colorResource = defaultVal;
 										bridge00_11 = 0;
 									} else if (decorType2 != this.isTileType2(x + 1, z, plane, 15282)
-											&& this.isTileType2(x, z + 1, plane, 15282) != decorType2) {
+										&& this.isTileType2(x, z + 1, plane, 15282) != decorType2) {
 										bridge00_11 = 0;
 										res01 = defaultVal;
 									} else if (decorType2 != this.isTileType2(1 + x, z, plane, 15282)
-											&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
+										&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
 										res01 = defaultVal;
 										bridge00_11 = 1;
 									} else if (decorType2 != this.isTileType2(x - 1, z, plane, 15282)
-											&& decorType2 != this.isTileType2(x, 1 + z, plane, 15282)) {
+										&& decorType2 != this.isTileType2(x, 1 + z, plane, 15282)) {
 										colorResource = defaultVal;
 										bridge00_11 = 1;
 									}
 
 								if (EntityHandler.getTileDef(decorID - 1).getObjectType() != 0)
 									this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-											CollisionFlag.FULL_BLOCK_C);
+										CollisionFlag.FULL_BLOCK_C);
 
 								if (EntityHandler.getTileDef(decorID - 1).getTileValue() == 2)
 									this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-											CollisionFlag.OBJECT);
+										CollisionFlag.OBJECT);
 							}
 
 							this.drawMinimapTile(x, (int) z, bridge00_11, res01, colorResource);
 							int slope = this.getTileElevation(x + 1, 1 + z) - this.getTileElevation(x, z)
-									+ this.getTileElevation(x, z + 1) - this.getTileElevation(x + 1, z);
+								+ this.getTileElevation(x, z + 1) - this.getTileElevation(x + 1, z);
 							int[] faceIndicies;
 							if (colorResource == res01 && slope == 0) {
 								if (colorResource != Scene.TRANSPARENT) {
-									faceIndicies = new int[] { z - (-(x * 96) - 96), z + x * 96, 1 + x * 96 + z,
-											z - (-(x * 96) - 96) + 1 };
+									faceIndicies = new int[]{z - (-(x * 96) - 96), z + x * 96, 1 + x * 96 + z,
+										z - (-(x * 96) - 96) + 1};
 									int faceID = worldMod.insertFace(4, faceIndicies, Scene.TRANSPARENT, colorResource,
-											false);
+										false);
 									this.faceTileX[faceID] = x;
 									this.faceTileZ[faceID] = z;
 									worldMod.facePickIndex[faceID] = faceID + 200000;
@@ -645,7 +644,7 @@ public final class World {
 										faceIndicies[0] = 96 + z + x * 96;
 										faceIndicies[2] = 1 + z + x * 96;
 										int faceID = worldMod.insertFace(3, faceIndicies, Scene.TRANSPARENT,
-												colorResource, false);
+											colorResource, false);
 										this.faceTileX[faceID] = x;
 										this.faceTileZ[faceID] = z;
 										worldMod.facePickIndex[faceID] = faceID + 200000;
@@ -656,7 +655,7 @@ public final class World {
 										faceIndices2[1] = 97 + x * 96 + z;
 										faceIndices2[0] = 1 + x * 96 + z;
 										int faceID = worldMod.insertFace(3, faceIndices2, Scene.TRANSPARENT, res01,
-												false);
+											false);
 										this.faceTileX[faceID] = x;
 										this.faceTileZ[faceID] = z;
 										worldMod.facePickIndex[faceID] = faceID + 200000;
@@ -667,7 +666,7 @@ public final class World {
 										faceIndicies[1] = 96 + x * 96 + z + 1;
 										faceIndicies[0] = 1 + x * 96 + z;
 										int faceID = worldMod.insertFace(3, faceIndicies, Scene.TRANSPARENT,
-												colorResource, false);
+											colorResource, false);
 										this.faceTileX[faceID] = x;
 										this.faceTileZ[faceID] = z;
 										worldMod.facePickIndex[faceID] = 200000 + faceID;
@@ -678,7 +677,7 @@ public final class World {
 										faceIndices2[2] = z - (-(x * 96) - 97);
 										faceIndices2[0] = x * 96 + z + 96;
 										int faceID = worldMod.insertFace(3, faceIndices2, Scene.TRANSPARENT, res01,
-												false);
+											false);
 										this.faceTileX[faceID] = x;
 										this.faceTileZ[faceID] = z;
 										worldMod.facePickIndex[faceID] = faceID + 200000;
@@ -690,39 +689,39 @@ public final class World {
 					for (int x = 1; x < 95; ++x)
 						for (int z = 1; z < 95; ++z)
 							if (this.getTileDecorationID((int) x, z, plane) > 0 && EntityHandler
-									.getTileDef(this.getTileDecorationID((int) x, z, plane) - 1).getTileValue() == 4) {
+								.getTileDef(this.getTileDecorationID((int) x, z, plane) - 1).getTileValue() == 4) {
 
 								int tileDecor = EntityHandler.getTileDef(this.getTileDecorationID(x, z, plane) - 1)
-										.getColour();
+									.getColour();
 								int v00 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z), z * 128);
 								int v10 = worldMod.insertVertex((x + 1) * 128, -this.getTileElevation(1 + x, z),
-										z * 128);
+									z * 128);
 								int v11 = worldMod.insertVertex((1 + x) * 128, -this.getTileElevation(x + 1, z + 1),
-										(z + 1) * 128);
+									(z + 1) * 128);
 								int v01 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, 1 + z),
-										128 + z * 128);
-								int[] indices = new int[] { v00, v10, v11, v01 };
+									128 + z * 128);
+								int[] indices = new int[]{v00, v10, v11, v01};
 								int faceID = worldMod.insertFace(4, indices, tileDecor, Scene.TRANSPARENT, false);
 								this.faceTileX[faceID] = x;
 								this.faceTileZ[faceID] = z;
 								worldMod.facePickIndex[faceID] = faceID + 200000;
 								this.drawMinimapTile(x, z, 0, tileDecor, tileDecor);
 							} else if (this.getTileDecorationID((int) x, z, plane) == 0 || EntityHandler
-									.getTileDef(this.getTileDecorationID(x, z, plane) - 1).getTileValue() != 3) {
+								.getTileDef(this.getTileDecorationID(x, z, plane) - 1).getTileValue() != 3) {
 								if (this.getTileDecorationID(x, z + 1, plane) > 0
-										&& EntityHandler.getTileDef(this.getTileDecorationID(x, 1 + z, plane) - 1)
-												.getTileValue() == 4) {
+									&& EntityHandler.getTileDef(this.getTileDecorationID(x, 1 + z, plane) - 1)
+									.getTileValue() == 4) {
 									int tileDecor = EntityHandler
-											.getTileDef(this.getTileDecorationID((int) x, z + 1, plane) - 1)
-											.getColour();
+										.getTileDef(this.getTileDecorationID((int) x, z + 1, plane) - 1)
+										.getColour();
 									int v00 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z), z * 128);
 									int v10 = worldMod.insertVertex((x + 1) * 128, -this.getTileElevation(1 + x, z),
-											z * 128);
+										z * 128);
 									int v11 = worldMod.insertVertex(128 + x * 128, -this.getTileElevation(1 + x, z + 1),
-											(z + 1) * 128);
+										(z + 1) * 128);
 									int v01 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, 1 + z),
-											z * 128 + 128);
-									int[] indices = new int[] { v00, v10, v11, v01 };
+										z * 128 + 128);
+									int[] indices = new int[]{v00, v10, v11, v01};
 									int faceID = worldMod.insertFace(4, indices, tileDecor, Scene.TRANSPARENT, false);
 									this.faceTileX[faceID] = x;
 									this.faceTileZ[faceID] = z;
@@ -731,19 +730,19 @@ public final class World {
 								}
 
 								if (this.getTileDecorationID((int) x, z - 1, plane) > 0
-										&& EntityHandler.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
-												.getTileValue() == 4) {
+									&& EntityHandler.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
+									.getTileValue() == 4) {
 									int tileDecor = EntityHandler
-											.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
-											.getColour();
+										.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
+										.getColour();
 									int v00 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z), z * 128);
 									int v10 = worldMod.insertVertex((1 + x) * 128, -this.getTileElevation(x + 1, z),
-											z * 128);
+										z * 128);
 									int v11 = worldMod.insertVertex((1 + x) * 128, -this.getTileElevation(x + 1, z + 1),
-											(z + 1) * 128);
+										(z + 1) * 128);
 									int v01 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z + 1),
-											128 + z * 128);
-									int[] indices = new int[] { v00, v10, v11, v01 };
+										128 + z * 128);
+									int[] indices = new int[]{v00, v10, v11, v01};
 									int faceID = worldMod.insertFace(4, indices, tileDecor, Scene.TRANSPARENT, false);
 									this.faceTileX[faceID] = x;
 									this.faceTileZ[faceID] = z;
@@ -752,19 +751,19 @@ public final class World {
 								}
 
 								if (this.getTileDecorationID((int) (x + 1), z, plane) > 0 && EntityHandler
-										.getTileDef(this.getTileDecorationID((int) (x + 1), z, plane) - 1)
-										.getTileValue() == 4) {
+									.getTileDef(this.getTileDecorationID((int) (x + 1), z, plane) - 1)
+									.getTileValue() == 4) {
 									int tileDecor = EntityHandler
-											.getTileDef(this.getTileDecorationID((int) (1 + x), z, plane) - 1)
-											.getColour();
+										.getTileDef(this.getTileDecorationID((int) (1 + x), z, plane) - 1)
+										.getColour();
 									int v00 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z), z * 128);
 									int v10 = worldMod.insertVertex(128 + x * 128, -this.getTileElevation(1 + x, z),
-											z * 128);
+										z * 128);
 									int v11 = worldMod.insertVertex((1 + x) * 128, -this.getTileElevation(1 + x, 1 + z),
-											z * 128 + 128);
+										z * 128 + 128);
 									int v01 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z + 1),
-											(1 + z) * 128);
-									int[] indices = new int[] { v00, v10, v11, v01 };
+										(1 + z) * 128);
+									int[] indices = new int[]{v00, v10, v11, v01};
 									int faceID = worldMod.insertFace(4, indices, tileDecor, Scene.TRANSPARENT, false);
 									this.faceTileX[faceID] = x;
 									this.faceTileZ[faceID] = z;
@@ -773,19 +772,19 @@ public final class World {
 								}
 
 								if (this.getTileDecorationID((int) (x - 1), z, plane) > 0 && EntityHandler
-										.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1)
-										.getTileValue() == 4) {
+									.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1)
+									.getTileValue() == 4) {
 									int tileDecor = EntityHandler
-											.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1)
-											.getColour();
+										.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1)
+										.getColour();
 									int v00 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z), z * 128);
 									int v10 = worldMod.insertVertex((x + 1) * 128, -this.getTileElevation(1 + x, z),
-											z * 128);
+										z * 128);
 									int v11 = worldMod.insertVertex(128 + x * 128, -this.getTileElevation(1 + x, 1 + z),
-											z * 128 + 128);
+										z * 128 + 128);
 									int v01 = worldMod.insertVertex(x * 128, -this.getTileElevation(x, z + 1),
-											(1 + z) * 128);
-									int[] indices = new int[] { v00, v10, v11, v01 };
+										(1 + z) * 128);
+									int[] indices = new int[]{v00, v10, v11, v01};
 									int faceID = worldMod.insertFace(4, indices, tileDecor, Scene.TRANSPARENT, false);
 									this.faceTileX[faceID] = x;
 									this.faceTileZ[faceID] = z;
@@ -796,7 +795,7 @@ public final class World {
 
 					worldMod.setDiffuseLightAndColor(-50, -10, -50, 40, 48, true, 105);
 					this.modelLandscapeGrid = this.modelAccumulate.divideModelByGrid(0, 8, 1536, 112, 64, 233, 1536,
-							false, 0);
+						false, 0);
 
 					for (int x = 0; x < 64; ++x)
 						this.scene.addModel(this.modelLandscapeGrid[x]);
@@ -813,11 +812,11 @@ public final class World {
 
 						int wall = this.getVerticalWall(x, z);
 						if (wall > 0
-								&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
+							&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
 							this.insertWallIntoModel(wall - 1, this.modelAccumulate, 1 + x, z, x, -14584, z);
 							if (showWallOnMinimap && EntityHandler.getDoorDef(wall - 1).getDoorType() != 0) {
 								this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-										CollisionFlag.WALL_NORTH);
+									CollisionFlag.WALL_NORTH);
 								if (z > 0)
 									this.collisionFlagBitwiseOr(x, (int) (z - 1), CollisionFlag.WALL_SOUTH);
 							}
@@ -828,11 +827,11 @@ public final class World {
 
 						wall = this.getHorizontalWall(x, z);
 						if (wall > 0
-								&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
+							&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
 							this.insertWallIntoModel(wall - 1, this.modelAccumulate, x, z, x, -14584, 1 + z);
 							if (showWallOnMinimap && EntityHandler.getDoorDef(wall - 1).getDoorType() != 0) {
 								this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-										CollisionFlag.WALL_EAST);
+									CollisionFlag.WALL_EAST);
 								if (x > 0)
 									this.collisionFlagBitwiseOr(x - 1, (int) z, CollisionFlag.WALL_WEST);
 							}
@@ -843,11 +842,11 @@ public final class World {
 
 						wall = this.getWallDiagonal(x, z);
 						if (wall > 0 && wall < 12000
-								&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
+							&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
 							this.insertWallIntoModel(wall - 1, this.modelAccumulate, x + 1, z, x, -14584, 1 + z);
 							if (showWallOnMinimap && EntityHandler.getDoorDef(wall - 1).getDoorType() != 0)
 								this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-										CollisionFlag.FULL_BLOCK_B);
+									CollisionFlag.FULL_BLOCK_B);
 
 							if (showWallOnMinimap) {
 								this.minimapGraphics.setPixel(x * 3, z * 3, wallColor);
@@ -857,11 +856,11 @@ public final class World {
 						}
 
 						if (wall > 12000 && wall < 24000 && (EntityHandler.getDoorDef(wall - 12001).getUnknown() == 0
-								|| this.showInvisibleWalls)) {
+							|| this.showInvisibleWalls)) {
 							this.insertWallIntoModel(wall - 12001, this.modelAccumulate, x, z, x + 1, -14584, 1 + z);
 							if (showWallOnMinimap && EntityHandler.getDoorDef(wall - 12001).getDoorType() != 0)
 								this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-										CollisionFlag.FULL_BLOCK_A);
+									CollisionFlag.FULL_BLOCK_A);
 
 							if (showWallOnMinimap) {
 								this.minimapGraphics.setPixel(2 + x * 3, z * 3, wallColor);
@@ -876,7 +875,7 @@ public final class World {
 
 				this.modelAccumulate.setDiffuseLightAndColor(-50, -10, -50, 60, 24, false, 122);
 				this.modelWallGrid[plane] = this.modelAccumulate.divideModelByGrid(0, 8, 1536, -120, 64, 338, 1536,
-						true, 0);
+					true, 0);
 
 				for (int x = 0; x < 64; ++x)
 					this.scene.addModel(this.modelWallGrid[plane][x]);
@@ -1060,40 +1059,40 @@ public final class World {
 							ec11 = -ec11;
 							ec00 = -ec00;
 							if (this.getWallDiagonal(x, z) > 12000 && this.getWallDiagonal(x, z) < 24000
-									&& this.getWallRoof(x - 1, z - 1) == 0) {
-								int[] index = new int[] { this.modelAccumulate.insertVertex(p11x, ec11, p11z),
-										this.modelAccumulate.insertVertex(p01x, ec01, p01z),
-										this.modelAccumulate.insertVertex(p10x, ec10, p10z) };
+								&& this.getWallRoof(x - 1, z - 1) == 0) {
+								int[] index = new int[]{this.modelAccumulate.insertVertex(p11x, ec11, p11z),
+									this.modelAccumulate.insertVertex(p01x, ec01, p01z),
+									this.modelAccumulate.insertVertex(p10x, ec10, p10z)};
 								this.modelAccumulate.insertFace(3, index, roof, Scene.TRANSPARENT, false);
 							} else if (this.getWallDiagonal(x, z) > 12000 && this.getWallDiagonal(x, z) < 24000
-									&& this.getWallRoof(1 + x, z + 1) == 0) {
-								int[] index = new int[] { this.modelAccumulate.insertVertex(p00x, ec00, p00z),
-										this.modelAccumulate.insertVertex(p10x, ec10, p10z),
-										this.modelAccumulate.insertVertex(p01x, ec01, p01z) };
+								&& this.getWallRoof(1 + x, z + 1) == 0) {
+								int[] index = new int[]{this.modelAccumulate.insertVertex(p00x, ec00, p00z),
+									this.modelAccumulate.insertVertex(p10x, ec10, p10z),
+									this.modelAccumulate.insertVertex(p01x, ec01, p01z)};
 								this.modelAccumulate.insertFace(3, index, roof, Scene.TRANSPARENT, false);
 							} else if (this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 12000
-									&& this.getWallRoof(x + 1, z - 1) == 0) {
-								int[] index = new int[] { this.modelAccumulate.insertVertex(p01x, ec01, p01z),
-										this.modelAccumulate.insertVertex(p00x, ec00, p00z),
-										this.modelAccumulate.insertVertex(p11x, ec11, p11z) };
+								&& this.getWallRoof(x + 1, z - 1) == 0) {
+								int[] index = new int[]{this.modelAccumulate.insertVertex(p01x, ec01, p01z),
+									this.modelAccumulate.insertVertex(p00x, ec00, p00z),
+									this.modelAccumulate.insertVertex(p11x, ec11, p11z)};
 								this.modelAccumulate.insertFace(3, index, roof, Scene.TRANSPARENT, false);
 							} else if (this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 12000
-									&& this.getWallRoof(x - 1, 1 + z) == 0) {
-								int[] index = new int[] { this.modelAccumulate.insertVertex(p10x, ec10, p10z),
-										this.modelAccumulate.insertVertex(p11x, ec11, p11z),
-										this.modelAccumulate.insertVertex(p00x, ec00, p00z) };
+								&& this.getWallRoof(x - 1, 1 + z) == 0) {
+								int[] index = new int[]{this.modelAccumulate.insertVertex(p10x, ec10, p10z),
+									this.modelAccumulate.insertVertex(p11x, ec11, p11z),
+									this.modelAccumulate.insertVertex(p00x, ec00, p00z)};
 								this.modelAccumulate.insertFace(3, index, roof, Scene.TRANSPARENT, false);
 							} else if (ec10 == ec00 && ec11 == ec01) {
-								int[] index = new int[] { this.modelAccumulate.insertVertex(p00x, ec00, p00z),
-										this.modelAccumulate.insertVertex(p10x, ec10, p10z),
-										this.modelAccumulate.insertVertex(p11x, ec11, p11z),
-										this.modelAccumulate.insertVertex(p01x, ec01, p01z) };
+								int[] index = new int[]{this.modelAccumulate.insertVertex(p00x, ec00, p00z),
+									this.modelAccumulate.insertVertex(p10x, ec10, p10z),
+									this.modelAccumulate.insertVertex(p11x, ec11, p11z),
+									this.modelAccumulate.insertVertex(p01x, ec01, p01z)};
 								this.modelAccumulate.insertFace(4, index, roof, Scene.TRANSPARENT, false);
 							} else if (ec00 == ec01 && ec11 == ec10) {
-								int[] index = new int[] { this.modelAccumulate.insertVertex(p01x, ec01, p01z),
-										this.modelAccumulate.insertVertex(p00x, ec00, p00z),
-										this.modelAccumulate.insertVertex(p10x, ec10, p10z),
-										this.modelAccumulate.insertVertex(p11x, ec11, p11z) };
+								int[] index = new int[]{this.modelAccumulate.insertVertex(p01x, ec01, p01z),
+									this.modelAccumulate.insertVertex(p00x, ec00, p00z),
+									this.modelAccumulate.insertVertex(p10x, ec10, p10z),
+									this.modelAccumulate.insertVertex(p11x, ec11, p11z)};
 								this.modelAccumulate.insertFace(4, index, roof, Scene.TRANSPARENT, false);
 							} else {
 								boolean var34 = true;
@@ -1104,24 +1103,24 @@ public final class World {
 									var34 = false;
 
 								if (!var34) {
-									int[] var35 = new int[] { this.modelAccumulate.insertVertex(p10x, ec10, p10z),
-											this.modelAccumulate.insertVertex(p11x, ec11, p11z),
-											this.modelAccumulate.insertVertex(p00x, ec00, p00z) };
+									int[] var35 = new int[]{this.modelAccumulate.insertVertex(p10x, ec10, p10z),
+										this.modelAccumulate.insertVertex(p11x, ec11, p11z),
+										this.modelAccumulate.insertVertex(p00x, ec00, p00z)};
 									this.modelAccumulate.insertFace(3, var35, roof, Scene.TRANSPARENT, false);
 
-									int[] index2 = new int[] { this.modelAccumulate.insertVertex(p01x, ec01, p01z),
-											this.modelAccumulate.insertVertex(p00x, ec00, p00z),
-											this.modelAccumulate.insertVertex(p11x, ec11, p11z) };
+									int[] index2 = new int[]{this.modelAccumulate.insertVertex(p01x, ec01, p01z),
+										this.modelAccumulate.insertVertex(p00x, ec00, p00z),
+										this.modelAccumulate.insertVertex(p11x, ec11, p11z)};
 									this.modelAccumulate.insertFace(3, index2, roof, Scene.TRANSPARENT, false);
 								} else {
-									int[] index1 = new int[] { this.modelAccumulate.insertVertex(p00x, ec00, p00z),
-											this.modelAccumulate.insertVertex(p10x, ec10, p10z),
-											this.modelAccumulate.insertVertex(p01x, ec01, p01z) };
+									int[] index1 = new int[]{this.modelAccumulate.insertVertex(p00x, ec00, p00z),
+										this.modelAccumulate.insertVertex(p10x, ec10, p10z),
+										this.modelAccumulate.insertVertex(p01x, ec01, p01z)};
 									this.modelAccumulate.insertFace(3, index1, roof, Scene.TRANSPARENT, false);
 
-									int[] index2 = new int[] { this.modelAccumulate.insertVertex(p11x, ec11, p11z),
-											this.modelAccumulate.insertVertex(p01x, ec01, p01z),
-											this.modelAccumulate.insertVertex(p10x, ec10, p10z) };
+									int[] index2 = new int[]{this.modelAccumulate.insertVertex(p11x, ec11, p11z),
+										this.modelAccumulate.insertVertex(p01x, ec01, p01z),
+										this.modelAccumulate.insertVertex(p10x, ec10, p10z)};
 									this.modelAccumulate.insertFace(3, index2, roof, Scene.TRANSPARENT, false);
 								}
 							}
@@ -1130,7 +1129,7 @@ public final class World {
 
 				this.modelAccumulate.setDiffuseLightAndColor(-50, -10, -50, 50, 50, true, -98);
 				this.modelRoofGrid[plane] = this.modelAccumulate.divideModelByGrid(0, 8, 1536, -112, 64, 169, 1536,
-						true, 0);
+					true, 0);
 
 				for (int x = 0; x < 64; ++x)
 					this.scene.addModel(this.modelRoofGrid[plane][x]);
@@ -1145,7 +1144,7 @@ public final class World {
 			}
 		} catch (RuntimeException var37) {
 			throw GenUtil.makeThrowable(var37,
-					"k.I(" + var1 + ',' + var2 + ',' + showWallOnMinimap + ',' + plane + ',' + var5 + ')');
+				"k.I(" + var1 + ',' + var2 + ',' + showWallOnMinimap + ',' + plane + ',' + var5 + ')');
 		}
 	}
 
@@ -1221,7 +1220,7 @@ public final class World {
 			return EntityHandler.getTileDef(id - 1).getColour();
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
-					"k.M(" + "dummy" + ',' + xTile + ',' + defaultVal + ',' + plane + ',' + zTile + ')');
+				"k.M(" + "dummy" + ',' + xTile + ',' + defaultVal + ',' + plane + ',' + zTile + ')');
 		}
 	}
 
@@ -1392,7 +1391,7 @@ public final class World {
 		try {
 
 			return this.getWallRoof(tileX, tileZ) > 0 || this.getWallRoof(tileX - 1, tileZ) > 0
-					|| this.getWallRoof(tileX - 1, tileZ - 1) > 0 || this.getWallRoof(tileX, tileZ - 1) > 0;
+				|| this.getWallRoof(tileX - 1, tileZ - 1) > 0 || this.getWallRoof(tileX, tileZ - 1) > 0;
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "k.DA(" + tileX + ',' + "dummy" + ',' + tileZ + ')');
 		}
@@ -1402,7 +1401,7 @@ public final class World {
 		try {
 
 			return this.getWallRoof(tileX, tileZ) > 0 && this.getWallRoof(tileX - 1, tileZ) > 0
-					&& this.getWallRoof(tileX - 1, tileZ - 1) > 0 && this.getWallRoof(tileX, tileZ - 1) > 0;
+				&& this.getWallRoof(tileX - 1, tileZ - 1) > 0 && this.getWallRoof(tileX, tileZ - 1) > 0;
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "k.EA(" + false + ',' + tileX + ',' + tileZ + ')');
 		}
@@ -1427,7 +1426,7 @@ public final class World {
 			int v2 = model.insertVertex(x1, -this.tileElevationCache[t1X][t1Z] - height, z1);
 			int v3 = model.insertVertex(x2, -height - this.tileElevationCache[t2X][t2Z], z2);
 			int v4 = model.insertVertex(x2, -this.tileElevationCache[t2X][t2Z], z2);
-			int[] var19 = new int[] { v1, v2, v3, v4 };
+			int[] var19 = new int[]{v1, v2, v3, v4};
 			int face = model.insertFace(4, var19, frontTex, backTex, false);
 			if (EntityHandler.getDoorDef(var1).getUnknown() == 5)
 				model.facePickIndex[face] = 30000 + var1;
@@ -1436,7 +1435,7 @@ public final class World {
 
 		} catch (RuntimeException var21) {
 			throw GenUtil.makeThrowable(var21, "k.F(" + var1 + ',' + (model != null ? "{...}" : "null") + ',' + t2X
-					+ ',' + t1Z + ',' + t1X + ',' + var6 + ',' + t2Z + ')');
+				+ ',' + t1Z + ',' + t1X + ',' + var6 + ',' + t2Z + ')');
 		}
 	}
 
@@ -1502,33 +1501,33 @@ public final class World {
 							if (EntityHandler.getObjectDef(id).getType() != 1) {
 								if (var5 == 0) {
 									this.collisionFlags[var8][var9] = FastMath
-											.bitwiseAnd(this.collisionFlags[var8][var9], ~CollisionFlag.WALL_EAST);
+										.bitwiseAnd(this.collisionFlags[var8][var9], ~CollisionFlag.WALL_EAST);
 									if (var8 > 0)
 										this.collisionFlagModify(var8 - 1, var9, 0xFFFF, CollisionFlag.WALL_WEST);
 								} else if (var5 != 2) {
 									if (var5 != 4) {
 										if (var5 == 6) {
 											this.collisionFlags[var8][var9] = FastMath.bitwiseAnd(
-													this.collisionFlags[var8][var9], ~CollisionFlag.WALL_NORTH);
+												this.collisionFlags[var8][var9], ~CollisionFlag.WALL_NORTH);
 											if (var9 > 0)
 												this.collisionFlagModify(var8, var9 - 1, 0xFFFF,
-														CollisionFlag.WALL_SOUTH);
+													CollisionFlag.WALL_SOUTH);
 										}
 									} else {
 										this.collisionFlags[var8][var9] = FastMath
-												.bitwiseAnd(this.collisionFlags[var8][var9], ~CollisionFlag.WALL_WEST);
+											.bitwiseAnd(this.collisionFlags[var8][var9], ~CollisionFlag.WALL_WEST);
 										if (var8 < 95)
 											this.collisionFlagModify(1 + var8, var9, 0xFFFF, CollisionFlag.WALL_EAST);
 									}
 								} else {
 									this.collisionFlags[var8][var9] = FastMath
-											.bitwiseAnd(this.collisionFlags[var8][var9], ~CollisionFlag.WALL_SOUTH);
+										.bitwiseAnd(this.collisionFlags[var8][var9], ~CollisionFlag.WALL_SOUTH);
 									if (var9 < 95)
 										this.collisionFlagModify(var8, var9 + 1, 0xFFFF, CollisionFlag.WALL_NORTH);
 								}
 							} else
 								this.collisionFlags[var8][var9] = FastMath.bitwiseAnd(this.collisionFlags[var8][var9],
-										~CollisionFlag.FULL_BLOCK_C);
+									~CollisionFlag.FULL_BLOCK_C);
 
 					this.setVertexLightArea(x, z, var6, var7);
 				}
@@ -1544,20 +1543,20 @@ public final class World {
 				if (EntityHandler.getDoorDef(id).getDoorType() == 1) {
 					if (dir == 0) {
 						this.collisionFlags[x][z] = FastMath.bitwiseAnd(this.collisionFlags[x][z],
-								~CollisionFlag.WALL_NORTH);
+							~CollisionFlag.WALL_NORTH);
 						if (z > 0)
 							this.collisionFlagModify(x, z - 1, 0xFFFF, CollisionFlag.WALL_SOUTH);
 					} else if (dir == 1) {
 						this.collisionFlags[x][z] = FastMath.bitwiseAnd(this.collisionFlags[x][z],
-								~CollisionFlag.WALL_EAST);
+							~CollisionFlag.WALL_EAST);
 						if (x > 0)
 							this.collisionFlagModify(x - 1, z, 0xFFFF, CollisionFlag.WALL_WEST);
 					} else if (dir == 2)
 						this.collisionFlags[x][z] = FastMath.bitwiseAnd(this.collisionFlags[x][z],
-								~CollisionFlag.FULL_BLOCK_A);
+							~CollisionFlag.FULL_BLOCK_A);
 					else if (dir == 3)
 						this.collisionFlags[x][z] = FastMath.bitwiseAnd(this.collisionFlags[x][z],
-								~CollisionFlag.FULL_BLOCK_B);
+							~CollisionFlag.FULL_BLOCK_B);
 
 					this.setVertexLightArea(x, z, 1, 1);
 				}
@@ -1570,7 +1569,6 @@ public final class World {
 		try {
 			if (this.removeAllObjectsOnReset)
 				this.scene.removeAllGameObjects(false);
-
 
 
 			for (int j = 0; j < 64; ++j) {
@@ -1622,10 +1620,10 @@ public final class World {
 				for (int z = 0; z < 96; ++z)
 					if (this.getTileDecorationID((int) x, z, 0) == 250)
 						if (x == 47 && this.getTileDecorationID((int) (x + 1), z, 0) != 250
-								&& this.getTileDecorationID((int) (1 + x), z, 0) != 2)
+							&& this.getTileDecorationID((int) (1 + x), z, 0) != 2)
 							this.setTileDecoration(x, z, 9);
 						else if (z == 47 && this.getTileDecorationID((int) x, z + 1, 0) != 250
-								&& this.getTileDecorationID((int) x, 1 + z, 0) != 2)
+							&& this.getTileDecorationID((int) x, 1 + z, 0) != 2)
 							this.setTileDecoration(x, z, 9);
 						else
 							this.setTileDecoration(x, z, 2);
@@ -1642,25 +1640,25 @@ public final class World {
 				for (int x = tileX; x <= width + tileX; ++x)
 					for (int z = tileZ; tileZ + height >= z; ++z) {
 						final int flag00 = CollisionFlag.FULL_BLOCK_C | CollisionFlag.FULL_BLOCK_B
-								| CollisionFlag.WALL_NORTH | CollisionFlag.WALL_EAST;
+							| CollisionFlag.WALL_NORTH | CollisionFlag.WALL_EAST;
 						final int flag10 = CollisionFlag.FULL_BLOCK_C | CollisionFlag.FULL_BLOCK_A
-								| CollisionFlag.WALL_WEST | CollisionFlag.WALL_NORTH;
+							| CollisionFlag.WALL_WEST | CollisionFlag.WALL_NORTH;
 						final int flag01 = CollisionFlag.FULL_BLOCK_C | CollisionFlag.FULL_BLOCK_A
-								| CollisionFlag.WALL_SOUTH | CollisionFlag.WALL_EAST;
+							| CollisionFlag.WALL_SOUTH | CollisionFlag.WALL_EAST;
 						final int flag11 = CollisionFlag.FULL_BLOCK_C | CollisionFlag.FULL_BLOCK_B
-								| CollisionFlag.WALL_WEST | CollisionFlag.WALL_SOUTH;
+							| CollisionFlag.WALL_WEST | CollisionFlag.WALL_SOUTH;
 
 						if ((flag00 & this.collisionFlagSafe(x, z)) == 0
-								&& (flag10 & this.collisionFlagSafe(x - 1, z)) == 0
-								&& (this.collisionFlagSafe(x, z - 1) & flag01) == 0
-								&& (this.collisionFlagSafe(x - 1, z - 1) & flag11) == 0)
+							&& (flag10 & this.collisionFlagSafe(x - 1, z)) == 0
+							&& (this.collisionFlagSafe(x, z - 1) & flag01) == 0
+							&& (this.collisionFlagSafe(x - 1, z - 1) & flag11) == 0)
 							this.setVertexLightOther(x, z, 0);
 						else
 							this.setVertexLightOther(x, z, 35);
 					}
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"k.B(" + width + ',' + height + ',' + "dummy" + ',' + tileX + ',' + tileZ + ')');
+				"k.B(" + width + ',' + height + ',' + "dummy" + ',' + tileX + ',' + tileZ + ')');
 		}
 	}
 
@@ -1697,13 +1695,9 @@ public final class World {
 
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"k.A(" + tileZ + ',' + light + ',' + chunkZ + ',' + 2 + ',' + chunkX + ',' + tileX + ')');
+				"k.A(" + tileZ + ',' + light + ',' + chunkZ + ',' + 2 + ',' + chunkX + ',' + tileX + ')');
 		}
 	}
-
-	private Sector[] worldMapSector = new Sector[4];
-	private int mapPointX = 0;
-	private int mapPointZ = 0;
 
 	public void setWorldMapPoint(int offsetX, int offsetY) {
 		mapPointX = offsetX;
@@ -1751,47 +1745,47 @@ public final class World {
 					if (decorType == 5) {
 						if (this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 24000)
 							if (this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal) != Scene.TRANSPARENT && this
-									.getTileDecorationCacheVal(x, z - 1, plane, defaultVal) != Scene.TRANSPARENT) {
+								.getTileDecorationCacheVal(x, z - 1, plane, defaultVal) != Scene.TRANSPARENT) {
 								bridge00_11 = 0;
 								colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 							} else if (this.getTileDecorationCacheVal(1 + x, z, plane, defaultVal) != Scene.TRANSPARENT
-									&& this.getTileDecorationCacheVal(x, 1 + z, plane,
-											defaultVal) != Scene.TRANSPARENT) {
+								&& this.getTileDecorationCacheVal(x, 1 + z, plane,
+								defaultVal) != Scene.TRANSPARENT) {
 								res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 								bridge00_11 = 0;
 							} else if (this.getTileDecorationCacheVal(1 + x, z, plane, defaultVal) != Scene.TRANSPARENT
-									&& this.getTileDecorationCacheVal(x, z - 1, plane,
-											defaultVal) != Scene.TRANSPARENT) {
+								&& this.getTileDecorationCacheVal(x, z - 1, plane,
+								defaultVal) != Scene.TRANSPARENT) {
 								res01 = this.getTileDecorationCacheVal(x + 1, z, plane, defaultVal);
 								bridge00_11 = 1;
 							} else if (this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal) != Scene.TRANSPARENT
-									&& this.getTileDecorationCacheVal(x, z + 1, plane,
-											defaultVal) != Scene.TRANSPARENT) {
+								&& this.getTileDecorationCacheVal(x, z + 1, plane,
+								defaultVal) != Scene.TRANSPARENT) {
 								bridge00_11 = 1;
 								colorResource = this.getTileDecorationCacheVal(x - 1, z, plane, defaultVal);
 							}
 					} else if (decorType != 2 || this.getWallDiagonal(x, z) > 0 && this.getWallDiagonal(x, z) < 24000)
 						if (decorType2 != this.isTileType2(x - 1, z, plane, 15282)
-								&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
+							&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
 							colorResource = defaultVal;
 							bridge00_11 = 0;
 						} else if (decorType2 != this.isTileType2(x + 1, z, plane, 15282)
-								&& this.isTileType2(x, z + 1, plane, 15282) != decorType2) {
+							&& this.isTileType2(x, z + 1, plane, 15282) != decorType2) {
 							bridge00_11 = 0;
 							res01 = defaultVal;
 						} else if (decorType2 != this.isTileType2(1 + x, z, plane, 15282)
-								&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
+							&& this.isTileType2(x, z - 1, plane, 15282) != decorType2) {
 							res01 = defaultVal;
 							bridge00_11 = 1;
 						} else if (decorType2 != this.isTileType2(x - 1, z, plane, 15282)
-								&& decorType2 != this.isTileType2(x, 1 + z, plane, 15282)) {
+							&& decorType2 != this.isTileType2(x, 1 + z, plane, 15282)) {
 							colorResource = defaultVal;
 							bridge00_11 = 1;
 						}
 
 					if (EntityHandler.getTileDef(decorID - 1).getObjectType() != 0)
 						this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z],
-								CollisionFlag.FULL_BLOCK_C);
+							CollisionFlag.FULL_BLOCK_C);
 
 					if (EntityHandler.getTileDef(decorID - 1).getTileValue() == 2)
 						this.collisionFlags[x][z] = FastMath.bitwiseOr(this.collisionFlags[x][z], CollisionFlag.OBJECT);
@@ -1802,36 +1796,36 @@ public final class World {
 		for (int x = 1; x < 95; ++x) {
 			for (int z = 1; z < 95; ++z) {
 				if (this.getTileDecorationID((int) x, z, plane) > 0 && EntityHandler
-						.getTileDef(this.getTileDecorationID((int) x, z, plane) - 1).getTileValue() == 4) {
+					.getTileDef(this.getTileDecorationID((int) x, z, plane) - 1).getTileValue() == 4) {
 					int tileDecor = EntityHandler.getTileDef(this.getTileDecorationID(x, z, plane) - 1).getColour();
 					this.drawMinimapTile(x, z, 0, tileDecor, tileDecor);
 				} else if (this.getTileDecorationID((int) x, z, plane) == 0
-						|| EntityHandler.getTileDef(this.getTileDecorationID(x, z, plane) - 1).getTileValue() != 3) {
+					|| EntityHandler.getTileDef(this.getTileDecorationID(x, z, plane) - 1).getTileValue() != 3) {
 					if (this.getTileDecorationID(x, z + 1, plane) > 0 && EntityHandler
-							.getTileDef(this.getTileDecorationID(x, 1 + z, plane) - 1).getTileValue() == 4) {
+						.getTileDef(this.getTileDecorationID(x, 1 + z, plane) - 1).getTileValue() == 4) {
 						int tileDecor = EntityHandler.getTileDef(this.getTileDecorationID((int) x, z + 1, plane) - 1)
-								.getColour();
+							.getColour();
 						this.drawMinimapTile(x, (int) z, 0, tileDecor, tileDecor);
 					}
 
 					if (this.getTileDecorationID((int) x, z - 1, plane) > 0 && EntityHandler
-							.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1).getTileValue() == 4) {
+						.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1).getTileValue() == 4) {
 						int tileDecor = EntityHandler.getTileDef(this.getTileDecorationID((int) x, z - 1, plane) - 1)
-								.getColour();
+							.getColour();
 						this.drawMinimapTile(x, (int) z, 0, tileDecor, tileDecor);
 					}
 
 					if (this.getTileDecorationID((int) (x + 1), z, plane) > 0 && EntityHandler
-							.getTileDef(this.getTileDecorationID((int) (x + 1), z, plane) - 1).getTileValue() == 4) {
+						.getTileDef(this.getTileDecorationID((int) (x + 1), z, plane) - 1).getTileValue() == 4) {
 						int tileDecor = EntityHandler.getTileDef(this.getTileDecorationID((int) (1 + x), z, plane) - 1)
-								.getColour();
+							.getColour();
 						this.drawMinimapTile(x, (int) z, 0, tileDecor, tileDecor);
 					}
 
 					if (this.getTileDecorationID((int) (x - 1), z, plane) > 0 && EntityHandler
-							.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1).getTileValue() == 4) {
+						.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1).getTileValue() == 4) {
 						int tileDecor = EntityHandler.getTileDef(this.getTileDecorationID((int) (x - 1), z, plane) - 1)
-								.getColour();
+							.getColour();
 						this.drawMinimapTile(x, (int) z, 0, tileDecor, tileDecor);
 					}
 				}
@@ -1852,13 +1846,13 @@ public final class World {
 				}
 				wall = this.getWallDiagonal(x, z);
 				if (wall > 0 && wall < 12000
-						&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
+					&& (EntityHandler.getDoorDef(wall - 1).getUnknown() == 0 || this.showInvisibleWalls)) {
 					this.minimapGraphics.setPixel(x * 3, z * 3, wallColor);
 					this.minimapGraphics.setPixel(1 + x * 3, 1 + z * 3, wallColor);
 					this.minimapGraphics.setPixel(x * 3 + 2, 2 + z * 3, wallColor);
 				}
 				if (wall > 12000 && wall < 24000
-						&& (EntityHandler.getDoorDef(wall - 12001).getUnknown() == 0 || this.showInvisibleWalls)) {
+					&& (EntityHandler.getDoorDef(wall - 12001).getUnknown() == 0 || this.showInvisibleWalls)) {
 
 					this.minimapGraphics.setPixel(2 + x * 3, z * 3, wallColor);
 					this.minimapGraphics.setPixel(x * 3 + 1, z * 3 + 1, wallColor);
@@ -1882,7 +1876,7 @@ public final class World {
 				}
 			} else {
 				ByteBuffer data = DataConversions
-						.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
+					.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
 				s = Sector.unpack(data);
 			}
 		} catch (Exception e) {
@@ -1891,9 +1885,6 @@ public final class World {
 		}
 		worldMapSector[sector] = s;
 	}
-
-	private ZipFile tileArchive;
-	private Sector[] sectors;
 
 	public void loadSection(int sector, int height, int sectionX, int sectionY) {
 		Sector s = null;
@@ -1909,7 +1900,7 @@ public final class World {
 				}
 			} else {
 				ByteBuffer data = DataConversions
-						.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
+					.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
 				s = Sector.unpack(data);
 			}
 		} catch (Exception e) {

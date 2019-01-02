@@ -7,17 +7,33 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 
 public final class Scene {
-	public int fogSmoothingStartDistance = 10;
-	public int fogZFalloff = 20;
-	private int[] m_a;
-	private int m_A;
+	public static final int TRANSPARENT = 12345678;
 	private final RSModel[] m_Ab;
 	private final int[] m_B = new int[40];
+	private final int m_db;
+	private final int polyNormalScale;
+	private final int m_ib = 50;
+	private final int[][] m_Ib;
+	private final int[] m_J = new int[40];
+	private final int[] m_qb;
+	private final int[] m_Qb = new int[40];
+	private final int[] m_r;
+	private final boolean m_Ub;
+	private final int[] m_v;
+	private final int[] m_Vb = new int[40];
+	private final int[] m_yb;
+	private final int rot1024_zTop = 5;
+	public int fogSmoothingStartDistance = 10;
+	public int fogZFalloff = 20;
+	public int fogLandscapeDistance;
+	public RSModel m_T;
+	public int fogEntityDistance;
+	private int[] m_a;
+	private int m_A;
 	private int m_cb;
 	private int m_Cb;
 	private int m_cc = 0;
 	private long[] m_D;
-	private final int m_db;
 	private GraphicsController graphics;
 	private int m_e;
 	private int m_eb;
@@ -27,42 +43,28 @@ public final class Scene {
 	private int[] m_Fb;
 	private byte[][] m_g;
 	private int[] m_gb;
-	private final int polyNormalScale;
 	private int[] m_H;
 	private int[] m_Hb;
 	private int[][] m_i;
-	private final int m_ib = 50;
-	private final int[][] m_Ib;
 	private int m_j;
-	private final int[] m_J = new int[40];
 	private int[] m_jb;
 	private boolean m_K;
 	private int[][] resourceDatabase;
 	private int[][] m_L;
-	public int fogLandscapeDistance;
 	private int m_n;
 	private int m_Nb;
 	private int[] m_ob;
 	private int[] m_Ob;
 	private int[] pixelData;
 	private int[] m_Q;
-	private final int[] m_qb;
-	private final int[] m_Qb = new int[40];
-	private final int[] m_r;
 	private boolean[] m_S;
-	public RSModel m_T;
 	private int m_u;
-	private final boolean m_Ub;
-	private final int[] m_v;
 	private int m_vb;
-	private final int[] m_Vb = new int[40];
 	private int m_wb = 192;
 	private int m_Wb;
 	private Scanline[] m_x;
-	public int fogEntityDistance;
 	private int m_Xb;
 	private Polygon[] polygons;
-	private final int[] m_yb;
 	private int m_zb;
 	private int m_Zb = 256;
 	private int modelCount;
@@ -74,9 +76,6 @@ public final class Scene {
 	private int rot1024_x;
 	private int rot1024_y;
 	private int rot1024_z;
-
-	private final int rot1024_zTop = 5;
-	public static final int TRANSPARENT = 12345678;
 
 	public Scene(GraphicsController var1, int var2, int maxPolygonCount, int var4) {
 		this.m_Ib = new int[this.m_ib][256];
@@ -136,13 +135,13 @@ public final class Scene {
 			this.m_a = new int[var4];
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6,
-					"lb.<init>(" + (var1 != null ? "{...}" : "null") + ',' + var2 + ',' + maxPolygonCount + ',' + var4 + ')');
+				"lb.<init>(" + (var1 != null ? "{...}" : "null") + ',' + var2 + ',' + maxPolygonCount + ',' + var4 + ')');
 		}
 	}
 
 	private final boolean polygonHit1(Polygon polyA, Polygon polyB) {
 		try {
-			
+
 			RSModel modelA = polyA.model;
 			RSModel modelB = polyB.model;
 			int faceA = polyA.faceID;
@@ -164,7 +163,7 @@ public final class Scene {
 			for (int v = 0; indexCountA > v; ++v) {
 				int vID = indexA[v];
 				int dot = bn_y * (bv0_y - modelA.vertYRot[vID]) + (bv0_x - modelA.vertXRot[vID]) * bn_x
-						+ (bv0_z - modelA.vertZRot[vID]) * bn_z;
+					+ (bv0_z - modelA.vertZRot[vID]) * bn_z;
 				if (-bf_normMag > dot && orientation < 0 || dot > bf_normMag && orientation > 0) {
 					hit = true;
 					break;
@@ -187,7 +186,7 @@ public final class Scene {
 				for (int v = 0; v < indexCountB; ++v) {
 					int vID = indexB[v];
 					int dot = bn_x * (bv0_x - modelB.vertXRot[vID])
-							- (-(bn_y * (bv0_y - modelB.vertYRot[vID])) - (bv0_z - modelB.vertZRot[vID]) * bn_z);
+						- (-(bn_y * (bv0_y - modelB.vertYRot[vID])) - (bv0_z - modelB.vertZRot[vID]) * bn_z);
 					if (dot < -bf_normMag && orientation > 0 || bf_normMag < dot && orientation < 0) {
 						hit = true;
 						break;
@@ -198,13 +197,13 @@ public final class Scene {
 			}
 		} catch (RuntimeException var24) {
 			throw GenUtil.makeThrowable(var24, "lb.DA(" + false + ',' + (polyA != null ? "{...}" : "null") + ','
-					+ (polyB != null ? "{...}" : "null") + ')');
+				+ (polyB != null ? "{...}" : "null") + ')');
 		}
 	}
 
 	public final int[] getQB(byte var1) {
 		try {
-			
+
 			return this.m_qb;
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "lb.C(" + var1 + ')');
@@ -213,7 +212,7 @@ public final class Scene {
 
 	private final boolean booleanCombinatoric(boolean var2, int var3, int var4, int var5, int var6) {
 		try {
-			
+
 			if ((!var2 || var5 > var6) && var5 >= var6) {
 				if (var5 < var4)
 					return true;
@@ -238,13 +237,13 @@ public final class Scene {
 			// true)) : true);
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"lb.H(" + "dummy" + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ')');
+				"lb.H(" + "dummy" + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ')');
 		}
 	}
 
 	private final boolean polygonHit2(byte var1, Polygon var2, Polygon var3) {
 		try {
-			
+
 			if (var3.minP6 >= var2.maxP6) {
 				return true;
 			} else {
@@ -287,7 +286,7 @@ public final class Scene {
 					for (var23 = 0; var23 < var10; ++var23) {
 						var12 = var8[var23];
 						var13 = (var17 - var4.vertZRot[var12]) * var20 + (var16 - var4.vertYRot[var12]) * var19
-								+ var18 * (var15 - var4.vertXRot[var12]);
+							+ var18 * (var15 - var4.vertXRot[var12]);
 						if (var13 < -var21 && var22 < 0 || var13 > var21 && var22 > 0) {
 							var14 = true;
 							break;
@@ -310,7 +309,7 @@ public final class Scene {
 						for (var23 = 0; var11 > var23; ++var23) {
 							var12 = var9[var23];
 							var13 = (var17 - var5.vertZRot[var12]) * var20 + (var15 - var5.vertXRot[var12]) * var18
-									+ (var16 - var5.vertYRot[var12]) * var19;
+								+ (var16 - var5.vertYRot[var12]) * var19;
 							if (-var21 > var13 && var22 > 0 || var21 < var13 && var22 < 0) {
 								var14 = true;
 								break;
@@ -377,13 +376,13 @@ public final class Scene {
 			}
 		} catch (RuntimeException var29) {
 			throw GenUtil.makeThrowable(var29, "lb.F(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ','
-					+ (var3 != null ? "{...}" : "null") + ')');
+				+ (var3 != null ? "{...}" : "null") + ')');
 		}
 	}
 
 	private final void resetMTVertHead() {
 		try {
-			
+
 			this.m_n = 0;
 			this.m_T.resetFaceVertHead((int) 1);
 		} catch (RuntimeException var3) {
@@ -393,7 +392,7 @@ public final class Scene {
 
 	final int resourceToColor(int resource, boolean var2) {
 		try {
-			
+
 			if (resource == Scene.TRANSPARENT) {
 				return 0;
 			} else {
@@ -417,7 +416,7 @@ public final class Scene {
 
 	private final boolean booleanCombinatoric2(int var1, boolean var2, int var3, byte var4, int var5) {
 		try {
-			
+
 			return (!var2 || var3 > var1) && var3 >= var1 ? (var5 < var1 ? true : var2) : (var1 >= var5 ? !var2 : true);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "lb.CA(" + var1 + ',' + var2 + ',' + var3 + ',' + -71 + ',' + var5 + ')');
@@ -426,17 +425,17 @@ public final class Scene {
 
 	private final int booleanCombinatoric3(int var1, boolean var2, int var3, int var4, int var5, int var6) {
 		try {
-			
+
 			return var4 == var1 ? var6 : (var5 - var6) * (var3 - var1) / (var4 - var1) + var6;
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"lb.M(" + var1 + ',' + false + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ')');
+				"lb.M(" + var1 + ',' + false + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ')');
 		}
 	}
 
 	private final void a(int var1, byte var2) {
 		try {
-			
+
 			short var3;
 			if (this.m_Hb[var1] != 0) {
 				var3 = 128;
@@ -480,7 +479,7 @@ public final class Scene {
 
 	private final void computePolygon(int polyID) {
 		try {
-			
+
 			Polygon poly = this.polygons[polyID];
 			RSModel model = poly.model;
 			int face = poly.faceID;
@@ -506,7 +505,7 @@ public final class Scene {
 			} else {
 				fParam4 = 0;
 				while (normX > 25000 || normY > 25000 || normZ > 25000 || normX < -25000 || normY < -25000
-						|| normZ < -25000) {
+					|| normZ < -25000) {
 					normX >>= 1;
 					normY >>= 1;
 					normZ >>= 1;
@@ -515,7 +514,7 @@ public final class Scene {
 
 				model.scenePolyNormalShift[face] = fParam4;
 				model.scenePolyNormalMagnitude[face] = (int) ((double) this.polyNormalScale
-						* Math.sqrt((double) (normZ * normZ + normY * normY + normX * normX)));
+					* Math.sqrt((double) (normZ * normZ + normY * normY + normX * normX)));
 			}
 
 			poly.normalX = normX;
@@ -568,7 +567,7 @@ public final class Scene {
 
 	private final void a(int var1, int var2, int var3, boolean var4) {
 		try {
-			
+
 			int projX = 1024 - this.rot1024_x & 1023;
 			int projY = 1023 & 1024 - this.rot1024_y;
 			int projZ = 1024 - this.rot1024_z & 1023;
@@ -632,7 +631,7 @@ public final class Scene {
 		try {
 			this.m_L = new int[var4][];
 			this.m_g = new byte[var4][];
-			
+
 			this.resourceDatabase = new int[var4][];
 			this.m_i = new int[var3][];
 			this.m_S = new boolean[var4];
@@ -652,7 +651,6 @@ public final class Scene {
 				var4 = 32;
 			}
 
-			
 
 			for (int var7 = var3; var7 < this.modelCount; ++var7) {
 				this.models[var7].setDiffuseLight(var2, var5, var6, -115, var4, var1);
@@ -660,7 +658,7 @@ public final class Scene {
 
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"lb.KA(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ')');
+				"lb.KA(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ')');
 		}
 	}
 
@@ -677,7 +675,7 @@ public final class Scene {
 				var4[var5].m_p = -1;
 			}
 
-			
+
 			var5 = 0;
 
 			while (true) {
@@ -697,8 +695,8 @@ public final class Scene {
 					for (int var9 = var8; var9 >= 1 + var7; --var9) {
 						Polygon var10 = var4[var9];
 						if (var10.maxP6 > var6.minP6 && var10.minP6 < var6.maxP6 && var10.maxP2 > var6.minP2
-								&& var10.minP2 < var6.maxP2 && var6.m_f != var10.m_p
-								&& !this.polygonHit2((byte) -84, var10, var6) && this.polygonHit1(var10, var6)) {
+							&& var10.minP2 < var6.maxP2 && var6.m_f != var10.m_p
+							&& !this.polygonHit2((byte) -84, var10, var6) && this.polygonHit1(var10, var6)) {
 							this.a(var7, var4, var9, (byte) 34);
 							var7 = this.m_e;
 							if (var4[var9] != var10) {
@@ -714,14 +712,14 @@ public final class Scene {
 			}
 		} catch (RuntimeException var11) {
 			throw GenUtil.makeThrowable(var11,
-					"lb.I(" + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null") + ')');
+				"lb.I(" + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null") + ')');
 		}
 	}
 
 	private final void a(int var1, int var2, int[] var3, int var4, int var5, RSModel var6, int[] var7, int[] var8,
-			int var9, int var10, int var11) {
+						 int var9, int var10, int var11) {
 		try {
-			
+
 			int var12;
 			int var13;
 			int var14;
@@ -1332,7 +1330,7 @@ public final class Scene {
 				if (this.m_K && this.m_cc < this.m_db && this.m_Wb >= this.m_Xb && this.m_Cb > this.m_Wb) {
 					var52 = this.m_x[this.m_Wb];
 					if (this.m_j >= var52.m_d >> 8 && this.m_j <= var52.m_k >> 8 && var52.m_k >= var52.m_d && !var6.m_db
-							&& var6.m_zb[var2] == 0) {
+						&& var6.m_zb[var2] == 0) {
 						this.m_Ab[this.m_cc] = var6;
 						this.m_qb[this.m_cc] = var2;
 						++this.m_cc;
@@ -1342,15 +1340,15 @@ public final class Scene {
 			}
 		} catch (RuntimeException var51) {
 			throw GenUtil.makeThrowable(var51,
-					"lb.R(" + var1 + ',' + var2 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ',' + var5
-							+ ',' + (var6 != null ? "{...}" : "null") + ',' + (var7 != null ? "{...}" : "null") + ','
-							+ (var8 != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11 + ')');
+				"lb.R(" + var1 + ',' + var2 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ',' + var5
+					+ ',' + (var6 != null ? "{...}" : "null") + ',' + (var7 != null ? "{...}" : "null") + ','
+					+ (var8 != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11 + ')');
 		}
 	}
 
 	private final void a(int var1, int var2, Polygon[] var3, int var4) {
 		try {
-			
+
 			if (var4 > var1) {
 				int var5 = var1 - 1;
 				int var6 = var4 + 1;
@@ -1382,13 +1380,13 @@ public final class Scene {
 
 		} catch (RuntimeException var11) {
 			throw GenUtil.makeThrowable(var11,
-					"lb.AA(" + var1 + ',' + -1 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ')');
+				"lb.AA(" + var1 + ',' + -1 + ',' + (var3 != null ? "{...}" : "null") + ',' + var4 + ')');
 		}
 	}
 
 	private final boolean a(int var1, Polygon[] var2, int var3, byte var4) {
 		try {
-			
+
 
 			while (true) {
 				Polygon var6 = var2[var1];
@@ -1442,13 +1440,13 @@ public final class Scene {
 			}
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
-					"lb.FA(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3 + ',' + var4 + ')');
+				"lb.FA(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3 + ',' + var4 + ')');
 		}
 	}
 
 	private final boolean a(int[] var1, int[] var2, int[] var3, int[] var4, int var5) {
 		try {
-			
+
 			int var6 = var3.length;
 			int var7 = var1.length;
 			byte var16 = 0;
@@ -1504,9 +1502,9 @@ public final class Scene {
 						}
 
 						var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var4[var10], var2[var8],
-								var3[var8], var3[(1 + var8) % var6]);
+							var3[var8], var3[(1 + var8) % var6]);
 						var13 = this.booleanCombinatoric3(var2[(var6 + (var9 - 1)) % var6], false, var4[var10],
-								var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
+							var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
 						var14 = var1[var10];
 						var17 = var12 < var14 | var13 < var14;
 						if (this.booleanCombinatoric2(var14, var17, var12, (byte) -71, var13)) {
@@ -1528,9 +1526,9 @@ public final class Scene {
 						}
 
 						var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var2[var8], var4[var10],
-								var1[var10], var1[(var10 + 1) % var7]);
+							var1[var10], var1[(var10 + 1) % var7]);
 						var15 = this.booleanCombinatoric3(var4[(var7 + (var11 - 1)) % var7], false, var2[var8],
-								var4[var11], var1[var11], var1[(var11 - 1 + var7) % var7]);
+							var4[var11], var1[var11], var1[(var11 - 1 + var7) % var7]);
 						var17 = var12 < var14 | var12 < var15;
 						if (this.booleanCombinatoric2(var12, !var17, var14, (byte) -71, var15)) {
 							return true;
@@ -1548,11 +1546,11 @@ public final class Scene {
 							if (var2[var9] >= var4[var10]) {
 								if (var4[var10] >= var4[var11]) {
 									var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var4[var11],
-											var2[var8], var3[var8], var3[(1 + var8) % var6]);
+										var2[var8], var3[var8], var3[(1 + var8) % var6]);
 									var13 = this.booleanCombinatoric3(var2[(var9 - 1 + var6) % var6], false,
-											var4[var11], var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
+										var4[var11], var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
 									var14 = this.booleanCombinatoric3(var4[(1 + var10) % var7], false, var4[var11],
-											var4[var10], var1[var10], var1[(var10 + 1) % var7]);
+										var4[var10], var1[var10], var1[(var10 + 1) % var7]);
 									var15 = var1[var11];
 									if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 										return true;
@@ -1564,12 +1562,12 @@ public final class Scene {
 									}
 								} else {
 									var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var4[var10],
-											var2[var8], var3[var8], var3[(1 + var8) % var6]);
+										var2[var8], var3[var8], var3[(1 + var8) % var6]);
 									var13 = this.booleanCombinatoric3(var2[(var9 + var6 - 1) % var6], false,
-											var4[var10], var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
+										var4[var10], var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
 									var14 = var1[var10];
 									var15 = this.booleanCombinatoric3(var4[(var7 + (var11 - 1)) % var7], false,
-											var4[var10], var4[var11], var1[var11], var1[(var11 - 1 + var7) % var7]);
+										var4[var10], var4[var11], var1[var11], var1[(var11 - 1 + var7) % var7]);
 									if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 										return true;
 									}
@@ -1581,12 +1579,12 @@ public final class Scene {
 								}
 							} else if (var2[var9] < var4[var11]) {
 								var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var2[var9],
-										var2[var8], var3[var8], var3[(1 + var8) % var6]);
+									var2[var8], var3[var8], var3[(1 + var8) % var6]);
 								var13 = var3[var9];
 								var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var2[var9],
-										var4[var10], var1[var10], var1[(1 + var10) % var7]);
+									var4[var10], var1[var10], var1[(1 + var10) % var7]);
 								var15 = this.booleanCombinatoric3(var4[(var11 - 1 + var7) % var7], false, var2[var9],
-										var4[var11], var1[var11], var1[(var11 - (1 - var7)) % var7]);
+									var4[var11], var1[var11], var1[(var11 - (1 - var7)) % var7]);
 								if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 									return true;
 								}
@@ -1597,11 +1595,11 @@ public final class Scene {
 								}
 							} else {
 								var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var4[var11],
-										var2[var8], var3[var8], var3[(var8 + 1) % var6]);
+									var2[var8], var3[var8], var3[(var8 + 1) % var6]);
 								var13 = this.booleanCombinatoric3(var2[(var6 + var9 - 1) % var6], false, var4[var11],
-										var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
+									var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
 								var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var4[var11],
-										var4[var10], var1[var10], var1[(var10 + 1) % var7]);
+									var4[var10], var1[var10], var1[(var10 + 1) % var7]);
 								var15 = var1[var11];
 								if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 									return true;
@@ -1615,11 +1613,11 @@ public final class Scene {
 						} else if (var4[var10] > var2[var8]) {
 							if (var2[var8] >= var4[var11]) {
 								var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var4[var11],
-										var2[var8], var3[var8], var3[(1 + var8) % var6]);
+									var2[var8], var3[var8], var3[(1 + var8) % var6]);
 								var13 = this.booleanCombinatoric3(var2[(var6 + (var9 - 1)) % var6], false, var4[var11],
-										var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
+									var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
 								var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var4[var11],
-										var4[var10], var1[var10], var1[(1 + var10) % var7]);
+									var4[var10], var1[var10], var1[(1 + var10) % var7]);
 								var15 = var1[var11];
 								if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 									return true;
@@ -1632,11 +1630,11 @@ public final class Scene {
 							} else {
 								var12 = var3[var8];
 								var13 = this.booleanCombinatoric3(var2[(var9 + (var6 - 1)) % var6], false, var2[var8],
-										var2[var9], var3[var9], var3[(var9 + var6 - 1) % var6]);
+									var2[var9], var3[var9], var3[(var9 + var6 - 1) % var6]);
 								var14 = this.booleanCombinatoric3(var4[(1 + var10) % var7], false, var2[var8],
-										var4[var10], var1[var10], var1[(1 + var10) % var7]);
+									var4[var10], var1[var10], var1[(1 + var10) % var7]);
 								var15 = this.booleanCombinatoric3(var4[(var7 - 1 + var11) % var7], false, var2[var8],
-										var4[var11], var1[var11], var1[(var7 + (var11 - 1)) % var7]);
+									var4[var11], var1[var11], var1[(var7 + (var11 - 1)) % var7]);
 								if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 									return true;
 								}
@@ -1648,12 +1646,12 @@ public final class Scene {
 							}
 						} else if (var4[var10] < var4[var11]) {
 							var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var4[var10], var2[var8],
-									var3[var8], var3[(1 + var8) % var6]);
+								var3[var8], var3[(1 + var8) % var6]);
 							var13 = this.booleanCombinatoric3(var2[(var6 + (var9 - 1)) % var6], false, var4[var10],
-									var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
+								var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
 							var14 = var1[var10];
 							var15 = this.booleanCombinatoric3(var4[(var7 + (var11 - 1)) % var7], false, var4[var10],
-									var4[var11], var1[var11], var1[(var7 + var11 - 1) % var7]);
+								var4[var11], var1[var11], var1[(var7 + var11 - 1) % var7]);
 							if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 								return true;
 							}
@@ -1664,11 +1662,11 @@ public final class Scene {
 							}
 						} else {
 							var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var4[var11], var2[var8],
-									var3[var8], var3[(var8 + 1) % var6]);
+								var3[var8], var3[(var8 + 1) % var6]);
 							var13 = this.booleanCombinatoric3(var2[(var9 + var6 - 1) % var6], false, var4[var11],
-									var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
+								var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
 							var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var4[var11], var4[var10],
-									var1[var10], var1[(1 + var10) % var7]);
+								var1[var10], var1[(1 + var10) % var7]);
 							var15 = var1[var11];
 							if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 								return true;
@@ -1685,12 +1683,12 @@ public final class Scene {
 						if (~var2[var8] <= ~var4[var10]) {
 							if (var4[var10] < var4[var11]) {
 								var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var4[var10],
-										var2[var8], var3[var8], var3[(var8 + 1) % var6]);
+									var2[var8], var3[var8], var3[(var8 + 1) % var6]);
 								var13 = this.booleanCombinatoric3(var2[(var9 - 1 + var6) % var6], false, var4[var10],
-										var2[var9], var3[var9], var3[(var9 - 1 + var6) % var6]);
+									var2[var9], var3[var9], var3[(var9 - 1 + var6) % var6]);
 								var14 = var1[var10];
 								var15 = this.booleanCombinatoric3(var4[(var11 - 1 + var7) % var7], false, var4[var10],
-										var4[var11], var1[var11], var1[(var11 + (var7 - 1)) % var7]);
+									var4[var11], var1[var11], var1[(var11 + (var7 - 1)) % var7]);
 								if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 									return true;
 								}
@@ -1701,11 +1699,11 @@ public final class Scene {
 								}
 							} else {
 								var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var4[var11],
-										var2[var8], var3[var8], var3[(1 + var8) % var6]);
+									var2[var8], var3[var8], var3[(1 + var8) % var6]);
 								var13 = this.booleanCombinatoric3(var2[(var6 + var9 - 1) % var6], false, var4[var11],
-										var2[var9], var3[var9], var3[(var9 + (var6 - 1)) % var6]);
+									var2[var9], var3[var9], var3[(var9 + (var6 - 1)) % var6]);
 								var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var4[var11],
-										var4[var10], var1[var10], var1[(1 + var10) % var7]);
+									var4[var10], var1[var10], var1[(1 + var10) % var7]);
 								var15 = var1[var11];
 								if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 									return true;
@@ -1720,9 +1718,9 @@ public final class Scene {
 							if (var4[var11] > var2[var8]) {
 								var12 = var3[var8];
 								var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var2[var8],
-										var4[var10], var1[var10], var1[(1 + var10) % var7]);
+									var4[var10], var1[var10], var1[(1 + var10) % var7]);
 								var15 = this.booleanCombinatoric3(var4[(var11 - 1 + var7) % var7], false, var2[var8],
-										var4[var11], var1[var11], var1[(var7 + (var11 - 1)) % var7]);
+									var4[var11], var1[var11], var1[(var7 + (var11 - 1)) % var7]);
 								if (!this.booleanCombinatoric2(var12, !var17, var14, (byte) -71, var15)) {
 									return false;
 								}
@@ -1731,11 +1729,11 @@ public final class Scene {
 							}
 
 							var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var4[var11], var2[var8],
-									var3[var8], var3[(1 + var8) % var6]);
+								var3[var8], var3[(1 + var8) % var6]);
 							var13 = this.booleanCombinatoric3(var2[(var9 + var6 - 1) % var6], false, var4[var11],
-									var2[var9], var3[var9], var3[(var9 + var6 - 1) % var6]);
+								var2[var9], var3[var9], var3[(var9 + var6 - 1) % var6]);
 							var14 = this.booleanCombinatoric3(var4[(1 + var10) % var7], false, var4[var11], var4[var10],
-									var1[var10], var1[(1 + var10) % var7]);
+								var1[var10], var1[(1 + var10) % var7]);
 							var15 = var1[var11];
 							if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 								return true;
@@ -1752,9 +1750,9 @@ public final class Scene {
 						if (var4[var10] < var2[var8]) {
 							if (var4[var10] < var2[var9]) {
 								var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var4[var10],
-										var2[var8], var3[var8], var3[(var8 + 1) % var6]);
+									var2[var8], var3[var8], var3[(var8 + 1) % var6]);
 								var13 = this.booleanCombinatoric3(var2[(var9 - 1 + var6) % var6], false, var4[var10],
-										var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
+									var2[var9], var3[var9], var3[(var6 - 1 + var9) % var6]);
 								var14 = var1[var10];
 								if (!this.booleanCombinatoric2(var14, var17, var12, (byte) -71, var13)) {
 									return false;
@@ -1764,12 +1762,12 @@ public final class Scene {
 							}
 
 							var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var2[var9], var2[var8],
-									var3[var8], var3[(1 + var8) % var6]);
+								var3[var8], var3[(1 + var8) % var6]);
 							var13 = var3[var9];
 							var14 = this.booleanCombinatoric3(var4[(1 + var10) % var7], false, var2[var9], var4[var10],
-									var1[var10], var1[(var10 + 1) % var7]);
+								var1[var10], var1[(var10 + 1) % var7]);
 							var15 = this.booleanCombinatoric3(var4[(var11 - 1 + var7) % var7], false, var2[var9],
-									var4[var11], var1[var11], var1[(var11 + var7 - 1) % var7]);
+								var4[var11], var1[var11], var1[(var11 + var7 - 1) % var7]);
 							if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 								return true;
 							}
@@ -1780,12 +1778,12 @@ public final class Scene {
 							}
 						} else if (var2[var8] >= var2[var9]) {
 							var12 = this.booleanCombinatoric3(var2[(var8 + 1) % var6], false, var2[var9], var2[var8],
-									var3[var8], var3[(1 + var8) % var6]);
+								var3[var8], var3[(1 + var8) % var6]);
 							var13 = var3[var9];
 							var14 = this.booleanCombinatoric3(var4[(1 + var10) % var7], false, var2[var9], var4[var10],
-									var1[var10], var1[(1 + var10) % var7]);
+								var1[var10], var1[(1 + var10) % var7]);
 							var15 = this.booleanCombinatoric3(var4[(var11 - (1 - var7)) % var7], false, var2[var9],
-									var4[var11], var1[var11], var1[(var11 + var7 - 1) % var7]);
+								var4[var11], var1[var11], var1[(var11 + var7 - 1) % var7]);
 							if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 								return true;
 							}
@@ -1797,11 +1795,11 @@ public final class Scene {
 						} else {
 							var12 = var3[var8];
 							var13 = this.booleanCombinatoric3(var2[(var9 + var6 - 1) % var6], false, var2[var8],
-									var2[var9], var3[var9], var3[(var6 + var9 - 1) % var6]);
+								var2[var9], var3[var9], var3[(var6 + var9 - 1) % var6]);
 							var14 = this.booleanCombinatoric3(var4[(var10 + 1) % var7], false, var2[var8], var4[var10],
-									var1[var10], var1[(var10 + 1) % var7]);
+								var1[var10], var1[(var10 + 1) % var7]);
 							var15 = this.booleanCombinatoric3(var4[(var11 + (var7 - 1)) % var7], false, var2[var8],
-									var4[var11], var1[var11], var1[(var7 + var11 - 1) % var7]);
+								var4[var11], var1[var11], var1[(var7 + var11 - 1) % var7]);
 							if (this.booleanCombinatoric(var17, var13, var15, var12, var14)) {
 								return true;
 							}
@@ -1815,9 +1813,9 @@ public final class Scene {
 
 					if (var4[var10] <= var2[var8]) {
 						var12 = this.booleanCombinatoric3(var2[(1 + var8) % var6], false, var4[var10], var2[var8],
-								var3[var8], var3[(var8 + 1) % var6]);
+							var3[var8], var3[(var8 + 1) % var6]);
 						var13 = this.booleanCombinatoric3(var2[(var9 - 1 + var6) % var6], false, var4[var10],
-								var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
+							var2[var9], var3[var9], var3[(var6 + (var9 - 1)) % var6]);
 						var14 = var1[var10];
 						if (!this.booleanCombinatoric2(var14, var17, var12, (byte) -71, var13)) {
 							return false;
@@ -1827,9 +1825,9 @@ public final class Scene {
 					} else {
 						var12 = var3[var8];
 						var14 = this.booleanCombinatoric3(var4[(1 + var10) % var7], false, var2[var8], var4[var10],
-								var1[var10], var1[(var10 + 1) % var7]);
+							var1[var10], var1[(var10 + 1) % var7]);
 						var15 = this.booleanCombinatoric3(var4[(var7 + (var11 - 1)) % var7], false, var2[var8],
-								var4[var11], var1[var11], var1[(var7 - 1 + var11) % var7]);
+							var4[var11], var1[var11], var1[(var7 - 1 + var11) % var7]);
 						if (this.booleanCombinatoric2(var12, !var17, var14, (byte) -71, var15)) {
 							return true;
 						} else {
@@ -1842,16 +1840,16 @@ public final class Scene {
 			}
 		} catch (RuntimeException var23) {
 			throw GenUtil.makeThrowable(var23,
-					"lb.B(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ','
-							+ (var3 != null ? "{...}" : "null") + ',' + (var4 != null ? "{...}" : "null") + ',' + var5
-							+ ')');
+				"lb.B(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ','
+					+ (var3 != null ? "{...}" : "null") + ',' + (var4 != null ? "{...}" : "null") + ',' + var5
+					+ ')');
 		}
 	}
 
 	private final void a(int[] var1, RSModel model, int var3, int var4, int var5, int[] var6, int[] var7, int var8,
-			int var9) {
+						 int var9) {
 		try {
-			
+
 			if (var5 != -2) {
 				int var10;
 				int var11;
@@ -1962,8 +1960,8 @@ public final class Scene {
 										}
 
 										Shader.shadeScanline(var23, 10, 0, 0, this.pixelData, var25 + var8 * var30, var38,
-												var8 * var28 + var19, var22 + var8 * var29, var8 + var33, var26, var39,
-												0, var20, this.resourceDatabase[var5], var37);
+											var8 * var28 + var19, var22 + var8 * var29, var8 + var33, var26, var39,
+											0, var20, this.resourceDatabase[var5], var37);
 										var33 += var32;
 										var22 += var24;
 										var25 += var27;
@@ -1996,9 +1994,9 @@ public final class Scene {
 										}
 
 										Shader.shadeScanline(var22 + var29 * var8, var20, (byte) 50,
-												var25 + var8 * var30, var38, var39 << 2, this.resourceDatabase[var5],
-												var8 + var33, var8 * var28 + var19, var26, 0, 0, this.pixelData, var23,
-												var37);
+											var25 + var8 * var30, var38, var39 << 2, this.resourceDatabase[var5],
+											var8 + var33, var8 * var28 + var19, var26, 0, 0, this.pixelData, var23,
+											var37);
 										var19 += var21;
 										var25 += var27;
 										var33 += var32;
@@ -2027,8 +2025,8 @@ public final class Scene {
 									}
 
 									Shader.shadeScanline(var33 + var8, var22 + var8 * var29, var19 + var8 * var28, 0,
-											var38, var23, 0, var25 + var8 * var30, var20, var39 << 2,
-											this.resourceDatabase[var5], var37, var26, this.pixelData, (byte) 119);
+										var38, var23, 0, var25 + var8 * var30, var20, var39 << 2,
+										this.resourceDatabase[var5], var37, var26, this.pixelData, (byte) 119);
 									var33 += var32;
 									var22 += var24;
 									var19 += var21;
@@ -2103,8 +2101,8 @@ public final class Scene {
 									}
 
 									Shader.shadeScanline(this.pixelData, var23, var26, var8 * var30 + var25, var39, var38,
-											var8 + var33, var37, var28 * var8 + var19, 0, this.resourceDatabase[var5],
-											false, var20, var8 * var29 + var22, 0);
+										var8 + var33, var37, var28 * var8 + var19, 0, this.resourceDatabase[var5],
+										false, var20, var8 * var29 + var22, 0);
 									var33 += var32;
 									var25 += var27;
 									var19 += var21;
@@ -2132,8 +2130,8 @@ public final class Scene {
 									}
 
 									Shader.shadeScanline(var39, 1121159302, var23, var8 * var29 + var22, var20,
-											this.resourceDatabase[var5], var38, 0, var19 + var28 * var8, 0, this.pixelData,
-											var33 + var8, var25 + var8 * var30, var26, var37);
+										this.resourceDatabase[var5], var38, 0, var19 + var28 * var8, 0, this.pixelData,
+										var33 + var8, var25 + var8 * var30, var26, var37);
 									var33 += var32;
 									var22 += var24;
 									var19 += var21;
@@ -2171,8 +2169,8 @@ public final class Scene {
 									}
 
 									Shader.shadeScanline(var37, var30 * var8 + var25, 0, (byte) 25, 0, var20, var26,
-											var39, this.resourceDatabase[var5], this.pixelData, var8 + var33,
-											var8 * var28 + var19, 0, var23, var38, var29 * var8 + var22);
+										var39, this.resourceDatabase[var5], this.pixelData, var8 + var33,
+										var8 * var28 + var19, 0, var23, var38, var29 * var8 + var22);
 									var25 += var27;
 									var22 += var24;
 									var33 += var32;
@@ -2243,7 +2241,7 @@ public final class Scene {
 								}
 
 								GraphicsController.a(var16, this.m_H, -var15, this.pixelData, 0, var17, var8 + var11,
-										var3 - 1);
+									var3 - 1);
 								var11 += var10;
 							} else {
 								var11 += var10;
@@ -2270,7 +2268,7 @@ public final class Scene {
 								}
 
 								MiscFunctions.copyBlock16(0, var17, -var15, this.pixelData, this.m_H, var16, var11 + var8,
-										418609192);
+									418609192);
 								var11 += var10;
 							} else {
 								var11 += var10;
@@ -2297,7 +2295,7 @@ public final class Scene {
 								}
 
 								MiscFunctions.copyBlock4(var17, 0, this.m_H, var16, var8 + var11, this.pixelData, -var15,
-										(byte) 82);
+									(byte) 82);
 								var11 += var10;
 							} else {
 								var11 += var10;
@@ -2313,15 +2311,15 @@ public final class Scene {
 			}
 		} catch (RuntimeException var40) {
 			throw GenUtil.makeThrowable(var40,
-					"lb.O(" + (var1 != null ? "{...}" : "null") + ',' + (model != null ? "{...}" : "null") + ',' + var3
-							+ ',' + var4 + ',' + var5 + ',' + (var6 != null ? "{...}" : "null") + ','
-							+ (var7 != null ? "{...}" : "null") + ',' + var8 + ',' + var9 + ')');
+				"lb.O(" + (var1 != null ? "{...}" : "null") + ',' + (model != null ? "{...}" : "null") + ',' + var3
+					+ ',' + var4 + ',' + var5 + ',' + (var6 != null ? "{...}" : "null") + ','
+					+ (var7 != null ? "{...}" : "null") + ',' + var8 + ',' + var9 + ')');
 		}
 	}
 
 	public final void addModel(RSModel mod) {
 		try {
-			
+
 			if (mod == null) {
 				System.out.println("Warning tried to add null object!");
 			}
@@ -2340,7 +2338,7 @@ public final class Scene {
 			if (var1 < 95) {
 				return (RSModel[]) null;
 			} else {
-				
+
 				return this.m_Ab;
 			}
 		} catch (RuntimeException var3) {
@@ -2350,7 +2348,7 @@ public final class Scene {
 
 	public final int b(int var1) {
 		try {
-			
+
 			if (var1 != 0) {
 				this.m_S = (boolean[]) null;
 			}
@@ -2363,7 +2361,7 @@ public final class Scene {
 
 	private final void b(int var1, boolean var2) {
 		try {
-			
+
 			if (!var2) {
 				this.m_K = false;
 			}
@@ -2390,7 +2388,7 @@ public final class Scene {
 
 						for (var6 = 0; this.m_cb > var6; ++var6) {
 							if (var1 != var6 && this.m_Hb[var6] == 1 && null != this.resourceDatabase[var6]
-									&& this.m_D[var6] < var8) {
+								&& this.m_D[var6] < var8) {
 								var8 = this.m_D[var6];
 								var5 = var6;
 							}
@@ -2414,7 +2412,7 @@ public final class Scene {
 
 						for (var6 = 0; var6 < this.m_cb; ++var6) {
 							if (var1 != var6 && this.m_Hb[var6] == 0 && null != this.resourceDatabase[var6]
-									&& ~var8 < ~this.m_D[var6]) {
+								&& ~var8 < ~this.m_D[var6]) {
 								var8 = this.m_D[var6];
 								var5 = var6;
 							}
@@ -2434,7 +2432,7 @@ public final class Scene {
 
 	private final void b(int var1, int var2) {
 		try {
-			
+
 			Polygon var4 = this.polygons[var2];
 			RSModel var5 = var4.model;
 			int var6 = var4.faceID;
@@ -2501,7 +2499,7 @@ public final class Scene {
 
 	public final void d(int var1, int var2) {
 		try {
-			
+
 			if (null != this.resourceDatabase[var2]) {
 				int[] var3 = this.resourceDatabase[var2];
 
@@ -2540,7 +2538,7 @@ public final class Scene {
 
 	public final int drawSprite(int var1, int var2, int var3, int var4, int var5, int var6, int var7, byte var8) {
 		try {
-			
+
 			this.m_gb[this.m_n] = var1;
 			this.m_Fb[this.m_n] = var4;
 			this.m_a[this.m_n] = var5;
@@ -2550,20 +2548,20 @@ public final class Scene {
 			this.m_Q[this.m_n] = 0;
 			int var9 = this.m_T.insertVertex2(false, var2, var4, var5);
 			int var10 = this.m_T.insertVertex2(false, var2, var4, var5 - var7);
-			int[] var11 = new int[] { var9, var10 };
+			int[] var11 = new int[]{var9, var10};
 			this.m_T.insertFace(2, var11, 0, 0, false);
 			this.m_T.facePickIndex[this.m_n] = var3;
 			this.m_T.m_zb[this.m_n++] = 0;
 			return this.m_n - 1;
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12, "lb.HA(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ','
-					+ var6 + ',' + var7 + ',' + 109 + ')');
+				+ var6 + ',' + var7 + ',' + 109 + ')');
 		}
 	}
 
 	public final void endScene(int var1) {
 		try {
-			
+
 			this.m_f = this.graphics.interlace;
 			int var7 = this.m_A * this.fogLandscapeDistance >> this.rot1024_vp_src;
 			MiscFunctions.pe_s_b = 0;
@@ -2593,11 +2591,11 @@ public final class Scene {
 			int var3;
 			for (var3 = 0; this.modelCount > var3; ++var3) {
 				this.models[var3].rotate1024(this.rot1024_off_y, this.rot1024_vp_src, this.rot1024_off_x, (byte) -122,
-						this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
+					this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
 			}
 
 			this.models[this.modelCount].rotate1024(this.rot1024_off_y, this.rot1024_vp_src, this.rot1024_off_x,
-					(byte) -114, this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
+				(byte) -114, this.rot1024_off_z, this.rot1024_y, this.rot1024_z, this.rot1024_x, this.rot1024_zTop);
 			this.m_zb = 0;
 
 			RSModel var2;
@@ -2708,7 +2706,7 @@ public final class Scene {
 						var14 = (this.m_ob[var3] << this.rot1024_vp_src) / var13;
 						var15 = (this.m_Eb[var3] << this.rot1024_vp_src) / var13;
 						if (this.m_A >= var26 - var14 / 2 && -this.m_A <= var26 + var14 / 2
-								&& var12 - var15 <= this.m_wb && var12 >= -this.m_wb) {
+							&& var12 - var15 <= this.m_wb && var12 >= -this.m_wb) {
 							Polygon var16 = this.polygons[this.m_zb];
 							var16.faceID = var3;
 							var16.model = var2;
@@ -2745,11 +2743,11 @@ public final class Scene {
 						int var20 = var13 - var28 / 2;
 						int var21 = this.m_Nb - (var17 - var14);
 						this.graphics.drawEntity(this.m_gb[var3], var20 + this.m_Zb, var21, var28, var17,
-								(256 << this.rot1024_vp_src) / var15, var19);
+							(256 << this.rot1024_vp_src) / var15, var19);
 						if (this.m_K && this.m_db > this.m_cc) {
 							var20 += (this.m_Q[var3] << this.rot1024_vp_src) / var15;
 							if (var21 <= this.m_Wb && var21 + var17 >= this.m_Wb && var20 <= this.m_j
-									&& this.m_j <= var20 + var28 && !var2.m_db && var2.m_zb[var3] == 0) {
+								&& this.m_j <= var20 + var28 && !var2.m_db && var2.m_zb[var3] == 0) {
 								this.m_Ab[this.m_cc] = var2;
 								this.m_qb[this.m_cc] = var3;
 								++this.m_cc;
@@ -2777,10 +2775,10 @@ public final class Scene {
 							if (var2.faceDiffuseLight[var3] == Scene.TRANSPARENT) {
 								if (var25.orientation < 0) {
 									var28 = var2.diffuseParam1 + var2.vertLightOther[var6]
-											- var2.vertDiffuseLight[var6];
+										- var2.vertDiffuseLight[var6];
 								} else {
 									var28 = var2.vertLightOther[var6] + var2.diffuseParam1
-											+ var2.vertDiffuseLight[var6];
+										+ var2.vertDiffuseLight[var6];
 								}
 							}
 
@@ -2803,9 +2801,9 @@ public final class Scene {
 								if (var2.vertZRot[var15] >= this.rot1024_zTop) {
 									var13 = var2.vertZRot[var6] - var2.vertZRot[var15];
 									var12 = var2.vertYRot[var6] - (var2.vertZRot[var6] - this.rot1024_zTop)
-											* (var2.vertYRot[var6] - var2.vertYRot[var15]) / var13;
+										* (var2.vertYRot[var6] - var2.vertYRot[var15]) / var13;
 									var26 = var2.vertXRot[var6] - (var2.vertXRot[var6] - var2.vertXRot[var15])
-											* (var2.vertZRot[var6] - this.rot1024_zTop) / var13;
+										* (var2.vertZRot[var6] - this.rot1024_zTop) / var13;
 									this.m_yb[var14] = (var26 << this.rot1024_vp_src) / this.rot1024_zTop;
 									this.m_B[var14] = (var12 << this.rot1024_vp_src) / this.rot1024_zTop;
 									this.m_r[var14] = var28;
@@ -2821,9 +2819,9 @@ public final class Scene {
 								if (var2.vertZRot[var15] >= this.rot1024_zTop) {
 									var13 = var2.vertZRot[var6] - var2.vertZRot[var15];
 									var12 = var2.vertYRot[var6] - (var2.vertZRot[var6] - this.rot1024_zTop)
-											* (var2.vertYRot[var6] - var2.vertYRot[var15]) / var13;
+										* (var2.vertYRot[var6] - var2.vertYRot[var15]) / var13;
 									var26 = var2.vertXRot[var6] - (var2.vertXRot[var6] - var2.vertXRot[var15])
-											* (var2.vertZRot[var6] - this.rot1024_zTop) / var13;
+										* (var2.vertZRot[var6] - this.rot1024_zTop) / var13;
 									this.m_yb[var14] = (var26 << this.rot1024_vp_src) / this.rot1024_zTop;
 									this.m_B[var14] = (var12 << this.rot1024_vp_src) / this.rot1024_zTop;
 									this.m_r[var14] = var28;
@@ -2866,7 +2864,7 @@ public final class Scene {
 
 	public final void loadTexture(int var1, int[] var3, int var4, byte[] var5) {
 		try {
-			
+
 			this.m_g[var1] = var5;
 
 			this.m_L[var1] = var3;
@@ -2877,7 +2875,7 @@ public final class Scene {
 			this.b(var1, true);
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "lb.E(" + var1 + ',' + (var3 != null ? "{...}" : "null")
-					+ ',' + var4 + ',' + (var5 != null ? "{...}" : "null") + ')');
+				+ ',' + var4 + ',' + (var5 != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -2888,7 +2886,7 @@ public final class Scene {
 			}
 
 			this.m_n -= var2;
-			
+
 			this.m_T.removeFacesAndOrVerts(var2 * 2, -113, var2);
 			if (this.m_n < 0) {
 				this.m_n = 0;
@@ -2901,7 +2899,7 @@ public final class Scene {
 
 	final void removeAllGameObjects(boolean var1) {
 		try {
-			
+
 			this.resetMTVertHead();
 			if (var1) {
 				this.m_Xb = -11;
@@ -2930,7 +2928,7 @@ public final class Scene {
 				}
 			}
 
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "lb.W(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
@@ -2941,7 +2939,7 @@ public final class Scene {
 			zRot &= 1023;
 			xRot &= 1023;
 			yRot &= 1023;
-			
+
 			this.rot1024_z = 1023 & 1024 - zRot;
 			this.rot1024_x = 1023 & 1024 - xRot;
 			this.rot1024_y = 1023 & 1024 - yRot;
@@ -2980,7 +2978,7 @@ public final class Scene {
 			this.rot1024_off_x = centerX - offX;
 		} catch (RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15, "lb.EA(" + centerX + ',' + centerZ + ',' + offset + ',' + xRot + ','
-					+ "dummy" + ',' + yRot + ',' + centerY + ',' + zRot + ')');
+				+ "dummy" + ',' + yRot + ',' + centerY + ',' + zRot + ')');
 		}
 	}
 
@@ -2991,7 +2989,7 @@ public final class Scene {
 			}
 
 			this.m_Q[var2] = var3;
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "lb.V(" + var1 + ',' + var2 + ',' + var3 + ')');
 		}
@@ -2999,7 +2997,7 @@ public final class Scene {
 
 	public final void setDiffuseDir(int dirZ, int dirY, boolean var3, int dirX) {
 		try {
-			
+
 			if (dirX == 0 && dirY == 0 && dirZ == 0) {
 				dirX = 32;
 			}
@@ -3019,7 +3017,7 @@ public final class Scene {
 
 	public final void setFaceSpriteLocalPlayer(int var1, int var2) {
 		try {
-			
+
 			this.m_T.m_zb[var2] = 1;
 			if (var1 != '\u8000') {
 				this.m_Cb = 32;
@@ -3029,15 +3027,15 @@ public final class Scene {
 			throw GenUtil.makeThrowable(var4, "lb.S(" + var1 + ',' + var2 + ')');
 		}
 	}
-	
+
 	public int getX() {
 		return m_j + m_Zb;
 	}
-	
+
 	public int getY() {
 		return m_Wb;
 	}
-	
+
 	public final void setMidpoints(int var1, boolean var2, int var3, int var4, int var5, int var6, int var7) {
 		try {
 			this.rot1024_vp_src = var6;
@@ -3046,7 +3044,7 @@ public final class Scene {
 			this.m_Nb = var5;
 			this.m_x = new Scanline[var1 + var5];
 			this.m_wb = var1;
-			
+
 			this.m_A = var4;
 
 			for (int var8 = 0; var8 < var5 + var1; ++var8) {
@@ -3059,7 +3057,7 @@ public final class Scene {
 			pixelData = graphics.pixelData;
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"lb.K(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ')');
+				"lb.K(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ')');
 		}
 	}
 
@@ -3069,7 +3067,7 @@ public final class Scene {
 			this.m_j = x - this.m_Zb;
 			this.m_Wb = y;
 			this.m_cc = var1;
-			
+
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "lb.J(" + var1 + ',' + x + ',' + y + ')');
 		}

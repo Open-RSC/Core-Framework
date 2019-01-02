@@ -2,13 +2,13 @@ package com.openrsc.client.entityhandling.defs;
 
 public class DoorDef extends EntityDef {
 
-    public String command1;
-    public String command2;
-    public int doorType;
-    public int unknown;
-    public int wallObjectHeight;
-    public int modelVar2;
-    public int modelVar3;
+	public String command1;
+	public String command2;
+	public int doorType;
+	public int unknown;
+	public int wallObjectHeight;
+	public int modelVar2;
+	public int modelVar3;
 
 	public DoorDef(String name, String description, String command1, String command2, int doorType, int unknown, int wallObjectHeight, int modelVar2, int modelVar3, int id) {
 		super(name, description, id);
@@ -20,32 +20,32 @@ public class DoorDef extends EntityDef {
 		this.modelVar2 = modelVar2;
 		this.modelVar3 = modelVar3;
 	}
-	
-    public String getCommand1() {
-        return command1;
-    }
 
-    public String getCommand2() {
-        return command2;
-    }
+	public String getCommand1() {
+		return command1;
+	}
 
-    public int getDoorType() {
-        return doorType;
-    }
+	public String getCommand2() {
+		return command2;
+	}
 
-    public int getUnknown() {
-        return unknown;
-    }
+	public int getDoorType() {
+		return doorType;
+	}
 
-    public int getWallObjectHeight() {
-        return wallObjectHeight;
-    }
+	public int getUnknown() {
+		return unknown;
+	}
 
-    public int getModelVar2() {
-        return modelVar2;
-    }
+	public int getWallObjectHeight() {
+		return wallObjectHeight;
+	}
 
-    public int getModelVar3() {
-        return modelVar3;
-    }
+	public int getModelVar2() {
+		return modelVar2;
+	}
+
+	public int getModelVar3() {
+		return modelVar3;
+	}
 }

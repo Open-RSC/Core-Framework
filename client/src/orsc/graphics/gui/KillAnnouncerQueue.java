@@ -9,11 +9,11 @@ public class KillAnnouncerQueue {
 	public void addKill(KillAnnouncer kill) {
 		try {
 			Kill.addFirst(kill);
-			if(Kill.size() >= 10) {
+			if (Kill.size() >= 10) {
 				Kill.removeLast();
 
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -25,7 +25,7 @@ public class KillAnnouncerQueue {
 					Kill.remove(k);
 				}
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

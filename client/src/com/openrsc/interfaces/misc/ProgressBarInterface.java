@@ -33,15 +33,15 @@ public class ProgressBarInterface {
 					timeLeftPercentage = 0;
 				}
 				float percentToWidth = progressBarWidth - (timeLeftPercentage * progressBarWidth);
-				
+
 				graphics().drawBoxAlpha(getX() - 2, getY() - 2, (int) progressBarWidth + 4, 10 + 4, 0, 128);
 				graphics().drawBoxAlpha(getX(), getY(), (int) progressBarWidth, 10, 0xffffff, 125);
-				
-				if(percentToWidth > progressBarWidth)
+
+				if (percentToWidth > progressBarWidth)
 					percentToWidth = progressBarWidth;
-				else if(percentToWidth < 0) 
+				else if (percentToWidth < 0)
 					percentToWidth = 0;
-				
+
 				graphics().drawBoxAlpha(getX(), getY(), (int) percentToWidth - 2, 10, 0x0000ff, 200);
 				graphics().drawColoredString((int) (getX() + (progressBarWidth / 2)), getY() + 9, (batchTotalCount - batchCompletedCount) + "/" + batchTotalCount, 0, 0xffffff, 0);
 //				
@@ -61,7 +61,7 @@ public class ProgressBarInterface {
 		headerComponent.setInputListener(new InputListener() {
 			@Override
 			public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
-			
+
 				if (mButtonDown == 2 && progressBarComponent.isVisible()) {
 					int newX = clickX - (headerComponent.getWidth() / 2);
 					int newY = clickY - 5;
@@ -110,7 +110,7 @@ public class ProgressBarInterface {
 		progressBarComponent.addComponent(headerComponent);
 		progressBarComponent.addComponent(progressBarItself);
 		progressBarComponent.setVisible(false);
-		
+
 	}
 
 	public void initVariables(int batchTotalCount, int actionDelay) {
@@ -129,7 +129,7 @@ public class ProgressBarInterface {
 		getComponent().getClient().packetHandler.getClientStream().newPacket(199);
 		getComponent().getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
 		getComponent().getClient().packetHandler.getClientStream().finishPacket();
-		
+
 	}
 
 	public void show() {

@@ -4,7 +4,7 @@ import orsc.graphics.gui.MenuItem;
 
 public final class ArrayUtil {
 	public static final void putZero(int[] data, int offset, int count) {
-		for (count = offset + count - 7; offset < count;) {
+		for (count = offset + count - 7; offset < count; ) {
 			data[offset++] = 0;
 			data[offset++] = 0;
 			data[offset++] = 0;
@@ -15,7 +15,7 @@ public final class ArrayUtil {
 			data[offset++] = 0;
 		}
 
-		for (count += 7; offset < count;) {
+		for (count += 7; offset < count; ) {
 			data[offset++] = 0;
 		}
 	}
@@ -102,7 +102,7 @@ public final class ArrayUtil {
 
 		} catch (RuntimeException var13) {
 			throw GenUtil.makeThrowable(var13, "ub.A(" + (priority != null ? "{...}" : "null") + ',' + "dummy" + ','
-					+ left + ',' + right + ',' + (items != null ? "{...}" : "null") + ')');
+				+ left + ',' + right + ',' + (items != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -111,7 +111,7 @@ public final class ArrayUtil {
 			quickSort(items, priority, 0, priority.length - 1);
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "cb.D(" + "dummy" + ',' + (items != null ? "{...}" : "null") + ','
-					+ (priority != null ? "{...}" : "null") + ')');
+				+ (priority != null ? "{...}" : "null") + ')');
 		}
 	}
 }

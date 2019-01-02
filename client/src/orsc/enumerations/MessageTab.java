@@ -2,12 +2,6 @@ package orsc.enumerations;
 
 public enum MessageTab {
 	ALL(0), CHAT(1), QUEST(2), PRIVATE(3), CLAN(4);
-	private final int rsID;
-
-	private MessageTab(int rsID) {
-		this.rsID = rsID;
-	}
-
 	private static final MessageTab[] map;
 
 	static {
@@ -19,6 +13,12 @@ public enum MessageTab {
 		for (MessageTab t : values())
 			if (t.rsID >= 0)
 				map[t.rsID] = t;
+	}
+
+	private final int rsID;
+
+	private MessageTab(int rsID) {
+		this.rsID = rsID;
 	}
 
 	public static MessageTab lookup(int rsID) {

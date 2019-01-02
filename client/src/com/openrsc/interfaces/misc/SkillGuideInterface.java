@@ -10,28 +10,19 @@ import java.util.ArrayList;
 
 
 public final class SkillGuideInterface {
-	private ArrayList<SkillItem> skillItems;
-	
 	public int curTab = 0;
-	
-	private boolean visible = false;
-
 	public int skillGuideScroll;
-	
 	public Panel skillGuide;
-
-	private mudclient mc;
-
-	private int panelColour, textColour, bordColour;
-	
 	int width = 430;
 	int height = 320;
 	int autoHeight = 0;
-	
-	private int x, y;
-	
 	// Different y values used for larger skill guides with more tabs
 	boolean largeSkillGuide = false;
+	private ArrayList<SkillItem> skillItems;
+	private boolean visible = false;
+	private mudclient mc;
+	private int panelColour, textColour, bordColour;
+	private int x, y;
 
 	public SkillGuideInterface(mudclient mc) {
 		this.mc = mc;
@@ -40,16 +31,16 @@ public final class SkillGuideInterface {
 
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		skillItems = new ArrayList<SkillItem>();
-		
+
 		skillGuideScroll = skillGuide.addScrollingList2(x + 4, y + 79, width - 5, height - 77, 100, 7, true);
 	}
-	
+
 	public void reposition() {
 		x = (mc.getGameWidth() - width) / 2;
 		y = (mc.getGameHeight() - height) / 2;
-		
+
 		skillGuide.reposition(skillGuideScroll, x + 4, y + 81, width - 5, height - 82);
 	}
 
@@ -57,15 +48,17 @@ public final class SkillGuideInterface {
 		reposition();
 		int x = (mc.getGameWidth() - width) / 2;
 		int y = (mc.getGameHeight() - height) / 2;
-		
-		panelColour = 0x989898; textColour = 0xffffff; bordColour = 0x000000;
-		
+
+		panelColour = 0x989898;
+		textColour = 0xffffff;
+		bordColour = 0x000000;
+
 		skillGuide.handleMouse(mc.getMouseX(), mc.getMouseY(), mc.getMouseButtonDown(), mc.getLastMouseDown());
-		
+
 		// Draws the background
 		mc.getSurface().drawBoxAlpha(x, y, width, autoHeight - y, panelColour, 160);
 		mc.getSurface().drawBoxBorder(x, width, y, autoHeight - y, bordColour);
-		
+
 		// Draws the title
 		if (mc.skillGuideChosenTabs.size() <= 4) {
 			largeSkillGuide = false;
@@ -74,7 +67,7 @@ public final class SkillGuideInterface {
 			largeSkillGuide = true;
 			drawStringCentered(mc.getSkillGuideChosen(), x, y + 20, 5, textColour);
 		}
-		
+
 		this.drawButton(x + 394, y + 6, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
@@ -85,7 +78,7 @@ public final class SkillGuideInterface {
 				setVisible(false);
 			}
 		});
-		
+
 		int tabDrawX = 0;
 		int tabDrawY = 0;
 		if (largeSkillGuide) {
@@ -97,9 +90,9 @@ public final class SkillGuideInterface {
 		}
 		int tabDrawXDiff = 75;
 		int tabDrawYDiff = 20;
-		
+
 		// Draws the tab pickers
-		for(int i = 0; i < mc.skillGuideChosenTabs.size(); i++) {
+		for (int i = 0; i < mc.skillGuideChosenTabs.size(); i++) {
 			// Starts new row of tabs
 			if (i == 4) {
 				tabDrawY += 25;
@@ -108,47 +101,47 @@ public final class SkillGuideInterface {
 			this.drawTab(x + tabDrawX, y + tabDrawY, tabDrawXDiff, tabDrawYDiff, mc.skillGuideChosenTabs.get(i), 1);
 			tabDrawX += tabDrawXDiff + 10;
 		}
-		
+
 		mc.getSurface().drawLineHoriz(x + 1, y + 81, width - 2, 0);
 		mc.getSurface().drawBoxAlpha(x + 1, y + 82, width - 2, 16, 0x6580B7, 192);
-		
+
 		mc.getSurface().drawString("Level", x + 5, y + 94, 0xffffff, 2);
 		//mc.getSurface().drawString("Item", x + 5 + 35, y + 94, 0xffffff, 2);
 		mc.getSurface().drawString("Advancement", x + 5 + 80, y + 94, 0xffffff, 2);
-		
+
 		drawSkillItems();
 	}
-	
+
 	public void drawSkillItems() {
 		int x = (mc.getGameWidth() - width) / 2;
 		int y = (mc.getGameHeight() - height) / 2;
-		
+
 		// Gets all items in the list for what skill was chosen
 		populateSkillItems();
-		
+
 		// Sets up scroll
 		skillGuide.clearList(skillGuideScroll);
-		for(int i = -1; i <= skillItems.size(); i++) {
+		for (int i = -1; i <= skillItems.size(); i++) {
 			skillGuide.setListEntry(skillGuideScroll, i + 1, "", 0, (String) null, (String) null);
 		}
-		
+
 		int listStartPoint = skillGuide.getScrollPosition(skillGuideScroll);
 		int listEndPoint = listStartPoint + 5;
-		
+
 		int levelX = x + 10;
 		int spriteX = levelX + 15;
 		int detailX = spriteX + 50;
 		int allY = 0;
 		allY = y + 82 + 16;
-		
+
 		for (int i = -1; i < skillItems.size(); i++) {
 			if (i >= 100) {
 				break;
 			}
 
-			if (i < listStartPoint || i > listEndPoint) 
+			if (i < listStartPoint || i > listEndPoint)
 				continue;
-			
+
 			SkillItem curItem = skillItems.get(i);
 			ItemDef def = EntityHandler.getItemDef(curItem.getItemID());
 			String levelReq = curItem.getLevelReq();
@@ -156,23 +149,23 @@ public final class SkillGuideInterface {
 
 			mc.getSurface().drawBoxAlpha(detailX - 75, allY, width, 37, 0x45454545, 90);
 			drawString(levelReq, levelX, allY + 25, 2, textColour);
-			
+
 			//mc.getSurface().drawLineHoriz(detailX - 75, allY, width, 0);
-			if(i != skillItems.size() - 1 && i != listEndPoint) {
+			if (i != skillItems.size() - 1 && i != listEndPoint) {
 				mc.getSurface().drawBoxBorder(detailX - 75, width, allY, 37 + 1, 0);
 			}
 			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(),
-					spriteX + 5, allY + 2, 48, 32, def.getPictureMask(), 0, false, 0, 1);
-			
+				spriteX + 5, allY + 2, 48, 32, def.getPictureMask(), 0, false, 0, 1);
+
 			drawString(skillDetail, detailX + 10, allY + 25, 2, textColour);
-			
+
 			allY += 37;
 		}
 		autoHeight = allY;
-		
+
 		skillGuide.drawPanel();
 	}
-	
+
 	public void changeTab(int tabNum) {
 		curTab = tabNum;
 		skillGuide.resetScrollIndex(skillGuideScroll);
@@ -182,10 +175,10 @@ public final class SkillGuideInterface {
 	public void drawString(String str, int x, int y, int font, int color) {
 		mc.getSurface().drawString(str, x, y, color, font);
 	}
-	
+
 	public void drawStringCentered(String str, int x, int y, int font, int color) {
 		int stringWid = mc.getSurface().stringWidth(font, str);
-		mc.getSurface().drawShadowText(str, x + (width/2) - (stringWid/2) - 2, y, color, font, false);
+		mc.getSurface().drawShadowText(str, x + (width / 2) - (stringWid / 2) - 2, y, color, font, false);
 	}
 
 	private void drawButton(int x, int y, int width, int height, String text, int font, boolean checked, ButtonHandler handler) {
@@ -203,9 +196,9 @@ public final class SkillGuideInterface {
 		}
 		mc.getSurface().drawBoxAlpha(x, y, width, height, bgBtnColour, 192);
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
-		mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2) - 1, y + height / 2 + 5, textColour, font);
+		mc.getSurface().drawString(text, x + (width / 2) - (mc.getSurface().stringWidth(font, text) / 2) - 1, y + height / 2 + 5, textColour, font);
 	}
-	
+
 	// Used for drawing tabs
 	// Keeps track of current tab and tab hovered over
 	private void drawTab(int x, int y, int width, int height, String text, int font) {
@@ -213,11 +206,10 @@ public final class SkillGuideInterface {
 		boolean current = mc.skillGuideChosenTabs.get(curTab).equals(text);
 		if (current) {
 			bgBtnColour = 0x659CDE; // red
-		}
-		else if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
+		} else if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
 			bgBtnColour = 0x6580B7; // blue
 			if (mc.getMouseClick() == 1) {
-				for(int i = 0; i < mc.skillGuideChosenTabs.size(); i++) {
+				for (int i = 0; i < mc.skillGuideChosenTabs.size(); i++) {
 					if (mc.skillGuideChosenTabs.get(i) == text) {
 						changeTab(i);
 					}
@@ -227,9 +219,9 @@ public final class SkillGuideInterface {
 		}
 		mc.getSurface().drawBoxAlpha(x, y, width, height, bgBtnColour, 192);
 		mc.getSurface().drawBoxBorder(x, width, y, height, 0x242424);
-	    mc.getSurface().drawString(text, x + (width/2) - (mc.getSurface().stringWidth(font, text)/2), y + height / 2 + 5, textColour, font);
+		mc.getSurface().drawString(text, x + (width / 2) - (mc.getSurface().stringWidth(font, text) / 2), y + height / 2 + 5, textColour, font);
 	}
-	
+
 	public void populateSkillItems() {
 		skillItems.clear();
 		if (mc.getSkillGuideChosen().equals("Attack")) {
@@ -457,7 +449,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(142, "35", "Wine"));
 				skillItems.add(new SkillItem(1269, "50", "Oomlie Meat Parcel"));
 				skillItems.add(new SkillItem(1102, "58", "Tasty Ugthanki Kebab"));
-			} 
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Woodcutting")) {
 			if (curTab == 0) {
@@ -571,7 +563,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(1018, "10", "Lens"));
 				skillItems.add(new SkillItem(465, "33", "Vial"));
 				skillItems.add(new SkillItem(611, "46", "Orb"));
-			} else if(curTab == 6) {
+			} else if (curTab == 6) {
 				skillItems.add(new SkillItem(616, "54", "Battlestaff of Water"));
 				skillItems.add(new SkillItem(618, "58", "Battlestaff of Earth"));
 				skillItems.add(new SkillItem(615, "62", "Battlestaff of Fire"));
@@ -680,7 +672,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(80, "84", "Adamant Two-handed Swords - 3 Bars"));
 				skillItems.add(new SkillItem(123, "86", "Adamant Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(120, "88", "Adamant Platebodies - 5 Bars"));
-			} else if(curTab == 6) {
+			} else if (curTab == 6) {
 				skillItems.add(new SkillItem(396, "85", "Rune Daggers - 1 Bar"));
 				skillItems.add(new SkillItem(405, "86", "Rune Axes - 1 Bar"));
 				skillItems.add(new SkillItem(98, "87", "Rune Maces - 1 Bar"));
@@ -698,7 +690,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(81, "99", "Rune Two-handed Swords - 3 Bars"));
 				skillItems.add(new SkillItem(402, "99", "Rune Platelegs - 3 Bars"));
 				skillItems.add(new SkillItem(401, "99", "Rune Platebodies - 5 Bars"));
-			} else if(curTab == 7) {
+			} else if (curTab == 7) {
 				skillItems.add(new SkillItem(1278, "60", "Dragon Square Shield - Smith the 2 halves together"));
 			}
 		}
@@ -832,7 +824,7 @@ public final class SkillGuideInterface {
 			}
 		}
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}

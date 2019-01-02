@@ -1,4 +1,5 @@
 package orsc.util.bzip;
+
 final class BZState {
 	int availOut = 0;
 	int[][] base = new int[6][258];
