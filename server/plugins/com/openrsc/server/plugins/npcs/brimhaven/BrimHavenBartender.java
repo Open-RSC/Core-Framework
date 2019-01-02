@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+	TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -16,13 +16,13 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "Yohoho me hearty what would you like to drink?");
 			String[] options;
 			if (p.getCache().hasKey("barcrawl")
-					&& !p.getCache().hasKey("barfour")) {
-				options = new String[] { "Nothing thankyou",
-						"A pint of Grog please", "A bottle of rum please",
-						"I'm doing Alfred Grimhand's barcrawl" };
+				&& !p.getCache().hasKey("barfour")) {
+				options = new String[]{"Nothing thankyou",
+					"A pint of Grog please", "A bottle of rum please",
+					"I'm doing Alfred Grimhand's barcrawl"};
 			} else {
-				options = new String[] { "Nothing thankyou",
-						"A pint of Grog please", "A bottle of rum please" };
+				options = new String[]{"Nothing thankyou",
+					"A pint of Grog please", "A bottle of rum please"};
 			}
 			int firstMenu = showMenu(p, n, options);
 			if (firstMenu == 0) {// NOTHING
@@ -34,7 +34,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 					addItem(p, 598, 1);
 				} else {
 					playerTalk(p, n,
-							"Oh dear. I don't seem to have enough money");
+						"Oh dear. I don't seem to have enough money");
 				}
 			} else if (firstMenu == 2) {
 				npcTalk(p, n, "That'll be 27 gold");
@@ -44,16 +44,16 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 					addItem(p, 318, 1);
 				} else {
 					playerTalk(p, n,
-							"Oh dear. I don't seem to have enough money");
+						"Oh dear. I don't seem to have enough money");
 				}
 			} else if (firstMenu == 3) {
 				npcTalk(p, n, "Haha time to be breaking out the old supergrog",
-						"That'll be 15 coins please");
+					"That'll be 15 coins please");
 				if (hasItem(p, 10, 15)) {
 					message(p,
-							"The bartender serves you a glass of strange thick dark liquid",
-							"You wince and drink it", "You stagger backwards",
-							"You think you see 2 bartenders signing 2 barcrawl cards");
+						"The bartender serves you a glass of strange thick dark liquid",
+						"You wince and drink it", "You stagger backwards",
+						"You think you see 2 bartenders signing 2 barcrawl cards");
 					p.getCache().store("barfour", true);
 				} else {
 					playerTalk(p, n, "I don't have 15 coins right now");

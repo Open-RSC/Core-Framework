@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutiveListener {
 
 	public static final int TRAWLER_CATCH = 1106;
-	public static final int[] JUNK_ITEMS = new int[] {
+	public static final int[] JUNK_ITEMS = new int[]{
 		1155, // Old boot
 		1157, // Damaged armour
 		1158, // Damaged armour
@@ -28,6 +28,10 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 		1245, // Edible seaweed
 		793   // oyster
 	};
+
+	private static int offsetToPercent(int levelDiff) {
+		return levelDiff > 40 ? 60 : 20 + levelDiff;
+	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -85,17 +89,15 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 							message(p, 1200, "..some seaweed");
 							addItem(p, 1245, 1);
 							p.incExp(Skills.FISHING, 20, false);
-						}
-						else if (randomJunkItem == 793) { // Oyster
+						} else if (randomJunkItem == 793) { // Oyster
 							message(p, 1200, "..an oyster!");
 							addItem(p, 793, 1);
 							p.incExp(Skills.FISHING, 40, false);
-						}
-						else {
+						} else {
 							// Broken glass, buttons, damaged armour, ceramic remains
 							if (randomJunkItem == 1170 || randomJunkItem == 1166
-									|| randomJunkItem == 1157 || randomJunkItem == 1158
-									|| randomJunkItem == 1169) {
+								|| randomJunkItem == 1157 || randomJunkItem == 1158
+								|| randomJunkItem == 1169) {
 								message(p, 1200, "..some " + EntityHandler.getItemDef(randomJunkItem).getName());
 							}
 							// Old boot
@@ -125,10 +127,6 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 			return false;
 		}
 		return DataConversions.percentChance(offsetToPercent(levelDiff));
-	}
-
-	private static int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
 	}
 
 }

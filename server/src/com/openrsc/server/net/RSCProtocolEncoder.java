@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /*
- * 
+ *
  * @author Imposter
  *
  */
@@ -18,7 +18,7 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> {
 
 		if (!p.isRaw()) {
 			int packetLength = p.getBuffer().readableBytes();
-			
+
 			ByteBuf buffer = Unpooled.buffer(packetLength + 3);
 
 			buffer.writeShort(buffer.capacity());

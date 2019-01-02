@@ -15,31 +15,31 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerDatabaseExecutor implements Runnable  {
-	
+public class PlayerDatabaseExecutor implements Runnable {
+
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
-	
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("PlayerDataProcessor"));
-	
-    private Queue<LoginRequest> loadRequests = new ConcurrentLinkedQueue<LoginRequest>();
-    
-    private Queue<Player> saveRequests = new ConcurrentLinkedQueue<Player>();
-    
-    private DatabasePlayerLoader database = new DatabasePlayerLoader();
-    
+
+	private Queue<LoginRequest> loadRequests = new ConcurrentLinkedQueue<LoginRequest>();
+
+	private Queue<Player> saveRequests = new ConcurrentLinkedQueue<Player>();
+
+	private DatabasePlayerLoader database = new DatabasePlayerLoader();
+
 	@Override
 	public void run() {
 		try {
 			LoginRequest loginRequest = null;
-			while((loginRequest = loadRequests.poll()) != null) {
+			while ((loginRequest = loadRequests.poll()) != null) {
 				int loginResponse = database.validateLogin(loginRequest);
 				loginRequest.loginValidated(loginResponse);
-				if(loginResponse == 0) {
+				if (loginResponse == 0) {
 					final Player loadedPlayer = database.loadPlayer(loginRequest);
-					
+
 					LoginTask loginTask = new LoginTask(loginRequest, loadedPlayer);
 					Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
 						@Override
@@ -47,12 +47,12 @@ public class PlayerDatabaseExecutor implements Runnable  {
 							loginTask.run();
 						}
 					});
-				
+
 				}
 				//LOGGER.info("Processed login request for " + loginRequest.getUsername() + " response: " + loginResponse);
 			}
 			Player playerToSave = null;
-			while((playerToSave = saveRequests.poll()) != null) {
+			while ((playerToSave = saveRequests.poll()) != null) {
 				getDatabase().savePlayer(playerToSave);
 				//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
 			}
@@ -75,7 +75,7 @@ public class PlayerDatabaseExecutor implements Runnable  {
 	public void addSaveRequest(Player player) {
 		saveRequests.add(player);
 	}
-	
+
 	public void start() {
 		scheduledExecutor.scheduleAtFixedRate(this, 50, 50, TimeUnit.MILLISECONDS);
 	}

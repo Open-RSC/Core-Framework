@@ -13,15 +13,15 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class CraftingEquipmentShops implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	public static final int ROMMIK = 156;
 	public static final int DOMMIK = 173;
 
 	private final Shop shop = new Shop(false, 5000, 100, 65, 2,
-			new Item(167, 2), new Item(293, 4), new Item(295, 2),
-			new Item(294, 2), new Item(39, 3), new Item(43, 100),
-			new Item(386, 3));
+		new Item(167, 2), new Item(293, 4), new Item(295, 2),
+		new Item(294, 2), new Item(39, 3), new Item(43, 100),
+		new Item(386, 3));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -30,7 +30,7 @@ public final class CraftingEquipmentShops implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public final class CraftingEquipmentShops implements ShopInterface,
 		int option = showMenu(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
 		if (option == 0) {
 			npcTalk(p, n, "Ok fair well on your travels");
-		} else if(option == 1) {
+		} else if (option == 1) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}

@@ -18,14 +18,14 @@ public class Zenesha implements ShopInterface, TalkToNpcExecutiveListener, TalkT
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		
-			npcTalk(p, n, "hello I sell plate mail tops");
-			int menu = showMenu(p, n, "I'm not interested", "I may be interested");
-			if(menu == 1) {
-				npcTalk(p, n, "Look at these fine samples then");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
-			} 
+
+		npcTalk(p, n, "hello I sell plate mail tops");
+		int menu = showMenu(p, n, "I'm not interested", "I may be interested");
+		if (menu == 1) {
+			npcTalk(p, n, "Look at these fine samples then");
+			p.setAccessingShop(shop);
+			ActionSender.showShop(p, shop);
+		}
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class Zenesha implements ShopInterface, TalkToNpcExecutiveListener, TalkT
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

@@ -15,15 +15,15 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SilverMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 60000 * 2, 100, 70,2, new Item(44,
-			2), new Item(383, 1), new Item(384, 1));
+	private final Shop shop = new Shop(false, 60000 * 2, 100, 70, 2, new Item(44,
+		2), new Item(383, 1), new Item(384, 1));
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(p.getCache().hasKey("silverStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("silverStolen") + 1200)) {
+		if (p.getCache().hasKey("silverStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("silverStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
-					"That you have just stolen from me",
-					"guards guards");
+				"That you have just stolen from me",
+				"guards guards");
 
 			Npc attacker = getNearestNpc(p, 323, 5); // Paladin first
 			if (attacker == null)
@@ -33,17 +33,16 @@ public class SilverMerchant implements ShopInterface, TalkToNpcExecutiveListener
 
 			if (attacker != null)
 				attacker.setChasing(p);
-		}
-		else {
+		} else {
 			npcTalk(p, n, "Silver! Silver!", "Best prices for buying and selling in all Kandarin!");
 			int menu = showMenu(p, n, "Yes please", "No thankyou");
-			if(menu == 0) {
+			if (menu == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			}
-		} 
+		}
 	}
-	
+
 	// WHEN STEALING AND CAUGHT BY A MERCHANT ("Hey thats mine");
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
@@ -54,7 +53,7 @@ public class SilverMerchant implements ShopInterface, TalkToNpcExecutiveListener
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

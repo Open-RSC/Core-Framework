@@ -24,7 +24,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if(item.getID() == BULL_ROARER) {
+		if (item.getID() == BULL_ROARER) {
 			return true;
 		}
 		return false;
@@ -32,18 +32,18 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if(item.getID() == BULL_ROARER) {
+		if (item.getID() == BULL_ROARER) {
 			message(p, 1300, "You start to swing the bullroarer above your head.",
-					"You feel a bit silly at first, but soon it makes an interesting sound.");
-			if(inKharaziJungle(p)) {
+				"You feel a bit silly at first, but soon it makes an interesting sound.");
+			if (inKharaziJungle(p)) {
 				message(p, 1300, "You see some movement in the trees...");
 				attractNatives(p);
 			} else {
 				message(p, 1300, "Nothing much seems to happen though.");
 				Npc forester = getNearestNpc(p, JungleForester.JUNGLE_FORESTER, 10);
-				if(forester != null) {
+				if (forester != null) {
 					npcTalk(p, forester, "You might like to use that when you get into the ",
-							"Kharazi jungle, it might attract more natives...");
+						"Kharazi jungle, it might attract more natives...");
 				}
 			}
 		}
@@ -51,25 +51,25 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 
 	void attractNatives(Player p) {
 		int controlRandom = DataConversions.getRandom().nextInt(4);
-		if(controlRandom == 0) {
+		if (controlRandom == 0) {
 			message(p, 1300, "...but nothing else much seems to happen.");
-		} else if(controlRandom >= 1 && controlRandom <= 2) {
+		} else if (controlRandom >= 1 && controlRandom <= 2) {
 			message(p, 1300, "...and a tall, dark, charismatic looking native approaches you.");
 			Npc gujuo = getNearestNpc(p, LegendsQuestGujuo.GUJUO, 15);
-			if(gujuo == null) {
+			if (gujuo == null) {
 				gujuo = spawnNpc(LegendsQuestGujuo.GUJUO, p.getX(), p.getY());
 				delayedRemoveGujuo(p, gujuo);
 			}
-			if(gujuo != null) {
+			if (gujuo != null) {
 				gujuo.resetPath();
 				gujuo.teleport(p.getX(), p.getY());
 				gujuo.initializeTalkScript(p);
 				sleep(650);
 				npcWalkFromPlayer(p, gujuo);
 			}
-		} else if(controlRandom == 3) {
+		} else if (controlRandom == 3) {
 			Npc nativeNpc = getMultipleNpcsInArea(p, 5, 777, 775, 521, 776);
-			if(nativeNpc != null) {
+			if (nativeNpc != null) {
 				message(p, 1300, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
 				nativeNpc.setChasing(p);
 				message(p, 0, "And attacks...");
@@ -93,17 +93,17 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 						stop();
 						return;
 					}
-					if(!inKharaziJungle(p)) {
+					if (!inKharaziJungle(p)) {
 						n.remove();
 						stop();
 						return;
 					}
 					int yell = DataConversions.random(0, 3);
-					if(yell == 1) {
+					if (yell == 1) {
 						npcTalk(p, n, "I must visit my people now...");
-					} else if(yell == 2) {
+					} else if (yell == 2) {
 						npcTalk(p, n, "I must go and hunt now Bwana..");
-					} else if(yell == 3) {
+					} else if (yell == 3) {
 						npcTalk(p, n, "I have to collect herbs now Bwana...");
 					} else {
 						npcTalk(p, n, "I have work to do Bwana, I may see you again...");
@@ -117,7 +117,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 					stop();
 				}
 			});
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

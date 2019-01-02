@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -9,7 +10,6 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.Constants;
 
 public final class ChatHandler implements PacketHandler {
 
@@ -30,7 +30,7 @@ public final class ChatHandler implements PacketHandler {
 
 		ChatMessage chatMessage = new ChatMessage(sender, message);
 		sender.getUpdateFlags().setChatMessage(chatMessage);
-		
+
 		GameLogging.addQuery(new ChatLog(sender.getUsername(), chatMessage.getMessageString()));
 		World.getWorld().addEntryToSnapshots(new Chatlog(sender.getUsername(), chatMessage.getMessageString()));
 	}

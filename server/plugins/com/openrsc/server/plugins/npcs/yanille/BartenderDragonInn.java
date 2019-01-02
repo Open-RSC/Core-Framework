@@ -10,7 +10,7 @@ import com.openrsc.server.plugins.menu.Option;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class BartenderDragonInn implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+	TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
@@ -34,23 +34,23 @@ public final class BartenderDragonInn implements TalkToNpcExecutiveListener,
 						addItem(p, 829, 1);
 						removeItem(p, 10, 2);
 					} else {
-						playerTalk(p, n,"Oh dear. I don't seem to have enough money");
+						playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 					}
 				}
 			});
 			defaultMenu.addOption(new Option("Can I have some greenmans ale?") {
-					@Override
-					public void action() {
-						npcTalk(p, n, "Ok, that'll be ten coins");
-						if (hasItem(p, 10, 10)) {
-							p.message("You buy a pint of ale");
-							addItem(p, 830, 1);
-							removeItem(p, 10, 10);
-						} else {
-							playerTalk(p, n, "Oh dear. I don't seem to have enough money");
-						}
+				@Override
+				public void action() {
+					npcTalk(p, n, "Ok, that'll be ten coins");
+					if (hasItem(p, 10, 10)) {
+						p.message("You buy a pint of ale");
+						addItem(p, 830, 1);
+						removeItem(p, 10, 10);
+					} else {
+						playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 					}
-				});
+				}
+			});
 			defaultMenu.showMenu(p);
 		}
 	}

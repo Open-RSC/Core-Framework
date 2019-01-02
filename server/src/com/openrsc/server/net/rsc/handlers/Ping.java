@@ -7,6 +7,6 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public class Ping implements PacketHandler {
 
 	public void handlePacket(Packet p, Player player) throws Exception {
-		
+
 	}
 }

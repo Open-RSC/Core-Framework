@@ -13,27 +13,26 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class CaptainBarnaby implements ObjectActionListener,
-		ObjectActionExecutiveListener, TalkToNpcExecutiveListener, TalkToNpcListener {
+	ObjectActionExecutiveListener, TalkToNpcExecutiveListener, TalkToNpcListener {
 	public static final int BARNABY = 316;
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Do you want to go on a trip to Karamja?",
-				"The trip will cost you 30 gold");
-		String[] menu = new String[] {
+			"The trip will cost you 30 gold");
+		String[] menu = new String[]{
 			"I'd rather go to Crandor Isle",
 			"Yes please", "No thankyou"
 		};
 		if (p.getQuestStage(Quests.DRAGON_SLAYER) == -1 || p.getCache().hasKey("ned_hired")) {
-			menu = new String[] { // Crandor option is not needed.
+			menu = new String[]{ // Crandor option is not needed.
 				"Yes please", "No thankyou"
 			};
 			int choice = showMenu(p, n, menu);
-			if(choice >= 0) {
+			if (choice >= 0) {
 				travel(p, n, choice + 1);
 			}
-		}
-		else {
+		} else {
 			int choice = showMenu(p, n, menu);
 			travel(p, n, choice);
 		}
@@ -42,9 +41,8 @@ public final class CaptainBarnaby implements ObjectActionListener,
 	public void travel(final Player p, final Npc n, int option) {
 		if (option == 0) {
 			npcTalk(p, n, "No I need to stay alive",
-					"I have a wife and family to support");
-		}
-		else if (option == 1) {
+				"I have a wife and family to support");
+		} else if (option == 1) {
 			if (p.getInventory().remove(10, 30) > -1) {
 				message(p, "You pay 30 gold", "You board the ship");
 				p.teleport(467, 651, false);
@@ -66,14 +64,14 @@ public final class CaptainBarnaby implements ObjectActionListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 157) {
 			if (command.equals("board")) {
-				if (p.getY() != 616 ) {				
+				if (p.getY() != 616) {
 					return;
 				}
 
 				Npc captain = getNearestNpc(p, BARNABY, 5);
 				if (captain != null) {
 					captain.initializeTalkScript(p);
-				} else {							
+				} else {
 					p.message("I need to speak to the captain before boarding the ship.");
 				}
 			}
@@ -83,6 +81,6 @@ public final class CaptainBarnaby implements ObjectActionListener,
 	@Override
 	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
 		return (arg0.getID() == 157 && arg0.getLocation().equals(Point.location(536, 617)))
-				|| (arg0.getID() == 155 && arg0.getLocation().equals(Point.location(531, 617)));				
-		}
+			|| (arg0.getID() == 155 && arg0.getLocation().equals(Point.location(531, 617)));
 	}
+}

@@ -24,22 +24,45 @@ import java.util.Random;
 public final class DataConversions {
 
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
-
-	public static StringEncryption encryption = new StringEncryption(StringEncryption.asByte(22, 22, 22, 22, 22, 22, 21,
-			22, 22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8,
-			22, 16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15,
-			17, 8, 11, 9, 10, 10, 10, 10, 11, 10, 9, 7, 12, 11, 10, 10, 9, 10, 10, 12, 10, 9, 8, 12, 12, 9, 14, 8, 12,
-			17, 16, 17, 22, 13, 21, 4, 7, 6, 5, 3, 6, 6, 5, 4, 10, 7, 5, 6, 4, 4, 6, 10, 5, 4, 4, 5, 7, 6, 10, 6, 10,
-			22, 19, 22, 14, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-			22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
-
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final char[] special_characters = "~`!@#$%^&*()_-+={}[]|\'\";:?><,./".toCharArray();
+	public static StringEncryption encryption = new StringEncryption(StringEncryption.asByte(22, 22, 22, 22, 22, 22, 21,
+		22, 22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8,
+		22, 16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15,
+		17, 8, 11, 9, 10, 10, 10, 10, 11, 10, 9, 7, 12, 11, 10, 10, 9, 10, 10, 12, 10, 9, 8, 12, 12, 9, 14, 8, 12,
+		17, 16, 17, 22, 13, 21, 4, 7, 6, 5, 3, 6, 6, 5, 4, 10, 7, 5, 6, 4, 4, 6, 10, 5, 4, 4, 5, 7, 6, 10, 6, 10,
+		22, 19, 22, 14, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
+	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i',
+		'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g',
+		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
+		'5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(',
+		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
+		'%', '"', '[', ']', '{', '}', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+		'U', 'V', 'W', 'X', 'Y', 'Z'};
+	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
+	private static MessageDigest md5, sha1, sha512;
+	private static Random rand = new Random();
+	private static SecureRandom secureRandom = new SecureRandom();
+
+	/**
+	 * Creates an instance of the message digest used for creating md5 hashes
+	 */
+	static {
+		try {
+			md5 = MessageDigest.getInstance("MD5");
+			sha1 = MessageDigest.getInstance("SHA-1");
+			sha512 = MessageDigest.getInstance("SHA-512");
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
+	}
 
 	public static String getDateFromMsec(long diffMSec) {
 		int left = 0;
@@ -62,36 +85,9 @@ public final class DataConversions {
 			}
 		}
 		String diff = Integer.toString(dd) + " days " + Integer.toString(hh) + " hours " + Integer.toString(mm)
-				+ " minutes " + Integer.toString(ss) + " seconds";
+			+ " minutes " + Integer.toString(ss) + " seconds";
 		return diff;
 
-	}
-
-	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i',
-		'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g',
-		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
-		'5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(',
-		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
-		'%', '"', '[', ']', '{', '}', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
-		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y', 'Z'};
-
-	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
-	private static MessageDigest md5, sha1, sha512;
-	private static Random rand = new Random();
-    private static SecureRandom secureRandom = new SecureRandom();
-
-	/**
-	 * Creates an instance of the message digest used for creating md5 hashes
-	 */
-	static {
-		try {
-			md5 = MessageDigest.getInstance("MD5");
-			sha1 = MessageDigest.getInstance("SHA-1");
-			sha512 = MessageDigest.getInstance("SHA-512");
-        } catch (Exception e) {
-			LOGGER.catching(e);
-		}
 	}
 
 	/**
@@ -105,38 +101,37 @@ public final class DataConversions {
 		}
 	}
 
-    public static String sha1(String s) {
-        synchronized (sha1) {
-            sha1.reset();
-            sha1.update(s.getBytes());
-            return toHex(sha1.digest()).toLowerCase();
-        }
-    }
+	public static String sha1(String s) {
+		synchronized (sha1) {
+			sha1.reset();
+			sha1.update(s.getBytes());
+			return toHex(sha1.digest()).toLowerCase();
+		}
+	}
 
-    public static String sha512(String s) {
-        synchronized (sha512) {
-            sha512.reset();
-            sha512.update(s.getBytes());
-            return toHex(sha512.digest()).toLowerCase();
-        }
-    }
+	public static String sha512(String s) {
+		synchronized (sha512) {
+			sha512.reset();
+			sha512.update(s.getBytes());
+			return toHex(sha512.digest()).toLowerCase();
+		}
+	}
 
-    public static String generateSalt() {
-        int len = 30;
-        StringBuilder sb = new StringBuilder( len );
-        for( int i = 0; i < len; i++ )
-        {
-            int ran         = secureRandom.nextInt(characters.length);
-            char character  = characters[ran];
-            if(character == '\\') character = '`'; // replace backslash because MySQL escape makes this into a new line
-            sb.append( character );
-        }
-        return sb.toString();
-    }
+	public static String generateSalt() {
+		int len = 30;
+		StringBuilder sb = new StringBuilder(len);
+		for (int i = 0; i < len; i++) {
+			int ran = secureRandom.nextInt(characters.length);
+			char character = characters[ran];
+			if (character == '\\') character = '`'; // replace backslash because MySQL escape makes this into a new line
+			sb.append(character);
+		}
+		return sb.toString();
+	}
 
-    public static String hashPassword(String password, String salt){
-        return DataConversions.sha512(salt + DataConversions.md5(password));
-    }
+	public static String hashPassword(String password, String salt) {
+		return DataConversions.sha512(salt + DataConversions.md5(password));
+	}
 
 	public static String toHex(byte[] bytes) {
 		// change below to lower or uppercase X to control case of output
@@ -174,8 +169,7 @@ public final class DataConversions {
 		for (int i = 0; i < value.length(); i++) {
 			if (getCharCode(value.charAt(i)) > 0) {
 				s += value.charAt(i);
-			}
-			else {
+			} else {
 				s += " ";
 			}
 		}
@@ -184,7 +178,7 @@ public final class DataConversions {
 
 	public static String upperCaseAllFirst(String value) {
 
-		Character[] array = value.chars().mapToObj(c -> (char)c).toArray(Character[]::new);
+		Character[] array = value.chars().mapToObj(c -> (char) c).toArray(Character[]::new);
 
 		String s = "";
 		int i = 0;
@@ -204,8 +198,7 @@ public final class DataConversions {
 		for (; i < array.length; i++) {
 			if (Character.isWhitespace(array[i - 1]) && Character.isUpperCase(array[i])) {
 				s += String.valueOf(Character.toUpperCase(array[i]));
-			}
-			else {
+			} else {
 				s += String.valueOf(Character.toLowerCase(array[i]));
 			}
 		}
@@ -738,14 +731,14 @@ public final class DataConversions {
 		return "";
 	}
 
-        public static int getTimeStamp() {
+	public static int getTimeStamp() {
 		long time = System.currentTimeMillis() / 1000;
-		return (int)time;
-        }
+		return (int) time;
+	}
 
 	public static String numberFormat(int i) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-	    String number = numberFormat.format(i);
+		String number = numberFormat.format(i);
 		return number;
 	}
 }

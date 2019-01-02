@@ -12,19 +12,19 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public final class Blurberry  implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {	
+public final class Blurberry implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 3000, 100, 25,1,  new Item(937, 10), new Item(938, 10), new Item(939, 10), new Item(940, 10), new Item(941, 10), new Item(942, 10), new Item(943, 10));
-	
+	private final Shop shop = new Shop(false, 3000, 100, 25, 1, new Item(937, 10), new Item(938, 10), new Item(939, 10), new Item(940, 10), new Item(941, 10), new Item(942, 10), new Item(943, 10));
+
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		npcTalk(p,n, "good day to you", "can i get you drink");
-		int opt = showMenu(p,n, "what do you have", "no thanks");
+		npcTalk(p, n, "good day to you", "can i get you drink");
+		int opt = showMenu(p, n, "what do you have", "no thanks");
 		if (opt == 0) {
 			npcTalk(p, n, "take a look");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
-		} else if(opt == 1) {
+		} else if (opt == 1) {
 			npcTalk(p, n, "ok, take it easy");
 		}
 	}
@@ -36,7 +36,7 @@ public final class Blurberry  implements ShopInterface, TalkToNpcExecutiveListen
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

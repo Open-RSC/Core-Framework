@@ -9,7 +9,8 @@ public class Activity extends Snapshot {
 
 	/**
 	 * Constructor
-	 * @param player player that performed the activity
+	 *
+	 * @param player   player that performed the activity
 	 * @param activity the activity that was performed
 	 */
 	public Activity(String sender, String activity) {
@@ -17,12 +18,12 @@ public class Activity extends Snapshot {
 		this.setActivity(activity);
 	}
 
-	public void setActivity(String activity) {
-		this.activity = activity;
-	}
-
 	public String getActivity() {
 		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
 	}
 }
 

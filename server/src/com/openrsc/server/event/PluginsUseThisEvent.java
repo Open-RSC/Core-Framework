@@ -5,7 +5,7 @@ public abstract class PluginsUseThisEvent extends DelayedEvent {
 	public PluginsUseThisEvent() {
 		super(null, 0);
 	}
-	
+
 	public PluginsUseThisEvent(int delay) {
 		super(null, delay);
 	}

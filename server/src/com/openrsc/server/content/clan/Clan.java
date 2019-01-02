@@ -23,7 +23,7 @@ public class Clan {
 			ClanPlayer clanMember = new ClanPlayer(player.getUsername());
 			clanMember.setRank(ClanRank.NORMAL);
 			clanMember.setPlayerReference(player);
-			if(leader == null) {
+			if (leader == null) {
 				clanMember.setRank(ClanRank.LEADER);
 				leader = clanMember;
 				Arrays.fill(clanSetting, 1);
@@ -34,7 +34,7 @@ public class Clan {
 			updateClanGUI();
 			ActionSender.sendClanSetting(clanMember.getPlayerReference());
 
-			if(getPlayers().size() > 1) {
+			if (getPlayers().size() > 1) {
 				ClanManager.saveClanChanges(this);
 			}
 			return clanMember;
@@ -78,12 +78,12 @@ public class Clan {
 		}
 
 		ClanRank setRank = ClanRank.getRankFor(newRank);
-		if(member.getRank().rankIndex == newRank) {
+		if (member.getRank().rankIndex == newRank) {
 			return;
 		}
 
 		if (getLeader().getUsername().equalsIgnoreCase(player.getUsername())) {
-			if(newRank == 1) {
+			if (newRank == 1) {
 				player.getClan().getPlayer(player.getUsername()).setRank(ClanRank.NORMAL);
 				setLeader(member);
 				getLeader().setRank(ClanRank.LEADER);
@@ -92,7 +92,7 @@ public class Clan {
 				ClanManager.saveClanChanges(this);
 				ActionSender.sendClanSetting(player);
 			} else {
-				if(newRank == 2) {
+				if (newRank == 2) {
 					messageClanInfo("Congratulations! " + member.getUsername() + " has been promoted to " + ClanRank.getRankFor(newRank).name().toLowerCase() + " rank.");
 				} else {
 					messageClanInfo(member.getUsername() + " has been put back to " + ClanRank.getRankFor(newRank).name().toLowerCase() + " rank.");
@@ -101,23 +101,23 @@ public class Clan {
 				ClanManager.updateClanRankPlayer(member);
 			}
 			updateClanGUI();
-			if(member.isOnline()) {
+			if (member.isOnline()) {
 				ActionSender.sendClanSetting(member.getPlayerReference());
 			}
 		}
 	}
 
 	public void updateClanGUI() {
-		for(ClanPlayer m : players) {
-			if(m.isOnline()) {
+		for (ClanPlayer m : players) {
+			if (m.isOnline()) {
 				ActionSender.sendClan(m.getPlayerReference());
 			}
 		}
 	}
 
 	public void updateClanSettings() {
-		for(ClanPlayer m : players) {
-			if(m.isOnline()) {
+		for (ClanPlayer m : players) {
+			if (m.isOnline()) {
 				ActionSender.sendClanSetting(m.getPlayerReference());
 			}
 		}
@@ -136,11 +136,15 @@ public class Clan {
 		return players;
 	}
 
+	public void setPlayers(ArrayList<ClanPlayer> clanPlayers) {
+		this.players = clanPlayers;
+	}
+
 	public void messageChat(Player player, String string) {
 		for (ClanPlayer cMember : getPlayers()) {
 			if (cMember.getPlayerReference() != null) {
 				Player clanPlayer = cMember.getPlayerReference();
-				ActionSender.sendMessage(clanPlayer, player, 1, MessageType.CLAN_CHAT, "@whi@[@cla@"+ getClanName() + "@whi@] " + string, player.getIcon());
+				ActionSender.sendMessage(clanPlayer, player, 1, MessageType.CLAN_CHAT, "@whi@[@cla@" + getClanName() + "@whi@] " + string, player.getIcon());
 			}
 		}
 	}
@@ -149,7 +153,7 @@ public class Clan {
 		for (ClanPlayer cMember : getPlayers()) {
 			if (cMember.getPlayerReference() != null) {
 				Player clanPlayer = cMember.getPlayerReference();
-				ActionSender.sendPlayerServerMessage(clanPlayer, MessageType.CLAN_CHAT, "@whi@[@cla@"+ getClanName() + "@whi@] " + string);
+				ActionSender.sendPlayerServerMessage(clanPlayer, MessageType.CLAN_CHAT, "@whi@[@cla@" + getClanName() + "@whi@] " + string);
 			}
 		}
 	}
@@ -178,10 +182,6 @@ public class Clan {
 		this.id = id;
 	}
 
-	public void setPlayers(ArrayList<ClanPlayer> clanPlayers) {
-		this.players = clanPlayers;
-	}
-
 	public ClanPlayer getLeader() {
 		return leader;
 	}
@@ -190,47 +190,48 @@ public class Clan {
 		this.leader = leader;
 	}
 
-	public void setKickSetting(int state) {
-		this.clanSetting[0] = state;
-	}
-
 	public int getKickSetting() {
 		return clanSetting[0];
 	}
 
-	public void setInviteSetting(int state) {
-		this.clanSetting[1] = state;
+	public void setKickSetting(int state) {
+		this.clanSetting[0] = state;
 	}
 
 	public int getInviteSetting() {
 		return clanSetting[1];
 	}
 
+	public void setInviteSetting(int state) {
+		this.clanSetting[1] = state;
+	}
+
 	public boolean isAllowed(int setting, Player p) {
 		if (p.getClan() != null) {
-			if(clanSetting[setting] == 0) {
+			if (clanSetting[setting] == 0) {
 				return true;
-			} else if(clanSetting[setting] == 1 && p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER)) {
+			} else if (clanSetting[setting] == 1 && p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER)) {
 				return true;
-			} else if(clanSetting[setting] == 2 && (p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER) || p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.GENERAL))) {
+			} else if (clanSetting[setting] == 2 && (p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER) || p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.GENERAL))) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void setAllowSearchJoin(int state) {
-		this.clanSetting[2] = state;
-	}
 	public int getAllowSearchJoin() {
 		return clanSetting[2];
 	}
 
-	public void setClanPoints(int p) {
-		this.clanPoints = p;
+	public void setAllowSearchJoin(int state) {
+		this.clanSetting[2] = state;
 	}
 
 	public int getClanPoints() {
 		return clanPoints;
+	}
+
+	public void setClanPoints(int p) {
+		this.clanPoints = p;
 	}
 }

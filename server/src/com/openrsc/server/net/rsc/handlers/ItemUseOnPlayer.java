@@ -44,26 +44,26 @@ public class ItemUseOnPlayer implements PacketHandler {
 				player.resetPath();
 				player.resetFollowing();
 				if (!player.getInventory().contains(item)
-						|| !player.canReach(affectedPlayer) || player.isBusy()
-						|| player.isRanging()
-						|| player.getStatus() != Action.USING_Item_ON_PLAYER) {
+					|| !player.canReach(affectedPlayer) || player.isBusy()
+					|| player.isRanging()
+					|| player.getStatus() != Action.USING_Item_ON_PLAYER) {
 					return;
 				}
 				player.resetAll();
 				player.face(affectedPlayer);
 				if (item.getDef().isMembersOnly()
-						&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Constants.GameServer.MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}
 				if (PluginHandler.getPluginHandler().blockDefaultAction(
-						"InvUseOnPlayer",
-						new Object[] { player, affectedPlayer, item }))
+					"InvUseOnPlayer",
+					new Object[]{player, affectedPlayer, item}))
 					return;
 				switch (item.getID()) {
-				default:
-					player.message("Nothing interesting happens");
-					break;
+					default:
+						player.message("Nothing interesting happens");
+						break;
 				}
 			}
 		});

@@ -13,11 +13,11 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class BriansBattleAxes implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 15000, 100, 55, 1, new Item(205,
-			4), new Item(89, 3), new Item(90, 2), new Item(429, 1),
-			new Item(91, 1), new Item(92, 1));
+		4), new Item(89, 3), new Item(90, 2), new Item(429, 1),
+		new Item(91, 1), new Item(92, 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -26,7 +26,7 @@ public final class BriansBattleAxes implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -39,11 +39,11 @@ public final class BriansBattleAxes implements ShopInterface,
 		npcTalk(p, n, "ello");
 		int option = showMenu(p, n, "So are you selling something", "ello");
 		switch (option) {
-		case 0:
-			npcTalk(p, n, "Yep take a look at these great axes");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-			break;
+			case 0:
+				npcTalk(p, n, "Yep take a look at these great axes");
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+				break;
 		}
 	}
 

@@ -6,29 +6,29 @@ import com.openrsc.server.model.world.World;
 
 
 public class ObjectRemover extends GameTickEvent {
-	
-    public static final World world = World.getWorld();
-    private GameObject object;
 
-    public ObjectRemover(GameObject object, int ticks) {
-        super(null, ticks);
-        this.object = object;
-    }
+	public static final World world = World.getWorld();
+	private GameObject object;
 
-    public boolean equals(Object o) {
-        if (o instanceof ObjectRemover) {
-            return ((ObjectRemover) o).getObject().equals(getObject());
-        }
-        return false;
-    }
+	public ObjectRemover(GameObject object, int ticks) {
+		super(null, ticks);
+		this.object = object;
+	}
 
-    public GameObject getObject() {
-        return object;
-    }
+	public boolean equals(Object o) {
+		if (o instanceof ObjectRemover) {
+			return ((ObjectRemover) o).getObject().equals(getObject());
+		}
+		return false;
+	}
 
-    public void run() {
-        world.unregisterGameObject(object);
-      	stop();
-    }
+	public GameObject getObject() {
+		return object;
+	}
+
+	public void run() {
+		world.unregisterGameObject(object);
+		stop();
+	}
 
 }

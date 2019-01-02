@@ -12,16 +12,11 @@ public final class Shop {
 	private final boolean general;
 
 	private final int respawnRate, buyModifier, sellModifier, priceModifier;
-	
-	public String area = "-null-";
-	
-	public int[] ownerIDs = null;
-
 	private final Item[] items;
-
 	private final ArrayList<Item> shopItems = new ArrayList<Item>();
-
 	private final ArrayList<Player> players = new ArrayList<Player>();
+	public String area = "-null-";
+	public int[] ownerIDs = null;
 
 	public Shop(boolean general, int respawnRate, int buyModifier, int sellModifier, int priceModifier, Item... items) {
 		this.general = general;
@@ -34,7 +29,7 @@ public final class Shop {
 			shopItems.add(new Item(item.getID(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
 		}
 	}
-	
+
 	public Shop(Shop oldShop, String name, int... ids) {
 		this.general = oldShop.general;
 		this.respawnRate = oldShop.respawnRate;
@@ -44,7 +39,7 @@ public final class Shop {
 		this.items = oldShop.items;
 		this.area = name;
 		this.ownerIDs = ids;
-		
+
 		for (Item item : items) {
 			shopItems.add(new Item(item.getID(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
 		}
@@ -125,7 +120,7 @@ public final class Shop {
 	public void removeShopItem(Item item) {
 		synchronized (shopItems) {
 			Iterator<Item> shopItem = shopItems.iterator();
-			while(shopItem.hasNext()) {
+			while (shopItem.hasNext()) {
 				Item i = shopItem.next();
 				if (i.getID() == item.getID()) {
 					if (i.getAmount() - item.getAmount() <= 0) {
@@ -165,21 +160,21 @@ public final class Shop {
 	public boolean canHoldItem(Item item) {
 		return (40 - shopItems.size()) >= (shopItems.contains(item) ? 0 : 1);
 	}
-	
+
 	public int getItemBuyPrice(int itemID, int defaultPrice, int totalBought) {
 		int priceMod = buyModifier + getStockBuyOffset(itemID, totalBought);
 		if (priceMod < 10)
 			priceMod = 10;
 		return (priceMod * defaultPrice) / 100;
 	}
-	
+
 	public int getItemSellPrice(int itemID, int defaultPrice, int totalRemoved) {
 		int priceMod = sellModifier + getStockOffset(itemID, totalRemoved);
 		if (priceMod < 10)
 			priceMod = 10;
 		return (priceMod * defaultPrice) / 100;
 	}
-	
+
 	public boolean shouldStock(int id) {
 		if (general) {
 			return true;
@@ -229,10 +224,11 @@ public final class Shop {
 	public int getSellModifier() {
 		return sellModifier;
 	}
+
 	public int getPriceModifier() {
 		return priceModifier;
 	}
-	
+
 	public int getStockOffset(int itemID, int totalRemoved) {
 		int baseStock = 1;
 		for (int is = 0; is < items.length; is++) {
@@ -247,7 +243,7 @@ public final class Shop {
 			offset = 100;
 		return offset;
 	}
-	
+
 	public int getStockBuyOffset(int itemID, int totalRemoved) {
 		int baseStock = 0;
 		for (int is = 0; is < items.length; is++) {
@@ -262,7 +258,7 @@ public final class Shop {
 			offset = 100;
 		return offset;
 	}
-	
+
 
 	public int getStock(int itemID) {
 		for (int is = 0; is < items.length; is++) {

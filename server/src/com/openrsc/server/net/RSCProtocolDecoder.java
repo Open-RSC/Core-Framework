@@ -8,9 +8,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.util.List;
 
 /**
- * 
  * @author Imposter
- * 
  */
 public final class RSCProtocolDecoder extends ByteToMessageDecoder {
 
@@ -18,11 +16,11 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
 //		ConnectionAttachment attachment = ((ConnectionAttachment) ctx.channel().getAttachment());
 
-		if(buffer.readableBytes() > 2) {
+		if (buffer.readableBytes() > 2) {
 			buffer.markReaderIndex();
 			int length = buffer.readUnsignedShort();
-			if(buffer.readableBytes() >= length && length > 0) {
-				int opcode = (buffer.readByte()) & 0xFF;				
+			if (buffer.readableBytes() >= length && length > 0) {
+				int opcode = (buffer.readByte()) & 0xFF;
 				length -= 1;
 				ByteBuf data = Unpooled.buffer(length);
 				buffer.readBytes(data, length);

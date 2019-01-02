@@ -14,11 +14,13 @@ import java.util.HashMap;
 @SuppressWarnings("unchecked")
 public final class EntityHandler {
 
+	public static ItemDefinition[] items;
+	public static ArrayList<NPCDef> npcs;
+	public static SpellDef[] spells;
 	private static HashMap<Integer, ItemArrowHeadDef> arrowHeads;
 	private static HashMap<Integer, ItemBowStringDef> bowString;
 	private static HashMap<Integer, CerterDef> certers;
 	private static HashMap<Integer, ItemDartTipDef> dartTips;
-
 	private static DoorDef[] doors;
 	private static HashMap<Integer, FiremakingDef> firemaking;
 	private static GameObjectDef[] gameObjects;
@@ -29,30 +31,25 @@ public final class EntityHandler {
 	private static ItemCraftingDef[] itemCrafting;
 	private static HashMap<Integer, Integer> itemEdibleHeals;
 	private static HashMap<Integer, ItemHerbDef> itemHerb;
-	public static ItemDefinition[] items;
 	private static HashMap<Integer, ItemSmeltingDef> itemSmelting;
 	private static ItemSmithingDef[] itemSmithing;
 	private static HashMap<Integer, ItemUnIdentHerbDef> itemUnIdentHerb;
 	private static HashMap<Integer, ItemLogCutDef> logCut;
-
-	public static ArrayList<NPCDef> npcs;
 	private static HashMap<Integer, ObjectFishingDef[]> objectFishing;
-
 	private static HashMap<Integer, ObjectMiningDef> objectMining;
 	private static HashMap<Point, TelePoint> objectTelePoints;
 	private static HashMap<Integer, ObjectWoodcuttingDef> objectWoodcutting;
 	private static PrayerDef[] prayers;
-	public static SpellDef[] spells;
 	private static TileDef[] tiles;
 
 	static {
-		
+
 		doors = (DoorDef[]) PersistenceManager.load("defs/DoorDef.xml.gz");
 		gameObjects = (GameObjectDef[]) PersistenceManager.load("defs/GameObjectDef.xml.gz");
 		prayers = (PrayerDef[]) PersistenceManager.load("defs/PrayerDef.xml.gz");
 		spells = (SpellDef[]) PersistenceManager.load("defs/SpellDef.xml.gz");
 		tiles = (TileDef[]) PersistenceManager.load("defs/TileDef.xml.gz");
-		
+
 		herbSeconds = (ItemHerbSecond[]) PersistenceManager.load("defs/extras/ItemHerbSecond.xml.gz");
 		dartTips = (HashMap<Integer, ItemDartTipDef>) PersistenceManager.load("defs/extras/ItemDartTipDef.xml.gz");
 		gems = (HashMap<Integer, ItemGemDef>) PersistenceManager.load("defs/extras/ItemGemDef.xml.gz");
@@ -126,13 +123,13 @@ public final class EntityHandler {
 	 * @param the items type
 	 * @return the types of items affected
 	 */
-	  public static int[] getAffectedTypes(int type) {
-	        int[] affectedTypes = itemAffectedTypes.get(type);
-	        if (affectedTypes != null) {
-	            return affectedTypes;
-	        }
-	        return new int[0];
-	  }
+	public static int[] getAffectedTypes(int type) {
+		int[] affectedTypes = itemAffectedTypes.get(type);
+		if (affectedTypes != null) {
+			return affectedTypes;
+		}
+		return new int[0];
+	}
 
 
 	/**

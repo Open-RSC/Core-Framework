@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 public class RegionManager {
@@ -34,9 +34,8 @@ public class RegionManager {
 
 	/**
 	 * Gets the local players around an entity.
-	 * 
-	 * @param entity
-	 *            The entity.
+	 *
+	 * @param entity The entity.
 	 * @return The collection of local players.
 	 */
 	public static Collection<Player> getLocalPlayers(final Entity entity) {
@@ -53,9 +52,8 @@ public class RegionManager {
 
 	/**
 	 * Gets the local NPCs around an entity.
-	 * 
-	 * @param entity
-	 *            The entity.
+	 *
+	 * @param entity The entity.
 	 * @return The collection of local NPCs.
 	 */
 	public static Collection<Npc> getLocalNpcs(Entity entity) {
@@ -72,8 +70,8 @@ public class RegionManager {
 
 	public static Collection<GameObject> getLocalObjects(Mob entity) {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
-		for (Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext();) {
-			for (Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext();) {
+		for (Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
+			for (Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext(); ) {
 				if (o == null) continue;
 				GameObject gameObject = o.next();
 				if (gameObject.getLocation().withinGridRange(entity.getLocation(), Constants.GameServer.VIEW_DISTANCE)) {
@@ -98,9 +96,8 @@ public class RegionManager {
 
 	/**
 	 * Gets the regions surrounding a location.
-	 * 
-	 * @param location
-	 *            The location.
+	 *
+	 * @param location The location.
 	 * @return The regions surrounding the location.
 	 */
 	public static LinkedHashSet<Region> getSurroundingRegions(Point location) {
@@ -111,9 +108,9 @@ public class RegionManager {
 		surrounding.add(regions[regionX][regionY]);
 		int[] xMod = {-1, +1, -1, 0, +1, 0, -1, +1};
 		int[] yMod = {-1, +1, 0, -1, 0, +1, +1, -1};
-		for(int i = 0; i < xMod.length;i++) {
-			Region tmpRegion = getRegionFromSectorCoordinates(regionX + xMod[i], regionY+ yMod[i]);
-			if(tmpRegion != null) {
+		for (int i = 0; i < xMod.length; i++) {
+			Region tmpRegion = getRegionFromSectorCoordinates(regionX + xMod[i], regionY + yMod[i]);
+			if (tmpRegion != null) {
 				surrounding.add(tmpRegion);
 			}
 		}
@@ -121,7 +118,7 @@ public class RegionManager {
 	}
 
 	private static Region getRegionFromSectorCoordinates(int regionX, int regionY) {
-		if(regionX < 0 || regionY < 0 || regionX >= regions.length || regionY >= regions[regionX].length) {
+		if (regionX < 0 || regionY < 0 || regionX >= regions.length || regionY >= regions[regionX].length) {
 			return null;
 		}
 		return regions[regionX][regionY];

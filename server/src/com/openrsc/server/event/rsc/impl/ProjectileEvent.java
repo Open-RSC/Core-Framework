@@ -11,7 +11,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
 
 /**
- * 
  * @author n0m
  */
 public class ProjectileEvent extends SingleTickEvent {
@@ -55,8 +54,8 @@ public class ProjectileEvent extends SingleTickEvent {
 	@Override
 	public void action() {
 		if (!canceled && caster.withinRange(opponent, 15)) {// maybe this will
-															// cancel the damage
-															// out on death.
+			// cancel the damage
+			// out on death.
 			projectileDamage();
 		}
 		if (caster.isPlayer() && opponent.isPlayer()) {
@@ -99,7 +98,7 @@ public class ProjectileEvent extends SingleTickEvent {
 				Player playerCaster = (Player) caster;
 				Npc npcOpponent = (Npc) opponent;
 				if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
-						new Object[] { playerCaster, npcOpponent })) {
+					new Object[]{playerCaster, npcOpponent})) {
 					return;
 				}
 				npcOpponent.killedBy(playerCaster);

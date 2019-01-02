@@ -7,7 +7,7 @@ public abstract class RestartableDelayedEvent extends DelayedEvent {
 	public RestartableDelayedEvent(Player owner, int delay) {
 		super(owner, delay);
 	}
-	
+
 	public abstract void reset();
 
 }

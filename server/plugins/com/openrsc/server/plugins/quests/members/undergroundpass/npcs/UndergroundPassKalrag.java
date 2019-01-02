@@ -12,9 +12,10 @@ import static com.openrsc.server.plugins.Functions.message;
 public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
 	public static int KALRAG = 641;
+
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if(n.getID() == KALRAG) {
+		if (n.getID() == KALRAG) {
 			return true;
 		}
 		return false;
@@ -22,12 +23,12 @@ public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKil
 
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
-		if(n.getID() == KALRAG) {
+		if (n.getID() == KALRAG) {
 			n.killedBy(p);
 			message(p, "kalrag slumps to the floor",
-					"poison flows from the corpse over the soil");
-			if(!p.getCache().hasKey("poison_on_doll") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
-				if(hasItem(p, 1004)) {
+				"poison flows from the corpse over the soil");
+			if (!p.getCache().hasKey("poison_on_doll") && p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+				if (hasItem(p, 1004)) {
 					message(p, "you smear the doll of iban in the poisoned blood");
 					p.message("it smells horrific");
 					p.getCache().store("poison_on_doll", true);

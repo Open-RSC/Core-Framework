@@ -11,9 +11,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
- * 
  * @author n0m
- *
  */
 public class StatRestorationEvent extends GameTickEvent {
 
@@ -66,12 +64,12 @@ public class StatRestorationEvent extends GameTickEvent {
 		}
 		if (restored)
 			this.lastRestoration = System.currentTimeMillis();
-			owner.getSkills().sendUpdateAll();
+		owner.getSkills().sendUpdateAll();
 	}
 
 	/**
 	 * Normalises level to max level by 1.
-	 * 
+	 *
 	 * @param skill
 	 * @return true if action done, false if skill is already normal
 	 */

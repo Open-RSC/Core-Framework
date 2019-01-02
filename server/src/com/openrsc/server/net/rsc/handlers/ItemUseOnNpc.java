@@ -37,26 +37,26 @@ public class ItemUseOnNpc implements PacketHandler {
 				player.resetPath();
 				player.resetFollowing();
 				if (!player.getInventory().contains(item) || player.isBusy()
-						|| player.isRanging() || !player.canReach(affectedNpc)
-						|| affectedNpc.isBusy()
-						|| player.getStatus() != Action.USING_Item_ON_NPC) {
+					|| player.isRanging() || !player.canReach(affectedNpc)
+					|| affectedNpc.isBusy()
+					|| player.getStatus() != Action.USING_Item_ON_NPC) {
 					return;
 				}
 				player.resetAll();
 				player.face(affectedNpc);
 				if (PluginHandler.getPluginHandler().blockDefaultAction(
-						"InvUseOnNpc",
-						new Object[] { player, affectedNpc, item }))
+					"InvUseOnNpc",
+					new Object[]{player, affectedNpc, item}))
 					return;
 
 				switch (affectedNpc.getID()) {
 
-				default:
-					player.message("Nothing interesting happens");
-					break;
+					default:
+						player.message("Nothing interesting happens");
+						break;
 				}
 				if (item.getDef().isMembersOnly()
-						&& !Constants.GameServer.MEMBER_WORLD) {
+					&& !Constants.GameServer.MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return;
 				}

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * This system is for adding a new menu item on NPC under certain circumstances.
  * If this system is used, the whole starting menu needs to be done using this.
- * 
+ *
  * @author n0m
  */
 public class Menu {
@@ -20,9 +20,9 @@ public class Menu {
 	 * Adds a single option to the menu. Usage: Menu defaultMenu = new Menu();
 	 * defaultMenu.addOption(new Option("Hello, this is a menu item") { public
 	 * void action() {
-	 * 
+	 * <p>
 	 * } }
-	 * 
+	 *
 	 * @param option
 	 * @return
 	 */
@@ -34,11 +34,11 @@ public class Menu {
 	/**
 	 * Adds multiple options at once. defaultMenu.addOptions(new
 	 * Option("Hello, this is a menu item") { public void action() {
-	 * 
+	 * <p>
 	 * } }, new Option("Hello, this is a menu item") { public void action() {
-	 * 
+	 * <p>
 	 * } });
-	 * 
+	 *
 	 * @param opts
 	 * @return
 	 */
@@ -51,7 +51,7 @@ public class Menu {
 
 	/**
 	 * Builds and displays the menu to the player.
-	 * 
+	 *
 	 * @param player
 	 */
 	public void showMenu(Player player) {
@@ -66,7 +66,7 @@ public class Menu {
 		long start = System.currentTimeMillis();
 		while (true) {
 			if (System.currentTimeMillis() - start > 19500
-					|| player.getMenu() == null) {
+				|| player.getMenu() == null) {
 				break;
 			}
 			if (player.getInteractingNpc() != null)
@@ -75,11 +75,11 @@ public class Menu {
 		}
 	}
 
-	
+
 	public int size() {
 		return options.size();
 	}
-	
+
 	public void handleReply(Player player, int i) {
 		Option option = options.get(i);
 		if (option != null) {

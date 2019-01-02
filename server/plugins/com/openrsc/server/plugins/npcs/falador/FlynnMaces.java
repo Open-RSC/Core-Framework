@@ -13,13 +13,13 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class FlynnMaces implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	public static final int npcid = 115;
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 1,
-			new Item(94, 5), new Item(0, 4), new Item(95, 4),
-			new Item(96, 3), new Item(97, 2));
+		new Item(94, 5), new Item(0, 4), new Item(95, 4),
+		new Item(96, 3), new Item(97, 2));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -28,7 +28,7 @@ public final class FlynnMaces implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

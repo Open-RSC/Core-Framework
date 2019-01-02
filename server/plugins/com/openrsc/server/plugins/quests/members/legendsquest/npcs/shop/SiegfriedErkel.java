@@ -16,30 +16,30 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 60000, 150, 50, 2,
-			new Item(796, 6), new Item(596, 5), new Item(52, 4),
-			new Item(421, 3), new Item(1276, 1), new Item(1288, 3));
+		new Item(796, 6), new Item(596, 5), new Item(52, 4),
+		new Item(421, 3), new Item(1276, 1), new Item(1288, 3));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if(p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
+		if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != -1) {
 			npcTalk(p, n, "I'm sorry but the services of this shop are only for ",
-					"the pleasure of those who are rightfull members of the ",
-					"Legends Guild. I would get into serious trouble if I sold ",
-					"a non-member an item from this store.");
+				"the pleasure of those who are rightfull members of the ",
+				"Legends Guild. I would get into serious trouble if I sold ",
+				"a non-member an item from this store.");
 		} else {
 			npcTalk(p, n, "Hello there and welcome to the shop of useful items.",
-					"Can I help you at all?");
+				"Can I help you at all?");
 			int option = showMenu(p, n, "Yes please. What are you selling?",
-					"No thanks");
+				"No thanks");
 			switch (option) {
-			case 0:
-				npcTalk(p, n, "Take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
-				break;
-			case 1:
-				npcTalk(p, n, "Ok, well, if you change your mind, do pop back.");
-				break;
+				case 0:
+					npcTalk(p, n, "Take a look");
+					p.setAccessingShop(shop);
+					ActionSender.showShop(p, shop);
+					break;
+				case 1:
+					npcTalk(p, n, "Ok, well, if you change your mind, do pop back.");
+					break;
 			}
 		}
 	}
@@ -51,7 +51,7 @@ public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveLi
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

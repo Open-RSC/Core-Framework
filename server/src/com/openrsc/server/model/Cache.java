@@ -6,13 +6,18 @@ import java.util.NoSuchElementException;
 
 /**
  * Player cache
- * 
+ *
  * @author Peeter
- *         <p/>
- *         This system enables a programmer to store key/value pairs in the
- *         database with ease.
+ * <p/>
+ * This system enables a programmer to store key/value pairs in the
+ * database with ease.
  */
 public class Cache {
+
+	/**
+	 * Where we store the data.
+	 */
+	private Map<String, Object> storage = new HashMap<String, Object>();
 
 	public Map<String, Object> getCacheMap() {
 		return storage;
@@ -20,7 +25,7 @@ public class Cache {
 
 	/**
 	 * Determines if the selected key already exists in the cache
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -29,17 +34,11 @@ public class Cache {
 	}
 
 	/**
-	 * Where we store the data.
-	 */
-	private Map<String, Object> storage = new HashMap<String, Object>();
-
-	/**
 	 * Store an integer in the cache
-	 * 
+	 *
 	 * @param key
 	 * @param i
-	 * @throws IllegalArgumentException
-	 *             when the key is already used in the database
+	 * @throws IllegalArgumentException when the key is already used in the database
 	 */
 	public void set(String key, int i) {
 		storage.put(key, i);
@@ -47,11 +46,10 @@ public class Cache {
 
 	/**
 	 * Store a String in the cache
-	 * 
+	 *
 	 * @param key
 	 * @param s
-	 * @throws IllegalArgumentException
-	 *             when the key is already used in the database
+	 * @throws IllegalArgumentException when the key is already used in the database
 	 */
 	public void store(String key, String s) {
 		storage.put(key, s);
@@ -59,11 +57,10 @@ public class Cache {
 
 	/**
 	 * Store a Boolean in the cache
-	 * 
+	 *
 	 * @param key
 	 * @param b
-	 * @throws IllegalArgumentException
-	 *             when the key is already used in the database
+	 * @throws IllegalArgumentException when the key is already used in the database
 	 */
 	public void store(String key, Boolean b) {
 		storage.put(key, b);
@@ -71,11 +68,10 @@ public class Cache {
 
 	/**
 	 * Store a long in the cache
-	 * 
+	 *
 	 * @param key
 	 * @param b
-	 * @throws IllegalArgumentException
-	 *             when the key is already used in the database
+	 * @throws IllegalArgumentException when the key is already used in the database
 	 */
 	public void store(String key, long l) {
 		storage.put(key, l);
@@ -83,13 +79,12 @@ public class Cache {
 
 	/**
 	 * Get an Integer from the cache
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @throws NoSuchElementException
-	 *             - When no object is found for the key
-	 *             IllegalArgumentException - When object is found, but is not
-	 *             an Integer
+	 * @throws NoSuchElementException - When no object is found for the key
+	 *                                IllegalArgumentException - When object is found, but is not
+	 *                                an Integer
 	 */
 	public int getInt(String key) {
 		if (!storage.containsKey(key))
@@ -98,60 +93,54 @@ public class Cache {
 		Object value = storage.get(key);
 		if (!(value instanceof Integer)) {
 			throw new IllegalArgumentException(
-					"Object found, but not an Integer");
+				"Object found, but not an Integer");
 		}
 		return (Integer) value;
 	}
 
 	/**
 	 * Get a String from the cache
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @throws NoSuchElementException
-	 *             When no object is found for the key
-	 * @throws IllegalArgumentException
-	 *             When object is found, but is not a string
+	 * @throws NoSuchElementException   When no object is found for the key
+	 * @throws IllegalArgumentException When object is found, but is not a string
 	 */
 	public String getString(String key) {
 		if (!storage.containsKey(key))
 			throw new NoSuchElementException("No object found for that key");
 		if (!(storage.get(key) instanceof String)) {
 			throw new IllegalArgumentException(
-					"Object found, but not an String");
+				"Object found, but not an String");
 		}
 		return (String) (storage.get(key));
 	}
 
 	/**
 	 * Get a Boolean from the cache
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @throws NoSuchElementException
-	 *             When no object is found for the key
-	 * @throws IllegalArgumentException
-	 *             When object is found, but is not a Boolean
+	 * @throws NoSuchElementException   When no object is found for the key
+	 * @throws IllegalArgumentException When object is found, but is not a Boolean
 	 */
 	public Boolean getBoolean(String key) {
 		if (!storage.containsKey(key))
 			throw new NoSuchElementException("No object found for that key");
 		if (!(storage.get(key) instanceof Boolean)) {
 			throw new IllegalArgumentException(
-					"Object found, but not a Boolean");
+				"Object found, but not a Boolean");
 		}
 		return (Boolean) (storage.get(key));
 	}
 
 	/**
 	 * Get a Long from the cache
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @throws NoSuchElementException
-	 *             When no object is found for the key
-	 * @throws IllegalArgumentException
-	 *             When object is found, but is not a Long
+	 * @throws NoSuchElementException   When no object is found for the key
+	 * @throws IllegalArgumentException When object is found, but is not a Long
 	 */
 	public long getLong(String key) {
 		if (!storage.containsKey(key))
@@ -166,7 +155,7 @@ public class Cache {
 
 	/**
 	 * Remove a value from the cache.
-	 * 
+	 *
 	 * @param key
 	 */
 	public void remove(String key) {

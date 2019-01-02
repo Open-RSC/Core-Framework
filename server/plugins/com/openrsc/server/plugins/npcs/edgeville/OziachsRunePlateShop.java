@@ -12,11 +12,11 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class OziachsRunePlateShop  implements ShopInterface,
-TalkToNpcListener, TalkToNpcExecutiveListener {
+public class OziachsRunePlateShop implements ShopInterface,
+	TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(401,
-			1));
+		1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -25,7 +25,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -37,11 +37,11 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 	public void onTalkToNpc(final Player p, final Npc n) {
 		playerTalk(p, n, "I have slain the dragon");
 		npcTalk(p, n, "Well done");
-		final int option = showMenu(p, n, new String[] {
-				"Can I buy a rune plate mail body now please?", "Thank you" });
+		final int option = showMenu(p, n, new String[]{
+			"Can I buy a rune plate mail body now please?", "Thank you"});
 		if (option == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
-		} 
+		}
 	}
 }

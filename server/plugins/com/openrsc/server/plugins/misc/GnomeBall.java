@@ -1,15 +1,12 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
-import com.openrsc.server.Server;
-import com.openrsc.server.util.rsc.DataConversions;
-
-import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeBall implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 

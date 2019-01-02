@@ -18,22 +18,6 @@ public class Item implements Comparable<Item> {
 	public Item() {
 	}
 
-	public final int getID() {
-		return id;
-	}
-
-	public final int getIndex() {
-		return index;
-	}
-
-	public final void setID(int newid) {
-		id = newid;
-	}
-
-	public final void setIndex(int newIndex) {
-		index = newIndex;
-	}
-
 	public Item(int id) {
 		setID(id);
 		setAmount(1);
@@ -42,6 +26,22 @@ public class Item implements Comparable<Item> {
 	public Item(int id, int amount) {
 		setID(id);
 		setAmount(amount);
+	}
+
+	public final int getID() {
+		return id;
+	}
+
+	public final void setID(int newid) {
+		id = newid;
+	}
+
+	public final int getIndex() {
+		return index;
+	}
+
+	public final void setIndex(int newIndex) {
+		index = newIndex;
 	}
 
 	public int compareTo(Item item) {
@@ -73,6 +73,13 @@ public class Item implements Comparable<Item> {
 		return amount;
 	}
 
+	public void setAmount(int amount) {
+		if (amount < 0) {
+			amount = 0;
+		}
+		this.amount = amount;
+	}
+
 	public ItemCookingDef getCookingDef() {
 		return EntityHandler.getItemCookingDef(id);
 	}
@@ -82,7 +89,7 @@ public class Item implements Comparable<Item> {
 	}
 
 	public ItemSmeltingDef getSmeltingDef() {
-		return EntityHandler.getItemSmeltingDef(id); 
+		return EntityHandler.getItemSmeltingDef(id);
 	}
 
 	public ItemUnIdentHerbDef getUnIdentHerbDef() {
@@ -99,13 +106,6 @@ public class Item implements Comparable<Item> {
 
 	public boolean isWielded() {
 		return wielded;
-	}
-
-	public void setAmount(int amount) {
-		if (amount < 0) {
-			amount = 0;
-		}
-		this.amount = amount;
 	}
 
 	public void setWielded(boolean wielded) {

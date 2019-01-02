@@ -5,7 +5,10 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemDropDef;
+import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
@@ -15,16 +18,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 import static com.openrsc.server.Constants.GameServer.*;
@@ -33,21 +32,16 @@ public class Npc extends Mob {
 
 
 	/**
-	 * Logger instance
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
-
-	/**
 	 * World instance
 	 */
 	protected static final World world = World.getWorld();
-
-	private int armourPoints = 1;
-
 	/**
-	 * Holds players that did damage with combat
+	 * Logger instance
 	 */
-	private Map<Integer, Integer> combatDamagers = new HashMap<Integer, Integer>();
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final List<String> valuableDrops = Arrays.asList(
+		VALUABLE_DROP_ITEMS.split(",")
+	);
 	/**
 	 * The definition of this npc
 	 */
@@ -56,7 +50,11 @@ public class Npc extends Mob {
 	 * The location of this npc
 	 */
 	protected NPCLoc loc;
-
+	private int armourPoints = 1;
+	/**
+	 * Holds players that did damage with combat
+	 */
+	private Map<Integer, Integer> combatDamagers = new HashMap<Integer, Integer>();
 	/**
 	 * Holds players that did damage with mage
 	 */
@@ -65,18 +63,11 @@ public class Npc extends Mob {
 	 * Holds players that did damage with range
 	 */
 	private Map<Integer, Integer> rangeDamagers = new HashMap<Integer, Integer>();
-
 	private boolean shouldRespawn = true;
 	private boolean isRespawning = false;
-
 	private int weaponAimPoints = 1;
 	private int weaponPowerPoints = 1;
-
-
-	private static final List<String> valuableDrops = Arrays.asList(
-			VALUABLE_DROP_ITEMS.split(",")
-	);
-
+	private NpcBehavior npcBehavior;
 
 	public Npc(int id, int x, int y) {
 		this(new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -177,6 +168,7 @@ public class Npc extends Mob {
 	public int getArmourPoints() {
 		return armourPoints;
 	}
+
 	public int getNPCCombatLevel() {
 		return getDef().combatLevel;
 	}
@@ -276,8 +268,7 @@ public class Npc extends Mob {
 	/**
 	 * Distributes the XP from this monster and the loot
 	 *
-	 * @param attacker
-	 *            the person that "finished off" the npc
+	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
 	public Player handleLootAndXpDistribution(Player attacker) {
@@ -300,23 +291,23 @@ public class Npc extends Mob {
 			}
 
 			// Give the player their share of the experience.
-			int totalXP = (int)(((double)(totalCombatXP) / (double)(getDef().hits)) * (double)(damageDoneByPlayer));
+			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 
 			switch (p.getCombatStyle()) {
-			case 0:
-				for (int x = 0; x < 3; x++) {
-					p.incExp(x, totalXP, true);
-				}
-				break;
-			case 1:
-				p.incExp(2, totalXP * 3, true);
-				break;
-			case 2:
-				p.incExp(0, totalXP * 3, true);
-				break;
-			case 3:
-				p.incExp(1, totalXP * 3, true);
-				break;
+				case 0:
+					for (int x = 0; x < 3; x++) {
+						p.incExp(x, totalXP, true);
+					}
+					break;
+				case 1:
+					p.incExp(2, totalXP * 3, true);
+					break;
+				case 2:
+					p.incExp(0, totalXP * 3, true);
+					break;
+				case 3:
+					p.incExp(1, totalXP * 3, true);
+					break;
 			}
 			p.incExp(3, totalXP, true);
 		}
@@ -333,7 +324,7 @@ public class Npc extends Mob {
 				playerWithMostDamage = p;
 				currentHighestDamage = dmgDoneByPlayer;
 			}
-			newXP = (int)(((double)(totalCombatXP) / (double)(this.getDef().hits)) * (double)(dmgDoneByPlayer));
+			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
 			p.incExp(4, newXP * 4, true);
 			ActionSender.sendStat(p, 4);
 		}
@@ -361,7 +352,7 @@ public class Npc extends Mob {
 		Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
 			@Override
 			public void action() {
-				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[] { p, npc });
+				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
 			}
 		});
 
@@ -373,7 +364,7 @@ public class Npc extends Mob {
 		Server.getServer().getGameEventHandler().add(new ImmediateEvent() {
 			@Override
 			public void action() {
-				PluginHandler.getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[] { p, npc });
+				PluginHandler.getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
 			}
 		});
 
@@ -393,12 +384,10 @@ public class Npc extends Mob {
 				if (NPC_KILL_MESSAGES && NPC_KILL_MESSAGES_FILTER) {
 					if (NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName())) {
 						owner.addNpcKill(this, true);
-					}
-					else {
+					} else {
 						owner.addNpcKill(this, false);
 					}
-				}
-				else {
+				} else {
 					owner.addNpcKill(this, NPC_KILL_MESSAGES);
 				}
 			}
@@ -446,7 +435,7 @@ public class Npc extends Mob {
 				if (hit >= total && hit < (total + weight)) {
 					if (dropID != -1) {
 						if (EntityHandler.getItemDef(dropID).isMembersOnly()
-								&& !Constants.GameServer.MEMBER_WORLD) {
+							&& !Constants.GameServer.MEMBER_WORLD) {
 							continue;
 						}
 
@@ -480,7 +469,7 @@ public class Npc extends Mob {
 							// Gold Drops
 							if (drop.getID() == 10) {
 								amount = Formulae.calculateGoldDrop(
-										GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+									GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 								);
 							}
 
@@ -496,10 +485,10 @@ public class Npc extends Mob {
 						if (dropID != -1 && amount > 0 && VALUABLE_DROP_MESSAGES && (currentRatio > VALUABLE_DROP_RATIO || (VALUABLE_DROP_EXTRAS && valuableDrops.contains(temp.getDef().getName())))) {
 							if (amount > 1) {
 								owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice() * amount) + " coins)");
+									(temp.getDef().getDefaultPrice() * amount) + " coins)");
 							} else {
 								owner.message("@red@Valuable drop: " + temp.getDef().getName() + " (" +
-										(temp.getDef().getDefaultPrice()) + " coins)");
+									(temp.getDef().getDefaultPrice()) + " coins)");
 							}
 						}
 					}
@@ -563,8 +552,6 @@ public class Npc extends Mob {
 		return "[NPC:" + EntityHandler.getNpcDef(id).getName() + "]";
 	}
 
-	private NpcBehavior npcBehavior;
-
 	public void updatePosition() {
 
 		npcBehavior.tick();
@@ -575,20 +562,20 @@ public class Npc extends Mob {
 		return npcBehavior.isChasing();
 	}
 
-	public Player getChasedPlayer() {
-		return npcBehavior.getChasedPlayer();
-	}
-
 	public void setChasing(Player player) {
 		npcBehavior.setChasing(player);
 	}
 
-	public void setBehavior(NpcBehavior behavior) {
-		this.npcBehavior = behavior;
+	public Player getChasedPlayer() {
+		return npcBehavior.getChasedPlayer();
 	}
 
 	public NpcBehavior getBehavior() {
 		return npcBehavior;
+	}
+
+	public void setBehavior(NpcBehavior behavior) {
+		this.npcBehavior = behavior;
 	}
 
 	public void setNPCLoc(NPCLoc loc2) {

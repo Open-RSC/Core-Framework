@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FairyLunderwin implements TalkToNpcListener,
-TalkToNpcExecutiveListener {
+	TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -22,12 +22,12 @@ TalkToNpcExecutiveListener {
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 219) {
 			npcTalk(p, n, "I am buying cabbage, we have no such thing where I come from",
-					"I pay hansomly for this wounderous object",
-					"Would 100 gold coins per cabbage be a fair price?");
-			if(hasItem(p, 18)) {
+				"I pay hansomly for this wounderous object",
+				"Would 100 gold coins per cabbage be a fair price?");
+			if (hasItem(p, 18)) {
 				int menu = showMenu(p, n, "Yes, I will sell you all my cabbages",
-						"No, I will keep my cabbbages");
-				if(menu == 0) {
+					"No, I will keep my cabbbages");
+				if (menu == 0) {
 					p.message("You sell a cabbage");
 					removeItem(p, 18, 1);
 					addItem(p, 10, 100);

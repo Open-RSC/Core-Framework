@@ -12,7 +12,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SpinningWheel implements InvUseOnObjectListener,
-		InvUseOnObjectExecutiveListener {
+	InvUseOnObjectExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
@@ -26,19 +26,19 @@ public class SpinningWheel implements InvUseOnObjectListener,
 		int requiredLevel = -1;
 		int experience = -1;
 		switch (item.getID()) {
-		case 145: // Wool
-			produceID = 207;
-			requiredLevel = 1;
-			experience = 12;
-			break;
-		case 675: // Flax
-			produceID = 676;
-			requiredLevel = 10;
-			experience = 60;
-			break;
-		default:
-			player.message("Nothing interesting happens");
-			return;
+			case 145: // Wool
+				produceID = 207;
+				requiredLevel = 1;
+				experience = 12;
+				break;
+			case 675: // Flax
+				produceID = 676;
+				requiredLevel = 10;
+				experience = 60;
+				break;
+			default:
+				player.message("Nothing interesting happens");
+				return;
 		}
 		final int produce = produceID;
 		final int requirement = requiredLevel;
@@ -47,13 +47,13 @@ public class SpinningWheel implements InvUseOnObjectListener,
 			return;
 		}
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-				.getRepeatTimes(player, CRAFTING)) {
+			.getRepeatTimes(player, CRAFTING)) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(CRAFTING) < requirement) {
 					message(owner, "You need a crafting level of "
-							+ requirement + " to spin "
-							+ item.getDef().getName().toLowerCase() + "!");
+						+ requirement + " to spin "
+						+ item.getDef().getName().toLowerCase() + "!");
 					interrupt();
 					return;
 				}
@@ -61,10 +61,10 @@ public class SpinningWheel implements InvUseOnObjectListener,
 					showBubble(owner, item);
 					owner.playSound("mechanical");
 					owner.message("You make the "
-							+ item.getDef().getName()
-							+ " into a "
-							+ EntityHandler.getItemDef(produce).getName()
-									.toLowerCase() + "");
+						+ item.getDef().getName()
+						+ " into a "
+						+ EntityHandler.getItemDef(produce).getName()
+						.toLowerCase() + "");
 					owner.getInventory().add(new Item(produce, 1));
 					owner.incExp(12, exp, true);
 				} else {

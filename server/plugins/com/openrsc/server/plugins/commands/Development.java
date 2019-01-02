@@ -10,7 +10,7 @@ import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 
 public final class Development implements CommandListener {
-	/** 
+	/**
 	 * Template for ::dev commands
 	 * Development usable commands in general
 	 */
@@ -29,9 +29,9 @@ public final class Development implements CommandListener {
 			n.setShouldRespawn(true);
 			player.message("Storing to database");
 			DatabaseConnection.getDatabase().executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
-					+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
-					+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
-					+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
+				+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
+				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
+				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
 		}
 		if (command.equals("cnpc")) {
 			int id = Integer.parseInt(args[0]);
@@ -43,15 +43,15 @@ public final class Development implements CommandListener {
 			n.setShouldRespawn(true);
 			player.message("Storing to database");
 			DatabaseConnection.getDatabase().executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
-					+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
-					+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
-					+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
+				+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
+				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
+				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
 		} else if (command.equals("rpc")) {
 			int id = Integer.parseInt(args[0]);
 			Npc npc = World.getWorld().getNpc(id);
 			if (npc != null) {
 				DatabaseConnection.getDatabase()
-				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+					.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
 						+ "npclocs` WHERE `id` = '" + npc.getID() + "' AND startX='" + npc.getLoc().startX
 						+ "' AND startY='" + npc.getLoc().startY + "' AND minX='" + npc.getLoc().minX
 						+ "' AND maxX = '" + npc.getLoc().maxX + "' AND minY='" + npc.getLoc().minY
@@ -65,7 +65,7 @@ public final class Development implements CommandListener {
 			final GameObject object = player.getViewArea().getGameObject(Point.location(x, y));
 			if (object != null) {
 				DatabaseConnection.getDatabase()
-				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+					.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
 						+ "objects` WHERE `x` = '" + object.getX() + "' AND `y` =  '" + object.getY()
 						+ "' AND `id` = '" + object.getID() + "' AND `direction` = '" + object.getDirection()
 						+ "' AND `type` = '" + object.getType() + "'");
@@ -85,8 +85,8 @@ public final class Development implements CommandListener {
 			GameObject newObject = new GameObject(Point.location(x, y), id, 0, 0);
 			World.getWorld().registerGameObject(newObject);
 			DatabaseConnection.getDatabase()
-			.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
-						+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
+				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
 					+ newObject.getX() + "', '" + newObject.getY() + "', '" + newObject.getID() + "', '"
 					+ newObject.getDirection() + "', '" + newObject.getType() + "')");
 
@@ -104,7 +104,7 @@ public final class Development implements CommandListener {
 				direction = 0;
 			}
 			DatabaseConnection.getDatabase()
-			.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
+				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
 					+ object.getX() + "' AND `y` =  '" + object.getY() + "' AND `id` = '" + object.getID()
 					+ "' AND `direction` = '" + object.getDirection() + "' AND `type` = '" + object.getType()
 					+ "'");
@@ -114,7 +114,7 @@ public final class Development implements CommandListener {
 			World.getWorld().registerGameObject(newObject);
 
 			DatabaseConnection.getDatabase()
-			.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
+				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('" + newObject.getX() + "', '"
 					+ newObject.getY() + "', '" + newObject.getID() + "', '" + newObject.getDirection() + "', '"
 					+ newObject.getType() + "')");

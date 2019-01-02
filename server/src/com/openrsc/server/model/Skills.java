@@ -1,7 +1,5 @@
 package com.openrsc.server.model;
 
-import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
-
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -9,34 +7,41 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
+
 public class Skills {
 
+	public static final int SKILL_COUNT = 18;
+	public static final int MAXIMUM_EXP = 2000000000;
+	public static final String[] SKILL_NAME = {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
+		"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
+		"agility", "thieving"};
+	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITPOINTS = 3, RANGE = 4, PRAYER = 5, MAGIC = 6,
+		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
+		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20;
 	// Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
 	private static final int GLOBAL_LEVEL_LIMIT = 1000;
 	public static int[] experienceArray;
 
-	public static final int SKILL_COUNT = 18;
-
-	public static final int MAXIMUM_EXP = 2000000000;
-
-	public static final String[] SKILL_NAME = { "attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-			"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-			"agility", "thieving" };
-
-	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITPOINTS = 3, RANGE = 4, PRAYER = 5, MAGIC = 6,
-			COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-			MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20;
+	static {
+		int i = 0;
+		experienceArray = new int[GLOBAL_LEVEL_LIMIT + 5];
+		for (int j = 0; j < GLOBAL_LEVEL_LIMIT + 5; j++) {
+			int k = j + 1;
+			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
+			i += i1;
+			experienceArray[j] = (i & 0xffffffc);
+		}
+	}
 
 	private Mob mob;
-
 	private int[] levels = new int[SKILL_COUNT];
 	private int[] exps = new int[SKILL_COUNT];
 
 	/**
 	 * Creates a skills object.
-	 * 
-	 * @param mob
-	 *            The player whose skills this object represents.
+	 *
+	 * @param mob The player whose skills this object represents.
 	 */
 	public Skills(Mob mob) {
 		this.mob = mob;
@@ -48,9 +53,27 @@ public class Skills {
 		exps[3] = 4616;
 	}
 
+	public static int getLevelForExperience(int experience, int limit) {
+		for (int level = 0; level < limit - 1; level++) {
+			if (experience >= experienceArray[level])
+				continue;
+			return (level + 1);
+		}
+		return limit;
+	}
+
+	public static int experienceForLevel(int level) {
+		int lvlArrayIndex = level - 2;
+		if (lvlArrayIndex == -1)
+			return 0;
+		if (lvlArrayIndex < 0 || lvlArrayIndex > experienceArray.length)
+			return 0;
+		return experienceArray[lvlArrayIndex];
+	}
+
 	/**
 	 * Gets the total level.
-	 * 
+	 *
 	 * @return The total level.
 	 */
 	public int getTotalLevel() {
@@ -127,27 +150,8 @@ public class Skills {
 			sendUpdate(skill);
 	}
 
-
 	public int getLevel(int skill) {
 		return levels[skill];
-	}
-
-	public static int getLevelForExperience(int experience, int limit) {
-		for (int level = 0; level < limit - 1; level++) {
-			if (experience >= experienceArray[level])
-				continue;
-			return (level + 1);
-		}
-		return limit;
-	}
-
-	public static int experienceForLevel(int level) {
-		int lvlArrayIndex = level - 2;
-		if (lvlArrayIndex == -1)
-			return 0;
-		if (lvlArrayIndex < 0 || lvlArrayIndex > experienceArray.length)
-			return 0;
-		return experienceArray[lvlArrayIndex];
 	}
 
 	public int getExperience(int skill) {
@@ -170,13 +174,13 @@ public class Skills {
 				Player player = (Player) mob;
 				if (newLevel >= PLAYER_LEVEL_LIMIT - 5 && newLevel <= PLAYER_LEVEL_LIMIT - 1) {
 					GameLogging.addQuery(new LiveFeedLog(player,
-							"has achieved level-" + newLevel + " in " + SKILL_NAME[skill] + "!"));
+						"has achieved level-" + newLevel + " in " + SKILL_NAME[skill] + "!"));
 				} else if (newLevel == PLAYER_LEVEL_LIMIT) {
 					GameLogging.addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
-							+ " in " + SKILL_NAME[skill] + ", congratulations!"));
+						+ " in " + SKILL_NAME[skill] + ", congratulations!"));
 				}
 				player.message("@gre@You just advanced " + levelDiff + " " + SKILL_NAME[skill] + " level"
-						/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
+					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				ActionSender.sendSound((Player) mob, "advance");
 			}
 
@@ -238,16 +242,5 @@ public class Skills {
 
 	public void loadLevels(int[] lv) {
 		this.levels = lv;
-	}
-
-	static {
-		int i = 0;
-		experienceArray = new int[GLOBAL_LEVEL_LIMIT + 5];
-		for (int j = 0; j < GLOBAL_LEVEL_LIMIT + 5; j++) {
-			int k = j + 1;
-			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
-			i += i1;
-			experienceArray[j] = (i & 0xffffffc);
-		}
 	}
 }

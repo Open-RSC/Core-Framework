@@ -1,14 +1,9 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.event.rsc.SingleTickEvent;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
-import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.PluginHandler;
 
 public class BenignProjectileEvent extends SingleTickEvent {
 

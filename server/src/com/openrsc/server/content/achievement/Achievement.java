@@ -3,10 +3,19 @@ package com.openrsc.server.content.achievement;
 import java.util.ArrayList;
 
 public class Achievement {
-	
+
+	private ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
+	private ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
+	private int id;
+	private String name;
+	private String title;
+	private String desc;
+	private AchievementType achievementType;
+	private int startID;
+
 	public Achievement(ArrayList<AchievementTask> tasks,
-			ArrayList<AchievementReward> rewards,
-			int id, String name, String title, String desc) {
+					   ArrayList<AchievementReward> rewards,
+					   int id, String name, String title, String desc) {
 		this.tasks = tasks;
 		this.rewards = rewards;
 		this.id = id;
@@ -15,38 +24,14 @@ public class Achievement {
 		this.desc = desc;
 	}
 
-	private ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
-	private ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
-	
-	private int id;
-	private String name;
-	private String title;
-	private String desc;
-	
-	private AchievementType achievementType;
-	
-	private int startID;
-	
-	public enum AchievementType {
-		TALK_TO_NPC,
-		PICK_UP_ITEM,
-		USE_OBJECT
-	}
-
-	public enum TaskType {
-		KILL_NPC, GATHER_ITEM, TALK_TO_NPC, DO_QUEST,
-	}
-
-	public enum TaskReward {
-		ITEM, EXPERIENCE,
-	}
-
 	public String getName() {
 		return name;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public String getDesc() {
 		return desc;
 	}
@@ -78,5 +63,19 @@ public class Achievement {
 
 	public void setStartID(int startID) {
 		this.startID = startID;
+	}
+
+	public enum AchievementType {
+		TALK_TO_NPC,
+		PICK_UP_ITEM,
+		USE_OBJECT
+	}
+
+	public enum TaskType {
+		KILL_NPC, GATHER_ITEM, TALK_TO_NPC, DO_QUEST,
+	}
+
+	public enum TaskReward {
+		ITEM, EXPERIENCE,
 	}
 }

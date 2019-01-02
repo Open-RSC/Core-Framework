@@ -18,13 +18,13 @@ public class Duel implements ContainerListener {
 	private Player duelRecipient;
 
 	private boolean[] duelOptions = new boolean[4];
-	
+
 	private boolean duelAccepted;
-	
+
 	private boolean duelConfirmAccepted;
-	
+
 	private boolean duelActive;
-	
+
 	private ItemContainer duelOffer;
 
 	public Duel(Player player) {
@@ -32,7 +32,7 @@ public class Duel implements ContainerListener {
 		this.duelOffer = new ItemContainer(player, 12, false);
 	}
 
-	
+
 	public Player getPlayer() {
 		return player;
 	}
@@ -96,51 +96,52 @@ public class Duel implements ContainerListener {
 	@Override
 	public void fireItemChanged(int slot) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void clearDuelOptions() {
 		for (int i = 0; i < 4; i++) {
 			duelOptions[i] = false;
 		}
 	}
-	
+
 	public boolean getDuelSetting(int i) {
 		return duelOptions[i];
 	}
-	
+
 	public void setDuelSetting(int i, boolean b) {
 		duelOptions[i] = b;
 	}
-	
+
 	@Override
 	public void fireItemsChanged() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void fireContainerFull() {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	public void resetAll() {
 		Player duelOpponent = getDuelRecipient();
-		
-		if(duelOpponent != null) {
+
+		if (duelOpponent != null) {
 			setDuelRecipient(null);
 			duelOpponent.getDuel().resetAll();
 		}
-		
+
 		if (isDuelActive()) {
 			ActionSender.sendDuelWindowClose(player);
 			player.setStatus(Action.IDLE);
 		}
-		
+
 		setDuelActive(false);
 		setDuelAccepted(false);
 		setDuelConfirmAccepted(false);
-		
+
 		resetDuelOffer();
 		clearDuelOptions();
 	}
@@ -163,7 +164,7 @@ public class Duel implements ContainerListener {
 			Item affectedItem = player.getInventory().get(item);
 			if (affectedItem == null) {
 				LOGGER.info("Missing staked item [" + item.getID() + ", " + item.getAmount()
-						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
+					+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
 				continue;
 			}
 			player.getInventory().remove(item);
@@ -172,8 +173,8 @@ public class Duel implements ContainerListener {
 		}
 		log.build();
 		GameLogging.addQuery(log);
-		
-		if(player != null && duelOpponent != null) {
+
+		if (player != null && duelOpponent != null) {
 			player.save();
 			duelOpponent.save();
 		}

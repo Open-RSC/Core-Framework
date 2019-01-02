@@ -18,14 +18,14 @@ public class PlayerOnlineFlagQuery extends Query {
 		this.loginIP = loginIP;
 		this.online = online;
 	}
-	
+
 	public PlayerOnlineFlagQuery(int playerID, boolean online) {
 		super("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "players` SET `online`=? WHERE `id`=?");
 		this.playerID = playerID;
 		this.online = online;
 		loginIP = null;
 	}
-	
+
 	@Override
 	public Query build() {
 		return this;
@@ -36,7 +36,7 @@ public class PlayerOnlineFlagQuery extends Query {
 		PreparedStatement statement = connection.prepareStatement(query);
 		int id = 1;
 		statement.setInt(id++, online ? 1 : 0);
-		if(loginIP != null) {
+		if (loginIP != null) {
 			statement.setLong(id++, time);
 			statement.setString(id++, loginIP);
 		}

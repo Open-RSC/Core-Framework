@@ -12,13 +12,13 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class GaiusTwoHandlerShop  implements ShopInterface,
-		TalkToNpcListener, TalkToNpcExecutiveListener {
+public class GaiusTwoHandlerShop implements ShopInterface,
+	TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	private final int GAIUS = 228;
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2,
-			new Item(76, 4), new Item(77, 3), new Item(78, 2),
-			new Item(426, 1), new Item(79, 1), new Item(80, 1));
+		new Item(76, 4), new Item(77, 3), new Item(78, 2),
+		new Item(426, 1), new Item(79, 1), new Item(80, 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -27,7 +27,7 @@ public class GaiusTwoHandlerShop  implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class GaiusTwoHandlerShop  implements ShopInterface,
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to my two handed sword shop");
-		final int option = showMenu(p, n, new String[] { "Let's trade",
-				"Thankyou" });
+		final int option = showMenu(p, n, new String[]{"Let's trade",
+			"Thankyou"});
 		if (option == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);

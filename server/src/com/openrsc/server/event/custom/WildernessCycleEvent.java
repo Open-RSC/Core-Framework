@@ -15,11 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class WildernessCycleEvent extends DelayedEvent {
-	
+
 	/**
-     * The asynchronous logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger();
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private long lastWildernessChange;
 
@@ -45,10 +45,10 @@ public class WildernessCycleEvent extends DelayedEvent {
 					if (lastWildernessType != databaseWildType) {
 						lastWildernessType = databaseWildType;
 						World.getWorld()
-								.sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
-										+ ". Next change in " + timeUntilChange() + " hours.");
+							.sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
+								+ ". Next change in " + timeUntilChange() + " hours.");
 					}
-					
+
 				}
 
 				@Override
@@ -69,7 +69,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 					lastWildernessType = 0;
 				}
 				World.getWorld().sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
-						+ ". Next change in " + timeUntilChange() + " hours.");
+					+ ". Next change in " + timeUntilChange() + " hours.");
 
 				GameLogging.addQuery(new Query("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
 
@@ -89,28 +89,28 @@ public class WildernessCycleEvent extends DelayedEvent {
 			}
 
 			switch (lastWildernessType) {
-			case 0:
-			case 1:
-				World.godSpellsStart = 60;
-				World.godSpellsMax = 60;
+				case 0:
+				case 1:
+					World.godSpellsStart = 60;
+					World.godSpellsMax = 60;
 
-				World.membersWildStart = 48;
-				World.membersWildMax = 60;
-				break;
-			case 2:
-				World.godSpellsStart = 0;
-				World.godSpellsMax = 60;
+					World.membersWildStart = 48;
+					World.membersWildMax = 60;
+					break;
+				case 2:
+					World.godSpellsStart = 0;
+					World.godSpellsMax = 60;
 
-				World.membersWildStart = 0;
-				World.membersWildMax = 60;
-				break;
-			case 3:
-				World.godSpellsStart = 60;
-				World.godSpellsMax = 60;
+					World.membersWildStart = 0;
+					World.membersWildMax = 60;
+					break;
+				case 3:
+					World.godSpellsStart = 60;
+					World.godSpellsMax = 60;
 
-				World.membersWildStart = 0;
-				World.membersWildMax = 60;
-				break;
+					World.membersWildStart = 0;
+					World.membersWildMax = 60;
+					break;
 			}
 
 		} catch (Exception e) {
@@ -121,18 +121,18 @@ public class WildernessCycleEvent extends DelayedEvent {
 	private String getFriendlyString(int lastWildernessType) {
 		String friendlyString = "";
 		switch (lastWildernessType) {
-		case 0:
-			friendlyString = "Fully F2P";
-			break;
-		case 1:
-			friendlyString = "Fully F2P";
-			break;
-		case 2:
-			friendlyString = "Fully P2P /w god spells";
-			break;
-		case 3:
-			friendlyString = "Fully P2P /w out god spells";
-			break;
+			case 0:
+				friendlyString = "Fully F2P";
+				break;
+			case 1:
+				friendlyString = "Fully F2P";
+				break;
+			case 2:
+				friendlyString = "Fully P2P /w god spells";
+				break;
+			case 3:
+				friendlyString = "Fully P2P /w out god spells";
+				break;
 		}
 		return friendlyString;
 	}

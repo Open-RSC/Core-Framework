@@ -49,7 +49,7 @@ public class CaptchaGenerator {
 			currentX += gfx.getFontMetrics().charWidth(captcha.charAt(i)) + (DataConversions.random(5, 10));
 		}
 		p.setSleepword(captcha);
-		try(final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			ImageIO.setUseCache(false);
 			ImageIO.write(image, "PNG", baos);
 			return baos.toByteArray();
@@ -68,8 +68,8 @@ public class CaptchaGenerator {
 	public static void loadFonts() {
 		words.clear();
 		try (final BufferedReader br = new BufferedReader(new FileReader(
-				new File(System.getProperty("user.dir") + File.separator + "conf" + File.separator + "server" + File.separator + "words.list")))) {
-			for (String line; (line = br.readLine()) != null;)
+			new File(System.getProperty("user.dir") + File.separator + "conf" + File.separator + "server" + File.separator + "words.list")))) {
+			for (String line; (line = br.readLine()) != null; )
 				words.add(line);
 		} catch (final IOException e1) {
 			LOGGER.catching(e1);
@@ -78,12 +78,12 @@ public class CaptchaGenerator {
 		final String[] fonts = fontFolderFile.list();
 		loadedFonts = new Font[fonts.length];
 		for (int i = 0; i < fonts.length; i++)
-			try(final FileInputStream fontStream = new FileInputStream(fontFolder + fonts[i])) {
+			try (final FileInputStream fontStream = new FileInputStream(fontFolder + fonts[i])) {
 				final Font temp = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, fontStream);
 				loadedFonts[i] = temp.deriveFont(Float.valueOf(DataConversions.random(25, 35)));
 			} catch (final Exception e) {
 				LOGGER.catching(e);
-			} 
+			}
 		LOGGER.info("Loaded " + fonts.length + " fonts.");
 	}
 }

@@ -8,7 +8,8 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.removeItem;
 
 public class KittenToCat implements DropListener, DropExecutiveListener, InvActionListener, InvActionExecutiveListener {
 

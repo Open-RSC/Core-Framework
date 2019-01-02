@@ -11,7 +11,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class BuyMarketItemTask extends MarketTask {
-	
+
 	private Player playerBuyer;
 	private int auctionID;
 	private int amount;
@@ -21,12 +21,12 @@ public class BuyMarketItemTask extends MarketTask {
 		this.auctionID = auctionID;
 		this.amount = amount;
 	}
-	
+
 	@Override
-	public void doTask()  throws Exception {
+	public void doTask() throws Exception {
 		MarketItem item = MarketDatabase.getAuctionItem(auctionID);
-	
-		if(item == null) {
+
+		if (item == null) {
 			ActionSender.sendBox(playerBuyer, "@red@[Auction House - Error] % @whi@ This item is sold out! % Click 'Refresh' to update the Auction.", false);
 			return;
 		}
@@ -38,7 +38,7 @@ public class BuyMarketItemTask extends MarketTask {
 			ActionSender.sendBox(playerBuyer, "@red@[Auction House - Error] % @whi@ You can't buy your own object, please select another item. % Or cancel this item from the 'My Auction' tab.", false);
 			return;
 		}
-		
+
 		if (amount > item.getAmountLeft()) {
 			amount = item.getAmountLeft();
 		}
@@ -53,7 +53,7 @@ public class BuyMarketItemTask extends MarketTask {
 
 		ItemDefinition def = EntityHandler.getItemDef(item.getItemID());
 		if (!playerBuyer.getInventory().full()
-				&& (!def.isStackable() && playerBuyer.getInventory().size() + amount <= 30)) {
+			&& (!def.isStackable() && playerBuyer.getInventory().size() + amount <= 30)) {
 			if (!def.isStackable()) {
 				for (int i = 0; i < amount; i++)
 					playerBuyer.getInventory().add(new Item(item.getItemID(), 1));
@@ -63,35 +63,33 @@ public class BuyMarketItemTask extends MarketTask {
 			playerBuyer.getInventory().remove(10, auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your inventory.", false);
 			playerBuyer.save();
-		}
-		else if (!playerBuyer.getBank().full()) {
+		} else if (!playerBuyer.getBank().full()) {
 			playerBuyer.getBank().add(new Item(item.getItemID(), amount));
 			playerBuyer.getInventory().remove(10, auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your bank.", false);
 			playerBuyer.save();
-		}
-		else {
+		} else {
 			ActionSender.sendBox(playerBuyer, "@red@[Auction House - Error] % @whi@ Unable to buy auction, no space left in your inventory or bank.", false);
 			return;
 		}
 
 		int sellerUsernameID = item.getSeller();
 		Player sellerPlayer = World.getWorld().getPlayerID(sellerUsernameID);
-		
+
 		if (sellerPlayer != null) {
 			sellerPlayer.message("@gre@[Auction House]@lre@ " + amount + "x " + def.getName() + "@whi@ has been sold!");
 			sellerPlayer.message("@gre@[Auction House]@whi@ You can collect your earnings from a bank.");
 			sellerPlayer.save();
 		}
 
-		MarketDatabase.addCollectableItem("Sold " + def.getName() + "("+ item.getItemID() +") x" + amount + " for " + auctionPrice + "gp", 10, auctionPrice, sellerUsernameID);
+		MarketDatabase.addCollectableItem("Sold " + def.getName() + "(" + item.getItemID() + ") x" + amount + " for " + auctionPrice + "gp", 10, auctionPrice, sellerUsernameID);
 		item.setBuyers(!item.getBuyers().isEmpty() ? item.getBuyers() + ", \n" + "[" + (System.currentTimeMillis() / 1000) + ": "
-				+ playerBuyer.getUsername() + ": x" + amount + "]" : "[" + (System.currentTimeMillis() / 1000) + ": "
-				+ playerBuyer.getUsername() + ": x" + amount + "]");
-		
+			+ playerBuyer.getUsername() + ": x" + amount + "]" : "[" + (System.currentTimeMillis() / 1000) + ": "
+			+ playerBuyer.getUsername() + ": x" + amount + "]");
+
 		item.setAmountLeft(item.getAmountLeft() - amount);
 		item.setPrice(item.getAmountLeft() * priceForEach);
-		
+
 		if (item.getAmountLeft() == 0) {
 			MarketDatabase.setSoldOut(item);
 		} else {
