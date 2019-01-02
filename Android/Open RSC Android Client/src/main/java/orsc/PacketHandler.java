@@ -703,8 +703,8 @@ public class PacketHandler {
 		String formerName = packetsIncoming.readString();
 		int icon = packetsIncoming.get32();
 		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
-		mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
-	}
+		mc.showMessage(true, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
+  }
 
 	private void sendPrivateMessage() {
 		String var13 = packetsIncoming.readString();
@@ -1868,7 +1868,7 @@ public class PacketHandler {
 						if (!var29) {
 							player.messageTimeout = 150;
 							player.message = message;
-							mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.getStaffName(false) : player.getStaffName(false)), player.message,
+							mc.showMessage(!Config.S_WANT_CUSTOM_RANK_DISPLAY, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@yel@ " + player.getStaffName() : player.getStaffName()), player.message,
 								MessageType.CHAT, crownID, player.accountName);
 
 						}
@@ -1881,7 +1881,7 @@ public class PacketHandler {
 						player.message = message;
 						player.messageTimeout = 150;
 						if (mc.getLocalPlayer() == player) {
-							mc.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.getStaffName(true) : player.getStaffName(true)), player.message, MessageType.QUEST, 0, player.accountName);
+							mc.showMessage(false, (player.clanTag != null ? "@whi@[@cla@" + player.clanTag + "@whi@]@whi@ " + player.getStaffName() : player.getStaffName()), player.message, MessageType.QUEST, 0, player.accountName);
 						}
 					}
 				}

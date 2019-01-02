@@ -975,7 +975,7 @@ public final class mudclient implements Runnable {
 			try {
 
 				ORSCharacter player = this.players[index];
-				String name = player.getStaffName(true);
+				String name = player.getStaffName();
 				int var5 = 2203 - this.midRegionBaseZ - this.playerLocalZ - this.worldOffsetZ;
 				if (this.midRegionBaseX + this.playerLocalX + this.worldOffsetX >= 2640) {
 					var5 = -50;
@@ -1052,7 +1052,7 @@ public final class mudclient implements Runnable {
 							"@whi@" + name + level);
 					this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_FOLLOW, "Follow",
 							"@whi@" + name + level);
-					this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(true),
+					this.menuCommon.addItem_With2Strings("Report abuse", "@whi@" + name + level, player.getStaffName(),
 							MenuItemAction.REPORT_ABUSE, player.accountName);
 					if (modMenu) {
 						this.menuCommon.addItem_With2Strings("Summon", "@whi@" + name, player.displayName,
@@ -4858,7 +4858,7 @@ public final class mudclient implements Runnable {
 					if (Config.S_SHOW_FLOATING_NAMETAGS) {
 						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.displayName != null)
-								this.getSurface().drawShadowText(player.getStaffName(true), (width - this.getSurface().stringWidth(0, player.getStaffName())) / 2 + x + 1, y - 14, 0xffff00, 0, false);
+								this.getSurface().drawShadowText(player.getStaffName(), (width - this.getSurface().stringWidth(0, player.getStaffName())) / 2 + x + 1, y - 14, 0xffff00, 0, false);
 						}
 						if (Config.C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0) {
 							if (player.clanTag != null)
