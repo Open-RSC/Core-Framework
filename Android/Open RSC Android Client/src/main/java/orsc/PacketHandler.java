@@ -704,7 +704,7 @@ public class PacketHandler {
 		int icon = packetsIncoming.get32();
 		String message = RSBufferUtils.getEncryptedString(packetsIncoming);
 		mc.showMessage(true, sender, message, MessageType.PRIVATE_RECIEVE, icon, formerName);
-	}
+  }
 
 	private void sendPrivateMessage() {
 		String var13 = packetsIncoming.readString();
