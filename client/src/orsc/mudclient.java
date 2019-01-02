@@ -4484,12 +4484,12 @@ public final class mudclient implements Runnable {
 				}
 
 				this.panelLogin.drawPanel();
-			}
 
-			this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
-			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
-			// this.screenOffsetY);
-			clientPort.draw();
+				this.getSurface().drawSpriteClipping(spriteMedia + 22, 0, getGameHeight(), getGameWidth(), 10, 0, 0, false, 0, 1);
+				// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
+				// this.screenOffsetY);
+				clientPort.draw();
+			}
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.R(" + 2540 + ')');
 		}
