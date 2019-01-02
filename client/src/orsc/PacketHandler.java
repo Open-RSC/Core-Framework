@@ -748,7 +748,7 @@ public class PacketHandler {
 			experienceDropsToggle = this.getClientStream().getUnsignedByte();
 			itemsOnDeathMenu = this.getClientStream().getUnsignedByte();
 			showRoofToggle = this.getClientStream().getUnsignedByte();
-			Config.C_SHOW_ROOF = showRoofToggle != 1; // If we don't want the toggle, always show.
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantGlobalChat = this.getClientStream().getUnsignedByte();
 			wantSkillMenus = this.getClientStream().getUnsignedByte();
 			wantQuestMenus = this.getClientStream().getUnsignedByte();
@@ -787,7 +787,7 @@ public class PacketHandler {
 			experienceDropsToggle = packetsIncoming.getUnsignedByte();
 			itemsOnDeathMenu = packetsIncoming.getUnsignedByte();
 			showRoofToggle = packetsIncoming.getUnsignedByte();
-			Config.C_SHOW_ROOF = showRoofToggle != 1; // If we don't want the toggle, always show.
+			Config.C_HIDE_ROOFS = showRoofToggle != 1; // If we don't want the toggle, always show.
 			wantGlobalChat = packetsIncoming.getUnsignedByte();
 			wantSkillMenus = packetsIncoming.getUnsignedByte();
 			wantQuestMenus = packetsIncoming.getUnsignedByte();
