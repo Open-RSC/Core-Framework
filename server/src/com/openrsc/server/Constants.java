@@ -187,6 +187,7 @@ public final class Constants {
 		public static boolean VALUABLE_DROP_EXTRAS = false;
 		public static String VALUABLE_DROP_ITEMS = "";
 		public static boolean WANT_CUSTOM_RANK_DISPLAY = false;
+		public static boolean RIGHT_CLICK_BANK = false;
 
 		/**
 		 *
@@ -253,6 +254,7 @@ public final class Constants {
 			WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
 			WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));
 			WANT_KEYBOARD_SHORTCUTS = Boolean.parseBoolean(props.getProperty("want_keyboard_shortcuts"));
+			RIGHT_CLICK_BANK = Boolean.parseBoolean(props.getProperty("right_click_bank"));
 			WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
 			WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
 			WANT_BANK_NOTES = Boolean.parseBoolean(props.getProperty("want_bank_notes"));
