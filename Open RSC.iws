@@ -2,27 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/OpenRSC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/DecoderThreadFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/DecoderThreadFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/FastThreadFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/FastThreadFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/GameEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/SlowThreadFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/core/SlowThreadFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/AppFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/ControlButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/ControlButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LaunchButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LaunchButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LinkButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/LinkButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/NavButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/elements/NavButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/ButtonListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/PositionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/listeners/PositionListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/popup/PopupFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/popup/PopupFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/threads/StatusChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/threads/StatusChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/ui/CustomBarUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/frame/ui/CustomBarUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/net/Downloader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ClientLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ConnectHttps.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/ConnectHttps.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Launcher/src/com/loader/openrsc/util/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,17 +15,7 @@
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -88,25 +58,15 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Open RSC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Launcher" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1546468370637" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1546486949802" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Tools/Map Generator/build.xml" />
@@ -127,7 +87,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.Launcher">
+  <component name="RunManager" selected="Ant Target.Client">
     <configuration name="Client" type="AntRunConfiguration">
       <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
       <method v="2">
@@ -136,12 +96,6 @@
     </configuration>
     <configuration name="Launcher" type="AntRunConfiguration">
       <antsettings antfile="file://$PROJECT_DIR$/Launcher/build.xml" target="compile-and-run" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Map Generator" type="AntRunConfiguration">
-      <antsettings antfile="file://$PROJECT_DIR$/Tools/Map Generator/build.xml" target="compile-and-run" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -177,7 +131,6 @@
       <item itemvalue="Ant Target.Sprite Editor" />
       <item itemvalue="Ant Target.Sprite Packer" />
       <item itemvalue="Ant Target.Sprite Unpacker" />
-      <item itemvalue="Ant Target.Map Generator" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -202,9 +155,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="53" y="23" width="1627" height="1027" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13123028" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13123028" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -224,6 +176,7 @@
       <window_info active="true" anchor="bottom" id="Messages" order="10" visible="true" weight="0.32406417" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="right" id="Fabric" weight="0.32996845" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.052615844" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -417,8 +370,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Launcher/src/com/loader/openrsc/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="150">
+          <caret line="10" column="23" lean-forward="true" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
         </state>
       </provider>
     </entry>
