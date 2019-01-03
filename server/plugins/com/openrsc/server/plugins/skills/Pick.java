@@ -11,13 +11,13 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import static com.openrsc.server.plugins.Functions.addItem;
 
 public final class Pick implements ObjectActionExecutiveListener,
-		ObjectActionListener {
+	ObjectActionListener {
 
 	@Override
 	public boolean blockObjectAction(final GameObject obj,
-			final String command, final Player player) {
+									 final String command, final Player player) {
 		return command.equals("pick")
-				|| /* Flax */obj.getID() == 313;
+			|| /* Flax */obj.getID() == 313;
 	}
 
 	private void handleFlaxPickup(final Player owner, GameObject obj) {
@@ -28,32 +28,32 @@ public final class Pick implements ObjectActionExecutiveListener,
 
 	@Override
 	public void onObjectAction(final GameObject object, final String command,
-			final Player owner) {
+							   final Player owner) {
 		switch (object.getID()) {
-		case 72: // Wheat
-			owner.message("You get some grain");
-			owner.getInventory().add(new Item(29, 1));
-			break;
-		case 191: // Potatos
-			owner.message("You pick a potato");
-			owner.getInventory().add(new Item(348, 1));
-			break;
-		case 313: // Flax
-			handleFlaxPickup(owner, object);
-			return;
-		default:
-			owner.message("Nothing interesting happens");
-			return;
+			case 72: // Wheat
+				owner.message("You get some grain");
+				owner.getInventory().add(new Item(29, 1));
+				break;
+			case 191: // Potatos
+				owner.message("You pick a potato");
+				owner.getInventory().add(new Item(348, 1));
+				break;
+			case 313: // Flax
+				handleFlaxPickup(owner, object);
+				return;
+			default:
+				owner.message("Nothing interesting happens");
+				return;
 		}
 		owner.playSound("potato");
 		owner.setBusy(true);
 		Server.getServer().getEventHandler().add(
-				new SingleEvent(owner, 600) {
-					@Override
-					public void action() {
-						owner.setBusy(false);
-					}
-				});
+			new SingleEvent(owner, 600) {
+				@Override
+				public void action() {
+					owner.setBusy(false);
+				}
+			});
 		return;
 	}
 }

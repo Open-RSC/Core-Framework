@@ -25,17 +25,17 @@ public final class RegularPlayer implements CommandListener {
 
 	@Override
 	public void onCommand(String command, String[] args, Player player) {
-		if(!Constants.GameServer.PLAYER_COMMANDS && player.isMod() || !Constants.GameServer.PLAYER_COMMANDS && player.isAdmin()) {
-		    this.handleCommand(command, player, args);
-        } else if(!Constants.GameServer.PLAYER_COMMANDS) {
-		    return;
-        } else {
-            this.handleCommand(command, player, args);
-        }
+		if (!Constants.GameServer.PLAYER_COMMANDS && player.isMod() || !Constants.GameServer.PLAYER_COMMANDS && player.isAdmin()) {
+			this.handleCommand(command, player, args);
+		} else if (!Constants.GameServer.PLAYER_COMMANDS) {
+			return;
+		} else {
+			this.handleCommand(command, player, args);
+		}
 	}
 
 	private void handleCommand(String command, Player player, String[] args) {
-		if(command.equalsIgnoreCase("gang")) {
+		if (command.equalsIgnoreCase("gang")) {
 			if (isBlackArmGang(player)) {
 				player.message("You are a member of the Black Arm Gang");
 			} else if (isPhoenixGang(player)) {
@@ -44,15 +44,15 @@ public final class RegularPlayer implements CommandListener {
 				player.message("You are not in a gang - you need to start the shield of arrav quest");
 			}
 		}
-		if(command.equalsIgnoreCase("ip")) {
+		if (command.equalsIgnoreCase("ip")) {
 			player.message("IP in wild: " + World.getWildernessIPTracker().ipCount(player.getCurrentIP()));
 		}
-		if(command.equalsIgnoreCase("wilderness")) {
+		if (command.equalsIgnoreCase("wilderness")) {
 			int TOTAL_PLAYERS_IN_WILDERNESS = 0;
 			int PLAYERS_IN_F2P_WILD = 0;
 			int PLAYERS_IN_P2P_WILD = 0;
 			int EDGE_DUNGEON = 0;
-			for(Player p : World.getWorld().getPlayers()) {
+			for (Player p : World.getWorld().getPlayers()) {
 				if (p.getLocation().inWilderness()) {
 					TOTAL_PLAYERS_IN_WILDERNESS++;
 				}
@@ -62,16 +62,16 @@ public final class RegularPlayer implements CommandListener {
 				if ((p.getLocation().wildernessLevel() >= 48 && p.getLocation().wildernessLevel() <= 56)) {
 					PLAYERS_IN_P2P_WILD++;
 				}
-				if(p.getLocation().inBounds(195, 3206, 234, 3258)) {
+				if (p.getLocation().inBounds(195, 3206, 234, 3258)) {
 					EDGE_DUNGEON++;
 				}
 			}
 
-			ActionSender.sendBox(player, "There are currently @red@" + TOTAL_PLAYERS_IN_WILDERNESS + " @whi@player"+(TOTAL_PLAYERS_IN_WILDERNESS == 1 ? "" : "s") + " in wilderness % %"
-							+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player"+(PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
-							+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player"+(PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
-							+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player"+(EDGE_DUNGEON == 1 ? "" : "s") + " %"
-					, false);
+			ActionSender.sendBox(player, "There are currently @red@" + TOTAL_PLAYERS_IN_WILDERNESS + " @whi@player" + (TOTAL_PLAYERS_IN_WILDERNESS == 1 ? "" : "s") + " in wilderness % %"
+					+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player" + (PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
+					+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
+					+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
+				, false);
 		}
 		if (command.equalsIgnoreCase("c") && Constants.GameServer.WANT_CLANS) {
 			if (player.getClan() == null) {
@@ -91,24 +91,24 @@ public final class RegularPlayer implements CommandListener {
 		if (command.equalsIgnoreCase("claninvite") && Constants.GameServer.WANT_CLANS) {
 			long invitePlayer = DataConversions.usernameToHash(args[0]);
 			Player invited = World.getWorld().getPlayer(invitePlayer);
-			if(!player.getClan().isAllowed(1, player)) {
+			if (!player.getClan().isAllowed(1, player)) {
 				player.message("You are not allowed to invite into clan.");
 				return;
 			}
-			if(invited != null) {
+			if (invited != null) {
 				ClanInvite.createClanInvite(player, invited);
 			} else {
 				ActionSender.sendBox(player, "Player is not online or could not be found!", false);
 			}
 		}
 		if (command.equalsIgnoreCase("clankick") && Constants.GameServer.WANT_CLANS) {
-			if(player.getClan() != null) {
+			if (player.getClan() != null) {
 				String playerToKick = args[0].replace("_", " ");
-				if(!player.getClan().isAllowed(0, player)) {
+				if (!player.getClan().isAllowed(0, player)) {
 					player.message("You are not allowed to kick.");
 					return;
 				}
-				if(player.getClan().getLeader().getUsername().equals(playerToKick)) {
+				if (player.getClan().getLeader().getUsername().equals(playerToKick)) {
 					player.message("You can't kick the leader.");
 					return;
 				}
@@ -120,11 +120,11 @@ public final class RegularPlayer implements CommandListener {
 			long timePlayed = player.getCache().getLong("total_played");
 
 			ActionSender.sendBox(player,
-					"@lre@Player Information: %"
-							+ " %"
-							+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
-							+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-					, true);
+				"@lre@Player Information: %"
+					+ " %"
+					+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
+					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
+				, true);
 			return;
 		}
 		if (command.equalsIgnoreCase("event")) {
@@ -135,13 +135,13 @@ public final class RegularPlayer implements CommandListener {
 			if (player.getLocation().inWilderness()) {
 				player.message("Please move out of wilderness first");
 				return;
-			} else if(player.getLocation().inModRoom()){
+			} else if (player.getLocation().inModRoom()) {
 				player.message("You can't participate to events from here..");
 				return;
 			}
 			if (player.getCombatLevel() > World.EVENT_COMBAT_MAX || player.getCombatLevel() < World.EVENT_COMBAT_MIN) {
 				player.message("This event is only for combat level range: " + World.EVENT_COMBAT_MIN + " - "
-						+ World.EVENT_COMBAT_MAX);
+					+ World.EVENT_COMBAT_MAX);
 				return;
 			}
 			player.teleport(World.EVENT_X, World.EVENT_Y);
@@ -164,7 +164,7 @@ public final class RegularPlayer implements CommandListener {
 
 			long waitTime = 15000;
 
-			if(player.isMod()) {
+			if (player.isMod()) {
 				waitTime = 0;
 			}
 
@@ -193,16 +193,16 @@ public final class RegularPlayer implements CommandListener {
 				if (p.getGlobalBlock() == 3 && channel == 2) {
 					continue;
 				}
-				if(p.getGlobalBlock() == 4 && channel == 1) {
+				if (p.getGlobalBlock() == 4 && channel == 1) {
 					continue;
 				}
 				if (p.getGlobalBlock() != 2) {
 					String header = "";
 					ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getUsername() + ": "
-							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
+						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
 				}
 			}
-			if(command.equals("g")) {
+			if (command.equals("g")) {
 				GameLogging.addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 			} else {
@@ -239,40 +239,39 @@ public final class RegularPlayer implements CommandListener {
 		}
 		if (command.equals("onlinelist")) {
 			String boxTextPlayerNames = "";
-			for(Player p : World.getWorld().getPlayers()) {
+			for (Player p : World.getWorld().getPlayers()) {
 				boxTextPlayerNames += p.getUsername() + "%";
 			}
-			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames,true);
+			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames, true);
 
 			return;
 		}
-		if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks"))
-		{
-			ArrayList<String> groups    = new ArrayList();
+		if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks")) {
+			ArrayList<String> groups = new ArrayList();
 			for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
 				groups.add(Group.getStaffPrefix(entry.getKey()) + entry.getValue() + (player.isDev() ? " (" + entry.getKey() + ")" : ""));
 			}
 
 			ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 		}
-		if(command.equals("commands")) {
+		if (command.equals("commands")) {
 			ActionSender.sendBox(player, ""
-					+ "@yel@Commands available: %"
-					+ "Type :: before you enter your command, see the list below. % %"
-					+ "@whi@::info - shows player and server information %"
-					+ "@whi@::online - shows players currently online %"
-					+ "@whi@::onlinelist - shows players currently online in a list %"
-					+ "@whi@::skull - sets you skulled for 20 minutes %"
-					+ "@whi@::fatigue - gives you 100 percent fatigue %"
-					+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
-					+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
-					+ "@whi@::event - to enter an ongoing server event %"
-					+ "@whi@::c <message> - talk in clan chat %"
-					+ "@whi@::claninvite <name> - invite player to clan %"
-					+ "@whi@::clankick <name> - kick player from clan %"
-					+ "@whi@::clanaccept - accept clan invitation %"
-					+ "@whi@::gang - shows if you are 'Pheonix' or 'Black arm' gang %"
-					+ "@whi@::wilderness - shows the wilderness activity", true);
+				+ "@yel@Commands available: %"
+				+ "Type :: before you enter your command, see the list below. % %"
+				+ "@whi@::info - shows player and server information %"
+				+ "@whi@::online - shows players currently online %"
+				+ "@whi@::onlinelist - shows players currently online in a list %"
+				+ "@whi@::skull - sets you skulled for 20 minutes %"
+				+ "@whi@::fatigue - gives you 100 percent fatigue %"
+				+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
+				+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
+				+ "@whi@::event - to enter an ongoing server event %"
+				+ "@whi@::c <message> - talk in clan chat %"
+				+ "@whi@::claninvite <name> - invite player to clan %"
+				+ "@whi@::clankick <name> - kick player from clan %"
+				+ "@whi@::clanaccept - accept clan invitation %"
+				+ "@whi@::gang - shows if you are 'Pheonix' or 'Black arm' gang %"
+				+ "@whi@::wilderness - shows the wilderness activity", true);
 			return;
 		}
 	}

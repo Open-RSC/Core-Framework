@@ -26,9 +26,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- *
  * @author n0m
- *
  */
 public final class GameStateUpdater {
 
@@ -40,71 +38,6 @@ public final class GameStateUpdater {
 
 	private final EntityList<Player> players = World.getWorld().getPlayers();
 	private final EntityList<Npc> npcs = World.getWorld().getNpcs();
-
-	public void doUpdates() throws Exception {
-		processPlayers();
-		processNpcs();
-		processMessageQueues();
-		updateClients();
-		doCleanup();
-		executeWalkToActions();
-		/*final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
-		final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
-		for (int x = 0; x < HORIZONTAL_PLANES; ++x)
-			for (int y = 0; y < VERTICAL_PLANES; ++y) {
-				Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE, y * RegionManager.REGION_SIZE);
-				if (r != null)
-					for (Iterator<Player> i = r.getPlayers().iterator(); i.hasNext();) {
-						if (i.next().isRemoved())
-							i.remove();
-					}
-			}*/
-	}
-
-	public void updateClients() {
-		for (Player p : players) {
-			sendUpdatePackets(p);
-			p.process();
-		}
-	}
-
-	public void doCleanup() {// it can do the teleport at this time.
-		/*
-		 * Reset the update related flags and unregister npcs flagged as
-		 * unregistering
-		 */
-
-		for (Npc npc : npcs) {
-			npc.resetMoved();
-			npc.resetSpriteChanged();
-			npc.getUpdateFlags().reset();
-			npc.setTeleporting(false);
-		}
-		/*
-		 * Reset the update related flags and unregister players that are
-		 * flagged as unregistered
-		 */
-		Iterator<Player> playerListIterator = players.iterator();
-		while (playerListIterator.hasNext()) {
-			Player player = playerListIterator.next();
-			player.setTeleporting(false);
-			player.resetSpriteChanged();
-			player.getUpdateFlags().reset();
-			player.resetMoved();
-		}
-	}
-
-	public void executeWalkToActions() {
-		for (Player p : players) {
-			if (p.getWalkToAction() != null) {
-				if (p.getWalkToAction().shouldExecute()) {
-					p.getWalkToAction().execute();
-					p.setWalkToAction(null);
-				}
-			}
-		}
-	}
-
 
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
 	public static void sendUpdatePackets(Player p) {
@@ -124,68 +57,6 @@ public final class GameStateUpdater {
 		}
 	}
 
-	private void processNpcs() {
-		for (Npc n : npcs) {
-			try {
-				if (n.isUnregistering()) {
-					World.getWorld().unregisterNpc(n);
-					continue;
-				}
-				n.updatePosition();
-			} catch (Exception e) {
-				LOGGER.error(
-						"Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
-				LOGGER.catching(e);
-			}
-		}
-	}
-
-	/**
-	 * Updates the messages queues for each player
-	 */
-	private void processMessageQueues() {
-		for (Player p : players) {
-			PrivateMessage pm = p.getNextPrivateMessage();
-			if (pm != null) {
-				Player affectedPlayer = World.getWorld().getPlayer(pm.getFriend());
-				if (affectedPlayer != null) {
-					if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
-							.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
-							&& !affectedPlayer.getSocial().isIgnoring(p.getUsernameHash()) || p.isMod()) {
-						ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage());
-						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
-					}
-
-					GameLogging.addQuery(new PMLog(p.getUsername(), pm.getMessage(),
-							DataConversions.hashToUsername(pm.getFriend())));
-				}
-			}
-		}
-		for (Player p : players) {
-			if (p.requiresOfferUpdate()) {
-				ActionSender.sendTradeItems(p);
-				p.setRequiresOfferUpdate(false);
-			}
-		}
-	}
-
-	/**
-	 * Update the position of players, and check if who (and what) they are
-	 * aware of needs updated
-	 */
-	private void processPlayers() {
-		for (Player p : players) {
-			if (p.isUnregistering()) {
-				World.getWorld().unregisterPlayer(p);
-				continue;
-			}
-			p.updatePosition();
-			if (p.getUpdateFlags().hasAppearanceChanged()) {
-				p.incAppearanceID();
-			}
-		}
-	}
-
 	/**
 	 * Checks if the player has moved within the last X minutes
 	 */
@@ -196,25 +67,23 @@ public final class GameStateUpdater {
 		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
-        if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
+		if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
 			player.save();
 			player.setLastSaveTime(curTime);
 		}
 		if (curTime - player.getLastPing() >= 30000) {
 			player.unregister(false, "Ping time-out");
-		}
-		else if (player.warnedToMove()) {
+		} else if (player.warnedToMove()) {
 			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isMod()) {
 				player.unregister(false, "Movement time-out");
 			}
-		}
-		else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
+		} else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
 			if (player.isSleeping()) {
 				player.setSleeping(false);
 				ActionSender.sendWakeUp(player, false, false);
 			}
 			player.message("@cya@You have been standing here for " + (timeoutLimit / 60000)
-					+ " mins! Please move to a new area");
+				+ " mins! Please move to a new area");
 			player.setWarnedToMove(true);
 		}
 	}
@@ -224,7 +93,7 @@ public final class GameStateUpdater {
 		packet.setID(79);
 		packet.startBitAccess();
 		packet.writeBits(playerToUpdate.getLocalNpcs().size(), 8);
-		for (Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext();) {
+		for (Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
 			Npc localNpc = it$.next();
 
 			if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isTeleporting()) {
@@ -248,8 +117,8 @@ public final class GameStateUpdater {
 		}
 		for (Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved()
-					|| newNPC.getID() == 194 && !playerToUpdate.getCache().hasKey("ned_hired")
-					|| !playerToUpdate.withinRange(newNPC, (Constants.GameServer.VIEW_DISTANCE * 8) - 1)) {
+				|| newNPC.getID() == 194 && !playerToUpdate.getCache().hasKey("ned_hired")
+				|| !playerToUpdate.withinRange(newNPC, (Constants.GameServer.VIEW_DISTANCE * 8) - 1)) {
 				continue;
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 				break;
@@ -278,24 +147,22 @@ public final class GameStateUpdater {
 		positionBuilder.writeBits(playerToUpdate.getLocalPlayers().size(), 8);
 
 		if (playerToUpdate.loggedIn()) {
-			for (Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext();) {
+			for (Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
 				Player otherPlayer = it$.next();
 				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
-						|| otherPlayer.isTeleporting() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
-						|| !visibleConditionOverride) {
+					|| otherPlayer.isTeleporting() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
+					|| !visibleConditionOverride) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //???
 					it$.remove();
 					playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
 				} else {
-					if(!otherPlayer.hasMoved() && !otherPlayer.spriteChanged())
-					{
+					if (!otherPlayer.hasMoved() && !otherPlayer.spriteChanged()) {
 						positionBuilder.writeBits(0, 1); //Needs Update
-					}
-					else {
+					} else {
 						// The player is actually going to be updated
 						if (otherPlayer.hasMoved()) {
 							positionBuilder.writeBits(1, 1); //Needs Update
@@ -313,13 +180,13 @@ public final class GameStateUpdater {
 			for (Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
-						|| otherPlayer.isRemoved() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
-						|| !visibleConditionOverride) {
+					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+					|| otherPlayer.isRemoved() || (otherPlayer.isInvisible() && !playerToUpdate.isAdmin())
+					|| !visibleConditionOverride) {
 					continue;
 				}
 				byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
-						playerToUpdate.getLocation());
+					playerToUpdate.getLocation());
 				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
 				positionBuilder.writeBits(offsets[0], 6);
 				positionBuilder.writeBits(offsets[1], 6);
@@ -351,7 +218,7 @@ public final class GameStateUpdater {
 			}
 		}
 		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
-		+ npcProjectilesNeedingDisplayed.size();
+			+ npcProjectilesNeedingDisplayed.size();
 		if (updateSize > 0) {
 			PacketBuilder npcAppearancePacket = new PacketBuilder();
 			npcAppearancePacket.setID(104);
@@ -420,7 +287,7 @@ public final class GameStateUpdater {
 				projectilesNeedingDisplayed.add(projectileFired);
 			}
 			if (updateFlags.hasChatMessage() && !player.getSettings()
-					.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
+				.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				chatMessagesNeedingDisplayed.add(chatMessage);
 			}
@@ -433,16 +300,16 @@ public final class GameStateUpdater {
 
 		}
 		issuePlayerAppearanceUpdatePacket(player, bubblesNeedingDisplayed, chatMessagesNeedingDisplayed,
-				projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingAppearanceUpdate);
+			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingAppearanceUpdate);
 	}
 
 	public static void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
-			Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
-			Queue<Damage> playersNeedingDamageUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
+														 Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
+														 Queue<Damage> playersNeedingDamageUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
 			int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
-			+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
-			+ playersNeedingAppearanceUpdate.size();
+				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
+				+ playersNeedingAppearanceUpdate.size();
 
 			if (updateSize > 0) {
 				PacketBuilder appearancePacket = new PacketBuilder();
@@ -461,7 +328,7 @@ public final class GameStateUpdater {
 					appearancePacket.writeByte(chatType);
 					if (chatType == 1) {
 						if (cm.getSender() != null && cm.getSender() instanceof Player)
-							appearancePacket.writeInt(((Player)(cm.getSender())).getIcon());
+							appearancePacket.writeInt(((Player) (cm.getSender())).getIcon());
 					}
 					appearancePacket.writeString(cm.getMessageString());
 				}
@@ -492,7 +359,7 @@ public final class GameStateUpdater {
 				while ((playerNeedingAppearanceUpdate = playersNeedingAppearanceUpdate.poll()) != null) {
 					PlayerAppearance appearance = playerNeedingAppearanceUpdate.getSettings().getAppearance();
 
-					appearancePacket.writeShort((short)playerNeedingAppearanceUpdate.getIndex());
+					appearancePacket.writeShort((short) playerNeedingAppearanceUpdate.getIndex());
 					appearancePacket.writeByte((byte) 5);
 					//appearancePacket.writeShort(0);
 					appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
@@ -534,13 +401,13 @@ public final class GameStateUpdater {
 		// TODO: This is not handled correctly.
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
-		for (Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext();) {
+		for (Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
 			GameObject o = it$.next();
 			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || !o.isVisibleTo(playerToUpdate)) {
 				int offsetX = o.getX() - playerToUpdate.getX();
 				int offsetY = o.getY() - playerToUpdate.getY();
 				//If the object is close enough we can use regular way to remove:
-				if(offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
+				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					packet.writeShort(60000);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
@@ -558,8 +425,8 @@ public final class GameStateUpdater {
 
 		for (GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-					|| !newObject.isVisibleTo(playerToUpdate) || newObject.getType() != 0
-					|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
+				|| !newObject.isVisibleTo(playerToUpdate) || newObject.getType() != 0
+				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
 				continue;
 			}
 			packet.writeShort(newObject.getID());
@@ -579,13 +446,13 @@ public final class GameStateUpdater {
 		boolean changed = false;
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(99);
-		for (Iterator<GroundItem> it$ = playerToUpdate.getLocalGroundItems().iterator(); it$.hasNext();) {
+		for (Iterator<GroundItem> it$ = playerToUpdate.getLocalGroundItems().iterator(); it$.hasNext(); ) {
 			GroundItem groundItem = it$.next();
 			int offsetX = (groundItem.getX() - playerToUpdate.getX());
 			int offsetY = (groundItem.getY() - playerToUpdate.getY());
 
-			if(!playerToUpdate.withinGridRange(groundItem)) {
-				if(offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
+			if (!playerToUpdate.withinGridRange(groundItem)) {
+				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					packet.writeByte(255);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
@@ -598,7 +465,7 @@ public final class GameStateUpdater {
 					it$.remove();
 					changed = true;
 				}
-			} else if(groundItem.isRemoved() || !groundItem.visibleTo(playerToUpdate)) {
+			} else if (groundItem.isRemoved() || !groundItem.visibleTo(playerToUpdate)) {
 				packet.writeShort(groundItem.getID() + 32768);
 				packet.writeByte(offsetX);
 				packet.writeByte(offsetY);
@@ -610,8 +477,8 @@ public final class GameStateUpdater {
 
 		for (GroundItem groundItem : playerToUpdate.getViewArea().getItemsInView()) {
 			if (!playerToUpdate.withinGridRange(groundItem) || groundItem.isRemoved()
-					|| !groundItem.visibleTo(playerToUpdate)
-					|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
+				|| !groundItem.visibleTo(playerToUpdate)
+				|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
 				continue;
 			}
 			packet.writeShort(groundItem.getID());
@@ -632,12 +499,12 @@ public final class GameStateUpdater {
 		PacketBuilder packet = new PacketBuilder();
 		packet.setID(91);
 
-		for (Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext();) {
+		for (Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
 			GameObject o = it$.next();
 			if (!playerToUpdate.withinGridRange(o) || (o.isRemoved() || !o.isVisibleTo(playerToUpdate))) {
 				int offsetX = o.getX() - playerToUpdate.getX();
 				int offsetY = o.getY() - playerToUpdate.getY();
-				if(offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
+				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					packet.writeShort(60000);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
@@ -653,8 +520,8 @@ public final class GameStateUpdater {
 		}
 		for (GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-					|| !newObject.isVisibleTo(playerToUpdate) || newObject.getType() != 1
-					|| playerToUpdate.getLocalWallObjects().contains(newObject)) {
+				|| !newObject.isVisibleTo(playerToUpdate) || newObject.getType() != 1
+				|| playerToUpdate.getLocalWallObjects().contains(newObject)) {
 				continue;
 			}
 
@@ -672,7 +539,7 @@ public final class GameStateUpdater {
 	}
 
 	private static void sendClearLocations(Player p) {
-		if(p.getLocationsToClear().size() > 0) {
+		if (p.getLocationsToClear().size() > 0) {
 			PacketBuilder packetBuilder = new PacketBuilder(211);
 			for (Point point : p.getLocationsToClear()) {
 				int offsetX = point.getX() - p.getX();
@@ -682,6 +549,132 @@ public final class GameStateUpdater {
 			}
 			p.getLocationsToClear().clear();
 			p.write(packetBuilder.toPacket());
+		}
+	}
+
+	public void doUpdates() throws Exception {
+		processPlayers();
+		processNpcs();
+		processMessageQueues();
+		updateClients();
+		doCleanup();
+		executeWalkToActions();
+		/*final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
+		final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
+		for (int x = 0; x < HORIZONTAL_PLANES; ++x)
+			for (int y = 0; y < VERTICAL_PLANES; ++y) {
+				Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE, y * RegionManager.REGION_SIZE);
+				if (r != null)
+					for (Iterator<Player> i = r.getPlayers().iterator(); i.hasNext();) {
+						if (i.next().isRemoved())
+							i.remove();
+					}
+			}*/
+	}
+
+	public void updateClients() {
+		for (Player p : players) {
+			sendUpdatePackets(p);
+			p.process();
+		}
+	}
+
+	public void doCleanup() {// it can do the teleport at this time.
+		/*
+		 * Reset the update related flags and unregister npcs flagged as
+		 * unregistering
+		 */
+
+		for (Npc npc : npcs) {
+			npc.resetMoved();
+			npc.resetSpriteChanged();
+			npc.getUpdateFlags().reset();
+			npc.setTeleporting(false);
+		}
+		/*
+		 * Reset the update related flags and unregister players that are
+		 * flagged as unregistered
+		 */
+		Iterator<Player> playerListIterator = players.iterator();
+		while (playerListIterator.hasNext()) {
+			Player player = playerListIterator.next();
+			player.setTeleporting(false);
+			player.resetSpriteChanged();
+			player.getUpdateFlags().reset();
+			player.resetMoved();
+		}
+	}
+
+	public void executeWalkToActions() {
+		for (Player p : players) {
+			if (p.getWalkToAction() != null) {
+				if (p.getWalkToAction().shouldExecute()) {
+					p.getWalkToAction().execute();
+					p.setWalkToAction(null);
+				}
+			}
+		}
+	}
+
+	private void processNpcs() {
+		for (Npc n : npcs) {
+			try {
+				if (n.isUnregistering()) {
+					World.getWorld().unregisterNpc(n);
+					continue;
+				}
+				n.updatePosition();
+			} catch (Exception e) {
+				LOGGER.error(
+					"Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
+				LOGGER.catching(e);
+			}
+		}
+	}
+
+	/**
+	 * Updates the messages queues for each player
+	 */
+	private void processMessageQueues() {
+		for (Player p : players) {
+			PrivateMessage pm = p.getNextPrivateMessage();
+			if (pm != null) {
+				Player affectedPlayer = World.getWorld().getPlayer(pm.getFriend());
+				if (affectedPlayer != null) {
+					if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
+						.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
+						&& !affectedPlayer.getSocial().isIgnoring(p.getUsernameHash()) || p.isMod()) {
+						ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage());
+						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
+					}
+
+					GameLogging.addQuery(new PMLog(p.getUsername(), pm.getMessage(),
+						DataConversions.hashToUsername(pm.getFriend())));
+				}
+			}
+		}
+		for (Player p : players) {
+			if (p.requiresOfferUpdate()) {
+				ActionSender.sendTradeItems(p);
+				p.setRequiresOfferUpdate(false);
+			}
+		}
+	}
+
+	/**
+	 * Update the position of players, and check if who (and what) they are
+	 * aware of needs updated
+	 */
+	private void processPlayers() {
+		for (Player p : players) {
+			if (p.isUnregistering()) {
+				World.getWorld().unregisterPlayer(p);
+				continue;
+			}
+			p.updatePosition();
+			if (p.getUpdateFlags().hasAppearanceChanged()) {
+				p.incAppearanceID();
+			}
 		}
 	}
 }

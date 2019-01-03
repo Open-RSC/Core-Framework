@@ -6,10 +6,18 @@ import java.io.ByteArrayInputStream;
 
 public interface ClientPort {
 
+	static boolean saveCredentials() {
+		return saveCredentials();
+	}
+
+	public static boolean saveCredentials(String creds) {
+		return false;
+	}
+
 	public boolean drawLoading(int i);
 
 	public void showLoadingProgress(int percentage, String status);
-	
+
 	public void initListeners();
 
 	public void crashed();
@@ -37,16 +45,8 @@ public interface ClientPort {
 	public void playSound(byte[] soundData, int offset, int dataLength);
 
 	public void stopSoundPlayer();
-	
+
 	public void drawKeyboard();
-
-	static boolean saveCredentials() {
-		return saveCredentials();
-	}
-
-	public static boolean saveCredentials(String creds) {
-		return false;
-	}
 
 	public String loadCredentials();
 }

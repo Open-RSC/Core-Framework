@@ -18,7 +18,7 @@ public enum Action {
 	USING_Item_ON_NPC("Using an Item on an NPC"),
 	USING_Item_ON_OBJECT("Using an Item on an Object"),
 	USING_Item_ON_PLAYER("Using an Item on a Player"),
-	USING_OBJECT("Using an Object"), 
+	USING_OBJECT("Using an Object"),
 	DIED_FROM_DAMAGE("Died from damage");
 
 	private String description;

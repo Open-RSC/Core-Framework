@@ -24,6 +24,7 @@ import com.openrsc.server.util.rsc.Formulae;
 public class CombatEvent extends GameTickEvent {
 
 	protected final Mob attackerMob, defenderMob;
+	private int roundNumber = 0;
 
 	public CombatEvent(Mob attacker, Mob defender) {
 		super(null, 0);
@@ -35,7 +36,7 @@ public class CombatEvent extends GameTickEvent {
 	protected static void onDeath(Mob killed, Mob killer) {
 		if (killer.isPlayer() && killed.isNpc()) {
 			if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerKilledNpc",
-					new Object[] { ((Player) killer), ((Npc) killed) })) {
+				new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
 			}
 		}
@@ -49,28 +50,26 @@ public class CombatEvent extends GameTickEvent {
 
 			int exp = Formulae.combatExperience(playerKilled);
 			switch (playerKiller.getCombatStyle()) {
-			case 0:
-				for (int x = 0; x < 3; x++) {
-					playerKiller.incExp(x, exp, true);
-				}
-				break;
-			case 1:
-				playerKiller.incExp(2, exp * 3, true);
-				break;
-			case 2:
-				playerKiller.incExp(0, exp * 3, true);
-				break;
-			case 3:
-				playerKiller.incExp(1, exp * 3, true);
-				break;
+				case 0:
+					for (int x = 0; x < 3; x++) {
+						playerKiller.incExp(x, exp, true);
+					}
+					break;
+				case 1:
+					playerKiller.incExp(2, exp * 3, true);
+					break;
+				case 2:
+					playerKiller.incExp(0, exp * 3, true);
+					break;
+				case 3:
+					playerKiller.incExp(1, exp * 3, true);
+					break;
 			}
 			playerKiller.incExp(3, exp, true);
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);
 	}
-
-	private int roundNumber = 0;
 
 	public final void run() {
 		setDelayTicks(2);
@@ -90,14 +89,14 @@ public class CombatEvent extends GameTickEvent {
 			resetCombat();
 		} else {
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
-				inflictDamage(hitter, target, MeleeFormula.getDamage(hitter, target));
+			inflictDamage(hitter, target, MeleeFormula.getDamage(hitter, target));
 			//} else {
 			//	inflictDamage(hitter, target, PVPCombatFormula.calcFightHit(hitter, target));
 			//}
 		}
 	}
 
-	public  void inflictDamage(final Mob hitter, final Mob target, int damage) {
+	public void inflictDamage(final Mob hitter, final Mob target, int damage) {
 		hitter.incHitsMade();
 		if (hitter.isNpc() && target.isPlayer()) {
 			Player targetPlayer = (Player) target;
@@ -163,8 +162,7 @@ public class CombatEvent extends GameTickEvent {
 					Player player = (Player) defenderMob;
 					player.setStatus(Action.IDLE);
 					player.resetAll();
-				}
-				else {
+				} else {
 					if (defenderMob.getCombatState() == CombatState.RUNNING)
 						delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
 				}
@@ -182,8 +180,7 @@ public class CombatEvent extends GameTickEvent {
 					Player player = (Player) attackerMob;
 					player.setStatus(Action.IDLE);
 					player.resetAll();
-				}
-				else {
+				} else {
 					if (attackerMob.getCombatState() == CombatState.RUNNING)
 						delayedAggro = 17000; // 17 + 3 second timer for npcs running
 				}

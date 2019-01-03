@@ -5,5 +5,5 @@ import com.openrsc.server.model.entity.player.Player;
 
 public interface WieldListener {
 
-    public void onWield(Player player, Item item);
+	public void onWield(Player player, Item item);
 }

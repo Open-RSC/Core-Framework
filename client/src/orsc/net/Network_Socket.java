@@ -1,7 +1,6 @@
 package orsc.net;
 
 import orsc.PacketHandler;
-import orsc.mudclient;
 import orsc.util.GenUtil;
 
 import java.io.IOException;
@@ -10,13 +9,12 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public final class Network_Socket extends Network_Base implements Runnable {
+	private final byte[] tmpRead = new byte[1];
 	private boolean closed = false;
 	private InputStream inStream;
 	private boolean m_X = true;
 	private OutputStream outStream;
 	private Socket sock;
-	private final byte[] tmpRead = new byte[1];
-
 	private byte[] writeBuffer;
 
 	private int writeBufRead = 0;
@@ -32,7 +30,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 			var2.startThread(1, this);
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
-					"da.<init>(" + (sock != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ')');
+				"da.<init>(" + (sock != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -121,7 +119,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 	public final int get32() {
 		try {
 			int r = this.inStream.read() + this.inStream.read()
-					+ this.inStream.read() + this.inStream.read();
+				+ this.inStream.read() + this.inStream.read();
 			return r & 0xFF;
 		} catch (IOException var3) {
 			throw GenUtil.makeThrowable(var3, "tb.G(" + "dummy" + ')');
@@ -138,8 +136,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 				bldr.append((char) i);
 			}
 			return bldr.toString();
-		}
-		catch (IOException var3) {
+		} catch (IOException var3) {
 			throw GenUtil.makeThrowable(var3, "");
 		}
 	}
@@ -161,7 +158,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 			}
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"da.F(" + (data != null ? "{...}" : "null") + ',' + count + ',' + offset + ',' + "dummy" + ')');
+				"da.F(" + (data != null ? "{...}" : "null") + ',' + count + ',' + offset + ',' + "dummy" + ')');
 		}
 	}
 
@@ -241,7 +238,7 @@ public final class Network_Socket extends Network_Base implements Runnable {
 			}
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"da.D(" + (data != null ? "{...}" : "null") + ',' + offset + ',' + count + ',' + "dummy" + ')');
+				"da.D(" + (data != null ? "{...}" : "null") + ',' + offset + ',' + count + ',' + "dummy" + ')');
 		}
 	}
 }

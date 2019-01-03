@@ -13,12 +13,12 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class PeksaHelmets implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 1, new Item(104,
-			5), new Item(5, 3), new Item(105, 3), new Item(106, 1),
-			new Item(107, 1), new Item(108, 4), new Item(6, 3),
-			new Item(109, 2), new Item(110, 1), new Item(111, 1));
+		5), new Item(5, 3), new Item(105, 3), new Item(106, 1),
+		new Item(107, 1), new Item(108, 4), new Item(6, 3),
+		new Item(109, 2), new Item(110, 1), new Item(111, 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -27,7 +27,7 @@ public final class PeksaHelmets implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public final class PeksaHelmets implements ShopInterface,
 			npcTalk(p, n, "Well look at all these great helmets!");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
-		} else if(option == 1) {
+		} else if (option == 1) {
 			npcTalk(p, n, "Well come back if you change your mind");
 		}
 	}

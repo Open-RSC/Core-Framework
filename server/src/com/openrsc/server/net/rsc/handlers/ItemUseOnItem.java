@@ -25,16 +25,16 @@ public final class ItemUseOnItem implements PacketHandler {
 		int itemIndex2 = p.readShort();
 		Item item1 = player.getInventory().get(itemIndex1);
 		Item item2 = player.getInventory().get(itemIndex2);
-		
+
 		if (item1 == null || item2 == null) {
 			player.setSuspiciousPlayer(true);
 			return;
 		}
-		if(itemIndex1 == itemIndex2) {
+		if (itemIndex1 == itemIndex2) {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		
+
 		if (item1.getDef().isMembersOnly() || item2.getDef().isMembersOnly()) {
 			if (!Constants.GameServer.MEMBER_WORLD) {
 				player.sendMemberErrorMessage();
@@ -47,10 +47,10 @@ public final class ItemUseOnItem implements PacketHandler {
 		// + item2 + " at " + player.getLocation()));
 
 		if (PluginHandler.getPluginHandler().blockDefaultAction("InvUseOnItem",
-				new Object[] { player, item1, item2 })) {
+			new Object[]{player, item1, item2})) {
 			return;
 		}
 
-		 player.message("Nothing interesting happens");
+		player.message("Nothing interesting happens");
 	}
 }

@@ -1,10 +1,6 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.Region;
-import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
@@ -12,9 +8,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- *
  * @author Graham
- *
  */
 public class PathValidation {
 
@@ -67,7 +61,7 @@ public class PathValidation {
 	}
 
 	public static boolean checkAdjacent(Point curPoint, Point nextPoint) {
-		int[] coords = { curPoint.getX(), curPoint.getY() };
+		int[] coords = {curPoint.getX(), curPoint.getY()};
 		int startX = curPoint.getX();
 		int startY = curPoint.getY();
 		int destX = nextPoint.getX();
@@ -123,15 +117,13 @@ public class PathValidation {
 
 		if (coords[0] > startX) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_EAST, false);
-		}
-		else if (coords[0] < startX) {
+		} else if (coords[0] < startX) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_WEST, false);
 		}
 
 		if (coords[1] > startY) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
-		}
-		else if (coords[1] < startY) {
+		} else if (coords[1] < startY) {
 			newXBlocked = checkBlocking(coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
 		}
 
@@ -170,7 +162,7 @@ public class PathValidation {
 
 	private static boolean checkBlocking(int x, int y, int bit, boolean isCurrentTile) {
 		TileValue t = World.getWorld().getTile(x, y);
-		if(t.projectileAllowed) {
+		if (t.projectileAllowed) {
 			return false;
 		}
 

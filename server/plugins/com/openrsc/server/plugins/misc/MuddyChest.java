@@ -18,14 +18,14 @@ public class MuddyChest implements ObjectActionExecutiveListener, ObjectActionLi
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == MUDDY_CHEST) {
+		if (obj.getID() == MUDDY_CHEST) {
 			p.message("the chest is locked");
 		}
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if(obj.getID() == MUDDY_CHEST && item.getID() == ItemId.MUDDY_KEY.id()) {
+		if (obj.getID() == MUDDY_CHEST && item.getID() == ItemId.MUDDY_KEY.id()) {
 			int respawnTime = 3000;
 			p.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, MUDDY_CHEST_OPEN);

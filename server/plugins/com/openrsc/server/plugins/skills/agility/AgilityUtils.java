@@ -5,21 +5,21 @@ import com.openrsc.server.model.entity.player.Player;
 import static com.openrsc.server.plugins.Functions.AGILITY;
 
 public class AgilityUtils {
-	
+
 	public static void setNextObstacle(Player p, int id, int[] obstacleOrder, int bonus) {
-		if(p.getAttribute("nextObstacle", -1) == -1) {
-			if(id == obstacleOrder[0]) {
+		if (p.getAttribute("nextObstacle", -1) == -1) {
+			if (id == obstacleOrder[0]) {
 				p.setAttribute("nextObstacle", obstacleOrder[1]);
 			} else {
 				p.setAttribute("nextObstacle", obstacleOrder[0]);
 			}
 		} else {
-			if((int) p.getAttribute("nextObstacle") != id) {
+			if ((int) p.getAttribute("nextObstacle") != id) {
 				p.setAttribute("nextObstacle", obstacleOrder[0]);
 			} else {
-				for(int i = 0; i < obstacleOrder.length;i++) {
-					if(obstacleOrder[i] == id) {
-						if(i == obstacleOrder.length - 1) {
+				for (int i = 0; i < obstacleOrder.length; i++) {
+					if (obstacleOrder[i] == id) {
+						if (i == obstacleOrder.length - 1) {
 							p.incExp(AGILITY, bonus, true);
 							p.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;

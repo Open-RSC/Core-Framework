@@ -15,8 +15,8 @@ public class Guide implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	 */
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-	
-		if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 10) {
+
+		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 10) {
 			npcTalk(p, n, "Please proceed through the next door");
 			return;
 		}

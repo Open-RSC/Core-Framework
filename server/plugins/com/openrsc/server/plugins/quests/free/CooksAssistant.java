@@ -18,15 +18,10 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 	 * Original Author: Fate 2013-09-10
 	 */
 
-	class Cook {
-		public static final int TERRIBLE_MESS = 0;
-	}
-
 	/**
 	 * Npc's associated with this quest.
 	 */
 	private static final int COOK = 7;
-
 	/**
 	 * Items required for the quest.
 	 */
@@ -183,5 +178,9 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean isMembers() {
 		return false;
+	}
+
+	class Cook {
+		public static final int TERRIBLE_MESS = 0;
 	}
 }

@@ -12,8 +12,8 @@ public class HeadChef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Hello welcome to the chef's guild",
-				"Only accomplished chefs and cooks are allowed in here",
-				"Feel free to use any of our facilities");
+			"Only accomplished chefs and cooks are allowed in here",
+			"Feel free to use any of our facilities");
 	}
 
 	@Override

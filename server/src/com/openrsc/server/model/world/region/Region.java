@@ -33,7 +33,7 @@ public class Region {
 
 	/**
 	 * Gets the list of players.
-	 * 
+	 *
 	 * @return The list of players.
 	 */
 	public Collection<Player> getPlayers() {
@@ -44,7 +44,7 @@ public class Region {
 
 	/**
 	 * Gets the list of NPCs.
-	 * 
+	 *
 	 * @return The list of NPCs.
 	 */
 	public Collection<Npc> getNpcs() {
@@ -55,7 +55,7 @@ public class Region {
 
 	/**
 	 * Gets the list of objects.
-	 * 
+	 *
 	 * @return The list of objects.
 	 */
 	public Collection<GameObject> getGameObjects() {
@@ -190,7 +190,7 @@ public class Region {
 		}
 		return null;
 	}
-	
+
 	public GameObject getWallGameObject(Point point, int direction) {
 		synchronized (objects) {
 			for (GameObject o : objects) {

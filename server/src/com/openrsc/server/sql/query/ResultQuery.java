@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class ResultQuery extends Query {
-	
+
 	public ResultQuery(String query) {
 		super(query);
 	}

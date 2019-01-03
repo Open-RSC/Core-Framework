@@ -19,32 +19,29 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 /**
- * 
  * @author n0m
- *
  */
 public class RangeEvent extends GameTickEvent {
 
-	private Mob target;
-
-	public int[][] allowedArrows = { { 189, 11, 638, 639 }, // Shortbow
-			{ 188, 11, 574, 638, 639 }, // Longbow
-			{ 649, 11, 574, 638, 639 }, // Oak Shortbow
-			{ 648, 11, 574, 638, 639, 640, 641 }, // Oak Longbow
-			{ 651, 11, 574, 638, 639, 640, 641 }, // Willow Shortbow
-			{ 650, 11, 574, 638, 639, 640, 641, 642, 643 }, // Willow Longbow
-			{ 653, 11, 574, 638, 639, 640, 641, 642, 643 }, // Maple Shortbow
-			{ 652, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645 }, // Maple
-																	// Longbow
-			{ 655, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 723 }, // Yew
-																		// Shortbow
-			{ 654, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 }, // Yew
-																				// Longbow
-			{ 657, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 }, // Magic
-																				// Shortbow
-			{ 656, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723 } // Magic
-																				// Longbow
+	public int[][] allowedArrows = {{189, 11, 638, 639}, // Shortbow
+		{188, 11, 574, 638, 639}, // Longbow
+		{649, 11, 574, 638, 639}, // Oak Shortbow
+		{648, 11, 574, 638, 639, 640, 641}, // Oak Longbow
+		{651, 11, 574, 638, 639, 640, 641}, // Willow Shortbow
+		{650, 11, 574, 638, 639, 640, 641, 642, 643}, // Willow Longbow
+		{653, 11, 574, 638, 639, 640, 641, 642, 643}, // Maple Shortbow
+		{652, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645}, // Maple
+		// Longbow
+		{655, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 723}, // Yew
+		// Shortbow
+		{654, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723}, // Yew
+		// Longbow
+		{657, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723}, // Magic
+		// Shortbow
+		{656, 11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723} // Magic
+		// Longbow
 	};
+	private Mob target;
 
 	public RangeEvent(Player owner, Mob victim) {
 		super(owner, 1);
@@ -71,16 +68,16 @@ public class RangeEvent extends GameTickEvent {
 	public void run() {
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
-				|| (target.isPlayer() && !((Player) target).loggedIn())
-				|| target.getSkills().getLevel(Skills.HITPOINTS) <= 0 || !getPlayerOwner().checkAttack(target, true)
-				|| !getPlayerOwner().withinRange(target) || bowID < 0) {
+			|| (target.isPlayer() && !((Player) target).loggedIn())
+			|| target.getSkills().getLevel(Skills.HITPOINTS) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| !getPlayerOwner().withinRange(target) || bowID < 0) {
 			getPlayerOwner().resetRange();
 			stop();
 			return;
 		}
 		if (!canReach(target)) {
 			getPlayerOwner().walkToEntity(target.getX(), target.getY());
-			if(owner.nextStep(owner.getX(), owner.getY(), target) == null && bowID != -1) {
+			if (owner.nextStep(owner.getX(), owner.getY(), target) == null && bowID != -1) {
 				getPlayerOwner().message("I can't get close enough");
 				getPlayerOwner().resetRange();
 				stop();
@@ -107,10 +104,10 @@ public class RangeEvent extends GameTickEvent {
 						return;
 					}
 				}
-				
+
 				if (target.isNpc()) {
 					if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerRangeNpc",
-							new Object[] { owner, target })) {
+						new Object[]{owner, target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
@@ -178,7 +175,7 @@ public class RangeEvent extends GameTickEvent {
 				}
 				if (arrowID < 0) {
 					getPlayerOwner().message("I've run out of ammo!");
-					if(getPlayerOwner().getCache().hasKey("shot_ice")) {
+					if (getPlayerOwner().getCache().hasKey("shot_ice")) {
 						getPlayerOwner().getCache().remove("shot_ice");
 					}
 					ActionSender.sendSound(getPlayerOwner(), "outofammo");
@@ -186,7 +183,7 @@ public class RangeEvent extends GameTickEvent {
 					return;
 				}
 				int damage = Formulae.calcRangeHit(getPlayerOwner(),
-						getPlayerOwner().getSkills().getLevel(Skills.RANGE), target.getArmourPoints(), arrowID);
+					getPlayerOwner().getSkills().getLevel(Skills.RANGE), target.getArmourPoints(), arrowID);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
@@ -206,7 +203,7 @@ public class RangeEvent extends GameTickEvent {
 					GroundItem arrows = getArrows(arrowID);
 					if (arrows == null) {
 						World.getWorld().registerItem(
-								new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
+							new GroundItem(arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
 					} else {
 						arrows.setAmount(arrows.getAmount() + 1);
 					}

@@ -4,7 +4,6 @@ import orsc.enumerations.ORSCharacterDirection;
 
 public final class ORSCharacter {
 	public String accountName;
-	ORSCharacterDirection direction = ORSCharacterDirection.NORTH;
 	public int animationNext;
 	public int attackingNpcServerIndex = 0;
 	public int attackingPlayerServerIndex = 0;
@@ -40,6 +39,7 @@ public final class ORSCharacter {
 	public boolean isInvulnerable = false;
 	public int icon = 0;
 	public int groupID = Group.DEFAULT_GROUP;
+	ORSCharacterDirection direction = ORSCharacterDirection.NORTH;
 
 	public boolean isSuperMod() {
 		return groupID == 2 || isAdmin();
@@ -53,8 +53,7 @@ public final class ORSCharacter {
 		return groupID == 8 || isAdmin();
 	}
 
-	public boolean isEvent()
-	{
+	public boolean isEvent() {
 		return groupID == 9 || isAdmin();
 	}
 
@@ -66,7 +65,7 @@ public final class ORSCharacter {
 		return groupID == 1 || isOwner();
 	}
 
-	public boolean isStaff(){
+	public boolean isStaff() {
 		return isMod() || isDev() || isEvent();
 	}
 

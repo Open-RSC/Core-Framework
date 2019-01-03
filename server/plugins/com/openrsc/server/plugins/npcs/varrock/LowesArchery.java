@@ -13,11 +13,11 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class LowesArchery implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 55, 1, new Item(11,
-			200), new Item(190, 150), new Item(189, 4), new Item(
-			188, 2), new Item(60, 2));
+		200), new Item(190, 150), new Item(189, 4), new Item(
+		188, 2), new Item(60, 2));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -26,7 +26,7 @@ public final class LowesArchery implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -37,10 +37,10 @@ public final class LowesArchery implements ShopInterface,
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to Lowe's Archery Store",
-				"Do you want to see my wares?");
+			"Do you want to see my wares?");
 
 		int option = showMenu(p, n, "Yes please",
-				"No, I prefer to bash things close up");
+			"No, I prefer to bash things close up");
 
 		if (option == 0) {
 			p.setAccessingShop(shop);

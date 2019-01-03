@@ -13,31 +13,31 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class GnomeWaiter implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 25, 1,
-			new Item(944, 3), new Item(945, 3), new Item(947, 3),
-			new Item(948, 3), new Item(949, 3), new Item(950, 3),
-			new Item(951, 3), new Item(952, 3), new Item(953, 3),
-			new Item(954, 4), new Item(955, 4), new Item(956, 4),
-			new Item(957, 4));
+		new Item(944, 3), new Item(945, 3), new Item(947, 3),
+		new Item(948, 3), new Item(949, 3), new Item(950, 3),
+		new Item(951, 3), new Item(952, 3), new Item(953, 3),
+		new Item(954, 4), new Item(955, 4), new Item(956, 4),
+		new Item(957, 4));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		npcTalk(p, n,  "hello", "good afternoon",
-				"can i tempt you with our new menu?");
+		npcTalk(p, n, "hello", "good afternoon",
+			"can i tempt you with our new menu?");
 
 		int option = showMenu(p, n, "i'll take a look", "not really");
 		switch (option) {
-		case 0:
-			npcTalk(p, n, "i hope you like what you see");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-			break;
+			case 0:
+				npcTalk(p, n, "i hope you like what you see");
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+				break;
 
-		case 1:
-			npcTalk(p, n, "ok then, enjoy your stay");
-			break;
+			case 1:
+				npcTalk(p, n, "ok then, enjoy your stay");
+				break;
 		}
 	}
 
@@ -48,7 +48,7 @@ public final class GnomeWaiter implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

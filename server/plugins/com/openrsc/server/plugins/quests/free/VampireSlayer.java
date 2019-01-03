@@ -17,10 +17,10 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class VampireSlayer implements QuestInterface,TalkToNpcListener,
-		TalkToNpcExecutiveListener, ObjectActionListener,
-		ObjectActionExecutiveListener, PlayerKilledNpcExecutiveListener,
-		PlayerKilledNpcListener, PlayerAttackNpcExecutiveListener {
+public class VampireSlayer implements QuestInterface, TalkToNpcListener,
+	TalkToNpcExecutiveListener, ObjectActionListener,
+	ObjectActionExecutiveListener, PlayerKilledNpcExecutiveListener,
+	PlayerKilledNpcListener, PlayerAttackNpcExecutiveListener {
 	@Override
 	public int getQuestId() {
 		return Constants.Quests.VAMPIRE_SLAYER;
@@ -33,21 +33,21 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 
 	private void morganDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
-		case 0:
-			npcTalk(p, n, "Please please help us, bold hero");
-			playerTalk(p, n, "What's the problem?");
-			npcTalk(p,
+			case 0:
+				npcTalk(p, n, "Please please help us, bold hero");
+				playerTalk(p, n, "What's the problem?");
+				npcTalk(p,
 					n,
 					"Our little village has been dreadfully ravaged by an evil vampire",
 					"There's hardly any of us left",
 					"We need someone to get rid of him once and for good");
-			int choice = showMenu(p, n,
+				int choice = showMenu(p, n,
 					"No. vampires are scary", "Ok I'm up for an adventure",
 					"I tried fighting him. He wouldn't die");
-			if (choice == 0) {
-				npcTalk(p, n, "I don't blame you");
-			} else if (choice == 1) {
-				npcTalk(p,
+				if (choice == 0) {
+					npcTalk(p, n, "I don't blame you");
+				} else if (choice == 1) {
+					npcTalk(p,
 						n,
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
@@ -57,10 +57,10 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						"He's a bit of an old soak",
 						"Mention his old friend Morgan",
 						"I'm sure he wouldn't want me to be killed by a vampire");
-				playerTalk(p, n, "I'll look him up then");
-				p.updateQuestStage(getQuestId(), 1);
-			} else if (choice == 2) {
-				npcTalk(p,
+					playerTalk(p, n, "I'll look him up then");
+					p.updateQuestStage(getQuestId(), 1);
+				} else if (choice == 2) {
+					npcTalk(p,
 						n,
 						"Maybe you're not going about it right",
 						"I think first you should seek help",
@@ -71,79 +71,79 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 						"He's a bit of an old soak",
 						"Mention his old friend Morgan",
 						"I'm sure he wouldn't want me to be killed by a vampire");
-				playerTalk(p, n, "I'll look him up then");
-				p.updateQuestStage(getQuestId(), 1);
-			}
-			break;
-		case 1:
-		case 2:
-			npcTalk(p, n, "How are you doing with your quest?");
-			playerTalk(p, n, "I'm working on it still");
-			npcTalk(p, n, "Please hurry", "Every day we live in fear of lives",
+					playerTalk(p, n, "I'll look him up then");
+					p.updateQuestStage(getQuestId(), 1);
+				}
+				break;
+			case 1:
+			case 2:
+				npcTalk(p, n, "How are you doing with your quest?");
+				playerTalk(p, n, "I'm working on it still");
+				npcTalk(p, n, "Please hurry", "Every day we live in fear of lives",
 					"That we will be the vampires next victim");
-			break;
-		case -1:
-			npcTalk(p, n, "How are you doing with your quest?");
-			playerTalk(p, n, "I have slain the foul creature");
-			npcTalk(p, n, "Thank you, thank you",
+				break;
+			case -1:
+				npcTalk(p, n, "How are you doing with your quest?");
+				playerTalk(p, n, "I have slain the foul creature");
+				npcTalk(p, n, "Thank you, thank you",
 					"You will always be a hero in our village");
-			break;
+				break;
 		}
 	}
 
 	private void harlowDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
-		case -1:
-		case 0:
-		case 1:
-		case 2:
-			String[] options;
-			npcTalk(p, n, "Buy me a drrink pleassh");
-			if (!hasItem(p, 217)
+			case -1:
+			case 0:
+			case 1:
+			case 2:
+				String[] options;
+				npcTalk(p, n, "Buy me a drrink pleassh");
+				if (!hasItem(p, 217)
 					&& p.getQuestStage(Constants.Quests.VAMPIRE_SLAYER) != -1) {
-				options = new String[] { "No you've had enough", "Ok mate",
-						"Morgan needs your help" };
-			} else {
-				options = new String[] { "No you've had enough", "Ok mate" };
-			}
-			int choice = showMenu(p, n, options);
-			if (choice == 0) {
-			} else if (choice == 1) {
-				if (p.getInventory().hasItemId(193)) {
-					p.message("You give a beer to Dr Harlow");
-					p.getInventory().remove(
-							p.getInventory().getLastIndexById(193));
-					npcTalk(p, n, "Cheersh matey");
+					options = new String[]{"No you've had enough", "Ok mate",
+						"Morgan needs your help"};
 				} else {
-					playerTalk(p, n, "I'll just go and buy one");
+					options = new String[]{"No you've had enough", "Ok mate"};
 				}
-			} else if (choice == 2) {
-				npcTalk(p, n, "Morgan you shhay?");
-				playerTalk(p, n,
-						"His village is being terrorised by a vampire",
-						"He wanted me to ask you how i should go about stopping it");
-				npcTalk(p, n,
-						"Buy me a beer then i'll teash you what you need to know");
-				int choice2 = showMenu(p, n, "Ok mate",
-						"But this is your friend Morgan we're talking about");
-				if (choice2 == 0) {
+				int choice = showMenu(p, n, options);
+				if (choice == 0) {
+				} else if (choice == 1) {
 					if (p.getInventory().hasItemId(193)) {
 						p.message("You give a beer to Dr Harlow");
+						p.getInventory().remove(
+							p.getInventory().getLastIndexById(193));
 						npcTalk(p, n, "Cheersh matey");
-						p.getInventory().remove(p.getInventory().getLastIndexById(193));
-						playerTalk(p, n, "So tell me how to kill vampires then");
-						npcTalk(p, n,
+					} else {
+						playerTalk(p, n, "I'll just go and buy one");
+					}
+				} else if (choice == 2) {
+					npcTalk(p, n, "Morgan you shhay?");
+					playerTalk(p, n,
+						"His village is being terrorised by a vampire",
+						"He wanted me to ask you how i should go about stopping it");
+					npcTalk(p, n,
+						"Buy me a beer then i'll teash you what you need to know");
+					int choice2 = showMenu(p, n, "Ok mate",
+						"But this is your friend Morgan we're talking about");
+					if (choice2 == 0) {
+						if (p.getInventory().hasItemId(193)) {
+							p.message("You give a beer to Dr Harlow");
+							npcTalk(p, n, "Cheersh matey");
+							p.getInventory().remove(p.getInventory().getLastIndexById(193));
+							playerTalk(p, n, "So tell me how to kill vampires then");
+							npcTalk(p, n,
 								"Yesh yesh vampires I was very good at killing em once");
-						p.message("Dr Harlow appears to sober up slightly");
-						npcTalk(p,
+							p.message("Dr Harlow appears to sober up slightly");
+							npcTalk(p,
 								n,
 								"Well you're gonna to kill it with a stake",
 								"Otherwishe he'll just regenerate",
 								"Yes your killing blow must be done with a stake",
 								"I jusht happen to have one on me");
-						p.message("Dr Harlow hands you a stake");
-						p.getInventory().add(new Item(217));
-						npcTalk(p,
+							p.message("Dr Harlow hands you a stake");
+							p.getInventory().add(new Item(217));
+							npcTalk(p,
 								n,
 								"You'll need a hammer to hand to drive it in properly as well",
 								"One last thing",
@@ -151,16 +151,16 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 								"Vampires are weakened somewhat if they can smell garlic",
 								"Dunno where you'd find that though",
 								"Remember even then a vampire is a dangeroush foe");
-						playerTalk(p, n, "Thank you very much");
-						p.updateQuestStage(getQuestId(), 2);
-					} else {
-						playerTalk(p, n, "I'll just go and buy one");
+							playerTalk(p, n, "Thank you very much");
+							p.updateQuestStage(getQuestId(), 2);
+						} else {
+							playerTalk(p, n, "I'll just go and buy one");
+						}
+					} else if (choice2 == 1) {
+						npcTalk(p, n, "Buy ush a drink anyway");
 					}
-				} else if (choice2 == 1) {
-					npcTalk(p, n, "Buy ush a drink anyway");
 				}
-			}
-			break;
+				break;
 		}
 	}
 
@@ -178,7 +178,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		if (player.getQuestStage(this) == -1 && command.equals("search")
-				&& obj.getID() == 136 && obj.getY() == 3380) {
+			&& obj.getID() == 136 && obj.getY() == 3380) {
 			player.message("There's a pillow in here");
 			return;
 		} else if (obj.getID() == 141 && obj.getY() == 1562) {
@@ -192,19 +192,20 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 			}
 			return;
 		} else if (obj.getID() == 136 && obj.getY() == 3380) {
-			for(Npc npc : player.getRegion().getNpcs()) {
-				if(npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
+			for (Npc npc : player.getRegion().getNpcs()) {
+				if (npc.getID() == 96 && npc.getAttribute("spawnedFor", null).equals(player)) {
 					player.message("There's nothing there.");
 					return;
 				}
 			}
-			
+
 			final Npc n = spawnNpc(96, 206, 3381, 1000 * 60 * 5, player);
 			n.setShouldRespawn(false);
 			player.message("A vampire jumps out of the coffin");
 			return;
 		}
 	}
+
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		if (n.getID() == 97 || n.getID() == 98) {
@@ -215,7 +216,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
-			Player player) {
+									 Player player) {
 		if (obj.getID() == 136 && obj.getY() == 3380) {
 			return true;
 		}
@@ -245,7 +246,7 @@ public class VampireSlayer implements QuestInterface,TalkToNpcListener,
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == 96) {
 			if (p.getInventory().wielding(217) == true
-					&& p.getInventory().hasItemId(168)) {
+				&& p.getInventory().hasItemId(168)) {
 				p.getInventory().remove(p.getInventory().getLastIndexById(217));
 				p.message("You hammer the stake in to the vampires chest!");
 				n.killedBy(p);

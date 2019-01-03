@@ -7,18 +7,17 @@ import java.util.*;
 
 /**
  * This class is a collection which is backed by 3 seperate Lists.
- *
+ * <p>
  * These Lists control the state of this collection.
- *
+ * <p>
  * To update this collections current state, you need to explicity call the
  * update method.
- *
+ * <p>
  * The purpose of this collection is to seperate new values added to this
  * collection untill the update method has been called. Removal of entities will
  * NOT take effect until the update method is called. This is so we can see what
  * is being removed (and in cases this is required by the server) to handle them
  * specially.
- *
  */
 public class StatefulEntityCollection<T extends Entity> {
 	private Collection<T> entitiesToRemove;

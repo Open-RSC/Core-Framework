@@ -8,8 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
  * @author Peeter
  */
 public interface WithdrawListener {
-    /**
-     * Called when a user withdraws an item
-     */
-    public void onWithdraw(Player p, int itemID, int amount);
+	/**
+	 * Called when a user withdraws an item
+	 */
+	public void onWithdraw(Player p, int itemID, int amount);
 }

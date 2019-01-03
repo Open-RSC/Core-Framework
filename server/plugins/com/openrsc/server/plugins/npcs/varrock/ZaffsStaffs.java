@@ -13,11 +13,11 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class ZaffsStaffs implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 2, new Item(614,
-			5), new Item(100, 5), new Item(198, 5), new Item(101, 2),
-			new Item(102, 2), new Item(103, 2), new Item(197, 2));
+		5), new Item(100, 5), new Item(198, 5), new Item(101, 2),
+		new Item(102, 2), new Item(103, 2), new Item(197, 2));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -26,7 +26,7 @@ public final class ZaffsStaffs implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public final class ZaffsStaffs implements ShopInterface,
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Would you like to buy or sell some staffs?");
-		int option = showMenu(p,n,"Yes please", "No, thank you");
+		int option = showMenu(p, n, "Yes please", "No, thank you");
 		if (option == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);

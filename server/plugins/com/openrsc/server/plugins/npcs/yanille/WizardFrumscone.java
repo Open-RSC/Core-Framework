@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
 public class WizardFrumscone implements TalkToNpcListener, TalkToNpcExecutiveListener {
-	
+
 	public static int WIZARD_FRUMSCONE = 515;
 
 	@Override
@@ -18,10 +18,10 @@ public class WizardFrumscone implements TalkToNpcListener, TalkToNpcExecutiveLis
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(n.getID() == WIZARD_FRUMSCONE) {
-			npcTalk(p,n, "Do you like my magic zombies",
-					"Feel free to kill them",
-					"Theres plenty more where these came from");
+		if (n.getID() == WIZARD_FRUMSCONE) {
+			npcTalk(p, n, "Do you like my magic zombies",
+				"Feel free to kill them",
+				"Theres plenty more where these came from");
 		}
 	}
 }

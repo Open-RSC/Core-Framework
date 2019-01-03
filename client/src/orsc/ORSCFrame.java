@@ -3,15 +3,11 @@ package orsc;
 import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
 
 public class ORSCFrame extends ORSCApplet {
 
 	private static final long serialVersionUID = 1L;
-
-	public String getCacheLocation() {
-		return Config.F_CACHE_DIR + File.separator;
-	}
 
 	public static void main(String[] args) {
 		JFrame jframe = new JFrame(Config.SERVER_NAME);
@@ -34,13 +30,17 @@ public class ORSCFrame extends ORSCApplet {
 //		jframe.add(applet);
 	}
 
-	@Override
-    public void playSound(byte[] soundData, int offset, int dataLength) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	public String getCacheLocation() {
+		return Config.F_CACHE_DIR + File.separator;
+	}
 
-    @Override
-    public void stopSoundPlayer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void playSound(byte[] soundData, int offset, int dataLength) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void stopSoundPlayer() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 }

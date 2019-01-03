@@ -20,15 +20,15 @@ public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, Tal
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Pssst come here if you want to do some amulet trading");
 		int menu = showMenu(p, n, "What are you selling?", "What do you mean pssst?", "Why don't you ever restock some types of amulets?");
-		if(menu == 0) {
+		if (menu == 0) {
 			p.message("Davon opens up his jacket to reveal some amulets");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
-		} else if(menu == 1) {
+		} else if (menu == 1) {
 			npcTalk(p, n, "I was clearing my throat");
-		} else if(menu == 2) {
+		} else if (menu == 2) {
 			npcTalk(p, n, "Some of these amulets are very hard to get",
-					"I have to wait until an adventurer supplies me");
+				"I have to wait until an adventurer supplies me");
 		}
 	}
 
@@ -39,7 +39,7 @@ public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, Tal
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

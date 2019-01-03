@@ -23,25 +23,21 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
  * @author n0m
- *
  */
 public class Functions {
 
-  /**
-   * The asynchronous logger.
-   */
-  private static final Logger LOGGER = LogManager.getLogger();
-
 	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
-			COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-			MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17;
+		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
+		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17;
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static String getBankPinInput(Player player) {
 		ActionSender.sendBankPinInterface(player);
@@ -88,7 +84,7 @@ public class Functions {
 			public void run() {
 				n.resetPath();
 				Path path = new Path(n, PathType.WALK_TO_POINT);
-				for(Point p : waypoints) {
+				for (Point p : waypoints) {
 					path.addStep(p.getX(), p.getY());
 				}
 				path.finish();
@@ -164,19 +160,20 @@ public class Functions {
 
 	/**
 	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
-	 * @param p - the player
+	 *
+	 * @param p         - the player
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
-	 * @param applyQP - apply the quest point increase
+	 * @param applyQP   - apply the quest point increase
 	 */
 	public static void incQuestReward(Player p, int[] questData, boolean applyQP) {
 		int qp = questData[0];
 		int skillId = questData[1];
 		int baseXP = questData[2];
 		int varXP = questData[3];
-		if(skillId >= 0 && baseXP > 0 && varXP >= 0) {
+		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
 			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
 		}
-		if(applyQP) {
+		if (applyQP) {
 			p.incQuestPoints(qp);
 		}
 	}
@@ -207,13 +204,13 @@ public class Functions {
 	private static boolean checkBlocking(Npc npc, int x, int y, int bit) {
 		TileValue t = World.getWorld().getTile(x, y);
 		Point p = new Point(x, y);
-		for(Npc n : npc.getViewArea().getNpcsInView()) {
-			if(n.getLocation().equals(p)) {
+		for (Npc n : npc.getViewArea().getNpcsInView()) {
+			if (n.getLocation().equals(p)) {
 				return true;
 			}
 		}
-		for(Player areaPlayer : npc.getViewArea().getPlayersInView()) {
-			if(areaPlayer.getLocation().equals(p)) {
+		for (Player areaPlayer : npc.getViewArea().getPlayersInView()) {
+			if (areaPlayer.getLocation().equals(p)) {
 				return true;
 			}
 		}
@@ -290,7 +287,7 @@ public class Functions {
 		if (player.getLocation().equals(n.getLocation())) {
 			for (int x = -1; x <= 1; ++x) {
 				for (int y = -1; y <= 1; ++y) {
-					if(x == 0 || y == 0)
+					if (x == 0 || y == 0)
 						continue;
 					Point destination = canWalk(n, player.getX() - x, player.getY() - y);
 					if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
@@ -319,6 +316,7 @@ public class Functions {
 		});
 		return npc;
 	}
+
 	public static Npc spawnNpc(int id, int x, int y) {
 		final Npc npc = new Npc(id, x, y);
 		post(new Runnable() {
@@ -387,7 +385,6 @@ public class Functions {
 	public static void createGroundItem(int id, int amount, int x, int y, Player owner) {
 		World.getWorld().registerItem(new GroundItem(id, x, y, amount, owner));
 	}
-
 
 
 	/**
@@ -534,22 +531,22 @@ public class Functions {
 
 	public static int[] coordModifier(Player player, boolean up, GameObject object) {
 		if (object.getGameObjectDef().getHeight() <= 1) {
-			return new int[] { player.getX(), Formulae.getNewY(player.getY(), up) };
+			return new int[]{player.getX(), Formulae.getNewY(player.getY(), up)};
 		}
-		int[] coords = { object.getX(), Formulae.getNewY(object.getY(), up) };
+		int[] coords = {object.getX(), Formulae.getNewY(object.getY(), up)};
 		switch (object.getDirection()) {
-		case 0:
-			coords[1] -= (up ? -object.getGameObjectDef().getHeight() : 1);
-			break;
-		case 2:
-			coords[0] -= (up ? -object.getGameObjectDef().getHeight() : 1);
-			break;
-		case 4:
-			coords[1] += (up ? -1 : object.getGameObjectDef().getHeight());
-			break;
-		case 6:
-			coords[0] += (up ? -1 : object.getGameObjectDef().getHeight());
-			break;
+			case 0:
+				coords[1] -= (up ? -object.getGameObjectDef().getHeight() : 1);
+				break;
+			case 2:
+				coords[0] -= (up ? -object.getGameObjectDef().getHeight() : 1);
+				break;
+			case 4:
+				coords[1] += (up ? -1 : object.getGameObjectDef().getHeight());
+				break;
+			case 6:
+				coords[0] += (up ? -1 : object.getGameObjectDef().getHeight());
+				break;
 		}
 		return coords;
 	}
@@ -581,6 +578,7 @@ public class Functions {
 	public static void doDoor(final GameObject object, final Player p) {
 		doDoor(object, p, 11);
 	}
+
 	public static void doTentDoor(final GameObject object, final Player p) {
 		p.setBusyTimer(650);
 		if (object.getDirection() == 0) {
@@ -602,21 +600,17 @@ public class Functions {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX(), object.getY() + 1);
-			}
-			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
+			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() - 1, object.getY());
 			}
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX(), object.getY() - 1);
-			}
-			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
+			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() + 1, object.getY());
-			}
-			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
+			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX() + 1, object.getY() + 1);
-			}
-			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
+			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX() - 1, object.getY() - 1);
 			}
 		}
@@ -643,9 +637,9 @@ public class Functions {
 	public static void doWallMovePlayer(final GameObject object, final Player p, int replaceID, int delay, boolean removeObject) {
 		p.setBusyTimer(650);
 		/* For the odd looking walls. */
-		if(removeObject) {
+		if (removeObject) {
 			GameObject newObject = new GameObject(object.getLocation(), replaceID, object.getDirection(), object.getType());
-			if(object.getID() == replaceID) {
+			if (object.getID() == replaceID) {
 				p.message("Nothing interesting happens");
 				return;
 			}
@@ -675,21 +669,17 @@ public class Functions {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX(), object.getY() + 1);
-			}
-			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
+			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() - 1, object.getY());
 			}
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX(), object.getY() - 1);
-			}
-			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
+			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() + 1, object.getY());
-			}
-			else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
+			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX() + 1, object.getY() + 1);
-			}
-			else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
+			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX() - 1, object.getY() - 1);
 			}
 		}
@@ -707,9 +697,9 @@ public class Functions {
 				movePlayer(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
 				movePlayer(p, object.getX() - 1, object.getY());
-			} else if(object.getX() == p.getX() - 1 && object.getY() == p.getY() + 1) {
+			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() + 1) {
 				movePlayer(p, object.getX() - 1, object.getY() + 1);
-			} else if(object.getX() == p.getX() + 1 && object.getY() == p.getY() - 1) {
+			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() - 1) {
 				movePlayer(p, object.getX() + 1, object.getY() - 1);
 			}
 		}
@@ -720,7 +710,7 @@ public class Functions {
 		p.setBusyTimer(650);
 		/* For the odd looking walls. */
 		GameObject newObject = new GameObject(object.getLocation(), replaceID, object.getDirection(), object.getType());
-		if(object.getID() == replaceID) {
+		if (object.getID() == replaceID) {
 			p.message("Nothing interesting happens");
 			return;
 		}
@@ -861,7 +851,7 @@ public class Functions {
 	}
 
 	public static void doRock(final GameObject object, final Player p, int damage, boolean eventMessage,
-			int spikeLocation) {
+							  int spikeLocation) {
 		p.setBusyTimer(650);
 		p.message("you climb onto the rock");
 		boolean failRock = false;
@@ -873,7 +863,7 @@ public class Functions {
 		}
 		if (object != null && !failRock) {
 			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
-					|| object.getDirection() == 3) {
+				|| object.getDirection() == 3) {
 				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
 					movePlayer(p, object.getX() - 1, object.getY());
 				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
@@ -952,7 +942,7 @@ public class Functions {
 		}
 		if (eventMessage) {
 			Server.getServer().getEventHandler()
-			.add(new UndergroundPassMessages(p, DataConversions.random(2000, 10000)));
+				.add(new UndergroundPassMessages(p, DataConversions.random(2000, 10000)));
 		}
 	}
 
@@ -1064,7 +1054,7 @@ public class Functions {
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
 			for (final Npc n : npcsInView) {
-				if(n.getID() == npcId) {
+				if (n.getID() == npcId) {
 
 				}
 				if (n.getID() == npcId && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
@@ -1131,11 +1121,12 @@ public class Functions {
 	public static void message(final Player player, int delay, final String... messages) {
 		message(player, null, delay, messages);
 	}
+
 	public static void message(final Player player, final Npc npc, int delay, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
-					if(npc.isRemoved()) {
+					if (npc.isRemoved()) {
 						player.setBusy(false);
 						return;
 					}
@@ -1184,13 +1175,12 @@ public class Functions {
 	 *
 	 * @param player
 	 * @param npc
-	 * @param messages
-	 *            - String array of npc dialogue lines.
+	 * @param messages - String array of npc dialogue lines.
 	 */
 	public static void npcTalk(final Player player, final Npc npc, final int delay, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				if(npc.isRemoved()) {
+				if (npc.isRemoved()) {
 					player.setBusy(false);
 					return;
 				}
@@ -1228,8 +1218,7 @@ public class Functions {
 	 *
 	 * @param player
 	 * @param npc
-	 * @param messages
-	 *            - String array of npc dialogue lines.
+	 * @param messages - String array of npc dialogue lines.
 	 */
 	public static void npcYell(final Player player, final Npc npc, final String... messages) {
 		for (final String message : messages) {
@@ -1254,8 +1243,8 @@ public class Functions {
 	public static void playerTalk(final Player player, final Npc npc, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				if(npc != null) {
-					if(npc.isRemoved()) {
+				if (npc != null) {
+					if (npc.isRemoved()) {
 						player.setBusy(false);
 						return;
 					}
@@ -1406,19 +1395,19 @@ public class Functions {
 
 	public static void resetGnomeCooking(Player p) {
 		String[] caches = {
-				"cheese_on_batta", "tomato_on_batta", "tomato_cheese_batta", "leaves_on_batta",
-				"complete_dish", "chocolate_on_bowl", "leaves_on_bowl", "chocolate_bomb", "cream_on_bowl",
-				"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta",
-				"kingworms_on_bowl", "onions_on_bowl", "gnomespice_on_bowl", "wormhole", "gnomespice_on_dough",
-				"toadlegs_on_dough", "gnomecrunchie_dough", "gnome_crunchie_cooked", "gnomespice_on_worm",
-				"worm_on_batta", "worm_batta", "onion_on_batta", "cabbage_on_batta", "dwell_on_batta",
-				"veg_batta_no_cheese", "veg_batta_with_cheese", "chocolate_on_dough", "choco_dust_on_crunchies",
-				"potato_on_bowl", "vegball", "toadlegs_on_bowl", "cheese_on_bowl", "dwell_on_bowl", "kingworm_on_dough",
-				"leaves_on_dough", "spice_over_crunchies", "batta_cooked_leaves", "diced_orange_on_batta", "lime_on_batta",
-				"pine_apple_batta", "spice_over_batta"
+			"cheese_on_batta", "tomato_on_batta", "tomato_cheese_batta", "leaves_on_batta",
+			"complete_dish", "chocolate_on_bowl", "leaves_on_bowl", "chocolate_bomb", "cream_on_bowl",
+			"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta",
+			"kingworms_on_bowl", "onions_on_bowl", "gnomespice_on_bowl", "wormhole", "gnomespice_on_dough",
+			"toadlegs_on_dough", "gnomecrunchie_dough", "gnome_crunchie_cooked", "gnomespice_on_worm",
+			"worm_on_batta", "worm_batta", "onion_on_batta", "cabbage_on_batta", "dwell_on_batta",
+			"veg_batta_no_cheese", "veg_batta_with_cheese", "chocolate_on_dough", "choco_dust_on_crunchies",
+			"potato_on_bowl", "vegball", "toadlegs_on_bowl", "cheese_on_bowl", "dwell_on_bowl", "kingworm_on_dough",
+			"leaves_on_dough", "spice_over_crunchies", "batta_cooked_leaves", "diced_orange_on_batta", "lime_on_batta",
+			"pine_apple_batta", "spice_over_batta"
 		};
-		for(String s : caches) {
-			if(p.getCache().hasKey(s)) {
+		for (String s : caches) {
+			if (p.getCache().hasKey(s)) {
 				p.getCache().remove(s);
 			}
 		}
@@ -1426,17 +1415,17 @@ public class Functions {
 
 	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) {
 		String[] caches = {
-				"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
-				"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
-				"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base",
-				"leaves_into_drink", "lime_slices_to_drink", "whisky_in_shaker", "milk_in_shaker",
-				"leaves_in_shaker", "choco_bar_in_drink", "chocolate_saturday_base", "heated_choco_saturday",
-				"choco_dust_into_drink", "brandy_in_shaker", "diced_orange_in_drink", "blurberry_special_base",
-				"diced_lemon_in_drink", "pineapple_punch_base", "diced_lime_in_drink", "wizard_blizzard_base"
+			"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
+			"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
+			"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base",
+			"leaves_into_drink", "lime_slices_to_drink", "whisky_in_shaker", "milk_in_shaker",
+			"leaves_in_shaker", "choco_bar_in_drink", "chocolate_saturday_base", "heated_choco_saturday",
+			"choco_dust_into_drink", "brandy_in_shaker", "diced_orange_in_drink", "blurberry_special_base",
+			"diced_lemon_in_drink", "pineapple_punch_base", "diced_lime_in_drink", "wizard_blizzard_base"
 		};
-		for(String s : caches) {
-			if(p.getCache().hasKey(s)) {
-				if(reset) {
+		for (String s : caches) {
+			if (p.getCache().hasKey(s)) {
+				if (reset) {
 					p.getCache().remove(s);
 					continue;
 				}
@@ -1489,7 +1478,7 @@ public class Functions {
 			public void run() {
 				newNpc.setShouldRespawn(false);
 				World.getWorld().registerNpc(newNpc);
-				if(onlyShift)  {
+				if (onlyShift) {
 					n.setShouldRespawn(false);
 				}
 				n.remove();
@@ -1497,6 +1486,7 @@ public class Functions {
 		});
 		return newNpc;
 	}
+
 	public static void temporaryRemoveNpc(final Npc n) {
 		post(new Runnable() {
 			@Override
@@ -1514,8 +1504,7 @@ public class Functions {
 			public void action() {
 				try {
 					r.run();
-				}
-				catch (Throwable e) {
+				} catch (Throwable e) {
 					LOGGER.catching(e);
 				}
 			}

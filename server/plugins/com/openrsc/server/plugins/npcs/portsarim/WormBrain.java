@@ -17,7 +17,7 @@ public final class WormBrain implements WallObjectActionListener, WallObjectActi
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 30 && obj.getX() == 283 && obj.getY() == 665) {
 			return true;
-		} 
+		}
 		return false;
 	}
 
@@ -34,47 +34,47 @@ public final class WormBrain implements WallObjectActionListener, WallObjectActi
 					public void action() {
 						npcTalk(p, n, "So? Why should I be giving it to you? What you do for Wormbrain?");
 						new Menu().addOptions(
-								new Option("I'm not going to do anything for you. Forget it") {
-									public void action() {
-										npcTalk(p, n, "Me keep map piece, you no get map piece");
-									}
-								},
-								new Option("I'll let you live. I could just kill you") {
-									@Override
-									public void action() {
-										npcTalk(p, n, "Ha! Me in here you out dere. You not get map piece");
-									}
-								}, new Option("I suppose I could pay you for the map piece...") {
-									@Override
-									public void action() {
-										playerTalk(p, n, "Say, 10,000 coins?");
-										npcTalk(p, n, "Me not stoopid, it worth at least 1,000,000 coins!");
-										new Menu().addOptions(
-												new Option("You must be joking! Forget it") {
-													public void action() {
-														npcTalk(p, n, "Me keep map piece, you no get map piece");
-													}
-												}, new Option("Alright then, 1,000,000 it is") {
-													@Override
-													public void action() {
-														if(hasItem(p, 10, 1000000)) {
-															removeItem(p, 10, 1000000);
-															p.message("You buy the map piece from Wormbrain");
-															npcTalk(p, n, "Fank you very much! Now me can bribe da guards, hehehe");
-															addItem(p, 416, 1);
-														} else {
-															playerTalk(p, n, "Oops, I don't have enough on me");
-															npcTalk(p, n, "Comes back when you has enough");
-														}
-													}
-												}).showMenu(p);
-									}
-								}, new Option("Where did you get the map piece from?") {
-									@Override
-									public void action() {
-										npcTalk(p, n, "Found it when me pick some stuff up, me kept it");
-									}
-								}).showMenu(p);
+							new Option("I'm not going to do anything for you. Forget it") {
+								public void action() {
+									npcTalk(p, n, "Me keep map piece, you no get map piece");
+								}
+							},
+							new Option("I'll let you live. I could just kill you") {
+								@Override
+								public void action() {
+									npcTalk(p, n, "Ha! Me in here you out dere. You not get map piece");
+								}
+							}, new Option("I suppose I could pay you for the map piece...") {
+								@Override
+								public void action() {
+									playerTalk(p, n, "Say, 10,000 coins?");
+									npcTalk(p, n, "Me not stoopid, it worth at least 1,000,000 coins!");
+									new Menu().addOptions(
+										new Option("You must be joking! Forget it") {
+											public void action() {
+												npcTalk(p, n, "Me keep map piece, you no get map piece");
+											}
+										}, new Option("Alright then, 1,000,000 it is") {
+											@Override
+											public void action() {
+												if (hasItem(p, 10, 1000000)) {
+													removeItem(p, 10, 1000000);
+													p.message("You buy the map piece from Wormbrain");
+													npcTalk(p, n, "Fank you very much! Now me can bribe da guards, hehehe");
+													addItem(p, 416, 1);
+												} else {
+													playerTalk(p, n, "Oops, I don't have enough on me");
+													npcTalk(p, n, "Comes back when you has enough");
+												}
+											}
+										}).showMenu(p);
+								}
+							}, new Option("Where did you get the map piece from?") {
+								@Override
+								public void action() {
+									npcTalk(p, n, "Found it when me pick some stuff up, me kept it");
+								}
+							}).showMenu(p);
 					}
 				});
 			}

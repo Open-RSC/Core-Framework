@@ -14,7 +14,7 @@ public class UndergroundPassWell implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == WELL) {
+		if (obj.getID() == WELL) {
 			return true;
 		}
 		return false;
@@ -22,9 +22,9 @@ public class UndergroundPassWell implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == WELL) {
+		if (obj.getID() == WELL) {
 			message(p, "you climb into the well");
-			if((p.getCache().hasKey("orb_of_light1") && p.getCache().hasKey("orb_of_light2") && p.getCache().hasKey("orb_of_light3") && p.getCache().hasKey("orb_of_light4")) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, 7) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, -1)) {
+			if ((p.getCache().hasKey("orb_of_light1") && p.getCache().hasKey("orb_of_light2") && p.getCache().hasKey("orb_of_light3") && p.getCache().hasKey("orb_of_light4")) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, 7) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, -1)) {
 				message(p, "you feel the grip of icy hands all around you...");
 				p.teleport(722, 3461);
 				sleep(600);
@@ -34,7 +34,7 @@ public class UndergroundPassWell implements ObjectActionListener, ObjectActionEx
 				p.damage((int) (getCurrentLevel(p, HITS) * 0.2D));
 				displayTeleportBubble(p, obj.getX(), obj.getY(), false);
 				message(p, "from below an icy blast of air chills you to your bones",
-						"a mystical force seems to blast you back out of the well");
+					"a mystical force seems to blast you back out of the well");
 				p.message("there must be a positive force near by!");
 			}
 		}

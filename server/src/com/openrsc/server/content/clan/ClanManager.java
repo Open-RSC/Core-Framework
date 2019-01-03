@@ -14,15 +14,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 
-
 public class ClanManager {
+	public static final int MAX_CLAN_SIZE = 15;
+	public final static ClanRankComparator CLAN_COMPERATOR = new ClanRankComparator();
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-
-	public static final int MAX_CLAN_SIZE = 15;
-
 	public static ArrayList<Clan> clans = new ArrayList<Clan>();
 
 	public static void createClan(Clan clan) {
@@ -57,7 +55,7 @@ public class ClanManager {
 		for (Clan t : clans) {
 			if (t.getClanName().equalsIgnoreCase(exist))
 				return t;
-			else if(t.getClanTag().equalsIgnoreCase(exist))
+			else if (t.getClanTag().equalsIgnoreCase(exist))
 				return t;
 		}
 		return null;
@@ -90,7 +88,7 @@ public class ClanManager {
 			clan.setClanPoints(result.getInt("clan_points"));
 
 			PreparedStatement fetchPlayers = DatabaseConnection.getDatabase()
-					.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
+				.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 			fetchPlayers.setInt(1, clan.getClanID());
 			ResultSet playersResult = fetchPlayers.executeQuery();
 
@@ -103,7 +101,7 @@ public class ClanManager {
 				member.setKills(playersResult.getInt("kills"));
 				member.setDeaths(playersResult.getInt("deaths"));
 				clanMembers.add(member);
-				if(ClanRank.getRankFor(rankID) == ClanRank.LEADER) {
+				if (ClanRank.getRankFor(rankID) == ClanRank.LEADER) {
 					clan.setLeader(member);
 				}
 			}
@@ -117,7 +115,7 @@ public class ClanManager {
 
 	private static void databaseCreateClan(Clan clan) throws SQLException {
 		PreparedStatement statement = DatabaseConnection.getDatabase().getConnection().prepareStatement(
-				"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan`(`name`, `tag`, `leader`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, clan.getClanName());
 		statement.setString(2, clan.getClanTag());
 		statement.setString(3, clan.getLeader().getUsername());
@@ -131,7 +129,7 @@ public class ClanManager {
 		statement.close();
 
 		statement = DatabaseConnection.getDatabase()
-				.prepareStatement("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`) VALUES (?,?,?)");
+			.prepareStatement("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`) VALUES (?,?,?)");
 		for (ClanPlayer member : clan.getPlayers()) {
 			statement.setInt(1, clan.getClanID());
 			statement.setString(2, member.getUsername());
@@ -144,7 +142,7 @@ public class ClanManager {
 	private static void databaseDeleteClan(Clan clan) throws SQLException {
 		PreparedStatement deleteClan = DatabaseConnection.getDatabase().prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan` WHERE `id`=?");
 		PreparedStatement deleteClanPlayers = DatabaseConnection.getDatabase()
-				.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
+			.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 
 		deleteClan.setInt(1, clan.getClanID());
 		deleteClan.executeUpdate();
@@ -155,7 +153,7 @@ public class ClanManager {
 	private static void saveClanPlayer(Clan clan) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase().prepareStatement(
-					"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
+				"INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)");
 			for (ClanPlayer member : clan.getPlayers()) {
 				statement.setInt(1, clan.getClanID());
 				statement.setString(2, member.getUsername());
@@ -174,7 +172,7 @@ public class ClanManager {
 	public static void deleteClanPlayer(Clan clan) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
-					.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
+				.prepareStatement("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 			statement.setInt(1, clan.getClanID());
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -186,7 +184,7 @@ public class ClanManager {
 	public static void updateClan(Clan clan) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
-					.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `clan_points`=? WHERE `id`=?");
+				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `clan_points`=? WHERE `id`=?");
 			statement.setString(1, clan.getClanName());
 			statement.setString(2, clan.getClanTag());
 			statement.setString(3, clan.getLeader().getUsername());
@@ -207,7 +205,7 @@ public class ClanManager {
 	public static void updateClanRankPlayer(ClanPlayer cp) {
 		try {
 			PreparedStatement statement = DatabaseConnection.getDatabase()
-					.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` SET `rank`=? WHERE `username`=?");
+				.prepareStatement("UPDATE `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "clan_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());
 			statement.executeUpdate();
@@ -230,7 +228,7 @@ public class ClanManager {
 	}
 
 	public static void saveClans() {
-		for(Clan t : clans) {
+		for (Clan t : clans) {
 			saveClanChanges(t);
 		}
 	}
@@ -243,13 +241,10 @@ public class ClanManager {
 
 		//saveBank(team);
 	}
-	
-	public final static ClanRankComparator CLAN_COMPERATOR = new ClanRankComparator();
-	private static class ClanRankComparator implements Comparator<Clan>
-	{
-		public int compare(Clan o1, Clan o2)
-		{
-			if(o1.getClanPoints() == o2.getClanPoints()) {
+
+	private static class ClanRankComparator implements Comparator<Clan> {
+		public int compare(Clan o1, Clan o2) {
+			if (o1.getClanPoints() == o2.getClanPoints()) {
 				return o1.getClanName().compareTo(o2.getClanName());
 			}
 			return o1.getClanPoints() > o2.getClanPoints() ? -1 : 1;

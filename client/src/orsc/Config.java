@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Config {
-	private static Properties prop = new Properties();
-
 	public static final String SERVER_NAME = "Open RSC";
 	public static final String SERVER_IP = "localhost";
 	public static final int SERVER_PORT = 43594;
@@ -18,19 +16,14 @@ public class Config {
 	public static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	public static final boolean CACHE_APPEND_VERSION = false;
 	public static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-
-
-
 	public static boolean F_ANDROID_BUILD = false;
 	public static boolean SAVE_CREDENTIALS = true;
 	//public static String F_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-    public static String F_CACHE_DIR = "";
-
-
+	public static String F_CACHE_DIR = "";
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_BATCH_PROGRESS_BAR = false;
-	public static boolean C_SHOW_ROOF = true;
+	public static boolean C_HIDE_ROOFS = false;
 	public static boolean C_SHOW_FOG = true;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = false;
@@ -40,7 +33,6 @@ public class Config {
 	public static int C_FIGHT_MENU = 1;
 	public static int C_ZOOM = 0;
 	public static boolean C_INV_COUNT = false;
-
 	/* Android: */
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static int F_LONG_PRESS_CALC;
@@ -49,14 +41,12 @@ public class Config {
 	public static int C_MENU_SIZE = 6;
 	public static boolean C_SWIPE_TO_SCROLL = true;
 	public static boolean C_SWIPE_TO_ROTATE = true;
-
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
 	public static int C_EXPERIENCE_COUNTER_MODE = 0;
 	public static int C_EXPERIENCE_COUNTER_COLOR = 0;
 	public static int C_EXPERIENCE_DROP_SPEED = 1;
 	public static boolean C_EXPERIENCE_CONFIG_SUBMENU = false;
-
 	/* Server Defined: DOUBLE CHECK THESE ON SERVER */
 	public static int S_PLAYER_LEVEL_LIMIT = 99;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
@@ -77,7 +67,7 @@ public class Config {
 	public static boolean S_WANT_DECANTING = false;
 	public static boolean S_WANT_CERTS_TO_BANK = false;
 	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
-
+	public static boolean S_RIGHT_CLICK_BANK = false;
 	// if you change these, and the config file,
 	// they will also change the options menu to
 	// 2-tabs (3 on android). (Not enough room for
@@ -98,6 +88,7 @@ public class Config {
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
+	private static Properties prop = new Properties();
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
@@ -108,16 +99,13 @@ public class Config {
 			if (CUSTOM_CACHE_DIR_ENABLED) {
 				if (CACHE_APPEND_VERSION) {
 					F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
-				}
-				else {
+				} else {
 					F_CACHE_DIR = CUSTOM_CACHE_DIR;
 				}
-			}
-			else {
+			} else {
 				if (CACHE_APPEND_VERSION) {
 					F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
-				}
-				else {
+				} else {
 					F_CACHE_DIR = "Cache";
 				}
 			}
@@ -163,7 +151,7 @@ public class Config {
 			if (Modifier.isStatic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers())) {
 				try {
 					if (force || !prop.containsKey(f.getName())
-							|| !prop.get(f.getName()).toString().equalsIgnoreCase(f.get(null).toString())) {
+						|| !prop.get(f.getName()).toString().equalsIgnoreCase(f.get(null).toString())) {
 						Class<?> t = f.getType();
 
 						if (t == int.class) {
@@ -238,5 +226,7 @@ public class Config {
 		return F_ANDROID_BUILD;
 	}
 
-	public static boolean Remember() { return SAVE_CREDENTIALS; }
+	public static boolean Remember() {
+		return SAVE_CREDENTIALS;
+	}
 }

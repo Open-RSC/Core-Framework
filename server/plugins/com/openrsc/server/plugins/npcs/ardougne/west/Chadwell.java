@@ -12,21 +12,21 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public final class Chadwell  implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class Chadwell implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
 
-	private final Shop shop = new Shop(false, 3000, 130, 40,3,  new Item(237, 7), new Item(156, 10), new Item(357, 2), new Item(50, 2), new Item(166, 10), new Item(259, 2), new Item(168, 5), new Item(138, 10), new Item(17, 10), new Item(135, 3), new Item(132, 2), new Item(188, 2), new Item(11, 200), new Item(1263, 10));
-	
+	private final Shop shop = new Shop(false, 3000, 130, 40, 3, new Item(237, 7), new Item(156, 10), new Item(357, 2), new Item(50, 2), new Item(166, 10), new Item(259, 2), new Item(168, 5), new Item(138, 10), new Item(17, 10), new Item(135, 3), new Item(132, 2), new Item(188, 2), new Item(11, 200), new Item(1263, 10));
+
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-			npcTalk(p,n, "hello there", "good day, what can i get you?");
-			int options = showMenu(p,n, "nothing thanks, just browsing", "lets see what you've got");
-			if(options == 0) {
-				npcTalk(p, n, "ok then");
-			}
-			if(options == 1) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
-			}
+		npcTalk(p, n, "hello there", "good day, what can i get you?");
+		int options = showMenu(p, n, "nothing thanks, just browsing", "lets see what you've got");
+		if (options == 0) {
+			npcTalk(p, n, "ok then");
+		}
+		if (options == 1) {
+			p.setAccessingShop(shop);
+			ActionSender.showShop(p, shop);
+		}
 
 	}
 
@@ -37,7 +37,7 @@ public final class Chadwell  implements ShopInterface, TalkToNpcExecutiveListene
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

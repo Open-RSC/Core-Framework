@@ -12,11 +12,11 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class HelemosShop  implements ShopInterface,
-TalkToNpcListener, TalkToNpcExecutiveListener {
+public class HelemosShop implements ShopInterface,
+	TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	private static final int HELEMOS = 269;
-	private final Shop shop = new Shop(false, 60000, 100, 55,3, new Item(594, 1));
+	private final Shop shop = new Shop(false, 60000, 100, 55, 3, new Item(594, 1));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
@@ -25,7 +25,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override
@@ -36,14 +36,14 @@ TalkToNpcListener, TalkToNpcExecutiveListener {
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to the hero's guild");
-		final int option = showMenu(p, n, new String[] {
-				"So do you sell anything here?", "So what can I do here?" });
+		final int option = showMenu(p, n, new String[]{
+			"So do you sell anything here?", "So what can I do here?"});
 		if (option == 0) {
 			npcTalk(p, n, "Why yes we do run an exclusive shop for our members");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
 			npcTalk(p, n, "Look around there are all sorts of things to keep our members entertained");
-		} 
+		}
 	}
 }

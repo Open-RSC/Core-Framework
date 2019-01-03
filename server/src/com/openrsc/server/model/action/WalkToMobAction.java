@@ -7,28 +7,30 @@ import com.openrsc.server.model.entity.player.Player;
 
 public abstract class WalkToMobAction extends WalkToAction {
 
-	private int radius;
 	protected Mob mob;
+	private int radius;
 
 	public WalkToMobAction(Player owner, Mob mob, int radius) {
 		super(owner, mob.getLocation());
 		this.mob = mob;
 		this.radius = radius;
-		if(shouldExecute()) {
+		if (shouldExecute()) {
 			execute();
 			owner.setWalkToAction(null);
 			hasExecuted = true;
 		}
 	}
+
 	public Mob getMob() {
 		return mob;
 	}
+
 	@Override
 	public boolean shouldExecute() {
 		return (player.withinRange(mob, radius)
 			&& PathValidation.checkAdjacent(
-				new Point(player.getX(), player.getY()),
-				new Point(mob.getX(), mob.getY()))
+			new Point(player.getX(), player.getY()),
+			new Point(mob.getX(), mob.getY()))
 			&& !hasExecuted);
 	}
 }

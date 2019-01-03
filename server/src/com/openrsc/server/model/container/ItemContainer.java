@@ -10,7 +10,7 @@ public class ItemContainer {
 
 	private ArrayList<Item> list = new ArrayList<Item>();
 	private LinkedList<ContainerListener> listeners = new LinkedList<ContainerListener>();
-	
+
 	private boolean alwaysStack;
 
 	public ItemContainer(Player player, int size, boolean alwaysStack) {
@@ -213,19 +213,19 @@ public class ItemContainer {
 	}
 
 	public void fireItemChanged(int slot) {
-		for(ContainerListener listener : listeners) {
+		for (ContainerListener listener : listeners) {
 			listener.fireItemChanged(slot);
 		}
 	}
 
 	public void fireItemsChanged() {
-		for(ContainerListener listener : listeners) {
+		for (ContainerListener listener : listeners) {
 			listener.fireItemsChanged();
 		}
 	}
-	
+
 	public void fireContainerFull() {
-		for(ContainerListener l : listeners) {
+		for (ContainerListener l : listeners) {
 			l.fireContainerFull();
 		}
 	}

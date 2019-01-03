@@ -33,8 +33,8 @@ public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			addItem(p, 201, 1);
 		} else if (selected == 5)
 			npcTalk(p, n, "I'm a little worried",
-					"I've heard there's lots of people going about,",
-					"killing citizens at random");
+				"I've heard there's lots of people going about,",
+				"killing citizens at random");
 		else if (selected == 6) {
 			npcTalk(p, n, "I'm fine", "How are you?");
 			playerTalk(p, n, "Very well, thank you");
@@ -46,7 +46,7 @@ public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			npcTalk(p, n, "A very noble profession");
 		} else if (selected == 9) {
 			npcTalk(p, n, "Not too bad",
-					"I'm a little worried about the increase in Goblins these days");
+				"I'm a little worried about the increase in Goblins these days");
 			playerTalk(p, n, "Don't worry. I'll kill them");
 		} else if (selected == 10)
 			npcTalk(p, n, "Hello", "Nice weather we've been having");
@@ -55,21 +55,21 @@ public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		else if (selected == 12) {
 			npcTalk(p, n, "Do I know you?");
 			playerTalk(p, n,
-					"No, I was just wondering if you had anything interesting to say");
+				"No, I was just wondering if you had anything interesting to say");
 		} else if (selected == 13) {
 			npcTalk(p, n, "How can I help you?");
 			int option = showMenu(p, n, "Do you wish to trade?",
-					"I'm in search of a quest",
-					"I'm in search of enemies to kill");
+				"I'm in search of a quest",
+				"I'm in search of enemies to kill");
 			if (option == 0)
 				npcTalk(p, n, "No, I have nothing I wish to get rid of",
-						"If you want some trading,",
-						"there are plenty of shops and market stalls around though");
+					"If you want some trading,",
+					"there are plenty of shops and market stalls around though");
 			else if (option == 1)
 				npcTalk(p, n, "I'm sorry I can't help you there");
 			else if (option == 2)
 				npcTalk(p, n,
-						"I've heard there are many fearsome creatures under the ground");
+					"I've heard there are many fearsome creatures under the ground");
 		}
 	}
 }

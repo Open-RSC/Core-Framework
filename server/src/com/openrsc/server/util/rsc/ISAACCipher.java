@@ -5,7 +5,7 @@ package com.openrsc.server.util.rsc;
  * An implementation of the <a href="http://www.burtleburtle.net/bob/rand/isaacafa.html">ISAAC</a> psuedorandom number
  * generator.
  * </p>
- * 
+ *
  * <pre>
  * ------------------------------------------------------------------------------
  * Rand.java: By Bob Jenkins.  My random number generator, ISAAC.
@@ -20,7 +20,7 @@ package com.openrsc.server.util.rsc;
  * <p>
  * This class has been changed to be more conformant to Java and javadoc conventions.
  * </p>
- * 
+ *
  * @author Bob Jenkins
  */
 public final class ISAACCipher {
@@ -86,7 +86,7 @@ public final class ISAACCipher {
 
 	/**
 	 * Creates the random number generator with the specified seed.
-	 * 
+	 *
 	 * @param seed The seed.
 	 */
 	public ISAACCipher(int[] seed) {
@@ -100,7 +100,7 @@ public final class ISAACCipher {
 
 	/**
 	 * Initialises this random number generator.
-	 * 
+	 *
 	 * @param hasSeed Set to {@code true} if a seed was passed to the constructor.
 	 */
 	private void init(boolean hasSeed) {
@@ -236,7 +236,7 @@ public final class ISAACCipher {
 		int i, j, x, y;
 
 		b += ++c;
-		for (i = 0, j = SIZE / 2; i < SIZE / 2;) {
+		for (i = 0, j = SIZE / 2; i < SIZE / 2; ) {
 			x = mem[i];
 			a ^= a << 13;
 			a += mem[j++];
@@ -262,7 +262,7 @@ public final class ISAACCipher {
 			rsl[i++] = b = mem[(y >> LOG_SIZE & MASK) >> 2] + x;
 		}
 
-		for (j = 0; j < SIZE / 2;) {
+		for (j = 0; j < SIZE / 2; ) {
 			x = mem[i];
 			a ^= a << 13;
 			a += mem[j++];
@@ -291,7 +291,7 @@ public final class ISAACCipher {
 
 	/**
 	 * Gets the next random value.
-	 * 
+	 *
 	 * @return The next random value.
 	 */
 	public int nextInt() {

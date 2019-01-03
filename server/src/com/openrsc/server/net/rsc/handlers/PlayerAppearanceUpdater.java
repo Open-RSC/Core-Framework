@@ -37,7 +37,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		int bodySprite = bodyGender + 1;
 
 		PlayerAppearance appearance = new PlayerAppearance(hairColour,
-				topColour, trouserColour, skinColour, headSprite, bodySprite);
+			topColour, trouserColour, skinColour, headSprite, bodySprite);
 		if (!appearance.isValid()) {
 			player.setSuspiciousPlayer(true);
 			return;
@@ -50,7 +50,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 			for (int slot = 0; slot < inv.size(); slot++) {
 				Item i = inv.get(slot);
 				if (i.isWieldable() && i.getDef().getWieldPosition() == 1
-						&& i.isWielded() && i.getDef().isFemaleOnly()) {
+					&& i.isWielded() && i.getDef().isFemaleOnly()) {
 					player.getInventory().unwieldItem(i, false);
 					ActionSender.sendInventoryUpdateItem(player, slot);
 					break;

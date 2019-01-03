@@ -50,226 +50,80 @@ import java.util.concurrent.atomic.AtomicReference;
  * A single player.
  */
 public final class Player extends Mob {
+	public final static Item[] STARTER_ITEMS = {new Item(87), new Item(166), new Item(132)};
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-
 	public final int MAX_FATIGUE = 75000;
-
-	public int IRON_MAN_MODE = 0;
-	public int IRON_MAN_RESTRICTION = 1;
-	public int IRON_MAN_HC_DEATH = 0;
-
-	public int getIronMan() {
-		return IRON_MAN_MODE;
-	}
-
-	public int getIronManRestriction() {
-		return IRON_MAN_RESTRICTION;
-	}
-
-	public void setIronMan(int i) {
-		this.IRON_MAN_MODE = i;
-	}
-
-	public int getHCIronmanDeath() {
-		return IRON_MAN_HC_DEATH;
-	}
-
-	public void setHCIronmanDeath(int i) {
-		this.IRON_MAN_HC_DEATH = i;
-	}
-
-	public void updateHCIronman(int int1) {
-		this.IRON_MAN_MODE = int1;
-		this.IRON_MAN_HC_DEATH = int1;
-	}
-
-	public void setIronManRestriction(int i) {
-		this.IRON_MAN_RESTRICTION = i;
-	}
-
-	public boolean isIronMan(int mode) {
-		if (mode == 1 && getIronMan() == 1) {
-			return true;
-		} else if (mode == 2 && getIronMan() == 2) {
-			return true;
-		} else if (mode == 3 && getIronMan() == 3) {
-			return true;
-		}
-		return false;
-	}
-
-	private FireCannonEvent cannonEvent = null;
-
-	public void resetCannonEvent() {
-		if (cannonEvent != null) {
-			cannonEvent.stop();
-		}
-		cannonEvent = null;
-	}
-
-	public boolean isCannonEventActive() {
-		return cannonEvent != null;
-	}
-
-	public void setCannonEvent(FireCannonEvent event) {
-		cannonEvent = event;
-	}
-
-	private long consumeTimer = 0;
-
-	public boolean cantConsume() {
-		return consumeTimer - System.currentTimeMillis() > 0;
-	}
-
-	public void setConsumeTimer(long l) {
-		consumeTimer = System.currentTimeMillis() + l;
-	}
-
-	public long getLastSaveTime() {
-	return lastSaveTime;
-	}
-
-	public void setLastSaveTime(long save) {
-	lastSaveTime = save;
-	}
-
-	private long lastSaveTime = System.currentTimeMillis();
-
-	private int appearanceID;
-
-	private HashMap<Long, Integer> knownPlayersAppearanceIDs = new HashMap<Long, Integer>();
-
-	public int getAppearanceID() {
-		return appearanceID;
-	}
-
-	public void incAppearanceID() {
-		appearanceID++;
-	}
-
-    private long lastCommand;
-
-	public void setLastCommand(long newTime) {
-		this.lastCommand = newTime;
-	}
-
-	public long getLastCommand() {
-		return lastCommand;
-	}
-
-	public boolean requiresAppearanceUpdateFor(Player p) {
-		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
-			if (entry.getKey() == p.getUsernameHash()) {
-				if (entry.getValue() != p.getAppearanceID()) {
-					knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
-		return true;
-	}
-
-	public HashMap<Long, Integer> getKnownPlayerAppearanceIDs() {
-		return knownPlayersAppearanceIDs;
-	}
-
-	public void write(Packet o) {
-		if (channel != null) {
-			synchronized (outgoingPacketsLock) {
-				outgoingPackets.add(o);
-			}
-		}
-	}
-
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
-
-	public final static Item[] STARTER_ITEMS = { new Item(87), new Item(166), new Item(132) };
-
-	private LinkedHashSet<Player> localPlayers = new LinkedHashSet<Player>();
-	private LinkedHashSet<Npc> localNpcs = new LinkedHashSet<Npc>();
-	private LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
-	private LinkedHashSet<GameObject> localWallObjects = new LinkedHashSet<GameObject>();
-	private LinkedHashSet<GroundItem> localGroundItems = new LinkedHashSet<GroundItem>();
-
-	public LinkedHashSet<Npc> getLocalNpcs() {
-		return localNpcs;
-	}
-
-	public LinkedHashSet<GameObject> getLocalWallObjects() {
-		return localWallObjects;
-	}
-
-	public LinkedHashSet<GameObject> getLocalGameObjects() {
-		return localObjects;
-	}
-
-	public LinkedHashSet<Player> getLocalPlayers() {
-		return localPlayers;
-	}
-
-	public LinkedHashSet<GroundItem> getLocalGroundItems() {
-		return localGroundItems;
-	}
-	private ArrayDeque<Point> locationsToClear = new ArrayDeque<Point>();
-
-	public ArrayDeque<Point> getLocationsToClear() {
-		return locationsToClear;
-	}
-
-	/**
-	 * Prayers
-	 */
-	private Prayers prayers;
-
-	/**
-	 * Bank for banked items
-	 */
-	private Bank bank;
-
-	private BatchEvent batchEvent = null;
-
-	public int lastMineTry = -1;
 	/**
 	 * Players cache is used to store various objects into database
 	 */
 	private final Cache cache = new Cache();
 	private final Cache killCache = new Cache();
-
 	/**
-	 * Controls if were allowed to accept appearance updates
+	 * Received packets from this player yet to be processed.
 	 */
-	private boolean changingAppearance = false;
-
+	private final LinkedHashMap<Integer, Packet> incomingPackets = new LinkedHashMap<Integer, Packet>();
+	private final Object incomingPacketLock = new Object();
+	/**
+	 * Outgoing packets from this player yet to be processed.
+	 */
+	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
+	private final Object outgoingPacketsLock = new Object();
+	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
+	public int IRON_MAN_MODE = 0;
+	public int IRON_MAN_RESTRICTION = 1;
+	public int IRON_MAN_HC_DEATH = 0;
+	public int lastMineTry = -1;
 	public int click = -1;
-
-	/**
-	 * Combat style: 0 - all, 1 - str, 2 - att, 3 - def
-	 */
-	private int combatStyle = 0;
-
 	/**
 	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
 	 */
 	public String correctSleepword = "";
-
+	/**
+	 * The last menu reply this player gave in a quest
+	 */
+	public long lastCast = System.currentTimeMillis();
+	private FireCannonEvent cannonEvent = null;
+	private long consumeTimer = 0;
+	private long lastSaveTime = System.currentTimeMillis();
+	private int appearanceID;
+	private HashMap<Long, Integer> knownPlayersAppearanceIDs = new HashMap<Long, Integer>();
+	private long lastCommand;
+	private LinkedHashSet<Player> localPlayers = new LinkedHashSet<Player>();
+	private LinkedHashSet<Npc> localNpcs = new LinkedHashSet<Npc>();
+	private LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
+	private LinkedHashSet<GameObject> localWallObjects = new LinkedHashSet<GameObject>();
+	private LinkedHashSet<GroundItem> localGroundItems = new LinkedHashSet<GroundItem>();
+	private ArrayDeque<Point> locationsToClear = new ArrayDeque<Point>();
+	/**
+	 * Prayers
+	 */
+	private Prayers prayers;
+	/**
+	 * Bank for banked items
+	 */
+	private Bank bank;
+	private BatchEvent batchEvent = null;
+	/**
+	 * Controls if were allowed to accept appearance updates
+	 */
+	private boolean changingAppearance = false;
+	/**
+	 * Combat style: 0 - all, 1 - str, 2 - att, 3 - def
+	 */
+	private int combatStyle = 0;
 	private String currentIP = "0.0.0.0";
-
 	/**
 	 * Unix time when the player logged in
 	 */
 	private long currentLogin = 0;
-
 	/**
 	 * DelayedEvent responsible for handling prayer drains
 	 */
 	private PrayerDrainEvent prayerDrainEvent;
-
 	/**
 	 * The drain rate of the prayers currently enabled
 	 */
@@ -278,17 +132,14 @@ public final class Player extends Mob {
 	 * Amount of fatigue - 0 to 75000
 	 */
 	private int fatigue = 0, sleepStateFatigue = 0;
-
 	/**
 	 * The main accounts group is
 	 */
 	private int groupID = Group.DEFAULT_GROUP;
-
 	/**
 	 * Is the player accessing their bank?
 	 */
 	private boolean inBank = false;
-
 	private int incorrectSleepTries = 0;
 	/**
 	 * The npc we are currently interacting with
@@ -304,14 +155,9 @@ public final class Player extends Mob {
 	 */
 	private Channel channel;
 	/**
-	 * The last menu reply this player gave in a quest
-	 */
-	public long lastCast = System.currentTimeMillis();
-	/**
 	 * Time of antidote protection from poison
 	 */
 	private long lastAntidote = 0;
-
 	/**
 	 * Stores the last IP address used
 	 */
@@ -328,7 +174,6 @@ public final class Player extends Mob {
 	 * Time last report was sent, used to throttle reports
 	 */
 	private long lastReport = 0;
-
 	/**
 	 * The time of the last spell cast, used as a throttle
 	 */
@@ -358,28 +203,14 @@ public final class Player extends Mob {
 	 */
 	private int owner = 1;
 	/**
-	 * Received packets from this player yet to be processed.
-	 */
-	private final LinkedHashMap<Integer, Packet> incomingPackets = new LinkedHashMap<Integer, Packet>();
-	private final Object incomingPacketLock = new Object();
-
-	/**
-	 * Outgoing packets from this player yet to be processed.
-	 */
-	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
-	private final Object outgoingPacketsLock = new Object();
-	/**
 	 * The player's password
 	 */
 	private String password;
-
 	private int questionOption;
 	/**
 	 * Total quest points
 	 */
 	private int questPoints = 0;
-
-	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
 	/**
 	 * Ranging event
 	 */
@@ -389,7 +220,6 @@ public final class Player extends Mob {
 	 * If the player is reconnecting after connection loss
 	 */
 	private boolean reconnecting = false;
-
 	/**
 	 * Is a trade/duel update required?
 	 */
@@ -402,11 +232,8 @@ public final class Player extends Mob {
 	 * DelayedEvent used for removing players skull after 20mins
 	 */
 	private DelayedEvent skullEvent = null;
-
 	private DelayedEvent chargeEvent = null;
-
 	private DelayedEvent sleepEvent;
-
 	private boolean sleeping = false;
 	/**
 	 * Player sleep word
@@ -437,11 +264,63 @@ public final class Player extends Mob {
 	 */
 	private long sessionStart;
 	private PlayerSettings playerSettings;
-
 	private Social social;
-
 	private Duel duel;
+	private DelayedEvent unregisterEvent;
+	/**
+	 * Restricts P2P stuff in F2P wilderness.
+	 */
+	/*public void unwieldMembersItems() { // Not authentic behavior
+		if (getLocation().inWilderness() && (!getLocation().isMembersWild())) {
+			boolean found = false;
+			for (Item i : getInventory().getItems()) {
 
+				if (i.isWielded() && i.getDef().isMembersOnly()) {
+					getInventory().unwieldItem(i, true);
+					found = true;
+				}
+				if (i.getID() == 2109 && i.isWielded()) {
+					getInventory().unwieldItem(i, true);
+				}
+			}
+			if (found) {
+				message("Members objects can only be wield above wild level P2P Gate " + World.membersWildStart + " - "
+						+ World.membersWildMax);
+
+				ActionSender.sendInventory(this);
+				ActionSender.sendEquipmentStats(this);
+			}
+			for (int i = 0; i < 3; i++) {
+				int min = skills.getLevel(i);
+				int max = skills.getMaxStat(i);
+				int baseStat = min > max ? max : min;
+				int newStat = baseStat + DataConversions.roundUp((max / 100D) * 10) + 2;
+				if (min > newStat || (min > max && (i == 1 || i == 0))) {
+					skills.setLevel(i, max);
+				}
+			}
+			if (skills.getLevel(Skills.RANGE) > skills.getMaxStat(Skills.RANGE)) {
+				skills.setLevel(Skills.RANGE, skills.getMaxStat(Skills.RANGE));
+			}
+		}
+
+	}*/
+	private int bankSize = 192; //Maximum bank items allowed
+	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
+	private long lastSave = System.currentTimeMillis();
+	private int actionsMouseStill = 0;
+	private long lastMouseMoved = 0;
+	private Map<Integer, Integer> achievements = new ConcurrentHashMap<>();
+	/**
+	 * KILLS N DEATHS
+	 **/
+	private int kills = 0;
+	private int deaths = 0;
+	private WalkToAction walkToAction;
+	private Trade trade;
+	private int databaseID;
+	private Clan clan;
+	private ClanInvite activeClanInvitation;
 	/**
 	 * Constructs a new Player instance from LoginRequest
 	 *
@@ -468,9 +347,149 @@ public final class Player extends Mob {
 
 	}
 
+	public int getIronMan() {
+		return IRON_MAN_MODE;
+	}
+
+	public void setIronMan(int i) {
+		this.IRON_MAN_MODE = i;
+	}
+
+	public int getIronManRestriction() {
+		return IRON_MAN_RESTRICTION;
+	}
+
+	public void setIronManRestriction(int i) {
+		this.IRON_MAN_RESTRICTION = i;
+	}
+
+	public int getHCIronmanDeath() {
+		return IRON_MAN_HC_DEATH;
+	}
+
+	public void setHCIronmanDeath(int i) {
+		this.IRON_MAN_HC_DEATH = i;
+	}
+
+	public void updateHCIronman(int int1) {
+		this.IRON_MAN_MODE = int1;
+		this.IRON_MAN_HC_DEATH = int1;
+	}
+
+	public boolean isIronMan(int mode) {
+		if (mode == 1 && getIronMan() == 1) {
+			return true;
+		} else if (mode == 2 && getIronMan() == 2) {
+			return true;
+		} else if (mode == 3 && getIronMan() == 3) {
+			return true;
+		}
+		return false;
+	}
+
+	public void resetCannonEvent() {
+		if (cannonEvent != null) {
+			cannonEvent.stop();
+		}
+		cannonEvent = null;
+	}
+
+	public boolean isCannonEventActive() {
+		return cannonEvent != null;
+	}
+
+	public void setCannonEvent(FireCannonEvent event) {
+		cannonEvent = event;
+	}
+
+	public boolean cantConsume() {
+		return consumeTimer - System.currentTimeMillis() > 0;
+	}
+
+	public void setConsumeTimer(long l) {
+		consumeTimer = System.currentTimeMillis() + l;
+	}
+
+	public long getLastSaveTime() {
+		return lastSaveTime;
+	}
+
+	public void setLastSaveTime(long save) {
+		lastSaveTime = save;
+	}
+
+	public int getAppearanceID() {
+		return appearanceID;
+	}
+
+	public void incAppearanceID() {
+		appearanceID++;
+	}
+
+	public long getLastCommand() {
+		return lastCommand;
+	}
+
+	public void setLastCommand(long newTime) {
+		this.lastCommand = newTime;
+	}
+
+	public boolean requiresAppearanceUpdateFor(Player p) {
+		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
+			if (entry.getKey() == p.getUsernameHash()) {
+				if (entry.getValue() != p.getAppearanceID()) {
+					knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+		return true;
+	}
+
+	public HashMap<Long, Integer> getKnownPlayerAppearanceIDs() {
+		return knownPlayersAppearanceIDs;
+	}
+
+	public void write(Packet o) {
+		if (channel != null) {
+			synchronized (outgoingPacketsLock) {
+				outgoingPackets.add(o);
+			}
+		}
+	}
+
+	public LinkedHashSet<Npc> getLocalNpcs() {
+		return localNpcs;
+	}
+
+	public LinkedHashSet<GameObject> getLocalWallObjects() {
+		return localWallObjects;
+	}
+
+	public LinkedHashSet<GameObject> getLocalGameObjects() {
+		return localObjects;
+	}
+
+	public LinkedHashSet<Player> getLocalPlayers() {
+		return localPlayers;
+	}
+
+	public LinkedHashSet<GroundItem> getLocalGroundItems() {
+		return localGroundItems;
+	}
+
+	public ArrayDeque<Point> getLocationsToClear() {
+		return locationsToClear;
+	}
+
 	public boolean accessingBank() {
 		return inBank;
 	}
+
+	//private int unreadMessages, teleportStones;
 
 	public boolean accessingShop() {
 		return shop != null;
@@ -526,7 +545,7 @@ public final class Player extends Mob {
 
 	public boolean canLogout() {
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
-				&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000;
+			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000;
 	}
 
 	public boolean canReport() {
@@ -555,7 +574,7 @@ public final class Player extends Mob {
 			}
 			if (!missile) {
 				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
-						|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
 					return false;
 				}
 			}
@@ -614,17 +633,11 @@ public final class Player extends Mob {
 		return -1;
 	}
 
-	private DelayedEvent unregisterEvent;
-
-	//private int unreadMessages, teleportStones;
-
 	/**
 	 * Unregisters this player instance from the server
 	 *
-	 * @param force
-	 *            - if false wait until combat is over
-	 * @param reason
-	 *            - reason why the player was unregistered.
+	 * @param force  - if false wait until combat is over
+	 * @param reason - reason why the player was unregistered.
 	 */
 	public void unregister(boolean force, final String reason) {
 		if (unregistering) {
@@ -643,7 +656,7 @@ public final class Player extends Mob {
 				@Override
 				public void run() {
 					if (owner.canLogout() || (!(owner.inCombat() && owner.getDuel().isDuelActive())
-							&& System.currentTimeMillis() - startDestroy > 60000)) {
+						&& System.currentTimeMillis() - startDestroy > 60000)) {
 						owner.unregister(true, reason);
 						matchRunning = false;
 					}
@@ -683,56 +696,16 @@ public final class Player extends Mob {
 				if (getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
 					message("You are not a high enough level to use this item");
 					message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of "
-							+ requiredLevel);
+						+ requiredLevel);
 					item.setWielded(false);
 					updateWornItems(item.getDef().getWieldPosition(),
-							getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
+						getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
 					ActionSender.sendInventoryUpdateItem(this, slot);
 				}
 			}
 		}
 		ActionSender.sendEquipmentStats(this);
 	}
-
-	/**
-	 * Restricts P2P stuff in F2P wilderness.
-	 */
-	/*public void unwieldMembersItems() { // Not authentic behavior
-		if (getLocation().inWilderness() && (!getLocation().isMembersWild())) {
-			boolean found = false;
-			for (Item i : getInventory().getItems()) {
-
-				if (i.isWielded() && i.getDef().isMembersOnly()) {
-					getInventory().unwieldItem(i, true);
-					found = true;
-				}
-				if (i.getID() == 2109 && i.isWielded()) {
-					getInventory().unwieldItem(i, true);
-				}
-			}
-			if (found) {
-				message("Members objects can only be wield above wild level P2P Gate " + World.membersWildStart + " - "
-						+ World.membersWildMax);
-
-				ActionSender.sendInventory(this);
-				ActionSender.sendEquipmentStats(this);
-			}
-			for (int i = 0; i < 3; i++) {
-				int min = skills.getLevel(i);
-				int max = skills.getMaxStat(i);
-				int baseStat = min > max ? max : min;
-				int newStat = baseStat + DataConversions.roundUp((max / 100D) * 10) + 2;
-				if (min > newStat || (min > max && (i == 1 || i == 0))) {
-					skills.setLevel(i, max);
-				}
-			}
-			if (skills.getLevel(Skills.RANGE) > skills.getMaxStat(Skills.RANGE)) {
-				skills.setLevel(Skills.RANGE, skills.getMaxStat(Skills.RANGE));
-			}
-		}
-
-	}*/
-	private int bankSize = 192; //Maximum bank items allowed
 
 	public int getBankSize() {
 		return bankSize;
@@ -746,10 +719,17 @@ public final class Player extends Mob {
 		return bank;
 	}
 
+	public void setBank(Bank b) {
+		bank = b;
+	}
+
 	public Cache getCache() {
 		return cache;
 	}
-	public Cache getKillCache() { return killCache; }
+
+	public Cache getKillCache() {
+		return killCache;
+	}
 
 	public long getCastTimer() {
 		return lastSpellCast;
@@ -759,21 +739,41 @@ public final class Player extends Mob {
 		return click;
 	}
 
+	public void setClick(int click) {
+		this.click = click;
+	}
+
 	@Override
 	public int getCombatStyle() {
 		return combatStyle;
+	}
+
+	public void setCombatStyle(int style) {
+		combatStyle = style;
 	}
 
 	public String getCorrectSleepword() {
 		return correctSleepword;
 	}
 
+	public void setCorrectSleepword(String correctSleepword) {
+		this.correctSleepword = correctSleepword;
+	}
+
 	public String getCurrentIP() {
 		return currentIP;
 	}
 
+	public void setCurrentIP(String currentIP) {
+		this.currentIP = currentIP;
+	}
+
 	public long getCurrentLogin() {
 		return currentLogin;
+	}
+
+	public void setCurrentLogin(long currentLogin) {
+		this.currentLogin = currentLogin;
 	}
 
 	public int getDaysSinceLastLogin() {
@@ -789,8 +789,17 @@ public final class Player extends Mob {
 		return drainRate;
 	}
 
+	public void setDrainRate(int rate) {
+		drainRate = rate;
+	}
+
 	public int getFatigue() {
 		return fatigue;
+	}
+
+	public void setFatigue(int fatigue) {
+		this.fatigue = fatigue;
+		ActionSender.sendFatigue(this);
 	}
 
 	public int getIncorrectSleepTimes() {
@@ -801,16 +810,32 @@ public final class Player extends Mob {
 		return interactingNpc;
 	}
 
+	public void setInteractingNpc(Npc interactingNpc) {
+		this.interactingNpc = interactingNpc;
+	}
+
 	public Inventory getInventory() {
 		return inventory.get();
+	}
+
+	public void setInventory(Inventory i) {
+		inventory.set(i);
 	}
 
 	public String getLastIP() {
 		return lastIP;
 	}
 
+	public void setLastIP(String ip) {
+		lastIP = ip;
+	}
+
 	public long getLastLogin() {
 		return lastLogin;
+	}
+
+	public void setLastLogin(long l) {
+		lastLogin = l;
 	}
 
 	public long getLastPing() {
@@ -831,8 +856,17 @@ public final class Player extends Mob {
 		return menu;
 	}
 
+	public void setMenu(Menu menu) {
+		this.menu = menu;
+	}
+
 	public MenuOptionListener getMenuHandler() {
 		return menuHandler;
+	}
+
+	public void setMenuHandler(MenuOptionListener menuHandler) {
+		menuHandler.setOwner(this);
+		this.menuHandler = menuHandler;
 	}
 
 	public int getMinutesMuteLeft() {
@@ -847,8 +881,16 @@ public final class Player extends Mob {
 			return 0;
 	}
 
+	public void setMuteExpires(long l) {
+		getCache().store("mute_expires", l);
+	}
+
 	public int getOption() {
 		return questionOption;
+	}
+
+	public void setOption(int option) {
+		this.questionOption = option;
 	}
 
 	public int getOwner() {
@@ -871,6 +913,10 @@ public final class Player extends Mob {
 
 	public int getQuestPoints() {
 		return questPoints;
+	}
+
+	public void setQuestPoints(int questPoints) {
+		this.questPoints = questPoints;
 	}
 
 	public int calculateQuestPoints() {
@@ -903,7 +949,7 @@ public final class Player extends Mob {
 	public int getRangeEquip() {
 		for (Item item : getInventory().getItems()) {
 			if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+				|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
 				return item.getID();
 			}
 		}
@@ -923,8 +969,26 @@ public final class Player extends Mob {
 		return rangeEvent;
 	}
 
+	public void setRangeEvent(RangeEvent event) {
+		if (rangeEvent != null) {
+			rangeEvent.stop();
+		}
+		rangeEvent = event;
+		setStatus(Action.RANGING_MOB);
+		Server.getServer().getGameEventHandler().add(rangeEvent);
+	}
+
 	public ThrowingEvent getThrowingEvent() {
 		return throwingEvent;
+	}
+
+	public void setThrowingEvent(ThrowingEvent event) {
+		if (throwingEvent != null) {
+			throwingEvent.stop();
+		}
+		throwingEvent = event;
+		setStatus(Action.RANGING_MOB);
+		Server.getServer().getGameEventHandler().add(throwingEvent);
 	}
 
 	public String getStaffName() {
@@ -939,12 +1003,24 @@ public final class Player extends Mob {
 		return shop;
 	}
 
+	public void setShop(Shop shop) {
+		this.shop = shop;
+	}
+
 	public DelayedEvent getSkullEvent() {
 		return skullEvent;
 	}
 
+	public void setSkullEvent(DelayedEvent skullEvent) {
+		this.skullEvent = skullEvent;
+	}
+
 	public DelayedEvent getChargeEvent() {
 		return chargeEvent;
+	}
+
+	public void setChargeEvent(DelayedEvent chargeEvent) {
+		this.chargeEvent = chargeEvent;
 	}
 
 	public int getSkullTime() {
@@ -965,6 +1041,10 @@ public final class Player extends Mob {
 		return sleepword;
 	}
 
+	public void setSleepword(String sleepword) {
+		this.sleepword = sleepword;
+	}
+
 	public int getSpellWait() {
 		return DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D);
 	}
@@ -973,9 +1053,17 @@ public final class Player extends Mob {
 		return status;
 	}
 
+	public void setStatus(Action a) {
+		status = a;
+	}
+
 	public String getUsername() {
 
 		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public long getUsernameHash() {
@@ -983,6 +1071,10 @@ public final class Player extends Mob {
 			return DataConversions.usernameToHash((String) getAttribute("fakeuser", null));
 		}
 		return usernameHash;
+	}
+
+	public void setUsernameHash(long usernameHash) {
+		this.usernameHash = usernameHash;
 	}
 
 	@Override
@@ -1020,6 +1112,11 @@ public final class Player extends Mob {
 
 	public int[] getWornItems() {
 		return wornItems;
+	}
+
+	public void setWornItems(int[] worn) {
+		wornItems = worn;
+		getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	public void handleWakeup() {
@@ -1061,14 +1158,14 @@ public final class Player extends Mob {
 		/**
 		 * Double Experience
 		 **/
-		if(Constants.GameServer.IS_DOUBLE_EXP) {
+		if (Constants.GameServer.IS_DOUBLE_EXP) {
 			multiplier *= 2;
 		}
 
 		/**
 		 * Experience Elixir
 		 **/
-		if(getCache().hasKey("elixir_time")) {
+		if (getCache().hasKey("elixir_time")) {
 			if (getElixir() <= 0) {
 				getCache().remove("elixir_time");
 				ActionSender.sendElixirTimer(this, 0);
@@ -1108,7 +1205,7 @@ public final class Player extends Mob {
 		}
 
 		skillXP *= getExperienceRate(skill);
-		skills.addExperience(skill, (int)skillXP);
+		skills.addExperience(skill, (int) skillXP);
 		// ActionSender.sendExperience(this, skill);
 	}
 
@@ -1133,6 +1230,10 @@ public final class Player extends Mob {
 		return groupID == Group.OWNER;
 	}
 
+	public void setOwner(int owner) {
+		this.owner = owner;
+	}
+
 	public boolean isAdmin() {
 		return groupID == Group.ADMIN || isOwner();
 	}
@@ -1153,12 +1254,16 @@ public final class Player extends Mob {
 		return groupID == Group.EVENT || isAdmin();
 	}
 
-	public boolean isStaff(){
+	public boolean isStaff() {
 		return isMod() || isDev() || isEvent();
 	}
 
 	public boolean isChangingAppearance() {
 		return changingAppearance;
+	}
+
+	public void setChangingAppearance(boolean b) {
+		changingAppearance = b;
 	}
 
 	public boolean isAntidoteProtected() {
@@ -1169,12 +1274,35 @@ public final class Player extends Mob {
 		return inBank;
 	}
 
+	public void setInBank(boolean inBank) {
+		this.inBank = inBank;
+	}
+
 	public boolean isLoggedIn() {
 		return loggedIn;
 	}
 
+	public void setLoggedIn(boolean loggedIn) {
+		if (loggedIn) {
+			currentLogin = System.currentTimeMillis();
+			if (getCache().hasKey("poisoned")) {
+				startPoisonEvent();
+				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
+				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
+			}
+			prayerDrainEvent = new PrayerDrainEvent(this, Integer.MAX_VALUE);
+			Server.getServer().getGameEventHandler().add(prayerDrainEvent);
+			Server.getServer().getGameEventHandler().add(statRestorationEvent);
+		}
+		this.loggedIn = loggedIn;
+	}
+
 	public boolean isMale() {
 		return maleGender;
+	}
+
+	public void setMale(boolean male) {
+		maleGender = male;
 	}
 
 	public boolean isMaleGender() {
@@ -1198,8 +1326,16 @@ public final class Player extends Mob {
 		return reconnecting;
 	}
 
+	public void setReconnecting(boolean reconnecting) {
+		this.reconnecting = reconnecting;
+	}
+
 	public boolean isRequiresOfferUpdate() {
 		return requiresOfferUpdate;
+	}
+
+	public void setRequiresOfferUpdate(boolean b) {
+		requiresOfferUpdate = b;
 	}
 
 	public boolean isSkulled() {
@@ -1222,8 +1358,16 @@ public final class Player extends Mob {
 		return sleeping;
 	}
 
+	public void setSleeping(boolean isSleeping) {
+		this.sleeping = isSleeping;
+	}
+
 	public boolean isSuspiciousPlayer() {
 		return suspiciousPlayer;
+	}
+
+	public void setSuspiciousPlayer(boolean suspicious) {
+		suspiciousPlayer = suspicious;
 	}
 
 	@Override
@@ -1251,22 +1395,22 @@ public final class Player extends Mob {
 			ActionSender.sendSound(player, "victory");
 			if (player.getLocation().inWilderness()) {
 				int id = -1;
-				if(player.getKillType() == 0) {
+				if (player.getKillType() == 0) {
 					id = player.getEquippedWeaponID();
 					if (id == -1 || id == 59 || id == 60)
 						id = 16;
-				} else if(player.getKillType() == 1) {
+				} else if (player.getKillType() == 1) {
 					id = -1;
-				} else if(player.getKillType() == 2) {
+				} else if (player.getKillType() == 2) {
 					id = -2;
 				}
-				world.sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash() , id);
+				world.sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
 				player.incKills();
 				this.incDeaths();
 				GameLogging.addQuery(new LiveFeedLog(player, "has PKed <strong>" + this.getUsername() + "</strong>"));
 			} else if (stake) {
 				GameLogging.addQuery(new LiveFeedLog(player,
-						"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
+					"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
 			}
 		}
 		if (stake) {
@@ -1274,7 +1418,7 @@ public final class Player extends Mob {
 		} else {
 			getInventory().dropOnDeath(mob);
 		}
-		if(isIronMan(3)) {
+		if (isIronMan(3)) {
 			updateHCIronman(1);
 			ActionSender.sendIronManMode(this);
 			GameLogging.addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
@@ -1282,7 +1426,7 @@ public final class Player extends Mob {
 		removeSkull(); // destroy
 		resetCombatEvent();
 		world.registerItem(new GroundItem(20, getX(), getY(), 1, player));
-		if((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
+		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(122, 647), true);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
@@ -1297,7 +1441,6 @@ public final class Player extends Mob {
 		prayers.resetPrayers();
 		skills.normalize();
 	}
-
 
 	public int getEquippedWeaponID() {
 		for (Item i : getInventory().getItems()) {
@@ -1325,10 +1468,6 @@ public final class Player extends Mob {
 		teleport(x, y, false);
 	}
 
-	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
-
-	private long lastSave = System.currentTimeMillis();
-
 	public void addPrivateMessage(PrivateMessage privateMessage) {
 		if (getPrivateMessageQueue().size() < 2) {
 			getPrivateMessageQueue().add(privateMessage);
@@ -1351,9 +1490,6 @@ public final class Player extends Mob {
 		ActionSender.sendSound(this, sound);
 	}
 
-	private int actionsMouseStill = 0;
-	private long lastMouseMoved = 0;
-
 	public void checkForMouseMovement(boolean movedMouse) {
 		if (!movedMouse) {
 			actionsMouseStill++;
@@ -1361,8 +1497,8 @@ public final class Player extends Mob {
 			float minutesFlagged = (float) (System.currentTimeMillis() - lastMouseMoved) / (float) 60000;
 			if (actionsMouseStill >= 30 && minutesFlagged >= 1) {
 				String string = "Check " + getUsername() + "! " + actionsMouseStill
-						+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
-						+ " mins ago";
+					+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
+					+ " mins ago";
 
 				for (Player p : World.getWorld().getPlayers()) {
 					if (p.isMod()) {
@@ -1395,7 +1531,7 @@ public final class Player extends Mob {
 					try {
 						if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
 							LOGGER.info("Handling Packet (CLASS: " + ph + "): "
-									+ this.username + " (ID: " + this.owner + ")");
+								+ this.username + " (ID: " + this.owner + ")");
 						ph.handlePacket(p.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
@@ -1492,7 +1628,7 @@ public final class Player extends Mob {
 			rangeEvent.stop();
 			rangeEvent = null;
 		}
-		if(throwingEvent != null) {
+		if (throwingEvent != null) {
 			throwingEvent.stop();
 			throwingEvent = null;
 		}
@@ -1525,7 +1661,7 @@ public final class Player extends Mob {
 			updateQuestStage(questId, -1);
 			ActionSender.sendStats(this);
 			GameLogging.addQuery(new LiveFeedLog(this,
-					"just completed <strong><font color=#00FF00>" + world.getQuest(questId).getQuestName()
+				"just completed <strong><font color=#00FF00>" + world.getQuest(questId).getQuestName()
 					+ "</font></strong> quest! He now has <strong><font color=#E1E100>" + this.getQuestPoints()
 					+ "</font></strong> quest points"));
 		}
@@ -1542,10 +1678,6 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void setBank(Bank b) {
-		bank = b;
-	}
-
 	public void setBatchEvent(BatchEvent batchEvent) {
 		if (batchEvent != null) {
 			this.batchEvent = batchEvent;
@@ -1557,61 +1689,8 @@ public final class Player extends Mob {
 		lastSpellCast = System.currentTimeMillis();
 	}
 
-	public void setChangingAppearance(boolean b) {
-		changingAppearance = b;
-	}
-
 	public void setAntidoteProtection() {
 		lastAntidote = System.currentTimeMillis();
-	}
-
-	public void setClick(int click) {
-		this.click = click;
-	}
-
-	public void setCombatStyle(int style) {
-		combatStyle = style;
-	}
-
-	public void setCorrectSleepword(String correctSleepword) {
-		this.correctSleepword = correctSleepword;
-	}
-
-	public void setCurrentIP(String currentIP) {
-		this.currentIP = currentIP;
-	}
-
-	public void setCurrentLogin(long currentLogin) {
-		this.currentLogin = currentLogin;
-	}
-
-	public void setDrainRate(int rate) {
-		drainRate = rate;
-	}
-
-	public void setFatigue(int fatigue) {
-		this.fatigue = fatigue;
-		ActionSender.sendFatigue(this);
-	}
-
-	public void setInBank(boolean inBank) {
-		this.inBank = inBank;
-	}
-
-	public void setInteractingNpc(Npc interactingNpc) {
-		this.interactingNpc = interactingNpc;
-	}
-
-	public void setInventory(Inventory i) {
-		inventory.set(i);
-	}
-
-	public void setLastIP(String ip) {
-		lastIP = ip;
-	}
-
-	public void setLastLogin(long l) {
-		lastLogin = l;
 	}
 
 	public void setLastReport() {
@@ -1620,46 +1699,6 @@ public final class Player extends Mob {
 
 	public void setLastReport(long lastReport) {
 		this.lastReport = lastReport;
-	}
-
-	public void setLoggedIn(boolean loggedIn) {
-		if (loggedIn) {
-			currentLogin = System.currentTimeMillis();
-			if (getCache().hasKey("poisoned")) {
-				startPoisonEvent();
-				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
-				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
-			}
-			prayerDrainEvent = new PrayerDrainEvent(this, Integer.MAX_VALUE);
-			Server.getServer().getGameEventHandler().add(prayerDrainEvent);
-			Server.getServer().getGameEventHandler().add(statRestorationEvent);
-		}
-		this.loggedIn = loggedIn;
-	}
-
-	public void setMale(boolean male) {
-		maleGender = male;
-	}
-
-	public void setMenu(Menu menu) {
-		this.menu = menu;
-	}
-
-	public void setMenuHandler(MenuOptionListener menuHandler) {
-		menuHandler.setOwner(this);
-		this.menuHandler = menuHandler;
-	}
-
-	public void setMuteExpires(long l) {
-		getCache().store("mute_expires", l);
-	}
-
-	public void setOption(int option) {
-		this.questionOption = option;
-	}
-
-	public void setOwner(int owner) {
-		this.owner = owner;
 	}
 
 	public void setQuestStage(int q, int stage) {
@@ -1675,8 +1714,6 @@ public final class Player extends Mob {
 		getQuestStages().put(q.getQuestId(), stage);
 		ActionSender.sendQuestInfo(this, q.getQuestId(), stage);
 	}
-
-	private Map<Integer, Integer> achievements = new ConcurrentHashMap<>();
 
 	public Map<Integer, Integer> getAchievements() {
 		return achievements;
@@ -1701,37 +1738,6 @@ public final class Player extends Mob {
 		return 0;
 	}
 
-
-	public void setRangeEvent(RangeEvent event) {
-		if (rangeEvent != null) {
-			rangeEvent.stop();
-		}
-		rangeEvent = event;
-		setStatus(Action.RANGING_MOB);
-		Server.getServer().getGameEventHandler().add(rangeEvent);
-	}
-
-	public void setThrowingEvent(ThrowingEvent event) {
-		if (throwingEvent != null) {
-			throwingEvent.stop();
-		}
-		throwingEvent = event;
-		setStatus(Action.RANGING_MOB);
-		Server.getServer().getGameEventHandler().add(throwingEvent);
-	}
-
-	public void setReconnecting(boolean reconnecting) {
-		this.reconnecting = reconnecting;
-	}
-
-	public void setRequiresOfferUpdate(boolean b) {
-		requiresOfferUpdate = b;
-	}
-
-	public void setShop(Shop shop) {
-		this.shop = shop;
-	}
-
 	public void setSkulledOn(Player player) {
 		player.getSettings().addAttackedBy(this);
 		if (System.currentTimeMillis() - getSettings().lastAttackedBy(player) > 1200000) {
@@ -1740,45 +1746,8 @@ public final class Player extends Mob {
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public void setSkullEvent(DelayedEvent skullEvent) {
-		this.skullEvent = skullEvent;
-	}
-
-	public void setChargeEvent(DelayedEvent chargeEvent) {
-		this.chargeEvent = chargeEvent;
-	}
-
-	public void setSleeping(boolean isSleeping) {
-		this.sleeping = isSleeping;
-	}
-
-	public void setSleepword(String sleepword) {
-		this.sleepword = sleepword;
-	}
-
 	public void setSpellFail() {
 		lastSpellCast = System.currentTimeMillis() + 20000;
-	}
-
-	public void setStatus(Action a) {
-		status = a;
-	}
-
-	public void setSuspiciousPlayer(boolean suspicious) {
-		suspiciousPlayer = suspicious;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public void setUsernameHash(long usernameHash) {
-		this.usernameHash = usernameHash;
-	}
-
-	public void setWornItems(int[] worn) {
-		wornItems = worn;
-		getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	public void startSleepEvent(final boolean bed) {
@@ -1808,7 +1777,7 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(int x, int y, boolean bubble) {
-		if (bubble && PluginHandler.getPluginHandler().blockDefaultAction("Teleport", new Object[] { this })) {
+		if (bubble && PluginHandler.getPluginHandler().blockDefaultAction("Teleport", new Object[]{this})) {
 			return;
 		}
 		if (inCombat()) {
@@ -1865,15 +1834,6 @@ public final class Player extends Mob {
 		return questStages;
 	}
 
-	public void setQuestPoints(int questPoints) {
-		this.questPoints = questPoints;
-	}
-
-	/** KILLS N DEATHS **/
-	private int kills = 0;
-	private int deaths = 0;
-	private WalkToAction walkToAction;
-
 	public int getKills() {
 		return kills;
 	}
@@ -1904,15 +1864,13 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void setWalkToAction(WalkToAction action) {
-		this.walkToAction = action;
-	}
-
 	public WalkToAction getWalkToAction() {
 		return walkToAction;
 	}
 
-	private Trade trade;
+	public void setWalkToAction(WalkToAction action) {
+		this.walkToAction = action;
+	}
 
 	public int getElixir() {
 		if (getCache().hasKey("elixir_time")) {
@@ -1922,6 +1880,7 @@ public final class Player extends Mob {
 		}
 		return 0;
 	}
+
 	public void addElixir(int seconds) {
 		long elixirTime = seconds;
 		long now = System.currentTimeMillis() / 1000;
@@ -1930,7 +1889,7 @@ public final class Player extends Mob {
 	}
 
 	public void removeElixir() {
-		if(getCache().hasKey("elixir_time"))
+		if (getCache().hasKey("elixir_time"))
 			getCache().remove("elixir_time");
 
 		ActionSender.sendElixirTimer(this, 0);
@@ -1977,8 +1936,8 @@ public final class Player extends Mob {
 		return prayers;
 	}
 
-	public int getIcon(){
-		if(Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY) {
+	public int getIcon() {
+		if (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY) {
 			if (isAdmin())
 				return 0x0100FF00;
 
@@ -1992,8 +1951,7 @@ public final class Player extends Mob {
 				return 0x014D33BD;
 
 			return 0;
-		}
-		else {
+		} else {
 			if (isAdmin())
 				return 0x02FFFFFF;
 
@@ -2011,15 +1969,6 @@ public final class Player extends Mob {
 	public Duel getDuel() {
 		return duel;
 	}
-	private int databaseID;
-
-	public int getDatabaseID() {
-		return databaseID;
-	}
-
-	public void setDatabaseID(int i) {
-		this.databaseID = i;
-	}
 	/*public int getUnreadMessages() {
 		return unreadMessages + 1;
 	}*/
@@ -2033,28 +1982,35 @@ public final class Player extends Mob {
 		this.teleportStones = stones;
 	}*/
 
-	private Clan clan;
-	private ClanInvite activeClanInvitation;
+	public int getDatabaseID() {
+		return databaseID;
+	}
 
-	public void setClan(Clan clan) {
-		this.clan = clan;
-		getUpdateFlags().setAppearanceChanged(true);
+	public void setDatabaseID(int i) {
+		this.databaseID = i;
 	}
 
 	public Clan getClan() {
 		return clan;
 	}
 
-	public void setActiveClanInvite(ClanInvite inv) {
-		activeClanInvitation = inv;
+	public void setClan(Clan clan) {
+		this.clan = clan;
+		getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	public ClanInvite getActiveClanInvite() {
 		return activeClanInvitation;
 	}
+
+	public void setActiveClanInvite(ClanInvite inv) {
+		activeClanInvitation = inv;
+	}
+
 	public long secondsUntillPool() {
 		return (90 - ((System.currentTimeMillis() - (getCache().hasKey("last_death") ? getCache().getLong("last_death") : 0)) / 1000));
 	}
+
 	public boolean canUsePool() {
 		return System.currentTimeMillis() - (getCache().hasKey("last_death") ? getCache().getLong("last_death") : 0) > 90000;
 	}
@@ -2064,8 +2020,7 @@ public final class Player extends Mob {
 		String n_id = String.valueOf(n.getID());
 		if (getKillCache().hasKey(n_id)) {
 			getKillCache().put(n_id, getKillCache().getInt(n_id) + 1);
-		}
-		else {
+		} else {
 			getKillCache().set(n_id, 1);
 		}
 		if (sendUpdate) {
@@ -2073,33 +2028,35 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void setInvisible(boolean invisible)
-	{
-		getUpdateFlags().setAppearanceChanged(true);
-		this.getCache().store("invisible", invisible);
-	}
-	public void toggleInvisible(){
+	public void toggleInvisible() {
 		setInvisible(!isInvisible());
 	}
+
 	public boolean isInvisible() {
-		if(!getCache().hasKey("invisible"))
+		if (!getCache().hasKey("invisible"))
 			return false;
 
 		return getCache().getBoolean("invisible");
 	}
 
-	public void setInvulnerable(boolean invulnerable)
-	{
+	public void setInvisible(boolean invisible) {
 		getUpdateFlags().setAppearanceChanged(true);
-		this.getCache().store("invulnerable", invulnerable);
+		this.getCache().store("invisible", invisible);
 	}
+
 	public boolean isInvulnerable() {
-		if(!getCache().hasKey("invulnerable"))
+		if (!getCache().hasKey("invulnerable"))
 			return false;
 
 		return getCache().getBoolean("invulnerable");
 	}
-	public void toggleInvulnerable(){
+
+	public void setInvulnerable(boolean invulnerable) {
+		getUpdateFlags().setAppearanceChanged(true);
+		this.getCache().store("invulnerable", invulnerable);
+	}
+
+	public void toggleInvulnerable() {
 		setInvulnerable(!isInvulnerable());
 	}
 }

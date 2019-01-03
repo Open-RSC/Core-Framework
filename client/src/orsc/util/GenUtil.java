@@ -4,8 +4,8 @@ import java.io.*;
 import java.net.URL;
 
 public class GenUtil {
-	static long lastTimeCall;
 	public static URL streamChooserContext = null;
+	static long lastTimeCall;
 	static long timeOverflow;
 
 	public static final InputStream chooseStreamFor(String file) throws IOException {
@@ -82,6 +82,7 @@ public class GenUtil {
 			throw var3;
 		}
 	}
+
 	/**
 	 * @see chooseStreamFor
 	 */
@@ -99,7 +100,7 @@ public class GenUtil {
 			stream.close();
 		} catch (RuntimeException var7) {
 			throw makeThrowable(var7, "ta.A(" + (file != null ? "{...}" : "null") + ',' + "dummy" + ','
-					+ (dest != null ? "{...}" : "null") + ',' + limit + ')');
+				+ (dest != null ? "{...}" : "null") + ',' + limit + ')');
 		}
 	}
 
@@ -140,7 +141,7 @@ public class GenUtil {
 	}
 
 	public static final int computeItemCost(int basePrice, int shopItemPrice, int shopBuyPriceMod, int var3,
-			boolean var4, int var5, int count, int shopPriceMultiplier) {
+											boolean var4, int var5, int count, int shopPriceMultiplier) {
 		try {
 			int cost = 0;
 
@@ -165,7 +166,7 @@ public class GenUtil {
 			return cost;
 		} catch (RuntimeException var12) {
 			throw makeThrowable(var12, "o.F(" + basePrice + ',' + shopItemPrice + ',' + shopBuyPriceMod + ',' + -30910
-					+ ',' + var4 + ',' + var5 + ',' + count + ',' + shopPriceMultiplier + ')');
+				+ ',' + var4 + ',' + var5 + ',' + count + ',' + shopPriceMultiplier + ')');
 		}
 	}
 

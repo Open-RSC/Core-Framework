@@ -1,16 +1,14 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import static com.openrsc.server.plugins.Functions.PRAYER;
-
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 
+import static com.openrsc.server.plugins.Functions.PRAYER;
+
 /**
- * 
  * @author n0m
- * 
  */
 public class ElvargPrayerDrain implements OnCombatStartScript {
 
@@ -48,7 +46,7 @@ public class ElvargPrayerDrain implements OnCombatStartScript {
 			else if (defender.getSkills().getLevel(Skills.PRAYER) == 2)
 				defender.getSkills().setLevel(Skills.PRAYER, 1);
 		}
-		
+
 	}
 
 }

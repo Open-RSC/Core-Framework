@@ -4,5 +4,5 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface PlayerMageNpcListener {
-    public void onPlayerMageNpc(Player p, Npc n);
+	public void onPlayerMageNpc(Player p, Npc n);
 }

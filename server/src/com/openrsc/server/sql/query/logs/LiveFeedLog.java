@@ -11,10 +11,10 @@ import java.sql.SQLException;
 public class LiveFeedLog extends Query {
 	private String feedText;
 	private String username;
-	
+
 	public LiveFeedLog(Player player, String feedText) {
 		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
-				+ "live_feeds`(`username`,`message`,`time`) VALUES(?, ?, ?)");
+			+ "live_feeds`(`username`,`message`,`time`) VALUES(?, ?, ?)");
 		this.username = player.getUsername();
 		this.feedText = feedText;
 	}

@@ -10,19 +10,43 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class RSModel {
+	private final int m_Vb = 12345678;
+	public int[] faceDiffuseLight;
+	public int faceHead;
+	public int[] faceIndexCount;
+	public int[][] faceIndices;
+	public int key = -1;
+	public boolean m_cb = false;
+	public int[] facePickIndex;
+	int diffuseParam1 = 32;
+	int[] scenePolyNormalShift;
+	int[] scenePolyNormalMagnitude;
+	int[] faceTextureBack;
+	int[] faceTextureFront;
+	boolean m_db = false;
+	boolean m_dc = true;
+	int m_hc = 0;
+	boolean m_Kb = false;
+	int m_Yb = 1;
+	byte[] m_zb;
+	int[] vertDiffuseLight;
+	int[] vertexParam2;
+	int[] vertexParam6;
+	byte[] vertLightOther;
+	int vertHead;
+	int[] vertX;
+	int[] vertXRot;
+	int[] vertYRot;
+	int[] vertZ;
+	int[] vertZRot;
 	private int appliedTransform;
 	private int diffuseDirX = 180;
 	private int diffuseDirY = 155;
 	private int diffuseDirZ = 95;
 	private int diffuseMag = 256;
-	int diffuseParam1 = 32;
 	private int diffuseParam2 = 512;
 	private boolean dontComputeDiffuse = false;
 	private int faceCount;
-	public int[] faceDiffuseLight;
-	public int faceHead;
-	public int[] faceIndexCount;
-	public int[][] faceIndices;
 	private int[] faceMaxX;
 	private int[] faceMaxY;
 	private int[] faceMaxZ;
@@ -33,24 +57,10 @@ public final class RSModel {
 	private int[] faceNormY;
 	private int[] faceNormZ;
 	private int[][] faceParam1;
-	int[] scenePolyNormalShift;
-	int[] scenePolyNormalMagnitude;
-	int[] faceTextureBack;
-	int[] faceTextureFront;
-	public int key = -1;
 	private boolean m_b = false;
 	private boolean m_c = false;
-	public boolean m_cb = false;
-	boolean m_db = false;
-	boolean m_dc = true;
-	public int[] facePickIndex;
 	private int m_hb;
-	int m_hc = 0;
-	boolean m_Kb = false;
 	private boolean m_v = false;
-	private final int m_Vb = 12345678;
-	int m_Yb = 1;
-	byte[] m_zb;
 	private int maxFaceDimension = 12345678;
 	private int maxX;
 	private int maxY;
@@ -73,20 +83,10 @@ public final class RSModel {
 	private int translateX;
 	private int translateY;
 	private int translateZ;
-	int[] vertDiffuseLight;
 	private int vertexCount2;
-	int[] vertexParam2;
-	int[] vertexParam6;
-	byte[] vertLightOther;
-	int vertHead;
-	int[] vertX;
-	int[] vertXRot;
 	private int[] vertXTransform;
 	private int[] vertY;
-	int[] vertYRot;
 	private int[] vertYTransform;
-	int[] vertZ;
-	int[] vertZRot;
 	private int[] vertZTransform;
 
 	public RSModel(byte[] data, int offset, boolean var3) {
@@ -164,7 +164,7 @@ public final class RSModel {
 			this.m_Yb = 1;
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8,
-					"ca.<init>(" + (data != null ? "{...}" : "null") + ',' + offset + ',' + var3 + ')');
+				"ca.<init>(" + (data != null ? "{...}" : "null") + ',' + offset + ',' + var3 + ')');
 		}
 	}
 
@@ -192,7 +192,7 @@ public final class RSModel {
 			this.setFaceVertexCount(faceLimit, vertexLimit, (int) 69);
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "ca.<init>(" + vertexLimit + ',' + faceLimit + ',' + var3 + ',' + var4
-					+ ',' + var5 + ',' + var6 + ',' + var7 + ')');
+				+ ',' + var5 + ',' + var6 + ',' + var7 + ')');
 		}
 	}
 
@@ -201,7 +201,7 @@ public final class RSModel {
 			this.addModels(0, models, true, modelCount);
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
-					"ca.<init>(" + (models != null ? "{...}" : "null") + ',' + modelCount + ')');
+				"ca.<init>(" + (models != null ? "{...}" : "null") + ',' + modelCount + ')');
 		}
 	}
 
@@ -214,7 +214,7 @@ public final class RSModel {
 			this.addModels(0, var1, false, var2);
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "ca.<init>(" + (var1 != null ? "{...}" : "null") + ',' + var2 + ',' + var3
-					+ ',' + var4 + ',' + noDiffuseCompute + ',' + var6 + ')');
+				+ ',' + var4 + ',' + noDiffuseCompute + ',' + var6 + ')');
 		}
 	}
 
@@ -300,20 +300,20 @@ public final class RSModel {
 
 	final RSModel copyModel(boolean var1, int var2, boolean noDiffuse, boolean var4, boolean var5) {
 		try {
-			
-			RSModel[] var6 = new RSModel[] { this };
+
+			RSModel[] var6 = new RSModel[]{this};
 			RSModel copy = new RSModel(var6, 1, var4, var5, noDiffuse, var1);
 			copy.m_hc = this.m_hc;
 			return copy;
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"ca.Q(" + var1 + ',' + var2 + ',' + noDiffuse + ',' + var4 + ',' + var5 + ')');
+				"ca.Q(" + var1 + ',' + var2 + ',' + noDiffuse + ',' + var4 + ',' + var5 + ')');
 		}
 	}
 
 	private final void addModels(int offset, RSModel[] models, boolean var3, int modelCount) {
 		try {
-			
+
 			int faceCount = 0;
 			int vertCount = 0;
 
@@ -345,11 +345,11 @@ public final class RSModel {
 					int v;
 					for (v = 0; model.faceIndexCount[f] > v; ++v) {
 						newIndices[v] = this.insertVertex(model.vertX[srcIndices[v]], model.vertY[srcIndices[v]],
-								model.vertZ[srcIndices[v]]);
+							model.vertZ[srcIndices[v]]);
 					}
 
 					v = this.insertFace(model.faceIndexCount[f], newIndices, model.faceTextureFront[f],
-							model.faceTextureBack[f], false);
+						model.faceTextureBack[f], false);
 					this.faceDiffuseLight[v] = model.faceDiffuseLight[f];
 					this.scenePolyNormalShift[v] = model.scenePolyNormalShift[f];
 					this.scenePolyNormalMagnitude[v] = model.scenePolyNormalMagnitude[f];
@@ -376,13 +376,13 @@ public final class RSModel {
 			this.m_Yb = 1;
 		} catch (RuntimeException var14) {
 			throw GenUtil.makeThrowable(var14, "ca.KA(" + offset + ',' + (models != null ? "{...}" : "null") + ','
-					+ var3 + ',' + modelCount + ')');
+				+ var3 + ',' + modelCount + ')');
 		}
 	}
 
 	public final void addRotation(int rotX, int rotY, int rotZ) {
 		try {
-			
+
 			this.rot256X = rotX + this.rot256X & 255;
 			this.rot256Y = rotY + this.rot256Y & 255;
 			this.rot256Z = 255 & this.rot256Z + rotZ;
@@ -398,7 +398,7 @@ public final class RSModel {
 	 */
 	private final void applyRotMatrix(int xToZ, int zToY, int yToX, int yToZ, int zToX, int xToY, byte var7) {
 		try {
-			
+
 
 			for (int i = 0; i < this.vertHead; ++i) {
 				if (yToX != 0) {
@@ -423,13 +423,13 @@ public final class RSModel {
 
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
-					"ca.E(" + xToZ + ',' + zToY + ',' + yToX + ',' + yToZ + ',' + zToX + ',' + xToY + ',' + var7 + ')');
+				"ca.E(" + xToZ + ',' + zToY + ',' + yToX + ',' + yToZ + ',' + zToX + ',' + xToY + ',' + var7 + ')');
 		}
 	}
 
 	private final void calculateBoundingBoxes(int var1) {
 		try {
-			
+
 			this.minX = 999999;
 			this.minZ = 999999;
 			this.maxZ = -999999;
@@ -536,7 +536,7 @@ public final class RSModel {
 			this.vertYRot = new int[this.vertHead];
 			this.vertZRot = new int[this.vertHead];
 			this.vertexParam6 = new int[this.vertHead];
-			
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "ca.H(" + var1 + ')');
 		}
@@ -545,8 +545,8 @@ public final class RSModel {
 	@Override
 	public final RSModel clone() {
 		try {
-			
-			RSModel[] var2 = new RSModel[] { this };
+
+			RSModel[] var2 = new RSModel[]{this};
 			RSModel var3 = new RSModel(var2, 1);
 			var3.m_cb = this.m_cb;
 			var3.m_hc = this.m_hc;
@@ -559,7 +559,7 @@ public final class RSModel {
 	private final void commitTransform(byte var1) {
 		try {
 			this.resetTransformCache((int) 7972);
-			
+
 
 			for (int i = 0; i < this.vertHead; ++i) {
 				this.vertX[i] = this.vertXTransform[i];
@@ -590,9 +590,9 @@ public final class RSModel {
 
 	private final void computeAppliedTransform() {
 		try {
-			
+
 			if (this.rotM_yToX == 256 && this.rotM_yToZ == 256 && this.rotM_zToX == 256 && this.rotM_zToY == 256
-					&& this.rotM_xToZ == 256 && this.rotM_xToY == 256) {
+				&& this.rotM_xToZ == 256 && this.rotM_xToY == 256) {
 				if (this.scaleX == 256 && this.scaleY == 256 && this.scaleZ == 256) {
 					if (this.rot256X == 0 && this.rot256Y == 0 && this.rot256Z == 0) {
 						if (this.translateX == 0 && this.translateY == 0 && this.translateZ == 0) {
@@ -616,15 +616,15 @@ public final class RSModel {
 
 	private final void computeDiffuse(int var1) {
 		try {
-			
+
 			if (!this.dontComputeDiffuse) {
 				int diffuseDivide = this.diffuseParam2 * this.diffuseMag >> 8;
 
 				for (int f = 0; this.faceHead > f; ++f) {
 					if (this.faceDiffuseLight[f] != this.m_Vb) {
 						this.faceDiffuseLight[f] = (this.faceNormY[f] * this.diffuseDirY
-								+ this.faceNormX[f] * this.diffuseDirX + this.diffuseDirZ * this.faceNormZ[f])
-								/ diffuseDivide;
+							+ this.faceNormX[f] * this.diffuseDirX + this.diffuseDirZ * this.faceNormZ[f])
+							/ diffuseDivide;
 					}
 				}
 
@@ -659,7 +659,7 @@ public final class RSModel {
 				for (i = 0; this.vertHead > i; ++i) {
 					if (faceCount[i] > 0) {
 						this.vertDiffuseLight[i] = (tmpZNorm[i] * this.diffuseDirZ + tmpXNorm[i] * this.diffuseDirX
-								+ tmpYNorm[i] * this.diffuseDirY) / (diffuseDivide * faceCount[i]);
+							+ tmpYNorm[i] * this.diffuseDirY) / (diffuseDivide * faceCount[i]);
 					}
 				}
 
@@ -671,7 +671,7 @@ public final class RSModel {
 
 	private final void computeNormals(byte var1) {
 		try {
-			
+
 			if (!this.dontComputeDiffuse || !this.m_c) {
 				if (var1 == 14) {
 					for (int face = 0; this.faceHead > face; ++face) {
@@ -719,13 +719,13 @@ public final class RSModel {
 
 	private final void copyFaceTo(int[] faceVert, RSModel dest, int faceVertCount, int srcFaceID, int var5) {
 		try {
-			
+
 			int[] nVerts = new int[faceVertCount];
 
 			int i;
 			for (i = 0; i < faceVertCount; ++i) {
 				int vID = nVerts[i] = dest.insertVertex(this.vertX[faceVert[i]], this.vertY[faceVert[i]],
-						this.vertZ[faceVert[i]]);
+					this.vertZ[faceVert[i]]);
 				dest.vertDiffuseLight[vID] = this.vertDiffuseLight[faceVert[i]];
 				dest.vertLightOther[vID] = this.vertLightOther[faceVert[i]];
 			}
@@ -735,7 +735,7 @@ public final class RSModel {
 			}
 
 			i = dest.insertFace(faceVertCount, nVerts, this.faceTextureFront[srcFaceID],
-					this.faceTextureBack[srcFaceID], false);
+				this.faceTextureBack[srcFaceID], false);
 			if (!dest.m_db && !this.m_db) {
 				dest.facePickIndex[i] = this.facePickIndex[srcFaceID];
 			}
@@ -745,7 +745,7 @@ public final class RSModel {
 			dest.scenePolyNormalMagnitude[i] = this.scenePolyNormalMagnitude[srcFaceID];
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "ca.D(" + (faceVert != null ? "{...}" : "null") + ','
-					+ (dest != null ? "{...}" : "null") + ',' + faceVertCount + ',' + srcFaceID + ',' + var5 + ')');
+				+ (dest != null ? "{...}" : "null") + ',' + faceVertCount + ',' + srcFaceID + ',' + var5 + ')');
 		}
 	}
 
@@ -755,7 +755,7 @@ public final class RSModel {
 				this.appliedTransform = -128;
 			}
 
-			
+
 			this.translateX = model.translateX;
 			this.translateY = model.translateY;
 			this.translateZ = model.translateZ;
@@ -770,9 +770,9 @@ public final class RSModel {
 	}
 
 	final RSModel[] divideModelByGrid(int var1, int xDim, int zGridSize, int var4, int outModels, int limitVertCount,
-			int xGridSize, boolean var8, int var9) {
+									  int xGridSize, boolean var8, int var9) {
 		try {
-			
+
 			this.commitTransform((byte) -28);
 			int[] outVertCount = new int[outModels];
 			int[] outFaceCount = new int[outModels];
@@ -831,13 +831,13 @@ public final class RSModel {
 			return output;
 		} catch (RuntimeException var19) {
 			throw GenUtil.makeThrowable(var19, "ca.J(" + 0 + ',' + xDim + ',' + zGridSize + ',' + var4 + ',' + outModels
-					+ ',' + limitVertCount + ',' + xGridSize + ',' + var8 + ',' + var9 + ')');
+				+ ',' + limitVertCount + ',' + xGridSize + ',' + var8 + ',' + var9 + ')');
 		}
 	}
 
 	private final int getFaceParam1(byte var1, byte[] data) {
 		try {
-			
+
 
 			while (data[this.m_hb] == 10 || data[this.m_hb] == 13) {
 				++this.m_hb;
@@ -859,7 +859,7 @@ public final class RSModel {
 
 	public final int insertFace(int indexCount, int[] indices, int texFront, int texBack, boolean var5) {
 		try {
-			
+
 			if (var5) {
 				this.addRotation(23, 10, 30);
 			}
@@ -876,13 +876,13 @@ public final class RSModel {
 			}
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "ca.P(" + indexCount + ',' + (indices != null ? "{...}" : "null") + ','
-					+ texFront + ',' + texBack + ',' + var5 + ')');
+				+ texFront + ',' + texBack + ',' + var5 + ')');
 		}
 	}
 
 	public final int insertVertex(int x, int y, int z) {
 		try {
-			
+
 
 			for (int i = 0; this.vertHead > i; ++i) {
 				if (x == this.vertX[i] && y == this.vertY[i] && z == this.vertZ[i]) {
@@ -905,7 +905,7 @@ public final class RSModel {
 
 	final int insertVertex2(boolean var1, int z, int x, int y) {
 		try {
-			
+
 			if (this.vertHead >= this.vertexCount2) {
 				return -1;
 			} else {
@@ -921,7 +921,7 @@ public final class RSModel {
 
 	final void removeFacesAndOrVerts(int deleteVerts, int var2, int deleteFaces) {
 		try {
-			
+
 			this.faceHead -= deleteFaces;
 			if (var2 > -110) {
 				ModelFileManager.getModelFileIndex((String) null);
@@ -945,7 +945,7 @@ public final class RSModel {
 		try {
 			this.faceHead = 0;
 			this.vertHead = 0;
-			
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "ca.M(" + 1 + ')');
 		}
@@ -957,7 +957,7 @@ public final class RSModel {
 				this.translate2(120, 57, 20);
 			}
 
-			
+
 			int i;
 			if (this.m_Yb == 2) {
 				this.m_Yb = 0;
@@ -994,7 +994,7 @@ public final class RSModel {
 
 				if (this.appliedTransform >= 4) {
 					this.applyRotMatrix(this.rotM_xToZ, this.rotM_zToY, this.rotM_yToX, this.rotM_yToZ, this.rotM_zToX,
-							this.rotM_xToY, (byte) -127);
+						this.rotM_xToY, (byte) -127);
 				}
 
 				if (this.appliedTransform >= 1) {
@@ -1011,13 +1011,13 @@ public final class RSModel {
 	}
 
 	final void rotate1024(int yOffset, int vParamSrc, int xOffset, byte var4, int zOffset, int rotY, int rotZ, int rotX,
-			int zTop) {
+						  int zTop) {
 		try {
-			
+
 			this.resetTransformCache((int) 7972);
 			if (this.minZ <= MiscFunctions.netsock_s_K && this.maxZ >= MiscFunctions.rssock_facs_j
-					&& this.minX <= MiscFunctions.class13_s_b && this.maxX >= MiscFunctions.pe_s_f
-					&& this.minY <= MiscFunctions.cachingFile_s_y && this.maxY >= MiscFunctions.pe_s_b) {
+				&& this.minX <= MiscFunctions.class13_s_b && this.maxX >= MiscFunctions.pe_s_f
+				&& this.minY <= MiscFunctions.cachingFile_s_y && this.maxY >= MiscFunctions.pe_s_b) {
 				this.m_dc = true;
 				int xy_xy = 0;
 				if (var4 > -105) {
@@ -1090,13 +1090,13 @@ public final class RSModel {
 			}
 		} catch (RuntimeException var21) {
 			throw GenUtil.makeThrowable(var21, "ca.U(" + yOffset + ',' + vParamSrc + ',' + xOffset + ',' + var4 + ','
-					+ zOffset + ',' + rotY + ',' + rotZ + ',' + rotX + ',' + zTop + ')');
+				+ zOffset + ',' + rotY + ',' + rotZ + ',' + rotX + ',' + zTop + ')');
 		}
 	}
 
 	private final void rotate256(int var1, int rotX, int rotZ, int rotY) {
 		try {
-			
+
 			if (var1 >= -14) {
 				this.faceNormY = (int[]) null;
 			}
@@ -1138,7 +1138,7 @@ public final class RSModel {
 	 */
 	private final void scale(int xScale, int var2, int zScale, int yScale) {
 		try {
-			
+
 			if (var2 != -27483) {
 				this.insertVertex(-7, -31, -82);
 			}
@@ -1160,7 +1160,7 @@ public final class RSModel {
 				this.m_Yb = 71;
 			}
 
-			
+
 			if (!this.dontComputeDiffuse) {
 				this.diffuseDirZ = dirZ;
 				this.diffuseDirY = dirY;
@@ -1175,7 +1175,7 @@ public final class RSModel {
 
 	final void setDiffuseLight(int var1, int var2, int diffuseDirY, int var4, int diffuseDirX, int diffuseDirZ) {
 		try {
-			
+
 			this.diffuseParam1 = 256 - var2 * 4;
 			this.diffuseParam2 = (64 - var1) * 16 + 128;
 			if (var4 > -110) {
@@ -1187,12 +1187,12 @@ public final class RSModel {
 				this.diffuseDirZ = diffuseDirZ;
 				this.diffuseDirY = diffuseDirY;
 				this.diffuseMag = (int) Math.sqrt(
-						(double) (diffuseDirZ * diffuseDirZ + diffuseDirY * diffuseDirY + diffuseDirX * diffuseDirX));
+					(double) (diffuseDirZ * diffuseDirZ + diffuseDirY * diffuseDirY + diffuseDirX * diffuseDirX));
 				this.computeDiffuse(-102);
 			}
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "ca.G(" + var1 + ',' + var2 + ',' + diffuseDirY + ',' + var4 + ','
-					+ diffuseDirX + ',' + diffuseDirZ + ')');
+				+ diffuseDirX + ',' + diffuseDirZ + ')');
 		}
 	}
 
@@ -1200,7 +1200,7 @@ public final class RSModel {
 		try {
 			this.diffuseParam2 = (64 - p2) * 16 + 128;
 			this.diffuseParam1 = 256 - p1 * 4;
-			
+
 			if (!this.dontComputeDiffuse) {
 				for (int i = 0; i < this.faceHead; ++i) {
 					if (var5) {
@@ -1218,7 +1218,7 @@ public final class RSModel {
 			}
 		} catch (RuntimeException var10) {
 			throw GenUtil.makeThrowable(var10,
-					"ca.N(" + dirZ + ',' + p1 + ',' + dirY + ',' + dirX + ',' + var5 + ',' + p2 + ',' + var7 + ')');
+				"ca.N(" + dirZ + ',' + p1 + ',' + dirY + ',' + dirX + ',' + var5 + ',' + p2 + ',' + var7 + ')');
 		}
 	}
 
@@ -1248,7 +1248,7 @@ public final class RSModel {
 				this.vertexParam6 = new int[vertexCount];
 			}
 
-			
+
 			this.faceDiffuseLight = new int[faceCount];
 			this.rotM_zToX = 256;
 			this.rot256Y = 0;
@@ -1306,7 +1306,7 @@ public final class RSModel {
 
 	final void setRot256(int rotX, int rotY, int rotZ) {
 		try {
-			
+
 			this.rot256X = rotX & 255;
 			this.rot256Y = rotY & 255;
 			this.rot256Z = rotZ & 255;
@@ -1322,7 +1322,7 @@ public final class RSModel {
 			this.translateY = tY;
 			this.translateX = tX;
 			this.translateZ = tZ;
-			
+
 			this.computeAppliedTransform();
 			this.m_Yb = 1;
 		} catch (RuntimeException var6) {
@@ -1332,7 +1332,7 @@ public final class RSModel {
 
 	final void setVertexLightOther(int id, int val) {
 		try {
-			
+
 			this.vertLightOther[id] = (byte) val;
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "ca.HA(" + id + ',' + val + ',' + -61 + ')');
@@ -1341,7 +1341,7 @@ public final class RSModel {
 
 	private final void translate(int vOff, int yt, int zt, int xt) {
 		try {
-			
+
 
 			for (int i = vOff; this.vertHead > i; ++i) {
 				this.vertXTransform[i] += xt;
@@ -1359,7 +1359,7 @@ public final class RSModel {
 			this.translateY += tY;
 			this.translateZ += tZ;
 			this.translateX += tX;
-			
+
 			this.computeAppliedTransform();
 			this.m_Yb = 1;
 		} catch (RuntimeException var6) {

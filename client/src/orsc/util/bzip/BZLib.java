@@ -147,7 +147,7 @@ public final class BZLib {
 					}
 
 					createDecodeTables(state.limit[var37], state.base[var37], state.perm[var37], state.len[var37],
-							minLen, maxLen, alphaSize);
+						minLen, maxLen, alphaSize);
 					state.minLens[var37] = minLen;
 				}
 
@@ -377,7 +377,7 @@ public final class BZLib {
 	}
 
 	private static final void createDecodeTables(int[] limit, int[] base, int[] perm, byte[] length, int minLen,
-			int maxLen, int alphaSize) {
+												 int maxLen, int alphaSize) {
 		int var7 = 0;
 
 		int var8;
@@ -451,7 +451,8 @@ public final class BZLib {
 		int var10 = state.decompressedSize;
 		int sSaveNblockPP = state.saveNblock + 1;
 
-		label63: while (true) {
+		label63:
+		while (true) {
 			if (cStateOutLen > 0) {
 				while (true) {
 					if (var10 == 0) {
