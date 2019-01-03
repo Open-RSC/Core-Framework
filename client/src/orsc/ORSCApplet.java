@@ -14,35 +14,45 @@ import java.awt.image.*;
 import java.io.*;
 
 public class ORSCApplet extends Applet implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener,
-		ImageObserver, ImageProducer, ClientPort {
-
-	static mudclient mudclient;
-	static PacketHandler packetHandler;
-
-	public static int globalLoadingPercent = 0;
-	public static String globalLoadingState = "";
+	ImageObserver, ImageProducer, ClientPort {
 
 	private static final long serialVersionUID = 1L;
-
+	public static int globalLoadingPercent = 0;
+	public static String globalLoadingState = "";
+	static mudclient mudclient;
+	static PacketHandler packetHandler;
+	private final boolean m_hb = false;
+	protected int resizeWidth;
+	protected int resizeHeight;
 	Font createdbyFont = new Font("Helvetica", 1, 13);
 	Font copyrightFont2 = new Font("Helvetica", 0, 12);
 	Font loadingFont = new Font("TimesRoman", 0, 15);
-
 	Graphics loadingGraphics;
 	Image loadingLogo;
-	private int loadingPercent = 0;
 	String loadingState = "Loading";
-	private final boolean m_hb = false;
 	boolean m_N = false;
 	String m_p = null;
-
+	private int loadingPercent = 0;
 	private int height = 384;
 	private int width = 512;
-	protected int resizeWidth;
-	protected int resizeHeight;
-
 	private DirectColorModel imageModel;
 	private Image backingImage;
+	private ImageConsumer imageProducer;
+
+	public static boolean saveCredentials(String creds) {
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
+
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(creds);
+			outputWriter.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	void addMouseClick(int button, int x, int y) {
 		try {
@@ -60,8 +70,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			g.drawString(str, x - metrics.stringWidth(str) / 2, y + metrics.getHeight() / 4);
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9,
-					"e.LE(" + (var1 != null ? "{...}" : "null") + ',' + (str != null ? "{...}" : "null") + ',' + y + ','
-							+ true + ',' + x + ',' + (g != null ? "{...}" : "null") + ')');
+				"e.LE(" + (var1 != null ? "{...}" : "null") + ',' + (str != null ? "{...}" : "null") + ',' + y + ','
+					+ true + ',' + x + ',' + (g != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -123,13 +133,13 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				this.drawCenteredString(this.loadingFont, state, 10 + y, true, 138 + x, this.loadingGraphics);
 				if (!this.m_hb) {
 					this.drawCenteredString(this.createdbyFont, "Powered by Open RSC", 30 + y, true,
-							x + 138, this.loadingGraphics);
+						x + 138, this.loadingGraphics);
 					this.drawCenteredString(this.createdbyFont, "We support open source development.", y + 44, true, x + 138,
-							this.loadingGraphics);
+						this.loadingGraphics);
 				} else {
 					this.loadingGraphics.setColor(new Color(132, 132, 152));
 					this.drawCenteredString(this.copyrightFont2, "We support open source development.", this.height - 20, true,
-							138 + x, this.loadingGraphics);
+						138 + x, this.loadingGraphics);
 				}
 
 				if (null != this.m_p) {
@@ -143,7 +153,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7,
-					"e.FE(" + (state != null ? "{...}" : "null") + ',' + percent + ',' + var3 + ')');
+				"e.FE(" + (state != null ? "{...}" : "null") + ',' + percent + ',' + var3 + ')');
 		}
 	}
 
@@ -228,13 +238,13 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			// Backspace
 			if (keyChar == '\b' && mudclient.inputTextCurrent.length() > 0) {
 				mudclient.inputTextCurrent = mudclient.inputTextCurrent.substring(0,
-						mudclient.inputTextCurrent.length() - 1);
+					mudclient.inputTextCurrent.length() - 1);
 			}
 
 			// Backspace
 			if (keyChar == '\b' && mudclient.chatMessageInput.length() > 0) {
 				mudclient.chatMessageInput = mudclient.chatMessageInput.substring(0,
-						mudclient.chatMessageInput.length() - 1);
+					mudclient.chatMessageInput.length() - 1);
 			}
 
 			if (keyChar == '\n' || keyChar == '\r') {
@@ -413,8 +423,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	@Override
 	public final void mouseWheelMoved(MouseWheelEvent var1) {
-			updateControlShiftState((InputEvent) var1);
-			mudclient.runScroll(var1.getWheelRotation());
+		updateControlShiftState((InputEvent) var1);
+		mudclient.runScroll(var1.getWheelRotation());
 	}
 
 	@Override
@@ -490,7 +500,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	}
 
 	public void loadLogo() {
-        // Leaving this blank
+		// Leaving this blank
 	}
 
 	final void startApplet(int width, int height, int clientversion, int var4) {
@@ -648,8 +658,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		}
 	}
 
-	private ImageConsumer imageProducer;
-
 	@Override
 	public void initGraphics() {
 		int width = mudclient.getSurface().width2;
@@ -672,7 +680,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 			if (null != this.imageProducer) {
 				this.imageProducer.setPixels(0, 0, mudclient.getSurface().width2, mudclient.getSurface().height2,
-						this.imageModel, mudclient.getSurface().pixelData, 0, mudclient.getSurface().width2);
+					this.imageModel, mudclient.getSurface().pixelData, 0, mudclient.getSurface().width2);
 				this.imageProducer.imageComplete(2);
 			}
 		} catch (RuntimeException var3) {
@@ -713,7 +721,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			System.out.println("TDLR");
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3,
-					"ua.requestTopDownLeftRightResend(" + (arg0 != null ? "{...}" : "null") + ')');
+				"ua.requestTopDownLeftRightResend(" + (arg0 != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -782,21 +790,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	}
 
-	public static boolean saveCredentials(String creds) {
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "credentials.txt");
-
-			OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-			outputWriter.write(creds);
-			outputWriter.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
 	public String loadCredentials() {
 		try {
 
@@ -817,13 +810,13 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		return "";
 	}
 
-    @Override
-    public void playSound(byte[] soundData, int offset, int dataLength) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void playSound(byte[] soundData, int offset, int dataLength) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 
-    @Override
-    public void stopSoundPlayer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void stopSoundPlayer() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 }

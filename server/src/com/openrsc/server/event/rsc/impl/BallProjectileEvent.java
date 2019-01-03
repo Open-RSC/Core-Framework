@@ -1,8 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.model.entity.Mob;
-import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.player.Player;
 
 public abstract class BallProjectileEvent extends BenignProjectileEvent {
 
@@ -12,7 +10,7 @@ public abstract class BallProjectileEvent extends BenignProjectileEvent {
 
 	@Override
 	public void action() {
-		if(!canceled) {
+		if (!canceled) {
 			doSpell();
 		}
 	}

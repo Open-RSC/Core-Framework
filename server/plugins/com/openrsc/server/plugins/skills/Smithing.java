@@ -19,11 +19,11 @@ import com.openrsc.server.util.rsc.Formulae;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Smithing implements InvUseOnObjectListener,
-InvUseOnObjectExecutiveListener {
+	InvUseOnObjectExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
-			Player player) {
+									   Player player) {
 		return obj.getID() == 177 || obj.getID() == 50;
 	}
 
@@ -56,7 +56,7 @@ InvUseOnObjectExecutiveListener {
 		if (!(obj.getID() == 50 || obj.getID() == 177)) return false;
 
 		// Using hammer with anvil.
-		if(item.getID() == 168) {
+		if (item.getID() == 168) {
 			player.message("To forge items use the metal you wish to work with the anvil");
 			return false;
 		}
@@ -87,13 +87,13 @@ InvUseOnObjectExecutiveListener {
 	private void beginSmithing(final Item item, final Player player) {
 
 		// Combining Dragon Square Shield Halves
-		if(item.getID() == 1276 || item.getID() == 1277) {
+		if (item.getID() == 1276 || item.getID() == 1277) {
 			attemptDragonSquareCombine(item, player);
 			return;
 		}
 
 		// Failure to make a gold bowl without Legend's Quest.
-		if(item.getID() == 172 && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
+		if (item.getID() == 172 && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
 			player.message("You're not quite sure what to make from the gold..");
 			return;
 		}
@@ -101,7 +101,7 @@ InvUseOnObjectExecutiveListener {
 		player.message("What would you like to make?");
 
 		// Gold
-		if(item.getID() == 172) {
+		if (item.getID() == 172) {
 			handleGoldSmithing(player);
 			return;
 		}
@@ -111,14 +111,13 @@ InvUseOnObjectExecutiveListener {
 	}
 
 	private void attemptDragonSquareCombine(Item item, Player player) {
-		if(player.getSkills().getLevel(13) < 60) {
+		if (player.getSkills().getLevel(13) < 60) {
 			player.message("You need a smithing ability of at least 60 to complete this task.");
 		}
 		// non-kosher this message
-		else if(player.getInventory().countId(1276) < 1 || player.getInventory().countId(1277) < 1) {
+		else if (player.getInventory().countId(1276) < 1 || player.getInventory().countId(1277) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
-		}
-		else {
+		} else {
 			player.message("You set to work trying to fix the ancient shield.");
 			sleep(1200);
 			player.message("You hammer long and hard and use all of your skill.");
@@ -135,15 +134,15 @@ InvUseOnObjectExecutiveListener {
 
 	private void handleGoldSmithing(Player player) {
 		int goldOption = showMenu(player, "Golden bowl.", "Cancel");
-		if(player.isBusy()) {
+		if (player.isBusy()) {
 			return;
 		}
 		if (goldOption == 0) {
 			message(player, "You hammer the metal...");
-			if(player.getInventory().countId(172) < 2) {
+			if (player.getInventory().countId(172) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
-				if(Formulae.failCalculation(player, Skills.SMITHING, 50)) {
+				if (Formulae.failCalculation(player, Skills.SMITHING, 50)) {
 					for (int x = 0; x < 2; x++) {
 						player.getInventory().remove(172, 1);
 					}
@@ -166,7 +165,7 @@ InvUseOnObjectExecutiveListener {
 		int firstType = firstMenu(item, player);
 		if (firstType < 0) return;
 
-		if(player.isBusy()) {
+		if (player.isBusy()) {
 			return;
 		}
 
@@ -177,7 +176,7 @@ InvUseOnObjectExecutiveListener {
 		// Distribute to the correct function to make our final choice
 		int toMake = chooseItem(player, secondType);
 
-		if(player.isBusy() || toMake == -1) {
+		if (player.isBusy() || toMake == -1) {
 			return;
 		}
 
@@ -252,7 +251,7 @@ InvUseOnObjectExecutiveListener {
 		}
 
 		// Bronze Bar
-		if(item.getID() == 169) {
+		if (item.getID() == 169) {
 			option = showMenu(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Craft Item", "Cancel");
 
@@ -286,7 +285,7 @@ InvUseOnObjectExecutiveListener {
 		// Armour
 		if (firstType == 1) {
 			player.message("Choose a type of armour to make");
-			return offset + showMenu(player,  "Helmet", "Shield", "Armour");
+			return offset + showMenu(player, "Helmet", "Shield", "Armour");
 		}
 
 		offset += 3;
@@ -325,12 +324,12 @@ InvUseOnObjectExecutiveListener {
 		if (firstType == 3) {
 
 			// Nails
-			if(item.getID() == 171) {
+			if (item.getID() == 171) {
 				makeNails(item, player);
 			}
 
 			// Bronze Wire
-			else if(item.getID() == 169) {
+			else if (item.getID() == 169) {
 				makeWire(item, player);
 			}
 		}
@@ -357,7 +356,7 @@ InvUseOnObjectExecutiveListener {
 	private void makeWire(Item item, Player player) {
 		player.message("What sort of craft item do you want to make?");
 		int bronzeWireOption = showMenu(player, "Bronze Wire(1 bar)", "Cancel");
-		if(player.isBusy()) {
+		if (player.isBusy()) {
 			return;
 		}
 		if (player.getInventory().countId(169) < 1) {
@@ -377,7 +376,7 @@ InvUseOnObjectExecutiveListener {
 		// Dagger
 		if (secondType == 0) return 0;
 
-		// Throwing Knife
+			// Throwing Knife
 		else if (secondType == 1) {
 			if (!Constants.GameServer.MEMBER_WORLD) {
 				player.message("This feature is members only");
@@ -389,22 +388,22 @@ InvUseOnObjectExecutiveListener {
 		// Sword
 		else if (secondType == 2) return swordChoice(player);
 
-		// Axe
+			// Axe
 		else if (secondType == 3) return axeChoice(player);
 
-		// Mace
+			// Mace
 		else if (secondType == 4) return 9;
 
-		// Helmet
+			// Helmet
 		else if (secondType == 5) return helmetChoice(player);
 
-		// Shield
+			// Shield
 		else if (secondType == 6) return shieldChoice(player);
 
-		// Armour
+			// Armour
 		else if (secondType == 7) return armourChoice(player);
 
-		// Arrowheads
+			// Arrowheads
 		else if (secondType == 8) return 18;
 
 		else if (secondType == 9) {
@@ -447,7 +446,7 @@ InvUseOnObjectExecutiveListener {
 
 	private int shieldChoice(Player player) {
 		player.message("What sort of shield do you want to make?");
-		int option = showMenu(player,  "Square Shield (2 bars)",
+		int option = showMenu(player, "Square Shield (2 bars)",
 			"Kite Shield (3 bars)");
 		if (option == 0) return 12; // Square Shield
 		else if (option == 1) return 13; // Kite Shield
@@ -478,7 +477,7 @@ InvUseOnObjectExecutiveListener {
 
 			count = showMenu(player, options);
 
-			if(count == -1) {
+			if (count == -1) {
 				return -1;
 			}
 

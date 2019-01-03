@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * TODO: Change log to builder design (ex: new TradeLog().build())
  * Logic should never be involved in preparing statements other than passing data to the database
- * @author openfrog
  *
+ * @author openfrog
  */
 
 
@@ -21,7 +21,7 @@ public final class TradeLog extends Query {
 
 	private String player1, player2, playerOnesOffer, playerTwosOffer, player1_ip, player2_ip;
 	private List<Item> player1Offer, player2Offer;
-	
+
 	public TradeLog(String player1, String player2, List<Item> player1Offer, List<Item> player2Offer, String player1_ip, String player2_ip) {
 		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "trade_logs`(`player1`, `player2`, `player1_items`, `player2_items`, `player1_ip`, `player2_ip`, `time`) VALUES(?, ?, ?, ?, ?, ?, ?)");
 		this.player1 = player1;
@@ -48,20 +48,20 @@ public final class TradeLog extends Query {
 	@Override
 	public Query build() {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (Item i : player1Offer) {
 			//System.out.println("Player 1 offered: " + i.getID());
 			sb.append(i.getID()).append(":").append(i.getAmount()).append(",");
 		}
-		
+
 		playerOnesOffer = sb.toString();
 		sb = new StringBuilder();
-		
+
 		for (Item i : player2Offer) {
 			//System.out.println("Player 2 offered: " + i.getID());
 			sb.append(i.getID()).append(":").append(i.getAmount()).append(",");
 		}
-		
+
 		playerTwosOffer = sb.toString();
 		return this;
 	}

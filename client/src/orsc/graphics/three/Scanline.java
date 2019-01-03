@@ -1,4 +1,5 @@
 package orsc.graphics.three;
+
 final class Scanline {
 	int m_e;
 	int m_k;

@@ -11,17 +11,17 @@ import com.openrsc.server.plugins.menu.Option;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class MonkOfEntrana implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+	TalkToNpcListener {
 
 	private boolean CAN_GO(Player p) {
 		for (Item item : p.getInventory().getItems()) {
 			String name = item.getDef().getName().toLowerCase();
 			if (name.contains("dagger") || name.contains("scimitar")
-					|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
-					|| (name.contains("sword")
-					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-					|| name.contains("mace") || name.contains("helmet")
-					|| name.contains("axe")) {
+				|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
+				|| (name.contains("sword")
+				&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
+				|| name.contains("mace") || name.contains("helmet")
+				|| name.contains("axe")) {
 				return true;
 			}
 		}
@@ -35,7 +35,7 @@ public final class MonkOfEntrana implements TalkToNpcExecutiveListener,
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if(n.getLocation().inEntrana()) {
+		if (n.getLocation().inEntrana()) {
 			npcTalk(p, n, "Are you looking to take passage back to port sarim?");
 			final Menu defaultMenu = new Menu();
 			defaultMenu.addOption(new Option("No I don't wish to go") {
@@ -56,7 +56,7 @@ public final class MonkOfEntrana implements TalkToNpcExecutiveListener,
 			return;
 		}
 		npcTalk(p, n, "Are you looking to take passage to our holy island?",
-				"If so your weapons and armour must be left behind");
+			"If so your weapons and armour must be left behind");
 		final Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("No I don't wish to go") {
 			@Override
@@ -69,7 +69,7 @@ public final class MonkOfEntrana implements TalkToNpcExecutiveListener,
 				message(p, "The monk quickly searches you");
 				if (CAN_GO(p)) {
 					npcTalk(p, n, "Sorry we cannot allow you on to our island",
-							"Make sure you are not carrying weapons or armour please");
+						"Make sure you are not carrying weapons or armour please");
 				} else {
 					message(p, "You board the ship");
 					p.teleport(418, 570, false);

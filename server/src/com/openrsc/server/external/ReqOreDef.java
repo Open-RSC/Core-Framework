@@ -5,21 +5,21 @@ package com.openrsc.server.external;
  */
 public class ReqOreDef {
 
-    /**
-     * The amount of the ore required
-     */
-    public int amount;
-    /**
-     * The id of the ore
-     */
-    public int oreId;
+	/**
+	 * The amount of the ore required
+	 */
+	public int amount;
+	/**
+	 * The id of the ore
+	 */
+	public int oreId;
 
-    public int getAmount() {
-        return amount;
-    }
+	public int getAmount() {
+		return amount;
+	}
 
-    public int getId() {
-        return oreId;
-    }
+	public int getId() {
+		return oreId;
+	}
 
 }

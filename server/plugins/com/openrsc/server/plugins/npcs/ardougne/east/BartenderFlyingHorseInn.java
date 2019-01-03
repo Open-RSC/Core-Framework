@@ -13,7 +13,7 @@ public class BartenderFlyingHorseInn implements TalkToNpcListener, TalkToNpcExec
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if(n.getID() == BARTENDER) {
+		if (n.getID() == BARTENDER) {
 			return true;
 		}
 		return false;
@@ -21,16 +21,16 @@ public class BartenderFlyingHorseInn implements TalkToNpcListener, TalkToNpcExec
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if(n.getID() == BARTENDER) {
+		if (n.getID() == BARTENDER) {
 			npcTalk(p, n, "Would you like to buy a drink?");
 			playerTalk(p, n, "What do you serve?");
 			npcTalk(p, n, "Beer");
 			int menu = showMenu(p, n,
-					"I'll have a beer then",
-					"I'll not have anything then");
-			if(menu == 0) {
+				"I'll have a beer then",
+				"I'll not have anything then");
+			if (menu == 0) {
 				npcTalk(p, n, "Ok, that'll be two coins");
-				if(hasItem(p, 10, 2)) {
+				if (hasItem(p, 10, 2)) {
 					removeItem(p, 10, 2);
 					addItem(p, 193, 1);
 					p.message("You buy a pint of beer");

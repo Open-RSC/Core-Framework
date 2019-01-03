@@ -13,33 +13,61 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 public final class AuctionHouse {
-	private int x, y;
-	private int width, height;
 	public int auctionScrollHandle;
 	public int auctionSearchHandle;
-
 	public Panel auctionMenu;
 	public Panel myAuctions;
 	public Panel selectItemGUI;
-
-	private ArrayList<AuctionItem> auctionItems;
 	public int activeInterface;
 	public int myAuctionScrollHandle;
-
 	public int textField_amount;
 	public int textField_price;
-
-	private int newAuctionInventoryIndex = -1;
-	private AuctionItem newAuctionItem = null;
 	public int textField_priceEach;
 	public int textField_buyAmount;
-
+	private int x, y;
+	private int width, height;
+	private ArrayList<AuctionItem> auctionItems;
+	private int newAuctionInventoryIndex = -1;
+	private AuctionItem newAuctionItem = null;
 	private int selectedAuction = -1;
 	private int selectedCancelAuction = -1;
 
 	private int selectItemAdd = 0;
 
 	private boolean visible = false;
+	private int selectedFilter;
+	private String[] resources = {"log", "bones", "pickaxe", "dough"};
+	private int orderingBy = 0;
+	Comparator<AuctionItem> auctionComparator = new Comparator<AuctionItem>() {
+		@Override
+		public int compare(AuctionItem o1, AuctionItem o2) {
+			if (orderingBy == 0) { /* price down */
+				return o1.getPrice() - o2.getPrice();
+			} else if (orderingBy == 1) { /* price up */
+				return o2.getPrice() - o1.getPrice();
+			} else if (orderingBy == 2) { /* name */
+				ItemDef d1 = EntityHandler.getItemDef(o1.getItemID());
+				ItemDef d2 = EntityHandler.getItemDef(o2.getItemID());
+
+				return d1.getName().compareToIgnoreCase(d2.getName());
+			} else if (orderingBy == 3) { /* price each down */
+				int priceEach1 = o1.getPrice() / o1.getAmount();
+				int priceEach2 = o2.getPrice() / o2.getAmount();
+				return priceEach1 - priceEach2;
+			} else if (orderingBy == 4) { /* price each up */
+				int priceEach1 = o1.getPrice() / o1.getAmount();
+				int priceEach2 = o2.getPrice() / o2.getAmount();
+				return priceEach2 - priceEach1;
+			}
+			ItemDef d1 = EntityHandler.getItemDef(o1.getAuctionID());
+			ItemDef d2 = EntityHandler.getItemDef(o2.getAuctionID());
+
+			return d1.getName().compareToIgnoreCase(d2.getName());
+		}
+	};
+	private String sortBy = "Price Down";
+	private double fee;
+	private mudclient mc;
 
 	public AuctionHouse(mudclient mc) {
 		this.mc = mc;
@@ -62,7 +90,7 @@ public final class AuctionHouse {
 		textField_price = myAuctions.addLeftTextEntry(x + 60, y + 130, 70, 18, 1, 8, false, true);
 		textField_amount = myAuctions.addLeftTextEntry(x + 60, y + 209, 70, 18, 1, 8, false, true);
 		textField_priceEach = myAuctions.addLeftTextEntry(x + 60, y + 169, 70, 18, 1, 8, false, true);
-		
+
 		myAuctionScrollHandle = myAuctions.addScrollingList2(x + 216, y + 74, 270, 179, 1000, 7, true);
 	}
 
@@ -124,44 +152,14 @@ public final class AuctionHouse {
 				setVisible(false);
 			}
 		});
-		
+
 		if (activeInterface == 0) {
 			drawAuctionMenu(graphics);
 		} else if (activeInterface == 1) {
-			drawMyAuctions(graphics);	
+			drawMyAuctions(graphics);
 		}
 		return true;
 	}
-
-
-
-	Comparator<AuctionItem> auctionComparator = new Comparator<AuctionItem>() {
-		@Override
-		public int compare(AuctionItem o1, AuctionItem o2) {
-			if (orderingBy == 0) { /* price down */
-				return o1.getPrice() - o2.getPrice();
-			} else if (orderingBy == 1) { /* price up */
-				return o2.getPrice() - o1.getPrice();
-			} else if (orderingBy == 2) { /* name */
-				ItemDef d1 = EntityHandler.getItemDef(o1.getItemID());
-				ItemDef d2 = EntityHandler.getItemDef(o2.getItemID());
-
-				return d1.getName().compareToIgnoreCase(d2.getName());
-			} else if (orderingBy == 3) { /* price each down */
-				int priceEach1 = o1.getPrice() / o1.getAmount();
-				int priceEach2 = o2.getPrice() / o2.getAmount();
-				return priceEach1 - priceEach2;
-			} else if (orderingBy == 4) { /* price each up */
-				int priceEach1 = o1.getPrice() / o1.getAmount();
-				int priceEach2 = o2.getPrice() / o2.getAmount();
-				return priceEach2 - priceEach1;
-			}
-			ItemDef d1 = EntityHandler.getItemDef(o1.getAuctionID());
-			ItemDef d2 = EntityHandler.getItemDef(o2.getAuctionID());
-
-			return d1.getName().compareToIgnoreCase(d2.getName());
-		}
-	};
 
 	private void sendRefreshList() {
 		mc.packetHandler.getClientStream().newPacket(199);
@@ -189,22 +187,21 @@ public final class AuctionHouse {
 		graphics.drawBoxAlpha(x + 138, y + 37, 349, 251, 0, 60);
 		graphics.drawBoxBorder(x + 137, 350, y + 37, 252, 0x343434);
 
-		if(newAuctionItem == null) {
+		if (newAuctionItem == null) {
 			drawButtonFancy(graphics, x + 16, y + 37 + 10, 100, 48, "+ Select item", selectItemAdd == 1, new ButtonHandler() {
 				@Override
 				void handle() {
 					selectItemAdd = 1;
 				}
 			});
-		}
-		else if(newAuctionItem != null) {
+		} else if (newAuctionItem != null) {
 			ItemDef def = EntityHandler.getItemDef(newAuctionItem.getItemID());
 			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), x + 40, y + 55, 48, 32,
-					def.getPictureMask(), 0, false, 0, 1);
+				def.getPictureMask(), 0, false, 0, 1);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 				mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(), x + 47,
-						y + 59, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+					y + 59, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
 			}
 			//graphics.drawString("Fee: +" + (int) getFee() + "gp", x + 6, y + 101, 0xffffff, 0);
 		}
@@ -239,8 +236,8 @@ public final class AuctionHouse {
 
 		//graphics.drawString("Fee: 2.5%", x + 5 + 38, y + 280, 0xffffff, 0);
 		// END RIGHT SIDE
-		
-		if(selectItemAdd == 1) {
+
+		if (selectItemAdd == 1) {
 			//graphics.drawString("Auction House has a fee of 2.5% upon adding your sale", x + 176, y + 285, 0xffffff, 0);
 			graphics.drawString("My Inventory", x + 189, y + 64, 0xFFFF00, 1);
 			drawButton(graphics, x + 402, y + 32 + 10, 80, 21, "< My Listings", false, new ButtonHandler() {
@@ -268,25 +265,25 @@ public final class AuctionHouse {
 						ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]);
 
 						mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), drawX, drawY, 48,
-								32, def.getPictureMask(), 0, false, 0, 1);
+							32, def.getPictureMask(), 0, false, 0, 1);
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							mc.getSurface().drawSpriteClipping(mudclient.spriteItem + originalDef.getSprite(), drawX + 7,
-									drawY + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
+								drawY + 4, 33, 23, originalDef.getPictureMask(), 0, false, 0, 1);
 						}
 						graphics.drawString(String.valueOf(mc.getInventoryItemsCount()[inventorySlot]), drawX + 1,
-								drawY + 10, 65280, 1);
+							drawY + 10, 65280, 1);
 					}
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + boxWidth && mc.getMouseY() > drawY
-							&& mc.getMouseY() < drawY + boxHeight) {
+						&& mc.getMouseY() < drawY + boxHeight) {
 						graphics.drawBoxAlpha(drawX, drawY, boxWidth, boxHeight, i7, 160);
 						if (mc.getMouseClick() == 1) {
 							int itemID = mc.getInventoryItems()[inventorySlot];
 							int amount = mc.getInventoryCount(itemID);
-							if(itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
+							if (itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
 								mc.showMessage(false, (String) null, "This object cannot be added to auction", MessageType.GAME,
-										0, (String) null);
-								return; 
+									0, (String) null);
+								return;
 							}
 							if (amount > 0) {
 								int price = EntityHandler.getItemDef(itemID).getBasePrice();
@@ -310,7 +307,7 @@ public final class AuctionHouse {
 					inventorySlot++;
 				}
 			}
-		} else if(selectItemAdd == 0) {
+		} else if (selectItemAdd == 0) {
 			if (newAuctionItem == null) {
 				drawButtonFancy(graphics, x + 16, y + 37 + 10, 100, 48, "+ Select item", selectItemAdd == 1, new ButtonHandler() {
 					@Override
@@ -319,7 +316,7 @@ public final class AuctionHouse {
 					}
 				});
 			}
-			
+
 			LinkedList<AuctionItem> filteredList = new LinkedList<AuctionItem>();
 			for (AuctionItem item : auctionItems) {
 				if (item.getSeller().equalsIgnoreCase(mc.getUsername())) {
@@ -348,7 +345,7 @@ public final class AuctionHouse {
 					continue;
 				AuctionItem ahItem = filteredList.get(i);
 				if (mc.getMouseX() >= listX - 72 && mc.getMouseY() >= listY - 11 && mc.getMouseX() <= listX + 275 - 12
-						&& mc.getMouseY() <= listY - 11 + boxHeight) {
+					&& mc.getMouseY() <= listY - 11 + boxHeight) {
 					graphics.drawBoxAlpha(listX - 72, listY - 11, 348, boxHeight, 0x980000, 128);
 					if (mc.getMouseClick() == 1) {
 						selectedCancelAuction = i;
@@ -383,7 +380,7 @@ public final class AuctionHouse {
 				graphics.drawBoxAlpha(listX - 72, listY - 10, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
 				mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), listX - 72, listY - 10, 48,
-						32, def.getPictureMask(), 0, false, 0, 1);
+					32, def.getPictureMask(), 0, false, 0, 1);
 
 				graphics.drawString(String.valueOf(ahItem.getAmount()), listX - 72 + 1, listY - 10 + 11, 65280, 3);
 				listY += boxHeight + 2;
@@ -393,7 +390,7 @@ public final class AuctionHouse {
 				int cancelAuctionColor = 0x980000;
 
 				if (mc.getMouseX() >= x + 285 - 29 && mc.getMouseY() >= y + 260 && mc.getMouseX() <= x + 385 - 17
-						&& mc.getMouseY() <= y + 20 + 260) {
+					&& mc.getMouseY() <= y + 20 + 260) {
 					cancelAuctionColor = 0x500000;
 					if (mc.getMouseClick() == 1 && selectedCancelAuction < filteredList.size()) {
 						sendCancelAuction(filteredList.get(selectedCancelAuction).getAuctionID());
@@ -417,7 +414,7 @@ public final class AuctionHouse {
 	}
 
 	private void sendCreateAuction() {
-		if(newAuctionItem != null) {
+		if (newAuctionItem != null) {
 			if (newAuctionItem.getAmount() <= 0) {
 				newAuctionItem.setAmount(1);
 			}
@@ -441,22 +438,17 @@ public final class AuctionHouse {
 			selectItemAdd = 0;
 			newAuctionItem = null;
 			newAuctionInventoryIndex = -1;
-		} 
+		}
 	}
 
-	private int selectedFilter;
-	private String[] resources = { "log", "bones", "pickaxe", "dough" };
-	private int orderingBy = 0;
-	private String sortBy = "Price Down";
-
 	private void drawButton(GraphicsController graphics, int x, int y, int width, int height, String text,
-			boolean checked, ButtonHandler handler) {
+							boolean checked, ButtonHandler handler) {
 		int allColor = 0x333333;
 		if (checked) {
 			allColor = 0x659CDE;
 		}
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
-			if(!checked)
+			if (!checked)
 				allColor = 0x263751;
 			if (mc.getMouseClick() == 1) {
 				handler.handle();
@@ -469,13 +461,13 @@ public final class AuctionHouse {
 	}
 
 	private void drawButtonFancy(GraphicsController graphics, int x, int y, int width, int height, String text,
-			boolean checked, ButtonHandler handler) {
+								 boolean checked, ButtonHandler handler) {
 		int allColor = 0x0A2B56;
 		if (checked) {
 			allColor = 0x659CDE;
 		}
 		if (mc.getMouseX() >= x && mc.getMouseY() >= y && mc.getMouseX() <= x + width && mc.getMouseY() <= y + height) {
-			if(!checked)
+			if (!checked)
 				allColor = 0x263751;
 			if (mc.getMouseClick() == 1) {
 				handler.handle();
@@ -488,7 +480,7 @@ public final class AuctionHouse {
 	}
 
 	private void drawTextHit(GraphicsController graphics, int x, int y, int width, int height, String text,
-			boolean checked, ButtonHandler handler) {
+							 boolean checked, ButtonHandler handler) {
 		int allColor = 0xffffff;
 		if (checked) {
 			allColor = 0x6b8e23;
@@ -645,38 +637,38 @@ public final class AuctionHouse {
 			} else if (selectedFilter == 2 && ((24 & def.wearableID) != 0 || !def.isWieldable()) && !itemName.contains("shield")) {
 				continue;
 			} else if (selectedFilter == 3) {
-				commandFilter = new String[] { "drink", "eat" };
-				nameFilter = new String[] { "raw" };
+				commandFilter = new String[]{"drink", "eat"};
+				nameFilter = new String[]{"raw"};
 			} else if (selectedFilter == 4) {
-				nameFilter = new String[] { "-rune", "arrow", "bolt" };
+				nameFilter = new String[]{"-rune", "arrow", "bolt"};
 			} else if (selectedFilter == 5) {
-				nameFilter = new String[] { "uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone" };
-				exactNameFilter = new String[] { "opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace", 
-						"gold necklace", "holy symbol of saradomin", "unblessed holy symbol" };
+				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"};
+				exactNameFilter = new String[]{"opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
+					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol"};
 			} else if (selectedFilter == 6) {
-				nameFilter = new String[] { " ore", "coal", "bar", "clay" };
-				exactNameFilter = new String[] { "gold", "silver", "silver certificate", "gold certificate" };
-			}  else if (selectedFilter == 7) {
-				commandFilter = new String[] { "identify" };
-				nameFilter = new String[] { "unfinished", "vial", "weed", "ground", "root", "scale" };
-				exactNameFilter = new String[] { "Guam Leaf", "Marrentill", "Tarromin", "Harralander", "Irit leaf",
-						"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
-						"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak" };
+				nameFilter = new String[]{" ore", "coal", "bar", "clay"};
+				exactNameFilter = new String[]{"gold", "silver", "silver certificate", "gold certificate"};
+			} else if (selectedFilter == 7) {
+				commandFilter = new String[]{"identify"};
+				nameFilter = new String[]{"unfinished", "vial", "weed", "ground", "root", "scale"};
+				exactNameFilter = new String[]{"Guam Leaf", "Marrentill", "Tarromin", "Harralander", "Irit leaf",
+					"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
+					"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak"};
 			} else if (selectedFilter == 8) {
-				nameFilter = new String[] { "halloween", "bunny", "party", "pumpkin", "easter", "scythe", "cracker" };
-				exactNameFilter = new String[] { "Disc of returning", "santa's hat" };
+				nameFilter = new String[]{"halloween", "bunny", "party", "pumpkin", "easter", "scythe", "cracker"};
+				exactNameFilter = new String[]{"Disc of returning", "santa's hat"};
 			}
 			if (selectedFilter == 9) {
 				nameFilter = resources;
-				exactNameFilter = new String[] { 
-						"fur", "leather", "wool", "bow string", "flax", "cow hide",
-						"knife", "egg", "bucket", "milk", "flour", "skull", "grain", 
-						"needle", "thread", "holy", "water", "cadavaberries", 
-						"pot", "jug", "grapes", "shears", "tinderbox",
-						"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk", 
-						"flier", "garlic", "redberries", "rope", "bad wine", "cape", 
-						"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon", 
-						"fishing bait", "feather"
+				exactNameFilter = new String[]{
+					"fur", "leather", "wool", "bow string", "flax", "cow hide",
+					"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
+					"needle", "thread", "holy", "water", "cadavaberries",
+					"pot", "jug", "grapes", "shears", "tinderbox",
+					"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
+					"flier", "garlic", "redberries", "rope", "bad wine", "cape",
+					"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
+					"fishing bait", "feather"
 				};
 			}
 			boolean skip = true;
@@ -707,7 +699,7 @@ public final class AuctionHouse {
 					}
 				}
 			}
-			
+
 			if (nameFilter != null || commandFilter != null || exactNameFilter != null) {
 				if (skip) {
 					continue;
@@ -718,7 +710,7 @@ public final class AuctionHouse {
 				filteredList.add(item);
 			}
 		}
-		if(selectedAuction == -1) {
+		if (selectedAuction == -1) {
 			auctionMenu.clearList(auctionScrollHandle);
 			auctionMenu.hide(textField_buyAmount);
 			auctionMenu.show(auctionScrollHandle);
@@ -745,11 +737,11 @@ public final class AuctionHouse {
 				}
 				auctionMenu.setListEntry(auctionScrollHandle, i + 1, "", 0, (String) null, (String) null);
 
-				if (i < listStartPoint || i > listEndPoint) 
+				if (i < listStartPoint || i > listEndPoint)
 					continue;
 				AuctionItem ahItem = filteredList.get(i);
 				if (mc.getMouseX() >= (listX - 3) && mc.getMouseY() >= (listY - 5) && mc.getMouseX() <= listX + 384
-						&& mc.getMouseY() <= (listY - 5) + boxHeight ) {
+					&& mc.getMouseY() <= (listY - 5) + boxHeight) {
 					graphics.drawBoxAlpha(listX - 3, listY - 5, 400, boxHeight, 0x980000, 128);
 					if (mc.getMouseClick() == 1) {
 						selectedAuction = i;
@@ -779,13 +771,13 @@ public final class AuctionHouse {
 				graphics.drawBoxAlpha(listX - 3, listY - 4, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
 				mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), listX - 3, listY - 5, 48,
-						32, def.getPictureMask(), 0, false, 0, 1);
+					32, def.getPictureMask(), 0, false, 0, 1);
 
 				graphics.drawString(String.valueOf(ahItem.getAmount()), listX + 1 - 3, listY + 10 - 4, 65280, 1);
 				listY += boxHeight + 2;
 			}
 			graphics.drawString("Showing: " + (showing) + "/" + (filteredList.size()) + " items", listX + 49, y + 75,
-					0xffffff, 1);
+				0xffffff, 1);
 			graphics.drawString("Expires in", listX + 201, y + 75, 0xffffff, 1);
 		}
 
@@ -827,7 +819,7 @@ public final class AuctionHouse {
 			graphics.drawBoxBorder(selectX + 8, 50, selectY + 22, 34, 0);
 
 			mc.getSurface().drawSpriteClipping(mudclient.spriteItem + def.getSprite(), selectX + 8, selectY + 22, 48, 32,
-					def.getPictureMask(), 0, false, 0, 1);
+				def.getPictureMask(), 0, false, 0, 1);
 			graphics.drawString(String.valueOf(ahItem.getAmount()), selectX + 10, selectY + 22 + 11, 65280, 1);
 
 			graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);
@@ -836,7 +828,7 @@ public final class AuctionHouse {
 			graphics.drawString("Total: " + method74(price) + "gp", selectX + 200, selectY + 32 + 14, 0xffffff, 2);
 			graphics.drawString("Each: " + method74(priceEach) + "gp", selectX + 200, selectY + 32 + 28, 0xffffff, 2);
 
-			graphics.drawString("Seller: " + ahItem.getSeller() , selectX + 8, selectY + 83, 0xffffff, 2);
+			graphics.drawString("Seller: " + ahItem.getSeller(), selectX + 8, selectY + 83, 0xffffff, 2);
 
 			if (mc.getLocalPlayer().isMod()) {
 				drawButton(graphics, selectX + 186, selectY + 68, 200, 22, "@red@[Staff] Delete Item", false, new ButtonHandler() {
@@ -910,10 +902,11 @@ public final class AuctionHouse {
 		}
 		return "" + priceEach;
 	}
-	private double fee;
+
 	private double getFee() {
 		return fee;
 	}
+
 	private void setFee(double d) {
 		this.fee = d;
 	}
@@ -955,17 +948,15 @@ public final class AuctionHouse {
 		mc.packetHandler.getClientStream().writeBuffer1.putInt(ahItem.getAuctionID());
 		mc.packetHandler.getClientStream().writeBuffer1.putInt(t);
 		mc.packetHandler.getClientStream().finishPacket();
-		if(t >= ahItem.getAmount() || ahItem.getAmount() <= 1 || ahItem.getSeller() == mc.getLocalPlayer().displayName) {
+		if (t >= ahItem.getAmount() || ahItem.getAmount() <= 1 || ahItem.getSeller() == mc.getLocalPlayer().displayName) {
 			selectedAuction = -1;
 		}
 	}
 
-	private mudclient mc;
-
 	public boolean keyDown(int key) {
 		if (activeInterface == 0) {
 			if (auctionMenu.focusOn(auctionSearchHandle) || auctionMenu.focusOn(textField_buyAmount)) {
-				if(auctionMenu.focusOn(auctionSearchHandle)) {
+				if (auctionMenu.focusOn(auctionSearchHandle)) {
 					selectedAuction = -1;
 				}
 				if (auctionMenu.focusOn(textField_buyAmount)) {
@@ -981,7 +972,7 @@ public final class AuctionHouse {
 			}
 		} else if (activeInterface == 1) {
 			if (myAuctions.focusOn(textField_amount) || myAuctions.focusOn(textField_price)
-					|| myAuctions.focusOn(textField_priceEach)) {
+				|| myAuctions.focusOn(textField_priceEach)) {
 				if (newAuctionItem != null) {
 					if (key >= 48 && key <= 57 || key == 8) {
 						myAuctions.keyPress(key);
@@ -1047,6 +1038,7 @@ public final class AuctionHouse {
 	public void addAuction(int auctionID, int itemID, int amount, int price, String seller, int hoursLeft) {
 		auctionItems.add(new AuctionItem(auctionID, itemID, amount, price, seller, hoursLeft));
 	}
+
 	public void resetAllVariables() {
 		auctionMenu.clearList(auctionSearchHandle);
 		auctionMenu.resetScrollIndex(auctionScrollHandle);

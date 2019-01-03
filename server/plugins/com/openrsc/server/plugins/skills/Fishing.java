@@ -21,10 +21,33 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Fishing implements ObjectActionListener, ObjectActionExecutiveListener {
 
+	public static ObjectFishDef getFish(ObjectFishingDef objectFishDef, int fishingLevel, int click) {
+		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();
+
+		for (ObjectFishDef def : objectFishDef.getFishDefs()) {
+			if (fishingLevel >= def.getReqLevel()) {
+				fish.add(def);
+			}
+		}
+		if (fish.size() <= 0) {
+			return null;
+		}
+		ObjectFishDef thisFish = fish.get(DataConversions.random(0, fish.size() - 1));
+		int levelDiff = fishingLevel - thisFish.getReqLevel();
+		if (levelDiff < 0) {
+			return null;
+		}
+		return DataConversions.percentChance(offsetToPercent(levelDiff)) ? thisFish : null;
+	}
+
+	private static int offsetToPercent(int levelDiff) {
+		return levelDiff > 40 ? 60 : 20 + levelDiff;
+	}
+
 	@Override
 	public void onObjectAction(final GameObject object, String command, Player owner) {
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
-				|| command.equals("cage")) {
+			|| command.equals("cage")) {
 			handleFishing(object, owner, owner.click, command);
 		}
 	}
@@ -48,31 +71,31 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		if (owner.getSkills().getLevel(10) < def.getReqLevel()) {
 			owner.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel() + " "
-					+ fishingRequirementString(object, command) + " "
-					+ (!command.contains("cage") ? "these fish"
-							: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-							.substring(4) + "s"));
+				+ fishingRequirementString(object, command) + " "
+				+ (!command.contains("cage") ? "these fish"
+				: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+				.substring(4) + "s"));
 			return;
 		}
 		final int netId = def.getNetId();
 		if (owner.getInventory().countId(netId) <= 0) {
-			owner.playerServerMessage(MessageType.QUEST, 
-					"You need a "
-							+ EntityHandler
-							.getItemDef(
-									netId)
-							.getName().toLowerCase()
-							+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
-							+ (!command.contains("cage") ? "these fish"
-									: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-									.substring(4) + "s"));
+			owner.playerServerMessage(MessageType.QUEST,
+				"You need a "
+					+ EntityHandler
+					.getItemDef(
+						netId)
+					.getName().toLowerCase()
+					+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
+					+ (!command.contains("cage") ? "these fish"
+					: EntityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+					.substring(4) + "s"));
 			return;
 		}
 		final int baitId = def.getBaitId();
 		if (baitId >= 0) {
 			if (owner.getInventory().countId(baitId) <= 0) {
-				owner.playerServerMessage(MessageType.QUEST, 
-						"You don't have any " + EntityHandler.getItemDef(baitId).getName().toLowerCase() + " left");
+				owner.playerServerMessage(MessageType.QUEST,
+					"You don't have any " + EntityHandler.getItemDef(baitId).getName().toLowerCase() + " left");
 				return;
 			}
 		}
@@ -86,7 +109,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 				if (baitId >= 0) {
 					if (owner.getInventory().countId(baitId) <= 0) {
 						owner.playerServerMessage(MessageType.QUEST, "You don't have any " + EntityHandler.getItemDef(baitId).getName().toLowerCase()
-								+ " left");
+							+ " left");
 						return;
 					}
 				}
@@ -109,8 +132,8 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						}
 						ActionSender.sendInventory(owner);
 					}
-					if(netId == 548) {
-						if(DataConversions.random(0, 200) == 100) {
+					if (netId == 548) {
+						if (DataConversions.random(0, 200) == 100) {
 							owner.playerServerMessage(MessageType.QUEST, "You catch a casket");
 							owner.incExp(10, fishDef.getExp(), true);
 							addItem(owner, 549, 1);
@@ -118,20 +141,20 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 						Item fish = new Item(fishDef.getId());
 						owner.getInventory().add(fish);
 						owner.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == 17 || fish.getID() == 622 || fish.getID() == 16 ? "some" : fish.getID() == 793 ? "an" : "a") + " "
-								+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == 793 ? " shell" : ""));
+							+ fish.getDef().getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == 793 ? " shell" : ""));
 						owner.incExp(10, fishDef.getExp(), true);
 					} else {
 						Item fish = new Item(fishDef.getId());
 						owner.getInventory().add(fish);
 						owner.playerServerMessage(MessageType.QUEST, "You catch " + (netId == 376 ? "some" : "a") + " "
-								+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == 349 ? "s" : "")
-								+ (fish.getID() == 545 ? "!" : ""));
+							+ fish.getDef().getName().toLowerCase().replace("raw ", "") + (fish.getID() == 349 ? "s" : "")
+							+ (fish.getID() == 545 ? "!" : ""));
 						owner.incExp(10, fishDef.getExp(), true);
 					}
 				} else {
 					owner.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 					if (!owner.getInventory().hasItemId(349) && owner.getLocation().onTutorialIsland()
-							&& owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 40) {
+						&& owner.getCache().hasKey("tutorial") && owner.getCache().getInt("tutorial") == 40) {
 						owner.message("keep trying, you'll catch something soon");
 					}
 				}
@@ -144,7 +167,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		if (obj.getID() == 352)
 			return false;
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
-				|| command.equals("cage")) {
+			|| command.equals("cage")) {
 			return true;
 		}
 		return false;
@@ -164,29 +187,6 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			name = "fishing to catch";
 		}
 		return name;
-	}
-
-	public static ObjectFishDef getFish(ObjectFishingDef objectFishDef, int fishingLevel, int click) {
-		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();
-
-		for (ObjectFishDef def : objectFishDef.getFishDefs()) {
-			if (fishingLevel >= def.getReqLevel()) {
-				fish.add(def);
-			}
-		}
-		if (fish.size() <= 0) {
-			return null;
-		}
-		ObjectFishDef thisFish = fish.get(DataConversions.random(0, fish.size() - 1));
-		int levelDiff = fishingLevel - thisFish.getReqLevel();
-		if (levelDiff < 0) {
-			return null;
-		}
-		return DataConversions.percentChance(offsetToPercent(levelDiff)) ? thisFish : null;
-	}
-
-	private static int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
 	}
 
 	private String tryToCatchFishString(ObjectFishingDef def) {

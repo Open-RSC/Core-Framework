@@ -12,14 +12,14 @@ public class TutorialHandler implements PacketHandler {
 		if (player == null) {
 			return;
 		}
-		if(player.getLocation().onTutorialIsland()) {
+		if (player.getLocation().onTutorialIsland()) {
 			if (player.isBusy()) {
 				if (player.inCombat()) {
 					player.message("You cannot do that whilst fighting!");
 				}
 				return;
 			}
-			if(player.getCache().hasKey("tutorial")) {
+			if (player.getCache().hasKey("tutorial")) {
 				player.getCache().remove("tutorial");
 			}
 			player.teleport(122, 647, false);

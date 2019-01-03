@@ -8,7 +8,7 @@ public class ClanPlayer {
 	private ClanRank rank;
 	private int kills;
 	private int deaths;
-	
+
 	public ClanPlayer(String player) {
 		this.username = player;
 	}
@@ -40,7 +40,7 @@ public class ClanPlayer {
 	public void setRank(ClanRank rank) {
 		this.rank = rank;
 	}
-	
+
 	public int getKills() {
 		return kills;
 	}
@@ -56,7 +56,7 @@ public class ClanPlayer {
 	public void setDeaths(int deaths) {
 		this.deaths = deaths;
 	}
-	
+
 	public void incDeaths() {
 		deaths++;
 	}

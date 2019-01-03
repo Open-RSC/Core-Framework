@@ -3,18 +3,18 @@ package com.openrsc.server.model.world;
 import com.openrsc.server.model.Point;
 
 public class Area {
-	
+
 	private int minX, maxX, minY, maxY;
-	
+
 	private String name;
-	
+
 	public Area(int minX, int maxX, int minY, int maxY) {
 		this.minX = minX;
 		this.maxX = maxX;
 		this.minY = minY;
 		this.maxY = maxY;
 	}
-	
+
 	public Area(int minX, int maxX, int minY, int maxY, String areaName) {
 		this.minX = minX;
 		this.maxX = maxX;
@@ -22,7 +22,7 @@ public class Area {
 		this.maxY = maxY;
 		this.setName(areaName);
 	}
-	
+
 	public int getMinX() {
 		return minX;
 	}
@@ -54,16 +54,16 @@ public class Area {
 	public void setMaxY(int maxY) {
 		this.maxY = maxY;
 	}
-	
+
 	public boolean inBounds(int x, int y) {
 		return x > minX && x < maxX && y > minY && y < maxY;
 	}
-	
+
 	public boolean inBounds(Point p) {
-		
+
 		int x = p.getX();
 		int y = p.getY();
-		
+
 		return x > minX && x < maxX && y > minY && y < maxY;
 	}
 

@@ -71,12 +71,12 @@ public class PrayerHandler implements PacketHandler {
 //			ActionSender.sendPrayers(player);
 			return;
 		}
-		if(prayerID == 8 && player.isIronMan(2)) {
+		if (prayerID == 8 && player.isIronMan(2)) {
 			player.message("Ultimate Iron Mens, cannot protect items");
 			player.getPrayers().resetPrayers();
 			return;
 		}
-		
+
 		PrayerDef prayer = EntityHandler.getPrayerDef(prayerID);
 		int packetOne = OpcodeIn.PRAYER_ACTIVATED.getOpcode();
 		int packetTwo = OpcodeIn.PRAYER_DEACTIVATED.getOpcode();

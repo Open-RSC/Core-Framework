@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveLis
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 
@@ -48,10 +48,10 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
-			int phatId	= Formulae.weightedRandomChoice(phatIds, phatWeights);
-			int prizeId	= Formulae.weightedRandomChoice(prizeIds, prizeWeights);
-			Item phat	= new Item(phatId);
-			Item prize	= new Item(prizeId);
+			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
+			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
+			Item phat = new Item(phatId);
+			Item prize = new Item(prizeId);
 
 			if (DataConversions.random(0, 1) == 1) {
 				otherPlayer.message("The person you pull the cracker with gets the prize");

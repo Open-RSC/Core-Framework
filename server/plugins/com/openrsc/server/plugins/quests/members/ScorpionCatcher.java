@@ -16,21 +16,17 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiv
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class ScorpionCatcher implements QuestInterface,TalkToNpcListener,
-TalkToNpcExecutiveListener, InvUseOnNpcListener,
-InvUseOnNpcExecutiveListener, InvUseOnWallObjectListener,
-InvUseOnWallObjectExecutiveListener, WallObjectActionListener,
-WallObjectActionExecutiveListener {
+import static com.openrsc.server.plugins.Functions.*;
 
-	public static int THORMAC = 300;
-	public static int SEER = 301;
-	public static int VELRAK_THE_EXPLORER = 272;
+public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
+	TalkToNpcExecutiveListener, InvUseOnNpcListener,
+	InvUseOnNpcExecutiveListener, InvUseOnWallObjectListener,
+	InvUseOnWallObjectExecutiveListener, WallObjectActionListener,
+	WallObjectActionExecutiveListener {
 
 	public static final int NONE = 678;
 	public static final int ONE = 679; // (Taverly)
@@ -40,6 +36,9 @@ WallObjectActionExecutiveListener {
 	public static final int ONE_AND_THREE = 688;
 	public static final int TWO_AND_THREE = 689;
 	public static final int ONE_TWO_AND_THREE = 681;
+	public static int THORMAC = 300;
+	public static int SEER = 301;
+	public static int VELRAK_THE_EXPLORER = 272;
 
 	@Override
 	public int getQuestId() {
@@ -63,11 +62,6 @@ WallObjectActionExecutiveListener {
 		incQuestReward(p, Quests.questData.get(Quests.SCORPION_CATCHER), true);
 	}
 
-	class SEER_NPC {
-		private static final int LOCATE_SCORPIONS = 0;
-		private static final int PRIMARY_DIALOGUE = 1;
-	}
-
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		if (n.getID() == THORMAC) {
@@ -85,81 +79,79 @@ WallObjectActionExecutiveListener {
 	private void seerDialogue(Player p, Npc n, int cID) {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
-			case 0:
-			case -1:
-				seerDialogue(p, n, SEER_NPC.PRIMARY_DIALOGUE);
-				break;
-			case 1:
-				npcTalk(p, n, "Many greetings");
-				int first = showMenu(p, n, 
+				case 0:
+				case -1:
+					seerDialogue(p, n, SEER_NPC.PRIMARY_DIALOGUE);
+					break;
+				case 1:
+					npcTalk(p, n, "Many greetings");
+					int first = showMenu(p, n,
 						"I need to locate some scorpions",
 						"Your friend Thormac sent me to speak to you",
 						"I seek knowledge and power");
-				if (first == 0) {
-					seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
-				} else if (first == 1) {
-					npcTalk(p, n, "What does the old fellow want");
-					playerTalk(p, n, "He's lost his valuable lesser kharid scorpions");
-					seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
-				} else if (first == 2) {
-					npcTalk(p, n, "Knowledge comes from experience, power comes from battleaxes");
-				}
-				break;
-			case 2:
+					if (first == 0) {
+						seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
+					} else if (first == 1) {
+						npcTalk(p, n, "What does the old fellow want");
+						playerTalk(p, n, "He's lost his valuable lesser kharid scorpions");
+						seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
+					} else if (first == 2) {
+						npcTalk(p, n, "Knowledge comes from experience, power comes from battleaxes");
+					}
+					break;
+				case 2:
 
-				// Still needs first scorpion
-				if (!hasItem(p, ONE) &&
+					// Still needs first scorpion
+					if (!hasItem(p, ONE) &&
 						!hasItem(p, ONE_AND_TWO) &&
 						!hasItem(p, ONE_TWO_AND_THREE) &&
 						!hasItem(p, ONE_AND_THREE)) {
-					if (!hasItem(p, NONE)) {
-						playerTalk(p, n, "I need to locate some scorpions");
-						seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
+						if (!hasItem(p, NONE)) {
+							playerTalk(p, n, "I need to locate some scorpions");
+							seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
+						} else {
+							npcTalk(p, n, "Many greetings");
+							playerTalk(p, n, "Where did you say that scorpion was again?");
+							npcTalk(p, n, "Let me look into my looking glass");
+							message(p, "The seer produces a small mirror",
+								"The seer gazes into the mirror",
+								"The seer smoothes his hair with his hand");
+							npcTalk(p, n,
+								"I can see a scorpion that you seek",
+								"It would appear to be near some  nasty looking spiders",
+								"I can see two coffins there as well",
+								"The scorpion seems to be going through some crack in the wall",
+								"He's gone into some sort of secret room",
+								"Well see if you can find that scorpion then",
+								"And I'll try and get you some information on the others");
+						}
 					}
-					else {
-						npcTalk(p, n, "Many greetings");
-						playerTalk(p, n, "Where did you say that scorpion was again?");
-						npcTalk(p, n, "Let me look into my looking glass");
-						message(p, "The seer produces a small mirror",
-							"The seer gazes into the mirror",
-							"The seer smoothes his hair with his hand");
-						npcTalk(p, n,
-							"I can see a scorpion that you seek",
-							"It would appear to be near some  nasty looking spiders",
-							"I can see two coffins there as well",
-							"The scorpion seems to be going through some crack in the wall",
-							"He's gone into some sort of secret room",
-							"Well see if you can find that scorpion then",
-							"And I'll try and get you some information on the others");
-					}
-				}
 
-				// Still needs second scorpion
-				else if (!hasItem(p, TWO) &&
+					// Still needs second scorpion
+					else if (!hasItem(p, TWO) &&
 						!hasItem(p, ONE_AND_TWO) &&
 						!hasItem(p, TWO_AND_THREE) &&
 						!hasItem(p, ONE_TWO_AND_THREE)) {
-					playerTalk(p, n, "Hi I have retrieved the scorpion from near the spiders");
-					npcTalk(p, n, "Well I've checked my looking glass",
-						"There seems to be a kharid scorpion in a village full of  axe wielding warriors",
-						"One of the warriors there, dressed mainly in black has picked it up",
-						"That's all I can tell you about that scorpion");
-				}
+						playerTalk(p, n, "Hi I have retrieved the scorpion from near the spiders");
+						npcTalk(p, n, "Well I've checked my looking glass",
+							"There seems to be a kharid scorpion in a village full of  axe wielding warriors",
+							"One of the warriors there, dressed mainly in black has picked it up",
+							"That's all I can tell you about that scorpion");
+					}
 
-				// Still needs third scorpion
-				else if (!hasItem(p, THREE) &&
+					// Still needs third scorpion
+					else if (!hasItem(p, THREE) &&
 						!hasItem(p, ONE_AND_THREE) &&
 						!hasItem(p, TWO_AND_THREE) &&
 						!hasItem(p, ONE_TWO_AND_THREE)) {
-					npcTalk(p, n, "Many greetings");
-					playerTalk(p, n, "I have retrieved a second scorpion");
-					npcTalk(p, n,
-						"That's lucky because I've got some information on the last scorpion for you",
-						"It seems to be in some sort of upstairs room",
-						"There seems to be some sort of brown clothing lying on the floor");
-				}
-				else seerDialogue(p, n, SEER_NPC.PRIMARY_DIALOGUE);
-				break;
+						npcTalk(p, n, "Many greetings");
+						playerTalk(p, n, "I have retrieved a second scorpion");
+						npcTalk(p, n,
+							"That's lucky because I've got some information on the last scorpion for you",
+							"It seems to be in some sort of upstairs room",
+							"There seems to be some sort of brown clothing lying on the floor");
+					} else seerDialogue(p, n, SEER_NPC.PRIMARY_DIALOGUE);
+					break;
 			}
 
 		}
@@ -183,15 +175,15 @@ WallObjectActionExecutiveListener {
 					"He's gone into some sort of secret room",
 					"Well see if you can find that scorpion then",
 					"And I'll try and get you some information on the others");
-				if(p.getQuestStage(this) == 1) {
+				if (p.getQuestStage(this) == 1) {
 					p.updateQuestStage(getQuestId(), 2);
 				}
 				break;
 
 			case SEER_NPC.PRIMARY_DIALOGUE:
-				npcTalk(p,n, "Many greetings");
+				npcTalk(p, n, "Many greetings");
 				int menu = showMenu(p, n, "Many greetings", "I seek knowledge and power");
-				if(menu == 1) {
+				if (menu == 1) {
 					npcTalk(p, n, "Knowledge comes from experience, power comes from battleaxes");
 				}
 				break;
@@ -242,10 +234,10 @@ WallObjectActionExecutiveListener {
 			switch (p.getQuestStage(this)) {
 				case 0:
 					npcTalk(p, n, "Hello I am Thormac the sorceror",
-							"I don't suppose you could be of assistance to me?");
+						"I don't suppose you could be of assistance to me?");
 					int first = showMenu(p, n,
-							"What do you need assistance with?",
-							"I'm a little busy");
+						"What do you need assistance with?",
+						"I'm a little busy");
 					if (first == 0) {
 						thormacDialogue(p, n, 0);
 					}
@@ -253,19 +245,18 @@ WallObjectActionExecutiveListener {
 				case 1:
 				case 2:
 					npcTalk(p, n, "How goes your quest?");
-					if(!hasItem(p, NONE) && !hasItem(p, ONE_TWO_AND_THREE)) { // No empty cage, no full cage
-						int menu = showMenu(p,n,
+					if (!hasItem(p, NONE) && !hasItem(p, ONE_TWO_AND_THREE)) { // No empty cage, no full cage
+						int menu = showMenu(p, n,
 							"I've lost my cage",
 							"I've not caught all the scorpions yet");
-						if(menu == 0) {
-							npcTalk(p,n, "Ok here is another cage",
-									"You're almost as bad at loosing things as me");
+						if (menu == 0) {
+							npcTalk(p, n, "Ok here is another cage",
+								"You're almost as bad at loosing things as me");
 							addItem(p, NONE, 1);
-						} else if(menu == 1) {
+						} else if (menu == 1) {
 							npcTalk(p, n, "Well remember, go speak to the seers north of here if you need any help");
 						}
-					}
-					else if (hasItem(p, ONE_TWO_AND_THREE)) { // full cage
+					} else if (hasItem(p, ONE_TWO_AND_THREE)) { // full cage
 						playerTalk(p, n, "I have retrieved all your scorpions");
 						npcTalk(p, n, "aha my little scorpions home at last");
 						removeItem(p, ONE_TWO_AND_THREE, 1);
@@ -278,64 +269,64 @@ WallObjectActionExecutiveListener {
 				case -1:
 					npcTalk(p, n, "Thankyou for rescuing my scorpions");
 					int four = showMenu(p, n, "That's ok",
-							"You said you'd enchant my battlestaff for me");
+						"You said you'd enchant my battlestaff for me");
 					if (four == 1) {
 						npcTalk(p, n,
-								"Yes it'll cost you 40000 coins for the materials needed mind you",
-								"Which sort of staff did you want enchanting?");
+							"Yes it'll cost you 40000 coins for the materials needed mind you",
+							"Which sort of staff did you want enchanting?");
 						int five = showMenu(p, n,
-								"battlestaff of fire", "battlestaff of water",
-								"battlestaff of air", "battlestaff of earth",
-						"I won't bother yet actually");
+							"battlestaff of fire", "battlestaff of water",
+							"battlestaff of air", "battlestaff of earth",
+							"I won't bother yet actually");
 						if (five == 0) {
-							if(!hasItem(p, 615)) {
+							if (!hasItem(p, 615)) {
 								playerTalk(p, n, "I don't have a battlestaff of fire yet though");
 								return;
 							}
-							if(!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, 10, 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if(removeItem(p, new Item(10, 40000), new Item(615,1)))  {
+							if (removeItem(p, new Item(10, 40000), new Item(615, 1))) {
 								addItem(p, 682, 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 1) {
-							if(!hasItem(p, 616)) {
+							if (!hasItem(p, 616)) {
 								playerTalk(p, n, "I don't have a battlestaff of water yet though");
 								return;
 							}
-							if(!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, 10, 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if(removeItem(p, new Item(10, 40000), new Item(616,1)))  {
+							if (removeItem(p, new Item(10, 40000), new Item(616, 1))) {
 								addItem(p, 683, 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 2) {
-							if(!hasItem(p, 617)) {
+							if (!hasItem(p, 617)) {
 								playerTalk(p, n, "I don't have a battlestaff of air yet though");
 								return;
 							}
-							if(!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, 10, 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if(removeItem(p, new Item(10, 40000), new Item(617,1)))  {
+							if (removeItem(p, new Item(10, 40000), new Item(617, 1))) {
 								addItem(p, 684, 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 3) {
-							if(!hasItem(p, 618)) {
+							if (!hasItem(p, 618)) {
 								playerTalk(p, n, "I don't have a battlestaff of earth yet though");
 								return;
 							}
-							if(!hasItem(p, 10, 40000)) {
+							if (!hasItem(p, 10, 40000)) {
 								playerTalk(p, n, "I'll just get the money for you");
 								return;
 							}
-							if(removeItem(p, new Item(10, 40000), new Item(618,1)))  {
+							if (removeItem(p, new Item(10, 40000), new Item(618, 1))) {
 								addItem(p, 685, 1);
 								p.message("Thormac enchants your staff");
 							}
@@ -422,16 +413,14 @@ WallObjectActionExecutiveListener {
 			cageId != ONE_AND_THREE && cageId != ONE_TWO_AND_THREE
 		) {
 			return true;
-		}
-		else if (n.getID() == 303 && // Second Scorpion (Barbarian)
-				cageId != TWO && cageId != ONE_AND_TWO &&
-				cageId != TWO_AND_THREE && cageId != ONE_TWO_AND_THREE
+		} else if (n.getID() == 303 && // Second Scorpion (Barbarian)
+			cageId != TWO && cageId != ONE_AND_TWO &&
+			cageId != TWO_AND_THREE && cageId != ONE_TWO_AND_THREE
 		) {
 			return true;
-		}
-		else if (n.getID() == 304 && // Third Scorpion (Monastery)
-				cageId != THREE && cageId != ONE_AND_THREE &&
-				cageId != TWO_AND_THREE && cageId != ONE_TWO_AND_THREE
+		} else if (n.getID() == 304 && // Third Scorpion (Monastery)
+			cageId != THREE && cageId != ONE_AND_THREE &&
+			cageId != TWO_AND_THREE && cageId != ONE_TWO_AND_THREE
 		) {
 			return true;
 		}
@@ -528,14 +517,13 @@ WallObjectActionExecutiveListener {
 			if (toRemove > -1) removeItem(p, toRemove, 1);
 			if (toAdd > -1) addItem(p, toAdd, 1);
 			temporaryRemoveNpc(n);
-		}
-		else
+		} else
 			p.message("Talk to Seer before you attempt catching this scorpion");
 	}
 
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
-			Player player) {
+										   Player player) {
 		if (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == 595) {
 			return true;
 		}
@@ -576,7 +564,7 @@ WallObjectActionExecutiveListener {
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click,
-			Player player) {
+										 Player player) {
 		if (obj.getID() == 87 && obj.getY() == 3353) {
 			return true;
 		}
@@ -589,5 +577,10 @@ WallObjectActionExecutiveListener {
 			doDoor(obj, p);
 			p.message("You just went through a secret door");
 		}
+	}
+
+	class SEER_NPC {
+		private static final int LOCATE_SCORPIONS = 0;
+		private static final int PRIMARY_DIALOGUE = 1;
 	}
 }

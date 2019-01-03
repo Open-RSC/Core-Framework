@@ -8,45 +8,33 @@ import com.openrsc.server.util.rsc.Formulae;
 import java.util.ArrayList;
 
 public class Point {
-	
+
 	private static ArrayList<WildernessLocation> wildernessLocations = new ArrayList<WildernessLocation>();
-	
-	public boolean isMembersWild() {
-		if(inWilderness()) {
-			for(WildernessLocation location : wildernessLocations) {
-				if(x >= location.getMinX() && y >= location.getMinY() && x <= location.getMaxX() && y <= location.getMaxY()) {
-					if(location.getWildState() == WildState.MEMBERS_WILD) {
-						return true;
-					} else if(location.getWildState() == WildState.FREE_WILD) {
-						return false;
-					}
-				}
-			}
-			/* If its allowed in these wild levels */
-			if(wildernessLevel() >= 48 && wildernessLevel() <= 56) {
-				return true;
-			}
-			/* It is F2P */
-			return false;
-		}
-		/* Not in wild, its P2P */
-		return true;
+
+	static {
+		/* Edgeville dungeon wilderness, always members wild */
+		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 195, 3206, 234, 3258));
+		/* Red Dragons, always P2P */
+		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 129, 180, 163, 219));
+		/* Underground Lava maze, always P2P */
+		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 243, 2988, 283, 3020));
 	}
-	
-	public WildernessLocation getWildernessLocation() {
-		for(WildernessLocation location : wildernessLocations) {
-			if(x > location.getMinX() && y > location.getMinY() && x < location.getMaxX() && y < location.getMaxY()) {
-				return location;
-			}
-		}
-		return null;
+
+	protected int x, y;
+
+	protected Point() {
 	}
-	
+
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
 	public static Point location(int x, int y) {
 		if (x < 0 || y < 0) {
 			throw new IllegalArgumentException(
-					"Point may not contain non negative values x:" + x + " y:"
-							+ y);
+				"Point may not contain non negative values x:" + x + " y:"
+					+ y);
 		}
 		return new Point(x, y);
 	}
@@ -62,14 +50,35 @@ public class Point {
 		return false;
 	}
 
-	protected int x, y;
-
-	protected Point() {
+	public boolean isMembersWild() {
+		if (inWilderness()) {
+			for (WildernessLocation location : wildernessLocations) {
+				if (x >= location.getMinX() && y >= location.getMinY() && x <= location.getMaxX() && y <= location.getMaxY()) {
+					if (location.getWildState() == WildState.MEMBERS_WILD) {
+						return true;
+					} else if (location.getWildState() == WildState.FREE_WILD) {
+						return false;
+					}
+				}
+			}
+			/* If its allowed in these wild levels */
+			if (wildernessLevel() >= 48 && wildernessLevel() <= 56) {
+				return true;
+			}
+			/* It is F2P */
+			return false;
+		}
+		/* Not in wild, its P2P */
+		return true;
 	}
 
-	public Point(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public WildernessLocation getWildernessLocation() {
+		for (WildernessLocation location : wildernessLocations) {
+			if (x > location.getMinX() && y > location.getMinY() && x < location.getMaxX() && y < location.getMaxY()) {
+				return location;
+			}
+		}
+		return null;
 	}
 
 	public final boolean withinRange(Point p, int radius) {
@@ -77,7 +86,7 @@ public class Point {
 		int yDiff = this.y - p.y;
 
 		return xDiff <= radius && xDiff >= -radius && yDiff <= radius
-				&& yDiff >= -radius;
+			&& yDiff >= -radius;
 	}
 
 	public final boolean withinGridRange(Point p, int radius) {
@@ -103,7 +112,7 @@ public class Point {
 	public boolean inBounds(int x1, int y1, int x2, int y2) {
 		return x >= x1 && x <= x2 && y >= y1 && y <= y2;
 	}
-	
+
 	public boolean inHeroQuestRangeRoom() {
 		return inBounds(459, 460, 672, 673);
 	}
@@ -111,6 +120,7 @@ public class Point {
 	public boolean onTutorialIsland() {
 		return inBounds(190, 720, 240, 770);
 	}
+
 	public boolean inTutorialLanding() {
 		return inBounds(214, 739, 221, 747);
 	}
@@ -122,7 +132,7 @@ public class Point {
 	public boolean inWilderness() {
 		return wildernessLevel() > 0;
 	}
-	
+
 	public boolean inFreeWild() {
 		return (wildernessLevel() >= 1 && wildernessLevel() <= 48);
 	}
@@ -232,9 +242,9 @@ public class Point {
 	public String toString() {
 		return "(" + x + ", " + y + ")";
 	}
-	
+
 	public double getDistanceTo(Point o2) {
-	    int xDiff = Math.abs(getX() - o2.getX());
+		int xDiff = Math.abs(getX() - o2.getX());
 		int yDiff = Math.abs(getY() - o2.getY());
 		return xDiff + yDiff;
 	}
@@ -248,35 +258,26 @@ public class Point {
 	}
 
 	public boolean inMageArena() {
-		return inBounds(220,122,236,137);
+		return inBounds(220, 122, 236, 137);
 	}
 
 	public boolean inTouristTrapCave() {
-		return inBounds(49,3600,95,3647);
+		return inBounds(49, 3600, 95, 3647);
 	}
-	
+
 	public boolean inTouristTrapCave1() {
-		return inBounds(79,3614,95,3647);
+		return inBounds(79, 3614, 95, 3647);
 	}
-	
+
 	public boolean inTouristTrapCave2() {
-		return inBounds(48,3633,78,3647);
+		return inBounds(48, 3633, 78, 3647);
 	}
-	
+
 	public boolean inTouristTrapCave3() {
-		return inBounds(49,3600,95,3647);
-	}
-	
-	static {	
-		/* Edgeville dungeon wilderness, always members wild */
-		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 195, 3206, 234, 3258));
-		/* Red Dragons, always P2P */
-		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 129, 180, 163, 219));
-		/* Underground Lava maze, always P2P */
-		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 243, 2988, 283, 3020));
+		return inBounds(49, 3600, 95, 3647);
 	}
 
 	public boolean inArea(Area area) {
-		return area.inBounds(this); 
+		return area.inBounds(this);
 	}
 }

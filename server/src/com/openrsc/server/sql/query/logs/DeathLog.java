@@ -19,10 +19,10 @@ public class DeathLog extends Query {
 	private Point location;
 	private String killer;
 	private String killed;
-	
+
 	private String message;
 	private boolean duel;
-	
+
 	public DeathLog(Player killed, Mob killer, boolean duel) {
 		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
 		this.killed = killed.getUsername();
@@ -30,24 +30,24 @@ public class DeathLog extends Query {
 		this.location = killed.getLocation();
 		this.duel = duel;
 	}
-	
+
 	public void addDroppedItem(Item item) {
 		droppedLoot.add(item);
 	}
-	
+
 	@Override
 	public Query build() {
 		String droppedString = "";
-		for(Item item : droppedLoot) {
-			droppedString += "([id:"+ item.getID() + "] " + item.getDef().getName() + " x " + DataConversions.numberFormat(item.getAmount()) + "),";
+		for (Item item : droppedLoot) {
+			droppedString += "([id:" + item.getID() + "] " + item.getDef().getName() + " x " + DataConversions.numberFormat(item.getAmount()) + "),";
 		}
 		if (droppedString.length() > 0)
 			droppedString.substring(0, droppedString.length() - 1);
 		else
 			droppedString = "Nothing";
-		
+
 		String killerName = "World";
-		if(killer != null) {
+		if (killer != null) {
 			killerName = killer;
 		}
 		message = killed + " was killed (duel:" + duel + ") by " + killerName + " on " + location + " and dropped " + droppedString;

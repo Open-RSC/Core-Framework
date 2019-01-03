@@ -12,9 +12,9 @@ public abstract class CustomProjectileEvent extends ProjectileEvent {
 
 	@Override
 	public void action() {
-		if(!canceled) {
+		if (!canceled) {
 			doSpell();
-			if(opponent.isNpc() && caster.isPlayer())
+			if (opponent.isNpc() && caster.isPlayer())
 				((Npc) opponent).setChasing((Player) caster);
 		}
 	}

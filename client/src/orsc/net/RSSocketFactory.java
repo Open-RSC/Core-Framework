@@ -30,10 +30,10 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 			OutputStream var6 = sock.getOutputStream();
 			if (contentQuery != null) {
 				var6.write(("CONNECT " + this.socketHost + ":" + this.socketPort + " HTTP/1.0\n" + contentQuery + "\n\n")
-						.getBytes(Charset.forName("ISO-8859-1")));
+					.getBytes(Charset.forName("ISO-8859-1")));
 			} else {
 				var6.write(("CONNECT " + this.socketHost + ":" + this.socketPort + " HTTP/1.0\n\n")
-						.getBytes(Charset.forName("ISO-8859-1")));
+					.getBytes(Charset.forName("ISO-8859-1")));
 			}
 
 			var6.flush();
@@ -72,7 +72,7 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 			return null;
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12, "gb.G(" + tunnelIP + ',' + "dummy" + ','
-					+ (contentQuery != null ? "{...}" : "null") + ',' + (tunnelHost != null ? "{...}" : "null") + ')');
+				+ (contentQuery != null ? "{...}" : "null") + ',' + (tunnelHost != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -137,10 +137,10 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 						try {
 							Class<?> var6 = Class.forName("sun.net.www.protocol.http.AuthenticationInfo");
 							Method var7 = var6.getDeclaredMethod("getProxyAuth",
-									new Class[] { String.class, Integer.TYPE });
+								new Class[]{String.class, Integer.TYPE});
 							var7.setAccessible(true);
 							Object var8 = var7.invoke((Object) null,
-									new Object[] { var4.getHostName(), new Integer(var4.getPort()) });
+								new Object[]{var4.getHostName(), new Integer(var4.getPort())});
 							if (null != var8) {
 								Method var9 = var6.getDeclaredMethod("supportsPreemptiveAuthorization", new Class[0]);
 								var9.setAccessible(true);
@@ -148,11 +148,11 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 									Method var10 = var6.getDeclaredMethod("getHeaderName", new Class[0]);
 									var10.setAccessible(true);
 									Method var11 = var6.getDeclaredMethod("getHeaderValue",
-											new Class[] { URL.class, String.class });
+										new Class[]{URL.class, String.class});
 									var11.setAccessible(true);
 									String var12 = (String) var10.invoke(var8, new Object[0]);
 									String var13 = (String) var11.invoke(var8,
-											new Object[] { new URL("https://" + this.socketHost + "/"), "https" });
+										new Object[]{new URL("https://" + this.socketHost + "/"), "https"});
 									var16 = var12 + ": " + var13;
 								}
 							}
@@ -176,7 +176,7 @@ final class RSSocketFactory extends RSSocketFactory_Base {
 			}
 		} catch (RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15,
-					"gb.F(" + (proxy != null ? "{...}" : "null") + ',' + "dummy" + ')');
+				"gb.F(" + (proxy != null ? "{...}" : "null") + ',' + "dummy" + ')');
 		}
 	}
 }

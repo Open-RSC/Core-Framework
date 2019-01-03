@@ -8,17 +8,17 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BrotherJered implements TalkToNpcExecutiveListener,
-TalkToNpcListener {
+	TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n,
-				"Hello friend, would you like me to bless your amulet of saradomin?");
+			"Hello friend, would you like me to bless your amulet of saradomin?");
 		int option = showMenu(p, n, "Yes please", "No thanks");
 		if (option == 0) {
 			if (removeItem(p, 45, 1)) {
 				message(p, "He quickly takes your amulet",
-						"He hands you back a blessed amulet of saradomin");
+					"He hands you back a blessed amulet of saradomin");
 				addItem(p, 385, 1);
 			} else {
 				npcTalk(p, n, "Oh dear looks like you don't have any amulet to bless");

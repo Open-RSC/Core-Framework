@@ -6,6 +6,6 @@ import com.openrsc.server.model.entity.player.Player;
 
 public interface InvUseOnGroundItemExecutiveListener {
 
-    public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player);
+	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player);
 
 }

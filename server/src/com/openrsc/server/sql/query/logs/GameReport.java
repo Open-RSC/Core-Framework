@@ -16,30 +16,29 @@ import java.util.Iterator;
 public final class GameReport extends Query {
 	private final String reported;
 	private final Player reporterPlayer;
-	private int reported_x, reported_y;
 	private final byte reason;
-	
 	private final StringBuilder chatlog = new StringBuilder();
+	private int reported_x, reported_y;
 
 	public GameReport(Player reporter, String reported, byte reason) {
 		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.reason = reason;
 		this.reported = reported;
 		this.reporterPlayer = reporter;
-		
+
 		long playerish = DataConversions.usernameToHash(reported);
 		Player reportedPlayer = World.getWorld().getPlayer(playerish);
-		if(reportedPlayer != null) {
+		if (reportedPlayer != null) {
 			this.reported_x = reportedPlayer.getX();
 			this.reported_y = reportedPlayer.getY();
 		}
 		Iterator<Snapshot> i = World.getWorld().getSnapshots().descendingIterator();
 		while (i.hasNext()) {
 			Snapshot s = i.next();
-			if(s instanceof Chatlog) { 
-				Chatlog cl = (Chatlog)s;
+			if (s instanceof Chatlog) {
+				Chatlog cl = (Chatlog) s;
 				if ((cl.getOwner().contains(reported) || cl.getOwner().equalsIgnoreCase(reported))) {
-					if(System.currentTimeMillis() - s.getTimestamp() < 60000) {
+					if (System.currentTimeMillis() - s.getTimestamp() < 60000) {
 						chatlog.append("[" + DataConversions.timeFormat(cl.getTimestamp()) + "] " + cl.getOwner() + ": " + cl.getMessage() + "\n");
 					}
 				}

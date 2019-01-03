@@ -38,7 +38,7 @@ public class OpenMarketTask extends MarketTask {
 			MarketItem item = iterator.next();
 			chunk.addItem(item);
 		}
-		
+
 		System.out.println(currentWritten + " : " + chunk.getChunkItemCount());
 		if (!chunk.isFinished())
 			owner.write(chunk.toPacket());
@@ -81,7 +81,7 @@ public class OpenMarketTask extends MarketTask {
 				builder.writeInt(item.getAmountLeft());
 				builder.writeInt(item.getPrice());
 				builder.writeByte(item.getSeller() == owner.getDatabaseID() ? 1 : 0);
-				if(item.getSeller() != owner.getDatabaseID()) {
+				if (item.getSeller() != owner.getDatabaseID()) {
 					builder.writeString(item.getSellerName());
 				}
 				builder.writeByte(item.getHoursLeft());

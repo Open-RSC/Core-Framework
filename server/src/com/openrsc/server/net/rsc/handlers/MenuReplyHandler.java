@@ -20,24 +20,24 @@ public class MenuReplyHandler implements PacketHandler {
 		final MenuOptionListener menuHandler = player.getMenuHandler();
 		final int option = p.readByte();
 		FutureTask<Integer> task = new FutureTask<Integer>(
-				new Callable<Integer>() {
-					@Override
-					public Integer call() throws Exception {
-						if (player.getMenu() != null) {
-							player.getMenu().handleReply(player, option);
-						} else if (menuHandler != null) {
-							final String reply = option == 30 ? ""
-									: menuHandler.getOption(option);
-							player.resetMenuHandler();
-							if (reply == null) {
-								player.setSuspiciousPlayer(true);
-							} else {
-								menuHandler.handleReply(option, reply);
-							}
+			new Callable<Integer>() {
+				@Override
+				public Integer call() throws Exception {
+					if (player.getMenu() != null) {
+						player.getMenu().handleReply(player, option);
+					} else if (menuHandler != null) {
+						final String reply = option == 30 ? ""
+							: menuHandler.getOption(option);
+						player.resetMenuHandler();
+						if (reply == null) {
+							player.setSuspiciousPlayer(true);
+						} else {
+							menuHandler.handleReply(option, reply);
 						}
-						return 1;
 					}
-				});
+					return 1;
+				}
+			});
 		PluginHandler.getPluginHandler().getExecutor().execute(task);
 	}
 }

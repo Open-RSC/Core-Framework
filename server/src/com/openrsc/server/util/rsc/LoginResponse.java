@@ -25,5 +25,5 @@ public class LoginResponse {
 	public static int WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS = 24;
 	public static int NONE_OF_YOUR_CHARACTERS_CAN_LOGIN = 25;
 	public static int NEED_TO_SET_DISPLAY_NAME = 23;
-	
+
 }

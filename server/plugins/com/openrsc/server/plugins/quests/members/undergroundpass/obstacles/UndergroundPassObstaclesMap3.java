@@ -14,15 +14,19 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
 
-	/** ITEM IDs **/
+	/**
+	 * ITEM IDs
+	 **/
 	public static int IBANS_CONSCIENCE = 1008;
 	public static int KLANKS = 1006;
 	public static int DEMONS_CHEST = 912;
 	public static int ROBE_OF_ZAMORAK_TOP = 702;
 	public static int ROBE_OF_ZAMORAK_BOTTOM = 703;
 
-	/** OBJECT IDs **/
-	public static int[] CAGES = { 888, 887 };
+	/**
+	 * OBJECT IDs
+	 **/
+	public static int[] CAGES = {888, 887};
 	public static int ZAMORAKIAN_TEMPLE_DOOR = 869;
 
 	@Override
@@ -99,7 +103,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 		if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (p.getX() <= 792) {
 				if (p.getInventory().wielding(ROBE_OF_ZAMORAK_TOP)
-						&& p.getInventory().wielding(ROBE_OF_ZAMORAK_BOTTOM)) {
+					&& p.getInventory().wielding(ROBE_OF_ZAMORAK_BOTTOM)) {
 					replaceObject(obj, new GameObject(obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					delayedSpawnObject(obj.getLoc(), 3000);
 					p.teleport(792, 3469);
@@ -108,13 +112,13 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					message(p, "you pull open the large doors");
 					p.message("and walk into the temple");
 					if (p.getCache().hasKey("poison_on_doll") && p.getCache().hasKey("cons_on_doll")
-							&& p.getCache().hasKey("ash_on_doll") && p.getCache().hasKey("shadow_on_doll")) {
+						&& p.getCache().hasKey("ash_on_doll") && p.getCache().hasKey("shadow_on_doll")) {
 						p.message("Iban seems to sense danger");
 						message(p, "@yel@Iban: who dares bring the witches magic into my temple");
 						message(p, "his eyes fixate on you as he raises his arm");
 						message(p, "@yel@Iban: an imposter dares desecrate this sacred place..",
-								"@yel@Iban: ..home to the only true child of zamorak",
-								"@yel@Iban: join the damned, mortal");
+							"@yel@Iban: ..home to the only true child of zamorak",
+							"@yel@Iban: join the damned, mortal");
 						p.message("iban raises his staff to the air");
 						message(p, "a blast of energy comes from ibans staff");
 						p.message("you are hit by ibans magic bolt");
@@ -127,24 +131,24 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 						try {
 							while (true) {
 								/* Time-out fail, handle appropriately */
-								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && p.getLocation().inBounds(794,799,3467,3471)) {
+								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && p.getLocation().inBounds(794, 799, 3467, 3471)) {
 									p.message("you're blasted out of the temple");
 									p.message("@yel@Iban: and stay out");
 									p.teleport(790, 3469);
 									break;
 								}
 								/* If player has logged out or removed for whatever reason TODO */
-								if(p.isRemoved()) {
+								if (p.isRemoved()) {
 									break;
 								}
 								/* ends it */
-								if(p.getAttribute("iban_bubble_show", false)) {
+								if (p.getAttribute("iban_bubble_show", false)) {
 									break;
 								}
 								/* Get random point on the area */
 								Point blastPosition = new Point(
-										DataConversions.random(area.getMinX(), area.getMaxX()),
-										DataConversions.random(area.getMinY(), area.getMaxY()));
+									DataConversions.random(area.getMinX(), area.getMaxX()),
+									DataConversions.random(area.getMinY(), area.getMaxY()));
 								ActionSender.sendTeleBubble(p, blastPosition.getX(), blastPosition.getY(), true);
 								if (p.getLocation().withinRange(blastPosition, 1)) {
 									/* Blast hit */
@@ -155,7 +159,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 								}
 								sleep(650);
 							}
-						} catch(Exception e) {
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					} else {

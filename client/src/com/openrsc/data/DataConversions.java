@@ -8,12 +8,12 @@ import java.util.Random;
 public final class DataConversions {
 
 	private static Random rand = new Random();
-	private static char characters[] = { ' ', 'e', 't', 'a', 'o', 'i', 'h',
-			'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p',
-			'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5',
-			'6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')',
-			'-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$', '%',
-			'"', '[', ']' };
+	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i', 'h',
+		'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p',
+		'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5',
+		'6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')',
+		'-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$', '%',
+		'"', '[', ']'};
 
 
 	/**
@@ -21,7 +21,7 @@ public final class DataConversions {
 	 * InputStream
 	 */
 	public static final ByteBuffer streamToBuffer(BufferedInputStream in)
-			throws IOException {
+		throws IOException {
 		byte[] buffer = new byte[in.available()];
 		in.read(buffer, 0, buffer.length);
 		return ByteBuffer.wrap(buffer);

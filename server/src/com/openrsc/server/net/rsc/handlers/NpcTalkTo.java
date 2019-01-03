@@ -34,7 +34,7 @@ public final class NpcTalkTo implements PacketHandler {
 				player.resetFollowing();
 				player.resetPath();
 				if (player.isBusy() || player.isRanging() || !player.canReach(n)
-						|| player.getStatus() != Action.TALKING_MOB) {
+					|| player.getStatus() != Action.TALKING_MOB) {
 					return;
 				}
 				player.resetAll();
@@ -49,7 +49,7 @@ public final class NpcTalkTo implements PacketHandler {
 				if (player.getLocation().equals(n.getLocation())) {
 					for (int x = -1; x <= 1; ++x) {
 						for (int y = -1; y <= 1; ++y) {
-							if(x == 0 || y == 0)
+							if (x == 0 || y == 0)
 								continue;
 							Point destination = canWalk(player.getX() - x, player.getY() - y);
 							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
@@ -62,7 +62,7 @@ public final class NpcTalkTo implements PacketHandler {
 				player.face(n);
 				n.face(player);
 				player.setInteractingNpc(n);
-				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[] { player, n });
+				PluginHandler.getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{player, n});
 			}
 
 			private Point canWalk(int x, int y) {
@@ -73,11 +73,11 @@ public final class NpcTalkTo implements PacketHandler {
 				boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
 				if (myX > x) {
 					myXBlocked = checkBlocking(myX - 1, myY, 8); // Check right
-																// tiles
+					// tiles
 					newX = myX - 1;
 				} else if (myX < x) {
 					myXBlocked = checkBlocking(myX + 1, myY, 2); // Check left
-																// tiles
+					// tiles
 					newX = myX + 1;
 				}
 				if (myY > y) {
@@ -85,7 +85,7 @@ public final class NpcTalkTo implements PacketHandler {
 					newY = myY - 1;
 				} else if (myY < y) {
 					myYBlocked = checkBlocking(myX, myY + 1, 1); // Check bottom
-																// tiles
+					// tiles
 					newY = myY + 1;
 				}
 
@@ -116,13 +116,13 @@ public final class NpcTalkTo implements PacketHandler {
 			private boolean checkBlocking(int x, int y, int bit) {
 				TileValue t = World.getWorld().getTile(x, y);
 				Point p = new Point(x, y);
-				for(Npc n : n.getViewArea().getNpcsInView()) {
-					if(n.getLocation().equals(p)) {
+				for (Npc n : n.getViewArea().getNpcsInView()) {
+					if (n.getLocation().equals(p)) {
 						return true;
 					}
 				}
-				for(Player areaPlayer : n.getViewArea().getPlayersInView()) {
-					if(areaPlayer.getLocation().equals(p)) {
+				for (Player areaPlayer : n.getViewArea().getPlayersInView()) {
+					if (areaPlayer.getLocation().equals(p)) {
 						return true;
 					}
 				}
@@ -134,11 +134,11 @@ public final class NpcTalkTo implements PacketHandler {
 					return true;
 				}
 				if ((objectValue & 16) != 0) { // There is a diagonal wall here:
-												// \
+					// \
 					return true;
 				}
 				if ((objectValue & 32) != 0) { // There is a diagonal wall here:
-												// /
+					// /
 					return true;
 				}
 				if ((objectValue & 64) != 0) { // This tile is unwalkable

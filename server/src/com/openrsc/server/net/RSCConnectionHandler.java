@@ -10,9 +10,7 @@ import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 
 /**
- * 
  * @author Imposter
- * 
  */
 public class RSCConnectionHandler extends ChannelInboundHandlerAdapter {
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
@@ -50,7 +48,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter {
 			ReferenceCountUtil.release(message);
 		}
 	}
-	
+
 	@Override
 	public void channelRegistered(final ChannelHandlerContext ctx) throws Exception {
 		//final ConnectionAttachment att = new ConnectionAttachment();

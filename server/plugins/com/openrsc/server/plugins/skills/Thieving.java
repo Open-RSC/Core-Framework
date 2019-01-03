@@ -25,187 +25,57 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Thieving extends Functions
-implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener, ObjectActionExecutiveListener,
-WallObjectActionExecutiveListener, WallObjectActionListener {
+	implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener, ObjectActionExecutiveListener,
+	WallObjectActionExecutiveListener, WallObjectActionListener {
 
-	enum Pickpocket {
-		MAN(1, 32, "Oi what do you think you're doing",
-				new LootItem(10, 3, 100)), 
-		FARMER(10, 58, "What do you think you're doing",
-				new LootItem(10, 9, 100)), 
-		WARRIOR(25, 104, "Hey what do you think you're doing",
-				new LootItem(10, 18, 100)), 
-		WORKMAN(25, 0, "Hey what do you think you're doing",
-				new LootItem(10, 10, 30), 
-				new LootItem(211, 1, 20),
-				new LootItem(21, 1, 18), 
-				new LootItem(237, 1, 16), 
-				new LootItem(1115, 1, 14),
-				new LootItem(1117, 1, 12), 
-				new LootItem(16, 1, 10), 
-				new LootItem(-1, 0, 8)), 
-		ROGUE(32, 146, "Hey what do you think you're doing",
-				new LootItem(10, 25, 40),
-				new LootItem(10, 40, 30), 
-				new LootItem(142, 1, 10), 
-				new LootItem(33, 8, 10),
-				new LootItem(714, 1, 10), 
-				new LootItem(559, 1, 3)), 
-		GUARD(40, 187, "Err what do you think you're doing",
-				new LootItem(10, 30, 100)), 
-		KNIGHT(55, 337, "Err what do you think you're doing",
-				new LootItem(10, 50, 100)),
-		YANILLE_WATCHMAN(65, 550, "Oi you nasty little thief",
-				new LootItem(10, 60, 100), 
-				new LootItem(138, 1, 100)), 
-		PALADIN(70, 607, "Get your hands off my valuables",
-				new LootItem(10, 80, 100), 
-				new LootItem(41, 1, 100)),
-		GNOME_LOCAL(75, 793, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22), 
-				new LootItem(10, 400, 18), 
-				new LootItem(152, 1, 10),
-				new LootItem(34, 1, 15), 
-				new LootItem(895, 1, 15), 
-				new LootItem(897, 1, 20)),
-		GNOME_CHILD(75, 793, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22), 
-				new LootItem(10, 400, 18), 
-				new LootItem(152, 1, 10),
-				new LootItem(34, 1, 15), 
-				new LootItem(895, 1, 15), 
-				new LootItem(897, 1, 20)),
-		GNOME_TRAINER(75, 793, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22), 
-				new LootItem(10, 400, 18), 
-				new LootItem(152, 1, 10),
-				new LootItem(34, 1, 15), 
-				new LootItem(895, 1, 15), 
-				new LootItem(897, 1, 20)),
-		BLURBERRY_BARMAN(75, 793, "Get your hands off my valuables human",
-				new LootItem(10, 200, 22), 
-				new LootItem(10, 400, 18), 
-				new LootItem(152, 1, 10),
-				new LootItem(34, 1, 15), 
-				new LootItem(895, 1, 15), 
-				new LootItem(897, 1, 20)),
-		HERO(80, 1093, "Get your hands off my valuables",
-				new LootItem(10, 100, 25), 
-				new LootItem(10, 200, 15), 
-				new LootItem(10, 300, 10),
-				new LootItem(612, 1, 10), 
-				new LootItem(142, 1, 14), 
-				new LootItem(152, 1, 5), 
-				new LootItem(38, 2, 10), 
-				new LootItem(619, 1, 5), 
-				new LootItem(161, 1, 1));
-
-		private final ArrayList<LootItem> lootTable;
-		private final int xp;
-		private final int requiredLevel;
-		private final String shoutMessage;
-
-		Pickpocket(int req, int xp, String shoutMessage, LootItem... possibleLoot) {
-			this.xp = xp;
-			this.requiredLevel = req;
-			this.shoutMessage = shoutMessage;
-			lootTable = new ArrayList<LootItem>();
-			for (LootItem lootItem : possibleLoot) {
-				lootTable.add(lootItem);
-			}
-			Collections.sort(lootTable);
-		}
-
-		public int getRequiredLevel() {
-			return requiredLevel;
-		}
-
-		public ArrayList<LootItem> getLootTable() {
-			return lootTable;
-		}
-
-		public int getXp() {
-			return xp;
-		}
-	}
-	
 	static final String piece_of = "piece of ";
 
-	enum Stall {
-		TEA_STALL(780, 5, 64, 780, 5000,
-				"", new LootItem(739, 1, 100)),
-		BAKERS_STALL(325, 5, 64, 325, 5000,
-				"", new LootItem(330, 1, 100)),
-		SILK_STALL(326, 20, 96, 326, 8000,
-				piece_of, new LootItem(200, 1, 100)),
-		FUR_STALL(327, 35, 144, 327, 15000,
-				piece_of, new LootItem(541, 1, 10),
-				new LootItem(146, 1, 100)),
-		SILVER_STALL(328, 50, 216, 328, 30000,
-				piece_of, new LootItem(383, 1, 100)),
-		SPICES_STALL(329, 65, 324, 329, 80000,
-				"pot of ", new LootItem(707, 1, 100)),
-		GEMS_STALL(330, 75, 640, 330, 180000,
-				"", new LootItem(160, 1, 65),
-				new LootItem(159, 1, 20),
-				new LootItem(158, 1, 10),
-				new LootItem(157, 1, 5));
+	public static boolean succeedPickLockThieving(Player player, int req_level) {
+		int level_diff = player.getSkills().getLevel(17) - req_level;
 
-		private String lootPrefix;
-		ArrayList<LootItem> lootTable;
-		private int xp;
-		private int requiredLevel;
-		private int respawnTime;
-		private int ownerID;
+		int percent = DataConversions.random(1, 100);
+		if (level_diff < 0)
+			level_diff = 0;
 
-		Stall(int ownerID, int req, int xp, int ownerNpc, int respawnTime, String lootPrefix, LootItem... loot) {
-			this.ownerID = ownerID;
-			this.setXp(xp);
-			this.setRespawnTime(respawnTime);
-			this.setRequiredLevel(req);
-			this.setLootPrefix(lootPrefix);
-			lootTable = new ArrayList<LootItem>();
-			for (LootItem lootItem : loot) {
-				lootTable.add(lootItem);
-			}
-			Collections.sort(lootTable);
+		if (level_diff > 40) {
+			level_diff = 75;
+		} else {
+			level_diff = (int) (player.getSkills().getLevel(17) * (double) 0.2D) + 50;
 		}
+		if (hasItem(player, 714, 1)) {
+			level_diff += 10;
+		}
+		return percent <= level_diff;
+	}
 
-		public int getRequiredLevel() {
-			return requiredLevel;
-		}
+	/*
+	 * public static boolean succeedThieving(Player p, int req_level) { int
+	 * levelDiff = p.getSkills().getLevel(17) - req_level;
+	 *
+	 * if (levelDiff < 0) { return false; }
+	 *
+	 * System.out.println("Thieving: " + DataConversions.random(0, (levelDiff +
+	 * 2) * 2)); return DataConversions.random(0, (levelDiff + 2) * 2) != 0; }
+	 */
+	private static boolean succeedThieving(Player player, int req_level) {
+		int level_diff = player.getSkills().getLevel(17) - req_level;
 
-		public void setRequiredLevel(int requiredLevel) {
-			this.requiredLevel = requiredLevel;
-		}
+		int percent = DataConversions.random(1, 100);
+		if (level_diff < 0)
+			level_diff = 0;
 
-		public int getRespawnTime() {
-			return respawnTime;
+		if (level_diff > 10) {
+			level_diff = 70;
 		}
-
-		public void setRespawnTime(int respawnTime) {
-			this.respawnTime = respawnTime;
+		if (level_diff > 20) {
+			level_diff = 80;
 		}
-
-		public int getXp() {
-			return xp;
+		if (level_diff > 30) {
+			level_diff = 90;
+		} else {
+			level_diff = 56 + level_diff;
 		}
-
-		public void setXp(int xp) {
-			this.xp = xp;
-		}
-
-		public int getOwnerID() {
-			return ownerID;
-		}
-		
-		public void setLootPrefix(String lootPrefix) {
-			this.lootPrefix = lootPrefix;
-		}
-		
-		public String getLootPrefix() {
-			return lootPrefix;
-		}
+		return percent <= level_diff;
 	}
 
 	public void stallThieving(Player player, GameObject object, Stall stall) {
@@ -214,24 +84,22 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 		if (stall.equals(Stall.BAKERS_STALL))
 			player.message("You attempt to steal some cake from the " + objectName);
-		else if(stall.equals(Stall.TEA_STALL)) {
+		else if (stall.equals(Stall.TEA_STALL)) {
 			int chance_player_caught = 60;
 			Npc teaseller = Functions.getNearestNpc(player, stall.getOwnerID(), 8);
 			boolean caught = (chance_player_caught > DataConversions.random(0, 100)) && !teaseller.isBusy();
-			if(caught) {
+			if (caught) {
 				npcTalk(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
 				return;
-			}
-			else
+			} else
 				player.message("You attempt to steal a cup of tea...");
-		}
-		else if(stall.equals(Stall.GEMS_STALL))
+		} else if (stall.equals(Stall.GEMS_STALL))
 			player.message("You attempt to steal gem from the " + objectName);
 		else
 			player.message("You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 		sleep(800);
-		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" :  objectName.replaceAll("stall", "").trim();
-		if(!failNoun.endsWith("s")) {
+		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" : objectName.replaceAll("stall", "").trim();
+		if (!failNoun.endsWith("s")) {
 			failNoun += "s";
 		}
 		if (player.getSkills().getLevel(17) < stall.getRequiredLevel()) {
@@ -244,12 +112,12 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		if (stall.equals(Stall.BAKERS_STALL)) {
 			guard = getMultipleNpcsInArea(player, 5, 65);
 		} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL) || stall.equals(Stall.FUR_STALL)
-				|| stall.equals(Stall.SILK_STALL)) {
+			|| stall.equals(Stall.SILK_STALL)) {
 			guard = getMultipleNpcsInArea(player, 5, 65, 322);
 		} else if (stall.equals(Stall.GEMS_STALL)) {
 			guard = getMultipleNpcsInArea(player, 5, 65, 322, 324);
 		}
-		
+
 		if (shopkeeper != null) {
 			if (canBeSeen(shopkeeper.getX(), shopkeeper.getY(), player.getX(), player.getY())) {
 				Functions.npcYell(player, shopkeeper, "Hey thats mine");
@@ -291,23 +159,19 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 		if (stall.equals(Stall.SILK_STALL)) { // Silk
 			player.getCache().put("silkStolen", Instant.now().getEpochSecond());
-		}
-		else if (stall.equals(Stall.FUR_STALL)) { // Fur
+		} else if (stall.equals(Stall.FUR_STALL)) { // Fur
 			player.getCache().put("furStolen", Instant.now().getEpochSecond());
-		}
-		else if (stall.equals(Stall.SILVER_STALL)) { // Silver
+		} else if (stall.equals(Stall.SILVER_STALL)) { // Silver
 			player.getCache().put("silverStolen", Instant.now().getEpochSecond());
-		}
-		else if (stall.equals(Stall.SPICES_STALL)) { // Spice
+		} else if (stall.equals(Stall.SPICES_STALL)) { // Spice
 			player.getCache().put("spiceStolen", Instant.now().getEpochSecond());
-		}
-		else if (stall.equals(Stall.GEMS_STALL)) { // Gem
+		} else if (stall.equals(Stall.GEMS_STALL)) { // Gem
 			player.getCache().put("gemStolen", Instant.now().getEpochSecond());
 		}
 
 		// Replace stall with empty version
 		World.getWorld().replaceGameObject(object,
-				new GameObject(object.getLocation(), 341, object.getDirection(), object.getType()));
+			new GameObject(object.getLocation(), 341, object.getDirection(), object.getType()));
 		World.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
 	}
 
@@ -319,44 +183,44 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		Point teleLoc = null;
 		int xp = 0;
 		switch (obj.getID()) {
-		case 334:
-			// 10gp Chest
-			req = 13;
-			xp = 30;
-			respawnTime = 10000;
-			loot.add(new LootItem(10, 10, 100));
-			break;
+			case 334:
+				// 10gp Chest
+				req = 13;
+				xp = 30;
+				respawnTime = 10000;
+				loot.add(new LootItem(10, 10, 100));
+				break;
 			// Nature-rune Chest
-		case 335:
-			req = 28;
-			xp = 100;
-			respawnTime = 25000;
-			loot = getLootAsList(new LootItem(10, 3, 100), new LootItem(40, 1, 100));
-			break;
-		case 336:
-			// 50gp Chest
-			req = 43;
-			xp = 500;
-			respawnTime = 100000;
-			loot.add(new LootItem(10, 50, 100));
-			break;
-		case 337:
-			// blood Chest
-			req = 59;
-			xp = 1000;
-			respawnTime = 250000;
-			loot = getLootAsList(new LootItem(10, 500, 100), new LootItem(619, 2, 100));
-			teleLoc = Point.location(614, 568);
-			break;
-		case 338:
-			// paladin Chest
-			req = 72;
-			xp = 2000;
-			respawnTime = 500000;
-			loot = getLootAsList(new LootItem(10, 1000, 100), new LootItem(545, 1, 100),
+			case 335:
+				req = 28;
+				xp = 100;
+				respawnTime = 25000;
+				loot = getLootAsList(new LootItem(10, 3, 100), new LootItem(40, 1, 100));
+				break;
+			case 336:
+				// 50gp Chest
+				req = 43;
+				xp = 500;
+				respawnTime = 100000;
+				loot.add(new LootItem(10, 50, 100));
+				break;
+			case 337:
+				// blood Chest
+				req = 59;
+				xp = 1000;
+				respawnTime = 250000;
+				loot = getLootAsList(new LootItem(10, 500, 100), new LootItem(619, 2, 100));
+				teleLoc = Point.location(614, 568);
+				break;
+			case 338:
+				// paladin Chest
+				req = 72;
+				xp = 2000;
+				respawnTime = 500000;
+				loot = getLootAsList(new LootItem(10, 1000, 100), new LootItem(545, 1, 100),
 					new LootItem(154, 1, 100), new LootItem(160, 1, 100));
-			teleLoc = Point.location(523, 606);
-			break;
+				teleLoc = Point.location(523, 606);
+				break;
 		}
 
 		player.message("You search the chest for traps");
@@ -433,11 +297,11 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 	@Override
 	public boolean blockNpcCommand(Npc n, String command, Player p) {
-		if(command.equalsIgnoreCase("pickpocket")) {
+		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = null;
 			try {
 				pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
-			} catch(Exception e) {
+			} catch (Exception e) {
 				//Ignore..
 			}
 
@@ -465,7 +329,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		String thievedMobName = npc.getDef().getName().toLowerCase();
 		//gnome local, child, trainer and barman all known as gnome for the thiev messages
 		//yanille watchman known simply as watchman
-		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" : 
+		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 		if (player.getSkills().getLevel(17) < pickpocket.getRequiredLevel()) {
@@ -502,7 +366,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 							continue;
 						}
 						if (hit >= total && hit < (total + loot.getChance())) {
-							if(loot.getId() == -1) {
+							if (loot.getId() == -1) {
 								player.message("You find nothing to steal");
 								return;
 							}
@@ -514,7 +378,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					player.message("You pick the " + thievedMobSt + "'s pocket");
 					if (selectedLoot != null) {
 						player.getInventory().add(selectedLoot);
-					} 
+					}
 				} else {
 					player.face(npc);
 					player.setBusyTimer(0);
@@ -522,7 +386,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 					setDelay(600);
 					player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
-					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
+						.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
 					interrupt();
 					npc.startCombat(player);
 				}
@@ -582,7 +446,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 				addItem(player, 671, 5);
 
 				World.getWorld().replaceGameObject(obj,
-						new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType()));
+					new GameObject(obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 150000);
 			}
 		}
@@ -620,54 +484,6 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		return true;
 	}
 
-	public static boolean succeedPickLockThieving(Player player, int req_level) {
-		int level_diff = player.getSkills().getLevel(17) - req_level;
-
-		int percent = DataConversions.random(1, 100);
-		if (level_diff < 0)
-			level_diff = 0;
-
-		if (level_diff > 40) {
-			level_diff = 75;
-		} else {
-			level_diff = (int) (player.getSkills().getLevel(17) * (double) 0.2D) + 50;
-		}
-		if (hasItem(player, 714, 1)) {
-			level_diff += 10;
-		}
-		return percent <= level_diff;
-	}
-
-	/*
-	 * public static boolean succeedThieving(Player p, int req_level) { int
-	 * levelDiff = p.getSkills().getLevel(17) - req_level;
-	 * 
-	 * if (levelDiff < 0) { return false; }
-	 * 
-	 * System.out.println("Thieving: " + DataConversions.random(0, (levelDiff +
-	 * 2) * 2)); return DataConversions.random(0, (levelDiff + 2) * 2) != 0; }
-	 */
-	private static boolean succeedThieving(Player player, int req_level) {
-		int level_diff = player.getSkills().getLevel(17) - req_level;
-
-		int percent = DataConversions.random(1, 100);
-		if (level_diff < 0)
-			level_diff = 0;
-
-		if (level_diff > 10) {
-			level_diff = 70;
-		}
-		if (level_diff > 20) {
-			level_diff = 80;
-		}
-		if (level_diff > 30) {
-			level_diff = 90;
-		} else {
-			level_diff = 56 + level_diff;
-		}
-		return percent <= level_diff;
-	}
-
 	/**
 	 * Nature rune chest door id (94) [3.11.2013 22:02:55] Kevin: 10gp chest
 	 * door id (93) [3.11.2013 22:05:47] Kevin: house where u can find nature
@@ -678,7 +494,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 	 * floor door id (97) [3.11.2013 22:23:46] Kevin: the paladin chest give all
 	 * the items it says it gie all at once [3.11.2013 22:23:58] Kevin: when you
 	 * loot the chest you get teleported at 523, 606 [3.11.2013
-	 * 
+	 *
 	 * @param player
 	 * @param obj
 	 */
@@ -700,70 +516,70 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		boolean goThrough = false; // no need for picklock again.
 		boolean requiresLockpick = false;
 		switch (obj.getID()) {
-		case 93: // 10gp chest door id (93)
-			req = 7;
-			exp = 15;
-			if (player.getY() <= 591) {
-				goThrough = true;
-			}
-			break;
-		case 94: // Nature rune chest + 50 gp chest door id (94)
-			if (obj.getX() == 586 && obj.getY() == 581 || obj.getX() == 539 && obj.getY() == 599
-			|| obj.getX() == 581 && obj.getY() == 580) {
-				req = 16;
-				exp = 60;
-				if (player.getX() == 539 && player.getY() >= 599) {
-					goThrough = true;
-				} else if (player.getX() <= 585 && player.getY() == 581) {
-					goThrough = true;
-				} else if (player.getX() >= 581 && player.getY() == 580) {
+			case 93: // 10gp chest door id (93)
+				req = 7;
+				exp = 15;
+				if (player.getY() <= 591) {
 					goThrough = true;
 				}
-			}
-			break;
-		case 95: // Ardougne Sewer mine (95)
-			req = 31;
-			exp = 100;
-			if (player.getX() <= 556) {
-				goThrough = true;
-			}
-			break;
-		case 96: // Chaos druid tower door id (96)
-			req = 46;
-			exp = 150;
-			if (player.getY() <= 555) {
-				goThrough = true;
-			}
-			break;
-		case 162: // yanille druid door id(162)
-			req = 82;
-			exp = 200;
-			requiresLockpick = true;
-			break;
-		case 100: // axe huts door id (100)
-			req = 32;
-			exp = 100;
-			requiresLockpick = true;
-			if (player.getY() >= 103 && player.getY() <= 107) {
-				goThrough = true;
-			}
-			break;
-		case 99: // pirate hut door id (99)
-			req = 39;
-			exp = 140;
-			requiresLockpick = true;
-			if ((player.getX() >= 263 && player.getX() <= 269 && player.getY() == 104)
+				break;
+			case 94: // Nature rune chest + 50 gp chest door id (94)
+				if (obj.getX() == 586 && obj.getY() == 581 || obj.getX() == 539 && obj.getY() == 599
+					|| obj.getX() == 581 && obj.getY() == 580) {
+					req = 16;
+					exp = 60;
+					if (player.getX() == 539 && player.getY() >= 599) {
+						goThrough = true;
+					} else if (player.getX() <= 585 && player.getY() == 581) {
+						goThrough = true;
+					} else if (player.getX() >= 581 && player.getY() == 580) {
+						goThrough = true;
+					}
+				}
+				break;
+			case 95: // Ardougne Sewer mine (95)
+				req = 31;
+				exp = 100;
+				if (player.getX() <= 556) {
+					goThrough = true;
+				}
+				break;
+			case 96: // Chaos druid tower door id (96)
+				req = 46;
+				exp = 150;
+				if (player.getY() <= 555) {
+					goThrough = true;
+				}
+				break;
+			case 162: // yanille druid door id(162)
+				req = 82;
+				exp = 200;
+				requiresLockpick = true;
+				break;
+			case 100: // axe huts door id (100)
+				req = 32;
+				exp = 100;
+				requiresLockpick = true;
+				if (player.getY() >= 103 && player.getY() <= 107) {
+					goThrough = true;
+				}
+				break;
+			case 99: // pirate hut door id (99)
+				req = 39;
+				exp = 140;
+				requiresLockpick = true;
+				if ((player.getX() >= 263 && player.getX() <= 269 && player.getY() == 104)
 					|| (player.getX() == 266 && player.getY() >= 100)) {
-				goThrough = true;
-			}
-			break;
-		case 97:// Ardougne Paladin 2nd floor door id (97)
-			req = 61;
-			exp = 200;
-			if (player.getY() >= 1548 && player.getX() == 609) {
-				goThrough = true;
-			}
-			break;
+					goThrough = true;
+				}
+				break;
+			case 97:// Ardougne Paladin 2nd floor door id (97)
+				req = 61;
+				exp = 200;
+				if (player.getY() >= 1548 && player.getX() == 609) {
+					goThrough = true;
+				}
+				break;
 		}
 		if (click == 0) {
 			if (goThrough) {
@@ -804,7 +620,7 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 
 	@Override
 	public void onNpcCommand(Npc n, String command, Player p) {
-		if(command.equalsIgnoreCase("pickpocket")) {
+		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
 			if (pickpocket != null) {
 				doPickpocket(p, n, pickpocket);
@@ -819,10 +635,188 @@ WallObjectActionExecutiveListener, WallObjectActionListener {
 		handlePicklock(obj, p, click);
 	}
 
+	enum Pickpocket {
+		MAN(1, 32, "Oi what do you think you're doing",
+			new LootItem(10, 3, 100)),
+		FARMER(10, 58, "What do you think you're doing",
+			new LootItem(10, 9, 100)),
+		WARRIOR(25, 104, "Hey what do you think you're doing",
+			new LootItem(10, 18, 100)),
+		WORKMAN(25, 0, "Hey what do you think you're doing",
+			new LootItem(10, 10, 30),
+			new LootItem(211, 1, 20),
+			new LootItem(21, 1, 18),
+			new LootItem(237, 1, 16),
+			new LootItem(1115, 1, 14),
+			new LootItem(1117, 1, 12),
+			new LootItem(16, 1, 10),
+			new LootItem(-1, 0, 8)),
+		ROGUE(32, 146, "Hey what do you think you're doing",
+			new LootItem(10, 25, 40),
+			new LootItem(10, 40, 30),
+			new LootItem(142, 1, 10),
+			new LootItem(33, 8, 10),
+			new LootItem(714, 1, 10),
+			new LootItem(559, 1, 3)),
+		GUARD(40, 187, "Err what do you think you're doing",
+			new LootItem(10, 30, 100)),
+		KNIGHT(55, 337, "Err what do you think you're doing",
+			new LootItem(10, 50, 100)),
+		YANILLE_WATCHMAN(65, 550, "Oi you nasty little thief",
+			new LootItem(10, 60, 100),
+			new LootItem(138, 1, 100)),
+		PALADIN(70, 607, "Get your hands off my valuables",
+			new LootItem(10, 80, 100),
+			new LootItem(41, 1, 100)),
+		GNOME_LOCAL(75, 793, "Get your hands off my valuables human",
+			new LootItem(10, 200, 22),
+			new LootItem(10, 400, 18),
+			new LootItem(152, 1, 10),
+			new LootItem(34, 1, 15),
+			new LootItem(895, 1, 15),
+			new LootItem(897, 1, 20)),
+		GNOME_CHILD(75, 793, "Get your hands off my valuables human",
+			new LootItem(10, 200, 22),
+			new LootItem(10, 400, 18),
+			new LootItem(152, 1, 10),
+			new LootItem(34, 1, 15),
+			new LootItem(895, 1, 15),
+			new LootItem(897, 1, 20)),
+		GNOME_TRAINER(75, 793, "Get your hands off my valuables human",
+			new LootItem(10, 200, 22),
+			new LootItem(10, 400, 18),
+			new LootItem(152, 1, 10),
+			new LootItem(34, 1, 15),
+			new LootItem(895, 1, 15),
+			new LootItem(897, 1, 20)),
+		BLURBERRY_BARMAN(75, 793, "Get your hands off my valuables human",
+			new LootItem(10, 200, 22),
+			new LootItem(10, 400, 18),
+			new LootItem(152, 1, 10),
+			new LootItem(34, 1, 15),
+			new LootItem(895, 1, 15),
+			new LootItem(897, 1, 20)),
+		HERO(80, 1093, "Get your hands off my valuables",
+			new LootItem(10, 100, 25),
+			new LootItem(10, 200, 15),
+			new LootItem(10, 300, 10),
+			new LootItem(612, 1, 10),
+			new LootItem(142, 1, 14),
+			new LootItem(152, 1, 5),
+			new LootItem(38, 2, 10),
+			new LootItem(619, 1, 5),
+			new LootItem(161, 1, 1));
+
+		private final ArrayList<LootItem> lootTable;
+		private final int xp;
+		private final int requiredLevel;
+		private final String shoutMessage;
+
+		Pickpocket(int req, int xp, String shoutMessage, LootItem... possibleLoot) {
+			this.xp = xp;
+			this.requiredLevel = req;
+			this.shoutMessage = shoutMessage;
+			lootTable = new ArrayList<LootItem>();
+			for (LootItem lootItem : possibleLoot) {
+				lootTable.add(lootItem);
+			}
+			Collections.sort(lootTable);
+		}
+
+		public int getRequiredLevel() {
+			return requiredLevel;
+		}
+
+		public ArrayList<LootItem> getLootTable() {
+			return lootTable;
+		}
+
+		public int getXp() {
+			return xp;
+		}
+	}
+
+	enum Stall {
+		TEA_STALL(780, 5, 64, 780, 5000,
+			"", new LootItem(739, 1, 100)),
+		BAKERS_STALL(325, 5, 64, 325, 5000,
+			"", new LootItem(330, 1, 100)),
+		SILK_STALL(326, 20, 96, 326, 8000,
+			piece_of, new LootItem(200, 1, 100)),
+		FUR_STALL(327, 35, 144, 327, 15000,
+			piece_of, new LootItem(541, 1, 10),
+			new LootItem(146, 1, 100)),
+		SILVER_STALL(328, 50, 216, 328, 30000,
+			piece_of, new LootItem(383, 1, 100)),
+		SPICES_STALL(329, 65, 324, 329, 80000,
+			"pot of ", new LootItem(707, 1, 100)),
+		GEMS_STALL(330, 75, 640, 330, 180000,
+			"", new LootItem(160, 1, 65),
+			new LootItem(159, 1, 20),
+			new LootItem(158, 1, 10),
+			new LootItem(157, 1, 5));
+
+		ArrayList<LootItem> lootTable;
+		private String lootPrefix;
+		private int xp;
+		private int requiredLevel;
+		private int respawnTime;
+		private int ownerID;
+
+		Stall(int ownerID, int req, int xp, int ownerNpc, int respawnTime, String lootPrefix, LootItem... loot) {
+			this.ownerID = ownerID;
+			this.setXp(xp);
+			this.setRespawnTime(respawnTime);
+			this.setRequiredLevel(req);
+			this.setLootPrefix(lootPrefix);
+			lootTable = new ArrayList<LootItem>();
+			for (LootItem lootItem : loot) {
+				lootTable.add(lootItem);
+			}
+			Collections.sort(lootTable);
+		}
+
+		public int getRequiredLevel() {
+			return requiredLevel;
+		}
+
+		public void setRequiredLevel(int requiredLevel) {
+			this.requiredLevel = requiredLevel;
+		}
+
+		public int getRespawnTime() {
+			return respawnTime;
+		}
+
+		public void setRespawnTime(int respawnTime) {
+			this.respawnTime = respawnTime;
+		}
+
+		public int getXp() {
+			return xp;
+		}
+
+		public void setXp(int xp) {
+			this.xp = xp;
+		}
+
+		public int getOwnerID() {
+			return ownerID;
+		}
+
+		public String getLootPrefix() {
+			return lootPrefix;
+		}
+
+		public void setLootPrefix(String lootPrefix) {
+			this.lootPrefix = lootPrefix;
+		}
+	}
+
 	static class LootItem implements Comparable<LootItem> {
-		private int chance;
 		private final int id;
 		private final int amount;
+		private int chance;
 
 		public LootItem(int id, int amount, int chance) {
 			this.id = id;

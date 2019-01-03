@@ -12,12 +12,10 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GemMining implements ObjectActionListener,
-ObjectActionExecutiveListener {
+	ObjectActionExecutiveListener {
 
 	public static final int GEM_ROCK = 588;
 
@@ -42,30 +40,30 @@ ObjectActionExecutiveListener {
 		final int mineLvl = p.getSkills().getLevel(14);
 		int reqlvl = 1;
 		switch (axeId) {
-		case 156:
-			retrytimes = 1;
-			break;
-		case 1258:
-			retrytimes = 2;
-			break;
-		case 1259:
-			retrytimes = 3;
-			reqlvl = 6;
-			break;
-		case 1260:
-			retrytimes = 5;
-			reqlvl = 21;
-			break;
-		case 1261:
-			retrytimes = 8;
-			reqlvl = 31;
-			break;
-		case 1262:
-			retrytimes = 12;
-			reqlvl = 41;
-			break;
+			case 156:
+				retrytimes = 1;
+				break;
+			case 1258:
+				retrytimes = 2;
+				break;
+			case 1259:
+				retrytimes = 3;
+				reqlvl = 6;
+				break;
+			case 1260:
+				retrytimes = 5;
+				reqlvl = 21;
+				break;
+			case 1261:
+				retrytimes = 8;
+				reqlvl = 31;
+				break;
+			case 1262:
+				retrytimes = 12;
+				reqlvl = 41;
+				break;
 		}
-		
+
 		if (p.click == 1) {
 			p.playSound("prospect");
 			p.setBusyTimer(1800);
@@ -84,7 +82,7 @@ ObjectActionExecutiveListener {
 
 		if (axeId < 0 || reqlvl > mineLvl) {
 			message(p, "You need a pickaxe to mine this rock",
-					"You do not have a pickaxe which you have the mining level to use");
+				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
 
@@ -106,21 +104,21 @@ ObjectActionExecutiveListener {
 					owner.getInventory().add(gem);
 					interrupt();
 					GameObject object = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
-					if(object != null && object.getID() == obj.getID()) {
+					if (object != null && object.getID() == obj.getID()) {
 						GameObject newObject = new GameObject(obj.getLocation(), 98, obj.getDirection(), obj.getType());
 						World.getWorld().replaceGameObject(obj, newObject);
 						World.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minutes respawn time
 					}
 				} else {
 					owner.message("You only succeed in scratching the rock");
-					if(getRepeatFor() > 1) {
+					if (getRepeatFor() > 1) {
 						GameObject checkObj = owner.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
-						if(checkObj == null) {
+						if (checkObj == null) {
 							interrupt();
 						}
 					}
 				}
-				if(!isCompleted()) {
+				if (!isCompleted()) {
 					showBubble(owner, new Item(1258));
 					owner.message("You have a swing at the rock!");
 				}
@@ -130,7 +128,7 @@ ObjectActionExecutiveListener {
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
+		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			return true;
 		}
 		return false;
@@ -138,7 +136,7 @@ ObjectActionExecutiveListener {
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
+		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			handleGemRockMining(obj, p, p.click);
 		}
 	}
@@ -183,14 +181,16 @@ ObjectActionExecutiveListener {
 			bonus = 12;
 			break;
 		}*/
-		if(p.getInventory().wielding(597)) { // charged dragonstone amulet bonus
+		if (p.getInventory().wielding(597)) { // charged dragonstone amulet bonus
 			bonus = 5; // 5%
 		}
 		return DataConversions.percentChance(offsetToPercent(levelDiff + bonus));
 	}
+
 	private int offsetToPercent(int levelDiff) {
 		return levelDiff > 40 ? 60 : 20 + levelDiff;
 	}
+
 	/**
 	 * Returns a gem ID
 	 */
@@ -215,19 +215,19 @@ ObjectActionExecutiveListener {
 	}
 
 	private String minedString(int gemID) {
-		if(gemID == UNCUT_OPAL) {
+		if (gemID == UNCUT_OPAL) {
 			return "You just mined an Opal!";
-		} else if(gemID == UNCUT_JADE) {
+		} else if (gemID == UNCUT_JADE) {
 			return "You just mined a piece of Jade!";
-		} else if(gemID == UNCUT_RED_TOPAZ) {
+		} else if (gemID == UNCUT_RED_TOPAZ) {
 			return "You just mined a Red Topaz!";
-		} else if(gemID == UNCUT_SAPPHIRE) {
+		} else if (gemID == UNCUT_SAPPHIRE) {
 			return "You just found a sapphire!";
-		} else if(gemID == UNCUT_EMERALD) {
+		} else if (gemID == UNCUT_EMERALD) {
 			return "You just found an emerald!";
-		} else if(gemID == UNCUT_RUBY) {
+		} else if (gemID == UNCUT_RUBY) {
 			return "You just found a ruby!";
-		} else if(gemID == UNCUT_DIAMOND) {
+		} else if (gemID == UNCUT_DIAMOND) {
 			return "You just found a diamond!";
 		}
 		return null;

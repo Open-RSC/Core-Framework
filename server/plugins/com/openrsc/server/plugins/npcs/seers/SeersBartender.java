@@ -10,7 +10,7 @@ import com.openrsc.server.plugins.menu.Option;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class SeersBartender implements TalkToNpcExecutiveListener,
-		TalkToNpcListener {
+	TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
@@ -21,20 +21,20 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 				@Override
 				public void action() {
 					npcTalk(p, n, "Well we have a beer",
-							"Or if you want some food, we have our home made stew and meat pies");
+						"Or if you want some food, we have our home made stew and meat pies");
 					Menu def = new Menu();
 					def.addOption(new Option("Beer please") {
 						@Override
 						public void action() {
 							npcTalk(p, n, "one beer coming up",
-									"Ok, that'll be two coins");
+								"Ok, that'll be two coins");
 							if (hasItem(p, 10, 2)) {
 								p.message("You buy a pint of beer");
 								addItem(p, 193, 1);
 								p.getInventory().remove(10, 18);
 							} else {
 								playerTalk(p, n,
-										"Oh dear. I don't seem to have enough money");
+									"Oh dear. I don't seem to have enough money");
 							}
 
 						}
@@ -49,7 +49,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 								p.getInventory().remove(10, 18);
 							} else {
 								playerTalk(p, n,
-										"Oh dear. I don't seem to have enough money");
+									"Oh dear. I don't seem to have enough money");
 							}
 
 						}
@@ -58,20 +58,20 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						@Override
 						public void action() {
 							npcTalk(p, n,
-									"A bowl of stew, that'll be 20 gold please");
+								"A bowl of stew, that'll be 20 gold please");
 							if (hasItem(p, 10, 16)) {
 								p.message("You buy a bowl of home made stew");
 								addItem(p, 346, 1);
 								p.getInventory().remove(10, 18);
 							} else {
 								playerTalk(p, n,
-										"Oh dear. I don't seem to have enough money");
+									"Oh dear. I don't seem to have enough money");
 							}
 
 						}
 					});
 					def.addOption(new Option(
-							"I don't really want anything thanks") {
+						"I don't really want anything thanks") {
 						@Override
 						public void action() {
 						}
@@ -83,35 +83,35 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 				@Override
 				public void action() {
 					npcTalk(p, n, "one beer coming up",
-							"Ok, that'll be two coins");
+						"Ok, that'll be two coins");
 					if (hasItem(p, 10, 2)) {
 						p.message("You buy a pint of beer");
 						addItem(p, 193, 1);
 						p.getInventory().remove(10, 18);
 					} else {
 						playerTalk(p, n,
-								"Oh dear. I don't seem to have enough money");
+							"Oh dear. I don't seem to have enough money");
 					}
 				}
 			});
 			if (p.getCache().hasKey("barcrawl")
-					&& !p.getCache().hasKey("barfive")) {
+				&& !p.getCache().hasKey("barfive")) {
 				defaultMenu.addOption(new Option(
-						"I'm doing Alfred Grimhand's barcrawl") {
+					"I'm doing Alfred Grimhand's barcrawl") {
 					@Override
 					public void action() {
 						npcTalk(p,
-								n,
-								"Oh you're a barbarian then",
-								"Now which of these was the barrels contained the liverbane ale?",
-								"That'll be 18 coins please");
+							n,
+							"Oh you're a barbarian then",
+							"Now which of these was the barrels contained the liverbane ale?",
+							"That'll be 18 coins please");
 						if (hasItem(p, 10, 18)) {
 							p.getInventory().remove(10, 18);
 							message(p,
-									"The bartender gives you a glass of liverbane ale",
-									"You gulp it down",
-									"The room seems to be swaying",
-									"The bartender scrawls his signature on your card");
+								"The bartender gives you a glass of liverbane ale",
+								"You gulp it down",
+								"The room seems to be swaying",
+								"The bartender scrawls his signature on your card");
 							p.getCache().store("barfive", true);
 						} else {
 							playerTalk(p, n, "I don't have 18 coins right now");
@@ -120,7 +120,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 				});
 			}
 			defaultMenu.addOption(new Option(
-					"I don't really want anything thanks") {
+				"I don't really want anything thanks") {
 				@Override
 				public void action() {
 				}

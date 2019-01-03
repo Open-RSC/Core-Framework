@@ -52,7 +52,7 @@ public class AttackHandler implements PacketHandler {
 			return;
 		}*/
 		if (affectedMob.isPlayer()) {
-			if(affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
+			if (affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
 				player.message("Here kolodion protects all from your attack");
 				player.resetPath();
 				return;
@@ -86,18 +86,18 @@ public class AttackHandler implements PacketHandler {
 						return;
 					}
 					if (player.isBusy() || mob.isBusy() || !player.canReach(mob)
-							|| !player.checkAttack(mob, false) || player.getStatus() != Action.ATTACKING_MOB) {
+						|| !player.checkAttack(mob, false) || player.getStatus() != Action.ATTACKING_MOB) {
 						return;
 					}
 					if (mob.isNpc()) {
 						if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerAttackNpc",
-								new Object[] { player, (Npc) mob })) {
+							new Object[]{player, (Npc) mob})) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
 						if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerAttack",
-								new Object[] { player, mob })) {
+							new Object[]{player, mob})) {
 							return;
 						}
 					}
@@ -106,7 +106,7 @@ public class AttackHandler implements PacketHandler {
 			});
 		} else {
 			if (player.isBusy() || !player.checkAttack(affectedMob, true)
-					|| player.getStatus() != Action.ATTACKING_MOB) {
+				|| player.getStatus() != Action.ATTACKING_MOB) {
 				return;
 			}
 			final Mob target = affectedMob;
@@ -131,7 +131,7 @@ public class AttackHandler implements PacketHandler {
 							affectedPlayer.resetShop();
 						}
 					}
-					if(player.getRangeEquip() > 0) {
+					if (player.getRangeEquip() > 0) {
 						owner.setRangeEvent(new RangeEvent(owner, target));
 					} else {
 						owner.setThrowingEvent(new ThrowingEvent(owner, target));

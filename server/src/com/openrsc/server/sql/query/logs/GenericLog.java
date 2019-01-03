@@ -8,9 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public final class GenericLog extends Query {
-	
+
 	private final String message;
-	
+
 	public GenericLog(String message) {
 		super("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
 		this.message = message;
@@ -28,5 +28,5 @@ public final class GenericLog extends Query {
 	public Query build() {
 		return this;
 	}
-	
+
 }

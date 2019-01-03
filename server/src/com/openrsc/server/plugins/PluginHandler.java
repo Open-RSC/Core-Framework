@@ -25,7 +25,7 @@ import static org.apache.logging.log4j.util.Unbox.box;
 
 /**
  * Initiates plug-ins that implements some listeners
- * 
+ *
  * @author Peeter, design idea xEnt
  * @author n0m - changes made:
  * Plugins are now loaded from external jar
@@ -40,10 +40,15 @@ public final class PluginHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static PluginHandler pluginHandler = null;
-
+	public static boolean reloading;
 	private Object defaultHandler = null;
-
 	private URLClassLoader urlClassLoader;
+	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
+	private Map<String, Set<Object>> executivePlugins = new HashMap<String, Set<Object>>();
+	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+	private List<Class<?>> knownInterfaces = new ArrayList<Class<?>>();
+	// private ExecutorService executor = Executors.newFixedThreadPool(2);
+	private Map<String, Class<?>> queue = new ConcurrentHashMap<String, Class<?>>();
 
 	public static PluginHandler getPluginHandler() {
 		if (pluginHandler == null) {
@@ -51,51 +56,52 @@ public final class PluginHandler {
 		}
 		return pluginHandler;
 	}
+
 	public static List<Class<?>> loadClasses(final String pckgname)
-			throws ClassNotFoundException {
+		throws ClassNotFoundException {
 		final List<Class<?>> classes = new ArrayList<Class<?>>();
 		final ArrayList<File> directories = new ArrayList<File>();
 		try {
 			final ClassLoader cld = Thread.currentThread()
-					.getContextClassLoader();
+				.getContextClassLoader();
 			if (cld == null) {
 				throw new ClassNotFoundException("Can't get class loader.");
 			}
 			final Enumeration<URL> resources = cld.getResources(pckgname
-					.replace('.', '/'));
+				.replace('.', '/'));
 			while (resources.hasMoreElements()) {
 				final URL res = resources.nextElement();
 				if (res.getProtocol().equalsIgnoreCase("jar")) {
 					final JarURLConnection conn = (JarURLConnection) res
-							.openConnection();
+						.openConnection();
 					final JarFile jar = conn.getJarFile();
 					for (final JarEntry e : Collections.list(jar.entries())) {
 						if (e.getName().startsWith(pckgname.replace('.', '/'))
-								&& e.getName().endsWith(".class")
-								&& !e.getName().contains("$")) {
+							&& e.getName().endsWith(".class")
+							&& !e.getName().contains("$")) {
 							final String className = e.getName()
-									.replace("/", ".")
-									.substring(0, e.getName().length() - 6);
+								.replace("/", ".")
+								.substring(0, e.getName().length() - 6);
 							classes.add(Class.forName(className));
 						}
 					}
 				} else {
 					directories.add(new File(URLDecoder.decode(res.getPath(),
-							"UTF-8")));
+						"UTF-8")));
 				}
 			}
 		} catch (final NullPointerException x) {
 			throw new ClassNotFoundException(
-					pckgname
+				pckgname
 					+ " does not appear to be a valid package (Null pointer exception)");
 		} catch (final UnsupportedEncodingException encex) {
 			throw new ClassNotFoundException(
-					pckgname
+				pckgname
 					+ " does not appear to be a valid package (Unsupported encoding)");
 		} catch (final IOException ioex) {
 			throw new ClassNotFoundException(
-					"IOException was thrown when trying to get all resources for "
-							+ pckgname);
+				"IOException was thrown when trying to get all resources for "
+					+ pckgname);
 		}
 
 		for (final File directory : directories) {
@@ -104,34 +110,23 @@ public final class PluginHandler {
 				for (final String file : files) {
 					if (file.endsWith(".class")) {
 						classes.add(Class.forName(pckgname + '.'
-								+ file.substring(0, file.length() - 6)));
+							+ file.substring(0, file.length() - 6)));
 					}
 				}
 			} else {
 				throw new ClassNotFoundException(pckgname + " ("
-						+ directory.getPath() 
-						+ ") does not appear to be a valid package");  
+					+ directory.getPath()
+					+ ") does not appear to be a valid package");
 			}
 		}
 		return classes;
 	}
-
-	private Map<String, Set<Object>> actionPlugins = new HashMap<String, Set<Object>>();
-	private Map<String, Set<Object>> executivePlugins = new HashMap<String, Set<Object>>();
-	private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-	// private ExecutorService executor = Executors.newFixedThreadPool(2);
-
-	private List<Class<?>> knownInterfaces = new ArrayList<Class<?>>();
-
-	private Map<String, Class<?>> queue = new ConcurrentHashMap<String, Class<?>>();
-	public static boolean reloading;
 
 	public boolean blockDefaultAction(final String interfce, final Object[] data) {
 		return blockDefaultAction(interfce, data, true);
 	}
 
 	/**
-	 * 
 	 * @param interfce
 	 * @param data
 	 * @param callAction
@@ -139,10 +134,10 @@ public final class PluginHandler {
 	 */
 
 	public boolean blockDefaultAction(final String interfce,
-			final Object[] data, final boolean callAction) {
-		if(reloading) {
-			for(Object o : data) {
-				if(o instanceof Player) {
+									  final Object[] data, final boolean callAction) {
+		if (reloading) {
+			for (Object o : data) {
+				if (o instanceof Player) {
 					((Player) o).message("Plugins are being updated, please wait.");
 				}
 			}
@@ -152,7 +147,7 @@ public final class PluginHandler {
 		queue.clear();
 		if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
 			for (final Object c : executivePlugins.get(interfce
-					+ "ExecutiveListener")) {
+				+ "ExecutiveListener")) {
 				try {
 					final Class<?>[] dataClasses = new Class<?>[data.length];
 					int i = 0;
@@ -160,15 +155,14 @@ public final class PluginHandler {
 						dataClasses[i++] = o.getClass();
 					}
 					final Method m = c.getClass().getMethod("block" + interfce,
-							dataClasses);
+						dataClasses);
 					shouldBlock = (Boolean) m.invoke(c, data);
 					if (shouldBlock) {
 						queue.put(interfce, c.getClass());
 						flagStop = true;
-					} else if(queue.size() > 1) {
+					} else if (queue.size() > 1) {
 
-					}
-					else if (queue.isEmpty()) {
+					} else if (queue.isEmpty()) {
 						queue.put(interfce, defaultHandler.getClass());
 					}
 				} catch (final Exception e) {
@@ -201,7 +195,7 @@ public final class PluginHandler {
 	}
 
 	public void handleAction(final String interfce, final Object[] data) {
-		if(reloading) {
+		if (reloading) {
 			return;
 		}
 		if (actionPlugins.containsKey(interfce + "Listener")) {
@@ -214,13 +208,13 @@ public final class PluginHandler {
 					}
 
 					final Method m = c.getClass().getMethod("on" + interfce,
-							dataClasses);
+						dataClasses);
 					boolean go = false;
 
 					if (queue.containsKey(interfce)) {
 						for (final Class<?> clz : queue.values()) {
 							if (clz.getName().equalsIgnoreCase(
-									c.getClass().getName())) {
+								c.getClass().getName())) {
 								go = true;
 								break;
 							}
@@ -231,18 +225,18 @@ public final class PluginHandler {
 
 					if (go) {
 						final FutureTask<Integer> task = new FutureTask<Integer>(
-								new Callable<Integer>() {
-									@Override
-									public Integer call() throws Exception {
-										try {
-											LOGGER.info("Executing with : " + m.getName());
-											m.invoke(c, data);
-										} catch (Exception cme) {
-											LOGGER.catching(cme);
-										}
-										return 1;
+							new Callable<Integer>() {
+								@Override
+								public Integer call() throws Exception {
+									try {
+										LOGGER.info("Executing with : " + m.getName());
+										m.invoke(c, data);
+									} catch (Exception cme) {
+										LOGGER.catching(cme);
 									}
-								});
+									return 1;
+								}
+							});
 						getExecutor().execute(task);
 					}
 				} catch (final Exception e) {
@@ -259,25 +253,24 @@ public final class PluginHandler {
 		ArrayList<Class<?>> loadedClassFiles = new ArrayList<Class<?>>();
 
 		String pathToJar = "./plugins.jar";
-        boolean jarExists   = new File(pathToJar).isFile();
-        if(jarExists)
-        {
-            JarFile jarFile = new JarFile(pathToJar);
-            URL[] urls = { new URL("jar:file:" + pathToJar + "!/") };
-            urlClassLoader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
+		boolean jarExists = new File(pathToJar).isFile();
+		if (jarExists) {
+			JarFile jarFile = new JarFile(pathToJar);
+			URL[] urls = {new URL("jar:file:" + pathToJar + "!/")};
+			urlClassLoader = URLClassLoader.newInstance(urls, getClass().getClassLoader());
 
-            Enumeration<JarEntry> enumeration = jarFile.entries();
-            while(enumeration.hasMoreElements()) {
-                JarEntry je = enumeration.nextElement();
-                if (je.getName().endsWith(".class") && !je.getName().contains("$")) {
-                    String className = je.getName().substring(0,
-                            je.getName().length() - 6).replace('/', '.');
-                    Class<?> c = urlClassLoader.loadClass(className);
-                    loadedClassFiles.add(c);
-                }
-            }
-            jarFile.close();
-        }
+			Enumeration<JarEntry> enumeration = jarFile.entries();
+			while (enumeration.hasMoreElements()) {
+				JarEntry je = enumeration.nextElement();
+				if (je.getName().endsWith(".class") && !je.getName().contains("$")) {
+					String className = je.getName().substring(0,
+						je.getName().length() - 6).replace('/', '.');
+					Class<?> c = urlClassLoader.loadClass(className);
+					loadedClassFiles.add(c);
+				}
+			}
+			jarFile.close();
+		}
 
 		for (final Class<?> interfce : loadInterfaces("com.openrsc.server.plugins.listeners.action")) {
 			final String interfceName = interfce.getName().substring(interfce.getName().lastIndexOf(".") + 1);
@@ -287,7 +280,7 @@ public final class PluginHandler {
 					continue;
 				}
 				Object instance = plugin.getConstructor().newInstance();
-				if(instance instanceof DefaultHandler && defaultHandler == null) {
+				if (instance instanceof DefaultHandler && defaultHandler == null) {
 					defaultHandler = instance;
 					continue;
 				}
@@ -327,7 +320,7 @@ public final class PluginHandler {
 		}
 		for (final Class<?> interfce : loadInterfaces("com.openrsc.server.plugins.listeners.executive")) {
 			final String interfceName = interfce.getName().substring(
-					interfce.getName().lastIndexOf(".") + 1);
+				interfce.getName().lastIndexOf(".") + 1);
 			knownInterfaces.add(interfce);
 			for (final Class<?> plugin : loadedClassFiles) {
 				if (!interfce.isAssignableFrom(plugin)) {
@@ -340,15 +333,15 @@ public final class PluginHandler {
 					loadedPlugins.put(instance.getClass().getName(), instance);
 
 					if (Arrays.asList(instance.getClass().getInterfaces())
-							.contains(QuestInterface.class)) {
+						.contains(QuestInterface.class)) {
 						final QuestInterface q = (QuestInterface) instance;
 						try {
 							World.getWorld().registerQuest(
-									(QuestInterface) instance);
+								(QuestInterface) instance);
 						} catch (final Exception e) {
 							LOGGER.error(
-									"Error registering quest "
-											+ q.getQuestName());
+								"Error registering quest "
+									+ q.getQuestName());
 							LOGGER.catching(e);
 							continue;
 						}
@@ -371,7 +364,7 @@ public final class PluginHandler {
 	}
 
 	private List<Class<?>> loadInterfaces(final String thePackage)
-			throws ClassNotFoundException {
+		throws ClassNotFoundException {
 		final List<Class<?>> classList = new ArrayList<Class<?>>();
 		for (final Class<?> discovered : loadClasses(thePackage)) {
 			if (discovered.isInterface()) {
@@ -380,6 +373,7 @@ public final class PluginHandler {
 		}
 		return classList;
 	}
+
 	public void unload() throws IOException {
 		reloading = true;
 		urlClassLoader.close();

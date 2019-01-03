@@ -13,25 +13,25 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class MagicStoreOwner implements ShopInterface,
-		TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 75, 2,
-			new Item(31, 50), new Item(32, 50), new Item(33, 50),
-			new Item(34, 50), new Item(35, 50), new Item(36, 50),
-			new Item(825, 30), new Item(614, 5), new Item(101, 2),
-			new Item(102, 2), new Item(103, 2), new Item(197, 2));
+		new Item(31, 50), new Item(32, 50), new Item(33, 50),
+		new Item(34, 50), new Item(35, 50), new Item(36, 50),
+		new Item(825, 30), new Item(614, 5), new Item(101, 2),
+		new Item(102, 2), new Item(103, 2), new Item(197, 2));
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to the magic guild store",
-				"would you like to buy some magic supplies");
+			"would you like to buy some magic supplies");
 
 		int option = showMenu(p, n, "Yes please", "No thank you");
 		switch (option) {
-		case 0:
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-			break;
+			case 0:
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+				break;
 		}
 	}
 
@@ -42,7 +42,7 @@ public final class MagicStoreOwner implements ShopInterface,
 
 	@Override
 	public Shop[] getShops() {
-		return new Shop[] { shop };
+		return new Shop[]{shop};
 	}
 
 	@Override

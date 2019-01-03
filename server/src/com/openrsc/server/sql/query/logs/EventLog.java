@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public final class EventLog extends Query {
-	
+
 	private final String message;
 
 	public EventLog(String message) {

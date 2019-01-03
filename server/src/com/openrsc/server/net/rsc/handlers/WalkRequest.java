@@ -32,11 +32,11 @@ public class WalkRequest implements PacketHandler {
 					return;
 				}
 				if (opponent.getHitsMade() >= 3) {
-					if (player.getDuel().isDuelActive()&& player.getDuel().getDuelSetting(0)) {
+					if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(0)) {
 						player.message("You cannot retreat from this duel!");
 						return;
 					}
-					if(player.getDuel().isDuelActive()) {
+					if (player.getDuel().isDuelActive()) {
 						if (player.getAttribute("projectile", null) != null) {
 							ProjectileEvent projectileEvent = player.getAttribute("projectile");
 							projectileEvent.setCanceled(true);
@@ -48,9 +48,9 @@ public class WalkRequest implements PacketHandler {
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
 
-					if(opponent.isNpc()) {
+					if (opponent.isNpc()) {
 						if (PluginHandler.getPluginHandler().blockDefaultAction("PlayerNpcRun",
-								new Object[] { player, ((Npc) opponent) })) {
+							new Object[]{player, ((Npc) opponent)})) {
 							return;
 						}
 					}
@@ -61,9 +61,7 @@ public class WalkRequest implements PacketHandler {
 			} else {
 				return;
 			}
-		}
-
-		else if (player.isBusy()) {
+		} else if (player.isBusy()) {
 			return;
 		}
 		player.checkAndInterruptBatchEvent();
@@ -74,7 +72,8 @@ public class WalkRequest implements PacketHandler {
 		int firstStepX = p.readAnotherShort();
 		int firstStepY = p.readAnotherShort();
 		PathType pathType = packetOpcode == OpcodeIn.WALK_TO_POINT.getOpcode() ? PathType.WALK_TO_POINT : PathType.WALK_TO_ENTITY;
-		Path path = new Path(player, pathType); {
+		Path path = new Path(player, pathType);
+		{
 			path.addStep(firstStepX, firstStepY);
 			int numWaypoints = p.getReadableBytes() / 2;
 			for (int stepCount = 0; stepCount < numWaypoints; stepCount++) {

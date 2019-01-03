@@ -13,22 +13,19 @@ public class MeleeFormula {
 	 * Gets a gaussian distributed randomized value between 0 and the
 	 * {@code maximum} value. <br>
 	 * The mean (average) is maximum / 2.
-	 * 
-	 * @param meanModifier
-	 *            The modifier used to determine the mean.
-	 * @param r
-	 *            The random instance.
-	 * @param maximum
-	 *            The maximum value.
+	 *
+	 * @param meanModifier The modifier used to determine the mean.
+	 * @param r            The random instance.
+	 * @param maximum      The maximum value.
 	 * @return The randomized value.
 	 */
 	public static double getGaussian(double meanModifier, Random r,
-			int maximum) {
+									 int maximum) {
 		return getGaussian(meanModifier, r, (double) maximum);
 	}
 
 	public static double getGaussian(double meanModifier, Random r,
-			double maximum) {
+									 double maximum) {
 		double mean = maximum * meanModifier;
 		double deviation = mean * 1.79;
 		double value = 0;
@@ -40,11 +37,9 @@ public class MeleeFormula {
 
 	/**
 	 * Gets the current damage to be dealt to the victim.
-	 * 
-	 * @param source
-	 *            The attacking mob.
-	 * @param victim
-	 *            The mob being attacked.
+	 *
+	 * @param source The attacking mob.
+	 * @param victim The mob being attacked.
 	 * @return The amount to hit.
 	 */
 	public static final int getDamage(Mob source, Mob victim) {
@@ -53,22 +48,17 @@ public class MeleeFormula {
 
 	/**
 	 * Gets the current melee damage.
-	 * 
-	 * @param source
-	 *            The attacking mob.
-	 * @param victim
-	 *            The mob being attacked.
-	 * @param accuracyMultiplier
-	 *            The amount to increase the accuracy with.
-	 * @param hitMultiplier
-	 *            The amount to increase the hit with.
-	 * @param defenceMultiplier
-	 *            The amount to increase the defence with.
+	 *
+	 * @param source             The attacking mob.
+	 * @param victim             The mob being attacked.
+	 * @param accuracyMultiplier The amount to increase the accuracy with.
+	 * @param hitMultiplier      The amount to increase the hit with.
+	 * @param defenceMultiplier  The amount to increase the defence with.
 	 * @return The amount to hit.
 	 */
 	public static int getDamage(Mob source, Mob victim,
-			double accuracyMultiplier, double hitMultiplier,
-			double defenceMultiplier) {
+								double accuracyMultiplier, double hitMultiplier,
+								double defenceMultiplier) {
 		double acc = getMeleeAccuracy(source);
 		double def = getMeleeDefence(victim);
 		int maxHit = getMeleeDamage(source, hitMultiplier);
@@ -78,9 +68,9 @@ public class MeleeFormula {
 
 		int finalAccuracy;
 		if (acc > def)
-			finalAccuracy = (int)((1.0 - ((def + 2.0) / (2.0 * (acc + 1.0)))) * 10000.0);
+			finalAccuracy = (int) ((1.0 - ((def + 2.0) / (2.0 * (acc + 1.0)))) * 10000.0);
 		else
-			finalAccuracy = (int)((acc / (2.0 * (def + 1.0))) * 10000.0);
+			finalAccuracy = (int) ((acc / (2.0 * (def + 1.0))) * 10000.0);
 
 		if (finalAccuracy > DataConversions.random(0, 10000)) {
 			return (int) getGaussian(1.0, source.getRandom(), maxHit);
@@ -90,15 +80,15 @@ public class MeleeFormula {
 
 	private static int getMeleeDamage(Mob source, double hitMultiplier) {
 		int styleBonus = styleBonus(source, 2);
-		
-		double prayerBonus = addPrayers(source, Prayers.BURST_OF_STRENGTH,
-				Prayers.SUPERHUMAN_STRENGTH,
-				Prayers.ULTIMATE_STRENGTH);
 
-		int strengthLevel = (int)(source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus + 8;
-		
+		double prayerBonus = addPrayers(source, Prayers.BURST_OF_STRENGTH,
+			Prayers.SUPERHUMAN_STRENGTH,
+			Prayers.ULTIMATE_STRENGTH);
+
+		int strengthLevel = (int) (source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus + 8;
+
 		double bonusMultiplier = (source.getWeaponPowerPoints() + 64) / 640.0D;
-		int maxHit = (int)((strengthLevel * bonusMultiplier) + 0.5D);
+		int maxHit = (int) ((strengthLevel * bonusMultiplier) + 0.5D);
 
 		return maxHit;
 	}
@@ -107,11 +97,11 @@ public class MeleeFormula {
 	private static double getMeleeDefence(Mob defender) {
 		int styleBonus = styleBonus(defender, 1);
 		double prayerBonus = addPrayers(defender, Prayers.THICK_SKIN,
-				Prayers.ROCK_SKIN,
-				Prayers.STEEL_SKIN);
-		
-		int defenseLevel = (int)(defender.getSkills().getLevel(Skills.DEFENCE) * prayerBonus) + styleBonus + 8;
-		double bonusMultiplier = (double)(defender.getArmourPoints() + 64);
+			Prayers.ROCK_SKIN,
+			Prayers.STEEL_SKIN);
+
+		int defenseLevel = (int) (defender.getSkills().getLevel(Skills.DEFENCE) * prayerBonus) + styleBonus + 8;
+		double bonusMultiplier = (double) (defender.getArmourPoints() + 64);
 
 		if (defender.isNpc())
 			bonusMultiplier *= 0.9;
@@ -122,11 +112,11 @@ public class MeleeFormula {
 	private static double getMeleeAccuracy(Mob attacker) {
 		int styleBonus = styleBonus(attacker, 0);
 		double prayerBonus = addPrayers(attacker, Prayers.CLARITY_OF_THOUGHT,
-				Prayers.IMPROVED_REFLEXES,
-				Prayers.INCREDIBLE_REFLEXES);
+			Prayers.IMPROVED_REFLEXES,
+			Prayers.INCREDIBLE_REFLEXES);
 
-		int attackLevel = (int)(attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus + 8;
-		double bonusMultiplier = (double)(attacker.getWeaponAimPoints() + 64);
+		int attackLevel = (int) (attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus + 8;
+		double bonusMultiplier = (double) (attacker.getWeaponAimPoints() + 64);
 
 		if (attacker.isNpc())
 			bonusMultiplier *= 0.9;
@@ -143,10 +133,11 @@ public class MeleeFormula {
 			return 1;
 
 		return (skill == 0 && style == 2) || (skill == 1 && style == 3)
-				|| (skill == 2 && style == 1) ? 3 : 0;
+			|| (skill == 2 && style == 1) ? 3 : 0;
 	}
+
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {
-		if(source.isPlayer()) {
+		if (source.isPlayer()) {
 			Player sourcePlayer = (Player) source;
 			if (sourcePlayer.getPrayers().isPrayerActivated(prayer3)) {
 				return 1.15D;

@@ -10,10 +10,10 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
-
-import java.util.ArrayList;
 
 public class CrystalChest implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -27,7 +27,7 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		if(obj.getID() == CRYSTAL_CHEST) {
+		if (obj.getID() == CRYSTAL_CHEST) {
 			p.message("the chest is locked");
 		}
 	}
@@ -39,7 +39,7 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if(item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
+		if (item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
 			int respawnTime = 1000;
 			player.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, CRYSTAL_CHEST_OPEN);

@@ -10,18 +10,18 @@ import static com.openrsc.server.plugins.Functions.addItem;
 
 public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	int[][] combinePotions = { 
-			{ 475, 476, 474 }, // Attack potions.
-			{ 478, 479, 477 }, // Stat restore potions
-			{ 481, 482, 480 }, // Defense potions
-			{ 484, 485, 483 }, // Prayer potion
-			{ 487, 488, 486 }, // SAP
-			{ 490, 491, 489 }, // Fishing potion
-			{ 493, 494, 492 }, // SSP
-			{ 496, 497, 495 }, // SDP
-			{ 499, 500, 498 }, // Range pot
-			{ 567, 568, 566 }, // Cure pot
-			{ 964, 965, 963 } // Zammy pot
+	int[][] combinePotions = {
+		{475, 476, 474}, // Attack potions.
+		{478, 479, 477}, // Stat restore potions
+		{481, 482, 480}, // Defense potions
+		{484, 485, 483}, // Prayer potion
+		{487, 488, 486}, // SAP
+		{490, 491, 489}, // Fishing potion
+		{493, 494, 492}, // SSP
+		{496, 497, 495}, // SDP
+		{499, 500, 498}, // Range pot
+		{567, 568, 566}, // Cure pot
+		{964, 965, 963} // Zammy pot
 	};
 
 	@Override
@@ -69,7 +69,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				addItem(p, 465, 1); // give 1 empty vial.
 				return;
 			}
-		} 
+		}
 		// 3 dose on 3 dose = 6 dose (one 4 dose full pot, one 2 dose pot)
 		else if (item1.getID() == 222 && item2.getID() == 222) {
 			if (p.getInventory().remove(new Item(222)) > -1 && p.getInventory().remove(new Item(222)) > -1) {
@@ -78,7 +78,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				p.message("You combine two 3 doses of " + item1.getDef().getName().toLowerCase());
 				return;
 			}
-		} 
+		}
 		/** Rest of the potions in the game **/
 		else {
 			for (int i = 0; i < combinePotions.length; i++) {
@@ -102,7 +102,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 						addItem(p, 465, 1); // give 1 empty vial.
 						p.message("you get an empty vial over");
 						return;
-					} 
+					}
 				}
 				/** 2 dose with 2 dose. **/
 				else if (item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][0]) {
@@ -135,7 +135,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 		// 1 dose on 1 dose = 2 dose
 		if (item1.getID() == 224 && item2.getID() == 224) {
 			return true;
-		} 
+		}
 		if (item1.getID() == 222 && item2.getID() == 222) {
 			return true;
 		}

@@ -6,9 +6,7 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 
 /**
- * 
  * @author n0m
- * 
  */
 public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 
@@ -38,7 +36,7 @@ public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 			if (defender.getSkills().getLevel(Skills.PRAYER) > 1)
 				defender.getSkills().setLevel(Skills.PRAYER, 1);
 		}
-		
+
 	}
 
 }

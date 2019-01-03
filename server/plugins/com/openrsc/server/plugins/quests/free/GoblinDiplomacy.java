@@ -12,8 +12,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
-		TalkToNpcExecutiveListener {
+public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
+	TalkToNpcExecutiveListener {
 
 	@Override
 	public int getQuestId() {
@@ -27,8 +27,8 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 
 	public void onTalkToNpc(Player p, final Npc n) {
 		final Npc otherGoblin = n.getID() == 151 ? World.getWorld().getNpc(152,
-				314, 330, 441, 457) : World.getWorld().getNpc(151, 321, 445,
-				326, 449);
+			314, 330, 441, 457) : World.getWorld().getNpc(151, 321, 445,
+			326, 449);
 		if (n.getID() == 151 || n.getID() == 152) {
 			if (p.getQuestStage(this) == 0) {
 				if (n.getID() == 151) {
@@ -52,33 +52,33 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 				}
 
 				int option = showMenu(p, n, false, //do not send over
-						"Why are you arguing about the colour of your armour?",
-						"Wouldn't you prefer peace?",
-						"Do you want me to pick an armour colour for you?");
+					"Why are you arguing about the colour of your armour?",
+					"Wouldn't you prefer peace?",
+					"Do you want me to pick an armour colour for you?");
 				switch (option) {
-				case 0: // yes
-					playerTalk(p, n, "Why are you arguing about the colour of your armour?");
-					npcTalk(p, n, "We decide to celebrate goblin new century",
+					case 0: // yes
+						playerTalk(p, n, "Why are you arguing about the colour of your armour?");
+						npcTalk(p, n, "We decide to celebrate goblin new century",
 							"By changing the colour of our armour",
 							"Light blue get boring after a bit",
 							"And we want change",
 							"Problem is they want different change to us");
-					break;
-				case 1: // No
-					playerTalk(p, n, "Wouldn't you prefer peace");
-					npcTalk(p, n,
+						break;
+					case 1: // No
+						playerTalk(p, n, "Wouldn't you prefer peace");
+						npcTalk(p, n,
 							"Yeah peace is good as long as it is peace wearing Green armour");
-					npcTalk(p, otherGoblin, "But green to much like skin!",
+						npcTalk(p, otherGoblin, "But green to much like skin!",
 							"Nearly make you look naked!");
-					break;
-				case 2:
-					playerTalk(p, n, "Do you want me to pick an armour colour for you?",
+						break;
+					case 2:
+						playerTalk(p, n, "Do you want me to pick an armour colour for you?",
 							"different to either green or red");
-					npcTalk(p, n, "Hmm me dunno what that'd look like",
+						npcTalk(p, n, "Hmm me dunno what that'd look like",
 							"You'd have to bring me some, so us could decide");
-					npcTalk(p, otherGoblin, "Yep bring us orange armour");
-					npcTalk(p, n, "Yep orange might be good");
-					p.updateQuestStage(getQuestId(), 2);
+						npcTalk(p, otherGoblin, "Yep bring us orange armour");
+						npcTalk(p, n, "Yep orange might be good");
+						p.updateQuestStage(getQuestId(), 2);
 				}
 			} else if (p.getQuestStage(this) == 2) {
 				npcTalk(p, n, "Oh it you");
@@ -105,8 +105,8 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 					npcTalk(p, otherGoblin, "maybe if it was a bit lighter");
 					npcTalk(p, n, "Yeah try light blue");
 					playerTalk(p, n,
-							"I thought that was the amour you were changing from",
-							"But never mind, anything is worth a try");
+						"I thought that was the amour you were changing from",
+						"But never mind, anything is worth a try");
 					p.updateQuestStage(getQuestId(), 4);
 				} else {
 					npcTalk(p, n, "Have you got some Dark Blue goblin armour yet?");
@@ -120,9 +120,9 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 					p.getInventory().remove(273, 1);
 					npcTalk(p, n, "That is rather nice");
 					npcTalk(p, otherGoblin,
-							"Yes I could see myself wearing somethin' like that");
+						"Yes I could see myself wearing somethin' like that");
 					npcTalk(p, n, "It' a deal then", "Light blue it is",
-							"Thank you for sorting our argument");
+						"Thank you for sorting our argument");
 
 					p.sendQuestComplete(Constants.Quests.GOBLIN_DIPLOMACY);
 				} else {
@@ -132,7 +132,7 @@ public class GoblinDiplomacy implements QuestInterface,TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == -1) { // COMPLETED
 				npcTalk(p, n,
-						"Now you've solved our argument we gotta think of something else to do");
+					"Now you've solved our argument we gotta think of something else to do");
 				npcTalk(p, otherGoblin, "Yep, we bored now");
 			}
 		}

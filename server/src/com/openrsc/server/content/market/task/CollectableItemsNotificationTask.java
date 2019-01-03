@@ -10,7 +10,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import java.util.ArrayList;
 
 public class CollectableItemsNotificationTask extends MarketTask {
-	
+
 	private Player player;
 
 	public CollectableItemsNotificationTask(Player player) {
@@ -32,6 +32,6 @@ public class CollectableItemsNotificationTask extends MarketTask {
 		}
 		ActionSender.sendBox(player, items, true);
 	}
-	
+
 
 }

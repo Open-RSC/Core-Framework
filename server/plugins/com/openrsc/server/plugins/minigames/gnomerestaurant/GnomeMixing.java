@@ -9,6 +9,129 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
+	public boolean canMix(Item itemOne, Item itemTwo) {
+		for (GnomeMix gm : GnomeMix.values()) {
+			if (gm.isValid(itemOne.getID(), itemTwo.getID())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+		return canMix(item1, item2);
+	}
+
+	@Override
+	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+		GnomeMix gm = null;
+		for (GnomeMix mix : GnomeMix.values()) {
+			if (mix.isValid(item1.getID(), item2.getID())) {
+				gm = mix;
+			}
+		}
+		if (!p.getCache().hasKey(gm.cacheName)) {
+			p.getCache().set(gm.cacheName, 1);
+		} else {
+			int next = p.getCache().getInt(gm.cacheName);
+			p.getCache().set(gm.cacheName, (next + 1));
+		}
+		if (hasItem(p, gm.itemIDOther)) {
+			p.setBusy(true);
+			if (gm.itemIDOther != 898)
+				removeItem(p, gm.itemIDOther, 1);
+			if (p.getCache().hasKey("cheese_on_batta")
+				&& p.getCache().hasKey("tomato_on_batta")
+				&& p.getCache().hasKey("tomato_cheese_batta")
+				&& p.getCache().hasKey("leaves_on_batta")) { // tomato cheese batta
+				p.getCache().set("complete_dish", 901);
+			}
+			if (p.getCache().hasKey("chocolate_on_bowl") && p.getCache().getInt("chocolate_on_bowl") >= 4
+				&& p.getCache().hasKey("leaves_on_bowl")
+				&& p.getCache().hasKey("chocolate_bomb")
+				&& p.getCache().hasKey("cream_on_bowl") && p.getCache().getInt("cream_on_bowl") >= 2
+				&& p.getCache().hasKey("choco_dust_on_bowl")) { // chocolate bomb
+				p.getCache().set("complete_dish", 907);
+			}
+			if (p.getCache().hasKey("kingworms_on_bowl") && p.getCache().getInt("kingworms_on_bowl") >= 6
+				&& p.getCache().hasKey("onions_on_bowl") && p.getCache().getInt("onions_on_bowl") >= 2
+				&& p.getCache().hasKey("gnomespice_on_bowl")
+				&& p.getCache().hasKey("wormhole")
+				&& p.getCache().hasKey("leaves_on_bowl")) { // wormhole
+				p.getCache().set("complete_dish", 909);
+			}
+			if (p.getCache().hasKey("gnomespice_on_dough")
+				&& p.getCache().hasKey("toadlegs_on_dough") && p.getCache().getInt("toadlegs_on_dough") >= 2
+				&& p.getCache().hasKey("leaves_on_crunchies")
+				&& p.getCache().hasKey("gnomecrunchie_dough")
+				&& p.getCache().hasKey("gnome_crunchie_cooked")) { // toad crunchies
+				p.getCache().set("complete_dish", 913);
+			}
+			if (p.getCache().hasKey("gnomespice_on_worm")
+				&& p.getCache().hasKey("worm_on_batta")
+				&& p.getCache().hasKey("cheese_on_batta")
+				&& p.getCache().hasKey("worm_batta")
+				&& p.getCache().hasKey("leaves_on_batta")) { // worm batta
+				p.getCache().set("complete_dish", 904);
+			}
+			if (p.getCache().hasKey("onion_on_batta")
+				&& p.getCache().hasKey("tomato_on_batta") && p.getCache().getInt("tomato_on_batta") >= 2
+				&& p.getCache().hasKey("cabbage_on_batta")
+				&& p.getCache().hasKey("dwell_on_batta")
+				&& p.getCache().hasKey("veg_batta_no_cheese")
+				&& p.getCache().hasKey("veg_batta_with_cheese")
+				&& p.getCache().hasKey("leaves_on_batta")) { // veg batta
+				p.getCache().set("complete_dish", 906);
+			}
+			if (p.getCache().hasKey("gnomespice_on_dough")
+				&& p.getCache().hasKey("chocolate_on_dough") && p.getCache().getInt("chocolate_on_dough") >= 2
+				&& p.getCache().hasKey("choco_dust_on_crunchies")
+				&& p.getCache().hasKey("gnomecrunchie_dough")
+				&& p.getCache().hasKey("gnome_crunchie_cooked")) { // choc crunchies
+				p.getCache().set("complete_dish", 911);
+			}
+			if (p.getCache().hasKey("onions_on_bowl") && p.getCache().getInt("onions_on_bowl") >= 2
+				&& p.getCache().hasKey("potato_on_bowl") && p.getCache().getInt("potato_on_bowl") >= 2
+				&& p.getCache().hasKey("gnomespice_on_bowl")
+				&& p.getCache().hasKey("vegball")
+				&& p.getCache().hasKey("leaves_on_bowl")) { // vegball
+				p.getCache().set("complete_dish", 908);
+			}
+			if (p.getCache().hasKey("gnomespice_on_dough")
+				&& p.getCache().hasKey("kingworm_on_dough") && p.getCache().getInt("kingworm_on_dough") >= 2
+				&& p.getCache().hasKey("leaves_on_dough")
+				&& p.getCache().hasKey("gnomecrunchie_dough")
+				&& p.getCache().hasKey("gnome_crunchie_cooked")
+				&& p.getCache().hasKey("spice_over_crunchies")) { // worm crunchies
+				p.getCache().set("complete_dish", 912);
+			}
+			if (p.getCache().hasKey("gnomespice_on_dough") && p.getCache().getInt("gnomespice_on_dough") >= 3
+				&& p.getCache().hasKey("leaves_on_dough") && p.getCache().getInt("leaves_on_dough") >= 2
+				&& p.getCache().hasKey("gnomecrunchie_dough")
+				&& p.getCache().hasKey("gnome_crunchie_cooked")
+				&& p.getCache().hasKey("spice_over_crunchies")) { // spice crunchies
+				p.getCache().set("complete_dish", 914);
+			}
+			if (p.getCache().hasKey("leaves_on_batta") && p.getCache().getInt("leaves_on_batta") >= 4
+				&& p.getCache().hasKey("batta_cooked_leaves")
+				&& p.getCache().hasKey("diced_orange_on_batta")
+				&& p.getCache().hasKey("lime_on_batta")
+				&& p.getCache().hasKey("pine_apple_batta")
+				&& p.getCache().hasKey("spice_over_batta")) { // fruit batta
+				p.getCache().set("complete_dish", 905);
+			}
+
+			if (p.getCache().hasKey("complete_dish")) {
+				removeItem(p, gm.itemID, 1);
+				addItem(p, p.getCache().getInt("complete_dish"), 1);
+				resetGnomeCooking(p);
+			}
+			p.message(gm.messages[0]);
+			p.setBusy(false);
+		}
+	}
+
 	enum GnomeMix {
 		CHEESE_ON_BATTA(884, 319, "cheese_on_batta", "you crumble the cheese over the gnome batta"),
 		TOMATO_ON_BATTA(884, 320, "tomato_on_batta", "you add the tomato to the gnome batta"),
@@ -59,129 +182,6 @@ public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 
 		public boolean isValid(int i, int is) {
 			return itemID == i && itemIDOther == is || itemIDOther == i && itemID == is;
-		}
-	}
-
-	public boolean canMix(Item itemOne, Item itemTwo) {
-		for(GnomeMix gm : GnomeMix.values()) {
-			if(gm.isValid(itemOne.getID(), itemTwo.getID())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		return canMix(item1, item2);
-	}
-
-	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		GnomeMix gm = null;
-		for(GnomeMix mix : GnomeMix.values()) {
-			if(mix.isValid(item1.getID(), item2.getID())) {
-				gm = mix;
-			}
-		}
-		if(!p.getCache().hasKey(gm.cacheName)) {
-			p.getCache().set(gm.cacheName, 1);
-		} else {
-			int next = p.getCache().getInt(gm.cacheName);
-			p.getCache().set(gm.cacheName, (next + 1));
-		}
-		if(hasItem(p, gm.itemIDOther)) {
-			p.setBusy(true);
-			if(gm.itemIDOther != 898) 
-				removeItem(p, gm.itemIDOther, 1);
-			if(p.getCache().hasKey("cheese_on_batta") 
-					&& p.getCache().hasKey("tomato_on_batta")
-					&& p.getCache().hasKey("tomato_cheese_batta") 
-					&& p.getCache().hasKey("leaves_on_batta"))  { // tomato cheese batta
-				p.getCache().set("complete_dish", 901);
-			}
-			if(p.getCache().hasKey("chocolate_on_bowl") && p.getCache().getInt("chocolate_on_bowl") >= 4
-					&& p.getCache().hasKey("leaves_on_bowl")
-					&& p.getCache().hasKey("chocolate_bomb")
-					&& p.getCache().hasKey("cream_on_bowl") && p.getCache().getInt("cream_on_bowl") >= 2
-					&& p.getCache().hasKey("choco_dust_on_bowl"))  { // chocolate bomb
-				p.getCache().set("complete_dish", 907);
-			}
-			if(p.getCache().hasKey("kingworms_on_bowl") && p.getCache().getInt("kingworms_on_bowl") >= 6
-					&& p.getCache().hasKey("onions_on_bowl") && p.getCache().getInt("onions_on_bowl") >= 2
-					&& p.getCache().hasKey("gnomespice_on_bowl")
-					&& p.getCache().hasKey("wormhole")
-					&& p.getCache().hasKey("leaves_on_bowl"))  { // wormhole
-				p.getCache().set("complete_dish", 909);
-			}
-			if(p.getCache().hasKey("gnomespice_on_dough")
-					&& p.getCache().hasKey("toadlegs_on_dough") && p.getCache().getInt("toadlegs_on_dough") >= 2
-					&& p.getCache().hasKey("leaves_on_crunchies")
-					&& p.getCache().hasKey("gnomecrunchie_dough")
-					&& p.getCache().hasKey("gnome_crunchie_cooked"))  { // toad crunchies
-				p.getCache().set("complete_dish", 913);
-			}
-			if(p.getCache().hasKey("gnomespice_on_worm")
-					&& p.getCache().hasKey("worm_on_batta")
-					&& p.getCache().hasKey("cheese_on_batta")
-					&& p.getCache().hasKey("worm_batta")
-					&& p.getCache().hasKey("leaves_on_batta"))  { // worm batta
-				p.getCache().set("complete_dish", 904);
-			}
-			if(p.getCache().hasKey("onion_on_batta")
-					&& p.getCache().hasKey("tomato_on_batta") && p.getCache().getInt("tomato_on_batta") >= 2
-					&& p.getCache().hasKey("cabbage_on_batta")
-					&& p.getCache().hasKey("dwell_on_batta")
-					&& p.getCache().hasKey("veg_batta_no_cheese")
-					&& p.getCache().hasKey("veg_batta_with_cheese")
-					&& p.getCache().hasKey("leaves_on_batta"))  { // veg batta
-				p.getCache().set("complete_dish", 906);
-			}
-			if(p.getCache().hasKey("gnomespice_on_dough")
-					&& p.getCache().hasKey("chocolate_on_dough") && p.getCache().getInt("chocolate_on_dough") >= 2
-					&& p.getCache().hasKey("choco_dust_on_crunchies")
-					&& p.getCache().hasKey("gnomecrunchie_dough")
-					&& p.getCache().hasKey("gnome_crunchie_cooked"))  { // choc crunchies
-				p.getCache().set("complete_dish", 911);
-			}
-			if(p.getCache().hasKey("onions_on_bowl") && p.getCache().getInt("onions_on_bowl") >= 2
-					&& p.getCache().hasKey("potato_on_bowl") && p.getCache().getInt("potato_on_bowl") >= 2
-					&& p.getCache().hasKey("gnomespice_on_bowl")
-					&& p.getCache().hasKey("vegball")
-					&& p.getCache().hasKey("leaves_on_bowl"))  { // vegball
-				p.getCache().set("complete_dish", 908);
-			}
-			if(p.getCache().hasKey("gnomespice_on_dough")
-					&& p.getCache().hasKey("kingworm_on_dough") && p.getCache().getInt("kingworm_on_dough") >= 2
-					&& p.getCache().hasKey("leaves_on_dough")
-					&& p.getCache().hasKey("gnomecrunchie_dough")
-					&& p.getCache().hasKey("gnome_crunchie_cooked")
-					&& p.getCache().hasKey("spice_over_crunchies"))  { // worm crunchies
-				p.getCache().set("complete_dish", 912);
-			}
-			if(p.getCache().hasKey("gnomespice_on_dough") && p.getCache().getInt("gnomespice_on_dough") >= 3
-					&& p.getCache().hasKey("leaves_on_dough") && p.getCache().getInt("leaves_on_dough") >= 2
-					&& p.getCache().hasKey("gnomecrunchie_dough")
-					&& p.getCache().hasKey("gnome_crunchie_cooked")
-					&& p.getCache().hasKey("spice_over_crunchies"))  { // spice crunchies
-				p.getCache().set("complete_dish", 914);
-			}
-			if(p.getCache().hasKey("leaves_on_batta") && p.getCache().getInt("leaves_on_batta") >= 4
-					&& p.getCache().hasKey("batta_cooked_leaves")
-					&& p.getCache().hasKey("diced_orange_on_batta")
-					&& p.getCache().hasKey("lime_on_batta")
-					&& p.getCache().hasKey("pine_apple_batta")
-					&& p.getCache().hasKey("spice_over_batta"))  { // fruit batta
-				p.getCache().set("complete_dish", 905);
-			}
-			
-			if(p.getCache().hasKey("complete_dish")) {
-				removeItem(p, gm.itemID, 1);
-				addItem(p, p.getCache().getInt("complete_dish"), 1);
-				resetGnomeCooking(p);
-			}
-			p.message(gm.messages[0]);
-			p.setBusy(false);
 		}
 	}
 }

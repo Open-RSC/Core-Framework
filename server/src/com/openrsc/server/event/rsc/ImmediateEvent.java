@@ -8,12 +8,12 @@ public abstract class ImmediateEvent extends GameTickEvent {
 		super(null, 0);
 		setImmediate(true);
 	}
-	
+
 	public ImmediateEvent(Mob mob) {
 		super(mob, 0);
 		setImmediate(true);
 	}
-	
+
 	@Override
 	public void run() {
 		action();
