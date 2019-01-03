@@ -113,6 +113,8 @@ public class DatabasePlayerLoader {
 				statement.executeBatch();
 			}*/
 
+			s.getCache().store("last_spell_cast", s.getCastTimer());
+
 			updateLongs(Statements.save_DeleteCache, s.getDatabaseID());
 			if (s.getCache().getCacheMap().size() > 0) {
 				statement = conn.prepareStatement(
@@ -496,6 +498,13 @@ public class DatabasePlayerLoader {
 				if (identifier == 3) {
 					save.getCache().put(key, result.getLong("value"));
 				}
+			}
+
+			try {
+				save.setCastTimer(save.getCache().getLong("last_spell_cast"));
+			}
+			catch (Throwable t) {
+				save.setCastTimer();
 			}
 
 			result = resultSetFromInteger(Statements.npcKillSelectAll, save.getDatabaseID());
