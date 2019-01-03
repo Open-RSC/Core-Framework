@@ -2,11 +2,10 @@ package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.model.Point;
 import com.openrsc.server.net.Packet;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,6 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public final class DataConversions {
@@ -45,7 +47,7 @@ public final class DataConversions {
 		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
 		'%', '"', '[', ']', '{', '}', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
 		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y', 'Z'};
+		'U', 'V', 'W', 'X', 'Y', 'Z', '<', '>', '^', '_',};
 	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
 	private static MessageDigest md5, sha1, sha512;
 	private static Random rand = new Random();
@@ -178,12 +180,21 @@ public final class DataConversions {
 
 	public static String upperCaseAllFirst(String value) {
 
-		Character[] array = value.chars().mapToObj(c -> (char) c).toArray(Character[]::new);
+		// TODO: Code at some point before this should strip colour codes (to be put back in after).
+		//   This is because the first letter of the string, regardless of colour codes, should be
+		//   a capital letter. But unless we strip and replace codes, we can't find that as easily.
+		//   Colour codes may also have capitals within them, regardless of position. Examples:
+		//      @rAn@ , @RAN@ , @Ora@ , @orA@ , etc. for capitals in colour codes.
+		//      @ran@------------This should be what the text looks like. Capital at beginning.
+
+		Character[] array = value.chars().mapToObj(c -> (char)c).toArray(Character[]::new);
 
 		String s = "";
 		int i = 0;
-		while (array[i].equals(" ")) { // Skip spaces
+		while (array[i].equals(" ") || !Character.isLetter(array[i])) { // Skip spaces and non-letters.
+			s += String.valueOf(array[i]);
 			i++;
+			if (s.length() == array.length) return s;
 		}
 
 		// Uppercase first letter.
@@ -194,9 +205,19 @@ public final class DataConversions {
 
 		i++;
 
-		// Keep uppercase all letters that follow a whitespace character, if already cap
+		// Keep all letters that follow a whitespace character, if already capital, uppercase.
+		// Also any character following a '.', '!', '?' should be transformed into a capital.
+		// Also optionally any character following a:
+		// "'", ":", "#", "@", "_", "-"
+		// can be a capital if user entered.
 		for (; i < array.length; i++) {
-			if (Character.isWhitespace(array[i - 1]) && Character.isUpperCase(array[i])) {
+			Character c = array[i - 1];
+			if (c.equals('.') || c.equals('!') || c.equals('?') ||
+				((Character.isWhitespace(array[i - 1])
+						|| c.equals('\'') || c.equals(':') || c.equals('_')
+						|| c.equals('#') || c.equals('@') || c.equals('-'))
+					&& Character.isUpperCase(array[i]))
+				) {
 				s += String.valueOf(Character.toUpperCase(array[i]));
 			} else {
 				s += String.valueOf(Character.toLowerCase(array[i]));
@@ -273,7 +294,7 @@ public final class DataConversions {
 		}
 	}
 
-	public static final String getEncryptedString(Packet src, int limit) {
+	public static String getEncryptedString(Packet src, int limit) {
 
 		try {
 			int count = src.getSmart08_16();// correct.
@@ -292,7 +313,7 @@ public final class DataConversions {
 		}
 	}
 
-	public static final String getStringFromBytes(byte[] src, int offset, int count) {
+	static String getStringFromBytes(byte[] src, int offset, int count) {
 		char[] dest = new char[count];
 		int dh = 0;
 
