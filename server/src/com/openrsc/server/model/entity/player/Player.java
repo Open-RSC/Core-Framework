@@ -645,6 +645,7 @@ public final class Player extends Mob {
 		}
 		if (force || canLogout()) {
 			updateTotalPlayed();
+			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
 		} else {
@@ -1683,6 +1684,10 @@ public final class Player extends Mob {
 			this.batchEvent = batchEvent;
 			Server.getServer().getEventHandler().add(batchEvent);
 		}
+	}
+
+	public void setCastTimer(long timer) {
+		lastSpellCast = timer;
 	}
 
 	public void setCastTimer() {
