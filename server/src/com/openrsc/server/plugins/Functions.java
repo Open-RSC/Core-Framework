@@ -1361,45 +1361,46 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
-		final long start = System.currentTimeMillis();
-		if (npc != null) {
-			if(npc.isRemoved()) {
-				player.resetMenuHandler();
-				player.setOption(-1);
-				player.setBusy(false);
-				return -1;
+		synchronized(player) {
+			final long start = System.currentTimeMillis();
+			if (npc != null) {
+				if (npc.isRemoved()) {
+					player.resetMenuHandler();
+					player.setOption(-1);
+					player.setBusy(false);
+					return -1;
+				}
+				npc.setBusy(true);
 			}
-			npc.setBusy(true);
-		}
-		player.resetMenuHandler();
-		player.setOption(-1);
-		player.setMenuHandler(new MenuOptionListener(options) {
-			@Override
-			public void handleReply(final int option, final String reply) {
-				player.setOption(option);
-			}
-		});
-		ActionSender.sendMenu(player, options);
+			player.resetMenuHandler();
+			player.setOption(-1);
+			player.setMenuHandler(new MenuOptionListener(options) {
+				@Override
+				public void handleReply(final int option, final String reply) {
+					player.setOption(option);
+				}
+			});
+			ActionSender.sendMenu(player, options);
 
-		while (true) {
-			if (player.getOption() != -1) {
-				if (npc != null && options[player.getOption()] != null) {
-					npc.setBusy(false);
-					if (sendToClient)
-						playerTalk(player, npc, options[player.getOption()]);
+			while (true) {
+				if (player.getOption() != -1) {
+					if (npc != null && options[player.getOption()] != null) {
+						npc.setBusy(false);
+						if (sendToClient)
+							playerTalk(player, npc, options[player.getOption()]);
+					}
+					return player.getOption();
+				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+					player.setOption(-1);
+					player.resetMenuHandler();
+					if (npc != null) {
+						npc.setBusy(false);
+						player.setBusyTimer(0);
+					}
+					return -1;
 				}
-				return player.getOption();
+				sleep(1);
 			}
-			else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-				player.setOption(-1);
-				player.resetMenuHandler();
-				if (npc != null) {
-					npc.setBusy(false);
-					player.setBusyTimer(0);
-				}
-				return -1;
-			}
-			sleep(1);
 		}
 	}
 
