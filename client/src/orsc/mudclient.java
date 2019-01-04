@@ -8240,6 +8240,12 @@ public final class mudclient implements Runnable {
 	private final void fetchContainerSize() {
 		try {
 
+			getSurface().resize(this.gameWidth, this.gameHeight + 12);
+			this.getSurface().setClip(0, this.getGameWidth(), this.getGameHeight() + 12, 0);
+			this.scene.setMidpoints(this.halfGameHeight(), true, this.getGameWidth(), this.halfGameWidth(),
+					this.halfGameHeight(), this.m_qd, this.halfGameWidth());
+
+
 			// Container c;
 			// if (this.runningAsApplet) {
 			// if (null != ClientBase.containerApplet) {
