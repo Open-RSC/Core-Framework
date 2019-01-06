@@ -131,7 +131,9 @@ public class GroundItem extends Entity {
 			return false;
 		if (!belongsTo(p) && p.getIronMan() >= 1 && p.getIronMan() <= 3)
 			return false;
-		return System.currentTimeMillis() - spawnedTime > 60000;
+
+		// One minute and four seconds to show to all.
+		return System.currentTimeMillis() - spawnedTime > 64000;
 	}
 
 	@Override
