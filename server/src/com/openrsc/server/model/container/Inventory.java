@@ -76,7 +76,8 @@ public class Inventory {
 			if (this.full()) {
 				//player.message("Your Inventory is full, the " + itemToAdd.getDef().getName() + " drops to the ground!");
 				world.registerItem(
-					new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player));
+					new GroundItem(itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
+					94000);
 				GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped(inventory full) "
 					+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
 				return;
