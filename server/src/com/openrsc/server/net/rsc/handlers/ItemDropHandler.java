@@ -98,7 +98,7 @@ public final class ItemDropHandler implements PacketHandler {
 			GroundItem groundItem = new GroundItem(item.getID(), player.getX(), player.getY(), amount,
 				player);
 			ActionSender.sendSound(player, "dropobject");
-			World.getWorld().registerItem(groundItem);
+			World.getWorld().registerItem(groundItem, 188000);
 			GameLogging.addQuery(new GenericLog(player.getUsername() + " dropped " + item.getDef().getName() + " x"
 				+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 			player.setStatus(Action.IDLE);
@@ -147,7 +147,7 @@ public final class ItemDropHandler implements PacketHandler {
 				if (owner.getInventory().remove(item) > -1) {
 					GroundItem groundItem = new GroundItem(item.getID(), owner.getX(), owner.getY(), amount,
 						owner);
-					World.getWorld().registerItem(groundItem);
+					World.getWorld().registerItem(groundItem, 188000);
 					GameLogging.addQuery(new GenericLog(owner.getUsername() + " dropped " + item.getDef().getName()
 						+ " at " + owner.getLocation().toString()));
 					dropCount++;
