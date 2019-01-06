@@ -535,7 +535,7 @@ public class Inventory {
 				if (dropOwner.getIronMan() != 0) {
 					groundItem.setAttribute("playerKill", true);
 				}
-				world.registerItem(groundItem);
+				world.registerItem(groundItem, 128000);
 			}
 		}
 		log.build();
