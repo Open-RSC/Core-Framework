@@ -438,9 +438,13 @@ public final class World {
 	}
 
 	public void registerItem(final GroundItem i) {
+		registerItem(i, 128000);
+	}
+
+	public void registerItem(final GroundItem i, int delayTime) {
 		try {
 			if (i.getLoc() == null) {
-				Server.getServer().getEventHandler().add(new SingleEvent(null, 180000) {
+				Server.getServer().getEventHandler().add(new SingleEvent(null, delayTime) {
 					public void action() {
 						unregisterItem(i);
 					}
