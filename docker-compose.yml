@@ -9,6 +9,7 @@ services:
             - "./Website:/var/www/html"
             - "./etc/nginx/logs:/var/log/nginx"
             - "./etc/letsencrypt:/etc/letsencrypt"
+            - "./server/avatars:/var/www/html/avatars"
         ports:
             - "80:80"
             - "443:443"
