@@ -2,12 +2,16 @@ package com.openrsc.server.model.entity;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
-import com.openrsc.server.model.*;
+import com.openrsc.server.model.Path;
 import com.openrsc.server.model.Path.PathType;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.ViewArea;
+import com.openrsc.server.model.WalkingQueue;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
@@ -18,6 +22,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,7 +96,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Event to handle following
 	 */
-	private DelayedEvent followEvent;
+	private GameTickEvent followEvent;
 	/**
 	 * Who we are currently following (if anyone)
 	 */
@@ -348,7 +353,7 @@ public abstract class Mob extends Entity {
 		combatTimer = System.currentTimeMillis() + delay;
 	}
 
-	public DelayedEvent getFollowEvent() {
+	public GameTickEvent getFollowEvent() {
 		return followEvent;
 	}
 
@@ -442,7 +447,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void setFollowing(Mob mob) {
-		setFollowing(mob, 0);
+		setFollowing(mob, 1);
 	}
 
 	public abstract void killedBy(Mob mob);
@@ -494,19 +499,19 @@ public abstract class Mob extends Entity {
 		}
 		final Mob me = this;
 		following = mob;
-		followEvent = new DelayedEvent(null, 500) {
+		followEvent = new GameTickEvent(null, 2) {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
 					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
 					resetFollowing();
 				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
 					me.resetPath();
-				} else if (me.finishedPath() && !me.withinRange(mob, radius + 1)) {
+				} else if (me.finishedPath() && !me.withinRange(mob, radius)) {
 					me.walkToEntity(mob.getX(), mob.getY());
 				}
 			}
 		};
-		Server.getServer().getEventHandler().add(followEvent);
+		Server.getServer().getGameEventHandler().add(followEvent);
 	}
 
 	public void setLastCombatState(CombatState lastCombatState) {
