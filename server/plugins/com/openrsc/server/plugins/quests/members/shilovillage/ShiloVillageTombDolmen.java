@@ -36,6 +36,9 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 	@Override
 	public void handleReward(Player player) {
 		/* REMOVE CACHES AFTER QUEST COMPLETE THAT NO LONGER IS USED */
+		if (player.getCache().hasKey("obtained_shilo_info")) {
+			player.getCache().remove("obtained_shilo_info");
+		}
 		if (player.getCache().hasKey("coins_shilo_cave")) {
 			player.getCache().remove("coins_shilo_cave");
 		}
@@ -44,6 +47,12 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 		}
 		if (player.getCache().hasKey("tomb_door_shilo")) {
 			player.getCache().remove("tomb_door_shilo");
+		}
+		if (player.getCache().hasKey("SV_DIG_LIT")) {
+			player.getCache().remove("SV_DIG_LIT");
+		}
+		if (player.getCache().hasKey("SV_DIG_ROPE")) {
+			player.getCache().remove("SV_DIG_ROPE");
 		}
 		if (player.getCache().hasKey("SV_DIG_BUMP")) {
 			player.getCache().remove("SV_DIG_BUMP");

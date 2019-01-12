@@ -16,6 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class ShiloVillageObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/* Objects */
+	public static final int SPEC_STONE = 674;
 	public static final int BUMPY_DIRT = 651;
 	public static final int PILE_OF_RUBBLE = 670;
 	public static final int SMASHED_TABLE = 697;
@@ -44,12 +45,18 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 
 	/* Items */
 	public static final int SPADE = 211;
+	public static final int CANDLE = 601;
+	public static final int ROPE = 237;
 	public static final int CRUMPLED_SCROLL = 960;
 	public static final int ZADIMUS_CORPSE = 962;
 	public static final int TATTERED_SCROLL = 959;
+	public static final int STONE_PLAQUE = 958;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+		if (obj.getID() == SPEC_STONE) {
+			return true;
+		}
 		if (obj.getID() == BUMPY_DIRT) {
 			return true;
 		}
@@ -131,6 +138,17 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				return;
 			}
 			p.setBusy(true);
+			if(!p.getInventory().wielding(852)) {
+				//going down
+				if(obj.getY() > p.getY()) {
+					p.message("@red@You simply cannot concentrate enough to climb down the rocks.");
+				}
+				//going up
+				else {
+					p.message("@red@You simply cannot concentrate enough to climb up the rocks.");
+				}
+				return;
+			}
 			p.message("You carefully pick your way through the rocks.");
 			p.teleport(349, 3618);
 			if (ShiloVillageUtils.succeed(p, 32)) {
@@ -154,7 +172,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.damage(0);
 				playerTalk(p, null, "Ooooff!");
 			}
-			p.incExp(AGILITY, 4, true);
+			p.incExp(AGILITY, 5, true);
 			p.setBusy(false);
 		}
 		if (obj.getID() == METALLIC_DUNGEON_GATE) {
@@ -277,11 +295,22 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 						"No way could you get me to go in there !");
 					if (menu == 0) {
 						p.message("You contort your body and prepare to squirm, worm like, into the hole.");
-						message(p, "You struggle through the narrow crevice in the rocks");
-						p.teleport(471, 3658);
-						p.message("and drop to your feet into a narrow underground corridor");
-						if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 5) {
-							p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 6);
+						if (ShiloVillageUtils.succeed(p, 32)) {
+							message(p, "You struggle through the narrow crevice in the rocks");
+							p.teleport(471, 3658);
+							p.message("and drop to your feet into a narrow underground corridor");
+							if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 5) {
+								p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 6);
+							}
+						}
+						else {
+							message(p, "You managed to get yourself stuck.",
+									"You have to wrench yourself free to get out.",
+									"You manage to pull yourself out, but hurt yourself in the process.");
+							p.damage(3);
+							sleep(1000);
+							p.damage(0);
+							p.message("Maybe you'll have better luck next time?");
 						}
 					} else if (menu == 1) {
 						p.message("You decide that the surface is the place for you!");
@@ -313,12 +342,16 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 							"You gingerly remove a delicate scroll from the shelf");
 						p.message("and place it carefully in your inventory.");
 						addItem(p, TATTERED_SCROLL, 1);
+						if (!p.getCache().hasKey("obtained_shilo_info")) {
+							p.getCache().store("obtained_shilo_info", true);
+						}
+						p.incExp(AGILITY, 15, true);
 					} else {
 						message(p, "You acidently knock some rocks and the ceiling starts to cave in.");
 						message(p, "Some rocks fall on you.");
 						p.damage((int) (getCurrentLevel(p, HITS) * 0.1D + 1));
+						p.incExp(AGILITY, 5, true);
 					}
-					p.incExp(AGILITY, 10, true);
 				}
 			} else if (menu == 1) {
 				message(p, "You decide to leave the rocks well alone.");
@@ -354,6 +387,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 							"Maybe Trufitus can give you some tips on what to do with it.",
 							"You sense that there is a spirit that needs to be put to rest.");
 						addItem(p, ZADIMUS_CORPSE, 1);
+						if (!p.getCache().hasKey("obtained_shilo_info")) {
+							p.getCache().store("obtained_shilo_info", true);
+						}
 					}
 				}
 			}
@@ -365,6 +401,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.message("You find a tattatered, very ornate scroll.");
 				p.message("Which you place carefully in your inventory.");
 				addItem(p, CRUMPLED_SCROLL, 1);
+				if (!p.getCache().hasKey("obtained_shilo_info")) {
+					p.getCache().store("obtained_shilo_info", true);
+				}
 			}
 		}
 		if (obj.getID() == WET_ROCKS) {
@@ -386,12 +425,14 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					message(p, "You are washed onto the waterfall river bank");
 					p.message("barely alive!");
 					p.damage((int) (getCurrentLevel(p, HITS) * 0.2D + 4));
+					p.incExp(AGILITY, 5, true);
 				} else {
 					message(p, "You manage to work your way along the slippery wall");
 					message(p, "and avoid falling into the water below.");
 					p.teleport(344, 808);
 					message(p, "You make it out of the cave");
 					p.message("and into the warmth of the jungle.");
+					p.incExp(AGILITY, 100, true);
 				}
 			} else if (m == 1) {
 				message(p, "You decide to have another look around.");
@@ -472,8 +513,10 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					p.teleport(341, 810);
 					p.setBusy(false);
 				} else if (sub == 2) {
-					message(p, "Your experience in crafting tells you that");
-					p.message("there isn't enough wood to complete this task.");
+					message(p, "You happily start hacking away at the table",
+							"But realise that you won't have enough woood to properly finish the item off!");
+					playerTalk(p, null, "Oops! Not enough wood left to do anything else with the table!");
+					message(p, "There isn't enough wood left in this table to make anything!");
 				}
 			}
 		}
@@ -490,6 +533,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				} else if (obj.getX() == 357 && obj.getY() == 3668) {
 					p.teleport(347, 3709);
 				}
+				p.incExp(AGILITY, 10, true);
 			} else if (menu == 1) {
 				p.message("You decide to stay where you are");
 			}
@@ -499,8 +543,11 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
 				if (p.getCache().hasKey("SV_DIG_BUMP")) {
-					message(p, "You see a small fissure in the granite");
-					p.message("It's very dark beyond the fissure.");
+					message(p, "You see a small fissure in the granite",
+							"that you might just be able to crawl through.");
+					if(!hasItem(p, CANDLE) && !p.getCache().hasKey("SV_DIG_LIT")) {
+						p.message("It's very dark beyond the fissure.");
+					}
 					ShiloVillageUtils.BUMPY_DIRT_HOLDER(p);
 					return;
 				}
@@ -514,11 +561,29 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.message("It just looks like some bumpy ground");
 			}
 		}
+		if (obj.getID() == SPEC_STONE) {
+			if (command.equalsIgnoreCase("Look Closer")) {
+				p.message("This stone seems to have strange markings on it");
+			}
+			else if (command.equalsIgnoreCase("Investigate")) {
+				message(p, "This stone seems to have strange markings on it",
+						"Maybe Trufitus can decipher them.",
+						"The stone is too heavy to carry",
+						"But the letters stand proud on a plaque",
+						"Maybe you could seperate the plaque from the rock?");
+			}
+		}
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == BUMPY_DIRT && item.getID() == SPADE) {
+			return true;
+		}
+		if (obj.getID() == BUMPY_DIRT && item.getID() == CANDLE) {
+			return true;
+		}
+		if (obj.getID() == BUMPY_DIRT && item.getID() == ROPE) {
 			return true;
 		}
 		if (obj.getID() == HILLSIDE_ENTRANCE && item.getID() == 974) {
@@ -531,6 +596,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			return true;
 		}
 		if (obj.getID() == TOMB_DOORS && item.getID() == 20) {
+			return true;
+		}
+		if (obj.getID() == SPEC_STONE && item.getID() == 167) {
 			return true;
 		}
 		return false;
@@ -561,8 +629,8 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				message(p, "@red@You feel invisible hands starting to choke you...");
 				p.damage(getCurrentLevel(p, HITS) / 2);
 			}
-			message(p, "You unlock the doors with the key",
-				"The doors creak open revealing bright day light.");
+			message(p, "You insert the key into the lock and it merges with the door.",
+					"The doors creak open revealing bright day light.");
 			p.message("You walk outside into the warmth of the Jungle heat.");
 			p.teleport(350, 782);
 			if (p.getCache().hasKey("tomb_door_shilo")) {
@@ -591,13 +659,66 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				"Although it isabout the right size,");
 			p.message("you find that it just doesn't fit the delicate lock mechanism.");
 		}
+		if (obj.getID() == BUMPY_DIRT && item.getID() == ROPE) {
+			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				p.message("The entrance seems to have caved in.");
+			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
+				// player has not lit place on bumpy dirt
+				if (!p.getCache().hasKey("SV_DIG_LIT")) {
+					p.message("It's too dark to see where to attach it.");
+				}
+				else if (!p.getCache().hasKey("SV_DIG_ROPE")) {
+					message(p, "You see where to attach the rope very clearly.",
+							"You secure it well.");
+					p.message("A rope is already secured there");
+					p.getCache().store("SV_DIG_ROPE", true);
+					removeItem(p, ROPE, 1);
+				}
+				else {
+					p.message("A rope is already secured there");
+				}
+			} else {
+				//possibly had other behavior
+				p.message("Nothing interesting happens");
+			}
+		}
+		if (obj.getID() == BUMPY_DIRT && item.getID() == CANDLE) {
+			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				p.message("The entrance seems to have caved in.");
+			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
+				// player has not lit place on bumpy dirt
+				if (!p.getCache().hasKey("SV_DIG_LIT")) {
+					message(p, "You hold the candle to the fissure and see that",
+							"there is quite a large drop after you get through the hole.");
+					if(!hasItem(p, ROPE)) {
+						p.message("It's a pity you don't have some rope");
+					}
+					else {
+						p.message("Some rope might help here");
+					}
+					p.getCache().store("SV_DIG_LIT", true);
+					removeItem(p, CANDLE, 1);
+				}
+				else {
+					//what's authentic behavior here?
+					p.message("The spot is already lit");
+				}
+			} else {
+				//possibly had other behavior
+				p.message("Nothing interesting happens");
+			}
+		}
 		if (obj.getID() == BUMPY_DIRT && item.getID() == SPADE) {
 			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 2) {
 				if (!p.getCache().hasKey("SV_DIG_BUMP")) {
 					message(p, "You dig a small hole and almost immediately hit granite",
-						"You excavate the hole a bit more and see that there is a small fissure");
+						"You excavate the hole a bit more and see that there is a small fissure",
+						"that you might just be able to crawl through.");
+					if(!hasItem(p, CANDLE) && !p.getCache().hasKey("SV_DIG_LIT")) {
+						p.message("It's very dark beyond the fissure.");
+					}
 					p.getCache().store("SV_DIG_BUMP", true);
 					ShiloVillageUtils.BUMPY_DIRT_HOLDER(p);
 				} else {
@@ -609,6 +730,12 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					"But without knowing what you're digging for...");
 				p.message("you decide to give up.");
 			}
+		}
+		if (obj.getID() == SPEC_STONE && item.getID() == 167) {
+			message(p, "You cleanly cut the plaque of letters away from the rock.",
+					"You place it carefully into your inventory.");
+			addItem(p, STONE_PLAQUE, 1);
+			p.incExp(CRAFTING, 10, true);
 		}
 	}
 

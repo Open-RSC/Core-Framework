@@ -103,7 +103,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 				"Do not return here or your life will be forfeit!");
 		} else if (n.getID() == Nazastarool_Skeleton) {
 			npcTalk(p, n, "Leave now mortal, sweet Rashiliyia will rest!",
-				"Your life will be forfet if you return!");
+				"Your life will be forfeit if you return!");
 		} else if (n.getID() == Nazastarool_Ghost) {
 			npcTalk(p, n, "Run infidel and never polute the tomb of Rashiliyia again!",
 				"A grisly death is what you will meet should you return.");
@@ -165,11 +165,11 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			if (!p.getCache().hasKey("dolmen_zombie")) {
 				p.getCache().store("dolmen_zombie", true);
 			}
-			p.message("You defeat Nazastarool and the corpse falls to");
+			p.message("You defeat Nazastarool and the corpse falls to  ");
 			sleep(1200);
-			p.message("the ground. The bones start to move again and");
+			p.message("the ground. The bones start to move again and   ");
 			sleep(1200);
-			p.message("soon they reform into a grisly giant skeleton.");
+			p.message("soon they reform into a grisly giant skeleton.  ");
 			sleep(1000);
 			spawnAndMoveAway(p, Nazastarool_Skeleton);
 			p.setBusy(false);
@@ -180,11 +180,11 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			if (!p.getCache().hasKey("dolmen_skeleton")) {
 				p.getCache().store("dolmen_skeleton", true);
 			}
-			p.message("You defeat the Nazastarool Skeleton as the corpse falls to");
+			p.message("You defeat the Nazastarool Skeleton as the corpse falls to ");
 			sleep(1200);
-			p.message("the ground. An ethereal form starts taking shape above the");
+			p.message("the ground. An ethereal form starts taking shape above the ");
 			sleep(1200);
-			p.message("bones and you soon face the vengeful ghost of Nazastarool");
+			p.message("bones and you soon face the vengeful ghost of Nazastarool ");
 			sleep(1000);
 			spawnAndMoveAway(p, Nazastarool_Ghost);
 			p.setBusy(false);

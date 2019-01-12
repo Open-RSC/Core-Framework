@@ -15,6 +15,9 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+			return true;
+		}
 		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
 			return true;
 		}
@@ -24,19 +27,19 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.ZADIMUS_CORPSE) {
 			return true;
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 974) {
+		if (n.getID() == TRUFITUS && item.getID() == 974) { // bone shard
 			return true;
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 972) {
+		if (n.getID() == TRUFITUS && item.getID() == 972) { // loc crystal
 			return true;
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 961) {
+		if (n.getID() == TRUFITUS && item.getID() == 961) { // zadi corpse
 			return true;
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 973) {
+		if (n.getID() == TRUFITUS && item.getID() == 973) { // sword pommel
 			return true;
 		}
-		if (n.getID() == TRUFITUS && item.getID() == 977) { // rash corpse.
+		if (n.getID() == TRUFITUS && item.getID() == 977) { // rash corpse
 			return true;
 		}
 		return false;
@@ -94,7 +97,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 			"Something about kin and keys?");
 		int option2 = showMenu(p, n,
 			"How do I make a bronze necklace?",
-			"Thanks");
+			"Thanks!");
 		if (option2 == 0) {
 			bronzeNecklaceChat(p, n);
 		} else if (option2 == 1) {
@@ -263,8 +266,13 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				npcTalk(p, n, "Hmmm, well just that part about the wards..");
 				message(p, "Trufitus seems to drift off in thought.");
 				npcTalk(p, n, "It may be possible to make a ward like that?",
-					"But what is the best thing to make it from?",
-					"Perhaps you'll get some clues from other items?");
+					"But what is the best thing to make it from?");
+				// having zadimus corpse prolly
+				if(hasItem(p, ShiloVillageObjects.ZADIMUS_CORPSE)) {
+					npcTalk(p, n, "Now...what was it that Zadimus said...");
+				} else {
+					npcTalk(p, n, "Perhaps you'll get some clues from other items?");
+				}
 			} else if (menu == 1) {
 				npcTalk(p, n, "You're quite welcome Bwana.");
 			}
@@ -310,6 +318,26 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 					"the spirit of this being may possess me and ",
 					"turn me into a minion of Rashiliyia.");
 			}
+		}
+		if (n.getID() == TRUFITUS && item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+			if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == -1) {
+				playerTalk(p, n, "Have a look at this.");
+				npcTalk(p, n, "Hmmm, I'm not sure you will get much use out of this.",
+					"Why not see if you can sell it in Shilo Village.");
+				return;
+			}
+			p.message("You hand over the Stone Plaque to Trufitus.");
+			playerTalk(p, n, "Can you decipher this please?");
+			npcTalk(p, n, "This is an ancient artifact!");
+			p.message("Trufitus looks at the item in awe.");
+			npcTalk(p, n, "I can certainly try!",
+				"Hmm, incredible, it seems very ancient,",
+				"and mentions something about Zadimus and Ah Za Rhoon.",
+				"It says,'Here lies the traitor Zadimus, let his spirit",
+				"be forever tormented'");
+			p.message("Trufitus hands the Stone Plaque back");
+			npcTalk(p, n, "If you have found anything else that you need help with",
+					"please just let me know.");
 		}
 	}
 }
