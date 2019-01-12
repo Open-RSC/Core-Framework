@@ -2,6 +2,7 @@ package com.openrsc.server.model.container;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,7 +14,11 @@ import com.openrsc.server.sql.query.logs.DeathLog;
 import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.Formulae;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Inventory {
 
@@ -506,17 +511,7 @@ public class Inventory {
 		DeathLog log = new DeathLog(player, opponent, false);
 		for (; iterator.hasNext(); ) {
 			Item item = iterator.next();
-			/**
-			 * ALWAYS KEEP THE GAUNTLESS (STEEL GAUNTLESS OR THE GAUNTLESS YOU
-			 * ENHANCED STEEL FOR) IF YOU DIE
-			 **/
-			if (item.getID() >= 698 && item.getID() <= 701) {
-				continue;
-			}
-			/**
-			 * ALWAYS KEEP THE PUMPKIN HEADS IF YOU DIE
-			 **/
-			if (item.getID() >= 2097 && item.getID() <= 2102) {
+			if (item.getID() >= ItemId.STEEL_GAUNTLETS.id() && item.getID() <= ItemId.GAUNTLETS_OF_CHAOS.id()) {
 				continue;
 			}
 			if (item.isWielded()) {
@@ -535,7 +530,7 @@ public class Inventory {
 				if (dropOwner.getIronMan() != 0) {
 					groundItem.setAttribute("playerKill", true);
 				}
-				world.registerItem(groundItem, 128000);
+				world.registerItem(groundItem, 644000); // 10m 44s
 			}
 		}
 		log.build();
