@@ -20,31 +20,45 @@ import static com.openrsc.server.plugins.Functions.*;
 public class ShiloVillageUtils implements DropListener, DropExecutiveListener, InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener, PickupExecutiveListener {
 
 	public static void BUMPY_DIRT_HOLDER(Player p) {
-		message(p, "that you might just be able to crawl through.");
 		p.message("Do you want to try to crawl through the fissure?");
+		if (p.getCache().hasKey("SV_DIG_ROPE")) {
+			p.message("You see that a rope is attached nearby");
+		}
 		int menu = showMenu(p,
 			"Yes, I'll give it a go!",
 			"No thanks, it looks a bit dark!");
 		if (menu == 0) {
 			p.message("You start to contort your body...");
-			message(p, "through the small crack in the rock.",
-				"With some dificulty you manage to push your body",
-				"As you squeeze out of the hole...");
-			p.message("you realise that there is a huge drop underneath you");
-			p.message("You begin falling....");
-			p.teleport(380, 3692);
-			sleep(500);
-			playerTalk(p, null, "Ahhhhh!");
-			p.damage(1);
-			p.message("Your body is battered as you hit the cavern walls.");
-			playerTalk(p, null, "Ooooff!");
-			p.damage(1);
-			sleep(500);
-			p.teleport(352, 3650);
-			p.damage((int) (getCurrentLevel(p, HITS) * 0.2 + 10));
-			message(p, "You hit the floor and it knocks the wind out of you!");
-			playerTalk(p, null, "Ugghhhh!!");
-			p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 3);
+			message(p, "With some dificulty you manage to push your body",
+					"through the small crack in the rock.");
+			if (!p.getCache().hasKey("SV_DIG_ROPE")) {
+				message(p, "As you squeeze out of the hole...");
+				p.message("you realise that there is a huge drop underneath you");
+				p.message("You begin falling....");
+				p.teleport(380, 3692);
+				sleep(500);
+				playerTalk(p, null, "Ahhhhh!");
+				p.damage(1);
+				p.message("Your body is battered as you hit the cavern walls.");
+				playerTalk(p, null, "Ooooff!");
+				p.damage(1);
+				sleep(500);
+				p.teleport(352, 3650);
+				p.damage((int) (getCurrentLevel(p, HITS) * 0.2 + 10));
+				message(p, "You hit the floor and it knocks the wind out of you!");
+				playerTalk(p, null, "Ugghhhh!!");
+			}
+			else {
+				message(p, "You squeeze through the fissure in the granite",
+						"And once through, you cleverly use the rope to slowly lower",
+						"yourself to the floor.");
+				playerTalk(p, null, "Yay!");
+				p.teleport(352, 3650);
+			}
+			p.incExp(AGILITY, 30, true);
+			if(p.getQuestStage(Constants.Quests.SHILO_VILLAGE) == 2) {
+				p.updateQuestStage(Constants.Quests.SHILO_VILLAGE, 3);
+			}
 		} else if (menu == 1) {
 			p.message("You think better of attempting to squeeze your body into the fissure.");
 			playerTalk(p, null, "It looked very dangerous, and dark...",
@@ -101,6 +115,9 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
+		if (i.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+			return true;
+		}
 		if (i.getID() == ShiloVillageObjects.CRUMPLED_SCROLL) {
 			return true;
 		}
@@ -108,6 +125,9 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			return true;
 		}
 		if (i.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
+			return true;
+		}
+		if (i.getID() == 835) { // Bone key
 			return true;
 		}
 		if (i.getID() == 974) { // Bone shard
@@ -218,6 +238,12 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			p.message("It turns to dust as soon as it hits the ground.");
 			removeItem(p, 973, 1);
 		}
+		if (i.getID() == 835) { // Bone key
+			p.message("This looks quite valuable.");
+			p.message("As you go to throw the item away");
+			p.message("Zadimus' words come to you again.");
+			p.message("@yel@'I am the key, but only kin may approach her'");
+		}
 		if (i.getID() == 974) { // Bone shard
 			p.message("You cannot bring yourself to drop this item.");
 			p.message("You remember the words that Zadimus said when he appeared");
@@ -254,6 +280,19 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide against throwing the item away.");
 			}
 		}
+		if (i.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+			p.message("This looks quite important, are you sure you want to drop it?");
+			int menu = showMenu(p,
+				"Yes, I'm sure.",
+				"No, I think I'll keep it.");
+			if (menu == 0) {
+				p.message("As you drop the item, it bounces into a stream.");
+				p.message("never to be seen again.");
+				removeItem(p, ShiloVillageObjects.STONE_PLAQUE, 1);
+			} else if (menu == 1) {
+				p.message("You decide against throwing the item away.");
+			}
+		}
 	}
 
 	@Override
@@ -265,6 +304,9 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			return true;
 		}
 		if (item.getID() == ShiloVillageObjects.TATTERED_SCROLL) {
+			return true;
+		}
+		if (item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
 			return true;
 		}
 		if (item.getID() == 974) { // Bone shard
@@ -307,10 +349,14 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 					return;
 				}
 				int objectX = 351;
+				//TODO: check ranges
 				if (objectX - p.getX() <= 5 && objectX - p.getX() >= -5) {
 					p.message("The crystal blazes brilliantly.");
 					p.getSkills().subtractLevel(PRAYER, 1);
-				} else if (objectX - p.getX() <= 10 && objectX - p.getX() >= -10) {
+				} else if (objectX - p.getX() <= 7 && objectX - p.getX() >= -7) {
+					p.message("@yel@The crystal is very bright.");
+					p.getSkills().subtractLevel(PRAYER, 1);
+				}else if (objectX - p.getX() <= 10 && objectX - p.getX() >= -10) {
 					p.message("@red@The crystal glows brightly");
 					p.getSkills().subtractLevel(PRAYER, 1);
 				} else if (objectX - p.getX() <= 20 && objectX - p.getX() >= -20) {
@@ -393,6 +439,10 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			} else if (menu == 1) {
 				p.message("You decide not to open the scroll but instead put it carefully back into your inventory.");
 			}
+		}
+		if (item.getID() == ShiloVillageObjects.STONE_PLAQUE) {
+			message(p, "The markings are very intricate. It's a very strange language.",
+					"The meaning of it evades you though.");
 		}
 	}
 
