@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -8,7 +9,11 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
 
 public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -16,7 +21,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		npcTalk(p, n, "Go away, I'm meditating");
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, 24)) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id())) {
 			defaultMenu.addOption(new Option(
 				"Father Aereck sent me to talk to you") {
 				@Override
@@ -41,7 +46,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 									"Take this amulet");
 								message(p,
 									"Father Urhney hands you an amulet");
-								addItem(p, 24, 1); // AMULET OF GHOST SPEAK.
+								addItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
 								npcTalk(p,
 									n,
 									"It is an amulet of Ghostspeak",
@@ -83,7 +88,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 									"Take this amulet");
 								message(p,
 									"Father Urhney hands you an amulet");
-								addItem(p, 24, 1); // AMULET OF GHOST SPEAK.
+								addItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
 								npcTalk(p,
 									n,
 									"It is an amulet of Ghostspeak",
@@ -103,7 +108,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				}
 			});
 		}
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2 && !hasItem(p, 24)) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2 && !hasItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id())) {
 			defaultMenu.addOption(new Option(
 				"I've lost the amulet") {
 				@Override
@@ -112,6 +117,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					npcTalk(p, n, "How careless can you get",
 						"Those things aren't easy to come by you know",
 						"It's a good job I've got a spare");
+					addItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1);
 					message(p, "Father Urhney hands you an amulet");
 					npcTalk(p, n, "Be more careful this time");
 					playerTalk(p, n, "Ok I'll try to be");

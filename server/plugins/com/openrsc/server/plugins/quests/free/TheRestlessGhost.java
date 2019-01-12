@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.free;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -66,7 +67,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 					return;
 				}
 				if (p.getQuestStage(this) == 0
-					|| !p.getInventory().wielding(24)) {
+					|| !p.getInventory().wielding(ItemId.AMULET_OF_GHOSTSPEAK.id())) {
 					playerTalk(p, n, "Hello ghost, how are you?");
 					npcTalk(p, n, "Wooo wooo wooooo");
 					int choice = showMenu(p, n,
@@ -218,7 +219,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 						}
 					}
 				}
-				return;// try now, son. :D
+				return;
 			}
 			switch (cID) {
 				case Ghost.DONTSPEAK:
@@ -302,10 +303,10 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 40 && player.getQuestStage(this) == 3
-			&& item.getID() == 27) {
+			&& item.getID() == ItemId.QUEST_SKULL.id()) {
 			spawnNpc(15, 102, 675, 30);
 			message(player, "You put the skull in the coffin");
-			removeItem(player, 27, 1);
+			removeItem(player, ItemId.QUEST_SKULL.id(), 1);
 			//on completion cache key no longer needed
 			player.getCache().remove("tried_grab_skull");
 			Npc npc = getNearestNpc(player, 15, 8);
@@ -330,7 +331,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		if (item.getID() == 27 && obj.getID() == 40) {
+		if (item.getID() == ItemId.QUEST_SKULL.id() && obj.getID() == 40) {
 			return true;
 		}
 		return false;
@@ -363,7 +364,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 27) {
+		if (i.getID() == ItemId.QUEST_SKULL.id()) {
 			return true;
 		}
 		return false;
@@ -372,7 +373,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		Npc skeleton = getNearestNpc(p, 50, 10);
-		if (i.getID() == 27) {
+		if (i.getID() == ItemId.QUEST_SKULL.id()) {
 			// spawn-place
 			if (i.getX() == 218 && i.getY() == 3521) {
 				if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) != 3) {
@@ -381,7 +382,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 				} else if (!p.getCache().hasKey("tried_grab_skull")) {
 					p.getCache().store("tried_grab_skull", true);
 					World.getWorld().unregisterItem(i);
-					addItem(p, 27, 1);
+					addItem(p, ItemId.QUEST_SKULL.id(), 1);
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						p.message("Out of nowhere a skeleton appears");
@@ -395,14 +396,14 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 				// allow if player had at least one time tried grab skull
 				else {
 					World.getWorld().unregisterItem(i);
-					addItem(p, 27, 1);
+					addItem(p, ItemId.QUEST_SKULL.id(), 1);
 				}
 
 			}
 			// allow wild if post-quest
 			else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 && i.getY() <= 425) {
 				World.getWorld().unregisterItem(i);
-				addItem(p, 27, 1);
+				addItem(p, ItemId.QUEST_SKULL.id(), 1);
 			} else {
 				playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
 				return;
