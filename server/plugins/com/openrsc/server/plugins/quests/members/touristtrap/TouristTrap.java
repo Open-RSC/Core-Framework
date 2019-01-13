@@ -2582,7 +2582,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		if (obj.getID() == DESK) {
 			message(p, "You search the captains desk while he's not looking.");
 			if (hasItem(p, CELL_DOOR_KEY) && hasItem(p, METAL_KEY) &&
-				((p.getQuestStage(this) >= 0 || p.getQuestStage(this) <= 9) ? true : hasItem(p, WROUGHT_KEY))) {
+				((p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) ? true : hasItem(p, WROUGHT_KEY))) {
 				message(p, "...but you find nothing of interest.");
 				return;
 			}
@@ -2595,7 +2595,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				addItem(p, METAL_KEY, 1);
 			}
 			//only after player has past to stage of wrought iron key
-			if (!(p.getQuestStage(this) >= 0 || p.getQuestStage(this) <= 9) && !hasItem(p, WROUGHT_KEY)) {
+			if (!(p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) && !hasItem(p, WROUGHT_KEY)) {
 				message(p, "You find a large wrought iron key.");
 				addItem(p, WROUGHT_KEY, 1);
 			}
