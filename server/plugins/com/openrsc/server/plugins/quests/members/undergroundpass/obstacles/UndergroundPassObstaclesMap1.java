@@ -98,8 +98,13 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 		if (obj.getID() == UNDERGROUND_CAVE) {
 			switch (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS)) {
 				case 0:
-					p.message("You must first complete the biohazard quest...");
-					p.message("...before you can enter");
+					if (p.getQuestStage(Constants.Quests.BIOHAZARD) != -1) {
+						p.message("You must first complete the biohazard quest...");
+						p.message("...before you can enter");
+					}
+					else {
+						p.message("you must talk to king lathas before you can enter");
+					}
 					break;
 				case 1:
 					Npc koftik = getNearestNpc(p, UndergroundPassKoftik.KOFTIK, 10);
@@ -113,6 +118,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				case 5:
 				case 6:
 				case 7:
+				case 8:
 				case -1:
 					message(p, "you cautiously enter the cave");
 					p.teleport(673, 3420);
@@ -236,12 +242,25 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				int menu = showMenu(p, "yes, i'll have a go", "no chance");
 				if (menu == 0) {
 					message(p, "you carefully try and diconnect the trip wire");
-					p.message("you manage to delay the trap..");
-					p.message("...long enough to cross the rocks");
-					if (obj.getX() == p.getX() + 1)
-						p.teleport(obj.getX() + 1, obj.getY());
-					else
-						p.teleport(obj.getX() - 1, obj.getY());
+					if (succeed(p, 1)) {
+						p.message("you manage to delay the trap..");
+						p.message("...long enough to cross the rocks");
+						if (obj.getX() == p.getX() + 1)
+							p.teleport(obj.getX() + 1, obj.getY());
+						else
+							p.teleport(obj.getX() - 1, obj.getY());
+					}
+					else {
+						p.message("but the trap activates");
+						p.teleport(obj.getX(), obj.getY());
+						World.getWorld().replaceGameObject(obj,
+							new GameObject(obj.getLocation(), 805, obj.getDirection(), obj
+								.getType()));
+						World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
+						p.damage((int) (getCurrentLevel(p, HITS) / 6) + 1);
+						playerTalk(p, null, "aaarghh");
+					}
+					
 				} else if (menu == 1) {
 					p.message("you back away from the trap");
 				}
@@ -251,5 +270,21 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			p.message("you drop down to the cave floor");
 			p.teleport(706, 3439);
 		}
+	}
+	
+	boolean succeed(Player player, int req) {
+		int level_difference = getCurrentLevel(player, THIEVING) - req;
+		int percent = random(1, 100);
+
+		if (level_difference < 0)
+			return true;
+		if (level_difference >= 15)
+			level_difference = 70;
+		if (level_difference >= 20)
+			level_difference = 80;
+		else
+			level_difference = 40 + level_difference;
+
+		return percent <= level_difference;
 	}
 }

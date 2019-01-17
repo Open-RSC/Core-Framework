@@ -51,6 +51,7 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 			case 5:
 			case 6:
 			case 7:
+			case 8:
 			case -1:
 				playerTalk(p, n, "hello");
 				npcTalk(p, n, "you again, die zamorakian scum");

@@ -30,6 +30,7 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 				case 5:
 				case 6:
 				case 7:
+				case 8:
 				case -1:
 					message(p, "the dwarf is leaning on a barrel of home made brew");
 					p.message("he looks a little drunk");
@@ -94,39 +95,28 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					if (p.getCache().hasKey("doll_of_iban")) {
 						playerTalk(p, n, "niloof, i found the witch's house");
 						npcTalk(p, n, "and...?");
-						if (!hasItem(p, 1005) && hasItem(p, 1004)) {
+						if (hasItem(p, 1004) && !hasItem(p, 1005)) {
 							npcTalk(p, n, "i found this old book",
 								"i'm not sure if it's of any use to you traveller");
 							addItem(p, 1005, 1);
 							return;
-						} else if (!hasItem(p, 1004) && !hasItem(p, 1005)) {
+						} else if (!hasItem(p, 1004)) {
 							playerTalk(p, n, "i found a strange doll and a book",
-								"but i've lost the doll");
-							npcTalk(p, n, "well it's a good job i found it");
-							addItem(p, 1004, 1);
-							npcTalk(p, n, "the witches rag doll, this here be black magic traveller",
-								"mixed with the right ingredients the doll can inflict serious harm",
-								"these four elements of being are guarded somewhere in this cave",
-								"his shadow, his flesh, his conscience and his blood",
-								"if you can retrieve these,combined with the doll...",
-								"you will be able destroy iban...",
-								"and ressurect the 'well of voyage'",
-								"i found this old book",
-								"i'm not sure if it's of any use to you traveller");
-							addItem(p, 1005, 1);
-							return;
-						} else if (hasItem(p, 1005) && !hasItem(p, 1004)) {
-							playerTalk(p, n, "i found a strange doll and a book",
-								"but i've lost the doll");
-							npcTalk(p, n, "well it's a good job i found it");
-							addItem(p, 1004, 1);
-							npcTalk(p, n, "the witches rag doll, this here be black magic traveller",
-								"mixed with the right ingredients the doll can inflict serious harm",
-								"these four elements of being are guarded somewhere in this cave",
-								"his shadow, his flesh, his conscience and his blood",
-								"if you can retrieve these,combined with the doll...",
-								"you will be able destroy iban...",
-								"and ressurect the 'well of voyage'");
+									"but i've lost the doll");
+								npcTalk(p, n, "well it's a good job i found it");
+								addItem(p, 1004, 1);
+								npcTalk(p, n, "the witches rag doll, this here be black magic traveller",
+									"mixed with the right ingredients the doll can inflict serious harm",
+									"these four elements of being are guarded somewhere in this cave",
+									"his shadow, his flesh, his conscience and his blood",
+									"if you can retrieve these,combined with the doll...",
+									"you will be able destroy iban...",
+									"and ressurect the 'well of voyage'");
+								if (!hasItem(p, 1005)) {
+									npcTalk(p, n, "i found this old book",
+											"i'm not sure if it's of any use to you traveller");
+									addItem(p, 1005, 1);
+								}
 						}
 						playerTalk(p, n, "i found a strange book and this..");
 						p.message("you show niloof the strange doll");
@@ -149,6 +139,23 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					}
 					break;
 				case 7:
+					playerTalk(p, n, "hi niloof");
+					npcTalk(p, n, "traveller, thank the stars you're still around",
+							"i thought your time had come");
+					playerTalk(p, n, "i've still a few years in me yet");
+					if (!hasItem(p, 1004)) {
+						npcTalk(p, n, "i found something i think you need traveller");
+						playerTalk(p, n, "the doll?");
+						npcTalk(p, n, "i found it while slaying some of the souless, here");
+						p.message("niloof gives you the doll of iban");
+						addItem(p, 1004, 1);
+					}
+					playerTalk(p, n, "it's about time i delt with iban");
+					npcTalk(p, n, "good luck to you, you'll need it",
+							"may the strength of the elders be with you");
+					playerTalk(p, n, "take care niloof");
+					break;
+				case 8:
 				case -1:
 					p.message("the dwarf seems to be busy");
 					break;
@@ -180,10 +187,11 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 							"if you're not carefull you'll become one of them too");
 						playerTalk(p, n, "who?.. ibans followers");
 						npcTalk(p, n, "they're not followers, they're slaves, they're the souless");
-						int menu = showMenu(p, n,
+						int menu = showMenu(p, n, false, //do not send over
 							"what happened to them?",
 							"no wonder their breath was soo bad");
 						if (menu == 0) {
+							playerTalk(p, n, "what happened to them?");
 							npcTalk(p, n, "they were normal once, adventurers, treasure hunters",
 								"but men are weak, they couldn't ignore the vocies",
 								"now they all seem to think with one conscience..",
@@ -207,6 +215,7 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					}
 					break;
 				case 7:
+				case 8:
 				case -1:
 					playerTalk(p, n, "hello klank");
 					npcTalk(p, n, "hello again adventurer, so you're still around");
@@ -226,9 +235,12 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 							npcTalk(p, n, "we don't joke down here, friend");
 						} else if (menu2 == 1) {
 							if (hasItem(p, 10, 5000)) {
+								p.message("you give klank 5000 coins...");
 								removeItem(p, 10, 5000);
+								p.message("...and klank gives you a pair of guanletts");
 								addItem(p, 1006, 1);
-								p.message("klank gives you a pair of gaunlets");
+								npcTalk(p, n, "there you go..i hope they help");
+								playerTalk(p, n, "i'll see you around klank");
 							} else {
 								playerTalk(p, n, "oh dear, i haven't enough money");
 								npcTalk(p, n, "sorry, i can't sell them any cheaper than that");

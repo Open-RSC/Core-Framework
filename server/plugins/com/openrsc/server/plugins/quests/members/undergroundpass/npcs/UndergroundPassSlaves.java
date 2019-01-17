@@ -60,7 +60,7 @@ public class UndergroundPassSlaves implements TalkToNpcListener,
 					playerTalk(p, n, "hi");
 					npcTalk(p, n, "Mwaarrr fnnntchh. Gbpp dng sktd delp?");
 					playerTalk(p, n, "pardon?");
-					npcTalk(p, n, "Kjp lar falut");
+					npcTalk(p, n, "Kjp lar falut: Gbpp dng sktd delp?");
 					playerTalk(p, n, "sorry, i dont under..");
 					npcTalk(p, n, "Mwaarrr fnnntchh. Gbpp dng sktd delp?",
 						"GBPP DNG SKTD DELP! GBPP DNG SKTD DELP!");
@@ -69,7 +69,7 @@ public class UndergroundPassSlaves implements TalkToNpcListener,
 				case 638:
 					playerTalk(p, n, "hi");
 					npcTalk(p, n, "Kill the villagers, burn them all- every last one",
-						"I want nothing to survive");
+						"I want nothing to survive: nothing but the sweet smell of burning flesh");
 					playerTalk(p, n, "you're ill");
 					npcTalk(p, n, "What's that - you've never smelt it before",
 						"Well, let's just say that it's an acquired taste");

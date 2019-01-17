@@ -24,7 +24,8 @@ public class UndergroundPassWell implements ObjectActionListener, ObjectActionEx
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == WELL) {
 			message(p, "you climb into the well");
-			if ((p.getCache().hasKey("orb_of_light1") && p.getCache().hasKey("orb_of_light2") && p.getCache().hasKey("orb_of_light3") && p.getCache().hasKey("orb_of_light4")) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, 7) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, -1)) {
+			if ((p.getCache().hasKey("orb_of_light1") && p.getCache().hasKey("orb_of_light2") && p.getCache().hasKey("orb_of_light3") && p.getCache().hasKey("orb_of_light4")) || 
+					atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				message(p, "you feel the grip of icy hands all around you...");
 				p.teleport(722, 3461);
 				sleep(600);
