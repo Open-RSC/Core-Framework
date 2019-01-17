@@ -234,7 +234,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 		}
 		if (obj.getID() == GATE_OF_IBAN) {
 			p.message("you pull on the great door");
-			if ((p.getCache().hasKey("flames_of_zamorak1") && p.getCache().hasKey("flames_of_zamorak2") && (p.getCache().hasKey("flames_of_zamorak3") && p.getCache().getInt("flames_of_zamorak3") >= 2)) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, 7) || atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, -1)) {
+			if ((p.getCache().hasKey("flames_of_zamorak1") && p.getCache().hasKey("flames_of_zamorak2") && (p.getCache().hasKey("flames_of_zamorak3") && p.getCache().getInt("flames_of_zamorak3") >= 2)) || atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				message(p, "from behind the door you hear cry's and moans");
 				p.message("the door slowly creeks open");
 				replaceObject(obj, new GameObject(obj.getLocation(), 723, obj.getDirection(), obj

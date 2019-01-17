@@ -140,6 +140,24 @@ public class Functions {
 		}
 		return flag;
 	}
+	
+	/**
+	 * Returns true if you are in any stages provided.
+	 *
+	 * @param p
+	 * @param qID
+	 * @param stage
+	 * @return
+	 */
+	public static boolean atQuestStages(Player p, int qID, int... stage) {
+		boolean flag = false;
+		for (int s : stage) {
+			if (atQuestStage(p, qID, s)) {
+				flag = true;
+			}
+		}
+		return flag;
+	}
 
 	public static void attack(Npc npc, Player p) {
 		npc.setChasing(p);

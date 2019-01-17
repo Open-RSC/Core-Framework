@@ -142,7 +142,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == SPIDER_NEST_RAILING) {
 			message(p, "you search the bars");
-			if (p.getCache().hasKey("doll_of_iban") || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 7 || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+			if (p.getCache().hasKey("doll_of_iban") || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 7 || p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
 				message(p, "there's a gap big enough to squeeze through");
 				p.message("would you like to try");
 				int menu = showMenu(p,

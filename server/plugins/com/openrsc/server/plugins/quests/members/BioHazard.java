@@ -830,13 +830,13 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 					case 4:
 					case 5:
 					case 6:
+					case 7:
 						playerTalk(p, n, "hello king lanthas");
 						npcTalk(p, n, "traveller, how are you managing down there?");
 						playerTalk(p, n, "it's a pretty nasty place but i'm ok");
 						npcTalk(p, n, "well keep up the good work");
-
 						break;
-					case 7:
+					case 8:
 						npcTalk(p, n, "the traveller returns..any news?");
 						playerTalk(p, n, "indeed, the quest is complete lathas",
 							"i have defeated iban and his undead minions");
