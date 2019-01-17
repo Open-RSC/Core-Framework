@@ -694,10 +694,40 @@ public final class Player extends Mob {
 			if (item.isWielded()) {
 				int requiredLevel = item.getDef().getRequiredLevel();
 				int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
+				String itemLower = item.getDef().getName().toLowerCase();
+				Optional<Integer> optionalLevel = Optional.empty();
+				Optional<Integer> optionalSkillIndex = Optional.empty();
+				boolean unWield = false;
+				boolean bypass = itemLower.endsWith("spear") && itemLower.startsWith("poisoned")
+						&& !Constants.GameServer.STRICT_PSPEAR_CHECK;
+				if (itemLower.endsWith("spear")) {
+					int level = item.getDef().getRequiredLevel();
+					optionalLevel = Optional.of(level <= 5 ? level : level + 5);
+					optionalSkillIndex = Optional.of(Skills.ATTACK);
+				}
+				//staff of iban (usable)
+				if (item.getID() == 1000) {
+					int level = item.getDef().getRequiredLevel();
+					optionalLevel = Optional.of(level);
+					optionalSkillIndex = Optional.of(Skills.ATTACK);
+				}
+				
 				if (getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
-					message("You are not a high enough level to use this item");
-					message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of "
-						+ requiredLevel);
+					if (!bypass) {
+						message("You are not a high enough level to use this item");
+						message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
+						unWield = true;
+					}
+				}
+				if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
+					if (!bypass) {
+						message("You are not a high enough level to use this item");
+						message("You need to have a " + Formulae.statArray[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+						unWield = true;
+					}	
+				}
+				
+				if (unWield) {
 					item.setWielded(false);
 					updateWornItems(item.getDef().getWieldPosition(),
 						getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));
