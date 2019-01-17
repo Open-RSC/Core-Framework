@@ -3,6 +3,7 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 public class Inventory {
 
@@ -392,11 +394,38 @@ public class Inventory {
 
 		int requiredLevel = item.getDef().getRequiredLevel();
 		int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
+		String itemLower = item.getDef().getName().toLowerCase();
+		Optional<Integer> optionalLevel = Optional.empty();
+		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
+		boolean bypass = itemLower.endsWith("spear") && itemLower.startsWith("poisoned")
+				&& !Constants.GameServer.STRICT_PSPEAR_CHECK;
+		
+		if (itemLower.endsWith("spear")) {
+			int level = item.getDef().getRequiredLevel();
+			optionalLevel = Optional.of(level <= 5 ? level : level + 5);
+			optionalSkillIndex = Optional.of(Skills.ATTACK);
+		}
+		//staff of iban (usable)
+		if (item.getID() == 1000) {
+			int level = item.getDef().getRequiredLevel();
+			optionalLevel = Optional.of(level);
+			optionalSkillIndex = Optional.of(Skills.ATTACK);
+		}
+		
 		if (player.getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
-			player.message("You are not a high enough level to use this item");
-			player.message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
-			ableToWield = false;
+			if (!bypass) {
+				player.message("You are not a high enough level to use this item");
+				player.message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
+				ableToWield = false;
+			}
+		}
+		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
+			if (!bypass) {
+				player.message("You are not a high enough level to use this item");
+				player.message("You need to have a " + Formulae.statArray[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+				ableToWield = false;
+			}	
 		}
 		if (item.getDef().isFemaleOnly() && player.isMale()) {
 			player.message("It doesn't fit!");
