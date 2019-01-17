@@ -211,7 +211,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			message(player, "its light quickly dims and then dies");
 			player.message("you feel a cold shudder run down your spine");
 			removeItem(player, item.getID(), 1);
-			if (!atQuestStage(player, Constants.Quests.UNDERGROUND_PASS, 7) || !atQuestStage(player, Constants.Quests.UNDERGROUND_PASS, -1)) {
+			if (!atQuestStages(player, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (item.getID() == ORBS[0]) {
 					if (!player.getCache().hasKey("orb_of_light1")) {
 						player.getCache().store("orb_of_light1", true);

@@ -663,6 +663,7 @@ public class SpellHandler implements PacketHandler {
 				switch (id) {
 					case 16: // Telekinetic grab
 						// fluffs gets its own message
+						// same case with ana
 						int[] ungrabbableArr = {
 							//scythe
 							1289,
@@ -670,6 +671,8 @@ public class SpellHandler implements PacketHandler {
 							1156,
 							//orbs
 							991, 992, 993, 994,
+							//cat (underground pass)
+							1003,
 							//god capes
 							1213, 1214, 1215,
 							//holy grail
