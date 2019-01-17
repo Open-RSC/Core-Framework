@@ -184,6 +184,7 @@ public final class Constants {
 		public static String VALUABLE_DROP_ITEMS = "";
 		public static boolean WANT_CUSTOM_RANK_DISPLAY = false;
 		public static boolean RIGHT_CLICK_BANK = false;
+		public static boolean STRICT_PSPEAR_CHECK = false;
 
 		/**
 		 * @param file
@@ -272,6 +273,8 @@ public final class Constants {
 			VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
 			START_TIME = System.currentTimeMillis();
 			NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
+			
+			STRICT_PSPEAR_CHECK = Boolean.parseBoolean(props.getProperty("strict_pspear_check"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)
