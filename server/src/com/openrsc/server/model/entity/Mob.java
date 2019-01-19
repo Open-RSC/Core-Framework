@@ -72,7 +72,7 @@ public abstract class Mob extends Entity {
 	 * Time of last movement, used for timeout
 	 */
 	protected long lastMovement = System.currentTimeMillis();
-	protected int mobSprite = 1;
+	protected int mobSprite = 0;
 	/**
 	 * The stat restore event
 	 */
