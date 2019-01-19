@@ -398,22 +398,29 @@ public class Inventory {
 		Optional<Integer> optionalLevel = Optional.empty();
 		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
-		boolean bypass = itemLower.endsWith("spear") && itemLower.startsWith("poisoned")
-				&& !Constants.GameServer.STRICT_PSPEAR_CHECK;
+		boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
+				(itemLower.startsWith("poisoned") && 
+					(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+					(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) || 
+					(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
+				);
 		
-		if (itemLower.endsWith("spear")) {
-			int level = item.getDef().getRequiredLevel();
-			optionalLevel = Optional.of(level <= 5 ? level : level + 5);
+		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
+			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 			optionalSkillIndex = Optional.of(Skills.ATTACK);
 		}
 		//staff of iban (usable)
 		if (item.getID() == 1000) {
-			int level = item.getDef().getRequiredLevel();
-			optionalLevel = Optional.of(level);
+			optionalLevel = Optional.of(requiredLevel);
+			optionalSkillIndex = Optional.of(Skills.ATTACK);
+		}
+		//battlestaves (incl. enchanted version)
+		if (itemLower.contains("battlestaff")) {
+			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(Skills.ATTACK);
 		}
 		
-		if (player.getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
+		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
 				player.message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
