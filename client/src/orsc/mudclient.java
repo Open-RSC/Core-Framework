@@ -870,6 +870,7 @@ public final class mudclient implements Runnable {
 					var6 &= 255;
 					if (reposition()) {
 						if (this.currentViewMode == GameMode.LOGIN)
+							this.createLoginPanels(3845);
 							this.renderLoginScreenViewports(-116);
 						continue;
 					}
@@ -4487,7 +4488,6 @@ public final class mudclient implements Runnable {
 			this.welcomeScreenShown = false;
 
 			this.getSurface().blackScreen(true);
-			this.createLoginPanels(3845);
 
 			if (this.loginScreenNumber == 0 || this.loginScreenNumber == 2 || this.loginScreenNumber == 3) {
 				int var2 = this.frameCounter * 2 % 3072;
