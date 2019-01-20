@@ -869,9 +869,10 @@ public final class mudclient implements Runnable {
 					--this.m_b;
 					var6 &= 255;
 					if (reposition()) {
-						if (this.currentViewMode == GameMode.LOGIN)
+						/*if (this.currentViewMode == GameMode.LOGIN) {
 							this.createLoginPanels(3845);
 							this.renderLoginScreenViewports(-116);
+						}*/
 						continue;
 					}
 					this.draw();
@@ -11328,6 +11329,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().newPacket(102);
 						this.packetHandler.getClientStream().finishPacket();
 						this.logoutTimeout = 1000;
+						// this.createLoginPanels(3845);
 					}
 				} else {
 					this.showMessage(false, (String) null, "You can\'t logout during combat!", MessageType.GAME, 0,
