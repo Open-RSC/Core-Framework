@@ -429,8 +429,8 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Drop tables relaoded");
 		}
 		else if (cmd.equalsIgnoreCase("gi") || cmd.equalsIgnoreCase("gitem")) {
-			if (args.length < 3 || args.length == 4) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [respawn_time] (x) (y)");
+			if (args.length < 1 || args.length == 4) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
 				return;
 			}
 
@@ -438,48 +438,62 @@ public final class Admins implements CommandListener {
 			try {
 				id = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [respawn_time] (x) (y)");
-				return;
-			}
-
-			int amount;
-			try {
-				amount = Integer.parseInt(args[1]);
-			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [respawn_time] (x) (y)");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
 				return;
 			}
 
 			int respawnTime;
-			try {
-				respawnTime = Integer.parseInt(args[2]);
-			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [respawn_time] (x) (y)");
-				return;
+			if(args.length >= 3) {
+				try {
+					respawnTime = Integer.parseInt(args[1]);
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
+					return;
+				}
+			} else {
+				respawnTime = 188000;
 			}
 
-			int x = -1;
+			int amount;
+			if(args.length >= 3) {
+				try {
+					amount = Integer.parseInt(args[2]);
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
+					return;
+				}
+			} else {
+				amount = 1;
+			}
+
+			int x;
 			if(args.length >= 4) {
 				try {
 					x = Integer.parseInt(args[3]);
 				} catch (NumberFormatException ex) {
-					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [respawn_time] (x) (y)");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
 					return;
 				}
 			} else {
 				x = player.getX();
 			}
 
-			int y = -1;
+			int y;
 			if(args.length >= 5) {
 				try {
 					y = Integer.parseInt(args[4]);
 				} catch (NumberFormatException ex) {
-					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] [respawn_time] (x) (y)");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (respawn_time) (amount) (x) (y)");
 					return;
 				}
 			} else {
 				y = player.getY();
+			}
+
+			Point itemLocation = new Point(x,y);
+			if((world.getTile(itemLocation).traversalMask & 64) != 0) {
+				player.message(messagePrefix + "Can not place a ground item here");
+				return;
 			}
 
 			if (EntityHandler.getItemDef(id) == null) {
@@ -493,7 +507,6 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Point itemLocation = new Point(x,y);
 			ItemLoc item = new ItemLoc(id, x, y, amount, respawnTime);
 			DatabaseConnection.getDatabase()
 				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
@@ -501,7 +514,7 @@ public final class Admins implements CommandListener {
 					+ item.getId() + "','" + item.getX() + "','" + item.getY() + "','" + item.getAmount()
 					+ "','" + item.getRespawnTime() + "')");
 			World.getWorld().registerItem(new GroundItem(item));
-			player.message(messagePrefix + "Added groung item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
+			player.message(messagePrefix + "Added ground item to database: " + EntityHandler.getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		}
 		else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem")) {
 			if(args.length == 1) {
@@ -1284,6 +1297,101 @@ public final class Admins implements CommandListener {
 			p.getBank().getItems().clear();
 			p.message(messagePrefix + "Your bank has been wiped by an admin");
 			player.message(messagePrefix + "Wiped bank of " + p.getUsername());
+		}
+		else if(cmd.equalsIgnoreCase("massitem")) {
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
+				return;
+			}
+
+			try {
+				int id          = Integer.parseInt(args[0]);
+				int amount      = Integer.parseInt(args[1]);
+				ItemDefinition itemDef = EntityHandler.getItemDef(id);
+				if (itemDef != null) {
+					int x = 0;
+					int y = 0;
+					int baseX = player.getX();
+					int baseY = player.getY();
+					int nextX = 0;
+					int nextY = 0;
+					int dX = 0;
+					int dY = 0;
+					int minX = 0;
+					int minY = 0;
+					int maxX = 0;
+					int maxY = 0;
+					int scanned = 0;
+					while (scanned < amount) {
+						scanned++;
+						if (dX < 0) {
+							x -= 1;
+							if (x == minX) {
+								dX = 0;
+								dY = nextY;
+								if (dY < 0)
+									minY -= 1;
+								else
+									maxY += 1;
+								nextX = 1;
+							}
+						} else if (dX > 0) {
+							x += 1;
+							if (x == maxX) {
+								dX = 0;
+								dY = nextY;
+								if (dY < 0)
+									minY -=1;
+								else
+									maxY += 1;
+								nextX = -1;
+							}
+						} else {
+							if (dY < 0) {
+								y -= 1;
+								if (y == minY) {
+									dY = 0;
+									dX = nextX;
+									if (dX < 0)
+										minX -= 1;
+									else
+										maxX += 1;
+									nextY = 1;
+								}
+							} else if (dY > 0) {
+								y += 1;
+								if (y == maxY) {
+									dY = 0;
+									dX = nextX;
+									if (dX < 0)
+										minX -= 1;
+									else
+										maxX += 1;
+									nextY = -1;
+								}
+							} else {
+								minY -= 1;
+								dY = -1;
+								nextX = 1;
+							}
+						}
+
+						if(world.withinWorld(baseX + x, baseY + y)) {
+							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
+								ItemLoc item = new ItemLoc(id, baseX + x, baseY + y, amount, 188000);
+								World.getWorld().registerItem(new GroundItem(item));
+							}
+						}
+					}
+					player.message(messagePrefix + "Spawned " + amount + " " + itemDef.getName());
+				}
+				else {
+					player.message(messagePrefix + "Invalid ID");
+				}
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
+			}
 		}
 	}
 }
