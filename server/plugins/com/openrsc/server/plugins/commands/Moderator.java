@@ -370,6 +370,31 @@ public final class Moderator implements CommandListener {
 				return;
 			}
 		}
+		else if (cmd.equalsIgnoreCase("skull")) {
+			if(args.length == 0) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			String skullMessage;
+			if(p.isSkulled()) {
+				p.removeSkull();
+				skullMessage = "removed";
+			}
+			else {
+				p.addSkull(1200000);
+				skullMessage = "added";
+			}
+			p.message(messagePrefix + "Skull has been " + skullMessage + " by an admin");
+			player.message(messagePrefix + "Skull has been " + skullMessage + ": " + p.getUsername());
+		}
 		else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
 			String newStr = "";
 
