@@ -722,14 +722,14 @@ public final class Player extends Mob {
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
+						message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
 						unWield = true;
 					}
 				}
 				if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Formulae.statArray[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+						message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
 						unWield = true;
 					}	
 				}
