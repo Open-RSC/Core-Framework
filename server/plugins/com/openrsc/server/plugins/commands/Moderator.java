@@ -827,11 +827,10 @@ public final class Moderator implements CommandListener {
 		}
 		else if (cmd.equalsIgnoreCase("alert")) {
 			String message = "";
-			if (args.length > 0)
-			{
+			if (args.length > 0) {
 				Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
-				if (p != null)
-				{
+
+				if (p != null) {
 					for (int i = 1; i < args.length; i++)
 						message += args[i] + " ";
 					ActionSender.sendBox(p, player.getStaffName() + ":@whi@ " + message, false);
