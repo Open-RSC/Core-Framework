@@ -151,7 +151,7 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 									if (sub_opt3 == 0) {
 										moselReiDialogue(p, n, MoselRei.SOMEONE_WHO_DOES_KNOW);
 									} else if (sub_opt3 == 1) {
-										npcTalk(p, n, "Ok, I understand, you may as well be on your way then.");
+										npcTalk(p, n, "Ok, perhaps you'd like to be on your way now?");
 									}
 								} else if (sub_opt2 == 2) {
 									moselReiDialogue(p, n, MoselRei.SOMEONE_WHO_DOES_KNOW);
@@ -161,9 +161,6 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 							}
 						} else if (option == 1) {
 							moselReiDialogue(p, n, MoselRei.WHAT_CAN_WE_DO);
-							npcTalk(p, n, "But you would need to speak to the Witch Doctor in the Tai Bwo Wannai village.",
-								"To get more details about that.",
-								"I really have to go now and fight these undead!");
 						}
 						break;
 				}
@@ -178,7 +175,10 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 						"The village is covered in a deadly green mist.",
 						"If you go into the village, a terrible sickness will befall you.",
 						"And the undead creatures are even stonger beyond the gates.",
-						"My guess is that it has something to do with the legend of Rashiliyia.");
+						"My guess is that it has something to do with the legend of Rashiliyia.",
+						"But you would need to speak to the Witch Doctor in the Tai Bwo Wannai village.",
+						"To get more details about that.",
+						"I really have to go now and fight these undead!");
 					break;
 				case MoselRei.SOMEONE_WHO_DOES_KNOW:
 					npcTalk(p, n, "My guess is that this has something to do with the legend of Rashiliyia.",

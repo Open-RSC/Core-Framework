@@ -86,7 +86,7 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 		}
 		if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getID(), ITEMS_TO_FLAMES)) {
 			message(p, "you throw the " + item.getDef().getName().toLowerCase() + " into the flames");
-			if (!atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, 7) || !atQuestStage(p, Constants.Quests.UNDERGROUND_PASS, -1)) {
+			if (!atQuestStages(p, Constants.Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (!p.getCache().hasKey("flames_of_zamorak1") && item.getID() == 997) {
 					p.getCache().store("flames_of_zamorak1", true);
 				}

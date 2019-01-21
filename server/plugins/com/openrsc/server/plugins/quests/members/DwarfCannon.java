@@ -594,8 +594,14 @@ public class DwarfCannon
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		if (obj.getID() == 981) {
+			player.message("you climb up the ladder");
+			if(player.getQuestStage(this) == 0) {
+				player.message("but the trap door will not open");
+				return;
+			}
 			player.teleport(616, 1435, false);
 		} else if (obj.getID() == 985) {
+			player.message("you climb down the ladder");
 			player.teleport(616, 493, false);
 		}
 		if (obj.getID() == 982 && obj.getY() == 523) {
@@ -725,13 +731,17 @@ public class DwarfCannon
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 1046 && p.getQuestStage(this) == 2) {
-			if (!p.getCache().hasKey("grabed_dwarf_remains")) {
+		if (i.getID() == 1046) {
+			if(hasItem(p, 1046)) {
+				p.message("carrying one 'dwarfs remains' is bad enough");
+				return;
+			}
+			if (p.getQuestStage(this) == 2 && !p.getCache().hasKey("grabed_dwarf_remains")) {
 				p.getCache().store("grabed_dwarf_remains", true);
 			}
+			World.getWorld().unregisterItem(i);
+			addItem(p, 1046, 1);
 		}
-		World.getWorld().unregisterItem(i);
-		addItem(p, 1046, 1);
 	}
 
 	class RAILINGS {
