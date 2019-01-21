@@ -326,7 +326,7 @@ public final class Development implements CommandListener {
 		else if (cmd.equalsIgnoreCase("tile")) {
 			TileValue tv = World.getWorld().getTile(player.getLocation());
 			player.message(messagePrefix + "traversal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
-				+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile? " + tv.projectileAllowed);
+				+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile: " + tv.projectileAllowed);
 		}
 		else if (cmd.equalsIgnoreCase("debugregion")) {
 			boolean debugPlayers ;
