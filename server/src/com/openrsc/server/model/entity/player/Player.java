@@ -696,7 +696,7 @@ public final class Player extends Mob {
 				int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
 				if (getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
 					message("You are not a high enough level to use this item");
-					message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of "
+					message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of "
 						+ requiredLevel);
 					item.setWielded(false);
 					updateWornItems(item.getDef().getWieldPosition(),
@@ -2063,5 +2063,123 @@ public final class Player extends Mob {
 
 	public void toggleInvulnerable() {
 		setInvulnerable(!isInvulnerable());
+	}
+
+	public Point summon(Point summonLocation) {
+		Point originalLocation = getLocation();
+		setSummonReturnPoint();
+		teleport(summonLocation.getX(), summonLocation.getY(), true);
+		return originalLocation;
+	}
+
+	public Point summon(Player summonTo) {
+		return summon(summonTo.getLocation());
+	}
+
+	public void setSummonReturnPoint() {
+		if(wasSummoned())
+			return;
+
+		getCache().set("return_x", getX());
+		getCache().set("return_y", getY());
+		getCache().store("was_summoned", true);
+	}
+
+	public void resetSummonReturnPoint() {
+		getCache().remove("return_x");
+		getCache().remove("return_y");
+		getCache().remove("was_summoned");
+	}
+
+	public int getSummonReturnX() {
+		if(!getCache().hasKey("return_x"))
+			return -1;
+
+		return getCache().getInt("return_x");
+	}
+
+	public int getSummonReturnY() {
+		if(!getCache().hasKey("return_y"))
+			return -1;
+
+		return getCache().getInt("return_y");
+	}
+
+	public Point returnFromSummon() {
+		if(!wasSummoned())
+			return null;
+
+		Point originalLocation = getLocation();
+		teleport(getSummonReturnX(), getSummonReturnY(), true);
+		resetSummonReturnPoint();
+		return originalLocation;
+	}
+
+	public void setSummoned(boolean wasSummoned) {
+		getCache().store("was_summoned", wasSummoned);
+	}
+
+	public boolean wasSummoned() {
+		if (!getCache().hasKey("was_summoned"))
+			return false;
+
+		return getCache().getBoolean("was_summoned");
+	}
+
+	public Point jail() {
+		Point originalLocation = getLocation();
+		setJailReturnPoint();
+		teleport(75,1641, true);
+		return originalLocation;
+	}
+
+	public void setJailReturnPoint() {
+		if(isJailed())
+			return;
+
+		getCache().set("jail_return_x", getX());
+		getCache().set("jail_return_y", getY());
+		getCache().store("is_jailed", true);
+	}
+
+	public void resetJailReturnPoint() {
+		getCache().remove("jail_return_x");
+		getCache().remove("jail_return_y");
+		getCache().remove("is_jailed");
+	}
+
+	public int getJailReturnX() {
+		if(!getCache().hasKey("jail_return_x"))
+			return -1;
+
+		return getCache().getInt("jail_return_x");
+	}
+
+	public int getJailReturnY() {
+		if(!getCache().hasKey("jail_return_y"))
+			return -1;
+
+		return getCache().getInt("jail_return_y");
+	}
+
+	public Point releaseFromJail() {
+		if(!isJailed())
+			return null;
+
+		Point originalLocation = getLocation();
+		teleport(getJailReturnX(), getJailReturnY(), true);
+		resetJailReturnPoint();
+		return originalLocation;
+	}
+
+	public void setJailed(boolean isJailed) {
+		getCache().store("is_jailed", isJailed);
+	}
+
+	public boolean isJailed() {
+		if (!getCache().hasKey("is_jailed"))
+			return false;
+
+		return getCache().getBoolean("is_jailed");
 	}
 }
