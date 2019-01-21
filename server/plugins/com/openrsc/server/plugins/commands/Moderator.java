@@ -370,6 +370,31 @@ public final class Moderator implements CommandListener {
 				return;
 			}
 		}
+		else if (cmd.equalsIgnoreCase("skull")) {
+			if(args.length == 0) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			String skullMessage;
+			if(p.isSkulled()) {
+				p.removeSkull();
+				skullMessage = "removed";
+			}
+			else {
+				p.addSkull(1200000);
+				skullMessage = "added";
+			}
+			p.message(messagePrefix + "Skull has been " + skullMessage + " by an admin");
+			player.message(messagePrefix + "Skull has been " + skullMessage + ": " + p.getUsername());
+		}
 		else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
 			String newStr = "";
 
@@ -799,6 +824,55 @@ public final class Moderator implements CommandListener {
 			} catch (SQLException e) {
 				player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
 			}
+		}
+		else if (cmd.equalsIgnoreCase("alert")) {
+			String message = "";
+			if (args.length > 0) {
+				Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+				if (p != null) {
+					for (int i = 1; i < args.length; i++)
+						message += args[i] + " ";
+					ActionSender.sendBox(p, player.getStaffName() + ":@whi@ " + message, false);
+					player.message(messagePrefix + "Alerted " + p.getUsername());
+				}
+				else
+					player.message(messagePrefix + "Invalid name or player is not online");
+			}
+			else
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");
+		}
+		else if (cmd.equalsIgnoreCase("ip")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			/*long requestee = player.getUsernameHash();
+			p.requestLocalhost(requestee);*/
+			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP());
+		}
+		else if (cmd.equalsIgnoreCase("ipcount")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			int count = 0;
+			for (Player worldPlayer : world.getPlayers()) {
+				if(worldPlayer.getCurrentIP() == p.getCurrentIP())
+					count++;
+			}
+
+			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP() + " has " + count + " connections");
 		}
 	}
 }

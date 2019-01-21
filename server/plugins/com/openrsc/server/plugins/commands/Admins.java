@@ -1129,5 +1129,119 @@ public final class Admins implements CommandListener {
 				p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
 			}
 		}
+		else if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce"))) {
+			int argsIndex   = 0;
+			String message  = "";
+
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [message]");
+				return;
+			}
+
+			for (; argsIndex < args.length; argsIndex++)
+				message += args[argsIndex] + " ";
+
+			String announcementPrefix = "@whi@ANNOUNCEMENT " + player.getStaffName();
+
+			for(Player p : world.getPlayers()) {
+				ActionSender.sendMessage(p, player, 1, MessageType.CHAT, announcementPrefix + ": @whi@ " + message, player.getIcon());
+			}
+		}
+		else if (cmd.equalsIgnoreCase("heal")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getSkills().setLevel(Skills.HITPOINTS, p.getSkills().getMaxStat(3));
+			p.message(messagePrefix + "You have been healed by an admin");
+			player.message(messagePrefix + "Healed: " + p.getUsername());
+		}
+		else if ((cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits"))) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				return;
+			}
+
+			Player p = args.length > 1 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			try {
+				int newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
+
+				if(newHits > p.getSkills().getLevel(Skills.HITPOINTS))
+					newHits = p.getSkills().getLevel(Skills.HITPOINTS);
+				if(newHits < 0)
+					newHits = 0;
+
+				p.getSkills().setLevel(Skills.HITPOINTS, newHits);
+				if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+					p.killedBy(player);
+
+				p.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
+				player.message(messagePrefix + "Set " + p.getUsername() + "'s hits to " + newHits);
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				return;
+			}
+		}
+		else if (cmd.equalsIgnoreCase("kill")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getSkills().setLevel(Skills.HITPOINTS, 0);
+			p.killedBy(player);
+			p.message(messagePrefix + "You have been killed by an admin");
+			player.message(messagePrefix + "Killed " + p.getUsername());
+		}
+		else if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg"))) {
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			int damage;
+			try {
+				damage = Integer.parseInt(args[1]);
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
+				return;
+			}
+
+			p.getSkills().setLevel(Skills.HITPOINTS, p.getSkills().getLevel(Skills.HITPOINTS) - damage);
+			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+				p.killedBy(player);
+
+			p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
+			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
+		}
 	}
 }
