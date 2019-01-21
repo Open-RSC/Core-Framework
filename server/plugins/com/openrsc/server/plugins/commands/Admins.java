@@ -1268,7 +1268,7 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "Your inventory has been wiped by an admin");
 			player.message(messagePrefix + "Wiped inventory of " + p.getUsername());
 		}
-		else if (cmd.equalsIgnoreCase("wipebank") && owner.isAdmin()) {
+		else if (cmd.equalsIgnoreCase("wipebank")) {
 			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
