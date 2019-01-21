@@ -1144,7 +1144,7 @@ public final class Admins implements CommandListener {
 			String announcementPrefix = "@whi@ANNOUNCEMENT " + player.getStaffName();
 
 			for(Player p : world.getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, announcementPrefix + ": @whi@ " + message, player.getIcon());
+				ActionSender.sendMessage(p, player, 1, MessageType.CHAT, announcementPrefix + ": @whi@ " + message, player.getIcon());
 			}
 		}
 		else if (cmd.equalsIgnoreCase("heal")) {
