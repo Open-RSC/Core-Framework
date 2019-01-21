@@ -14,6 +14,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
@@ -1496,6 +1497,35 @@ public final class Admins implements CommandListener {
 			}
 			catch(NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] (duration_minutes)");
+			}
+		}
+		else if (cmd.equalsIgnoreCase("npctalk"))
+		{
+			if(args.length < 2)
+			{
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
+				return;
+			}
+
+			try
+			{
+				int npc_id      = Integer.parseInt(args[0]);
+
+				String newStr = "";
+				for (int i = 1; i < args.length; i++)
+					newStr = newStr += args[i] + " ";
+
+				final Npc npc = world.getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+
+				if (npc != null) {
+					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, newStr, player));
+				}
+				else {
+					player.message(messagePrefix + "NPC could not be found");
+				}
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
 			}
 		}
 	}
