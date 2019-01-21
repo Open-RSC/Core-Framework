@@ -43,9 +43,6 @@ public final class Formulae {
 		{new java.awt.Point(397, 525), new java.awt.Point(441, 579),},
 		{new java.awt.Point(431, 0), new java.awt.Point(1007, 1007)},
 		{new java.awt.Point(335, 734), new java.awt.Point(437, 894)}};
-	public static final String[] statArray = {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-		"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-		"agility", "thieving"};
 	// trawler: 297, 720
 	public static final int[] woodcuttingAxeIDs = {405, 204, 203, 428, 88, 12, 87};
 	public static final int[] xbowIDs = {59, 60};
@@ -727,29 +724,6 @@ public final class Formulae {
 			return 0;
 		}
 		return (exps[type] * barCount);
-	}
-
-	// maxHit
-
-	public static int getStat(String stat) {
-		for (int i = 0; i < statArray.length; i++) {
-			if (statArray[i].equalsIgnoreCase(stat))
-				return i;
-		}
-
-		return -1;
-	}
-
-	/**
-	 * Given a stat string get its index returns -1 on failure
-	 */
-	public static int getStatIndex(String stat) {
-		for (int index = 0; index < statArray.length; index++) {
-			if (stat.equalsIgnoreCase(statArray[index])) {
-				return index;
-			}
-		}
-		return -1;
 	}
 
 	public static boolean isP2P(boolean f2pwildy, Object... objs) {
