@@ -1214,5 +1214,34 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "You have been killed by an admin");
 			player.message(messagePrefix + "Killed " + p.getUsername());
 		}
+		else if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg"))) {
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			int damage;
+			try {
+				damage = Integer.parseInt(args[1]);
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
+				return;
+			}
+
+			p.getSkills().setLevel(Skills.HITPOINTS, p.getSkills().getLevel(Skills.HITPOINTS) - damage);
+			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+				p.killedBy(player);
+
+			p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
+			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
+		}
 	}
 }
