@@ -2,6 +2,7 @@ package com.openrsc.server.model.container;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -390,7 +391,7 @@ public class Inventory {
 		boolean ableToWield = true;
 		if (player.getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
 			player.message("You are not a high enough level to use this item");
-			player.message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
+			player.message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
 			ableToWield = false;
 		}
 		if (item.getDef().isFemaleOnly() && player.isMale()) {

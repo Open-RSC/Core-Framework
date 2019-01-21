@@ -2,10 +2,11 @@ package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.model.Point;
 import com.openrsc.server.net.Packet;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,9 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public final class DataConversions {
@@ -761,5 +759,29 @@ public final class DataConversions {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 		String number = numberFormat.format(i);
 		return number;
+	}
+
+	public static boolean parseBoolean(String str) throws NumberFormatException {
+		if (
+			str.equalsIgnoreCase("true")	||
+				str.equalsIgnoreCase("t")		||
+				str.equalsIgnoreCase("yes")		||
+				str.equalsIgnoreCase("y")		||
+				str.equalsIgnoreCase("1")
+		) {
+			return true;
+		}
+
+		if (
+			str.equalsIgnoreCase("false")	||
+				str.equalsIgnoreCase("f")		||
+				str.equalsIgnoreCase("no")		||
+				str.equalsIgnoreCase("n")		||
+				str.equalsIgnoreCase("0")
+		) {
+			return false;
+		}
+
+		throw new NumberFormatException();
 	}
 }

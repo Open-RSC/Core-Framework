@@ -3,6 +3,7 @@ package com.openrsc.server.sql;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
@@ -10,7 +11,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.LoginResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -632,10 +632,10 @@ public class DatabasePlayerLoader {
 			e1.printStackTrace();
 			return null;
 		}
-		int[] data = new int[Formulae.statArray.length];
+		int[] data = new int[Skills.SKILL_NAME.length];
 		for (int i = 0; i < data.length; i++) {
 			try {
-				data[i] = result.getInt("cur_" + Formulae.statArray[i]);
+				data[i] = result.getInt("cur_" + Skills.SKILL_NAME[i]);
 			} catch (SQLException e) {
 				LOGGER.catching(e);
 				return null;
@@ -645,7 +645,7 @@ public class DatabasePlayerLoader {
 	}
 
 	private int[] fetchExperience(int playerID) {
-		int[] data = new int[Formulae.statArray.length];
+		int[] data = new int[Skills.SKILL_NAME.length];
 		try {
 			PreparedStatement statement = conn.prepareStatement(Statements.playerExp);
 			statement.setInt(1, playerID);
@@ -653,7 +653,7 @@ public class DatabasePlayerLoader {
 			result.next();
 			for (int i = 0; i < data.length; i++) {
 				try {
-					data[i] = result.getInt("exp_" + Formulae.statArray[i]);
+					data[i] = result.getInt("exp_" + Skills.SKILL_NAME[i]);
 				} catch (SQLException e) {
 					LOGGER.catching(e);
 					return null;

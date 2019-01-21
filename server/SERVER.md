@@ -55,3 +55,8 @@ Game tick events are executed on a specific tick cycle, set in the config. This
 cycle is usually 600ms (Runescape's original tick timing), but has potential
 to vary in custom servers. Game tick events handle most of the game's skill-based
 interactions, as well as a lot of other components.
+
+### Player Data
+DB Field -> Used for permanent storage
+Cache -> Used for storing non-permanent information across sessions
+Attribute -> Used for storing single-session information

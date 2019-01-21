@@ -1109,10 +1109,14 @@ public final class mudclient implements Runnable {
 				if (modMenu) {
 					this.menuCommon.addItem_With2Strings("Summon", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_SUMMON_PLAYER, player.accountName);
+					this.menuCommon.addItem_With2Strings("Return", "@whi@" + name, player.displayName,
+						MenuItemAction.MOD_RETURN_PLAYER, player.accountName);
 					this.menuCommon.addItem_With2Strings("Goto", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_GOTO_PLAYER, player.accountName);
 					this.menuCommon.addItem_With2Strings("Jail", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_PUT_PLAYER_JAIL, player.accountName);
+					this.menuCommon.addItem_With2Strings("Release", "@whi@" + name, player.displayName,
+						MenuItemAction.MOD_RELEASE_PLAYER_JAIL, player.accountName);
 					this.menuCommon.addItem_With2Strings("Check", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_CHECK_PLAYER, player.accountName);
 					this.menuCommon.addItem_With2Strings("Kick", "@whi@" + name, player.displayName,
@@ -9778,7 +9782,7 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case DEV_ADD_NPC: {
-					sendCommandString("cnpc " + devMenuNpcID + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("cnpc " + devMenuNpcID + " 1 " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
@@ -9792,12 +9796,12 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case DEV_REMOVE_OBJECT: {
-					sendCommandString("robject " + indexOrX + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("robject " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
 				case DEV_ROTATE_OBJECT: {
-					sendCommandString("rotateobject " + indexOrX + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("rotateobject " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
@@ -9805,6 +9809,18 @@ public final class mudclient implements Runnable {
 					String playerName = var9;
 					playerName = playerName.replaceAll(" ", "_");
 					sendCommandString("summon " + playerName);
+					break;
+				}
+				case MOD_RETURN_PLAYER: {
+					String playerName = var9;
+					playerName = playerName.replaceAll(" ", "_");
+					sendCommandString("return " + playerName);
+					break;
+				}
+				case MOD_RELEASE_PLAYER_JAIL: {
+					String playerName = var9;
+					playerName = playerName.replaceAll(" ", "_");
+					sendCommandString("release " + playerName);
 					break;
 				}
 				case MOD_GOTO_PLAYER: {
@@ -9816,7 +9832,7 @@ public final class mudclient implements Runnable {
 				case MOD_PUT_PLAYER_JAIL: {
 					String playerName = var9;
 					playerName = playerName.replaceAll(" ", "_");
-					sendCommandString("put " + playerName);
+					sendCommandString("jail " + playerName);
 					break;
 				}
 				case MOD_KICK_PLAYER: {
