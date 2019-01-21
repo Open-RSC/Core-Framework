@@ -825,5 +825,23 @@ public final class Moderator implements CommandListener {
 				player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
 			}
 		}
+		else if (cmd.equalsIgnoreCase("alert")) {
+			String message = "";
+			if (args.length > 0)
+			{
+				Player p = World.getPlayer(DataConversions.usernameToHash(args[0]));
+				if (p != null)
+				{
+					for (int i = 1; i < args.length; i++)
+						message += args[i] + " ";
+					ActionSender.sendBox(p, player.getStaffName() + ":@whi@ " + message, false);
+					player.message(messagePrefix + "Alerted " + p.getUsername());
+				}
+				else
+					player.message(messagePrefix + "Invalid name or player is not online");
+			}
+			else
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");
+		}
 	}
 }
