@@ -1268,6 +1268,22 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "Your inventory has been wiped by an admin");
 			player.message(messagePrefix + "Wiped inventory of " + p.getUsername());
 		}
+		else if (cmd.equalsIgnoreCase("wipebank") && owner.isAdmin()) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
 
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getBank().getItems().clear();
+			p.message(messagePrefix + "Your bank has been wiped by an admin");
+			player.message(messagePrefix + "Wiped bank of " + p.getUsername());
+		}
 	}
 }
