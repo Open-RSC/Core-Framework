@@ -1243,5 +1243,31 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
 			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
 		}
+		else if (cmd.equalsIgnoreCase("wipeinventory")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			for (Item i : p.getInventory().getItems()) {
+				if (p.getInventory().get(i).isWielded()) {
+					p.getInventory().get(i).setWielded(false);
+					p.updateWornItems(i.getDef().getWieldPosition(), i.getDef().getAppearanceId());
+				}
+
+				p.getInventory().remove(i);
+			}
+
+			p.message(messagePrefix + "Your inventory has been wiped by an admin");
+			player.message(messagePrefix + "Wiped inventory of " + p.getUsername());
+		}
+
 	}
 }
