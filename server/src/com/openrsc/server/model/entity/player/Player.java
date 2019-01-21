@@ -694,10 +694,47 @@ public final class Player extends Mob {
 			if (item.isWielded()) {
 				int requiredLevel = item.getDef().getRequiredLevel();
 				int requiredSkillIndex = item.getDef().getRequiredSkillIndex();
-				if (getSkills().getMaxStat(item.getDef().getRequiredSkillIndex()) < item.getDef().getRequiredLevel()) {
-					message("You are not a high enough level to use this item");
-					message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of "
-						+ requiredLevel);
+				String itemLower = item.getDef().getName().toLowerCase();
+				Optional<Integer> optionalLevel = Optional.empty();
+				Optional<Integer> optionalSkillIndex = Optional.empty();
+				boolean unWield = false;
+				boolean bypass = !Constants.GameServer.STRICT_CHECK_ALL &&
+						(itemLower.startsWith("poisoned") && 
+							(itemLower.endsWith("throwing dart") && !Constants.GameServer.STRICT_PDART_CHECK) ||
+							(itemLower.endsWith("throwing knife") && !Constants.GameServer.STRICT_PKNIFE_CHECK) || 
+							(itemLower.endsWith("spear") && !Constants.GameServer.STRICT_PSPEAR_CHECK)
+						);
+				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
+					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
+					optionalSkillIndex = Optional.of(Skills.ATTACK);
+				}
+				//staff of iban (usable)
+				if (item.getID() == 1000) {
+					optionalLevel = Optional.of(requiredLevel);
+					optionalSkillIndex = Optional.of(Skills.ATTACK);
+				}
+				//battlestaves (incl. enchanted version)
+				if (itemLower.contains("battlestaff")) {
+					optionalLevel = Optional.of(requiredLevel);
+					optionalSkillIndex = Optional.of(Skills.ATTACK);
+				}
+				
+				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
+					if (!bypass) {
+						message("You are not a high enough level to use this item");
+						message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
+						unWield = true;
+					}
+				}
+				if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
+					if (!bypass) {
+						message("You are not a high enough level to use this item");
+						message("You need to have a " + Formulae.statArray[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+						unWield = true;
+					}	
+				}
+				
+				if (unWield) {
 					item.setWielded(false);
 					updateWornItems(item.getDef().getWieldPosition(),
 						getSettings().getAppearance().getSprite(item.getDef().getWieldPosition()));

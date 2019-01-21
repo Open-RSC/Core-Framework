@@ -12,6 +12,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.Constants;
+
 public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
 
 	/**
@@ -64,7 +66,12 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					p.message("you find the remains of a dove");
 					addItem(p, IBANS_CONSCIENCE, 1);
 				} else {
-					p.message("you find nothing");
+					//kosher was separated lol
+					if (p.getInventory().wielding(KLANKS)) {
+						p.message("but you find find nothing");
+					} else {
+						p.message("you find nothing");
+					}
 				}
 			}
 			if (obj.getID() == CAGES[0]) {
@@ -72,20 +79,20 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				message(p, "the cage is locked");
 				sleep(1600);
 				message(p, "you search through the bottom of the cage");
+				p.message("but the souless bieng bites into your arm");
 				if (p.getInventory().wielding(KLANKS)) {
-					p.message("but the souless bieng bites into your arm");
 					p.message("klanks gaunlett protects you");
+					p.message("but you find find nothing");
 				} else {
-					p.message("but the souless bieng bites into your arm");
 					p.damage(((int) getCurrentLevel(p, HITS) / 10) + 5);
 					playerTalk(p, null, "aaarrgghh");
+					p.message("you find nothing");
 				}
-				p.message("you find nothing");
 			}
 		}
 		if (obj.getID() == DEMONS_CHEST) {
 			message(p, "you attempt to open the chest");
-			if (hasItem(p, 1009) && hasItem(p, 1010) && hasItem(p, 1009) && !p.getCache().hasKey("shadow_on_doll")) {
+			if (hasItem(p, 1009) && hasItem(p, 1010) && hasItem(p, 1011) && !p.getCache().hasKey("shadow_on_doll")) {
 				message(p, "the three amulets glow red in your satchel");
 				removeItem(p, 1009, 1);
 				removeItem(p, 1010, 1);
@@ -102,6 +109,11 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 		}
 		if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (p.getX() <= 792) {
+				if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == -1) {
+					message(p, "the temple is in ruins...");
+					p.message("...you cannot enter");
+					return;
+				}
 				if (p.getInventory().wielding(ROBE_OF_ZAMORAK_TOP)
 					&& p.getInventory().wielding(ROBE_OF_ZAMORAK_BOTTOM)) {
 					replaceObject(obj, new GameObject(obj.getLocation(), 914, obj.getDirection(), obj.getType()));
@@ -111,8 +123,11 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					p.teleport(795, 3469);
 					message(p, "you pull open the large doors");
 					p.message("and walk into the temple");
-					if (p.getCache().hasKey("poison_on_doll") && p.getCache().hasKey("cons_on_doll")
-						&& p.getCache().hasKey("ash_on_doll") && p.getCache().hasKey("shadow_on_doll")) {
+					if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 7 || (p.getCache().hasKey("poison_on_doll") && p.getCache().hasKey("cons_on_doll")
+						&& p.getCache().hasKey("ash_on_doll") && p.getCache().hasKey("shadow_on_doll"))) {
+						if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 6) {
+							p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 7);
+						}
 						p.message("Iban seems to sense danger");
 						message(p, "@yel@Iban: who dares bring the witches magic into my temple");
 						message(p, "his eyes fixate on you as he raises his arm");

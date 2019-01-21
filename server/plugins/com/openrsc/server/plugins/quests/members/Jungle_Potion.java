@@ -542,19 +542,20 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Yes, I've found Rashiliyia's Tomb!",
 								"I get choked when I go into Rashiliyias Tomb.");
 							if (tomb == 0) {
-								playerTalk(p, n, "Nope, I haven't found anything.");
 								npcTalk(p, n, "Well, that is a pity? Perhaps you should keep on looking?");
 							} else if (tomb == 1) {
 								npcTalk(p, n, "Very good Bwana, this is very good!",
 									"Did you find her remains?");
-								int newMenu = showMenu(p, n,
+								int newMenu = showMenu(p, n, false, //do not send over
 									"Yes, In fact I did!",
 									"Nope, I haven't found them yet.");
 								if (newMenu == 0) {
+									playerTalk(p, n, "Yes, In fact I did!");
 									npcTalk(p, n, "This is truly great Bwana.",
 										"If you need help with the remains, ",
 										"please show them to me.");
 								} else if (newMenu == 1) {
+									playerTalk(p, n, "No, I haven't found them yet.");
 									npcTalk(p, n, "You really need to find the remains before we",
 										"can hope to defeat her and remove her influence from",
 										"Shilo village.");
@@ -617,21 +618,26 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				npcTalk(p, n, "If you have found the temple, you should search it",
 					"thoroughly and see if there are any clues about",
 					"Rashiliyia.");
-				int ex3 = showMenu(p, n,
+				int ex3 = showMenu(p, n, false, //do not send over
 					"I need help with Rashlilia.",
 					"I need help with Zadimus.",
 					"I have some items that I need help with.",
 					"I need help with Bervirius.",
 					"Ok, thanks!");
 				if (ex3 == 0) {
+					playerTalk(p, n, "I need help with Rashliyia.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_RASH);
 				} else if (ex3 == 1) {
+					playerTalk(p, n, "I need help with Zadimus.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_ZADIMUS);
 				} else if (ex3 == 2) {
+					playerTalk(p, n, "I have some items that I need help with.");
 					trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 				} else if (ex3 == 3) {
+					playerTalk(p, n, "I need help with Bervirius.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_BERVIRIUS);
 				} else if (ex3 == 4) {
+					playerTalk(p, n, "Ok, thanks!");
 					npcTalk(p, n, "You're quite welcome Bwana.");
 				}
 				break;
@@ -682,21 +688,26 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				break;
 			case Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE:
 				npcTalk(p, n, "What could I possibly help you with Bwana?");
-				int c = showMenu(p, n,
+				int c = showMenu(p, n, false, //do not send over
 					"I need help with Rashiliyia.",
 					"I need help with Zadimus.",
 					"I have some items that I need help with.",
 					"I need help with Bervirius.",
 					"Ok, thanks!");
 				if (c == 0) {
+					playerTalk(p, n, "I need help with Rashliyia.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_RASH);
 				} else if (c == 1) {
+					playerTalk(p, n, "I need help with Zadimus.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_ZADIMUS);
 				} else if (c == 2) {
+					playerTalk(p, n, "I have some items that I need help with.");
 					trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 				} else if (c == 3) {
+					playerTalk(p, n, "I need help with Bervirius.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_BERVIRIUS);
 				} else if (c == 4) {
+					playerTalk(p, n, "Ok, thanks!");
 					npcTalk(p, n, "You're quite welcome Bwana.");
 				}
 				break;
@@ -889,14 +900,48 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				}
 				break;
 			case Trufitus.SHOW_ME_TEMPLE_ITEMS:
-				npcTalk(p, n, "Look for something that can identify the place.",
-					"Leave no stone unturned.",
-					"Any scrolls or information about Rashiliyias Kin would be helpful",
-					"Have you got any items concerning Rashiliyia?",
-					"If so, please show me them.",
-					"There must be something relating to Zadimus at the temple",
-					"Did you find anything? If so, let me see it.",
-					"And best of luck!");
+				npcTalk(p, n, "Well, just let me see the item and I'll help as much as I can.");
+				if (p.getQuestStage(Constants.Quests.SHILO_VILLAGE) >= 6) {
+					int optTemp = showMenu(p, n, "I need help with Zadimus.",
+							"I need help with Bervirius.",
+							"I need help with Rashliyia.",
+							"I need some help with the Temple of Ah Za Rhoon.",
+							"Ok, thanks!");
+					if (optTemp == 0) {
+						trufitisChat(p, n, Trufitus.HELP_WITH_BERVIRIUS);
+					} else if (optTemp == 1) {
+						trufitisChat(p, n, Trufitus.HELP_WITH_RASH);
+					} else if (optTemp == 2) {
+						trufitisChat(p, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
+					} else if (optTemp == 3) {
+						npcTalk(p, n, "You're quite welcome Bwana.");
+					}
+					return;
+				}
+				//no stone-plaque in bank or inventory
+				if(!p.getBank().hasItemId(958) && !p.getInventory().hasItemId(958)) {
+					npcTalk(p, n, "Look for something that can identify the place.",
+							"Leave no stone unturned.");
+				}
+				else {
+					npcTalk(p, n, "We need to identify that the place you have found",
+							"is indeed Ah Za Rhoon.");
+				}
+				//player has not explored inner Ah Za Rhoon
+				if(!p.getCache().hasKey("obtained_shilo_info")) {
+					npcTalk(p, n, "Look for details of Rashiliyias Kin, these may be well hidden.",
+							"There is a legend about Rashiliyia, look for it in the temple.",
+							"Look for something relating to Zadimus at the temple.",
+							"And best of luck!");
+				}
+				else {
+					npcTalk(p, n, "Any scrolls or information about Rashiliyias Kin would be helpful",
+							"Have you got any items concerning Rashiliyia?",
+							"If so, please show me them.",
+							"There must be something relating to Zadimus at the temple",
+							"Did you find anything? If so, let me see it.",
+							"And best of luck!");
+				}
 				break;
 			case Trufitus.KEYS_AND_KIN:
 				npcTalk(p, n, "Hmmm, maybe it's a clue of some kind?",

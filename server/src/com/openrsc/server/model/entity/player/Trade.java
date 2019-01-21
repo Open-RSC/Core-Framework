@@ -60,7 +60,7 @@ public class Trade implements ContainerListener {
 
 	public void resetAll() {
 		Player tradeRecipient = getTradeRecipient();
-		if (tradeRecipient != null) {
+		if (tradeRecipient != null && !tradeRecipient.isFollowing()) {
 			setTradeRecipient(null);
 			tradeRecipient.resetAll();
 		}

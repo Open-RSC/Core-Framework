@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.quests.members.undergroundpass.npcs.UndergroundPassKoftik;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -147,10 +148,14 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 		fallTeleportLocation(p, obj);
 		p.damage(((int) getCurrentLevel(p, HITS) / 5) + 5); // 6 lowest, 25 max. 
 		playerTalk(p, null, "ouch!");
-		if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
-			p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 5);
-			Npc koftik = getNearestNpc(p, 650, 10);
-			if (koftik != null) {
+		if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) >= 4) {
+			if (p.getQuestStage(Constants.Quests.UNDERGROUND_PASS) == 4) {
+				p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 5);
+			}
+			//only on "first-time" fail at stages 5, 8
+			Npc koftik = getNearestNpc(p, UndergroundPassKoftik.KOFTIK_LAST_MAP, 10);
+			if (koftik != null && 
+					(!p.getCache().hasKey("advised_koftik") || !p.getCache().getBoolean("advised_koftik")) ) {
 				npcTalk(p, koftik, "traveller is that you?.. my friend on a mission");
 				playerTalk(p, koftik, "koftik, you're still here, you should leave");
 				npcTalk(p, koftik, "leave?...leave?..this is my home now",
@@ -166,6 +171,7 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 					"we'll show them, go slay them m'lord",
 					"he'll be so proud, that's all i want");
 				playerTalk(p, koftik, "i'll pray for you");
+				p.getCache().store("advised_koftik", true);
 			}
 		}
 	}
