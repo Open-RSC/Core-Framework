@@ -1147,5 +1147,19 @@ public final class Admins implements CommandListener {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, announcementPrefix + ": @whi@ " + message, player.getIcon());
 			}
 		}
+		else if (cmd.equalsIgnoreCase("heal")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getSkills().setLevel(3, p.getSkills().getMaxStat(3));
+			p.message(messagePrefix + "You have been healed by an admin");
+			player.message(messagePrefix + "Healed: " + p.getUsername());
+		}
 	}
 }
