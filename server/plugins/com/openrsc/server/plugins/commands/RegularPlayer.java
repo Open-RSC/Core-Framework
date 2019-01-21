@@ -251,12 +251,6 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
 		}
-		else if (cmd.equalsIgnoreCase("skull")) {
-			int length = 20;
-			player.addSkull(length * 60000);
-			player.message(messagePrefix + "You have given yourself a skull.");
-			return;
-		}
 		else if (cmd.equalsIgnoreCase("onlinelist")) {
 			String boxTextPlayerNames = "";
 			for (Player p : World.getWorld().getPlayers()) {
@@ -285,8 +279,6 @@ public final class RegularPlayer implements CommandListener {
 					+ "@whi@::online - shows players currently online %"
 					+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
 					+ "@whi@::onlinelist - shows players currently online in a list %"
-					+ "@whi@::skull - sets you skulled for 20 minutes %"
-					+ "@whi@::fatigue - gives you 100 percent fatigue %"
 					+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
 					+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
 					+ "@whi@::c <message> - talk in clan chat %"
