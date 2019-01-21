@@ -1161,5 +1161,40 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "You have been healed by an admin");
 			player.message(messagePrefix + "Healed: " + p.getUsername());
 		}
+		else if ((cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits"))) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				return;
+			}
+
+			Player p = args.length > 1 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			try {
+				int newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
+
+				if(newHits > p.getSkills().getLevel(Skills.HITPOINTS))
+					newHits = p.getSkills().getLevel(Skills.HITPOINTS);
+				if(newHits < 0)
+					newHits = 0;
+
+				p.getSkills().setLevel(Skills.HITPOINTS, newHits);
+				if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
+					p.killedBy(player);
+
+				p.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
+				player.message(messagePrefix + "Set " + p.getUsername() + "'s hits to " + newHits);
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				return;
+			}
+		}
 	}
 }
