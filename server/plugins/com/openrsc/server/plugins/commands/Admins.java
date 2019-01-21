@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.commands;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HourlyEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
@@ -1391,6 +1392,110 @@ public final class Admins implements CommandListener {
 			}
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
+			}
+		}
+		else if (cmd.equalsIgnoreCase("massnpc")) {
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] (duration_minutes)");
+				return;
+			}
+
+			try {
+				int id = Integer.parseInt(args[0]);
+				int amount = Integer.parseInt(args[1]);
+				int duration = args.length >= 3 ? Integer.parseInt(args[2]) : 10;
+				NPCDef npcDef   = EntityHandler.getNpcDef(id);
+
+				if(npcDef == null) {
+					player.message(messagePrefix + "Invalid ID");
+					return;
+				}
+
+				if (EntityHandler.getNpcDef(id) != null) {
+					int x = 0;
+					int y = 0;
+					int baseX = player.getX();
+					int baseY = player.getY();
+					int nextX = 0;
+					int nextY = 0;
+					int dX = 0;
+					int dY = 0;
+					int minX = 0;
+					int minY = 0;
+					int maxX = 0;
+					int maxY = 0;
+					for(int i = 0; i < amount; i++) {
+						if (dX < 0) {
+							x -= 1;
+							if (x == minX) {
+								dX = 0;
+								dY = nextY;
+								if (dY < 0)
+									minY -= 1;
+								else
+									maxY += 1;
+								nextX = 1;
+							}
+						} else if (dX > 0) {
+							x += 1;
+							if (x == maxX) {
+								dX = 0;
+								dY = nextY;
+								if (dY < 0)
+									minY -=1;
+								else
+									maxY += 1;
+								nextX = -1;
+							}
+						} else {
+							if (dY < 0) {
+								y -= 1;
+								if (y == minY) {
+									dY = 0;
+									dX = nextX;
+									if (dX < 0)
+										minX -= 1;
+									else
+										maxX += 1;
+									nextY = 1;
+								}
+							} else if (dY > 0) {
+								y += 1;
+								if (y == maxY) {
+									dY = 0;
+									dX = nextX;
+									if (dX < 0)
+										minX -= 1;
+									else
+										maxX += 1;
+									nextY = -1;
+								}
+							} else {
+								minY -= 1;
+								dY = -1;
+								nextX = 1;
+							}
+						}
+						if(world.withinWorld(baseX + x, baseY + y)) {
+							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
+								final Npc n = new Npc(id, baseX + x, baseY + y, baseX + x - 20, baseX + x + 20, baseY + y - 20, baseY + y + 20);
+								n.setShouldRespawn(false);
+								World.getWorld().registerNpc(n);
+								Server.getServer().getEventHandler().add(new SingleEvent(null, duration * 60000) {
+									@Override
+									public void action() {
+										n.remove();
+									}
+								});
+							}
+						}
+					}
+				}
+
+				player.message(messagePrefix + "Spawned " + amount + " " + npcDef.getName() + " for " + duration + " minutes");
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] (duration_minutes)");
 			}
 		}
 	}
