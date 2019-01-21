@@ -1157,7 +1157,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getSkills().setLevel(3, p.getSkills().getMaxStat(3));
+			p.getSkills().setLevel(Skills.HITPOINTS, p.getSkills().getMaxStat(3));
 			p.message(messagePrefix + "You have been healed by an admin");
 			player.message(messagePrefix + "Healed: " + p.getUsername());
 		}
