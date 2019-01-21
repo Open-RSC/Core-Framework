@@ -1499,16 +1499,13 @@ public final class Admins implements CommandListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount] (duration_minutes)");
 			}
 		}
-		else if (cmd.equalsIgnoreCase("npctalk"))
-		{
-			if(args.length < 2)
-			{
+		else if (cmd.equalsIgnoreCase("npctalk")) {
+			if(args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
 				return;
 			}
 
-			try
-			{
+			try {
 				int npc_id      = Integer.parseInt(args[0]);
 
 				String newStr = "";
