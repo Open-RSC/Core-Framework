@@ -1196,5 +1196,23 @@ public final class Admins implements CommandListener {
 				return;
 			}
 		}
+		else if (cmd.equalsIgnoreCase("kill")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			p.getSkills().setLevel(Skills.HITPOINTS, 0);
+			p.killedBy(player);
+			p.message(messagePrefix + "You have been killed by an admin");
+			player.message(messagePrefix + "Killed " + p.getUsername());
+		}
 	}
 }
