@@ -40,9 +40,6 @@ public final class RegularPlayer implements CommandListener {
 				player.message(messagePrefix + "You are not in a gang - you need to start the shield of arrav quest");
 			}
 		}
-		else if (cmd.equalsIgnoreCase("ip")) {
-			player.message(messagePrefix + "your IP: " + World.getWildernessIPTracker().ipCount(player.getCurrentIP()));
-		}
 		else if (cmd.equalsIgnoreCase("wilderness")) {
 			int TOTAL_PLAYERS_IN_WILDERNESS = 0;
 			int PLAYERS_IN_F2P_WILD = 0;
