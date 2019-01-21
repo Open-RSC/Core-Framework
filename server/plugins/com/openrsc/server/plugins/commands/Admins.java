@@ -1129,5 +1129,23 @@ public final class Admins implements CommandListener {
 				p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
 			}
 		}
+		else if ((cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equals("anouncement") || cmd.equalsIgnoreCase("anounce"))) {
+			int argsIndex   = 0;
+			String message  = "";
+
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [message]");
+				return;
+			}
+
+			for (; argsIndex < args.length; argsIndex++)
+				message += args[argsIndex] + " ";
+
+			String announcementPrefix = "@whi@ANNOUNCEMENT " + player.getStaffName();
+
+			for(Player p : world.getPlayers()) {
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, announcementPrefix + ": @whi@ " + message, player.getIcon());
+			}
+		}
 	}
 }
