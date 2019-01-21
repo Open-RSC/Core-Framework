@@ -277,7 +277,7 @@ public final class RegularPlayer implements CommandListener {
 		else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
 		}
-		else if (cmd.equals("commands")) {
+		else if (cmd.equalsIgnoreCase("commands")) {
 			ActionSender.sendBox(player, ""
 					+ "@yel@Commands available: %"
 					+ "Type :: before you enter your command, see the list below. % %"
