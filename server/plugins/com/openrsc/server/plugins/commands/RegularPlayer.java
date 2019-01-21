@@ -170,7 +170,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.teleport(World.EVENT_X, World.EVENT_Y);
 		}
-		else if (cmd.equals("g") || cmd.equals("p")) {
+		else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("p")) {
 			if (!Constants.GameServer.WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
@@ -226,7 +226,7 @@ public final class RegularPlayer implements CommandListener {
 						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
 				}
 			}
-			if (cmd.equals("g")) {
+			if (cmd.equalsIgnoreCase("g")) {
 				GameLogging.addQuery(new ChatLog(player.getUsername(), "(Global) " + newStr));
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 			} else {
@@ -234,7 +234,7 @@ public final class RegularPlayer implements CommandListener {
 				World.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		}
-		else if (cmd.equals("online")) {
+		else if (cmd.equalsIgnoreCase("online")) {
 			int players = (int) (World.getWorld().getPlayers().size());
 			for (Player p : World.getWorld().getPlayers()) {
 				if (p.isMod() && p.getSettings().getPrivacySetting(1)) {
@@ -243,7 +243,7 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.message(messagePrefix + "Players Online: " + players);
 		}
-		else if (cmd.equals("uniqueonline")) {
+		else if (cmd.equalsIgnoreCase("uniqueonline")) {
 			ArrayList<String> IP_ADDRESSES = new ArrayList<>();
 			for (Player p : World.getWorld().getPlayers()) {
 				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
@@ -251,13 +251,13 @@ public final class RegularPlayer implements CommandListener {
 			}
 			player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
 		}
-		else if (cmd.equals("skull")) {
+		else if (cmd.equalsIgnoreCase("skull")) {
 			int length = 20;
 			player.addSkull(length * 60000);
 			player.message(messagePrefix + "You have given yourself a skull.");
 			return;
 		}
-		else if (cmd.equals("onlinelist")) {
+		else if (cmd.equalsIgnoreCase("onlinelist")) {
 			String boxTextPlayerNames = "";
 			for (Player p : World.getWorld().getPlayers()) {
 				boxTextPlayerNames += p.getUsername() + "%";
