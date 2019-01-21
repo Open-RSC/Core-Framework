@@ -842,5 +842,37 @@ public final class Moderator implements CommandListener {
 			else
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");
 		}
+		else if (cmd.equalsIgnoreCase("ip")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			/*long requestee = player.getUsernameHash();
+			p.requestLocalhost(requestee);*/
+			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP());
+		}
+		else if (cmd.equalsIgnoreCase("ipcount")) {
+			Player p = args.length > 0 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			int count = 0;
+			for (Player worldPlayer : world.getPlayers()) {
+				if(worldPlayer.getCurrentIP() == p.getCurrentIP())
+					count++;
+			}
+
+			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP() + " has " + count + " connections");
+		}
 	}
 }
