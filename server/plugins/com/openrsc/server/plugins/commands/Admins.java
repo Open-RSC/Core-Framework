@@ -15,6 +15,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
@@ -24,6 +25,7 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.sql.GameLogging;
+import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -1508,14 +1510,16 @@ public final class Admins implements CommandListener {
 			try {
 				int npc_id      = Integer.parseInt(args[0]);
 
-				String newStr = "";
+				String msg = "";
 				for (int i = 1; i < args.length; i++)
-					newStr = newStr += args[i] + " ";
+					msg += args[i] + " ";
+				msg.trim();
 
 				final Npc npc = world.getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+				String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg));
 
 				if (npc != null) {
-					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, newStr, player));
+					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 				}
 				else {
 					player.message(messagePrefix + "NPC could not be found");
@@ -1524,6 +1528,30 @@ public final class Admins implements CommandListener {
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [msg]");
 			}
+		}
+		else if (cmd.equalsIgnoreCase("playertalk")) {
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [msg]");
+				return;
+			}
+
+			String msg = "";
+			for (int i = 1; i < args.length; i++)
+				msg += args[i] + " ";
+			msg.trim();
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+			if (p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg));
+
+			ChatMessage chatMessage = new ChatMessage(p, message);
+			p.getUpdateFlags().setChatMessage(chatMessage);
+			GameLogging.addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
+			world.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
 		}
 	}
 }
