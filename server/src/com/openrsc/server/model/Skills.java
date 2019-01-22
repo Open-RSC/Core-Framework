@@ -217,13 +217,26 @@ public class Skills {
 		return getLevelForExperience(getExperience(skill), mob instanceof Player ? PLAYER_LEVEL_LIMIT : GLOBAL_LEVEL_LIMIT);
 	}
 
+	public void normalize(int skill) {
+		normalize(skill, true);
+	}
+
+	public void normalize(int skill, boolean sendUpdate) {
+		levels[skill] = getMaxStat(skill);
+		if(sendUpdate)
+			sendUpdate(skill);
+	}
+
 	public void normalize() {
-		for (int i = 0; i < 18; i++) {
-			levels[i] = getMaxStat(i);
+		normalize(true);
+	}
+
+	public void normalize(boolean sendUpdate) {
+		for (int i = 0; i < Skills.SKILL_NAME.length; i++) {
+			normalize(i, false);
 		}
-		if (mob.isPlayer()) {
-			ActionSender.sendStats((Player) mob);
-		}
+		if(sendUpdate)
+			sendUpdateAll();
 	}
 
 	public void setLevelTo(int skill, int level) {
