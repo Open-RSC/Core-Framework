@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity.update;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.Mob;
 
 public class Damage {
@@ -15,7 +16,7 @@ public class Damage {
 	}
 
 	public int getCurHits() {
-		return mob.getSkills().getLevel(3);
+		return mob.getSkills().getLevel(Skills.HITPOINTS);
 	}
 
 	public int getDamage() {
@@ -27,7 +28,7 @@ public class Damage {
 	}
 
 	public int getMaxHits() {
-		return mob.getSkills().getMaxStat(3);
+		return mob.getSkills().getMaxStat(Skills.HITPOINTS);
 	}
 
 	public int getIndex() {
