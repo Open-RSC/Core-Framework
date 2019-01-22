@@ -1257,6 +1257,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			p.getUpdateFlags().setDamage(new Damage(player, damage));
 			p.getSkills().subtractLevel(Skills.HITPOINTS, damage);
 			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
 				p.killedBy(player);
