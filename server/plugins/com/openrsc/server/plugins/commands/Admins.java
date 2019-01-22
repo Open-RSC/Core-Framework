@@ -11,11 +11,13 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.ViewArea;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
@@ -1130,16 +1132,14 @@ public final class Admins implements CommandListener {
 				if(level > Constants.GameServer.PLAYER_LEVEL_LIMIT)
 					level = Constants.GameServer.PLAYER_LEVEL_LIMIT;
 
-				p.getSkills().setLevelTo(stat, level);
-				ActionSender.sendStat(p, stat);
+				p.getSkills().setLevel(stat, level);
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + "  to level " + level);
 				p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
 			}
 			else {
 				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
-					p.getSkills().setLevelTo(i, level);
-					ActionSender.sendStat(p, i);
+					p.getSkills().setLevel(i, level);
 				}
 
 				p.checkEquipment();
@@ -1175,7 +1175,8 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getSkills().setLevel(Skills.HITPOINTS, p.getSkills().getMaxStat(3));
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - p.getSkills().getMaxStat(Skills.HITPOINTS)));
+			p.getSkills().normalize(Skills.HITPOINTS);
 			p.message(messagePrefix + "You have been healed by an admin");
 			player.message(messagePrefix + "Healed: " + p.getUsername());
 		}
@@ -1197,11 +1198,12 @@ public final class Admins implements CommandListener {
 			try {
 				int newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
 
-				if(newHits > p.getSkills().getLevel(Skills.HITPOINTS))
-					newHits = p.getSkills().getLevel(Skills.HITPOINTS);
+				if(newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
+					newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
 				if(newHits < 0)
 					newHits = 0;
 
+				p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newHits));
 				p.getSkills().setLevel(Skills.HITPOINTS, newHits);
 				if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
 					p.killedBy(player);
@@ -1227,6 +1229,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS)));
 			p.getSkills().setLevel(Skills.HITPOINTS, 0);
 			p.killedBy(player);
 			p.message(messagePrefix + "You have been killed by an admin");
@@ -1254,7 +1257,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			p.getSkills().setLevel(Skills.HITPOINTS, p.getSkills().getLevel(Skills.HITPOINTS) - damage);
+			p.getSkills().subtractLevel(Skills.HITPOINTS, damage);
 			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
 				p.killedBy(player);
 
@@ -1566,6 +1569,49 @@ public final class Admins implements CommandListener {
 			p.getUpdateFlags().setChatMessage(null);
 			GameLogging.addQuery(new ChatLog(p.getUsername(), chatMessage.getMessageString()));
 			world.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
+		}
+		else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
+				return;
+			}
+
+			int id;
+			int damage;
+			Npc n;
+
+			try {
+				id = Integer.parseInt(args[0]);
+				n = world.getNpc(id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+				if (n == null) {
+					player.message(messagePrefix + "Unable to find the specified NPC");
+					return;
+				}
+			}
+			catch(NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
+				return;
+			}
+
+			if(args.length >= 2) {
+				try {
+					damage = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
+					return;
+				}
+			}
+			else {
+				damage = 9999;
+			}
+
+			GameObject sara = new GameObject(n.getLocation(), 1031, 0, 0);
+			world.registerGameObject(sara);
+			world.delayedRemoveObject(sara, 600);
+			n.getUpdateFlags().setDamage(new Damage(player, damage));
+			n.getSkills().subtractLevel(Skills.HITPOINTS, damage);
+			if (n.getSkills().getLevel(Skills.HITPOINTS) < 1)
+				n.killedBy(player);
 		}
 	}
 }
