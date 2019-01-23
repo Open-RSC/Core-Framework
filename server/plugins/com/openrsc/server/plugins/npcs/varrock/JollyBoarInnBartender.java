@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -9,6 +10,11 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
+	@Override
+	public boolean blockTalkToNpc(Player p, Npc n) {
+		return n.getID() == 44;
+	}
+	
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Yes please?");
@@ -33,10 +39,10 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 
 			if (hasItem(p, 10, 2)) {
 				p.message("You buy a pint of beer");
-				removeItem(p, 10, 2);
+				p.getInventory().remove(10, 2);
 				addItem(p, 193, 1);
 			} else {
-				playerTalk(p, n, "Oh dear, I don't seem to have enough money");
+				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 			}
 		} else if (reply == 1) {
 			npcTalk(p, n,
@@ -52,7 +58,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 			playerTalk(p, n, "Thanks", "I may try that at some point");
 		} else if (reply == 2) {
 			npcTalk(p, n,
-				"I'm that well up on the gossip out here",
+				"I'm not that well up on the gossip out here",
 				"I've heard that the bartender in the Blue Moon Inn has gone a little crazy",
 				"He keeps claiming he is part of something called a computer game",
 				"What that means, I don't know",
@@ -63,11 +69,12 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
 			if (hasItem(p, 10, 10)) {
-				removeItem(p, 10, 10);
+				p.getInventory().remove(10, 10);
 				message(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
-					"Your head is spinning",
-					"The bartender signs your card");
+					"Your head is spinning");
+				drinkAle(p);
+				message(p, "The bartender signs your card");
 				p.getCache().store("barone", true);
 				playerTalk(p, n, "Thanksh very mush");
 			} else {
@@ -75,9 +82,27 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 			}
 		}
 	}
-
-	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == 44;
+	
+	private void drinkAle(Player p) {
+		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.MAGIC, Skills.CRAFTING, Skills.MINING};
+		for (int i = 0; i < skillIDs.length; i++) {
+			setAleEffect(p, skillIDs[i]);
+		}
+	}
+	
+	private void setAleEffect(Player p, int skillId) {
+		int reduction, currentStat, maxStat;
+		maxStat = p.getSkills().getMaxStat(skillId);
+		//estimated
+		reduction = maxStat < 15 ? 5 :
+			maxStat < 40 ? 6 : 
+			maxStat < 75 ? 7 : 8;
+		currentStat = p.getSkills().getLevel(skillId);
+		if (currentStat <= 8) {
+			p.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
+		}
+		else {
+			p.getSkills().setLevel(skillId, currentStat - reduction);
+		}
 	}
 }
