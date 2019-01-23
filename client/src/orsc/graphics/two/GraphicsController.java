@@ -10,6 +10,8 @@ import orsc.util.GenUtil;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -774,26 +776,52 @@ public class GraphicsController {
 					}
 
 					if (width > wrapWidth) {
+						int lineEndsAt = lastBreak;
 						if (lastBreak <= lastLineTerm) {
-							lastBreak = i;
+							lineEndsAt = lastBreak = i;
+							lineEndsAt++;
 						}
 
-						width = 0;
+						StringBuilder colourCode    = new StringBuilder();
+
+						if(Config.S_WANT_FIXED_OVERHEAD_CHAT) {
+							StringBuilder regexBuilder = new StringBuilder(str.substring(0, lastLineTerm));
+							String regexCheck = regexBuilder.reverse().toString();
+							Pattern regex = Pattern.compile("(@.{3}@)");
+							Matcher match = regex.matcher(regexCheck);
+
+							if (match.find())
+								colourCode = colourCode.append(match.group(0)).reverse();
+						}
+
 						if (centered) {
-							this.drawColoredStringCentered(color, font, 0, str.substring(lastLineTerm, lastBreak), x, y);
+							this.drawColoredStringCentered(color, font, 0, colourCode + str.substring(lastLineTerm, lineEndsAt), x, y);
 						} else {
-							this.drawColoredString(x, y, str.substring(lastLineTerm, lastBreak), font, color, 0);
+							this.drawColoredString(x, y, colourCode + str.substring(lastLineTerm, lineEndsAt), font, color, 0);
 						}
 						lastLineTerm = i = 1 + lastBreak;
 						y += this.fontHeight(font);
+						width = 0;
 					}
 				}
 
 				if (width > 0) {
+					StringBuilder colourCode    = new StringBuilder();
+
+					if(Config.S_WANT_FIXED_OVERHEAD_CHAT) {
+						StringBuilder regexBuilder = new StringBuilder(str.substring(0, lastLineTerm));
+						String regexCheck = regexBuilder.reverse().toString();
+						Pattern regex = Pattern.compile("(@.{3}@)");
+						Matcher match = regex.matcher(regexCheck);
+
+						if(match.find())
+							colourCode  = colourCode.append(match.group(0)).reverse();
+					}
+
 					if (centered) {
-						this.drawColoredStringCentered(color, font, 0, str.substring(lastLineTerm), x, y);
+						this.drawColoredStringCentered(color, font, 0, colourCode + str.substring(lastLineTerm), x, y);
 					} else {
-						this.drawColoredString(x, y, str.substring(lastLineTerm), font, color, 0);
+						this.drawColoredString(x, y, colourCode + str.substring(lastLineTerm), font, color, 0);
 					}
 				}
 			} catch (Exception var15) {
