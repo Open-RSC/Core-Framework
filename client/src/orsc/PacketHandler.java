@@ -724,7 +724,7 @@ public class PacketHandler {
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus;
 		int wantExperienceElixirs, wantKeyboardShortcuts;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
-		int wantDropX, wantExpInfo, wantWoodcuttingGuild;
+		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank;
 
 		if (!mc.gotInitialConfigs) {
@@ -766,6 +766,7 @@ public class PacketHandler {
 			wantCertsToBank = this.getClientStream().getUnsignedByte();
 			wantCustomRankDisplay = this.getClientStream().getUnsignedByte();
 			wantRightClickBank = this.getClientStream().getUnsignedByte();
+			wantFixedOverheadChat = this.getClientStream().getUnsignedByte();
 		} else {
 			serverName = packetsIncoming.readString();
 			playerLevelLimit = packetsIncoming.getUnsignedByte();
@@ -805,6 +806,7 @@ public class PacketHandler {
 			wantCertsToBank = packetsIncoming.getUnsignedByte();
 			wantCustomRankDisplay = packetsIncoming.getUnsignedByte();
 			wantRightClickBank = packetsIncoming.getUnsignedByte();
+			wantFixedOverheadChat = packetsIncoming.getUnsignedByte();
 		}
 
 		if (mc.DEBUG) {
@@ -843,7 +845,8 @@ public class PacketHandler {
 					"\nS_WANT_DECANTING " + wantDecanting +
 					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank +
 					"\nS_WANT_CUSTOM_RANK_DISPLAY" + wantCustomRankDisplay +
-					"\nS_RIGHT_CLICK_BANK" + wantRightClickBank
+					"\nS_RIGHT_CLICK_BANK" + wantRightClickBank +
+					"\nS_WANT_FIXED_OVERHEAD_CHAT" + wantFixedOverheadChat
 			);
 		}
 
@@ -884,6 +887,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false");
 		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false");
 		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false");
+		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false");
 
 		Config.updateServerConfiguration(props);
 
