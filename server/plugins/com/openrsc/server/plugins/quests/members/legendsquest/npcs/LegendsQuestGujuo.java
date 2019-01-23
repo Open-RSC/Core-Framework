@@ -1,13 +1,21 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -879,7 +887,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					}
 					break;
 				case Gujuo.BLESS_THE_BOWL:
-					if (getCurrentLevel(p, PRAYER) < 42) {
+					if (getCurrentLevel(p, Skills.PRAYER) < 42) {
 						npcTalk(p, n, "Bwana, I am very sorry,",
 							"But you are too inexperienced to bless this bowl.");
 						p.message("You need a prayer ability of 42 to complete this task.");
@@ -892,7 +900,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						npcTalk(p, n, 3000, "Ohhhhhmmmmmm");
 						playerTalk(p, n, "Oooooohhhhmmmmmmmmmm");
 						npcTalk(p, n, 3000, "Ohhhhhmmmmmm");
-						if (Formulae.failCalculation(p, PRAYER, 42)) {
+						if (Formulae.failCalculation(p, Skills.PRAYER, 42)) {
 							message(p, 1300, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
 							if (hasItem(p, 1188)) {
@@ -904,7 +912,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						} else {
 							message(p, 1300, "You were not able to go into a deep enough trance.",
 								"You lose some prayer...");
-							p.getSkills().setLevel(PRAYER, p.getSkills().getLevel(PRAYER) - 5);
+							p.getSkills().setLevel(Skills.PRAYER, p.getSkills().getLevel(Skills.PRAYER) - 5);
 							npcTalk(p, n, "Would you like to try again.");
 							int failMenu = showMenu(p, n,
 								"Yes, I'd like to bless my golden bowl.",
@@ -938,41 +946,41 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 	}
 
 	class Gujuo {
-		public static final int SORRY_IT_WAS_A_MISTAKE = 0;
-		public static final int IM_LOST = 1;
-		public static final int NO_THANKS = 2;
-		public static final int I_WILL_RELEASE_UNGADULU = 3;
-		public static final int I_WANT_TO_DEVELOP_FRIENDLY_RELATIONS = 4;
-		public static final int OK_THANKS_FOR_YOUR_HELP = 5;
-		public static final int UNGADULU_LOOKS_STRANGE = 6;
-		public static final int UNGADULU_CALLED_ME_VACU = 7;
-		public static final int UNKNOWN_FORCES = 8;
-		public static final int I_NEED_TO_DOUSE_SOME_FLAMES_WITH_PURE_WATER = 9;
-		public static final int WHAT_KIND_OF_A_VESSEL = 10;
-		public static final int METAL_OF_SUN_WHAT_IS_THAT = 11;
-		public static final int HOW_DO_I_BLESS_THE_BOWL = 12;
-		public static final int WHERE_CAN_I_FIND_THIS_METAL = 13;
-		public static final int HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU = 14;
-		public static final int BLESS_THE_BOWL = 15;
-		public static final int WHAT_DO_I_DO_NOW = 16;
-		public static final int I_HAVE_THE_YOMMI_TREE_SEEDS = 17;
-		public static final int UNGADULU_IS_FREE = 18;
-		public static final int WHERE_IS_THE_FETILE_SOIL = 19;
-		public static final int I_HAVE_GERMINATED_THE_YOMMI_TREE_SEEDS = 20;
-		public static final int THE_YOMMI_TREE_DIED = 21;
-		public static final int DOES_THE_YOMMI_TREE_HAVE_TO_HAVE_PURE_WATER = 22;
-		public static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER = 23;
-		public static final int THE_WATER_POOL_HAS_DRIED_UP_AND_I_NEED_MORE_WATER = 24;
-		public static final int WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE = 25;
-		public static final int I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET = 26;
-		public static final int IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME = 27;
-		public static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2 = 28;
-		public static final int WHERE_CAN_I_FIND_SNAKE_WEED = 29;
-		public static final int WHERE_CAN_I_FIND_ARDRIGAL = 30;
-		public static final int WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM = 31;
+		static final int SORRY_IT_WAS_A_MISTAKE = 0;
+		static final int IM_LOST = 1;
+		static final int NO_THANKS = 2;
+		static final int I_WILL_RELEASE_UNGADULU = 3;
+		static final int I_WANT_TO_DEVELOP_FRIENDLY_RELATIONS = 4;
+		static final int OK_THANKS_FOR_YOUR_HELP = 5;
+		static final int UNGADULU_LOOKS_STRANGE = 6;
+		static final int UNGADULU_CALLED_ME_VACU = 7;
+		static final int UNKNOWN_FORCES = 8;
+		static final int I_NEED_TO_DOUSE_SOME_FLAMES_WITH_PURE_WATER = 9;
+		static final int WHAT_KIND_OF_A_VESSEL = 10;
+		static final int METAL_OF_SUN_WHAT_IS_THAT = 11;
+		static final int HOW_DO_I_BLESS_THE_BOWL = 12;
+		static final int WHERE_CAN_I_FIND_THIS_METAL = 13;
+		static final int HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU = 14;
+		static final int BLESS_THE_BOWL = 15;
+		static final int WHAT_DO_I_DO_NOW = 16;
+		static final int I_HAVE_THE_YOMMI_TREE_SEEDS = 17;
+		static final int UNGADULU_IS_FREE = 18;
+		static final int WHERE_IS_THE_FETILE_SOIL = 19;
+		static final int I_HAVE_GERMINATED_THE_YOMMI_TREE_SEEDS = 20;
+		static final int THE_YOMMI_TREE_DIED = 21;
+		static final int DOES_THE_YOMMI_TREE_HAVE_TO_HAVE_PURE_WATER = 22;
+		static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER = 23;
+		static final int THE_WATER_POOL_HAS_DRIED_UP_AND_I_NEED_MORE_WATER = 24;
+		static final int WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE = 25;
+		static final int I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET = 26;
+		static final int IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME = 27;
+		static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2 = 28;
+		static final int WHERE_CAN_I_FIND_SNAKE_WEED = 29;
+		static final int WHERE_CAN_I_FIND_ARDRIGAL = 30;
+		static final int WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM = 31;
 
-		public static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 32;
-		public static final int I_KILLED_THE_DEMON_AGAIN = 33;
-		public static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 34;
+		static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 32;
+		static final int I_KILLED_THE_DEMON_AGAIN = 33;
+		static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 34;
 	}
 }

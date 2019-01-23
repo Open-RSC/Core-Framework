@@ -16,15 +16,11 @@ public class Bed implements ObjectActionExecutiveListener, ObjectActionListener 
 				owner.startSleepEvent(false);
 			else
 				owner.startSleepEvent(true);
-			return;
 		}
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (command.equals("rest") || command.equals("sleep") || command.equals("lie in")) {
-			return true;
-		}
-		return false;
+		return command.equals("rest") || command.equals("sleep") || command.equals("lie in");
 	}
 }

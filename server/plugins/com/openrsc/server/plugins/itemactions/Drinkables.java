@@ -303,17 +303,17 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 				player.getSkills().setLevel(Skills.STRENGTH, newStat);
 			}
 		}
-		if (player.getSkills().getLevel(Skills.DEFENCE) < player.getSkills().getMaxStat(Skills.DEFENCE)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.DEFENCE);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENCE) / 100D * defenceDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.DEFENCE)) {
-				player.getSkills().setLevel(Skills.DEFENCE, newStat);
+		if (player.getSkills().getLevel(Skills.DEFENSE) < player.getSkills().getMaxStat(Skills.DEFENSE)) {
+			int baseStat = player.getSkills().getMaxStat(Skills.DEFENSE);
+			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENSE) / 100D * defenceDecrease);
+			if (newStat < player.getSkills().getLevel(Skills.DEFENSE)) {
+				player.getSkills().setLevel(Skills.DEFENSE, newStat);
 			}
 		} else {
-			int baseStat = player.getSkills().getLevel(Skills.DEFENCE);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENCE) / 100D * defenceDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.DEFENCE)) {
-				player.getSkills().setLevel(Skills.DEFENCE, newStat);
+			int baseStat = player.getSkills().getLevel(Skills.DEFENSE);
+			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENSE) / 100D * defenceDecrease);
+			if (newStat < player.getSkills().getLevel(Skills.DEFENSE)) {
+				player.getSkills().setLevel(Skills.DEFENSE, newStat);
 			}
 		}
 		if (player.getSkills().getLevel(Skills.HITPOINTS) < player.getSkills().getMaxStat(Skills.HITPOINTS)) {
@@ -430,7 +430,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 	private void handleCocktail(Player player, Item item) {
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
-		player.getSkills().setLevel(Skills.DEFENCE, player.getSkills().getLevel(Skills.DEFENCE) - 1);
+		player.getSkills().setLevel(Skills.DEFENSE, player.getSkills().getLevel(Skills.DEFENSE) - 1);
 		player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) - 4);
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "It tastes awful..yuck");
@@ -670,8 +670,8 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 					player.getSkills().getLevel(Skills.CRAFTING) + needs);
 				player.getSkills().setLevel(Skills.ATTACK,
 					player.getSkills().getLevel(Skills.ATTACK) - 1);
-				player.getSkills().setLevel(Skills.DEFENCE,
-					player.getSkills().getLevel(Skills.DEFENCE) - 1);
+				player.getSkills().setLevel(Skills.DEFENSE,
+					player.getSkills().getLevel(Skills.DEFENSE) - 1);
 				player.message("You feel a little strange");
 				break;
 			case 3: // Hits +? Thieving + 1
@@ -709,11 +709,11 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 				player.getSkills().setLevel(Skills.STRENGTH,
 					player.getSkills().getLevel(Skills.STRENGTH) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skills.DEFENCE) + 4
-						- player.getSkills().getLevel(Skills.DEFENCE));
+					player.getSkills().getMaxStat(Skills.DEFENSE) + 4
+						- player.getSkills().getLevel(Skills.DEFENSE));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skills.DEFENCE,
-					player.getSkills().getLevel(Skills.DEFENCE) + needs);
+				player.getSkills().setLevel(Skills.DEFENSE,
+					player.getSkills().getLevel(Skills.DEFENSE) + needs);
 				player.message("Wow that was an amazing!! You feel really invigorated");
 				break;
 			case 5: // No effect

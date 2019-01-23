@@ -10,19 +10,19 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	public final int KNIFE = 13;
-	public final int LIME = 863;
-	public final int ORANGE = 857;
-	public final int ORANGE_DICE = 859;
-	public final int ORANGE_SLICE = 858;
-	public final int LIME_SLICE = 865;
-	public final int LIME_DICE = 864;
-	public final int PINE_APPLE = 861;
-	public final int PINE_APPLE_RINGS = 749;
-	public final int PINE_APPLE_DICE = 862;
-	public final int LEMON = 855;
-	public final int LEMON_SLICE = 856;
-	public final int LEMON_DICE = 860;
+	private final int KNIFE = 13;
+	private final int LIME = 863;
+	private final int ORANGE = 857;
+	private final int ORANGE_DICE = 859;
+	private final int ORANGE_SLICE = 858;
+	private final int LIME_SLICE = 865;
+	private final int LIME_DICE = 864;
+	private final int PINE_APPLE = 861;
+	private final int PINE_APPLE_RINGS = 749;
+	private final int PINE_APPLE_DICE = 862;
+	private final int LEMON = 855;
+	private final int LEMON_SLICE = 856;
+	private final int LEMON_DICE = 860;
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {

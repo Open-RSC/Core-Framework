@@ -42,7 +42,7 @@ public class PVPCombatFormula {
 					Prayers.STEEL_SKIN)
 					*
 					(
-						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getSkills().getLevel(Skills.DEFENCE)) * 1.1D
+						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getSkills().getLevel(Skills.DEFENSE)) * 1.1D
 					)
 					+
 					(

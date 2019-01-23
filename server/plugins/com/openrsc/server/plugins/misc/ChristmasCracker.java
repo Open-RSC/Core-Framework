@@ -12,8 +12,8 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 
-	public static final int[] phatWeights = {10, 15, 20, 23, 32, 28};
-	public static final int[] phatIds = {
+	private static final int[] phatWeights = {10, 15, 20, 23, 32, 28};
+	private static final int[] phatIds = {
 		ItemId.PINK_PARTY_HAT.id(),
 		ItemId.BLUE_PARTY_HAT.id(),
 		ItemId.GREEN_PARTY_HAT.id(),
@@ -22,8 +22,8 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.YELLOW_PARTY_HAT.id()
 	};
 
-	public static final int[] prizeWeights = {5, 5, 8, 8, 8, 8, 12, 14, 14, 18};
-	public static final int[] prizeIds = {
+	private static final int[] prizeWeights = {5, 5, 8, 8, 8, 8, 12, 14, 14, 18};
+	private static final int[] prizeIds = {
 		ItemId.LAW_RUNE.id(),
 		ItemId.BLACK_DAGGER.id(),
 		ItemId.GOLD_RING.id(),

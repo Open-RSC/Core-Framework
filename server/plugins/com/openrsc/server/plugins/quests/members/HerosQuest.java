@@ -2,16 +2,40 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.doDoor;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class HerosQuest implements QuestInterface, TalkToNpcListener,
@@ -45,8 +69,9 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		player.getCache().remove("armband");
 		int[] questData = Quests.questData.get(Quests.HEROS_QUEST);
 		//keep order kosher
-		int[] skillIDs = {STRENGTH, DEFENCE, HITS, ATTACK, RANGED, HERBLAW,
-			FISHING, COOKING, FIREMAKING, WOODCUT, MINING, SMITHING};
+		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE, Skills.HITPOINTS,
+			Skills.ATTACK, Skills.RANGED, Skills.HERBLAW,
+			Skills.FISHING, Skills.COOKING, Skills.FIREMAKING, Skills.WOODCUT, Skills.MINING, Skills.SMITHING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

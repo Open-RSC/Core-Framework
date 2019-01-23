@@ -11,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	public static final int TRUFITUS = 517;
+	private static final int TRUFITUS = 517;
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {

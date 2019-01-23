@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -10,11 +11,35 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMultipleNpcsInArea;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
@@ -22,30 +47,30 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	/**
 	 * Quest Npcs
 	 **/
-	public static int LUCIEN = 360;
-	public static int EDGE_LUCIEN = 364;
-	public static int WARRIOR_OF_LESARKUS = 361;
-	public static int WINELDA = 365;
+	private static int LUCIEN = 360;
+	private static int EDGE_LUCIEN = 364;
+	private static int WARRIOR_OF_LESARKUS = 361;
+	private static int WINELDA = 365;
 
 	/**
 	 * Quest Objects
 	 **/
-	public static int STAIR_DOWN = 370;
-	public static int STAIR_UP = 369;
-	public static int LEVER = 361;
-	public static int LEVER_BRACKET = 367;
-	public static int COMPLETE_LEVER = 368;
+	private static int STAIR_DOWN = 370;
+	private static int STAIR_UP = 369;
+	private static int LEVER = 361;
+	private static int LEVER_BRACKET = 367;
+	private static int COMPLETE_LEVER = 368;
 
 	/**
 	 * Quest Items
 	 **/
-	public static int PIECE_OF_LEVER = 724;
-	public static int ICE_ARROW = 723;
-	public static int PENDANT_OF_LUCIEN = 721;
+	private static int PIECE_OF_LEVER = 724;
+	private static int ICE_ARROW = 723;
+	private static int PENDANT_OF_LUCIEN = 721;
 	public static int BOOTS = 722;
-	public static int LIMPROOT = 220;
-	public static int STAFF_OF_ARMADYL = 725;
-	public static int GUARDIAN_PENDANT = 726;
+	private static int LIMPROOT = 220;
+	private static int STAFF_OF_ARMADYL = 725;
+	private static int GUARDIAN_PENDANT = 726;
 
 	@Override
 	public int getQuestId() {
@@ -69,7 +94,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		p.getCache().remove("killedLesarkus");
 		int[] questData = Quests.questData.get(Quests.TEMPLE_OF_IKOV);
 		//keep order kosher
-		int[] skillIDs = {RANGED, FLETCHING};
+		int[] skillIDs = {Skills.RANGED, Skills.FLETCHING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -521,7 +546,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (command.equals("searchfortraps")) {
 				p.message("You search the lever for traps");
-				if (getCurrentLevel(p, THIEVING) < 42) {
+				if (getCurrentLevel(p, Skills.THIEVING) < 42) {
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}

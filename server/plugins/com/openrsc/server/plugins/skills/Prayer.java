@@ -29,16 +29,12 @@ public class Prayer implements ObjectActionExecutiveListener, ObjectActionListen
 				message(player, "Suddenly a trapdoor opens beneath you");
 				player.teleport(608, 3525);
 			}
-			return;
 		}
 	}
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (command.equals("recharge at")) {
-			return true;
-		}
-		return false;
+		return command.equals("recharge at");
 	}
 
 }

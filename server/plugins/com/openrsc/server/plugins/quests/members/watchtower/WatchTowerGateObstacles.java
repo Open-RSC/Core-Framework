@@ -15,19 +15,16 @@ import static com.openrsc.server.plugins.Functions.*;
  */
 public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static int NORTH_WEST_GATE = 989;
-	public static int EAST_SOUTH_GATE = 988;
-	public static int OGRE_RELIC_COMPLETE = 1044;
-	public static int OGRE_ELCLAVE_GATE = 1068;
+	private static int NORTH_WEST_GATE = 989;
+	private static int EAST_SOUTH_GATE = 988;
+	private static int OGRE_RELIC_COMPLETE = 1044;
+	private static int OGRE_ELCLAVE_GATE = 1068;
 
-	public static int GOLD_BAR = 172;
+	private static int GOLD_BAR = 172;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == NORTH_WEST_GATE || obj.getID() == EAST_SOUTH_GATE || obj.getID() == OGRE_ELCLAVE_GATE) {
-			return true;
-		}
-		return false;
+		return obj.getID() == NORTH_WEST_GATE || obj.getID() == EAST_SOUTH_GATE || obj.getID() == OGRE_ELCLAVE_GATE;
 	}
 
 	@Override

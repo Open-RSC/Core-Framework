@@ -11,10 +11,10 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
-	public final int SHAKER = 834;
-	public final int COCKTAIL_GLASS = 833;
+	private final int SHAKER = 834;
+	private final int COCKTAIL_GLASS = 833;
 
-	public boolean canMix(Item itemOne, Item itemTwo) {
+	private boolean canMix(Item itemOne, Item itemTwo) {
 		for (DrinkMix dm : DrinkMix.values()) {
 			if (dm.isValid(itemOne.getID(), itemTwo.getID())) {
 				return true;
@@ -157,10 +157,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == SHAKER) {
-			return true;
-		}
-		return false;
+		return item.getID() == SHAKER;
 	}
 
 	@Override

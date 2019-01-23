@@ -24,7 +24,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
-		if (p.getSkills().getMaxStat(MAGIC) < 60) { // TODO: Enter the arena game.
+		if (p.getSkills().getMaxStat(Skills.MAGIC) < 60) { // TODO: Enter the arena game.
 			playerTalk(p, n, "hello there", "what is this place?");
 			npcTalk(p, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
@@ -179,26 +179,26 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 				if (Guthix != null && Guthix.withinRange(owner, 1)) {
 					godSpellObject(owner, 33);
 					p.message(randomMessage[2]);
-					if (getCurrentLevel(owner, HITS) < 20) {
+					if (getCurrentLevel(owner, Skills.HITPOINTS) < 20) {
 						owner.damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, HITS) / 10);
+						owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10);
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(owner, 1)) {
 					godSpellObject(owner, 35);
 					p.message(randomMessage[0]);
-					if (getCurrentLevel(owner, HITS) < 20) {
+					if (getCurrentLevel(owner, Skills.HITPOINTS) < 20) {
 						owner.damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, HITS) / 10);
+						owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10);
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(owner, 1)) {
 					godSpellObject(owner, 34);
 					p.message(randomMessage[1]);
-					if (getCurrentLevel(owner, HITS) < 20) {
+					if (getCurrentLevel(owner, Skills.HITPOINTS) < 20) {
 						owner.damage(2);
 					} else {
-						owner.damage(getCurrentLevel(owner, HITS) / 10);
+						owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10);
 					}
 				}
 			}
