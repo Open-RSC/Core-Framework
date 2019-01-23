@@ -27,48 +27,48 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	 **/
 
 	// OBJECTS
-	public static final int ELENAS_DOOR = 152;
-	public static final int JERICOS_CUPBOARD_ONE = 71;
-	public static final int JERICOS_CUPBOARD_TWO = 500;
-	public static final int WATCH_TOWER = 494;
-	public static final int VISUAL_ROPELADDER = 498;
-	public static final int COOKING_POT = 502;
-	public static final int NURSE_SARAHS_CUPBOARD = 510;
-	public static final int GET_INTO_CRATES_GATE = 504;
-	public static final int DISTILLATOR_CRATE = 505;
-	public static final int OTHER_CRATE = 290;
+	private static final int ELENAS_DOOR = 152;
+	private static final int JERICOS_CUPBOARD_ONE = 71;
+	private static final int JERICOS_CUPBOARD_TWO = 500;
+	private static final int WATCH_TOWER = 494;
+	private static final int VISUAL_ROPELADDER = 498;
+	private static final int COOKING_POT = 502;
+	private static final int NURSE_SARAHS_CUPBOARD = 510;
+	private static final int GET_INTO_CRATES_GATE = 504;
+	private static final int DISTILLATOR_CRATE = 505;
+	private static final int OTHER_CRATE = 290;
 
 	// ITEMS
-	public static final int BIRD_FEED = 800;
-	public static final int ROTTEN_APPLE = 801;
-	public static final int DOCTORS_GOWN = 802;
-	public static final int BRONZE_KEY = 803;
-	public static final int DISTILLATOR = 804;
-	public static final int LIQUID_HONEY = 809;
-	public static final int ETHENEA = 810;
-	public static final int SULPHURIC_BROLINE = 811;
-	public static final int PLAGUE_SAMPLE = 812;
-	public static final int TOUCH_PAPER = 813;
-	public static final int PRIEST_GOWN = 808;
-	public static final int PRIEST_ROBE = 807;
+	private static final int BIRD_FEED = 800;
+	private static final int ROTTEN_APPLE = 801;
+	private static final int DOCTORS_GOWN = 802;
+	private static final int BRONZE_KEY = 803;
+	private static final int DISTILLATOR = 804;
+	private static final int LIQUID_HONEY = 809;
+	private static final int ETHENEA = 810;
+	private static final int SULPHURIC_BROLINE = 811;
+	private static final int PLAGUE_SAMPLE = 812;
+	private static final int TOUCH_PAPER = 813;
+	private static final int PRIEST_GOWN = 808;
+	private static final int PRIEST_ROBE = 807;
 
 	// NPCS
-	public static final int ELENA = 483;
-	public static final int OMART = 484;
-	public static final int JERICO = 486;
-	public static final int KILRON = 487;
-	public static final int GUIDORS_WIFE = 488;
-	public static final int GUIDOR = 508;
-	public static final int NURSE_SARAH = 500;
-	public static final int MOURNER_HAS_KEY = 495;
-	public static final int CHEMIST = 504;
-	public static final int CHANCY = 505;
-	public static final int HOPS = 506;
-	public static final int DEVINCI = 507;
-	public static final int SECOND_CHANCY = 509;
-	public static final int SECOND_HOPS = 510;
-	public static final int SECOND_DEVINCI = 511;
-	public static final int KING_LATHAS = 512;
+	private static final int ELENA = 483;
+	private static final int OMART = 484;
+	private static final int JERICO = 486;
+	private static final int KILRON = 487;
+	private static final int GUIDORS_WIFE = 488;
+	private static final int GUIDOR = 508;
+	private static final int NURSE_SARAH = 500;
+	private static final int MOURNER_HAS_KEY = 495;
+	private static final int CHEMIST = 504;
+	private static final int CHANCY = 505;
+	private static final int HOPS = 506;
+	private static final int DEVINCI = 507;
+	private static final int SECOND_CHANCY = 509;
+	private static final int SECOND_HOPS = 510;
+	private static final int SECOND_DEVINCI = 511;
+	private static final int KING_LATHAS = 512;
 
 
 	@Override

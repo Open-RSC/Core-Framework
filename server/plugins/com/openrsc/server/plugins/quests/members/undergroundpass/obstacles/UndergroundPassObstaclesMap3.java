@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.Area;
@@ -10,9 +12,17 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
+import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObject;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -58,7 +68,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					if (p.getInventory().wielding(KLANKS)) {
 						p.message("klanks gaunlett protects you");
 					} else {
-						p.damage(((int) getCurrentLevel(p, HITS) / 10) + 5);
+						p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 10) + 5);
 						playerTalk(p, null, "aaarrgghh");
 					}
 				}
@@ -84,7 +94,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					p.message("klanks gaunlett protects you");
 					p.message("but you find find nothing");
 				} else {
-					p.damage(((int) getCurrentLevel(p, HITS) / 10) + 5);
+					p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 10) + 5);
 					playerTalk(p, null, "aaarrgghh");
 					p.message("you find nothing");
 				}
@@ -138,7 +148,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 						message(p, "a blast of energy comes from ibans staff");
 						p.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(p, p.getX() + 1, p.getY(), true);
-						p.damage(((int) getCurrentLevel(p, HITS) / 7) + 1);
+						p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 7) + 1);
 						playerTalk(p, null, "aarrgh");
 						message(p, "@yel@Iban:die foolish mortal");
 						long start = System.currentTimeMillis();
@@ -167,7 +177,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 								ActionSender.sendTeleBubble(p, blastPosition.getX(), blastPosition.getY(), true);
 								if (p.getLocation().withinRange(blastPosition, 1)) {
 									/* Blast hit */
-									p.damage(((int) getCurrentLevel(p, HITS) / 6) + 2);
+									p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 6) + 2);
 									p.teleport(795, 3469); // insert the coords
 									playerTalk(p, null, "aarrgh");
 									p.message("you're blasted back to the door");

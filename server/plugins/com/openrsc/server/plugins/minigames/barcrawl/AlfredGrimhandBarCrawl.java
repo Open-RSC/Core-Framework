@@ -16,20 +16,13 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 	ObjectActionExecutiveListener {
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
-		if (obj.getID() == 311 && obj.getX() == 494) {
-			return true;
-		}
-		return false;
+	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+		return obj.getID() == 311 && obj.getX() == 494;
 	}
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
-		if (n.getID() == 305) {
-			return true;
-		}
-		return false;
+		return n.getID() == 305;
 	}
 
 	@Override
@@ -47,8 +40,8 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 						int third = showMenu(
 							p,
 							barbarian,
-							new String[]{"I've lost my barcrawl card",
-								"Not to bad, my barcrawl card is in my bank now"});
+							"I've lost my barcrawl card",
+								"Not to bad, my barcrawl card is in my bank now");
 						if (third == 0) {
 							npcTalk(p, barbarian, "What are you like?",
 								"You're gonna have to start all over now",
@@ -90,16 +83,16 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 				}
 				npcTalk(p, barbarian, "Oi whaddya want?");
 				int first = showMenu(p, barbarian,
-					new String[]{"I want to come through this gate",
-						"I want some money"});
+					"I want to come through this gate",
+						"I want some money");
 				if (first == 0) {
 					npcTalk(p, barbarian, "Barbarian only",
 						"Are you a barbarian?", "You don't look like one");
 					int second = showMenu(
 						p,
 						barbarian,
-						new String[]{"Hmm, yep you've got me there",
-							"Looks can be deceiving, I am in fact a barbarian"});
+						"Hmm, yep you've got me there",
+							"Looks can be deceiving, I am in fact a barbarian");
 					if (second == 0) {
 						// NOTHING
 					} else if (second == 1) {
@@ -125,8 +118,6 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 					npcTalk(p, barbarian,
 						"Well do I look like a banker to you?");
 				}
-			} else {
-				return;
 			}
 		}
 	}
@@ -141,9 +132,9 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 			if (p.getCache().hasKey("barcrawl")) {
 				npcTalk(p, n, "So hows the barcrawl coming along?");
 				if (!hasItem(p, 668)) {
-					final int third = showMenu(p, n, new String[]{
+					final int third = showMenu(p, n,
 						"I've lost my barcrawl card",
-						"Not to bad, my barcrawl card is in my bank now"});
+						"Not to bad, my barcrawl card is in my bank now");
 					if (third == 0) {
 						npcTalk(p, n, "What are you like?",
 							"You're gonna have to start all over now",
@@ -184,14 +175,14 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 				return;
 			}
 			npcTalk(p, n, "Oi whaddya want?");
-			final int first = showMenu(p, n, new String[]{
-				"I want to come through this gate", "I want some money"});
+			final int first = showMenu(p, n,
+				"I want to come through this gate", "I want some money");
 			if (first == 0) {
 				npcTalk(p, n, "Barbarian only", "Are you a barbarian?",
 					"You don't look like one");
-				final int second = showMenu(p, n, new String[]{
+				final int second = showMenu(p, n,
 					"Hmm, yep you've got me there",
-					"Looks can be deceiving, I am in fact a barbarian"});
+					"Looks can be deceiving, I am in fact a barbarian");
 				if (second == 0) {
 					// NOTHING
 				} else if (second == 1) {

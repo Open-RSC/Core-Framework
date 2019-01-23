@@ -5,6 +5,7 @@ import com.openrsc.server.Constants.GameServer;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,7 +13,20 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.doDoor;
+import static com.openrsc.server.plugins.Functions.doGate;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
+import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 /**
  * Does default action to unhandled(non-quest related) doors.
@@ -513,7 +527,7 @@ public class DoorAction {
 					break;
 				}
 				if (p.getY() > 523) {
-					if (getCurrentLevel(p, FISHING) < 68) {
+					if (getCurrentLevel(p, Skills.FISHING) < 68) {
 						p.setBusy(true);
 						Npc masterFisher = World.getWorld().getNpc(368, 582, 588,
 							524, 527);
@@ -540,7 +554,7 @@ public class DoorAction {
 				if (obj.getX() != 268 || obj.getY() != 3381) {
 					break;
 				}
-				if (getCurrentLevel(p, MINING) < 60) {
+				if (getCurrentLevel(p, Skills.MINING) < 60) {
 					Npc dwarf = World.getWorld().getNpc(191, 265, 270, 3379, 3380);
 					if (dwarf != null) {
 						npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
@@ -556,7 +570,7 @@ public class DoorAction {
 				if (obj.getX() != 347 || obj.getY() != 601) {
 					return;
 				}
-				if (getCurrentLevel(p, CRAFTING) < 40) {
+				if (getCurrentLevel(p, Skills.CRAFTING) < 40) {
 					p.setBusy(true);
 					Npc master = World.getWorld().getNpc(231, 341, 349, 599, 612);
 					if (master != null) {
@@ -580,7 +594,7 @@ public class DoorAction {
 				if (obj.getX() != 179 || obj.getY() != 488) {
 					break;
 				}
-				if (getCurrentLevel(p, COOKING) < 32) {
+				if (getCurrentLevel(p, Skills.COOKING) < 32) {
 					Npc chef = World.getWorld().getNpc(133, 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
@@ -602,7 +616,7 @@ public class DoorAction {
 				if (obj.getX() != 599 || obj.getY() != 757) {
 					break;
 				}
-				if (getCurrentLevel(p, MAGIC) < 66) {
+				if (getCurrentLevel(p, Skills.MAGIC) < 66) {
 					Npc wizard = World.getWorld().getNpc(513, 596, 597, 755, 758);
 					if (wizard != null) {
 						npcTalk(p, wizard, "You need a magic level of 66 to get in here",
@@ -1042,8 +1056,6 @@ public class DoorAction {
 			default:
 				player.message(
 					"Nothing interesting happens");
-
-				return;
 		}
 	}
 
@@ -1086,7 +1098,7 @@ public class DoorAction {
 					doGate(player, obj);
 				} else {
 					if (Constants.GameServer.WANT_WOODCUTTING_GUILD) {
-						if (getCurrentLevel(player, WOODCUT) < 70) {
+						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
 							player.setBusy(true);
 							final Npc forester = World.getWorld().getNpc(348, 562, 565,
 								468, 472);

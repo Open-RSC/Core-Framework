@@ -9,7 +9,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	public boolean canMix(Item itemOne, Item itemTwo) {
+	private boolean canMix(Item itemOne, Item itemTwo) {
 		for (GnomeMix gm : GnomeMix.values()) {
 			if (gm.isValid(itemOne.getID(), itemTwo.getID())) {
 				return true;

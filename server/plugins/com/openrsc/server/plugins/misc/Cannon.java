@@ -36,7 +36,7 @@ public class Cannon implements ObjectActionListener,
 	 * cannon_stage - 1-4 depending on how many parts have been added.
 	 */
 
-	public final Item CANNON_BALL = new Item(ItemId.MULTI_CANNON_BALL.id());
+	private final Item CANNON_BALL = new Item(ItemId.MULTI_CANNON_BALL.id());
 
 	private void pickupBase(Player player, GameObject object) {
 		player.message("you pick up the cannon");

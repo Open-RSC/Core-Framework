@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -11,18 +12,21 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	public static int[] WINCH = {1095, 1053};
+	private static int[] WINCH = {1095, 1053};
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
-		if (inArray(obj.getID(), WINCH)) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), WINCH);
 	}
 
 	@Override
@@ -47,14 +51,14 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.message("The bucket descends, but does not reach the bottom");
 							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							if (getCurrentLevel(p, AGILITY) < 10) {
+							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
 								p.setBusy(false);
 								return;
 							}
 							message(p, "You try to climb down the rope",
 								"You lower yourself into the shaft");
-							p.incExp(AGILITY, 20, true);
+							p.incExp(Skills.AGILITY, 20, true);
 							p.teleport(26, 3346);
 							p.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
@@ -70,14 +74,14 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 							p.message("The bucket descends, but does not reach the bottom");
 							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							if (getCurrentLevel(p, AGILITY) < 10) {
+							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
 								p.setBusy(false);
 								return;
 							}
 							message(p, "You try to climb down the rope",
 								"You lower yourself into the shaft");
-							p.incExp(AGILITY, 20, true);
+							p.incExp(Skills.AGILITY, 20, true);
 							if (p.getQuestStage(Constants.Quests.DIGSITE) >= 6) {
 								p.teleport(19, 3385);
 							} else {
@@ -92,10 +96,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (inArray(obj.getID(), WINCH) && item.getID() == 237) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), WINCH) && item.getID() == 237;
 	}
 
 	@Override

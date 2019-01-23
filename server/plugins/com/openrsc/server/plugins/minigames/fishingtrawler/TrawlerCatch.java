@@ -13,8 +13,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static final int TRAWLER_CATCH = 1106;
-	public static final int[] JUNK_ITEMS = new int[]{
+	private static final int TRAWLER_CATCH = 1106;
+	private static final int[] JUNK_ITEMS = new int[]{
 		1155, // Old boot
 		1157, // Damaged armour
 		1158, // Damaged armour
@@ -121,7 +121,7 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 		}
 	}
 
-	public boolean catchFish(int levelReq, int level) {
+	private boolean catchFish(int levelReq, int level) {
 		int levelDiff = level - levelReq;
 		if (levelDiff <= 0) {
 			return false;

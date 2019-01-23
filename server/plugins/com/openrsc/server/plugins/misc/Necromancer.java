@@ -86,18 +86,12 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == 358 || n.getID() == 359) {
-			return true;
-		}
-		return false;
+		return n.getID() == 358 || n.getID() == 359;
 	}
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == 358 || n.getID() == 359) {
-			return true;
-		}
-		return false;
+		return n.getID() == 358 || n.getID() == 359;
 	}
 
 	@Override

@@ -17,15 +17,15 @@ import static com.openrsc.server.plugins.Functions.*;
 public class GemMining implements ObjectActionListener,
 	ObjectActionExecutiveListener {
 
-	public static final int GEM_ROCK = 588;
+	private static final int GEM_ROCK = 588;
 
-	public final int UNCUT_OPAL = 891;
-	public final int UNCUT_JADE = 890;
-	public final int UNCUT_RED_TOPAZ = 889;
-	public final int UNCUT_SAPPHIRE = 160;
-	public final int UNCUT_EMERALD = 159;
-	public final int UNCUT_RUBY = 158;
-	public final int UNCUT_DIAMOND = 157;
+	private final int UNCUT_OPAL = 891;
+	private final int UNCUT_JADE = 890;
+	private final int UNCUT_RED_TOPAZ = 889;
+	private final int UNCUT_SAPPHIRE = 160;
+	private final int UNCUT_EMERALD = 159;
+	private final int UNCUT_RUBY = 158;
+	private final int UNCUT_DIAMOND = 157;
 
 	private void handleGemRockMining(final GameObject obj, Player p, int click) {
 		if (p.isBusy()) {
@@ -128,10 +128,7 @@ public class GemMining implements ObjectActionListener,
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
-			return true;
-		}
-		return false;
+		return obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"));
 	}
 
 	@Override

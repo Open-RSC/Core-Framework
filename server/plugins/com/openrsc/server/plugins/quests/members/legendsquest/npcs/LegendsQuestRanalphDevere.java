@@ -3,24 +3,33 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
+import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener,
 	PlayerNpcRunListener, PlayerNpcRunExecutiveListener {
 
-	public static final int RANALPH_DEVERE = 762;
+	private static final int RANALPH_DEVERE = 762;
 	public final static int A_HUNK_OF_CRYSTAL = 1221;
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == RANALPH_DEVERE && !hasItem(p, A_HUNK_OF_CRYSTAL) && !p.getCache().hasKey("cavernous_opening")) {
-			return true;
-		}
-		return false;
+		return n.getID() == RANALPH_DEVERE && !hasItem(p, A_HUNK_OF_CRYSTAL) && !p.getCache().hasKey("cavernous_opening");
 	}
 
 	@Override
@@ -83,10 +92,7 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == RANALPH_DEVERE && !hasItem(p, A_HUNK_OF_CRYSTAL) && !p.getCache().hasKey("cavernous_opening")) {
-			return true;
-		}
-		return false;
+		return n.getID() == RANALPH_DEVERE && !hasItem(p, A_HUNK_OF_CRYSTAL) && !p.getCache().hasKey("cavernous_opening");
 	}
 
 	@Override
@@ -98,10 +104,7 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == RANALPH_DEVERE && !hasItem(p, A_HUNK_OF_CRYSTAL) && !p.getCache().hasKey("cavernous_opening")) {
-			return true;
-		}
-		return false;
+		return n.getID() == RANALPH_DEVERE && !hasItem(p, A_HUNK_OF_CRYSTAL) && !p.getCache().hasKey("cavernous_opening");
 	}
 
 	@Override
@@ -113,10 +116,7 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 
 	@Override
 	public boolean blockPlayerNpcRun(Player p, Npc n) {
-		if (n.getID() == RANALPH_DEVERE && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getCache().hasKey("viyeldi_companions")) {
-			return true;
-		}
-		return false;
+		return n.getID() == RANALPH_DEVERE && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8 && p.getCache().hasKey("viyeldi_companions");
 	}
 
 	@Override

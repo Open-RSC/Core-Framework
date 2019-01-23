@@ -10,11 +10,11 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static final int EXAMINER = 723;
+	private static final int EXAMINER = 723;
 
 	public static int UNSTAMPED_LETTER = 1147;
 	public static int STAMPED_LETTER = 1146;
-	public static int TROWEL = 1145;
+	private static int TROWEL = 1145;
 	public static int LEVEL_1_CERTIFICATE = 1142;
 	public static int LEVEL_2_CERTIFICATE = 1143;
 	public static int LEVEL_3_CERTIFICATE = 1144;
@@ -22,10 +22,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == EXAMINER) {
-			return true;
-		}
-		return false;
+		return n.getID() == EXAMINER;
 	}
 
 	@Override
@@ -618,20 +615,19 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 	}
 
 	class ExaminerNPC {
-		public static final int START_EXAM_AND_MENU_ONE = 0;
-		public static final int START_EXAM_MENU_TWO = 1;
-		public static final int START_EXAM_MENU_THREE = 2;
-		public static final int START_EXAM_FINAL = 3;
+		static final int START_EXAM_AND_MENU_ONE = 0;
+		static final int START_EXAM_MENU_TWO = 1;
+		static final int START_EXAM_MENU_THREE = 2;
+		static final int START_EXAM_FINAL = 3;
 
-		public static final int START_EXAM2_AND_MENU_ONE = 4;
-		public static final int START_EXAM2_MENU_TWO = 5;
-		public static final int START_EXAM2_MENU_THREE = 6;
-		public static final int START_EXAM2_FINAL = 7;
+		static final int START_EXAM2_AND_MENU_ONE = 4;
+		static final int START_EXAM2_MENU_TWO = 5;
+		static final int START_EXAM2_MENU_THREE = 6;
+		static final int START_EXAM2_FINAL = 7;
 
-		public static final int START_EXAM3_AND_MENU_ONE = 8;
-		public static final int START_EXAM3_MENU_TWO = 9;
-		public static final int START_EXAM3_MENU_THREE = 10;
-		public static final int START_EXAM3_FINAL = 11;
-
+		static final int START_EXAM3_AND_MENU_ONE = 8;
+		static final int START_EXAM3_MENU_TWO = 9;
+		static final int START_EXAM3_MENU_THREE = 10;
+		static final int START_EXAM3_FINAL = 11;
 	}
 }

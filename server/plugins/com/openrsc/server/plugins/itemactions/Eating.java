@@ -12,10 +12,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.isEdible()) {
-			return true;
-		}
-		return false;
+		return item.isEdible();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -22,19 +23,19 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 	/**
 	 * OBJECT IDs
 	 **/
-	public static int WITCH_RAILING = 172;
-	public static int WITCH_DOOR = 173;
-	public static int WITCH_CHEST = 885;
+	private static int WITCH_RAILING = 172;
+	private static int WITCH_DOOR = 173;
+	private static int WITCH_CHEST = 885;
 
 	/**
 	 * ITEM IDs
 	 **/
-	public static int CAT = 1003;
+	private static int CAT = 1003;
 
 	/**
 	 * NPC IDs
 	 **/
-	public static int KARDIA_THE_WITCH = 643;
+	private static int KARDIA_THE_WITCH = 643;
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
@@ -67,7 +68,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 					sleep(1000);
 					p.message("the witch raises her hands above her");
 					displayTeleportBubble(p, p.getX(), p.getY(), true);
-					p.damage(((int) getCurrentLevel(p, HITS) / 5) + 5); // 6 lowest, 25 max. 
+					p.damage(((int) getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5); // 6 lowest, 25 max.
 					npcTalk(p, witch, "haa haa.. die mortal");
 				}
 			} else if (click == 1) {

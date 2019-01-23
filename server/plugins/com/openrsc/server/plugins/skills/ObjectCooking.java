@@ -27,7 +27,6 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			npcTalk(owner, cook, "Hey! Who said you could use that?");
 		} else
 			handleCooking(item, owner, object);
-		return;
 	}
 
 	private void handleCooking(final Item item, Player p,
@@ -55,7 +54,6 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 			}
 			p.setBusy(false);
-			return;
 		}
 
 		// Raw Oomlie Meat (Always burn)
@@ -166,7 +164,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;
 	}
 
-	public void cookMethod(Player p, int itemID, int product, String... messages) {
+	private void cookMethod(Player p, int itemID, int product, String... messages) {
 		if (hasItem(p, itemID, 1)) {
 			showBubble(p, new Item(itemID));
 			p.playSound("cooking");
