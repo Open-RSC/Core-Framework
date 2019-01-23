@@ -1387,8 +1387,7 @@ public final class Admins implements CommandListener {
 
 						if(world.withinWorld(baseX + x, baseY + y)) {
 							if ((world.getTile(new Point(baseX + x, baseY + y)).traversalMask & 64) == 0) {
-								ItemLoc item = new ItemLoc(id, baseX + x, baseY + y, amount, 188000);
-								World.getWorld().registerItem(new GroundItem(item));
+								world.registerItem(new GroundItem(id, baseX + x, baseY + y, amount, null));
 							}
 						}
 					}
