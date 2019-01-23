@@ -118,7 +118,7 @@ public final class Development implements CommandListener {
 				return;
 			}
 
-			player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + npc.getID());
+			player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + id);
 			DatabaseConnection.getDatabase()
 				.executeUpdate("DELETE FROM `" + Constants.GameServer.MYSQL_TABLE_PREFIX
 					+ "npclocs` WHERE `id` = '" + npc.getID() + "' AND startX='" + npc.getLoc().startX
