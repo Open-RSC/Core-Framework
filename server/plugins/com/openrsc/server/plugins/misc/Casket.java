@@ -48,16 +48,16 @@ public class Casket implements InvActionListener, InvActionExecutiveListener {
 				} else {
 					addItem(p, ItemId.COINS.id(), 640);
 				}
-			} else if (randomChanceOpen > 585 && randomChanceOpen <= 859) {
+			} else if (randomChanceOpen <= 859) {
 				// Uncut sapphire, 25.34% chance
 				addItem(p, ItemId.UNCUT_SAPPHIRE.id(), 1);
-			} else if (randomChanceOpen > 859 && randomChanceOpen <= 990) {
+			} else if (randomChanceOpen <= 990) {
 				// Uncut emerald, 12.11% chance
 				addItem(p, ItemId.UNCUT_EMERALD.id(), 1);
-			} else if (randomChanceOpen > 990 && randomChanceOpen <= 1047) {
+			} else if (randomChanceOpen <= 1047) {
 				//Uncut ruby, 5.27% chance
 				addItem(p, ItemId.UNCUT_RUBY.id(), 1);
-			} else if (randomChanceOpen > 1047 && randomChanceOpen <= 1064) {
+			} else if (randomChanceOpen <= 1064) {
 				// Uncut diamond, 1.57% chance
 				addItem(p, ItemId.UNCUT_DIAMOND.id(), 1);
 			} else {

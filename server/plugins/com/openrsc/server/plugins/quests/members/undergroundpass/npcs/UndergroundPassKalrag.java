@@ -11,14 +11,11 @@ import static com.openrsc.server.plugins.Functions.message;
 
 public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
-	public static int KALRAG = 641;
+	private static int KALRAG = 641;
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == KALRAG) {
-			return true;
-		}
-		return false;
+		return n.getID() == KALRAG;
 	}
 
 	@Override

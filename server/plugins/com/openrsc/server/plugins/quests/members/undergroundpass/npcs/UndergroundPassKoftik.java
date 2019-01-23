@@ -2,13 +2,20 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener {
@@ -18,13 +25,13 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	 * Note: King Lathas (Quest starer) is located in the Biohazard quest template
 	 **/
 	public static int KOFTIK = 626;
-	public static int KOFTIK_FIRE_CAMP = 627;
-	public static int KOFTIK_MAP_2 = 628;
-	public static int KOFTIK_MAP_2_BOULDER = 629;
+	private static int KOFTIK_FIRE_CAMP = 627;
+	private static int KOFTIK_MAP_2 = 628;
+	private static int KOFTIK_MAP_2_BOULDER = 629;
 	public static int KOFTIK_LAST_MAP = 650;
-	public static int KOFTIK_AFTER_IBAN = 659;
+	private static int KOFTIK_AFTER_IBAN = 659;
 
-	public static int DAMP_CLOTH = 989;
+	private static int DAMP_CLOTH = 989;
 
 	/**
 	 * fast dialogues
@@ -79,7 +86,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 		p.message("@gre@You haved gained 5 quest points!");
 		int[] questData = Quests.questData.get(Quests.UNDERGROUND_PASS);
 		//keep order kosher
-		int[] skillIDs = {AGILITY, ATTACK};
+		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(p, questData, i == (skillIDs.length - 1));
@@ -91,10 +98,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == KOFTIK || n.getID() == KOFTIK_FIRE_CAMP || n.getID() == KOFTIK_MAP_2 || n.getID() == KOFTIK_MAP_2_BOULDER || n.getID() == KOFTIK_LAST_MAP || n.getID() == KOFTIK_AFTER_IBAN) {
-			return true;
-		}
-		return false;
+		return n.getID() == KOFTIK || n.getID() == KOFTIK_FIRE_CAMP || n.getID() == KOFTIK_MAP_2 || n.getID() == KOFTIK_MAP_2_BOULDER || n.getID() == KOFTIK_LAST_MAP || n.getID() == KOFTIK_AFTER_IBAN;
 	}
 
 	@Override

@@ -18,44 +18,67 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
-import com.openrsc.server.plugins.quests.members.legendsquest.npcs.*;
+import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestEchnedZekin;
+import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestGujuo;
+import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestIrvigSenay;
+import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
+import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestRanalphDevere;
+import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestSanTojalon;
 import com.openrsc.server.plugins.skills.Mining;
 import com.openrsc.server.plugins.skills.Thieving;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.createGroundItemDelayedRemove;
+import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
+import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObject;
+import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.spawnNpcWithRadius;
 
 public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	// Objects
-	public static final int LEGENDS_CUPBOARD = 1149;
-	public static final int GRAND_VIZIERS_DESK = 1177;
-	public static final int TOTEM_POLE = 1169;
-	public static final int ROCK = 1151;
-	public static final int TALL_REEDS = 1163;
-	public static final int SHALLOW_WATER = 582;
-	public static final int CRATE = 1144;
-	public static final int CRUDE_BED = 1162;
-	public static final int CRUDE_DESK = 1032;
-	public static final int TABLE = 1161;
-	public static final int BOOKCASE = 931;
-	public static final int CAVE_ENTRANCE_LEAVE_DUNGEON = 1158;
-	public static final int CAVE_ENTRANCE_FROM_BOULDERS = 1159;
-	public static final int CAVE_ANCIENT_WOODEN_DOORS = 1160;
-	public static final int HEAVY_METAL_GATE = 1033;
-	public static final int HALF_BURIED_REMAINS = 1168;
-	public static final int CARVED_ROCK = 1037;
-	public static final int WOODEN_BEAM = 1156;
-	public static final int ROPE_UP = 1167;
-	public static final int RED_EYE_ROCK = 1148;
-	public static final int ANCIENT_LAVA_FURNACE = 1146;
-	public static final int CAVERNOUS_OPENING = 1145;
-	public static final int ECHNED_ZEKIN_ROCK = 1116;
-	public static final int FERTILE_EARTH = 1113;
+	private static final int LEGENDS_CUPBOARD = 1149;
+	private static final int GRAND_VIZIERS_DESK = 1177;
+	private static final int TOTEM_POLE = 1169;
+	private static final int ROCK = 1151;
+	private static final int TALL_REEDS = 1163;
+	private static final int SHALLOW_WATER = 582;
+	private static final int CRATE = 1144;
+	private static final int CRUDE_BED = 1162;
+	private static final int CRUDE_DESK = 1032;
+	private static final int TABLE = 1161;
+	private static final int BOOKCASE = 931;
+	private static final int CAVE_ENTRANCE_LEAVE_DUNGEON = 1158;
+	private static final int CAVE_ENTRANCE_FROM_BOULDERS = 1159;
+	private static final int CAVE_ANCIENT_WOODEN_DOORS = 1160;
+	private static final int HEAVY_METAL_GATE = 1033;
+	private static final int HALF_BURIED_REMAINS = 1168;
+	private static final int CARVED_ROCK = 1037;
+	private static final int WOODEN_BEAM = 1156;
+	private static final int ROPE_UP = 1167;
+	private static final int RED_EYE_ROCK = 1148;
+	private static final int ANCIENT_LAVA_FURNACE = 1146;
+	private static final int CAVERNOUS_OPENING = 1145;
+	private static final int ECHNED_ZEKIN_ROCK = 1116;
+	private static final int FERTILE_EARTH = 1113;
 
 
-	public static final int[] SMASH_BOULDERS = {1117, 1184, 1185};
+	private static final int[] SMASH_BOULDERS = {1117, 1184, 1185};
 	private static final int BABY_YOMMI_TREE = 1112;
 	private static final int YOMMI_TREE = 1107;
 	private static final int DEAD_YOMMI_TREE = 1141;
@@ -64,8 +87,8 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	private static final int CHOPPED_YOMMI_TREE = 1109;
 	private static final int TRIMMED_YOMMI_TREE = 1110;
 	private static final int CRAFTED_TOTEM_POLE = 1111;
-	final int[] REFILLABLE = {1188, 1266, 21, 140, 341, 465};
-	final int[] REFILLED = {1189, 1267, 50, 141, 342, 464};
+	private final int[] REFILLABLE = {1188, 1266, 21, 140, 341, 465};
+	private final int[] REFILLED = {1189, 1267, 50, 141, 342, 464};
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -215,7 +238,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"Yes, I'm very strong, I'll force them open.",
 					"No, I'm having second thoughts.");
 				if (menu == 0) {
-					if (getCurrentLevel(p, STRENGTH) < 50) {
+					if (getCurrentLevel(p, Skills.STRENGTH) < 50) {
 						p.message("You need a Strength of at least 50 to affect these gates.");
 						return;
 					}
@@ -227,7 +250,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					playerTalk(p, null, "Arghhhhhhh!");
 					message(p, 1300, "You push and push,");
 					playerTalk(p, null, "Shhhhhhhshshehshsh");
-					if (Formulae.failCalculation(p, STRENGTH, 50)) {
+					if (Formulae.failCalculation(p, Skills.STRENGTH, 50)) {
 						message(p, 1300, "You just manage to force the gates open slightly, ",
 							"just enough to force yourself through.");
 						replaceObjectDelayed(obj, 2000, 181);
@@ -239,7 +262,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					} else {
 						message(p, 1300, "but run out of steam before you're able to force the gates open.");
 						p.message("The effort of trying to force the gates reduces your strength temporarily");
-						p.getSkills().decrementLevel(STRENGTH);
+						p.getSkills().decrementLevel(Skills.STRENGTH);
 					}
 				} else if (menu == 1) {
 					p.message("You decide against forcing the gates.");
@@ -248,11 +271,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		if (inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (hasItem(p, Mining.getAxe(p))) {
-				if (getCurrentLevel(p, MINING) < 52) {
+				if (getCurrentLevel(p, Skills.MINING) < 52) {
 					p.message("You need a mining ability of at least 52 to affect these boulders.");
 					return;
 				}
-				if (Formulae.failCalculation(p, MINING, 50)) {
+				if (Formulae.failCalculation(p, Skills.MINING, 50)) {
 					message(p, 1300, "You take a good swing at the rock with your pick...");
 					replaceObjectDelayed(obj, 2000, 1143);
 					if (obj.getID() == SMASH_BOULDERS[0] && p.getY() <= 3704) {
@@ -274,7 +297,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					p.message("You fail to make a mark on the rocks.");
 					p.message("You miss hit the rock and the vibration shakes your bones.");
 					p.message("Your mining ability suffers...");
-					p.getSkills().decrementLevel(MINING);
+					p.getSkills().decrementLevel(Skills.MINING);
 				}
 			} else {
 				message(p, "You'll need a pickaxe to smash your way through these boulders.");
@@ -301,7 +324,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					message(p, 1300, "You walk through the door.");
 					p.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
-					if (getCurrentLevel(p, THIEVING) < 50) {
+					if (getCurrentLevel(p, Skills.THIEVING) < 50) {
 						p.message("You need a thieving level of at least 50 to attempt this.");
 						return;
 					}
@@ -321,7 +344,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 							playerTalk(p, null, "Easy as pie...");
 							sleep(1300);
 							message(p, 1300, "You tumble the lock mechanism and the door opens easily.");
-							p.incExp(THIEVING, 100, true);
+							p.incExp(Skills.THIEVING, 100, true);
 							replaceObjectDelayed(obj, 2000, 497);
 							p.teleport(441, 3703);
 						} else {
@@ -441,7 +464,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"Yes, I'll crawl through, I'm very athletic.",
 					"No, I'm pretty scared of enclosed areas.");
 				if (menu == 0) {
-					if (getCurrentLevel(p, AGILITY) < 50) {
+					if (getCurrentLevel(p, Skills.AGILITY) < 50) {
 						p.message("You need an agility of 50 to even attempt this.");
 						p.setBusy(false);
 						return;
@@ -540,7 +563,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				replaceObject(obj, new GameObject(obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 				addItem(p, 1183, 1);
 				p.message("Carrying this totem pole saps your strength...");
-				p.getSkills().setLevel(STRENGTH, (int) (p.getSkills().getLevel(STRENGTH) * 0.9));
+				p.getSkills().setLevel(Skills.STRENGTH, (int) (p.getSkills().getLevel(Skills.STRENGTH) * 0.9));
 			} else {
 				p.message("This is not your totem pole to carry.");
 			}
@@ -724,12 +747,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(p, WOODCUT) < 50) {
+			if (getCurrentLevel(p, Skills.WOODCUT) < 50) {
 				p.message("You need an woodcut level of 50 to");
 				p.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(p, HERBLAW) < 45) {
+			if (getCurrentLevel(p, Skills.HERBLAW) < 45) {
 				p.message("You need a herblaw skill of at least 45 to complete this task.");
 				return;
 			}
@@ -992,13 +1015,13 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	}
 
 	class CarvedRockItems {
-		public static final int SAPPHIRE = 164;
-		public static final int EMERALD = 163;
-		public static final int RUBY = 162;
-		public static final int DIAMOND = 161;
-		public static final int OPAL = 894;
-		public static final int JADE = 893;
-		public static final int RED_TOPAZ = 892;
+		static final int SAPPHIRE = 164;
+		static final int EMERALD = 163;
+		static final int RUBY = 162;
+		static final int DIAMOND = 161;
+		static final int OPAL = 894;
+		static final int JADE = 893;
+		static final int RED_TOPAZ = 892;
 
 	}
 }

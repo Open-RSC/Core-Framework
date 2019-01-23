@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -149,7 +150,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			}
 		}
 		if (inArray(obj.getID(), MAIN_ROCKS)) {
-			doRock(obj, p, (int) (getCurrentLevel(p, HITS) / 42) + 1, true, -1);
+			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1, true, -1);
 		}
 		if (obj.getID() == FIRST_SWAMP) {
 			message(p, "you try to cross but you're unable to",
@@ -158,7 +159,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			playerTalk(p, null, "gulp!");
 			p.teleport(674, 3462);
 			playerTalk(p, null, "aargh");
-			p.damage((int) (getCurrentLevel(p, HITS) / 42) + 1);
+			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1);
 			sleep(2000);
 			p.teleport(677, 3462);
 			sleep(650);
@@ -173,13 +174,13 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			p.teleport(687, 3462);
 			sleep(650);
 			playerTalk(p, null, "aargh");
-			p.damage((int) (getCurrentLevel(p, HITS) / 42) + 1);
+			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1);
 			p.teleport(690, 3461);
 			message(p, "you tumble deep into the cravass",
 				"and land battered and bruised at the base");
 		}
 		if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
-			doRock(obj, p, (int) (getCurrentLevel(p, HITS) / 42) + 1, true, -1);
+			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1, true, -1);
 		}
 		if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
 			message(p, "you climb up the mud pile");
@@ -188,7 +189,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				"you surface by the swamp, covered in muck");
 		}
 		if (inArray(obj.getID(), MAIN_LEDGE)) {
-			doLedge(obj, p, (int) (getCurrentLevel(p, HITS) / 42) + 1);
+			doLedge(obj, p, (int) (getCurrentLevel(p, Skills.HITPOINTS) / 42) + 1);
 		}
 		if (obj.getID() == LEVER) {
 			message(p, "you pull back on the old lever",
@@ -219,7 +220,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 				new GameObject(obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
 					.getType()));
 			World.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
-			p.damage((int) (getCurrentLevel(p, HITS) * 0.2D));
+			p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.2D));
 			playerTalk(p, null, "aaarrghhh");
 			message(p, "You've triggered a trap");
 		}
@@ -233,7 +234,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 					new GameObject(obj.getLocation(), 805, obj.getDirection(), obj
 						.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-				p.damage((int) (getCurrentLevel(p, HITS) / 6) + 1);
+				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 6) + 1);
 				playerTalk(p, null, "aaarghh");
 			} else {
 				message(p, "you search the rock",
@@ -257,10 +258,10 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 							new GameObject(obj.getLocation(), 805, obj.getDirection(), obj
 								.getType()));
 						World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-						p.damage((int) (getCurrentLevel(p, HITS) / 6) + 1);
+						p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 6) + 1);
 						playerTalk(p, null, "aaarghh");
 					}
-					
+
 				} else if (menu == 1) {
 					p.message("you back away from the trap");
 				}
@@ -271,9 +272,9 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener, Objec
 			p.teleport(706, 3439);
 		}
 	}
-	
+
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, THIEVING) - req;
+		int level_difference = getCurrentLevel(player, Skills.THIEVING) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)

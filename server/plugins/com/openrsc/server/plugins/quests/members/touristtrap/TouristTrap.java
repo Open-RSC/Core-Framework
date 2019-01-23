@@ -2,18 +2,50 @@ package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.IndirectTalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
+import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.executive.IndirectTalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.doDoor;
+import static com.openrsc.server.plugins.Functions.doGate;
+import static com.openrsc.server.plugins.Functions.doTentDoor;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener,
 	ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener, NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
@@ -21,56 +53,56 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	/**
 	 * Player isWielding
 	 **/
-	public static final int[] restricted = {0, 1, 3, 4, 5, 6, 7, 9};
+	private static final int[] restricted = {0, 1, 3, 4, 5, 6, 7, 9};
 	public static final int[] allow = {1019, 1020, 1021, 1022, 1023};
 	/**
 	 * Quest Items
 	 **/
-	public static int WROUGHT_KEY = 1097;
-	public static int METAL_KEY = 1021;
-	public static int CELL_DOOR_KEY = 1098;
-	public static int BEDOBIN_COPY_KEY = 1059;
-	public static int TECHNICAL_PLANS = 1060;
-	public static int PINE_APPLE = 1058;
+	private static int WROUGHT_KEY = 1097;
+	private static int METAL_KEY = 1021;
+	private static int CELL_DOOR_KEY = 1098;
+	private static int BEDOBIN_COPY_KEY = 1059;
+	private static int TECHNICAL_PLANS = 1060;
+	private static int PINE_APPLE = 1058;
 	/**
 	 * Quest Npcs
 	 **/
-	public static int IRENA = 538;
-	public static int MERCENARY = 668;
-	public static int MERCENARY_INSIDE = 670;
-	public static int MERCENARY_CAPTAIN = 669;
+	private static int IRENA = 538;
+	private static int MERCENARY = 668;
+	private static int MERCENARY_INSIDE = 670;
+	private static int MERCENARY_CAPTAIN = 669;
 	public static int CART_DRIVER = 711;
-	public static int MINING_SLAVE = 671;
-	public static int DRAFT_MERCENARY_GUARD = 710;
+	private static int MINING_SLAVE = 671;
+	private static int DRAFT_MERCENARY_GUARD = 710;
 	public static int ROWDY_MERCENARY = 716;
-	public static int BEDABIN_NOMAD = 701;
-	public static int BEDABIN_NOMAD_GUARD = 703;
-	public static int AL_SHABIM = 700;
-	public static int CAPTAIN_SIAD = 702;
-	public static int CAVE_2_MERCENARY = 690;
-	public static int CAVE_JAIL_MERCENARY = 692;
-	public static int CAVE_ANA = 554;
+	private static int BEDABIN_NOMAD = 701;
+	private static int BEDABIN_NOMAD_GUARD = 703;
+	private static int AL_SHABIM = 700;
+	private static int CAPTAIN_SIAD = 702;
+	private static int CAVE_2_MERCENARY = 690;
+	private static int CAVE_JAIL_MERCENARY = 692;
+	private static int CAVE_ANA = 554;
 	/**
 	 * Quest Objects
 	 **/
-	public static int STONE_GATE = 916;
-	public static int IRON_GATE = 932;
-	public static int JAIL_DOOR = 177;
-	public static int WINDOW = 178;
-	public static int ROCK_1 = 953;
-	public static int WOODEN_DOORS = 958;
-	public static int DESK = 1023;
-	public static int BOOKCASE = 1004;
-	public static int CAPTAINS_CHEST = 1005;
+	private static int STONE_GATE = 916;
+	private static int IRON_GATE = 932;
+	private static int JAIL_DOOR = 177;
+	private static int WINDOW = 178;
+	private static int ROCK_1 = 953;
+	private static int WOODEN_DOORS = 958;
+	private static int DESK = 1023;
+	private static int BOOKCASE = 1004;
+	private static int CAPTAINS_CHEST = 1005;
 	/**
 	 * Quest WallObjects
 	 **/
-	public static int TENT_DOOR_1 = 198;
-	public static int TENT_DOOR_2 = 196;
-	public static int CAVE_JAIL_DOOR = 180;
-	public static int STURDY_IRON_GATE = 200;
-	ArrayList<Integer> wieldPos = new ArrayList<>();
-	ArrayList<Integer> allowed = new ArrayList<>();
+	private static int TENT_DOOR_1 = 198;
+	private static int TENT_DOOR_2 = 196;
+	private static int CAVE_JAIL_DOOR = 180;
+	private static int STURDY_IRON_GATE = 200;
+	private ArrayList<Integer> wieldPos = new ArrayList<>();
+	private ArrayList<Integer> allowed = new ArrayList<>();
 
 	@Override
 	public int getQuestId() {
@@ -329,7 +361,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			"Smithing.",
 			"Thieving");
 		if (lastRewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = FLETCHING;
+			questData[Quests.MAPIDX_SKILL] = Skills.FLETCHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Fletching.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
@@ -337,7 +369,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = AGILITY;
+			questData[Quests.MAPIDX_SKILL] = Skills.AGILITY;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Agility.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
@@ -345,7 +377,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = SMITHING;
+			questData[Quests.MAPIDX_SKILL] = Skills.SMITHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Smithing.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
@@ -353,7 +385,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = THIEVING;
+			questData[Quests.MAPIDX_SKILL] = Skills.THIEVING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Thieving.");
 			p.sendQuestComplete(Constants.Quests.TOURIST_TRAP);
@@ -375,7 +407,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			"Smithing.",
 			"Thieving");
 		if (rewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = FLETCHING;
+			questData[Quests.MAPIDX_SKILL] = Skills.FLETCHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Fletching.",
 				"Ok, now choose your second skil.");
@@ -384,7 +416,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			lastRewardMenu(p, n, false);
 		} else if (rewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = AGILITY;
+			questData[Quests.MAPIDX_SKILL] = Skills.AGILITY;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Agility.",
 				"Ok, now choose your second skil.");
@@ -393,7 +425,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			lastRewardMenu(p, n, false);
 		} else if (rewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = SMITHING;
+			questData[Quests.MAPIDX_SKILL] = Skills.SMITHING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Smithing.",
 				"Ok, now choose your second skil.");
@@ -402,7 +434,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 			lastRewardMenu(p, n, false);
 		} else if (rewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = THIEVING;
+			questData[Quests.MAPIDX_SKILL] = Skills.THIEVING;
 			incQuestReward(p, questData, false);
 			message(p, "You advance your stat in Thieving.",
 				"Ok, now choose your second skil.");
@@ -2650,10 +2682,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockNpcCommand(Npc n, String command, Player p) {
-		if (n.getID() == MERCENARY_CAPTAIN && command.equalsIgnoreCase("watch")) {
-			return true;
-		}
-		return false;
+		return n.getID() == MERCENARY_CAPTAIN && command.equalsIgnoreCase("watch");
 	}
 
 	@Override
@@ -2667,10 +2696,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == MERCENARY_CAPTAIN) {
-			return true;
-		}
-		return false;
+		return n.getID() == MERCENARY_CAPTAIN;
 	}
 
 	@Override
@@ -3015,7 +3041,6 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			} else { //success-cell
 				if (hasItem(p, 1039)) {
 					failWindowAnaInBarrel(p, null);
-					return;
 				} else {
 					message(p, "You manage to bend the bar and climb out of the window.");
 					p.incExp(2, 40, true);
@@ -3039,7 +3064,6 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			} else { //success-hill
 				if (hasItem(p, 1039)) { //from the hill outside the window (fail-safe)
 					failWindowAnaInBarrel(p, null);
-					return;
 				} else {
 					message(p, "You manage to bend the bar !");
 					p.incExp(2, 40, true);
@@ -3096,10 +3120,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (item.getID() == 1014 && npc.getID() == AL_SHABIM) {
-			return true;
-		}
-		return false;
+		return item.getID() == 1014 && npc.getID() == AL_SHABIM;
 	}
 
 	@Override
@@ -3123,75 +3144,75 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	class Irene {
-		public static final int WHENDIDSHEGO = 0;
-		public static final int WHATDIDSHEGO = 1;
-		public static final int REWARD = 2;
-		public static final int LOOKFORDAUGHTER = 3;
-		public static final int GETBACKDAUGHTER = 4;
+		static final int WHENDIDSHEGO = 0;
+		static final int WHATDIDSHEGO = 1;
+		static final int REWARD = 2;
+		static final int LOOKFORDAUGHTER = 3;
+		static final int GETBACKDAUGHTER = 4;
 	}
 
 	class Mercenary {
-		public static final int THROW_PLAYER = 0;
-		public static final int PLACE_START = 1;
-		public static final int PLACE_SECOND = 2;
-		public static final int ORDER_KILL_PEOPLE = 3;
-		public static final int GUARDING_FIRST = 4;
-		public static final int GUARDING_SECOND = 5;
-		public static final int ANA_FIRST = 6;
-		public static final int ANA_SECOND = 7;
-		public static final int LEAVE_DESERT = 8;
+		static final int THROW_PLAYER = 0;
+		static final int PLACE_START = 1;
+		static final int PLACE_SECOND = 2;
+		static final int ORDER_KILL_PEOPLE = 3;
+		static final int GUARDING_FIRST = 4;
+		static final int GUARDING_SECOND = 5;
+		static final int ANA_FIRST = 6;
+		static final int ANA_SECOND = 7;
+		static final int LEAVE_DESERT = 8;
 	}
 
 	class MercenaryCaptain {
-		public static final int GUARDING = 0;
-		public static final int DONTSCAREME = 1;
-		public static final int MUSTBESOMETHINGICANDO = 2;
+		static final int GUARDING = 0;
+		static final int DONTSCAREME = 1;
+		static final int MUSTBESOMETHINGICANDO = 2;
 	}
 
 	class Slave {
-		public static final int NEWRECRUIT = 0;
-		public static final int UNDOTHEM = 1;
-		public static final int GIVEITAGO = 2;
+		static final int NEWRECRUIT = 0;
+		static final int UNDOTHEM = 1;
+		static final int GIVEITAGO = 2;
 	}
 
 	class MercenaryInside {
-		public static final int PINEAPPLES = 0;
-		public static final int UNDERSTAND = 1;
+		static final int PINEAPPLES = 0;
+		static final int UNDERSTAND = 1;
 	}
 
 	class BedabinNomad {
-		public static final int JUGOFWATER = 0;
-		public static final int FULLWATERSKIN = 1;
-		public static final int BUCKETOFWATER = 2;
-		public static final int SHANTAYPASS = 3;
-		public static final int PLACE = 4;
+		static final int JUGOFWATER = 0;
+		static final int FULLWATERSKIN = 1;
+		static final int BUCKETOFWATER = 2;
+		static final int SHANTAYPASS = 3;
+		static final int PLACE = 4;
 	}
 
 	class AlShabim {
-		public static final int WHATISTHISPLACE = 0;
-		public static final int HAVE_PLANS = 1;
-		public static final int MADE_WEAPON = 2;
+		static final int WHATISTHISPLACE = 0;
+		static final int HAVE_PLANS = 1;
+		static final int MADE_WEAPON = 2;
 	}
 
 	class Siad {
-		public static final int PREPARETODIE = 0;
-		public static final int SLAVESBROKENFREE = 1;
-		public static final int FIREFIRE = 2;
-		public static final int TWOMINUTES = 3;
-		public static final int ERM = 4;
-		public static final int SERVICE = 5;
-		public static final int DRAGON = 6;
-		public static final int LONELY = 7;
-		public static final int PLANS = 8;
-		public static final int SUCCEED = 9;
-		public static final int BOOKS = 10;
-		public static final int PUNISHED = 11;
+		static final int PREPARETODIE = 0;
+		static final int SLAVESBROKENFREE = 1;
+		static final int FIREFIRE = 2;
+		static final int TWOMINUTES = 3;
+		static final int ERM = 4;
+		static final int SERVICE = 5;
+		static final int DRAGON = 6;
+		static final int LONELY = 7;
+		static final int PLANS = 8;
+		static final int SUCCEED = 9;
+		static final int BOOKS = 10;
+		static final int PUNISHED = 11;
 	}
 
 	class Ana {
-		public static final int TRYGETYOUOUTOFHERE = 0;
-		public static final int GOTTHAT = 1;
-		public static final int SNEAKEDPAST = 2;
-		public static final int GUARDSRUBBISH = 3;
+		static final int TRYGETYOUOUTOFHERE = 0;
+		static final int GOTTHAT = 1;
+		static final int SNEAKEDPAST = 2;
+		static final int GUARDSRUBBISH = 3;
 	}
 }

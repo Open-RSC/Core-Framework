@@ -8,11 +8,11 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
-	int[] new_pumpkin_head = {2098, 2099, 2100, 2097, 2102, 2101};
-	int[] pumpkin_head = {2097, 2098, 2099, 2100, 2101, 2102};
-	int[] capes = {183, 209, 229, 511, 512, 513, 514};
-	int[] dye = {238, 239, 272, 282, 515, 516};
-	int[] newCapes = {183, 512, 229, 513, 511, 514};
+	private int[] new_pumpkin_head = {2098, 2099, 2100, 2097, 2102, 2101};
+	private int[] pumpkin_head = {2097, 2098, 2099, 2100, 2101, 2102};
+	private int[] capes = {183, 209, 229, 511, 512, 513, 514};
+	private int[] dye = {238, 239, 272, 282, 515, 516};
+	private int[] newCapes = {183, 512, 229, 513, 511, 514};
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
@@ -167,15 +167,11 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (player.getInventory().remove(new Item(282)) > -1 && player.getInventory().remove(new Item(273)) > -1) {
 				player.getInventory().add(new Item(274));
 				player.message("You dye the goblin armor");
-
-				return;
 			}
 		} else if (compareItemsIds(item1, item2, 273, 272)) {
 			if (player.getInventory().remove(new Item(272)) > -1 && player.getInventory().remove(new Item(273)) > -1) {
 				player.getInventory().add(new Item(275));
 				player.message("You dye the goblin armor");
-
-				return;
 			}
 		} else if (compareItemsIds(item1, item2, 1276, 1277)) {
 			//non-kosher message: hinting to use the anvil (if kosher message is found, replace)
@@ -185,44 +181,37 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			//if (player.getInventory().remove(new Item(1276)) > -1 && player.getInventory().remove(new Item(1277)) > -1) {
 			//	player.message("You join the two halves of the shield together");
 			//	player.getInventory().add(new Item(1278));
-			//	
+			//
 			//	return;
 			//}
-
-			return;
 		} else if (compareItemsIds(item1, item2, 526, 527)) {
 			if (player.getInventory().remove(item1) > -1 && player.getInventory().remove(item2) > -1) {
 				player.message("You join the two halves of the key together");
 				player.getInventory().add(new Item(525, 1));
-				return;
 			}
 		} else if (isMapPiece(item1) && isMapPiece(item2)) {
 			int[] pieces = {416, 417, 418};
 			if (player.getInventory().countId(pieces[0]) < 1 || player.getInventory().countId(pieces[1]) < 1 ||
 				player.getInventory().countId(pieces[2]) < 1) {
 				player.message("You still need one more piece of map");
-				return;
 			} else {
 				player.message("You put all the pieces of map together");
 				player.getInventory().remove(pieces[0], 1);
 				player.getInventory().remove(pieces[1], 1);
 				player.getInventory().remove(pieces[2], 1);
 				player.getInventory().add(new Item(415, 1));
-				return;
 			}
 		} else if (isCrestFragment(item1) && isCrestFragment(item2)) {
 			int[] fragments = {695, 696, 697};
 			if (player.getInventory().countId(fragments[0]) < 1 || player.getInventory().countId(fragments[1]) < 1 ||
 				player.getInventory().countId(fragments[2]) < 1) {
 				player.message("You still need one more piece of the crest");
-				return;
 			} else {
 				player.message("You put all the pieces of the crest together");
 				player.getInventory().remove(fragments[0], 1);
 				player.getInventory().remove(fragments[1], 1);
 				player.getInventory().remove(fragments[2], 1);
 				player.getInventory().add(new Item(694, 1));
-				return;
 			}
 		}
 	}
@@ -294,7 +283,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		return false;
 	}
 
-	public boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
+	private boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
 		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
 	}
 }

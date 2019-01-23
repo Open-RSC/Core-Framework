@@ -4,15 +4,27 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
 
-	public static final int VIYELDI = 772;
-	public static final int BLUE_WIZARD_HAT_VIYELDI = 1264;
+	private static final int VIYELDI = 772;
+	private static final int BLUE_WIZARD_HAT_VIYELDI = 1264;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -52,10 +64,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == BLUE_WIZARD_HAT_VIYELDI && i.getX() == 426 && i.getY() == 3708) {
-			return true;
-		}
-		return false;
+		return i.getID() == BLUE_WIZARD_HAT_VIYELDI && i.getX() == 426 && i.getY() == 3708;
 	}
 
 	@Override
@@ -79,10 +88,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == VIYELDI) {
-			return true;
-		}
-		return false;
+		return n.getID() == VIYELDI;
 	}
 
 	@Override
@@ -118,10 +124,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == VIYELDI) {
-			return true;
-		}
-		return false;
+		return n.getID() == VIYELDI;
 	}
 
 	@Override
@@ -133,10 +136,7 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == VIYELDI) {
-			return true;
-		}
-		return false;
+		return n.getID() == VIYELDI;
 	}
 
 	@Override

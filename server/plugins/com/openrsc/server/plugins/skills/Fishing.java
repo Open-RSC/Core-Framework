@@ -21,7 +21,7 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Fishing implements ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static ObjectFishDef getFish(ObjectFishingDef objectFishDef, int fishingLevel, int click) {
+	private static ObjectFishDef getFish(ObjectFishingDef objectFishDef, int fishingLevel, int click) {
 		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();
 
 		for (ObjectFishDef def : objectFishDef.getFishDefs()) {

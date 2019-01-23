@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -8,18 +9,30 @@ import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
 import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.createGroundItem;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.transform;
 
 public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, PlayerAttackNpcExecutiveListener {
 
-	public static final int NEZIKCHENED = 769;
+	static final int NEZIKCHENED = 769;
 
 	/**
 	 * @param p public method to use for third fight summons and nezichened
 	 */
-	public static void summonViyeldiCompanions(Player p) {
+	private static void summonViyeldiCompanions(Player p) {
 		Npc COMPANION = null;
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 1) {
 			COMPANION = spawnNpc(663, p.getX(), p.getY(), 60000 * 15, p);
@@ -61,7 +74,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(p);
 				p.message("You feel a great sense of loss...");
-				p.getSkills().setLevel(PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 4));
+				p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
 				p.message("@yel@Nezikchened: Your faith will help you little here.");
 			} else {
 				third_nezikchened.startCombat(p);
@@ -71,10 +84,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
-			return true;
-		}
-		return false;
+		return n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
 	}
 
 	@Override
@@ -87,10 +97,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerNpcRun(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED) {
-			return true;
-		}
-		return false;
+		return n.getID() == NEZIKCHENED;
 	}
 
 	@Override
@@ -128,10 +135,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED) {
-			return true;
-		}
-		return false;
+		return n.getID() == NEZIKCHENED;
 	}
 
 	@Override
@@ -200,10 +204,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
-			return true;
-		}
-		return false;
+		return n.getID() == NEZIKCHENED && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
 	}
 
 	@Override

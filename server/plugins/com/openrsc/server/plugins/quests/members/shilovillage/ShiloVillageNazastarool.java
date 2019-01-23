@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.quests.members.shilovillage;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -18,18 +19,15 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener,
 	PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
 
-	public static final int Nazastarool_Zombie = 613;
-	public static final int Nazastarool_Skeleton = 614;
-	public static final int Nazastarool_Ghost = 615;
+	private static final int Nazastarool_Zombie = 613;
+	private static final int Nazastarool_Skeleton = 614;
+	private static final int Nazastarool_Ghost = 615;
 
-	public static final int TOMB_DOLMEN_Nazastarool = 724;
+	private static final int TOMB_DOLMEN_Nazastarool = 724;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == TOMB_DOLMEN_Nazastarool) {
-			return true;
-		}
-		return false;
+		return obj.getID() == TOMB_DOLMEN_Nazastarool;
 	}
 
 	@Override
@@ -91,7 +89,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	private void choke(Player p) {
 		message(p, "@red@You feel invisible hands starting to choke you...");
-		p.damage(getCurrentLevel(p, HITS) / 2);
+		p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 2);
 	}
 
 	private void runFromNazastarool(Player p, Npc n) {
@@ -206,10 +204,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockPlayerNpcRun(Player p, Npc n) {
-		if (n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost) {
-			return true;
-		}
-		return false;
+		return n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost;
 	}
 
 	@Override
@@ -221,10 +216,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		if ((n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost)) {
-			return true;
-		}
-		return false;
+		return (n.getID() == Nazastarool_Zombie || n.getID() == Nazastarool_Skeleton || n.getID() == Nazastarool_Ghost);
 	}
 
 	@Override

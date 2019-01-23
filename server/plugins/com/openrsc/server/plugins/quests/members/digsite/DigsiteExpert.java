@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,18 +13,22 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListen
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	public static final int EXPERT = 728;
+	private static final int EXPERT = 728;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == EXPERT) {
-			return true;
-		}
-		return false;
+		return n.getID() == EXPERT;
 	}
 
 	@Override
@@ -99,7 +104,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 		player.message("@gre@You haved gained 2 quest points!");
 		int[] questData = Quests.questData.get(Quests.DIGSITE);
 		//keep order kosher
-		int[] skillIDs = {MINING, HERBLAW};
+		int[] skillIDs = {Skills.MINING, Skills.HERBLAW};
 		//1200 for mining, 500 for herblaw
 		int[] amounts = {1200, 500};
 		for (int i = 0; i < skillIDs.length; i++) {
@@ -115,10 +120,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item i) {
-		if (n.getID() == EXPERT) {
-			return true;
-		}
-		return false;
+		return n.getID() == EXPERT;
 	}
 
 	@Override

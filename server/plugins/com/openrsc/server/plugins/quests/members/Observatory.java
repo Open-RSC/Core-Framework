@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,7 +18,16 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class Observatory implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -45,7 +55,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	public void handleReward(Player p) {
 		p.message("@gre@You haved gained 2 quest points!");
 		int[] questData = Quests.questData.get(Quests.OBSERVATORY_QUEST);
-		questData[Quests.MAPIDX_SKILL] = CRAFTING;
+		questData[Quests.MAPIDX_SKILL] = Skills.CRAFTING;
 		incQuestReward(p, questData, true);
 		p.getCache().remove("keep_key_gate");
 	}
@@ -638,7 +648,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		if (selectedNumber == 0) {
 			npcTalk(p, n, "Virgo the virtuous",
 				"The strong and peaceful nature of virgo boosts your defence");
-			questData[Quests.MAPIDX_SKILL] = DEFENCE;
+			questData[Quests.MAPIDX_SKILL] = Skills.DEFENSE;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 1) {
 			npcTalk(p, n, "Libra the scales",
@@ -667,7 +677,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 7) {
 			npcTalk(p, n, "Aries the ram",
 				"The ram's strength improves your attack abilities");
-			questData[Quests.MAPIDX_SKILL] = ATTACK;
+			questData[Quests.MAPIDX_SKILL] = Skills.ATTACK;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 8) {
 			npcTalk(p, n, "Sagittarius the Centaur",
@@ -676,12 +686,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		} else if (selectedNumber == 9) {
 			npcTalk(p, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
-			questData[Quests.MAPIDX_SKILL] = HITS;
+			questData[Quests.MAPIDX_SKILL] = Skills.HITPOINTS;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 10) {
 			npcTalk(p, n, "Capricorn the goat",
 				"you are granted an increase in strength");
-			questData[Quests.MAPIDX_SKILL] = STRENGTH;
+			questData[Quests.MAPIDX_SKILL] = Skills.STRENGTH;
 			incQuestReward(p, questData, false);
 		} else if (selectedNumber == 11) {
 			npcTalk(p, n, "Cancer the crab",

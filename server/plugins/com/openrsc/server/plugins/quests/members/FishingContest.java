@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,7 +18,18 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.doGate;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.hasItemAtAll;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class FishingContest implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
@@ -346,10 +358,10 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 		p.message("Well done you have completed the fishing competition quest");
 		p.message("@gre@You haved gained 1 quest point!");
 		int[] questData = Quests.questData.get(Quests.FISHING_CONTEST);
-		if (p.getSkills().getMaxStat(FISHING) <= 23) {
+		if (p.getSkills().getMaxStat(Skills.FISHING) <= 23) {
 			questData[Quests.MAPIDX_BASE] = 900;
 			incQuestReward(p, questData, true);
-		} else if (p.getSkills().getMaxStat(FISHING) >= 24) {
+		} else if (p.getSkills().getMaxStat(Skills.FISHING) >= 24) {
 			questData[Quests.MAPIDX_BASE] = 1700;
 			incQuestReward(p, questData, true);
 		}

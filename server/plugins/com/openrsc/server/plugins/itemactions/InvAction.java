@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.itemactions;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -15,12 +16,9 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 
 	@Override
 	public boolean blockInvAction(Item item, Player player) {
-		if (inArray(item.getID(), 668, 1073, 537, 777, 781, 752, 706, 918, 920, 921, 922,
+		return (inArray(item.getID(), 668, 1073, 537, 777, 781, 752, 706, 918, 920, 921, 922,
 			926, 799, 936, 1099, 1060, 1039, 996, 1004, 1031, 1086, 1087, 1181, 1141,
-			1142, 1143, 1144, 1173, 1025, 1174, 793, 1120)) {
-			return true;
-		}
-		return false;
+			1142, 1143, 1144, 1173, 1025, 1174, 793, 1120));
 	}
 
 	@Override
@@ -226,7 +224,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 				"The prof tells me that this is cutting edge technology!");
 		} else if (item.getID() == 777) {
 			p.message("you rub together the dry sticks");
-			if (getCurrentLevel(p, FIREMAKING) < 30) {
+			if (getCurrentLevel(p, Skills.FIREMAKING) < 30) {
 				p.message("you need a firemaking level of 30 or above");
 				p.message("the sticks smoke momentarily then die out");
 				return;
@@ -412,7 +410,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			p.message("You eat the nightshade...");
 			removeItem(p, 1086, 1);
 			playerTalk(p, null, "Ahhhh! what have I done !");
-			p.damage((int) ((getCurrentLevel(p, HITS) * 0.2D) + 10));
+			p.damage((int) ((getCurrentLevel(p, Skills.HITPOINTS) * 0.2D) + 10));
 			p.message("The nightshade was highly poisonous");
 		} else if (item.getID() == 1087) {
 			if (p.getQuestStage(Quests.WATCHTOWER) == 8 || p.getQuestStage(Quests.WATCHTOWER) == 9) {

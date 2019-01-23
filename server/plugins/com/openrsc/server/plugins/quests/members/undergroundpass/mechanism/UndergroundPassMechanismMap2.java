@@ -15,19 +15,19 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener, Inv
 	/**
 	 * ITEM IDs
 	 **/
-	public static int ROPE = 237;
-	public static int PLANK = 410;
-	public static int RAILING = 995;
+	private static int ROPE = 237;
+	private static int PLANK = 410;
+	private static int RAILING = 995;
 
 	/**
 	 * ITEMS_TO_FLAMES: Unicorn horn, coat of arms red and blue.
 	 **/
-	public static int[] ITEMS_TO_FLAMES = {997, 998, 999};
+	private static int[] ITEMS_TO_FLAMES = {997, 998, 999};
 
 	/**
 	 * OBJECT IDs
 	 **/
-	public static int BOULDER = 867;
+	private static int BOULDER = 867;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {

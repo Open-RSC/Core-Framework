@@ -2,18 +2,40 @@ package com.openrsc.server.plugins.quests.members.grandtree;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.doGate;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.movePlayer;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcYell;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -22,48 +44,48 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 	 * King narnode coords: 416, 165    *
 	 ***********************************/
 
-	public static final int KING_NARNODE_SHAREEN = 541;
-	public static final int KING_NARNODE_SHAREEN_UNDERGROUND = 545;
+	private static final int KING_NARNODE_SHAREEN = 541;
+	private static final int KING_NARNODE_SHAREEN_UNDERGROUND = 545;
 
-	public static final int HAZELMERE = 546;
+	private static final int HAZELMERE = 546;
 
-	public static final int GLOUGH = 547;
+	private static final int GLOUGH = 547;
 
-	public static final int GLOUGHS_CUPBOARD = 620;
-	public static final int GLOUGH_CHEST = 632;
+	private static final int GLOUGHS_CUPBOARD = 620;
+	private static final int GLOUGH_CHEST = 632;
 
-	public static final int TREE_LADDER_UP = 585;
+	private static final int TREE_LADDER_UP = 585;
 
-	public static final int TREE_LADDER_DOWN = 586;
+	private static final int TREE_LADDER_DOWN = 586;
 
-	public static final int CHARLIE = 550;
+	private static final int CHARLIE = 550;
 
 	public static final int CAGE = 617;
 
-	public static final int GNOME_GUARD = 551;
+	private static final int GNOME_GUARD = 551;
 
-	public static final int SHIPYARD_GATE = 624;
+	private static final int SHIPYARD_GATE = 624;
 
-	public static final int SHIPYARD_WORKER_WHITE = 558;
-	public static final int SHIPYARD_WORKER_BLACK = 559;
-	public static final int SHIPYARD_FOREMAN = 560;
-	public static final int SHIPYARD_HUT_FOREMAN = 561;
+	private static final int SHIPYARD_WORKER_WHITE = 558;
+	private static final int SHIPYARD_WORKER_BLACK = 559;
+	private static final int SHIPYARD_FOREMAN = 560;
+	private static final int SHIPYARD_HUT_FOREMAN = 561;
 
-	public static final int FEMI = 563;
-	public static final int FEMI_INSIDE_STRONGHOLD = 564;
-	public static final int ANITA = 565;
+	private static final int FEMI = 563;
+	private static final int FEMI_INSIDE_STRONGHOLD = 564;
+	private static final int ANITA = 565;
 
-	public static final int WATCH_TOWER_UP = 635;
-	public static final int WATCH_TOWER_DOWN = 646;
-	public static final int WATCH_TOWER_STONE_STAND = 634;
+	private static final int WATCH_TOWER_UP = 635;
+	private static final int WATCH_TOWER_DOWN = 646;
+	private static final int WATCH_TOWER_STONE_STAND = 634;
 
-	public static final int BLACK_DEMON = 568;
+	private static final int BLACK_DEMON = 568;
 
-	public static final int ROOT_ONE = 609;
-	public static final int ROOT_TWO = 610;
-	public static final int ROOT_THREE = 637;
-	public static final int PUSH_ROOT = 638;
-	public static final int PUSH_ROOT_BACK = 639;
+	private static final int ROOT_ONE = 609;
+	private static final int ROOT_TWO = 610;
+	private static final int ROOT_THREE = 637;
+	private static final int PUSH_ROOT = 638;
+	private static final int PUSH_ROOT_BACK = 639;
 
 	@Override
 	public int getQuestId() {
@@ -85,7 +107,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		p.message("well done you have completed the grand tree quest");
 		int[] questData = Quests.questData.get(Quests.GRAND_TREE);
 		//keep order kosher
-		int[] skillIDs = {AGILITY, ATTACK, MAGIC};
+		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK, Skills.MAGIC};
 		//1600 for agility, 1600 for attack, 600 for magic
 		int[] baseAmounts = {1600, 1600, 600};
 		//1200 for agility, 1200 for attack, 200 for magic
@@ -1535,6 +1557,6 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	class QuestItems {
 		public static final int SHIPYARD_INVOICE = 922;
-		public static final int GLOUGH_CHEST_KEY = 925;
+		static final int GLOUGH_CHEST_KEY = 925;
 	}
 }

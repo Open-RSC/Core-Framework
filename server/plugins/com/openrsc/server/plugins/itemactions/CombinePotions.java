@@ -41,7 +41,6 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				addItem(p, ItemId.THREE_STRENGTH_POTION.id(), 1);
 				p.message("You combine 2 doses of " + item1.getDef().getName().toLowerCase() + " with 1 dose of " + item2.getDef().getName().toLowerCase());
 				addItem(p, ItemId.EMPTY_VIAL.id(), 1); // give 1 empty vial.
-				return;
 			}
 		}
 		// 1 dose on 3 dose = 4 dose
@@ -50,7 +49,6 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1);
 				p.message("You combine 3 doses of " + item1.getDef().getName().toLowerCase() + " with 1 dose of " + item2.getDef().getName().toLowerCase());
 				addItem(p, ItemId.EMPTY_VIAL.id(), 1); // give 1 empty vial.
-				return;
 			}
 		}
 		// 2 dose on 2 dose = 4 dose
@@ -59,7 +57,6 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1);
 				p.message("You combine two 2 doses of " + item1.getDef().getName().toLowerCase());
 				addItem(p, ItemId.EMPTY_VIAL.id(), 1); // give 1 empty vial.
-				return;
 			}
 		}
 		// 1 dose on 1 dose = 2 dose
@@ -68,7 +65,6 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				addItem(p, ItemId.TWO_STRENGTH_POTION.id(), 1);
 				p.message("You combine 1 dose of " + item1.getDef().getName().toLowerCase() + " with 1 dose of " + item2.getDef().getName().toLowerCase());
 				addItem(p, ItemId.EMPTY_VIAL.id(), 1); // give 1 empty vial.
-				return;
 			}
 		}
 		// 3 dose on 3 dose = 6 dose (one 4 dose full pot, one 2 dose pot)
@@ -77,7 +73,6 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 				addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1); // 4 dose
 				addItem(p, ItemId.TWO_STRENGTH_POTION.id(), 1); // 2 dose
 				p.message("You combine two 3 doses of " + item1.getDef().getName().toLowerCase());
-				return;
 			}
 		}
 		/** Rest of the potions in the game **/

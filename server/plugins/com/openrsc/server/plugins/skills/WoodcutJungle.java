@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -13,16 +14,21 @@ import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveL
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class WoodcutJungle implements ObjectActionListener,
 	ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
 
-	public static int[] JUNGLE_TREES = {1086, 1100, 1099, 1092, 1091};
+	private static int[] JUNGLE_TREES = {1086, 1100, 1099, 1092, 1091};
 
-	public static int JUNGLE_VINE = 204;
+	private static int JUNGLE_VINE = 204;
 
-	public static int JUNGLE_TREE_STUMP = 1087;
+	private static int JUNGLE_TREE_STUMP = 1087;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -65,7 +71,7 @@ public class WoodcutJungle implements ObjectActionListener,
 		//	return;
 		//}
 
-		if (getCurrentLevel(p, WOODCUT) < 50) {
+		if (getCurrentLevel(p, Skills.WOODCUT) < 50) {
 			p.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}
@@ -177,10 +183,7 @@ public class WoodcutJungle implements ObjectActionListener,
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
-		if (obj.getID() == JUNGLE_VINE) {
-			return true;
-		}
-		return false;
+		return obj.getID() == JUNGLE_VINE;
 	}
 
 	@Override

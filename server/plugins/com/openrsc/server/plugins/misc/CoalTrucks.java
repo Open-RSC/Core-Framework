@@ -32,18 +32,12 @@ public class CoalTrucks implements ObjectActionExecutiveListener, ObjectActionLi
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == COAL_TRUCK) {
-			return true;
-		}
-		return false;
+		return obj.getID() == COAL_TRUCK;
 	}
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == COAL_TRUCK && item.getID() == ItemId.COAL.id()) {
-			return true;
-		}
-		return false;
+		return obj.getID() == COAL_TRUCK && item.getID() == ItemId.COAL.id();
 	}
 
 	@Override
