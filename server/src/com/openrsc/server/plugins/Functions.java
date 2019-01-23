@@ -31,9 +31,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class Functions {
 
-	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
-		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17;
 	/**
 	 * The asynchronous logger.
 	 */
@@ -140,7 +137,7 @@ public class Functions {
 		}
 		return flag;
 	}
-	
+
 	/**
 	 * Returns true if you are in any stages provided.
 	 *

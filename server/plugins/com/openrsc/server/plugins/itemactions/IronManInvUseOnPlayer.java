@@ -9,16 +9,16 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 
-	public int GOLD_TOKEN = 2092;
-	public int PREMIUM_TOKEN = 2094;
+	private int GOLD_TOKEN = 2092;
+	private int PREMIUM_TOKEN = 2094;
 
-	public int SHIELD_OF_ARRAV_KEY = 48;
-	public int SHIELD_OF_ARRAV_BLACKARM_BROKENSHIELD = 53;
-	public int SHIELD_OF_ARRAV_PHOENIX_BROKENSHIELD = 54;
-	public int SHIELD_OF_ARRAV_CERTIFICATE = 61;
+	private int SHIELD_OF_ARRAV_KEY = 48;
+	private int SHIELD_OF_ARRAV_BLACKARM_BROKENSHIELD = 53;
+	private int SHIELD_OF_ARRAV_PHOENIX_BROKENSHIELD = 54;
+	private int SHIELD_OF_ARRAV_CERTIFICATE = 61;
 
-	public int HEROS_QUEST_CANDLESTICK = 585;
-	public int HEROS_QUEST_MISCELLANEOUS_KEY = 582;
+	private int HEROS_QUEST_CANDLESTICK = 585;
+	private int HEROS_QUEST_MISCELLANEOUS_KEY = 582;
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {

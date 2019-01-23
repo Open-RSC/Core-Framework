@@ -4,15 +4,19 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.ItemArrowHeadDef;
+import com.openrsc.server.external.ItemBowStringDef;
+import com.openrsc.server.external.ItemDartTipDef;
+import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.MenuOptionListener;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.FLETCHING;
 import static com.openrsc.server.plugins.Functions.addItem;
 
 public class Fletching implements InvUseOnItemExecutiveListener {
@@ -168,7 +172,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		}
 
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, FLETCHING)) {
+			.getRepeatTimes(player, Skills.FLETCHING)) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(9) < stringDef.getReqLevel()) {
@@ -250,7 +254,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 							final int experience = exp;
 							final String cutMessages = cutMessage;
 							player.setBatchEvent(new BatchEvent(player, 600, Formulae
-								.getRepeatTimes(player, FLETCHING)) {
+								.getRepeatTimes(player, Skills.FLETCHING)) {
 
 								@Override
 								public void action() {
@@ -300,7 +304,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 						final int experience = exp;
 						final String cutMessages = cutMessage;
 						player.setBatchEvent(new BatchEvent(player, 600, Formulae
-							.getRepeatTimes(player, FLETCHING)) {
+							.getRepeatTimes(player, Skills.FLETCHING)) {
 
 							@Override
 							public void action() {
@@ -346,7 +350,7 @@ public class Fletching implements InvUseOnItemExecutiveListener {
 		final int exp = 25;
 		final int pearlID = pearl.getID();
 		player.setBatchEvent(new BatchEvent(player, 600, Formulae
-			.getRepeatTimes(player, FLETCHING)) {
+			.getRepeatTimes(player, Skills.FLETCHING)) {
 			@Override
 			public void action() {
 				if (owner.getSkills().getLevel(9) < 34) {

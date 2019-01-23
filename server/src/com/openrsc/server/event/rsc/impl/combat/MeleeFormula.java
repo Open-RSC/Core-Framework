@@ -100,7 +100,7 @@ public class MeleeFormula {
 			Prayers.ROCK_SKIN,
 			Prayers.STEEL_SKIN);
 
-		int defenseLevel = (int) (defender.getSkills().getLevel(Skills.DEFENCE) * prayerBonus) + styleBonus + 8;
+		int defenseLevel = (int) (defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus + 8;
 		double bonusMultiplier = (double) (defender.getArmourPoints() + 64);
 
 		if (defender.isNpc())

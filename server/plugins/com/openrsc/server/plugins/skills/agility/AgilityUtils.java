@@ -1,8 +1,7 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.player.Player;
-
-import static com.openrsc.server.plugins.Functions.AGILITY;
 
 public class AgilityUtils {
 
@@ -20,7 +19,7 @@ public class AgilityUtils {
 				for (int i = 0; i < obstacleOrder.length; i++) {
 					if (obstacleOrder[i] == id) {
 						if (i == obstacleOrder.length - 1) {
-							p.incExp(AGILITY, bonus, true);
+							p.incExp(Skills.AGILITY, bonus, true);
 							p.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;
 						}

@@ -13,8 +13,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	public static final int WORKMAN = 722;
-	public static final int WORKMAN_SMALL_CAVE = 738;
+	private static final int WORKMAN = 722;
+	private static final int WORKMAN_SMALL_CAVE = 738;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -171,10 +171,7 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == WORKMAN && item.getID() == 1173) {
-			return true;
-		}
-		return false;
+		return n.getID() == WORKMAN && item.getID() == 1173;
 	}
 
 	@Override

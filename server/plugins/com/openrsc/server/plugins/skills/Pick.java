@@ -54,6 +54,5 @@ public final class Pick implements ObjectActionExecutiveListener,
 					owner.setBusy(false);
 				}
 			});
-		return;
 	}
 }

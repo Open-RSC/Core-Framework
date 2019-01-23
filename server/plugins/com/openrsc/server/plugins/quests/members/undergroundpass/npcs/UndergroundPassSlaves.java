@@ -10,7 +10,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassSlaves implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
-	public static int[] SLAVES = {634, 635, 636, 637, 638, 639, 640};
+	private static int[] SLAVES = {634, 635, 636, 637, 638, 639, 640};
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

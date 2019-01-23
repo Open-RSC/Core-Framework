@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,12 +15,22 @@ import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.transform;
 
 public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	public static final int UNGADULU = 766;
-	public static final int EVIL_UNGADULU = 767;
+	private static final int EVIL_UNGADULU = 767;
 
 	private static void ungaduluTalkToDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == UNGADULU) {
@@ -546,9 +557,9 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		npcTalk(p, n, "Iles Resti Yam Darkus Spiritus Possesi Yanai..");
 		message(p, n, 1300, "You feel a strange power coming over you...");
 		p.damage(5);
-		p.getSkills().setLevel(ATTACK, p.getSkills().getLevel(ATTACK) - 5);
-		p.getSkills().setLevel(DEFENCE, p.getSkills().getLevel(DEFENCE) - 5);
-		p.getSkills().setLevel(STRENGTH, p.getSkills().getLevel(STRENGTH) - 5);
+		p.getSkills().setLevel(Skills.ATTACK, p.getSkills().getLevel(Skills.ATTACK) - 5);
+		p.getSkills().setLevel(Skills.DEFENSE, p.getSkills().getLevel(Skills.DEFENSE) - 5);
+		p.getSkills().setLevel(Skills.STRENGTH, p.getSkills().getLevel(Skills.STRENGTH) - 5);
 		message(p, n, 1300, "The Shaman seems to get stronger...",
 			"The Shaman seems to return to normal...");
 		n = transform(n, UNGADULU, true);
@@ -676,8 +687,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		if (affectedmob.getID() == UNGADULU) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
-			p.getSkills().setLevel(ATTACK, 0);
-			p.getSkills().setLevel(STRENGTH, 0);
+			p.getSkills().setLevel(Skills.ATTACK, 0);
+			p.getSkills().setLevel(Skills.STRENGTH, 0);
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				message(p, 1300, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
@@ -697,10 +708,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 
 	@Override
 	public boolean blockPlayerNpcRun(Player p, Npc n) {
-		if (n.getID() == UNGADULU) {
-			return true;
-		}
-		return false;
+		return n.getID() == UNGADULU;
 	}
 
 	@Override
@@ -711,8 +719,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 			sleep(650);
 			npcTalk(p, n, "Run then....run away....",
 				"Save yourself....");
-			p.getSkills().setLevel(ATTACK, (p.getSkills().getMaxStat(ATTACK) - 19) + p.getSkills().getLevel(ATTACK));
-			p.getSkills().setLevel(STRENGTH, (p.getSkills().getMaxStat(STRENGTH) - 19) + p.getSkills().getLevel(STRENGTH));
+			p.getSkills().setLevel(Skills.ATTACK, (p.getSkills().getMaxStat(Skills.ATTACK) - 19) + p.getSkills().getLevel(Skills.ATTACK));
+			p.getSkills().setLevel(Skills.STRENGTH, (p.getSkills().getMaxStat(Skills.STRENGTH) - 19) + p.getSkills().getLevel(Skills.STRENGTH));
 			p.message("Strangely, you start to feel better.");
 		}
 	}
@@ -806,7 +814,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				if (nez != null) {
 					npcTalk(p, nez, "Curse you foul intruder...your faith will help you little here.");
 					nez.startCombat(p);
-					p.getSkills().setLevel(PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 4));
+					p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
 					message(p, 1300, "A sense of hopelessness fills your body...");
 					npcTalk(p, nez, "'Ere near to death ye comes now that ye has meddled in my dealings..");
 				}
@@ -818,29 +826,29 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 	}
 
 	class Ungadulu {
-		public static final int EXTINGUISH_THE_FLAMES = 0;
-		public static final int WHO_ARE_YOU = 1;
-		public static final int WHERE_DO_I_GET_PURE_WATER_FROM = 2;
-		public static final int HOW_DO_I_GET_OUT_OF_HERE = 3;
-		public static final int WHAT_WILL_YOU_DO_NOW = 4;
-		public static final int COLLECT_SOME_YOMMI_SEEDS_FOR_GUJUO = 5;
-		public static final int HOW_DO_I_GROW_THE_YOMMI_TREE = 6;
-		public static final int WHAT_DO_YOU_KNOW_ABOUT_THE_PURE_WATER = 7;
-		public static final int WHERE_DO_I_PLANT_THE_SEEDS = 8;
-		public static final int I_HAVE_GERMINATED_THE_SEEDS = 9;
-		public static final int I_NEED_MORE_YOMMI_TREE_SEEDS = 10;
-		public static final int WHERE_CAN_I_GET_MORE_PURE_WATER = 11;
-		public static final int THE_MAGIC_POOL_HAS_DRIED_UP = 12;
-		public static final int I_AM_ON_A_QUEST_TO_GET_MORE_PURE_WATER = 13;
-		public static final int WHAT_DO_YOU_KNOW_ABOUT_THE_SOURCE_OF_THE_SACRED_WATER = 14;
+		static final int EXTINGUISH_THE_FLAMES = 0;
+		static final int WHO_ARE_YOU = 1;
+		static final int WHERE_DO_I_GET_PURE_WATER_FROM = 2;
+		static final int HOW_DO_I_GET_OUT_OF_HERE = 3;
+		static final int WHAT_WILL_YOU_DO_NOW = 4;
+		static final int COLLECT_SOME_YOMMI_SEEDS_FOR_GUJUO = 5;
+		static final int HOW_DO_I_GROW_THE_YOMMI_TREE = 6;
+		static final int WHAT_DO_YOU_KNOW_ABOUT_THE_PURE_WATER = 7;
+		static final int WHERE_DO_I_PLANT_THE_SEEDS = 8;
+		static final int I_HAVE_GERMINATED_THE_SEEDS = 9;
+		static final int I_NEED_MORE_YOMMI_TREE_SEEDS = 10;
+		static final int WHERE_CAN_I_GET_MORE_PURE_WATER = 11;
+		static final int THE_MAGIC_POOL_HAS_DRIED_UP = 12;
+		static final int I_AM_ON_A_QUEST_TO_GET_MORE_PURE_WATER = 13;
+		static final int WHAT_DO_YOU_KNOW_ABOUT_THE_SOURCE_OF_THE_SACRED_WATER = 14;
 
-		public static final int I_HAVE_KILLED_VIYELDI = 15;
-		public static final int I_MET_A_SPIRIT_IN_THE_VIYELDI_CAVES = 16;
-		public static final int THE_SPIRIT_TOLD_ME_TO_KILL_VIYELDI = 17;
-		public static final int DO_YOU_KNOW_ANYTHING_ABOUT_DAGGERS = 18;
-		public static final int I_HAVE_KILLED_THE_SPIRIT = 19;
-		public static final int I_HAVE_GOT_THE_WATER = 20;
-		public static final int WHAT_DO_I_DO_NOW = 21;
+		static final int I_HAVE_KILLED_VIYELDI = 15;
+		static final int I_MET_A_SPIRIT_IN_THE_VIYELDI_CAVES = 16;
+		static final int THE_SPIRIT_TOLD_ME_TO_KILL_VIYELDI = 17;
+		static final int DO_YOU_KNOW_ANYTHING_ABOUT_DAGGERS = 18;
+		static final int I_HAVE_KILLED_THE_SPIRIT = 19;
+		static final int I_HAVE_GOT_THE_WATER = 20;
+		static final int WHAT_DO_I_DO_NOW = 21;
 
 	}
 }

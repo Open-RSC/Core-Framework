@@ -5,6 +5,7 @@ import com.openrsc.server.Constants.Quests;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectMiningDef;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -47,7 +48,7 @@ public final class Mining implements ObjectActionListener,
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (hasItem(owner, getAxe(owner))) {
-					if (getCurrentLevel(owner, MINING) >= 50) {
+					if (getCurrentLevel(owner, Skills.MINING) >= 50) {
 						owner.message("you manage to dig a way through the rockslide");
 						if (owner.getX() <= 425) {
 							owner.teleport(428, 438);
@@ -79,7 +80,7 @@ public final class Mining implements ObjectActionListener,
 						owner.message("You need a pickaxe to mine the rock");
 						return;
 					}
-					if (getCurrentLevel(owner, MINING) < 40) {
+					if (getCurrentLevel(owner, Skills.MINING) < 40) {
 						owner.message("You need a mining level of 40 to mine this crystal out");
 						return;
 					}
@@ -109,7 +110,7 @@ public final class Mining implements ObjectActionListener,
 		}
 	}
 
-	public void handleMining(final GameObject object, Player owner, int click) {
+	private void handleMining(final GameObject object, Player owner, int click) {
 		if (owner.isBusy()) {
 			return;
 		}
@@ -239,11 +240,7 @@ public final class Mining implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
-		if ((command.equals("mine") || command.equals("prospect")) && obj.getID() != 588) {
-			return true;
-		}
-		return false;
+	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588;
 	}
 }
