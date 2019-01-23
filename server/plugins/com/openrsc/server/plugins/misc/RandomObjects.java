@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.ShortEvent;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,7 +12,14 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.replaceObject;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class RandomObjects implements ObjectActionExecutiveListener, ObjectActionListener {
 
@@ -157,7 +165,7 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 		}
 		if (object.getID() == 400) {
 			owner.message("The plant takes a bite at you!");
-			owner.damage(getCurrentLevel(owner, HITS) / 10 + 2);
+			owner.damage(getCurrentLevel(owner, Skills.HITPOINTS) / 10 + 2);
 		}
 	}
 

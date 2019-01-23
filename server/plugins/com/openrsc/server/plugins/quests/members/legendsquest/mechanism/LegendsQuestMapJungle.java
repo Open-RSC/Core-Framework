@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -7,7 +8,11 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestMapJungle implements InvActionListener, InvActionExecutiveListener {
 
@@ -24,28 +29,19 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 	 * SIDE NOTE: There are 5 entrances (Very Deep east & Deep east, Very Deep west & Deep west, One Centered in middle).
 	 */
 
-	public static final int RADIMUS_SCROLLS = 1163;
-	public static final int RADIMUS_SCROLLS_COMPLETE = 1233;
+	private static final int RADIMUS_SCROLLS = 1163;
+	private static final int RADIMUS_SCROLLS_COMPLETE = 1233;
 
 	private boolean JUNGLE_WEST_AREA(Player p) {
-		if (p.getLocation().inBounds(432, 872, 477, 909)) {
-			return true;
-		}
-		return false;
+		return p.getLocation().inBounds(432, 872, 477, 909);
 	}
 
 	private boolean JUNGLE_MIDDLE_AREA(Player p) {
-		if (p.getLocation().inBounds(384, 874, 431, 909)) {
-			return true;
-		}
-		return false;
+		return p.getLocation().inBounds(384, 874, 431, 909);
 	}
 
 	private boolean JUNGLE_EAST_AREA(Player p) {
-		if (p.getLocation().inBounds(338, 875, 383, 909)) {
-			return true;
-		}
-		return false;
+		return p.getLocation().inBounds(338, 875, 383, 909);
 	}
 
 	@Override
@@ -100,7 +96,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 					message(p, 1200, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
 				}
-				if (getCurrentLevel(p, CRAFTING) < 50) {
+				if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
 					//message possibly non kosher
 					p.message("You need a crafting ability of at least 50 to complete this task.");
 					return;

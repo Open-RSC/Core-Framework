@@ -26,7 +26,7 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 	}
 
 
-	public void applyPoison(Player player, Item item) {
+	private void applyPoison(Player player, Item item) {
 		int makeAmount = 1;
 
 		if (item.getDef().isStackable()) {

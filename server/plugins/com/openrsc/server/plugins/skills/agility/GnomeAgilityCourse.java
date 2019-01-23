@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -18,7 +19,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 	private static final int SECOND_NET = 653;
 	private static final int PIPE = 654;
 
-	public static int[] obstacleOrder = {BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE};
+	private static int[] obstacleOrder = {BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE};
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
@@ -94,7 +95,7 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 				}
 				break;
 		}
-		p.incExp(AGILITY, 30, true);
+		p.incExp(Skills.AGILITY, 30, true);
 		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 140);
 		p.setBusy(false);
 	}

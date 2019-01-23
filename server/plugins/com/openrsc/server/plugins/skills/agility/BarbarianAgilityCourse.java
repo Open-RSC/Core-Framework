@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -7,21 +8,26 @@ import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.movePlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.random;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class BarbarianAgilityCourse implements WallObjectActionListener,
 	WallObjectActionExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener {
 
-	public static final int LOW_WALL = 164;
-	public static final int LOW_WALL2 = 163;
-	public static final int LEDGE = 678;
-	public static final int NET = 677;
-	public static final int LOG = 676;
-	public static final int PIPE = 671;
-	public static final int BACK_PIPE = 672;
-	public static final int SWING = 675;
-	public static final int[] obstacleOrder = {675, 676, 677, 678, 163, 164};
+	private static final int LOW_WALL = 164;
+	private static final int LOW_WALL2 = 163;
+	private static final int LEDGE = 678;
+	private static final int NET = 677;
+	private static final int LOG = 676;
+	private static final int PIPE = 671;
+	private static final int BACK_PIPE = 672;
+	private static final int SWING = 675;
+	private static final int[] obstacleOrder = {675, 676, 677, 678, 163, 164};
 	private static final int HANDHOLDS = 679;
 
 	@Override
@@ -36,7 +42,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 		switch (obj.getID()) {
 			case BACK_PIPE:
 			case PIPE:
-				if (getCurrentLevel(p, AGILITY) < 35) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 35) {
 					p.message("You need an agility level of 35 to attempt to squeeze through the pipe");
 					p.setBusy(false);
 					return;
@@ -54,7 +60,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				} else {
 					movePlayer(p, 487, 551);
 				}
-				p.incExp(AGILITY, 20, true);
+				p.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SWING:
 				p.message("you grab the rope and try and swing across");
@@ -63,7 +69,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				if (fail) {
 					p.message("you skillfully swing across the hole");
 					movePlayer(p, 486, 559);
-					p.incExp(AGILITY, 80, true);
+					p.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				} else {
 					p.message("Your hands slip and you fall to the level below");
@@ -85,7 +91,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 					sleep(650);
 					p.message("and walk across");
 					movePlayer(p, 492, 563);
-					p.incExp(AGILITY, 50, true);
+					p.incExp(Skills.AGILITY, 50, true);
 					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				} else {
 					p.message("You lose your footing and land in the water");
@@ -97,7 +103,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			case NET:
 				p.message("You climb up the netting");
 				movePlayer(p, 496, 1507);
-				p.incExp(AGILITY, 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				break;
 			case LEDGE:
@@ -109,7 +115,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				if (fail) {
 					movePlayer(p, 501, 1506);
 					p.message("You skillfully balance across the hole");
-					p.incExp(AGILITY, 80, true);
+					p.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				} else {
 					p.message("you lose your footing and fall to the level below");
@@ -123,7 +129,7 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			case HANDHOLDS:
 				p.message("You climb up the wall");
 				movePlayer(p, 497, 555);
-				p.incExp(AGILITY, 20, true);
+				p.incExp(Skills.AGILITY, 20, true);
 				AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 				break;
 		}
@@ -153,13 +159,13 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				movePlayer(p, p.getX() == obj.getX() ? p.getX() - 1 : p.getX() + 1, p.getY());
 				break;
 		}
-		p.incExp(AGILITY, 20, true);
+		p.incExp(Skills.AGILITY, 20, true);
 		AgilityUtils.setNextObstacle(p, obj.getID(), obstacleOrder, 300);
 		p.setBusy(false);
 	}
 
-	boolean succeed(Player player) {
-		int level_difference = getCurrentLevel(player, AGILITY) - 35;
+	private boolean succeed(Player player) {
+		int level_difference = getCurrentLevel(player, Skills.AGILITY) - 35;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)

@@ -14,15 +14,12 @@ import static com.openrsc.server.plugins.Functions.message;
 
 public class SwampToads implements PickupListener, PickupExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
-	public static final int SWAMP_TOAD = 895;
-	public static final int TOAD_LEGS = 896;
+	private static final int SWAMP_TOAD = 895;
+	private static final int TOAD_LEGS = 896;
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == SWAMP_TOAD) {
-			return true;
-		}
-		return false;
+		return item.getID() == SWAMP_TOAD;
 	}
 
 	@Override
@@ -36,10 +33,7 @@ public class SwampToads implements PickupListener, PickupExecutiveListener, InvA
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == SWAMP_TOAD) {
-			return true;
-		}
-		return false;
+		return i.getID() == SWAMP_TOAD;
 	}
 
 	@Override

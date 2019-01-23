@@ -10,17 +10,14 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
-	public static int[] DEMONS = {645, 646, 647};
+	private static int[] DEMONS = {645, 646, 647};
 	public static int AMULET_OF_OTHAINIAN = 1009;
 	public static int AMULET_OF_DOOMION = 1010;
 	public static int AMULET_OF_HOLTHION = 1011;
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (inArray(n.getID(), DEMONS)) {
-			return true;
-		}
-		return false;
+		return inArray(n.getID(), DEMONS);
 	}
 
 	@Override

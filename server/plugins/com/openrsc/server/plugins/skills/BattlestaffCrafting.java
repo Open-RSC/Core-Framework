@@ -1,12 +1,15 @@
 package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.removeItem;
 
 public class BattlestaffCrafting implements InvUseOnItemListener,
 	InvUseOnItemExecutiveListener {
@@ -28,7 +31,7 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 				combine = c;
 			}
 		}
-		if (p.getSkills().getLevel(CRAFTING) < combine.requiredLevel) {
+		if (p.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
 			p.message("You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
@@ -39,7 +42,7 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 				p.message(combine.messages[0]);
 
 			addItem(p, combine.resultItem, 1);
-			p.incExp(CRAFTING, combine.experience, true);
+			p.incExp(Skills.CRAFTING, combine.experience, true);
 
 			if (combine.messages.length > 1)
 				p.message(combine.messages[1]);

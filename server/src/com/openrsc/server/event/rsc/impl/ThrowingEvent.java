@@ -151,7 +151,7 @@ public class ThrowingEvent extends GameTickEvent {
 					ActionSender.sendInventory(getPlayerOwner());
 				}
 
-				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGE), target.getArmourPoints(), throwingID);
+				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), throwingID);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;

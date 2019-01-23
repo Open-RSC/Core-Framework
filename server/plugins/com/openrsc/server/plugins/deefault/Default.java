@@ -19,7 +19,7 @@ public class Default implements DefaultHandler, TalkToNpcListener, ObjectActionL
 	InvUseOnNpcListener, WallObjectActionListener {
 
 	public static final DoorAction doors = new DoorAction();
-	public static final Ladders ladders = new Ladders();
+	private static final Ladders ladders = new Ladders();
 
 	@Override
 	public void onInvUseOnNpc(final Player player, final Npc npc,
@@ -32,7 +32,6 @@ public class Default implements DefaultHandler, TalkToNpcListener, ObjectActionL
 								 final Player owner) {
 		if (doors.blockInvUseOnWallObject(object, item, owner)) {
 			doors.onInvUseOnWallObject(object, item, owner);
-			return;
 		} else {
 			owner.message("Nothing interesting happens");
 			//possibly unhandled

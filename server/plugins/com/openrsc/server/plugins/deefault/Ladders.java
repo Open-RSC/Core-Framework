@@ -66,7 +66,6 @@ public class Ladders {
 			if (player.getX() == 567 && player.getY() == 3330) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
-			return;
 		} else if (obj.getID() == 488) {
 			player.message("You pull the lever");
 			player.teleport(282, 3019);
@@ -74,7 +73,6 @@ public class Ladders {
 			if (player.getX() == 282 && player.getY() == 3019) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
-			return;
 		} else if (obj.getID() == 349) {
 			player.message("You pull the lever");
 			player.teleport(621, 596);
@@ -82,7 +80,6 @@ public class Ladders {
 			if (player.getX() == 621 && player.getY() == 596) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
-			return;
 		} else if (obj.getID() == 348) {
 			player.message("you pull the lever");
 			player.teleport(180, 128);
@@ -91,7 +88,6 @@ public class Ladders {
 			if (player.getX() == 180 && player.getY() == 128) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
-			return;
 		} else if (obj.getID() == 776) {
 			if (hasItem(player, 987)) {
 				player.message("The barman takes your ticket and allows you up to");
@@ -108,7 +104,6 @@ public class Ladders {
 					player.message("Kaleb is busy at the moment.");
 				}
 			}
-			return;
 		} else if (obj.getID() == 198 && obj.getX() == 251 && obj.getY() == 468) { // Prayer
 			// Guild
 			// Ladder
@@ -137,13 +132,10 @@ public class Ladders {
 								}
 							);
 						}
-					} else if (op == 1)
-						return;
-				} else
-					return;
+					}
+				}
 			} else
 				player.teleport(251, 1411, false);
-			return;
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
@@ -165,7 +157,6 @@ public class Ladders {
 			} else {
 				player.teleport(274, 3397, false);
 			}
-			return;
 		} else if (obj.getID() == 342 && obj.getX() == 611 && obj.getY() == 601) {
 			Npc paladinGuard = getNearestNpc(player, 323, 4);
 			if (paladinGuard != null) {
@@ -180,7 +171,6 @@ public class Ladders {
 				player.message(
 					"You " + command.replace("-", " ") + " the "
 						+ obj.getGameObjectDef().getName().toLowerCase());
-				return;
 			}
 		} else if (obj.getID() == 249 && obj.getX() == 98 && obj.getY() == 3537) { // lost city (Zanaris) ladder
 			Npc ladderAttendant = World.getWorld().getNpc(229, 99, 99, 3537, 3537);
@@ -195,21 +185,16 @@ public class Ladders {
 					player.teleport(98, 706, false);
 				}
 			}
-			return;
 		} else if (obj.getID() == 1187 && obj.getX() == 446 && obj.getY() == 3367) {
 			player.teleport(222, 110, false);
-			return;
 		} else if (obj.getID() == 331 && obj.getX() == 150 && obj.getY() == 558) {
 			player.teleport(151, 1505, false);
-			return;
 		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !Constants.GameServer.MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
-			return;
 		} else if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
 			player.teleport(148, 563, false);
-			return;
 		} else if (obj.getID() == 630 && obj.getX() == 576 && obj.getY() == 3577) {
-			return;
+			// TODO ????
 		} else if (command.equals("climb-up") || command.equals("climb up")
 			|| command.equals("go up")) {
 			int[] coords = coordModifier(player, true, obj);
@@ -217,7 +202,6 @@ public class Ladders {
 			player.message(
 				"You " + command.replace("-", " ") + " the "
 					+ obj.getGameObjectDef().getName().toLowerCase());
-			return;
 		} else if (command.equals("climb-down") || command.equals("climb down")
 			|| command.equals("go down")) {
 			int[] coords = coordModifier(player, false, obj);
@@ -225,7 +209,6 @@ public class Ladders {
 			player.message(
 				"You " + command.replace("-", " ") + " the "
 					+ obj.getGameObjectDef().getName().toLowerCase());
-			return;
 		}
 	}
 

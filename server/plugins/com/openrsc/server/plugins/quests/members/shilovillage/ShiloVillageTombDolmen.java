@@ -16,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	public static final int TOMB_DOLMEN = 689;
+	private static final int TOMB_DOLMEN = 689;
 
 	@Override
 	public int getQuestId() {

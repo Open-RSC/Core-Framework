@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,28 +13,38 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestInvAction implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
 	public static final int SCRIBBLED_NOTES = 1241;
 	public static final int SCRAWLED_NOTES = 1242;
 	public static final int SCRATCHED_NOTES = 1243;
-	public static final int ROUGH_SKETCH_OF_A_BOWL = 1246;
+	private static final int ROUGH_SKETCH_OF_A_BOWL = 1246;
 	public static final int SHAMANS_TOME = 1244;
 	public static final int BOOKING_OF_BINDING = 1238;
 	public static final int YOMMI_TREE_SEED = 1182;
 	public static final int GERMINATED_YOMMI_TREE_SEED = 1254;
 	public static final int A_RED_CRYSTAL = 1222;
-	public static final int HOLY_FORCE_SPELL = 1257;
-	public static final int GILDED_TOTEM_POLE = 1265;
+	private static final int HOLY_FORCE_SPELL = 1257;
+	private static final int GILDED_TOTEM_POLE = 1265;
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (inArray(item.getID(), SCRIBBLED_NOTES, SCRAWLED_NOTES, SCRATCHED_NOTES, ROUGH_SKETCH_OF_A_BOWL, SHAMANS_TOME, BOOKING_OF_BINDING, YOMMI_TREE_SEED, GERMINATED_YOMMI_TREE_SEED, A_RED_CRYSTAL, HOLY_FORCE_SPELL, GILDED_TOTEM_POLE)) {
-			return true;
-		}
-		return false;
+		return inArray(item.getID(),
+			SCRIBBLED_NOTES, SCRAWLED_NOTES, SCRATCHED_NOTES,
+			ROUGH_SKETCH_OF_A_BOWL, SHAMANS_TOME, BOOKING_OF_BINDING,
+			YOMMI_TREE_SEED, GERMINATED_YOMMI_TREE_SEED,
+			A_RED_CRYSTAL, HOLY_FORCE_SPELL, GILDED_TOTEM_POLE);
 	}
 
 	@Override
@@ -61,22 +72,22 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				Npc second_nezikchened = spawnNpc(769, formerNpcX, formerNpcY, 60000 * 15, p);
 				if (second_nezikchened != null) {
 					message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
-					second_nezikchened.getSkills().setLevel(DEFENCE, n.getSkills().getLevel(DEFENCE) - 5);
+					second_nezikchened.getSkills().setLevel(Skills.DEFENSE, n.getSkills().getLevel(Skills.DEFENSE) - 5);
 					if (p.getCache().hasKey("ran_from_2nd_nezi")) {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "So you have returned and I am prepared for you now!", p));
 					} else {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "Now I am revealed to you Vacu, so shall ye perish.", p));
 					}
 					second_nezikchened.startCombat(p);
-					int newPray = (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 2);
-					if (p.getSkills().getLevel(PRAYER) - newPray < 30) {
+					int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
+					if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
 						message(p, 1300, "A sense of fear comes over you ",
 							"You feel a sense of loss...");
 					} else {
 						message(p, 1300, "An intense sense of fear comes over you ",
 							"You feel a great sense of loss...");
 					}
-					p.getSkills().setLevel(PRAYER, newPray);
+					p.getSkills().setLevel(Skills.PRAYER, newPray);
 					if (p.getCache().hasKey("ran_from_2nd_nezi")) {
 						sleep(7000);
 						message(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
@@ -161,10 +172,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		if (item1.getID() == YOMMI_TREE_SEED && item2.getID() == 1267 || item1.getID() == 1267 && item2.getID() == YOMMI_TREE_SEED) {
-			return true;
-		}
-		return false;
+		return item1.getID() == YOMMI_TREE_SEED && item2.getID() == 1267 || item1.getID() == 1267 && item2.getID() == YOMMI_TREE_SEED;
 	}
 
 	@Override

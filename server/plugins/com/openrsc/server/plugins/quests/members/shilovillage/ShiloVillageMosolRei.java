@@ -19,10 +19,7 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == ShiloNpcs.MOSEL_REI) {
-			return true;
-		}
-		return false;
+		return n.getID() == ShiloNpcs.MOSEL_REI;
 	}
 
 	@Override
@@ -192,12 +189,12 @@ public class ShiloVillageMosolRei implements TalkToNpcListener, TalkToNpcExecuti
 	}
 
 	public class ShiloNpcs {
-		public static final int MOSEL_REI = 539;
+		static final int MOSEL_REI = 539;
 	}
 
 	class MoselRei {
-		public static final int WHAT_DANGER_IS_THERE = 0;
-		public static final int WHAT_CAN_WE_DO = 1;
-		public static final int SOMEONE_WHO_DOES_KNOW = 2;
+		static final int WHAT_DANGER_IS_THERE = 0;
+		static final int WHAT_CAN_WE_DO = 1;
+		static final int SOMEONE_WHO_DOES_KNOW = 2;
 	}
 }

@@ -133,7 +133,7 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		menu.showMenu(p);
 	}
 
-	protected void letsGo(Player p, Npc n) {
+	private void letsGo(Player p, Npc n) {
 		npcTalk(p, n, "good stuff, jump aboard");
 		npcTalk(p, n, "ok m hearty, keep your eys pealed");
 		npcTalk(p, n, "i need you to clog up those holes quick time");
@@ -165,7 +165,7 @@ public class Murphy implements TalkToNpcListener, TalkToNpcExecutiveListener {
 //		goMenu.showMenu(p);
 	}
 
-	void onship(Npc n, Player p) {
+	private void onship(Npc n, Player p) {
 		npcTalk(p, n, "whoooahh sailor");
 		int option = showMenu(p, n, "i've had enough,  take me back", "how you doing murphy?");
 		if (option == 0) {

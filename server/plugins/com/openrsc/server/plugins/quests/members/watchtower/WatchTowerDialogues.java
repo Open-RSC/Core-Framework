@@ -17,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	/**
-	 * REMEMBER: 
+	 * REMEMBER:
 	 * Ogre Og = Want coins.
 	 * Ogre Grew = Want Tooth.
 	 * **/
@@ -26,41 +26,41 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	/**
 	 * NPC IDs
 	 **/
-	public static int WATCHTOWER_WIZARD = 672;
-	public static int GREW = 681;
-	public static int OG = 680;
-	public static int TOBAN = 682;
-	public static int OGRE_CITIZEN = 704;
-	public static int ATTACKABLE_GEM_TRADER = 689;
-	public static int OGRE_ENCLAVE_GUARDS = 684;
-	public static int OGRE_TRADER_ROCK_CAKE = 688;
-	public static int CITY_GUARD = 691;
+	private static int WATCHTOWER_WIZARD = 672;
+	private static int GREW = 681;
+	private static int OG = 680;
+	private static int TOBAN = 682;
+	private static int OGRE_CITIZEN = 704;
+	private static int ATTACKABLE_GEM_TRADER = 689;
+	private static int OGRE_ENCLAVE_GUARDS = 684;
+	private static int OGRE_TRADER_ROCK_CAKE = 688;
+	static int CITY_GUARD = 691;
 
 	//LAST SKAVID FOR LEARNED LANGUAGE
-	public static int SKAVID_679 = 679;
+	private static int SKAVID_679 = 679;
 
 	// SKAVID FOR STARTING LANGUAGE
-	public static int SKAVID_678 = 678;
+	private static int SKAVID_678 = 678;
 
-	public static int SKAVID_696 = 696;
-	public static int SKAVID_707 = 707;
-	public static int SKAVID_708 = 708;
-	public static int SKAVID_709 = 709;
+	private static int SKAVID_696 = 696;
+	private static int SKAVID_707 = 707;
+	private static int SKAVID_708 = 708;
+	private static int SKAVID_709 = 709;
 
 	/**
 	 * ITEM IDs
 	 **/
-	public static int KEY = 1047;
-	public static int DRAGON_BONE = 814;
-	public static int OGRE_RELIC_PART = 1050;
-	public static int OGRE_RELIC_PART_2 = 1049;
-	public static int OGRE_RELIC_PART_3 = 1048;
-	public static int OGRE_RELIC_COMPLETE = 1044;
-	public static int OGRE_TOOTH = 1043;
-	public static int POWERING_CRYSTAL1 = 1037;
-	public static int POWERING_CRYSTAL2 = 1152;
-	public static int STOLEN_GOLD = 1040;
-	public static int SKAVID_MAP = 1045;
+	static int KEY = 1047;
+	private static int DRAGON_BONE = 814;
+	private static int OGRE_RELIC_PART = 1050;
+	private static int OGRE_RELIC_PART_2 = 1049;
+	private static int OGRE_RELIC_PART_3 = 1048;
+	private static int OGRE_RELIC_COMPLETE = 1044;
+	private static int OGRE_TOOTH = 1043;
+	private static int POWERING_CRYSTAL1 = 1037;
+	private static int POWERING_CRYSTAL2 = 1152;
+	private static int STOLEN_GOLD = 1040;
+	static int SKAVID_MAP = 1045;
 
 	@Override
 	public int getQuestId() {
@@ -1028,6 +1028,6 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 	}
 
 	class WatchTowerWizard {
-		public static final int SEARCHINGTHECAVES = 0;
+		static final int SEARCHINGTHECAVES = 0;
 	}
 }

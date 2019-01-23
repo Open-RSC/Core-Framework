@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.blurberrysbar;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,18 +12,22 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
 
-	public static final int BLURBERRY = 534;
+	private static final int BLURBERRY = 534;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == BLURBERRY) {
-			return true;
-		}
-		return false;
+		return n.getID() == BLURBERRY;
 	}
 
 	@Override
@@ -79,7 +84,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 							playerTalk(p, n, "here you go");
 							message(p, "you give blurberry the fruit blast");
 							removeItem(p, 866, 1);
-							p.incExp(COOKING, 160, true);
+							p.incExp(Skills.COOKING, 160, true);
 							p.message("he takes a sip");
 							npcTalk(p, n, "hmmm... not bad, not bad at all",
 								"now can you make me a drunk dragon",
@@ -107,7 +112,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 							playerTalk(p, n, "here you go");
 							message(p, "you give blurberry the drunk dragon");
 							removeItem(p, 872, 1);
-							p.incExp(COOKING, 160, true);
+							p.incExp(Skills.COOKING, 160, true);
 							p.message("he takes a sip");
 							npcTalk(p, n, "woooo, that's some good stuff",
 								"i can sell that",
@@ -136,7 +141,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 							playerTalk(p, n, "here you go");
 							message(p, "you give blurberry the short green guy");
 							removeItem(p, 874, 1);
-							p.incExp(COOKING, 160, true);
+							p.incExp(Skills.COOKING, 160, true);
 							p.message("he takes a sip");
 							npcTalk(p, n, "hmmm, not bad, not bad at all",
 								"i can sell that",
@@ -167,7 +172,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 							playerTalk(p, n, "here.. try some");
 							message(p, "you give blurberry the cocktail");
 							removeItem(p, 875, 1);
-							p.incExp(COOKING, 160, true);
+							p.incExp(Skills.COOKING, 160, true);
 							p.message("he takes a sip");
 							npcTalk(p, n, "that's blurberry-tastic",
 								"you're quite a bartender",
@@ -261,7 +266,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 			if (hasItem(p, 872) && hasItem(p, 875) && hasItem(p, 879)) {
 				playerTalk(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
 				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
-				p.incExp(COOKING, 360, true);
+				p.incExp(Skills.COOKING, 360, true);
 				removeItem(p, 872, 1);
 				removeItem(p, 875, 1);
 				removeItem(p, 879, 1);
@@ -295,10 +300,7 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == Items.GNOME_COCKTAIL_GUIDE) {
-			return true;
-		}
-		return false;
+		return item.getID() == Items.GNOME_COCKTAIL_GUIDE;
 	}
 
 	@Override
@@ -350,6 +352,6 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 	}
 
 	public class Items {
-		public static final int GNOME_COCKTAIL_GUIDE = 851;
+		static final int GNOME_COCKTAIL_GUIDE = 851;
 	}
 }

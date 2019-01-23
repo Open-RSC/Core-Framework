@@ -183,7 +183,7 @@ public class RangeEvent extends GameTickEvent {
 					return;
 				}
 				int damage = Formulae.calcRangeHit(getPlayerOwner(),
-					getPlayerOwner().getSkills().getLevel(Skills.RANGE), target.getArmourPoints(), arrowID);
+					getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), arrowID);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;

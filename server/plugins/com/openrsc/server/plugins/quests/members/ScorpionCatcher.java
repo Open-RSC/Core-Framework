@@ -28,17 +28,17 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	InvUseOnWallObjectExecutiveListener, WallObjectActionListener,
 	WallObjectActionExecutiveListener {
 
-	public static final int NONE = 678;
-	public static final int ONE = 679; // (Taverly)
-	public static final int TWO = 686; // (Barbarian)
-	public static final int THREE = 687; // (Monastery)
-	public static final int ONE_AND_TWO = 680;
-	public static final int ONE_AND_THREE = 688;
-	public static final int TWO_AND_THREE = 689;
-	public static final int ONE_TWO_AND_THREE = 681;
-	public static int THORMAC = 300;
-	public static int SEER = 301;
-	public static int VELRAK_THE_EXPLORER = 272;
+	private static final int NONE = 678;
+	private static final int ONE = 679; // (Taverly)
+	private static final int TWO = 686; // (Barbarian)
+	private static final int THREE = 687; // (Monastery)
+	private static final int ONE_AND_TWO = 680;
+	private static final int ONE_AND_THREE = 688;
+	private static final int TWO_AND_THREE = 689;
+	private static final int ONE_TWO_AND_THREE = 681;
+	private static int THORMAC = 300;
+	private static int SEER = 301;
+	private static int VELRAK_THE_EXPLORER = 272;
 
 	@Override
 	public int getQuestId() {

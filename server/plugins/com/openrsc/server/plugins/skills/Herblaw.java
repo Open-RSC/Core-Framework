@@ -31,10 +31,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	}
 
 	public boolean blockInvAction(final Item i, Player p) {
-		if (i.getDef().getCommand().equalsIgnoreCase("Identify")) {
-			return true;
-		}
-		return false;
+		return i.getDef().getCommand().equalsIgnoreCase("Identify");
 	}
 
 	private boolean handleHerbCleanup(final Item item, Player player) {

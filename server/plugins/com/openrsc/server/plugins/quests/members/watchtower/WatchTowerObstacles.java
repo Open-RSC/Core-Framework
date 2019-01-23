@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.watchtower;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,7 +13,23 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.coordModifier;
+import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openChest;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObject;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 /**
  * @author Imposter/Fate
@@ -23,52 +40,52 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 	/**
 	 * OBJECT IDs
 	 **/
-	public static int TOWER_FIRST_FLOOR_LADDER = 659;
-	public static int COMPLETED_QUEST_LADDER = 1017;
-	public static int TOWER_SECOND_FLOOR_LADDER = 1021;
-	public static int WATCHTOWER_LEVER = 1014;
-	public static int WATCHTOWER_LEVER_DOWNPOSITION = 1015;
-	public static int[] WRONG_BUSHES = {960};
-	public static int[] CORRECT_BUSHES = {993, 961, 992, 991, 990};
-	public static int[] TELEPORT_CAVES = {970, 972, 950, 971, 949, 975};
-	public static int[] CAVE_EXITS = {188, 189, 190, 191, 187, 192};
-	public static int TUNNEL_CAVE = 998;
-	public static int TOBAN_CHEST = 978;
-	public static int ISLAND_LADDER = 997;
-	public static int BATTLEMENT = 201;
-	public static int SOUTH_WEST_BATTLEMENT = 195;
-	public static int WRONG_STEAL_COUNTER = 973;
-	public static int OGRE_CAVE_ENCLAVE = 955;
-	public static int ROCK_CAKE_COUNTER = 999;
-	public static int ROCK_CAKE_COUNTER_EMPTY = 1034;
-	public static int CHEST_WEST = 1003;
-	public static int ROCK_OVER = 995;
-	public static int ROCK_BACK = 996;
-	public static int CHEST_EAST = 1001;
-	public static int DARK_PLACE_ROCKS = 1007;
-	public static int DARK_PLACE_TELEPORT_ROCK = 1008;
-	public static int YANILLE_HOLE = 968;
-	public static int SKAVID_HOLE = 969;
-	public static int OGRE_ENCLAVE_EXIT = 1024;
+	private static int TOWER_FIRST_FLOOR_LADDER = 659;
+	private static int COMPLETED_QUEST_LADDER = 1017;
+	private static int TOWER_SECOND_FLOOR_LADDER = 1021;
+	private static int WATCHTOWER_LEVER = 1014;
+	private static int WATCHTOWER_LEVER_DOWNPOSITION = 1015;
+	private static int[] WRONG_BUSHES = {960};
+	private static int[] CORRECT_BUSHES = {993, 961, 992, 991, 990};
+	private static int[] TELEPORT_CAVES = {970, 972, 950, 971, 949, 975};
+	private static int[] CAVE_EXITS = {188, 189, 190, 191, 187, 192};
+	private static int TUNNEL_CAVE = 998;
+	private static int TOBAN_CHEST = 978;
+	private static int ISLAND_LADDER = 997;
+	private static int BATTLEMENT = 201;
+	private static int SOUTH_WEST_BATTLEMENT = 195;
+	private static int WRONG_STEAL_COUNTER = 973;
+	private static int OGRE_CAVE_ENCLAVE = 955;
+	private static int ROCK_CAKE_COUNTER = 999;
+	private static int ROCK_CAKE_COUNTER_EMPTY = 1034;
+	private static int CHEST_WEST = 1003;
+	private static int ROCK_OVER = 995;
+	private static int ROCK_BACK = 996;
+	private static int CHEST_EAST = 1001;
+	private static int DARK_PLACE_ROCKS = 1007;
+	private static int DARK_PLACE_TELEPORT_ROCK = 1008;
+	private static int YANILLE_HOLE = 968;
+	private static int SKAVID_HOLE = 969;
+	private static int OGRE_ENCLAVE_EXIT = 1024;
 
 
 	/**
 	 * NPC IDs
 	 **/
-	public static int TOWER_GUARD = 575;
+	private static int TOWER_GUARD = 575;
 
 	/**
 	 * ITEM IDs
 	 **/
-	public static int ARMOUR = 1235;
-	public static int FINGERNAILS = 1036;
-	public static int EYE_PATCH = 1237;
-	public static int ROBE = 1234;
-	public static int DAGGER = 1236;
-	public static int STOLEN_GOLD = 1040;
-	public static int ROCK_CAKE = 1061;
-	public static int SKAVID_MAP = 1045;
-	public static int LIT_CANDLE = 601;
+	private static int ARMOUR = 1235;
+	static int FINGERNAILS = 1036;
+	private static int EYE_PATCH = 1237;
+	private static int ROBE = 1234;
+	private static int DAGGER = 1236;
+	private static int STOLEN_GOLD = 1040;
+	private static int ROCK_CAKE = 1061;
+	private static int SKAVID_MAP = 1045;
+	private static int LIT_CANDLE = 601;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -327,13 +344,13 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				npcTalk(p, ogre_trader, "Grr! get your hands off those cakes");
 				ogre_trader.startCombat(p);
 			} else {
-				if (getCurrentLevel(p, THIEVING) < 15) {
+				if (getCurrentLevel(p, Skills.THIEVING) < 15) {
 					p.message("You need a thieving level of 15 to steal from this stall");
 					return;
 				}
 				p.message("You cautiously grab a cake from the stall");
 				addItem(p, ROCK_CAKE, 1);
-				p.incExp(THIEVING, 64, true);
+				p.incExp(Skills.THIEVING, 64, true);
 				replaceObject(obj, new GameObject(obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
 				delayedSpawnObject(obj.getLoc(), 5000);
 			}
@@ -389,7 +406,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 								}
 								p.message("You daringly jump across the chasm");
 								p.teleport(647, 799);
-								p.incExp(AGILITY, 50, true);
+								p.incExp(Skills.AGILITY, 50, true);
 								playerTalk(p, null, "Phew! I just made it");
 							}
 						} else if (menu == 1) {
@@ -403,7 +420,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 						}
 						p.message("You daringly jump across the chasm");
 						p.teleport(647, 799);
-						p.incExp(AGILITY, 50, true);
+						p.incExp(Skills.AGILITY, 50, true);
 						playerTalk(p, null, "Phew! I just made it");
 					}
 				}

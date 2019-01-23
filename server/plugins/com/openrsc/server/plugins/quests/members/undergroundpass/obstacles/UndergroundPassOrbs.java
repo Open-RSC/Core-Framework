@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -71,7 +72,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 					new GameObject(obj.getLocation(), 826, obj.getDirection(), obj
 						.getType()));
 				World.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-				p.damage((int) (getCurrentLevel(p, HITS) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
 				playerTalk(p, null, "aaarghh");
 			} else {
 				message(p, "you search the rocks",
@@ -130,7 +131,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			} else {
 				p.teleport(709, 3472);
 				p.message("throwing you onto a pit of spikes");
-				p.damage((int) (getCurrentLevel(p, HITS) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
 				playerTalk(p, null, "aaarrrgh");
 			}
 		}
@@ -139,7 +140,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 			if (DataConversions.getRandom().nextInt(10) <= 2) { // fail
 				message(p, "but you fall back to the floor");
 				p.message("impailing yourself on the spike's once more");
-				p.damage((int) (getCurrentLevel(p, HITS) / 5) + 5);
+				p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) / 5) + 5);
 				playerTalk(p, null, "aaarrrgh");
 			} else { // succeed
 				p.teleport(737, 3453);
@@ -336,7 +337,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 	}
 
 	private void damageOfTrap(Player p, GameObject obj, GameObject _new, int objectID) {
-		p.damage((int) ((getCurrentLevel(p, HITS) / 16) + 2));
+		p.damage((int) ((getCurrentLevel(p, Skills.HITPOINTS) / 16) + 2));
 		if (_new == null) {
 			World.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getLocation(), 773, obj.getDirection(), obj

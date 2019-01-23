@@ -23,10 +23,7 @@ public class Woodcutting implements ObjectActionListener,
 	public boolean blockObjectAction(final GameObject obj,
 									 final String command, final Player player) {
 		final ObjectWoodcuttingDef def = EntityHandler.getObjectWoodcuttingDef(obj.getID());
-		if (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204) {
-			return true;
-		}
-		return false;
+		return (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204);
 	}
 
 	private void handleWoodcutting(final GameObject object, final Player owner,

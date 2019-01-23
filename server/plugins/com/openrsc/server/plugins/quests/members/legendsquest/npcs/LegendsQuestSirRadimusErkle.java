@@ -12,12 +12,18 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
-	public static final int SIR_RADIMUS_ERKLE_HOUSE = 735;
-	public static final int SIR_RADIMUS_ERKLE_GUILD = 785;
+	private static final int SIR_RADIMUS_ERKLE_HOUSE = 735;
+	private static final int SIR_RADIMUS_ERKLE_GUILD = 785;
 
 	@Override
 	public int getQuestId() {
@@ -126,11 +132,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Strength * ",
 						"--- Go to Skill Menu 2 ----");
 					if (menu_one == 0) {
-						skillReward(p, n, ATTACK);
+						skillReward(p, n, Skills.ATTACK);
 					} else if (menu_one == 1) {
-						skillReward(p, n, DEFENCE);
+						skillReward(p, n, Skills.DEFENSE);
 					} else if (menu_one == 2) {
-						skillReward(p, n, STRENGTH);
+						skillReward(p, n, Skills.STRENGTH);
 					} else if (menu_one == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_TWO);
 					}
@@ -142,11 +148,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Magic *",
 						"--- Go to Skill Menu 3  ----");
 					if (menu_two == 0) {
-						skillReward(p, n, HITS);
+						skillReward(p, n, Skills.HITPOINTS);
 					} else if (menu_two == 1) {
-						skillReward(p, n, PRAYER);
+						skillReward(p, n, Skills.PRAYER);
 					} else if (menu_two == 2) {
-						skillReward(p, n, MAGIC);
+						skillReward(p, n, Skills.MAGIC);
 					} else if (menu_two == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_THREE);
 					}
@@ -158,11 +164,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Smithing * ",
 						"--- Go to Skill Menu 4 ----");
 					if (menu_three == 0) {
-						skillReward(p, n, WOODCUT);
+						skillReward(p, n, Skills.WOODCUT);
 					} else if (menu_three == 1) {
-						skillReward(p, n, CRAFTING);
+						skillReward(p, n, Skills.CRAFTING);
 					} else if (menu_three == 2) {
-						skillReward(p, n, SMITHING);
+						skillReward(p, n, Skills.SMITHING);
 					} else if (menu_three == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_FOUR);
 					}
@@ -174,11 +180,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 						"* Thieving *",
 						"--- Go to Skill Menu 1 ----");
 					if (menu_four == 0) {
-						skillReward(p, n, HERBLAW);
+						skillReward(p, n, Skills.HERBLAW);
 					} else if (menu_four == 1) {
-						skillReward(p, n, AGILITY);
+						skillReward(p, n, Skills.AGILITY);
 					} else if (menu_four == 2) {
-						skillReward(p, n, THIEVING);
+						skillReward(p, n, Skills.THIEVING);
 					} else if (menu_four == 3) {
 						radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_ONE);
 					}
@@ -499,26 +505,26 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	class RadimusInHouse {
-		public static final int WHATS_INVOLVED = 0;
-		public static final int MAYBE_SOME_OTHER_TIME = 1;
-		public static final int WHO_ARE_YOU = 2;
+		static final int WHATS_INVOLVED = 0;
+		static final int MAYBE_SOME_OTHER_TIME = 1;
+		static final int WHO_ARE_YOU = 2;
 
-		public static final int SAME_MENU_HAS_SCROLLS = 3;
+		static final int SAME_MENU_HAS_SCROLLS = 3;
 
-		public static final int FORGOTTEN_WHAT_TO_DO = 4;
-		public static final int ANOTHER_MACHETE = 5;
-		public static final int CHARCOAL = 6;
-		public static final int PAPYRUS = 7;
-		public static final int IVE_COMPLETED_QUEST = 8;
+		static final int FORGOTTEN_WHAT_TO_DO = 4;
+		static final int ANOTHER_MACHETE = 5;
+		static final int CHARCOAL = 6;
+		static final int PAPYRUS = 7;
+		static final int IVE_COMPLETED_QUEST = 8;
 
-		public static final int SAME_MENU_NO_SCROLLS = 9;
-		public static final int LOST_KHARAZI_JUNGLE_MAP = 10;
+		static final int SAME_MENU_NO_SCROLLS = 9;
+		static final int LOST_KHARAZI_JUNGLE_MAP = 10;
 	}
 
 	class RadimusInGuild {
-		public static final int SKILL_MENU_ONE = 0;
-		public static final int SKILL_MENU_TWO = 1;
-		public static final int SKILL_MENU_THREE = 2;
-		public static final int SKILL_MENU_FOUR = 3;
+		static final int SKILL_MENU_ONE = 0;
+		static final int SKILL_MENU_TWO = 1;
+		static final int SKILL_MENU_THREE = 2;
+		static final int SKILL_MENU_FOUR = 3;
 	}
 }

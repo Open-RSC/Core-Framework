@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,7 +17,15 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class Panning implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
@@ -52,7 +61,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 		showBubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
-		p.incExp(MINING, 20, true);
+		p.incExp(Skills.MINING, 20, true);
 		p.setBusy(false);
 		return false;
 	}
@@ -156,19 +165,19 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 			int addAmount = 1;
 			if (randomNumber < 40) { // 40%
 				addItem = -1;
-			} else if (randomNumber >= 40 && randomNumber < 50) { // 10%
+			} else if (randomNumber < 50) { // 10%
 				addItem = ItemId.UNCUT_OPAL.id();
-			} else if (randomNumber >= 50 && randomNumber < 60) { // 10%
+			} else if (randomNumber < 60) { // 10%
 				addItem = ItemId.UNCUT_JADE.id();
-			} else if (randomNumber >= 60 && randomNumber < 70) { // 10%
+			} else if (randomNumber < 70) { // 10%
 				addItem = ItemId.COINS.id();
 				int[] randomCoins = {1, 2, 5, 10};
 				addAmount = randomCoins[DataConversions.random(0, (randomCoins.length - 1))];
-			} else if (randomNumber >= 70 && randomNumber < 80) { // 10%
+			} else if (randomNumber < 80) { // 10%
 				addItem = ItemId.ORANGE_ROCK_SAMPLE.id();
-			} else if (randomNumber >= 80 && randomNumber < 90) { // 10%
+			} else if (randomNumber < 90) { // 10%
 				addItem = ItemId.GOLD_NUGGETS.id();
-			} else if (randomNumber >= 90 && randomNumber < 100) { // 10%
+			} else if (randomNumber < 100) { // 10%
 				addItem = ItemId.UNCUT_SAPPHIRE.id();
 			}
 			p.getInventory().replace(ItemId.PANNING_TRAY_FULL.id(), ItemId.PANNING_TRAY.id());

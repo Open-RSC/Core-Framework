@@ -18,9 +18,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class WatchTowerGorad implements TalkToNpcListener,
 	TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener {
 
-	public static int OGRE_TOOTH = 1043;
+	private static int OGRE_TOOTH = 1043;
 
-	public static int GORAD = 683;
+	private static int GORAD = 683;
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.skills;
 import com.openrsc.server.Constants.GameServer;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -28,7 +29,7 @@ public class Thieving extends Functions
 	implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener, ObjectActionExecutiveListener,
 	WallObjectActionExecutiveListener, WallObjectActionListener {
 
-	static final String piece_of = "piece of ";
+	private static final String piece_of = "piece of ";
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		int level_diff = player.getSkills().getLevel(17) - req_level;
@@ -337,7 +338,7 @@ public class Thieving extends Functions
 			player.message("You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, THIEVING)) {
+		player.setBatchEvent(new BatchEvent(player, 1200, Formulae.getRepeatTimes(player, Skills.THIEVING)) {
 			@Override
 			public void action() {
 
@@ -595,7 +596,7 @@ public class Thieving extends Functions
 			}
 			message(player, 1200, "you attempt to pick the lock");
 
-			if (getCurrentLevel(player, THIEVING) < req) {
+			if (getCurrentLevel(player, Skills.THIEVING) < req) {
 				player.message("You are not a high enough level to pick this lock");
 				return;
 			}
