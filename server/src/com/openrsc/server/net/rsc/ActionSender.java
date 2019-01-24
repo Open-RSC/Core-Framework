@@ -992,10 +992,6 @@ public class ActionSender {
 					p.unwieldMembersItems();
 				}*/
 
-				if (p.isMod()) {
-					p.setAttribute("no-aggro", true);
-				}
-
 				if (!p.getLocation().inWilderness()) {
 					if (Constants.GameServer.SPAWN_AUCTION_NPCS) {
 						Market.getInstance().addCollectableItemsNotificationTask(p);
