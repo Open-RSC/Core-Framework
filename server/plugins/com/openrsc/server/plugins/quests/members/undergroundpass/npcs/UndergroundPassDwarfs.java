@@ -11,9 +11,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassDwarfs implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
-	public static int KAMEN = 657;
-	public static int NILOOF = 642;
-	public static int KLANK = 648;
+	private static int KAMEN = 657;
+	private static int NILOOF = 642;
+	private static int KLANK = 648;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

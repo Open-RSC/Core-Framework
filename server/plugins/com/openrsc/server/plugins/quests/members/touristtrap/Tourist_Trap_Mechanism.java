@@ -2,36 +2,59 @@ package com.openrsc.server.plugins.quests.members.touristtrap;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.DropListener;
+import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
+import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
+import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.UnWieldListener;
+import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static int MERCENARY = 668;
-	public static int TECHNICAL_PLANS = 1060;
-	public static int BEDABIN_NOMAD_GUARD = 703;
-	public static int AL_SHABIM = 700;
-	public static int MERCENARY_INSIDE = 670;
-	public static int PINE_APPLE = 1058;
-	public static int MINING_CAVE = 963;
-	public static int MINING_CART = 976;
-	public static int MINING_CAVE_BACK = 964;
-	public static int TRACK = 974;
-	public static int MINING_BARREL = 967;
-	public static int LIFT_PLATFORM = 977;
-	public static int ANA = 554;
-	public static int LIFT_UP = 966;
-	public static int MINING_CART_ABOVE = 1025;
-	public static int CART_DRIVER = 711;
-	public static int DISTURBED_SAND1 = 944;
-	public static int DISTURBED_SAND2 = 945;
+	private static int MERCENARY = 668;
+	private static int TECHNICAL_PLANS = 1060;
+	private static int BEDABIN_NOMAD_GUARD = 703;
+	private static int AL_SHABIM = 700;
+	private static int MERCENARY_INSIDE = 670;
+	private static int PINE_APPLE = 1058;
+	private static int MINING_CAVE = 963;
+	private static int MINING_CART = 976;
+	private static int MINING_CAVE_BACK = 964;
+	private static int TRACK = 974;
+	private static int MINING_BARREL = 967;
+	private static int LIFT_PLATFORM = 977;
+	private static int ANA = 554;
+	private static int LIFT_UP = 966;
+	private static int MINING_CART_ABOVE = 1025;
+	private static int CART_DRIVER = 711;
+	private static int DISTURBED_SAND1 = 944;
+	private static int DISTURBED_SAND2 = 945;
 
 	@Override
 	public void onUnWield(Player player, Item item) {
@@ -152,7 +175,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 			message(p, "Do you want to follow the technical plans ?");
 			int menu = showMenu(p, "Yes. I'd like to try.", "No, not just yet.");
 			if (menu == 0) {
-				if (getCurrentLevel(p, SMITHING) < 20) {
+				if (getCurrentLevel(p, Skills.SMITHING) < 20) {
 					p.message("You need level 20 smithing to make the dart tip.");
 					return;
 				}
@@ -187,7 +210,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				p.message("You need 10 feathers to attach the feathers to the dart tip.");
 				return;
 			}
-			if (getCurrentLevel(p, FLETCHING) < 10) {
+			if (getCurrentLevel(p, Skills.FLETCHING) < 10) {
 				p.message("You need at least level 10 fletching to complete the dart.");
 				return;
 			}
@@ -198,7 +221,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 				message(p, "You succesfully attach the feathers to the dart tip.");
 				p.getInventory().replace(1071, 1014);
 				//kosher: dependent on fletching level!
-				p.incExp(FLETCHING, getMaxLevel(p, FLETCHING) * 50, true);
+				p.incExp(Skills.FLETCHING, getMaxLevel(p, Skills.FLETCHING) * 50, true);
 			} else {
 				message(p, "An unlucky accident causes you to waste the feathers.",
 					"But you feel that you're close to making this item though.");
@@ -1003,7 +1026,7 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 		}
 	}
 
-	public boolean outsideCamp(Player p) {
+	private boolean outsideCamp(Player p) {
 		return (p.getY() < 795) || (p.getX() >= 92 && (p.getY() >= 795 && p.getY() <= 814))
 			|| (p.getX() <= 78 && (p.getY() >= 795 && p.getY() <= 814));
 	}
@@ -1044,20 +1067,20 @@ public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListe
 	}
 
 	class RepeatLift {
-		public static final int USETHIS = 0;
-		public static final int THING = 1;
+		static final int USETHIS = 0;
+		static final int THING = 1;
 	}
 
 	class CartDriver {
-		public static final int PSSST = 0;
-		public static final int PSSST2 = 1;
-		public static final int PSSST3 = 2;
-		public static final int PSSSTFINAL = 3;
-		public static final int OKSORRY = 4;
-		public static final int NICECART = 5;
-		public static final int WAGON = 6;
-		public static final int HELPYOU = 7;
-		public static final int WONDERIF = 8;
-		public static final int HECKOUT = 9;
+		static final int PSSST = 0;
+		static final int PSSST2 = 1;
+		static final int PSSST3 = 2;
+		static final int PSSSTFINAL = 3;
+		static final int OKSORRY = 4;
+		static final int NICECART = 5;
+		static final int WAGON = 6;
+		static final int HELPYOU = 7;
+		static final int WONDERIF = 8;
+		static final int HECKOUT = 9;
 	}
 }

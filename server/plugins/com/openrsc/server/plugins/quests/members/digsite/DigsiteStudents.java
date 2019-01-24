@@ -10,21 +10,18 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static final int STUDENT_ORANGE = 727;
-	public static final int STUDENT_PURPLE = 724;
-	public static final int STUDENT_GREEN = 725;
+	private static final int STUDENT_ORANGE = 727;
+	private static final int STUDENT_PURPLE = 724;
+	private static final int STUDENT_GREEN = 725;
 
-	public static int ROCK_SAMPLE_PURPLE = 1149;
-	public static int ROCK_SAMPLE_ORANGE = 1148;
-	public static int ROCK_SAMPLE_GREEN = 1117;
+	private static int ROCK_SAMPLE_PURPLE = 1149;
+	private static int ROCK_SAMPLE_ORANGE = 1148;
+	private static int ROCK_SAMPLE_GREEN = 1117;
 
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == STUDENT_ORANGE || n.getID() == STUDENT_PURPLE || n.getID() == STUDENT_GREEN) {
-			return true;
-		}
-		return false;
+		return n.getID() == STUDENT_ORANGE || n.getID() == STUDENT_PURPLE || n.getID() == STUDENT_GREEN;
 	}
 
 	/**

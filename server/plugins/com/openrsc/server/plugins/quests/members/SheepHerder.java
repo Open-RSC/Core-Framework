@@ -31,22 +31,22 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	InvUseOnNpcExecutiveListener, InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
 
-	public static final int HALGRIVE = 436;
-	public static final int FARMER_BRUMTY = 434;
-	public static final int PLAGUE_SHEEP_1ST = 430;
-	public static final int PLAGUE_SHEEP_2ND = 431;
-	public static final int PLAGUE_SHEEP_3RD = 432;
-	public static final int PLAGUE_SHEEP_4TH = 433;
+	private static final int HALGRIVE = 436;
+	private static final int FARMER_BRUMTY = 434;
+	private static final int PLAGUE_SHEEP_1ST = 430;
+	private static final int PLAGUE_SHEEP_2ND = 431;
+	private static final int PLAGUE_SHEEP_3RD = 432;
+	private static final int PLAGUE_SHEEP_4TH = 433;
 
-	public static final int POISON = 759;
-	public static final int CATTLE_PROD = 757;
-	public static final int PROTECTIVE_JACKET = 760;
-	public static final int PROTECTIVE_TROUSERS = 761;
+	private static final int POISON = 759;
+	private static final int CATTLE_PROD = 757;
+	private static final int PROTECTIVE_JACKET = 760;
+	private static final int PROTECTIVE_TROUSERS = 761;
 
-	public static final int GATE = 443;
-	public static final int CATTLE_FURNACE = 444;
+	private static final int GATE = 443;
+	private static final int CATTLE_FURNACE = 444;
 
-	public static final HashMap<Npc, RestartableDelayedEvent> npcEventMap = new HashMap<Npc, RestartableDelayedEvent>();
+	private static final HashMap<Npc, RestartableDelayedEvent> npcEventMap = new HashMap<Npc, RestartableDelayedEvent>();
 
 	@Override
 	public int getQuestId() {

@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,16 +12,20 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.resetGnomeCooking;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == Npcs.ALUFT_GIANNE) {
-			return true;
-		}
-		return false;
+		return n.getID() == Npcs.ALUFT_GIANNE;
 	}
 
 	@Override
@@ -245,7 +250,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 			if (hasItem(p, 904, 2) && hasItem(p, 902) && hasItem(p, 906)) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft two worm batta's a veg batta and a toad batta");
-				p.incExp(COOKING, 425, true);
+				p.incExp(Skills.COOKING, 425, true);
 				removeItem(p, 904, 2);
 				removeItem(p, 902, 1);
 				removeItem(p, 906, 1);
@@ -268,7 +273,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				removeItem(p, 907, 1);
 				removeItem(p, 911, 2);
 				removeItem(p, 913, 2);
-				p.incExp(COOKING, 675, true);
+				p.incExp(Skills.COOKING, 675, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 75 gold coins");
@@ -286,7 +291,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft the two choc crunchies");
 				removeItem(p, 911, 2);
-				p.incExp(COOKING, 300, true);
+				p.incExp(Skills.COOKING, 300, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 30 gold coins");
@@ -304,7 +309,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
 				removeItem(p, 907, 1);
 				removeItem(p, 911, 2);
-				p.incExp(COOKING, 425, true);
+				p.incExp(Skills.COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -321,7 +326,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				message(p, 1900, "you give aluft two veg batta's and a worm hole");
 				removeItem(p, 906, 2);
 				removeItem(p, 909, 1);
-				p.incExp(COOKING, 425, true);
+				p.incExp(Skills.COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -341,7 +346,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				removeItem(p, 908, 1);
 				removeItem(p, 910, 1);
 				removeItem(p, 909, 1);
-				p.incExp(COOKING, 425, true);
+				p.incExp(Skills.COOKING, 425, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -359,7 +364,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 				removeItem(p, 901, 1);
 				removeItem(p, 908, 1);
 				removeItem(p, 912, 2);
-				p.incExp(COOKING, 675, true);
+				p.incExp(Skills.COOKING, 675, true);
 				npcTalk(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 75 gold coins");
@@ -424,10 +429,7 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == Items.GIANNE_COOK_BOOK) {
-			return true;
-		}
-		return false;
+		return item.getID() == Items.GIANNE_COOK_BOOK;
 	}
 
 	@Override
@@ -501,16 +503,16 @@ public class GnomeRestaurant implements TalkToNpcListener, TalkToNpcExecutiveLis
 	}
 
 	public class Items {
-		public static final int GIANNE_COOK_BOOK = 899;
+		static final int GIANNE_COOK_BOOK = 899;
 
-		public static final int TOMATO = 320;
-		public static final int CHEESE = 319;
-		public static final int EQUA_LEAVES = 873;
-		public static final int GIANNE_DOUGH = 881;
-		public static final int GNOME_SPICE = 898;
+		static final int TOMATO = 320;
+		static final int CHEESE = 319;
+		static final int EQUA_LEAVES = 873;
+		static final int GIANNE_DOUGH = 881;
+		static final int GNOME_SPICE = 898;
 	}
 
 	private class Npcs {
-		public static final int ALUFT_GIANNE = 536;
+		static final int ALUFT_GIANNE = 536;
 	}
 }

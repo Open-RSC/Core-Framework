@@ -272,7 +272,7 @@ public final class Formulae {
 			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(6));
 
 			int newDef = (int) ((addPrayers(defender, Prayers.THICK_SKIN, Prayers.ROCK_SKIN, Prayers.STEEL_SKIN)
-				* defender.getSkills().getLevel(Skills.DEFENCE) / 4D) + (defender.getArmourPoints() / 4D));
+				* defender.getSkills().getLevel(Skills.DEFENSE) / 4D) + (defender.getArmourPoints() / 4D));
 			int hitChance = DataConversions.random(0, 150 + (newAtt - newDef));
 
 			if (hitChance > (defender.isNpc() ? 50 : 60)) {

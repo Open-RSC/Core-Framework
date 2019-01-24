@@ -10,21 +10,19 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeGlider implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static final int GNOME_PILOT = 552;
+	private static final int GNOME_PILOT = 552;
 
-	public static final int GNOME_PILOT_TWO = 556;
+	private static final int GNOME_PILOT_TWO = 556;
 
-	public static final int GNOME_PILOT_KARAMJA = 569;
-	public static final int GNOME_PILOT_VARROCK = 570;
-	public static final int GNOME_PILOT_ALKHARID = 571;
-	public static final int GNOME_PILOT_WHITEMOUNTAIN = 572;
+	private static final int GNOME_PILOT_KARAMJA = 569;
+	private static final int GNOME_PILOT_VARROCK = 570;
+	private static final int GNOME_PILOT_ALKHARID = 571;
+	private static final int GNOME_PILOT_WHITEMOUNTAIN = 572;
 
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GNOME_PILOT || n.getID() == GNOME_PILOT_KARAMJA || n.getID() == GNOME_PILOT_ALKHARID || n.getID() == GNOME_PILOT_WHITEMOUNTAIN || n.getID() == GNOME_PILOT_VARROCK)
-			return true;
-		return false;
+		return n.getID() == GNOME_PILOT || n.getID() == GNOME_PILOT_KARAMJA || n.getID() == GNOME_PILOT_ALKHARID || n.getID() == GNOME_PILOT_WHITEMOUNTAIN || n.getID() == GNOME_PILOT_VARROCK;
 	}
 
 	@Override
