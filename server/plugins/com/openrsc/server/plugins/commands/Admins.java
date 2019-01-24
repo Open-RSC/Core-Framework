@@ -1652,5 +1652,73 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Spawned " + npcAmt + " " + npcDef.getName());
 			player.message(messagePrefix + "Loot is " + itemAmt + " " + itemDef.getName());
 		}
+		else if (cmd.equalsIgnoreCase("chickenevent"))
+		{
+			int hours;
+			if(args.length >= 1) {
+				try {
+					hours = Integer.parseInt(args[0]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
+					return;
+				}
+			}
+			else {
+				hours = 24;
+			}
+
+			int npcAmount;
+			if(args.length >= 2) {
+				try {
+					npcAmount = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
+					return;
+				}
+			}
+			else {
+				npcAmount = 50;
+			}
+
+			int itemAmount;
+			if(args.length >= 3) {
+				try {
+					itemAmount = Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
+					return;
+				}
+			}
+			else {
+				itemAmount = 10000;
+			}
+
+			int npcLifeTime;
+			if(args.length >= 4) {
+				try {
+					npcLifeTime = Integer.parseInt(args[3]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (hours) (chicken_amount) (item_amount) (chicken_lifetime)");
+					return;
+				}
+			}
+			else {
+				npcLifeTime = 10*60*1000;
+			}
+
+			HashMap events = Server.getServer().getEventHandler().getEvents();
+			Iterator<DelayedEvent> iterator = events.values().iterator();
+			while (iterator.hasNext()) {
+				DelayedEvent event = iterator.next();
+
+				if(!(event instanceof HourlyNpcLootEvent)) continue;
+
+				player.message(messagePrefix + "Hourly NPC Loot Event is already running");
+				return;
+			}
+
+			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime*60*1000));
+			player.message(messagePrefix + "Chicken event started.");
+		}
 	}
 }
