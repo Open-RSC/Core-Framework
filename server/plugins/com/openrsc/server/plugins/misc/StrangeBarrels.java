@@ -4,6 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,7 +13,14 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.createGroundItem;
+import static com.openrsc.server.plugins.Functions.delayedSpawnObject;
+import static com.openrsc.server.plugins.Functions.displayTeleportBubble;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.registerObject;
+import static com.openrsc.server.plugins.Functions.removeObject;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class StrangeBarrels implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -162,7 +170,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 							"You're heavily jarred from the vibrations of the blow.");
 						int reduceAttack = DataConversions.random(1, 3);
 						p.message("Your attack is reduced by " + reduceAttack + ".");
-						p.getSkills().setLevel(ATTACK, p.getSkills().getLevel(ATTACK) - reduceAttack);
+						p.getSkills().setLevel(Skills.ATTACK, p.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
 					} else {
 						p.message("You were unable to smash this barrel open.");
 					}

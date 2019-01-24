@@ -105,7 +105,7 @@ public class Npc extends Mob {
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
 		getSkills().setLevelTo(Skills.ATTACK, def.getAtt());
-		getSkills().setLevelTo(Skills.DEFENCE, def.getDef());
+		getSkills().setLevelTo(Skills.DEFENSE, def.getDef());
 		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
 		getSkills().setLevelTo(Skills.HITPOINTS, def.getHits());
 

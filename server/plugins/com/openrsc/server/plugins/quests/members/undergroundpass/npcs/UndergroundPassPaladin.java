@@ -13,11 +13,11 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassPaladin implements TalkToNpcListener,
 	TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
 
-	public static int COAT_OF_ARMS_RED = 998;
-	public static int COAT_OF_ARMS_BLUE = 999;
+	private static int COAT_OF_ARMS_RED = 998;
+	private static int COAT_OF_ARMS_BLUE = 999;
 
-	public static int PALADIN_BEARD = 632;
-	public static int PALADIN = 633;
+	private static int PALADIN_BEARD = 632;
+	private static int PALADIN = 633;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

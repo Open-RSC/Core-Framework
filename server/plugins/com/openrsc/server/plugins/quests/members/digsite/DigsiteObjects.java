@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,41 +12,51 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.closeCupboard;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.openCupboard;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.replaceObject;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class DigsiteObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	public static final int[] SIGNPOST = {1060, 1061, 1062, 1063};
+	private static final int[] SIGNPOST = {1060, 1061, 1062, 1063};
 	/* Objects */
-	public static int HOUSE_EAST_CHEST_CLOSED = 1104;
-	public static int HOUSE_EAST_CHEST_OPEN = 1105;
-	public static int HOUSE_BOOKCASE = 1090;
-	public static int HOUSE_EAST_CUPBOARD_CLOSED = 1074;
-	public static int HOUSE_EAST_CUPBOARD_OPEN = 1078;
-	public static int HOUSE_WEST_CHESTS_CLOSED = 18;
-	public static int HOUSE_WEST_CHESTS_OPEN = 17;
-	public static int[] SACKS = {1075, 1076};
-	public static int[] BUSH = {1072, 1073};
+	private static int HOUSE_EAST_CHEST_CLOSED = 1104;
+	private static int HOUSE_EAST_CHEST_OPEN = 1105;
+	private static int HOUSE_BOOKCASE = 1090;
+	private static int HOUSE_EAST_CUPBOARD_CLOSED = 1074;
+	private static int HOUSE_EAST_CUPBOARD_OPEN = 1078;
+	private static int HOUSE_WEST_CHESTS_CLOSED = 18;
+	private static int HOUSE_WEST_CHESTS_OPEN = 17;
+	private static int[] SACKS = {1075, 1076};
+	private static int[] BUSH = {1072, 1073};
 
-	public static int[] BURIED_SKELETON = {1057, 1049};
+	private static int[] BURIED_SKELETON = {1057, 1049};
 
-	public static int TENT_LOCKED_CHEST = 1085;
-	public static int TENT_OPEN_CHEST = 1084;
-	public static int SPECIMEN_TRAY = 1052;
+	private static int TENT_LOCKED_CHEST = 1085;
+	private static int TENT_OPEN_CHEST = 1084;
+	private static int SPECIMEN_TRAY = 1052;
 
-	public static int CLIMB_UP_ROPE_SMALL_CAVE = 1097;
-	public static int CLIMB_UP_ROPE_BIG_CAVE = 1098;
+	private static int CLIMB_UP_ROPE_SMALL_CAVE = 1097;
+	private static int CLIMB_UP_ROPE_BIG_CAVE = 1098;
 
-	public static int BRICK = 1096;
-	public static int X_BARREL = 1082;
-	public static int X_BARREL_OPEN = 1083;
+	private static int BRICK = 1096;
+	private static int X_BARREL = 1082;
+	private static int X_BARREL_OPEN = 1083;
 
 	/* Items */
-	public static int CRACKED_ROCK_SAMPLE = 1150;
-	public static int BOOK_OF_EXPERIMENTAL_CHEMISTRY = 1141;
-	public static int ROCK_PICK = 1114;
-	public static int SPECIMEN_JAR = 1116;
-	public static int ROCK_SAMPLE = 1149;
+	private static int CRACKED_ROCK_SAMPLE = 1150;
+	private static int BOOK_OF_EXPERIMENTAL_CHEMISTRY = 1141;
+	private static int ROCK_PICK = 1114;
+	private static int SPECIMEN_JAR = 1116;
+	private static int ROCK_SAMPLE = 1149;
 
 	/* NPCS */
 	public static int WORKMAN = 722;
@@ -134,7 +145,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		if (obj.getID() == SPECIMEN_TRAY) {
 			int[] TRAY_ITEMS = {-1, 20, 1150, 28, 1165, 778, 1169, 10, 983};
-			p.incExp(MINING, 4, true);
+			p.incExp(Skills.MINING, 4, true);
 			message(p, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];

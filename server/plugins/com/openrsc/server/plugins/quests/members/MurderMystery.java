@@ -23,27 +23,27 @@ import static com.openrsc.server.plugins.Functions.*;
 public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	public static final int GREEN = 1201; // Green thread
-	public static final int BLUE = 1202; // Blue thread
-	public static final int RED = 1200; // Red thread
+	private static final int GREEN = 1201; // Green thread
+	private static final int BLUE = 1202; // Blue thread
+	private static final int RED = 1200; // Red thread
 
-	public static final int DAVID = 754; // David Sinclair
-	public static final int ANNA = 751; // Anna Sinclair
-	public static final int CAROL = 753; // Carol Sinclair
-	public static final int ELIZA = 755; // Elizabeth Sinclair
-	public static final int FRANK = 756; // Frank Sinclair
-	public static final int BOB = 752; // Bob Sinclair
+	private static final int DAVID = 754; // David Sinclair
+	private static final int ANNA = 751; // Anna Sinclair
+	private static final int CAROL = 753; // Carol Sinclair
+	private static final int ELIZA = 755; // Elizabeth Sinclair
+	private static final int FRANK = 756; // Frank Sinclair
+	private static final int BOB = 752; // Bob Sinclair
 
-	public static final int HOBBES = 743; //Hobbes
-	public static final int COOK = 744; // Louisa the Cook
-	public static final int STAN = 746; // Stanford Gardener
-	public static final int PIERRE = 742; // Pierre the Dog guy
-	public static final int DON = 741; // Donovan the handyman
-	public static final int MARY = 745; // Mary the Maid
-	public static final int POISON = 763; // Poison salesman
-	public static final int MAN = 750; // Man
+	private static final int HOBBES = 743; //Hobbes
+	private static final int COOK = 744; // Louisa the Cook
+	private static final int STAN = 746; // Stanford Gardener
+	private static final int PIERRE = 742; // Pierre the Dog guy
+	private static final int DON = 741; // Donovan the handyman
+	private static final int MARY = 745; // Mary the Maid
+	private static final int POISON = 763; // Poison salesman
+	private static final int MAN = 750; // Man
 
-	public static final int GUARD = 747; // Quest start npc
+	private static final int GUARD = 747; // Quest start npc
 
 	private static void sinclairSuspectDialogue(Player p, Npc n) {
 		playerTalk(p, n, "I'm here to help the guards with their investigation");

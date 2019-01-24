@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills.agility;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
@@ -10,13 +11,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public class WildernessAgilityCourse implements ObjectActionListener,
 	ObjectActionExecutiveListener {
 
-	public static final int GATE = 703;
-	public static final int SECOND_GATE = 704;
-	public static final int WILD_PIPE = 705;
-	public static final int WILD_ROPESWING = 706;
-	public static final int STONE = 707;
-	public static final int LEDGE = 708;
-	public static final int VINE = 709;
+	private static final int GATE = 703;
+	private static final int SECOND_GATE = 704;
+	private static final int WILD_PIPE = 705;
+	private static final int WILD_ROPESWING = 706;
+	private static final int STONE = 707;
+	private static final int LEDGE = 708;
+	private static final int VINE = 709;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -29,7 +30,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 		boolean failCourse = failWildCourse(p);
 		switch (obj.getID()) {
 			case GATE:
-				if (getCurrentLevel(p, AGILITY) < 52) {
+				if (getCurrentLevel(p, Skills.AGILITY) < 52) {
 					p.message("You need an agility level of 52 to attempt balancing along the ridge");
 					p.setBusy(false);
 					return;
@@ -47,7 +48,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				} else {
 					message(p, "You skillfully balance across the ridge");
 					movePlayer(p, 298, 125);
-					p.incExp(AGILITY, 50, true);
+					p.incExp(Skills.AGILITY, 50, true);
 				}
 				break;
 			case SECOND_GATE:
@@ -66,14 +67,14 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				} else {
 					message(p, "You skillfully balance across the ridge");
 					movePlayer(p, 298, 134);
-					p.incExp(AGILITY, 50, true);
+					p.incExp(Skills.AGILITY, 50, true);
 				}
 				break;
 			case WILD_PIPE:
 				p.message("You squeeze through the pipe");
 				sleep(1000);
 				movePlayer(p, 294, 112);
-				p.incExp(AGILITY, 50, true);
+				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case WILD_ROPESWING:
 				p.message("You grab the rope and try and swing across");
@@ -82,7 +83,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				if (failCourse) {
 					message(p, "You skillfully swing across the hole");
 					movePlayer(p, 292, 108);
-					p.incExp(AGILITY, 100, true);
+					p.incExp(Skills.AGILITY, 100, true);
 				} else { // 13 damage on 85hp.
 					// 11 damage on 73hp.
 					//
@@ -108,7 +109,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 					movePlayer(p, 296, 105);
 					sleep(600);
 					movePlayer(p, 297, 105);
-					p.incExp(AGILITY, 80, true);
+					p.incExp(Skills.AGILITY, 80, true);
 				} else {
 					p.message("You lose your footing and land in the lava");
 					movePlayer(p, 292, 104);
@@ -133,7 +134,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 					movePlayer(p, 300, 111);
 					sleep(600);
 					movePlayer(p, 301, 111);
-					p.incExp(AGILITY, 80, true);
+					p.incExp(Skills.AGILITY, 80, true);
 				} else {
 					p.message("you lose your footing and fall to the level below");
 					sleep(1000);
@@ -150,14 +151,14 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 				movePlayer(p, 304, 119);
 				sleep(600);
 				movePlayer(p, 304, 120);
-				p.incExp(AGILITY, 1580, true); // COMPLETION OF THE COURSE.
+				p.incExp(Skills.AGILITY, 1580, true); // COMPLETION OF THE COURSE.
 				break;
 		}
 		p.setBusy(false);
 	}
 
-	boolean failWildCourse(Player player) {
-		int level_difference = getCurrentLevel(player, AGILITY) - 52;
+	private boolean failWildCourse(Player player) {
+		int level_difference = getCurrentLevel(player, Skills.AGILITY) - 52;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)
@@ -172,7 +173,7 @@ public class WildernessAgilityCourse implements ObjectActionListener,
 		return percent <= level_difference;
 	}
 
-	int failRate() {
+	private int failRate() {
 		return random(1, 5);
 	}
 }

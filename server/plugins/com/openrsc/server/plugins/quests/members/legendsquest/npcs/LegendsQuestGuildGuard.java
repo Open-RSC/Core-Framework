@@ -11,12 +11,16 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static final int LEGENDS_GUILD_GUARD = 736;
-	public static final int MITHRIL_GATES = 1079;
+	private static final int LEGENDS_GUILD_GUARD = 736;
+	private static final int MITHRIL_GATES = 1079;
 
 	private void legendsGuardDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == LEGENDS_GUILD_GUARD) {
@@ -194,10 +198,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == LEGENDS_GUILD_GUARD) {
-			return true;
-		}
-		return false;
+		return n.getID() == LEGENDS_GUILD_GUARD;
 	}
 
 	@Override
@@ -209,10 +210,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == MITHRIL_GATES) {
-			return true;
-		}
-		return false;
+		return obj.getID() == MITHRIL_GATES;
 	}
 
 	@Override
@@ -271,13 +269,13 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 	}
 
 	class LegendsGuard {
-		public static final int WHAT_IS_THIS_PLACE = 0;
-		public static final int HOW_DO_I_GET_IN_HERE = 1;
-		public static final int CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE = 2;
-		public static final int ITS_OK_THANKS = 3;
-		public static final int CAN_I_GO_ON_THE_QUEST = 4;
-		public static final int WHAT_KIND_OF_QUEST_IS_IT = 5;
-		public static final int WHO_IS_GRAND_VIZIER_ERKLE = 6;
-		public static final int LIKE_TO_TALK_TO_GVE = 7;
+		static final int WHAT_IS_THIS_PLACE = 0;
+		static final int HOW_DO_I_GET_IN_HERE = 1;
+		static final int CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE = 2;
+		static final int ITS_OK_THANKS = 3;
+		static final int CAN_I_GO_ON_THE_QUEST = 4;
+		static final int WHAT_KIND_OF_QUEST_IS_IT = 5;
+		static final int WHO_IS_GRAND_VIZIER_ERKLE = 6;
+		static final int LIKE_TO_TALK_TO_GVE = 7;
 	}
 }

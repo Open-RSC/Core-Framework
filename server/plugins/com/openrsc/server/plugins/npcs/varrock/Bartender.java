@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -33,16 +34,18 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 		int reply = showMenu(p, n, options);
 		if (reply == 0) {
 			npcTalk(p, n, "No problemo", "That'll be 2 coins");
-			if (removeItem(p, 10, 2)) {
+			if (hasItem(p, 10, 2)) {
 				p.message("You buy a pint of beer");
 				addItem(p, 193, 1);
+				p.getInventory().remove(10, 2);
 			} else
-				playerTalk(p, n, "oh dear i don't seem to have enough coins");
+				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 		} else if (reply == 1) {
 			npcTalk(p, n,
 				"Ooh I don't know if I should be giving away information",
 				"Makes the computer game too easy");
-			reply = showMenu(p, n, "Oh ah well",
+			reply = showMenu(p, n, false, //do not send over
+					"Oh ah well",
 				"Computer game? What are you talking about?",
 				"Just a small clue?");
 			if (reply == 0) {
@@ -51,13 +54,13 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				playerTalk(p, n, "Computer game?",
 					"What are you talking about?");
 				npcTalk(p, n, "This world around us..",
-					"is all a computer game..", "called RuneScape");
+					"is all a computer game..", "called Runescape");
 				playerTalk(
 					p,
 					n,
 					"Nope, still don't understand what you are talking about",
 					"What's a computer?");
-				npcTalk(p, n, "It's a sort of magic box thing.",
+				npcTalk(p, n, "It's a sort of magic box thing,",
 					"which can do all sorts of different things");
 				playerTalk(p, n, "I give up",
 					"You're obviously completely mad!");
@@ -65,11 +68,11 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 			} else if (reply == 2) {
 				playerTalk(p, n, "Just a small clue?");
 				npcTalk(p, n,
-					"Go and talk to the bartender in the Jolly Boar Inn",
+					"Go and talk to the bartender at the Jolly Boar Inn",
 					"He doesn't seem to mind giving away clues");
 			}
 		} else if (reply == 2) {
-			npcTalk(p, n, "Well, there's the sword shop across the road.",
+			npcTalk(p, n, "Well, there's the sword shop across the road,",
 				"or there's also all sorts of shops up around the market");
 		} else if (reply == 3) {
 			npcTalk(p,
@@ -77,19 +80,45 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				"Oh no not another of you guys",
 				"These barbarian barcrawls cause too much damage to my bar",
 				"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
-			if (removeItem(p, 10, 50)) {
+			if (hasItem(p, 10, 50)) {
+				p.getInventory().remove(10, 50);
 				p.message("You buy some gutrot");
 				sleep(800);
 				p.message("You drink the gutrot");
 				sleep(800);
 				p.message("your insides feel terrible");
+				drinkAle(p);
 				p.damage(p.getRandom().nextInt(2) + 1);
 				sleep(800);
 				p.message("The bartender signs your card");
 				p.getCache().store("bartwo", true);
 				playerTalk(p, n, "Blearrgh");
 			} else
-				playerTalk(p, n, "I don't have 50 coins right now");
+				playerTalk(p, n, "I don't have 50 coins");
+		}
+	}
+	
+	private void drinkAle(Player p) {
+		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH, Skills.SMITHING};
+		for (int i = 0; i < skillIDs.length; i++) {
+			setAleEffect(p, skillIDs[i]);
+		}
+	}
+	
+	private void setAleEffect(Player p, int skillId) {
+		int reduction, currentStat, maxStat;
+		maxStat = p.getSkills().getMaxStat(skillId);
+		//estimated
+		reduction = maxStat < 15 ? 5 :
+			maxStat < 40 ? 6 : 
+			maxStat < 70 ? 7 : 
+			maxStat < 85 ? 8 : 9;
+		currentStat = p.getSkills().getLevel(skillId);
+		if (currentStat <= 9) {
+			p.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
+		}
+		else {
+			p.getSkills().setLevel(skillId, currentStat - reduction);
 		}
 	}
 
