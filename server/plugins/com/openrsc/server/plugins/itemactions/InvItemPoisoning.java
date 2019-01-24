@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
@@ -13,14 +14,14 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		return item1.getID() == 572 || item2.getID() == 572;
+		return item1.getID() == ItemId.WEAPON_POISON.id() || item2.getID() == ItemId.WEAPON_POISON.id();
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == 572) {
+		if (item1.getID() == ItemId.WEAPON_POISON.id()) {
 			applyPoison(player, item2);
-		} else if (item2.getID() == 572) {
+		} else if (item2.getID() == ItemId.WEAPON_POISON.id()) {
 			applyPoison(player, item1);
 		}
 	}
@@ -34,7 +35,7 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		}
 		Item poisonedItem = getPoisonedItem(item.getDef().getName());
 		if (poisonedItem != null) {
-			if (removeItem(player, 572, 1) && removeItem(player, item.getID(), makeAmount)) {
+			if (removeItem(player, ItemId.WEAPON_POISON.id(), 1) && removeItem(player, item.getID(), makeAmount)) {
 				player.message("You apply poison to your " + item.getDef().getName());
 				addItem(player, poisonedItem.getID(), makeAmount);
 			}
