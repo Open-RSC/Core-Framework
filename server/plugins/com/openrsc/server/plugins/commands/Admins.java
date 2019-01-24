@@ -6,6 +6,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HourlyEvent;
+import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Skills;
@@ -1612,6 +1613,44 @@ public final class Admins implements CommandListener {
 			n.getSkills().subtractLevel(Skills.HITPOINTS, damage);
 			if (n.getSkills().getLevel(Skills.HITPOINTS) < 1)
 				n.killedBy(player);
+		}
+		else if (cmd.equalsIgnoreCase("npcevent"))
+		{
+			if (args.length < 3) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] (item_amount) (duration)");
+				return;
+			}
+
+			int npcID, npcAmt = 0, itemID = 0, itemAmt = 0, duration = 0;
+			ItemDefinition itemDef;
+			NPCDef npcDef;
+			try {
+				npcID = Integer.parseInt(args[0]);
+				npcAmt = Integer.parseInt(args[1]);
+				itemID = Integer.parseInt(args[2]);
+				itemAmt = args.length >= 4 ? Integer.parseInt(args[3]) : 1;
+				duration = args.length >= 5 ? Integer.parseInt(args[4]) : 10;
+				itemDef = EntityHandler.getItemDef(itemID);
+				npcDef = EntityHandler.getNpcDef(npcID);
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [npc_amount] [item_id] (item_amount) (duration)");
+				return;
+			}
+
+			if(itemDef == null) {
+				player.message(messagePrefix + "Invalid item_id");
+				return;
+			}
+
+			if(npcDef == null) {
+				player.message(messagePrefix + "Invalid npc_id");
+				return;
+			}
+
+			Server.getServer().getEventHandler().add(new NpcLootEvent(player.getLocation(), npcID, npcAmt, itemID, itemAmt, duration));
+			player.message(messagePrefix + "Spawned " + npcAmt + " " + npcDef.getName());
+			player.message(messagePrefix + "Loot is " + itemAmt + " " + itemDef.getName());
 		}
 	}
 }

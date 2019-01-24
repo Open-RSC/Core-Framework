@@ -4,6 +4,7 @@ import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ItemDropDef;
@@ -68,6 +69,7 @@ public class Npc extends Mob {
 	private int weaponAimPoints = 1;
 	private int weaponPowerPoints = 1;
 	private NpcBehavior npcBehavior;
+	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
 
 	public Npc(int id, int x, int y) {
 		this(new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -496,6 +498,12 @@ public class Npc extends Mob {
 				}
 				total += weight;
 			}
+			if(mob instanceof Player) {
+				for (NpcLootEvent e : deathListeners) {
+					e.onLootNpcDeath((Player)mob, this);
+				}
+			}
+			deathListeners.clear();
 			remove();
 		}
 	}
@@ -600,5 +608,9 @@ public class Npc extends Mob {
 
 	public void superRemove() {
 		super.remove();
+	}
+
+	public boolean addDeathListener(NpcLootEvent event) {
+		return deathListeners.add(event);
 	}
 }
