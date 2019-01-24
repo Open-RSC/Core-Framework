@@ -180,7 +180,7 @@ public class NpcBehavior {
 		boolean closeEnough = npc.canReach(p);
 
 		return closeEnough && shouldAttack
-			&& !p.getAttribute("no-aggro", false)
+			&& (p instanceof Player && !((Player)p).isInvulnerable())
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
 
