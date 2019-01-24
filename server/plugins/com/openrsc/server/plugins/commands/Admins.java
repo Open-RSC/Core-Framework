@@ -6,6 +6,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HourlyEvent;
+import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
