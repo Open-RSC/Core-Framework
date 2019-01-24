@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.barcrawl;
 
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -48,7 +49,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 			}
 			if (p.getCache().hasKey("barcrawl")) {
 				npcTalk(p, n, "So hows the barcrawl coming along?");
-				if (!hasItem(p, 668)) {
+				if (!hasItem(p, ItemId.BARCRAWL_CARD.id())) {
 					final int third = showMenu(p, n, false, //do not send over
 						"I've lost my  barcrawl card",
 						"Not to bad, my barcrawl card is in my bank now");
@@ -56,7 +57,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 						npcTalk(p, n, "What are you like?",
 							"You're gonna have to start all over now",
 							"Here you go, have another barcrawl card");
-						addItem(p, 668, 1);
+						addItem(p, ItemId.BARCRAWL_CARD.id(), 1);
 						p.getCache().remove("barone");
 						p.getCache().remove("bartwo");
 						p.getCache().remove("barthree");
@@ -74,11 +75,11 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 					&& p.getCache().hasKey("barthree")
 					&& p.getCache().hasKey("barfour")
 					&& p.getCache().hasKey("barfive")
-					&& p.getCache().hasKey("barsix") && hasItem(p, 668)) {
+					&& p.getCache().hasKey("barsix") && hasItem(p, ItemId.BARCRAWL_CARD.id())) {
 					playerTalk(p, n,
 						"I think I jusht about done them all, but I losht count");
 					message(p, "You give the card to the barbarian");
-					removeItem(p, 668, 1);
+					removeItem(p, ItemId.BARCRAWL_CARD.id(), 1);
 					npcTalk(p,
 						n,
 						"Yep that seems fine",
@@ -119,7 +120,7 @@ public class AlfredGrimhandBarCrawl implements TalkToNpcListener,
 						"The Alfred Grimhand barcrawl",
 						"First done by Alfred Grimhand");
 					message(p, "The guard hands you a barcrawl card");
-					addItem(p, 668, 1);
+					addItem(p, ItemId.BARCRAWL_CARD.id(), 1);
 					npcTalk(p,
 						n,
 						"Take that card to each of the bars named on it",
