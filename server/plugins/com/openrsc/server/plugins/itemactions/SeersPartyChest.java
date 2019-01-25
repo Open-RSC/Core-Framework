@@ -42,15 +42,11 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 			public void action() {
 				Random rand = DataConversions.getRandom();
 				boolean upstairs = player.getLocation().isInSeersPartyHallUpstairs();
-				Point location;
 
 				while(true) {
-					if (upstairs) {
-						location = new Point(rand.nextInt(11) + 490, rand.nextInt(8) + 1408);
-
-					} else {
-						location = new Point(rand.nextInt(11) + 490, rand.nextInt(8) + 464);
-					}
+					Point location = upstairs ?
+						new Point(rand.nextInt(11) + 490, rand.nextInt(8) + 1408) :
+						new Point(rand.nextInt(11) + 490, rand.nextInt(8) + 464);
 
 					if ((World.getWorld().getTile(location).traversalMask & 64) != 0) {
 						continue;

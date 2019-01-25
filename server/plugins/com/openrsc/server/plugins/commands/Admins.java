@@ -1717,5 +1717,45 @@ public final class Admins implements CommandListener {
 			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime*60*1000));
 			player.message(messagePrefix + "Chicken event started.");
 		}
+		else if(cmd.equalsIgnoreCase("seers") || cmd.equalsIgnoreCase("toggleseers")) {
+			int time;
+			if(args.length >= 1) {
+				try {
+					time = Integer.parseInt(args[0]);
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " (time_in_minutes)");
+					return;
+				}
+			} else {
+				time = 60;
+			}
+
+			if(!player.getLocation().isInSeersPartyHall()) {
+				player.message(messagePrefix + "This command can only be run within the vicinity of the seers party hall");
+				return;
+			}
+
+			boolean upstairs = player.getLocation().isInSeersPartyHallUpstairs();
+			Point objectLoc =  upstairs ? new Point(495,1411) : new Point(495,467);
+			final GameObject existingObject = player.getViewArea().getGameObject(objectLoc);
+
+			if(existingObject != null && existingObject.getType() != 1 && existingObject.getID() != 18) {
+				player.message(messagePrefix + "Could not enable seers party hall " + (upstairs ? "upstairs" : "downstairs") + " object exists: " + existingObject.getGameObjectDef().getName());
+			}
+			else if(existingObject != null && existingObject.getType() != 1 && existingObject.getID() == 18) {
+				World.getWorld().unregisterGameObject(existingObject);
+				player.message(messagePrefix + "Seers party hall " + (upstairs ? "upstairs" : "downstairs") + " has been disabled.");
+			} else {
+				GameObject newObject = new GameObject(objectLoc, 18, 0, 0);
+				World.getWorld().registerGameObject(newObject);
+				Server.getServer().getEventHandler().add(new SingleEvent(null, time * 60000) {
+					@Override
+					public void action() {
+						World.getWorld().unregisterGameObject(newObject);
+					}
+				});
+				player.message(messagePrefix + "Seers party hall " + (upstairs ? "upstairs" : "downstairs") + " has been enabled.");
+			}
+		}
 	}
 }
