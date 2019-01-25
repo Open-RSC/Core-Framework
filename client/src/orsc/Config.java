@@ -31,7 +31,6 @@ public class Config {
 	public static boolean C_SIDE_MENU_OVERLAY = false;
 	public static boolean C_KILL_FEED = false;
 	public static int C_FIGHT_MENU = 1;
-	public static int C_ZOOM = 0;
 	public static boolean C_INV_COUNT = false;
 	/* Android: */
 	public static boolean F_SHOWING_KEYBOARD = false;
