@@ -4042,7 +4042,7 @@ public final class mudclient implements Runnable {
 							this.showUiWildWarn = 1;
 						}
 					}
-					//if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
+					if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
 						int i = 130;
 						if (localPlayer.isDev()) {
 							this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
@@ -4061,7 +4061,7 @@ public final class mudclient implements Runnable {
 							"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
 						i +=14;
 						this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
-					//}
+					}
 
 					if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
 						this.drawExperienceCounter(recentSkill);
