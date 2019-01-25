@@ -53,9 +53,7 @@ public final class ORSCharacter {
 		return groupID == 8 || isAdmin();
 	}
 
-	public boolean isEvent() {
-		return groupID == 9 || isAdmin();
-	}
+	public boolean isEvent() { return groupID == 9 || isMod() || isDev(); }
 
 	public boolean isOwner() {
 		return groupID == 0;
@@ -66,7 +64,7 @@ public final class ORSCharacter {
 	}
 
 	public boolean isStaff() {
-		return isMod() || isDev() || isEvent();
+		return isEvent();
 	}
 
 	public String getStaffName() {
