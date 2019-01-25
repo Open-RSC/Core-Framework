@@ -251,7 +251,7 @@ public final class RegularPlayer implements CommandListener {
 		else if (cmd.equalsIgnoreCase("onlinelist")) {
 			String boxTextPlayerNames = "";
 			for (Player p : World.getWorld().getPlayers()) {
-				boxTextPlayerNames += p.getUsername() + "%";
+				boxTextPlayerNames += p.getUsername() + (player.isDev() ? (" " + p.getLocation()) : "") + "%";
 			}
 			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames, true);
 
