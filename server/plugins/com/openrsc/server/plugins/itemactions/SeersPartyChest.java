@@ -18,17 +18,16 @@ import java.util.Random;
 
 public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseOnObjectListener {
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		if(obj.getID()!= 18) {
-			return true;
+		if(obj.getID() != 18 && obj.getID() != 17) {
+			return false;
 		}
-		if(obj.getLocation().isInSeersPartyHall()) {
-			return true;
+		if(!obj.getLocation().isInSeersPartyHall()) {
+			return false;
 		}
-		if(item.getDef().isUntradable()) {
-			ActionSender.sendMessage(player, null, 0, MessageType.QUEST, "You can not use this item here", 0);
-			return true;
+		if(item.getDef().isUntradable() && !player.isAdmin()) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
@@ -58,7 +57,7 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 
 				for (Player p : World.getWorld().getPlayers()) {
 					if((upstairs && p.getLocation().isInSeersPartyHallUpstairs()) || (!upstairs && p.getLocation().isInSeersPartyHallDownstairs())) {
-						ActionSender.sendMessage(player, null, 0, MessageType.QUEST, owner.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef().getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0);
+						ActionSender.sendMessage(p, null, 0, MessageType.QUEST, owner.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef().getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0);
 					}
 				}
 			}
