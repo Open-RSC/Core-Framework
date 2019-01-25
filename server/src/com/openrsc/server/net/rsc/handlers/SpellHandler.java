@@ -706,12 +706,6 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						if (affectedItem.getLocation().isInSeersPartyHall()) {
-							player.message("Telekinetic grab cannot be used in here");
-							return;
-						}
-						if (affectedItem.getID() == 575 || affectedItem.getID() == 2115
-							|| affectedItem.getID() == 2116 || affectedItem.getID() == 2117
-							|| affectedItem.getID() == 2118 || affectedItem.getID() == 2119) {
 							player.message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
