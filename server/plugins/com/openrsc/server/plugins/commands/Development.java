@@ -202,7 +202,7 @@ public final class Development implements CommandListener {
 					x = Integer.parseInt(args[1]);
 					y = Integer.parseInt(args[2]);
 				} catch (NumberFormatException ex) {
-					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [x] [y]");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (x) (y)");
 					return;
 				}
 			}
@@ -231,8 +231,8 @@ public final class Development implements CommandListener {
 			}
 
 			GameObject newObject = new GameObject(Point.location(x, y), id, 0, 0);
-			player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 			World.getWorld().registerGameObject(newObject);
+			player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 			DatabaseConnection.getDatabase()
 				.executeUpdate("INSERT INTO `" + Constants.GameServer.MYSQL_TABLE_PREFIX
 					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
