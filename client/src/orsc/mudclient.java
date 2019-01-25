@@ -8942,7 +8942,7 @@ public final class mudclient implements Runnable {
 					} else if (this.keyRight) {
 						this.cameraRotation = 255 & this.cameraRotation - 2;
 					} else if (this.keyDown) {
-						if(Config.S_ZOOM_VIEW_TOGGLE) {
+						if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
 							final int maxHeight = 1000 - (doCameraZoom ? 200 : 0);
 							if (cameraZoom < maxHeight) {
 								if (cameraZoom + 4 > maxHeight)
@@ -8956,7 +8956,7 @@ public final class mudclient implements Runnable {
 							}
 						}
 					} else if (this.keyUp) {
-						if(Config.S_ZOOM_VIEW_TOGGLE) {
+						if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
 							final int minHeight = 500 - (doCameraZoom ? 200 : 0);
 							if (cameraZoom > minHeight) {
 								if (cameraZoom - 4 < minHeight)
