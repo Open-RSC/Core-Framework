@@ -87,10 +87,6 @@ public final class Admins implements CommandListener {
 			}
 			player.message(messagePrefix + "Added bank items.");
 		}
-		else if (cmd.equalsIgnoreCase("toggleaggro")) {
-			player.setAttribute("no-aggro", !player.getAttribute("no-aggro", false));
-			player.message(messagePrefix + "Aggressive: " + player.getAttribute("no-aggro", false));
-		}
 		else if (cmd.equalsIgnoreCase("cleannpcs")) {
 			Server.getServer().submitTask(new Runnable() {
 				@Override
