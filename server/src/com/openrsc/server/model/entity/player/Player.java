@@ -19,6 +19,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
@@ -32,6 +33,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.sql.GameLogging;
+import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -1289,11 +1291,11 @@ public final class Player extends Mob {
 	}
 
 	public boolean isEvent() {
-		return groupID == Group.EVENT || isAdmin();
+		return groupID == Group.EVENT || isMod() || isDev();
 	}
 
 	public boolean isStaff() {
-		return isMod() || isDev() || isEvent();
+		return isEvent();
 	}
 
 	public boolean isChangingAppearance() {
@@ -2218,5 +2220,31 @@ public final class Player extends Mob {
 			return false;
 
 		return getCache().getBoolean("is_jailed");
+	}
+
+	public boolean groundItemTake(GroundItem item) {
+		Item itemFinal = new Item(item.getID(), item.getAmount());
+		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
+			itemFinal.setAttribute("npcdrop", true);
+		}
+
+		if (!this.getInventory().canHold(itemFinal)) {
+			return false;
+		}
+
+		if (item.getID() == 59 && item.getX() == 106 && item.getY() == 1476) {
+			Npc n = world.getNpc(37, 103, 107, 1476, 1479);
+			if (n != null && !n.inCombat()) {
+				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Hey thief!", this));
+				n.setChasing(this);
+			}
+		}
+		world.unregisterItem(item);
+		this.playSound("takeobject");
+		this.getInventory().add(itemFinal);
+		GameLogging.addQuery(new GenericLog(this.getUsername() + " picked up " + item.getDef().getName() + " x"
+			+ item.getAmount() + " at " + this.getLocation().toString()));
+
+		return true;
 	}
 }
