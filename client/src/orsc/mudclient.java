@@ -3899,18 +3899,11 @@ public final class mudclient implements Runnable {
 						}
 
 						this.cameraRotation = this.cameraAngle * 32;
-						if (doCameraZoom) {
-							this.scene.fogLandscapeDistance = 3000;
-							this.scene.fogEntityDistance = 3000;
-							this.scene.fogZFalloff = 1;
-							this.scene.fogSmoothingStartDistance = 2800;
-						} else {
-							this.scene.fogZFalloff = 1;
-							this.scene.fogLandscapeDistance = 10000;
-							this.scene.fogEntityDistance = 10000;
-							this.scene.fogSmoothingStartDistance = 10000;
+						this.scene.fogLandscapeDistance = 3000;
+						this.scene.fogEntityDistance = 3000;
+						this.scene.fogZFalloff = 1;
+						this.scene.fogSmoothingStartDistance = 2800;
 
-						}
 						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 						centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
@@ -3922,20 +3915,20 @@ public final class mudclient implements Runnable {
 						if (Config.C_SHOW_FOG) {
 							if (!this.interlace) {
 								this.scene.fogZFalloff = 1;
-								this.scene.fogLandscapeDistance = 2400;
-								this.scene.fogEntityDistance = 2400;
-								this.scene.fogSmoothingStartDistance = 2300;
+								this.scene.fogLandscapeDistance = gameWidth * 2 + cameraZoom * 2 - 124;
+								this.scene.fogEntityDistance = gameWidth * 2 + cameraZoom * 2 - 124;
+								this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 224;
 							} else {
 								this.scene.fogZFalloff = 1;
-								this.scene.fogLandscapeDistance = 2200;
-								this.scene.fogEntityDistance = 2200;
-								this.scene.fogSmoothingStartDistance = 2100;
+								this.scene.fogLandscapeDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+								this.scene.fogEntityDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+								this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 424;
 							}
 						} else {
 							this.scene.fogZFalloff = 1;
-							this.scene.fogLandscapeDistance = 10000;
-							this.scene.fogEntityDistance = 10000;
-							this.scene.fogSmoothingStartDistance = 10000;
+							this.scene.fogLandscapeDistance = cameraZoom * 6;
+							this.scene.fogEntityDistance = cameraZoom * 6;
+							this.scene.fogSmoothingStartDistance = cameraZoom * 6;
 						}
 
 						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
@@ -4049,7 +4042,7 @@ public final class mudclient implements Runnable {
 							this.showUiWildWarn = 1;
 						}
 					}
-					if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
+					//if (Config.S_SIDE_MENU_TOGGLE && Config.C_SIDE_MENU_OVERLAY) {
 						int i = 130;
 						if (localPlayer.isDev()) {
 							this.getSurface().drawString("Tile: @gre@(@whi@" + (playerLocalX + midRegionBaseX)
@@ -4066,7 +4059,9 @@ public final class mudclient implements Runnable {
 						i += 14;
 						this.getSurface().drawString(
 							"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
-					}
+						i +=14;
+						this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
+					//}
 
 					if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
 						this.drawExperienceCounter(recentSkill);
