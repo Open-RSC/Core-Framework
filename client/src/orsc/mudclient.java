@@ -249,7 +249,7 @@ public final class mudclient implements Runnable {
 	private int cameraPitch = 912;
 	private int cameraRotationX = 0;
 	private int cameraRotationZ = 0;
-	private int cameraZoom = 550;
+	private int cameraZoom = 750;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
@@ -302,7 +302,7 @@ public final class mudclient implements Runnable {
 	private boolean errorLoadingMemory = false;
 	private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
 	private int fatigueSleeping = 0;
-	private boolean fogOfWar = false;
+	private boolean doCameraZoom = false;
 	private int gameHeight = 334;
 	private int gameObjectInstanceCount = 0;
 	private int[] gameObjectInstanceZ = new int[5000];
@@ -553,7 +553,6 @@ public final class mudclient implements Runnable {
 	private long m_timer;
 	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
 
-	public boolean zoomCamera = false;
 	public int amountToZoom = 0;
 
 	public mudclient(ORSCApplet handler) {
@@ -3683,7 +3682,10 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
-						this.fogOfWar = false;
+						if(!this.doCameraZoom) {
+							amountToZoom -= 200;
+							this.doCameraZoom = true;
+						}
 						if (this.lastHeightOffset == 0
 							&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
 							/ 128] & 0x80) == 0
@@ -3697,7 +3699,10 @@ public final class mudclient implements Runnable {
 								this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
 							}
 
-							this.fogOfWar = false;
+							if(this.doCameraZoom) {
+								amountToZoom += 200;
+								this.doCameraZoom = false;
+							}
 						}
 					}
 
@@ -3884,7 +3889,7 @@ public final class mudclient implements Runnable {
 					this.characterHealthCount = 0;
 					this.characterDialogCount = 0;
 					if (this.cameraAutoAngleDebug) {
-						if (this.optionCameraModeAuto && !this.fogOfWar) {
+						if (this.optionCameraModeAuto && !this.doCameraZoom) {
 							centerX = this.cameraAngle;
 							this.autoRotateCamera((byte) 22);
 							if (centerX != this.cameraAngle) {
@@ -3894,7 +3899,7 @@ public final class mudclient implements Runnable {
 						}
 
 						this.cameraRotation = this.cameraAngle * 32;
-						if (fogOfWar) {
+						if (doCameraZoom) {
 							this.scene.fogLandscapeDistance = 3000;
 							this.scene.fogEntityDistance = 3000;
 							this.scene.fogZFalloff = 1;
@@ -3911,7 +3916,7 @@ public final class mudclient implements Runnable {
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 							this.cameraRotation * 4, (int) 0, 2000);
 					} else {
-						if (this.optionCameraModeAuto && !this.fogOfWar) {
+						if (this.optionCameraModeAuto && !this.doCameraZoom) {
 							this.autoRotateCamera((byte) 94);
 						}
 						if (Config.C_SHOW_FOG) {
@@ -3936,11 +3941,8 @@ public final class mudclient implements Runnable {
 						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 						centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
 
-						float zoomMultiplier = 0;
-						if (Config.S_ZOOM_VIEW_TOGGLE)
-							zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-							this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
+							this.cameraRotation * 4, (int) 0, (int) this.cameraZoom * 2);
 					}
 
 					this.scene.endScene(-113);
@@ -8915,7 +8917,7 @@ public final class mudclient implements Runnable {
 							if (this.keyLeft) {
 								this.keyLeft = false;
 								this.cameraAngle = this.cameraAngle + 1 & 7;
-								if (!this.fogOfWar) {
+								if (!this.doCameraZoom) {
 									if ((1 & this.cameraAngle) == 0) {
 										this.cameraAngle = 7 & 1 + this.cameraAngle;
 									}
@@ -8929,7 +8931,7 @@ public final class mudclient implements Runnable {
 							if (this.keyRight) {
 								this.keyRight = false;
 								this.cameraAngle = 7 + this.cameraAngle & 7;
-								if (!this.fogOfWar) {
+								if (!this.doCameraZoom) {
 									if ((1 & this.cameraAngle) == 0) {
 										this.cameraAngle = this.cameraAngle + 7 & 7;
 									}
@@ -8944,10 +8946,34 @@ public final class mudclient implements Runnable {
 						this.cameraRotation = 255 & this.cameraRotation + 2;
 					} else if (this.keyRight) {
 						this.cameraRotation = 255 & this.cameraRotation - 2;
-					} else if (this.keyDown && this.cameraAllowPitchModification) {
-						this.cameraPitch = (this.cameraPitch + 4) & 1023;
-					} else if (this.keyUp && this.cameraAllowPitchModification) {
-						this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+					} else if (this.keyDown) {
+						if(Config.S_ZOOM_VIEW_TOGGLE) {
+							final int maxHeight = 1000 - (doCameraZoom ? 200 : 0);
+							if (cameraZoom < maxHeight) {
+								if (cameraZoom + 4 > maxHeight)
+									cameraZoom = maxHeight;
+								else
+									cameraZoom += 4;
+							}
+						} else {
+							if(this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 4) & 1023;
+							}
+						}
+					} else if (this.keyUp) {
+						if(Config.S_ZOOM_VIEW_TOGGLE) {
+							final int minHeight = 500 - (doCameraZoom ? 200 : 0);
+							if (cameraZoom > minHeight) {
+								if (cameraZoom - 4 < minHeight)
+									cameraZoom = minHeight;
+								else
+									cameraZoom -= 4;
+							}
+						} else {
+							if(this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+							}
+						}
 					} else if (this.pageDown) {
 						currentChat++;
 						if (currentChat >= messages.size()) {
@@ -8974,10 +9000,18 @@ public final class mudclient implements Runnable {
 						++this.mouseClickXStep;
 					}
 
-					if (this.fogOfWar && this.cameraZoom > 550) {
+					/*if (this.doCameraZoom && this.cameraZoom > 550) {
 						this.cameraZoom -= 4;
-					} else if (!this.fogOfWar && this.cameraZoom < 750) {
+					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
 						this.cameraZoom += 4;
+					}*/
+					if(amountToZoom > 0) {
+						cameraZoom += 4;
+						amountToZoom -= 4;
+					}
+					if(amountToZoom < 0) {
+						cameraZoom -= 4;
+						amountToZoom += 4;
 					}
 
 					this.scene.d(25013, 17);
@@ -13464,13 +13498,6 @@ public final class mudclient implements Runnable {
 			panelMessageTabs.scrollMethodList(panelMessagePrivate, x);
 		else if (this.messageTabSelected == MessageTab.CLAN && !this.controlPressed)
 			panelMessageTabs.scrollMethodList(panelMessageClan, x);
-		else if (cameraZoom >= 550 && this.controlPressed) {
-			if (cameraZoom > 2200) {
-				cameraZoom = 2200;
-				return;
-			}
-			cameraZoom += 25 * x;
-		}
 	}
 
 	public boolean isShowDialogBank() {
