@@ -46,19 +46,17 @@ echo What would you like to do?
 echo:
 echo Choices:
 echo   %RED%1%NC% - Install
-echo   %RED%2%NC% - Fetch code updates
-echo   %RED%3%NC% - Run
-echo   %RED%4%NC% - Reset everything
-echo   %RED%5%NC% - Exit
+echo   %RED%2%NC% - Run
+echo   %RED%3%NC% - Reset everything
+echo   %RED%4%NC% - Exit
 echo:
 SET /P action=Please enter a number choice from above:
 echo:
 
 if /i "%action%"=="1" goto install
-if /i "%action%"=="2" goto update
-if /i "%action%"=="3" goto run
-if /i "%action%"=="4" goto reset
-if /i "%action%"=="5" exit
+if /i "%action%"=="2" goto run
+if /i "%action%"=="3" goto reset
+if /i "%action%"=="4" exit
 
 echo Error! %action% is not a valid option. Press enter to try again.
 echo:
@@ -91,23 +89,6 @@ echo:
 echo:
 goto start
 :<------------End Simple------------>
-
-
-:<------------Begin Update------------>
-:update
-echo:
-echo:
-echo Checking for updates
-echo:
-git pull
-echo:
-echo:
-echo Compiling the game client and server.
-echo:
-make compile-windows-simple
-echo:
-goto start
-:<------------End Update------------>
 
 
 :<------------Start Run------------>
