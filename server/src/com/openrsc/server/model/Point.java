@@ -210,7 +210,15 @@ public class Point {
 	}
 
 	public boolean isInSeersPartyHall() {
-		return inBounds(490, 464, 500, 471) || inBounds(490, 1408, 500, 1415);
+		return isInSeersPartyHallUpstairs() || isInSeersPartyHallDownstairs();
+	}
+
+	public boolean isInSeersPartyHallUpstairs() {
+		return inBounds(490, 1408, 500, 1415);
+	}
+
+	public boolean isInSeersPartyHallDownstairs() {
+		return inBounds(490, 464, 500, 471);
 	}
 
 	public int wildernessLevel() {

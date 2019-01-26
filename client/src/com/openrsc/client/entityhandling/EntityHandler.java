@@ -3081,7 +3081,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Powering crystal3", "An intricately cut gemstone", "", 0, 357, false, false, 0, 6750207, true, true, -1, -1, 1153));
 		items.add(new ItemDef("Powering crystal4", "An intricately cut gemstone", "", 0, 357, false, false, 0, 3407667, true, true, -1, -1, 1154));
 		items.add(new ItemDef("Old boot", "that's been here some time", "", 1, 391, false, false, 0, 4194304, true, true, -1, -1, 1155));
-		items.add(new ItemDef("Bunny ears", "Get another from the clothes shop if you die", "", 1, 392, false, true, 32, 4194304, false, false, 2133, -1, 1156));
+		items.add(new ItemDef("Bunny ears", "Get another from the clothes shop if you die", "", 1, 392, false, true, 32, 4194304, false, true, 2133, -1, 1156));
 		items.add(new ItemDef("Damaged armour", "that's been here some time", "", 1, 393, false, false, 0, 4194304, true, true, -1, -1, 1157));
 		items.add(new ItemDef("Damaged armour", "that's been here some time", "", 1, 394, false, false, 0, 4194304, true, true, -1, -1, 1158));
 		items.add(new ItemDef("Rusty sword", "that's been here some time", "", 1, 395, false, false, 0, 4194304, true, true, -1, -1, 1159));
@@ -3214,7 +3214,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Blessed Golden Bowl with plain water", "A golden bowl filled with plain water", "Empty", 1000, 405, false, false, 0, 8454143, true, true, -1, -1, 1286));
 		items.add(new ItemDef("Golden Bowl with plain water", "A golden bowl filled with plain water", "Empty", 1000, 405, false, false, 0, 8454143, true, true, -1, -1, 1287));
 		items.add(new ItemDef("Cape of legends", "Shows I am a member of the legends guild", "", 450, 59, false, true, 2048, 16777215, true, true, -1, -1, 1288));
-		items.add(new ItemDef("Scythe", "Get another from the clothes shop if you die", "", 15, 434, false, true, 8216, 0, false, false, 2134, -1, 1289));
+		items.add(new ItemDef("Scythe", "Get another from the clothes shop if you die", "", 15, 434, false, true, 8216, 0, false, true, 2134, -1, 1289));
 		loadNoteDefinitions();
 		loadCustomItemAndNoteDefinitions();
 
@@ -3271,8 +3271,8 @@ public class EntityHandler {
 		 * After id 2091 - Display Tea from regular RSC as the last real RSC item in note.
 		 */
 
-		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 1156, 2133));
-		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, false, -1, 1289, 2134));
+		items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, true, -1, 1156, 2133));
+		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 0, 438, true, false, 0, 0, false, true, -1, 1289, 2134));
 
 		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, 6, false, true, 33, 11189164, false, true, -1, -1, 2135));
 		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, 8, false, true, 322, 11189164, false, true, -1, -1, 2136));

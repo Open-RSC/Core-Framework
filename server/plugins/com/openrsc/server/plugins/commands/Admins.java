@@ -87,10 +87,6 @@ public final class Admins implements CommandListener {
 			}
 			player.message(messagePrefix + "Added bank items.");
 		}
-		else if (cmd.equalsIgnoreCase("toggleaggro")) {
-			player.setAttribute("no-aggro", !player.getAttribute("no-aggro", false));
-			player.message(messagePrefix + "Aggressive: " + player.getAttribute("no-aggro", false));
-		}
 		else if (cmd.equalsIgnoreCase("cleannpcs")) {
 			Server.getServer().submitTask(new Runnable() {
 				@Override
@@ -663,6 +659,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
+				return;
+			}
+
 			if(args[keyArg] == "invisible") {
 				player.message(messagePrefix + "Can not change that cache value. Use ::invisible instead.");
 				return;
@@ -708,7 +709,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			player.message(messagePrefix + p.getUsername() + " has value " + p.getCache().getString(args[keyArg]) + " for cache key " + args[keyArg]);
+			player.message(messagePrefix + p.getUsername() + " has value " + p.getCache().getCacheMap().get(args[keyArg]).toString() + " for cache key " + args[keyArg]);
 		}
 		else if (cmd.equalsIgnoreCase("deletecache") || cmd.equalsIgnoreCase("dcache") || cmd.equalsIgnoreCase("removecache") || cmd.equalsIgnoreCase("rcache")) {
 			if (args.length < 2) {
@@ -727,6 +728,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
+				return;
+			}
+
 			if (!p.getCache().hasKey(args[keyArg])) {
 				player.message(messagePrefix + p.getUsername() + " does not have the cache key " + args[keyArg] + " set");
 				return;
@@ -741,11 +747,15 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player playerToChange;
-			playerToChange = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(playerToChange == null) {
+			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
 
@@ -770,9 +780,9 @@ public final class Admins implements CommandListener {
 				stage = 0;
 			}
 
-			playerToChange.updateQuestStage(quest, stage);
-			playerToChange.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
-			player.message(messagePrefix + "You have changed " + playerToChange.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
+			p.updateQuestStage(quest, stage);
+			p.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
+			player.message(messagePrefix + "You have changed " + p.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
 		}
 		else if (cmd.equalsIgnoreCase("questcomplete") || cmd.equalsIgnoreCase("questcom")) {
 			if (args.length < 2) {
@@ -780,11 +790,15 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			Player playerToChange;
-			playerToChange = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if(playerToChange == null) {
+			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
 
@@ -798,8 +812,8 @@ public final class Admins implements CommandListener {
 			}
 
 			player.sendQuestComplete(quest);
-			playerToChange.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
-			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + playerToChange.getUsername());
+			p.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
+			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + p.getUsername());
 		}
 		else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("checkquest")) {
 			if (args.length < 2) {
@@ -1003,7 +1017,7 @@ public final class Admins implements CommandListener {
 			}
 			ActionSender.sendOpenAuctionHouse(p);
 		}
-		else if (cmd.equalsIgnoreCase("bank")) {
+		else if (cmd.equalsIgnoreCase("bank") || cmd.equalsIgnoreCase("quickbank")) {
 			Player p = args.length > 0 ? World.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
@@ -1128,20 +1142,25 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
+				return;
+			}
+
 			if(stat != -1) {
 				if(level < 1)
 					level = 1;
 				if(level > Constants.GameServer.PLAYER_LEVEL_LIMIT)
 					level = Constants.GameServer.PLAYER_LEVEL_LIMIT;
 
-				p.getSkills().setLevel(stat, level);
+				p.getSkills().setLevelTo(stat, level);
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + "  to level " + level);
 				p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
 			}
 			else {
 				for(int i = 0; i < Skills.SKILL_NAME.length; i++) {
-					p.getSkills().setLevel(i, level);
+					p.getSkills().setLevelTo(i, level);
 				}
 
 				p.checkEquipment();
@@ -1200,6 +1219,11 @@ public final class Admins implements CommandListener {
 			try {
 				int newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
 
+				if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID() && newHits == 0) {
+					player.message(messagePrefix + "You can not set hp to 0 of a staff member of equal or greater rank.");
+					return;
+				}
+
 				if(newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
 					newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
 				if(newHits < 0)
@@ -1231,6 +1255,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not kill a staff member of equal or greater rank.");
+				return;
+			}
+
 			p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS)));
 			p.getSkills().setLevel(Skills.HITPOINTS, 0);
 			p.killedBy(player);
@@ -1259,6 +1288,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not damage a staff member of equal or greater rank.");
+				return;
+			}
+
 			p.getUpdateFlags().setDamage(new Damage(player, damage));
 			p.getSkills().subtractLevel(Skills.HITPOINTS, damage);
 			if (p.getSkills().getLevel(Skills.HITPOINTS) <= 0)
@@ -1267,7 +1301,7 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
 			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
 		}
-		else if (cmd.equalsIgnoreCase("wipeinventory")) {
+		else if (cmd.equalsIgnoreCase("wipeinventory") || cmd.equalsIgnoreCase("wipeinv")) {
 			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
@@ -1277,6 +1311,11 @@ public final class Admins implements CommandListener {
 
 			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not wipe the inventory of a staff member of equal or greater rank.");
 				return;
 			}
 
@@ -1302,6 +1341,11 @@ public final class Admins implements CommandListener {
 
 			if(p == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not wipe the bank of a staff member of equal or greater rank.");
 				return;
 			}
 
@@ -1557,6 +1601,11 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not talk as a staff member of equal or greater rank.");
+				return;
+			}
+
 			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg));
 
 			ChatMessage chatMessage = new ChatMessage(p, message);
@@ -1720,6 +1769,104 @@ public final class Admins implements CommandListener {
 
 			Server.getServer().getEventHandler().add(new HourlyNpcLootEvent(hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime*60*1000));
 			player.message(messagePrefix + "Chicken event started.");
+		}
+		else if (cmd.equalsIgnoreCase("wildrule")) {
+			if (args.length < 3) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
+				return;
+			}
+
+			String rule = args[0];
+
+			int startLevel = -1;
+			try {
+				startLevel = Integer.parseInt(args[1]);
+			}
+			catch(NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
+				return;
+			}
+
+			int endLevel = -1;
+			try {
+				endLevel = Integer.parseInt(args[2]);
+			}
+			catch(NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
+				return;
+			}
+
+			if(rule.equalsIgnoreCase("god")) {
+				int start = Integer.parseInt(args[1]);
+				int end = Integer.parseInt(args[2]);
+				World.godSpellsStart = startLevel;
+				World.godSpellsMax = endLevel;
+				player.message(messagePrefix + "Wilderness rule for god spells set to [" + World.godSpellsStart + " -> "
+					+ World.godSpellsMax + "]");
+			} else if (rule.equalsIgnoreCase("members")) {
+				int start = Integer.parseInt(args[1]);
+				int end = Integer.parseInt(args[2]);
+				World.membersWildStart = startLevel;
+				World.membersWildMax = endLevel;
+				player.message(messagePrefix + "Wilderness rule for members set to [" + World.membersWildStart + " -> "
+					+ World.membersWildMax + "]");
+			} else {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [god/members] [startLevel] [endLevel]");
+			}
+		}
+		else if (cmd.equalsIgnoreCase("ban")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
+				return;
+			}
+
+			long userToBan = DataConversions.usernameToHash(args[0]);
+			String usernameToBan = DataConversions.hashToUsername(userToBan);
+			Player p = World.getWorld().getPlayer(userToBan);
+
+			int time;
+			if(args.length >= 2) {
+				try {
+					time = Integer.parseInt(args[1]);
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 for permanent, 0 to unban)");
+					return;
+				}
+			} else {
+				time = player.isAdmin() ? -1 : 60;
+			}
+
+			if (time == 0 && !player.isAdmin()) {
+				player.message(messagePrefix + "You are not allowed to unban users.");
+				return;
+			}
+
+			if (time == -1 && !player.isAdmin()) {
+				player.message(messagePrefix + "You are not allowed to permanently ban users.");
+				return;
+			}
+
+			if (time > 1440 && !player.isAdmin()) {
+				player.message(messagePrefix + "You are not allowed to ban for more than a day.");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
+				return;
+			}
+
+			if (p != null) {
+				p.unregister(true, "You have been banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes"));
+			}
+
+			if (time == 0) {
+				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was unbanned by " + player.getUsername()));
+			} else {
+				GameLogging.addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
+			}
+
+			player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time));
 		}
 	}
 }
