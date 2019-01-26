@@ -5,7 +5,7 @@ source .env
 
 # Check for any updates to the game server
 clear
-echo "Pulling recent updates from the Open-RSC Game repository."
+echo "Fetching recent updates from the Open-RSC Game repository."
 sudo git pull
 sudo make pull-game
 sudo chmod -R 777 Game
@@ -15,7 +15,7 @@ sudo chmod 644 etc/mariadb/innodb.cnf
 clear
 echo "Starting Docker containers."
 sudo make stop
-sudo make start-single-player
+sudo make start
 
 # Compile the game server and client
 clear
@@ -35,4 +35,4 @@ sudo ant -f Game/client/build.xml runclient &
 # Run the game server in the current window
 clear
 echo "Launching the game server."
-sudo ant -f Game/server/build.xml runservermembers
+sudo ant -f Game/server/build.xml runserver
