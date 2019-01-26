@@ -26,7 +26,7 @@ The first priority of our development is ensuring the authentic content found in
 
 3. Double click on "Go-Windows.cmd"
 
-4. Press "1" for "Install" and press enter. It may exit once installation is done. That is fine, just re-launch "Go-Windows.cmd"
+4. Press "1" for "Install" and press enter.
 
 5. When install completes and you are back on the main menu, press "3" for "Run" and press enter.
 

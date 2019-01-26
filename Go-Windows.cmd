@@ -78,9 +78,9 @@ choco install -y 7zip make openjdk ant bitnami-xampp
 echo:
 call "scripts/xampp-install.cmd"
 
-echo "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ((Get-Content -path C:\xampp\phpMyAdmin\config.inc.php -Raw) -replace "password'] = ''","password'] = 'root'") | Set-Content -Path "C:\xampp\phpMyAdmin\config.inc.php"
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "((Get-Content -path C:\xampp\phpMyAdmin\config.inc.php -Raw)) -replace \"password'] = ''\", \"password'] = 'root'\" | Set-Content -Path \"C:\xampp\phpMyAdmin\config.inc.php\""
 
-call C:\xampp\mysql\bin\mysqladmin.exe -uroot password root
+call
 call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
 echo:
 echo:

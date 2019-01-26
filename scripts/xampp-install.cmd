@@ -1,8 +1,5 @@
 @echo off
 
-cd C:\xampp\apache
-call apache_installservice.bat
-cd C:\xampp\mysql
-call mysql_installservice.bat
-cd C:\xampp
-start /min xampp-control.exe
+call C:\xampp\apache\apache_installservice.bat
+call C:\xampp\mysql\mysql_installservice.bat
+start /min C:\xampp\xampp-control.exe
