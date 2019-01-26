@@ -2,19 +2,91 @@
 ###### [![Build Status](https://travis-ci.org/Open-RSC/Game.svg?branch=2.0.0)](https://travis-ci.org/Open-RSC/Game)
 
 # Table of contents <a name="top"></a>
-1. [General Information](#general)
-2. [Enable High DPI Scaling For High Res Monitors](#dpi)
-3. [How to Install](#install)
-4. [Default Credentials](#credentials)
-5. [Minimum Requirements](#requirements)
-6. [Hosting Your Own Server](#hosting)
+1. [Project Information](#general)
+2. [How to Install](#install)
+3. [Default Credentials](#credentials)
+4. [Minimum Requirements](#requirements)
+5. [Bug Reports, Discord, Reddit, and Twitter](#bugs)
+6. [Enable High DPI Scaling For High Res Monitors](#dpi)
 
-## General Information<a name="general"></a>
-
+## Project Information<a name="general"></a>
 The first priority of our development is ensuring the authentic content found in the original Runescape Classic game is replicated to its full extent. We are in no way associated or affiliated with JaGex, Runescape Classic, or any other similar companies or products. Our goal is to program and play Runescape Classic, and have fun doing it!
 
-You can obtain a sample of the running client from:
-https://openrsc.com
+<a href="https://github.com/Open-RSC/Game/blob/2.0.0/CODE_OF_CONDUCT.md">Code of conduct</a>
+
+<a href="https://github.com/Open-RSC/Game/blob/2.0.0/CONTRIBUTING.md">Contributing guide</a>
+
+
+## How to Install<a name="install"></a>
+<b>Windows Single Player:</b>
+
+1. <a href="https://github.com/Open-RSC/Game/releases">Download the latest release "Source code (zip)"</a>
+
+2. Unzip the downloaded file and open the folder it created.
+
+3. Double click on "Go-Windows.cmd"
+
+4. Press "1" for "Install" and press enter.
+
+5. When install completes and you are back on the main menu, press "3" for "Run" and press enter.
+
+
+<b>Windows Developers:</b>
+
+1. Fork the repository and clone your fork of it locally with git.
+
+2. Please download IntelliJ IDEA Community IDE and Git Kraken to work on the project files.
+
+3. The "Go-Windows.cmd" script will get the basics installed for you, so follow the <b>Windows Single Player</b> guide above. 
+
+
+<b>Linux / Mac:</b>
+
+Paste the following in Terminal to begin the install process to get started:
+
+```
+bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
+```
+
+It is strongly suggested that you download IntelliJ IDEA Community IDE and Git Kraken for the project files. While this game is hosted on an Ubuntu VPS, you must learn the ins and outs before you will be ready to host a public facing server. 
+
+
+[Return to top](#top)
+
+
+## Default Credentials (user / pass)<a name="credentials"></a>
+
+user: root
+
+pass: root
+
+[Return to top](#top)
+
+
+## Minimum Requirements<a name="requirements"></a>
+
+* Windows 7 x64
+
+* Mac OS X High Sierra
+
+* Ubuntu Linux 18.04
+
+* 2GB RAM
+
+[Return to top](#top)
+
+
+## Bug Reports, Discord, Reddit, and Twitter<a name="bugs"></a>
+Feel free to submit bug reports in the repository issues section! If you would like to chat with developers and players of this project, join our Discord server!
+
+<a href="https://discordapp.com/invite/94vVKND">Discord</a>
+
+<a href="https://www.reddit.com/r/openrsc">Reddit</a>
+
+<a href="https://twitter.com/openrsc">Twitter</a>
+
+<a href="https://openrsc.com">OpenRSC Website</a>
+
 
 ## Enable high DPI Scaling For High Res Monitors<a name="dpi"></a>
 
@@ -39,78 +111,3 @@ Note: This requires Java 9 or newer to be installed. Java 8 does not support DPI
 8. Re-launch the Open RSC game client
 
 [Return to top](#top)
-___
-
-## How to Install<a name="install"></a>
-
-<b>Windows:</b>
-
-1. <a href="https://desktop.githubusercontent.com/releases/1.4.1-4eda7cdc/GitHubDesktopSetup.exe">Install GitHub Desktop</a>
-
-2. Click "Clone a repository" and specify URL: https://github.com/Open-RSC/Game.git
-<img src="https://i.imgur.com/ZMXUSr7.png"/>
-
-3. Click "Clone"
-
-4. Launch "Game/Go-Windows.cmd"
-
-
-<b>Linux / Mac:</b>
-
-Paste the following in Terminal to begin the install process:
-
-```
-bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
-```
-
-[Return to top](#top)
-___
-
-## Default Credentials (user / pass)<a name="credentials"></a>
-
-<b>Database:</b>
-
-root / root
-
-<b>Forum:</b>
-
-Administrator / password
-
-[Return to top](#top)
-___
-
-## Minimum Requirements<a name="requirements"></a>
-
-* Windows 7 x64
-
-* Mac OS X High Sierra
-
-* Ubuntu Linux 16.04
-
-* 1GB RAM
-
-[Return to top](#top)
-___
-
-## Hosting Your Own Server<a name="hosting"></a>
-
-For those who want to host their own Open RSC server, you can get $100 in DigitalOcean credit that is good for 60 days: https://m.do.co/c/be6a177e6664
-
-We believe security is the most important part of running a server and suggest the following Droplet firewall configuration if you use DigitalOcean: <img src="https://i.imgur.com/Lpal89h.png"/>
-
-After you configure this, you can test to see what ports are exposed to the public internet using "nmap DOMAIN -Pn" if you are using Linux and have installed "nmap" <img src="https://i.imgur.com/BNMYuGJ.png"/>
-
-We also recommend that you use CloudFlare to proxy your web traffic. Please use the following settings to ensure you are well protected:
-
-<img src="https://i.imgur.com/W3MqU3W.png"/>
-<img src="https://i.imgur.com/dIGlpNB.png"/>
-<img src="https://i.imgur.com/dxBi00O.png"/>
-<img src="https://i.imgur.com/A5MXjgo.png"/>
-<img src="https://i.imgur.com/0J5krT9.png"/>
-<img src="https://i.imgur.com/7Z5foy0.png"/>
-<img src="https://i.imgur.com/YeKseHB.png"/>
-<img src="https://i.imgur.com/RkqfwI7.png"/>
-___
-
-[Return to top](#top)
-___

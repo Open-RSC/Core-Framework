@@ -19,9 +19,6 @@ hard-reset:
 hard-reset-game-windows:
 	git reset HEAD --hard
 
-hard-reset-website-windows:
-	cd Website && git reset HEAD --hard
-
 certbot-native:
 	`pwd`/scripts/certbot-native.sh
 
@@ -52,9 +49,6 @@ file-edits:
 start:
 	docker-compose up -d
 
-start-single-player:
-	docker-compose --file docker-compose-single-player.yml up -d
-
 stop:
 	@docker-compose down -v
 
@@ -76,17 +70,8 @@ compile-windows-simple:
 	ant -f server/build.xml compile_plugins
 	ant -f client/build.xml compile
 
-compile-windows-developer:
-	ant -f server/build.xml compile_core
-	ant -f server/build.xml compile_plugins
-	ant -f client/build.xml compile
-	ant -f Launcher/build.xml compile
-
 import-game:
 	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_game.sql
-
-import-forum:
-	docker exec -i mysql mysql -uroot -proot < Databases/openrsc_forum.sql
 
 import-mysql:
 	docker exec -i mysql mysql -uroot -proot < Databases/mysql.sql
@@ -97,34 +82,18 @@ import-phpmyadmin:
 import-game-windows:
 	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_game.sql
 
-import-forum-windows:
-	docker exec -i mysql mysql -u"root" -p"root" < Databases/openrsc_forum.sql
-
 clone-website:
 	@$(shell sudo rm -rf Website && git clone https://github.com/Open-RSC/Website.git)
 	sudo chmod 644 Website/sql/config.inc.php
-	sudo chmod 644 Website/elite/board/config.php
 
 flush-website-avatars-windows:
 	rmdir "Website/avatars"
 
-flush-website-windows:
-	rmdir "Website"
-
-clone-website-windows:
-	git clone https://github.com/Open-RSC/Website.git
-
 pull-website:
 	@cd Website && git pull
 
-pull-website-windows:
-	cd Website && git pull
-
 fix-mariadb-permissions-windows:
 	icacls.exe etc/mariadb/innodb.cnf /GRANT:R "$($env:USERNAME):(R)"
-
-fix-forum-permissions-windows:
-	icacls.exe Website/board/cache /grant Everyone:F /t
 
 logs:
 	@docker-compose logs -f
@@ -134,9 +103,6 @@ backup:
 	sudo chmod -R 777 $(MYSQL_DUMPS_DIR)
 	sudo chmod 644 etc/mariadb/innodb.cnf
 	docker exec mysql mysqldump --all-databases -u$(dbuser) -p$(pass) --all-databases | sudo zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`.zip
-
-flush-website:
-	@$(shell sudo rm -rf Website)
 
 update-laravel:
 	sudo docker exec -i php bash -c "cd /var/www/html/openrsc-web && composer install && php artisan key:generate"
