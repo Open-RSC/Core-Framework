@@ -46,12 +46,10 @@ echo What would you like to do?
 echo:
 echo Choices:
 echo   %RED%1%NC% - Install
-echo   %RED%2%NC% - Update and Compile
+echo   %RED%2%NC% - Fetch code updates
 echo   %RED%3%NC% - Run
-echo   %RED%4%NC% - Manage Players
-echo   %RED%5%NC% - Perform a Hard Reset
-echo   %RED%6%NC% - Change Edition
-echo   %RED%7%NC% - Exit
+echo   %RED%4%NC% - Reset everything
+echo   %RED%5%NC% - Exit
 echo:
 SET /P action=Please enter a number choice from above:
 echo:
@@ -59,10 +57,8 @@ echo:
 if /i "%action%"=="1" goto install
 if /i "%action%"=="2" goto update
 if /i "%action%"=="3" goto run
-if /i "%action%"=="4" goto manage
-if /i "%action%"=="5" goto reset
-if /i "%action%"=="6" goto edition
-if /i "%action%"=="7" exit
+if /i "%action%"=="4" goto reset
+if /i "%action%"=="5" exit
 
 echo Error! %action% is not a valid option. Press enter to try again.
 echo:
@@ -78,45 +74,14 @@ echo:
 echo Installing everything needed. This will take a while, please do not close the window.
 echo:
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install -y 7zip make grepwin jdk8 ant bitnami-xampp
+choco install -y 7zip make openjdk ant bitnami-xampp
 echo:
 call "scripts/xampp-install.cmd"
 
-call "C:\Program Files\grepWin\grepWin.exe" /searchpath:"C:\xampp\phpMyAdmin\config.inc.php" /searchfor:"password'] = ''" /replacewith:"password'] = 'root'" /executereplace /closedialog /k:no
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "((Get-Content -path C:\xampp\phpMyAdmin\config.inc.php -Raw)) -replace \"password'] = ''\", \"password'] = 'root'\" | Set-Content -Path \"C:\xampp\phpMyAdmin\config.inc.php\""
 
-call C:\xampp\mysql\bin\mysqladmin.exe -uroot password root
+call
 call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
-call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_forum.sql
-echo:
-goto edition
-:<------------End Install Everything------------>
-
-
-:<------------Begin Edition------------>
-:edition
-echo:
-echo:
-echo Which edition of Open RSC would you like?
-echo:
-echo Choices:
-echo  %RED%1%NC% - Single player mode (only the bare minimum needed to play)
-echo  %RED%2%NC% - Developer mode (everything is included)
-echo:
-SET /P edition=Please enter a number choice from above:
-echo:
-
-if /i "%edition%"=="1" goto simple
-if /i "%edition%"=="2" goto developer
-
-echo Error! %edition% is not a valid option. Press enter to try again.
-echo:
-SET /P edition=""
-goto edition
-:<------------End Edition------------>
-
-
-:<------------Begin Simple------------>
-:simple
 echo:
 echo:
 echo Compiling the game client and server.
@@ -128,101 +93,6 @@ goto start
 :<------------End Simple------------>
 
 
-:<------------Start Developer------------>
-:developer
-echo:
-echo:
-echo Would you like to install Git Kraken? It simplifies git!
-echo:
-echo Choices:
-echo   %RED%1%NC% - Yes
-echo   %RED%2%NC% - I'm all set, lets continue!
-echo:
-SET /P gitkraken=Please enter a number choice from above:
-echo:
-if /i "%gitkraken%"=="1" goto installgitkraken
-if /i "%gitkraken%"=="2" goto askide
-
-echo Error! %gitkraken% is not a valid option. Press enter to try again.
-echo:
-SET /P gitkraken=""
-goto developer
-
-
-:installgitkraken
-echo:
-echo:
-echo Installing Git Kraken.
-echo:
-choco install -y gitkraken
-echo:
-goto askide
-
-
-:askide
-echo:
-echo:
-echo Would you like a programming IDE installed for editing code?
-echo:
-echo Choices:
-echo   %RED%1%NC% - Install NetBeans (recommended)
-echo   %RED%2%NC% - Install IntelliJ IDEA Community Edition
-echo   %RED%3%NC% - Install Eclipse
-echo   %RED%4%NC% - I'm all set, continue!
-echo:
-SET /P git=Please enter a number choice from above:
-echo:
-if /i "%git%"=="1" goto installnetbeans
-if /i "%git%"=="2" goto installintellij
-if /i "%git%"=="3" goto installeclipse
-if /i "%git%"=="4" goto developerstart
-
-echo Error! %git% is not a valid option. Press enter to try again.
-echo:
-SET /P git=""
-goto askide
-
-
-:installnetbeans
-echo:
-choco install -y netbeans
-echo:
-goto askide
-
-
-:installintellij
-echo:
-choco install -y intellijidea-community
-echo:
-goto askide
-
-
-:installeclipse
-echo:
-choco install -y eclipse
-echo:
-goto askide
-
-
-:developerstart
-echo:
-echo:
-echo Downloading a copy of the Website repository
-echo:
-make flush-website-avatars-windows
-make flush-website-windows
-make clone-website-windows
-echo:
-make fix-forum-permissions-windows
-echo:
-echo Compiling the game client and server.
-echo:
-make compile-windows-developer
-echo:
-goto start
-:<------------End Developer------------>
-
-
 :<------------Begin Update------------>
 :update
 echo:
@@ -230,12 +100,11 @@ echo:
 echo Checking for updates
 echo:
 git pull
-make pull-website-windows:
 echo:
 echo:
 echo Compiling the game client and server.
 echo:
-make compile-windows-developer
+make compile-windows-simple
 echo:
 goto start
 :<------------End Update------------>
@@ -253,16 +122,6 @@ goto start
 :<------------End Run------------>
 
 
-:<------------Start Manage------------>
-:manage
-echo:
-echo:
-echo Manage Players
-echo:
-goto start
-:<------------End Manage------------>
-
-
 :<------------Start Reset------------>
 :reset
 echo:
@@ -270,6 +129,6 @@ echo:
 echo Performing a hard reset.
 echo:
 make hard-reset-game-windows
-make hard-reset-website-windows
+call C:\xampp\mysql\bin\mysql -uroot -proot < Databases/openrsc_game.sql
 goto start
 :<------------End Reset------------>
