@@ -48,8 +48,8 @@ echo Choices:
 echo   %RED%1%NC% - Install
 echo   %RED%2%NC% - Fetch code updates
 echo   %RED%3%NC% - Run
-echo   %RED%5%NC% - Reset everything
-echo   %RED%7%NC% - Exit
+echo   %RED%4%NC% - Reset everything
+echo   %RED%5%NC% - Exit
 echo:
 SET /P action=Please enter a number choice from above:
 echo:
@@ -57,8 +57,8 @@ echo:
 if /i "%action%"=="1" goto install
 if /i "%action%"=="2" goto update
 if /i "%action%"=="3" goto run
-if /i "%action%"=="5" goto reset
-if /i "%action%"=="7" exit
+if /i "%action%"=="4" goto reset
+if /i "%action%"=="5" exit
 
 echo Error! %action% is not a valid option. Press enter to try again.
 echo:
