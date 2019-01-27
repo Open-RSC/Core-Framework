@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
