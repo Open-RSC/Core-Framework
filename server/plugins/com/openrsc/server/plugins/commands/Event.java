@@ -64,6 +64,7 @@ public final class Event implements CommandListener {
 			int x = -1;
 			int y = -1;
 			Point originalLocation;
+			Point teleportTo;
 
 			if(args.length == 1) {
 				p = player;
@@ -127,18 +128,17 @@ public final class Event implements CommandListener {
 			originalLocation = p.getLocation();
 
 			if (isTown) {
-				boolean townFound = false;
+				int townIndex = -1;
 				for (int i = 0; i < towns.length; i++) {
 					if (town.equalsIgnoreCase(towns[i])) {
-						GameLogging.addQuery(new StaffLog(player, 17, player.getUsername() + " has teleported " + p.getUsername() + " to: " + town + " " + townLocations[i].toString()));
-						p.teleport(townLocations[i].getX(), townLocations[i].getY(), true);
-						townFound = true;
+						townIndex = i;
 						break;
 					}
 				}
 
-				if(!townFound) {
-					// Failed to find a town, look for a player instead...
+				// townFound will == -1 when not found
+				if(townIndex == -1) {
+					// townIndex to find a town, look for a player instead...
 					Player tpTo = world.getPlayer(DataConversions.usernameToHash(town));
 
 					if (tpTo == null) {
@@ -146,7 +146,9 @@ public final class Event implements CommandListener {
 						return;
 					}
 
-					p.teleport(tpTo.getX(), tpTo.getY(), true);
+					teleportTo = tpTo.getLocation();
+				} else {
+					teleportTo = townLocations[townIndex];
 				}
 			}
 			else {
@@ -155,10 +157,11 @@ public final class Event implements CommandListener {
 					return;
 				}
 
-				p.teleport(x, y, true);
+				teleportTo = new Point(x,y);
 			}
 
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
+			p.teleport(teleportTo.getX(), teleportTo.getY(), true);
 			player.message(messagePrefix + "You have teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			p.message(messagePrefix + "You have been teleported to " + p.getLocation() + " from " + originalLocation);
 		}
