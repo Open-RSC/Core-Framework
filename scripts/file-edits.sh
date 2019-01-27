@@ -13,16 +13,11 @@ NC=`tput sgr0` # No Color
     export launchername=$(whiptail --inputbox "Please enter your launcher's filename. It must not contain spaces. (No .jar needed)" 8 50 OpenRSC --title "Open RSC Configuration" 3>&1 1>&2 2>&3)
 
     # Server configuration edits
-    sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/free.conf
-    sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/members.conf
-    sudo sed -i 's/mysql_pass">root/mysql_pass">'${pass}'/g' server/free.conf
-    sudo sed -i 's/mysql_pass">root/mysql_pass">'${pass}'/g' server/members.conf
-    sudo sed -i 's/game_tick">620/game_tick">'${tick}'/g' server/free.conf
-    sudo sed -i 's/game_tick">620/game_tick">'${tick}'/g' server/members.conf
-    sudo sed -i 's/43594/'${port}'/g' server/free.conf
-    sudo sed -i 's/43594/'${port}'/g' server/members.conf
-    sudo sed -i 's/Open RSC/'"${gamename}"'/g' server/free.conf
-    sudo sed -i 's/Open RSC/'"${gamename}"'/g' server/members.conf
+    sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/default.conf
+    sudo sed -i 's/mysql_pass">root/mysql_pass">'${pass}'/g' server/default.conf
+    sudo sed -i 's/game_tick">620/game_tick">'${tick}'/g' server/default.conf
+    sudo sed -i 's/43594/'${port}'/g' server/default.conf
+    sudo sed -i 's/Open RSC/'"${gamename}"'/g' server/default.conf
 
     #Client configuration edits
     sudo sed -i 's/Open RSC/'"${gamename}"'/g' client/src/orsc/Config.java
@@ -60,7 +55,7 @@ NC=`tput sgr0` # No Color
 
     if [ "$installmode" == "1" ]; then
         # Database configuration
-        sudo chmod 644 etc/mariadb/innodb.cnf
+        sudo chmod 644 /etc/mariadb/innodb.cnf
 
         export dbuser=root
         sudo docker exec -i mysql mysql -uroot -proot -Bse "CREATE USER 'openrsc'@'%' IDENTIFIED BY '$pass'; GRANT ALL PRIVILEGES ON * . * TO 'openrsc'@'%'; FLUSH PRIVILEGES;"
@@ -75,13 +70,9 @@ NC=`tput sgr0` # No Color
         sudo make stop && sudo make start
 
         # Website
-        sudo sed -i 's/dbuser = '\'root\''/dbuser = '\'openrsc\''/g' Website/elite/board/config.php
-        sudo sed -i 's/dbpasswd = '\'root\''/dbpasswd = '\'${pass}\''/g' Website/elite/board/config.php
-        sudo sed -i 's/game.openrsc.com/'${subdomain}'/g' Website/elite/index.php
-        sudo sed -i 's/43594/'${port}'/g"' Website/elite/index.php
-
+        # TODO: in progress
+        
         sudo chmod 644 Website/sql/config.inc.php
-      	sudo chmod 644 Website/elite/board/config.php
         sudo make certbot-docker
 
       elif [ "$installmode" == "2" ]; then
@@ -91,10 +82,7 @@ NC=`tput sgr0` # No Color
             sudo mysql -uopenrsc -p${pass} -Bse "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1'); FLUSH PRIVILEGES;"
 
             # Website
-            sudo sed -i 's/dbuser = '\'root\''/dbuser = '\'openrsc\''/g' /var/www/html/elite/board/config.php
-            sudo sed -i 's/dbpasswd = '\'root\''/dbpasswd = '\'${pass}\''/g' /var/www/html/elite/board/config.php
-            sudo sed -i 's/game.opeenrsc.com/'${subdomain}'/g' /var/www/html/elite/index.php
-            sudo sed -i 's/43594/'${port}'/g' /var/www/html/elite/index.php
+            # TODO: in progress
 
             sudo make certbot-native
 
