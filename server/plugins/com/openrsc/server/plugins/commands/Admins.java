@@ -1868,5 +1868,44 @@ public final class Admins implements CommandListener {
 
 			player.message(messagePrefix + Server.getPlayerDataProcessor().getDatabase().banPlayer(usernameToBan, time));
 		}
+		else if(cmd.equalsIgnoreCase("setcurstat")) {
+			if (args.length < 3) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player_name] [statID] [level]");
+				return;
+			}
+
+			boolean playerFound = false;
+			for(Player p : World.getWorld().getPlayers()) {
+				if(DataConversions.usernameToHash(args[0]) == DataConversions.usernameToHash(p.getUsername())) {
+					playerFound = true;
+					continue;
+				}
+			}
+
+			if(!playerFound) {
+				player.message("Unable to locate player: " + args[0]);
+				return;
+			}
+
+			if(Integer.parseInt(args[1])< 0 || Integer.parseInt(args[1]) > 17) {
+				player.message("Invalid skill ID. Skill IDs are 0-17 (18 skills)");
+				return;
+			}
+
+			Player p = World.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			int skillID = Integer.parseInt(args[1]);
+			int newCurrentLevel = Integer.parseInt(args[2]);
+
+			player.message("=== ::setcurstat args ===");
+			player.message("Username: " + p.getUsername().toString());
+			player.message("Skill: " + Skills.SKILL_NAME[skillID]);
+			player.message("Set to current level: " + newCurrentLevel);
+
+			p.getSkills().setLevel(skillID, newCurrentLevel);
+
+			if(DataConversions.usernameToHash(player.getUsername()) != DataConversions.usernameToHash(p.getUsername())) {
+				p.message(player.getUsername() + " set you effective " + Skills.SKILL_NAME[skillID] + " level to " + newCurrentLevel);
+			}
+		}
 	}
 }
