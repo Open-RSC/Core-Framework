@@ -20,35 +20,15 @@ The first priority of our development is ensuring the authentic content found in
 ## How to Install<a name="install"></a>
 <b>Windows Single Player:</b>
 
-1. <a href="https://github.com/Open-RSC/Game/releases">Download the latest release "Source code (zip)"</a>
+<a href="https://github.com/Open-RSC/Single-Player">Check out the dedicated single player verison of Open RSC for Windows!</a>
 
-2. Unzip the downloaded file and open the folder it created.
-
-3. Double click on "Go-Windows.cmd"
-
-4. Press "1" for "Install" and press enter.
-
-5. When install completes and you are back on the main menu, press "2" for "Run" and press enter.
-
-
-<b>Windows Developers:</b>
+<b>Developers on Windows / Linux / Mac:</b>
 
 1. Fork the repository and clone your fork of it locally with git.
 
 2. Please download IntelliJ IDEA Community IDE and Git Kraken to work on the project files.
 
-3. The "Go-Windows.cmd" script will get the basics installed for you, so follow the <b>Windows Single Player</b> guide above. 
-
-
-<b>Linux / Mac:</b>
-
-Paste the following in Terminal to begin the install process to get started:
-
-```
-bash <(curl -s https://raw.githubusercontent.com/Open-RSC/Game/2.0.0/scripts/clone.sh)
-```
-
-It is strongly suggested that you download IntelliJ IDEA Community IDE and Git Kraken for the project files. While this game is hosted on an Ubuntu VPS, you must learn the ins and outs before you will be ready to host a public facing server. 
+It is strongly suggested that you download IntelliJ IDEA Community IDE and Git Kraken for the project files. While the live game server is hosted on an Ubuntu VPS, you should learn the ins and outs of how things work before you host a public server. 
 
 
 [Return to top](#top)
