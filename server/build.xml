@@ -3,12 +3,14 @@
     <property name="build" location="build"/>
     <property name="lib" location="lib"/>
     <property name="jar" location="core.jar"/>
+    <property name="javac.source" value="1.8"/>
+    <property name="javac.target" value="1.8"/>
 
     <target name="compile_plugins">
         <delete file="plugins.jar"/>
         <delete dir="buildplugins"/>
         <mkdir dir="buildplugins"/>
-        <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false">
+        <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false" target="${javac.target}" source="${javac.source}">
             <classpath>
                 <pathelement location="core.jar"/>
                 <pathelement path="${java.class.path}/"/>
@@ -27,7 +29,7 @@
         <delete file="${jar}"/>
         <delete dir="${build}"/>
         <mkdir dir="${build}"/>
-        <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false">
+        <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}" source="${javac.source}">
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
