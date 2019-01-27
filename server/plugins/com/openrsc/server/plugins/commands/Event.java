@@ -49,10 +49,10 @@ public final class Event implements CommandListener {
 	 */
 	@Override
 	public void handleCommand(String cmd, String[] args, Player player) {
-		if (cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp") || cmd.equalsIgnoreCase("town")) {
+		if (cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp") || cmd.equalsIgnoreCase("town") || cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) {
 			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [town] OR ");
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [town] OR ");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [town/player] OR ");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [town/player] OR ");
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [x] [y] OR");
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [x] [y]");
 				return;
@@ -127,12 +127,26 @@ public final class Event implements CommandListener {
 			originalLocation = p.getLocation();
 
 			if (isTown) {
+				boolean townFound = false;
 				for (int i = 0; i < towns.length; i++) {
 					if (town.equalsIgnoreCase(towns[i])) {
 						GameLogging.addQuery(new StaffLog(player, 17, player.getUsername() + " has teleported " + p.getUsername() + " to: " + town + " " + townLocations[i].toString()));
 						p.teleport(townLocations[i].getX(), townLocations[i].getY(), true);
+						townFound = true;
 						break;
 					}
+				}
+
+				if(!townFound) {
+					// Failed to find a town, look for a player instead...
+					Player tpTo = world.getPlayer(DataConversions.usernameToHash(town));
+
+					if (tpTo == null) {
+						player.message(messagePrefix + "Invalid target");
+						return;
+					}
+
+					p.teleport(tpTo.getX(), tpTo.getY(), true);
 				}
 			}
 			else {
@@ -147,25 +161,6 @@ public final class Event implements CommandListener {
 			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
 			player.message(messagePrefix + "You have teleported " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			p.message(messagePrefix + "You have been teleported to " + p.getLocation() + " from " + originalLocation);
-		}
-		else if (cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) {
-			if (args.length != 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
-				return;
-			}
-
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
-
-			if(p != null) {
-				Point originalLocation = player.getLocation();
-				player.setSummonReturnPoint();
-				player.teleport(p.getX(), p.getY(), true);
-				GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported " + player.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
-				player.message(messagePrefix + "You have teleported to " + p.getUsername() + " " + p.getLocation() + " from " + originalLocation);
-			}
-			else {
-				player.message(messagePrefix + "Invalid name or player is not online");
-			}
 		}
 		else if (cmd.equalsIgnoreCase("blink")) {
 			player.setAttribute("blink", !player.getAttribute("blink", false));
