@@ -166,64 +166,6 @@ public final class SuperModerator implements CommandListener {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr, player.getIcon());
 			}
 		}
-		else if (cmd.equalsIgnoreCase("summon")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
-				return;
-			}
-
-			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
-
-			if(p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-
-			if(p.wasSummoned()) {
-				player.message(messagePrefix + "You can not summon a player who has already been summoned.");
-				return;
-			}
-
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not summon a staff member of equal or greater rank.");
-				return;
-			}
-
-			if(player.getLocation().inWilderness() && !player.isSuperMod()) {
-				player.message(messagePrefix + "You can not summon players into the wilderness.");
-				return;
-			}
-
-			Point originalLocation = p.summon(player);
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
-			player.message(messagePrefix + "You have summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
-		}
-		else if (cmd.equals("return")) {
-			Player p = args.length > 0 ?
-				world.getPlayer(DataConversions.usernameToHash(args[0])) :
-				player;
-
-			if(p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not return a staff member of equal or greater rank.");
-				return;
-			}
-
-			if(!p.wasSummoned()) {
-				player.message(messagePrefix + p.getUsername() + " has not been summoned.");
-				return;
-			}
-
-			Point originalLocation = p.returnFromSummon();
-			GameLogging.addQuery(new StaffLog(player, 15, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
-			player.message(messagePrefix + "You have returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			p.message(messagePrefix + "You have been returned by " + player.getStaffName());
-		}
 		else if (cmd.equalsIgnoreCase("jail")) {
 			if (args.length != 1)
 			{
