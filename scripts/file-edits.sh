@@ -15,7 +15,7 @@ NC=`tput sgr0` # No Color
     # Server configuration edits
     sudo sed -i 's/mysql_user">root/mysql_user">openrsc/g' server/default.conf
     sudo sed -i 's/mysql_pass">root/mysql_pass">'${pass}'/g' server/default.conf
-    sudo sed -i 's/game_tick">620/game_tick">'${tick}'/g' server/default.conf
+    sudo sed -i 's/game_tick">600/game_tick">'${tick}'/g' server/default.conf
     sudo sed -i 's/43594/'${port}'/g' server/default.conf
     sudo sed -i 's/Open RSC/'"${gamename}"'/g' server/default.conf
 
