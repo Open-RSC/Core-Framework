@@ -5,7 +5,7 @@ import static com.openrsc.server.plugins.Functions.message;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
-import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
@@ -22,8 +22,12 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.transform;
 
+import java.util.HashMap;
+
 public class LegendsQuestHolyWater implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
+	private static final HashMap<Player, RestartableDelayedEvent> playerEventMap = new HashMap<Player, RestartableDelayedEvent>();
+	
 	public boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
 		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
 	}
@@ -79,19 +83,43 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 					public void doSpell() {
 					}
 				});
+				
+				RestartableDelayedEvent playerEvent = playerEventMap.get(player);
+				//rethrowing holy water resets the timer
+				if (playerEvent == null) {
+					playerEvent = new RestartableDelayedEvent(player, 1000) {
+						int timesRan = 0;
+
+						@Override
+						public void run() {
+							// 5 min of holy water effect tops
+							if (timesRan > 300) {
+								if (player.getCache().hasKey("holy_water_neiz")) {
+									player.getCache().remove("holy_water_neiz");
+								}
+								stop();
+								playerEventMap.remove(player);
+							}
+							timesRan++;
+						}
+
+						@Override
+						public void reset() {
+							timesRan = 0;
+						}
+					};
+					playerEventMap.put(player, playerEvent);
+					if (!player.getCache().hasKey("holy_water_neiz")) {
+						player.getCache().store("holy_water_neiz", true);
+					}
+					Server.getServer().getEventHandler().add(playerEvent);
+				} else {
+					playerEvent.reset();
+				}
 				ungadulu = transform(ungadulu, LegendsQuestUngadulu.EVIL_UNGADULU, true);
 				npcTalk(player, ungadulu, "Vile serpent...you will pay for that...");
 				ungadulu = transform(ungadulu, LegendsQuestUngadulu.UNGADULU, true);
 				npcTalk(player, ungadulu, "What...what happened...why am I all wet?");
-				
-				// 5 min of holy water effect tops
-				if (player.getCache().hasKey("holy_water_neiz")) {
-					Server.getServer().getEventHandler().add(new SingleEvent(player, 300000) {
-						public void action() {
-							player.getCache().remove("holy_water_neiz");
-						}
-					});
-				}
 			}
 		}
 	}
