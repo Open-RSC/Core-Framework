@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Kills all java processes - needed for server auto restart process.
-killall java
+sudo killall java
 
 echo ""
 echo "Launching the game server in a new screen."
