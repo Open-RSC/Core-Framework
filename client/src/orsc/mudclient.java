@@ -10,57 +10,11 @@ import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.AuctionHouse;
-import com.openrsc.interfaces.misc.BankPinInterface;
-import com.openrsc.interfaces.misc.CustomBankInterface;
-import com.openrsc.interfaces.misc.DoSkillInterface;
-import com.openrsc.interfaces.misc.ExperienceConfigInterface;
-import com.openrsc.interfaces.misc.FishingTrawlerInterface;
-import com.openrsc.interfaces.misc.IronManInterface;
-import com.openrsc.interfaces.misc.LostOnDeathInterface;
-import com.openrsc.interfaces.misc.OnlineListInterface;
-import com.openrsc.interfaces.misc.ProgressBarInterface;
-import com.openrsc.interfaces.misc.QuestGuideInterface;
-import com.openrsc.interfaces.misc.SkillGuideInterface;
-import com.openrsc.interfaces.misc.TerritorySignupInterface;
+import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.GameMode;
-import orsc.enumerations.InputXAction;
-import orsc.enumerations.MenuItemAction;
-import orsc.enumerations.MessageTab;
-import orsc.enumerations.MessageType;
-import orsc.enumerations.ORSCharacterDirection;
-import orsc.enumerations.SocialPopupMode;
-import orsc.graphics.gui.InputXPrompt;
-import orsc.graphics.gui.KillAnnouncer;
-import orsc.graphics.gui.KillAnnouncerQueue;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.MessageHistory;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.gui.SocialLists;
+import orsc.enumerations.*;
+import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -72,6 +26,15 @@ import orsc.net.Network_Socket;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class mudclient implements Runnable {
 
@@ -286,7 +249,7 @@ public final class mudclient implements Runnable {
 	private int cameraPitch = 912;
 	private int cameraRotationX = 0;
 	private int cameraRotationZ = 0;
-	private int cameraZoom = 550;
+	private int cameraZoom = 750;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
@@ -339,7 +302,7 @@ public final class mudclient implements Runnable {
 	private boolean errorLoadingMemory = false;
 	private int[] experienceArray = new int[Config.S_PLAYER_LEVEL_LIMIT];
 	private int fatigueSleeping = 0;
-	private boolean fogOfWar = false;
+	private boolean doCameraZoom = false;
 	private int gameHeight = 334;
 	private int gameObjectInstanceCount = 0;
 	private int[] gameObjectInstanceZ = new int[5000];
@@ -589,6 +552,8 @@ public final class mudclient implements Runnable {
 	private long time;
 	private long m_timer;
 	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
+
+	public int amountToZoom = 0;
 
 	public mudclient(ORSCApplet handler) {
 		this.clientPort = handler;
@@ -1150,10 +1115,14 @@ public final class mudclient implements Runnable {
 				if (modMenu) {
 					this.menuCommon.addItem_With2Strings("Summon", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_SUMMON_PLAYER, player.accountName);
+					this.menuCommon.addItem_With2Strings("Return", "@whi@" + name, player.displayName,
+						MenuItemAction.MOD_RETURN_PLAYER, player.accountName);
 					this.menuCommon.addItem_With2Strings("Goto", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_GOTO_PLAYER, player.accountName);
 					this.menuCommon.addItem_With2Strings("Jail", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_PUT_PLAYER_JAIL, player.accountName);
+					this.menuCommon.addItem_With2Strings("Release", "@whi@" + name, player.displayName,
+						MenuItemAction.MOD_RELEASE_PLAYER_JAIL, player.accountName);
 					this.menuCommon.addItem_With2Strings("Check", "@whi@" + name, player.displayName,
 						MenuItemAction.MOD_CHECK_PLAYER, player.accountName);
 					this.menuCommon.addItem_With2Strings("Kick", "@whi@" + name, player.displayName,
@@ -3713,7 +3682,10 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
-						this.fogOfWar = false;
+						if(!this.doCameraZoom) {
+							amountToZoom -= 200;
+							this.doCameraZoom = true;
+						}
 						if (this.lastHeightOffset == 0
 							&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
 							/ 128] & 0x80) == 0
@@ -3727,7 +3699,10 @@ public final class mudclient implements Runnable {
 								this.scene.addModel(this.world.modelRoofGrid[2][centerX]);
 							}
 
-							this.fogOfWar = false;
+							if(this.doCameraZoom) {
+								amountToZoom += 200;
+								this.doCameraZoom = false;
+							}
 						}
 					}
 
@@ -3914,7 +3889,7 @@ public final class mudclient implements Runnable {
 					this.characterHealthCount = 0;
 					this.characterDialogCount = 0;
 					if (this.cameraAutoAngleDebug) {
-						if (this.optionCameraModeAuto && !this.fogOfWar) {
+						if (this.optionCameraModeAuto && !this.doCameraZoom) {
 							centerX = this.cameraAngle;
 							this.autoRotateCamera((byte) 22);
 							if (centerX != this.cameraAngle) {
@@ -3924,52 +3899,43 @@ public final class mudclient implements Runnable {
 						}
 
 						this.cameraRotation = this.cameraAngle * 32;
-						if (fogOfWar) {
-							this.scene.fogLandscapeDistance = 3000;
-							this.scene.fogEntityDistance = 3000;
-							this.scene.fogZFalloff = 1;
-							this.scene.fogSmoothingStartDistance = 2800;
-						} else {
-							this.scene.fogZFalloff = 1;
-							this.scene.fogLandscapeDistance = 10000;
-							this.scene.fogEntityDistance = 10000;
-							this.scene.fogSmoothingStartDistance = 10000;
+						this.scene.fogLandscapeDistance = 3000;
+						this.scene.fogEntityDistance = 3000;
+						this.scene.fogZFalloff = 1;
+						this.scene.fogSmoothingStartDistance = 2800;
 
-						}
 						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 						centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
 							this.cameraRotation * 4, (int) 0, 2000);
 					} else {
-						if (this.optionCameraModeAuto && !this.fogOfWar) {
+						if (this.optionCameraModeAuto && !this.doCameraZoom) {
 							this.autoRotateCamera((byte) 94);
 						}
 						if (Config.C_SHOW_FOG) {
 							if (!this.interlace) {
 								this.scene.fogZFalloff = 1;
-								this.scene.fogLandscapeDistance = 2400;
-								this.scene.fogEntityDistance = 2400;
-								this.scene.fogSmoothingStartDistance = 2300;
+								this.scene.fogLandscapeDistance = gameWidth * 2 + cameraZoom * 2 - 124;
+								this.scene.fogEntityDistance = gameWidth * 2 + cameraZoom * 2 - 124;
+								this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 224;
 							} else {
 								this.scene.fogZFalloff = 1;
-								this.scene.fogLandscapeDistance = 2200;
-								this.scene.fogEntityDistance = 2200;
-								this.scene.fogSmoothingStartDistance = 2100;
+								this.scene.fogLandscapeDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+								this.scene.fogEntityDistance =  gameWidth * 2 + cameraZoom * 2 - 324;
+								this.scene.fogSmoothingStartDistance = gameWidth * 2 + cameraZoom * 2 - 424;
 							}
 						} else {
 							this.scene.fogZFalloff = 1;
-							this.scene.fogLandscapeDistance = 10000;
-							this.scene.fogEntityDistance = 10000;
-							this.scene.fogSmoothingStartDistance = 10000;
+							this.scene.fogLandscapeDistance = cameraZoom * 6;
+							this.scene.fogEntityDistance = cameraZoom * 6;
+							this.scene.fogSmoothingStartDistance = cameraZoom * 6;
 						}
 
 						centerX = this.cameraAutoRotatePlayerX + this.cameraRotationX;
 						centerZ = this.cameraAutoRotatePlayerZ + this.cameraRotationZ;
-						float zoomMultiplier = 0;
-						if (Config.S_ZOOM_VIEW_TOGGLE)
-							zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
+
 						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-							this.cameraRotation * 4, (int) 0, (int) (this.cameraZoom + zoomMultiplier) * 2);
+							this.cameraRotation * 4, (int) 0, (int) this.cameraZoom * 2);
 					}
 
 					this.scene.endScene(-113);
@@ -4093,6 +4059,8 @@ public final class mudclient implements Runnable {
 						i += 14;
 						this.getSurface().drawString(
 							"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
+						i +=14;
+						this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
 					}
 
 					if (Config.S_EXPERIENCE_COUNTER_TOGGLE && Config.C_EXPERIENCE_COUNTER == 2) {
@@ -7222,12 +7190,6 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		// Zoom View
-		if (Config.S_ZOOM_VIEW_TOGGLE) {
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Zoom View - " + (Config.C_ZOOM == 0 ? "@yel@Normal" : Config.C_ZOOM == 1 ? "@ora@Far" : Config.C_ZOOM == 2 ? "@red@Super" : "@gre@Near"), 5, (String) null, (String) null);
-		}
-
 		// Fog
 		if (Config.S_FOG_TOGGLE) {
 			if (!Config.C_SHOW_FOG) {
@@ -7433,15 +7395,6 @@ public final class mudclient implements Runnable {
 		// Experience Drops
 		if (settingIndex == 4 && this.mouseButtonClick == 1 && Config.S_EXPERIENCE_DROPS_TOGGLE) {
 			Config.C_EXPERIENCE_DROPS = !Config.C_EXPERIENCE_DROPS;
-			Config.saveConfiguration(false);
-		}
-
-		// Zoom View
-		if (settingIndex == 5 && this.mouseButtonClick == 1 && Config.S_ZOOM_VIEW_TOGGLE) {
-			this.cameraZoom = 750;
-			Config.C_ZOOM++;
-			if (Config.C_ZOOM == 4)
-				Config.C_ZOOM = 0;
 			Config.saveConfiguration(false);
 		}
 
@@ -8959,7 +8912,7 @@ public final class mudclient implements Runnable {
 							if (this.keyLeft) {
 								this.keyLeft = false;
 								this.cameraAngle = this.cameraAngle + 1 & 7;
-								if (!this.fogOfWar) {
+								if (!this.doCameraZoom) {
 									if ((1 & this.cameraAngle) == 0) {
 										this.cameraAngle = 7 & 1 + this.cameraAngle;
 									}
@@ -8973,7 +8926,7 @@ public final class mudclient implements Runnable {
 							if (this.keyRight) {
 								this.keyRight = false;
 								this.cameraAngle = 7 + this.cameraAngle & 7;
-								if (!this.fogOfWar) {
+								if (!this.doCameraZoom) {
 									if ((1 & this.cameraAngle) == 0) {
 										this.cameraAngle = this.cameraAngle + 7 & 7;
 									}
@@ -8988,10 +8941,34 @@ public final class mudclient implements Runnable {
 						this.cameraRotation = 255 & this.cameraRotation + 2;
 					} else if (this.keyRight) {
 						this.cameraRotation = 255 & this.cameraRotation - 2;
-					} else if (this.keyDown && this.cameraAllowPitchModification) {
-						this.cameraPitch = (this.cameraPitch + 4) & 1023;
-					} else if (this.keyUp && this.cameraAllowPitchModification) {
-						this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+					} else if (this.keyDown) {
+						if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+							final int maxHeight = 1000 - (doCameraZoom ? 200 : 0);
+							if (cameraZoom < maxHeight) {
+								if (cameraZoom + 4 > maxHeight)
+									cameraZoom = maxHeight;
+								else
+									cameraZoom += 4;
+							}
+						} else {
+							if(this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 4) & 1023;
+							}
+						}
+					} else if (this.keyUp) {
+						if(Config.S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
+							final int minHeight = 500 - (doCameraZoom ? 200 : 0);
+							if (cameraZoom > minHeight) {
+								if (cameraZoom - 4 < minHeight)
+									cameraZoom = minHeight;
+								else
+									cameraZoom -= 4;
+							}
+						} else {
+							if(this.cameraAllowPitchModification) {
+								this.cameraPitch = (this.cameraPitch + 1024 - 4) & 1023;
+							}
+						}
 					} else if (this.pageDown) {
 						currentChat++;
 						if (currentChat >= messages.size()) {
@@ -9018,10 +8995,18 @@ public final class mudclient implements Runnable {
 						++this.mouseClickXStep;
 					}
 
-					if (this.fogOfWar && this.cameraZoom > 550) {
+					/*if (this.doCameraZoom && this.cameraZoom > 550) {
 						this.cameraZoom -= 4;
-					} else if (!this.fogOfWar && this.cameraZoom < 750) {
+					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
 						this.cameraZoom += 4;
+					}*/
+					if(amountToZoom > 0) {
+						cameraZoom += 4;
+						amountToZoom -= 4;
+					}
+					if(amountToZoom < 0) {
+						cameraZoom -= 4;
+						amountToZoom += 4;
 					}
 
 					this.scene.d(25013, 17);
@@ -9800,7 +9785,7 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case DEV_ADD_NPC: {
-					sendCommandString("cnpc " + devMenuNpcID + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("cnpc " + devMenuNpcID + " 1 " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
@@ -9814,12 +9799,12 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case DEV_REMOVE_OBJECT: {
-					sendCommandString("robject " + indexOrX + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("robject " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
 				case DEV_ROTATE_OBJECT: {
-					sendCommandString("rotateobject " + indexOrX + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("rotateobject " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
@@ -9827,6 +9812,18 @@ public final class mudclient implements Runnable {
 					String playerName = var9;
 					playerName = playerName.replaceAll(" ", "_");
 					sendCommandString("summon " + playerName);
+					break;
+				}
+				case MOD_RETURN_PLAYER: {
+					String playerName = var9;
+					playerName = playerName.replaceAll(" ", "_");
+					sendCommandString("return " + playerName);
+					break;
+				}
+				case MOD_RELEASE_PLAYER_JAIL: {
+					String playerName = var9;
+					playerName = playerName.replaceAll(" ", "_");
+					sendCommandString("release " + playerName);
 					break;
 				}
 				case MOD_GOTO_PLAYER: {
@@ -9838,7 +9835,7 @@ public final class mudclient implements Runnable {
 				case MOD_PUT_PLAYER_JAIL: {
 					String playerName = var9;
 					playerName = playerName.replaceAll(" ", "_");
-					sendCommandString("put " + playerName);
+					sendCommandString("jail " + playerName);
 					break;
 				}
 				case MOD_KICK_PLAYER: {
@@ -13496,13 +13493,6 @@ public final class mudclient implements Runnable {
 			panelMessageTabs.scrollMethodList(panelMessagePrivate, x);
 		else if (this.messageTabSelected == MessageTab.CLAN && !this.controlPressed)
 			panelMessageTabs.scrollMethodList(panelMessageClan, x);
-		else if (cameraZoom >= 550 && this.controlPressed) {
-			if (cameraZoom > 2200) {
-				cameraZoom = 2200;
-				return;
-			}
-			cameraZoom += 25 * x;
-		}
 	}
 
 	public boolean isShowDialogBank() {

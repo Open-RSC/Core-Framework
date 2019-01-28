@@ -21,21 +21,21 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	public static final int CERIL = 418;
-	public static final int BUTLER = 419;
-	public static final int LADY_HENRYETA = 422;
-	public static final int PHILIPE = 423;
-	public static final int CARNILLEAN_GUARD = 420;
-	public static final int CLIVET = 424;
-	public static final int CLAUS = 429;
-	public static final int CULT_MEMBER = 425;
-	public static final int ALOMONE = 427;
-	public static final int LORD_HAZEEL = 426;
+	private static final int CERIL = 418;
+	private static final int BUTLER = 419;
+	private static final int LADY_HENRYETA = 422;
+	private static final int PHILIPE = 423;
+	private static final int CARNILLEAN_GUARD = 420;
+	private static final int CLIVET = 424;
+	private static final int CLAUS = 429;
+	private static final int CULT_MEMBER = 425;
+	private static final int ALOMONE = 427;
+	private static final int LORD_HAZEEL = 426;
 
-	public static final int BUTLERS_CUPBOARD = 441;
-	public static final int BASEMENT_CRATE = 439;
-	public static final int TOP_LEVEL_BOOKCASE = 436;
-	public static final int CARNILLEAN_CHEST = 438;
+	private static final int BUTLERS_CUPBOARD = 441;
+	private static final int BASEMENT_CRATE = 439;
+	private static final int TOP_LEVEL_BOOKCASE = 436;
+	private static final int CARNILLEAN_CHEST = 438;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

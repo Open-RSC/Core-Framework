@@ -74,7 +74,7 @@ public final class GameStateUpdater {
 		if (curTime - player.getLastPing() >= 30000) {
 			player.unregister(false, "Ping time-out");
 		} else if (player.warnedToMove()) {
-			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isMod()) {
+			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isStaff()) {
 				player.unregister(false, "Movement time-out");
 			}
 		} else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {

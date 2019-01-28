@@ -11,9 +11,9 @@ import static com.openrsc.server.plugins.Functions.*;
 public class UndergroundPassDwarfs implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
 
-	public static int KAMEN = 657;
-	public static int NILOOF = 642;
-	public static int KLANK = 648;
+	private static int KAMEN = 657;
+	private static int NILOOF = 642;
+	private static int KLANK = 648;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -103,20 +103,21 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 						} else if (!hasItem(p, 1004)) {
 							playerTalk(p, n, "i found a strange doll and a book",
 									"but i've lost the doll");
-								npcTalk(p, n, "well it's a good job i found it");
-								addItem(p, 1004, 1);
-								npcTalk(p, n, "the witches rag doll, this here be black magic traveller",
+							npcTalk(p, n, "well it's a good job i found it");
+							addItem(p, 1004, 1);
+							npcTalk(p, n, "the witches rag doll, this here be black magic traveller",
 									"mixed with the right ingredients the doll can inflict serious harm",
 									"these four elements of being are guarded somewhere in this cave",
 									"his shadow, his flesh, his conscience and his blood",
 									"if you can retrieve these,combined with the doll...",
 									"you will be able destroy iban...",
 									"and ressurect the 'well of voyage'");
-								if (!hasItem(p, 1005)) {
-									npcTalk(p, n, "i found this old book",
-											"i'm not sure if it's of any use to you traveller");
-									addItem(p, 1005, 1);
-								}
+							if (!hasItem(p, 1005)) {
+								npcTalk(p, n, "i found this old book",
+										"i'm not sure if it's of any use to you traveller");
+								addItem(p, 1005, 1);
+							}
+							return;
 						}
 						playerTalk(p, n, "i found a strange book and this..");
 						p.message("you show niloof the strange doll");

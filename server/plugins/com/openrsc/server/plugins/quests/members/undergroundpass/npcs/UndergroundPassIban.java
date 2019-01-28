@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
+import com.openrsc.server.Constants;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -7,15 +8,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.Constants;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.atQuestStages;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
 
 public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
-	public static int PIT_OF_THE_DAMNED = 913;
-	public static int IBAN = 649;
-	public static int IBAN_DOLL = 1004;
+	private static int PIT_OF_THE_DAMNED = 913;
+	private static int IBAN = 649;
+	private static int IBAN_DOLL = 1004;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
@@ -68,7 +72,7 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 						addItem(p, 38, 150);
 						addItem(p, 31, 300);
 						p.teleport(687, 3485);
-						
+
 						/*player may teleport out after defeating iban
 						 * without talking to koftik (very likely and logic)*/
 						p.updateQuestStage(Constants.Quests.UNDERGROUND_PASS, 8);

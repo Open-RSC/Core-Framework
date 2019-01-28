@@ -1,13 +1,21 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -54,20 +62,20 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 				holyForceSpell(p, second_nezikchened);
 				message(p, second_nezikchened, 1300, "The Demon lets out an unearthly, blood curdling scream...");
 				message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
-				second_nezikchened.getSkills().setLevel(DEFENCE, second_nezikchened.getSkills().getLevel(DEFENCE) - 5);
-				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(PRAYER) / 2);
-				if (p.getSkills().getLevel(PRAYER) - newPray < 30) {
+				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
+				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
+				if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
 					message(p, 1300, "A sense of fear comes over you ",
 						"You feel a sense of loss...");
 				} else {
 					message(p, 1300, "An intense sense of fear comes over you ",
 						"You feel a great sense of loss...");
 				}
-				p.getSkills().setLevel(PRAYER, newPray);
+				p.getSkills().setLevel(Skills.PRAYER, newPray);
 			} else {
 				message(p, 1300, "A terrible fear comes over you. ",
 					"You feel a terrible sense of loss...");
-				p.getSkills().setLevel(PRAYER, 0);
+				p.getSkills().setLevel(Skills.PRAYER, 0);
 			}
 		}
 		if (useHolySpell) {
@@ -138,7 +146,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 								sleep(600);
 								second_nezikchened.startCombat(p);
 								p.message("You feel a terrible sense of loss...");
-								p.getSkills().setLevel(PRAYER, 0);
+								p.getSkills().setLevel(Skills.PRAYER, 0);
 							}
 						}
 						/**
@@ -418,16 +426,16 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 	}
 
 	class Echned {
-		public static final int WHAT_CAN_I_DO_ABOUT_THAT = 0;
-		public static final int WHY_ARE_YOU_TORTURED = 1;
-		public static final int I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU = 2;
-		public static final int I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER = 3;
-		public static final int ER_IVE_HAD_SECOND_THOUGHTS = 4;
-		public static final int I_HAVE_TO_BE_GOING = 5;
-		public static final int WHO_AM_I_SUPPOSED_TO_KILL_AGAIN = 6;
-		public static final int I_HAVE_SOMETHING_ELSE_IN_MIND = 7;
-		public static final int I_HAVE_NOT_SLAYED_VIYELDI_YET = 8;
-		public static final int I_DONT_HAVE_THE_DAGGER = 9;
+		static final int WHAT_CAN_I_DO_ABOUT_THAT = 0;
+		static final int WHY_ARE_YOU_TORTURED = 1;
+		static final int I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU = 2;
+		static final int I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER = 3;
+		static final int ER_IVE_HAD_SECOND_THOUGHTS = 4;
+		static final int I_HAVE_TO_BE_GOING = 5;
+		static final int WHO_AM_I_SUPPOSED_TO_KILL_AGAIN = 6;
+		static final int I_HAVE_SOMETHING_ELSE_IN_MIND = 7;
+		static final int I_HAVE_NOT_SLAYED_VIYELDI_YET = 8;
+		static final int I_DONT_HAVE_THE_DAGGER = 9;
 
 	}
 }

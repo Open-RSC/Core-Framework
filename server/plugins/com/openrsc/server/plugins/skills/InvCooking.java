@@ -99,10 +99,9 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		} else if (isValidCooking(item1, item2)) {
 			handleCombineCooking(player, item1, item2);
 		}
-		return;
 	}
 
-	public void handleCombineCooking(Player p, Item itemOne, Item itemTwo) {
+	private void handleCombineCooking(Player p, Item itemOne, Item itemTwo) {
 		CombineCooking combine = null;
 
 		// Pizza order matters!
@@ -152,7 +151,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		}
 	}
 
-	public boolean isValidCooking(Item itemOne, Item itemTwo) {
+	private boolean isValidCooking(Item itemOne, Item itemTwo) {
 		for (CombineCooking c : CombineCooking.values()) {
 			if (c.isValid(itemOne.getID(), itemTwo.getID())) {
 				return true;

@@ -12,11 +12,17 @@ import com.openrsc.server.plugins.npcs.shilo.JungleForester;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestGujuo;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getMultipleNpcsInArea;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecutiveListener {
 
-	public static final int BULL_ROARER = 1177;
+	private static final int BULL_ROARER = 1177;
 
 	private boolean inKharaziJungle(Player p) {
 		return p.getLocation().inBounds(338, 869, 477, 908);
@@ -24,10 +30,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == BULL_ROARER) {
-			return true;
-		}
-		return false;
+		return item.getID() == BULL_ROARER;
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 		}
 	}
 
-	void attractNatives(Player p) {
+	private void attractNatives(Player p) {
 		int controlRandom = DataConversions.getRandom().nextInt(4);
 		if (controlRandom == 0) {
 			message(p, 1300, "...but nothing else much seems to happen.");
@@ -79,7 +82,7 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 		}
 	}
 
-	void delayedRemoveGujuo(Player p, Npc n) {
+	private void delayedRemoveGujuo(Player p, Npc n) {
 		try {
 			Server.getServer().getEventHandler().add(new DelayedEvent(null, 60000 * 3) {
 				@Override

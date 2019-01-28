@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.minigames.blurberrysbar;
 
+import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,228 +13,112 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
 
-	public static final int BLURBERRY = 534;
+	private static final int BLURBERRY = 534;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == BLURBERRY) {
-			return true;
-		}
-		return false;
+		return n.getID() == BLURBERRY;
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		if (n.getID() == BLURBERRY) {
-			if (!p.getCache().hasKey("blurberrys_bar")) {
-				playerTalk(p, n, "hello");
-				npcTalk(p, n, "well hello there traveller",
-					"if your looking for a cocktail the barman will happily make you one");
-				playerTalk(p, n, "he looks pretty busy");
-				npcTalk(p, n, "I know,i just can't find any skilled staff",
-					"I don't suppose your looking for some part time work?",
-					"the pay isn't great but it's a good way to meet people");
-				int menu = showMenu(p, n,
-					"no thanks i prefer to stay this side of the bar",
-					"ok then i'll give it a go");
-				if (menu == 1) {
-					npcTalk(p, n, "excellent",
-						"it's not an easy job, i'll have to test you first",
-						"i'm sure you'll be great though",
-						"here, take this cocktail guide");
-					addItem(p, 851, 1);
-					p.message("blurberry gives you a cocktail guide");
-					npcTalk(p, n, "the book tells you how to make all the cocktails we serve",
-						"I'll tell you what i need and you can make them");
-					playerTalk(p, n, "sounds easy enough");
-					npcTalk(p, n, "take a look at the book and then come and talk to me");
-					p.getCache().set("blurberrys_bar", 1);
-				}
+	public void onTalkToNpc(Player player, Npc npc) {
+		if (npc.getID() == BLURBERRY) {
+			if (!player.getCache().hasKey("blurberrys_bar")) {
+				startBlurberrysBar(player, npc);
 			} else {
-				int stage = p.getCache().getInt("blurberrys_bar");
+				int stage = player.getCache().getInt("blurberrys_bar");
 				switch (stage) {
+
+					// Assigns Fruit Blast
 					case 1:
-						playerTalk(p, n, "hello blurberry");
-						npcTalk(p, n, "hi, are you ready to make your first cocktail?");
-						playerTalk(p, n, "absolutely");
-						npcTalk(p, n, "ok then, to start with make me a fruit blast",
-							"here, you'll need these ingredients",
-							"but I'm afraid i can't give you any more if you mess up");
-						message(p, "blurberry gives you two lemons,one orange, one pineapple");
-						addItem(p, 855, 2);
-						addItem(p, 857, 1);
-						addItem(p, 861, 1);
-						addItem(p, 834, 1);
-						addItem(p, 833, 1);
-						addItem(p, 13, 1);
-						p.message("a cocktail shaker, a glass and a knife");
-						npcTalk(p, n, "let me know when you're done");
-						p.getCache().set("blurberrys_bar", 2);
+						assignFruitBlast(player, npc);
 						break;
+
+					// Returns Fruit Blast, Assigns Drunk Dragon
 					case 2:
-						npcTalk(p, n, "so where's my fruit blast");
-						if (hasItem(p, 866)) {
-							playerTalk(p, n, "here you go");
-							message(p, "you give blurberry the fruit blast");
-							removeItem(p, 866, 1);
-							p.incExp(COOKING, 160, true);
-							p.message("he takes a sip");
-							npcTalk(p, n, "hmmm... not bad, not bad at all",
-								"now can you make me a drunk dragon",
-								"here's what you need");
-							p.message("blurberry gives you some vodka, some gin, some dwell berries...");
-							addItem(p, 869, 1);
-							addItem(p, 870, 1);
-							addItem(p, 765, 1);
-							addItem(p, 861, 1);
-							addItem(p, 871, 1);
-							addItem(p, 833, 1);
-							p.message("... some pineapple and some cream");
-							npcTalk(p, n, "i'm afraid i won't be able to give you anymore if you make a mistake though",
-								"let me know when it's done");
-							p.getCache().set("blurberrys_bar", 3);
+						npcTalk(player, npc, "so where's my fruit blast");
+						if (hasItem(player, ItemId.FRUIT_BLAST.id())) {
+							assignDrunkDragon(player, npc);
 						} else {
-							npcTalk(p, n, "i don't know what you have there but it's no fruit blast");
+							npcTalk(player, npc, "i don't know what you have there but it's no fruit blast");
 						}
 						break;
+
+					// Returns Drunk Dragon, Assigns SGG
 					case 3:
-						playerTalk(p, n, "hello blurberry");
-						npcTalk(p, n, "hello again traveller",
+						playerTalk(player, npc, "hello blurberry");
+						npcTalk(player, npc, "hello again traveller",
 							"how did you do?");
-						if (hasItem(p, 872)) {
-							playerTalk(p, n, "here you go");
-							message(p, "you give blurberry the drunk dragon");
-							removeItem(p, 872, 1);
-							p.incExp(COOKING, 160, true);
-							p.message("he takes a sip");
-							npcTalk(p, n, "woooo, that's some good stuff",
-								"i can sell that",
-								"there you go, your share of the profit");
-							addItem(p, 10, 1);
-							p.message("blurberry gives you 1 gold coin");
-							playerTalk(p, n, "thanks");
-							npcTalk(p, n, "okay then now i need an s g g");
-							playerTalk(p, n, "a what?");
-							npcTalk(p, n, "a short green guy, and don't bring me a gnome",
-								"here's all you need");
-							p.message("blurberry gives you four limes, some vodka and some equa leaves");
-							addItem(p, 863, 4);
-							addItem(p, 869, 1);
-							addItem(p, 765, 1);
-							addItem(p, 833, 1);
-							p.getCache().set("blurberrys_bar", 4);
+						if (hasItem(player, ItemId.DRUNK_DRAGON.id())) {
+							assignSGG(player, npc);
 						} else {
-							npcTalk(p, n, "i dont know what that is but it's no drunk dragon");
+							npcTalk(player, npc, "i dont know what that is but it's no drunk dragon");
 						}
 						break;
+
+					// Returns SGG, Assigns Chocolate Saturday
 					case 4:
-						playerTalk(p, n, "hi blurberry");
-						npcTalk(p, n, "so have you got my s g g?");
-						if (hasItem(p, 874)) {
-							playerTalk(p, n, "here you go");
-							message(p, "you give blurberry the short green guy");
-							removeItem(p, 874, 1);
-							p.incExp(COOKING, 160, true);
-							p.message("he takes a sip");
-							npcTalk(p, n, "hmmm, not bad, not bad at all",
-								"i can sell that",
-								"there you go, that's your share");
-							p.message("blurberry gives you 1 gold coin");
-							addItem(p, 10, 1);
-							npcTalk(p, n, "you doing quite well, i'm impressed",
-								"ok let's try a chocolate saturday, i love them",
-								"here's your ingredients");
-							p.message("blurberry gives you some whisky, some milk, some equa leaves...");
-							p.message("a chocolate bar, some cream and some chocolate dust");
-							addItem(p, 868, 1);
-							addItem(p, 22, 1);
-							addItem(p, 873, 1);
-							addItem(p, 337, 1);
-							addItem(p, 871, 1);
-							addItem(p, 772, 1);
-							addItem(p, 833, 1);
-							p.getCache().set("blurberrys_bar", 5);
+						playerTalk(player, npc, "hi blurberry");
+						npcTalk(player, npc, "so have you got my s g g?");
+						if (hasItem(player, ItemId.SGG.id())) {
+							assignChocolateSaturday(player, npc);
 						} else {
-							npcTalk(p, n, "i dont know what that is but it's no s g g");
+							npcTalk(player, npc, "i dont know what that is but it's no s g g");
 						}
 						break;
+
+					// Returns Chocolate Saturday, Assigns Blurberry Special
 					case 5:
-						playerTalk(p, n, "hello blurberry");
-						npcTalk(p, n, "hello, how did it go with the choc saturday");
-						if (hasItem(p, 875)) {
-							playerTalk(p, n, "here.. try some");
-							message(p, "you give blurberry the cocktail");
-							removeItem(p, 875, 1);
-							p.incExp(COOKING, 160, true);
-							p.message("he takes a sip");
-							npcTalk(p, n, "that's blurberry-tastic",
-								"you're quite a bartender",
-								"okay ,lets test you once more",
-								"try and make me a blurberry special",
-								"then we'll see if you have what it takes",
-								"here's your ingredients");
-							addItem(p, 869, 1);
-							addItem(p, 870, 1);
-							addItem(p, 876, 1);
-							addItem(p, 855, 3);
-							addItem(p, 857, 2);
-							addItem(p, 863, 1);
-							addItem(p, 873, 1);
-							addItem(p, 833, 1);
-							playerTalk(p, n, "ok i'll do best");
-							npcTalk(p, n, "I'm sure you'll make a great bar man");
-							p.getCache().set("blurberrys_bar", 6);
+						playerTalk(player, npc, "hello blurberry");
+						npcTalk(player, npc, "hello, how did it go with the choc saturday");
+						if (hasItem(player, ItemId.CHOCOLATE_SATURDAY.id())) {
+							assignBlurberrySpecial(player, npc);
 						} else {
-							playerTalk(p, n, "i haven't managed to make it yet");
-							npcTalk(p, n, "ok, it's one choc saturday i need",
+							playerTalk(player, npc, "i haven't managed to make it yet");
+							npcTalk(player, npc, "ok, it's one choc saturday i need",
 								"well let me know when you're done");
 						}
 						break;
+
+					// Returns Blurberry Special
 					case 6:
-						playerTalk(p, n, "hi again");
-						npcTalk(p, n, "so how did you do");
-						if (hasItem(p, 877)) {
-							playerTalk(p, n, "I think i've made it right");
-							message(p, "you give the blurberry special to blurberry");
-							removeItem(p, 877, 1);
-							p.message("he takes a sip");
-							npcTalk(p, n, "well i never, incredible",
-								"not many manage to get that right, but this is perfect",
-								"It would be an honour to have you on the team");
-							playerTalk(p, n, "thanks");
-							npcTalk(p, n, "now if you ever want to make some money",
-								"or want to improve your cooking skills just come and see me",
-								"I'll tell you what drinks we need, and if you can, you make them");
-							playerTalk(p, n, "what about ingredients?");
-							npcTalk(p, n, "I'm afraid i can't give you anymore for free",
-								"but you can buy them from heckel funch the grocer",
-								"I'll always pay you more for the cocktail than you paid for the ingredients",
-								"and it's a great way to learn how to prepare food and drink");
-							p.getCache().set("blurberrys_bar", 7);
+						playerTalk(player, npc, "hi again");
+						npcTalk(player, npc, "so how did you do");
+						if (hasItem(player, ItemId.BLURBERRY_SPECIAL.id())) {
+							completeBlurberrysBar(player, npc);
 						} else {
-							playerTalk(p, n, "I haven't managed to make it yet");
-							npcTalk(p, n, "I need one blurberry special",
+							playerTalk(player, npc, "I haven't managed to make it yet");
+							npcTalk(player, npc, "I need one blurberry special",
 								"well let me know when you're done");
 						}
 						break;
+
+					// Current Job
 					case 7:
-						if (p.getCache().hasKey("blurberry_job")) {
-							myCurrentJob(p, n);
+						if (player.getCache().hasKey("blurberry_job")) {
+							myCurrentJob(player, npc);
 						} else {
-							playerTalk(p, n, "hello again blurberry");
-							npcTalk(p, n, "well hello traveller",
+							playerTalk(player, npc, "hello again blurberry");
+							npcTalk(player, npc, "well hello traveller",
 								"i'm quite busy as usual, any chance you could help");
-							int menu = showMenu(p, n,
+							int menu = showMenu(player, npc,
 								"I'm quite busy myself, sorry",
 								"ok then, what do you need");
 							if (menu == 0) {
-								npcTalk(p, n, "that's ok, come back when you're free");
+								npcTalk(player, npc, "that's ok, come back when you're free");
 							} else if (menu == 1) {
-								randomizeJob(p, n);
+								randomizeJob(player, npc);
 							}
 						}
 						break;
@@ -258,16 +144,18 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 		if (job == 0) {
 			playerTalk(p, n, "hi");
 			npcTalk(p, n, "have you made the order?");
-			if (hasItem(p, 872) && hasItem(p, 875) && hasItem(p, 879)) {
+			if (hasItem(p, ItemId.DRUNK_DRAGON.id())
+				&& hasItem(p, ItemId.CHOCOLATE_SATURDAY.id())
+				&& hasItem(p, ItemId.PINEAPPLE_PUNCH.id())) {
 				playerTalk(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
 				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
-				p.incExp(COOKING, 360, true);
-				removeItem(p, 872, 1);
-				removeItem(p, 875, 1);
-				removeItem(p, 879, 1);
+				p.incExp(Skills.COOKING, 360, true);
+				removeItem(p, ItemId.DRUNK_DRAGON.id(), 1);
+				removeItem(p, ItemId.CHOCOLATE_SATURDAY.id(), 1);
+				removeItem(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
 				npcTalk(p, n, "that's blurberry-tastic");
 				p.message("blurberry gives you 100 gold coins");
-				addItem(p, 10, 100);
+				addItem(p, ItemId.COINS.id(), 100);
 				npcTalk(p, n, "could you make me another order");
 			} else {
 				playerTalk(p, n, "not yet");
@@ -295,15 +183,12 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == Items.GNOME_COCKTAIL_GUIDE) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.GNOME_COCKTAIL_GUIDE.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p) {
-		if (item.getID() == Items.GNOME_COCKTAIL_GUIDE) {
+		if (item.getID() == ItemId.GNOME_COCKTAIL_GUIDE.id()) {
 			p.message("you open blurberry's cocktail book");
 			p.message("inside are a list of cocktails");
 			int menu = showMenu(p,
@@ -342,14 +227,173 @@ public class BlurberrysBar implements TalkToNpcListener, TalkToNpcExecutiveListe
 
 	@Override
 	public boolean blockDrop(Player p, Item i) {
-		if (i.getID() == 854 || i.getID() == 867) {
+		if (i.getID() == ItemId.FULL_COCKTAIL_GLASS.id() || i.getID() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			checkAndRemoveBlurberry(p, true);
 			return false;
 		}
 		return false;
 	}
 
-	public class Items {
-		public static final int GNOME_COCKTAIL_GUIDE = 851;
+
+	private void startBlurberrysBar(Player player, Npc npc) {
+		playerTalk(player, npc, "hello");
+		npcTalk(player, npc, "well hello there traveller",
+			"if your looking for a cocktail the barman will happily make you one");
+		playerTalk(player, npc, "he looks pretty busy");
+		npcTalk(player, npc, "I know,i just can't find any skilled staff",
+			"I don't suppose your looking for some part time work?",
+			"the pay isn't great but it's a good way to meet people");
+		int menu = showMenu(player, npc,
+			"no thanks i prefer to stay this side of the bar",
+			"ok then i'll give it a go");
+		if (menu == 1) {
+			npcTalk(player, npc, "excellent",
+				"it's not an easy job, i'll have to test you first",
+				"i'm sure you'll be great though",
+				"here, take this cocktail guide");
+			addItem(player, ItemId.GNOME_COCKTAIL_GUIDE.id(), 1);
+			player.message("blurberry gives you a cocktail guide");
+			npcTalk(player, npc, "the book tells you how to make all the cocktails we serve",
+				"I'll tell you what i need and you can make them");
+			playerTalk(player, npc, "sounds easy enough");
+			npcTalk(player, npc, "take a look at the book and then come and talk to me");
+			player.getCache().set("blurberrys_bar", 1);
+		}
+	}
+
+	private void assignFruitBlast(Player player, Npc npc) {
+		playerTalk(player, npc, "hello blurberry");
+		npcTalk(player, npc, "hi, are you ready to make your first cocktail?");
+		playerTalk(player, npc, "absolutely");
+		npcTalk(player, npc, "ok then, to start with make me a fruit blast",
+			"here, you'll need these ingredients",
+			"but I'm afraid i can't give you any more if you mess up");
+		message(player, "blurberry gives you two lemons,one orange, one pineapple");
+		addItem(player, ItemId.LEMON.id(), 2);
+		addItem(player, ItemId.ORANGE.id(), 1);
+		addItem(player, ItemId.FRESH_PINEAPPLE.id(), 1);
+		addItem(player, ItemId.COCKTAIL_SHAKER.id(), 1);
+		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
+		addItem(player, ItemId.KNIFE.id(), 1);
+		player.message("a cocktail shaker, a glass and a knife");
+		npcTalk(player, npc, "let me know when you're done");
+		player.getCache().set("blurberrys_bar", 2);
+	}
+
+	private void assignDrunkDragon(Player player, Npc npc) {
+		playerTalk(player, npc, "here you go");
+		message(player, "you give blurberry the fruit blast");
+		removeItem(player, ItemId.FRUIT_BLAST.id(), 1);
+		player.incExp(Skills.COOKING, 160, true);
+		player.message("he takes a sip");
+		npcTalk(player, npc, "hmmm... not bad, not bad at all",
+			"now can you make me a drunk dragon",
+			"here's what you need");
+		player.message("blurberry gives you some vodka, some gin, some dwell berries...");
+		addItem(player, ItemId.VODKA.id(), 1);
+		addItem(player, ItemId.GIN.id(), 1);
+		addItem(player, ItemId.DWELLBERRIES.id(), 1);
+		addItem(player, ItemId.FRESH_PINEAPPLE.id(), 1);
+		addItem(player, ItemId.CREAM.id(), 1);
+		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
+		player.message("... some pineapple and some cream");
+		npcTalk(player, npc, "i'm afraid i won't be able to give you anymore if you make a mistake though",
+			"let me know when it's done");
+		player.getCache().set("blurberrys_bar", 3);
+	}
+
+	private void assignSGG(Player player, Npc npc) {
+		playerTalk(player, npc, "here you go");
+		message(player, "you give blurberry the drunk dragon");
+		removeItem(player, ItemId.DRUNK_DRAGON.id(), 1);
+		player.incExp(Skills.COOKING, 160, true);
+		player.message("he takes a sip");
+		npcTalk(player, npc, "woooo, that's some good stuff",
+			"i can sell that",
+			"there you go, your share of the profit");
+		addItem(player, ItemId.COINS.id(), 1);
+		player.message("blurberry gives you 1 gold coin");
+		playerTalk(player, npc, "thanks");
+		npcTalk(player, npc, "okay then now i need an s g g");
+		playerTalk(player, npc, "a what?");
+		npcTalk(player, npc, "a short green guy, and don't bring me a gnome",
+			"here's all you need");
+		player.message("blurberry gives you four limes, some vodka and some equa leaves");
+		addItem(player, ItemId.LIME.id(), 4);
+		addItem(player, ItemId.VODKA.id(), 1);
+		addItem(player, ItemId.EQUA_LEAVES.id(), 1);
+		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
+		player.getCache().set("blurberrys_bar", 4);
+	}
+
+	private void assignChocolateSaturday(Player player, Npc npc) {
+		playerTalk(player, npc, "here you go");
+		message(player, "you give blurberry the short green guy");
+		removeItem(player, ItemId.SGG.id(), 1);
+		player.incExp(Skills.COOKING, 160, true);
+		player.message("he takes a sip");
+		npcTalk(player, npc, "hmmm, not bad, not bad at all",
+			"i can sell that",
+			"there you go, that's your share");
+		player.message("blurberry gives you 1 gold coin");
+		addItem(player, ItemId.COINS.id(), 1);
+		npcTalk(player, npc, "you doing quite well, i'm impressed",
+			"ok let's try a chocolate saturday, i love them",
+			"here's your ingredients");
+		player.message("blurberry gives you some whisky, some milk, some equa leaves...");
+		player.message("a chocolate bar, some cream and some chocolate dust");
+		addItem(player, ItemId.WHISKY.id(), 1);
+		addItem(player, ItemId.MILK.id(), 1);
+		addItem(player, ItemId.EQUA_LEAVES.id(), 1);
+		addItem(player, ItemId.CHOCOLATE_BAR.id(), 1);
+		addItem(player, ItemId.CREAM.id(), 1);
+		addItem(player, ItemId.CHOCOLATE_DUST.id(), 1);
+		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
+		player.getCache().set("blurberrys_bar", 5);
+	}
+
+	private void assignBlurberrySpecial(Player player, Npc npc) {
+		playerTalk(player, npc, "here.. try some");
+		message(player, "you give blurberry the cocktail");
+		removeItem(player, ItemId.CHOCOLATE_SATURDAY.id(), 1);
+		player.incExp(Skills.COOKING, 160, true);
+		player.message("he takes a sip");
+		npcTalk(player, npc, "that's blurberry-tastic",
+			"you're quite a bartender",
+			"okay ,lets test you once more",
+			"try and make me a blurberry special",
+			"then we'll see if you have what it takes",
+			"here's your ingredients");
+		addItem(player, ItemId.VODKA.id(), 1);
+		addItem(player, ItemId.GIN.id(), 1);
+		addItem(player, ItemId.BRANDY.id(), 1);
+		addItem(player, ItemId.LEMON.id(), 3);
+		addItem(player, ItemId.ORANGE.id(), 2);
+		addItem(player, ItemId.LIME.id(), 1);
+		addItem(player, ItemId.EQUA_LEAVES.id(), 1);
+		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
+		playerTalk(player, npc, "ok i'll do best");
+		npcTalk(player, npc, "I'm sure you'll make a great bar man");
+		player.getCache().set("blurberrys_bar", 6);
+	}
+
+	private void completeBlurberrysBar(Player player, Npc npc) {
+		playerTalk(player, npc, "I think i've made it right");
+		message(player, "you give the blurberry special to blurberry");
+		removeItem(player, ItemId.BLURBERRY_SPECIAL.id(), 1);
+		player.message("he takes a sip");
+		npcTalk(player, npc, "well i never, incredible",
+			"not many manage to get that right, but this is perfect",
+			"It would be an honour to have you on the team");
+		playerTalk(player, npc, "thanks");
+		npcTalk(player, npc, "now if you ever want to make some money",
+			"or want to improve your cooking skills just come and see me",
+			"I'll tell you what drinks we need, and if you can, you make them");
+		playerTalk(player, npc, "what about ingredients?");
+		npcTalk(player, npc, "I'm afraid i can't give you anymore for free",
+			"but you can buy them from heckel funch the grocer",
+			"I'll always pay you more for the cocktail than you paid for the ingredients",
+			"and it's a great way to learn how to prepare food and drink");
+		player.getCache().set("blurberrys_bar", 7);
 	}
 }

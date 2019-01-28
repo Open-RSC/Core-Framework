@@ -23,26 +23,26 @@ import static com.openrsc.server.plugins.Functions.*;
  */
 public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, PickupListener, PickupExecutiveListener {
 
-	public static final int OGRE_RELIC_PART_1 = 1050;
-	public static final int OGRE_RELIC_PART_2 = 1049;
-	public static final int OGRE_RELIC_PART_3 = 1048;
-	public static final int OGRE_RELIC_COMPLETE = 1044;
-	public static final int POWERING_CRYSTAL1 = 1037;
-	public static final int POWERING_CRYSTAL2 = 1152;
-	public static final int POWERING_CRYSTAL3 = 1153;
-	public static final int POWERING_CRYSTAL4 = 1154;
-	public static final int VIAL_OF_WATER = 464;
-	public static final int DEATH_RUNE = 38;
-	public static final int SKAVID_MAP = 1045;
-	public static final int NIGHTSHADE = 1086;
-	public static final int SHAMAN_ROBE = 1087;
-	public static final int OGRE_POTION = 1053;
-	public static final int MAGIC_OGRE_POTION = 1054;
-	public static int TOBAN_CHEST = 978;
-	public static int KEY = 1047;
-	public static int STOLEN_GOLD = 1040;
-	public static int WATCHTOWER_WIZARD = 672;
-	public static int OGRE_GUARD = 684;
+	private static final int OGRE_RELIC_PART_1 = 1050;
+	private static final int OGRE_RELIC_PART_2 = 1049;
+	private static final int OGRE_RELIC_PART_3 = 1048;
+	private static final int OGRE_RELIC_COMPLETE = 1044;
+	private static final int POWERING_CRYSTAL1 = 1037;
+	private static final int POWERING_CRYSTAL2 = 1152;
+	private static final int POWERING_CRYSTAL3 = 1153;
+	private static final int POWERING_CRYSTAL4 = 1154;
+	private static final int VIAL_OF_WATER = 464;
+	private static final int DEATH_RUNE = 38;
+	private static final int SKAVID_MAP = 1045;
+	private static final int NIGHTSHADE = 1086;
+	private static final int SHAMAN_ROBE = 1087;
+	private static final int OGRE_POTION = 1053;
+	private static final int MAGIC_OGRE_POTION = 1054;
+	private static int TOBAN_CHEST = 978;
+	private static int KEY = 1047;
+	private static int STOLEN_GOLD = 1040;
+	private static int WATCHTOWER_WIZARD = 672;
+	private static int OGRE_GUARD = 684;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {

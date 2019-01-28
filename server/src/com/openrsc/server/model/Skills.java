@@ -7,6 +7,8 @@ import com.openrsc.server.sql.GameLogging;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.Formulae;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.Constants.GameServer.PLAYER_LEVEL_LIMIT;
 
 public class Skills {
@@ -16,9 +18,10 @@ public class Skills {
 	public static final String[] SKILL_NAME = {"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 		"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
 		"agility", "thieving"};
-	public static final int ATTACK = 0, DEFENCE = 1, STRENGTH = 2, HITPOINTS = 3, RANGE = 4, PRAYER = 5, MAGIC = 6,
+	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
 		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, SLAYER = 18, FARMING = 19, RUNECRAFTING = 20;
+	public static final ArrayList<String> STAT_LIST = new ArrayList<String>(){{ for(int i = 0; i < SKILL_NAME.length; i++) { add(SKILL_NAME[i]); } }};
 	// Global Experience Calculations (Some NPCs have levels > PLAYER_LEVEL_LIMIT)
 	private static final int GLOBAL_LEVEL_LIMIT = 1000;
 	public static int[] experienceArray;
@@ -214,13 +217,26 @@ public class Skills {
 		return getLevelForExperience(getExperience(skill), mob instanceof Player ? PLAYER_LEVEL_LIMIT : GLOBAL_LEVEL_LIMIT);
 	}
 
+	public void normalize(int skill) {
+		normalize(skill, true);
+	}
+
+	public void normalize(int skill, boolean sendUpdate) {
+		levels[skill] = getMaxStat(skill);
+		if(sendUpdate)
+			sendUpdate(skill);
+	}
+
 	public void normalize() {
-		for (int i = 0; i < 18; i++) {
-			levels[i] = getMaxStat(i);
+		normalize(true);
+	}
+
+	public void normalize(boolean sendUpdate) {
+		for (int i = 0; i < Skills.SKILL_NAME.length; i++) {
+			normalize(i, false);
 		}
-		if (mob.isPlayer()) {
-			ActionSender.sendStats((Player) mob);
-		}
+		if(sendUpdate)
+			sendUpdateAll();
 	}
 
 	public void setLevelTo(int skill, int level) {

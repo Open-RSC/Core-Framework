@@ -113,21 +113,36 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 1156 && !p.getCache().hasKey("bunny_ears"))
-			p.getCache().put("bunny_ears", 1);
-		else if (i.getID() == 1289 && !p.getCache().hasKey("scythe"))
-			p.getCache().put("scythe", 1);
+		if (i.getID() == 1156) {
+			if(!p.isAdmin()) {
+				if (p.getInventory().hasItemId(1156) || p.getBank().countId(1156) > 0) {
+					p.message("You don't need another set of bunny ears");
+					p.message("You only have one head");
+					return;
+				}
+			}
+			if(!p.getCache().hasKey("bunny_ears") || p.getCache().getInt("bunny_ears") == 0) {
+				p.getCache().put("bunny_ears", 1);
+			}
+		}
+		else if (i.getID() == 1289) {
+			if(!p.isAdmin()) {
+				if (p.getInventory().hasItemId(1289) || p.getBank().countId(1289) > 0) {
+					p.message("You don't need another scythe");
+					p.message("You already have one");
+					return;
+				}
+			}
+			if(!p.getCache().hasKey("scythe") || p.getCache().getInt("scythe") == 0) {
+				p.getCache().put("scythe", 1);
+			}
+		}
+
+		p.groundItemTake(i);
 	}
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 1156) { // Bunny Ears
-			if (p.getInventory().hasItemId(1156) || p.getBank().countId(1156) > 0)
-				return true;
-		} else if (i.getID() == 1289) { // Scythe
-			if (p.getInventory().hasItemId(1289) || p.getBank().countId(1289) > 0)
-				return true;
-		}
-		return false;
+		return i.getID() == 1156 || i.getID() == 1289;
 	}
 }

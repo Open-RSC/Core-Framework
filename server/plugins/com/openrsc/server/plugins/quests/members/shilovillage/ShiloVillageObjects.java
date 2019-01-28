@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.shilovillage;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,41 +17,41 @@ import static com.openrsc.server.plugins.Functions.*;
 public class ShiloVillageObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/* Objects */
-	public static final int SPEC_STONE = 674;
-	public static final int BUMPY_DIRT = 651;
-	public static final int PILE_OF_RUBBLE = 670;
-	public static final int SMASHED_TABLE = 697;
-	public static final int WET_ROCKS = 696;
-	public static final int CAVE_SACK = 783;
-	public static final int ROTTEN_GALLOWS = 682;
+	private static final int SPEC_STONE = 674;
+	private static final int BUMPY_DIRT = 651;
+	private static final int PILE_OF_RUBBLE = 670;
+	private static final int SMASHED_TABLE = 697;
+	private static final int WET_ROCKS = 696;
+	private static final int CAVE_SACK = 783;
+	private static final int ROTTEN_GALLOWS = 682;
 
-	public static final int PILE_OF_RUBBLE_TATTERED_SCROLL = 683;
-	public static final int BRIDGE_BLOCKADE = 691;
+	private static final int PILE_OF_RUBBLE_TATTERED_SCROLL = 683;
+	private static final int BRIDGE_BLOCKADE = 691;
 
-	public static final int WELL_STACKED_ROCKS = 688;
+	private static final int WELL_STACKED_ROCKS = 688;
 
-	public static final int TOMB_DOLMEN_HANDHOLDS = 690;
+	private static final int TOMB_DOLMEN_HANDHOLDS = 690;
 
-	public static final int SEARCH_TREE_FOR_ENTRANCE = 573;
+	private static final int SEARCH_TREE_FOR_ENTRANCE = 573;
 
-	public static final int HILLSIDE_ENTRANCE = 572;
+	private static final int HILLSIDE_ENTRANCE = 572;
 
-	public static final int RASH_EXIT_DOOR = 583;
+	private static final int RASH_EXIT_DOOR = 583;
 
-	public static final int METALLIC_DUNGEON_GATE = 577;
+	private static final int METALLIC_DUNGEON_GATE = 577;
 
-	public static final int CLIMB_CAVE_ROCKS = 719;
+	private static final int CLIMB_CAVE_ROCKS = 719;
 
-	public static final int TOMB_DOORS = 794;
+	private static final int TOMB_DOORS = 794;
 
 	/* Items */
-	public static final int SPADE = 211;
-	public static final int CANDLE = 601;
-	public static final int ROPE = 237;
-	public static final int CRUMPLED_SCROLL = 960;
-	public static final int ZADIMUS_CORPSE = 962;
-	public static final int TATTERED_SCROLL = 959;
-	public static final int STONE_PLAQUE = 958;
+	private static final int SPADE = 211;
+	private static final int CANDLE = 601;
+	private static final int ROPE = 237;
+	static final int CRUMPLED_SCROLL = 960;
+	static final int ZADIMUS_CORPSE = 962;
+	static final int TATTERED_SCROLL = 959;
+	static final int STONE_PLAQUE = 958;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
@@ -172,7 +173,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.damage(0);
 				playerTalk(p, null, "Ooooff!");
 			}
-			p.incExp(AGILITY, 5, true);
+			p.incExp(Skills.AGILITY, 5, true);
 			p.setBusy(false);
 		}
 		if (obj.getID() == METALLIC_DUNGEON_GATE) {
@@ -191,7 +192,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					if (!p.getInventory().wielding(852)) {
 						replaceObjectDelayed(obj, 1800, 181);
 						p.teleport(348, 3616);
-						p.damage(getCurrentLevel(p, HITS) / 2 + 1);
+						p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 2 + 1);
 						if (p.getStatus() != Action.DIED_FROM_DAMAGE) {
 							message(p, "@red@You feel invisible hands starting to choke you...");
 							p.teleport(348, 3614);
@@ -272,9 +273,9 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				message(p, "You fall back to the floor.");
 				p.teleport(380, 3692);
 				playerTalk(p, null, "Ahhhhh!");
-				p.damage(getCurrentLevel(p, HITS) / 10);
+				p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 10);
 				message(p, "And it knocks the wind out of you.");
-				p.damage(getCurrentLevel(p, HITS) / 10);
+				p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 10);
 				p.teleport(467, 3674);
 				playerTalk(p, null, "Oooff!");
 			}
@@ -345,12 +346,12 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 						if (!p.getCache().hasKey("obtained_shilo_info")) {
 							p.getCache().store("obtained_shilo_info", true);
 						}
-						p.incExp(AGILITY, 15, true);
+						p.incExp(Skills.AGILITY, 15, true);
 					} else {
 						message(p, "You acidently knock some rocks and the ceiling starts to cave in.");
 						message(p, "Some rocks fall on you.");
-						p.damage((int) (getCurrentLevel(p, HITS) * 0.1D + 1));
-						p.incExp(AGILITY, 5, true);
+						p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.1D + 1));
+						p.incExp(Skills.AGILITY, 5, true);
 					}
 				}
 			} else if (menu == 1) {
@@ -424,15 +425,15 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					p.teleport(339, 808);
 					message(p, "You are washed onto the waterfall river bank");
 					p.message("barely alive!");
-					p.damage((int) (getCurrentLevel(p, HITS) * 0.2D + 4));
-					p.incExp(AGILITY, 5, true);
+					p.damage((int) (getCurrentLevel(p, Skills.HITPOINTS) * 0.2D + 4));
+					p.incExp(Skills.AGILITY, 5, true);
 				} else {
 					message(p, "You manage to work your way along the slippery wall");
 					message(p, "and avoid falling into the water below.");
 					p.teleport(344, 808);
 					message(p, "You make it out of the cave");
 					p.message("and into the warmth of the jungle.");
-					p.incExp(AGILITY, 100, true);
+					p.incExp(Skills.AGILITY, 100, true);
 				}
 			} else if (m == 1) {
 				message(p, "You decide to have another look around.");
@@ -533,7 +534,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				} else if (obj.getX() == 357 && obj.getY() == 3668) {
 					p.teleport(347, 3709);
 				}
-				p.incExp(AGILITY, 10, true);
+				p.incExp(Skills.AGILITY, 10, true);
 			} else if (menu == 1) {
 				p.message("You decide to stay where you are");
 			}
@@ -627,7 +628,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 		if (obj.getID() == RASH_EXIT_DOOR && item.getID() == 835) {
 			if (!p.getInventory().wielding(852)) {
 				message(p, "@red@You feel invisible hands starting to choke you...");
-				p.damage(getCurrentLevel(p, HITS) / 2);
+				p.damage(getCurrentLevel(p, Skills.HITPOINTS) / 2);
 			}
 			message(p, "You insert the key into the lock and it merges with the door.",
 					"The doors creak open revealing bright day light.");
@@ -735,7 +736,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			message(p, "You cleanly cut the plaque of letters away from the rock.",
 					"You place it carefully into your inventory.");
 			addItem(p, STONE_PLAQUE, 1);
-			p.incExp(CRAFTING, 10, true);
+			p.incExp(Skills.CRAFTING, 10, true);
 		}
 	}
 

@@ -23,18 +23,15 @@ import static com.openrsc.server.plugins.Functions.message;
 
 public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
-	public final static int TINDERBOX = 166;
+	private final static int TINDERBOX = 166;
 	/**
 	 * LOG IDs
 	 **/
-	public static int[] LOGS = {14, 632, 633, 634, 635, 636};
+	private static int[] LOGS = {14, 632, 633, 634, 635, 636};
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		if (myItem.getID() == TINDERBOX && inArray(item.getID(), LOGS)) {
-			return true;
-		}
-		return false;
+		return myItem.getID() == TINDERBOX && inArray(item.getID(), LOGS);
 	}
 
 	@Override
@@ -51,7 +48,6 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 					break;
 				default:
 					player.message("Nothing interesting happens");
-					return;
 			}
 		} else {
 			if (item.getID() == 14) { // Log
@@ -170,10 +166,7 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
-			return true;
-		}
-		return false;
+		return item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS);
 	}
 
 	@Override

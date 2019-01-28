@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,7 +15,17 @@ import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestU
 import com.openrsc.server.plugins.quests.members.shilovillage.ShiloVillageUtils;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.createGroundItem;
+import static com.openrsc.server.plugins.Functions.doWallMovePlayer;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 public class LegendsQuestWallObjects implements WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
 
@@ -98,7 +109,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 			}
 		}
 		if (obj.getID() == RUINED_WALL) {
-			if (getCurrentLevel(p, AGILITY) < 50) {
+			if (getCurrentLevel(p, Skills.AGILITY) < 50) {
 				p.message("You need an agility level of 50 to jump this wall");
 				p.setBusy(false);
 				return;
@@ -130,7 +141,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					message(p, "You walk blindly into the intense heat of the supernatural flames.");
 					if (DataConversions.random(0, 9) <= 3) {
 						message(p, 1300, "The heat is so intense that it burns you.");
-						p.damage((int) Math.ceil((double) p.getSkills().getLevel(HITS) / 10 + 1));
+						p.damage((int) Math.ceil((double) p.getSkills().getLevel(Skills.HITPOINTS) / 10 + 1));
 						playerTalk(p, null, "Owwww!");
 					} else {
 						message(p, 1300, "The heat is intense and just before you burn yourself,",

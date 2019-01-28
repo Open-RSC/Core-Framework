@@ -3,18 +3,13 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.sql.GameLogging;
-import com.openrsc.server.sql.query.logs.GenericLog;
 
 public class GroundItemTake implements PacketHandler {
 	/**
@@ -97,30 +92,12 @@ public class GroundItemTake implements PacketHandler {
 				}
 
 				player.resetAll();
-				Item itemFinal = new Item(item.getID(), item.getAmount());
-				if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
-					itemFinal.setAttribute("npcdrop", true);
-				}
+
 				if (PluginHandler.getPluginHandler().blockDefaultAction("Pickup", new Object[]{player, item})) {
 					return;
 				}
 
-				if (!player.getInventory().canHold(itemFinal)) {
-					return;
-				}
-				if (item.getID() == 59 && item.getX() == 106 && item.getY() == 1476) {
-					Npc n = world.getNpc(37, 103, 107, 1476, 1479);
-					if (n != null && !n.inCombat()) {
-						n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Hey thief!", player));
-						n.setChasing(player);
-					}
-				}
-				world.unregisterItem(item);
-				player.playSound("takeobject");
-
-				player.getInventory().add(itemFinal);
-				GameLogging.addQuery(new GenericLog(player.getUsername() + " picked up " + item.getDef().getName() + " x"
-					+ item.getAmount() + " at " + player.getLocation().toString()));
+				player.groundItemTake(item);
 			}
 		});
 	}

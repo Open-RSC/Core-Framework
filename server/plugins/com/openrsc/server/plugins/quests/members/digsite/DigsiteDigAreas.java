@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,28 +15,38 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 /**
  * @author Imposter/Fate
  */
 public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
-	public static final int TROWEL = 1145;
-	public static final int ROCK_PICK = 1114;
-	public static final int SPADE = 211;
-	public static final int PANNING_TRAY = 1111;
-	public static int[] SOIL = {1065, 1066, 1067};
-	public static int ROCK = 1059;
-	public static int WORKMAN = 722;
+	private static final int TROWEL = 1145;
+	private static final int ROCK_PICK = 1114;
+	private static final int SPADE = 211;
+	private static final int PANNING_TRAY = 1111;
+	private static int[] SOIL = {1065, 1066, 1067};
+	private static int ROCK = 1059;
+	private static int WORKMAN = 722;
 
-	public int[] TRAINING_AREA_ITEMS = {-1, -2, 1168, 1165, 10, 1150, 983};
+	private int[] TRAINING_AREA_ITEMS = {-1, -2, 1168, 1165, 10, 1150, 983};
 
-	public int[] DIGSITE_LEVEL1_ITEMS = {-1, 20, 894, 1155, 1162, 778, 150, 801, 1166, 1159, 1168};
+	private int[] DIGSITE_LEVEL1_ITEMS = {-1, 20, 894, 1155, 1162, 778, 150, 801, 1166, 1159, 1168};
 
-	public int[] DIGSITE_LEVEL2_ITEMS = {-1, 20, 516, 135, 149, 1170, 271, 1167, 1158, 140, 1155};
+	private int[] DIGSITE_LEVEL2_ITEMS = {-1, 20, 516, 135, 149, 1170, 271, 1167, 1158, 140, 1155};
 
-	public int[] DIGSITE_LEVEL3_ITEMS = {-1, 20, 1157, 1167, 1175, 1165, 827, 251, 1166, 1162, 10, 39, 149, 1075, 470, 1169, 1151, 1155, 516};
+	private int[] DIGSITE_LEVEL3_ITEMS = {-1, 20, 1157, 1167, 1175, 1165, 827, 251, 1166, 1162, 10, 39, 149, 1075, 470, 1169, 1151, 1155, 516};
 
 	private static boolean getLevel3Digsite(Player p) {
 		if (p.getLocation().inBounds(10, 495, 14, 499)) { // Top North DONE.
@@ -47,7 +58,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 		return false;
 	}
 
-	public static void doDigsiteItemMessages(Player p, int item) {
+	static void doDigsiteItemMessages(Player p, int item) {
 		if (item == -1) {
 			p.message("You find nothing");
 		} else if (item == -2) {
@@ -153,10 +164,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	private boolean getDigsite(Player p) {
-		if (p.getLocation().inBounds(5, 492, 42, 545)) { // ENTIRE DIGSITE AREA used for spade
-			return true;
-		}
-		return false;
+		return p.getLocation().inBounds(5, 492, 42, 545); // ENTIRE DIGSITE AREA used for spade
 	}
 
 	private void doSpade(Player p, Item item, GameObject obj) {
@@ -210,7 +218,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(ROCK_PICK));
-				p.incExp(MINING, 70, true);
+				p.incExp(Skills.MINING, 70, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL2_ITEMS.length - 1));
@@ -219,7 +227,6 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				if (selectedItem != -1) {
 					addItem(p, selectedItem, 1);
 				}
-				return;
 			}
 		}
 	}
@@ -228,7 +235,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 		if (item.getID() == TROWEL && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
 				showBubble(p, new Item(TROWEL));
-				p.incExp(MINING, 50, true);
+				p.incExp(Skills.MINING, 50, true);
 				message(p, "You dig with the trowel...");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (TRAINING_AREA_ITEMS.length - 1));
@@ -271,7 +278,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(TROWEL));
-				p.incExp(MINING, 60, true);
+				p.incExp(Skills.MINING, 60, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL1_ITEMS.length - 1));
@@ -331,7 +338,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					return;
 				}
 				showBubble(p, new Item(TROWEL));
-				p.incExp(MINING, 80, true);
+				p.incExp(Skills.MINING, 80, true);
 				message(p, "You dig through the earth");
 				sleep(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL3_ITEMS.length - 1));
@@ -389,10 +396,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (inArray(obj.getID(), SOIL)) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), SOIL);
 	}
 
 	@Override
@@ -406,10 +410,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == SPADE && getDigsite(p)) {
-			return true;
-		}
-		return false;
+		return item.getID() == SPADE && getDigsite(p);
 	}
 
 	@Override

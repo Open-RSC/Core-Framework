@@ -20,9 +20,8 @@ sudo systemctl restart nginx
 sudo mysql -u"root" -p"root" < "Databases/mysql.sql"
 sudo mysql -u"root" -p"root" < "Databases/phpmyadmin.sql"
 sudo mysql -u"root" -p"root" < "Databases/openrsc_game.sql"
-sudo mysql -u"root" -p"root" < "Databases/openrsc_forum.sql"
 
 sudo rm /var/www/html/*.*
 make clone-website
-cp -a Website/. /var/www/html/
+sudo cp -a Website/. /var/www/html/
 make file-edits

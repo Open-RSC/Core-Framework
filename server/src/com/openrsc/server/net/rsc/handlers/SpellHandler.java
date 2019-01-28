@@ -413,12 +413,12 @@ public class SpellHandler implements PacketHandler {
 				- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
 
 			if (newStat < maxWeaken && spell != 34) {
-				player.message("Your opponent already has weakened " + Formulae.statArray[affectsStat]);
+				player.message("Your opponent already has weakened " + Skills.SKILL_NAME[affectsStat]);
 				return;
 			}
 			if (player.getDuel().isDuelActive() && affectedMob.isPlayer()) {
 				Player aff = (Player) affectedMob;
-				aff.message("Your " + Formulae.statArray[affectsStat] + " has been reduced by the spell!");
+				aff.message("Your " + Skills.SKILL_NAME[affectsStat] + " has been reduced by the spell!");
 			}
 			affectedMob.getSkills().setLevel(affectsStat, newStat);
 		}
@@ -706,12 +706,6 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						if (affectedItem.getLocation().isInSeersPartyHall()) {
-							player.message("Telekinetic grab cannot be used in here");
-							return;
-						}
-						if (affectedItem.getID() == 575 || affectedItem.getID() == 2115
-							|| affectedItem.getID() == 2116 || affectedItem.getID() == 2117
-							|| affectedItem.getID() == 2118 || affectedItem.getID() == 2119) {
 							player.message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
@@ -878,7 +872,7 @@ public class SpellHandler implements PacketHandler {
 						final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
 							- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
 						if (newStat < maxWeaken) {
-							player.message("Your opponent already has weakened " + Formulae.statArray[affectsStat]);
+							player.message("Your opponent already has weakened " + Skills.SKILL_NAME[affectsStat]);
 							return;
 						}
 						if (!checkAndRemoveRunes(player, spell)) {

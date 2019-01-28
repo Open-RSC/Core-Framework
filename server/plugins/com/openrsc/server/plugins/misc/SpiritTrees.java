@@ -12,9 +12,9 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveListener {
 
-	public static int STRONGHOLD_SPIRIT_TREE = 661;
-	public static int YOUNG_SPIRIT_TREES = 391;
-	public static int TREE_GNOME_VILLAGE_SPIRIT_TREE = 390;
+	private static int STRONGHOLD_SPIRIT_TREE = 661;
+	private static int YOUNG_SPIRIT_TREES = 391;
+	private static int TREE_GNOME_VILLAGE_SPIRIT_TREE = 390;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
@@ -23,7 +23,7 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		/** Tree Gnome Stronghold tree 
+		/** Tree Gnome Stronghold tree
 		 *  NOTE: Only spirit tree that does not teleport you back to tree gnome village unless you have completed Grand Tree quest
 		 *  NOTE: If you complete Grand Tree quest you can use all spirit trees without completing tree gnome village quest.
 		 *  NOTE: If you have only completed tree gnome village quest you can still use all teleports except this one.

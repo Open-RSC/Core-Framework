@@ -19,6 +19,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
@@ -32,6 +33,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.sql.GameLogging;
+import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -597,7 +599,7 @@ public final class Player extends Mob {
 				return false;
 			}
 
-			if (victim.getAttribute("no-aggro", false)) {
+			if (victim.isInvulnerable()) {
 				message("You are not allowed to attack that person");
 				return false;
 			}
@@ -722,14 +724,14 @@ public final class Player extends Mob {
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Formulae.statArray[requiredSkillIndex] + " level of " + requiredLevel);
+						message("You need to have a " + Skills.SKILL_NAME[requiredSkillIndex] + " level of " + requiredLevel);
 						unWield = true;
 					}
 				}
 				if (optionalSkillIndex.isPresent() && getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
 					if (!bypass) {
 						message("You are not a high enough level to use this item");
-						message("You need to have a " + Formulae.statArray[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
+						message("You need to have a " + Skills.SKILL_NAME[optionalSkillIndex.get()] + " level of " + optionalLevel.get());
 						unWield = true;
 					}	
 				}
@@ -1289,11 +1291,11 @@ public final class Player extends Mob {
 	}
 
 	public boolean isEvent() {
-		return groupID == Group.EVENT || isAdmin();
+		return groupID == Group.EVENT || isMod() || isDev();
 	}
 
 	public boolean isStaff() {
-		return isMod() || isDev() || isEvent();
+		return isEvent();
 	}
 
 	public boolean isChangingAppearance() {
@@ -2100,5 +2102,149 @@ public final class Player extends Mob {
 
 	public void toggleInvulnerable() {
 		setInvulnerable(!isInvulnerable());
+	}
+
+	public Point summon(Point summonLocation) {
+		Point originalLocation = getLocation();
+		setSummonReturnPoint();
+		teleport(summonLocation.getX(), summonLocation.getY(), true);
+		return originalLocation;
+	}
+
+	public Point summon(Player summonTo) {
+		return summon(summonTo.getLocation());
+	}
+
+	public void setSummonReturnPoint() {
+		if(wasSummoned())
+			return;
+
+		getCache().set("return_x", getX());
+		getCache().set("return_y", getY());
+		getCache().store("was_summoned", true);
+	}
+
+	public void resetSummonReturnPoint() {
+		getCache().remove("return_x");
+		getCache().remove("return_y");
+		getCache().remove("was_summoned");
+	}
+
+	public int getSummonReturnX() {
+		if(!getCache().hasKey("return_x"))
+			return -1;
+
+		return getCache().getInt("return_x");
+	}
+
+	public int getSummonReturnY() {
+		if(!getCache().hasKey("return_y"))
+			return -1;
+
+		return getCache().getInt("return_y");
+	}
+
+	public Point returnFromSummon() {
+		if(!wasSummoned())
+			return null;
+
+		Point originalLocation = getLocation();
+		teleport(getSummonReturnX(), getSummonReturnY(), true);
+		resetSummonReturnPoint();
+		return originalLocation;
+	}
+
+	public void setSummoned(boolean wasSummoned) {
+		getCache().store("was_summoned", wasSummoned);
+	}
+
+	public boolean wasSummoned() {
+		if (!getCache().hasKey("was_summoned"))
+			return false;
+
+		return getCache().getBoolean("was_summoned");
+	}
+
+	public Point jail() {
+		Point originalLocation = getLocation();
+		setJailReturnPoint();
+		teleport(75,1641, true);
+		return originalLocation;
+	}
+
+	public void setJailReturnPoint() {
+		if(isJailed())
+			return;
+
+		getCache().set("jail_return_x", getX());
+		getCache().set("jail_return_y", getY());
+		getCache().store("is_jailed", true);
+	}
+
+	public void resetJailReturnPoint() {
+		getCache().remove("jail_return_x");
+		getCache().remove("jail_return_y");
+		getCache().remove("is_jailed");
+	}
+
+	public int getJailReturnX() {
+		if(!getCache().hasKey("jail_return_x"))
+			return -1;
+
+		return getCache().getInt("jail_return_x");
+	}
+
+	public int getJailReturnY() {
+		if(!getCache().hasKey("jail_return_y"))
+			return -1;
+
+		return getCache().getInt("jail_return_y");
+	}
+
+	public Point releaseFromJail() {
+		if(!isJailed())
+			return null;
+
+		Point originalLocation = getLocation();
+		teleport(getJailReturnX(), getJailReturnY(), true);
+		resetJailReturnPoint();
+		return originalLocation;
+	}
+
+	public void setJailed(boolean isJailed) {
+		getCache().store("is_jailed", isJailed);
+	}
+
+	public boolean isJailed() {
+		if (!getCache().hasKey("is_jailed"))
+			return false;
+
+		return getCache().getBoolean("is_jailed");
+	}
+
+	public boolean groundItemTake(GroundItem item) {
+		Item itemFinal = new Item(item.getID(), item.getAmount());
+		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
+			itemFinal.setAttribute("npcdrop", true);
+		}
+
+		if (!this.getInventory().canHold(itemFinal)) {
+			return false;
+		}
+
+		if (item.getID() == 59 && item.getX() == 106 && item.getY() == 1476) {
+			Npc n = world.getNpc(37, 103, 107, 1476, 1479);
+			if (n != null && !n.inCombat()) {
+				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Hey thief!", this));
+				n.setChasing(this);
+			}
+		}
+		world.unregisterItem(item);
+		this.playSound("takeobject");
+		this.getInventory().add(itemFinal);
+		GameLogging.addQuery(new GenericLog(this.getUsername() + " picked up " + item.getDef().getName() + " x"
+			+ item.getAmount() + " at " + this.getLocation().toString()));
+
+		return true;
 	}
 }

@@ -31,7 +31,6 @@ public class Config {
 	public static boolean C_SIDE_MENU_OVERLAY = false;
 	public static boolean C_KILL_FEED = false;
 	public static int C_FIGHT_MENU = 1;
-	public static int C_ZOOM = 0;
 	public static boolean C_INV_COUNT = false;
 	/* Android: */
 	public static boolean F_SHOWING_KEYBOARD = false;
@@ -88,6 +87,7 @@ public class Config {
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
+	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
 	private static Properties prop = new Properties();
 
 	public static void set(String key, Object value) {

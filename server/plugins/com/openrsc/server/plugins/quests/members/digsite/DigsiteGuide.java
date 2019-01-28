@@ -10,14 +10,11 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 
 public class DigsiteGuide implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
-	public static final int GUIDE = 726;
+	private static final int GUIDE = 726;
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == GUIDE) {
-			return true;
-		}
-		return false;
+		return n.getID() == GUIDE;
 	}
 
 	@Override

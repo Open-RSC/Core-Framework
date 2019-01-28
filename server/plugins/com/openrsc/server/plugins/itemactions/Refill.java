@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,12 +14,17 @@ public class Refill implements InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
 
 	final int[] VALID_OBJECTS = {2, 466, 814, 48, 26, 86, 1130};
-	final int[] REFILLABLE = {21, 140, 341, 465};
-	final int[] REFILLED = {50, 141, 342, 464};
+	private final int[] REFILLABLE = {
+		ItemId.BUCKET.id(), ItemId.JUG.id(), ItemId.BOWL.id(), ItemId.EMPTY_VIAL.id()
+	};
+	private int[] REFILLED = {
+		ItemId.BUCKET_OF_WATER.id(), ItemId.JUG_OF_WATER.id(), ItemId.BOWL_OF_WATER.id(), ItemId.VIAL.id()
+	};
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return inArray(obj.getID(), 2, 466, 814, 48, 26, 86, 1130) && inArray(item.getID(), 21, 140, 341, 465);
+		return inArray(obj.getID(), VALID_OBJECTS)
+			&& inArray(item.getID(),REFILLABLE);
 	}
 
 	@Override
@@ -34,7 +40,12 @@ public class Refill implements InvUseOnObjectListener,
 							showBubble(owner, item);
 							owner.playSound("filljug");
 							sleep(300);
-							owner.message("You fill the " + item.getDef().getName().toLowerCase() + " from the " + obj.getGameObjectDef().getName().toLowerCase());
+							owner.message(
+								"You fill the "
+								+ item.getDef().getName().toLowerCase()
+								+ " from the "
+								+ obj.getGameObjectDef().getName().toLowerCase()
+							);
 							addItem(owner, refilledID, 1);
 						} else {
 							interrupt();

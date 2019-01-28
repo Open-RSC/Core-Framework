@@ -42,7 +42,6 @@ echo ""
 read installmode
 
 if [ "$installmode" == "2" ]; then
-    sudo chmod 644 /var/www/html/elite/board/config.php
     sudo chmod 644 Website/sql/config.inc.php
 
     # Client
@@ -64,7 +63,6 @@ if [ "$installmode" == "2" ]; then
 
 elif [ "$installmode" == "1" ]; then
     sudo chmod 644 etc/mariadb/innodb.cnf
-    sudo chmod 644 Website/elite/board/config.php
     sudo chmod 644 Website/sql/config.inc.php
     sudo setfacl -m user:$USER:rw /var/run/docker.sock
 

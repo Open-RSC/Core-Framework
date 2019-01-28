@@ -430,6 +430,7 @@ public class ActionSender {
 		s.writeByte((byte) (Constants.GameServer.WANT_CERTS_TO_BANK ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.WANT_CUSTOM_RANK_DISPLAY ? 1 : 0));
 		s.writeByte((byte) (Constants.GameServer.RIGHT_CLICK_BANK ? 1 : 0));
+		s.writeByte((byte) (Constants.GameServer.FIX_OVERHEAD_CHAT ? 1 : 0));
 		return s;
 	}
 
@@ -990,10 +991,6 @@ public class ActionSender {
 				/*if (p.getLocation().inWilderness()) { // Not authentic
 					p.unwieldMembersItems();
 				}*/
-
-				if (p.isMod()) {
-					p.setAttribute("no-aggro", true);
-				}
 
 				if (!p.getLocation().inWilderness()) {
 					if (Constants.GameServer.SPAWN_AUCTION_NPCS) {

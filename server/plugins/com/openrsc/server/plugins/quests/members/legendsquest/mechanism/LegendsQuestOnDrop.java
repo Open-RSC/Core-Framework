@@ -8,7 +8,9 @@ import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestI
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestRanalphDevere;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestSanTojalon;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.createGroundItem;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.removeItem;
 
 public class LegendsQuestOnDrop implements DropListener, DropExecutiveListener {
 

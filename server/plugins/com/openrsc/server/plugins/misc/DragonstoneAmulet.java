@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemId;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,21 +12,20 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/**
 	 * RE-CHARGE AMULET
 	 **/
-	public static int FOUNTAIN_OF_HEROES = 282;
+	private static int FOUNTAIN_OF_HEROES = 282;
 
 	@Override
 	public boolean blockInvAction(Item item, Player p) {
-		if (item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p, 600, Formulae.getRepeatTimes(p, CRAFTING)) {
+			p.setBatchEvent(new BatchEvent(p, 600, Formulae.getRepeatTimes(p, Skills.CRAFTING)) {
 				@Override
 				public void action() {
 					if (!p.getInventory().hasItemId(item.getID())) {

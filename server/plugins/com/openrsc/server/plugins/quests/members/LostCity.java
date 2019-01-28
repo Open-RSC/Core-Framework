@@ -2,15 +2,49 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.Constants.Quests;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.atQuestStage;
+import static com.openrsc.server.plugins.Functions.atQuestStages;
+import static com.openrsc.server.plugins.Functions.completeQuest;
+import static com.openrsc.server.plugins.Functions.doDoor;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.getQuestStage;
+import static com.openrsc.server.plugins.Functions.getWoodcutAxe;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.isNpcNearby;
+import static com.openrsc.server.plugins.Functions.isWielding;
+import static com.openrsc.server.plugins.Functions.kill;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.movePlayer;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.setCurrentLevel;
+import static com.openrsc.server.plugins.Functions.setQuestStage;
+import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
 
 /**
  * Rewritten in Java.
@@ -89,7 +123,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				break;
 			case 245:
 				if (atQuestStages(p, this, 4, 3, 2, -1)) {
-					if (getCurrentLevel(p, WOODCUT) < 36) {
+					if (getCurrentLevel(p, Skills.WOODCUT) < 36) {
 						message(p,
 							"You are not a high enough woodcutting level to chop down this tree",
 							"You need a woodcutting level of 36");
@@ -312,12 +346,12 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 				sleep(1000);
 				movePlayer(p, 427, 3380, true);
 				/* What is the point of this? */
-				if (getCurrentLevel(p, PRAYER) <= 3)
-					setCurrentLevel(p, PRAYER, 1);
-				else if (getCurrentLevel(p, PRAYER) <= 39)
-					setCurrentLevel(p, PRAYER, 2);
+				if (getCurrentLevel(p, Skills.PRAYER) <= 3)
+					setCurrentLevel(p, Skills.PRAYER, 1);
+				else if (getCurrentLevel(p, Skills.PRAYER) <= 39)
+					setCurrentLevel(p, Skills.PRAYER, 2);
 				else
-					setCurrentLevel(p, PRAYER, 3);
+					setCurrentLevel(p, Skills.PRAYER, 3);
 			}
 		}
 	}
@@ -395,7 +429,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (hasItem(p, 510, 1)) {
-			if (getCurrentLevel(p, CRAFTING) < 31) {
+			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
 				message(p,
 					"You are not a high enough crafting level to craft this staff",
 					"You need a crafting level of 31");

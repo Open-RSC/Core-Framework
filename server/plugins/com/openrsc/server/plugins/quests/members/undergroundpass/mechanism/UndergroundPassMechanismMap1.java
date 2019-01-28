@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.mechanism;
 
 import com.openrsc.server.Constants;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,26 +13,30 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.sleep;
 
 public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
 	/**
 	 * ITEM IDs
 	 **/
-	public static int DAMP_CLOTH = 989;
-	public static int ARROW = 984;
-	public static int LIT_ARROW = 985;
-	public static int ROPE = 237;
-	public static int ROCKS = 986;
+	private static int DAMP_CLOTH = 989;
+	private static int ARROW = 984;
+	private static int LIT_ARROW = 985;
+	private static int ROPE = 237;
+	private static int ROCKS = 986;
 
 	/**
 	 * OBJECT IDs
 	 **/
-	public static int OLD_BRIDGE = 726;
-	public static int STALACTITE_1 = 771;
-	public static int STALACTITE_2 = 798;
-	public static int SWAMP_CROSS = 754;
+	private static int OLD_BRIDGE = 726;
+	private static int STALACTITE_1 = 771;
+	private static int STALACTITE_2 = 798;
+	private static int SWAMP_CROSS = 754;
 
 
 	@Override
@@ -81,7 +86,7 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 		if (item.getID() == LIT_ARROW && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
 				removeItem(player, LIT_ARROW, 1);
-				if ((getCurrentLevel(player, RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
+				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					message(player, "you fire the lit arrow at the bridge",
 						"it burns out and has little effect");
 				} else {

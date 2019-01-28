@@ -762,4 +762,28 @@ public final class DataConversions {
 		String number = numberFormat.format(i);
 		return number;
 	}
+
+	public static boolean parseBoolean(String str) throws NumberFormatException {
+		if (
+			str.equalsIgnoreCase("true")	||
+				str.equalsIgnoreCase("t")		||
+				str.equalsIgnoreCase("yes")		||
+				str.equalsIgnoreCase("y")		||
+				str.equalsIgnoreCase("1")
+		) {
+			return true;
+		}
+
+		if (
+			str.equalsIgnoreCase("false")	||
+				str.equalsIgnoreCase("f")		||
+				str.equalsIgnoreCase("no")		||
+				str.equalsIgnoreCase("n")		||
+				str.equalsIgnoreCase("0")
+		) {
+			return false;
+		}
+
+		throw new NumberFormatException();
+	}
 }
