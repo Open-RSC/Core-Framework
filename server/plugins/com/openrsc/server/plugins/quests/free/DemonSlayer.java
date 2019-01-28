@@ -1095,11 +1095,11 @@ public class DemonSlayer implements QuestInterface,
 						playerTalk(p, null, "Maybe I'd better wield silverlight first");
 						return true;
 					} else {
+						// silverlight effect shared in its own file
 						n.getSkills().setLevel(3, n.getDef().getHits());
 						p.resetMenuHandler();
 						p.setOption(-1);
 						p.setAttribute("delrith", false);
-						p.message("As you strike the demon with silverlight he appears to weaken a lot");
 					}
 					break;
 				case -1:

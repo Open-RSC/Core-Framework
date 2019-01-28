@@ -15,10 +15,7 @@ public class LegendsQuestGates implements ObjectActionListener, ObjectActionExec
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == LEGENDS_HALL_DOOR) {
-			return true;
-		}
-		return false;
+		return obj.getID() == LEGENDS_HALL_DOOR;
 	}
 
 	@Override

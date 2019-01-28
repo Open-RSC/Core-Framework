@@ -36,10 +36,7 @@ public class Fionella implements ShopInterface, TalkToNpcExecutiveListener, Talk
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == FIONELLA) {
-			return true;
-		}
-		return false;
+		return n.getID() == FIONELLA;
 	}
 
 	@Override

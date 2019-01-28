@@ -21,10 +21,7 @@ public class LegendsQuestDarkMetalGate implements ObjectActionListener, ObjectAc
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		if (obj.getID() == DARK_METAL_GATE) {
-			return true;
-		}
-		return false;
+		return obj.getID() == DARK_METAL_GATE;
 	}
 
 	@Override
@@ -98,9 +95,6 @@ public class LegendsQuestDarkMetalGate implements ObjectActionListener, ObjectAc
 
 	@Override
 	public boolean blockPlayerMageObject(Player player, GameObject obj, SpellDef spell) {
-		if (obj.getID() == DARK_METAL_GATE) {
-			return true;
-		}
-		return false;
+		return obj.getID() == DARK_METAL_GATE;
 	}
 }

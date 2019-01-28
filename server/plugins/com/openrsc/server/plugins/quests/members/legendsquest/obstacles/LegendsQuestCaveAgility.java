@@ -50,14 +50,28 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					p.teleport(421, 3699);
 					p.message("You slip and fall...");
 					int failScene = DataConversions.random(0, 10);
-					if (failScene == 3) {
+					if (failScene == 0) {
 						p.message("...but you luckily avoid any damage.");
-					} else if (failScene == 5) {
-						p.damage(31);
-						p.message("...and take some major damage.");
-					} else {
-						p.damage(DataConversions.random(3, 25));
+					}
+					else if (failScene <= 2) {
+						p.damage(DataConversions.random(3, 6));
+						p.message("...and take a bit of damage.");
+					}
+					else if (failScene <= 5) {
+						p.damage(DataConversions.random(7, 11));
+						p.message("...and take some damage.");
+					}
+					else if (failScene <= 7) {
+						p.damage(DataConversions.random(12, 16));
 						p.message("...and take damage.");
+					}
+					else if (failScene <= 9) {
+						p.damage(DataConversions.random(17, 23));
+						p.message("...and are injured.");
+					}
+					else {
+						p.damage(DataConversions.random(24, 31));
+						p.message("...and take some major damage.");
 					}
 					p.incExp(Skills.AGILITY, 5, true);
 				}
@@ -84,7 +98,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					}
 				} else {
 					p.message("You slip and fall...");
-					p.damage(3);
+					p.damage(DataConversions.random(2, 3));
 					p.teleport(421, 3707);
 					sleep(600);
 					p.incExp(Skills.AGILITY, 5, true);
@@ -113,7 +127,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					}
 				} else {
 					p.message("You slip and fall...");
-					p.damage(3);
+					p.damage(DataConversions.random(2, 3));
 					p.teleport(419, 3704);
 					sleep(600);
 					p.incExp(Skills.AGILITY, 5, true);
@@ -142,7 +156,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					}
 				} else {
 					p.message("You slip and fall...");
-					p.damage(3);
+					p.damage(DataConversions.random(2, 3));
 					p.teleport(424, 3702);
 					sleep(600);
 					p.incExp(Skills.AGILITY, 5, true);
@@ -171,7 +185,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 					}
 				} else {
 					p.message("You slip and fall...");
-					p.damage(3);
+					p.damage(DataConversions.random(2, 3));
 					p.teleport(426, 3704);
 					sleep(600);
 					p.incExp(Skills.AGILITY, 5, true);

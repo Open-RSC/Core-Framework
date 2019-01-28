@@ -190,6 +190,9 @@ public final class Constants {
 		public static boolean STRICT_PDART_CHECK = false;
 		public static boolean STRICT_PKNIFE_CHECK = false;
 		public static boolean STRICT_PSPEAR_CHECK = false;
+		
+		//loosened checks
+		public static boolean LOOSE_SHALLOW_WATER_CHECK = false;
 
 		/**
 		 * @param file
@@ -284,6 +287,8 @@ public final class Constants {
 			STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));
 			STRICT_PKNIFE_CHECK = Boolean.parseBoolean(props.getProperty("strict_pknife_check"));
 			STRICT_PSPEAR_CHECK = Boolean.parseBoolean(props.getProperty("strict_pspear_check"));
+			
+			LOOSE_SHALLOW_WATER_CHECK = Boolean.parseBoolean(props.getProperty("loose_shallow_water_check"));
 
 			// Make sure config doesn't exceed max values
 			if (VIEW_DISTANCE > 4)

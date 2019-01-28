@@ -67,7 +67,7 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 			}
 			message(p, 1300, "A nerve tingling scream echoes around you as you slay the dead Hero.",
 				"@yel@Ranalph Devere: Ahhhggggh",
-				"@yel@Ranalph Devere: Forever must I live in this torment till this beast is slain...");
+				"@yel@Ranalph Devere:Forever must I live in this torment till this beast is slain...");
 			sleep(650);
 			LegendsQuestNezikchened.demonFight(p);
 		}

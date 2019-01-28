@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.inArray;
@@ -64,7 +65,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 					npcTalk(p, n, "Argghhhhh...noooooo!");
 					p.getCache().store("already_cast_holy_spell", true);
 				}
-				message(p, n, 1300, "The Demon lets out an unearthly, blood curdling scream...");
+				message(p, n, 1300, "The spirit lets out an unearthly, blood curdling scream...");
 				int formerNpcX = n.getX();
 				int formerNpcY = n.getY();
 				if (n != null)
@@ -138,14 +139,24 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				int opt = showMenu(p,
 					"Yes, I'll try.",
 					"No, I don't think I'll bother.");
-				if (opt == 0) {
+				//authentic, didn't matter option choosed
+				if (opt == 0 || opt == 1) 
+				{
+					if (getCurrentLevel(p, Skills.PRAYER) < 10) {
+						p.message("You need at least ten prayer points to cast this spell.");
+						return;
+					}
+					if (getCurrentLevel(p, Skills.MAGIC) < 10) {
+						p.message("You need at least ten magic points to cast this spell.");
+						return;
+					}
 					if (hasItem(p, 465)) {
-						// TODO
+						message(p, "The spell is cast perfectly..",
+								"You enchant one of the empty vials.");
+						p.getInventory().replace(465, 1240);
 					} else {
 						p.message("This spell looks as if it needs some other components.");
 					}
-				} else if (opt == 1) {
-					p.message("This spell looks as if it needs some other components.");
 				}
 			}
 		}
@@ -191,4 +202,5 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 			}
 		}
 	}
+
 }

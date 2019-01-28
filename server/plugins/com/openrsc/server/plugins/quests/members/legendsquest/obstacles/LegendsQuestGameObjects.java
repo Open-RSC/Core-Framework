@@ -38,7 +38,6 @@ import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
@@ -123,7 +122,6 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					"It slowly congeals into the shape of a body...");
 				echned = spawnNpcWithRadius(p, LegendsQuestEchnedZekin.ECHNED_ZEKIN, p.getX(), p.getY(), 0, 60000 * 3);
 				if (echned != null) {
-
 					p.setBusyTimer(3000);
 					sleep(1300);
 					message(p, echned, 1300, "Which slowly floats towards you.");
@@ -198,8 +196,16 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					message(p, 1300, "...but a terrible fear grips you...");
 					p.message("And you can go no further.");
 				} else {
-					message(p, 1300, "And although fear stabs at your heart...",
-						"You shimmey down the rope...");
+					int rnd = DataConversions.random(0, 4);
+					if (rnd == 0) {
+						message(p, 1300, "but fear stabs at your heart...",
+								"and you lose concentration,");
+						p.damage(DataConversions.random(10, 15));
+					}
+					else {
+						message(p, 1300, "And although fear stabs at your heart...",
+								"You shimmey down the rope...");
+					}
 					p.teleport(426, 3707);
 				}
 			} else if (menu == 1) {
@@ -220,7 +226,48 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "You see a delicate inscription on the rock, it says,");
 			message(p, 1900, "@gre@'Once there were crystals to make the pool shine,'");
 			message(p, 0, "@gre@'Ordered in stature to retrieve what's mine.'");
-			// TODO - to check what gem is attached or not.
+			String gem = "";
+			boolean attached = false;
+			// opal
+			if (obj.getX() == 471 && obj.getY() == 3722) {
+				gem = "Opal";
+				attached = p.getCache().hasKey("legends_attach_1");
+			}
+			// emerald
+			else if (obj.getX() == 474 && obj.getY() == 3730) {
+				gem = "Emerald";
+				attached = p.getCache().hasKey("legends_attach_2");
+			}
+			// ruby
+			else if (obj.getX() == 471 && obj.getY() == 3734) {
+				gem = "Ruby";
+				attached = p.getCache().hasKey("legends_attach_3");
+			}
+			// diamond
+			else if (obj.getX() == 466 && obj.getY() == 3739) {
+				gem = "Diamond";
+				attached = p.getCache().hasKey("legends_attach_4");
+			}
+			// sapphire
+			else if (obj.getX() == 460 && obj.getY() == 3737) {
+				gem = "Sapphire";
+				attached = p.getCache().hasKey("legends_attach_5");
+			}
+			// red topaz
+			else if (obj.getX() == 464 && obj.getY() == 3730) {
+				gem = "Topaz";
+				attached = p.getCache().hasKey("legends_attach_6");
+			}
+			// jade
+			else if (obj.getX() == 469 && obj.getY() == 3728) {
+				gem = "Jade";
+				attached = p.getCache().hasKey("legends_attach_7");
+			}
+			
+			if (!gem.equals("") && attached) {
+				message(p, 1300, "A barely visible " + gem + " becomes clear again, spinning above the rock.",
+						"And then fades again...");
+			}
 		}
 		if (obj.getID() == HALF_BURIED_REMAINS) {
 			message(p, "It looks as if some poor unfortunate soul died here.");
@@ -391,7 +438,6 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				sleep(1300);
 				addItem(p, LegendsQuestInvAction.SCRAWLED_NOTES, 1);
 				message(p, 1300, "You find a scrap of paper with nonesense written on it.");
-				p.message("It looks like rubbish...");
 			}
 		}
 		if (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search")) {
@@ -437,11 +483,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("A magical looking pool.");
 				return;
 			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 8 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
-				p.message("A disgusting sess pit of filth and stench...");
-				return;
-			}
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 5 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 6 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 7) {
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 5 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
 				p.message("A disgusting sess pit of filth and stench...");
 				return;
 			}
@@ -507,7 +549,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
-				replaceTotemPole(p, obj);
+				replaceTotemPole(p, obj, false);
 				return;
 			}
 			message(p, 1300, "This totem pole looks very corrupted,",
@@ -524,7 +566,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
-				replaceTotemPole(p, obj);
+				replaceTotemPole(p, obj, false);
 				return;
 			}
 			replaceObject(obj, new GameObject(obj.getLocation(), TOTEM_POLE, obj.getDirection(), obj.getType()));
@@ -596,6 +638,9 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		if (obj.getID() == CAVERNOUS_OPENING && item.getID() == LegendsQuestInvAction.A_RED_CRYSTAL + 9) {
 			return true;
 		}
+		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.YOMMI_TREE_SEED) {
+			return true;
+		}
 		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED) {
 			return true;
 		}
@@ -624,15 +669,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOTEM_POLE && item.getID() == 1183) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
-				replaceObjectDelayed(obj, 10000, 1170);
-				message(p, 1300, "This totem pole is truly awe inspiring.",
-					"It depicts powerful Karamja jungle animals.",
-					"It is very well carved and brings a sense of power ",
-					"and spiritual fullfilment to anyone who looks at it.");
+				message(p, "You have already replaced the evil totem pole with your own.",
+						"You feel a great sense of accomplishment");
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
-				replaceTotemPole(p, obj);
+				replaceTotemPole(p, obj, true);
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 8) {
@@ -731,13 +773,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "Soon the tree stops growing...",
 				"It looks tall enough now to make a good totem pole.");
 		}
+		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.YOMMI_TREE_SEED) {
+			p.message("These seeds need to be germinated in pure water before they");
+			p.message("can be planted in the fertile soil.");
+		}
 		if (obj.getID() == FERTILE_EARTH && item.getID() == LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED) {
-			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 8) {
-				p.message("You'll need some sacred water to feed ");
-				p.message("the tree when it starts growing.");
-				return;
-			}
-			if (!hasItem(p, 1267)) {
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) != 8 || !hasItem(p, 1267)) {
 				p.message("You'll need some sacred water to feed ");
 				p.message("the tree when it starts growing.");
 				return;
@@ -804,6 +845,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				case LegendsQuestSanTojalon.A_CHUNK_OF_CRYSTAL:
 				case LegendsQuestIrvigSenay.A_LUMP_OF_CRYSTAL:
 				case LegendsQuestRanalphDevere.A_HUNK_OF_CRYSTAL:
+					if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
+						//message possibly non kosher
+						p.message("You need a crafting ability of at least 50 to perform this task.");
+						return;
+					}
 					if (!p.getCache().hasKey(item.getDef().getName().toLowerCase().replace(" ", "_"))) {
 						p.getCache().store(item.getDef().getName().toLowerCase().replace(" ", "_"), true);
 						removeItem(p, item.getID(), 1);
@@ -940,6 +986,14 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				}
 				return;
 			}
+			if((p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) 
+					&& !Constants.GameServer.LOOSE_SHALLOW_WATER_CHECK) {
+				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.",
+						"You take a refreshing drink from the pool.",
+						"The cut reed is soaked through with water and is now all soggy.");
+				return;
+			}
+			
 			int emptyID = -1;
 			int refilledID = -1;
 			for (int i = 0; i < REFILLABLE.length; i++) {
@@ -950,7 +1004,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				}
 			}
 			if (emptyID != -1) {
-				message(p, 1300, "You use the cut reed plant to syphon some water from the pool");
+				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.");
 				if (emptyID == 1188) {
 					message(p, 1300, "into your gold bowl.");
 					p.getInventory().replace(1188, 1189);
@@ -972,7 +1026,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 	}
 
-	private void replaceTotemPole(Player p, GameObject obj) {
+	private void replaceTotemPole(Player p, GameObject obj, boolean calledGujuo) {
 		if (hasItem(p, 1183)) {
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 9) {
 				p.updateQuestStage(Constants.Quests.LEGENDS_QUEST, 10);
@@ -983,31 +1037,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				"And replace it with the one you carved yourself.",
 				"As you do so, you feel a lightness in the air,");
 			p.message("almost as if the Kharazi jungle were sighing.");
-			Npc gujuo = spawnNpc(LegendsQuestGujuo.GUJUO, p.getX(), p.getY(), 60000 * 3);
-			if (gujuo != null) {
-				gujuo.resetPath();
-				sleep(650);
-				npcWalkFromPlayer(p, gujuo);
-				npcTalk(p, gujuo, "Greetins Bwana,",
-					"We witnessed your fight with the Demon from some distance away.",
-					"My people are so pleased with your heroic efforts.",
-					"Your strength and ability as a warrior are Legendary.");
-				message(p, gujuo, 1300, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
-				addItem(p, 1265, 1);
-				npcTalk(p, gujuo, "Please accept this as a token of our appreciation.",
-					"Please, now consider yourself a friend of my people.",
-					"And visit us anytime.");
-				if (hasItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED)) {
-					removeItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED, p.getInventory().countId(LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED));
-					npcTalk(p, gujuo, "I'll take those Germinated Yommi tree seeds to Ungadulu,",
-						"I'm sure he'll apreciate them.");
-
+			p.message("Perhaps Gujuo would like to see the totem pole.");
+			if (calledGujuo) {
+				Npc gujuo = spawnNpc(LegendsQuestGujuo.GUJUO, p.getX(), p.getY(), 60000 * 3);
+				if (gujuo != null) {
+					gujuo.initializeTalkScript(p);
 				}
-				npcTalk(p, gujuo, "I have to collect herbs now Bwana...",
-					"");
-				p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
-				if (gujuo != null)
-					gujuo.remove();
 			}
 		} else {
 			p.message("I shall replace it with the Totem pole");
@@ -1022,6 +1057,5 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		static final int OPAL = 894;
 		static final int JADE = 893;
 		static final int RED_TOPAZ = 892;
-
 	}
 }

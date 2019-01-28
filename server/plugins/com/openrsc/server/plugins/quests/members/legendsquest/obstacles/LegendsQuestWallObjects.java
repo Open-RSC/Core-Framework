@@ -177,9 +177,21 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 									p.teleport(453, 3705);
 									sleep(1300);
 									message(p, 1300, "You take a run up...");
-									message(p, 1300, "You sail over the tops of the flames, just getting slightly burnt by the flames...");
+									int burnDegRnd = DataConversions.random(0, 5);
+									if (burnDegRnd <= 2) {
+										message(p, 1300, "You sail over the tops of the flames, just getting slightly burnt by the flames...");
+										p.damage(DataConversions.random(3,7));
+									}
+									else if (burnDegRnd <= 4) {
+										message(p, 1300, "You get severly burned as you jump across the flames...");
+										p.damage(DataConversions.random(8,17));
+									}
+									else if (burnDegRnd <= 5) {
+										message(p, 1300, "You get severly burned as you jump across the flames...",
+												"You feel very un well..");
+										p.damage(DataConversions.random(18,37));
+									}
 									p.teleport(455, 3702);
-									p.damage(8);
 								} else if (leave == 1) {
 									Npc ungadulu = getNearestNpc(p, LegendsQuestUngadulu.UNGADULU, 8);
 									if (ungadulu == null) {
@@ -236,7 +248,11 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 					p.message("You quickly walk over the doused flames.");
 					doWallMovePlayer(obj, p, 206, 5000, true);
 					break;
+				case 50:
+				case 141:
+				case 342:
 				case 464:
+				case 1189:
 					message(p, 1300, "The water seems to evaporate in a cloud of steam",
 						"before it gets anywhere near the flames.");
 					break;

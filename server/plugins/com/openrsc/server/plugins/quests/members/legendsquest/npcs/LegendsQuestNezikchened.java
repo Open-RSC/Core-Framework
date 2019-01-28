@@ -60,7 +60,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 			npcTalk(p, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
 			if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") <= 3) {
 				npcTalk(p, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
-				message(p, third_nezikchened, 1300, "The Demon starts chanting.",
+				message(p, third_nezikchened, 1300, "The Demon starts chanting...",
 					"@yel@Nezikchened: Protectors of source, alive in death,",
 					"@yel@Nezikchened: do not rest while this Vacu draws breath!");
 				if (third_nezikchened != null) {
@@ -75,7 +75,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 				third_nezikchened.startCombat(p);
 				p.message("You feel a great sense of loss...");
 				p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
-				p.message("@yel@Nezikchened: Your faith will help you little here.");
+				npcTalk(p, third_nezikchened, "Your faith will help you little here.");
 			} else {
 				third_nezikchened.startCombat(p);
 			}
@@ -195,7 +195,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 					message(p, 1300, "@yel@Nezikchened: Arrrghhhh.",
 						"@yel@Nezikchened: I am beaten by a mere mortal.",
 						"@yel@Nezikchened: I will revenge myself upon you...");
-					playerTalk(p, null, "Yeah, yeah, yeah !",
+					playerTalk(p, null, "Yeah, yeah, yeah ! ",
 						"Heard it all before !");
 					break;
 			}

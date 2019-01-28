@@ -31,15 +31,12 @@ public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveLi
 				"Can I help you at all?");
 			int option = showMenu(p, n, "Yes please. What are you selling?",
 				"No thanks");
-			switch (option) {
-				case 0:
-					npcTalk(p, n, "Take a look");
-					p.setAccessingShop(shop);
-					ActionSender.showShop(p, shop);
-					break;
-				case 1:
-					npcTalk(p, n, "Ok, well, if you change your mind, do pop back.");
-					break;
+			if (option == 0) {
+				npcTalk(p, n, "Take a look");
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+			} else if (option == 1) {
+				npcTalk(p, n, "Ok, well, if you change your mind, do pop back.");
 			}
 		}
 	}
