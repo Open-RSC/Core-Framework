@@ -102,6 +102,9 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 						return;
 					}
 					int yell = DataConversions.random(0, 3);
+					if (yell == 0) {
+						npcTalk(p, n, "I am tired Bwana, I must go and rest...");
+					}
 					if (yell == 1) {
 						npcTalk(p, n, "I must visit my people now...");
 					} else if (yell == 2) {

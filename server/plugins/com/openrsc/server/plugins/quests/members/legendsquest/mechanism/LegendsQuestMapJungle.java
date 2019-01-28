@@ -65,9 +65,17 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				missionBreifing(p);
 			} else if (menu == 1) {
 				if (!JUNGLE_WEST_AREA(p) && !JUNGLE_MIDDLE_AREA(p) && !JUNGLE_EAST_AREA(p)) {
-					message(p, 1200, "You're not even in the Kharazi Jungle yet.");
-					message(p, 1200, "You need to get to the Southern end of Karamja ");
-					message(p, 1200, "before you can start mapping.");
+					int rnd = DataConversions.random(0, 1);
+					if (rnd == 0) {
+						message(p, 1200, "You're not even in the Kharazi Jungle yet.");
+						message(p, 1200, "You need to get to the Southern end of Karamja ");
+						message(p, 1200, "before you can start mapping.");
+					}
+					else {
+						message(p, 1900, "You prepare to start mapping this area...");
+						message(p, 1200, "This doesn't look like the Kharazi Jungle! ");
+						message(p, 1200, "You need to go to the very southern end of the Island of Karamja !");
+					}
 					return;
 				}
 				message(p, 1900, "You prepare to start mapping this area...");
@@ -96,9 +104,9 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 					message(p, 1200, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
 				}
+				//potentially this check was done earlier?
 				if (getCurrentLevel(p, Skills.CRAFTING) < 50) {
-					//message possibly non kosher
-					p.message("You need a crafting ability of at least 50 to complete this task.");
+					p.message("You need a crafting level of 50 to perform this task.");
 					return;
 				}
 				if (canMap) {
@@ -109,7 +117,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 	}
 
 	private void missionBreifing(Player p) {
-		ActionSender.sendBox(p, "* Legends Guild Quest *% % % %"
+		ActionSender.sendBox(p, "* Legends Guild Quest * % % % %"
 			+ "1 : Map the Kharazi Jungle (Southern end of Karamja), there are three main areas that need to be mapped.% %"
 			+ "2 : Try to meet up with the local friendly natives, some are not so friendly so be careful.% %"
 			+ "3 : See if you can get a trophy or native jungle item from the natives to display in the Legends Guild. You may be given a task or test to earn this.% % %"
@@ -128,7 +136,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 			message(p, 1200, "@gre@Middle area of the Kharazi Jungle- *** Completed ***");
 		}
 		if (!p.getCache().hasKey("JUNGLE_WEST")) {
-			message(p, 1200, "@red@You have yet to map the western part of the Kharazi Jungle");
+			message(p, 1200, "@red@You have yet to map the Western part of the Kharazi Jungle.");
 		} else {
 			message(p, 1200, "@gre@Western part of the Kharazi Jungle- *** Completed ***");
 		}
@@ -136,7 +144,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 
 	private void mapArea(Player p) {
 		int random = DataConversions.random(0, 100);
-		if (random >= 0 && random <= 29) { // 30% succeed.
+		if (random <= 29) { // 30% succeed.
 			removeItem(p, 982, 1);
 			message(p, 1200, "You neatly add a new section to your map.");
 			if (JUNGLE_WEST_AREA(p)) {
@@ -167,17 +175,17 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				message(p, 1900, "You still have some sections of the map to complete.");
 				checkMapComplete(p);
 			}
-		} else if (random > 29 && random <= 50) { // 20 % fail both.
+		} else if (random <= 50) { // 20 % fail both.
 			p.message("You fall over, landing on your charcoal and papyrus, destroying them both.");
 			removeItem(p, 982, 1);
 			removeItem(p, 983, 1);
-		} else if (random > 50 && random <= 70) { // 20% to fail papyrus
+		} else if (random <= 70) { // 20% to fail papyrus
 			p.message("You make a mess of the map, the paper is totally ruined.");
 			removeItem(p, 982, 1);
-		} else if (random > 70 && random <= 90) { // 20% to fail charcoal
+		} else if (random <= 90) { // 20% to fail charcoal
 			p.message("You snap your stick of charcoal.");
 			removeItem(p, 983, 1);
-		} else if (random > 90 && random <= 100) { // 10% to fail and save papyrus
+		} else if (random <= 100) { // 10% to fail and save papyrus
 			p.message("You make a mess of the map, but are able to rescue the paper.");
 		}
 	}

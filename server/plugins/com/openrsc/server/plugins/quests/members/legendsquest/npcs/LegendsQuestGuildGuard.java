@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
@@ -27,7 +28,6 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 			if (cID == -1) {
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 0: /* Not started Legends Quest */
-						message(p, 1200, "You approach a nearby guard...");
 						npcTalk(p, n, "Yes " + (p.isMale() ? "Sir" : "Ma'am") + ", how can I help you?");
 						int menu = showMenu(p, n,
 							"What is this place?",
@@ -45,14 +45,30 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 						}
 						break;
 					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+					case 7:
+					case 8:
+					case 9:
+					case 10:
 						p.message("A guard nods at you as you walk past.");
 						npcTalk(p, n, "Hope the quest is going well " + (p.isMale() ? "Sir" : "Ma'am") + " !");
+						break;
+					case 11:
+					case -1:
+						p.message("The guards Salute you as you walk past.");
+						npcTalk(p, n, "! ! ! Attention ! ! !",
+							"Legends Guild Member Approaching");
+						openGates(p);
 						break;
 				}
 			}
 			switch (cID) {
 				case LegendsGuard.WHAT_IS_THIS_PLACE:
-					npcTalk(p, n, "This is the Legends Guild " + (p.isMale() ? "Sir" : "Ma'am") + " !",
+					npcTalk(p, n, "This is the Legends Guild " + (p.isMale() ? "sir" : "Maaam") + " !",
 						"Legendary RuneScape citizens are invited on a quest",
 						"in order to become members of the guild.");
 					int opt = showMenu(p, n,
@@ -65,7 +81,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 					}
 					break;
 				case LegendsGuard.HOW_DO_I_GET_IN_HERE:
-					npcTalk(p, n, "Well " + (p.isMale() ? "Sir" : "Ma'am") + ", ",
+					npcTalk(p, n, "Well " + (p.isMale() ? "sir" : "Ma'am") + ", ",
 						"you'll need to be a legendary citizen of RuneScape.",
 						"If you want to use the Legends Hall, ",
 						"you'll be invited to complete a quest.",
@@ -158,12 +174,14 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 				case LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT:
 					npcTalk(p, n, "Well, to be honest " + (p.isMale() ? "Sir" : "Ma'am") + ", I'm not really sure.",
 						"You'll need to talk to Grand Vizier Erkle to find that out.");
-					int opt4 = showMenu(p, n,
+					int opt4 = showMenu(p, n, false, //do not send over
 						"Can I go on the quest?",
 						"Thanks for your help.");
 					if (opt4 == 0) {
+						playerTalk(p, n, "Can I go on the quest?");
 						legendsGuardDialogue(p, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
 					} else if (opt4 == 1) {
+						playerTalk(p, n, "Thanks for your help");
 						npcTalk(p, n, "You're welcome..");
 						p.message("The Guard marches off on patrol again.");
 					}
@@ -172,11 +190,14 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 					npcTalk(p, n, "He is the head of the Legends Guild.",
 						"His full name is Radimus Erkle.",
 						"Would you like to talk to him about the quest?");
-					int opt5 = showMenu(p, n,
+					int opt5 = showMenu(p, n, false, //do not send over
 						"Yes, I'd like to talk to Grand Vizier Erkle.",
 						"Some other time perhaps.");
 					if (opt5 == 0) {
+						playerTalk(p, n, "Yes, I'd like to talk to Grand Vizier Erkle.");
 						legendsGuardDialogue(p, n, LegendsGuard.LIKE_TO_TALK_TO_GVE);
+					} else if (opt5 == 1) {
+						playerTalk(p, n, "Some other time perhaps");
 					}
 					break;
 				case LegendsGuard.LIKE_TO_TALK_TO_GVE:
@@ -204,6 +225,9 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == LEGENDS_GUILD_GUARD) {
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 0) {
+				message(p, 1200, "You approach a nearby guard...");
+			}
 			legendsGuardDialogue(p, n, -1);
 		}
 	}
@@ -226,6 +250,7 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecu
 				switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
 					case 0:
 						if (legends_guard != null) {
+							message(p, 1200, "A nearby guard approaches you...");
 							legends_guard.initializeTalkScript(p);
 						} else {
 							p.message("The guards is currently busy.");
