@@ -1,7 +1,7 @@
 include .env
 MYSQL_DUMPS_DIR=./data
 
-go:
+goo:
 	`pwd`/Go-Linux.sh
 
 run:
