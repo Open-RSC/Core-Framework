@@ -20,7 +20,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
 	PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
-	PickupExecutiveListener, DropListener, DropExecutiveListener {
+	PickupExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
@@ -310,10 +310,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
-		if (n.getID() >= 757 && n.getID() <= 760 || n.getID() == 713) {
-			return true;
-		}
-		return false;
+		return n.getID() >= 757 && n.getID() <= 760 || n.getID() == 713;
 	}
 
 	@Override
@@ -401,17 +398,6 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 				Server.getServer().getGameEventHandler().add(new ObjectRemover(charge, 2));
 				break;
 		}
-	}
-
-	@Override
-	public void onDrop(Player p, Item i) {
-		removeItem(p, i);
-		p.message("As you drop the " + i.getDef().getName() + ", it vanishes.");
-	}
-
-	@Override
-	public boolean blockDrop(Player p, Item i) {
-		return i.getID() >= 1213 && i.getID() <= 1218;
 	}
 
 	@Override
@@ -529,10 +515,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == 1213 || i.getID() == 1214 || i.getID() == 1215) {
-			return true;
-		}
-		return false;
+		return i.getID() == 1213 || i.getID() == 1214 || i.getID() == 1215;
 	}
 
 	@Override
