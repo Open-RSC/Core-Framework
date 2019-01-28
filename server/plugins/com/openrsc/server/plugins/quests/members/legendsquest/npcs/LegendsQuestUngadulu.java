@@ -7,11 +7,15 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
+import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
 
@@ -27,10 +31,10 @@ import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 import static com.openrsc.server.plugins.Functions.transform;
 
-public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	public static final int UNGADULU = 766;
-	private static final int EVIL_UNGADULU = 767;
+	public static final int EVIL_UNGADULU = 767;
 
 	private static void ungaduluTalkToDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == UNGADULU) {
@@ -58,7 +62,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 						} else if (menu == 1) {
 							ungaduluTalkToDialogue(p, n, Ungadulu.HOW_DO_I_GET_OUT_OF_HERE);
 						} else if (menu == 2) {
-							npcTalk(p, n, "My sincerest pleasure Bwana...");
+							ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 						}
 						break;
 					case 5:
@@ -126,7 +130,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 							} else if (newMenu9 == 3) {
 								ungaduluTalkToDialogue(p, n, Ungadulu.I_NEED_MORE_YOMMI_TREE_SEEDS);
 							} else if (newMenu9 == 4) {
-								npcTalk(p, n, "My sincerest pleasure Bwana...");
+								ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 							}
 						} else {
 							npcTalk(p, n, "Hello Bwana, how goes your quest with the Yommi tree?");
@@ -175,6 +179,9 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				}
 			}
 			switch (cID) {
+				case Ungadulu.OK_THANKS:
+					npcTalk(p, n, "My sincerest pleasure Bwana...");
+					break;
 				case Ungadulu.WHAT_DO_I_DO_NOW:
 					npcTalk(p, n, "Well, you should be able to plant the Yommi tree.",
 						"And then water it with the sacred water.",
@@ -190,7 +197,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					} else if (y_menu == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_THE_SPIRIT);
 					} else if (y_menu == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.I_HAVE_KILLED_THE_SPIRIT:
@@ -209,39 +216,55 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					} else if (f_menu == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_I_DO_NOW);
 					} else if (f_menu == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.I_HAVE_GOT_THE_WATER:
 					npcTalk(p, n, "That is truly great Bwana...well done!",
 						"You have the spirit of the jungle lion",
 						"Did you use the spell and kill the spirit?");
-					int x_menu = showMenu(p, n,
+					int x_menu = showMenu(p, n, false, //do not send over
 						"Yes, I've killed the Spirit.",
 						"What do I do now?",
 						"Ok, thanks...");
 					if (x_menu == 0) {
+						playerTalk(p, n, "Yes, I've killed the Spirit.");
 						ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_THE_SPIRIT);
 					} else if (x_menu == 1) {
+						playerTalk(p, n, "What do I do now ?");
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_I_DO_NOW);
 					} else if (x_menu == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						playerTalk(p, n, "Ok, thanks...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.DO_YOU_KNOW_ANYTHING_ABOUT_DAGGERS:
 					npcTalk(p, n, "I know something about them, especially magical daggers.",
 						"If you have a specific one, show it to me and I'll help",
 						"as much as I can.");
-					int reply3 = showMenu(p, n,
-						"I have killed Viyeldi!",
-						"The spirit told me to kill Viyeldi.",
-						"Ok, thanks...");
+					boolean killedViyeldi = p.getCache().hasKey("killed_viyeldi");
+					String[] menuOpts;
+					if (killedViyeldi) {
+						menuOpts = new String[]{"I have killed Viyeldi!",
+								"The spirit told me to kill Viyeldi.",
+								"Ok, thanks..."};
+					} else {
+						menuOpts = new String[]{"I met a spirit in the Viyeldi Caves.",
+								"The spirit told me to kill Viyeldi.",
+								"Ok, thanks..."};
+					}
+					int reply3 = showMenu(p, n, menuOpts);
 					if (reply3 == 0) {
-						ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_VIYELDI);
+						if (killedViyeldi) {
+							ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_VIYELDI);
+						}
+						else {
+							ungaduluTalkToDialogue(p, n, Ungadulu.I_MET_A_SPIRIT_IN_THE_VIYELDI_CAVES);
+						}
 					} else if (reply3 == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.THE_SPIRIT_TOLD_ME_TO_KILL_VIYELDI);
 					} else if (reply3 == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.I_HAVE_KILLED_VIYELDI:
@@ -264,27 +287,23 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (reply4 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.DO_YOU_KNOW_ANYTHING_ABOUT_DAGGERS);
 					} else if (reply4 == 1) {
-						npcTalk(p, n, "I am not sure at this time Bwana.",
-							"Give me a few moments to think.",
-							"Hmmm....");
-						message(p, n, 1300, "The Shaman looks as if he's thinking very deeply.");
-						npcTalk(p, n, "I could make a spell that would help you to defeat the spirit.",
-							"But I need you to bring me a possesion that it once owned.",
-							"If you have something like that, please show it to me.",
-							"And I'll give you the spell.");
-						int reply5 = showMenu(p, n,
-							"I have killed Viyeldi!",
-							"Do you know anything about daggers?",
-							"Ok, thanks...");
-						if (reply5 == 0) {
-							ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_KILLED_VIYELDI);
-						} else if (reply5 == 1) {
-							ungaduluTalkToDialogue(p, n, Ungadulu.DO_YOU_KNOW_ANYTHING_ABOUT_DAGGERS);
-						} else if (reply5 == 2) {
-							npcTalk(p, n, "My sincerest pleasure Bwana...");
+						if (hasItem(p, 1257)) {
+							npcTalk(p, n, "You can use that Holy Force spell to try and defeat the spirit.",
+									"Come back and let me know if I can help in any other way.");
+						} else {
+							npcTalk(p, n, "I am not sure at this time Bwana.",
+									"Give me a few moments to think.",
+									"Hmmm....");
+							message(p, n, 1300, "The Shaman looks as if he's thinking very deeply.",
+									"The wizened old Shaman hands over a piece of paper.");
+							npcTalk(p, n, "Take this spell and pray that you can defeat",
+									"this evil spirit before it's too late.");
+							addItem(p, 1257, 1);
+							npcTalk(p, n, "I'll take that dagger from you now!");
+							removeItem(p, 1256, 1); //GLOWING DAGGER
 						}
 					} else if (reply4 == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.I_MET_A_SPIRIT_IN_THE_VIYELDI_CAVES:
@@ -298,7 +317,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (reply2 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.THE_SPIRIT_TOLD_ME_TO_KILL_VIYELDI);
 					} else if (reply2 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.THE_SPIRIT_TOLD_ME_TO_KILL_VIYELDI:
@@ -316,7 +335,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (reply == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.I_MET_A_SPIRIT_IN_THE_VIYELDI_CAVES);
 					} else if (reply == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.WHAT_DO_YOU_KNOW_ABOUT_THE_SOURCE_OF_THE_SACRED_WATER:
@@ -334,7 +353,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (newMenu8 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.I_AM_ON_A_QUEST_TO_GET_MORE_PURE_WATER);
 					} else if (newMenu8 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.I_AM_ON_A_QUEST_TO_GET_MORE_PURE_WATER:
@@ -351,7 +370,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (newMenu7 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_YOU_KNOW_ABOUT_THE_SOURCE_OF_THE_SACRED_WATER);
 					} else if (newMenu7 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.THE_MAGIC_POOL_HAS_DRIED_UP:
@@ -365,7 +384,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (newMenu6 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHERE_CAN_I_GET_MORE_PURE_WATER);
 					} else if (newMenu6 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.WHERE_CAN_I_GET_MORE_PURE_WATER:
@@ -384,7 +403,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (newMenu5 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.THE_MAGIC_POOL_HAS_DRIED_UP);
 					} else if (newMenu5 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.I_NEED_MORE_YOMMI_TREE_SEEDS:
@@ -408,7 +427,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (opt3 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHERE_DO_I_PLANT_THE_SEEDS);
 					} else if (opt3 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.WHERE_DO_I_PLANT_THE_SEEDS:
@@ -421,7 +440,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (opt2 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.I_HAVE_GERMINATED_THE_SEEDS);
 					} else if (opt2 == 1) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.HOW_DO_I_GET_OUT_OF_HERE:
@@ -445,7 +464,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					} else if (chapter == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_WILL_YOU_DO_NOW);
 					} else if (chapter == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.WHAT_WILL_YOU_DO_NOW:
@@ -464,7 +483,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					} else if (chapter2 == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.HOW_DO_I_GET_OUT_OF_HERE);
 					} else if (chapter2 == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.COLLECT_SOME_YOMMI_SEEDS_FOR_GUJUO:
@@ -489,7 +508,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 						} else if (newMenu == 1) {
 							ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_YOU_KNOW_ABOUT_THE_PURE_WATER);
 						} else if (newMenu == 2) {
-							npcTalk(p, n, "My sincerest pleasure Bwana...");
+							ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 						}
 					} else {
 						npcTalk(p, n, "You already have some Yommi tree seeds, use those first..",
@@ -525,7 +544,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					} else if (option == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.WHAT_DO_YOU_KNOW_ABOUT_THE_PURE_WATER);
 					} else if (option == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 				case Ungadulu.WHAT_DO_YOU_KNOW_ABOUT_THE_PURE_WATER:
@@ -544,7 +563,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					} else if (next == 1) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.HOW_DO_I_GET_OUT_OF_HERE);
 					} else if (next == 2) {
-						npcTalk(p, n, "My sincerest pleasure Bwana...");
+						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
 					}
 					break;
 			}
@@ -652,13 +671,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == UNGADULU) {
-			return true;
-		}
-		if (n.getID() == EVIL_UNGADULU) {
-			return true;
-		}
-		return false;
+		return n.getID() == UNGADULU || n.getID() == EVIL_UNGADULU;
 	}
 
 	@Override
@@ -673,13 +686,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == UNGADULU) {
-			return true;
-		}
-		if (n.getID() == EVIL_UNGADULU) {
-			return true;
-		}
-		return false;
+		return n.getID() == UNGADULU || n.getID() == EVIL_UNGADULU;
 	}
 
 	@Override
@@ -699,6 +706,57 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				return;
 			}
 			p.startCombat(affectedmob);
+		}
+		if (affectedmob.getID() == EVIL_UNGADULU) {
+			p.message("A strange power stops you from attacking the Shaman.");
+			evilUngadulu(p, affectedmob);
+		}
+	}
+	
+	@Override
+	public boolean blockPlayerRangeNpc(Player p, Npc n) {
+		return n.getID() == UNGADULU || n.getID() == EVIL_UNGADULU;
+	}
+
+	@Override
+	public void onPlayerRangeNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == UNGADULU) {
+			p.message("You feel a strange force coming over you...");
+			p.message("You feel weakened....");
+			p.getSkills().setLevel(Skills.ATTACK, 0);
+			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+				message(p, 1300, "The Shaman casts a debilitating spell on you..",
+					"You're sent reeling backwards through the flames..");
+				p.teleport(454, 3702);
+				p.damage(5);
+				npcTalk(p, affectedmob, "Think twice in future before attacking me..");
+				playerTalk(p, affectedmob, "Ughhh!");
+				return;
+			}
+			p.startCombat(affectedmob);
+		}
+		if (affectedmob.getID() == EVIL_UNGADULU) {
+			p.message("A strange power stops you from attacking the Shaman.");
+			evilUngadulu(p, affectedmob);
+		}
+	}
+
+	@Override
+	public boolean blockPlayerMageNpc(Player p, Npc n) {
+		return n.getID() == UNGADULU || n.getID() == EVIL_UNGADULU;
+	}
+
+	@Override
+	public void onPlayerMageNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == UNGADULU) {
+			p.message("You feel a strange force coming over you...");
+			p.message("You feel weakened....");
+			p.getSkills().setLevel(Skills.ATTACK, 0);
+			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			p.message("The spell fizzles and dies...");
+			p.message("Some sort of magical effect seems to be protecting the Shaman.");
+			return;
 		}
 		if (affectedmob.getID() == EVIL_UNGADULU) {
 			p.message("A strange power stops you from attacking the Shaman.");
@@ -817,6 +875,16 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
 					message(p, 1300, "A sense of hopelessness fills your body...");
 					npcTalk(p, nez, "'Ere near to death ye comes now that ye has meddled in my dealings..");
+					if (p.getCache().hasKey("holy_water_neiz")) {
+						p.message("The holy water starts smoking on the Demons skin...");
+						npcTalk(p, nez, "Ahhhrhhhhhghhhh...it burns.....");
+						// silverlight effect may also be present
+						for (int i = 0; i < 3; i++) {
+							int currentStat = npc.getSkills().getLevel(i);
+							int newStat = currentStat - (int) (currentStat * 0.15);
+							npc.getSkills().setLevel(i, newStat);
+						}
+					}
 				}
 			} else {
 				npcTalk(p, npc, "Ha, ha ha! There's no need to use that on me any more...",
@@ -849,6 +917,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		static final int I_HAVE_KILLED_THE_SPIRIT = 19;
 		static final int I_HAVE_GOT_THE_WATER = 20;
 		static final int WHAT_DO_I_DO_NOW = 21;
+		static final int OK_THANKS = 22;
 
 	}
 }

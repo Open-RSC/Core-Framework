@@ -1,11 +1,15 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
 import com.openrsc.server.Constants;
+import com.openrsc.server.Server;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.quests.members.legendsquest.mechanism.LegendsQuestInvAction;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.addItem;
@@ -13,7 +17,9 @@ import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
 import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
 
@@ -47,7 +53,17 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 							GujuoDialogue(p, n, Gujuo.SORRY_IT_WAS_A_MISTAKE);
 						}
 						break;
-					case 2: // TODO
+					case 2: // DISCOVER CAVES
+						npcTalk(p, n, "How goes your quest to release Ungadulu Bwana?");
+						int menuCave = showMenu(p, n, "I've found the caves, but I don't know what to do.",
+								"Ok thanks for your help.");
+						if (menuCave == 0) {
+							npcTalk(p, n, "Search the caves and try to talk to Ungadulu, there may be some",
+									"clues to be had by searching all the items in the cave...");
+							gujuoBye(p, n);
+						} else if (menuCave == 1) {
+							GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+						}
 						break;
 					case 3:
 						if (hasItem(p, 1188) || hasItem(p, 1189)) { // GOLDEN BOWL
@@ -102,12 +118,14 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						npcTalk(p, n, "I have visited Ungadulu in the caves, he is hard at work studying.",
 							"He looks well!",
 							"Have you grown the Yommi tree yet?");
-						int opt20 = showMenu(p, n,
+						int opt20 = showMenu(p, n, false, //do not send over
 							"The water pool has dried up and I need more water.",
 							"The Yommi tree died");
 						if (opt20 == 0) {
+							playerTalk(p, n, "The water pool has dried up and I need more pure water.");
 							GujuoDialogue(p, n, Gujuo.THE_WATER_POOL_HAS_DRIED_UP_AND_I_NEED_MORE_WATER);
 						} else if (opt20 == 1) {
+							playerTalk(p, n, "The Yommi tree died");
 							GujuoDialogue(p, n, Gujuo.THE_YOMMI_TREE_DIED);
 						}
 						break;
@@ -156,48 +174,61 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					case 10:
 					case 11:
 					case -1:
-						if (hasItem(p, 1265)) {
-							npcTalk(p, n, "Good day Bwana.",
+						if (!p.getCache().hasKey("rewarded_totem") && p.getQuestStage(Constants.Quests.LEGENDS_QUEST) >= 9) {
+							n.resetPath();
+							sleep(650);
+							npcWalkFromPlayer(p, n);
+							npcTalk(p, n, "Greetins Bwana,",
+								"We witnessed your fight with the Demon from some distance away.",
+								"My people are so pleased with your heroic efforts.",
+								"Your strength and ability as a warrior are Legendary.");
+							message(p, n, 1300, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
+							addItem(p, 1265, 1);
+							p.getCache().store("rewarded_totem", true);
+							npcTalk(p, n, "Please accept this as a token of our appreciation.",
+								"Please, now consider yourself a friend of my people.",
+								"And visit us anytime.");
+							if (hasItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED)) {
+								removeItem(p, LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED, p.getInventory().countId(LegendsQuestInvAction.GERMINATED_YOMMI_TREE_SEED));
+								npcTalk(p, n, "I'll take those Germinated Yommi tree seeds to Ungadulu,",
+									"I'm sure he'll apreciate them.");
+							}
+							gujuoBye(p, n);
+							return;
+						}
+						npcTalk(p, n, "Good day Bwana.",
 								"The Kharazi jungle is especially beautifull today isn't it?",
 								"My village people pass on their thanks to you.");
-							int last = showMenu(p, n,
-								"Do you have any news?",
-								"Where are all your people.",
-								"Ok thanks for your help.");
-							if (last == 0) {
-								npcTalk(p, n, "Just that everything is fine in the jungle with us.",
-									"And that we are gratefull to you for your help.");
-							} else if (last == 1) {
-								npcTalk(p, n, "My people are all happy living in the jungle.",
-									"They are still afraid of strangers and will not approach",
-									"But they are around, none the less.",
-									"Your story has been woven into the fabric of our society.",
-									"And we all sing your many praises Bwana.");
-							} else if (last == 2) {
-								GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
-							}
+						String[] menuOpts;
+						if (hasItem(p, 1265) || p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == -1) {
+							menuOpts = new String[]{ "Do you have any news?",
+									"Where are all your people.",
+									"Ok thanks for your help."};
 						} else {
-							int last = showMenu(p, n,
-								"Do you have any news?",
-								"Where are all your people.",
-								"I've lost the tribal gift you gave me.",
-								"Ok thanks for your help.");
-							if (last == 0) {
-								npcTalk(p, n, "Just that everything is fine in the jungle with us.",
+							menuOpts = new String[]{ "Do you have any news?",
+									"Where are all your people.",
+									"I've lost the tribal gift you gave me.",
+									"Ok thanks for your help."};
+						}
+						
+						int last = showMenu(p, n, menuOpts);
+						if (last == 0) {
+							npcTalk(p, n, "Just that everything is fine in the jungle with us.",
 									"And that we are gratefull to you for your help.");
-							} else if (last == 1) {
-								npcTalk(p, n, "My people are all happy living in the jungle.",
+						} else if (last == 1) {
+							npcTalk(p, n, "My people are all happy living in the jungle.",
 									"They are still afraid of strangers and will not approach",
 									"But they are around, none the less.",
 									"Your story has been woven into the fabric of our society.",
 									"And we all sing your many praises Bwana.");
-							} else if (last == 2) {
+						} else if (last == 2 || last == 3) {
+							if (last == 2 && !hasItem(p, 1265) && menuOpts.length == 4) {
 								npcTalk(p, n, "Well, that wasn't very nice of you.",
-									"It took us a long time to make that Totem pole.",
-									"Luckily, I made another one at the same time.");
+										"It took us a long time to make that Totem pole.",
+										"Luckily, I made another one at the same time.");
 								p.message("Gujuo hands over another totem pole.");
 								addItem(p, 1265, 1);
-							} else if (last == 3) {
+							} else {
 								GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 							}
 						}
@@ -337,15 +368,18 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						"You should perhaps talk to Ungadulu, he may know something ?",
 						"Perhaps there is another way to get to the source of the stream?",
 						"But I am not sure where it is...");
-					int opt30 = showMenu(p, n,
+					int opt30 = showMenu(p, n, false, //do not send over
 						"Where is the source of the spring of pure water ?",
 						"If I went in search of the source, could you help me?",
 						"Ok thanks for your help.");
 					if (opt30 == 0) {
+						playerTalk(p, n, "Where is the source of the spring of pure water ?");
 						GujuoDialogue(p, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
 					} else if (opt30 == 1) {
+						playerTalk(p, n, "If I went, could you help me?");
 						GujuoDialogue(p, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
 					} else if (opt30 == 2) {
+						playerTalk(p, n, "Ok thanks for your help.");
 						GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 					}
 					break;
@@ -373,6 +407,19 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					} else if (opt29 == 3) {
 						GujuoDialogue(p, n, Gujuo.WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM);
 					} else if (opt29 == 4) {
+						GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					}
+					break;
+				case Gujuo.OK_I_WONT_GO:
+					npcTalk(p, n, "I understand Bwana,",
+							"It would be a waste of a perfectly good life.",
+							"We will try to defeat the evil spirits in other ways ?",
+							"But I am not sure how we will do that.");
+					int optNotGo = showMenu(p, n, "If I went, could you help me?",
+							"Ok thanks for your help.");
+					if (optNotGo == 0) {
+						GujuoDialogue(p, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+					} else if (optNotGo == 1) {
 						GujuoDialogue(p, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 					}
 					break;
@@ -424,7 +471,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						"If I went, could you help me?",
 						"I searched the catacombs thoroughly but found nothing else..");
 					if (opt23 == 0) {
-						//NOTHING - it's an empty menu.
+						GujuoDialogue(p, n, Gujuo.OK_I_WONT_GO);
 					} else if (opt23 == 1) {
 						GujuoDialogue(p, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
 					} else if (opt23 == 2) {
@@ -619,15 +666,11 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 						"They are flanked by the palm which also forms the divine geometry",
 						"You will find that they cover a small entrance...",
 						"That is where Ungadulu is being kept,",
-						"If you can free him, he will entrust to you some of the sacred Yommi tree seeds.",
-						"I have to collect herbs now Bwana...", "");
+						"If you can free him, he will entrust to you some of the sacred Yommi tree seeds.");
 					if (!p.getCache().hasKey("legends_cavern")) {
 						p.getCache().store("legends_cavern", true);
 					}
-					if (n != null) {
-						message(p, 1300, "Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
-						n.remove();
-					}
+					gujuoBye(p, n);
 					break;
 				case Gujuo.I_WANT_TO_DEVELOP_FRIENDLY_RELATIONS:
 					message(p, n, 1300, "Gujuo smiles and shakes your hand warmly...");
@@ -650,10 +693,11 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 							npcTalk(p, n, "We could try to make a new totem pole.",
 								"However, we need to make it from the trunk of the ",
 								"sacred Yommi tree. ");
-							int opt7 = showMenu(p, n,
+							int opt7 = showMenu(p, n, false, //do not send over
 								"How do we make the totem pole?",
 								"I'm lost, can you show me the way out?");
 							if (opt7 == 0) {
+								playerTalk(p, n, "How do we make a totem pole?");
 								npcTalk(p, n, "First we need to plant a sacred Yommi tree..",
 									"It is a magical tree of great power, however, our Shaman..",
 									"Ungadulu is the only person with the seeds for this tree.");
@@ -682,6 +726,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 									}
 								}
 							} else if (opt7 == 1) {
+								playerTalk(p, n, "I'm lost, can you show me the way out?");
 								GujuoDialogue(p, n, Gujuo.IM_LOST);
 							}
 						} else if (opt6 == 1) {
@@ -692,10 +737,8 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					}
 					break;
 				case Gujuo.OK_THANKS_FOR_YOUR_HELP:
-					npcTalk(p, n, "You are more than welcome bwana...",
-						"I have work to do Bwana, I may see you again...", "");
-					message(p, 1300, "Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
-					n.remove();
+					npcTalk(p, n, "You are more than welcome bwana...");
+					gujuoBye(p, n);
 					break;
 				case Gujuo.UNGADULU_LOOKS_STRANGE:
 					npcTalk(p, n, "Be wary Bwana.",
@@ -914,12 +957,13 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 								"You lose some prayer...");
 							p.getSkills().setLevel(Skills.PRAYER, p.getSkills().getLevel(Skills.PRAYER) - 5);
 							npcTalk(p, n, "Would you like to try again.");
-							int failMenu = showMenu(p, n,
+							int failMenu = showMenu(p, n, false, //do not send over
 								"Yes, I'd like to bless my golden bowl.",
 								"No thanks, I'll wait.");
 							if (failMenu == 0) {
 								GujuoDialogue(p, n, Gujuo.BLESS_THE_BOWL);
 							} else if (failMenu == 1) {
+								playerTalk(p, n, "No thanks, I'll wait.");
 								npcTalk(p, n, "Very well, let me know when you want to try?");
 								GujuoDialogue(p, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 							}
@@ -928,6 +972,31 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 					break;
 			}
 		}
+	}
+	
+	public void gujuoBye(Player p, Npc n) {
+		int yell = DataConversions.random(0, 3);
+		if (yell == 0) {
+			npcTalk(p, n, "I am tired Bwana, I must go and rest...");
+		}
+		if (yell == 1) {
+			npcTalk(p, n, "I must visit my people now...");
+		} else if (yell == 2) {
+			npcTalk(p, n, "I must go and hunt now Bwana..");
+		} else if (yell == 3) {
+			npcTalk(p, n, "I have to collect herbs now Bwana...");
+		} else {
+			npcTalk(p, n, "I have work to do Bwana, I may see you again...");
+		}
+		npcTalk(p, n, "");
+		Server.getServer().getEventHandler().add(new SingleEvent(null, 1900) {
+			public void action() {
+				p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+				if(n != null) {
+					n.remove();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -982,5 +1051,6 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 		static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 32;
 		static final int I_KILLED_THE_DEMON_AGAIN = 33;
 		static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 34;
+		static final int OK_I_WONT_GO = 35;
 	}
 }

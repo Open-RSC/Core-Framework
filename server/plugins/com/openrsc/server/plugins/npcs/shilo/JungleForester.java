@@ -21,10 +21,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		if (n.getID() == JUNGLE_FORESTER) {
-			return true;
-		}
-		return false;
+		return n.getID() == JUNGLE_FORESTER;
 	}
 
 	@Override
@@ -99,8 +96,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 					} else if (menu == 1) {
 						LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.NATIVES_IN_THE_JUNGLE);
 					} else if (menu == 2) {
-						npcTalk(p, n, "You're welcome!",
-							"See you around...");
+						LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.OK_THANKS);
 					}
 					break;
 				case JungleForesterNPC_LegendsQuest.NATIVES_IN_THE_JUNGLE:
@@ -126,14 +122,12 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 								"and I'll offer you something in return...",
 								"OK, I have to go now, but it's been nice talking with you.");
 						} else if (opt3 == 1) {
-							npcTalk(p, n, "You're welcome!",
-								"See you around...");
+							LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.OK_THANKS);
 						}
 					} else if (opt == 1) {
 						LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.KHARAZI_JUNGLE);
 					} else if (opt == 2) {
-						npcTalk(p, n, "You're welcome!",
-							"See you around...");
+						LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.OK_THANKS);
 					}
 					break;
 				case JungleForesterNPC_LegendsQuest.KHARAZI_JUNGLE:
@@ -168,8 +162,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 						} else if (opt2 == 1) {
 							LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.NATIVES_IN_THE_JUNGLE);
 						} else if (opt2 == 2) {
-							npcTalk(p, n, "You're welcome!",
-								"See you around...");
+							LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.OK_THANKS);
 						}
 					} else if (option == 1) {
 						npcTalk(p, n, "No, of course not...",
@@ -179,8 +172,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 					} else if (option == 3) {
 						LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.NATIVES_IN_THE_JUNGLE);
 					} else if (option == 4) {
-						npcTalk(p, n, "You're welcome!",
-							"See you around...");
+						LegendsQuest_jungleForesterDialogue(p, n, JungleForesterNPC_LegendsQuest.OK_THANKS);
 					}
 					break;
 				case JungleForesterNPC_LegendsQuest.MAKE_A_COPY:
@@ -192,6 +184,10 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 					npcTalk(p, n, "Here, I won't be needing this any longer, and it may help you.",
 						"Whenever I've used it before, it attracted the attention of jungle natives.");
 					addItem(p, 1177, 1);
+					break;
+				case JungleForesterNPC_LegendsQuest.OK_THANKS:
+					npcTalk(p, n, "You're welcome!",
+							"See you around...");
 					break;
 			}
 		}
@@ -229,8 +225,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 					} else if (menu == 1) {
 						defaultJungleForesterDialogue(p, n, JungleForesterNPC.KHARAZI_JUNGLE);
 					} else if (menu == 2) {
-						npcTalk(p, n, "You're welcome!",
-							"See you around...");
+						defaultJungleForesterDialogue(p, n, JungleForesterNPC.OK_THANKS);
 					}
 					break;
 				case JungleForesterNPC.WHO_ARE_YOU:
@@ -251,32 +246,40 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 						"But they only just managed to to escape the jungle with their lives.",
 						"Apparently he was on a mission to map the area.",
 						"How foolish is that?");
-					int sub_menu2 = showMenu(p, n,
+					int sub_menu2 = showMenu(p, n, false, //do not send over
 						"So someone managed to get into the Kharazi Jungle?",
 						"What do you do here?",
 						"Ok thanks");
 					if (sub_menu2 == 0) {
+						playerTalk(p, n, "So someone managed to get into the Jungle?");
 						npcTalk(p, n, "Yes, he said he was from some place...near the Barbarian outpost.",
 							"Mentioned something about a legend ?",
 							"It meant nothing to me though.");
-						int sub_menu3 = showMenu(p, n,
+						int sub_menu3 = showMenu(p, n, false, //do not send over
 							"How do I get into the jungle?",
 							"What do you do here?",
 							"Ok thanks");
 						if (sub_menu3 == 0) {
+							playerTalk(p, n, "How do I get into the Kharazi jungle?");
 							defaultJungleForesterDialogue(p, n, JungleForesterNPC.KHARAZI_JUNGLE);
 						} else if (sub_menu3 == 1) {
+							playerTalk(p, n, "What do you do here?");
 							defaultJungleForesterDialogue(p, n, JungleForesterNPC.WHAT_DO_YOU_DO_HERE);
 						} else if (sub_menu3 == 2) {
-							npcTalk(p, n, "You're welcome!",
-								"See you around...");
+							playerTalk(p, n, "Ok thanks");
+							defaultJungleForesterDialogue(p, n, JungleForesterNPC.OK_THANKS);
 						}
 					} else if (sub_menu2 == 1) {
+						playerTalk(p, n, "What do you do here?");
 						defaultJungleForesterDialogue(p, n, JungleForesterNPC.WHAT_DO_YOU_DO_HERE);
 					} else if (sub_menu2 == 2) {
-						npcTalk(p, n, "You're welcome!",
-							"See you around...");
+						playerTalk(p, n, "Ok thanks");
+						defaultJungleForesterDialogue(p, n, JungleForesterNPC.OK_THANKS);
 					}
+					break;
+				case JungleForesterNPC.OK_THANKS:
+					npcTalk(p, n, "You're welcome!",
+							"See you around...");
 					break;
 			}
 		}
@@ -284,10 +287,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == JUNGLE_FORESTER && item.getID() == 1233) { // the complete map.
-			return true;
-		}
-		return false;
+		return n.getID() == JUNGLE_FORESTER && item.getID() == 1233; // the complete map.
 	}
 
 	@Override
@@ -338,6 +338,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 		public static final int WHAT_DO_YOU_DO_HERE = 0;
 		public static final int WHO_ARE_YOU = 1;
 		public static final int KHARAZI_JUNGLE = 2;
+		public static final int OK_THANKS = 3;
 	}
 
 	class JungleForesterNPC_LegendsQuest {
@@ -346,5 +347,6 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 		public static final int KHARAZI_JUNGLE = 2;
 		public static final int NATIVES_IN_THE_JUNGLE = 3;
 		public static final int MAKE_A_COPY = 4;
+		public static final int OK_THANKS = 5;
 	}
 }

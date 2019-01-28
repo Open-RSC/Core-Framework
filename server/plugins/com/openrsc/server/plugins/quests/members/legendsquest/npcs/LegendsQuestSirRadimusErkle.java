@@ -17,6 +17,7 @@ import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
@@ -52,7 +53,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				"already_cast_holy_spell", "ran_from_2nd_nezi", "legends_choose_reward",
 				"legends_reward_claimed", "ancient_wall_runes", "gave_glowing_dagger",
 				"met_spirit", "cavernous_opening", "viyeldi_companions", "killed_viyeldi",
-				"legends_wooden_beam",
+				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", 
 			};
 		for (String s : caches) {
 			if (p.getCache().hasKey(s)) {
@@ -102,14 +103,15 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 							npcTalk(p, n, "Hello again...",
 								"Would you like to continue with your training?");
 						}
-						int menu = showMenu(p, n,
+						int menu = showMenu(p, n, false, //do not send over
 							"Yes, I'll train now.",
 							"No, I've got something else to do at the moment.");
 						if (menu == 0) {
 							npcTalk(p, n, "You can choose " + getRewardClaimCount(p) + " areas to increase your abilities in.");
 							radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_ONE);
 						} else if (menu == 1) {
-							npcTalk(p, n, "Very well " + (p.isMale() ? "Sir" : "young lady") + ".",
+							playerTalk(p, n, "No, I've got something else to do at the moment.");
+							npcTalk(p, n, "Very well young " + (p.isMale() ? "man" : "lady") + ".",
 								"Return when you are able, but don't leave it too long.",
 								"You'll benefit alot from this training.",
 								"Now, do excuse me while, I have other things to attend to.",
@@ -235,16 +237,19 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					case 0:
 						npcTalk(p, n, "Good day to you " + (p.isMale() ? "Sir" : "my Lady") + " !",
 							"No doubt you are keen to become a member of the Legends Guild ?");
-						int menu = showMenu(p, n,
+						int menu = showMenu(p, n, false, //do not send over
 							"Yes actually, what's involved?",
 							"Maybe some other time.",
 							"Who are you?");
 						if (menu == 0) {
 							/* START LEGENDS QUEST */
+							playerTalk(p, n, "Yes actually, what's involved ?");
 							radimusInHouseDialogue(p, n, RadimusInHouse.WHATS_INVOLVED);
 						} else if (menu == 1) {
+							playerTalk(p, n, "Maybe some other time.");
 							radimusInHouseDialogue(p, n, RadimusInHouse.MAYBE_SOME_OTHER_TIME);
 						} else if (menu == 2) {
+							playerTalk(p, n, "Who are you?");
 							radimusInHouseDialogue(p, n, RadimusInHouse.WHO_ARE_YOU);
 						}
 						break;
@@ -318,12 +323,14 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				case RadimusInHouse.WHO_ARE_YOU:
 					npcTalk(p, n, "My name is Radimus Erkle, I am the Grand Vizier of the Legends Guild.",
 						"Are you interested in becoming a member?");
-					int opt = showMenu(p, n,
+					int opt = showMenu(p, n, false, //do not send over
 						"Yes actually, what's involved?",
 						"Maybe some other time.");
 					if (opt == 0) {
+						playerTalk(p, n, "Yes actually, what's involved ?");
 						radimusInHouseDialogue(p, n, RadimusInHouse.WHATS_INVOLVED);
 					} else if (opt == 1) {
+						playerTalk(p, n, "Maybe some other time.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.MAYBE_SOME_OTHER_TIME);
 					}
 					break;
@@ -347,40 +354,41 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					}
 					break;
 				case RadimusInHouse.SAME_MENU_NO_SCROLLS:
-					int myMenu = showMenu(p, n,
+					int myMenu = showMenu(p, n, false, //do not send over
 						"Terrible, I lost my map of the Kharazi Jungle.",
 						"It's Ok, but I have forgotten what to do.",
 						"Great, but I need another machete.",
 						"I've run out of Charcoal.",
 						"I've run out of Papyrus.");
 					if (myMenu == 0) {
+						playerTalk(p, n, "Terrible, I lost my map of the Kharazi Jungle.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.LOST_KHARAZI_JUNGLE_MAP);
 					} else if (myMenu == 1) {
+						playerTalk(p, n, "It's Ok, but I have forgotten what to do.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.FORGOTTEN_WHAT_TO_DO);
 					} else if (myMenu == 2) {
+						playerTalk(p, n, "I need another machete.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.ANOTHER_MACHETE);
 					} else if (myMenu == 3) {
+						playerTalk(p, n, "I've run out of Charcoal.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.CHARCOAL);
 					} else if (myMenu == 4) {
+						playerTalk(p, n, "I've run out of Papyrus.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.PAPYRUS);
 					}
 					break;
 				case RadimusInHouse.FORGOTTEN_WHAT_TO_DO:
-					switch (p.getQuestStage(Constants.Quests.LEGENDS_QUEST)) {
-						case 1:
-							npcTalk(p, n, "Tut! How forgetful!",
-								"You need to find a way into the Kharazi jungle, ",
-								"Then you need to explore and map that entire area.",
-								"While you're there, you need to make contact with any jungle natives.",
-								"Bring back a tribal gift from the natives",
-								"so that we can display it in the Legends Guild.",
-								"I hope that answers your question!");
-							if (hasItem(p, 1163) || hasItem(p, 1233)) {
-								radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
-							} else {
-								radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
-							}
-							break;
+					npcTalk(p, n, "Tut! How forgetful!",
+							"You need to find a way into the Kharazi jungle, ",
+							"Then you need to explore and map that entire area.",
+							"While you're there, you need to make contact with any jungle natives.",
+							"Bring back a tribal gift from the natives",
+							"so that we can display it in the Legends Guild.",
+							"I hope that answers your question!");
+					if (hasItem(p, 1163) || hasItem(p, 1233)) {
+						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
+					} else {
+						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
 					}
 					break;
 				case RadimusInHouse.ANOTHER_MACHETE:
@@ -470,7 +478,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				return;
 			}
 			if (p.getQuestStage(Constants.Quests.LEGENDS_QUEST) == 10) {
-				npcTalk(p, n, "" + (p.isMale() ? "Sir" : "Madam") + ", this is truly amazing...");
+				npcTalk(p, n, (p.isMale() ? "Sir" : "Madam") + ", this is truly amazing...");
 				if (!hasItem(p, 1233)) {
 					npcTalk(p, n, "However, I need you to complete the map of the ,",
 						"Kharazi Jungle before your quest is complete.");
@@ -492,6 +500,16 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				p.message("You have not completed this quest - submitting bug abuse.");
 			}
 		}
+		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1183) { // regular totem
+			npcTalk(p, n, "Hmmm, well, it is very impressive.",
+					"Especially since it looks very heavy...",
+					"However, it lacks a certain authenticity,",
+					"my guess is that you made it.",
+					"But I'm not sure why.",
+					"We would like to have a really nice display object",
+					"to put on display in the Legends Guild main hall.",
+					"Do you think you could get something more authentic ?");
+		}
 		if (n.getID() == SIR_RADIMUS_ERKLE_HOUSE && item.getID() == 1233) { // the complete map.
 			npcTalk(p, n, "Well done " + (p.isMale() ? "Sir" : "Madam") + ", very well done...",
 				"However, you'll probably need it while you search",
@@ -500,7 +518,6 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				"To place in the Legends Guild.",
 				"I'll take the map off your hands once we get the ",
 				"proof that you have met the natives.");
-
 		}
 	}
 

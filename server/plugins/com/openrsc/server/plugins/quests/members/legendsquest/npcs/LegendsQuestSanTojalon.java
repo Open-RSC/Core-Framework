@@ -64,7 +64,6 @@ public class LegendsQuestSanTojalon implements PlayerAttackNpcListener, PlayerAt
 			n.remove();
 			if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 1) {
 				p.getCache().set("viyeldi_companions", 2);
-				p.message("HEJ");
 			}
 			message(p, 1300, "A nerve tingling scream echoes around you as you slay the dead Hero.",
 				"@yel@San Tojalon: Ahhhggggh",

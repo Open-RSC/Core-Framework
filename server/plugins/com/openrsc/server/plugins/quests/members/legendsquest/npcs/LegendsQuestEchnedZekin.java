@@ -12,6 +12,7 @@ import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
@@ -37,7 +38,9 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 	}
 
 	private void holyForceSpell(Player p, Npc n) {
-		message(p, n, 1300, "You quickly grab the Holy Force Spell and cast it at the Demon.");
+		//not sure if this line is correct
+		//message(p, n, 1300, "You quickly grab the Holy Force Spell and cast it at the Demon.");
+		message(p, "You thrust the Holy Force spell in front of the spirit.");
 		message(p, n, 1300, "A bright, holy light streams out from the paper spell.");
 		if (p.getCache().hasKey("already_cast_holy_spell")) {
 			npcTalk(p, n, "Argghhhhh...not again....!");
@@ -60,7 +63,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 		if (second_nezikchened != null) {
 			if (useHolySpell) {
 				holyForceSpell(p, second_nezikchened);
-				message(p, second_nezikchened, 1300, "The Demon lets out an unearthly, blood curdling scream...");
+				message(p, second_nezikchened, 1300, "The spirit lets out an unearthly, blood curdling scream...");
 				message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
 				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
 				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
@@ -285,6 +288,15 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						}
 					}
 					break;
+				case Echned.ILL_DO_IT:
+					p.message("The formless shape shimmers brightly...");
+					npcTalk(p, n, "You will benefit from this decision, the source will be",
+						"opened to you.",
+						"Bring the dagger back to me when you have completed this task.");
+					if (n != null) {
+						n.remove();
+					}
+					break;
 				case Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU:
 					npcTalk(p, n, "Such noble thoughts, but Viyeldi is not alive.",
 						"He is merely a vessel by which the power of the source ",
@@ -317,24 +329,38 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						"and then bring it to me when Viyeldi is dead.");
 					int sub_menu4 = showMenu(p, n,
 						"Ok, I'll do it.",
-						"I've changed my mind, I can't do it.");
+						"I've changed my mind, I can't do it.",
+						"No, I won't take someone's life for you.");
 					if (sub_menu4 == 0) {
-						p.message("The formless shape shimmers brightly...");
-						npcTalk(p, n, "You will benefit from this decision, the source will be",
-							"opened to you.",
-							"Bring the dagger back to me when you have completed this task.");
+						echnedDialogue(p, n, Echned.ILL_DO_IT);
 					} else if (sub_menu4 == 1) {
-						npcTalk(p, n, "The decision is yours but you will have no other way to ",
-							"get to the source.",
-							"The pure water you seek will forever be out of your reach.");
-						int sub_menu5 = showMenu(p, n,
-							"I'll do what I must to get the water.",
-							"No, I won't take someone's life for you.");
+						npcTalk(p, n, "The pure water you seek will forever be out of your reach.");
+						playerTalk(p, n, "I'll do what I must to get the water.");
+						p.message("The shapeless spirit seems to crackle with energy.");
+						npcTalk(p, n, "You would release me from my torment and the source would",
+								"be available to you.",
+								"However, you must realise that this will be no easy task.",
+								"Use the dagger I have provided for you to complete this task.",
+								"and then bring it to me when Viyeldi is dead.");
+						int sub_menu5 = showMenu(p, n, "Ok, I'll do it.",
+								"I've changed my mind, I can't do it.");
 						if (sub_menu5 == 0) {
-							echnedDialogue(p, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
+							echnedDialogue(p, n, Echned.ILL_DO_IT);
 						} else if (sub_menu5 == 1) {
-							echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
+							npcTalk(p, n, "The decision is yours but you will have no other way to ",
+									"get to the source.",
+									"The pure water you seek will forever be out of your reach.");
+								int sub_menu6 = showMenu(p, n,
+									"I'll do what I must to get the water.",
+									"No, I won't take someone's life for you.");
+								if (sub_menu6 == 0) {
+									echnedDialogue(p, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
+								} else if (sub_menu6 == 1) {
+									echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
+								}
 						}
+					} else if (sub_menu4 == 2) {
+						echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
 					}
 					break;
 				case Echned.WHO_AM_I_SUPPOSED_TO_KILL_AGAIN:
@@ -436,6 +462,6 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 		static final int I_HAVE_SOMETHING_ELSE_IN_MIND = 7;
 		static final int I_HAVE_NOT_SLAYED_VIYELDI_YET = 8;
 		static final int I_DONT_HAVE_THE_DAGGER = 9;
-
+		static final int ILL_DO_IT = 10;
 	}
 }
