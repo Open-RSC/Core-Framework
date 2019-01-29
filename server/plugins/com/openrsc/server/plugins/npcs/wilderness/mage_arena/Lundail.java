@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.playerTalk;
 
 public final class Lundail implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -21,7 +22,8 @@ public final class Lundail implements ShopInterface,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		npcTalk(p, n, "well hello sir", "hello brave adventurer",
+		playerTalk(p, n, "well hello sir");
+		npcTalk(p, n, "hello brave adventurer",
 			"how can i help you?");
 
 		int option = showMenu(p, n, "what are you selling?",
