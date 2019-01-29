@@ -12,12 +12,18 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
+import com.openrsc.server.Constants;
+
 public final class ZaffsStaffs implements ShopInterface,
 	TalkToNpcExecutiveListener, TalkToNpcListener {
-
-	private final Shop shop = new Shop(false, 30000, 100, 55, 2, new Item(614,
-		5), new Item(100, 5), new Item(198, 5), new Item(101, 2),
-		new Item(102, 2), new Item(103, 2), new Item(197, 2));
+	
+	private final Shop shop = (Constants.GameServer.MEMBER_WORLD) ? 
+			new Shop(false, 30000, 100, 55, 2, new Item(614, 5), 
+					new Item(100, 5), new Item(198, 5), new Item(101, 2),
+					new Item(102, 2), new Item(103, 2), new Item(197, 2)) :
+			new Shop(false, 30000, 100, 55, 2, 
+					new Item(100, 5), new Item(198, 5), new Item(101, 2),
+					new Item(102, 2), new Item(103, 2), new Item(197, 2));
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
