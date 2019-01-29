@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import static com.openrsc.server.plugins.Functions.*;
 
+import com.openrsc.server.external.ItemId;
+
 public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListener,
 	TalkToNpcListener {
 
@@ -22,19 +24,19 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 		if (p.getCache().hasKey("mage_arena")
 			&& p.getCache().getInt("mage_arena") == 2) {
 			playerTalk(p, n, "hello my friend, kolodion sent me down");
-			npcTalk(p,
-				n,
+			npcTalk(p, n,
 				"sssshhh...the gods are talking..i can hear their whispers",
 				"..can you hear them adventurer...they're calling you");
 			playerTalk(p, n, "erm...ok!");
 			npcTalk(p, n,
-				"go and chant to the sacred stone of your chosen god",
+				"go and chant to the the sacred stone of your chosen god",
 				"you will be rewarded");
 			playerTalk(p, n, "ok?");
 			npcTalk(p, n, "once you're done come back to me...",
 				"...and i'll supply you with a mage staff ready for battle");
 			p.getCache().set("mage_arena", 3);
-		} else if ((p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 3) && (hasItem(p, 1213) || hasItem(p, 1214) || hasItem(p, 1215))) {
+		} else if ((p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 3) && 
+				(hasItem(p, ItemId.ZAMORAK_CAPE.id()) || hasItem(p, ItemId.SARADOMIN_CAPE.id()) || hasItem(p, ItemId.GUTHIX_CAPE.id()))) {
 			npcTalk(p, n, "hello adventurer, have you made your choice?");
 			playerTalk(p, n, "i have");
 			npcTalk(p, n, "good, good .. i hope you chose well",
@@ -42,17 +44,17 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 				"now i will give you a magic staff",
 				"these are all the weapons and armour you'll need here");
 			p.message("the mage guardian gives you a magic staff");
-			if (hasItem(p, 1213, 1)) {
-				addItem(p, 1216, 1);
-			} else if (hasItem(p, 1214, 1)) {
-				addItem(p, 1218, 1);
-			} else if (hasItem(p, 1215, 1)) {
-				addItem(p, 1217, 1);
+			if (hasItem(p, ItemId.ZAMORAK_CAPE.id(), 1)) {
+				addItem(p, ItemId.STAFF_OF_ZAMORAK.id(), 1);
+			} else if (hasItem(p, ItemId.SARADOMIN_CAPE.id(), 1)) {
+				addItem(p, ItemId.STAFF_OF_SARADOMIN.id(), 1);
+			} else if (hasItem(p, ItemId.GUTHIX_CAPE.id(), 1)) {
+				addItem(p, ItemId.STAFF_OF_GUTHIX.id(), 1);
 			}
 			p.getCache().set("mage_arena", 4);
 		} else if (p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 4) {
 			playerTalk(p, n, "hello again");
-			npcTalk(p, n, "hello adventurer, are you looking for another staff");
+			npcTalk(p, n, "hello adventurer, are you looking for another staff?");
 			int choice = showMenu(p, n, "what do you have to offer?", "no thanks", "tell me what you know about the charge spell?");
 			if (choice == 0) {
 				npcTalk(p, n, "take a look");
