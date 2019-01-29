@@ -3009,23 +3009,29 @@ public final class mudclient implements Runnable {
 						}
 						this.getSurface().drawString("1", xr + 320, 214 + yr, color2, 3);
 
-						color2 = 0xFFFFFF;
-						if (mouseInRow && this.mouseX > 333 + xr && this.mouseX < 345 + xr) {
-							color2 = 0xFF0000;
+						if (count >= 5) {
+							color2 = 0xFFFFFF;
+							if (mouseInRow && this.mouseX > 333 + xr && this.mouseX < 345 + xr) {
+								color2 = 0xFF0000;
+							}
+							this.getSurface().drawString("5", 335 + xr, 214 + yr, color2, 3);
 						}
-						this.getSurface().drawString("5", 335 + xr, 214 + yr, color2, 3);
 
-						color2 = 0xFFFFFF;
-						if (mouseInRow && 348 + xr < this.mouseX && this.mouseX < xr + 365) {
-							color2 = 0xFF0000;
+						if (count >= 10) {
+							color2 = 0xFFFFFF;
+							if (mouseInRow && 348 + xr < this.mouseX && this.mouseX < xr + 365) {
+								color2 = 0xFF0000;
+							}
+							this.getSurface().drawString("10", 350 + xr, 214 + yr, color2, 3);
 						}
-						this.getSurface().drawString("10", 350 + xr, 214 + yr, color2, 3);
 
-						color2 = 0xFFFFFF;
-						if (mouseInRow && this.mouseX > 368 + xr && 385 + xr > this.mouseX) {
-							color2 = 0xFF0000;
+						if (count >= 50) {
+							color2 = 0xFFFFFF;
+							if (mouseInRow && this.mouseX > 368 + xr && 385 + xr > this.mouseX) {
+								color2 = 0xFF0000;
+							}
+							this.getSurface().drawString("50", xr + 370, 214 + yr, color2, 3);
 						}
-						this.getSurface().drawString("50", xr + 370, 214 + yr, color2, 3);
 
 						color2 = 0xFFFFFF;
 						if (mouseInRow && this.mouseX > xr + 388 && this.mouseX < 400 + xr) {
@@ -3055,23 +3061,29 @@ public final class mudclient implements Runnable {
 						}
 						this.getSurface().drawString("1", xr + 320, 239 + yr, color2, 3);
 
-						color2 = 0xFFFFFF;
-						if (mouseInRow && xr + 333 < this.mouseX && this.mouseX < xr + 345) {
-							color2 = 0xFF0000;
+						if (invCount >= 5) {
+							color2 = 0xFFFFFF;
+							if (mouseInRow && xr + 333 < this.mouseX && this.mouseX < xr + 345) {
+								color2 = 0xFF0000;
+							}
+							this.getSurface().drawString("5", 335 + xr, 239 + yr, color2, 3);
 						}
-						this.getSurface().drawString("5", 335 + xr, 239 + yr, color2, 3);
 
-						color2 = 0xFFFFFF;
-						if (mouseInRow && 348 + xr < this.mouseX && 365 + xr > this.mouseX) {
-							color2 = 0xFF0000;
+						if (invCount >= 10) {
+							color2 = 0xFFFFFF;
+							if (mouseInRow && 348 + xr < this.mouseX && 365 + xr > this.mouseX) {
+								color2 = 0xFF0000;
+							}
+							this.getSurface().drawString("10", xr + 350, 239 + yr, color2, 3);
 						}
-						this.getSurface().drawString("10", xr + 350, 239 + yr, color2, 3);
 
-						color2 = 0xFFFFFF;
-						if (mouseInRow && this.mouseX > xr + 368 && 385 + xr > this.mouseX) {
-							color2 = 0xFF0000;
+						if (invCount >= 50) {
+							color2 = 0xFFFFFF;
+							if (mouseInRow && this.mouseX > xr + 368 && 385 + xr > this.mouseX) {
+								color2 = 0xFF0000;
+							}
+							this.getSurface().drawString("50", xr + 370, 239 + yr, color2, 3);
 						}
-						this.getSurface().drawString("50", xr + 370, 239 + yr, color2, 3);
 
 						color2 = 0xFFFFFF;
 						if (mouseInRow && this.mouseX > 388 + xr && xr + 400 > this.mouseX) {
