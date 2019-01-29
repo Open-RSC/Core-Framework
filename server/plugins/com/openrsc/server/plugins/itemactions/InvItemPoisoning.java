@@ -28,15 +28,34 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 
 
 	private void applyPoison(Player player, Item item) {
-		int makeAmount = 1;
+		int makeAmount = 1, maxAmount;
+		String rawItemName = item.getDef().getName().toLowerCase();
+		String procItemName;
 
 		if (item.getDef().isStackable()) {
-			makeAmount = hasItem(player, item.getID(), 15) ? 15 : player.getInventory().countId(item.getID());
+			//6 darts or 5 bolts/arrows
+			maxAmount = rawItemName.contains("dart") ? 6 : 5;
+			makeAmount = hasItem(player, item.getID(), maxAmount) ? maxAmount : player.getInventory().countId(item.getID());
+			
+			procItemName = "some ";
+			if (rawItemName.contains("dart")) {
+				procItemName += "darts";
+			} else if (rawItemName.contains("bolt")) {
+				procItemName += "bolts";
+			} else if (rawItemName.contains("arrow")) {
+				procItemName += "arrows";
+			} else {
+				procItemName += (rawItemName + (!rawItemName.endsWith("s") ? "s" : ""));
+			}
+			procItemName += "!";
+		}
+		else {
+			procItemName = "a " + rawItemName + ".";
 		}
 		Item poisonedItem = getPoisonedItem(item.getDef().getName());
 		if (poisonedItem != null) {
 			if (removeItem(player, ItemId.WEAPON_POISON.id(), 1) && removeItem(player, item.getID(), makeAmount)) {
-				player.message("You apply poison to your " + item.getDef().getName());
+				player.message("You poison " + procItemName);
 				addItem(player, poisonedItem.getID(), makeAmount);
 			}
 		} else {
