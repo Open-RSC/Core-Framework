@@ -3,6 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.Constants;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.MiniEvent;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -59,7 +60,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getID() == 1263 && !player.isSleeping()) {
+		if (item.getID() == ItemId.SLEEPING_BAG.id() && !player.isSleeping()) {
 			ActionSender.sendEnterSleep(player);
 			player.startSleepEvent(false);
 			// player.resetPath(); - real rsc.
@@ -79,28 +80,32 @@ public class ItemActionHandler implements PacketHandler {
 						owner.message("You bury the "
 							+ item.getDef().getName().toLowerCase());
 						owner.getInventory().remove(item);
-						switch (item.getID()) {
-							case 20: // Bones
+						switch (ItemId.getById(item.getID())) {
+							case BONES:
 								owner.incExp(5, 15, true); // 3.75
 								break;
-							case 604: // Bat bones
+							case BAT_BONES:
 								owner.incExp(5, 18, true); // 4.5
 								break;
-							case 413: // Big bones
+							case BIG_BONES:
 								owner.incExp(5, 50, true); // 12.5
 								break;
-							case 814: // Dragon bones
+							case DRAGON_BONES:
 								owner.incExp(5, 240, true); // 60
 								break;
-							case 2256: // Soul of Greatwood NOT INCLUDED
-								owner.incExp(5, 800 * 4, true); // 800
-								break;
+//							case 2256: // Soul of Greatwood NOT INCLUDED
+//								owner.incExp(5, 800 * 4, true); // 800
+//								break;
+							// any other item with command bury
+							default:
+								player.message("Nothing interesting happens");
+								break;	
 						}
 					}
 				});
 		} else {
-			switch (item.getID()) {
-				case 387: // Disk of Returning
+			switch (ItemId.getById(item.getID())) {
+				case DISK_OF_RETURNING:
 					if (player.getX() == 305 && player.getY() == 3300) {
 						player.message("You spin your disk of returning");
 						player.teleport(310, 3347, true);
@@ -113,11 +118,14 @@ public class ItemActionHandler implements PacketHandler {
 						player.message("or the dwarven mines");
 					}
 					break;
-				case 260: // burntpie
+				case BURNTPIE:
 					if (item.getDef().getCommand().equalsIgnoreCase("empty dish")) {
 						player.message("you remove the burnt pie from the pie dish");
 						player.getInventory().replace(item.getID(), 251);
 					}
+					break;
+				case SPADE:
+					// nothing - no action/message was triggered with spade's dig option
 					break;
 				default:
 					player.message("Nothing interesting happens");
