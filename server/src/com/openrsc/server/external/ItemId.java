@@ -1,6 +1,10 @@
 package com.openrsc.server.external;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ItemId {
+	NOTHING(-1),
 	IRON_MACE(0),
 	IRON_SHORT_SWORD(1),
 	IRON_KITE_SHIELD(2),
@@ -1302,6 +1306,19 @@ public enum ItemId {
 	HARDCORE_IRONMAN_PLATEBODY(2142),
 	HARDCORE_IRONMAN_PLATELEGS(2143);
 	private int itemId;
+
+	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
+	static {
+		for (ItemId item : ItemId.values()) {
+			if (byId.put(item.id(), item) != null) {
+				throw new IllegalArgumentException("duplicate id: " + item.id());
+			}
+		}
+	}
+
+	public static ItemId getById(Integer id) {
+		return byId.getOrDefault(id, ItemId.NOTHING);
+	}
 
 	/**
 	 * @param itemId The ID of the item.
