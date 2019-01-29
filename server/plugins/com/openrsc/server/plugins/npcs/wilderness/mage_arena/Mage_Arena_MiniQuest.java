@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.wilderness.mage_arena;
 import com.openrsc.server.Server;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
+import com.openrsc.server.external.ItemId;
 import com.openrsc.server.model.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -22,6 +23,10 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 	PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
 	PickupExecutiveListener {
 
+	public static final int SARADOMIN_STONE = 1152;
+	public static final int GUTHIX_STONE = 1153;
+	public static final int ZAMORAK_STONE = 1154;
+	
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		if (p.getSkills().getMaxStat(Skills.MAGIC) < 60) { // TODO: Enter the arena game.
@@ -35,11 +40,10 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 			/* Started but failed. */
 			if (stage == 1) {
 				playerTalk(p, n, "hi");
-				npcTalk(p, n, "you return young conjurer", "..you obviously have a taste for the darkside of magic",
+				npcTalk(p, n, "you return young conjurer..", "..you obviously have a taste for the darkside of magic",
 					"let us continue with the battle...now");
 				if (cantGo(p)) {
-					npcTalk(p, n, "you may not take armour or weapons into the arena");
-					message(p, "You cannot enter the arena...", "...while carrying armor or weapons");
+					message(p, "You cannot enter the arena...", "...while carrying weapons or armour");
 					return;
 				}
 				movePlayer(p, 229, 130);
@@ -93,7 +97,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 				"top wizards travel from all over to fight here");
 			int choice = showMenu(p, n, "can i fight here?", "what's the point of that?", "that's barbaric");
 			if (choice == 0) {
-				fight(p, n);
+				canifight(p, n);
 			} else if (choice == 1) {
 				whatsthepoint(p, n);
 			} else if (choice == 2) {
@@ -101,53 +105,76 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 			}
 		}
 	}
+	
+	public void canifight(Player p, Npc n) {
+		npcTalk(p, n, "my arena is open to any high level wizard",
+				"but this is no game traveller, wizards fall in this arena..",
+				"..never to rise again, the strongest of mage's have been destroyed",
+				"but if you're sure you want in?");
+		int choice = showMenu(p, n, "yes indeedy", "no, i don't");
+		if (choice == 0) {
+			joinfight(p, n);
+		} else if (choice == 1) {
+			npcTalk(p, n, "your loss");
+		}
+	}
 
 	public void whatsthepoint(Player p, Npc n) {
-		npcTalk(p, n, "we learn how to use magic to it fullest...",
-			".., how to channel forces of the cosmos into our world",
-			".., but mainly I just like blasting people into dust");
+		npcTalk(p, n, "we learn how to use our magic to it fullest...",
+			"..,how to channel forces of the cosmos into our world..",
+			"..,but mainly I just like blasting people into dust");
 		int choice = showMenu(p, n, "can i fight here?", "that's barbaric");
 		if (choice == 0) {
-			fight(p, n);
+			canifight(p, n);
 		} else if (choice == 1) {
 			barbaric(p, n);
 		}
 	}
 
 	public void barbaric(Player p, Npc n) {
-		npcTalk(p, n, "nope, it's just magic, but I know what you mean", "so do you want to join us");
-		int choice = showMenu(p, n, "yes indeedy", "no i don't");
+		npcTalk(p, n, "nope, it's magic, but I know what you mean",
+				"so do you want to join us?");
+		int choice = showMenu(p, n, "yes indeedy", "no, i don't");
 		if (choice == 0) {
-			fight(p, n);
+			joinfight(p, n);
 		} else if (choice == 1) {
 			npcTalk(p, n, "your loss");
 		}
 	}
 
-	public void fight(Player p, Npc n) {
+	public void joinfight(Player p, Npc n) {
 		npcTalk(p, n, "good..good, you have a healthy sense of competition",
 			"remember traveller in my arena hand to hand combat is useless",
-			"your strength will diminish as you enter the arena", "before i can accept you in, we must duel",
+			"your strength will diminish as you enter the arena",
+			"but the spells you can learn are amongst the most powerful in runescape",
+			"before i can accept you in, we must duel",
 			"you may not take armour or weapons into the arena");
-		int choice = showMenu(p, n, "ok let's fight", "no thanks");
-		if (choice == 0) {
-			if (cantGo(p)) {
-				npcTalk(p, n, "you may not take armour or weapons into the arena");
-				message(p, "You cannot enter the arena...", "...while carrying armor or weapons");
-				return;
-			}
-			npcTalk(p, n, "now!");
-			if (!p.getCache().hasKey("mage_arena")) {
-				p.getCache().set("mage_arena", 1);
-			}
-			movePlayer(p, 229, 130);
-			setCurrentLevel(p, 0, 0);
-			setCurrentLevel(p, 2, 0);
+		if (cantGo(p)) {
+			message(p, "You cannot enter the arena...", "...while carrying weapons or armour");
+		}
+		else {
+			int choice = showMenu(p, n, "ok let's fight", "no thanks");
+			if (choice == 0) {
+				npcTalk(p, n, "I must check that you're up to scratch");
+				playerTalk(p, n, "you don't need to worry about that");
+				npcTalk(p, n, "not just any magician can enter traveller",
+						"only the most powerful, the most feared",
+						"before you use the power of this arena",
+						"you must prove yourself against me",
+						"now!");
+				if (!p.getCache().hasKey("mage_arena")) {
+					p.getCache().set("mage_arena", 1);
+				}
+				movePlayer(p, 229, 130);
+				setCurrentLevel(p, Skills.ATTACK, 0);
+				setCurrentLevel(p, Skills.STRENGTH, 0);
 
-			startKolodionEvent(p);
-			spawnKolodion(p, 713);
-			sleep(650);
-
+				startKolodionEvent(p);
+				spawnKolodion(p, 713);
+				sleep(650);
+			} else if (choice == 1) {
+				npcTalk(p, n, "your loss");
+			}
 		}
 	}
 
@@ -175,7 +202,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 				Npc Guthix = getNearestNpc(p, 789, 2);
 				Npc Zamorak = getNearestNpc(p, 790, 2);
 				Npc Saradomin = getNearestNpc(p, 791, 2);
-				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
+				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
 				if (Guthix != null && Guthix.withinRange(owner, 1)) {
 					godSpellObject(owner, 33);
 					p.message(randomMessage[2]);
@@ -261,7 +288,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 						godSpellObject(owner, 35);
 						break;
 				}
-				String[] randomMessage = {"this is your end", "die fool", "feel the power of elements"};
+				String[] randomMessage = {"roooaar", "die you foolish mortal", "feel the power of the elements", "the bigger the better", "aaarrgghhh"};
 				npcYell(owner, npc, randomMessage[random(0, randomMessage.length - 1)]);
 				owner.damage(random(3, 13));
 
@@ -281,7 +308,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 	public void spawnKolodion(Player player, int id) {
 		player.setAttribute("spawned_kolodion", spawnNpc(id, 227, 130, 300000, player));
 		player.getCache().set("kolodion_stage", id);
-		player.message("kolodion blasts you with his staff " + (id != 713 ? "again" : ""));
+		player.message("kolodion blasts you " + (id == 713 ? "with his staff" : "again"));
 		player.damage(random(7, 15));
 		startKolodionEvent(player);
 		ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
@@ -319,44 +346,44 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 			n.remove();
 
 			if (n.getID() == 713) {
-				message(p, "kolodion slumps to the floor...");
-				message(p, "..his body begins to grow and changes form", "he becomes an intimidating ogre");
+				message(p, "kolodion slumps to the floor..");
+				message(p, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
 				spawnKolodion(p, 757);
 			} else if (n.getID() == 757) {
-				message(p, "kolodion slumps to the floor once more...",
-					"..but again his body begins to grow and changes form", "he becomes enormous spider");
+				message(p, "kolodion slumps to the floor once more..",
+					"..but again his body begins to grow and he changes form", "He becomes an enormous spider");
 				spawnKolodion(p, n.getID() + 1);
 			} else if (n.getID() == 758) {
-				message(p, "kolodion slumps to the floor once more...",
-					"..but again his body begins to grow as he changes form", "he becomes ethereal being");
+				message(p, "kolodion again slumps to the floor..",
+					"..but again his body begins to grow as he changes form", "He becomes an ethereal being");
 				spawnKolodion(p, n.getID() + 1);
 			} else if (n.getID() == 759) {
-				message(p, "kolodion slumps to the floor motionless..",
+				message(p, "kolodion again slumps to the floor..motionless",
 					"..but again his body begins to grow as he changes form", "...larger this time",
 					"He becomes a vicious demon");
 				spawnKolodion(p, n.getID() + 1);
 			} else if (n.getID() == 760) {
-				message(p, "kolodion slumps to the floor motionless..", "he slowly rises to his feet in his true form");
+				message(p, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
 				message(p, "@yel@Kolodion: \"well done young adventurer\"",
 					"@yel@Kolodion: \"you truly are a worthy battle mage\"");
+				p.message("kolodion teleports you to his cave");
 				p.teleport(446, 3370);
 				Npc kolodion = getNearestNpc(p, 712, 5);
 				if (kolodion == null) {
-					p.message("error kolodion not found. better luck next tiem!");
+					p.message("kolodion is currently busy");
 					return;
 				}
-				p.message("kolodion teleports you to his cave");
-				playerTalk(p, kolodion, "what now kolodion, how can i learn some of those spells");
-				npcTalk(p, kolodion, "these spells are gifts from gods", "first you must choose which god",
+				playerTalk(p, kolodion, "what now kolodion? how can i learn some of those spells?");
+				npcTalk(p, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
 					"...you will represent in the mage arena");
 				playerTalk(p, kolodion, "cool");
 				npcTalk(p, kolodion, "step into the magic pool, it will carry you to the chamber");
 				playerTalk(p, kolodion, "the chamber?");
 
 				npcTalk(p, kolodion, "there you must decide your loyalty");
-				playerTalk(p, kolodion, "ok kolodion, thanks for the battle");
+				playerTalk(p, kolodion, "ok kolodion , thanks for the battle");
 				npcTalk(p, kolodion, "remember young mage, you must use the spells...",
-					"many times in the arena before you can use them outside");
+					"...many times in the arena before you can use them outside");
 				playerTalk(p, kolodion, "no problem");
 				p.getCache().set("mage_arena", 2);
 				p.getCache().remove("kolodion_stage");
@@ -403,7 +430,7 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == 1019 || obj.getID() == 1020 || obj.getID() == 1027
-			|| obj.getID() == 1152 || obj.getID() == 1153 || obj.getID() == 1154;
+			|| obj.getID() == SARADOMIN_STONE || obj.getID() == GUTHIX_STONE || obj.getID() == ZAMORAK_STONE;
 	}
 
 	@Override
@@ -435,46 +462,61 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 					player.message("you cannot enter without the permission of kolodion");
 				}
 			}
-		} else if (obj.getID() == 1152) {
-			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
-				message(player, "you kneel begin to chant to saradomin");
+		} else if (obj.getID() == SARADOMIN_STONE) {
+			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
+				message(player, "you kneel and chant to saradomin");
 				if (!alreadyHasCape(player)) {
 					message(player, "you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
-					addItem(player, 1214, 1);
+					addItem(player, ItemId.SARADOMIN_CAPE.id(), 1);
 				} else {
 					message(player, "but there is no response");
 				}
 			}
-			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
+			// first time
+			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
+				message(player, "you kneel and begin to chant to saradomin",
+						"you feel a rush of energy charge through your veins");
+				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
+				addItem(player, ItemId.SARADOMIN_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
 			}
-		} else if (obj.getID() == 1153) {
-			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
-				message(player, "you kneel begin to chant to guthix");
+		} else if (obj.getID() == GUTHIX_STONE) {
+			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
+				message(player, "you kneel and chant to guthix");
 				if (!alreadyHasCape(player)) {
 					message(player, "you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
-					addItem(player, 1215, 1);
+					addItem(player, ItemId.GUTHIX_CAPE.id(), 1);
 				} else {
 					message(player, "but there is no response");
 				}
 			}
-			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
+			// first time
+			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
+				message(player, "you kneel and begin to chant to guthix",
+						"you feel a rush of energy charge through your veins");
+				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
+				addItem(player, ItemId.GUTHIX_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
 			}
-		} else if (obj.getID() == 1154) {
-			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
-				message(player, "you kneel begin to chant to zamorak");
+		} else if (obj.getID() == ZAMORAK_STONE) {
+			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
+				message(player, "you kneel and chant to zamorak");
 				if (!alreadyHasCape(player)) {
 					message(player, "you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
-					addItem(player, 1213, 1);
+					addItem(player, ItemId.ZAMORAK_CAPE.id(), 1);
 				} else {
 					message(player, "but there is no response");
 				}
 			}
-			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
+			// first time
+			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
+				message(player, "you kneel and begin to chant to zamorak",
+						"you feel a rush of energy charge through your veins");
+				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
+				addItem(player, ItemId.ZAMORAK_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
 			}
 		}
@@ -482,12 +524,14 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 
 	private boolean alreadyHasCape(Player player) {
 		for (Item item : player.getInventory().getItems()) {
-			if (item.getID() == 1213 || item.getID() == 1214 || item.getID() == 1215) {
+			if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
+					|| item.getID() == ItemId.GUTHIX_CAPE.id()) {
 				return true;
 			}
 		}
 		for (Item item : player.getBank().getItems()) {
-			if (item.getID() == 1213 || item.getID() == 1214 || item.getID() == 1215) {
+			if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
+					|| item.getID() == ItemId.GUTHIX_CAPE.id()) {
 				return true;
 			}
 		}
@@ -515,12 +559,12 @@ public class Mage_Arena_MiniQuest implements TalkToNpcExecutiveListener, TalkToN
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		return i.getID() == 1213 || i.getID() == 1214 || i.getID() == 1215;
+		return i.getID() == ItemId.ZAMORAK_CAPE.id() || i.getID() == ItemId.SARADOMIN_CAPE.id() || i.getID() == ItemId.GUTHIX_CAPE.id();
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == 1213 || i.getID() == 1214 || i.getID() == 1215) {
+		if (i.getID() == ItemId.ZAMORAK_CAPE.id() || i.getID() == ItemId.SARADOMIN_CAPE.id() || i.getID() == ItemId.GUTHIX_CAPE.id()) {
 			if (alreadyHasCape(p)) {
 				p.message("you may only possess one sacred cape at a time");
 			} else {
