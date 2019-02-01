@@ -177,7 +177,7 @@ public final class Event implements CommandListener {
 
 			if (p != null) {
 				p.toggleInvisible();
-				String invisibleText = p.isInvisible() ? "invisible" : "visible";
+				String invisibleText = p.stateIsInvisible() ? "invisible" : "visible";
 				player.message(messagePrefix + p.getUsername() + " is now " + invisibleText);
 				p.message(messagePrefix + "A staff member has made you " + invisibleText);
 				GameLogging.addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + p.getUsername() + " " + invisibleText));
@@ -192,7 +192,7 @@ public final class Event implements CommandListener {
 
 			if (p != null) {
 				p.toggleInvulnerable();
-				String invulnerableText = p.isInvulnerable() ? "invulnerable" : "vulnerable";
+				String invulnerableText = p.stateIsInvulnerable() ? "invulnerable" : "vulnerable";
 				player.message(messagePrefix + p.getUsername() + " is now " + invulnerableText);
 				p.message(messagePrefix + "A staff member has made you " + invulnerableText);
 				GameLogging.addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + p.getUsername() + " " + invulnerableText));

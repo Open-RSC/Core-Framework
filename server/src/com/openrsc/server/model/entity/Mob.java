@@ -701,4 +701,12 @@ public abstract class Mob extends Entity {
 	public void setKillType(int i) {
 		this.killType = i;
 	}
+
+	public boolean stateIsInvisible() { return false; }
+
+	public boolean stateIsInvulnerable() { return false; }
+
+	public boolean isInvisibleTo(Mob m) { return true; }
+
+	public boolean isInvulnerableTo(Mob m) { return true; }
 }
