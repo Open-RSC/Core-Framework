@@ -2091,5 +2091,49 @@ public final class Admins implements CommandListener {
 				p.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
 			}
 		}
+		else if (cmd.equalsIgnoreCase("freezexp") || cmd.equalsIgnoreCase("freezeexp") || cmd.equalsIgnoreCase("freezeexperience")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
+				return;
+			}
+
+			Player p = world.getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not freeze experience of a staff member of equal or greater rank.");
+				return;
+			}
+
+			boolean freezeXp;
+			boolean toggle;
+			if(args.length > 1) {
+				try {
+					freezeXp = DataConversions.parseBoolean(args[1]);
+					toggle = false;
+				} catch (NumberFormatException ex) {
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] (boolean)");
+					return;
+				}
+			} else {
+				toggle = true;
+				freezeXp = false;
+			}
+
+			boolean newFreezeXp;
+			if(toggle) {
+				newFreezeXp = p.toggleFreezeXp();
+			} else {
+				newFreezeXp = p.setFreezeXp(freezeXp);
+			}
+
+			String freezeMessage = newFreezeXp ? "frozen" : "unfrozen";
+			p.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
+			player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + p.getUsername());
+		}
 	}
 }
