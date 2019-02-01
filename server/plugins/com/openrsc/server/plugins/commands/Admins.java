@@ -1024,7 +1024,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 			// Show bank screen to yourself
-			if (p.getUsernameHash() == player.getUsernameHash()) {
+			if (p.getUsernameHash() == player.getUsernameHash() || cmd.equalsIgnoreCase("quickbank")) {
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			} else {
