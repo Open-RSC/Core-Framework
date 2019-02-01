@@ -1215,7 +1215,7 @@ public final class Admins implements CommandListener {
 			p.message(messagePrefix + "Your prayer has been recharged by an admin");
 			player.message(messagePrefix + "Recharged: " + p.getUsername());
 		}
-		else if ((cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits"))) {
+		else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits")) {
 			if(args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
 				return;
@@ -1230,13 +1230,13 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not set hp of a staff member of equal or greater rank.");
+				return;
+			}
+
 			try {
 				int newHits = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
-
-				if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID() && newHits == 0) {
-					player.message(messagePrefix + "You can not set hp to 0 of a staff member of equal or greater rank.");
-					return;
-				}
 
 				if(newHits > p.getSkills().getMaxStat(Skills.HITPOINTS))
 					newHits = p.getSkills().getMaxStat(Skills.HITPOINTS);
@@ -1253,6 +1253,45 @@ public final class Admins implements CommandListener {
 			}
 			catch (NumberFormatException e) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [hp]");
+				return;
+			}
+		}
+		else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
+			if(args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [prayer]");
+				return;
+			}
+
+			Player p = args.length > 1 ?
+				world.getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
+
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not set prayer of a staff member of equal or greater rank.");
+				return;
+			}
+
+			try {
+				int newPrayer = Integer.parseInt(args[args.length > 1 ? 1 : 0]);
+
+				if(newPrayer > p.getSkills().getMaxStat(Skills.HITPOINTS))
+					newPrayer = p.getSkills().getMaxStat(Skills.HITPOINTS);
+				if(newPrayer < 0)
+					newPrayer = 0;
+
+				p.getUpdateFlags().setDamage(new Damage(player, p.getSkills().getLevel(Skills.HITPOINTS) - newPrayer));
+				p.getSkills().setLevel(Skills.HITPOINTS, newPrayer);
+
+				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
+				player.message(messagePrefix + "Set " + p.getUsername() + "'s prayer to " + newPrayer);
+			}
+			catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [prayer]");
 				return;
 			}
 		}
