@@ -1828,14 +1828,18 @@ public final class Player extends Mob {
 		if (inCombat()) {
 			combatEvent.resetCombat();
 		}
-		for (Player p : getViewArea().getPlayersInView()) {
+
+		if(!isInvisible()) {
+			for (Player p : getViewArea().getPlayersInView()) {
+				if (bubble) {
+					ActionSender.sendTeleBubble(p, getX(), getY(), false);
+				}
+			}
 			if (bubble) {
-				ActionSender.sendTeleBubble(p, getX(), getY(), false);
+				ActionSender.sendTeleBubble(this, getX(), getY(), false);
 			}
 		}
-		if (bubble) {
-			ActionSender.sendTeleBubble(this, getX(), getY(), false);
-		}
+
 		setLocation(Point.location(x, y), true);
 		resetPath();
 		ActionSender.sendWorldInfo(this);
