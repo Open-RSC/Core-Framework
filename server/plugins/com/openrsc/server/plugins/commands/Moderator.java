@@ -197,7 +197,7 @@ public final class Moderator implements CommandListener {
 			player.message(messagePrefix + "You have summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
 		}
-		else if (cmd.equals("return")) {
+		else if (cmd.equalsIgnoreCase("return")) {
 			Player p = args.length > 0 ?
 				world.getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
